@@ -3,8 +3,8 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { getAllSecretKindOptions, getOptionalSecretKinds } from "@homarr/definitions";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 
 const logger = createLogger({ module: "integrationTestConnection" });
 
@@ -65,7 +65,12 @@ export const testConnectionAsync = async (
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
 
-  const decryptedSecrets = secretKinds
+  // Optional secrets (for example a dashboard URL used for links) are passed along when they are set.
+  const optionalSecretKinds = getOptionalSecretKinds(integration.kind).filter(
+    (kind) => !secretKinds.includes(kind) && sourcedSecrets.some((secret) => secret.kind === kind),
+  );
+
+  const decryptedSecrets = [...secretKinds, ...optionalSecretKinds]
     .map((kind) => {
       const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
       // Will never be undefined because of the check before

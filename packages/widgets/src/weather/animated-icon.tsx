@@ -1,12 +1,16 @@
+import type { CSSProperties } from "react";
+
 import "../widgets-common.css";
 
 import { WeatherIcon } from "./icon";
 
 interface AnimatedWeatherIconProps {
+  animated?: boolean;
   code: number;
+  isDay?: boolean;
   size?: string | number;
+  style?: CSSProperties;
 }
-
 
 const getAnimationClass = (code: number): string => {
   if (code === 0) return "weather-anim-sun";
@@ -18,11 +22,12 @@ const getAnimationClass = (code: number): string => {
   return "";
 };
 
-
-export const AnimatedWeatherIcon = ({ code, size = 26 }: AnimatedWeatherIconProps) => {
+export const AnimatedWeatherIcon = ({ animated = false, code, isDay, size = 26, style }: AnimatedWeatherIconProps) => {
+  let animationClass = "";
+  if (animated && (code !== 0 || isDay !== false)) animationClass = getAnimationClass(code);
   return (
-    <span className={`weather-anim-wrapper ${getAnimationClass(code)}`}>
-      <WeatherIcon code={code} size={size} />
+    <span className={`weather-anim-wrapper ${animationClass}`} data-is-day={isDay === false ? "false" : "true"}>
+      <WeatherIcon code={code} isDay={isDay} size={size} style={style} />
     </span>
   );
 };

@@ -9,7 +9,7 @@ const defaultRedisOptions = {
 
 export type { Redis as RedisClient } from "ioredis";
 
-export const createRedisClient = () =>
+export const createRedisClient = (options: RedisOptions = {}) =>
   redisEnv.IS_EXTERNAL
     ? new Redis({
         ...defaultRedisOptions,
@@ -23,5 +23,6 @@ export const createRedisClient = () =>
           : undefined,
         username: redisEnv.USERNAME,
         password: redisEnv.PASSWORD,
+        ...options,
       })
-    : new Redis(defaultRedisOptions);
+    : new Redis({ ...defaultRedisOptions, ...options });

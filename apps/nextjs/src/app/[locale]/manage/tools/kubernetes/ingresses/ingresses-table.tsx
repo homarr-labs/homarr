@@ -13,24 +13,31 @@ import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { KubernetesIngress } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+
+import KubernetesErrorPage from "../cluster-dashboard/error";
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
 dayjs.extend(relativeTime);
 
 interface IngressesTableComponentProps {
+  contextId: string;
   initialIngresses: RouterOutputs["kubernetes"]["ingresses"]["getIngresses"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MRT_ColumnDef<KubernetesIngress>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.ingresses">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesIngress>[] => [
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
     enableClickToCopy: true,
   },
   {
@@ -67,20 +74,19 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MR
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
-export function IngressesTable(initialData: IngressesTableComponentProps) {
-  const tIngresses = useScopedI18n("kubernetes.ingresses");
+export function IngressesTable({ contextId, initialIngresses }: IngressesTableComponentProps) {
+  const tIngresses = useI18n("kubernetes.ingresses");
+  const tField = useI18n("kubernetes.field");
 
-  const { data } = clientApi.kubernetes.ingresses.getIngresses.useQuery(undefined, {
-    initialData: initialData.initialIngresses,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data, isError } = clientApi.kubernetes.ingresses.getIngresses.useQuery(
+    { contextId },
+    createKubernetesResourceQueryOptions(initialIngresses),
+  );
 
   const table = useTranslatedMantineReactTable({
     data,
@@ -100,8 +106,12 @@ export function IngressesTable(initialData: IngressesTableComponentProps) {
       autoFocus: true,
     },
 
-    columns: createColumns(tIngresses),
+    columns: createColumns(tIngresses, tField),
   });
+
+  if (isError) {
+    return <KubernetesErrorPage />;
+  }
 
   return <MantineReactTable table={table} />;
 }

@@ -6,23 +6,24 @@
 homarr/
 ├── apps/
 │   ├── nextjs/          # Main Next.js application (port 3000)
-│   ├── docs/            # Docusaurus 3 documentation site (@homarr/docs)
-│   ├── tasks/           # Cron job runner + Fastify tRPC API (port 3002)
-│   └── websocket/       # Standalone tRPC WebSocket server (port 3001)
+│   ├── docs/            # Next.js + Fumadocs documentation site (@homarr/docs)
+│   ├── tasks/           # Cron-job initialization and scheduling runtime
+│   ├── websocket/       # Standalone tRPC WebSocket server (port 3001)
+│   └── workshop/        # Go/PocketBase Workshop service
 ├── packages/
 │   ├── api/             # tRPC appRouter, procedures, OpenAPI
 │   ├── auth/            # NextAuth config, providers, session, API keys
-│   ├── db/              # Drizzle schema (3 DB drivers), migrations, queries
+│   ├── db/              # SQLite and PostgreSQL schemas, migrations, queries
 │   ├── core/            # Env validation, DB/Redis driver factories, logging
 │   ├── definitions/     # Domain enums: WidgetKind, IntegrationKind, permissions
-│   ├── widgets/         # All 39 dashboard widgets (definitions + components)
+│   ├── widgets/         # Dashboard widget definitions and components
 │   ├── integrations/    # Integration classes (HTTP clients to external apps)
 │   ├── redis/           # Redis pub/sub channels, caching abstractions
 │   ├── translation/     # next-intl setup, locale configs, lang JSON files
 │   ├── ui/              # Shared Mantine components, theme, hooks
 │   ├── validation/      # Shared zod schemas for API/forms
 │   ├── common/          # Shared utilities, IDs, errors
-│   ├── cron-jobs/       # Cron job implementations (25+ jobs)
+│   ├── cron-jobs/       # Cron job implementations
 │   ├── cron-jobs-core/  # Cron scheduling primitives
 │   ├── cron-job-status/ # Cron status via Redis
 │   ├── boards/          # Board context, edit mode, cache updater
@@ -40,8 +41,9 @@ homarr/
 │   ├── analytics/       # Server-side analytics (Umami)
 │   ├── server-settings/ # Server setting keys/types
 │   ├── settings/        # User-facing settings UI context
-│   ├── old-import/      # Legacy Homarr import
-│   ├── old-schema/      # Legacy Homarr zod schemas
+│   ├── custom-widgets/  # Custom JSX v2 schema, validation, and runtime
+│   ├── onboarding/      # Onboarding studio and setup flow
+│   ├── workshop/        # Homarr-side Workshop client and contracts
 │   └── cli/             # Node CLI for ops (brocli)
 ├── tooling/
 │   ├── typescript/      # Base tsconfig
@@ -53,15 +55,17 @@ homarr/
 └── Dockerfile           # Multi-stage production build
 ```
 
-## Documentation Sync
+## Documentation
 
-The documentation site lives at `apps/docs/` (Docusaurus 3, `@homarr/docs`).
+Add or update docs only when a smart, advanced user cannot infer the changed behavior from the UI or generated API schema. Document hidden capabilities, surprising behavior, non-obvious prerequisites or constraints, configuration contracts, and migrations. A code or API change alone is not a reason to add docs.
 
-When modifying user-facing code, you MUST also update the corresponding documentation:
+Keep warranted documentation concise. Omit UI walkthroughs, visible control descriptions, and details already clear from the interface or schema.
+
+Only after this reader-value test passes, use these locations:
 
 - New integration → `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts`
 - New widget → `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`
-- Changed API → `apps/docs/docs/management/api.mdx`
+- Changed API → `apps/docs/docs/management/api/index.mdx`
 - New/changed env vars → `apps/docs/docs/advanced/`
 - New CLI commands → `apps/docs/docs/advanced/command-line/`
 - Auth changes → `apps/docs/docs/advanced/` SSO pages
@@ -73,7 +77,7 @@ When modifying user-facing code, you MUST also update the corresponding document
 - `pnpm dev:cli -- dev` — run the developer CLI without installing a global binary
 - `pnpm db:seed` — seed default database data explicitly
 - `pnpm docker:dev:up` — start the Redis development service in the background
-- `pnpm dev:docs` — Docusaurus docs site only
+- `pnpm dev:docs` — Fumadocs site only
 - `pnpm turbo build` — build all packages
 - `pnpm turbo build --filter=@homarr/docs` — build docs only
 - `pnpm turbo typecheck` — typecheck all packages
@@ -84,19 +88,26 @@ When modifying user-facing code, you MUST also update the corresponding document
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
-- Mantine: use the `mantine` MCP server (configured in `.mcp.json`; tools `get_item_doc` / `get_item_props` / `search_docs`) for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox` for selects, the polymorphic `component` prop, `@mantine/hooks`) over hand-rolled equivalents. Check `packages/ui/` for existing conventions first.
-
-## MCP servers
-
-`.mcp.json` at the repo root declares project-scoped MCP servers (the standard Claude Code layout; other tools can import the same `mcpServers` block). See the `mantine` entry there for the Mantine v9 server, and the upstream docs at https://mantine.dev/guides/llms/ for per-tool setup (OpenCode: `.opencode/opencode.json`, Codex: `.codex/config.toml`). Only keyless server definitions belong in `.mcp.json`; anything needing secrets stays in local dotfiles.
-
-## Agent Skills
-
-Portable agent skills live in `.agents/skills/` (the Agent Skills open standard). Cursor, Codex, and OpenCode read `.agents/skills/` natively. Claude Code does not scan it, so `.claude/skills/` is a symlink back to `.agents/skills/`. Install skills at `.agents/skills/<name>/SKILL.md` — that single copy is used everywhere. See `.agents/skills/` for available skills (documentation-sync, mcp-integration, codebase-context, datatable-migration).
-
+- Mantine: use the `mantine` MCP server in `.mcp.json` for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox`, the polymorphic `component` prop, `@mantine/hooks`) and check `packages/ui/` for existing conventions first.
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `pnpm dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
 - Run `pnpm dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
 - Run `pnpm dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
-- Run Go checks from `tools/homarr-dev` with `go test ./...` and `go vet ./...`.
+
+## Testing
+
+Add tests only when requested. Favor assertions that would fail for a plausible regression in user-visible behavior or a security boundary; avoid checks that repeat implementation details or duplicate stronger coverage. For focused changes, run only the relevant existing or newly requested checks when validation is needed. Do not run broad test, Docker, or E2E suites by default.
+
+## MCP servers
+
+`.mcp.json` declares project-scoped MCP servers. Keep only keyless definitions there; credentials belong in local dotfiles. See [Mantine LLM tooling](https://mantine.dev/guides/llms/) for client-specific setup.
+
+## Agent Skills
+
+Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
+
+- `codebase-context` — architecture, package boundaries, and shared utilities
+- `documentation-sync` — documentation for changes users need explained
+- `mcp-integration` — safe tRPC-to-MCP exposure
+- `homarr-custom-widget` — safe Custom JSX v2 authoring

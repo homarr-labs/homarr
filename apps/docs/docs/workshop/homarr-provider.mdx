@@ -1,0 +1,38 @@
+---
+title: Homarr provider
+sidebar_position: 2
+tags:
+  - Assistant
+  - AI
+  - Privacy
+  - Community
+---
+
+import { HomarrProviderDiagram } from "@site/src/components/pages/core-concepts/technical-diagrams";
+
+# Homarr provider
+
+The Homarr provider gives Community Workshop users access to a server-selected model without configuring an Assistant
+API key.
+
+Select **Homarr** under **Management → Assistant**, enable Assistant, then sign in to the Workshop when prompted.
+
+<HomarrProviderDiagram />
+
+## Allowance
+
+- Each user receives 50 request units per UTC day.
+- Each model request consumes one unit; a tool loop can consume several.
+- Forwarded requests count even when the upstream model fails.
+- A shared daily service limit also applies.
+
+Assistant shows the remaining allowance and reset time beside the model control.
+
+## Data handling
+
+Prompts, attachments, tools, and tool results pass through Workshop and OpenRouter. Workshop does not retain request or
+response content; it stores the user, UTC day, and counters required for limits. OpenRouter is configured for zero data
+retention with data collection disabled.
+
+Operators configure the model, limits, and upstream key; see the
+[Workshop operator guide](/docs/advanced/development/workshop-operator#homarr-provider).

@@ -8,7 +8,7 @@ import { UploadMedia } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 
 export const UploadMediaButton = () => {
-  const t = useI18n();
+  const t = useI18n("media");
   const onSettledAsync = async () => {
     await revalidatePathActionAsync("/manage/medias");
   };
@@ -17,7 +17,7 @@ export const UploadMediaButton = () => {
     <UploadMedia onSettled={onSettledAsync} multiple>
       {({ onClick, loading }) => (
         <Button onClick={onClick} loading={loading} rightSection={<IconUpload size={16} stroke={1.5} />}>
-          {t("media.action.upload.label")}
+          {t("action.upload.label")}
         </Button>
       )}
     </UploadMedia>

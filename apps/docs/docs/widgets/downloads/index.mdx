@@ -1,97 +1,69 @@
 ---
-title: 'Download Client'
-description: 'Allows you to view and manage your Downloads from both Torrent and Usenet clients.'
+title: "Download Client"
+description: "View and manage downloads from Torrent and Usenet clients."
 hide_title: true
 ---
 
-import { aria2Integration } from '@site/docs/integrations/aria2';
-import { delugeIntegration } from '@site/docs/integrations/deluge';
-import { nzbgetIntegration } from '@site/docs/integrations/nzbget';
-import { qBittorentIntegration } from '@site/docs/integrations/q-bittorent';
-import { sabnzbdIntegration } from '@site/docs/integrations/sabnzbd';
-import { transmissionIntegration } from '@site/docs/integrations/transmission';
-import { slskdIntegration } from '@site/docs/integrations/slskd';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { downloadsWidget } from '.';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
+import { aria2Integration } from "@site/docs/integrations/aria2";
+import { delugeIntegration } from "@site/docs/integrations/deluge";
+import { nzbgetIntegration } from "@site/docs/integrations/nzbget";
+import { qBittorentIntegration } from "@site/docs/integrations/q-bittorent";
+import { sabnzbdIntegration } from "@site/docs/integrations/sabnzbd";
+import { transmissionIntegration } from "@site/docs/integrations/transmission";
+import { slskdIntegration } from "@site/docs/integrations/slskd";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { downloadsWidget } from ".";
+import advancedView from "./img/advanced-view.png";
+import filterPanel from "./img/filter-panel.png";
 
-<WidgetHeader
-  widget={downloadsWidget}
-  categories={['Torrent client', 'Usenet client', 'Downloads']}
+<WidgetHeader widget={downloadsWidget} categories={["Torrent client", "Usenet client", "Downloads"]} />
+
+The Download Client widget combines active jobs from supported Torrent, Usenet, and other download clients. Rows can be
+sorted, filtered, expanded, and configured by column. Advanced view adds queue statistics and the complete selected
+column set.
+
+Pause, resume, and delete actions require Interact access to the source integration. `slskd` is list-only. If one source
+fails, jobs from healthy integrations remain available.
+
+### Advanced view
+
+<img src={advancedView.src} alt="Downloads advanced view with queue statistics and expanded job details" />
+
+### Filtering
+
+<img src={filterPanel.src} alt="Downloads advanced view filtered by client and state" />
+
+### Supported integrations
+
+<WidgetIntegrations
+  items={[
+    { integration: sabnzbdIntegration, note: "Usenet client" },
+    { integration: nzbgetIntegration, note: "Usenet client" },
+    { integration: delugeIntegration, note: "Torrent client" },
+    { integration: transmissionIntegration, note: "Torrent client" },
+    { integration: qBittorentIntegration, note: "Torrent client" },
+    { integration: aria2Integration, note: "Multi-protocol download client" },
+    { integration: slskdIntegration, note: "Soulseek client; list-only" },
+  ]}
 />
-
-This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
-
-### Screenshots
-
-import downloadsCard from './img/screenshot.png';
-import contextMenuImg from './img/context-menu.png';
-
-<div>
-    <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
-</div>
-
-#### Right-click context menu
-
-<div>
-    <img src={contextMenuImg} alt="Downloads widget context menu with pause, delete, and copy actions" width={128 * 4} />
-</div>
-
-### Features
-
-- **Responsive table** — columns automatically adapt to widget width, hiding less important columns at smaller sizes
-- **Sortable columns** — click any column header to sort ascending/descending
-- **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
-- **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu
-- **Row expansion** — click any row to see full details inline without opening a separate modal
-- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category
-- **Global stats bar** — toggle a summary bar showing queue progress, total size, speeds, ratio, and per-state counts
-- **Client filtering** — filter downloads by integration or status using the footer filter panel
-- **Global controls** — pause/resume all downloads across all clients from the footer bar
-- **Status indicators** — color-coded badges show download state at a glance
-- **Speed overview** — total download and upload speeds displayed in the footer
-
-### Supported Integrations
-
-<WidgetIntegrations items={[{
-  integration: sabnzbdIntegration,
-  note: "Usenet client"
-}, {
-  integration: nzbgetIntegration,
-  note: "Usenet client"
-}, {
-  integration: delugeIntegration,
-  note: "Torrent client"
-}, {
-  integration: transmissionIntegration,
-  note: "Torrent client"
-}, {
-  integration: qBittorentIntegration,
-  note: "Torrent client"
-}, {
-  integration: aria2Integration,
-  note: "Multi-protocol download client"
-}, {
-  integration: slskdIntegration,
-  note: "Soulseek client (read-only)"
-}]} />
 
 ### Interactions
 
-- **Right-click** any download to open a context menu with pause/resume, delete, and copy actions
-- **Click** any row to expand it and see full download details inline
-- **Hover** a download name for a quick stats tooltip
-- **Stats toggle** — show or hide the global stats bar from the footer
-- **Pause / Resume** all downloads using the footer controls
-- **Filter** by integration or status using the filter button in the footer
-- **Sort** by clicking column headers (with persistent sort direction)
+- Select a row to expand its details.
+- Right-click a row to copy identifiers or run permitted actions.
+- Use the footer to filter clients and states, show statistics, or pause and resume actionable queues.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={downloadsWidget.configuration} />

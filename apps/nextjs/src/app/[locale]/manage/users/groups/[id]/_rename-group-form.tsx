@@ -19,7 +19,8 @@ interface RenameGroupFormProps {
 }
 
 export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
-  const t = useI18n();
+  const tGroup = useI18n("group");
+  const tCommon = useI18n("common");
   const { mutate, isPending } = clientApi.group.updateGroup.useMutation();
   const form = useZodForm(groupUpdateSchema.pick({ name: true }), {
     initialValues: {
@@ -41,16 +42,16 @@ export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
           onSuccess() {
             void revalidatePathActionAsync(`/users/groups/${group.id}`);
             showSuccessNotification({
-              title: t("common.notification.update.success"),
-              message: t("group.action.update.notification.success.message", {
+              title: tCommon("notification.update.success"),
+              message: tGroup("action.update.notification.success.message", {
                 name: values.name,
               }),
             });
           },
           onError() {
             showErrorNotification({
-              title: t("common.notification.update.error"),
-              message: t("group.action.update.notification.error.message", {
+              title: tCommon("notification.update.error"),
+              message: tGroup("action.update.notification.error.message", {
                 name: values.name,
               }),
             });
@@ -58,18 +59,18 @@ export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
         },
       );
     },
-    [group.id, mutate, t, disabled],
+    [group.id, mutate, tGroup, tCommon, disabled],
   );
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput label={t("group.field.name")} {...form.getInputProps("name")} disabled={disabled} />
+        <TextInput label={tCommon("field.name")} {...form.getInputProps("name")} disabled={disabled} />
 
         {!disabled && (
           <Group justify="end">
             <Button type="submit" loading={isPending}>
-              {t("common.action.saveChanges")}
+              {tCommon("action.saveChanges")}
             </Button>
           </Group>
         )}

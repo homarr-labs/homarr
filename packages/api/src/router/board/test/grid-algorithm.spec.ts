@@ -1,8 +1,8 @@
 import { createId } from "@paralleldrive/cuid2";
 import { describe, expect, test } from "vitest";
 
-import type { GridAlgorithmItem } from "../grid-algorithm";
-import { generateResponsiveGridFor } from "../grid-algorithm";
+import { generateResponsiveGridFor } from "@homarr/common";
+import type { GridAlgorithmItem } from "@homarr/common";
 
 const ROOT_SECTION_ID = "section";
 
@@ -25,34 +25,34 @@ describe("Grid Algorithm", () => {
 
     expect(output).toBe(item.output);
   });
-  test.each(dynamicSectionTests)(
-    "should convert a grid with dynamic sections from 16 columns to %i columns",
+  test.each(containerTests)(
+    "should convert a grid with nested containers from 16 columns to %i columns",
     (_, testInput) => {
-      const outerDynamicSectionId = "b";
-      const innerDynamicSectionId = "f";
+      const outerContainerId = "b";
+      const innerContainerId = "f";
       const items = [
         algoItem({ id: "a", width: 2, height: 2 }),
-        algoItem({ id: outerDynamicSectionId, type: "section", width: 12, height: 3, yOffset: 2 }),
-        algoItem({ id: "a", width: 2, sectionId: outerDynamicSectionId }),
-        algoItem({ id: "b", width: 4, sectionId: outerDynamicSectionId, xOffset: 2 }),
-        algoItem({ id: "c", width: 2, sectionId: outerDynamicSectionId, xOffset: 6 }),
-        algoItem({ id: "d", width: 1, sectionId: outerDynamicSectionId, xOffset: 8 }),
-        algoItem({ id: "e", width: 3, sectionId: outerDynamicSectionId, xOffset: 9 }),
+        algoItem({ id: outerContainerId, type: "section", width: 12, height: 3, yOffset: 2 }),
+        algoItem({ id: "a", width: 2, sectionId: outerContainerId }),
+        algoItem({ id: "b", width: 4, sectionId: outerContainerId, xOffset: 2 }),
+        algoItem({ id: "c", width: 2, sectionId: outerContainerId, xOffset: 6 }),
+        algoItem({ id: "d", width: 1, sectionId: outerContainerId, xOffset: 8 }),
+        algoItem({ id: "e", width: 3, sectionId: outerContainerId, xOffset: 9 }),
         algoItem({
-          id: innerDynamicSectionId,
+          id: innerContainerId,
           type: "section",
           width: 8,
           height: 2,
           yOffset: 1,
-          sectionId: outerDynamicSectionId,
+          sectionId: outerContainerId,
         }),
-        algoItem({ id: "a", width: 2, sectionId: innerDynamicSectionId }),
-        algoItem({ id: "b", width: 5, xOffset: 2, sectionId: innerDynamicSectionId }),
-        algoItem({ id: "c", width: 1, height: 2, xOffset: 7, sectionId: innerDynamicSectionId }),
-        algoItem({ id: "d", width: 7, yOffset: 1, sectionId: innerDynamicSectionId }),
-        algoItem({ id: "g", width: 4, yOffset: 1, sectionId: outerDynamicSectionId, xOffset: 8 }),
-        algoItem({ id: "h", width: 3, yOffset: 2, sectionId: outerDynamicSectionId, xOffset: 8 }),
-        algoItem({ id: "i", width: 1, yOffset: 2, sectionId: outerDynamicSectionId, xOffset: 11 }),
+        algoItem({ id: "a", width: 2, sectionId: innerContainerId }),
+        algoItem({ id: "b", width: 5, xOffset: 2, sectionId: innerContainerId }),
+        algoItem({ id: "c", width: 1, height: 2, xOffset: 7, sectionId: innerContainerId }),
+        algoItem({ id: "d", width: 7, yOffset: 1, sectionId: innerContainerId }),
+        algoItem({ id: "g", width: 4, yOffset: 1, sectionId: outerContainerId, xOffset: 8 }),
+        algoItem({ id: "h", width: 3, yOffset: 2, sectionId: outerContainerId, xOffset: 8 }),
+        algoItem({ id: "i", width: 1, yOffset: 2, sectionId: outerContainerId, xOffset: 11 }),
         algoItem({ id: "c", width: 5, yOffset: 5 }),
       ];
 
@@ -64,10 +64,10 @@ describe("Grid Algorithm", () => {
       });
 
       const rootItems = newItems.items.filter((item) => item.sectionId === ROOT_SECTION_ID);
-      const outerSection = items.find((item) => item.id === outerDynamicSectionId);
-      const outerItems = newItems.items.filter((item) => item.sectionId === outerDynamicSectionId);
-      const innerSection = items.find((item) => item.id === innerDynamicSectionId);
-      const innerItems = newItems.items.filter((item) => item.sectionId === innerDynamicSectionId);
+      const outerSection = items.find((item) => item.id === outerContainerId);
+      const outerItems = newItems.items.filter((item) => item.sectionId === outerContainerId);
+      const innerSection = items.find((item) => item.id === innerContainerId);
+      const innerItems = newItems.items.filter((item) => item.sectionId === innerContainerId);
 
       expect(generateOutputText(rootItems, testInput.outputColumns)).toBe(testInput.root);
       expect(generateOutputText(outerItems, Math.min(testInput.outputColumns, outerSection?.width ?? 999))).toBe(
@@ -78,6 +78,26 @@ describe("Grid Algorithm", () => {
       );
     },
   );
+
+  test("stops projecting a corrupted recursive section graph", () => {
+    const recursiveSection = algoItem({ id: "recursive", type: "section", width: 3 });
+    const duplicateRecursiveLayout = algoItem({
+      id: "recursive",
+      type: "section",
+      width: 3,
+      sectionId: "recursive",
+    });
+
+    const result = generateResponsiveGridFor({
+      items: [recursiveSection, duplicateRecursiveLayout],
+      width: 3,
+      previousWidth: 12,
+      sectionId: ROOT_SECTION_ID,
+    });
+
+    expect(result.items).toContainEqual(expect.objectContaining({ id: "recursive", sectionId: ROOT_SECTION_ID }));
+    expect(result.items).toHaveLength(2);
+  });
 });
 
 const algoItem = (item: Partial<GridAlgorithmItem>): GridAlgorithmItem => ({
@@ -192,7 +212,7 @@ const itemTests = [
   },
 ].map((item) => [item.inputColumnCount, item.outputColumnCount, item] as const);
 
-const dynamicSectionTests = [
+const containerTests = [
   {
     outputColumns: 16,
     root: `

@@ -1,0 +1,30 @@
+---
+title: "Timer / Pomodoro"
+description: "Runs a simple timer or a configurable Pomodoro sequence."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { timerWidget } from ".";
+
+<WidgetHeader widget={timerWidget} categories={["Productivity", "Time"]} />
+
+The Timer / Pomodoro widget runs in the browser without an integration. Timer mode uses one duration; Pomodoro mode
+alternates configurable focus, short-break, and long-break phases.
+
+Progress and alert preferences are stored per board and widget in the current browser. Notifications can fire only
+while Homarr is open.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={timerWidget.configuration} />

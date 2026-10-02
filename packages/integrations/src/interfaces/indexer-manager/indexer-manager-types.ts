@@ -1,12 +1,12 @@
 export interface Indexer {
-  id: number;
+  id: number | string;
   name: string;
   url: string;
   /**
    * Enabled: when the user enable / disable the indexer.
    * Status: when there is an error with the indexer site.
-   * If one of the options are false the indexer is off.
+   * A null status means the provider does not expose health.
    */
   enabled: boolean;
-  status: boolean;
+  status: boolean | null;
 }

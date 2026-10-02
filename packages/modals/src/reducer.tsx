@@ -94,6 +94,8 @@ const getModal = <TModal extends ModalDefinition>(modal: ModalState<TModal>) => 
   const ModalContent = modal.modal.component;
 
   const { innerProps, ...rest } = modal.props;
+  let closeInterceptor: (() => boolean) | null = null;
+
   const FullModal = () => {
     const context = useContext(ModalContext);
 
@@ -106,6 +108,9 @@ const getModal = <TModal extends ModalDefinition>(modal: ModalState<TModal>) => 
         innerProps={innerProps}
         actions={{
           closeModal: () => context.closeModal(modal.id),
+          setCloseInterceptor: (interceptor: (() => boolean) | null) => {
+            closeInterceptor = interceptor;
+          },
         }}
       />
     );
@@ -114,5 +119,11 @@ const getModal = <TModal extends ModalDefinition>(modal: ModalState<TModal>) => 
   return {
     modalProps: rest,
     content: <FullModal />,
+    onCloseRequest: () => {
+      if (closeInterceptor) {
+        return closeInterceptor();
+      }
+      return true;
+    },
   };
 };

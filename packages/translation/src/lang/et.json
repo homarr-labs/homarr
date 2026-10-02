@@ -688,211 +688,6 @@
       "add": "Lisa rakendus"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Kohandatud vidinad",
-        "noResults": "Kohandatud vidinaid veel pole. Loo esimene!",
-        "loading": "Laadimine..."
-      },
-      "create": {
-        "title": "Loo kohandatud vidin",
-        "subtitle": "Määra API URL, autentimine ja vastuseandmete kuvamisviis."
-      },
-      "edit": {
-        "title": "Muuda kohandatud vidinat"
-      }
-    },
-    "action": {
-      "create": "Loo",
-      "import": "Impordi",
-      "save": "Salvesta",
-      "delete": "Kustuta kohandatud vidin",
-      "deleteConfirm": "Kas oled kindel, et soovid „{name}“ kustutada? Seda toimingut ei saa tagasi võtta.",
-      "export": "Ekspordi",
-      "addMapping": "Lisa vastendus",
-      "addColumn": "Lisa veerg",
-      "edit": "Muuda",
-      "removeMapping": "Eemalda vastendus",
-      "removeColumn": "Eemalda veerg",
-      "addItem": "Lisa üksus",
-      "removeItem": "Eemalda üksus",
-      "addBar": "Lisa riba",
-      "duplicate": "Dubleeri",
-      "copyAiPrompt": "Kopeeri tehisintellekti viip",
-      "enable": "Luba",
-      "disable": "Keela",
-      "menu": "Toimingud"
-    },
-    "field": {
-      "name": "Nimi",
-      "description": "Kirjeldus",
-      "iconUrl": "Ikooni URL",
-      "url": "URL",
-      "authType": "Autentimise tüüp",
-      "headerName": "Päise/päringuparameetri nimi",
-      "method": "Meetod",
-      "requestBody": "Päringu sisu",
-      "displayType": "Kuvatüüp",
-      "jsonPath": "JSON-i tee",
-      "jsonPathHint": "Kasuta väärtuste eraldamiseks JSONPathi süntaksit, nt $.data.temperature või $.items[0].name",
-      "label": "Silt",
-      "unit": "Ühik",
-      "mappings": "Vastendused",
-      "tablePath": "Massiivi JSON-i tee",
-      "tablePathHint": "Vastuses oleva massiivi tee, nt $.data.items",
-      "columns": "Veerud",
-      "header": "Päis",
-      "items": "Üksused",
-      "gridColumns": "Ruudustiku veerud",
-      "cardStyle": "Kaardi stiil",
-      "bars": "Ribad",
-      "valuePath": "Väärtuse JSON-i tee",
-      "maxPath": "Maksimumväärtuse JSON-i tee",
-      "showPercentage": "Kuva protsent",
-      "barSize": "Riba suurus",
-      "goodValues": "Head väärtused (komadega eraldatud)",
-      "dotSize": "Täpi suurus",
-      "valueSize": "Väärtuse suurus",
-      "labelPosition": "Sildi asukoht",
-      "kvLayout": "Paigutus",
-      "striped": "Triibulised read",
-      "compact": "Kompaktrežiim",
-      "maxHeight": "Maksimaalne kõrgus (px)",
-      "color": "Värv",
-      "buttonLabel": "Nupu silt",
-      "buttonColor": "Nupu värv",
-      "confirmText": "Kinnitustekst",
-      "confirmTextHint": "Määramisel kuvatakse enne päringu täitmist kinnitusdialoog",
-      "successMessage": "Õnnestumisteade",
-      "successMessageHint": "Pärast edukat täitmist kuvatav teade",
-      "enabled": "Lubatud",
-      "template": {
-        "label": "JSX-mall",
-        "description": "Mantine'i JSX-mall. Juurdepääs API vastuse väljadele andmesidemete kaudu (nt data.name). Kasuta ainult lubatud komponente. Keelatud: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Protsessori temperatuur",
-      "exampleLabelShort": "Protsessori temp",
-      "exampleHeader": "Nimi",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.nimi",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "sinine"
-    },
-    "cardStyleOption": {
-      "filled": "Täidetud",
-      "outline": "Kontuur",
-      "subtle": "Tagasihoidlik"
-    },
-    "layoutOption": {
-      "list": "Loend",
-      "grid": "Ruudustik"
-    },
-    "sizeOption": {
-      "sm": "Väike",
-      "md": "Keskmine",
-      "lg": "Suur",
-      "xl": "Eriti suur"
-    },
-    "labelPositionOption": {
-      "above": "Ülal",
-      "below": "All"
-    },
-    "fieldset": {
-      "general": "Üldine",
-      "connection": "API-ühendus",
-      "display": "Kuvamise seadistus"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Kuva üks eraldatud väärtus koos sildi ja ühikuga",
-      "keyValue": "Kuva mitu sildistatud väärtust kõrvuti",
-      "table": "Kuva andmeread tabelivormingus",
-      "statGrid": "Värvilised statistikakaardid ruudustikus — nagu Pi-Hole'i või Speedtesti vidinad",
-      "progressBars": "Kettakasutust, mälu või kvoote näitavad edenemisribad",
-      "statusIndicator": "Värvilised olekutäpid, mis näitavad ühendust/ühenduse puudumist või seisundit",
-      "countGrid": "Kompaktsed arvu ja sildi loendurid tihedas ruudustikus",
-      "raw": "Ilusti vormindatud JSON-väljund silumiseks",
-      "actionButton": "Nupp, mis klõpsamisel käivitab päringu",
-      "customJsx": "Kohandatud JSX-paigutus lubatud Mantine'i komponentidega ja täieliku API-andmesidemega"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Pole",
-      "bearer": "Bearer-märk",
-      "basic": "Põhiautentimine",
-      "apiKeyHeader": "API-võti (päis)",
-      "apiKeyQuery": "API-võti (päring)"
-    },
-    "displayType": {
-      "singleValue": "Üks väärtus",
-      "keyValue": "Võti-väärtus",
-      "table": "Tabel",
-      "statGrid": "Statistikaruudustik",
-      "progressBars": "Edenemisribad",
-      "statusIndicator": "Olekunäidik",
-      "countGrid": "Loenduriruudustik",
-      "raw": "Töötlemata JSON",
-      "actionButton": "Toimingu nupp",
-      "customJsx": "Kohandatud JSX"
-    },
-    "secret": {
-      "apiKey": "API-võti / märk",
-      "username": "Kasutajanimi",
-      "password": "Parool",
-      "savedPlaceholder": "••••••• (salvestatud, jätmiseks tühjaks)"
-    },
-    "preview": {
-      "title": "Eelvaade",
-      "test": "Testi",
-      "hint": "Klõpsa nupul Testi, et vaadata API vastust praeguse seadistusega.",
-      "rawResponse": "Töötlemata JSON-vastus"
-    },
-    "notification": {
-      "created": "Vidin „{name}“ loodi edukalt.",
-      "updated": "Vidinat „{name}“ värskendati edukalt.",
-      "deleted": "Vidin „{name}“ kustutati.",
-      "imported": "Vidin imporditi edukalt.",
-      "aiPromptCopied": "AI viip kopeeritud lõikelauale",
-      "aiPromptDescription": "Kopeeri valmis viip, et kleepida see mis tahes tehisintellekti vestlusrobotisse (ChatGPT, Claude, Gemini...). See sisaldab vidina täielikku skeemi ja API vastust, et tehisintellekt saaks luua valmis imporditava JSON-seadistuse.",
-      "aiPromptCopy": "Kopeeri lõikelauale",
-      "aiPromptNoResponse": "Nõuanne: paremate tulemuste saamiseks käivita esmalt test, et lisada viipa API vastus.",
-      "aiPromptCopyError": "Viiba kopeerimine lõikelauale nurjus. Sinu veebibrauser ei pruugi seda funktsiooni toetada.",
-      "createError": "Vidina loomine nurjus. Kontrolli, kas API lõpp-punkt on kättesaadav.",
-      "updateError": "Vidina värskendamine nurjus. Muudatusi ei salvestatud.",
-      "importError": "Vidina importimine nurjus. Veendu, et fail oleks sobiv kohandatud vidina JSON-eksport.",
-      "exportError": "Vidina eksportimine nurjus.",
-      "duplicated": "Vidin „{name}“ dubleeriti.",
-      "duplicateError": "Vidina dubleerimine nurjus.",
-      "toggleError": "Vidina oleku lülitamine nurjus.",
-      "deleteError": "Vidina kustutamine nurjus.",
-      "previewError": "Eelvaate toomine nurjus. Kontrolli URL-i ja proovi uuesti.",
-      "executed": "Toiming õnnestus.",
-      "executeError": "Toiming nurjus: {error}"
-    },
-    "table": {
-      "name": "Nimi",
-      "url": "URL",
-      "display": "Kuvamine"
-    },
-    "widget": {
-      "disabled": "See vidin on keelatud"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Pilvepõhine pöördproksi ja koormusjaotur"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Jälgige, millistel teie Dockeri konteineritel on pildivärskendusi saadaval."
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumendihaldussüsteem skannitud dokumentide arhiveerimiseks ja korrastamiseks"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Sonarri ja Radarri kaasrakendus, mis haldab ja laadib alla subtiitreid"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Jälgige, millistel teie Dockeri konteineritel on pildivärskendusi saadaval."
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "siin",
     "iconPicker": {
       "label": "Ikooni URL",
-      "description": "Otsi teegist, kleebi pildi URL või laadi fail üles.",
       "header": "Sisesta nimi või objektid ikoonide filtreerimiseks... Homarr otsib {countIcons} ikooni seast",
       "headerLoading": "Otsi pilte nime järgi",
+      "noResults": "Otsingule „{search}“ vastavaid ikoone pole.",
+      "error": "Ikoonide laadimine nurjus.",
+      "description": "Otsi teegist, kleebi pildi URL või laadi fail üles.",
       "clear": "Eemalda pilt",
       "uploadImage": "Laadi pilt üles",
       "results": "Pildiotsingu tulemused",
@@ -1452,9 +1249,7 @@
       "otherImages": "Teised pildid",
       "urlLoading": "Pildi kontrollimine…",
       "urlReady": "Pilt on kasutamiseks valmis",
-      "urlError": "Seda pilti ei õnnestunud laadida. Kontrolli URL-i ja proovi uuesti.",
-      "noResults": "Otsingule „{search}“ vastavaid ikoone pole.",
-      "error": "Ikoonide laadimine nurjus."
+      "urlError": "Seda pilti ei õnnestunud laadida. Kontrolli URL-i ja proovi uuesti."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Kuva edastusteated"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Näita, mitu jälgitavat konteinerit on uuendusi saadaval.",
-      "title": "What's Up Docker",
-      "monitored": "Jälgitud",
-      "updatesAvailable": "{count, plural, one {# uuendus saadaval} other {# uuendust saadaval}}",
-      "updateAvailable": "Uuendus saadaval",
-      "openReleaseNotes": "Ava väljalaskemärkmed",
-      "option": {
-        "showTitle": {
-          "label": "Näita pealkirja"
-        },
-        "showRing": {
-          "label": "Näita uuenduste rõngast"
-        },
-        "layout": {
-          "label": "Paigutus",
-          "option": {
-            "horizontal": {
-              "label": "Horisontaalne"
-            },
-            "vertical": {
-              "label": "Vertikaalne"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Näita konteinerite uuenduste loendit",
-          "description": "Loetleb iga jälgitava konteineri, millel on pildiuuendus saadaval"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Teave",
         "processor": "Protsessor: {cpuModelName}",
-        "memory": "Mälu: {memory} GiB",
-        "memoryAvailable": "Saadaval: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Mälu: {memory}",
+        "memoryAvailable": "Saadaval: {memoryAvailable} ({percent}%)",
         "version": "Versioon: {version}",
         "uptime": "Tööaeg: {months} kuud, {days} päeva, {hours} tundi, {minutes} minutit",
         "loadAverage": "Keskmine koormus:",
@@ -2874,193 +2637,6 @@
         "internalServerError": "Paperless-ngx andmete toomine nurjus"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Hostide paikade oleku ülevaade PatchMonist",
-      "title": "PatchMoni statistika",
-      "totalHosts": "Hoste kokku",
-      "hostsNeedingUpdates": "Vajavad uuendusi",
-      "securityUpdates": "Turvauuendused",
-      "upToDateHosts": "Ajakohased hostid",
-      "hostsWithSecurityUpdates": "Turvauuendustega hostid",
-      "recentUpdates24h": "Uuendused (24 h)",
-      "totalOutdatedPackages": "Aegunud paketid",
-      "totalRepos": "Hoidlad",
-      "osDistribution": "Operatsioonisüsteemide jaotus",
-      "compliance": "Paikade vastavus",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Uuendatud {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Kuva hostide koguarv",
-          "description": "Kuva jälgitavate hostide koguarv"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Kuva uuendusi vajavad hostid",
-          "description": "Kuva hostid, millel on vähemalt üks aegunud pakett"
-        },
-        "showSecurityUpdates": {
-          "label": "Kuva turvauuendused",
-          "description": "Kuva saadaolevate turvauuenduste koguarv"
-        },
-        "showUpToDateHosts": {
-          "label": "Kuva ajakohased hostid",
-          "description": "Kuva hostid, millel pole aegunud pakette"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Kuva turvauuendustega hostid",
-          "description": "Kuva turvapaiku vajavad hostid"
-        },
-        "showRecentUpdates24h": {
-          "label": "Kuva hiljutised uuendused (24 h)",
-          "description": "Kuva viimase 24 tunni jooksul rakendatud uuenduste arv"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Kuva aegunud paketid",
-          "description": "Kuva kõigi hostide aegunud pakettide koguarv"
-        },
-        "showTotalRepos": {
-          "label": "Kuva hoidlad",
-          "description": "Kuva jälgitavate aktiivsete hoidlate arv"
-        },
-        "enableThresholdColors": {
-          "label": "Luba läviväärtuste värvid",
-          "description": "Värvi statistikanäitajad raskusastme eelseadete alusel roheliseks, kollaseks või punaseks"
-        },
-        "useCustomThresholds": {
-          "label": "Täpsemad läviväärtused",
-          "description": "Kohanda iga statistikanäitaja hoiatuse ja kriitilisi läviväärtusi absoluutarvude või hostide koguarvu protsentidena"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Absoluutarv",
-            "percent": "Hostide koguarvu protsent"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Uuendusi vajavate hostide läviväärtuse režiim",
-          "description": "Võrdle uuendusi vajavate hostide arvu absoluutväärtuse või hostide koguarvu protsendina"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Uuendusi vajavate hostide hoiatuse läviväärtus",
-          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Uuendusi vajavate hostide kriitiline läviväärtus",
-          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Turvauuenduste läviväärtuse režiim",
-          "description": "Võrdle turvauuenduste arvu absoluutväärtuse või hostide koguarvu protsendina"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Turvauuenduste hoiatuse läviväärtus",
-          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Turvauuenduste kriitiline läviväärtus",
-          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Turvauuendustega hostide läviväärtuse režiim",
-          "description": "Võrdle hostide arvu absoluutväärtuse või hostide koguarvu protsendina"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Turvauuendustega hostide hoiatuse läviväärtus",
-          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Turvauuendustega hostide kriitiline läviväärtus",
-          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Ajakohaste hostide läviväärtuse režiim",
-          "description": "Võrdle ajakohaste hostide arvu absoluutväärtuse või hostide koguarvu protsendina"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Ajakohaste hostide hoiatuse läviväärtus",
-          "description": "Kuva kollane, kui väärtus on sellel läviväärtusel või sellest suurem, kuid täielik katvus pole saavutatud"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Ajakohaste hostide kriitiline läviväärtus",
-          "description": "Kuva punane, kui väärtus langeb sellest läviväärtusest allapoole"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Aegunud pakettide läviväärtuse režiim",
-          "description": "Võrdle aegunud pakettide arvu absoluutväärtuse või hostide koguarvu protsendina"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Aegunud pakettide hoiatuse läviväärtus",
-          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Aegunud pakettide kriitiline läviväärtus",
-          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
-        },
-        "showOsDistribution": {
-          "label": "Kuva operatsioonisüsteemide jaotus",
-          "description": "Kuva jälgitavate hostide jaotus operatsioonisüsteemi järgi"
-        },
-        "osDistributionLimit": {
-          "label": "Operatsioonisüsteemide jaotuse piirang",
-          "description": "Kuvatavate operatsioonisüsteemide maksimaalne arv",
-          "option": {
-            "3": "3 parimat",
-            "5": "5 parimat",
-            "10": "10 parimat",
-            "all": "Kõik"
-          }
-        },
-        "showOsVersion": {
-          "label": "Kuva operatsioonisüsteemi versioon",
-          "description": "Lisa operatsioonisüsteemi versioon võimaluse korral iga jaotuse sildile"
-        },
-        "showComplianceHero": {
-          "label": "Kuva vastavuse põhinäitaja",
-          "description": "Kuva vastavusrõngas, mis näitab ajakohaste hostide protsenti"
-        },
-        "osDisplayMode": {
-          "label": "Operatsioonisüsteemi kuvamisrežiim",
-          "description": "Vali, kuidas operatsioonisüsteemide jaotust kuvada",
-          "option": {
-            "bars": "Horisontaalsed ribad",
-            "donut": "Rõngasdiagramm"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "PatchMoni andmete toomine nurjus"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Bazarr'i eksemplari puuduvate subtiitrite ja seisundi ülevaade",
-      "episodes": "Puuduvad osad",
-      "movies": "Puuduvad filmid",
-      "providers": "Teenusepakkujate probleemid",
-      "status": "Seisundiprobleemid",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Kuva puuduvad osad",
-          "description": "Kuva subtiitriteta osade arv"
-        },
-        "showMissingMovies": {
-          "label": "Kuva puuduvad filmid",
-          "description": "Kuva subtiitriteta filmide arv"
-        },
-        "showProviderIssues": {
-          "label": "Kuva teenusepakkujate probleemid",
-          "description": "Kuva probleemidega subtiitriteenusepakkujate arv"
-        },
-        "showHealthIssues": {
-          "label": "Kuva seisundiprobleemid",
-          "description": "Kuva Bazarr'i seisundiprobleemide arv"
-        }
-      },
-      "error": {
-        "internalServerError": "Bazarr'i andmete toomine nurjus"
-      }
-    },
     "immich-serverStats": {
       "name": "Immichi serveri statistika",
       "description": "Teave sinu Immichi eksemplari kohta",
@@ -3137,7 +2713,7 @@
           "label": "Kuva lõpetatuks märgitud mitmesugused kirjed"
         },
         "activeTorrentThreshold": {
-          "label": "Peida lõpetatud torrent alla selle läve (kiB/s)"
+          "label": "Peida lõpetatud torrent alla selle läve"
         },
         "categoryFilter": {
           "label": "Filtreeritavad kategooriad/sildid"
@@ -3432,35 +3008,6 @@
           }
         }
       }
-    },
-    "mediaMissing": {
-      "name": "Puuduv ja järjekorras olev meedia",
-      "description": "Kuvab Radarrist ja Sonarrist puuduvad ning järjekorras olevad filmid ja osad",
-      "option": {
-        "showMissing": {
-          "label": "Kuva puuduvad üksused"
-        },
-        "showQueued": {
-          "label": "Kuva järjekorras olevad üksused"
-        },
-        "pageSize": {
-          "label": "Üksusi lehel"
-        }
-      },
-      "tab": {
-        "missing": "Puuduvad",
-        "queued": "Järjekorras"
-      },
-      "type": {
-        "movie": "Film",
-        "episode": "Osa"
-      },
-      "empty": {
-        "missing": "Puuduvaid üksusi pole",
-        "queued": "Järjekorras olevaid üksusi pole",
-        "noTabsEnabled": "Luba vidina seadetes vähemalt üks vahekaart"
-      },
-      "timeLeft": "Aega jäänud"
     },
     "rssFeed": {
       "name": "RSS-voogud",
@@ -3790,40 +3337,6 @@
         "internalServerError": "Tööaja andmete toomine nurjus"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Traefiku ruuterite, teenuste, vahevara ja sisenemispunktide ülevaade",
-      "option": {
-        "showTcp": {
-          "label": "Kuva TCP"
-        },
-        "showUdp": {
-          "label": "Kuva UDP"
-        },
-        "showEntryPoints": {
-          "label": "Kuva sisenemispunkte"
-        }
-      },
-      "instances": "Traefiku eksemplarid",
-      "versionUnknown": "Versioon teadmata",
-      "summary": {
-        "routers": "Ruuterid",
-        "entryPoints": "Sisenemispunktid"
-      },
-      "resource": {
-        "routers": "Ruuterid",
-        "services": "Teenused",
-        "middlewares": "Vahevarad"
-      },
-      "status": {
-        "healthy": "Terve",
-        "errors": "{count} viga",
-        "warnings": "{count} hoiatust"
-      },
-      "error": {
-        "internalServerError": "Traefiku andmete toomine nurjus"
-      }
-    },
     "audioStats": {
       "name": "Helistatistika",
       "description": "Navidrome'i või Audiobookshelfi kogu- ja taasesitusstatistika",
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "Ebatervislik"
       }
-    },
-    "customApi": {
-      "name": "Kohandatud API",
-      "description": "Kuva mis tahes välise API andmeid kohandatud seadistusega.",
-      "option": {
-        "definitionId": {
-          "label": "Määratluse ID"
-        },
-        "refreshInterval": {
-          "label": "Värskendusintervall",
-          "description": "Kui sageli API-st andmeid uuesti tuua (sekundites)"
-        }
-      },
-      "noDefinition": "Määratlust pole valitud",
-      "definitionNotFound": "Vidina määratlust ei leitud. See võidi kustutada.",
-      "noDisplayOutput": "Kuvaväljund puudub",
-      "executeConfirm": "Kas oled kindel, et soovid selle toimingu käivitada?",
-      "executing": "Käivitamine...",
-      "executeSuccess": "Toiming õnnestus",
-      "executeFailed": "Toiming nurjus. Kontrolli vidina seadistust."
     },
     "beszelSystemTable": {
       "name": "Beszeli süsteemid (tabel)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "Dockeri võrgu I/O",
           "subtitle": "Dockeri konteinerite võrguliiklus"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Hostide paikade oleku ülevaade PatchMonist",
+      "title": "PatchMoni statistika",
+      "totalHosts": "Hoste kokku",
+      "hostsNeedingUpdates": "Vajavad uuendusi",
+      "securityUpdates": "Turvauuendused",
+      "upToDateHosts": "Ajakohased hostid",
+      "hostsWithSecurityUpdates": "Turvauuendustega hostid",
+      "recentUpdates24h": "Uuendused (24 h)",
+      "totalOutdatedPackages": "Aegunud paketid",
+      "totalRepos": "Hoidlad",
+      "osDistribution": "Operatsioonisüsteemide jaotus",
+      "compliance": "Paikade vastavus",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Uuendatud {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Kuva hostide koguarv",
+          "description": "Kuva jälgitavate hostide koguarv"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Kuva uuendusi vajavad hostid",
+          "description": "Kuva hostid, millel on vähemalt üks aegunud pakett"
+        },
+        "showSecurityUpdates": {
+          "label": "Kuva turvauuendused",
+          "description": "Kuva saadaolevate turvauuenduste koguarv"
+        },
+        "showUpToDateHosts": {
+          "label": "Kuva ajakohased hostid",
+          "description": "Kuva hostid, millel pole aegunud pakette"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Kuva turvauuendustega hostid",
+          "description": "Kuva turvapaiku vajavad hostid"
+        },
+        "showRecentUpdates24h": {
+          "label": "Kuva hiljutised uuendused (24 h)",
+          "description": "Kuva viimase 24 tunni jooksul rakendatud uuenduste arv"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Kuva aegunud paketid",
+          "description": "Kuva kõigi hostide aegunud pakettide koguarv"
+        },
+        "showTotalRepos": {
+          "label": "Kuva hoidlad",
+          "description": "Kuva jälgitavate aktiivsete hoidlate arv"
+        },
+        "enableThresholdColors": {
+          "label": "Luba läviväärtuste värvid",
+          "description": "Värvi statistikanäitajad raskusastme eelseadete alusel roheliseks, kollaseks või punaseks"
+        },
+        "useCustomThresholds": {
+          "label": "Täpsemad läviväärtused",
+          "description": "Kohanda iga statistikanäitaja hoiatuse ja kriitilisi läviväärtusi absoluutarvude või hostide koguarvu protsentidena"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absoluutarv",
+            "percent": "Hostide koguarvu protsent"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Uuendusi vajavate hostide läviväärtuse režiim",
+          "description": "Võrdle uuendusi vajavate hostide arvu absoluutväärtuse või hostide koguarvu protsendina"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Uuendusi vajavate hostide hoiatuse läviväärtus",
+          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Uuendusi vajavate hostide kriitiline läviväärtus",
+          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Turvauuenduste läviväärtuse režiim",
+          "description": "Võrdle turvauuenduste arvu absoluutväärtuse või hostide koguarvu protsendina"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Turvauuenduste hoiatuse läviväärtus",
+          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Turvauuenduste kriitiline läviväärtus",
+          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Turvauuendustega hostide läviväärtuse režiim",
+          "description": "Võrdle hostide arvu absoluutväärtuse või hostide koguarvu protsendina"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Turvauuendustega hostide hoiatuse läviväärtus",
+          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Turvauuendustega hostide kriitiline läviväärtus",
+          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Ajakohaste hostide läviväärtuse režiim",
+          "description": "Võrdle ajakohaste hostide arvu absoluutväärtuse või hostide koguarvu protsendina"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Ajakohaste hostide hoiatuse läviväärtus",
+          "description": "Kuva kollane, kui väärtus on sellel läviväärtusel või sellest suurem, kuid täielik katvus pole saavutatud"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Ajakohaste hostide kriitiline läviväärtus",
+          "description": "Kuva punane, kui väärtus langeb sellest läviväärtusest allapoole"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Aegunud pakettide läviväärtuse režiim",
+          "description": "Võrdle aegunud pakettide arvu absoluutväärtuse või hostide koguarvu protsendina"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Aegunud pakettide hoiatuse läviväärtus",
+          "description": "Kuva kollane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Aegunud pakettide kriitiline läviväärtus",
+          "description": "Kuva punane, kui väärtus jõuab selle läviväärtuseni"
+        },
+        "showOsDistribution": {
+          "label": "Kuva operatsioonisüsteemide jaotus",
+          "description": "Kuva jälgitavate hostide jaotus operatsioonisüsteemi järgi"
+        },
+        "osDistributionLimit": {
+          "label": "Operatsioonisüsteemide jaotuse piirang",
+          "description": "Kuvatavate operatsioonisüsteemide maksimaalne arv",
+          "option": {
+            "3": "3 parimat",
+            "5": "5 parimat",
+            "10": "10 parimat",
+            "all": "Kõik"
+          }
+        },
+        "showOsVersion": {
+          "label": "Kuva operatsioonisüsteemi versioon",
+          "description": "Lisa operatsioonisüsteemi versioon võimaluse korral iga jaotuse sildile"
+        },
+        "showComplianceHero": {
+          "label": "Kuva vastavuse põhinäitaja",
+          "description": "Kuva vastavusrõngas, mis näitab ajakohaste hostide protsenti"
+        },
+        "osDisplayMode": {
+          "label": "Operatsioonisüsteemi kuvamisrežiim",
+          "description": "Vali, kuidas operatsioonisüsteemide jaotust kuvada",
+          "option": {
+            "bars": "Horisontaalsed ribad",
+            "donut": "Rõngasdiagramm"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "PatchMoni andmete toomine nurjus"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Bazarr'i eksemplari puuduvate subtiitrite ja seisundi ülevaade",
+      "episodes": "Puuduvad osad",
+      "movies": "Puuduvad filmid",
+      "providers": "Teenusepakkujate probleemid",
+      "status": "Seisundiprobleemid",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Kuva puuduvad osad",
+          "description": "Kuva subtiitriteta osade arv"
+        },
+        "showMissingMovies": {
+          "label": "Kuva puuduvad filmid",
+          "description": "Kuva subtiitriteta filmide arv"
+        },
+        "showProviderIssues": {
+          "label": "Kuva teenusepakkujate probleemid",
+          "description": "Kuva probleemidega subtiitriteenusepakkujate arv"
+        },
+        "showHealthIssues": {
+          "label": "Kuva seisundiprobleemid",
+          "description": "Kuva Bazarr'i seisundiprobleemide arv"
+        }
+      },
+      "error": {
+        "internalServerError": "Bazarr'i andmete toomine nurjus"
+      }
+    },
+    "mediaMissing": {
+      "name": "Puuduv ja järjekorras olev meedia",
+      "description": "Kuvab Radarrist ja Sonarrist puuduvad ning järjekorras olevad filmid ja osad",
+      "option": {
+        "showMissing": {
+          "label": "Kuva puuduvad üksused"
+        },
+        "showQueued": {
+          "label": "Kuva järjekorras olevad üksused"
+        },
+        "pageSize": {
+          "label": "Üksusi lehel"
+        }
+      },
+      "tab": {
+        "missing": "Puuduvad",
+        "queued": "Järjekorras"
+      },
+      "type": {
+        "movie": "Film",
+        "episode": "Osa"
+      },
+      "empty": {
+        "missing": "Puuduvaid üksusi pole",
+        "queued": "Järjekorras olevaid üksusi pole",
+        "noTabsEnabled": "Luba vidina seadetes vähemalt üks vahekaart"
+      },
+      "timeLeft": "Aega jäänud"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Traefiku ruuterite, teenuste, vahevara ja sisenemispunktide ülevaade",
+      "option": {
+        "showTcp": {
+          "label": "Kuva TCP"
+        },
+        "showUdp": {
+          "label": "Kuva UDP"
+        },
+        "showEntryPoints": {
+          "label": "Kuva sisenemispunkte"
+        }
+      },
+      "instances": "Traefiku eksemplarid",
+      "versionUnknown": "Versioon teadmata",
+      "summary": {
+        "routers": "Ruuterid",
+        "entryPoints": "Sisenemispunktid"
+      },
+      "resource": {
+        "routers": "Ruuterid",
+        "services": "Teenused",
+        "middlewares": "Vahevarad"
+      },
+      "status": {
+        "healthy": "Terve",
+        "errors": "{count} viga",
+        "warnings": "{count} hoiatust"
+      },
+      "error": {
+        "internalServerError": "Traefiku andmete toomine nurjus"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Näita, mitu jälgitavat konteinerit on uuendusi saadaval.",
+      "title": "What's Up Docker",
+      "monitored": "Jälgitud",
+      "updatesAvailable": "{count, plural, one {# uuendus saadaval} other {# uuendust saadaval}}",
+      "updateAvailable": "Uuendus saadaval",
+      "openReleaseNotes": "Ava väljalaskemärkmed",
+      "option": {
+        "showTitle": {
+          "label": "Näita pealkirja"
+        },
+        "showRing": {
+          "label": "Näita uuenduste rõngast"
+        },
+        "layout": {
+          "label": "Paigutus",
+          "option": {
+            "horizontal": {
+              "label": "Horisontaalne"
+            },
+            "vertical": {
+              "label": "Vertikaalne"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Näita konteinerite uuenduste loendit",
+          "description": "Loetleb iga jälgitava konteineri, millel on pildiuuendus saadaval"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Kodu",
         "boards": "Paneelid",
         "apps": "Rakendused",
         "integrations": "Integratsioonid",
-        "customWidgets": "Kohandatud vidinad",
         "searchEngies": "Otsingumootorid",
         "medias": "Meedia",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Lohista ZIP-varukoopia siia",
-              "description": "Aktsepteeritakse Homarr SQLite'i varukoopia .zip-faile (max 256 MB)"
+              "description": "Aktsepteeritakse Homarr SQLite'i varukoopia .zip-faile (max {maxSize})"
             },
             "analyzing": "Varukoopia analüüsimine...",
             "changeFile": "Muuda faili",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Halda",
       "boards": {
         "label": "Paneelid"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Muuda"
-        }
-      },
-      "custom-widgets": {
-        "label": "Kohandatud vidinad",
-        "new": {
-          "label": "Uus"
-        },
-        "edit": {
-          "label": "Muuda",
-          "flow": {
-            "label": "Voog"
-          }
         }
       },
       "users": {

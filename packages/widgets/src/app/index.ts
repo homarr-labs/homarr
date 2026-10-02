@@ -15,7 +15,8 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
-  queryKeys: [[["app", "byId"]], [["widget", "app"]]],
+  supportsAdvancedFocus: false,
+  queryKeys: [[["app", "byId"]], [["widget", "app", "ping"]]],
   createOptions(settings) {
     return optionsBuilder.from(
       (factory) => ({
@@ -54,7 +55,7 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
           options: [
             {
               label(t) {
-                return t("widget.app.option.layout.option.column");
+                return t("widget.common.layout.option.vertical");
               },
               value: "column",
               icon: IconLayoutNavbarExpand,
@@ -68,7 +69,7 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
             },
             {
               label(t) {
-                return t("widget.app.option.layout.option.row");
+                return t("widget.common.layout.option.horizontal");
               },
               value: "row",
               icon: IconLayoutSidebarLeftExpand,

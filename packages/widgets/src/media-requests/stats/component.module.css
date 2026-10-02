@@ -1,7 +1,25 @@
-[data-mantine-color-scheme="light"] .card {
-  background-color: var(--mantine-color-gray-1);
+.card {
+  background-color: transparent;
 }
 
-[data-mantine-color-scheme="dark"] .card {
-  background-color: var(--mantine-color-dark-7);
+.userCard {
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: transparent;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .userCard {
+    transition: none;
+  }
 }

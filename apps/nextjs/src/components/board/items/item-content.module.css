@@ -1,12 +1,58 @@
-.badge {
-  @mixin dark {
-    --background-color: rgb(from var(--mantine-color-dark-6) r g b / var(--opacity));
-    --border-color: rgb(from var(--mantine-color-dark-4) r g b / var(--opacity));
+.settingsButton {
+  position: absolute;
+  top: calc(var(--mantine-spacing-sm) / 2);
+  right: calc(var(--mantine-spacing-sm) / 2);
+  z-index: 201;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+:global([data-type="item"]:hover) .settingsButton,
+:global([data-type="item"]:focus-within) .settingsButton,
+.settingsButton[data-menu-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.editModeInertContent {
+  display: contents;
+}
+
+.editModeInertContent[data-board-grid-inert-content="true"] {
+  pointer-events: none;
+  user-select: none;
+}
+
+.editModeInertContent[data-board-grid-inert-content="true"] * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+.advancedFocusTrigger {
+  position: absolute;
+  top: var(--mantine-spacing-xs);
+  left: 50%;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.advancedFocusTrigger:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settingsButton {
+    transition: none;
   }
-  @mixin light {
-    --background-color: rgb(from var(--mantine-color-white) r g b / var(--opacity));
-    --border-color: rgb(from var(--mantine-color-gray-3) r g b / var(--opacity));
+}
+
+@media (max-width: 768px) {
+  .settingsButton {
+    opacity: 1;
+    pointer-events: auto;
   }
-  background-color: var(--background-color) !important;
-  border-color: var(--border-color) !important;
 }

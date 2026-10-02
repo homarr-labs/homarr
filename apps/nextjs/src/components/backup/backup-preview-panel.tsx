@@ -3,7 +3,7 @@
 import { Badge, Group, Paper, Stack, Table, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck, IconDatabase, IconGitBranch } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { BackupAnalysis } from "./types";
 import { PREVIEW_TABLE_KEYS } from "./types";
@@ -13,10 +13,25 @@ interface BackupPreviewPanelProps {
 }
 
 export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
-  const t = useScopedI18n("management.page.tool.backup.restore.preview");
+  const t = useI18n("management.page.tool.backup.restore.preview");
+  const tEntities = useI18n("common.entity");
   const exportDate = new Date(analysis.metadata.exportedAt).toLocaleString();
   const pendingCount = analysis.migrations.pending.length;
   const hasPendingMigrations = pendingCount > 0;
+  const entityKeys = {
+    app: "apps",
+    board: "boards",
+    integration: "integrations",
+    item: undefined,
+    media: "media",
+    search_engine: "searchEngines",
+    user: "users",
+  } as const;
+  const getEntityLabel = (key: (typeof PREVIEW_TABLE_KEYS)[number]) => {
+    const entityKey = entityKeys[key];
+    if (entityKey) return tEntities(entityKey);
+    return t(`entities.${key}` as never);
+  };
 
   return (
     <Stack gap="md">
@@ -47,7 +62,7 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
             <Table.Tbody>
               {PREVIEW_TABLE_KEYS.map((key) => (
                 <Table.Tr key={key}>
-                  <Table.Td>{t(`entities.${key}` as never)}</Table.Td>
+                  <Table.Td>{getEntityLabel(key)}</Table.Td>
                   <Table.Td ta="right">
                     <Group gap={4} justify="flex-end">
                       {(analysis.counts[key] ?? 0) > 0 && <IconCheck size={14} color="var(--mantine-color-green-6)" />}
@@ -64,7 +79,7 @@ export const BackupPreviewPanel = ({ analysis }: BackupPreviewPanelProps) => {
           {analysis.boardNames.length > 0 && (
             <Group gap="xs" wrap="wrap">
               <Text size="sm" fw={500}>
-                {t("boards")}:
+                {tEntities("boards")}:
               </Text>
               {analysis.boardNames.map((name) => (
                 <Badge key={name} variant="light" size="sm">

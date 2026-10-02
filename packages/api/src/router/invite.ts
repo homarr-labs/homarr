@@ -32,6 +32,9 @@ export const inviteRouter = createTRPCRouter({
         path: "/api/invites",
         tags: ["invites"],
         protect: true,
+        summary: "List user invitations",
+        description:
+          "Return invitations with their expiration dates and creators, ordered by expiration. Invite tokens are excluded. Requires admin permission and credentials authentication to be enabled.",
       },
       mcp: { enabled: true, description: "List all user invites" },
     })
@@ -56,7 +59,7 @@ export const inviteRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(
       z.object({
-        expirationDate: z.date(),
+        expirationDate: z.iso.datetime({ offset: true }),
       }),
     )
     .output(z.object({ id: z.string(), token: z.string() }))
@@ -66,6 +69,9 @@ export const inviteRouter = createTRPCRouter({
         path: "/api/invites",
         tags: ["invites"],
         protect: true,
+        summary: "Create a user invitation",
+        description:
+          "Create a single-use invitation with the supplied expiration date and return its ID and registration token. Requires admin permission and credentials authentication to be enabled.",
       },
       mcp: {
         enabled: true,
@@ -80,7 +86,7 @@ export const inviteRouter = createTRPCRouter({
 
       await ctx.db.insert(invites).values({
         id,
-        expirationDate: input.expirationDate,
+        expirationDate: new Date(input.expirationDate),
         creatorId: ctx.session.user.id,
         token,
       });
@@ -104,6 +110,9 @@ export const inviteRouter = createTRPCRouter({
         path: "/api/invites/{id}",
         tags: ["invites"],
         protect: true,
+        summary: "Delete a user invitation",
+        description:
+          "Revoke an invitation by ID. Requires admin permission and credentials authentication to be enabled. Returns not found if the invitation does not exist.",
       },
       mcp: { enabled: true, description: "Delete an invite by ID. REQUIRED: id (invite ID string)" },
     })

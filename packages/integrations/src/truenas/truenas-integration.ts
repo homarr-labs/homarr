@@ -5,6 +5,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
@@ -24,12 +25,18 @@ const ERROR_MESSAGE_LIMIT = 200;
  */
 const describeRequestError = (error: unknown) => {
   const cause = error instanceof Error ? error.cause : undefined;
-  const reason = cause instanceof Error ? cause.message : error instanceof Error ? error.message : String(error);
-
-  return reason.length > ERROR_MESSAGE_LIMIT ? `${reason.slice(0, ERROR_MESSAGE_LIMIT)}…` : reason;
+  let reason = String(error);
+  if (error instanceof Error) reason = error.message;
+  if (cause instanceof Error) reason = cause.message;
+  if (reason.length > ERROR_MESSAGE_LIMIT) return `${reason.slice(0, ERROR_MESSAGE_LIMIT)}…`;
+  return reason;
 };
 
 export class TrueNasIntegration extends Integration implements ISystemHealthMonitoringIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    throw new Error("TrueNAS credentials authenticate its WebSocket API and cannot authenticate generic HTTP requests");
+  }
+
   private client?: TrueNasClient;
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -38,15 +45,16 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   }
 
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
-    const systemInformation = await this.getSystemInformationAsync();
-    const reporting = await this.getReportingAsync();
+    const [systemInformation, reporting, datasets, netdata] = await Promise.all([
+      this.getSystemInformationAsync(),
+      this.getReportingAsync(),
+      this.getPoolsAsync(),
+      this.getReportingNetdataAsync(),
+    ]);
 
     const cpuData = this.extractLatestReportingData(reporting, "cpu");
     const cpuTempData = this.extractLatestReportingData(reporting, "cputemp");
     const memoryData = this.extractLatestReportingData(reporting, "memory");
-    const datasets = await this.getPoolsAsync();
-
-    const netdata = await this.getReportingNetdataAsync();
 
     const upload = this.extractNetworkTrafficData(netdata, 2); // Index 2 is "sent"
     const download = this.extractNetworkTrafficData(netdata, 1); // Index 1 is "received"
@@ -61,13 +69,17 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       cpuTemp: Math.max(...cpuTempData.filter((_item, index) => index > 0)),
       memAvailableInBytes,
       memUsedInBytes,
-      fileSystem: datasets.map((dataset) => ({
-        deviceName: dataset.name,
-        available: `${dataset.available}`,
-        used: `${dataset.used}`,
-        percentage:
-          dataset.used + dataset.available === 0 ? 0 : (dataset.used / (dataset.used + dataset.available)) * 100,
-      })),
+      fileSystem: datasets.map((dataset) => {
+        const total = dataset.used + dataset.available;
+        let percentage = 0;
+        if (total > 0) percentage = (dataset.used / total) * 100;
+        return {
+          deviceName: dataset.name,
+          available: `${dataset.available}`,
+          used: `${dataset.used}`,
+          percentage,
+        };
+      }),
       availablePkgUpdates: 0,
       network: {
         up: upload * NETWORK_MULTIPLIER,

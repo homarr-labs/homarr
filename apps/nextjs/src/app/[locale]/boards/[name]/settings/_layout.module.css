@@ -1,0 +1,18 @@
+.gutterSettings {
+  background: color-mix(in srgb, var(--mantine-color-default) 55%, transparent);
+}
+
+.gutterControls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: var(--mantine-spacing-md);
+}
+
+.gutterControls > div {
+  min-width: 0;
+}
+
+.gutterWidth {
+  padding-inline: 4px;
+  padding-bottom: var(--mantine-spacing-lg);
+}

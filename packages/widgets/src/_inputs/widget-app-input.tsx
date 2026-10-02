@@ -17,8 +17,15 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
+const renderHereLink = (children: React.ReactNode) => (
+  <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
+    {children}
+  </Anchor>
+);
+
 export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tApp = useI18n("widget.common.app");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const { data: apps, isPending, refetch } = clientApi.app.selectable.useQuery();
@@ -38,7 +45,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
         label={tInput("label")}
         searchable
         leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
-        nothingFoundMessage={t("widget.common.app.noData")}
+        nothingFoundMessage={tApp("noData")}
         renderOption={renderSelectOption}
         data={
           apps?.map((app) => ({
@@ -49,13 +56,9 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
         }
         inputWrapperOrder={["label", "input", "description", "error"]}
         description={
-          <Text size="xs">
-            {t.rich("widget.common.app.description", {
-              here: () => (
-                <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
-                  {t("common.here")}
-                </Anchor>
-              ),
+          <Text component="span" size="xs">
+            {tApp.rich("description", {
+              here: () => renderHereLink(tCommon("here")),
             })}
           </Text>
         }
@@ -77,7 +80,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
             })
           }
         >
-          {t("widget.common.app.quickCreate")}
+          {tApp("quickCreate")}
         </Button>
       )}
     </SimpleGrid>

@@ -1,0 +1,95 @@
+---
+title: Workshop operator guide
+sidebar_label: Operator guide
+sidebar_position: 3
+tags:
+  - Workshop
+  - Deployment
+  - Environment variables
+  - PocketBase
+---
+
+# Workshop operator guide
+
+Workshop uses PocketBase. The production image serves the Workshop website and API from one origin and stores state in
+`/pb_data`.
+
+## Environment variables
+
+| Variable                               | Purpose                                      | Default                        |
+| -------------------------------------- | -------------------------------------------- | ------------------------------ |
+| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links | `https://homarr.dev`           |
+| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and docs       | `HOMARR_WEBSITE_URL`           |
+| `WORKSHOP_WEB_URL`                     | Public Workshop URL                          | `HOMARR_WEBSITE_URL/workshop`  |
+| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email         | Required in production         |
+| `PB_ALLOWED_ORIGINS`                   | Allowed browser origins                      | `*`                            |
+| `GITHUB_CLIENT_ID`                     | GitHub OAuth application ID                  | —                              |
+| `GITHUB_CLIENT_SECRET`                 | GitHub OAuth application secret              | —                              |
+| `OPENROUTER_API_KEY`                   | Enables the Homarr Assistant provider        | Provider disabled when empty   |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily request allowance             | `50`                           |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily request ceiling                 | `10000`                        |
+| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible upstream               | `https://openrouter.ai/api/v1` |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Upstream model behind `homarr/model`         | `openai/gpt-6-luna`            |
+
+Public URL variables accept HTTP(S) origins without embedded credentials, query strings, or fragments. Restart the
+container after changing runtime configuration.
+
+## Documentation search and AI
+
+The documentation uses Fumadocs search with an index generated during the website build. Search runs in the browser
+and needs no hosted search credentials or crawler.
+
+The **Ask AI** launcher connects to Kapa separately. `KAPA_WEBSITE_ID` is a public website integration ID, read when
+building the documentation. The default uses Homarr's integration. For a private deployment, pass your own ID or
+an empty value to disable it: `docker build --build-arg KAPA_WEBSITE_ID= -f apps/workshop/Dockerfile .`.
+Changing this value requires rebuilding the image; setting it on an already-built container has no effect.
+
+For your own Kapa integration, enable the deployment domain in Kapa and configure a Website Crawl source for your
+published docs. Preview the `main` content selector and verify extracted headings, code, and integration details.
+After a migration, refresh the source and check answer citations. `/llms.txt` alone does not configure Kapa ingestion.
+See the [Kapa website widget guide](https://docs.kapa.ai/integrations/website-widget/quickstart).
+
+## Authentication and email
+
+Configure both GitHub OAuth variables and use `https://<workshop-host>/api/oauth2-redirect` as the callback. Supplying
+only one OAuth variable is a startup error. Configure SMTP for comment, report, and removal notifications.
+
+For the central community, `PB_ALLOWED_ORIGINS=*` permits requests from self-hosted Homarr origins. A private deployment
+can use a comma-separated allowlist.
+
+## Homarr provider
+
+`OPENROUTER_API_KEY` enables the [Homarr provider](/docs/workshop/homarr-provider). The default is `openai/gpt-6-luna`
+with Max reasoning and a 32K combined reasoning/output budget. Remove an old `HOMARR_AI_OPENROUTER_MODEL` override or set
+it explicitly to this model when upgrading. OpenRouter selects an eligible provider for the model; Workshop does not
+pin a provider. Provider fallbacks remain disabled.
+
+For [BYOK](https://openrouter.ai/docs/guides/overview/auth/byok), configure your OpenAI key as a prioritized key in the
+same OpenRouter workspace as `OPENROUTER_API_KEY`. Set **Shared capacity fallback** to **Never use shared capacity for
+any model on this provider**. The request's `allow_fallbacks: false` prevents retrying another provider, but does not
+pin the initial provider or guarantee OpenAI BYOK billing. Use OpenRouter provider restrictions if required. Store the
+OpenAI key in OpenRouter, not in Workshop or Homarr clients.
+
+Workshop retains zero-data-retention routing and denies data collection. Your BYOK key must be eligible under those
+policies; configure any provider-agreement declaration only if it reflects your actual OpenAI agreement. An ineligible
+or unavailable key cannot make a non-ZDR route eligible. Other eligible providers may serve the model.
+
+Workshop does not retain prompts or responses and enforces per-user and global daily request limits. Keep spending
+controls on both the OpenAI account and OpenRouter workspace: request limits are not monetary limits, and OpenRouter
+fees can still apply to BYOK requests. Streaming responses include upstream token usage when reported.
+
+## Deployment
+
+The v2 image is `ghcr.io/homarr-labs/workshop:v2`; immutable `sha-<commit>` tags are preferable for promotion. The
+service listens on port 8090.
+
+When using a reverse proxy, forward the complete hostname, including `/api`, `/_/`, and
+`/workshop-runtime-config.js`. Use a dedicated hostname when Homarr already occupies the intended origin.
+
+Verify `/api/health`, the Workshop page, a public listing request, GitHub sign-in, and one installation after deployment.
+
+## Backup and restore
+
+Stop writes and copy `/pb_data` for a consistent backup. A restore replaces the selected PocketBase data directory, so
+preserve the current volume and verify that the backup contains `data.db` first. Rehearse the restore outside production
+and verify sign-in and one installation afterward.

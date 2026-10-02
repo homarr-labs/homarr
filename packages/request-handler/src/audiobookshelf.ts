@@ -1,4 +1,4 @@
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { AudiobookshelfDashboardData } from "@homarr/integrations/types";
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
@@ -8,6 +8,7 @@ export const audiobookshelfRequestHandler = createIntegrationRequestHandler<
   "audiobookshelf",
   Record<string, never>
 >({
+  cacheNamespace: "audiobookshelf:stats",
   async requestAsync(integration) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();

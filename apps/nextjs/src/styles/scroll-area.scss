@@ -1,3 +1,33 @@
+:where(*) {
+  scrollbar-width: thin;
+}
+
+@supports selector(::-webkit-scrollbar) {
+  // Non-auto scrollbar-width overrides pixel sizing in Chromium and WebKit.
+  :where(*) {
+    scrollbar-width: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--mantine-color-dimmed, #888) 65%, transparent);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--mantine-color-dimmed, #888);
+  }
+}
+
 .scroll-area-w100 .mantine-ScrollArea-viewport > div:nth-of-type(1) {
   width: 100%;
   display: inherit !important;

@@ -17,16 +17,14 @@ export const recreateAdmin = command({
   // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
-      console.error("Credentials provider is not enabled");
-      return;
+      throw new Error("Credentials provider is not enabled");
     }
 
     const result = await usernameSchema.safeParseAsync(options.username);
 
     if (!result.success) {
-      console.error("Invalid username:");
-      console.error(result.error.issues.map((error) => `- ${error.message}`).join("\n"));
-      return;
+      const issues = result.error.issues.map((error) => `- ${error.message}`).join("\n");
+      throw new Error(`Invalid username:\n${issues}`);
     }
 
     const totalCount = await db
@@ -40,8 +38,7 @@ export const recreateAdmin = command({
       .then((rows) => rows.at(0)?.count ?? 0);
 
     if (totalCount > 0) {
-      console.error("Credentials admin user exists");
-      return;
+      throw new Error("Credentials admin user exists");
     }
 
     const existingUser = await db.query.users.findFirst({
@@ -49,8 +46,7 @@ export const recreateAdmin = command({
     });
 
     if (existingUser) {
-      console.error("User with this name already exists");
-      return;
+      throw new Error("User with this name already exists");
     }
 
     const temporaryGroupId = createId();

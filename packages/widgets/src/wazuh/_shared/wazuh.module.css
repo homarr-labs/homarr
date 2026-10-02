@@ -1,0 +1,302 @@
+.frame {
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.header {
+  min-height: 22px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.headerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.headerLinkIcon {
+  flex-shrink: 0;
+  opacity: 0;
+  color: var(--mantine-color-dimmed);
+  transition: opacity 120ms ease;
+}
+
+.headerLink:hover .headerLinkIcon {
+  opacity: 1;
+}
+
+.nowrap {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tile {
+  position: relative;
+  padding: 5px 8px 5px 10px;
+  border-radius: var(--mantine-radius-sm);
+  background: light-dark(var(--mantine-color-gray-0), rgba(255, 255, 255, 0.035));
+  border: 1px solid light-dark(var(--mantine-color-gray-2), rgba(255, 255, 255, 0.06));
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tile::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--tile-color);
+}
+
+.tile[data-active="true"] {
+  border-color: var(--tile-color);
+  background: light-dark(var(--mantine-color-gray-1), rgba(255, 255, 255, 0.07));
+}
+
+.tileValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.tileButton {
+  display: block;
+  width: 100%;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.tileButton:hover .tile {
+  background: light-dark(var(--mantine-color-gray-1), rgba(255, 255, 255, 0.07));
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: var(--mantine-radius-sm);
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+
+a.row:hover,
+button.row:hover {
+  background: light-dark(var(--mantine-color-gray-1), rgba(255, 255, 255, 0.05));
+}
+
+.rowStriped:nth-child(even) {
+  background: light-dark(var(--mantine-color-gray-0), rgba(255, 255, 255, 0.018));
+}
+
+.mono {
+  font-family: var(--mantine-font-family-monospace);
+  /* Monospace glyphs look larger; scale slightly down relative to the surrounding text. */
+  font-size: 0.92em;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.bar {
+  height: 4px;
+  border-radius: 2px;
+  background: light-dark(var(--mantine-color-gray-2), rgba(255, 255, 255, 0.06));
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mantine-color-dimmed);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--mantine-font-size-xs);
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mantine-color-body);
+  text-align: left;
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mantine-color-dimmed);
+  padding: 4px 6px;
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), rgba(255, 255, 255, 0.08));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-1), rgba(255, 255, 255, 0.04));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover td {
+  background: light-dark(var(--mantine-color-gray-0), rgba(255, 255, 255, 0.035));
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sortButton:hover {
+  color: var(--mantine-color-text);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.statusDot[data-status="active"] {
+  background: var(--mantine-color-green-6);
+  box-shadow: 0 0 0 3px rgba(64, 192, 87, 0.15);
+}
+
+.statusDot[data-status="disconnected"] {
+  background: var(--mantine-color-red-6);
+  box-shadow: 0 0 0 3px rgba(250, 82, 82, 0.15);
+}
+
+.statusDot[data-status="never_connected"],
+.statusDot[data-status="unknown"] {
+  background: var(--mantine-color-gray-6);
+}
+
+.statusDot[data-status="pending"] {
+  background: var(--mantine-color-yellow-6);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  max-width: 100%;
+  padding: 0 6px;
+  height: 16px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: light-dark(var(--mantine-color-gray-1), rgba(255, 255, 255, 0.07));
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+}
+
+.chip[data-color="violet"] {
+  background: rgba(132, 94, 247, 0.16);
+  color: var(--mantine-color-violet-3);
+}
+
+.chip[data-color="cyan"] {
+  background: rgba(34, 184, 207, 0.14);
+  color: var(--mantine-color-cyan-3);
+}
+
+.chip[data-color="red"] {
+  background: rgba(250, 82, 82, 0.16);
+  color: var(--mantine-color-red-3);
+}
+
+.levelBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--mantine-radius-sm);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  color: var(--mantine-color-white);
+}
+
+.levelBadge[data-color="gray"] {
+  background: var(--mantine-color-gray-7);
+}
+
+.levelBadge[data-color="blue"] {
+  background: var(--mantine-color-blue-7);
+}
+
+.levelBadge[data-color="yellow"] {
+  background: var(--mantine-color-yellow-5);
+  color: var(--mantine-color-dark-9);
+}
+
+.levelBadge[data-color="orange"] {
+  background: var(--mantine-color-orange-7);
+}
+
+.levelBadge[data-color="red"] {
+  background: var(--mantine-color-red-8);
+}
+
+.pathStart {
+  direction: rtl;
+  text-align: left;
+  unicode-bidi: plaintext;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.table .mono {
+  font-size: 11px;
+}

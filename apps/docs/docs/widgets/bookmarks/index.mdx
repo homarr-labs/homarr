@@ -1,8 +1,10 @@
 ---
 title: "Bookmarks"
-description: "Displays multiple app links"
+description: "Keeps useful links together"
 hide_title: true
 ---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -11,32 +13,44 @@ import { bookmarksWidget } from ".";
 
 <WidgetHeader widget={bookmarksWidget} categories={["Links", "Apps"]} />
 
-The bookmarks widget allows you to display multiple app links in a single widget.
-You can add links to your favorite applications, websites, or any other resources you want quick access to.
-In view mode, right-clicking uses the browser's link menu. Homarr's widget menu remains available in edit mode.
+The Bookmarks widget keeps direct URLs and Homarr Apps in one ordered list. URLs do not require an App record; Homarr
+uses the site's favicon when available. Choose adaptive, compact-grid, or other layouts from the widget configuration.
+Vertical uses consistent compact rows and keeps bookmark names visible whenever the widget is wide enough, regardless
+of how many bookmarks are configured. Adaptive and grid layouts reduce card height and spacing to show as many
+bookmarks as possible before scrolling. Horizontal uses a compact, centered scrolling row with narrower cards in
+one-row widgets. Horizontal, vertical, compact-grid, and icon-only layouts keep their gaps tight. Compact grid also
+preserves its configured columns when the dashboard is scaled. Bookmark cards, icons, text, and gaps keep the same
+visual density when a low-column dashboard is enlarged to fill the screen.
+
+Right-click a bookmark link in view mode to use the browser menu, including opening it in a new tab or copying its address.
 
 ### Screenshots
 
 import gridIconsOnly from "./img/grid-icons-only.png";
 import gridWithTitle from "./img/grid-with-title.png";
 import verticalListAll from "./img/vertical-list-all.png";
-import vericalListSimple from "./img/vertical-list-simple.png";
+import verticalListSimple from "./img/vertical-list-simple.png";
 
 <div className='flex gap-1'>
     <div className='flex flex-col gap-1'>
-        <img src={gridIconsOnly} alt="bookmarks grid icons-only" width={128} height={128} />
-        <img src={vericalListSimple} alt="bookmarks vertical-list no-domain" width={128} height={128} />
+        <img src={gridIconsOnly.src} alt="bookmarks grid icons-only" width={128} height={128} />
+        <img src={verticalListSimple.src} alt="bookmarks vertical-list no-domain" width={128} height={128} />
     </div>
 
-    <img src={gridWithTitle} alt="bookmarks grid with-title" width={256 + 4} height={256 + 4} />
-    <img src={verticalListAll} alt="bookmarks vertical-list all-elements" width={128} height={256 + 4} />
+    <img src={gridWithTitle.src} alt="bookmarks grid with-title" width={256 + 4} height={256 + 4} />
+    <img src={verticalListAll.src} alt="bookmarks vertical-list all-elements" width={128} height={256 + 4} />
 
 </div>
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
+The widget title controls are independent of **Hide bookmark names**, which affects individual links. Hiding the
+widget title preserves its text and gives the space back to the bookmarks. Existing widgets keep their 11px heading.
 
 <WidgetConfig configuration={bookmarksWidget.configuration} />

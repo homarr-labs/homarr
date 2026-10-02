@@ -29,9 +29,10 @@ export const getSessionFromApiKeyAsync = async (
     return null;
   }
 
-  const [apiKeyId, apiKey] = apiKeyHeaderValue.split(".");
+  const apiKeyParts = apiKeyHeaderValue.split(".");
+  const [apiKeyId, apiKey] = apiKeyParts;
 
-  if (!apiKeyId || !apiKey) {
+  if (apiKeyParts.length !== 2 || !apiKeyId || !apiKey) {
     logger.warn("Failed to authenticate with api-key", { ipAddress, userAgent, reason: "API_KEY_INVALID_FORMAT" });
     return null;
   }

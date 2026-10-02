@@ -688,211 +688,6 @@
       "add": "Thêm ứng dụng"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Tiện ích tùy chỉnh",
-        "noResults": "Chưa có tiện ích tùy chỉnh. Hãy tạo tiện ích đầu tiên của bạn!",
-        "loading": "Đang tải..."
-      },
-      "create": {
-        "title": "Tạo tiện ích tùy chỉnh",
-        "subtitle": "Xác định URL API, thông tin xác thực và cách hiển thị dữ liệu phản hồi."
-      },
-      "edit": {
-        "title": "Chỉnh sửa tiện ích tùy chỉnh"
-      }
-    },
-    "action": {
-      "create": "Tạo",
-      "import": "Nhập",
-      "save": "Lưu",
-      "delete": "Xóa tiện ích tùy chỉnh",
-      "deleteConfirm": "Bạn có chắc muốn xóa \"{name}\" không? Không thể hoàn tác thao tác này.",
-      "export": "Xuất",
-      "addMapping": "Thêm ánh xạ",
-      "addColumn": "Thêm cột",
-      "edit": "Sửa",
-      "removeMapping": "Xóa ánh xạ",
-      "removeColumn": "Xóa cột",
-      "addItem": "Thêm mục",
-      "removeItem": "Xóa mục",
-      "addBar": "Thêm thanh",
-      "duplicate": "Nhân bản",
-      "copyAiPrompt": "Sao chép lời nhắc AI",
-      "enable": "Bật",
-      "disable": "Tắt",
-      "menu": "Thao tác"
-    },
-    "field": {
-      "name": "Tên",
-      "description": "Mô tả",
-      "iconUrl": "URL biểu tượng",
-      "url": "URL",
-      "authType": "Loại xác thực",
-      "headerName": "Tên tham số Header/Truy vấn",
-      "method": "Phương thức",
-      "requestBody": "Nội dung yêu cầu",
-      "displayType": "Loại hiển thị",
-      "jsonPath": "Đường dẫn JSON",
-      "jsonPathHint": "Sử dụng cú pháp JSONPath để trích xuất giá trị, ví dụ: $.data.temperature hoặc $.items[0].name",
-      "label": "Nhãn",
-      "unit": "Đơn vị",
-      "mappings": "Ánh xạ",
-      "tablePath": "Đường dẫn JSON của mảng",
-      "tablePathHint": "Đường dẫn đến mảng trong phản hồi, ví dụ: $.data.items",
-      "columns": "Cột",
-      "header": "Tiêu đề",
-      "items": "Mục",
-      "gridColumns": "Cột lưới",
-      "cardStyle": "Kiểu thẻ",
-      "bars": "Thanh",
-      "valuePath": "Đường dẫn JSON của giá trị",
-      "maxPath": "Đường dẫn JSON của giá trị tối đa",
-      "showPercentage": "Hiển thị phần trăm",
-      "barSize": "Kích thước thanh",
-      "goodValues": "Giá trị tốt (phân tách bằng dấu phẩy)",
-      "dotSize": "Kích thước chấm",
-      "valueSize": "Kích thước giá trị",
-      "labelPosition": "Vị trí nhãn",
-      "kvLayout": "Bố cục",
-      "striped": "Hàng sọc",
-      "compact": "Chế độ thu gọn",
-      "maxHeight": "Chiều cao tối đa (px)",
-      "color": "Màu",
-      "buttonLabel": "Nhãn nút",
-      "buttonColor": "Màu nút",
-      "confirmText": "Nội dung xác nhận",
-      "confirmTextHint": "Nếu được đặt, hộp thoại xác nhận sẽ xuất hiện trước khi thực hiện yêu cầu",
-      "successMessage": "Thông báo thành công",
-      "successMessageHint": "Thông báo hiển thị sau khi thực hiện thành công",
-      "enabled": "Đã bật",
-      "template": {
-        "label": "Mẫu JSX",
-        "description": "Mẫu JSX Mantine. Truy cập các trường phản hồi API thông qua liên kết dữ liệu (ví dụ: data.name). Chỉ sử dụng các component được cho phép. Bị cấm: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Nhiệt độ CPU",
-      "exampleLabelShort": "Nhiệt độ CPU",
-      "exampleHeader": "Tên",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "xanh dương"
-    },
-    "cardStyleOption": {
-      "filled": "Đặc",
-      "outline": "Viền",
-      "subtle": "Tinh tế"
-    },
-    "layoutOption": {
-      "list": "Danh sách",
-      "grid": "Lưới"
-    },
-    "sizeOption": {
-      "sm": "Nhỏ",
-      "md": "Trung bình",
-      "lg": "Lớn",
-      "xl": "Rất lớn"
-    },
-    "labelPositionOption": {
-      "above": "Bên trên",
-      "below": "Bên dưới"
-    },
-    "fieldset": {
-      "general": "Chung",
-      "connection": "Kết nối API",
-      "display": "Cấu hình hiển thị"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Hiển thị một giá trị được trích xuất cùng nhãn và đơn vị",
-      "keyValue": "Hiển thị nhiều giá trị có nhãn cạnh nhau",
-      "table": "Hiển thị các hàng dữ liệu ở dạng bảng",
-      "statGrid": "Các thẻ thống kê có màu trong lưới — như các tiện ích Pi-Hole hoặc Speedtest",
-      "progressBars": "Thanh tiến độ hiển thị mức sử dụng hoặc mức hoàn thành — dành cho ổ đĩa, bộ nhớ và hạn mức",
-      "statusIndicator": "Các chấm trạng thái có màu hiển thị trạng thái trực tuyến/ngoại tuyến hoặc tình trạng hệ thống",
-      "countGrid": "Bộ đếm số + nhãn nhỏ gọn trong lưới dày",
-      "raw": "Đầu ra JSON được định dạng đẹp để gỡ lỗi",
-      "actionButton": "Nút kích hoạt yêu cầu khi được nhấp",
-      "customJsx": "Bố cục JSX tùy chỉnh sử dụng các component Mantine được cho phép cùng liên kết đầy đủ với dữ liệu API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Không có",
-      "bearer": "Mã thông báo Bearer",
-      "basic": "Xác thực cơ bản",
-      "apiKeyHeader": "Khóa API (Header)",
-      "apiKeyQuery": "Khóa API (Truy vấn)"
-    },
-    "displayType": {
-      "singleValue": "Giá trị đơn",
-      "keyValue": "Khóa-Giá trị",
-      "table": "Bảng",
-      "statGrid": "Lưới thống kê",
-      "progressBars": "Thanh tiến độ",
-      "statusIndicator": "Chỉ báo trạng thái",
-      "countGrid": "Lưới số lượng",
-      "raw": "JSON thô",
-      "actionButton": "Nút thao tác",
-      "customJsx": "JSX tùy chỉnh"
-    },
-    "secret": {
-      "apiKey": "Khóa API / Token",
-      "username": "Tên người dùng",
-      "password": "Mật khẩu",
-      "savedPlaceholder": "••••••• (đã lưu, để trống để giữ nguyên)"
-    },
-    "preview": {
-      "title": "Xem trước",
-      "test": "Kiểm tra",
-      "hint": "Nhấp vào Kiểm tra để xem trước phản hồi API với cấu hình hiện tại.",
-      "rawResponse": "Phản hồi JSON thô"
-    },
-    "notification": {
-      "created": "Đã tạo tiện ích \"{name}\" thành công.",
-      "updated": "Đã cập nhật tiện ích \"{name}\" thành công.",
-      "deleted": "Đã xóa tiện ích \"{name}\".",
-      "imported": "Đã nhập tiện ích thành công.",
-      "aiPromptCopied": "Đã sao chép lời nhắc AI vào bảng nhớ tạm",
-      "aiPromptDescription": "Sao chép lời nhắc dựng sẵn để dán vào bất kỳ chatbot AI nào (ChatGPT, Claude, Gemini...). Lời nhắc bao gồm toàn bộ lược đồ tiện ích và phản hồi API của bạn để AI có thể tạo cấu hình JSON sẵn sàng nhập.",
-      "aiPromptCopy": "Sao chép vào bảng nhớ tạm",
-      "aiPromptNoResponse": "Mẹo: Hãy chạy kiểm tra trước để đưa phản hồi API vào lời nhắc nhằm có kết quả tốt hơn.",
-      "aiPromptCopyError": "Không thể sao chép lời nhắc vào bảng nhớ tạm. Trình duyệt của bạn có thể không hỗ trợ tính năng này.",
-      "createError": "Không thể tạo tiện ích. Hãy kiểm tra endpoint API có thể truy cập.",
-      "updateError": "Không thể cập nhật tiện ích. Các thay đổi của bạn chưa được lưu.",
-      "importError": "Không thể nhập tiện ích. Đảm bảo tệp là bản xuất JSON tiện ích tùy chỉnh hợp lệ.",
-      "exportError": "Không thể xuất tiện ích.",
-      "duplicated": "Đã nhân bản tiện ích \"{name}\".",
-      "duplicateError": "Không thể nhân bản tiện ích.",
-      "toggleError": "Không thể chuyển đổi trạng thái tiện ích.",
-      "deleteError": "Không thể xóa tiện ích.",
-      "previewError": "Không thể tải bản xem trước. Hãy kiểm tra URL và thử lại.",
-      "executed": "Đã thực hiện thao tác thành công.",
-      "executeError": "Thao tác thất bại: {error}"
-    },
-    "table": {
-      "name": "Tên",
-      "url": "URL",
-      "display": "Hiển thị"
-    },
-    "widget": {
-      "disabled": "Tiện ích này đã bị tắt"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Reverse proxy và bộ cân bằng tải nền tảng đám mây"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Theo dõi các container Docker của bạn có bản cập nhật hình ảnh"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Hệ thống quản lý tài liệu để lưu trữ và sắp xếp các tài liệu đã quét"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Ứng dụng bổ trợ cho Sonarr và Radarr, dùng để quản lý và tải phụ đề"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Theo dõi các container Docker của bạn có bản cập nhật hình ảnh"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "tại đây",
     "iconPicker": {
       "label": "URL biểu tượng",
-      "description": "Tìm kiếm trong thư viện, dán URL hình ảnh hoặc tải lên tệp.",
       "header": "Nhập tên hoặc đối tượng để lọc biểu tượng... Homarr sẽ tìm qua {countIcons} biểu tượng cho bạn",
       "headerLoading": "Tìm kiếm hình ảnh theo tên",
+      "noResults": "Không có biểu tượng nào khớp với \"{search}\".",
+      "error": "Không thể tải biểu tượng.",
+      "description": "Tìm kiếm trong thư viện, dán URL hình ảnh hoặc tải lên tệp.",
       "clear": "Xóa hình ảnh",
       "uploadImage": "Tải lên hình ảnh",
       "results": "Kết quả tìm kiếm hình ảnh",
@@ -1452,9 +1249,7 @@
       "otherImages": "Hình ảnh khác",
       "urlLoading": "Đang kiểm tra hình ảnh…",
       "urlReady": "Hình ảnh đã sẵn sàng để sử dụng",
-      "urlError": "Không thể tải hình ảnh này. Kiểm tra URL và thử lại.",
-      "noResults": "Không có biểu tượng nào khớp với \"{search}\".",
-      "error": "Không thể tải biểu tượng."
+      "urlError": "Không thể tải hình ảnh này. Kiểm tra URL và thử lại."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Hiển thị tin nhắn phát sóng"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Hiển thị số container được theo dõi có bản cập nhật.",
-      "title": "What's Up Docker",
-      "monitored": "Đã theo dõi",
-      "updatesAvailable": "{count, plural, other {# bản cập nhật có sẵn}}",
-      "updateAvailable": "Có bản cập nhật",
-      "openReleaseNotes": "Mở ghi chú phát hành",
-      "option": {
-        "showTitle": {
-          "label": "Hiển thị tiêu đề"
-        },
-        "showRing": {
-          "label": "Hiển thị vòng cập nhật"
-        },
-        "layout": {
-          "label": "Bố cục",
-          "option": {
-            "horizontal": {
-              "label": "Nằm ngang"
-            },
-            "vertical": {
-              "label": "Thẳng đứng"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Hiển thị danh sách cập nhật container",
-          "description": "Liệt kê từng container được giám sát có bản cập nhật image sẵn có"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Thông tin",
         "processor": "Bộ xử lý: {cpuModelName}",
-        "memory": "Bộ nhớ: {memory}GiB",
-        "memoryAvailable": "Khả dụng: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Bộ nhớ: {memory}",
+        "memoryAvailable": "Khả dụng: {memoryAvailable} ({percent}%)",
         "version": "Phiên bản: {version}",
         "uptime": "Thời gian hoạt động: {months} tháng, {days} ngày, {hours} giờ, {minutes} phút",
         "loadAverage": "Tải trung bình:",
@@ -3137,7 +2900,7 @@
           "label": "Hiển thị các mục linh tinh được đánh dấu là đã hoàn tất"
         },
         "activeTorrentThreshold": {
-          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này (kiB/s)"
+          "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này"
         },
         "categoryFilter": {
           "label": "Danh mục/nhãn để lọc"
@@ -3947,26 +3710,6 @@
         "unhealthy": "Không ổn định"
       }
     },
-    "customApi": {
-      "name": "API tùy chỉnh",
-      "description": "Hiển thị dữ liệu từ bất kỳ API bên ngoài nào với cấu hình tùy chỉnh.",
-      "option": {
-        "definitionId": {
-          "label": "ID định nghĩa"
-        },
-        "refreshInterval": {
-          "label": "Khoảng thời gian làm mới",
-          "description": "Tần suất tải lại dữ liệu từ API (tính bằng giây)"
-        }
-      },
-      "noDefinition": "Chưa chọn định nghĩa",
-      "definitionNotFound": "Không tìm thấy định nghĩa tiện ích. Có thể định nghĩa đã bị xóa.",
-      "noDisplayOutput": "Không có đầu ra hiển thị",
-      "executeConfirm": "Bạn có chắc muốn thực hiện thao tác này không?",
-      "executing": "Đang thực hiện...",
-      "executeSuccess": "Đã thực hiện thao tác thành công",
-      "executeFailed": "Thao tác thất bại. Kiểm tra cấu hình tiện ích."
-    },
     "beszelSystemTable": {
       "name": "Beszel Systems (Bảng)",
       "description": "Dạng bảng của tất cả hệ thống được Beszel giám sát với các cột có thể sắp xếp và chỉ báo trạng thái",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "I/O mạng Docker",
           "subtitle": "Lưu lượng mạng của các container Docker"
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Hiển thị số container được theo dõi có bản cập nhật.",
+      "title": "What's Up Docker",
+      "monitored": "Đã theo dõi",
+      "updatesAvailable": "{count, plural, other {# bản cập nhật có sẵn}}",
+      "updateAvailable": "Có bản cập nhật",
+      "openReleaseNotes": "Mở ghi chú phát hành",
+      "option": {
+        "showTitle": {
+          "label": "Hiển thị tiêu đề"
+        },
+        "showRing": {
+          "label": "Hiển thị vòng cập nhật"
+        },
+        "layout": {
+          "label": "Bố cục",
+          "option": {
+            "horizontal": {
+              "label": "Nằm ngang"
+            },
+            "vertical": {
+              "label": "Thẳng đứng"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Hiển thị danh sách cập nhật container",
+          "description": "Liệt kê từng container được giám sát có bản cập nhật image sẵn có"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Trang chủ",
         "boards": "Bảng",
         "apps": "Ứng dụng",
         "integrations": "Tích hợp",
-        "customWidgets": "Tiện ích tùy chỉnh",
         "searchEngies": "Công cụ tìm kiếm",
         "medias": "Media",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Kéo tệp ZIP sao lưu vào đây",
-              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa 256 MB)"
+              "description": "Chấp nhận tệp .zip từ bản sao lưu SQLite của Homarr (tối đa {maxSize})"
             },
             "analyzing": "Đang phân tích bản sao lưu...",
             "changeFile": "Thay đổi tập tin",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Quản lý",
       "boards": {
         "label": "Bảng"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Sửa"
-        }
-      },
-      "custom-widgets": {
-        "label": "Tiện ích tùy chỉnh",
-        "new": {
-          "label": "Mới"
-        },
-        "edit": {
-          "label": "Sửa",
-          "flow": {
-            "label": "Luồng"
-          }
         }
       },
       "users": {

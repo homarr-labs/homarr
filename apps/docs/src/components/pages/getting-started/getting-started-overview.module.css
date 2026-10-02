@@ -1,0 +1,243 @@
+.overview,
+.installPaths {
+  --start-ink: var(--color-fd-foreground);
+  --start-muted: var(--color-fd-muted-foreground);
+  --start-panel: var(--color-fd-card);
+  --start-line: var(--color-fd-border);
+  --start-line-strong: color-mix(in oklch, var(--color-fd-foreground) 18%, var(--color-fd-border));
+  --start-coral: var(--color-fd-primary);
+}
+
+.overview {
+  display: grid;
+  gap: 1rem;
+  margin: 1.25rem 0 2.5rem;
+}
+
+.conceptCard {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: 1px solid color-mix(in oklch, var(--start-coral) 32%, var(--start-line));
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--start-coral) 4%, var(--start-panel));
+}
+
+.intro {
+  padding: 0;
+}
+
+.intro h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.intro p {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--start-muted);
+  line-height: 1.45;
+}
+
+.editor {
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 0.25rem;
+}
+
+.editorHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.editorHeading h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.editorHeading p {
+  margin: 0;
+  color: var(--start-muted);
+  font-size: 0.84rem;
+}
+
+.editorHeading > a {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.editorSteps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editorStep {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  border: 1px solid var(--start-line);
+  border-radius: 0.65rem;
+  background: var(--start-panel);
+}
+
+.stepCopy {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem;
+}
+
+.stepCopy > span {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid var(--start-line);
+  border-radius: 50%;
+  color: var(--start-muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.stepCopy > div {
+  display: grid;
+  min-width: 0;
+}
+
+.stepCopy strong {
+  font-size: 0.78rem;
+}
+
+.stepCopy small {
+  color: var(--start-muted);
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.stepMedia {
+  display: grid;
+  place-items: center;
+  min-height: 9rem;
+  padding: 0.4rem;
+  border-top: 1px solid var(--start-line);
+  background: #202020;
+}
+
+.stepMedia img {
+  display: block;
+  width: 100%;
+  max-height: 12rem;
+  object-fit: contain;
+}
+
+.stepMedia img[data-fit="cover"] {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.installPaths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.installPaths > .installPath {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  min-height: 10rem;
+  padding: 1.1rem;
+  border: 1px solid var(--start-line-strong);
+  border-radius: 0.9rem;
+  color: var(--start-ink);
+  background: color-mix(in oklch, var(--start-coral) 2.5%, var(--start-panel));
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.installPaths > .installPath:hover {
+  border-color: rgb(250 82 82 / 55%);
+  color: var(--start-ink);
+  background: color-mix(in oklch, var(--start-coral) 6%, var(--start-panel));
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.installPaths > .installPath > span {
+  color: var(--color-fd-primary);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.installPaths > .installPath strong {
+  font-size: 1rem;
+}
+
+.installPaths > .installPath small {
+  color: var(--start-muted);
+  line-height: 1.45;
+}
+
+.installPaths > .installPath > svg {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 0.9rem;
+  color: var(--start-coral);
+}
+
+.installPaths > .recommendedPath {
+  border-color: var(--color-fd-primary);
+  background: color-mix(in oklch, var(--start-coral) 5%, var(--start-panel));
+}
+
+@media (max-width: 800px) {
+  .editorHeading {
+    align-items: start;
+  }
+
+  .editorSteps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepMedia img {
+    max-height: 18rem;
+  }
+
+  .installPaths {
+    grid-template-columns: 1fr;
+  }
+
+  .installPaths > .installPath {
+    min-height: 8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .installPaths > .installPath {
+    transition: none;
+  }
+}

@@ -2,9 +2,18 @@ import { z } from "zod/v4";
 
 import { createEnv, runtimeEnvWithPrefix } from "@homarr/core/infrastructure/env";
 
+if (
+  ["mysql", "mariadb"].includes(process.env.DB_DIALECT ?? "") ||
+  ["mysql2", "mysql", "mariadb"].includes(process.env.DB_DRIVER ?? "") ||
+  /^(mysql|mariadb):/i.test(process.env.DB_URL ?? "")
+) {
+  throw new Error(
+    "MySQL and MariaDB are no longer supported. Migrate your database to SQLite or PostgreSQL before starting Homarr.",
+  );
+}
+
 const drivers = {
   betterSqlite3: "better-sqlite3",
-  mysql2: "mysql2",
   nodePostgres: "node-postgres",
 } as const;
 
@@ -21,8 +30,8 @@ export const dbEnv = createEnv({
    */
   server: {
     DRIVER: z
-      .union([z.literal(drivers.betterSqlite3), z.literal(drivers.mysql2), z.literal(drivers.nodePostgres)], {
-        message: `Invalid database driver, supported are ${Object.keys(drivers).join(", ")}`,
+      .union([z.literal(drivers.betterSqlite3), z.literal(drivers.nodePostgres)], {
+        message: `Invalid database driver, supported are ${Object.values(drivers).join(", ")}`,
       })
       .default(drivers.betterSqlite3),
     ...(urlRequired
@@ -42,7 +51,7 @@ export const dbEnv = createEnv({
             .regex(/\d+/)
             .transform(Number)
             .refine((number) => number >= 1)
-            .default(isDriver(drivers.mysql2) ? 3306 : 5432),
+            .default(5432),
           USER: z.string(),
           PASSWORD: z.string(),
           NAME: z.string(),

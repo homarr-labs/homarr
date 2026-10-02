@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Anchor, Card, Stack, Text } from "@mantine/core";
 
 import type { TablerIcon } from "@homarr/ui";
@@ -5,6 +6,7 @@ import type { TablerIcon } from "@homarr/ui";
 interface NoResultsProps {
   icon: TablerIcon;
   title: string;
+  description?: ReactNode;
   action?: {
     label: string;
     href: string;
@@ -12,7 +14,7 @@ interface NoResultsProps {
   };
 }
 
-export const NoResults = ({ icon: Icon, title, action }: NoResultsProps) => {
+export const NoResults = ({ icon: Icon, title, description, action }: NoResultsProps) => {
   return (
     <Card bg="transparent" withBorder={false}>
       <Stack align="center" gap="sm">
@@ -20,6 +22,11 @@ export const NoResults = ({ icon: Icon, title, action }: NoResultsProps) => {
         <Text fw={500} size="lg">
           {title}
         </Text>
+        {description && (
+          <Text c="dimmed" ta="center" maw={560}>
+            {description}
+          </Text>
+        )}
         {action && !action.hidden && <Anchor href={action.href}>{action.label}</Anchor>}
       </Stack>
     </Card>

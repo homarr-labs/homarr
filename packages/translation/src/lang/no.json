@@ -10,7 +10,7 @@
           "importOldmarr": "Importer fra Homarr før 1.0",
           "restoreSqlite": "Gjenopprett fra SQLite sikkerhetskopi",
           "restoreSqliteDescription": "Last opp en full SQLite database sikkerhetskopi fra en tidligere Homarr instans. Dette vil gjenopprette alle tavler, brukere, apper, integrasjoner og innstillinger.",
-          "backToOptions": "← Tilbake til oppsettalternativer"
+          "backToOptions": "λ Tilbake til innstillingsvalg"
         }
       },
       "import": {
@@ -200,7 +200,7 @@
       },
       "enableRightClickOnWidgets": {
         "label": "Aktiver høyreklikk på widgets",
-        "description": "Vis Homarrs hurtigmeny når du høyreklikker på en widget. Deaktiver for å bruke nettleserens standardmeny (f.eks. «Åpne lenke i ny fane»)."
+        "description": "Vis Hjemmens kontekstmeny når høyre klikker en widget. Deaktiver for å bruke nettleserens standardmeny (f.eks \"Åpne link i ny fan\")."
       },
       "defaultSearchEngine": {
         "label": "Standard søkemotor"
@@ -688,211 +688,6 @@
       "add": "Legg til en app"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Egendefinerte Widgeter",
-        "noResults": "Ingen tilpassede widgets ennå. Opprett din første!",
-        "loading": "Laster..."
-      },
-      "create": {
-        "title": "Opprett tilpasset widget",
-        "subtitle": "Angi en API-URL, autentisering og hvordan svardataene skal vises."
-      },
-      "edit": {
-        "title": "Rediger tilpasset widget"
-      }
-    },
-    "action": {
-      "create": "Opprett",
-      "import": "Importer",
-      "save": "Lagre",
-      "delete": "Slett tilpasset widget",
-      "deleteConfirm": "Er du sikker på at du vil slette \"{name}\"? Handlingen kan ikke angres.",
-      "export": "Eksporter",
-      "addMapping": "Legg til tilordning",
-      "addColumn": "Legg til kolonne",
-      "edit": "Rediger",
-      "removeMapping": "Fjern tilordning",
-      "removeColumn": "Fjern kolonne",
-      "addItem": "Legg til element",
-      "removeItem": "Fjern vare",
-      "addBar": "Legg til linje",
-      "duplicate": "Duplicate",
-      "copyAiPrompt": "Kopier AI ledetekst",
-      "enable": "Aktiver",
-      "disable": "Deaktiver",
-      "menu": "Handlinger"
-    },
-    "field": {
-      "name": "Navn",
-      "description": "Beskrivelse",
-      "iconUrl": "Ikonets URL",
-      "url": "Nettadresse",
-      "authType": "Autentisering Type",
-      "headerName": "Parameteren overskrift/spørring (Automatic Translation)",
-      "method": "Metode",
-      "requestBody": "Etterspør kropp",
-      "displayType": "Vis type",
-      "jsonPath": "JSON sti",
-      "jsonPathHint": "Bruk JSONPath syntaks for å pakke ut verdier, f.eks $.data.temperature or $.items[0].name",
-      "label": "Etikett",
-      "unit": "Enhet",
-      "mappings": "Tilordninger",
-      "tablePath": "Array JSON sti",
-      "tablePathHint": "Bane til listen i svaret, f.eks $.data.items",
-      "columns": "Kolonner",
-      "header": "Topptekst",
-      "items": "Elementer",
-      "gridColumns": "Rutenett kolonner",
-      "cardStyle": "Kort stil",
-      "bars": "Stolper",
-      "valuePath": "Verdi JSON sti",
-      "maxPath": "Max verdi JSON sti",
-      "showPercentage": "Vis prosent",
-      "barSize": "Bar størrelse",
-      "goodValues": "Gode verdier (komma-separert)",
-      "dotSize": "Dot Size",
-      "valueSize": "Verdi Størrelse",
-      "labelPosition": "Plassering av etikett",
-      "kvLayout": "Oppsett",
-      "striped": "Stripete rader",
-      "compact": "Kompakt modus",
-      "maxHeight": "Max Height (px)",
-      "color": "Farge",
-      "buttonLabel": "Etikett for knapp",
-      "buttonColor": "Farge på knapp",
-      "confirmText": "Bekreftelsestekst",
-      "confirmTextHint": "Hvis angitt, vil en bekreftelsesdialog vises før du utfører forespørselen",
-      "successMessage": "Suksess melding",
-      "successMessageHint": "Melding som vises etter vellykket utførelse",
-      "enabled": "Aktivert",
-      "template": {
-        "label": "JSX mal",
-        "description": "Mal for memantin. Tilgang til API svar via databindinger (f.eks data.navn). Bruk hvitelistede komponenter. Forbud: constructor, __proto__, eval, Funksjon, vindu, dokument."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU temperatur",
-      "exampleLabelShort": "CPU Temp",
-      "exampleHeader": "Navn",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.eksempel.com/api/v1/status",
-      "headerName": "X-API-nøkkel",
-      "jsonPath": "$.data.verdi",
-      "tablePath": "$.data.objekter",
-      "columnJsonPath": "$.navn",
-      "valuePath": "$.data.brukt",
-      "maxPath": "$.data.totalt",
-      "goodValues": "online, true, opp",
-      "color": "blå"
-    },
-    "cardStyleOption": {
-      "filled": "Fylt",
-      "outline": "Omriss",
-      "subtle": "Lilla"
-    },
-    "layoutOption": {
-      "list": "Liste",
-      "grid": "Rutenett"
-    },
-    "sizeOption": {
-      "sm": "Liten",
-      "md": "Middels",
-      "lg": "Stor",
-      "xl": "Ekstra stor"
-    },
-    "labelPositionOption": {
-      "above": "Over",
-      "below": "Nedenfor"
-    },
-    "fieldset": {
-      "general": "Generelt",
-      "connection": "API Tilkobling",
-      "display": "Vis konfigurasjon"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Vis en ekstrahert verdi med en etikett og enhet",
-      "keyValue": "Vis flere merkede verdier ved side",
-      "table": "Vis radene med data i et tabellformat",
-      "statGrid": "Fargede statistikkkort i rutenett - som Pi-Hole eller Speedtest widgets",
-      "progressBars": "Fremdriftsbarer som viser bruk eller ferdigstillelse – for disk, minne, kvoter",
-      "statusIndicator": "Farget status prikker som viser online/frakoblet eller helsetilstand",
-      "countGrid": "Kompakt antall + etiketttellere i tett rutenett",
-      "raw": "Veltiende JSON-output for feilsøking",
-      "actionButton": "En knapp som utløser en forespørsel når du klikket",
-      "customJsx": "Egendefinert JSX oppsett ved hjelp av hvitelistede Manton-komponenter med full API-data binding"
-    },
-    "method": {
-      "GET": "SKAFF",
-      "POST": "POST",
-      "PUT": "KJØP",
-      "DELETE": "SLETT",
-      "PATCH": "SE"
-    },
-    "authType": {
-      "none": "Ingen",
-      "bearer": "Bærer Symbol",
-      "basic": "Standard Auth",
-      "apiKeyHeader": "API-nøkkel (overskrift)",
-      "apiKeyQuery": "API-nøkkel (Query)"
-    },
-    "displayType": {
-      "singleValue": "Enkel Verdi",
-      "keyValue": "Nøkkelverdi",
-      "table": "Tabell",
-      "statGrid": "Stat rutenett",
-      "progressBars": "Fremdriftsstreker",
-      "statusIndicator": "Status indikator",
-      "countGrid": "Antall rutenett",
-      "raw": "Rå JSON",
-      "actionButton": "Handlingsknapp",
-      "customJsx": "Egendefinert JSX"
-    },
-    "secret": {
-      "apiKey": "API-nøkkel / Token",
-      "username": "Brukernavn",
-      "password": "Passord",
-      "savedPlaceholder": "•••••• (lagret, la være tom for å beholde)"
-    },
-    "preview": {
-      "title": "Forhåndsvisning",
-      "test": "Prøve",
-      "hint": "Klikk test for å forhåndsvise API svar med den gjeldende konfigurasjonen.",
-      "rawResponse": "Rå JSON-respons"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" opprettet.",
-      "updated": "Widget \"{name}\" oppdatert.",
-      "deleted": "Widget \"{name}\" slettet.",
-      "imported": "Widget ble importert.",
-      "aiPromptCopied": "AI prompt kopiert til utklippstavle",
-      "aiPromptDescription": "Kopier en forhåndsbygget prompt for å lime inn i en AI chatbot (ChatGPT, Claude, Gemini...). Det inkluderer hele widgetskjemaet og API-svaret slik at AI kan generere en JSON ferdig-til-import konfigurasjon for deg.",
-      "aiPromptCopy": "Kopier til utklippstavlen",
-      "aiPromptNoResponse": "Tips: Kjør en test først for å inkludere API-svaret i ledeteksten for å få bedre resultater.",
-      "aiPromptCopyError": "Kan ikke kopiere ledetekst til utklippstavlen. Nettleseren kan ikke støtte denne funksjonen.",
-      "createError": "Kunne ikke opprette widget. Sjekk API endepunktet er tilgjengelig.",
-      "updateError": "Kan ikke oppdatere widget. Dine endringer ble ikke lagret.",
-      "importError": "Kunne ikke importere widget. Påfør at filen er en gyldig egendefinert widget JSON eksport.",
-      "exportError": "Kunne ikke eksportere widget.",
-      "duplicated": "Widget \"{name}\" duplisert.",
-      "duplicateError": "Kunne ikke duplisere widget.",
-      "toggleError": "Kunne ikke bytte widget status.",
-      "deleteError": "Kunne ikke slette widget.",
-      "previewError": "Kan ikke hente forhåndsvisning. Kontroller URL-en og prøv på nytt.",
-      "executed": "Handlingen ble kjørt.",
-      "executeError": "Handlingen mislyktes: {error}"
-    },
-    "table": {
-      "name": "Navn",
-      "url": "Nettadresse",
-      "display": "Skjerm"
-    },
-    "widget": {
-      "disabled": "Denne widgeten er deaktivert"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Cloud-nativ revers-proxy og laste balanserer"
     },
-    "wud": {
-      "name": "Hva passer opp",
-      "description": "Overvåk hvilke av Docker-beholderene dine har bildeoppdateringer tilgjengelig"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "System for dokumentstyring for arkivering og organisering av skannede dokumenter"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Companion-applikasjon til Sonarr og Radarr som administrerer og laster ned undertekster"
+    },
+    "wud": {
+      "name": "Hva passer opp",
+      "description": "Overvåk hvilke av Docker-beholderene dine har bildeoppdateringer tilgjengelig"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "description": "Søk biblioteket, lim inn en bilde-URL, eller last opp en fil.",
       "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg.",
       "headerLoading": "Søk etter navn",
+      "noResults": "Ingen ikoner samsvarer med \"{search}\".",
+      "error": "Kunne ikke laste ned ikoner.",
+      "description": "Søk biblioteket, lim inn en bilde-URL, eller last opp en fil.",
       "clear": "Fjern bilde",
       "uploadImage": "Last opp bilde",
       "results": "Søkeresultater for bilde",
@@ -1452,9 +1249,7 @@
       "otherImages": "Andre bilder",
       "urlLoading": "Sjekker bildet…",
       "urlReady": "Bildet er klart til bruk",
-      "urlError": "Dette bildet kan ikke lastes. Kontroller URL-en og prøv på nytt.",
-      "noResults": "Ingen ikoner samsvarer med \"{search}\".",
-      "error": "Kunne ikke laste ned ikoner."
+      "urlError": "Dette bildet kan ikke lastes. Kontroller URL-en og prøv på nytt."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Vis kringkastede meldinger"
-        }
-      }
-    },
-    "wud": {
-      "name": "Hva passer opp",
-      "description": "Vis hvor mange sette containere som er tilgjengelige.",
-      "title": "Hva passer opp",
-      "monitored": "Overvåket",
-      "updatesAvailable": "{count, plural, one {# oppdatering tilgjengelig} other {# oppdateringer tilgjengelig}}",
-      "updateAvailable": "Oppdatering tilgjengelig",
-      "openReleaseNotes": "Åpne utgivelsesnotater",
-      "option": {
-        "showTitle": {
-          "label": "Vis tittel"
-        },
-        "showRing": {
-          "label": "Vis oppdatering ring"
-        },
-        "layout": {
-          "label": "Oppsett",
-          "option": {
-            "horizontal": {
-              "label": "Horisontal"
-            },
-            "vertical": {
-              "label": "Vertikal"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Vis liste over containeroppdatering",
-          "description": "Viser hver overvåket beholder som har en bildeoppdatering tilgjengelig"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informasjon",
         "processor": "Prosessor: {cpuModelName}",
-        "memory": "Minne: {memory}GiB",
-        "memoryAvailable": "Tilgjengelig: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Minne: {memory}",
+        "memoryAvailable": "Tilgjengelig: {memoryAvailable} ({percent}%)",
         "version": "Versjon: {version}",
         "uptime": "Oppetid: {months} Måneder, {days} Dager, {hours} Timer, {minutes} Minutter",
         "loadAverage": "Gjennomsnittsbelastning:",
@@ -3137,7 +2900,7 @@
           "label": "Vis diverse oppføringer merket som fullført"
         },
         "activeTorrentThreshold": {
-          "label": "Skjul fullført torrent under denne terskelen (i kiB/s)"
+          "label": "Skjul fullført torrent under denne terskelen"
         },
         "categoryFilter": {
           "label": "Kategorier/merker for filtrering"
@@ -3927,7 +3690,7 @@
               "label": "Prosentandel (f.eks. 76%)"
             },
             "absolute": {
-              "label": "Absolutte verdier (f.eks. 800GB / 1TB)"
+              "label": "Absolutte verdier"
             },
             "free": {
               "label": "Prosentandel ledig plass (f.eks. 24% ledig)"
@@ -3946,26 +3709,6 @@
       "status": {
         "unhealthy": "Usunn"
       }
-    },
-    "customApi": {
-      "name": "Egendefinert API",
-      "description": "Vise data fra alle eksterne API med egendefinert konfigurasjon.",
-      "option": {
-        "definitionId": {
-          "label": "Definisjon ID"
-        },
-        "refreshInterval": {
-          "label": "Oppdater intervall",
-          "description": "Hvor ofte skal data fra API (i sekunder) fylles"
-        }
-      },
-      "noDefinition": "Ingen definisjon valgt",
-      "definitionNotFound": "Widgetdefinisjonen ikke funnet. Den kan ha blitt slettet.",
-      "noDisplayOutput": "Ingen visningsutdata",
-      "executeConfirm": "Er du sikker på at du vil utføre denne handlingen?",
-      "executing": "Utfører...",
-      "executeSuccess": "Handlingen kjøres vellykket",
-      "executeFailed": "Handlingen feilet. Sjekk widgetkonfigurasjonen."
     },
     "beszelSystemTable": {
       "name": "Beszel systemer (tabell)",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker nettverk I/O",
           "subtitle": "Nettverkstrafikken til en dokerkolulator"
+        }
+      }
+    },
+    "wud": {
+      "name": "Hva passer opp",
+      "description": "Vis hvor mange sette containere som er tilgjengelige.",
+      "title": "Hva passer opp",
+      "monitored": "Overvåket",
+      "updatesAvailable": "{count, plural, one {# oppdatering tilgjengelig} other {# oppdateringer tilgjengelig}}",
+      "updateAvailable": "Oppdatering tilgjengelig",
+      "openReleaseNotes": "Åpne utgivelsesnotater",
+      "option": {
+        "showTitle": {
+          "label": "Vis tittel"
+        },
+        "showRing": {
+          "label": "Vis oppdatering ring"
+        },
+        "layout": {
+          "label": "Oppsett",
+          "option": {
+            "horizontal": {
+              "label": "Horisontal"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Vis liste over containeroppdatering",
+          "description": "Viser hver overvåket beholder som har en bildeoppdatering tilgjengelig"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Hjem",
         "boards": "Tavler",
         "apps": "Apper",
         "integrations": "Integrasjoner",
-        "customWidgets": "Egendefinerte Widgeter",
         "searchEngies": "Søkemotorer",
         "medias": "Medier",
         "users": {
@@ -4876,7 +4651,7 @@
             "title": "Statistikk",
             "general": {
               "title": "Send anonym brukerdata",
-              "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (MySQL/PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
+              "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
             }
           },
           "crawlingAndIndexing": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Slipp sikkerhetskopi ZIP her",
-              "description": "Aksepterer .zip-filer fra en Homarr SQLite sikkerhetskopi (maks 256 MB)"
+              "description": "Aksepterer .zip-filer fra en Homarr SQLite sikkerhetskopi (maks {maxSize})"
             },
             "analyzing": "Analyserer sikkerhetskopi...",
             "changeFile": "Endre fil",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Administrer",
       "boards": {
         "label": "Tavler"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Rediger"
-        }
-      },
-      "custom-widgets": {
-        "label": "Tilpassede widgets",
-        "new": {
-          "label": "Ny"
-        },
-        "edit": {
-          "label": "Rediger",
-          "flow": {
-            "label": "Bevegelse"
-          }
         }
       },
       "users": {

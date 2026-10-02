@@ -1,0 +1,5 @@
+{
+  "title": "Community",
+  "defaultOpen": false,
+  "pages": ["index", "faq", "get-in-touch", "translations", "donate", "license"]
+}

@@ -2,22 +2,27 @@
 
 import { Group, Stack, Switch, Text } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
+import { IconChevronRight } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 
-import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import type { ByteUnitSystem } from "@homarr/common";
 import type { ColorScheme } from "@homarr/definitions";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
 import { localeConfigurations } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createChildrenOptions } from "../../../../lib/children";
 import type { ChildrenAction } from "../../../../lib/children";
 import { interaction } from "../../../../lib/interaction";
 import { useUserPreferences } from "../../../../preferences/use-user-preference";
-import { preferenceChildrenOptionsByKey, preferenceIcons } from "../../../../preferences/preference-registry";
+import {
+  preferenceChildrenOptionsByKey,
+  preferenceIcons,
+  userFieldPreferenceLabels,
+} from "../../../../preferences/preference-registry";
 
 dayjs.extend(localeData);
 
@@ -43,15 +48,19 @@ const BooleanRow = ({
   </Group>
 );
 
-const SelectRow = ({ label, Icon, valueLabel }: { label: string; Icon: TablerIcon; valueLabel: string }) => (
+const SelectRow = ({ label, Icon, valueLabel }: { label: string; Icon: TablerIcon; valueLabel?: string }) => (
   <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
     <Group wrap="nowrap" gap="sm">
       <Icon stroke={1.5} size={20} />
       <Text>{label}</Text>
     </Group>
-    <Text size="sm" c="dimmed">
-      {valueLabel}
-    </Text>
+    {valueLabel ? (
+      <Text size="sm" c="dimmed">
+        {valueLabel}
+      </Text>
+    ) : (
+      <IconChevronRight aria-hidden size={16} />
+    )}
   </Group>
 );
 
@@ -64,16 +73,19 @@ const LinkRow = ({ label, Icon }: { label: string; Icon: TablerIcon }) => (
 
 const SELECT_KINDS = new Set(["select", "searchEngine", "board"]);
 
-const useSettingsActions = (_: Record<string, unknown>, query: string): SettingsAction[] => {
-  const t = useScopedI18n("search.mode.command.group.preferences.option");
-  const tColorScheme = useScopedI18n("common.colorScheme.options");
+export const useSettingsActions = (_: Record<string, unknown>, query: string): SettingsAction[] => {
+  const t = useI18n("search.mode.command.group.preferences.option");
+  const tUserField = useI18n("user.field");
+  const tByteUnit = useI18n("user.field.byteUnitSystem.options");
+  const tColorScheme = useI18n("common.colorScheme.options");
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user);
   const normalizedQuery = query.trim().toLowerCase();
   const preferences = useUserPreferences();
-
-  const boardsQuery = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isAuthenticated });
-  const searchEnginesQuery = clientApi.searchEngine.getSelectable.useQuery(undefined, { enabled: isAuthenticated });
+  const byteUnitLabels: Record<ByteUnitSystem, string> = {
+    decimal: `${tByteUnit("decimal")} (KB, MB, GB)`,
+    binary: `${tByteUnit("binary")} (KiB, MiB, GiB)`,
+  };
 
   const valueLabelResolvers: Record<string, () => string> = {
     colorScheme: () => tColorScheme(preferences.getPreference("colorScheme").value as ColorScheme),
@@ -81,21 +93,14 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
       const val = preferences.getPreference("locale").value;
       return localeConfigurations[val as keyof typeof localeConfigurations]?.name ?? String(val);
     },
-    defaultSearchEngineId: () =>
-      searchEnginesQuery.data?.find((e) => e.value === preferences.getPreference("defaultSearchEngineId").value)
-        ?.label ?? t("searchEngine.none" as never),
     firstDayOfWeek: () => dayjs.weekdays(false)[preferences.getPreference("firstDayOfWeek").value as DayOfWeek] ?? "",
-    homeBoardId: () =>
-      boardsQuery.data?.find((b) => b.id === preferences.getPreference("homeBoardId").value)?.name ??
-      t("board.none" as never),
-    mobileHomeBoardId: () =>
-      boardsQuery.data?.find((b) => b.id === preferences.getPreference("mobileHomeBoardId").value)?.name ??
-      t("board.none" as never),
+    byteUnitSystem: () => byteUnitLabels[preferences.getPreference("byteUnitSystem").value as ByteUnitSystem],
   };
 
   return visiblePreferenceDefinitions(isAuthenticated)
     .map((definition): SettingsAction | null => {
-      const label = t(`${definition.key}.label` as never);
+      const userFieldKey = userFieldPreferenceLabels[definition.key];
+      const label = userFieldKey ? tUserField(`${userFieldKey}.label` as never) : t(`${definition.key}.label` as never);
       const Icon = preferenceIcons[definition.key];
 
       const matchesSearch = [label, ...definition.aliases].some((v) => v.toLowerCase().includes(normalizedQuery));
@@ -128,9 +133,7 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
         if (!children) return null;
         return {
           key: definition.key,
-          Component: () => (
-            <SelectRow label={label} Icon={Icon} valueLabel={valueLabelResolvers[definition.key]?.() ?? ""} />
-          ),
+          Component: () => <SelectRow label={label} Icon={Icon} valueLabel={valueLabelResolvers[definition.key]?.()} />,
           useInteraction: interaction.children(children),
         };
       }
@@ -143,7 +146,7 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
 export const settingsChildrenOptions = createChildrenOptions<Record<string, unknown>>({
   useActions: useSettingsActions,
   DetailComponent: () => {
-    const t = useScopedI18n("search.mode.command.group.preferences");
+    const t = useI18n("search.mode.command.group.preferences");
     return (
       <Stack mx="md" my="sm" gap="xs">
         <Text>{t("title")}</Text>

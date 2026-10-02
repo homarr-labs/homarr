@@ -688,211 +688,6 @@
       "add": "App hinzufügen"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Benutzerdefinierte Widgets",
-        "noResults": "Noch keine benutzerdefinierten Widgets. Erstellen Sie Ihr erstes!",
-        "loading": "Wird geladen ..."
-      },
-      "create": {
-        "title": "Benutzerdefiniertes Widget erstellen",
-        "subtitle": "Definieren Sie eine API-URL, die Authentifizierung und die Darstellung der Antwortdaten."
-      },
-      "edit": {
-        "title": "Benutzerdefiniertes Widget bearbeiten"
-      }
-    },
-    "action": {
-      "create": "Erstellen",
-      "import": "Importieren",
-      "save": "Speichern",
-      "delete": "Benutzerdefiniertes Widget löschen",
-      "deleteConfirm": "Möchtest du „{name}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "export": "Exportieren",
-      "addMapping": "Zuordnung hinzufügen",
-      "addColumn": "Spalte hinzufügen",
-      "edit": "Bearbeiten",
-      "removeMapping": "Zuordnung entfernen",
-      "removeColumn": "Spalte entfernen",
-      "addItem": "Element hinzufügen",
-      "removeItem": "Element entfernen",
-      "addBar": "Balken hinzufügen",
-      "duplicate": "Duplizieren",
-      "copyAiPrompt": "KI-Prompt kopieren",
-      "enable": "Aktivieren",
-      "disable": "Deaktivieren",
-      "menu": "Aktionen"
-    },
-    "field": {
-      "name": "Name",
-      "description": "Beschreibung",
-      "iconUrl": "Symbol-URL",
-      "url": "URL",
-      "authType": "Authentifizierungstyp",
-      "headerName": "Name des Header-/Abfrageparameters",
-      "method": "Methode",
-      "requestBody": "Anfragetext",
-      "displayType": "Anzeigetyp",
-      "jsonPath": "JSON-Pfad",
-      "jsonPathHint": "Verwenden Sie die JSONPath-Syntax, um Werte zu extrahieren, z. B. $.data.temperature oder $.items[0].name",
-      "label": "Bezeichnung",
-      "unit": "Einheit",
-      "mappings": "Zuordnungen",
-      "tablePath": "JSON-Pfad des Arrays",
-      "tablePathHint": "Pfad zum Array in der Antwort, z. B. $.data.items",
-      "columns": "Spalten",
-      "header": "Kopfzeile",
-      "items": "Elemente",
-      "gridColumns": "Rasterspalten",
-      "cardStyle": "Kartenstil",
-      "bars": "Balken",
-      "valuePath": "JSON-Pfad des Werts",
-      "maxPath": "JSON-Pfad des Maximalwerts",
-      "showPercentage": "Prozentwert anzeigen",
-      "barSize": "Balkengrösse",
-      "goodValues": "Gute Werte (durch Komma getrennt)",
-      "dotSize": "Punktgrösse",
-      "valueSize": "Wertgrösse",
-      "labelPosition": "Position der Bezeichnung",
-      "kvLayout": "Ansicht",
-      "striped": "Gestreifte Zeilen",
-      "compact": "Kompakter Modus",
-      "maxHeight": "Maximale Höhe (px)",
-      "color": "Farbe",
-      "buttonLabel": "Schaltflächenbezeichnung",
-      "buttonColor": "Schaltflächenfarbe",
-      "confirmText": "Bestätigungstext",
-      "confirmTextHint": "Wenn festgelegt, wird vor dem Ausführen der Anfrage ein Bestätigungsdialog angezeigt",
-      "successMessage": "Erfolgsmeldung",
-      "successMessageHint": "Nachricht, die nach erfolgreicher Ausführung angezeigt wird",
-      "enabled": "Aktiviert",
-      "template": {
-        "label": "JSX-Vorlage",
-        "description": "Mantine-JSX-Vorlage. Greifen Sie über Datenbindungen auf API-Antwortfelder zu (z. B. data.name). Verwenden Sie nur zugelassene Komponenten. Verboten: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU-Temperatur",
-      "exampleLabelShort": "CPU-Temperatur",
-      "exampleHeader": "Name",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Schlüssel",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, wahr, aktiv",
-      "color": "blau"
-    },
-    "cardStyleOption": {
-      "filled": "Ausgefüllt",
-      "outline": "Umrandung",
-      "subtle": "Dezent"
-    },
-    "layoutOption": {
-      "list": "Liste",
-      "grid": "Raster"
-    },
-    "sizeOption": {
-      "sm": "Klein",
-      "md": "Mittel",
-      "lg": "Gross",
-      "xl": "Extragross"
-    },
-    "labelPositionOption": {
-      "above": "Oberhalb",
-      "below": "Unterhalb"
-    },
-    "fieldset": {
-      "general": "Allgemein",
-      "connection": "API-Verbindung",
-      "display": "Anzeigeeinstellungen"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Einen extrahierten Wert mit Bezeichnung und Einheit anzeigen",
-      "keyValue": "Mehrere beschriftete Werte nebeneinander anzeigen",
-      "table": "Datenzeilen im Tabellenformat anzeigen",
-      "statGrid": "Farbige Statistikkarten in einem Raster – wie bei Pi-hole- oder Speedtest-Widgets",
-      "progressBars": "Fortschrittsbalken zur Anzeige von Nutzung oder Abschluss – für Datenträger, Arbeitsspeicher und Kontingente",
-      "statusIndicator": "Farbige Statuspunkte für Online-/Offline- oder Zustandsanzeigen",
-      "countGrid": "Kompakte Zähler für Zahlen und Bezeichnungen in einem engen Raster",
-      "raw": "Formatiertes JSON zur Fehlerbehebung",
-      "actionButton": "Eine Schaltfläche, die beim Klicken eine Anfrage auslöst",
-      "customJsx": "Benutzerdefiniertes JSX-Layout mit zugelassenen Mantine-Komponenten und vollständiger API-Datenbindung"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Keine",
-      "bearer": "Bearer-Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API-Schlüssel (Header)",
-      "apiKeyQuery": "API-Schlüssel (Abfrage)"
-    },
-    "displayType": {
-      "singleValue": "Einzelwert",
-      "keyValue": "Schlüssel-Wert",
-      "table": "Tabelle",
-      "statGrid": "Statistikraster",
-      "progressBars": "Fortschrittsbalken",
-      "statusIndicator": "Statusanzeige",
-      "countGrid": "Zählerraster",
-      "raw": "Rohes JSON",
-      "actionButton": "Aktionsschaltfläche",
-      "customJsx": "Benutzerdefiniertes JSX"
-    },
-    "secret": {
-      "apiKey": "API-Schlüssel / Token",
-      "username": "Benutzername",
-      "password": "Passwort",
-      "savedPlaceholder": "••••••• (gespeichert, zum Beibehalten leer lassen)"
-    },
-    "preview": {
-      "title": "Vorschau",
-      "test": "Test",
-      "hint": "Klicken Sie auf «Test», um die API-Antwort mit Ihrer aktuellen Konfiguration in der Vorschau anzuzeigen.",
-      "rawResponse": "Rohe JSON-Antwort"
-    },
-    "notification": {
-      "created": "Widget „{name}“ erfolgreich erstellt.",
-      "updated": "Widget „{name}“ erfolgreich aktualisiert.",
-      "deleted": "Widget „{name}“ gelöscht.",
-      "imported": "Widget erfolgreich importiert.",
-      "aiPromptCopied": "KI-Prompt in die Zwischenablage kopiert",
-      "aiPromptDescription": "Kopieren Sie einen vorgefertigten Prompt, um ihn in einen beliebigen KI-Chatbot einzufügen (ChatGPT, Claude, Gemini ...). Er enthält das vollständige Widget-Schema und Ihre API-Antwort, damit die KI eine fertig importierbare JSON-Konfiguration für Sie erstellen kann.",
-      "aiPromptCopy": "In die Zwischenablage kopieren",
-      "aiPromptNoResponse": "Tipp: Führen Sie zuerst einen Test aus, um Ihre API-Antwort in den Prompt einzubeziehen und bessere Ergebnisse zu erzielen.",
-      "aiPromptCopyError": "Der Prompt konnte nicht in die Zwischenablage kopiert werden. Ihr Browser unterstützt diese Funktion möglicherweise nicht.",
-      "createError": "Widget konnte nicht erstellt werden. Überprüfen Sie, ob Ihr API-Endpunkt erreichbar ist.",
-      "updateError": "Widget konnte nicht aktualisiert werden. Ihre Änderungen wurden nicht gespeichert.",
-      "importError": "Widget konnte nicht importiert werden. Stellen Sie sicher, dass die Datei ein gültiger JSON-Export eines benutzerdefinierten Widgets ist.",
-      "exportError": "Widget konnte nicht exportiert werden.",
-      "duplicated": "Widget „{name}“ dupliziert.",
-      "duplicateError": "Widget konnte nicht dupliziert werden.",
-      "toggleError": "Fehler beim Umschalten des Widget-Status.",
-      "deleteError": "Fehler beim Löschen des Widgets.",
-      "previewError": "Fehler beim Abrufen der Vorschau. Überprüfen Sie die URL und versuchen Sie es erneut.",
-      "executed": "Aktion erfolgreich ausgeführt.",
-      "executeError": "Aktion fehlgeschlagen: {error}"
-    },
-    "table": {
-      "name": "Name",
-      "url": "URL",
-      "display": "Anzeige"
-    },
-    "widget": {
-      "disabled": "Dieses Widget ist deaktiviert"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Cloud-native Reverse-Proxy- und Load-Balancer-Lösung"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Überwachen Sie, für welche Ihrer Docker-Container Image-Updates verfügbar sind."
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Begleitanwendung für Sonarr und Radarr zur Verwaltung und zum Herunterladen von Untertiteln"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Überwachen Sie, für welche Ihrer Docker-Container Image-Updates verfügbar sind."
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "Hier",
     "iconPicker": {
       "label": "Icon-URL",
-      "description": "Durchsuchen Sie die Bibliothek, fügen Sie eine Bild-URL ein oder laden Sie eine Datei hoch.",
       "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie",
       "headerLoading": "Bilder nach Namen suchen",
+      "noResults": "Keine Symbole stimmen mit \"{search}\" überein.",
+      "error": "Symbole konnten nicht geladen werden.",
+      "description": "Durchsuchen Sie die Bibliothek, fügen Sie eine Bild-URL ein oder laden Sie eine Datei hoch.",
       "clear": "Bild entfernen",
       "uploadImage": "Bild hochladen",
       "results": "Bild-Suchergebnisse",
@@ -1452,9 +1249,7 @@
       "otherImages": "Andere Bilder",
       "urlLoading": "Bild wird überprüft…",
       "urlReady": "Bild ist einsatzbereit",
-      "urlError": "Dieses Bild konnte nicht geladen werden. Überprüfen Sie die URL und versuchen Sie es erneut.",
-      "noResults": "Keine Symbole stimmen mit \"{search}\" überein.",
-      "error": "Symbole konnten nicht geladen werden."
+      "urlError": "Dieses Bild konnte nicht geladen werden. Überprüfen Sie die URL und versuchen Sie es erneut."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Broadcast-Nachrichten anzeigen"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Zeigt an, wie viele überwachte Container Updates verfügbar haben.",
-      "title": "What's Up Docker",
-      "monitored": "Überwacht",
-      "updatesAvailable": "{count, plural, one {# Update verfügbar} other {# Updates verfügbar}}",
-      "updateAvailable": "Update verfügbar",
-      "openReleaseNotes": "Release Notes öffnen",
-      "option": {
-        "showTitle": {
-          "label": "Titel anzeigen"
-        },
-        "showRing": {
-          "label": "Update-Ring anzeigen"
-        },
-        "layout": {
-          "label": "Ansicht",
-          "option": {
-            "horizontal": {
-              "label": "Horizontal"
-            },
-            "vertical": {
-              "label": "Vertikal"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Container-Update-Liste anzeigen",
-          "description": "Listet jeden überwachten Container auf, für den ein Image-Update verfügbar ist."
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informationen",
         "processor": "Prozessor: {cpuModelName}",
-        "memory": "Speicher: {memory}GiB",
-        "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
+        "memory": "Speicher: {memory}",
+        "memoryAvailable": "Verfügbar: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
@@ -3137,7 +2900,7 @@
           "label": "Sonstige als abgeschlossen markierte Einträge anzeigen"
         },
         "activeTorrentThreshold": {
-          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
+          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden"
         },
         "categoryFilter": {
           "label": "Kategorien/Labels zum Filtern"
@@ -3947,26 +3710,6 @@
         "unhealthy": "Fehlerhaft"
       }
     },
-    "customApi": {
-      "name": "Benutzerdefinierte API",
-      "description": "Daten von jeder externen API mit benutzerdefinierter Konfiguration anzeigen.",
-      "option": {
-        "definitionId": {
-          "label": "Definitions-ID"
-        },
-        "refreshInterval": {
-          "label": "Aktualisierungsintervall",
-          "description": "Wie oft Daten von der API neu geladen werden sollen (in Sekunden)"
-        }
-      },
-      "noDefinition": "Keine Definition ausgewählt",
-      "definitionNotFound": "Widget-Definition nicht gefunden. Möglicherweise wurde sie gelöscht.",
-      "noDisplayOutput": "Keine Anzeigedaten",
-      "executeConfirm": "Möchten Sie diese Aktion wirklich ausführen?",
-      "executing": "Wird ausgeführt ...",
-      "executeSuccess": "Aktion erfolgreich ausgeführt",
-      "executeFailed": "Aktion fehlgeschlagen. Überprüfen Sie die Widget-Konfiguration."
-    },
     "beszelSystemTable": {
       "name": "Beszel-Systeme (Tabelle)",
       "description": "Tabellenansicht aller von Beszel überwachten Systeme mit sortierbaren Spalten und Statusindikatoren",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker-Netzwerk-E/A",
           "subtitle": "Netzwerkverkehr der Docker-Container"
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Zeigt an, wie viele überwachte Container Updates verfügbar haben.",
+      "title": "What's Up Docker",
+      "monitored": "Überwacht",
+      "updatesAvailable": "{count, plural, one {# Update verfügbar} other {# Updates verfügbar}}",
+      "updateAvailable": "Update verfügbar",
+      "openReleaseNotes": "Release Notes öffnen",
+      "option": {
+        "showTitle": {
+          "label": "Titel anzeigen"
+        },
+        "showRing": {
+          "label": "Update-Ring anzeigen"
+        },
+        "layout": {
+          "label": "Ansicht",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Container-Update-Liste anzeigen",
+          "description": "Listet jeden überwachten Container auf, für den ein Image-Update verfügbar ist."
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Startseite",
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrationen",
-        "customWidgets": "Benutzerdefinierte Widgets",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Ziehen Sie Ihre Backup-ZIP-Datei hierher",
-              "description": "Akzeptiert werden .zip-Dateien aus einer Homarr-SQLite-Sicherung (max. 256 MB)"
+              "description": "Akzeptiert werden .zip-Dateien aus einer Homarr-SQLite-Sicherung (max. {maxSize})"
             },
             "analyzing": "Sicherung wird analysiert ...",
             "changeFile": "Datei ändern",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Verwalten",
       "boards": {
         "label": "Boards"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Bearbeiten"
-        }
-      },
-      "custom-widgets": {
-        "label": "Benutzerdefinierte Widgets",
-        "new": {
-          "label": "Neu"
-        },
-        "edit": {
-          "label": "Bearbeiten",
-          "flow": {
-            "label": "Ablauf"
-          }
         }
       },
       "users": {

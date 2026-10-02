@@ -23,7 +23,8 @@ export const StepperNavigationComponent = ({
   prevStep,
   reset,
 }: StepperNavigationComponentProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tCreate = useI18n("management.page.user.create");
   return (
     <Card>
       {!isComplete ? (
@@ -33,7 +34,7 @@ export const StepperNavigationComponent = ({
             disabled={!hasPrevious || isLoadingNextStep}
             onClick={prevStep}
           >
-            {t("common.action.previous")}
+            {tCommon("action.previous")}
           </Button>
           <Button
             rightSection={<IconArrowRight size="1rem" />}
@@ -41,16 +42,16 @@ export const StepperNavigationComponent = ({
             loading={isLoadingNextStep}
             onClick={nextStep}
           >
-            {t("common.action.next")}
+            {tCommon("action.next")}
           </Button>
         </Group>
       ) : (
         <Group justify="end" wrap="nowrap">
           <Button variant="light" leftSection={<IconRotate size="1rem" />} onClick={reset}>
-            {t("management.page.user.create.action.createAnother")}
+            {tCreate("action.createAnother")}
           </Button>
           <Button leftSection={<IconArrowBackUp size="1rem" />} component={Link} href="/manage/users">
-            {t("management.page.user.create.action.back")}
+            {tCreate("action.back")}
           </Button>
         </Group>
       )}

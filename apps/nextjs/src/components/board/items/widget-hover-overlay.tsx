@@ -5,7 +5,7 @@ import { Avatar, Text, Tooltip } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { getIconUrl } from "@homarr/definitions";
+import { getIconUrl, getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { loadWidgetDefinition } from "@homarr/widgets/manifest";
 
@@ -34,14 +34,14 @@ const LoadedWidgetHoverOverlay = ({ item, integrations }: WidgetHoverOverlayProp
   const definition = use(loadWidgetDefinition(item.kind));
   const WidgetIcon = definition.icon;
 
-  const displayName = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
+  const displayName = item.advancedOptions.title?.trim() || getWidgetName(item.kind, t);
 
   const connectedIntegrations = (integrations ?? []).filter((integration) =>
     item.integrationIds.includes(integration.id),
   );
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} data-board-widget-header>
       <div className={classes.panel}>
         <div className={classes.nameSection}>
           <WidgetIcon size={14} stroke={1.75} className={classes.widgetIcon} />

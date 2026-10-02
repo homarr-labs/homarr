@@ -1,6 +1,6 @@
 import { IconBuildingBank } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const stockPriceTimeFrames = {
@@ -12,7 +12,15 @@ const timeRangeOptions = stockPriceTimeFrames.range;
 const timeIntervalOptions = stockPriceTimeFrames.interval;
 
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
+  supportsAdvancedFocus: true,
   icon: IconBuildingBank,
+  queryKey: [["widget", "stockPrice", "getPriceHistory"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      stock: scope.options.stock,
+      timeRange: scope.options.timeRange,
+      timeInterval: scope.options.timeInterval,
+    }),
   refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
@@ -32,6 +40,10 @@ export const { definition, componentLoader } = createWidgetDefinition("stockPric
           value,
           label: (t) => t(`widget.stockPrice.option.timeInterval.option.${value}.label`),
         })),
+      }),
+      showDetails: factory.switch({
+        defaultValue: true,
+        withDescription: true,
       }),
     }));
   },

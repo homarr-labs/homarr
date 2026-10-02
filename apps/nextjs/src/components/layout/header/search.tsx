@@ -8,7 +8,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import { HeaderButton } from "./button";
 import classes from "./search.module.css";
-import { preloadSpotlight } from "./lazy-spotlight";
 
 export const DesktopSearchInput = () => {
   const t = useI18n();
@@ -21,10 +20,7 @@ export const DesktopSearchInput = () => {
       w={400}
       size="sm"
       leftSection={<IconSearch size={20} stroke={1.5} />}
-      onClick={openSpotlight}
-      onFocus={preloadSpotlight}
-      onPointerDown={preloadSpotlight}
-      onPointerEnter={preloadSpotlight}
+      onClick={() => openSpotlight()}
       radius="xl"
     >
       {`${t("search.placeholder")}...`}
@@ -32,15 +28,14 @@ export const DesktopSearchInput = () => {
   );
 };
 
-export const MobileSearchButton = () => {
+export const MobileSearchButton = ({ alwaysVisible = false }: { alwaysVisible?: boolean }) => {
+  const t = useI18n();
   return (
     <HeaderButton
       data-homarr-dev-benchmark-interaction="search"
-      onClick={openSpotlight}
-      onFocus={preloadSpotlight}
-      onPointerDown={preloadSpotlight}
-      onPointerEnter={preloadSpotlight}
-      className={classes.mobileSearch}
+      onClick={() => openSpotlight()}
+      className={alwaysVisible ? undefined : classes.mobileSearch}
+      aria-label={t("search.placeholder")}
     >
       <IconSearch size={20} stroke={1.5} />
     </HeaderButton>

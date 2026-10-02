@@ -688,211 +688,6 @@
       "add": ""
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Pasirinktiniai valdikliai",
-        "noResults": "Pasirinktinių valdiklių dar nėra. Sukurkite pirmąjį!",
-        "loading": "Įkeliama..."
-      },
-      "create": {
-        "title": "Sukurti pasirinktinį valdiklį",
-        "subtitle": "Apibrėžkite API URL, autentifikavimą ir atsakymo duomenų rodymo būdą."
-      },
-      "edit": {
-        "title": "Redaguoti pasirinktinį valdiklį"
-      }
-    },
-    "action": {
-      "create": "Sukurti",
-      "import": "Importuoti",
-      "save": "Išsaugoti",
-      "delete": "Ištrinti pasirinktinį valdiklį",
-      "deleteConfirm": "Ar tikrai norite ištrinti „{name}“? Šio veiksmo neįmanoma atšaukti.",
-      "export": "Eksportuoti",
-      "addMapping": "Pridėti susiejimą",
-      "addColumn": "Pridėti stulpelį",
-      "edit": "Redaguoti",
-      "removeMapping": "Pašalinti susiejimą",
-      "removeColumn": "Pašalinti stulpelį",
-      "addItem": "Pridėti elementą",
-      "removeItem": "Pašalinti elementą",
-      "addBar": "Pridėti juostą",
-      "duplicate": "Dubliuoti",
-      "copyAiPrompt": "Kopijuoti DI užklausą",
-      "enable": "Įjungti",
-      "disable": "Išjungti",
-      "menu": "Veiksmai"
-    },
-    "field": {
-      "name": "Pavadinimas",
-      "description": "Aprašymas",
-      "iconUrl": "Piktogramos URL",
-      "url": "URL",
-      "authType": "Autentifikavimo tipas",
-      "headerName": "Antraštės / užklausos parametro pavadinimas",
-      "method": "Metodas",
-      "requestBody": "Užklausos turinys",
-      "displayType": "Rodinio tipas",
-      "jsonPath": "JSON kelias",
-      "jsonPathHint": "Naudokite JSONPath sintaksę reikšmėms išgauti, pvz., $.data.temperature arba $.items[0].name",
-      "label": "Etiketė",
-      "unit": "Vienetas",
-      "mappings": "Susiejimai",
-      "tablePath": "Masyvo JSON kelias",
-      "tablePathHint": "Kelias iki masyvo atsakyme, pvz., $.data.items",
-      "columns": "Stulpeliai",
-      "header": "Antraštė",
-      "items": "Elementai",
-      "gridColumns": "Tinklelio stulpeliai",
-      "cardStyle": "Kortelės stilius",
-      "bars": "Juostos",
-      "valuePath": "Reikšmės JSON kelias",
-      "maxPath": "Didžiausios reikšmės JSON kelias",
-      "showPercentage": "Rodyti procentinę dalį",
-      "barSize": "Juostos dydis",
-      "goodValues": "Geros reikšmės (atskirtos kableliais)",
-      "dotSize": "Taško dydis",
-      "valueSize": "Reikšmės dydis",
-      "labelPosition": "Etiketės padėtis",
-      "kvLayout": "Išdėstymas",
-      "striped": "Dryžuotos eilutės",
-      "compact": "Kompaktiškas režimas",
-      "maxHeight": "Didžiausias aukštis (px)",
-      "color": "Spalva",
-      "buttonLabel": "Mygtuko etiketė",
-      "buttonColor": "Mygtuko spalva",
-      "confirmText": "Patvirtinimo tekstas",
-      "confirmTextHint": "Jei nustatyta, prieš vykdant užklausą bus rodomas patvirtinimo dialogas",
-      "successMessage": "Sėkmės pranešimas",
-      "successMessageHint": "Pranešimas, rodomas sėkmingai įvykdžius",
-      "enabled": "Įjungta",
-      "template": {
-        "label": "JSX šablonas",
-        "description": "„Mantine“ JSX šablonas. Pasiekite API atsakymo laukus naudodami duomenų susiejimus (pvz., data.name). Naudokite tik leidžiamus komponentus. Draudžiama: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU temperatūra",
-      "exampleLabelShort": "CPU temperatūra",
-      "exampleHeader": "Pavadinimas",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.pavadinimas",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "prisijungęs, true, veikia",
-      "color": "mėlyna"
-    },
-    "cardStyleOption": {
-      "filled": "Užpildyta",
-      "outline": "Kontūras",
-      "subtle": "Subtili"
-    },
-    "layoutOption": {
-      "list": "Sąrašas",
-      "grid": "Tinklelis"
-    },
-    "sizeOption": {
-      "sm": "Mažas",
-      "md": "Vidutinis",
-      "lg": "Didelis",
-      "xl": "Itin didelis"
-    },
-    "labelPositionOption": {
-      "above": "Viršuje",
-      "below": "Apačioje"
-    },
-    "fieldset": {
-      "general": "Bendrieji",
-      "connection": "API ryšys",
-      "display": "Rodinio konfigūracija"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Rodyti vieną išgautą reikšmę su etikete ir vienetu",
-      "keyValue": "Rodyti kelias etiketes turinčias reikšmes greta",
-      "table": "Rodyti duomenų eilutes lentelės formatu",
-      "statGrid": "Spalvotos statistikos kortelės tinklelyje — kaip „Pi-Hole“ ar „Speedtest“ valdikliuose",
-      "progressBars": "Naudojimo arba užbaigtumo eigos juostos — diskui, atminčiai ir kvotoms",
-      "statusIndicator": "Spalvoti būsenos taškai, rodantys prisijungimo / atsijungimo arba būklės būsenas",
-      "countGrid": "Kompaktiški skaičių ir etikečių skaitikliai glaustame tinklelyje",
-      "raw": "Gražiai suformatuota JSON išvestis derinimui",
-      "actionButton": "Mygtukas, kuris spustelėjus suaktyvina užklausą",
-      "customJsx": "Pasirinktinis JSX išdėstymas naudojant leidžiamus „Mantine“ komponentus ir visą API duomenų susiejimą"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nėra",
-      "bearer": "Bearer žetonas",
-      "basic": "Pagrindinis autentifikavimas",
-      "apiKeyHeader": "API raktas (antraštė)",
-      "apiKeyQuery": "API raktas (užklausa)"
-    },
-    "displayType": {
-      "singleValue": "Viena reikšmė",
-      "keyValue": "Raktas–reikšmė",
-      "table": "Lentelė",
-      "statGrid": "Statistikos tinklelis",
-      "progressBars": "Eigos juostos",
-      "statusIndicator": "Būsenos indikatorius",
-      "countGrid": "Skaitiklių tinklelis",
-      "raw": "Neapdorotas JSON",
-      "actionButton": "Veiksmo mygtukas",
-      "customJsx": "Pasirinktinis JSX"
-    },
-    "secret": {
-      "apiKey": "API raktas / žetonas",
-      "username": "Naudotojo vardas",
-      "password": "Slaptažodis",
-      "savedPlaceholder": "••••••• (išsaugota, palikite tuščią, kad išlaikytumėte)"
-    },
-    "preview": {
-      "title": "Peržiūra",
-      "test": "Išbandyti",
-      "hint": "Spustelėkite „Išbandyti“, kad peržiūrėtumėte API atsakymą su dabartine konfigūracija.",
-      "rawResponse": "Neapdorotas JSON atsakymas"
-    },
-    "notification": {
-      "created": "Valdiklis „{name}“ sėkmingai sukurtas.",
-      "updated": "Valdiklis „{name}“ sėkmingai atnaujintas.",
-      "deleted": "Valdiklis „{name}“ ištrintas.",
-      "imported": "Valdiklis sėkmingai importuotas.",
-      "aiPromptCopied": "DI užklausa nukopijuota į iškarpinę",
-      "aiPromptDescription": "Nukopijuokite iš anksto paruoštą užklausą ir įklijuokite ją į bet kurį DI pokalbių robotą („ChatGPT“, „Claude“, „Gemini“...). Joje pateikiama visa valdiklio schema ir API atsakymas, kad DI galėtų sugeneruoti paruoštą importuoti JSON konfigūraciją.",
-      "aiPromptCopy": "Kopijuoti į iškarpinę",
-      "aiPromptNoResponse": "Patarimas: pirmiausia paleiskite bandymą, kad į užklausą būtų įtrauktas API atsakymas ir rezultatai būtų geresni.",
-      "aiPromptCopyError": "Nepavyko nukopijuoti užklausos į iškarpinę. Jūsų naršyklė gali nepalaikyti šios funkcijos.",
-      "createError": "Nepavyko sukurti valdiklio. Patikrinkite, ar jūsų API galinis taškas pasiekiamas.",
-      "updateError": "Nepavyko atnaujinti valdiklio. Jūsų pakeitimai neišsaugoti.",
-      "importError": "Nepavyko importuoti valdiklio. Įsitikinkite, kad failas yra tinkamas pasirinktinio valdiklio JSON eksportas.",
-      "exportError": "Nepavyko eksportuoti valdiklio.",
-      "duplicated": "Valdiklis „{name}“ sudubliuotas.",
-      "duplicateError": "Nepavyko dubliuoti valdiklio.",
-      "toggleError": "Nepavyko perjungti valdiklio būsenos.",
-      "deleteError": "Nepavyko ištrinti valdiklio.",
-      "previewError": "Nepavyko gauti peržiūros. Patikrinkite URL ir bandykite dar kartą.",
-      "executed": "Veiksmas sėkmingai įvykdytas.",
-      "executeError": "Veiksmas nepavyko: {error}"
-    },
-    "table": {
-      "name": "Pavadinimas",
-      "url": "URL",
-      "display": "Rodinys"
-    },
-    "widget": {
-      "disabled": "Šis valdiklis išjungtas"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Debesies pagrindu veikiantis atvirkštinis tarpinis serveris ir apkrovos balansavimo priemonė"
     },
-    "wud": {
-      "name": "Kas naujo, Docker",
-      "description": "Stebėkite, kuriems jūsų Docker konteineriams yra prieinami atvaizdų naujinimai"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentų valdymo sistema, skirta nuskaitytų dokumentų archyvavimui ir tvarkymui"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "„Sonarr“ ir „Radarr“ papildoma programa, valdanti ir atsisiunčianti subtitrus"
+    },
+    "wud": {
+      "name": "Kas naujo, Docker",
+      "description": "Stebėkite, kuriems jūsų Docker konteineriams yra prieinami atvaizdų naujinimai"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "čia",
     "iconPicker": {
       "label": "Piktogramos URL",
-      "description": "Ieškokite bibliotekoje, įklijuokite paveikslėlio URL arba įkelkite failą.",
       "header": "Įveskite pavadinimą ar objektus, kad filtruoti piktogramas... Homarr ieškos per {countIcons} piktogramas",
       "headerLoading": "Ieškoti paveikslėlių pagal pavadinimą",
+      "noResults": "Nė viena piktograma neatitinka „{search}“.",
+      "error": "Nepavyko įkelti piktogramų.",
+      "description": "Ieškokite bibliotekoje, įklijuokite paveikslėlio URL arba įkelkite failą.",
       "clear": "Pašalinti paveikslėlį",
       "uploadImage": "Įkelti paveikslėlį",
       "results": "Vaizdų paieškos rezultatai",
@@ -1452,9 +1249,7 @@
       "otherImages": "Kiti vaizdai",
       "urlLoading": "Tikrinamas vaizdas…",
       "urlReady": "Vaizdas paruoštas naudoti",
-      "urlError": "Šio vaizdo nepavyko įkelti. Patikrinkite URL ir bandykite dar kartą.",
-      "noResults": "Nė viena piktograma neatitinka „{search}“.",
-      "error": "Nepavyko įkelti piktogramų."
+      "urlError": "Šio vaizdo nepavyko įkelti. Patikrinkite URL ir bandykite dar kartą."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Rodyti transliacijos pranešimus"
-        }
-      }
-    },
-    "wud": {
-      "name": "Kas naujo, Docker",
-      "description": "Rodo, kiek stebimų konteinerių turi prieinamų naujinimų.",
-      "title": "Kas naujo, Docker",
-      "monitored": "Stebimi",
-      "updatesAvailable": "{count, plural, one {# atnaujinimas prieinamas} few {# atnaujinimai prieinami} many {# atnaujinimų prieinama} other {# atnaujinimo prieinama}}",
-      "updateAvailable": "Galimas naujinimas",
-      "openReleaseNotes": "Atidaryti leidimo pastabas",
-      "option": {
-        "showTitle": {
-          "label": "Rodyti pavadinimą"
-        },
-        "showRing": {
-          "label": "Rodyti naujinimo žiedą"
-        },
-        "layout": {
-          "label": "Išdėstymas",
-          "option": {
-            "horizontal": {
-              "label": "Horizontalus"
-            },
-            "vertical": {
-              "label": "Vertikalus"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Rodyti konteinerių naujinimų sąrašą",
-          "description": "Išvardija kiekvieną stebimą konteinerį, kuriam yra prieinamas atvaizdo naujinimas"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informacija",
         "processor": "Procesorius: {cpuModelName}",
-        "memory": "Atmintis: {memory}GiB",
-        "memoryAvailable": "Prieinama: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Atmintis: {memory}",
+        "memoryAvailable": "Prieinama: {memoryAvailable} ({percent}%)",
         "version": "Versija: {version}",
         "uptime": "Veikimo laikas: {months} mėn., {days} d., {hours} val., {minutes} min",
         "loadAverage": "Vidutinė apkrova:",
@@ -2874,193 +2637,6 @@
         "internalServerError": "Nepavyko gauti Paperless-ngx duomenų"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Pagrindinių kompiuterių pataisų būklės apžvalga iš „PatchMon“",
-      "title": "„PatchMon“ statistika",
-      "totalHosts": "Iš viso pagrindinių kompiuterių",
-      "hostsNeedingUpdates": "Reikia atnaujinimų",
-      "securityUpdates": "Saugumo atnaujinimai",
-      "upToDateHosts": "Atnaujinti pagrindiniai kompiuteriai",
-      "hostsWithSecurityUpdates": "Pagrindiniai kompiuteriai su saugumo atnaujinimais",
-      "recentUpdates24h": "Atnaujinimai (24 val.)",
-      "totalOutdatedPackages": "Pasenę paketai",
-      "totalRepos": "Saugyklos",
-      "osDistribution": "OS distribucija",
-      "compliance": "Pataisų atitiktis",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Atnaujinta {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Rodyti visus pagrindinius kompiuterius",
-          "description": "Rodyti bendrą stebimų pagrindinių kompiuterių skaičių"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Rodyti pagrindinius kompiuterius, kuriems reikia atnaujinimų",
-          "description": "Rodyti pagrindinius kompiuterius, turinčius bent vieną pasenusį paketą"
-        },
-        "showSecurityUpdates": {
-          "label": "Rodyti saugumo atnaujinimus",
-          "description": "Rodyti bendrą prieinamų saugumo atnaujinimų skaičių"
-        },
-        "showUpToDateHosts": {
-          "label": "Rodyti atnaujintus pagrindinius kompiuterius",
-          "description": "Rodyti pagrindinius kompiuterius, neturinčius pasenusių paketų"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Rodyti pagrindinius kompiuterius su saugumo atnaujinimais",
-          "description": "Rodyti pagrindinius kompiuterius, kuriems reikia saugumo pataisų"
-        },
-        "showRecentUpdates24h": {
-          "label": "Rodyti naujausius atnaujinimus (24 val.)",
-          "description": "Rodyti per pastarąsias 24 valandas pritaikytų atnaujinimų skaičių"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Rodyti pasenusius paketus",
-          "description": "Rodyti bendrą pasenusių paketų skaičių visuose pagrindiniuose kompiuteriuose"
-        },
-        "showTotalRepos": {
-          "label": "Rodyti saugyklas",
-          "description": "Rodyti stebimų aktyvių saugyklų skaičių"
-        },
-        "enableThresholdColors": {
-          "label": "Įjungti slenkstines spalvas",
-          "description": "Spalvinti statistikos reikšmes žalia, geltona arba raudona pagal griežtumo išankstines nuostatas"
-        },
-        "useCustomThresholds": {
-          "label": "Išplėstiniai slenksčiai",
-          "description": "Tinkinkite kiekvienos statistikos įspėjimo ir kritinius slenksčius naudodami absoliučius skaičius arba procentines visų pagrindinių kompiuterių dalis"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Absoliutus skaičius",
-            "percent": "Procentinė visų pagrindinių kompiuterių dalis"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Atnaujinimų poreikio slenksčio režimas",
-          "description": "Palyginti atnaujinimų poreikio skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Atnaujinimų poreikio įspėjimo slenkstis",
-          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Atnaujinimų poreikio kritinis slenkstis",
-          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Saugumo atnaujinimų slenksčio režimas",
-          "description": "Palyginti saugumo atnaujinimų skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Saugumo atnaujinimų įspėjimo slenkstis",
-          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Saugumo atnaujinimų kritinis slenkstis",
-          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Pagrindinių kompiuterių su saugumo atnaujinimais slenksčio režimas",
-          "description": "Palyginti pagrindinių kompiuterių skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Pagrindinių kompiuterių su saugumo atnaujinimais įspėjimo slenkstis",
-          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Pagrindinių kompiuterių su saugumo atnaujinimais kritinis slenkstis",
-          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Atnaujintų pagrindinių kompiuterių slenksčio režimas",
-          "description": "Palyginti atnaujintų pagrindinių kompiuterių skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Atnaujintų pagrindinių kompiuterių įspėjimo slenkstis",
-          "description": "Įjungti geltoną spalvą, kai reikšmė yra lygi arba didesnė už šį slenkstį, bet neapima visų pagrindinių kompiuterių"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Atnaujintų pagrindinių kompiuterių kritinis slenkstis",
-          "description": "Įjungti raudoną spalvą, kai reikšmė nukrenta žemiau šio slenksčio"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Pasenusių paketų slenksčio režimas",
-          "description": "Palyginti pasenusių paketų skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Pasenusių paketų įspėjimo slenkstis",
-          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Pasenusių paketų kritinis slenkstis",
-          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
-        },
-        "showOsDistribution": {
-          "label": "Rodyti OS distribuciją",
-          "description": "Rodyti stebimų pagrindinių kompiuterių suskirstymą pagal operacinę sistemą"
-        },
-        "osDistributionLimit": {
-          "label": "OS distribucijos riba",
-          "description": "Didžiausias rodomų operacinių sistemų skaičius",
-          "option": {
-            "3": "3 populiariausios",
-            "5": "5 populiariausios",
-            "10": "10 populiariausių",
-            "all": "Visos"
-          }
-        },
-        "showOsVersion": {
-          "label": "Rodyti OS versiją",
-          "description": "Kai prieinama, prie kiekvienos distribucijos etiketės pridėti OS versiją"
-        },
-        "showComplianceHero": {
-          "label": "Rodyti atitikties pagrindinį rodiklį",
-          "description": "Rodyti atitikties žiedą, nurodantį atnaujintų pagrindinių kompiuterių procentą"
-        },
-        "osDisplayMode": {
-          "label": "OS rodymo režimas",
-          "description": "Pasirinkite, kaip rodyti operacinės sistemos distribuciją",
-          "option": {
-            "bars": "Horizontalios juostos",
-            "donut": "Žiedinė diagrama"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "Nepavyko gauti „PatchMon“ duomenų"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Trūkstamų subtitrų ir būklės iš „Bazarr“ egzemplioriaus apžvalga",
-      "episodes": "Trūkstami epizodai",
-      "movies": "Trūkstami filmai",
-      "providers": "Teikėjų problemos",
-      "status": "Būklės problemos",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Rodyti trūkstamus epizodus",
-          "description": "Rodyti epizodų, kuriems trūksta subtitrų, skaičių"
-        },
-        "showMissingMovies": {
-          "label": "Rodyti trūkstamus filmus",
-          "description": "Rodyti filmų, kuriems trūksta subtitrų, skaičių"
-        },
-        "showProviderIssues": {
-          "label": "Rodyti teikėjų problemas",
-          "description": "Rodyti subtitrų teikėjų, turinčių problemų, skaičių"
-        },
-        "showHealthIssues": {
-          "label": "Rodyti būklės problemas",
-          "description": "Rodyti „Bazarr“ būklės problemų skaičių"
-        }
-      },
-      "error": {
-        "internalServerError": "Nepavyko gauti „Bazarr“ duomenų"
-      }
-    },
     "immich-serverStats": {
       "name": "„Immich“ serverio statistika",
       "description": "Informacija apie jūsų „Immich“ egzempliorių",
@@ -3137,7 +2713,7 @@
           "label": "Rodyti užbaigtais pažymėtus įvairius įrašus"
         },
         "activeTorrentThreshold": {
-          "label": "Slėpti baigtus torrent žemiau šios ribos (kiB/s)"
+          "label": "Slėpti baigtus torrent žemiau šios ribos"
         },
         "categoryFilter": {
           "label": "Kategorijos/žymos filtruoti"
@@ -3432,35 +3008,6 @@
           }
         }
       }
-    },
-    "mediaMissing": {
-      "name": "Trūkstama ir eilėje esanti medija",
-      "description": "Rodo trūkstamus ir eilėje esančius filmus bei epizodus iš „Radarr“ ir „Sonarr“",
-      "option": {
-        "showMissing": {
-          "label": "Rodyti trūkstamus elementus"
-        },
-        "showQueued": {
-          "label": "Rodyti eilėje esančius elementus"
-        },
-        "pageSize": {
-          "label": "Elementų puslapyje"
-        }
-      },
-      "tab": {
-        "missing": "Trūkstama",
-        "queued": "Eilėje"
-      },
-      "type": {
-        "movie": "Filmas",
-        "episode": "Epizodas"
-      },
-      "empty": {
-        "missing": "Trūkstamų elementų nėra",
-        "queued": "Eilėje esančių elementų nėra",
-        "noTabsEnabled": "Valdiklio nuostatose įjunkite bent vieną kortelę"
-      },
-      "timeLeft": "Liko laiko"
     },
     "rssFeed": {
       "name": "RSS srautai",
@@ -3790,40 +3337,6 @@
         "internalServerError": "Nepavyko gauti veikimo duomenų"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "„Traefik“ maršrutizatorių, paslaugų, tarpinių programų ir įėjimo taškų apžvalga",
-      "option": {
-        "showTcp": {
-          "label": "Rodyti TCP"
-        },
-        "showUdp": {
-          "label": "Rodyti UDP"
-        },
-        "showEntryPoints": {
-          "label": "Rodyti įėjimo taškus"
-        }
-      },
-      "instances": "„Traefik“ egzemplioriai",
-      "versionUnknown": "Versija nežinoma",
-      "summary": {
-        "routers": "Maršrutizatoriai",
-        "entryPoints": "Įėjimo taškai"
-      },
-      "resource": {
-        "routers": "Maršrutizatoriai",
-        "services": "Paslaugos",
-        "middlewares": "Tarpinės programos"
-      },
-      "status": {
-        "healthy": "Veikia tinkamai",
-        "errors": "Klaidų: {count}",
-        "warnings": "Įspėjimų: {count}"
-      },
-      "error": {
-        "internalServerError": "Nepavyko gauti „Traefik“ duomenų"
-      }
-    },
     "audioStats": {
       "name": "Garso statistika",
       "description": "Bibliotekos ir atkūrimo statistika iš Navidrome arba Audiobookshelf",
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "Nesveika"
       }
-    },
-    "customApi": {
-      "name": "Pasirinktinis API",
-      "description": "Rodykite duomenis iš bet kurio išorinio API naudodami pasirinktinę konfigūraciją.",
-      "option": {
-        "definitionId": {
-          "label": "Apibrėžimo ID"
-        },
-        "refreshInterval": {
-          "label": "Atnaujinimo intervalas",
-          "description": "Kaip dažnai iš naujo gauti duomenis iš API (sekundėmis)"
-        }
-      },
-      "noDefinition": "Apibrėžimas nepasirinktas",
-      "definitionNotFound": "Valdiklio apibrėžimas nerastas. Jis galėjo būti ištrintas.",
-      "noDisplayOutput": "Nėra rodinio išvesties",
-      "executeConfirm": "Ar tikrai norite įvykdyti šį veiksmą?",
-      "executing": "Vykdoma...",
-      "executeSuccess": "Veiksmas sėkmingai įvykdytas",
-      "executeFailed": "Veiksmas nepavyko. Patikrinkite valdiklio konfigūraciją."
     },
     "beszelSystemTable": {
       "name": "Beszel sistemos (lentelė)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "Docker tinklo I/O",
           "subtitle": "Docker konteinerių tinklo srautas"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Pagrindinių kompiuterių pataisų būklės apžvalga iš „PatchMon“",
+      "title": "„PatchMon“ statistika",
+      "totalHosts": "Iš viso pagrindinių kompiuterių",
+      "hostsNeedingUpdates": "Reikia atnaujinimų",
+      "securityUpdates": "Saugumo atnaujinimai",
+      "upToDateHosts": "Atnaujinti pagrindiniai kompiuteriai",
+      "hostsWithSecurityUpdates": "Pagrindiniai kompiuteriai su saugumo atnaujinimais",
+      "recentUpdates24h": "Atnaujinimai (24 val.)",
+      "totalOutdatedPackages": "Pasenę paketai",
+      "totalRepos": "Saugyklos",
+      "osDistribution": "OS distribucija",
+      "compliance": "Pataisų atitiktis",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Atnaujinta {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Rodyti visus pagrindinius kompiuterius",
+          "description": "Rodyti bendrą stebimų pagrindinių kompiuterių skaičių"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Rodyti pagrindinius kompiuterius, kuriems reikia atnaujinimų",
+          "description": "Rodyti pagrindinius kompiuterius, turinčius bent vieną pasenusį paketą"
+        },
+        "showSecurityUpdates": {
+          "label": "Rodyti saugumo atnaujinimus",
+          "description": "Rodyti bendrą prieinamų saugumo atnaujinimų skaičių"
+        },
+        "showUpToDateHosts": {
+          "label": "Rodyti atnaujintus pagrindinius kompiuterius",
+          "description": "Rodyti pagrindinius kompiuterius, neturinčius pasenusių paketų"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Rodyti pagrindinius kompiuterius su saugumo atnaujinimais",
+          "description": "Rodyti pagrindinius kompiuterius, kuriems reikia saugumo pataisų"
+        },
+        "showRecentUpdates24h": {
+          "label": "Rodyti naujausius atnaujinimus (24 val.)",
+          "description": "Rodyti per pastarąsias 24 valandas pritaikytų atnaujinimų skaičių"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Rodyti pasenusius paketus",
+          "description": "Rodyti bendrą pasenusių paketų skaičių visuose pagrindiniuose kompiuteriuose"
+        },
+        "showTotalRepos": {
+          "label": "Rodyti saugyklas",
+          "description": "Rodyti stebimų aktyvių saugyklų skaičių"
+        },
+        "enableThresholdColors": {
+          "label": "Įjungti slenkstines spalvas",
+          "description": "Spalvinti statistikos reikšmes žalia, geltona arba raudona pagal griežtumo išankstines nuostatas"
+        },
+        "useCustomThresholds": {
+          "label": "Išplėstiniai slenksčiai",
+          "description": "Tinkinkite kiekvienos statistikos įspėjimo ir kritinius slenksčius naudodami absoliučius skaičius arba procentines visų pagrindinių kompiuterių dalis"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absoliutus skaičius",
+            "percent": "Procentinė visų pagrindinių kompiuterių dalis"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Atnaujinimų poreikio slenksčio režimas",
+          "description": "Palyginti atnaujinimų poreikio skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Atnaujinimų poreikio įspėjimo slenkstis",
+          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Atnaujinimų poreikio kritinis slenkstis",
+          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Saugumo atnaujinimų slenksčio režimas",
+          "description": "Palyginti saugumo atnaujinimų skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Saugumo atnaujinimų įspėjimo slenkstis",
+          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Saugumo atnaujinimų kritinis slenkstis",
+          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Pagrindinių kompiuterių su saugumo atnaujinimais slenksčio režimas",
+          "description": "Palyginti pagrindinių kompiuterių skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Pagrindinių kompiuterių su saugumo atnaujinimais įspėjimo slenkstis",
+          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Pagrindinių kompiuterių su saugumo atnaujinimais kritinis slenkstis",
+          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Atnaujintų pagrindinių kompiuterių slenksčio režimas",
+          "description": "Palyginti atnaujintų pagrindinių kompiuterių skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Atnaujintų pagrindinių kompiuterių įspėjimo slenkstis",
+          "description": "Įjungti geltoną spalvą, kai reikšmė yra lygi arba didesnė už šį slenkstį, bet neapima visų pagrindinių kompiuterių"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Atnaujintų pagrindinių kompiuterių kritinis slenkstis",
+          "description": "Įjungti raudoną spalvą, kai reikšmė nukrenta žemiau šio slenksčio"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Pasenusių paketų slenksčio režimas",
+          "description": "Palyginti pasenusių paketų skaičių kaip absoliučią reikšmę arba procentinę visų pagrindinių kompiuterių dalį"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Pasenusių paketų įspėjimo slenkstis",
+          "description": "Įjungti geltoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Pasenusių paketų kritinis slenkstis",
+          "description": "Įjungti raudoną spalvą, kai reikšmė pasiekia šį slenkstį"
+        },
+        "showOsDistribution": {
+          "label": "Rodyti OS distribuciją",
+          "description": "Rodyti stebimų pagrindinių kompiuterių suskirstymą pagal operacinę sistemą"
+        },
+        "osDistributionLimit": {
+          "label": "OS distribucijos riba",
+          "description": "Didžiausias rodomų operacinių sistemų skaičius",
+          "option": {
+            "3": "3 populiariausios",
+            "5": "5 populiariausios",
+            "10": "10 populiariausių",
+            "all": "Visos"
+          }
+        },
+        "showOsVersion": {
+          "label": "Rodyti OS versiją",
+          "description": "Kai prieinama, prie kiekvienos distribucijos etiketės pridėti OS versiją"
+        },
+        "showComplianceHero": {
+          "label": "Rodyti atitikties pagrindinį rodiklį",
+          "description": "Rodyti atitikties žiedą, nurodantį atnaujintų pagrindinių kompiuterių procentą"
+        },
+        "osDisplayMode": {
+          "label": "OS rodymo režimas",
+          "description": "Pasirinkite, kaip rodyti operacinės sistemos distribuciją",
+          "option": {
+            "bars": "Horizontalios juostos",
+            "donut": "Žiedinė diagrama"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Nepavyko gauti „PatchMon“ duomenų"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Trūkstamų subtitrų ir būklės iš „Bazarr“ egzemplioriaus apžvalga",
+      "episodes": "Trūkstami epizodai",
+      "movies": "Trūkstami filmai",
+      "providers": "Teikėjų problemos",
+      "status": "Būklės problemos",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Rodyti trūkstamus epizodus",
+          "description": "Rodyti epizodų, kuriems trūksta subtitrų, skaičių"
+        },
+        "showMissingMovies": {
+          "label": "Rodyti trūkstamus filmus",
+          "description": "Rodyti filmų, kuriems trūksta subtitrų, skaičių"
+        },
+        "showProviderIssues": {
+          "label": "Rodyti teikėjų problemas",
+          "description": "Rodyti subtitrų teikėjų, turinčių problemų, skaičių"
+        },
+        "showHealthIssues": {
+          "label": "Rodyti būklės problemas",
+          "description": "Rodyti „Bazarr“ būklės problemų skaičių"
+        }
+      },
+      "error": {
+        "internalServerError": "Nepavyko gauti „Bazarr“ duomenų"
+      }
+    },
+    "mediaMissing": {
+      "name": "Trūkstama ir eilėje esanti medija",
+      "description": "Rodo trūkstamus ir eilėje esančius filmus bei epizodus iš „Radarr“ ir „Sonarr“",
+      "option": {
+        "showMissing": {
+          "label": "Rodyti trūkstamus elementus"
+        },
+        "showQueued": {
+          "label": "Rodyti eilėje esančius elementus"
+        },
+        "pageSize": {
+          "label": "Elementų puslapyje"
+        }
+      },
+      "tab": {
+        "missing": "Trūkstama",
+        "queued": "Eilėje"
+      },
+      "type": {
+        "movie": "Filmas",
+        "episode": "Epizodas"
+      },
+      "empty": {
+        "missing": "Trūkstamų elementų nėra",
+        "queued": "Eilėje esančių elementų nėra",
+        "noTabsEnabled": "Valdiklio nuostatose įjunkite bent vieną kortelę"
+      },
+      "timeLeft": "Liko laiko"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "„Traefik“ maršrutizatorių, paslaugų, tarpinių programų ir įėjimo taškų apžvalga",
+      "option": {
+        "showTcp": {
+          "label": "Rodyti TCP"
+        },
+        "showUdp": {
+          "label": "Rodyti UDP"
+        },
+        "showEntryPoints": {
+          "label": "Rodyti įėjimo taškus"
+        }
+      },
+      "instances": "„Traefik“ egzemplioriai",
+      "versionUnknown": "Versija nežinoma",
+      "summary": {
+        "routers": "Maršrutizatoriai",
+        "entryPoints": "Įėjimo taškai"
+      },
+      "resource": {
+        "routers": "Maršrutizatoriai",
+        "services": "Paslaugos",
+        "middlewares": "Tarpinės programos"
+      },
+      "status": {
+        "healthy": "Veikia tinkamai",
+        "errors": "Klaidų: {count}",
+        "warnings": "Įspėjimų: {count}"
+      },
+      "error": {
+        "internalServerError": "Nepavyko gauti „Traefik“ duomenų"
+      }
+    },
+    "wud": {
+      "name": "Kas naujo, Docker",
+      "description": "Rodo, kiek stebimų konteinerių turi prieinamų naujinimų.",
+      "title": "Kas naujo, Docker",
+      "monitored": "Stebimi",
+      "updatesAvailable": "{count, plural, one {# atnaujinimas prieinamas} few {# atnaujinimai prieinami} many {# atnaujinimų prieinama} other {# atnaujinimo prieinama}}",
+      "updateAvailable": "Galimas naujinimas",
+      "openReleaseNotes": "Atidaryti leidimo pastabas",
+      "option": {
+        "showTitle": {
+          "label": "Rodyti pavadinimą"
+        },
+        "showRing": {
+          "label": "Rodyti naujinimo žiedą"
+        },
+        "layout": {
+          "label": "Išdėstymas",
+          "option": {
+            "horizontal": {
+              "label": "Horizontalus"
+            },
+            "vertical": {
+              "label": "Vertikalus"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Rodyti konteinerių naujinimų sąrašą",
+          "description": "Išvardija kiekvieną stebimą konteinerį, kuriam yra prieinamas atvaizdo naujinimas"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Pagrindinis",
         "boards": "Lentos",
         "apps": "Programėlės",
         "integrations": "Integracijos",
-        "customWidgets": "Pasirinktiniai valdikliai",
         "searchEngies": "Paieškos sistemos",
         "medias": "Medijos",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Numeskite atsarginės kopijos ZIP failą čia",
-              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. 256 MB)"
+              "description": "Priima .zip failus iš Homarr SQLite atsarginės kopijos (maks. {maxSize})"
             },
             "analyzing": "Analizuojama atsarginė kopija...",
             "changeFile": "Pakeisti failą",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Valdyti",
       "boards": {
         "label": "Lentos"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Taisyti"
-        }
-      },
-      "custom-widgets": {
-        "label": "Pasirinktiniai valdikliai",
-        "new": {
-          "label": "Naujas"
-        },
-        "edit": {
-          "label": "Redaguoti",
-          "flow": {
-            "label": "Srautas"
-          }
         }
       },
       "users": {

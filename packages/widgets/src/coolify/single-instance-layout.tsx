@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
+import classes from "./component.module.css";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { buildServerResourceCounts } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
@@ -17,11 +20,12 @@ interface SingleInstanceLayoutProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
+  isAdvanced: boolean;
   widgetKey: string;
 }
 
-export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: SingleInstanceLayoutProps) {
-  const t = useScopedI18n("widget.coolify");
+export function SingleInstanceLayout({ instance, options, isTiny, isAdvanced, widgetKey }: SingleInstanceLayoutProps) {
+  const t = useI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
     defaultValue: false,
@@ -30,17 +34,15 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
     key: `coolify-sections-${widgetKey}`,
     defaultValue: ["applications"],
   });
-
+  const [advancedOpenSections, setAdvancedOpenSections] = useState(["servers", "applications", "services"]);
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
-  const displayUrl = baseUrl.replace(/^https?:\/\//, "");
-  const relativeTime = useTimeAgo(instance.updatedAt);
-
+  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
   return (
     <ScrollArea h="100%">
       <Stack gap={0}>
@@ -51,18 +53,43 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
               oolify
             </Text>
           </Group>
-          <Anchor href={baseUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
-            {displayUrl}
-          </Anchor>
+          <Stack gap={0} miw={0}>
+            {isAdvanced && (
+              <Text fz="xs" fw={600} truncate="end">
+                {instance.integrationName}
+              </Text>
+            )}
+            <Anchor
+              component={baseUrl ? "a" : "span"}
+              href={baseUrl}
+              target={baseUrl ? "_blank" : undefined}
+              rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+              fz={isTiny ? "xs" : "sm"}
+              fw={500}
+              c="dimmed"
+              lineClamp={1}
+            >
+              {isAdvanced ? t("source.url", { url: displayUrl }) : displayUrl}
+            </Anchor>
+          </Stack>
         </Group>
 
-        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+        <Accordion
+          className={classes.accordion}
+          variant="contained"
+          chevronPosition="right"
+          multiple
+          keepMounted={false}
+          value={isAdvanced ? advancedOpenSections : openSections}
+          onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
+        >
           {options.showServers && (
             <ServersSection
               servers={instance.instanceInfo.servers}
               serverResourceCounts={serverResourceCounts}
               baseUrl={baseUrl}
               isTiny={isTiny}
+              isAdvanced={isAdvanced}
               showIp={showIp}
               onToggleIp={() => setShowIp((prev) => !prev)}
             />
@@ -71,26 +98,35 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
             <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
           {options.showServices && (
-            <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+            <ServicesSection
+              services={instance.instanceInfo.services}
+              baseUrl={baseUrl}
+              isTiny={isTiny}
+              isAdvanced={isAdvanced}
+            />
           )}
         </Accordion>
 
-        <Group
-          justify="space-between"
-          p={4}
-          style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
-        >
-          <Group gap={2}>
-            <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
-            <Text size="xs" c="dimmed">
-              v{instance.instanceInfo.version}
-            </Text>
-          </Group>
-          <Text size="xs" c="dimmed">
-            {t("footer.updated", { when: relativeTime })}
-          </Text>
-        </Group>
+        <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
       </Stack>
     </ScrollArea>
   );
 }
+
+const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
+  const t = useI18n("widget.coolify");
+  const relativeTime = useTimeAgo(updatedAt, 60_000);
+  return (
+    <Group justify="space-between" p={4} className={classes.neutralDividerTop}>
+      <Group gap={2}>
+        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+        <Text size="xs" c="dimmed">
+          v{version}
+        </Text>
+      </Group>
+      <Text size="xs" c="dimmed">
+        {t("footer.updated", { when: relativeTime })}
+      </Text>
+    </Group>
+  );
+};

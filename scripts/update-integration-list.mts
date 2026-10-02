@@ -1,5 +1,9 @@
 import { readFile, writeFile } from "fs/promises";
-import { integrationDefs } from "../packages/definitions/src/integration";
+import {
+  getIntegrationDocumentationUrl,
+  integrationDefs,
+  integrationKinds,
+} from "../packages/definitions/src/integration";
 
 const FILE = "docs/README.md";
 const MAX_COLUMNS_PER_ROW = 7;
@@ -21,19 +25,29 @@ async function updateIntegrationList() {
   }
 
   // Generate the new integration list
-  const integrations = Object.values(integrationDefs)
-    .filter((def) => def.name !== "Mock")
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const integrations = integrationKinds
+    .filter((kind) => kind !== "mock")
+    .map((kind) => ({
+      ...integrationDefs[kind],
+      documentationUrl: getIntegrationDocumentationUrl(kind),
+    }))
+    .toSorted((a, b) => a.name.localeCompare(b.name));
   const tableRows: string[] = [];
   let currentRow: string[] = [];
 
   integrations.forEach((integration) => {
-    currentRow.push(`<td align="center">
-<a href="${integration.documentationUrl}" target="_blank" rel="noreferrer noopener">
+    const cellBody = `
   <img src="${integration.iconUrl}" alt="${integration.name}" width="90" height="90" />
-  <br/>  
+  <br/>
   <p align="center">${integration.name.replaceAll(" ", "<br/>")}</p>
-</a>
+`;
+    let cellContent = `<div>${cellBody}</div>`;
+    if (integration.documentationUrl !== null) {
+      cellContent = `<a href="${integration.documentationUrl}" target="_blank" rel="noreferrer noopener">${cellBody}</a>`;
+    }
+
+    currentRow.push(`<td align="center">
+${cellContent}
 </td>`);
 
     if (currentRow.length === MAX_COLUMNS_PER_ROW) {
@@ -67,4 +81,7 @@ ${endMarker}`;
   await writeFile(FILE, newContent, "utf8");
 }
 
-updateIntegrationList().catch(console.error);
+updateIntegrationList().catch((error: unknown) => {
+  console.error(error);
+  process.exitCode = 1;
+});

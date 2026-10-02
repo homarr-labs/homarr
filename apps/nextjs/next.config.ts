@@ -46,6 +46,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
+    preloadEntriesOnStart: true,
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
   },
@@ -64,6 +65,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      { source: "/.well-known/:path*", destination: "/well-known/:path*" },
+      {
+        source: "/api/mcp/:transport/.well-known/:path*",
+        destination: "/well-known/:path*/api/mcp/:transport",
+      },
+    ];
+  },
   // skipcq: JS-0116
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
@@ -79,6 +89,10 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)", // Apply CSP to all routes
         headers: [
+          {
+            key: "Accept-CH",
+            value: "Sec-CH-Viewport-Width",
+          },
           {
             key: "Content-Security-Policy",
             // worker-src / media-src with blob: is necessary for video.js, see https://github.com/homarr-labs/homarr/issues/3912 and https://stackoverflow.com/questions/65792855/problem-with-video-js-and-content-security-policy-csp

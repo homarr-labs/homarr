@@ -1,26 +1,38 @@
 import { Fragment } from "react";
 import { notFound, redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { getSafeAppHref } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
+import { getAppsSectionAccess } from "../_access";
 import { AppDeleteButton } from "./_app-delete-button";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
-  pageSize: z.string().regex(/\d+/).transform(Number).catch(10),
-  page: z.string().regex(/\d+/).transform(Number).catch(1),
+  pageSize: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive().max(100))
+    .catch(10),
+  page: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive())
+    .catch(1),
 });
 
 interface AppsPageProps {
@@ -29,24 +41,57 @@ interface AppsPageProps {
 
 export default async function AppsPage(props: AppsPageProps) {
   const session = await auth();
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-  if (!session.user.permissions.includes("board-modify-all")) {
-    notFound();
-  }
+  if (!session) redirect("/auth/login");
+  const { canManageAll, canCreate, canAccess } = getAppsSectionAccess(session);
+  if (!canAccess) notFound();
+  const canDelete = session.user.permissions.includes("app-full-all");
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
+  // Without app-modify-all the user may add apps but not browse the ones they cannot manage,
+  // so the list stays empty instead of leaking every app name and URL.
+  const { items: apps, totalCount } = canManageAll
+    ? await api.app.getPaginated(searchParams)
+    : { items: [], totalCount: 0 };
+  const totalPages = Math.ceil(totalCount / searchParams.pageSize);
 
-  const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
-  const t = await getScopedI18n("app");
+  if (totalPages > 0 && searchParams.page > totalPages) {
+    const params = createPaginationSearchParams(searchParams.search, searchParams.pageSize, totalPages);
+    redirect(`/manage/apps?${params.toString()}`);
+  }
 
-  const canCreate = session.user.permissions.includes("app-create");
+  const t = await getI18n("app");
+  const tCommon = await getI18n("common");
+  const hasSearch = canManageAll && Boolean(searchParams.search?.trim());
 
-  return (
-    <ManagePageLayout
-      title={t("page.list.title")}
+  const emptyState = !canManageAll ? (
+    <NoResults
+      icon={IconBox}
+      title={t("page.list.noResults.createOnlyTitle")}
+      description={t("page.list.noResults.createOnlyDescription")}
+      action={{ label: t("page.list.noResults.action"), href: "/manage/apps/new" }}
+    />
+  ) : hasSearch ? (
+    <NoResults
+      icon={IconBox}
+      title={t("page.list.noResults.filteredTitle")}
+      description={t("page.list.noResults.filteredDescription", { search: searchParams.search ?? "" })}
+      action={{ label: tCommon("action.clearSearch"), href: "/manage/apps" }}
+    />
+  ) : (
+    <NoResults
+      icon={IconBox}
+      title={t("page.list.noResults.title")}
+      description={t("page.list.noResults.description")}
+      action={{ label: t("page.list.noResults.action"), href: "/manage/apps/new", hidden: !canCreate }}
+    />
+  );
+
+  const page = (
+    <ManageCollectionPage
+      title={tCommon("entity.apps")}
+      ariaLabel={t("page.list.ariaLabel")}
+      itemCount={apps.length}
+      emptyState={emptyState}
       primaryAction={
         canCreate ? (
           <TourTarget id="manage-apps-create">
@@ -56,101 +101,101 @@ export default async function AppsPage(props: AppsPageProps) {
           </TourTarget>
         ) : undefined
       }
-      toolbar={<SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />}
-      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
+      toolbar={
+        canManageAll ? (
+          <SearchInput
+            placeholder={`${t("search")}...`}
+            ariaLabel={t("search")}
+            defaultValue={searchParams.search}
+            flexExpand
+          />
+        ) : undefined
+      }
+      footer={totalPages > 1 ? <TablePagination total={totalPages} /> : undefined}
       floatingPrimaryAction={canCreate}
     >
-      {apps.length === 0 && <AppNoResults />}
-      {apps.length > 0 && (
-        <TourTarget id="manage-apps-list">
-          <Stack gap="sm">
-            {apps.map((app) => (
-              <AppCard key={app.id} app={app} />
-            ))}
-          </Stack>
-        </TourTarget>
-      )}
-    </ManagePageLayout>
+      {apps.map((app) => (
+        <AppItem
+          key={app.id}
+          app={app}
+          canDelete={canDelete}
+          editLabel={tCommon("action.editNamed", { name: app.name })}
+        />
+      ))}
+    </ManageCollectionPage>
   );
+
+  return apps.length > 0 ? <TourTarget id="manage-apps-list">{page}</TourTarget> : page;
 }
 
-interface AppCardProps {
-  app: RouterOutputs["app"]["all"][number];
+interface AppItemProps {
+  app: RouterOutputs["app"]["getPaginated"]["items"][number];
+  canDelete: boolean;
+  editLabel: string;
 }
 
-const AppCard = async ({ app }: AppCardProps) => {
-  const t = await getScopedI18n("app");
-  const session = await auth();
+const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
+  const descriptionLines = app.description?.split("\n");
+  const safeHref = getSafeAppHref(app.href);
 
   return (
-    <Card>
-      <Group justify="space-between" wrap="nowrap">
-        <Group align="top" justify="start" wrap="nowrap" style={{ flex: "1" }}>
-          <Avatar
+    <ManageCollectionItem
+      leading={<Avatar size={36} src={app.iconUrl} radius="sm" styles={{ image: { objectFit: "contain" } }} alt="" />}
+      title={
+        <Text component="span" fw={600} lineClamp={1}>
+          {app.name}
+        </Text>
+      }
+      description={
+        descriptionLines ? (
+          <Text size="sm" c="dimmed" lineClamp={2}>
+            {descriptionLines.map((line, index) => (
+              <Fragment key={index}>
+                {line}
+                {index < descriptionLines.length - 1 && <br />}
+              </Fragment>
+            ))}
+          </Text>
+        ) : undefined
+      }
+      metadata={
+        safeHref ? (
+          <Anchor
+            href={safeHref}
+            target="_blank"
+            rel="noreferrer"
+            lineClamp={1}
             size="sm"
-            src={app.iconUrl}
-            radius={0}
-            styles={{
-              image: {
-                objectFit: "contain",
-              },
-            }}
-          />
-          <Stack gap={0} style={{ flex: "1" }}>
-            <Text fw={500} lineClamp={1}>
-              {app.name}
-            </Text>
-            {app.description && (
-              <Text size="sm" c="gray.6" lineClamp={4}>
-                {app.description.split("\n").map((line, index) => (
-                  <Fragment key={index}>
-                    {line}
-                    <br />
-                  </Fragment>
-                ))}
-              </Text>
-            )}
-            {app.href && (
-              <Anchor href={app.href} lineClamp={1} size="sm" style={{ wordBreak: "break-all" }}>
-                {app.href}
-              </Anchor>
-            )}
-          </Stack>
-        </Group>
-        <Group>
-          <ActionIconGroup>
-            {session?.user.permissions.includes("app-modify-all") && (
-              <ActionIcon
-                component={Link}
-                href={`/manage/apps/edit/${app.id}`}
-                variant="subtle"
-                color="gray"
-                aria-label={t("page.edit.title")}
-              >
-                <IconPencil size={16} stroke={1.5} />
-              </ActionIcon>
-            )}
-            {session?.user.permissions.includes("app-full-all") && <AppDeleteButton app={app} />}
-          </ActionIconGroup>
-        </Group>
-      </Group>
-    </Card>
+            style={{ wordBreak: "break-all" }}
+          >
+            {app.href}
+          </Anchor>
+        ) : undefined
+      }
+      actions={
+        <ActionIconGroup>
+          <ActionIcon
+            component={Link}
+            href={`/manage/apps/edit/${app.id}`}
+            variant="subtle"
+            color="gray"
+            size={44}
+            aria-label={editLabel}
+          >
+            <IconPencil size={18} stroke={1.5} />
+          </ActionIcon>
+          {canDelete && <AppDeleteButton app={app} />}
+        </ActionIconGroup>
+      }
+    />
   );
 };
 
-const AppNoResults = async () => {
-  const t = await getI18n();
-  const session = await auth();
+const createPaginationSearchParams = (search: string | undefined, pageSize: number, page: number) => {
+  const params = new URLSearchParams({ page: page.toString() });
 
-  return (
-    <NoResults
-      icon={IconBox}
-      title={t("app.page.list.noResults.title")}
-      action={{
-        label: t("app.page.list.noResults.action"),
-        href: "/manage/apps/new",
-        hidden: !session?.user.permissions.includes("app-create"),
-      }}
-    />
-  );
+  if (search) params.set("search", search);
+  if (pageSize !== 10) params.set("pageSize", pageSize.toString());
+
+  return params;
 };

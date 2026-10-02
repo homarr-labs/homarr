@@ -7,7 +7,8 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 export default function DockerErrorPage() {
-  const t = useI18n();
+  const tDocker = useI18n("docker");
+  const tCommon = useI18n("common");
 
   return (
     <Center>
@@ -15,10 +16,10 @@ export default function DockerErrorPage() {
         <IconShipOff size={48} stroke={1.5} />
         <Stack align="center" gap="xs">
           <Text size="lg" fw={500}>
-            {t("docker.error.internalServerError")}
+            {tDocker("error.internalServerError")}
           </Text>
           <Anchor size="sm" component={Link} href="/manage/tools/logs">
-            {t("common.action.checkLogs")}
+            {tCommon("action.checkLogs")}
           </Anchor>
         </Stack>
       </Stack>

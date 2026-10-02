@@ -1,27 +1,21 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { RingProgress, Text } from "@mantine/core";
+import { Badge, Box, Group, RingProgress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconClockPause, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
-import type { UptimeKumaDashboardData } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
-
-const emptyDashboard: UptimeKumaDashboardData = {
-  totalMonitors: 0,
-  upCount: 0,
-  downCount: 0,
-  pausedCount: 0,
-  averageUptimePercent: 0,
-  monitors: [],
-};
+import { aggregateUptimeKumaDashboards } from "./aggregate";
 
 const statVisibilityByOption = {
   showTotalMonitors: "totalMonitors",
@@ -85,58 +79,76 @@ const heroVariantByRing = {
   false: classes.heroTextOnly,
 } as const;
 
-export default function UptimeKumaWidget({ integrationIds, options, width }: WidgetComponentProps<"uptimeKuma">) {
+export default function UptimeKumaWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"uptimeKuma">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  return <UptimeKumaContent integrationIds={integrationIds} options={options} width={width} />;
+  return (
+    <UptimeKumaContent
+      integrationIds={integrationIds}
+      options={options}
+      width={width}
+      height={height}
+      displayMode={displayMode}
+    />
+  );
 }
 
 interface UptimeKumaContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"uptimeKuma">["options"];
   width: number;
+  height: number;
+  displayMode: "compact" | "advanced";
 }
 
-function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContentProps) {
-  const t = useScopedI18n("widget.uptimeKuma");
-  const { data: dashboardData } = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
+function UptimeKumaContent({ integrationIds, options, width, height, displayMode }: UptimeKumaContentProps) {
+  const t = useI18n("widget.uptimeKuma");
+  const dashboardQuery = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
+  const dashboardData = getUsableWidgetQueryData(dashboardQuery);
 
   if (!dashboardData) return <WidgetEmptyState />;
-
-  const combined = dashboardData.reduce<UptimeKumaDashboardData>(
-    (acc, item) => ({
-      totalMonitors: acc.totalMonitors + item.dashboard.totalMonitors,
-      upCount: acc.upCount + item.dashboard.upCount,
-      downCount: acc.downCount + item.dashboard.downCount,
-      pausedCount: acc.pausedCount + item.dashboard.pausedCount,
-      averageUptimePercent: acc.averageUptimePercent + item.dashboard.averageUptimePercent,
-      monitors: [...acc.monitors, ...item.dashboard.monitors],
-    }),
-    emptyDashboard,
+  const successfulDashboardData = dashboardData.flatMap((item) =>
+    item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],
   );
 
-  const instanceCount = dashboardData.length;
-  const averageUptime = combined.averageUptimePercent / Math.max(instanceCount, 1);
-  const uptimeValue = clampPercent(averageUptime);
+  const combined = aggregateUptimeKumaDashboards(successfulDashboardData.map((item) => item.dashboard));
+  const monitors = successfulDashboardData.flatMap((result) =>
+    result.dashboard.monitors.map((monitor) => ({
+      ...monitor,
+      key: `${result.integrationId}:${monitor.id}`,
+      integrationName: result.integrationName,
+    })),
+  );
+  const uptimeValue = clampPercent(combined.averageUptimePercent);
   const uptimeColor = getUptimeColor(uptimeValue);
-  const ringSize = getRingSize(width);
-  const iconSize = getIconSize(width);
+  const visualScale = Math.min(width, height);
+  const ringSize = getRingSize(visualScale);
+  const iconSize = getIconSize(visualScale);
   const gridCols = getGridCols(width);
+  const isAdvanced = displayMode === "advanced";
 
-  const visibleStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => options[optionKey as keyof typeof options])
+  const enabledStatKeys = Object.entries(statVisibilityByOption)
+    .filter(([optionKey]) => isAdvanced || options[optionKey as keyof typeof options])
     .map(([, statKey]) => statKey);
 
-  const showHero = options.showAverageUptime;
+  const showHero = isAdvanced || options.showAverageUptime;
+  const showRing = isAdvanced || options.showUptimeRing;
+  const visibleStatKeys = enabledStatKeys;
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
-  const heroRingClass = heroVariantByRing[String(options.showUptimeRing) as keyof typeof heroVariantByRing];
+  const heroRingClass = heroVariantByRing[String(showRing) as keyof typeof heroVariantByRing];
 
-  return (
+  const summaryContent = (
     <div className={classes.root}>
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
@@ -144,7 +156,7 @@ function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContent
             <span className={classes.heroLabel}>{t("averageUptime")}</span>
             <span className={classes.heroValue}>{formatNumber(uptimeValue, 1)}%</span>
           </div>
-          {options.showUptimeRing && (
+          {showRing && (
             <RingProgress
               className={classes.ring}
               size={ringSize}
@@ -178,7 +190,7 @@ function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContent
               <div key={statKey} className={classes.statTile}>
                 <Icon
                   className={classes.statIcon}
-                  size={iconSize}
+                  style={zoomCompensatedSize(iconSize)}
                   stroke={1.5}
                   color={`var(--mantine-color-${color}-6)`}
                 />
@@ -191,7 +203,73 @@ function UptimeKumaContent({ integrationIds, options, width }: UptimeKumaContent
       )}
     </div>
   );
+
+  if (displayMode === "compact") {
+    return (
+      <Box h="100%" pos="relative">
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+          <IntegrationErrorIndicator results={dashboardData} />
+        </Group>
+        {summaryContent}
+      </Box>
+    );
+  }
+
+  const monitorList = (
+    <Stack gap="xs">
+      {monitors
+        .toSorted((left, right) => statusOrder[left.status] - statusOrder[right.status])
+        .map((monitor) => (
+          <Group key={monitor.key} justify="space-between" wrap="nowrap" p="xs">
+            <Stack gap={0} style={{ minWidth: 0 }}>
+              <Text size="sm" fw={600} truncate>
+                {monitor.name}
+              </Text>
+              {(isAdvanced || successfulDashboardData.length > 1) && (
+                <Text size="xs" c="dimmed">
+                  {monitor.integrationName}
+                </Text>
+              )}
+            </Stack>
+            <Badge color={monitor.status === "up" ? "green" : monitor.status === "down" ? "red" : "yellow"}>
+              {t(`status.${monitor.status}`)} ·{" "}
+              {monitor.uptimePercent24h === null ? "—" : `${formatNumber(monitor.uptimePercent24h, 1)}%`}
+            </Badge>
+          </Group>
+        ))}
+    </Stack>
+  );
+
+  if (width < 760) {
+    return (
+      <Box h="100%" pos="relative">
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+          <IntegrationErrorIndicator results={dashboardData} />
+        </Group>
+        <ScrollArea h="100%">
+          <Stack gap="lg" p="md">
+            <Box h={Math.min(420, Math.max(180, Math.floor(height * 0.55)))}>{summaryContent}</Box>
+            {monitorList}
+          </Stack>
+        </ScrollArea>
+      </Box>
+    );
+  }
+
+  return (
+    <Box h="100%" pos="relative">
+      <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+        <IntegrationErrorIndicator results={dashboardData} />
+      </Group>
+      <SimpleGrid cols={2} spacing="lg" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+        {summaryContent}
+        <ScrollArea h="100%">{monitorList}</ScrollArea>
+      </SimpleGrid>
+    </Box>
+  );
 }
+
+const statusOrder = { down: 0, paused: 1, up: 2 } as const;
 
 function clampPercent(value: number): number {
   return Math.min(100, Math.max(0, value));

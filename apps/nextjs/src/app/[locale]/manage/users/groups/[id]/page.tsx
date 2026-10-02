@@ -4,7 +4,7 @@ import { Card, Group, Stack, Text, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { everyoneGroup } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
@@ -28,8 +28,8 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
   }
 
   const group = await api.group.getById({ id: params.id });
-  const tGeneral = await getScopedI18n("management.page.group.setting.general");
-  const tGroupAction = await getScopedI18n("group.action");
+  const tGeneral = await getI18n("management.page.group.setting.general");
+  const tGroupAction = await getI18n("group.action");
   const isReserved = group.name === everyoneGroup;
 
   return (

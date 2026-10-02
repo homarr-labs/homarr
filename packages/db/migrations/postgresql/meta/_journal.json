@@ -71,6 +71,48 @@
       "when": 1783786677702,
       "tag": "0009_add_right_click_preference",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1784305412862,
+      "tag": "0010_custom_widget_v2_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1786212457549,
+      "tag": "0011_add_layout_gutters",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1786215201393,
+      "tag": "0012_add_layout_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1786217088954,
+      "tag": "0013_add_assistant_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1787556966592,
+      "tag": "0014_add_header_preferences_and_branding",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1788763848932,
+      "tag": "0015_add_byte_unit_system",
+      "breakpoints": true
     }
   ]
 }

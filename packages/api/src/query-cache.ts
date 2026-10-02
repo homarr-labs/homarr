@@ -1,5 +1,16 @@
 import type { QueryKey } from "@tanstack/react-query";
 
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
+
+interface ForbiddenTrpcError {
+  data: { code: "FORBIDDEN" };
+}
+
+export const isTrpcForbiddenError = (error: unknown): error is ForbiddenTrpcError => {
+  if (!isRecord(error) || !isRecord(error.data)) return false;
+  return error.data.code === "FORBIDDEN";
+};
+
 // RSC-prefetched data must survive the hydration pass without an immediate
 // duplicate fetch. Widget-specific intervals still control live refreshes.
 export const queryCacheDefaultStaleTimeMs = 30_000;
@@ -8,6 +19,7 @@ export const queryCacheDefaultGcTimeMs = 1000 * 60 * 5;
 export const queryCacheMetadataStaleTimeMs = 1000 * 60 * 5;
 
 const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
+// Beszel system stats come from a live subscription rather than ordinary query recovery.
 const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
 
 export const isWidgetDataTrpcPath = (path: string) => {

@@ -1,10 +1,13 @@
 import { IconHeadphones, IconServerOff } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
+import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
 const hideUnlessNavidrome = {
-  shouldHide: (_: unknown, integrationKinds: string[]) => !integrationKinds.includes("navidrome"),
+  shouldHide: (_: unknown, integrationKinds: string[]) =>
+    !integrationKinds.includes("navidrome") && !integrationKinds.includes("mock"),
 };
 
 const hideUnlessAudiobookshelf = {
@@ -13,9 +16,10 @@ const hideUnlessAudiobookshelf = {
 
 export const { definition, componentLoader } = createWidgetDefinition("audioStats", {
   icon: IconHeadphones,
-  supportedIntegrations: ["navidrome", "audiobookshelf"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
+  supportsAdvancedFocus: true,
+  queryKeys: [[["widget", "audioStats", "getStats"]], [["widget", "mediaServer", "getCurrentStreams"]]],
+  queryMatcher: matchesWidgetRuntimeQuery,
+  ...getWidgetIntegrationConfig("audioStats"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

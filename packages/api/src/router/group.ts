@@ -6,7 +6,7 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import {
@@ -19,7 +19,6 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
-import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
@@ -185,18 +184,42 @@ export const groupRouter = createTRPCRouter({
       const maxPosition = await getMaxGroupPositionAsync(ctx.db);
 
       const groupId = createId();
-      await ctx.db.insert(groups).values({
+      const groupRow = {
         id: groupId,
         name: input.name,
         position: maxPosition + 1,
-      });
+      };
 
-      await ctx.db.insert(groupPermissions).values({
-        groupId,
-        permission: "admin",
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            const transitionResult = await transaction
+              .update(schema.onboarding)
+              .set({ previousStep: "group", step: "setup" })
+              .where(eq(schema.onboarding.step, "group"));
+            const transitionedRows = transitionResult.rowCount ?? 0;
+            if (transitionedRows !== 1) {
+              throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
+            }
+            await transaction.insert(schema.groups).values(groupRow);
+            await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            const transitionResult = transaction
+              .update(onboarding)
+              .set({ previousStep: "group", step: "setup" })
+              .where(eq(onboarding.step, "group"))
+              .run();
+            if (transitionResult.changes !== 1) {
+              throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
+            }
+            transaction.insert(groups).values(groupRow).run();
+            transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
+          });
+        },
       });
-
-      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -275,16 +298,43 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
-      await ctx.db.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId));
+      // Stored exactly as selected - implied permissions are resolved at read time through
+      // getPermissionsWithChildren, so nothing is silently escalated here.
+      const permissions = [...new Set(input.permissions)];
 
-      if (input.permissions.length > 0) {
-        await ctx.db.insert(groupPermissions).values(
-          input.permissions.map((permission) => ({
-            groupId: input.groupId,
-            permission,
-          })),
-        );
-      }
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.delete(schema.groupPermissions).where(eq(schema.groupPermissions.groupId, input.groupId));
+            if (permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.groupPermissions).values(
+              permissions.map((permission) => ({
+                groupId: input.groupId,
+                permission,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId)).run();
+            if (permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(groupPermissions)
+              .values(
+                permissions.map((permission) => ({
+                  groupId: input.groupId,
+                  permission,
+                })),
+              )
+              .run();
+          });
+        },
+      });
     }),
   transferOwnership: permissionRequiredProcedure
     .requiresPermission("admin")

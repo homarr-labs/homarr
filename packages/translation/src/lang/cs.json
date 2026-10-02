@@ -688,211 +688,6 @@
       "add": "Přidat aplikaci"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Vlastní widgety",
-        "noResults": "Zatím nemáte žádné vlastní widgety. Vytvořte svůj první!",
-        "loading": "Načítání..."
-      },
-      "create": {
-        "title": "Vytvořit vlastní widget",
-        "subtitle": "Definujte URL API, ověřování a způsob zobrazení dat odpovědi."
-      },
-      "edit": {
-        "title": "Upravit vlastní widget"
-      }
-    },
-    "action": {
-      "create": "Vytvořit",
-      "import": "Import",
-      "save": "Uložit",
-      "delete": "Odstranit vlastní widget",
-      "deleteConfirm": "Opravdu chcete odstranit „{name}“? Tuto akci nelze vrátit zpět.",
-      "export": "Export",
-      "addMapping": "Přidat mapování",
-      "addColumn": "Přidat sloupec",
-      "edit": "Upravit",
-      "removeMapping": "Odstranit mapování",
-      "removeColumn": "Odstranit sloupec",
-      "addItem": "Přidat položku",
-      "removeItem": "Odebrat položku",
-      "addBar": "Přidat lištu",
-      "duplicate": "Duplikovat",
-      "copyAiPrompt": "Kopírovat výzvu AI",
-      "enable": "Povolit",
-      "disable": "Zakázat",
-      "menu": "Akce"
-    },
-    "field": {
-      "name": "Název",
-      "description": "Popis",
-      "iconUrl": "URL ikony",
-      "url": "URL",
-      "authType": "Typ ověření",
-      "headerName": "Název hlavičky/parametru dotazu",
-      "method": "Metoda",
-      "requestBody": "Tělo požadavku",
-      "displayType": "Typ zobrazení",
-      "jsonPath": "Cesta JSON",
-      "jsonPathHint": "K extrakci hodnot použijte syntaxi JSONPath, např. $.data.temperature nebo $.items[0].name",
-      "label": "Popisek",
-      "unit": "Jednotka",
-      "mappings": "Mapování",
-      "tablePath": "Cesta pole JSON",
-      "tablePathHint": "Cesta k poli v odpovědi, např. $.data.items",
-      "columns": "Sloupce",
-      "header": "Hlavička",
-      "items": "Položky",
-      "gridColumns": "Sloupce mřížky",
-      "cardStyle": "Styl karty",
-      "bars": "Pruhy",
-      "valuePath": "Cesta hodnoty JSON",
-      "maxPath": "Cesta maximální hodnoty JSON",
-      "showPercentage": "Zobrazit procenta",
-      "barSize": "Velikost pruhu",
-      "goodValues": "Dobré hodnoty (oddělené čárkami)",
-      "dotSize": "Velikost tečky",
-      "valueSize": "Velikost hodnoty",
-      "labelPosition": "Pozice popisku",
-      "kvLayout": "Rozložení",
-      "striped": "Pruhované řádky",
-      "compact": "Kompaktní režim",
-      "maxHeight": "Maximální výška (px)",
-      "color": "Barva",
-      "buttonLabel": "Popisek tlačítka",
-      "buttonColor": "Barva tlačítka",
-      "confirmText": "Text potvrzení",
-      "confirmTextHint": "Pokud je nastaven, před provedením požadavku se zobrazí dialogové okno s potvrzením",
-      "successMessage": "Zpráva o úspěchu",
-      "successMessageHint": "Zpráva zobrazená po úspěšném provedení",
-      "enabled": "Povoleno",
-      "template": {
-        "label": "Šablona JSX",
-        "description": "Šablona JSX pro Mantine. K polím odpovědi API přistupujte pomocí datových vazeb (např. data.name). Používejte pouze povolené komponenty. Zakázáno: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Teplota CPU",
-      "exampleLabelShort": "Teplota CPU",
-      "exampleHeader": "Název",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API klíč",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.jméno",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "modrá"
-    },
-    "cardStyleOption": {
-      "filled": "Vyplněný",
-      "outline": "Obrys",
-      "subtle": "Jemný"
-    },
-    "layoutOption": {
-      "list": "Seznam",
-      "grid": "Mřížka"
-    },
-    "sizeOption": {
-      "sm": "Malé",
-      "md": "Střední",
-      "lg": "Velké",
-      "xl": "Extra velké"
-    },
-    "labelPositionOption": {
-      "above": "Nad",
-      "below": "Pod"
-    },
-    "fieldset": {
-      "general": "Obecné",
-      "connection": "API propojení",
-      "display": "Konfigurace zobrazení"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Zobrazit jednu extrahovanou hodnotu s popiskem a jednotkou",
-      "keyValue": "Zobrazit více popsaných hodnot vedle sebe",
-      "table": "Zobrazit řádky dat ve formátu tabulky",
-      "statGrid": "Barevné statistické karty v mřížce — například widgety Pi-Hole nebo Speedtest",
-      "progressBars": "Ukazatele průběhu zobrazující využití nebo dokončení — pro disk, paměť a kvóty",
-      "statusIndicator": "Barevné stavové tečky zobrazující stav online/offline nebo stav kondice",
-      "countGrid": "Kompaktní počítadla čísel a popisků v těsné mřížce",
-      "raw": "Formátovaný výstup JSON pro ladění",
-      "actionButton": "Tlačítko, které po kliknutí spustí požadavek",
-      "customJsx": "Vlastní rozložení JSX s použitím povolených komponent Mantine a úplnou datovou vazbou API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "ODSTRANIT",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Žádné",
-      "bearer": "Token Bearer",
-      "basic": "Základní ověřování",
-      "apiKeyHeader": "Klíč API (záhlaví)",
-      "apiKeyQuery": "Klíč API (dotazy)"
-    },
-    "displayType": {
-      "singleValue": "Jedna hodnota",
-      "keyValue": "Klíč–hodnota",
-      "table": "Tabulka",
-      "statGrid": "Statistická mřížka",
-      "progressBars": "Ukazatele průběhu",
-      "statusIndicator": "Indikátor stavu",
-      "countGrid": "Mřížka počtů",
-      "raw": "Nezpracovaný JSON",
-      "actionButton": "Akční tlačítko",
-      "customJsx": "Vlastní JSX"
-    },
-    "secret": {
-      "apiKey": "Klíč API / token",
-      "username": "Uživatelské jméno",
-      "password": "Heslo",
-      "savedPlaceholder": "••••••• (uloženo, ponechte prázdné pro zachování)"
-    },
-    "preview": {
-      "title": "Náhled",
-      "test": "Test",
-      "hint": "Kliknutím na Test zobrazíte náhled odpovědi API s aktuální konfigurací.",
-      "rawResponse": "Nezpracovaná odpověď JSON"
-    },
-    "notification": {
-      "created": "Widget „{name}“ byl úspěšně vytvořen.",
-      "updated": "Widget „{name}“ byl úspěšně aktualizován.",
-      "deleted": "Widget „{name}“ byl odstraněn.",
-      "imported": "Widget byl úspěšně importován.",
-      "aiPromptCopied": "Výzva AI byla zkopírována do schránky",
-      "aiPromptDescription": "Zkopírujte předpřipravenou výzvu a vložte ji do libovolného chatbota AI (ChatGPT, Claude, Gemini...). Obsahuje kompletní schéma widgetu a odpověď vašeho API, takže AI pro vás může vygenerovat konfigurační JSON připravený k importu.",
-      "aiPromptCopy": "Kopírovat do schránky",
-      "aiPromptNoResponse": "Tip: Nejprve spusťte test, aby se do výzvy zahrnula odpověď API a výsledky byly lepší.",
-      "aiPromptCopyError": "Výzvu se nepodařilo zkopírovat do schránky. Váš prohlížeč tuto funkci možná nepodporuje.",
-      "createError": "Widget se nepodařilo vytvořit. Zkontrolujte dostupnost koncového bodu API.",
-      "updateError": "Widget se nepodařilo aktualizovat. Vaše změny nebyly uloženy.",
-      "importError": "Widget se nepodařilo importovat. Ujistěte se, že soubor je platný export vlastního widgetu JSON.",
-      "exportError": "Widget se nepodařilo exportovat.",
-      "duplicated": "Widget „{name}“ byl duplikován.",
-      "duplicateError": "Widget se nepodařilo duplikovat.",
-      "toggleError": "Stav widgetu se nepodařilo přepnout.",
-      "deleteError": "Widget se nepodařilo odstranit.",
-      "previewError": "Náhled se nepodařilo načíst. Zkontrolujte URL a zkuste to znovu.",
-      "executed": "Akce byla úspěšně provedena.",
-      "executeError": "Akce selhala: {error}"
-    },
-    "table": {
-      "name": "Název",
-      "url": "URL",
-      "display": "Zobrazení"
-    },
-    "widget": {
-      "disabled": "Tento widget je zakázán"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Cloudový reverzní proxy server a nástroj pro vyvažování zátěže"
     },
-    "wud": {
-      "name": "Co je Docker nahoru",
-      "description": "Sledujte, které z vašich kontejnerů v Dockeru mají k dispozici aktualizace obrázků"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Systém pro správu dokumentů k archivaci a organizaci naskenovaných dokumentů"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Doplňková aplikace k Sonarru a Radarru, která spravuje a stahuje titulky"
+    },
+    "wud": {
+      "name": "Co je Docker nahoru",
+      "description": "Sledujte, které z vašich kontejnerů v Dockeru mají k dispozici aktualizace obrázků"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "zde",
     "iconPicker": {
       "label": "URL ikony",
-      "description": "Vyhledejte knihovnu, vložte URL obrázku, nebo nahrajte soubor.",
       "header": "Hledat {countIcons} obrázky podle jména",
       "headerLoading": "Hledat obrázky podle jména",
+      "noResults": "Žádné ikony neodpovídají „{search}“.",
+      "error": "Ikony se nepodařilo načíst.",
+      "description": "Vyhledejte knihovnu, vložte URL obrázku, nebo nahrajte soubor.",
       "clear": "Vymazat obrázek",
       "uploadImage": "Nahrát obrázek",
       "results": "Výsledky vyhledávání obrázků",
@@ -1452,9 +1249,7 @@
       "otherImages": "Ostatní obrázky",
       "urlLoading": "Kontrola obrázku…",
       "urlReady": "Obrázek je připraven k použití",
-      "urlError": "Tento obrázek nelze načíst. Zkontrolujte URL a zkuste to znovu.",
-      "noResults": "Žádné ikony neodpovídají „{search}“.",
-      "error": "Ikony se nepodařilo načíst."
+      "urlError": "Tento obrázek nelze načíst. Zkontrolujte URL a zkuste to znovu."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Zobrazit vysílané zprávy"
-        }
-      }
-    },
-    "wud": {
-      "name": "Co je Docker nahoru",
-      "description": "Zobrazit, kolik sledovaných kontejnerů je k dispozici aktualizace.",
-      "title": "Co je Docker nahoru",
-      "monitored": "Monitorováno",
-      "updatesAvailable": "{count, plural, one {K dispozici je # aktualizace} other {# dostupných aktualizací}}",
-      "updateAvailable": "K dispozici je aktualizace",
-      "openReleaseNotes": "Otevřít poznámky k vydání",
-      "option": {
-        "showTitle": {
-          "label": "Zobrazit název"
-        },
-        "showRing": {
-          "label": "Zobrazit vyzvánění aktualizace"
-        },
-        "layout": {
-          "label": "Rozložení",
-          "option": {
-            "horizontal": {
-              "label": "Horizontální"
-            },
-            "vertical": {
-              "label": "Vertikální"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Zobrazit seznam aktualizací kontejneru",
-          "description": "Zobrazí seznam každého monitorovaného kontejneru, který má k dispozici aktualizaci obrázku"
         }
       }
     },
@@ -2874,193 +2637,6 @@
         "internalServerError": "Data Paperless-ngx se nepodařilo načíst"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Přehled stavu oprav hostitelů z PatchMonu",
-      "title": "Statistiky PatchMonu",
-      "totalHosts": "Celkem hostitelů",
-      "hostsNeedingUpdates": "Vyžaduje aktualizace",
-      "securityUpdates": "Bezpečnostní aktualizace",
-      "upToDateHosts": "Aktuální hostitelé",
-      "hostsWithSecurityUpdates": "Hostitelé s bezpečnostními aktualizacemi",
-      "recentUpdates24h": "Aktualizace (24 h)",
-      "totalOutdatedPackages": "Zastaralé balíčky",
-      "totalRepos": "Repozitáře",
-      "osDistribution": "Distribuce OS",
-      "compliance": "Soulad oprav",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Aktualizováno {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Zobrazit celkový počet hostitelů",
-          "description": "Zobrazit celkový počet monitorovaných hostitelů"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Zobrazit hostitele vyžadující aktualizace",
-          "description": "Zobrazit hostitele s alespoň jedním zastaralým balíčkem"
-        },
-        "showSecurityUpdates": {
-          "label": "Zobrazit bezpečnostní aktualizace",
-          "description": "Zobrazit celkový počet dostupných bezpečnostních aktualizací"
-        },
-        "showUpToDateHosts": {
-          "label": "Zobrazit aktuální hostitele",
-          "description": "Zobrazit hostitele s nulovým počtem zastaralých balíčků"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Zobrazit hostitele s bezpečnostními aktualizacemi",
-          "description": "Zobrazit hostitele vyžadující bezpečnostní opravy"
-        },
-        "showRecentUpdates24h": {
-          "label": "Zobrazit poslední aktualizace (24 h)",
-          "description": "Zobrazit počet aktualizací použitých za posledních 24 hodin"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Zobrazit zastaralé balíčky",
-          "description": "Zobrazit celkový počet zastaralých balíčků na všech hostitelích"
-        },
-        "showTotalRepos": {
-          "label": "Zobrazit repozitáře",
-          "description": "Zobrazit počet aktivních monitorovaných repozitářů"
-        },
-        "enableThresholdColors": {
-          "label": "Povolit barvy podle prahových hodnot",
-          "description": "Obarvit statistické hodnoty zeleně, žlutě nebo červeně podle předvoleb závažnosti"
-        },
-        "useCustomThresholds": {
-          "label": "Pokročilé prahové hodnoty",
-          "description": "Přizpůsobit varovné a kritické prahové hodnoty pro jednotlivé statistiky pomocí absolutních počtů nebo procent celkového počtu hostitelů"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Absolutní počet",
-            "percent": "Procento celkového počtu hostitelů"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Režim prahové hodnoty pro aktualizace",
-          "description": "Porovnat počet aktualizací jako absolutní hodnotu nebo procento celkového počtu hostitelů"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Varovná prahová hodnota aktualizací",
-          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Kritická prahová hodnota aktualizací",
-          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Režim prahové hodnoty bezpečnostních aktualizací",
-          "description": "Porovnat počet bezpečnostních aktualizací jako absolutní hodnotu nebo procento celkového počtu hostitelů"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Varovná prahová hodnota bezpečnostních aktualizací",
-          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Kritická prahová hodnota bezpečnostních aktualizací",
-          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Režim prahové hodnoty hostitelů s bezpečnostními aktualizacemi",
-          "description": "Porovnat počet hostitelů jako absolutní hodnotu nebo procento celkového počtu hostitelů"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Varovná prahová hodnota hostitelů s bezpečnostními aktualizacemi",
-          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Kritická prahová hodnota hostitelů s bezpečnostními aktualizacemi",
-          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Režim prahové hodnoty aktuálních hostitelů",
-          "description": "Porovnat počet aktuálních hostitelů jako absolutní hodnotu nebo procento celkového počtu hostitelů"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Varovná prahová hodnota aktuálních hostitelů",
-          "description": "Při dosažení této prahové hodnoty nebo jejím překročení, ale před úplným pokrytím, zadat žlutou barvu"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Kritická prahová hodnota aktuálních hostitelů",
-          "description": "Při poklesu hodnoty pod tuto prahovou hodnotu zadat červenou barvu"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Režim prahové hodnoty zastaralých balíčků",
-          "description": "Porovnat počet zastaralých balíčků jako absolutní hodnotu nebo procento celkového počtu hostitelů"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Varovná prahová hodnota zastaralých balíčků",
-          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Kritická prahová hodnota zastaralých balíčků",
-          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
-        },
-        "showOsDistribution": {
-          "label": "Zobrazit distribuci OS",
-          "description": "Zobrazit rozdělení monitorovaných hostitelů podle operačního systému"
-        },
-        "osDistributionLimit": {
-          "label": "Limit distribuce OS",
-          "description": "Maximální počet operačních systémů k zobrazení",
-          "option": {
-            "3": "Nejlepší 3",
-            "5": "Nejlepších 5",
-            "10": "Nejlepších 10",
-            "all": "Vše"
-          }
-        },
-        "showOsVersion": {
-          "label": "Zobrazit verzi OS",
-          "description": "Pokud je k dispozici, připojit verzi OS ke každému popisku distribuce"
-        },
-        "showComplianceHero": {
-          "label": "Zobrazit hlavní ukazatel souladu",
-          "description": "Zobrazit kruhový ukazatel souladu s procentem aktuálních hostitelů"
-        },
-        "osDisplayMode": {
-          "label": "Režim zobrazení OS",
-          "description": "Zvolte způsob zobrazení distribuce operačních systémů",
-          "option": {
-            "bars": "Vodorovné pruhy",
-            "donut": "Prstencový graf"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "Data PatchMonu se nepodařilo načíst"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Přehled chybějících titulků a stavu kondice z vaší instance Bazarru",
-      "episodes": "Chybějící epizody",
-      "movies": "Chybějící filmy",
-      "providers": "Problémy poskytovatelů",
-      "status": "Problémy se stavem",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Zobrazit chybějící epizody",
-          "description": "Zobrazit počet epizod s chybějícími titulky"
-        },
-        "showMissingMovies": {
-          "label": "Zobrazit chybějící filmy",
-          "description": "Zobrazit počet filmů s chybějícími titulky"
-        },
-        "showProviderIssues": {
-          "label": "Zobrazit problémy poskytovatelů",
-          "description": "Zobrazit počet poskytovatelů titulků s problémy"
-        },
-        "showHealthIssues": {
-          "label": "Zobrazit problémy se stavem",
-          "description": "Zobrazit počet problémů se stavem Bazarru"
-        }
-      },
-      "error": {
-        "internalServerError": "Data Bazarru se nepodařilo načíst"
-      }
-    },
     "immich-serverStats": {
       "name": "Statistiky serveru Immich",
       "description": "Informace o vaší instanci Immich",
@@ -3433,35 +3009,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "Chybějící a zařazená média",
-      "description": "Zobrazuje chybějící a zařazené filmy a epizody ze Sonarru a Radarru",
-      "option": {
-        "showMissing": {
-          "label": "Zobrazit chybějící položky"
-        },
-        "showQueued": {
-          "label": "Zobrazit zařazené položky"
-        },
-        "pageSize": {
-          "label": "Položek na stránku"
-        }
-      },
-      "tab": {
-        "missing": "Chybějící",
-        "queued": "Ve frontě"
-      },
-      "type": {
-        "movie": "Film",
-        "episode": "Epizoda"
-      },
-      "empty": {
-        "missing": "Žádné chybějící položky",
-        "queued": "Žádné položky ve frontě",
-        "noTabsEnabled": "V nastavení widgetu povolte alespoň jednu kartu"
-      },
-      "timeLeft": "Zbývající čas"
-    },
     "rssFeed": {
       "name": "RSS kanály",
       "description": "Sleduje a zobrazuje jeden nebo více obecných kanálů RSS, ATOM nebo JSON",
@@ -3790,40 +3337,6 @@
         "internalServerError": "Data dostupnosti se nepodařilo načíst"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Přehled směrovačů, služeb, middlewaru a vstupních bodů Traefiku",
-      "option": {
-        "showTcp": {
-          "label": "Zobrazit TCP"
-        },
-        "showUdp": {
-          "label": "Zobrazit UDP"
-        },
-        "showEntryPoints": {
-          "label": "Zobrazit vstupní body"
-        }
-      },
-      "instances": "Instance Traefiku",
-      "versionUnknown": "Verze neznámá",
-      "summary": {
-        "routers": "Směrovače",
-        "entryPoints": "Vstupní body"
-      },
-      "resource": {
-        "routers": "Směrovače",
-        "services": "Služby",
-        "middlewares": "Middleware"
-      },
-      "status": {
-        "healthy": "V pořádku",
-        "errors": "{count} chyb",
-        "warnings": "{count} varování"
-      },
-      "error": {
-        "internalServerError": "Data Traefiku se nepodařilo načíst"
-      }
-    },
     "audioStats": {
       "name": "Statistiky zvuku",
       "description": "Statistiky knihovny a přehrávání z Navidrome nebo Audiobookshelf",
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "Nezdravý stav"
       }
-    },
-    "customApi": {
-      "name": "Vlastní API",
-      "description": "Zobrazujte data z libovolného externího API pomocí vlastní konfigurace.",
-      "option": {
-        "definitionId": {
-          "label": "ID definice"
-        },
-        "refreshInterval": {
-          "label": "Interval obnovení",
-          "description": "Jak často znovu načítat data z API (v sekundách)"
-        }
-      },
-      "noDefinition": "Není vybrána žádná definice",
-      "definitionNotFound": "Definice widgetu nebyla nalezena. Možná byla odstraněna.",
-      "noDisplayOutput": "Žádný výstup zobrazení",
-      "executeConfirm": "Opravdu chcete tuto akci provést?",
-      "executing": "Provádění...",
-      "executeSuccess": "Akce byla úspěšně provedena",
-      "executeFailed": "Akce selhala. Zkontrolujte konfiguraci widgetu."
     },
     "beszelSystemTable": {
       "name": "Systémy Beszel (tabulka)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "Vstup/výstup sítě Dockeru",
           "subtitle": "Síťový provoz kontejnerů Dockeru"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Přehled stavu oprav hostitelů z PatchMonu",
+      "title": "Statistiky PatchMonu",
+      "totalHosts": "Celkem hostitelů",
+      "hostsNeedingUpdates": "Vyžaduje aktualizace",
+      "securityUpdates": "Bezpečnostní aktualizace",
+      "upToDateHosts": "Aktuální hostitelé",
+      "hostsWithSecurityUpdates": "Hostitelé s bezpečnostními aktualizacemi",
+      "recentUpdates24h": "Aktualizace (24 h)",
+      "totalOutdatedPackages": "Zastaralé balíčky",
+      "totalRepos": "Repozitáře",
+      "osDistribution": "Distribuce OS",
+      "compliance": "Soulad oprav",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Aktualizováno {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Zobrazit celkový počet hostitelů",
+          "description": "Zobrazit celkový počet monitorovaných hostitelů"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Zobrazit hostitele vyžadující aktualizace",
+          "description": "Zobrazit hostitele s alespoň jedním zastaralým balíčkem"
+        },
+        "showSecurityUpdates": {
+          "label": "Zobrazit bezpečnostní aktualizace",
+          "description": "Zobrazit celkový počet dostupných bezpečnostních aktualizací"
+        },
+        "showUpToDateHosts": {
+          "label": "Zobrazit aktuální hostitele",
+          "description": "Zobrazit hostitele s nulovým počtem zastaralých balíčků"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Zobrazit hostitele s bezpečnostními aktualizacemi",
+          "description": "Zobrazit hostitele vyžadující bezpečnostní opravy"
+        },
+        "showRecentUpdates24h": {
+          "label": "Zobrazit poslední aktualizace (24 h)",
+          "description": "Zobrazit počet aktualizací použitých za posledních 24 hodin"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Zobrazit zastaralé balíčky",
+          "description": "Zobrazit celkový počet zastaralých balíčků na všech hostitelích"
+        },
+        "showTotalRepos": {
+          "label": "Zobrazit repozitáře",
+          "description": "Zobrazit počet aktivních monitorovaných repozitářů"
+        },
+        "enableThresholdColors": {
+          "label": "Povolit barvy podle prahových hodnot",
+          "description": "Obarvit statistické hodnoty zeleně, žlutě nebo červeně podle předvoleb závažnosti"
+        },
+        "useCustomThresholds": {
+          "label": "Pokročilé prahové hodnoty",
+          "description": "Přizpůsobit varovné a kritické prahové hodnoty pro jednotlivé statistiky pomocí absolutních počtů nebo procent celkového počtu hostitelů"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absolutní počet",
+            "percent": "Procento celkového počtu hostitelů"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Režim prahové hodnoty pro aktualizace",
+          "description": "Porovnat počet aktualizací jako absolutní hodnotu nebo procento celkového počtu hostitelů"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Varovná prahová hodnota aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Kritická prahová hodnota aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Režim prahové hodnoty bezpečnostních aktualizací",
+          "description": "Porovnat počet bezpečnostních aktualizací jako absolutní hodnotu nebo procento celkového počtu hostitelů"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Varovná prahová hodnota bezpečnostních aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Kritická prahová hodnota bezpečnostních aktualizací",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Režim prahové hodnoty hostitelů s bezpečnostními aktualizacemi",
+          "description": "Porovnat počet hostitelů jako absolutní hodnotu nebo procento celkového počtu hostitelů"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Varovná prahová hodnota hostitelů s bezpečnostními aktualizacemi",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Kritická prahová hodnota hostitelů s bezpečnostními aktualizacemi",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Režim prahové hodnoty aktuálních hostitelů",
+          "description": "Porovnat počet aktuálních hostitelů jako absolutní hodnotu nebo procento celkového počtu hostitelů"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Varovná prahová hodnota aktuálních hostitelů",
+          "description": "Při dosažení této prahové hodnoty nebo jejím překročení, ale před úplným pokrytím, zadat žlutou barvu"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Kritická prahová hodnota aktuálních hostitelů",
+          "description": "Při poklesu hodnoty pod tuto prahovou hodnotu zadat červenou barvu"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Režim prahové hodnoty zastaralých balíčků",
+          "description": "Porovnat počet zastaralých balíčků jako absolutní hodnotu nebo procento celkového počtu hostitelů"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Varovná prahová hodnota zastaralých balíčků",
+          "description": "Při dosažení této prahové hodnoty zadat žlutou barvu"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Kritická prahová hodnota zastaralých balíčků",
+          "description": "Při dosažení této prahové hodnoty zadat červenou barvu"
+        },
+        "showOsDistribution": {
+          "label": "Zobrazit distribuci OS",
+          "description": "Zobrazit rozdělení monitorovaných hostitelů podle operačního systému"
+        },
+        "osDistributionLimit": {
+          "label": "Limit distribuce OS",
+          "description": "Maximální počet operačních systémů k zobrazení",
+          "option": {
+            "3": "Nejlepší 3",
+            "5": "Nejlepších 5",
+            "10": "Nejlepších 10",
+            "all": "Vše"
+          }
+        },
+        "showOsVersion": {
+          "label": "Zobrazit verzi OS",
+          "description": "Pokud je k dispozici, připojit verzi OS ke každému popisku distribuce"
+        },
+        "showComplianceHero": {
+          "label": "Zobrazit hlavní ukazatel souladu",
+          "description": "Zobrazit kruhový ukazatel souladu s procentem aktuálních hostitelů"
+        },
+        "osDisplayMode": {
+          "label": "Režim zobrazení OS",
+          "description": "Zvolte způsob zobrazení distribuce operačních systémů",
+          "option": {
+            "bars": "Vodorovné pruhy",
+            "donut": "Prstencový graf"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Data PatchMonu se nepodařilo načíst"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Přehled chybějících titulků a stavu kondice z vaší instance Bazarru",
+      "episodes": "Chybějící epizody",
+      "movies": "Chybějící filmy",
+      "providers": "Problémy poskytovatelů",
+      "status": "Problémy se stavem",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Zobrazit chybějící epizody",
+          "description": "Zobrazit počet epizod s chybějícími titulky"
+        },
+        "showMissingMovies": {
+          "label": "Zobrazit chybějící filmy",
+          "description": "Zobrazit počet filmů s chybějícími titulky"
+        },
+        "showProviderIssues": {
+          "label": "Zobrazit problémy poskytovatelů",
+          "description": "Zobrazit počet poskytovatelů titulků s problémy"
+        },
+        "showHealthIssues": {
+          "label": "Zobrazit problémy se stavem",
+          "description": "Zobrazit počet problémů se stavem Bazarru"
+        }
+      },
+      "error": {
+        "internalServerError": "Data Bazarru se nepodařilo načíst"
+      }
+    },
+    "mediaMissing": {
+      "name": "Chybějící a zařazená média",
+      "description": "Zobrazuje chybějící a zařazené filmy a epizody ze Sonarru a Radarru",
+      "option": {
+        "showMissing": {
+          "label": "Zobrazit chybějící položky"
+        },
+        "showQueued": {
+          "label": "Zobrazit zařazené položky"
+        },
+        "pageSize": {
+          "label": "Položek na stránku"
+        }
+      },
+      "tab": {
+        "missing": "Chybějící",
+        "queued": "Ve frontě"
+      },
+      "type": {
+        "movie": "Film",
+        "episode": "Epizoda"
+      },
+      "empty": {
+        "missing": "Žádné chybějící položky",
+        "queued": "Žádné položky ve frontě",
+        "noTabsEnabled": "V nastavení widgetu povolte alespoň jednu kartu"
+      },
+      "timeLeft": "Zbývající čas"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Přehled směrovačů, služeb, middlewaru a vstupních bodů Traefiku",
+      "option": {
+        "showTcp": {
+          "label": "Zobrazit TCP"
+        },
+        "showUdp": {
+          "label": "Zobrazit UDP"
+        },
+        "showEntryPoints": {
+          "label": "Zobrazit vstupní body"
+        }
+      },
+      "instances": "Instance Traefiku",
+      "versionUnknown": "Verze neznámá",
+      "summary": {
+        "routers": "Směrovače",
+        "entryPoints": "Vstupní body"
+      },
+      "resource": {
+        "routers": "Směrovače",
+        "services": "Služby",
+        "middlewares": "Middleware"
+      },
+      "status": {
+        "healthy": "V pořádku",
+        "errors": "{count} chyb",
+        "warnings": "{count} varování"
+      },
+      "error": {
+        "internalServerError": "Data Traefiku se nepodařilo načíst"
+      }
+    },
+    "wud": {
+      "name": "Co je Docker nahoru",
+      "description": "Zobrazit, kolik sledovaných kontejnerů je k dispozici aktualizace.",
+      "title": "Co je Docker nahoru",
+      "monitored": "Monitorováno",
+      "updatesAvailable": "{count, plural, one {K dispozici je # aktualizace} other {# dostupných aktualizací}}",
+      "updateAvailable": "K dispozici je aktualizace",
+      "openReleaseNotes": "Otevřít poznámky k vydání",
+      "option": {
+        "showTitle": {
+          "label": "Zobrazit název"
+        },
+        "showRing": {
+          "label": "Zobrazit vyzvánění aktualizace"
+        },
+        "layout": {
+          "label": "Rozložení",
+          "option": {
+            "horizontal": {
+              "label": "Horizontální"
+            },
+            "vertical": {
+              "label": "Vertikální"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Zobrazit seznam aktualizací kontejneru",
+          "description": "Zobrazí seznam každého monitorovaného kontejneru, který má k dispozici aktualizaci obrázku"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Domovská stránka",
         "boards": "Plochy",
         "apps": "Aplikace",
         "integrations": "Integrace",
-        "customWidgets": "Vlastní widgety",
         "searchEngies": "Vyhledávače",
         "medias": "Média",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Sem přetáhněte ZIP se zálohou",
-              "description": "Přijímá soubory .zip ze zálohy Homarr SQLite (max. 256 MB)"
+              "description": "Přijímá soubory .zip ze zálohy Homarr SQLite (max. {maxSize})"
             },
             "analyzing": "Analýza zálohy...",
             "changeFile": "Změnit soubor",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Spravovat",
       "boards": {
         "label": "Plochy"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Upravit"
-        }
-      },
-      "custom-widgets": {
-        "label": "Vlastní widgety",
-        "new": {
-          "label": "Nový"
-        },
-        "edit": {
-          "label": "Upravit",
-          "flow": {
-            "label": "Tok"
-          }
         }
       },
       "users": {

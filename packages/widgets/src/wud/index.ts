@@ -1,12 +1,15 @@
 import { IconBrandDocker } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("wud", {
   icon: IconBrandDocker,
+  supportsAdvancedFocus: true,
   refetchInterval: null,
-  supportedIntegrations: ["wud"],
+  ...getWidgetIntegrationConfig("wud"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTitle: factory.switch({ defaultValue: true }),
@@ -14,7 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("wud", {
       layout: factory.select({
         options: (["horizontal", "vertical"] as const).map((value) => ({
           value,
-          label: (t) => t(`widget.wud.option.layout.option.${value}.label`),
+          label: (t) => t(`widget.common.layout.option.${value}`),
         })),
         defaultValue: "horizontal",
       }),

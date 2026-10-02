@@ -1,0 +1,43 @@
+---
+title: "Your Spotify"
+description: "A self-hosted Spotify listening history tracker."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { yourSpotifyIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={yourSpotifyIntegration} categories={["Music"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Your Spotify's `songs_per`, `time_per`, and `different_artists_per`
+endpoints and displays songs listened, listening time, and distinct artists. Homarr requests the fixed all-time range
+used by the upstream widget (`start=2006-04-23T00:00:00.000Z` and `timeSplit=all`).
+
+### Adding the integration
+
+<AddingIntegration />
+
+Point the integration at the Your Spotify API service, which listens on port `8080` by default. The API endpoints use
+the public token generated under `Settings > Account > Public token`; add that token as the integration's API key.
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Your Spotify's Settings > Account > Public token and generate a token if needed.",
+        "Paste the public token into the API Key field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

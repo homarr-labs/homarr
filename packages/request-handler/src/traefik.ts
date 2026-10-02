@@ -1,4 +1,4 @@
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { TraefikDashboardData } from "@homarr/integrations/types";
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
@@ -8,6 +8,7 @@ export const traefikRequestHandler = createIntegrationRequestHandler<
   "traefik",
   Record<string, never>
 >({
+  cacheNamespace: "traefik:summary",
   async requestAsync(integration, _input) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getDashboardDataAsync();

@@ -4,6 +4,8 @@ description: "Displays a list of the current version of the given repositories w
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -11,7 +13,7 @@ import { releasesWidget } from ".";
 
 <WidgetHeader widget={releasesWidget} categories={["Releases", "Software"]} />
 
-The releases widget enables you to track a list of repositories and see their respective latest release.
+The releases widget enables you to track a list of repositories and see their respective latest release. Compact mode keeps repositories in the familiar full-width stack.
 It also supports importing releases from your local docker containers.
 
 ### Screenshots
@@ -21,17 +23,24 @@ import fullCard from "./img/full.png";
 import noDetailsCard from "./img/no-details.png";
 
 <div className="flex gap-1">
-  <img src={fullCard} alt="releases full" width={128 * 3} />
-  <img src={collapsibleCard} alt="releases collapsible" width={128 * 3} />
-  <img src={noDetailsCard} alt="releases no details" width={128 * 3} />
+  <img src={fullCard.src} alt="releases full" width={128 * 3} />
+  <img src={collapsibleCard.src} alt="releases collapsible" width={128 * 3} />
+  <img src={noDetailsCard.src} alt="releases no details" width={128 * 3} />
 </div>
 
 ### Supported Providers
 
 GitHub, Docker Hub, GitLab, NPM, Codeberg, GitHub Container Registry, Quay, and LinuxServer.io are configured per repository in the widget.
+Adding or removing a provider token refreshes active release results.
+
+For GitHub repositories with more than 1,000 releases, Homarr uses the releases returned before GitHub's history limit. The latest release remains available in the widget.
 
 For GitHub Container Registry, use `owner/package` identifiers such as `homarr-labs/homarr`.
 Full image references such as `ghcr.io/homarr-labs/homarr:latest` are also accepted.
+
+Advanced view shows every configured repository in a roomier responsive layout. Repository names and details remain visible, and selecting a repository still expands its description and links.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
@@ -41,11 +50,11 @@ Full image references such as `ghcr.io/homarr-labs/homarr:latest` are also accep
 
 <WidgetConfig configuration={releasesWidget.configuration} />
 
-:::note
+<Alert type="note">
 
 The version filter is used to match the version tag of the release. It is a combination of the prefix, precision and suffix.
 
 Setting the Prefix to `v`, precision to `2` and the Suffix to `-alpha`, will match `v1.0-alpha` but not `v1.0-beta`.  
 Setting the Prefix to `v`, precision to `3`, will match `v5.2.0` but not `v1.0.2-alpha` or `Beta v5.2.1`.
 
-:::
+</Alert>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Homarr Custom Widget"
+  short_description: "Build and deploy safe Custom JSX widgets"
+  default_prompt: "Use $homarr-custom-widget to author, validate, preview, and configure a safe Custom JSX v2 widget."

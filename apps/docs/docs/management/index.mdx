@@ -1,0 +1,82 @@
+---
+title: Manage Homarr
+description: Configure boards, content, access, automation, and server-wide behavior.
+---
+
+import {
+  IconApi,
+  IconApps,
+  IconCertificate,
+  IconChecklist,
+  IconComponents,
+  IconDatabaseExport,
+  IconLayoutDashboard,
+  IconLogs,
+  IconPhoto,
+  IconPlugConnected,
+  IconRobot,
+  IconSearch,
+  IconSettings,
+  IconTerminal2,
+  IconUsers,
+} from "@tabler/icons-react";
+
+## Everyday configuration
+
+<Cards>
+  <Card icon={<IconLayoutDashboard />} title="Boards" href="/docs/management/boards">
+    Create, organize, share, and configure boards.
+  </Card>
+  <Card icon={<IconApps />} title="Apps" href="/docs/management/apps">
+    Add the services and links shown on boards.
+  </Card>
+  <Card icon={<IconPlugConnected />} title="Integrations" href="/docs/management/integrations">
+    Configure reusable service connections.
+  </Card>
+  <Card icon={<IconUsers />} title="Users and groups" href="/docs/management/users">
+    Control access and permissions.
+  </Card>
+  <Card icon={<IconSettings />} title="Settings" href="/docs/management/settings">
+    Change server and user preferences.
+  </Card>
+</Cards>
+
+## Content and extensions
+
+<Cards>
+  <Card icon={<IconPhoto />} title="Media" href="/docs/management/media">
+    Manage uploaded assets.
+  </Card>
+  <Card icon={<IconSearch />} title="Search engines" href="/docs/management/search-engines">
+    Configure search shortcuts.
+  </Card>
+  <Card icon={<IconComponents />} title="Custom Widgets" href="/docs/management/custom-widgets">
+    Build Custom JSX widgets.
+  </Card>
+  <Card icon={<IconRobot />} title="Assistant" href="/docs/management/assistant">
+    Configure Homarr's assistant features.
+  </Card>
+</Cards>
+
+## Operations
+
+<Cards>
+  <Card icon={<IconApi />} title="API" href="/docs/management/api">
+    Configure API keys and use the generated reference.
+  </Card>
+  <Card icon={<IconTerminal2 />} title="Model Context Protocol" href="/docs/management/mcp">
+    Connect external assistants to Homarr.
+  </Card>
+  <Card icon={<IconChecklist />} title="Tasks" href="/docs/management/tasks">
+    Inspect scheduled and background tasks.
+  </Card>
+  <Card icon={<IconLogs />} title="Logs" href="/docs/management/logs">
+    Inspect application logs.
+  </Card>
+  <Card icon={<IconCertificate />} title="Certificates" href="/docs/management/certificates">
+    Trust certificates used by connected services.
+  </Card>
+  <Card icon={<IconDatabaseExport />} title="Backups" href="/docs/management/backup">
+    Export and restore Homarr data.
+  </Card>
+</Cards>
