@@ -723,7 +723,7 @@ overrides:
   form-data@>=4.0.0 <4.0.4: '>=4.0.6'
   hono@<4.6.5: '>=4.13.7'
   immutable@>=5.0.0-beta.1 <5.1.8: 5.1.8
-  ip-address@<10.3.1: 10.3.1
+  ip-address@<10.3.1: 10.7.1
   image-size@<=2.0.2: 2.0.3
   js-yaml@>=3.0.0 <3.15.2: 3.15.2
   js-yaml@>=4.0.0 <4.3.2: 4.3.2
@@ -10697,8 +10697,8 @@ packages:
     resolution: {integrity: sha512-ehuGcf94bQXhfagULNXrJdfnWO38v070jxSx/qE87Kjzmu2fU7ro5EFAb+OPituLqgfyuQaym5DlrNydW2sJ9A==}
     engines: {node: '>=12.22.0'}
 
-  ip-address@10.3.1:
-    resolution: {integrity: sha512-1e9d3kb97NHJTIJDZW9rKqW2h6+dFa50Dy0fpPSMQp2ADje5gvKsXmdiK6dwY5t76TaTt5+P5N1Y/LoToIxP6g==}
+  ip-address@10.7.1:
+    resolution: {integrity: sha512-4OUAqU9Z1i3vCnS05hzGiFnEMDpQ+62pAD/MVQOp83fYyNC8GleCqaS0QikQBmcWCrKFiUs/B8ztRRiYOAXuCA==}
     engines: {node: '>= 12'}
 
   ipaddr.js@2.3.0:
@@ -22341,7 +22341,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ip-address@10.3.1: {}
+  ip-address@10.7.1: {}
 
   ipaddr.js@2.3.0: {}
 
@@ -25235,7 +25235,7 @@ snapshots:
 
   socks@2.8.3:
     dependencies:
-      ip-address: 10.3.1
+      ip-address: 10.7.1
       smart-buffer: 4.2.0
 
   solid-js@1.9.14:
