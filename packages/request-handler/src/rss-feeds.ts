@@ -44,7 +44,7 @@ const attemptGetImageFromEntry = (feedUrl: string, entry: object) => {
 };
 
 const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
-  const regex = /https?:\/\/\S+?\.(jpg|jpeg|png|gif|bmp|svg|webp|tiff)/i;
+  const regex = /https?:\/\/[^\s"'<>\\]+?\.(jpg|jpeg|png|gif|bmp|svg|webp|tiff)\b(?:\?[^\s"'<>\\#]*)?(?:#[^\s"'<>\\]*)?/i;
   const result = regex.exec(content);
 
   if (result == null) {
