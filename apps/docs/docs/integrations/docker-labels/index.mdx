@@ -1,0 +1,95 @@
+---
+title: "Docker labels"
+description: "Discover apps, integrations, and widgets from container labels during Homarr onboarding."
+---
+
+# Docker label discovery
+
+During onboarding, Homarr scans running containers on every reachable
+[Docker-compatible host](/docs/integrations/docker). Labels let you provide exact app metadata instead of relying on
+image-name matching. You can review and deselect every result before Homarr creates anything.
+
+A container with valid Homarr labels takes priority over image-based discovery. Containers without valid labels can
+still be suggested from their image and published ports.
+
+## Homarr labels
+
+`homarr.name` and `homarr.href` are required for label discovery. All other labels are optional.
+
+| Label                | Purpose                                                                    |
+| -------------------- | -------------------------------------------------------------------------- |
+| `homarr.name`        | App or integration display name                                            |
+| `homarr.href`        | Address opened by the app and used as the suggested integration address    |
+| `homarr.group`       | Container section that receives the selected app and compatible widget     |
+| `homarr.icon`        | App icon URL                                                               |
+| `homarr.description` | App description                                                            |
+| `homarr.ping`        | Address used for app status checks                                         |
+| `homarr.id`          | Stable source identifier; defaults to the Docker container ID              |
+| `homarr.board`       | Intended board name; see [Board targeting](#board-targeting)               |
+| `homarr.integration` | Homarr integration kind, for example `sonarr`                              |
+| `homarr.widget`      | Homarr widget kind to add when it supports the selected integration        |
+| `homarr.hide`        | Excludes the container when this label is present, regardless of its value |
+
+Unknown integration and widget kinds are ignored. Do not put API keys, passwords, or other secrets in labels. Enter
+credentials in onboarding, where Homarr stores them using its normal encrypted integration-secret flow.
+
+## Compose example
+
+```yaml
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    labels:
+      homarr.name: "Sonarr"
+      homarr.href: "http://server.local:8989"
+      homarr.group: "Media"
+      homarr.icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg"
+      homarr.description: "TV library"
+      homarr.ping: "http://server.local:8989"
+      homarr.integration: "sonarr"
+      homarr.widget: "calendar"
+```
+
+Use an address that is reachable where it is needed. A Docker service name can work for server-side integration
+requests, while an app link opened in a browser usually needs a LAN hostname, IP address, or reverse-proxy address.
+Onboarding accepts these self-hosted address formats directly and only requires the field to be non-empty.
+
+## Homepage label fallback
+
+When `homarr.name` is absent, onboarding also understands these Homepage labels:
+
+- `homepage.name`
+- `homepage.href`
+- `homepage.group`
+- `homepage.icon`
+- `homepage.description`
+
+`homepage.name` and `homepage.href` are required for the fallback. Homarr does not combine partial Homarr metadata with
+Homepage metadata: once `homarr.name` is present, use `homarr.*` labels for the remaining fields too.
+
+## What onboarding creates
+
+In **Connect**, label-discovered apps and integrations appear before image-based suggestions. You can import multiple
+services in one pass and edit every suggested address. For image-matched apps, Homarr uses the detected service type
+when building host, subdomain, or reverse-proxy path suggestions.
+
+When setup completes, Homarr rechecks the selected container sources and then:
+
+- creates an app with its name, address, icon, description, and ping address;
+- creates the requested integration and links its app after you provide required credentials;
+- places grouped apps in a board container named by `homarr.group`;
+- places ungrouped apps in the main board area;
+- adds `homarr.widget` only when the widget kind is valid and compatible with the selected integration;
+- keeps image-based discovery available for unlabeled containers.
+
+If a selected container disappears, targets another board, or requests an incompatible widget, setup finishes with a
+warning instead of creating an invalid board item.
+
+## Board targeting
+
+On a fresh installation with one seeded `dashboard` board, one unique selected `homarr.board` value can name that first
+board. Otherwise, the label must match the board selected in onboarding. Services labeled for another board are skipped
+and reported in the completion warning.
+
+Onboarding configures one board at a time. Run normal board management after setup if you want to distribute services
+across several boards.

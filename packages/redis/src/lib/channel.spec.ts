@@ -16,6 +16,7 @@ describe("createLockChannel", () => {
 
     expect(token).toEqual(expect.any(String));
     if (!token) throw new Error("Expected the fallback lock to return a token");
+    await expect(lock.renewAsync(token, 60)).resolves.toBe(true);
     await expect(lock.releaseAsync(token)).resolves.toBeUndefined();
   });
 });

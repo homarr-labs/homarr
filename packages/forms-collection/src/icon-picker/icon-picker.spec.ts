@@ -43,7 +43,7 @@ vi.mock("@homarr/auth/client", () => ({
 }));
 vi.mock("@homarr/translation", () => ({ supportedLanguages: [] }));
 vi.mock("@homarr/translation/client", () => ({
-  useScopedI18n: () => (key: string, params?: Record<string, string>) =>
+  useI18n: () => (key: string, params?: Record<string, string>) =>
     params ? `${key}:${Object.values(params).join(",")}` : key,
 }));
 vi.mock("../upload-media/upload-media", () => ({

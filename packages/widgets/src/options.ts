@@ -1,10 +1,12 @@
 import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
-import type { ActionIconProps } from "@mantine/core";
 import { z } from "zod/v4";
 import type { RefinementCtx, ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
+
+import { statsEntriesSchema } from "./stats/config";
+import type { StatsEntry } from "./stats/config";
 
 import type { DynamicSelectOption } from "./_inputs/widget-dynamic-select-input";
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
@@ -33,12 +35,19 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   CommonInput<TOptionValue[]>,
   "withDescription"
 > {
-  AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
+  AddButton: (props: {
+    addItem: (item: TItem) => void;
+    migrateItems: (items: TItem[], optionsPatch: Record<string, unknown>) => void;
+    removeItem: (value: TOptionValue) => void;
+    values: TOptionValue[];
+    initialOptions: Record<string, unknown>;
+  }) => React.ReactNode;
   ItemComponent: (props: {
     item: TItem;
     removeItem: () => void;
+    removeLabel: string;
     rootAttributes: DraggableAttributes;
-    handle: (props: Partial<Pick<ActionIconProps, "size" | "color" | "variant">>) => React.ReactNode;
+    handle: React.ReactNode;
   }) => React.ReactNode;
   uniqueIdentifier: (item: TItem) => TOptionValue;
   useData: (values: TOptionValue[]) => { data: TItem[] | undefined; isLoading: boolean; error: unknown };
@@ -49,6 +58,7 @@ interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonIn
 > {
   options: TOptions;
   searchable?: boolean;
+  withPlaceholder?: boolean;
 }
 
 interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
@@ -56,9 +66,22 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
     query: string,
     integrationIds: string[],
     options: Record<string, unknown>,
+    itemId?: string,
+    boardId?: string,
   ) => {
+    error?: string;
     isPending: boolean;
+    isError?: boolean;
     options: DynamicSelectOption[];
+  };
+}
+
+interface DynamicMultiSelectInput extends CommonInput<string[]> {
+  maxValues?: number;
+  useOptions: () => {
+    data: DynamicSelectOption[];
+    isPending: boolean;
+    isError: boolean;
   };
 }
 
@@ -84,11 +107,40 @@ interface IntegrationMultiSelectInput extends CommonInput<string[]> {
 interface NumberInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
+  storedUnit?: "kibibytesPerSecond";
 }
 
 interface SliderInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
+}
+
+export interface OptionTimezone {
+  id: string;
+  label: string;
+  timeZone: string;
+}
+
+interface TimezoneListInput extends CommonInput<OptionTimezone[]> {
+  maxValues?: number;
+  presets?: readonly OptionTimezone[];
+  timeZoneOptions: readonly { value: string; label: string }[];
+}
+
+export type DateTimeEventRecurrence = "none" | "yearly";
+
+export interface OptionDateTimeEvent {
+  id: string;
+  label: string;
+  targetUtc: string;
+  timeZone: string;
+  startUtc?: string;
+  recurrence: DateTimeEventRecurrence;
+}
+
+interface DateTimeEventListInput extends CommonInput<OptionDateTimeEvent[]> {
+  maxValues?: number;
+  timeZoneOptions: readonly { value: string; label: string }[];
 }
 
 export interface OptionLocation {
@@ -98,6 +150,12 @@ export interface OptionLocation {
 }
 
 const optionsFactory = {
+  internal: <T>(input: CommonInput<T> & { defaultValue: T }) => ({
+    type: "internal" as const,
+    defaultValue: input.defaultValue,
+    withDescription: false,
+    skipContextMenu: true,
+  }),
   switch: (input?: CommonInput<boolean>) => ({
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
@@ -128,17 +186,26 @@ const optionsFactory = {
     useOptions: input.useOptions,
     withDescription: input.withDescription ?? false,
   }),
+  dynamicMultiSelect: (input: DynamicMultiSelectInput) => ({
+    type: "dynamicMultiSelect" as const,
+    defaultValue: input.defaultValue ?? [],
+    maxValues: input.maxValues,
+    useOptions: input.useOptions,
+    withDescription: input.withDescription ?? false,
+  }),
   select: <const TOptions extends SelectOption[]>(input: SelectInput<TOptions>) => ({
     type: "select" as const,
     defaultValue: (input.defaultValue ?? input.options[0]) as inferSelectOptionValue<TOptions[number]>,
     options: input.options,
     searchable: input.searchable ?? false,
     withDescription: input.withDescription ?? false,
+    withPlaceholder: input.withPlaceholder ?? false,
   }),
   number: (input: NumberInput) => ({
     type: "number" as const,
     defaultValue: input.defaultValue ?? 0,
     step: input.step,
+    storedUnit: input.storedUnit,
     withDescription: input.withDescription ?? false,
     validate: input.validate,
   }),
@@ -163,6 +230,72 @@ const optionsFactory = {
       longitude: z.number(),
     }),
   }),
+  timezoneList: (input: TimezoneListInput) => {
+    const maxValues = input.maxValues ?? 6;
+    return {
+      type: "timezoneList" as const,
+      defaultValue: input.defaultValue ?? [],
+      maxValues,
+      presets: input.presets ?? [],
+      timeZoneOptions: input.timeZoneOptions,
+      withDescription: input.withDescription ?? false,
+      validate: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            label: z.string().trim().min(1).max(64),
+            timeZone: z.string().min(1),
+          }),
+        )
+        .max(maxValues)
+        .superRefine((values, ctx) => {
+          const ids = new Set<string>();
+          const timeZones = new Set<string>();
+
+          values.forEach((value, index) => {
+            if (ids.has(value.id)) {
+              ctx.addIssue({ code: "custom", path: [index, "id"], message: "Duplicate identifier" });
+            }
+            if (timeZones.has(value.timeZone)) {
+              ctx.addIssue({ code: "custom", path: [index, "timeZone"], message: "Duplicate timezone" });
+            }
+            ids.add(value.id);
+            timeZones.add(value.timeZone);
+          });
+        }),
+    };
+  },
+  dateTimeEventList: (input: DateTimeEventListInput) => {
+    const maxValues = input.maxValues ?? 20;
+    const dateTimeEventSchema = z.object({
+      id: z.string().min(1),
+      label: z.string().trim().min(1).max(64),
+      targetUtc: z.iso.datetime(),
+      timeZone: z.string().min(1),
+      startUtc: z.iso.datetime().optional(),
+      recurrence: z.enum(["none", "yearly"]),
+    });
+
+    return {
+      type: "dateTimeEventList" as const,
+      defaultValue: input.defaultValue ?? [],
+      maxValues,
+      timeZoneOptions: input.timeZoneOptions,
+      withDescription: input.withDescription ?? false,
+      validate: z
+        .array(dateTimeEventSchema)
+        .max(maxValues)
+        .superRefine((values, ctx) => {
+          const ids = new Set<string>();
+          values.forEach((value, index) => {
+            if (ids.has(value.id)) {
+              ctx.addIssue({ code: "custom", path: [index, "id"], message: "Duplicate identifier" });
+            }
+            ids.add(value.id);
+          });
+        }),
+    };
+  },
   multiText: (input?: CommonInput<string[]> & { validate?: ZodType }) => ({
     type: "multiText" as const,
     defaultValue: input?.defaultValue ?? [],
@@ -211,10 +344,23 @@ const optionsFactory = {
     withDescription: input.withDescription ?? false,
     useOptions: input.useOptions,
   }),
+  statsEntries: () => ({
+    type: "statsEntries" as const,
+    validate: statsEntriesSchema,
+    defaultValue: [] as StatsEntry[],
+    withDescription: false,
+    skipContextMenu: true,
+  }),
   customWidgetSelect: (input?: CommonInput<string>) => ({
     type: "customWidgetSelect" as const,
     defaultValue: input?.defaultValue ?? "",
     withDescription: input?.withDescription ?? false,
+  }),
+  customWidgetConfiguration: (input?: CommonInput<Record<string, unknown>>) => ({
+    type: "customWidgetConfiguration" as const,
+    defaultValue: input?.defaultValue ?? {},
+    withDescription: input?.withDescription ?? false,
+    skipContextMenu: true,
   }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,

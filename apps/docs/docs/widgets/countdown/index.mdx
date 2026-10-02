@@ -1,0 +1,30 @@
+---
+title: "Countdowns"
+description: "Tracks upcoming events and recurring anniversaries."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { countdownWidget } from ".";
+
+<WidgetHeader widget={countdownWidget} categories={["Time"]} />
+
+The Countdowns widget tracks up to 20 one-time or yearly events without an integration. Events use an IANA timezone and
+can be reordered; the first event is shown in compact view.
+
+Optional progress uses the configured start date. Browser notifications are local to the current browser and can fire
+only while Homarr is open.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={countdownWidget.configuration} />

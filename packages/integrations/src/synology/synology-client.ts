@@ -5,11 +5,13 @@ import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { SessionStore } from "../base/session-store";
 import type { SynologyDiskRecord, SynologyVolumeRecord } from "./synology-types";
 import {
   AUTH_API_NAME,
   INFO_API_NAME,
+  parseSynologyNumber,
   REQUEST_TIMEOUT_MS,
   SESSION_ERROR_CODES,
   synologyApiInfoResponseSchema,
@@ -62,6 +64,15 @@ export class SynologyClient {
     this.username = options.username;
     this.password = options.password;
     this.sessionStore = options.sessionStore;
+  }
+
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    let session = await this.sessionStore.getAsync();
+    if (!session) {
+      session = await this.loginAsync();
+      await this.sessionStore.setAsync(session, { ttlSeconds: 600 });
+    }
+    return { headers: { Cookie: session.cookieHeader }, redactValues: [session.cookieHeader] };
   }
 
   public async getSystemInfoAsync() {
@@ -174,8 +185,8 @@ export class SynologyClient {
     status: string | undefined,
     displayName?: string,
   ): SynologyVolumeRecord | null {
-    const usedBytes = parseNumericValue(usedValue);
-    const totalBytes = parseNumericValue(totalValue);
+    const usedBytes = parseSynologyNumber(usedValue);
+    const totalBytes = parseSynologyNumber(totalValue);
     if (usedBytes === null || totalBytes === null || totalBytes <= 0) {
       return null;
     }
@@ -194,7 +205,7 @@ export class SynologyClient {
       identifier: disk.id ?? disk.name ?? disk.display_name ?? "unknown-disk",
       name: disk.display_name ?? disk.name ?? disk.id ?? "unknown-disk",
       status: disk.smart_status ?? disk.status,
-      temperature: parseOptionalNumericValue(disk.temp ?? disk.temperature),
+      temperature: parseSynologyNumber(disk.temp ?? disk.temperature),
       volumeName: disk.volume_id ?? disk.vol_path,
     }));
   }
@@ -205,7 +216,7 @@ export class SynologyClient {
       identifier: disk.disk_id ?? disk.id ?? disk.name ?? "unknown-disk",
       name: disk.name ?? disk.disk_id ?? disk.id ?? "unknown-disk",
       status: disk.overall_status ?? disk.status,
-      temperature: parseOptionalNumericValue(disk.temp ?? disk.temperature),
+      temperature: parseSynologyNumber(disk.temp ?? disk.temperature),
       volumeName: undefined,
     }));
   }
@@ -393,17 +404,4 @@ function extractCookieHeader(headers: Headers): string | null {
   }
 
   return cookies.map((cookie) => cookie.split(";")[0]).join("; ");
-}
-
-function parseNumericValue(value: number | string | undefined): number | null {
-  if (value === undefined) {
-    return null;
-  }
-  const parsed = typeof value === "number" ? value : Number.parseFloat(value);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function parseOptionalNumericValue(value: number | string | undefined): number | null {
-  const parsed = parseNumericValue(value);
-  return parsed === null ? null : parsed;
 }

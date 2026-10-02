@@ -31,9 +31,19 @@ export interface TraefikProtocolSummary {
   middlewares: TraefikResourceSummary;
 }
 
+export interface TraefikResourceDetail {
+  protocol: "http" | "tcp" | "udp";
+  type: "router" | "service" | "middleware";
+  name: string;
+  provider: string | null;
+  status: TraefikResourceStatus;
+}
+
 export interface TraefikDashboardData {
   version: string | null;
   entryPoints: string[];
+  resources: TraefikResourceDetail[];
+  failedEndpoints: string[];
   http: TraefikProtocolSummary;
   tcp: TraefikProtocolSummary;
   udp: Omit<TraefikProtocolSummary, "middlewares">;

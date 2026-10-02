@@ -8,9 +8,8 @@ import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { Button, Center, Group, Image, Kbd, Text } from "@mantine/core";
 import type { FloatingPosition } from "@mantine/core";
 
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-
-import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 
 interface TourShellProps extends PropsWithChildren {
   steps: OnboardingTourStep[];
@@ -77,7 +76,9 @@ const TourDoneButton = ({ label, onClick }: TourDoneButtonProps) => {
 };
 
 export const TourShell = ({ steps, started, onEnd, stepRoutes, position, children }: TourShellProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common.action");
+  const tTour = useI18n("onboardingTour");
+  const { branding } = useSettings();
   const router = useRouter();
   const forwardActionRef = useRef<(() => void) | null>(null);
 
@@ -144,7 +145,13 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
           </Group>
           {stepIndexFromController(controller) === 0 && (
             <Center py="xs">
-              <Image src={homarrLogoPath} alt="Homarr" w={64} h={64} fit="contain" />
+              <Image
+                src={branding.logoImageUrl ?? "/logo/logo.png"}
+                alt={`${branding.appName} logo`}
+                w={64}
+                h={64}
+                fit="contain"
+              />
             </Center>
           )}
         </>
@@ -154,11 +161,11 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         const action = bindForwardAction(controller, () => {
           navigateAndAdvance(controller.currentStep?.id, nextStep?.id, () => controller.nextStep());
         });
-        return <TourForwardButton label={t("onboardingTour.next")} onClick={action} />;
+        return <TourForwardButton label={tCommon("next")} onClick={action} />;
       }}
       endStepNavigation={(controller) => {
         const action = bindForwardAction(controller, () => controller.endTour());
-        return <TourDoneButton label={t("onboardingTour.done")} onClick={action} />;
+        return <TourDoneButton label={tTour("done")} onClick={action} />;
       }}
       prevStepNavigation={(controller) => (
         <Button
@@ -169,20 +176,20 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
             navigateAndAdvance(controller.currentStep?.id, prevStep?.id, () => controller.prevStep());
           }}
         >
-          {t("onboardingTour.prev")}
+          {tTour("prev")}
         </Button>
       )}
       skipNavigation={(controller) => (
         <Button size="sm" variant="subtle" color="gray" onClick={() => controller.skipTour()}>
-          {t("onboardingTour.skip")}
+          {tTour("skip")}
         </Button>
       )}
       withPrevButton
       focusRevealProps={{
         disableTargetInteraction: true,
         popoverProps: {
-          position: position ?? { base: "bottom", sm: "right" },
-          width: 420,
+          position: position ?? { base: "bottom", md: "right" },
+          width: { base: "calc(100vw - 32px)", md: 420 },
           shadow: "xl",
           radius: "lg",
           middlewares: { shift: { padding: 16 }, flip: true },

@@ -11,7 +11,7 @@ export const timetableWidget: WidgetDefinition = {
       {
         name: "Search.ch URL",
         description: "Base URL for the Search.ch timetable API.",
-        values: "Any valid URL.",
+        values: "An HTTP(S) URL that resolves to a public IP address.",
         defaultValue: "https://search.ch",
       },
       {

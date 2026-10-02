@@ -9,14 +9,18 @@ interface LogoProps {
   shouldUseNextImage?: boolean;
 }
 
-export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoProps) =>
-  shouldUseNextImage ? (
-    <Image className="logo" src={src} alt={alt} width={size} height={size} />
+export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoProps) => {
+  const normalizedSrc = src.trim();
+  if (normalizedSrc.length === 0) return null;
+
+  return shouldUseNextImage ? (
+    <Image className="logo" src={normalizedSrc} alt={alt} width={size} height={size} />
   ) : (
     // we only want to use next/image for logos that we are sure will be preloaded and are allowed
     // eslint-disable-next-line @next/next/no-img-element
-    <img className="logo" src={src} alt={alt} width={size} height={size} />
+    <img className="logo" src={normalizedSrc} alt={alt} width={size} height={size} />
   );
+};
 
 const logoWithTitleSizes = {
   lg: { logoSize: 48, titleOrder: 1 },

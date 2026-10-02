@@ -5,9 +5,10 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database, InferSelectModel } from "@homarr/db";
 import { asc, eq, inArray, like } from "@homarr/db";
-import { apps } from "@homarr/db/schema";
+import { apps, integrations } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";
+import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 
@@ -19,15 +20,16 @@ const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@mas
 
 export const appRouter = createTRPCRouter({
   getPaginated: permissionRequiredProcedure
-    .requiresPermission("board-modify-all")
-    .input(paginatedSchema)
-    .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
+    .requiresPermission("app-modify-all")
     .meta({
       openapi: {
         method: "GET",
         path: "/api/apps/paginated",
         tags: ["apps"],
         protect: true,
+        summary: "List apps with pagination",
+        description:
+          "Return apps ordered by name with a total count. Supports a name filter and page controls. Requires app-modify-all permission.",
       },
       mcp: {
         enabled: true,
@@ -35,6 +37,8 @@ export const appRouter = createTRPCRouter({
           "List apps with pagination. OPTIONAL: search (string to filter by name), pageSize (number, default 10), page (number, default 1). All fields are optional — call with no arguments to get the first page",
       },
     })
+    .input(paginatedSchema)
+    .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(apps.name, `%${input.search.trim()}%`) : undefined;
       const totalCount = await ctx.db.$count(apps, whereQuery);
@@ -51,7 +55,8 @@ export const appRouter = createTRPCRouter({
         totalCount,
       };
     }),
-  all: protectedProcedure
+  all: permissionRequiredProcedure
+    .requiresPermission("app-modify-all")
     .input(z.void())
     .output(z.array(selectAppSchema))
     .meta({
@@ -60,6 +65,8 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps",
         tags: ["apps"],
         protect: true,
+        summary: "List all apps",
+        description: "Return all apps ordered by name. Requires app-modify-all permission.",
       },
       mcp: { enabled: true, description: "List all apps" },
     })
@@ -82,6 +89,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/search",
         tags: ["apps"],
         protect: true,
+        summary: "Search apps",
+        description:
+          "Find apps whose names contain the query, ordered by name. Requires app-modify-all or board-modify-all permission; returns up to 100 results.",
       },
       mcp: {
         enabled: true,
@@ -89,6 +99,16 @@ export const appRouter = createTRPCRouter({
       },
     })
     .query(({ ctx, input }) => {
+      if (
+        !ctx.session.user.permissions.includes("app-modify-all") &&
+        !ctx.session.user.permissions.includes("board-modify-all")
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permission denied",
+        });
+      }
+
       return ctx.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
         orderBy: asc(apps.name),
@@ -115,6 +135,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/selectable",
         tags: ["apps"],
         protect: true,
+        summary: "List selectable apps",
+        description:
+          "Return app IDs, names, icons, descriptions, destination URLs, and ping URLs for selection controls. Requires authentication.",
       },
     })
     .query(({ ctx }) => {
@@ -139,6 +162,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/{id}",
         tags: ["apps"],
         protect: true,
+        summary: "Get an app",
+        description:
+          "Return an app by ID. Signed-in users can access all apps; anonymous access is limited to apps placed on public boards. Missing or inaccessible apps return not found.",
       },
       mcp: { enabled: true, description: "Get a single app by its ID. REQUIRED: id (app ID string)" },
     })
@@ -169,6 +195,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps",
         tags: ["apps"],
         protect: true,
+        summary: "Create an app",
+        description:
+          "Create an app bookmark. Requires app-create permission. Returns the app, including its ID and the legacy appId field. An empty pingUrl disables the custom ping URL.",
       },
       mcp: {
         enabled: true,
@@ -216,6 +245,9 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/{id}",
         tags: ["apps"],
         protect: true,
+        summary: "Update an app",
+        description:
+          "Update an app by ID. Requires app-modify-all permission. Supply all required app fields; an empty pingUrl clears the custom ping URL. Changing href invalidates linked integration caches.",
       },
       mcp: {
         enabled: true,
@@ -245,6 +277,14 @@ export const appRouter = createTRPCRouter({
           pingUrl: input.pingUrl === "" ? null : input.pingUrl,
         })
         .where(eq(apps.id, input.id));
+
+      if (app.href !== input.href) {
+        const linkedIntegrations = await ctx.db.query.integrations.findMany({
+          columns: { id: true },
+          where: eq(integrations.appId, input.id),
+        });
+        await Promise.all(linkedIntegrations.map(({ id }) => invalidateIntegrationResponseCacheAsync(id)));
+      }
     }),
   delete: permissionRequiredProcedure
     .requiresPermission("app-full-all")
@@ -255,12 +295,19 @@ export const appRouter = createTRPCRouter({
         path: "/api/apps/{id}",
         tags: ["apps"],
         protect: true,
+        summary: "Delete an app",
+        description: "Delete an app by ID and invalidate linked integration caches. Requires app-full-all permission.",
       },
       mcp: { enabled: true, description: "Delete an app by ID. REQUIRED: id (app ID string)" },
     })
     .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {
+      const linkedIntegrations = await ctx.db.query.integrations.findMany({
+        columns: { id: true },
+        where: eq(integrations.appId, input.id),
+      });
       await ctx.db.delete(apps).where(eq(apps.id, input.id));
+      await Promise.all(linkedIntegrations.map(({ id }) => invalidateIntegrationResponseCacheAsync(id)));
     }),
 });
 

@@ -123,7 +123,7 @@ describe("create should create a new invite expiring on the specified date with 
 
     // Act
     const result = await caller.createInvite({
-      expirationDate,
+      expirationDate: expirationDate.toISOString(),
     });
 
     // Assert

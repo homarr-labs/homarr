@@ -38,17 +38,13 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
 
     const cpuUtilization = systemInfo.metrics.cpu.cpus.reduce((acc, val) => acc + val.percentTotal, 0);
     const cpuCount = systemInfo.metrics.cpu.cpus.length;
-
-    // Each entry in cpus[] is one logical CPU (thread). Dividing the summed per-thread
-    // utilization by the thread count (not physical cores) gives the correct average and
-    // avoids over-reporting on SMT systems. Guard against zero to avoid Infinity/NaN.
     let cpuUtilizationNormalized = 0;
     if (cpuCount > 0) {
       cpuUtilizationNormalized = cpuUtilization / cpuCount;
     }
 
-    const totalMemory = systemInfo.info.memory.layout.reduce((acc, layout) => layout.size + acc, 0);
-    const usedMemory = totalMemory * (systemInfo.metrics.memory.percentTotal / 100);
+    const totalMemory = systemInfo.metrics.memory.total;
+    const usedMemory = Math.max(totalMemory - systemInfo.metrics.memory.available, 0);
     const uptime = dayjs(systemInfo.info.os.uptime);
 
     return {
@@ -143,11 +139,6 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
             brand,
             cores,
             threads
-          },
-          memory {
-            layout {
-              size
-            }
           }
         }
       }

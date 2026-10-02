@@ -8,6 +8,42 @@ import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 import { nullableEmailSchema, optionalEmailSchema } from "./email";
 
+export {
+  createBoardHeaderItem,
+  createBuiltinHeaderItem,
+  defaultHeaderPreferences,
+  getDefaultHeaderZone,
+  getHeaderItemKey,
+  getHeaderItems,
+  getHeaderItemZone,
+  headerBuiltinItemIds,
+  headerItemIds,
+  headerItemSchema,
+  headerLogoDisplayValues,
+  headerPreferenceItemIds,
+  headerPreferencesMutationSchema,
+  headerPreferencesSchema,
+  headerPreferencesVersion,
+  headerSearchDisplayValues,
+  headerZoneIds,
+  isRequiredHeaderItem,
+  parseHeaderPreferences,
+  requiredHeaderBuiltinItemIds,
+} from "./header-preferences";
+export type {
+  HeaderBoardItem,
+  HeaderBuiltinItem,
+  HeaderBuiltinItemId,
+  HeaderItem,
+  HeaderItemId,
+  HeaderLogoDisplay,
+  HeaderPreferenceItemId,
+  HeaderPreferences,
+  HeaderSearchDisplay,
+  HeaderZoneId,
+  HeaderZones,
+} from "./header-preferences";
+
 // We always want the lowercase version of the username to compare it in a case-insensitive way
 export const usernameSchema = z.string().trim().toLowerCase().min(3).max(255);
 
@@ -116,6 +152,10 @@ export const userChangeSearchPreferencesSchema = z.object({
 
 export const userChangeColorSchemeSchema = z.object({
   colorScheme: zodEnumFromArray(colorSchemes),
+});
+
+export const userByteUnitSystemSchema = z.object({
+  byteUnitSystem: z.enum(["binary", "decimal"]),
 });
 
 export const userFirstDayOfWeekSchema = z.object({

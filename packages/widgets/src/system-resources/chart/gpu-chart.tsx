@@ -1,7 +1,6 @@
-import { Paper, Text } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
@@ -10,40 +9,33 @@ export const SystemResourceGPUChart = ({
   gpuUsageOverTime,
   hasShadow,
   labelDisplayMode,
+  advanced = false,
 }: {
   gpuUsageOverTime: number[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
+  advanced?: boolean;
 }) => {
   const chartData = gpuUsageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n("widget.systemResources.card");
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "grape.5" }]}
-      title={t("gpu")}
+      title={invariantTechnicalLabels.gpu}
       icon={IconDeviceDesktop}
       lastValue={
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        gpuUsageOverTime.length > 0 ? `${Math.round(gpuUsageOverTime[gpuUsageOverTime.length - 1]!)}%` : undefined
+        gpuUsageOverTime.length > 0
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            `${Math.round(gpuUsageOverTime[gpuUsageOverTime.length - 1]!)}%`
+          : undefined
       }
       chartType={hasShadow ? "area" : "line"}
       yAxisProps={{ domain: [0, 100] }}
       labelDisplayMode={labelDisplayMode}
-      tooltipProps={{
-        content: ({ payload }) => {
-          const value = payload[0] ? Number(payload[0].value) : 0;
-          return (
-            <Paper px={3} py={2} shadow="md">
-              <Text c="dimmed" size="xs">
-                {value.toFixed(0)}%
-              </Text>
-            </Paper>
-          );
-        },
-      }}
+      advanced={advanced}
+      tooltipLabel={(index) => `${Math.round(gpuUsageOverTime[index] ?? 0)}%`}
     />
   );
 };

@@ -1,0 +1,48 @@
+# Connect an agent
+
+An MCP-connected agent can validate, preview, test, and save Custom Widgets. The API key owner must be a Homarr
+administrator.
+
+Install the official skill:
+
+```sh
+npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
+```
+
+The skill routes the agent to the release-matched schema, runtime, security, examples, and component metadata. It keeps
+those references separate so the agent loads only what the current widget needs.
+
+## MCP resources
+
+- Prompt: `homarr-custom-widget-author`
+- Skill: `homarr://custom-widgets/skill`
+- References: `homarr://custom-widgets/references/{schema|runtime|security}`
+- Schema: `homarr://custom-widgets/schema`
+- Components: `homarr://custom-widgets/components` and `components/{name}`
+- Examples: `homarr://custom-widgets/examples/{name}`
+
+Equivalent HTTP resources are available under `/api/custom-widgets/` for authenticated administrators.
+
+## Authoring lifecycle
+
+1. Load the skill and only the references needed for the design.
+2. Read the external API documentation and build the definition.
+3. Create a preview from the complete definition; it validates both the manifest and JSX.
+4. Run every returned query and simulate every relevant action against the current preview revision.
+5. Inspect the preview and redacted journal. Revise the existing preview for JSX-only changes.
+6. Save from the final tested preview.
+7. Configure deployment-specific source URLs and credentials, then preview the saved definition again.
+
+Use `templateLines` for multiline JSX tool input. A preview must have current evidence for every query and action before
+it can be saved. Simulation counts as action evidence without performing the mutation.
+
+Migration-only exports can return validated JSON without credentials. Authentication is preserved, and live testing
+remains unverified until the administrator configures and tests the imported widget.
+
+If the agent does not have a source URL or credential, it can request a short-lived Homarr configuration URL. An
+authenticated administrator completes it in Homarr; the agent receives the status, never the plaintext credential.
+
+Agents can also search, inspect, install, and configure existing Workshop widgets instead of regenerating them.
+
+See [MCP](/docs/management/mcp) for client configuration and [requests and security](/docs/management/custom-widgets/requests-and-security) for the
+runtime limits.

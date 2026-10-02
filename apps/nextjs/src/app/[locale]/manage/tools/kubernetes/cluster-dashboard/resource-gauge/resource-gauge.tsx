@@ -15,7 +15,7 @@ interface KubernetesResourceGaugeProps {
 }
 
 export function ResourceGauge(props: KubernetesResourceGaugeProps) {
-  const t = useI18n();
+  const tCluster = useI18n("kubernetes.cluster");
   const currentLocale = useCurrentLocale();
   const isRTL = Boolean(isLocaleRTL(currentLocale));
 
@@ -31,9 +31,7 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
 
       {props.kubernetesCapacity.resourcesStats.map((stat) => {
         const isReserved = stat.type === "Reserved";
-        const labelKey = isReserved
-          ? "kubernetes.cluster.capacity.resource.reserved"
-          : "kubernetes.cluster.capacity.resource.used";
+        const labelKey = isReserved ? "capacity.resource.reserved" : "capacity.resource.used";
 
         return (
           <div key={stat.percentageValue}>
@@ -50,13 +48,13 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
                       {stat.maxUsedValue} / {stat.usedValue}{" "}
                     </Text>
                     <Text component="span" fw={500}>
-                      {t(labelKey)}
+                      {tCluster(labelKey)}
                     </Text>
                   </>
                 ) : (
                   <>
                     <Text component="span" fw={500}>
-                      {t(labelKey)}
+                      {tCluster(labelKey)}
                     </Text>
                     <Text component="span">
                       {" "}

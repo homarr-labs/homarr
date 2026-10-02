@@ -1,0 +1,26 @@
+.choice {
+  width: 100%;
+  border-radius: var(--mantine-radius-lg);
+  text-align: start;
+}
+
+.choice:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.card {
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out;
+}
+
+.choice:hover .card {
+  background-color: var(--mantine-color-default-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

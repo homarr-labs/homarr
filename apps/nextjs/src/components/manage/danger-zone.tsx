@@ -3,14 +3,14 @@
 import { Fragment } from "react";
 import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface DangerZoneRootProps {
   children: React.ReactNode[] | React.ReactNode;
 }
 
 export const DangerZoneRoot = ({ children }: DangerZoneRootProps) => {
-  const t = useScopedI18n("common");
+  const t = useI18n("common");
 
   return (
     <Stack gap="sm">

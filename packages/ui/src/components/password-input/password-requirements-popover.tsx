@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import { useState } from "react";
 import { Popover, Progress, Text } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { passwordRequirements } from "@homarr/validation/user";
 
 import { PasswordRequirement } from "./password-requirement";
@@ -14,7 +14,7 @@ const strengthColorMap = [
 ] as const;
 
 export const PasswordRequirementsPopover = ({ password, children }: PropsWithChildren<{ password: string }>) => {
-  const tPassword = useScopedI18n("user.field.password");
+  const tPassword = useI18n("user.field.password");
   const requirements = useRequirements();
   const strength = useStrength(password);
   const [popoverOpened, setPopoverOpened] = useState(false);
@@ -46,7 +46,7 @@ export const PasswordRequirementsPopover = ({ password, children }: PropsWithChi
 };
 
 const useRequirements = () => {
-  const t = useScopedI18n("user.field.password.suggestion");
+  const t = useI18n("user.field.password.suggestion");
 
   return passwordRequirements.map(({ check, value }) => ({ check, label: t(value) }));
 };

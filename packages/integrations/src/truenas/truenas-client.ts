@@ -2,7 +2,7 @@ import type { RawData } from "ws";
 import { WebSocket } from "ws";
 import z from "zod";
 
-import { createId } from "@homarr/common";
+import { createId, isRecord } from "@homarr/common";
 import { matchErrorCode, RequestError, ResponseError } from "@homarr/common/server";
 import {
   getAllTrustedCertificatesAsync,
@@ -306,9 +306,7 @@ const resolveCertificateOptionsAsync = async (): Promise<CertificateOptions> => 
 const parseMessage = (raw: RawData): Record<string, unknown> | undefined => {
   try {
     const parsed: unknown = JSON.parse(raw.toString());
-    return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)
-      ? (parsed as Record<string, unknown>)
-      : undefined;
+    return isRecord(parsed) ? parsed : undefined;
   } catch {
     return undefined;
   }

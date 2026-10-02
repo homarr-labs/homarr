@@ -11,7 +11,90 @@
   border-color: var(--border-color) !important;
 }
 
+.containerCard {
+  @mixin dark {
+    --container-default-border-color: var(--mantine-color-dark-4);
+  }
+  @mixin light {
+    --container-default-border-color: var(--mantine-color-gray-3);
+  }
+  --border-color: rgb(
+    from var(--container-border-color, var(--container-default-border-color)) r g b / var(--opacity, 1)
+  );
+  /* Keep the border visual without letting it shrink the square-cell grid's content box. */
+  border-width: 0;
+  box-shadow: inset 0 0 0 calc(1px * var(--board-canvas-inverse-scale, 1)) var(--border-color);
+}
+
 .itemCard:global(.iframe-wrapper) {
   background-color: transparent !important;
   border-color: transparent !important;
+}
+
+.collapsedContainerCard {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.containerToggle {
+  z-index: 9;
+  overflow: hidden;
+  color: var(--mantine-color-text);
+  background-color: var(--background-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+.containerToggle :global(.mantine-Button-inner) {
+  width: 100%;
+  min-width: 0;
+}
+
+.containerToggle :global(.mantine-Button-label) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.containerLabel,
+.containerAction {
+  background-color: var(--background-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+.containerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.containerLabel :global(.mantine-Badge-label) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.containerBody {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 140ms ease 80ms,
+    visibility 0s;
+}
+
+.containerBody[data-collapsed="true"] {
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 120ms ease,
+    visibility 0s linear 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .containerBody,
+  .containerBody[data-collapsed="true"] {
+    transition: none;
+  }
 }

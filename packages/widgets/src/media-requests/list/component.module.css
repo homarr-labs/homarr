@@ -1,0 +1,39 @@
+.card {
+  min-width: 0;
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+
+  &:hover,
+  &:focus-within {
+    border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.62));
+    background-color: transparent;
+  }
+}
+
+.pendingActions {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.card:hover .pendingActions,
+.card:focus-within .pendingActions,
+.pendingActionsVisible {
+  opacity: 1;
+}
+
+@media (any-pointer: coarse) {
+  .pendingActions {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .pendingActions {
+    transition: none;
+  }
+}

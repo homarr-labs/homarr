@@ -1,5 +1,8 @@
 import { hashKey } from "@tanstack/query-core";
 
+export const isRecord = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
+
 export function objectKeys<O extends object>(obj: O): (keyof O)[] {
   return Object.keys(obj) as (keyof O)[];
 }

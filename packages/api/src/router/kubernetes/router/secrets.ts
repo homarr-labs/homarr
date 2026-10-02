@@ -4,14 +4,15 @@ import type { KubernetesSecret } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 export const secretsRouter = createTRPCRouter({
   getSecrets: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesSecret[]> => {
-      const { coreApi } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesSecret[]> => {
+      const { coreApi } = getKubernetesClient(input.contextId);
       try {
         const secrets = await coreApi.listSecretForAllNamespaces();
 

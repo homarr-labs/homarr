@@ -2,6 +2,13 @@ import { createTheme, rem } from "@mantine/core";
 
 import { modalComponent } from "./theme/modal";
 
+export const scrollAreaDefaultProps = {
+  type: "hover",
+  scrollbarSize: 2,
+  scrollHideDelay: 500,
+  offsetScrollbars: true,
+} as const;
+
 export const theme = createTheme({
   primaryColor: "red",
   autoContrast: true,
@@ -25,6 +32,7 @@ export const theme = createTheme({
   },
 
   fontSizes: {
+    xxs: rem(11),
     xs: rem(12),
     sm: rem(14),
     md: rem(16),
@@ -94,6 +102,12 @@ export const theme = createTheme({
       defaultProps: {
         style: { borderRadius: 5 },
       },
+    },
+    ScrollArea: {
+      defaultProps: scrollAreaDefaultProps,
+    },
+    ScrollAreaAutosize: {
+      defaultProps: scrollAreaDefaultProps,
     },
     LoadingOverlay: {
       defaultProps: {

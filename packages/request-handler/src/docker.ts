@@ -8,15 +8,40 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { extractContainerImageName } from "@homarr/definitions";
-import type { ContainerState, Port } from "@homarr/docker";
+import type { ContainerState, DockerContainerTarget, DockerEndpointStatus, Port } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 const logger = createLogger({ module: "dockerRequestHandler" });
+export const dockerWidgetEndpointTimeoutMs = 5_000;
 
-const isDemoMode = ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
+const withDockerTimeoutAsync = async <T>(
+  operation: (signal: AbortSignal) => Promise<T>,
+  message: string,
+  timeoutMs: number,
+) => {
+  const controller = new AbortController();
+  const timeoutError = new Error(message);
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      operation(controller.signal),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => {
+          controller.abort(timeoutError);
+          reject(timeoutError);
+        }, timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+};
+
+const isDemoMode = () => ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
 
 const port = (privatePort: number, publicPort: number, type: string): Port => ({
   IP: "0.0.0.0",
@@ -170,40 +195,64 @@ const mockContainers: {
   },
 ];
 
+const demoDockerEndpoint = {
+  id: "demo",
+  name: "Demo Docker",
+  status: "available",
+  kind: "docker",
+  transport: "socket",
+  capabilities: ["inventory"],
+  source: "default",
+  scope: "admin",
+} satisfies DockerEndpointStatus;
+
 export const dockerContainersRequestHandler = createWidgetRequestHandler({
-  async requestAsync() {
-    if (isDemoMode) {
-      return mockContainers;
+  cacheNamespace: "docker-containers",
+  async requestAsync({ endpointIds }: { endpointIds?: string[] }) {
+    if (isDemoMode()) {
+      const includesDemoEndpoint =
+        endpointIds === undefined || endpointIds.length === 0 || endpointIds.includes("demo");
+      if (!includesDemoEndpoint) return { containers: [], endpoints: [] };
+
+      return {
+        containers: mockContainers.map((container) => ({
+          ...container,
+          endpointId: "demo",
+          endpointName: "Demo Docker",
+          resourceId: `demo:${container.id}`,
+        })),
+        endpoints: [demoDockerEndpoint],
+      };
     }
-    return await getContainersWithStatsAsync();
+    return await getContainersWithStatsAsync(dockerWidgetEndpointTimeoutMs, endpointIds);
   },
 });
 
 const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);
 
-const findContainerByIdAsync = async (id: string) => {
-  const dockerInstances = DockerSingleton.getInstances();
-  const containers = await Promise.all(
-    dockerInstances.map(async ({ instance }) => {
-      const container = instance.getContainer(id);
+export const hasDockerEndpointCapability = (
+  endpointId: string,
+  capability: "inventory" | "logs" | "lifecycle" | "remove",
+) =>
+  isDemoMode()
+    ? endpointId === "demo" && capability === "inventory"
+    : DockerSingleton.hasCapability(endpointId, capability);
 
-      return await new Promise<Container | null>((resolve) => {
-        container.inspect((err, data) => {
-          if (err || !data) {
-            resolve(null);
-          } else {
-            resolve(container);
-          }
-        });
-      });
-    }),
-  );
+export const findDockerContainerAsync = async (
+  { endpointId, id }: DockerContainerTarget,
+  requiredCapability: "inventory" | "logs" | "lifecycle" | "remove" = "inventory",
+) => {
+  const dockerInstance = DockerSingleton.findInstance(endpointId);
+  if (!dockerInstance || !hasDockerEndpointCapability(endpointId, requiredCapability)) return null;
 
-  return containers.find((container) => container) ?? null;
+  const container = dockerInstance.instance.getContainer(id);
+  return await new Promise<Container | null>((resolve) => {
+    container.inspect((err, data) => resolve(err || !data ? null : container));
+  });
 };
 
-export const getContainerLogsAsync = async (id: string, tail = 200) => {
-  const container = await findContainerByIdAsync(id);
+export const getContainerLogsAsync = async (target: DockerContainerTarget, tail = 200) => {
+  const container = await findDockerContainerAsync(target, "logs");
   if (!container) {
     return null;
   }
@@ -219,12 +268,12 @@ export const getContainerLogsAsync = async (id: string, tail = 200) => {
 };
 
 export const streamContainerLogsAsync = async (
-  id: string,
+  target: DockerContainerTarget,
   tail: number,
   onData: (data: string) => void,
   onError: (err: Error) => void,
 ) => {
-  const container = await findContainerByIdAsync(id);
+  const container = await findDockerContainerAsync(target, "logs");
   if (!container) {
     onError(new Error("Container not found"));
     return () => undefined;
@@ -259,25 +308,126 @@ export const streamContainerLogsAsync = async (
   };
 };
 
-async function getContainersWithStatsAsync() {
+export const getDockerEndpointsAsync = (): DockerEndpointStatus[] => {
+  if (isDemoMode()) return [demoDockerEndpoint];
+
   const dockerInstances = DockerSingleton.getInstances();
+  const initializationFailures = DockerSingleton.getInitializationFailures();
+
+  return [
+    ...dockerInstances.map(({ endpointId, endpointName, descriptor }) => ({
+      id: endpointId,
+      name: endpointName,
+      status: "available" as const,
+      kind: descriptor.kind,
+      transport: descriptor.transport.type,
+      capabilities: descriptor.capabilities,
+      source: descriptor.source,
+      scope: descriptor.scope,
+    })),
+    ...initializationFailures.map(({ descriptor }) => ({
+      id: descriptor.id,
+      name: descriptor.name,
+      status: "unavailable" as const,
+      kind: descriptor.kind,
+      transport: descriptor.transport.type,
+      capabilities: descriptor.capabilities,
+      source: descriptor.source,
+      scope: descriptor.scope,
+    })),
+  ];
+};
+
+/** CPU counters suitable as a delta baseline for current-usage calculation. */
+export type CpuUsageCounters = {
+  totalUsage: number;
+  systemUsage: number;
+};
+
+type CachedCpuUsageCounters = CpuUsageCounters & {
+  cachedAt: number;
+};
+
+// Docker's one-shot stats endpoint returns no usable precpu_stats baseline (the
+// fields are present but zero), so current CPU usage cannot be derived from a
+// single response. The request-handler process is long-lived and polls
+// repeatedly, so the previous poll's counters serve as the baseline instead.
+// Entries expire so removed containers do not accumulate.
+const cachedCpuUsageCounters = new Map<string, CachedCpuUsageCounters>();
+const cpuUsageCountersCacheTtlMs = 10 * 60 * 1000;
+
+/** @internal Only intended for tests to isolate the process-local counter cache between cases. */
+export function clearCpuUsageCountersCacheForTesting(): void {
+  cachedCpuUsageCounters.clear();
+}
+
+export async function getContainersWithStatsAsync(
+  timeoutMs = dockerWidgetEndpointTimeoutMs,
+  endpointIds: string[] = [],
+) {
+  const cacheEvictedBefore = Date.now() - cpuUsageCountersCacheTtlMs;
+  for (const [key, counters] of cachedCpuUsageCounters) {
+    if (counters.cachedAt < cacheEvictedBefore) {
+      cachedCpuUsageCounters.delete(key);
+    }
+  }
+
+  const selectedEndpointIds = new Set(endpointIds);
+  const includesAllEndpoints = selectedEndpointIds.size === 0;
+  const dockerInstances = DockerSingleton.getInstances().filter(
+    ({ endpointId }) => includesAllEndpoints || selectedEndpointIds.has(endpointId),
+  );
+  const initializationFailures = DockerSingleton.getInitializationFailures().filter(
+    ({ descriptor }) => includesAllEndpoints || selectedEndpointIds.has(descriptor.id),
+  );
   const results = await Promise.allSettled(
-    dockerInstances.map(async ({ instance, host }) => {
-      const instanceContainers = await instance.listContainers({ all: true });
+    dockerInstances.map(async ({ instance, host, endpointId, endpointName }) => {
+      const instanceContainers = await withDockerTimeoutAsync(
+        async (signal) => await instance.listContainers({ all: true, abortSignal: signal }),
+        `Timed out listing containers from Docker host ${host}`,
+        timeoutMs,
+      );
       return instanceContainers
         .filter((container) => !(dockerLabels.hide in container.Labels))
-        .map((container) => ({ ...container, instance: host }));
+        .map((container) => ({ ...container, instance: host, endpointId, endpointName }));
     }),
   );
 
+  const endpoints = [
+    ...results.map((result, index) => {
+      const dockerInstance = dockerInstances.at(index);
+      if (!dockerInstance) throw new Error("Docker endpoint result did not match a configured endpoint");
+      return {
+        id: dockerInstance.endpointId,
+        name: dockerInstance.endpointName,
+        status: result.status === "fulfilled" ? ("available" as const) : ("unavailable" as const),
+        kind: dockerInstance.descriptor.kind,
+        transport: dockerInstance.descriptor.transport.type,
+        capabilities: dockerInstance.descriptor.capabilities,
+        source: dockerInstance.descriptor.source,
+        scope: dockerInstance.descriptor.scope,
+      } satisfies DockerEndpointStatus;
+    }),
+    ...initializationFailures.map(({ descriptor }) => ({
+      id: descriptor.id,
+      name: descriptor.name,
+      status: "unavailable" as const,
+      kind: descriptor.kind,
+      transport: descriptor.transport.type,
+      capabilities: descriptor.capabilities,
+      source: descriptor.source,
+      scope: descriptor.scope,
+    })),
+  ] satisfies DockerEndpointStatus[];
+
   const containers = results.flatMap((result, index) => {
     if (result.status === "fulfilled") return result.value;
+    const dockerInstance = dockerInstances.at(index);
     logger.warn(
       new ErrorWithMetadata(
         "Failed to list containers from Docker host",
         {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          host: dockerInstances[index]!.host,
+          host: dockerInstance?.host ?? "unknown",
         },
         { cause: result.reason },
       ),
@@ -294,26 +444,56 @@ async function getContainersWithStatsAsync() {
         })
       : [];
 
+  const degradedEndpointIds = new Set<string>();
   const containerStatsPromises = containers.map(async (container) => {
-    const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
+    const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
 
-    const stats = await instance
-      .getContainer(container.Id)
-      .stats({ stream: false, "one-shot": true })
-      .catch(
-        () =>
-          ({
-            cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
-            memory_stats: { usage: 0 },
-          }) as ContainerStats,
+    let stats: ContainerStats;
+    try {
+      stats = await withDockerTimeoutAsync(
+        async (signal) => {
+          const options = { stream: false as const, "one-shot": true, abortSignal: signal };
+          return await instance.getContainer(container.Id).stats(options);
+        },
+        `Timed out reading Docker container stats for ${container.Id}`,
+        timeoutMs,
       );
+    } catch (error) {
+      degradedEndpointIds.add(container.endpointId);
+      logger.warn(
+        new ErrorWithMetadata(
+          "Failed to read Docker container stats",
+          { endpointId: container.endpointId, containerId: container.Id, host: container.instance },
+          { cause: error },
+        ),
+      );
+      stats = {
+        cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+        memory_stats: { usage: 0 },
+      } as ContainerStats;
+    }
 
-    const cpuUsage = calculateCpuUsage(stats);
+    const cpuUsageCacheKey = `${container.endpointId}:${container.Id}`;
+    const cpuUsage = calculateCpuUsage(stats, cachedCpuUsageCounters.get(cpuUsageCacheKey));
+
+    // Remember this poll's counters so the next one-shot response has a delta
+    // baseline even though the daemon does not provide precpu_stats.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const totalUsage = stats.cpu_stats?.cpu_usage?.total_usage;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const systemUsage = stats.cpu_stats?.system_cpu_usage;
+    if (typeof totalUsage === "number" && totalUsage > 0 && typeof systemUsage === "number" && systemUsage > 0) {
+      cachedCpuUsageCounters.set(cpuUsageCacheKey, { totalUsage, systemUsage, cachedAt: Date.now() });
+    }
+
     const memoryUsage = calculateMemoryUsage(stats);
 
     return {
       id: container.Id,
+      endpointId: container.endpointId,
+      endpointName: container.endpointName,
+      resourceId: `${container.endpointId}:${container.Id}`,
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       host: container.instance,
       state: container.State as ContainerState,
@@ -325,23 +505,43 @@ async function getContainersWithStatsAsync() {
     };
   });
 
-  return (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+  const resolvedContainers = (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+  return {
+    containers: resolvedContainers,
+    endpoints: endpoints.map((endpoint) =>
+      endpoint.status === "available" && degradedEndpointIds.has(endpoint.id)
+        ? { ...endpoint, status: "degraded" as const }
+        : endpoint,
+    ),
+  };
 }
 
-export function calculateCpuUsage(stats: ContainerStats): number {
+export function calculateCpuUsage(stats: ContainerStats, previousCounters?: CpuUsageCounters): number {
   // Handle containers with missing or invalid stats (e.g., exited, dead containers, Podman responses)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!stats.cpu_stats?.online_cpus || stats.cpu_stats.online_cpus === 0 || !stats.cpu_stats.cpu_usage?.total_usage) {
     return 0;
   }
 
-  const numberOfCpus = stats.cpu_stats.online_cpus;
-  const usage = stats.cpu_stats.system_cpu_usage;
-  if (!usage || usage === 0) {
+  // Docker's one-shot mode (and Podman) return precpu_stats with zeroed values,
+  // so a system counter of zero means there is no usable daemon-side baseline;
+  // fall back to the previous poll's counters, then to the cumulative totals.
+  const hasPrecpuBaseline = (stats.precpu_stats?.system_cpu_usage ?? 0) > 0;
+  const previousTotalUsage = hasPrecpuBaseline
+    ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      (stats.precpu_stats?.cpu_usage?.total_usage ?? 0)
+    : (previousCounters?.totalUsage ?? 0);
+  const previousSystemUsage = hasPrecpuBaseline
+    ? (stats.precpu_stats?.system_cpu_usage ?? 0)
+    : (previousCounters?.systemUsage ?? 0);
+  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - previousTotalUsage;
+  const systemDelta = (stats.cpu_stats.system_cpu_usage ?? 0) - previousSystemUsage;
+
+  if (systemDelta <= 0 || cpuDelta < 0) {
     return 0;
   }
 
-  return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
+  return (cpuDelta / systemDelta) * 100;
 }
 
 export function calculateMemoryUsage(stats: ContainerStats): number {

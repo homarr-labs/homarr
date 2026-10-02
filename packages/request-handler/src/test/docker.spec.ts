@@ -1,9 +1,18 @@
 import type { ContainerStats } from "dockerode";
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
+import { DockerSingleton } from "@homarr/docker";
 
-import { calculateCpuUsage, calculateMemoryUsage } from "../docker";
+import {
+  calculateCpuUsage,
+  calculateMemoryUsage,
+  clearCpuUsageCountersCacheForTesting,
+  dockerContainersRequestHandler,
+  getDockerEndpointsAsync,
+  getContainersWithStatsAsync,
+  hasDockerEndpointCapability,
+} from "../docker";
 
 vi.mock("@homarr/db", async (importActual) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -64,16 +73,42 @@ describe("calculateCpuUsage", () => {
     const stats = createStats({
       cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 2000 }, system_cpu_usage: 10000 },
     });
-    // (2000 / 10000) * 4 * 100 = 80
-    expect(calculateCpuUsage(stats)).toBe(80);
+    // (2000 / 10000) * 100 = 20
+    expect(calculateCpuUsage(stats)).toBe(20);
   });
 
   test("should handle fractional CPU usage", () => {
     const stats = createStats({
       cpu_stats: { online_cpus: 2, cpu_usage: { total_usage: 500 }, system_cpu_usage: 100000 },
     });
-    // (500 / 100000) * 2 * 100 = 1
-    expect(calculateCpuUsage(stats)).toBe(1);
+    // (500 / 100000) * 100 = 0.5
+    expect(calculateCpuUsage(stats)).toBe(0.5);
+  });
+
+  test("should use previous poll counters when precpu_stats is zeroed (one-shot mode)", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 3_000 }, system_cpu_usage: 20_000 },
+      // Docker's one-shot response contains precpu_stats with all-zero values
+      precpu_stats: { cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+    });
+    // Delta vs previous poll: cpu 3_000 - 1_000 = 2_000, system 20_000 - 10_000 = 10_000 → 20%
+    expect(calculateCpuUsage(stats, { totalUsage: 1_000, systemUsage: 10_000 })).toBe(20);
+  });
+
+  test("should prefer a valid precpu_stats baseline over previous poll counters", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 3_000 }, system_cpu_usage: 20_000 },
+      precpu_stats: { cpu_usage: { total_usage: 2_500 }, system_cpu_usage: 15_000 },
+    });
+    // precpu deltas: cpu 500, system 5_000 → 10%; the previous counters must be ignored
+    expect(calculateCpuUsage(stats, { totalUsage: 1_000, systemUsage: 10_000 })).toBe(10);
+  });
+
+  test("should return 0 when current counters are lower than the previous poll (container restart)", () => {
+    const stats = createStats({
+      cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: 100 }, system_cpu_usage: 20_000 },
+    });
+    expect(calculateCpuUsage(stats, { totalUsage: 1_000, systemUsage: 10_000 })).toBe(0);
   });
 });
 
@@ -118,4 +153,195 @@ describe("calculateMemoryUsage", () => {
     const stats = createStats({ memory_stats: { usage: 512 } });
     expect(calculateMemoryUsage(stats)).toBe(512);
   });
+});
+
+describe("getContainersWithStatsAsync", () => {
+  beforeEach(() => {
+    clearCpuUsageCountersCacheForTesting();
+  });
+
+  test("computes current CPU usage from successive one-shot polls", async () => {
+    let totalUsage = 1_000_000;
+    let systemUsage = 10_000_000;
+    const dockerInstance = createDockerInstance("local", async () => [
+      {
+        Id: "busy",
+        Image: "immich:latest",
+        Labels: {},
+        Names: ["/immich"],
+        State: "running",
+        Ports: [],
+      },
+    ]);
+    dockerInstance.instance.getContainer = (() => ({
+      stats: async () => ({
+        cpu_stats: { online_cpus: 4, cpu_usage: { total_usage: totalUsage }, system_cpu_usage: systemUsage },
+        memory_stats: { usage: 0 },
+      }),
+    })) as never;
+    vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([dockerInstance] as never);
+    vi.spyOn(DockerSingleton, "findInstance").mockReturnValue(dockerInstance as never);
+
+    try {
+      // First poll has no baseline: falls back to the cumulative ratio (10%)
+      const first = await getContainersWithStatsAsync(50);
+      expect(first.containers).toEqual([expect.objectContaining({ id: "busy", cpuUsage: 10 })]);
+
+      // Next poll used 2 of 4 core-seconds → current usage 50%, not a lifetime average
+      totalUsage += 2_000_000;
+      systemUsage += 4_000_000;
+
+      const second = await getContainersWithStatsAsync(50);
+      expect(second.containers).toEqual([expect.objectContaining({ id: "busy", cpuUsage: 50 })]);
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("queries only selected Docker endpoints and leaves an empty selection as all", async () => {
+    const firstListContainers = vi.fn(async () => []);
+    const secondListContainers = vi.fn(async () => []);
+    vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([
+      createDockerInstance("first", firstListContainers),
+      createDockerInstance("second", secondListContainers),
+    ] as never);
+    vi.spyOn(DockerSingleton, "getInitializationFailures").mockReturnValue([]);
+
+    try {
+      const selectedResult = await getContainersWithStatsAsync(50, ["second"]);
+
+      expect(firstListContainers).not.toHaveBeenCalled();
+      expect(secondListContainers).toHaveBeenCalledOnce();
+      expect(selectedResult.endpoints.map(({ id }) => id)).toEqual(["second"]);
+
+      await getContainersWithStatsAsync(50, []);
+
+      expect(firstListContainers).toHaveBeenCalledOnce();
+      expect(secondListContainers).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("marks a timed-out endpoint unavailable without blocking healthy endpoints", async () => {
+    vi.useFakeTimers();
+    try {
+      vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([
+        createDockerInstance("stalled", () => new Promise(() => undefined)),
+        createDockerInstance("healthy", async () => []),
+      ] as never);
+
+      const resultPromise = getContainersWithStatsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(result.endpoints).toEqual([
+        expect.objectContaining({ id: "stalled", status: "unavailable" }),
+        expect.objectContaining({ id: "healthy", status: "available" }),
+      ]);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("marks an endpoint degraded and returns zeroed stats when its stats request times out", async () => {
+    vi.useFakeTimers();
+    try {
+      const dockerInstance = createDockerInstance("healthy", async () => [
+        {
+          Id: "container-1",
+          Image: "sonarr:latest",
+          Labels: {},
+          Names: ["/sonarr"],
+          State: "running",
+          Ports: [],
+        },
+      ]);
+      let observedSignal: AbortSignal | undefined;
+      dockerInstance.instance.getContainer = (() => ({
+        stats: (options: { abortSignal?: AbortSignal }) => {
+          observedSignal = options.abortSignal;
+          return new Promise(() => undefined);
+        },
+      })) as never;
+      vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([dockerInstance] as never);
+      vi.spyOn(DockerSingleton, "findInstance").mockReturnValue(dockerInstance as never);
+
+      const resultPromise = getContainersWithStatsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(observedSignal?.aborted).toBe(true);
+      expect(result.containers).toEqual([expect.objectContaining({ id: "container-1", cpuUsage: 0, memoryUsage: 0 })]);
+      expect(result.endpoints).toEqual([expect.objectContaining({ id: "healthy", status: "degraded" })]);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("includes endpoints that failed during TLS initialization", async () => {
+    vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([]);
+    vi.spyOn(DockerSingleton, "getInitializationFailures").mockReturnValue([
+      {
+        host: "broken.example:2376",
+        descriptor: {
+          id: "broken-tls",
+          name: "Broken TLS",
+          kind: "docker",
+          transport: { type: "tls", host: "broken.example", port: 2376, caPath: "/missing/ca.pem" },
+          capabilities: ["inventory"],
+          scope: "admin",
+          source: "environment",
+        },
+      },
+    ]);
+
+    const result = await getContainersWithStatsAsync(50);
+
+    expect(result.endpoints).toEqual([
+      expect.objectContaining({ id: "broken-tls", status: "unavailable", transport: "tls" }),
+    ]);
+    vi.restoreAllMocks();
+  });
+});
+
+test("demo mode advertises and filters the same inventory-only endpoint", async () => {
+  const previousDemoMode = process.env.DEMO_MODE;
+  process.env.DEMO_MODE = "true";
+  try {
+    expect(getDockerEndpointsAsync()).toEqual([
+      expect.objectContaining({ id: "demo", name: "Demo Docker", capabilities: ["inventory"] }),
+    ]);
+
+    const selected = await dockerContainersRequestHandler.handler({ endpointIds: ["demo"] }).getDataAsync();
+    expect(selected.data.endpoints).toEqual([expect.objectContaining({ id: "demo" })]);
+    expect(selected.data.containers.length).toBeGreaterThan(0);
+
+    const excluded = await dockerContainersRequestHandler.handler({ endpointIds: ["other"] }).getDataAsync();
+    expect(excluded.data).toEqual({ containers: [], endpoints: [] });
+
+    expect(hasDockerEndpointCapability("demo", "inventory")).toBe(true);
+    expect(hasDockerEndpointCapability("demo", "logs")).toBe(false);
+    expect(hasDockerEndpointCapability("other", "inventory")).toBe(false);
+  } finally {
+    dockerContainersRequestHandler.invalidateCache();
+    if (previousDemoMode === undefined) delete process.env.DEMO_MODE;
+    else process.env.DEMO_MODE = previousDemoMode;
+  }
+});
+
+const createDockerInstance = (endpointId: string, listContainers: () => Promise<unknown[]>) => ({
+  endpointId,
+  endpointName: endpointId,
+  host: endpointId,
+  descriptor: {
+    kind: "docker",
+    transport: { type: "socket" },
+    capabilities: ["inventory"],
+    source: "environment",
+    scope: "admin",
+  },
+  instance: { listContainers, getContainer: () => ({}) },
 });

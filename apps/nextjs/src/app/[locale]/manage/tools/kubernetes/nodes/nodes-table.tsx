@@ -10,21 +10,30 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { KubernetesNode } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+
+import KubernetesErrorPage from "../cluster-dashboard/error";
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
 dayjs.extend(relativeTime);
 
 interface NodesListComponentProps {
+  contextId: string;
   initialNodes: RouterOutputs["kubernetes"]["nodes"]["getNodes"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.nodes">): MRT_ColumnDef<KubernetesNode>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.nodes">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tResource: ScopedTranslationFunction<"kubernetes.cluster.resources">,
+): MRT_ColumnDef<KubernetesNode>[] => [
   {
     accessorKey: "status",
-    header: t("field.state.label"),
+    header: tField("state.label"),
 
     Cell({ cell }) {
       const checkIcon = <IconCircleDashedCheck style={{ width: rem(12), height: rem(12) }} />;
@@ -42,34 +51,34 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.nodes">): MRT_Co
   },
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "allocatableCpuPercentage",
-    header: t("field.cpu.label"),
+    header: invariantTechnicalLabels.cpu,
     Cell({ cell }) {
-      return getRingProgress(cell.row.original.allocatableCpuPercentage);
+      return getRingProgress(cell.row.original.allocatableCpuPercentage, t("field.metricsUnavailable"));
     },
   },
   {
     accessorKey: "allocatableRamPercentage",
-    header: t("field.memory.label"),
+    header: invariantTechnicalLabels.ram,
     Cell({ cell }) {
-      return getRingProgress(cell.row.original.allocatableRamPercentage);
+      return getRingProgress(cell.row.original.allocatableRamPercentage, t("field.metricsUnavailable"));
     },
   },
   {
     accessorKey: "operatingSystem",
-    header: t("field.operatingSystem.label"),
+    header: invariantTechnicalLabels.os,
   },
   {
     accessorKey: "podsCount",
-    header: t("field.pods.label"),
+    header: tResource("pods"),
   },
   {
     accessorKey: "architecture",
-    header: t("field.architecture.label"),
+    header: tField("architecture.label"),
   },
   {
     accessorKey: "kubernetesVersion",
@@ -77,20 +86,20 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.nodes">): MRT_Co
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
-export function NodesTable(initialData: NodesListComponentProps) {
-  const tNodes = useScopedI18n("kubernetes.nodes");
+export function NodesTable({ contextId, initialNodes }: NodesListComponentProps) {
+  const tNodes = useI18n("kubernetes.nodes");
+  const tField = useI18n("kubernetes.field");
+  const tResource = useI18n("kubernetes.cluster.resources");
 
-  const { data } = clientApi.kubernetes.nodes.getNodes.useQuery(undefined, {
-    initialData: initialData.initialNodes,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data, isError } = clientApi.kubernetes.nodes.getNodes.useQuery(
+    { contextId },
+    createKubernetesResourceQueryOptions(initialNodes),
+  );
 
   const table = useTranslatedMantineReactTable({
     data,
@@ -109,13 +118,21 @@ export function NodesTable(initialData: NodesListComponentProps) {
       style: { minWidth: 300 },
       autoFocus: true,
     },
-    columns: createColumns(tNodes),
+    columns: createColumns(tNodes, tField, tResource),
   });
+
+  if (isError) {
+    return <KubernetesErrorPage />;
+  }
 
   return <MantineReactTable table={table} />;
 }
 
-function getRingProgress(value: number) {
+function getRingProgress(value: number | null, unavailableLabel: string) {
+  if (value === null) {
+    return <Text c="dimmed">{unavailableLabel}</Text>;
+  }
+
   return (
     <RingProgress
       size={70}

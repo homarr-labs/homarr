@@ -1,0 +1,126 @@
+.viewport {
+  position: relative;
+  overflow: visible;
+}
+
+/* --board-grid-drag-height inherits down the DOM tree like any custom property. A capped
+   section's own GridPreviewLayer effect correctly avoids setting it on itself (see
+   grid-preview-layer.tsx), but that does nothing to stop it inheriting the value an
+   *uncapped* ancestor section (e.g. the board's root section) legitimately sets on itself
+   while growing during a drag happening anywhere else on the board - any container (not just
+   a scrollable one - a non-scrollable, e.g. collapsible, container is just as capped) sits
+   inside that section's DOM tree, so the stray value cascades straight through and silently
+   defeats the `var(--board-grid-drag-height, ...px)` fallback in section-grid.tsx, which only
+   kicks in when the property is entirely unset, not merely inherited. Reset it here so every
+   container can never inherit a stray
+   value from anywhere above it, no matter what any ancestor's own drag state is doing.
+   https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables#custom_properties_and_inheritance */
+.viewport[data-section-kind="container"] {
+  --board-grid-drag-height: initial;
+}
+
+/* Chained with .viewport (rather than a standalone .scrollableViewport rule) so this always
+   wins on specificity, not source order. GridEditor loads as a separate async chunk in edit
+   mode, and a board mutation can trigger its stylesheet to re-register - at equal specificity,
+   that flips which of these two rules the cascade picks, silently un-capping the container even
+   though its height (set inline, see section-grid.tsx) stays correct throughout. */
+.viewport.scrollableViewport {
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* The grid content inside has a fixed pixel width matching this viewport's full
+     outer width (needed for the drag/resize math), so there's no room to reserve
+     for a scrollbar without it eating into - or overlapping - the content on
+     whichever side it renders. Hiding the native scrollbar track entirely (wheel/
+     touch/drag scrolling still works) avoids that instead of trying to reserve
+     space for it. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  --board-grid-drag-height: initial;
+}
+
+.staticGrid,
+.editorGrid {
+  position: relative;
+  overflow: visible;
+}
+
+.editorGrid {
+  position: absolute;
+}
+
+.editorPortalHost {
+  display: contents;
+}
+
+.staticItem {
+  overflow: visible;
+}
+
+.contentMount {
+  position: absolute;
+  inset: var(--board-grid-item-inset, 0px);
+  overflow: visible;
+}
+
+/* SectionGrid fits its content to the retained inset sides in view and edit mode. */
+.staticItem[data-type="section"] > .contentMount {
+  inset: var(--board-container-inset, 0px);
+}
+
+.staticItem[data-type="item"] > .contentMount {
+  inset: calc(10px * var(--board-canvas-inverse-scale, 1));
+}
+
+.viewport:is([data-rail-placement="left"], [data-rail-placement="right"])
+  > .staticGrid
+  > .staticItem[data-grid-y="0"]
+  > .contentMount {
+  inset-block-start: 0;
+}
+
+.viewport:is([data-rail-placement="left"], [data-rail-placement="right"])
+  > .staticGrid
+  > .staticItem[data-grid-inline-start="true"]
+  > .contentMount {
+  inset-inline-start: 0;
+}
+
+.viewport:is([data-rail-placement="left"], [data-rail-placement="right"])
+  > .staticGrid
+  > .staticItem[data-grid-inline-end="true"]
+  > .contentMount {
+  inset-inline-end: 0;
+}
+
+.staticItem:has([data-board-container-label]) {
+  z-index: 2;
+}
+
+.editorEntry {
+  overflow: visible;
+  cursor: grab;
+  user-select: none;
+}
+
+.editorEntry:active {
+  cursor: grabbing;
+}
+
+.editorEntry:focus-visible,
+.editorEntry[data-keyboard-editing="true"] {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-md);
+}
+
+.liveRegion {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

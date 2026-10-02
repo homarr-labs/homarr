@@ -1,5 +1,6 @@
 export * from "./count-badge";
 export { OverflowBadge } from "./overflow-badge";
+export { InlineConfirmActionIcon, InlineConfirmButton, InlineConfirmMenuItem } from "./inline-confirm-action";
 export { SearchInput } from "./search-input";
 export * from "./select-with-description";
 export * from "./select-with-description-and-badge";
@@ -12,9 +13,24 @@ export { UserAvatarGroup } from "./user-avatar-group";
 export { CustomPasswordInput } from "./password-input/password-input";
 export { IntegrationAvatar } from "./integration-avatar";
 export { BetaBadge } from "./beta-badge";
+export { CatalogItem } from "./catalog-item";
+export { SelectableCard } from "./selectable-card";
+export type {
+  SelectableCardProps,
+  SelectableCardStylesNames,
+  SelectableCardCssVariables,
+  SelectableCardFactory,
+} from "./selectable-card";
+export * from "./floating-tip";
 export { MaskedImage } from "./masked-image";
 export { MaskedOrNormalImage } from "./masked-or-normal-image";
 export { LanguageIcon } from "./language-icon";
+export { LanguageCombobox } from "./language-combobox";
+export { ColorSchemeCombobox } from "./color-scheme-combobox";
+export { BoardColorInput } from "./board-color-input";
+export { CornerStylePicker, cornerStyleValues } from "./corner-style-picker";
+export type { CornerStyle } from "./corner-style-picker";
+export { IntegrationMarquee } from "./integration-marquee";
 export { Link } from "./link";
 export {
   SelectGridLayout,

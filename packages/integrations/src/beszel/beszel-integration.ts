@@ -1,3 +1,4 @@
+import { isRecord } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -10,6 +11,7 @@ import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type {
   BeszelAlert,
   BeszelAlertHistory,
@@ -66,7 +68,7 @@ export const normalizeRealtimeSnapshot = (
   const id = `realtime-${receivedAt.getTime()}`;
   const events: LiveStatsEvent[] = [];
 
-  if (payload.stats && typeof payload.stats === "object" && !Array.isArray(payload.stats)) {
+  if (isRecord(payload.stats)) {
     events.push({
       type: "system_stats",
       record: { id, system: systemId, stats: payload.stats, type: "1m", created, updated: created },
@@ -131,7 +133,29 @@ export class BeszelIntegration extends Integration {
     this.sessionStore = createSessionStore(integration);
   }
 
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const session = await this.authenticateAsync();
+
+    return {
+      headers: { Authorization: session.token },
+      redactValues: [session.token],
+    };
+  }
+
+  private pendingAuthentication: Promise<BeszelSession> | undefined;
+
   private async authenticateAsync(): Promise<BeszelSession> {
+    if (this.pendingAuthentication) return await this.pendingAuthentication;
+    const pending = this.loadSessionAsync();
+    this.pendingAuthentication = pending;
+    try {
+      return await pending;
+    } finally {
+      this.pendingAuthentication = undefined;
+    }
+  }
+
+  private async loadSessionAsync(): Promise<BeszelSession> {
     const existingSession = await this.sessionStore.getAsync();
     if (existingSession && !isSessionExpired(existingSession)) {
       logger.debug("Using stored Beszel session", { integrationId: this.integration.id });
@@ -151,6 +175,7 @@ export class BeszelIntegration extends Integration {
     const response = await fetchWithTrustedCertificatesAsync(authUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      redirect: "error",
       body: JSON.stringify({
         identity: this.getSecretValue("username"),
         password: this.getSecretValue("password"),

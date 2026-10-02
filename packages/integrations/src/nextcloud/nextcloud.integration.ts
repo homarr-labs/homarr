@@ -12,6 +12,8 @@ import { ResponseError } from "@homarr/common/server";
 import { createHttpsAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../http-auth";
+import { basicAuth } from "../http-auth";
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -21,6 +23,7 @@ import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integ
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 import type { Notification } from "../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+import { createNextcloudCalendarServerUrl } from "./nextcloud-url";
 
 // Register all existing timezones
 if (ICAL.TimezoneService.count === 0) {
@@ -56,6 +59,10 @@ dayjs.extend(timezone);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration implements ICalendarIntegration, INotificationsIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return basicAuth("username", "password", { "OCS-APIRequest": "true" })(this.integration);
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();
@@ -189,7 +196,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
 
   private async createCalendarClientAsync(agent?: Agent) {
     return new DAVClient({
-      serverUrl: this.integration.url,
+      serverUrl: createNextcloudCalendarServerUrl(this.integration.url),
       credentials: {
         username: this.getSecretValue("username"),
         password: this.getSecretValue("password"),

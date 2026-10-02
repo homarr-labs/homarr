@@ -4,28 +4,37 @@ import { Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconCircleCheck, IconCircleX, IconWaveSine } from "@tabler/icons-react";
 
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
-import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { formatResultSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
-export function LatestResultSection({ result }: { result: SpeedtestTrackerResult }) {
-  const t = useScopedI18n("widget.speedtestTracker");
-  const locale = useCurrentLocale();
+export function LatestResultSection({
+  result,
+  width = 500,
+  compactSurface = false,
+}: {
+  result: SpeedtestTrackerResult;
+  width?: number;
+  compactSurface?: boolean;
+}) {
+  const t = useI18n("widget.speedtestTracker");
+  const locale = useCurrentIntlLocale();
   const timestamp = Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
   }).format(result.created_at);
-  const cols = result.healthy !== null ? 4 : 3;
+  const metricCount = result.healthy !== null ? 4 : 3;
+  const cols = width < 230 ? 2 : metricCount;
 
   return (
     <Stack gap={6} h="100%">
       <Group justify="space-between" align="center" wrap="nowrap">
-        <SectionLabel>{t("latestResult")}</SectionLabel>
-        <Text size="xs" c="dimmed">
+        <SectionLabel uppercase={compactSurface}>{t("latestResult")}</SectionLabel>
+        <Text size="xs" c="dimmed" truncate title={timestamp} style={{ minWidth: 0 }}>
           {timestamp}
         </Text>
       </Group>
@@ -35,18 +44,21 @@ export function LatestResultSection({ result }: { result: SpeedtestTrackerResult
           color="blue"
           value={formatResultSpeed(result, "download")}
           label={t("download")}
+          legacySurface={compactSurface}
         />
         <SpeedStatCard
           icon={IconArrowUp}
           color="teal"
           value={formatResultSpeed(result, "upload")}
           label={t("upload")}
+          legacySurface={compactSurface}
         />
         <SpeedStatCard
           icon={IconWaveSine}
           color="orange"
           value={result.ping !== null ? `${result.ping.toFixed(1)} ms` : "—"}
           label={t("ping")}
+          legacySurface={compactSurface}
         />
         {result.healthy !== null && (
           <SpeedStatCard
@@ -54,6 +66,7 @@ export function LatestResultSection({ result }: { result: SpeedtestTrackerResult
             color={result.healthy ? "green" : "red"}
             value={result.healthy ? t("healthy") : t("unhealthy")}
             label={t("status")}
+            legacySurface={compactSurface}
           />
         )}
       </SimpleGrid>

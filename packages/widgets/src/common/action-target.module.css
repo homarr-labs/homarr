@@ -1,0 +1,11 @@
+.root {
+  min-width: 24px;
+  min-height: 24px;
+}
+
+@media (any-pointer: coarse) {
+  .root {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

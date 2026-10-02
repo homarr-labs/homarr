@@ -1,38 +1,55 @@
 "use client";
 
-import { Button, Menu } from "@mantine/core";
-import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button, Card, Collapse, Group, Stack } from "@mantine/core";
+import { IconCategoryPlus } from "@tabler/icons-react";
 
-import { useModalAction } from "@homarr/modals";
-import { AddBoardModal, ImportBoardModal } from "@homarr/modals-collection";
+import { BoardCreateForm } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 
-import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
-
 export const CreateBoardButton = () => {
-  const t = useI18n();
-  const { openModal: openAddModal } = useModalAction(AddBoardModal);
-  const { openModal: openImportModal } = useModalAction(ImportBoardModal);
+  const t = useI18n("management.page.board.action");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isOpen, setIsOpen] = useState(searchParams.get("create") === "true");
+  const [formKey, setFormKey] = useState(0);
+
+  useEffect(() => {
+    if (searchParams.get("create") !== "true") return;
+
+    setFormKey((value) => value + 1);
+    setIsOpen(true);
+  }, [searchParams]);
+
+  const close = () => {
+    setIsOpen(false);
+    setFormKey((value) => value + 1);
+    if (searchParams.has("create")) router.replace("/manage/boards", { scroll: false });
+  };
+
+  const toggle = () => {
+    if (isOpen) {
+      close();
+      return;
+    }
+
+    setFormKey((value) => value + 1);
+    setIsOpen(true);
+  };
 
   return (
-    <ManageMobilePrimaryAction>
-      <Button.Group>
-        <Button leftSection={<IconCategoryPlus size="1rem" />} onClick={openAddModal}>
-          {t("management.page.board.action.new.label")}
+    <Stack>
+      <Group justify="end">
+        <Button leftSection={<IconCategoryPlus size="1rem" />} onClick={toggle}>
+          {t("new.label")}
         </Button>
-        <Menu position="bottom-end">
-          <Menu.Target>
-            <Button px="xs" ms={1}>
-              <IconChevronDown size="1rem" />
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item onClick={openImportModal} leftSection={<IconFileImport size="1rem" />}>
-              {t("board.action.oldImport.label")}
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      </Button.Group>
-    </ManageMobilePrimaryAction>
+      </Group>
+      <Collapse expanded={isOpen}>
+        <Card withBorder>
+          <BoardCreateForm key={formKey} onCancel={close} />
+        </Card>
+      </Collapse>
+    </Stack>
   );
 };

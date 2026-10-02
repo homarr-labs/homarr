@@ -1,8 +1,9 @@
 "use client";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useSettings } from "@homarr/settings";
 
-import { homarrLogoPath, homarrPageTitle } from "./homarr-logo";
+import { homarrLogoPath } from "./constants";
 import type { LogoWithTitleProps } from "./logo";
 import { Logo, LogoWithTitle } from "./logo";
 
@@ -12,8 +13,9 @@ interface LogoProps {
 
 const useImageOptions = () => {
   const board = useRequiredBoard();
+  const { branding } = useSettings();
   return {
-    src: board.logoImageUrl ?? homarrLogoPath,
+    src: board.logoImageUrl?.trim() || branding.logoImageUrl?.trim() || homarrLogoPath,
     alt: "Board logo",
     shouldUseNextImage: false,
   };
@@ -31,12 +33,13 @@ interface CommonLogoWithTitleProps {
 
 export const BoardLogoWithTitle = ({ size, hideTitleOnMobile }: CommonLogoWithTitleProps) => {
   const board = useRequiredBoard();
+  const { branding } = useSettings();
   const imageOptions = useImageOptions();
   return (
     <LogoWithTitle
       size={size}
       hideTitleOnMobile={hideTitleOnMobile}
-      title={board.pageTitle ?? homarrPageTitle}
+      title={board.pageTitle ?? branding.appName}
       image={imageOptions}
     />
   );

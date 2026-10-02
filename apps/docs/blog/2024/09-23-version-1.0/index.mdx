@@ -1,9 +1,10 @@
 ---
+title: Homarr 1.0 - complete rewrite of all systems
+date: 2024-09-23
 authors:
   - manuel-rw
 ---
 
-# Homarr 1.0 - complete rewrite of all systems
 We proudly present to you - Homarr ``1.0``.
 We have started work on this new version back in 2023 and have worked tirelessly for months on this brand-new dashboard.
 
@@ -12,8 +13,6 @@ Therefore, this version contains an unusual amount of breaking changes.
 This will be a one time occurrence and version > ``1.0`` will have less breaking changes.
 This time more important than every; **read the breaking changes** list and **create a backup** before updating.
 Some third party installation methods may take multiple days or weeks to update to the new version.
-
-See [this guide on how to import your previous Homarr dashboard](/docs/getting-started/after-the-installation#importing-a-zip-from-version-before-100)
 
 ## Changes at a glance
 - **Asynchronous integrations system**: In versions prior to ``1.0``, we fetched data upon each request synchronously.
@@ -30,14 +29,14 @@ reliability and scalability compared to < ``1.0``.
 - **Improved performance**: We have upgraded the underlying framework of Homarr and take advantage
 of an in-memory message bus and websockets to deliver data near realtime to you.
 
-<!-- truncate -->
+{/* Historical excerpt boundary. */}
 
 ## Breaking changes
-:::warning
+<Alert type="warning">
 
 Please consult the breaking changes list & upgrade guide if you used third-party installation methods.
 
-:::
+</Alert>
 
 - Docker Image
   - Removed support for ``arm/v7`` -> upgrade to newer architectures as an alternative

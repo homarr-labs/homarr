@@ -1,0 +1,19 @@
+---
+title: "Spoolman"
+description: "Spoolman tracks 3D printer filament spools, their contents, and usage."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { spoolmanIntegration } from ".";
+
+<IntegrationHeader integration={spoolmanIntegration} categories={["3D printing"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) displays the number of active spools and their total remaining filament weight.
+
+### Adding the integration
+
+<AddingIntegration />

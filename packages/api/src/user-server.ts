@@ -10,9 +10,11 @@ export const getRscUserSettingsAsync = cache(async (userId: string) =>
     columns: {
       homeBoardId: true,
       mobileHomeBoardId: true,
+      byteUnitSystem: true,
       firstDayOfWeek: true,
       pingIconsEnabled: true,
       enableRightClickOnWidgets: true,
+      headerPreferences: true,
       defaultSearchEngineId: true,
       openSearchInNewTab: true,
       ddgBangs: true,

@@ -688,211 +688,6 @@
       "add": "Lägg till en applikation"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Anpassade widgetar",
-        "noResults": "Inga anpassade widgetar ännu. Skapa din första!",
-        "loading": "Läser in..."
-      },
-      "create": {
-        "title": "Skapa anpassad widget",
-        "subtitle": "Definiera en API-URL, autentisering och hur svarsdata ska visas."
-      },
-      "edit": {
-        "title": "Redigera anpassad widget"
-      }
-    },
-    "action": {
-      "create": "Skapa",
-      "import": "Importera",
-      "save": "Spara",
-      "delete": "Ta bort anpassad widget",
-      "deleteConfirm": "Är du säker på att du vill ta bort \"{name}\"? Den här åtgärden kan inte ångras.",
-      "export": "Exportera",
-      "addMapping": "Lägg till mappning",
-      "addColumn": "Lägg till kolumn",
-      "edit": "Redigera",
-      "removeMapping": "Ta bort mappning",
-      "removeColumn": "Ta bort kolumn",
-      "addItem": "Lägg till objekt",
-      "removeItem": "Ta bort objekt",
-      "addBar": "Lägg till stapel",
-      "duplicate": "Duplicera",
-      "copyAiPrompt": "Kopiera AI-prompt",
-      "enable": "Aktivera",
-      "disable": "Inaktivera",
-      "menu": "Åtgärder"
-    },
-    "field": {
-      "name": "Namn",
-      "description": "Beskrivning",
-      "iconUrl": "Ikon-URL",
-      "url": "URL",
-      "authType": "Autentiseringstyp",
-      "headerName": "Namn på huvud-/frågeparameter",
-      "method": "Metod",
-      "requestBody": "Begärandetext",
-      "displayType": "Visningstyp",
-      "jsonPath": "JSON-sökväg",
-      "jsonPathHint": "Använd JSONPath-syntax för att extrahera värden, t.ex. $.data.temperature eller $.items[0].name",
-      "label": "Etikett",
-      "unit": "Enhet",
-      "mappings": "Mappningar",
-      "tablePath": "JSON-sökväg till array",
-      "tablePathHint": "Sökväg till arrayen i svaret, t.ex. $.data.items",
-      "columns": "Kolumner",
-      "header": "Rubrik",
-      "items": "Objekt",
-      "gridColumns": "Rutnätskolumner",
-      "cardStyle": "Kortstil",
-      "bars": "Staplar",
-      "valuePath": "JSON-sökväg till värde",
-      "maxPath": "JSON-sökväg till maxvärde",
-      "showPercentage": "Visa procent",
-      "barSize": "Stapeldimension",
-      "goodValues": "Bra värden (kommaseparerade)",
-      "dotSize": "Punktstorlek",
-      "valueSize": "Värdestorlek",
-      "labelPosition": "Etikettposition",
-      "kvLayout": "Layout",
-      "striped": "Randiga rader",
-      "compact": "Kompakt läge",
-      "maxHeight": "Maxhöjd (px)",
-      "color": "Färg",
-      "buttonLabel": "Knappetikett",
-      "buttonColor": "Knappfärg",
-      "confirmText": "Bekräftelsetext",
-      "confirmTextHint": "Om detta anges visas en bekräftelsedialog innan begäran körs",
-      "successMessage": "Framgångsmeddelande",
-      "successMessageHint": "Meddelande som visas efter lyckad körning",
-      "enabled": "Aktiverad",
-      "template": {
-        "label": "JSX-mall",
-        "description": "Mantine JSX-mall. Åtkomst till API-svarsfält via databindningar (t.ex. data.name). Använd endast vitlistade komponenter. Förbjudet: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU-temperatur",
-      "exampleLabelShort": "CPU-temperatur",
-      "exampleHeader": "Namn",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blå"
-    },
-    "cardStyleOption": {
-      "filled": "Fylld",
-      "outline": "Kontur",
-      "subtle": "Diskret"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Rutnät"
-    },
-    "sizeOption": {
-      "sm": "Liten",
-      "md": "Mellan",
-      "lg": "Stor",
-      "xl": "Extra stor"
-    },
-    "labelPositionOption": {
-      "above": "Ovanför",
-      "below": "Under"
-    },
-    "fieldset": {
-      "general": "Allmänt",
-      "connection": "API-anslutning",
-      "display": "Visningskonfiguration"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Visa ett extraherat värde med etikett och enhet",
-      "keyValue": "Visa flera etiketterade värden sida vid sida",
-      "table": "Visa datarader i tabellformat",
-      "statGrid": "Färgade statistikkort i ett rutnät – som Pi-Hole- eller Speedtest-widgetar",
-      "progressBars": "Förloppsstaplar som visar användning eller slutförande – för disk, minne och kvoter",
-      "statusIndicator": "Färgade statuspunkter som visar online/offline eller hälsotillstånd",
-      "countGrid": "Kompakta räknare med nummer och etikett i ett tätt rutnät",
-      "raw": "Formaterad JSON-utdata för felsökning",
-      "actionButton": "En knapp som utlöser en begäran när den klickas",
-      "customJsx": "Anpassad JSX-layout med vitlistade Mantine-komponenter och fullständig databindning till API:t"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Ingen",
-      "bearer": "Bearer-token",
-      "basic": "Grundläggande autentisering",
-      "apiKeyHeader": "API-nyckel (huvud)",
-      "apiKeyQuery": "API-nyckel (fråga)"
-    },
-    "displayType": {
-      "singleValue": "Enskilt värde",
-      "keyValue": "Nyckel–värde",
-      "table": "Tabell",
-      "statGrid": "Statistikrutnät",
-      "progressBars": "Förloppsstaplar",
-      "statusIndicator": "Statusindikator",
-      "countGrid": "Antalsrutnät",
-      "raw": "Rå JSON",
-      "actionButton": "Åtgärdsknapp",
-      "customJsx": "Anpassad JSX"
-    },
-    "secret": {
-      "apiKey": "API-nyckel/token",
-      "username": "Användarnamn",
-      "password": "Lösenord",
-      "savedPlaceholder": "••••••• (sparad, lämna tomt för att behålla)"
-    },
-    "preview": {
-      "title": "Förhandsgranskning",
-      "test": "Testa",
-      "hint": "Klicka på Testa för att förhandsgranska API-svaret med din aktuella konfiguration.",
-      "rawResponse": "Rått JSON-svar"
-    },
-    "notification": {
-      "created": "Widgeten \"{name}\" skapades.",
-      "updated": "Widgeten \"{name}\" uppdaterades.",
-      "deleted": "Widgeten \"{name}\" togs bort.",
-      "imported": "Widgeten importerades.",
-      "aiPromptCopied": "AI-prompten kopierades till urklipp",
-      "aiPromptDescription": "Kopiera en färdig prompt och klistra in den i valfri AI-chattbot (ChatGPT, Claude, Gemini...). Den innehåller hela widgets schemat och ditt API-svar så att AI:n kan generera en JSON-konfiguration som är klar att importera.",
-      "aiPromptCopy": "Kopiera till urklipp",
-      "aiPromptNoResponse": "Tips: Kör ett test först för att inkludera ditt API-svar i prompten och få bättre resultat.",
-      "aiPromptCopyError": "Det gick inte att kopiera prompten till urklipp. Din webbläsare kanske inte stöder den här funktionen.",
-      "createError": "Det gick inte att skapa widgeten. Kontrollera att API-slutpunkten kan nås.",
-      "updateError": "Det gick inte att uppdatera widgeten. Dina ändringar sparades inte.",
-      "importError": "Det gick inte att importera widgeten. Kontrollera att filen är en giltig JSON-export av en anpassad widget.",
-      "exportError": "Det gick inte att exportera widgeten.",
-      "duplicated": "Widgeten \"{name}\" duplicerades.",
-      "duplicateError": "Det gick inte att duplicera widgeten.",
-      "toggleError": "Det gick inte att växla widgetens status.",
-      "deleteError": "Det gick inte att ta bort widgeten.",
-      "previewError": "Det gick inte att hämta förhandsgranskningen. Kontrollera URL:en och försök igen.",
-      "executed": "Åtgärden kördes.",
-      "executeError": "Åtgärden misslyckades: {error}"
-    },
-    "table": {
-      "name": "Namn",
-      "url": "URL",
-      "display": "Visning"
-    },
-    "widget": {
-      "disabled": "Den här widgeten är inaktiverad"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Molnbaserad reverse proxy och lastbalanserare"
     },
-    "wud": {
-      "name": "Vad är Upp Docker",
-      "description": "Övervaka vilken av dina Docker behållare har bilduppdateringar tillgängliga"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumenthanteringssystem för arkivering och organisering av skannade dokument"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Ledsagarprogram till Sonarr och Radarr som hanterar och laddar ner undertexter"
+    },
+    "wud": {
+      "name": "Vad är Upp Docker",
+      "description": "Övervaka vilken av dina Docker behållare har bilduppdateringar tillgängliga"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "här",
     "iconPicker": {
       "label": "Ikon-URL",
-      "description": "Sök i biblioteket, klistra in en bild-URL eller ladda upp en fil.",
       "header": "Sök {countIcons} bilder efter namn",
       "headerLoading": "Sök bilder med namn",
+      "noResults": "Inga ikoner matchar \"{search}\".",
+      "error": "Det gick inte att läsa in ikoner.",
+      "description": "Sök i biblioteket, klistra in en bild-URL eller ladda upp en fil.",
       "clear": "Rensa bild",
       "uploadImage": "Ladda upp bild",
       "results": "Sökresultat för bild",
@@ -1452,9 +1249,7 @@
       "otherImages": "Andra bilder",
       "urlLoading": "Kontrollerar bild…",
       "urlReady": "Bilden är klar att användas",
-      "urlError": "Bilden kunde inte laddas. Kontrollera URL:en och försök igen.",
-      "noResults": "Inga ikoner matchar \"{search}\".",
-      "error": "Det gick inte att läsa in ikoner."
+      "urlError": "Bilden kunde inte laddas. Kontrollera URL:en och försök igen."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Visa sändningsmeddelanden"
-        }
-      }
-    },
-    "wud": {
-      "name": "Vad är Upp Docker",
-      "description": "Visa hur många bevakade behållare som har uppdateringar tillgängliga.",
-      "title": "Vad är Upp Docker",
-      "monitored": "Övervakad",
-      "updatesAvailable": "{count, plural, one {# uppdatering tillgänglig} other {# uppdateringar tillgängliga}}",
-      "updateAvailable": "Uppdatering tillgänglig",
-      "openReleaseNotes": "Öppna versionsfakta",
-      "option": {
-        "showTitle": {
-          "label": "Visa titel"
-        },
-        "showRing": {
-          "label": "Visa uppdateringsring"
-        },
-        "layout": {
-          "label": "Layout",
-          "option": {
-            "horizontal": {
-              "label": "Horisontell"
-            },
-            "vertical": {
-              "label": "Vertikal"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Visa uppdateringslista för behållare",
-          "description": "Listar varje övervakad behållare som har en bild uppdatering tillgänglig"
         }
       }
     },
@@ -3947,26 +3710,6 @@
         "unhealthy": "Ohälsosam"
       }
     },
-    "customApi": {
-      "name": "Anpassat API",
-      "description": "Visa data från valfritt externt API med anpassad konfiguration.",
-      "option": {
-        "definitionId": {
-          "label": "Definitions-ID"
-        },
-        "refreshInterval": {
-          "label": "Uppdateringsintervall",
-          "description": "Hur ofta data ska hämtas från API:t (i sekunder)"
-        }
-      },
-      "noDefinition": "Ingen definition har valts",
-      "definitionNotFound": "Widgetdefinitionen hittades inte. Den kan ha tagits bort.",
-      "noDisplayOutput": "Ingen visningsutdata",
-      "executeConfirm": "Är du säker på att du vill köra den här åtgärden?",
-      "executing": "Kör...",
-      "executeSuccess": "Åtgärden kördes",
-      "executeFailed": "Åtgärden misslyckades. Kontrollera widgetens konfiguration."
-    },
     "beszelSystemTable": {
       "name": "Beszel-system (tabell)",
       "description": "Tabellvy över alla Beszel-övervakade system med sorterbara kolumner och statusindikatorer",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker nätverks-I/O",
           "subtitle": "Nätverkstrafik för docker-behållare"
+        }
+      }
+    },
+    "wud": {
+      "name": "Vad är Upp Docker",
+      "description": "Visa hur många bevakade behållare som har uppdateringar tillgängliga.",
+      "title": "Vad är Upp Docker",
+      "monitored": "Övervakad",
+      "updatesAvailable": "{count, plural, one {# uppdatering tillgänglig} other {# uppdateringar tillgängliga}}",
+      "updateAvailable": "Uppdatering tillgänglig",
+      "openReleaseNotes": "Öppna versionsfakta",
+      "option": {
+        "showTitle": {
+          "label": "Visa titel"
+        },
+        "showRing": {
+          "label": "Visa uppdateringsring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horisontell"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Visa uppdateringslista för behållare",
+          "description": "Listar varje övervakad behållare som har en bild uppdatering tillgänglig"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Hem",
         "boards": "Tavlor",
         "apps": "Applikationer",
         "integrations": "Integrationer",
-        "customWidgets": "Anpassade widgetar",
         "searchEngies": "Sökmotorer",
         "medias": "Media",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Släpp din säkerhetskopia ZIP här",
-              "description": "Accepterar .zip-filer från en Homarr SQLite-säkerhetskopia (max 256 MB)"
+              "description": "Accepterar .zip-filer från en Homarr SQLite-säkerhetskopia (max {maxSize})"
             },
             "analyzing": "Analyserar säkerhetskopia...",
             "changeFile": "Byt fil",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Hantera",
       "boards": {
         "label": "Tavlor"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Redigera"
-        }
-      },
-      "custom-widgets": {
-        "label": "Anpassade widgetar",
-        "new": {
-          "label": "Ny"
-        },
-        "edit": {
-          "label": "Redigera",
-          "flow": {
-            "label": "Flöde"
-          }
         }
       },
       "users": {

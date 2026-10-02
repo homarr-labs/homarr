@@ -1,15 +1,17 @@
 import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
-  queryKeys: [[["widget", "healthMonitoring"]], [["integration", "byIds"]]],
-  refetchInterval: 5,
+  supportsAdvancedFocus: true,
+  queryKeys: [[["integration", "byIds"]], [["widget", "healthMonitoring"]]],
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
@@ -83,7 +85,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         },
         visibleStorageVolumes: {
           shouldHide(_, integrationKinds) {
-            return integrationKinds.length === 0 || !integrationKinds.every((kind) => kind === "synology");
+            return !supportsStorageVolumeSelection(integrationKinds);
           },
         },
         showUptime: {
@@ -113,9 +115,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-    (kind) => kind !== "patchmon" && kind !== "wud",
-  ),
+  ...getWidgetIntegrationConfig("healthMonitoring"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

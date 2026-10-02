@@ -1,0 +1,58 @@
+# Custom Widget troubleshooting
+
+## Definition problems
+
+| Symptom                  | Resolution                                                                                                 |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| Definition unavailable   | Restore or recreate the definition, or remove the unavailable board item.                                  |
+| **Migration required**   | Copy the migration prompt, describe the visible behavior without secrets, and import the returned v2 JSON. |
+| Invalid saved definition | Read the displayed schema errors, then recreate or import a valid definition.                              |
+| Invalid item options     | Open the board item's settings and correct values that no longer match the definition.                     |
+
+Migrating a v1 definition keeps the archived v1 record and encrypted secret for rollback. The migrated v2 definition
+uses the same ID and takes precedence.
+
+## Validation errors
+
+Start with the first diagnostic and its field path. Common causes are:
+
+- invalid or duplicate source, request, or option IDs;
+- a request referencing a missing source;
+- an option default that does not match its control;
+- `{param:name}` in a load query;
+- missing invocation parameters;
+- an invalid source or icon URL;
+- a runtime component using the wrong request kind.
+
+The Diagnostics tab also shows JSX errors, accessibility checks, and the redacted request journal.
+
+## Request errors
+
+Check the source URL, network scope, authentication, request method, path, body bindings, and board permission. The
+journal records the request ID, method, path template, status, and duration without credentials.
+
+For `invalid placeholder`, use `{option:name}` or `{param:name}`. Load queries can reference options only.
+
+In multi-replica deployments, connect every Homarr replica to the same Redis database. Otherwise an action can leave a
+stale cached query on another replica.
+
+## Runtime warnings
+
+`UNKNOWN_MANTINE_PROP` means the installed Mantine component does not document that property. Check the
+[component reference](/docs/management/custom-widgets/component-reference). `BLOCKED_CAPABILITY` means the runtime rejected an unsafe component,
+property, URL, or style capability.
+
+## Workshop unavailable
+
+Check `WORKSHOP_API_URL` and PocketBase health. Installed widgets continue to run without Workshop.
+
+## Rollback
+
+Preserve a database backup and the exact `SECRET_ENCRYPTION_KEY`. Roll back the Homarr application without manually
+removing the v1 tables. Workshop's PocketBase data has a separate backup lifecycle.
+
+## Report a bug
+
+Use the [Custom Widget bug form](https://github.com/homarr-labs/homarr/issues/new?template=custom_widget_bug.yml)
+with a minimal exported definition and sanitized request diagnostics. Remove credentials, private URLs, and personal data
+from exports, responses, logs, and screenshots before sharing.

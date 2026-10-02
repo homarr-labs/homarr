@@ -1,0 +1,16 @@
+{
+  "name": "homarr-mysql-to-sqlite",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/cli.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "mysql2": "3.22.6"
+  },
+  "engines": {
+    "node": ">=24.18.0 <25"
+  }
+}

@@ -7,6 +7,7 @@ import { useDisclosure } from "@mantine/hooks";
 import type { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { appManageSchema } from "@homarr/validation/app";
@@ -50,7 +51,8 @@ export const AppForm = ({
   hideButtons,
   formRef,
 }: AppFormProps) => {
-  const t = useI18n();
+  const tApp = useI18n("app");
+  const tCommon = useI18n("common");
 
   const form = useZodForm(appManageSchema, {
     initialValues: toFormValues(initialValues),
@@ -127,25 +129,25 @@ export const AppForm = ({
 
   const formFields = (
     <Stack>
-      <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
+      <TextInput {...form.getInputProps("name")} withAsterisk label={tCommon("field.name")} />
       <IconPicker
         {...form.getInputProps("iconUrl")}
         suggestedSearch={initialValues === undefined ? form.values.name : undefined}
       />
       <Textarea
         {...form.getInputProps("description")}
-        label={t("app.field.description.label")}
+        label={tApp("field.description.label")}
         autosize
         minRows={2}
         resize="vertical"
       />
-      <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
+      <TextInput {...form.getInputProps("href")} label={invariantTechnicalLabels.url} />
 
       <Checkbox
         checked={opened}
         onChange={handleClickDifferentUrlPing}
-        label={t("app.field.useDifferentUrlForPing.checkbox.label")}
-        description={t("app.field.useDifferentUrlForPing.checkbox.description")}
+        label={tApp("field.useDifferentUrlForPing.checkbox.label")}
+        description={tApp("field.useDifferentUrlForPing.checkbox.description")}
         mt="md"
       />
 
@@ -157,7 +159,7 @@ export const AppForm = ({
         <Group justify="end">
           {showBackToOverview && (
             <Button variant="default" component={Link} href="/manage/apps">
-              {t("common.action.backToOverview")}
+              {tCommon("action.backToOverview")}
             </Button>
           )}
           {buttonLabels.submitAndCreateAnother && (

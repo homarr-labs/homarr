@@ -1,0 +1,48 @@
+name: 🐞 Custom Widget bug
+description: Report a problem with a Custom JSX widget, its requests, preview, or editor
+title: "bug: custom widget "
+labels: ["needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share a small reproduction so we can distinguish widget code, upstream API, and Homarr problems.
+        Remove API keys, passwords, tokens, cookies, authorization headers, private URLs, and personal data from everything you share, including exports and screenshots. Replace private hosts with `https://example.invalid` while preserving relevant paths and response structure.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Actual and expected behavior
+      description: Describe what happens and what you expected. Include the exact error text and a sanitized screenshot if useful.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the affected request or control, relevant widget options, and whether this occurs in Test, preview, or on the dashboard. For layout issues, include the widget size and desktop or mobile viewport.
+    validations:
+      required: true
+  - type: textarea
+    id: definition
+    attributes:
+      label: Sanitized widget definition
+      description: Paste or attach the exported JSON with sources, requests, options, and JSX template. Prefer the smallest definition that reproduces the problem. If export fails, include the relevant JSX and request configuration. Check for private URLs and sensitive data before sharing.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the exact Homarr release, commit SHA, or image digest; installation method; browser/version; and desktop or mobile OS. For request issues, include the source type (HTTP or integration), integration kind, and upstream service version. Do not include server URLs or credentials.
+      placeholder: |
+        Homarr version / commit / image digest:
+        Installation method:
+        Browser and OS:
+        Source type, integration kind, and service version:
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized API response and logs
+      description: For request or data issues, include the request ID, method, relative API path, HTTP status, and a small response sample preserving field names and types. Add relevant Homarr or browser console errors. Remove sensitive values and private URLs; leave blank for purely visual issues.

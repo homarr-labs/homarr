@@ -688,211 +688,6 @@
       "add": "Tilføj en app"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
-      },
-      "create": {
-        "title": "",
-        "subtitle": ""
-      },
-      "edit": {
-        "title": ""
-      }
-    },
-    "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
-    },
-    "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
-    },
-    "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "",
       "description": ""
     },
-    "wud": {
-      "name": "Hvad Er Opad Docker",
-      "description": "Overvåg hvilke af dine Docker-containere der er tilgængelige billedopdateringer"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumenthåndteringssystem til arkivering og organisering af scannede dokumenter"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "Hvad Er Opad Docker",
+      "description": "Overvåg hvilke af dine Docker-containere der er tilgængelige billedopdateringer"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
-      "description": "Søg i biblioteket, indsæt en billed-URL, eller upload en fil.",
       "header": "Søg efter {countIcons} billeder efter navn",
       "headerLoading": "Søg billeder efter navn",
+      "noResults": "",
+      "error": "",
+      "description": "Søg i biblioteket, indsæt en billed-URL, eller upload en fil.",
       "clear": "Ryd billede",
       "uploadImage": "Upload billede",
       "results": "Billede søgeresultater",
@@ -1452,9 +1249,7 @@
       "otherImages": "Andre billeder",
       "urlLoading": "Kontrollerer billede…",
       "urlReady": "Billedet er klar til brug",
-      "urlError": "Dette billede kunne ikke indlæses. Tjek URL'en og prøv igen.",
-      "noResults": "",
-      "error": ""
+      "urlError": "Dette billede kunne ikke indlæses. Tjek URL'en og prøv igen."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
-        }
-      }
-    },
-    "wud": {
-      "name": "Hvad Er Opad Docker",
-      "description": "Vis hvor mange overvågede containere der er tilgængelige opdateringer.",
-      "title": "Hvad Er Opad Docker",
-      "monitored": "Overvåget",
-      "updatesAvailable": "{count, plural, one {# opdatering tilgængelig} other {# opdateringer tilgængelige}}",
-      "updateAvailable": "Opdatering tilgængelig",
-      "openReleaseNotes": "Åbn udgivelsesnoter",
-      "option": {
-        "showTitle": {
-          "label": "Vis titel"
-        },
-        "showRing": {
-          "label": "Vis opdateringsring"
-        },
-        "layout": {
-          "label": "Layout",
-          "option": {
-            "horizontal": {
-              "label": "Horisontal"
-            },
-            "vertical": {
-              "label": "Vertikal"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Vis liste over container-opdatering",
-          "description": "Lister hver overvåget beholder, der har en billedopdatering tilgængelig"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Information",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Memory: {memory}GiB",
-        "memoryAvailable": "Tilgængelig: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memory: {memory}",
+        "memoryAvailable": "Tilgængelig: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "Oppetid: {months} Måneder, {days} Dage, {hours} Timer, {minutes} Minutter",
         "loadAverage": "Belastningsgennemsnit:",
@@ -3137,7 +2900,7 @@
           "label": "Vis Diverse poster markeret som færdige"
         },
         "activeTorrentThreshold": {
-          "label": "Skjul afsluttet torrent under denne tærskel (i kiB/s)"
+          "label": "Skjul afsluttet torrent under denne tærskel"
         },
         "categoryFilter": {
           "label": "Kategorier/etiketter der skal filtreres"
@@ -3927,7 +3690,7 @@
               "label": "Procentdel (f.eks. 76 %)"
             },
             "absolute": {
-              "label": "Absolutte værdier (f.eks. 800GB / 1TB)"
+              "label": "Absolutte værdier"
             },
             "free": {
               "label": "Fri pladsprocent (fx, 24% fri)"
@@ -3946,26 +3709,6 @@
       "status": {
         "unhealthy": "Usund"
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "Beszel-systemer (tabel)",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker netværks-I/O",
           "subtitle": "Netværkstrafik af Docker-containere"
+        }
+      }
+    },
+    "wud": {
+      "name": "Hvad Er Opad Docker",
+      "description": "Vis hvor mange overvågede containere der er tilgængelige opdateringer.",
+      "title": "Hvad Er Opad Docker",
+      "monitored": "Overvåget",
+      "updatesAvailable": "{count, plural, one {# opdatering tilgængelig} other {# opdateringer tilgængelige}}",
+      "updateAvailable": "Opdatering tilgængelig",
+      "openReleaseNotes": "Åbn udgivelsesnoter",
+      "option": {
+        "showTitle": {
+          "label": "Vis titel"
+        },
+        "showRing": {
+          "label": "Vis opdateringsring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horisontal"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Vis liste over container-opdatering",
+          "description": "Lister hver overvåget beholder, der har en billedopdatering tilgængelig"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Hjem",
         "boards": "Tavler",
         "apps": "Apps",
         "integrations": "Integrationer",
-        "customWidgets": "",
         "searchEngies": "Søgemaskiner",
         "medias": "Medier",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Slip din backup-ZIP her",
-              "description": "Accepterer .zip-filer fra en Homarr SQLite-backup (maks 256 MB)"
+              "description": "Accepterer .zip-filer fra en Homarr SQLite-backup (maks {maxSize})"
             },
             "analyzing": "Analyserer backup...",
             "changeFile": "Skift fil",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Administrer",
       "boards": {
         "label": "Tavler"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Rediger"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

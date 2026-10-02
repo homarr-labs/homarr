@@ -1,170 +1,77 @@
-import { useLocation } from "@docusaurus/router";
-import React, { useEffect } from "react";
+"use client";
 
-export function Carbon() {
-  const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
-  if (process.env.NODE_ENV === "development") {
-    return null;
-  }
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
-  useEffect(() => {
-    const serve = "CWBDTKQM";
-    const placement = "homarrdev";
-    ref.current.innerHTML = "";
-    const s = document.createElement("script");
-    s.id = "_carbonads_js";
-    s.src = `//cdn.carbonads.com/carbon.js?serve=${serve}&placement=${placement}&format=cover`;
-    ref.current.appendChild(s);
-  }, [location]);
+type Placement = "toc" | "inline" | "banner" | "site-footer";
 
-  return (
-    <>
-      <div ref={ref} data-visual-test="blackout" className="flex flex-col m-4 space-y-2 argos-ignore" />
-    </>
-  );
-}
+/** Responsive placements are mutually exclusive: never request a hidden ad. */
+export function Carbon({ placement = "banner" }: { placement?: Placement }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
-// Variant 1: Strict re-initialization – remove prior scripts and injected nodes, then load cover
-export function CarbonCoverStrict() {
-  const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
-  if (process.env.NODE_ENV === "development") {
-    return null;
-  }
+  const hidden =
+    pathname === "/" || (placement === "site-footer" && /^\/workshop\/(?!admin\/?$)[^/]+\/?$/.test(pathname ?? ""));
 
   useEffect(() => {
-    const serve = "CWBDTKQM";
-    const placement = "homarrdev";
+    const host = ref.current;
+    if (!host || hidden) return;
+    if (process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_ENABLE_CARBON_ADS !== "true") return;
+    const desktop = window.matchMedia("(min-width: 1280px)");
 
-    // Clear our local container
-    ref.current.innerHTML = "";
+    let pendingLoad: ReturnType<typeof setTimeout> | undefined;
+    // Carbon responses can outlive the script that requested them. Keep the newest
+    // creative if an earlier navigation or breakpoint request finishes late.
+    const observer = new MutationObserver(() => {
+      const creatives = host.querySelectorAll('[id="carbonads"]');
+      for (const creative of Array.from(creatives).slice(0, -1)) creative.remove();
+    });
+    observer.observe(host, { childList: true, subtree: true });
 
-    // Remove any globally injected Carbon ad containers
-    Array.from(document.querySelectorAll('[id^="carbonads"], .carbonads')).forEach(
-      (el) => el.parentElement && el.parentElement.removeChild(el),
-    );
-
-    // Remove existing script if present
-    const existing = document.getElementById("_carbonads_js");
-    if (existing && existing.parentElement) existing.parentElement.removeChild(existing);
-
-    // Reset possible global handle
-    try {
-      delete (window as any)._carbonads;
-    } catch {}
-
-    // Inject fresh cover script into our container
-    const s = document.createElement("script");
-    s.id = "_carbonads_js";
-    s.src = `https://cdn.carbonads.com/carbon.js?serve=${serve}&placement=${placement}&format=cover`;
-    ref.current.appendChild(s);
-  }, [location]);
-
-  return (
-    <>
-      <style>
-        {`
-					#carbon-responsive-wrap * { margin: initial; padding: initial; }
-				`}
-      </style>
-      <div
-        ref={ref}
-        id="carbonads"
-        data-selector="carbonads"
-        className="bg-background flex flex-col m-4 space-y-2 carbonads argos-ignore"
-      />
-    </>
-  );
-}
-
-// Variant 2: Observer – load cover then keep only the latest injected ad node
-export function CarbonCoverObserver() {
-  const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
-  if (process.env.NODE_ENV === "development") {
-    return null;
-  }
-
-  useEffect(() => {
-    const serve = "CWBDTKQM";
-    const placement = "homarrdev";
-
-    ref.current.innerHTML = "";
-
-    const s = document.createElement("script");
-    s.id = "_carbonads_js";
-    s.src = `https://cdn.carbonads.com/carbon.js?serve=${serve}&placement=${placement}&format=cover`;
-    ref.current.appendChild(s);
-
-    // Observe body and ensure we keep only the most recent carbon container
-    const trim = () => {
-      const nodes = Array.from(document.querySelectorAll('[id^="carbonads"]')) as HTMLElement[];
-      if (nodes.length > 1) {
-        // Keep the last (most recently inserted); remove the rest
-        nodes.slice(0, -1).forEach((n) => n.parentElement && n.parentElement.removeChild(n));
+    function update() {
+      clearTimeout(pendingLoad);
+      if (!host) return;
+      const visible =
+        placement === "banner" ||
+        placement === "site-footer" ||
+        (placement === "toc" && desktop.matches) ||
+        (placement === "inline" && !desktop.matches);
+      if (!visible) {
+        host.replaceChildren();
+        return;
       }
+      if (host.querySelector("script")) return;
+      // Defer until after effect cleanup, avoiding duplicate requests during
+      // React Strict Mode's setup/cleanup/setup cycle.
+      pendingLoad = setTimeout(() => {
+        if (!host.isConnected || host.querySelector("script")) return;
+        const script = document.createElement("script");
+        script.id = "_carbonads_js";
+        script.async = true;
+        script.src = "https://cdn.carbonads.com/carbon.js?serve=CWBDTKQM&placement=homarrdev&format=cover";
+        host.appendChild(script);
+      }, 0);
+    }
+
+    update();
+    desktop.addEventListener("change", update);
+    return () => {
+      clearTimeout(pendingLoad);
+      observer.disconnect();
+      desktop.removeEventListener("change", update);
+      host.replaceChildren();
     };
+  }, [pathname, placement, hidden]);
 
-    const observer = new MutationObserver(() => trim());
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Initial pass
-    trim();
-
-    return () => observer.disconnect();
-  }, [location]);
+  if (hidden) return null;
 
   return (
-    <>
-      <style>
-        {`
-					#carbon-responsive-wrap * { margin: initial; padding: initial; }
-				`}
-      </style>
-      <div
-        ref={ref}
-        id="carbonads"
-        data-selector="carbonads"
-        className="bg-background flex flex-col m-4 space-y-2 carbonads argos-ignore"
-      />
-    </>
-  );
-}
-
-// Variant 3: CSS-only – hide the first instance so only the second (cover) remains visible
-export function CarbonCoverCssOnlySecond() {
-  const ref = React.useRef<HTMLDivElement>(null!);
-  const location = useLocation();
-  if (process.env.NODE_ENV === "development") {
-    return null;
-  }
-
-  useEffect(() => {
-    const serve = "CWBDTKQM";
-    const placement = "homarrdev";
-    ref.current.innerHTML = "";
-    const s = document.createElement("script");
-    s.id = "_carbonads_js";
-    s.src = `https://cdn.carbonads.com/carbon.js?serve=${serve}&placement=${placement}&format=cover`;
-    ref.current.appendChild(s);
-  }, [location]);
-
-  return (
-    <>
-      <style>
-        {`
-					/* Hide the first injected container; show subsequent one (cover) */
-					#carbon-responsive-wrap { display: none; }
-					#carbon-responsive-wrap * { margin: initial; padding: initial; }
-				`}
-      </style>
-      <div
-        ref={ref}
-        id="carbonads"
-        data-selector="carbonads"
-        className="bg-background flex flex-col m-4 space-y-2 carbonads argos-ignore"
-      />
-    </>
+    <aside
+      aria-label="Advertisement"
+      className={`homarr-carbon homarr-carbon-${placement}`}
+      data-visual-test="blackout"
+    >
+      <div ref={ref} />
+    </aside>
   );
 }

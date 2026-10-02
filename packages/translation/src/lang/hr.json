@@ -688,211 +688,6 @@
       "add": "Dodaj aplikaciju"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Prilagođeni widgeti",
-        "noResults": "Još nema prilagođenih widgeta. Izradite svoj prvi!",
-        "loading": "Učitavanje..."
-      },
-      "create": {
-        "title": "Izradi prilagođeni widget",
-        "subtitle": "Definirajte API URL, autentifikaciju i način prikaza podataka odgovora."
-      },
-      "edit": {
-        "title": "Uredi prilagođeni widget"
-      }
-    },
-    "action": {
-      "create": "Izradi",
-      "import": "Uvezi",
-      "save": "Spremi",
-      "delete": "Izbriši prilagođeni widget",
-      "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{name}\"? Ova se radnja ne može poništiti.",
-      "export": "Izvezi",
-      "addMapping": "Dodaj mapiranje",
-      "addColumn": "Dodaj stupac",
-      "edit": "Uredi",
-      "removeMapping": "Ukloni mapiranje",
-      "removeColumn": "Ukloni stupac",
-      "addItem": "Dodaj stavku",
-      "removeItem": "Ukloni stavku",
-      "addBar": "Dodaj traku",
-      "duplicate": "Dupliciraj",
-      "copyAiPrompt": "Kopiraj AI upit",
-      "enable": "Omogući",
-      "disable": "Onemogući",
-      "menu": "Radnje"
-    },
-    "field": {
-      "name": "Naziv",
-      "description": "Opis",
-      "iconUrl": "URL ikone",
-      "url": "URL",
-      "authType": "Vrsta autentifikacije",
-      "headerName": "Naziv zaglavlja/parametra upita",
-      "method": "Metoda",
-      "requestBody": "Tijelo zahtjeva",
-      "displayType": "Vrsta prikaza",
-      "jsonPath": "JSON putanja",
-      "jsonPathHint": "Upotrijebite sintaksu JSONPath za izdvajanje vrijednosti, npr. $.data.temperature ili $.items[0].name",
-      "label": "Oznaka",
-      "unit": "Jedinica",
-      "mappings": "Mapiranja",
-      "tablePath": "JSON putanja niza",
-      "tablePathHint": "Putanja do niza u odgovoru, npr. $.data.items",
-      "columns": "Stupci",
-      "header": "Zaglavlje",
-      "items": "Stavke",
-      "gridColumns": "Stupci rešetke",
-      "cardStyle": "Stil kartice",
-      "bars": "Trake",
-      "valuePath": "JSON putanja vrijednosti",
-      "maxPath": "JSON putanja maksimalne vrijednosti",
-      "showPercentage": "Prikaži postotak",
-      "barSize": "Veličina trake",
-      "goodValues": "Dobre vrijednosti (odvojene zarezom)",
-      "dotSize": "Veličina točke",
-      "valueSize": "Veličina vrijednosti",
-      "labelPosition": "Položaj oznake",
-      "kvLayout": "Raspored",
-      "striped": "Prugasti reci",
-      "compact": "Kompaktni način rada",
-      "maxHeight": "Maksimalna visina (px)",
-      "color": "Boja",
-      "buttonLabel": "Oznaka gumba",
-      "buttonColor": "Boja gumba",
-      "confirmText": "Tekst potvrde",
-      "confirmTextHint": "Ako je postavljeno, prije izvršavanja zahtjeva prikazat će se dijaloški okvir za potvrdu",
-      "successMessage": "Poruka o uspjehu",
-      "successMessageHint": "Poruka prikazana nakon uspješnog izvršavanja",
-      "enabled": "Omogućeno",
-      "template": {
-        "label": "JSX predložak",
-        "description": "Mantine JSX predložak. Pristupite poljima API odgovora putem povezivanja podataka (npr. data.name). Upotrebljavajte samo dopuštene komponente. Zabranjeno: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura CPU-a",
-      "exampleLabelShort": "Temp. CPU-a",
-      "exampleHeader": "Naziv",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.naziv",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "plava"
-    },
-    "cardStyleOption": {
-      "filled": "Ispunjeno",
-      "outline": "Obris",
-      "subtle": "Suptilno"
-    },
-    "layoutOption": {
-      "list": "Popis",
-      "grid": "Mreža"
-    },
-    "sizeOption": {
-      "sm": "Malo",
-      "md": "Srednje",
-      "lg": "Veliko",
-      "xl": "Vrlo veliko"
-    },
-    "labelPositionOption": {
-      "above": "Iznad",
-      "below": "Ispod"
-    },
-    "fieldset": {
-      "general": "Općenito",
-      "connection": "API veza",
-      "display": "Konfiguracija prikaza"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Prikaži jednu izdvojenu vrijednost s oznakom i jedinicom",
-      "keyValue": "Prikaži više označenih vrijednosti jednu uz drugu",
-      "table": "Prikaži retke podataka u obliku tablice",
-      "statGrid": "Obojene statističke kartice u mreži — poput widgeta Pi-Hole ili Speedtest",
-      "progressBars": "Trake napretka koje prikazuju upotrebu ili dovršenost — za disk, memoriju i kvote",
-      "statusIndicator": "Obojene statusne točke koje prikazuju stanje na mreži izvan mreže ili stanje ispravnosti",
-      "countGrid": "Kompaktni brojači brojeva i oznaka u uskoj mreži",
-      "raw": "Lijepo formatiran JSON izlaz za otklanjanje pogrešaka",
-      "actionButton": "Gumb koji pokreće zahtjev kada se klikne",
-      "customJsx": "Prilagođeni JSX raspored s dopuštenim Mantine komponentama i potpunim povezivanjem API podataka"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Ništa",
-      "bearer": "Bearer token",
-      "basic": "Osnovna autentifikacija",
-      "apiKeyHeader": "API ključ (zaglavlje)",
-      "apiKeyQuery": "API ključ (upit)"
-    },
-    "displayType": {
-      "singleValue": "Jedna vrijednost",
-      "keyValue": "Ključ-vrijednost",
-      "table": "Tablica",
-      "statGrid": "Mreža statistika",
-      "progressBars": "Trake napretka",
-      "statusIndicator": "Pokazatelj statusa",
-      "countGrid": "Mreža brojača",
-      "raw": "Sirovi JSON",
-      "actionButton": "Gumb radnje",
-      "customJsx": "Prilagođeni JSX"
-    },
-    "secret": {
-      "apiKey": "API ključ / token",
-      "username": "Korisničko ime",
-      "password": "Lozinka",
-      "savedPlaceholder": "••••••• (spremljeno, ostavite prazno za zadržavanje)"
-    },
-    "preview": {
-      "title": "Pretpregled",
-      "test": "Testiraj",
-      "hint": "Kliknite Testiraj za pretpregled API odgovora s trenutačnom konfiguracijom.",
-      "rawResponse": "Sirovi JSON odgovor"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" uspješno je izrađen.",
-      "updated": "Widget \"{name}\" uspješno je ažuriran.",
-      "deleted": "Widget \"{name}\" je izbrisan.",
-      "imported": "Widget je uspješno uvezen.",
-      "aiPromptCopied": "AI upit kopiran je u međuspremnik",
-      "aiPromptDescription": "Kopirajte unaprijed izrađen upit koji ćete zalijepiti u bilo koji AI chatbot (ChatGPT, Claude, Gemini...). Sadrži cijelu shemu widgeta i vaš API odgovor kako bi AI mogao izraditi JSON konfiguraciju spremnu za uvoz.",
-      "aiPromptCopy": "Kopiraj u međuspremnik",
-      "aiPromptNoResponse": "Savjet: prvo pokrenite test kako biste u upit uključili API odgovor za bolje rezultate.",
-      "aiPromptCopyError": "Kopiranje upita u međuspremnik nije uspjelo. Vaš preglednik možda ne podržava ovu značajku.",
-      "createError": "Izrada widgeta nije uspjela. Provjerite je li vaša API krajnja točka dostupna.",
-      "updateError": "Ažuriranje widgeta nije uspjelo. Promjene nisu spremljene.",
-      "importError": "Uvoz widgeta nije uspio. Provjerite je li datoteka valjani JSON izvoz prilagođenog widgeta.",
-      "exportError": "Izvoz widgeta nije uspio.",
-      "duplicated": "Widget \"{name}\" je dupliciran.",
-      "duplicateError": "Dupliciranje widgeta nije uspjelo.",
-      "toggleError": "Promjena statusa widgeta nije uspjela.",
-      "deleteError": "Brisanje widgeta nije uspjelo.",
-      "previewError": "Dohvaćanje pretpregleda nije uspjelo. Provjerite URL i pokušajte ponovno.",
-      "executed": "Radnja je uspješno izvršena.",
-      "executeError": "Radnja nije uspjela: {error}"
-    },
-    "table": {
-      "name": "Naziv",
-      "url": "URL",
-      "display": "Prikaz"
-    },
-    "widget": {
-      "disabled": "Ovaj je widget onemogućen"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Obrnuti proxy i raspodjelnik opterećenja izvorno za oblak"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Pratite koji od vaših Docker kontejnera imaju dostupna ažuriranja slika"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sustav za upravljanje dokumentima za arhiviranje i organiziranje skeniranih dokumenata"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Prateća aplikacija za Sonarr i Radarr koja upravlja titlovima i preuzima ih"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Pratite koji od vaših Docker kontejnera imaju dostupna ažuriranja slika"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "ovdje",
     "iconPicker": {
       "label": "URL ikone",
-      "description": "Pretražite biblioteku, zalijepite URL slike ili prenesite datoteku.",
       "header": "Upišite naziv ili objekte za filtriranje ikona... Homarr će pretražiti {countIcons} ikona za vas",
       "headerLoading": "Pretražite slike po nazivu",
+      "noResults": "Nijedna ikona ne odgovara izrazu \"{search}\".",
+      "error": "Učitavanje ikona nije uspjelo.",
+      "description": "Pretražite biblioteku, zalijepite URL slike ili prenesite datoteku.",
       "clear": "Očisti sliku",
       "uploadImage": "Prenesi sliku",
       "results": "Rezultati pretraživanja slika",
@@ -1452,9 +1249,7 @@
       "otherImages": "Ostale slike",
       "urlLoading": "Provjera slike…",
       "urlReady": "Slika je spremna za upotrebu",
-      "urlError": "Ova se slika nije mogla učitati. Provjerite URL i pokušajte ponovno.",
-      "noResults": "Nijedna ikona ne odgovara izrazu \"{search}\".",
-      "error": "Učitavanje ikona nije uspjelo."
+      "urlError": "Ova se slika nije mogla učitati. Provjerite URL i pokušajte ponovno."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Prikaži emitirane poruke"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Prikaži koliko praćenih kontejnera ima dostupna ažuriranja.",
-      "title": "What's Up Docker",
-      "monitored": "Praćeno",
-      "updatesAvailable": "{count, plural, one {# dostupno ažuriranje} few {# dostupna ažuriranja} other {# dostupnih ažuriranja}}",
-      "updateAvailable": "Dostupno ažuriranje",
-      "openReleaseNotes": "Otvori bilješke o izdanju",
-      "option": {
-        "showTitle": {
-          "label": "Prikaži naslov"
-        },
-        "showRing": {
-          "label": "Prikaži prsten ažuriranja"
-        },
-        "layout": {
-          "label": "Raspored",
-          "option": {
-            "horizontal": {
-              "label": "Horizontalno"
-            },
-            "vertical": {
-              "label": "Okomito"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Prikaži popis ažuriranja kontejnera",
-          "description": "Nabraja svaki nadzirani kontejner za koji je dostupno ažuriranje slike"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informacije",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Memorija: {memory}GiB",
-        "memoryAvailable": "Dostupno: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Memorija: {memory}",
+        "memoryAvailable": "Dostupno: {memoryAvailable} ({percent}%)",
         "version": "Verzija: {version}",
         "uptime": "Vrijeme rada: {months} mjeseci, {days} dana, {hours} sati, {minutes} minuta",
         "loadAverage": "Prosječno opterećenje:",
@@ -2874,193 +2637,6 @@
         "internalServerError": "Neuspješno dohvaćanje podataka iz Paperless-ngx"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Pregled stanja zakrpa računala iz PatchMona",
-      "title": "PatchMon statistika",
-      "totalHosts": "Ukupno računala",
-      "hostsNeedingUpdates": "Potrebna ažuriranja",
-      "securityUpdates": "Sigurnosna ažuriranja",
-      "upToDateHosts": "Ažurirana računala",
-      "hostsWithSecurityUpdates": "Računala sa sigurnosnim ažuriranjima",
-      "recentUpdates24h": "Ažuriranja (24 h)",
-      "totalOutdatedPackages": "Zastarjeli paketi",
-      "totalRepos": "Repozitoriji",
-      "osDistribution": "Distribucija OS-a",
-      "compliance": "Usklađenost zakrpa",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Ažurirano {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Prikaži ukupan broj računala",
-          "description": "Prikaži ukupan broj nadziranih računala"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Prikaži računala kojima su potrebna ažuriranja",
-          "description": "Prikaži računala s barem jednim zastarjelim paketom"
-        },
-        "showSecurityUpdates": {
-          "label": "Prikaži sigurnosna ažuriranja",
-          "description": "Prikaži ukupan broj dostupnih sigurnosnih ažuriranja"
-        },
-        "showUpToDateHosts": {
-          "label": "Prikaži ažurirana računala",
-          "description": "Prikaži računala bez zastarjelih paketa"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Prikaži računala sa sigurnosnim ažuriranjima",
-          "description": "Prikaži računala kojima su potrebne sigurnosne zakrpe"
-        },
-        "showRecentUpdates24h": {
-          "label": "Prikaži nedavna ažuriranja (24 h)",
-          "description": "Prikaži broj ažuriranja primijenjenih u posljednja 24 sata"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Prikaži zastarjele pakete",
-          "description": "Prikaži ukupan broj zastarjelih paketa na svim računalima"
-        },
-        "showTotalRepos": {
-          "label": "Prikaži repozitorije",
-          "description": "Prikaži broj aktivnih nadziranih repozitorija"
-        },
-        "enableThresholdColors": {
-          "label": "Omogući boje pragova",
-          "description": "Oboji statističke vrijednosti zelenom, žutom ili crvenom bojom na temelju unaprijed postavljenih razina ozbiljnosti"
-        },
-        "useCustomThresholds": {
-          "label": "Napredni pragovi",
-          "description": "Prilagodite pragove upozorenja i kritične pragove po statistici koristeći apsolutne brojeve ili postotke ukupnog broja računala"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Apsolutni broj",
-            "percent": "Postotak ukupnog broja računala"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Način praga za potrebna ažuriranja",
-          "description": "Usporedite broj potrebnih ažuriranja kao apsolutnu vrijednost ili postotak ukupnog broja računala"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Prag upozorenja za potrebna ažuriranja",
-          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Kritični prag za potrebna ažuriranja",
-          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Način praga za sigurnosna ažuriranja",
-          "description": "Usporedite broj sigurnosnih ažuriranja kao apsolutnu vrijednost ili postotak ukupnog broja računala"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Prag upozorenja za sigurnosna ažuriranja",
-          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Kritični prag za sigurnosna ažuriranja",
-          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Način praga za računala sa sigurnosnim ažuriranjima",
-          "description": "Usporedite broj računala kao apsolutnu vrijednost ili postotak ukupnog broja računala"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Prag upozorenja za računala sa sigurnosnim ažuriranjima",
-          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Kritični prag za računala sa sigurnosnim ažuriranjima",
-          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Način praga za ažurirana računala",
-          "description": "Usporedite broj ažuriranih računala kao apsolutnu vrijednost ili postotak ukupnog broja računala"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Prag upozorenja za ažurirana računala",
-          "description": "Prikaži žutu boju kada je vrijednost na ili iznad ovog praga, ali ispod potpune pokrivenosti"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Kritični prag za ažurirana računala",
-          "description": "Prikaži crvenu boju kada vrijednost padne ispod ovog praga"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Način praga za zastarjele pakete",
-          "description": "Usporedite broj zastarjelih paketa kao apsolutnu vrijednost ili postotak ukupnog broja računala"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Prag upozorenja za zastarjele pakete",
-          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Kritični prag za zastarjele pakete",
-          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
-        },
-        "showOsDistribution": {
-          "label": "Prikaži distribuciju OS-a",
-          "description": "Prikaži raščlambu nadziranih računala prema operacijskom sustavu"
-        },
-        "osDistributionLimit": {
-          "label": "Ograničenje distribucije OS-a",
-          "description": "Maksimalan broj operacijskih sustava za prikaz",
-          "option": {
-            "3": "Najviše 3",
-            "5": "Najviše 5",
-            "10": "Najviše 10",
-            "all": "Sve"
-          }
-        },
-        "showOsVersion": {
-          "label": "Prikaži verziju OS-a",
-          "description": "Dodaj verziju OS-a svakoj oznaci distribucije kada je dostupna"
-        },
-        "showComplianceHero": {
-          "label": "Prikaži sažetak usklađenosti",
-          "description": "Prikaži prsten usklađenosti koji pokazuje postotak ažuriranih računala"
-        },
-        "osDisplayMode": {
-          "label": "Način prikaza OS-a",
-          "description": "Odaberite način prikaza distribucije operacijskog sustava",
-          "option": {
-            "bars": "Vodoravne trake",
-            "donut": "Kružni grafikon"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "Neuspješno dohvaćanje podataka iz PatchMona"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Pregled nedostajućih titlova i stanja ispravnosti vaše instance Bazarra",
-      "episodes": "Nedostajuće epizode",
-      "movies": "Nedostajući filmovi",
-      "providers": "Problemi s pružateljima",
-      "status": "Problemi sa stanjem ispravnosti",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Prikaži nedostajuće epizode",
-          "description": "Prikaži broj epizoda kojima nedostaju titlovi"
-        },
-        "showMissingMovies": {
-          "label": "Prikaži nedostajuće filmove",
-          "description": "Prikaži broj filmova kojima nedostaju titlovi"
-        },
-        "showProviderIssues": {
-          "label": "Prikaži probleme s pružateljima",
-          "description": "Prikaži broj pružatelja titlova s problemima"
-        },
-        "showHealthIssues": {
-          "label": "Prikaži probleme sa stanjem ispravnosti",
-          "description": "Prikaži broj problema sa stanjem ispravnosti Bazarra"
-        }
-      },
-      "error": {
-        "internalServerError": "Neuspješno dohvaćanje podataka iz Bazarra"
-      }
-    },
     "immich-serverStats": {
       "name": "Statistika poslužitelja Immicha",
       "description": "Informacije o vašoj instanci Immicha",
@@ -3137,7 +2713,7 @@
           "label": "Prikaži razne dovršene stavke"
         },
         "activeTorrentThreshold": {
-          "label": "Sakrij dovršene torrente ispod ovog praga (u kiB/s)"
+          "label": "Sakrij dovršene torrente ispod ovog praga"
         },
         "categoryFilter": {
           "label": "Kategorije/oznake za filtriranje"
@@ -3432,35 +3008,6 @@
           }
         }
       }
-    },
-    "mediaMissing": {
-      "name": "Nedostajući i stavljeni mediji u red čekanja",
-      "description": "Prikazuje nedostajuće filmove i epizode te filmove i epizode u redu čekanja iz Radarra i Sonarra",
-      "option": {
-        "showMissing": {
-          "label": "Prikaži nedostajuće stavke"
-        },
-        "showQueued": {
-          "label": "Prikaži stavke u redu čekanja"
-        },
-        "pageSize": {
-          "label": "Stavke po stranici"
-        }
-      },
-      "tab": {
-        "missing": "Nedostaje",
-        "queued": "U redu čekanja"
-      },
-      "type": {
-        "movie": "Film",
-        "episode": "Epizoda"
-      },
-      "empty": {
-        "missing": "Nema nedostajućih stavki",
-        "queued": "Nema stavki u redu čekanja",
-        "noTabsEnabled": "Omogućite barem jednu karticu u postavkama widgeta"
-      },
-      "timeLeft": "Preostalo vrijeme"
     },
     "rssFeed": {
       "name": "RSS kanali",
@@ -3790,40 +3337,6 @@
         "internalServerError": "Neuspješno dohvaćanje podataka o dostupnosti"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Pregled Traefikovih usmjerivača, usluga, međuprograme i ulaznih točaka",
-      "option": {
-        "showTcp": {
-          "label": "Prikaži TCP"
-        },
-        "showUdp": {
-          "label": "Prikaži UDP"
-        },
-        "showEntryPoints": {
-          "label": "Prikaži ulazne točke"
-        }
-      },
-      "instances": "Traefikove instance",
-      "versionUnknown": "Verzija nije poznata",
-      "summary": {
-        "routers": "Usmjerivači",
-        "entryPoints": "Ulazne točke"
-      },
-      "resource": {
-        "routers": "Usmjerivači",
-        "services": "Usluge",
-        "middlewares": "Međuprogrami"
-      },
-      "status": {
-        "healthy": "Ispravno",
-        "errors": "{count} pogrešaka",
-        "warnings": "{count} upozorenja"
-      },
-      "error": {
-        "internalServerError": "Neuspješno dohvaćanje podataka iz Traefika"
-      }
-    },
     "audioStats": {
       "name": "Audio statistika",
       "description": "Statistika biblioteke i reprodukcije iz Navidromea ili Audiobookshelfa",
@@ -3946,26 +3459,6 @@
       "status": {
         "unhealthy": "Nezdravo"
       }
-    },
-    "customApi": {
-      "name": "Prilagođeni API",
-      "description": "Prikažite podatke iz bilo kojeg vanjskog API-ja s prilagođenom konfiguracijom.",
-      "option": {
-        "definitionId": {
-          "label": "ID definicije"
-        },
-        "refreshInterval": {
-          "label": "Interval osvježavanja",
-          "description": "Koliko često ponovno dohvaćati podatke iz API-ja (u sekundama)"
-        }
-      },
-      "noDefinition": "Nije odabrana nijedna definicija",
-      "definitionNotFound": "Definicija widgeta nije pronađena. Možda je izbrisana.",
-      "noDisplayOutput": "Nema izlaznih podataka za prikaz",
-      "executeConfirm": "Jeste li sigurni da želite izvršiti ovu radnju?",
-      "executing": "Izvršavanje...",
-      "executeSuccess": "Radnja je uspješno izvršena",
-      "executeFailed": "Radnja nije uspjela. Provjerite konfiguraciju widgeta."
     },
     "beszelSystemTable": {
       "name": "Beszel sustavi (tablica)",
@@ -4215,6 +3708,288 @@
         "dockerNetwork": {
           "title": "Docker mrežni I/O",
           "subtitle": "Mrežni promet Docker spremnika"
+        }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Pregled stanja zakrpa računala iz PatchMona",
+      "title": "PatchMon statistika",
+      "totalHosts": "Ukupno računala",
+      "hostsNeedingUpdates": "Potrebna ažuriranja",
+      "securityUpdates": "Sigurnosna ažuriranja",
+      "upToDateHosts": "Ažurirana računala",
+      "hostsWithSecurityUpdates": "Računala sa sigurnosnim ažuriranjima",
+      "recentUpdates24h": "Ažuriranja (24 h)",
+      "totalOutdatedPackages": "Zastarjeli paketi",
+      "totalRepos": "Repozitoriji",
+      "osDistribution": "Distribucija OS-a",
+      "compliance": "Usklađenost zakrpa",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Ažurirano {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Prikaži ukupan broj računala",
+          "description": "Prikaži ukupan broj nadziranih računala"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Prikaži računala kojima su potrebna ažuriranja",
+          "description": "Prikaži računala s barem jednim zastarjelim paketom"
+        },
+        "showSecurityUpdates": {
+          "label": "Prikaži sigurnosna ažuriranja",
+          "description": "Prikaži ukupan broj dostupnih sigurnosnih ažuriranja"
+        },
+        "showUpToDateHosts": {
+          "label": "Prikaži ažurirana računala",
+          "description": "Prikaži računala bez zastarjelih paketa"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Prikaži računala sa sigurnosnim ažuriranjima",
+          "description": "Prikaži računala kojima su potrebne sigurnosne zakrpe"
+        },
+        "showRecentUpdates24h": {
+          "label": "Prikaži nedavna ažuriranja (24 h)",
+          "description": "Prikaži broj ažuriranja primijenjenih u posljednja 24 sata"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Prikaži zastarjele pakete",
+          "description": "Prikaži ukupan broj zastarjelih paketa na svim računalima"
+        },
+        "showTotalRepos": {
+          "label": "Prikaži repozitorije",
+          "description": "Prikaži broj aktivnih nadziranih repozitorija"
+        },
+        "enableThresholdColors": {
+          "label": "Omogući boje pragova",
+          "description": "Oboji statističke vrijednosti zelenom, žutom ili crvenom bojom na temelju unaprijed postavljenih razina ozbiljnosti"
+        },
+        "useCustomThresholds": {
+          "label": "Napredni pragovi",
+          "description": "Prilagodite pragove upozorenja i kritične pragove po statistici koristeći apsolutne brojeve ili postotke ukupnog broja računala"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Apsolutni broj",
+            "percent": "Postotak ukupnog broja računala"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Način praga za potrebna ažuriranja",
+          "description": "Usporedite broj potrebnih ažuriranja kao apsolutnu vrijednost ili postotak ukupnog broja računala"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Prag upozorenja za potrebna ažuriranja",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Kritični prag za potrebna ažuriranja",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Način praga za sigurnosna ažuriranja",
+          "description": "Usporedite broj sigurnosnih ažuriranja kao apsolutnu vrijednost ili postotak ukupnog broja računala"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Prag upozorenja za sigurnosna ažuriranja",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Kritični prag za sigurnosna ažuriranja",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Način praga za računala sa sigurnosnim ažuriranjima",
+          "description": "Usporedite broj računala kao apsolutnu vrijednost ili postotak ukupnog broja računala"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Prag upozorenja za računala sa sigurnosnim ažuriranjima",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Kritični prag za računala sa sigurnosnim ažuriranjima",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Način praga za ažurirana računala",
+          "description": "Usporedite broj ažuriranih računala kao apsolutnu vrijednost ili postotak ukupnog broja računala"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Prag upozorenja za ažurirana računala",
+          "description": "Prikaži žutu boju kada je vrijednost na ili iznad ovog praga, ali ispod potpune pokrivenosti"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Kritični prag za ažurirana računala",
+          "description": "Prikaži crvenu boju kada vrijednost padne ispod ovog praga"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Način praga za zastarjele pakete",
+          "description": "Usporedite broj zastarjelih paketa kao apsolutnu vrijednost ili postotak ukupnog broja računala"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Prag upozorenja za zastarjele pakete",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Kritični prag za zastarjele pakete",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
+        },
+        "showOsDistribution": {
+          "label": "Prikaži distribuciju OS-a",
+          "description": "Prikaži raščlambu nadziranih računala prema operacijskom sustavu"
+        },
+        "osDistributionLimit": {
+          "label": "Ograničenje distribucije OS-a",
+          "description": "Maksimalan broj operacijskih sustava za prikaz",
+          "option": {
+            "3": "Najviše 3",
+            "5": "Najviše 5",
+            "10": "Najviše 10",
+            "all": "Sve"
+          }
+        },
+        "showOsVersion": {
+          "label": "Prikaži verziju OS-a",
+          "description": "Dodaj verziju OS-a svakoj oznaci distribucije kada je dostupna"
+        },
+        "showComplianceHero": {
+          "label": "Prikaži sažetak usklađenosti",
+          "description": "Prikaži prsten usklađenosti koji pokazuje postotak ažuriranih računala"
+        },
+        "osDisplayMode": {
+          "label": "Način prikaza OS-a",
+          "description": "Odaberite način prikaza distribucije operacijskog sustava",
+          "option": {
+            "bars": "Vodoravne trake",
+            "donut": "Kružni grafikon"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Neuspješno dohvaćanje podataka iz PatchMona"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Pregled nedostajućih titlova i stanja ispravnosti vaše instance Bazarra",
+      "episodes": "Nedostajuće epizode",
+      "movies": "Nedostajući filmovi",
+      "providers": "Problemi s pružateljima",
+      "status": "Problemi sa stanjem ispravnosti",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Prikaži nedostajuće epizode",
+          "description": "Prikaži broj epizoda kojima nedostaju titlovi"
+        },
+        "showMissingMovies": {
+          "label": "Prikaži nedostajuće filmove",
+          "description": "Prikaži broj filmova kojima nedostaju titlovi"
+        },
+        "showProviderIssues": {
+          "label": "Prikaži probleme s pružateljima",
+          "description": "Prikaži broj pružatelja titlova s problemima"
+        },
+        "showHealthIssues": {
+          "label": "Prikaži probleme sa stanjem ispravnosti",
+          "description": "Prikaži broj problema sa stanjem ispravnosti Bazarra"
+        }
+      },
+      "error": {
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Bazarra"
+      }
+    },
+    "mediaMissing": {
+      "name": "Nedostajući i stavljeni mediji u red čekanja",
+      "description": "Prikazuje nedostajuće filmove i epizode te filmove i epizode u redu čekanja iz Radarra i Sonarra",
+      "option": {
+        "showMissing": {
+          "label": "Prikaži nedostajuće stavke"
+        },
+        "showQueued": {
+          "label": "Prikaži stavke u redu čekanja"
+        },
+        "pageSize": {
+          "label": "Stavke po stranici"
+        }
+      },
+      "tab": {
+        "missing": "Nedostaje",
+        "queued": "U redu čekanja"
+      },
+      "type": {
+        "movie": "Film",
+        "episode": "Epizoda"
+      },
+      "empty": {
+        "missing": "Nema nedostajućih stavki",
+        "queued": "Nema stavki u redu čekanja",
+        "noTabsEnabled": "Omogućite barem jednu karticu u postavkama widgeta"
+      },
+      "timeLeft": "Preostalo vrijeme"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Pregled Traefikovih usmjerivača, usluga, međuprograme i ulaznih točaka",
+      "option": {
+        "showTcp": {
+          "label": "Prikaži TCP"
+        },
+        "showUdp": {
+          "label": "Prikaži UDP"
+        },
+        "showEntryPoints": {
+          "label": "Prikaži ulazne točke"
+        }
+      },
+      "instances": "Traefikove instance",
+      "versionUnknown": "Verzija nije poznata",
+      "summary": {
+        "routers": "Usmjerivači",
+        "entryPoints": "Ulazne točke"
+      },
+      "resource": {
+        "routers": "Usmjerivači",
+        "services": "Usluge",
+        "middlewares": "Međuprogrami"
+      },
+      "status": {
+        "healthy": "Ispravno",
+        "errors": "{count} pogrešaka",
+        "warnings": "{count} upozorenja"
+      },
+      "error": {
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Traefika"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Prikaži koliko praćenih kontejnera ima dostupna ažuriranja.",
+      "title": "What's Up Docker",
+      "monitored": "Praćeno",
+      "updatesAvailable": "{count, plural, one {# dostupno ažuriranje} few {# dostupna ažuriranja} other {# dostupnih ažuriranja}}",
+      "updateAvailable": "Dostupno ažuriranje",
+      "openReleaseNotes": "Otvori bilješke o izdanju",
+      "option": {
+        "showTitle": {
+          "label": "Prikaži naslov"
+        },
+        "showRing": {
+          "label": "Prikaži prsten ažuriranja"
+        },
+        "layout": {
+          "label": "Raspored",
+          "option": {
+            "horizontal": {
+              "label": "Horizontalno"
+            },
+            "vertical": {
+              "label": "Okomito"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Prikaži popis ažuriranja kontejnera",
+          "description": "Nabraja svaki nadzirani kontejner za koji je dostupno ažuriranje slike"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Dom",
         "boards": "Daske",
         "apps": "aplikacije",
         "integrations": "Integracije",
-        "customWidgets": "Prilagođeni widgeti",
         "searchEngies": "Tražilice",
         "medias": "Mediji",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Ovdje ispustite svoju ZIP sigurnosnu kopiju",
-              "description": "Prihvaća .zip datoteke iz Homarr SQLite sigurnosne kopije (maks. 256 MB)"
+              "description": "Prihvaća .zip datoteke iz Homarr SQLite sigurnosne kopije (maks. {maxSize})"
             },
             "analyzing": "Analiziranje sigurnosne kopije...",
             "changeFile": "Promijeni datoteku",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Upravljati",
       "boards": {
         "label": "Daske"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Uredi"
-        }
-      },
-      "custom-widgets": {
-        "label": "Prilagođeni widgeti",
-        "new": {
-          "label": "Novo"
-        },
-        "edit": {
-          "label": "Uredi",
-          "flow": {
-            "label": "Tijek"
-          }
         }
       },
       "users": {
