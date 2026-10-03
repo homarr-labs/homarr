@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Stack, Text, TextInput } from "@mantine/core";
-import { IconArrowRight, IconShieldCheck, IconUserPlus } from "@tabler/icons-react";
+import { IconArrowLeft, IconArrowRight, IconShieldCheck, IconUserPlus } from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -36,11 +36,12 @@ const AccountShell = ({
 );
 
 export const AccountSetup = ({ environment }: OnboardingStudioProps) => {
-  if (environment.currentStep === "user") return <CredentialsSetup />;
+  if (environment.currentStep === "user") return <CredentialsSetup canReturnToWelcome={!environment.hasUsers} />;
   return <ExternalGroupSetup />;
 };
 
-const CredentialsSetup = () => {
+const CredentialsSetup = ({ canReturnToWelcome }: { canReturnToWelcome: boolean }) => {
+  const navigationT = useI18n("init.studio");
   const t = useI18n("init.studio.account");
   const [requiresSignIn, setRequiresSignIn] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -52,6 +53,16 @@ const CredentialsSetup = () => {
       const message = t("unknownError");
       setSubmitError(message);
       showErrorNotification({ title: t("errorTitle"), message });
+    },
+  });
+  const returnToWelcome = clientApi.onboard.returnToWelcome.useMutation({
+    async onSuccess() {
+      sounds.swoosh();
+      await revalidatePathActionAsync("/init");
+    },
+    onError() {
+      sounds.error();
+      showErrorNotification({ title: t("errorTitle"), message: t("unknownError") });
     },
   });
   const form = useZodForm(userInitSchema, {
@@ -119,9 +130,27 @@ const CredentialsSetup = () => {
               {submitError}
             </Alert>
           ) : null}
-          <Button type="submit" size="md" loading={form.submitting} rightSection={<IconArrowRight size={18} />}>
+          <Button
+            type="submit"
+            size="md"
+            loading={form.submitting}
+            disabled={returnToWelcome.isPending}
+            rightSection={<IconArrowRight size={18} />}
+          >
             {t("create")}
           </Button>
+          {canReturnToWelcome && (
+            <Button
+              type="button"
+              variant="default"
+              leftSection={<IconArrowLeft size={18} />}
+              loading={returnToWelcome.isPending}
+              disabled={form.submitting}
+              onClick={() => returnToWelcome.mutate()}
+            >
+              {navigationT("back")}
+            </Button>
+          )}
         </Stack>
       </form>
     </AccountShell>

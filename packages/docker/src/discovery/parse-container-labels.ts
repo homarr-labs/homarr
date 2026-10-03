@@ -25,6 +25,21 @@ const resolveLabelValue = (
   useHomepageFallback: boolean,
 ) => readLabel(labels, homarrKey) ?? (useHomepageFallback ? readLabel(labels, homepageKey) : undefined);
 
+const resolveIcon = (labels: Record<string, string>, useHomepageFallback: boolean) => {
+  const homarrIcon = readLabel(labels, dockerLabels.icon);
+  if (homarrIcon || !useHomepageFallback) return homarrIcon;
+
+  const homepageIcon = readLabel(labels, homepageLabels.icon);
+  if (!homepageIcon || /^(mdi|si|sh)-/.test(homepageIcon)) return homepageIcon;
+
+  // Homepage's Dashboard Icons keys default to PNG; URLs and local paths pass through.
+  const dashboardIcon = /^([a-zA-Z0-9][a-zA-Z0-9_-]*)(?:\.(png|svg|webp))?$/.exec(homepageIcon);
+  if (!dashboardIcon?.[1]) return homepageIcon;
+
+  const extension = dashboardIcon[2] ?? "png";
+  return `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/${extension}/${dashboardIcon[1].toLowerCase()}.${extension}`;
+};
+
 const parseIntegrationKind = (value: string | undefined): IntegrationKind | undefined =>
   value && integrationKindSet.has(value) ? (value as IntegrationKind) : undefined;
 
@@ -57,7 +72,7 @@ export const parseContainerLabels = (
     group,
     name,
     href,
-    icon: resolveLabelValue(labels, dockerLabels.icon, homepageLabels.icon, useHomepageFallback),
+    icon: resolveIcon(labels, useHomepageFallback),
     description: resolveLabelValue(labels, dockerLabels.description, homepageLabels.description, useHomepageFallback),
     pingUrl: readLabel(labels, dockerLabels.ping),
     externalId,

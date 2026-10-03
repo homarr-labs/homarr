@@ -66,6 +66,10 @@ export default function NetworkControllerSummaryWidget({
     </Group>
   );
   const firstSummary = summaries[0];
+  const formatVpnCount = (count: number | null) => {
+    if (count === null) return statusLabels.unknown;
+    return t("card.vpn.countConnected", { count });
+  };
 
   let responsiveWidth = width;
   let responsiveHeight = height;
@@ -154,15 +158,11 @@ export default function NetworkControllerSummaryWidget({
                 />
               }
             >
-              <Text
-                title={t("card.vpn.countConnected", { count: summary.vpn.users })}
-                truncate="end"
-                style={{ minWidth: 0 }}
-              >
+              <Text title={formatVpnCount(summary.vpn.users)} truncate="end" style={{ minWidth: 0 }}>
                 {t("card.vpn.label")}
                 {showSecondary && (
                   <Text c="dimmed" size={secondaryTextSize} ms="xs" span>
-                    {t("card.vpn.countConnected", { count: summary.vpn.users })}
+                    {formatVpnCount(summary.vpn.users)}
                   </Text>
                 )}
               </Text>
@@ -234,7 +234,7 @@ export default function NetworkControllerSummaryWidget({
                                 {getMatrixMetricLabel(metric.key, t)}
                               </Text>
                               <Text size="xs" fw={500}>
-                                {formatMatrixMetric(metric.key, metric.value)}
+                                {formatMatrixMetric(metric.key, metric.value, statusLabels.unknown)}
                               </Text>
                             </Stack>
                           ))}
@@ -257,7 +257,8 @@ const getMatrixMetricLabel = (
   t: ScopedTranslationFunction<"widget.networkControllerSummary">,
 ) => t(`advanced.metric.${key}` as never);
 
-const formatMatrixMetric = (key: NetworkControllerMatrixMetricKey, value: number) => {
+const formatMatrixMetric = (key: NetworkControllerMatrixMetricKey, value: number | null, unknown: string) => {
+  if (value === null) return unknown;
   if (key === "latency" || key === "ping") return `${value}ms`;
   if (key === "uptime") return dayjs.duration(value, "seconds").humanize();
   return String(value);

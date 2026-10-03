@@ -43,7 +43,7 @@ Homarr 2.0 builds on the dashboard you already use. Here is what changed.
 
 {/* Historical excerpt boundary. */}
 
-SQLite and PostgreSQL users can update their Homarr image as usual; database migrations run automatically at startup. **MySQL users must convert before upgrading**, as explained below. Workshop uses the production service by default, with no preview URL configuration required.
+**Back up before upgrading:** database migrations run automatically at startup and change the existing database in place. Follow the [upgrade and rollback guidance](/docs/getting-started/installation/docker#update), including the note on board sizing. **MySQL users must convert before upgrading**, as explained below. Workshop uses the production service by default, with no preview URL configuration required.
 
 ## Database support in v2
 
