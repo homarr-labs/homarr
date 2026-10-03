@@ -12,6 +12,7 @@ import {
   fetchWithTrustedCertificatesAsync,
   getHttpRequestSignal,
 } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { SiteStats } from "@homarr/node-unifi";
 import Unifi from "@homarr/node-unifi";
 
@@ -25,6 +26,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
 import type { HealthSubsystem } from "./unifi-controller-types";
+
+const logger = createLogger({ module: "unifi-controller-integration" });
 
 const remoteVpnSessionsSchema = z.array(z.object({ up: z.boolean() }));
 
@@ -58,11 +61,33 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
         } catch (error) {
           // Older controllers may not expose remote sessions. An empty successful
           // response is authoritative; only an unsupported endpoint uses health.
-          if (!isAxiosError(error) || error.response?.status !== 404) throw error;
-          return this.getNumericValueOverAllSites([site], "vpn", (vpn) => vpn.remote_user_num_active, "sum");
+          if (isAxiosError(error) && error.response?.status === 404) {
+            return this.getNumericValueOverAllSites([site], "vpn", (vpn) => vpn.remote_user_num_active, "sum");
+          }
+          let status: number | undefined;
+          if (isAxiosError(error)) status = error.response?.status;
+          let reason = "request-failed";
+          if (error instanceof z.ZodError) reason = "invalid-response";
+          logger.warn("UniFi remote VPN session count unavailable", {
+            integrationId: this.integration.id,
+            site: site.name,
+            status,
+            reason,
+          });
+          return null;
         }
       }),
     );
+
+    // A partial site total cannot describe the controller's connected users.
+    let vpnUsers: number | null = 0;
+    for (const count of vpnUserCounts) {
+      if (count === null) {
+        vpnUsers = null;
+        break;
+      }
+      vpnUsers += count;
+    }
 
     return {
       wanStatus: this.getStatusValueOverAllSites(stats, "wan", (site) => site.status === "ok"),
@@ -84,7 +109,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       },
       vpn: {
         status: this.getStatusValueOverAllSites(stats, "vpn", (site) => site.status === "ok"),
-        users: vpnUserCounts.reduce((total, count) => total + count, 0),
+        users: vpnUsers,
       },
     } satisfies NetworkControllerSummary;
   }

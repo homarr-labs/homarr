@@ -6,7 +6,7 @@ export type NetworkControllerMatrixMetricKey = "latency" | "ping" | "uptime" | "
 export interface NetworkControllerMatrixSection {
   key: NetworkControllerMatrixSectionKey;
   status: "enabled" | "disabled";
-  metrics: { key: NetworkControllerMatrixMetricKey; value: number }[];
+  metrics: { key: NetworkControllerMatrixMetricKey; value: number | null }[];
 }
 
 export const getNetworkControllerMatrix = (summary: NetworkControllerSummary): NetworkControllerMatrixSection[] => [
