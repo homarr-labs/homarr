@@ -24,14 +24,41 @@ see [Managing integrations](/docs/management/integrations#configuration).
 
 ### Update
 
+<Alert type="warning">
+**Back up before upgrading from v1 to v2.** v2 migrates the existing database in place. For SQLite, this is
+`/appdata/db/db.sqlite` by default; v1 cannot use the upgraded database. Switching back to the v1 image alone is not a
+rollback.
+
+Stop Homarr before copying the complete `/appdata` directory or volume. Keep the pre-upgrade copy, your container
+configuration, and `SECRET_ENCRYPTION_KEY` securely. If you use an external PostgreSQL database, back it up with its
+native tools as well. See [Backup and restore](/docs/management/backup).
+
+</Alert>
+
 Update the image and recreate the container with the same configuration. Homarr runs database migrations automatically
 at startup, including when moving from v1 to v2; no separate upgrade procedure is needed. Keep the `/appdata` mount and
 `SECRET_ENCRYPTION_KEY` unchanged. Workshop connects to the production service by default.
+
+Existing MySQL installations must [convert to SQLite before upgrading to v2](/docs/advanced/mysql-to-sqlite).
 
 ```sh
 docker compose pull
 docker compose up -d
 ```
+
+To roll back, stop v2, restore the **pre-upgrade** database and `/appdata` backup with the matching configuration and
+encryption key, then start the previously used v1 image. A backup taken after v2 has migrated the database cannot
+restore v1 compatibility.
+
+#### Board sizing after upgrading to v2
+
+v2 uses fixed `200 × 200` logical-pixel cells and scales the whole board to fit the available width. A migrated
+12-column layout can therefore show smaller widgets and text than in v1. Reducing the column count in
+[board layout settings](/docs/management/boards#responsive-layouts) makes cells appear larger at the same viewport
+width; choose a count that fits your content.
+
+Back up before changing columns: reducing the count can resize Containers and displace widgets. Check the layout in
+edit mode before saving. Increasing the count again does not automatically restore the previous arrangement.
 
 ### Uninstall
 
@@ -53,5 +80,6 @@ docker run \
   -d ghcr.io/homarr-labs/homarr:latest
 ```
 
-Remove the Docker socket mount when it is not required. To update, pull the current image, recreate the container with
-the same arguments, and keep the `/appdata` mount and `SECRET_ENCRYPTION_KEY` unchanged.
+Remove the Docker socket mount when it is not required. To update, follow the [backup guidance above](#update), pull
+the current image, recreate the container with the same arguments, and keep the `/appdata` mount and
+`SECRET_ENCRYPTION_KEY` unchanged.
