@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
@@ -33,6 +33,7 @@ interface Props {
 
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
+  const togglePointer = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const containerDepth = useContext(ContainerDepthContext);
   // Stagger nested controls inward and downward without wrapping back over ancestors.
   const menuRightOffset = 4 + containerDepth * 32;
@@ -73,15 +74,15 @@ export const BoardContainerSection = ({ section }: Props) => {
     labelMaxWidth = `calc(100% - ${labelLeft}px - ${reservedMenuWidth})`;
     collapsedLabelPaddingRight = reservedMenuWidth;
   }
-  // Expanded controls sit on the border without reserving a header row.
+  // The native toggle spans the header; sibling actions stay above it.
   const toggleLayout = isVisuallyCollapsed
     ? { top: 0, left: 0, w: "100%", h: "100%", maw: "100%" }
     : {
         top: labelTop,
-        left: labelLeft,
-        w: "auto",
+        left: 0,
+        w: "100%",
         h: 20,
-        maw: labelMaxWidth,
+        maw: "100%",
       };
   const toggleIcon = isVisuallyCollapsed ? (
     <IconChevronDown size="var(--mantine-font-size-md)" />
@@ -125,13 +126,29 @@ export const BoardContainerSection = ({ section }: Props) => {
             pos="absolute"
             {...toggleLayout}
             px={6}
-            ps={isVisuallyCollapsed ? labelLeft : 6}
-            pe={isVisuallyCollapsed ? collapsedLabelPaddingRight : 6}
+            ps={labelLeft}
+            pe={collapsedLabelPaddingRight}
             radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
             leftSection={options.showLabel && toggleIcon}
-            onClick={toggle}
+            onPointerDown={(event) => {
+              togglePointer.current = { x: event.clientX, y: event.clientY, moved: false };
+            }}
+            onPointerMove={(event) => {
+              const pointer = togglePointer.current;
+              if (!pointer || event.buttons === 0) return;
+              if (Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) > 5) {
+                pointer.moved = true;
+              }
+            }}
+            onPointerCancel={() => {
+              togglePointer.current = null;
+            }}
+            onClick={(event) => {
+              if (event.detail > 0 && togglePointer.current?.moved) return;
+              toggle();
+            }}
             aria-expanded={!isVisuallyCollapsed}
             aria-controls={contentId}
             aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
