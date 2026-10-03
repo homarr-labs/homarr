@@ -1,0 +1,18 @@
+[
+  {
+    "label": "no-preload",
+    "image": "sha256:3a574c67bcf385b3283cfe32042a8847cb7cd0f096b5f7be89886a76cb8bbb72",
+    "parent_image": "sha256:7397ff992d374dd07d52ade59f1ccfc810a3e2bf934df9384e8cc547ee859148",
+    "source": "diagnostic runtime configuration only",
+    "settle_ms": 120000,
+    "exit_code": 0
+  },
+  {
+    "label": "serial-jit",
+    "image": "sha256:ee19fae0640a0946ccf13c4318627c03e92bf0dfc860792c859c5c3df3fbef28",
+    "parent_image": "sha256:7397ff992d374dd07d52ade59f1ccfc810a3e2bf934df9384e8cc547ee859148",
+    "source": "diagnostic runtime configuration only",
+    "settle_ms": 120000,
+    "exit_code": 0
+  }
+]
