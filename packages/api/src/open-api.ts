@@ -5,6 +5,7 @@ import { API_KEY_HEADER_NAME } from "@homarr/auth/api-key";
 import { appRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { integrationRequestProcedure } from "./router/integration/integration-request";
+import { integrationTestStoredConnectionProcedure } from "./router/integration/integration-test-stored-connection";
 import { infoRouter } from "./router/info";
 import { inviteRouter } from "./router/invite";
 import { serverSettingsRouter } from "./router/serverSettings";
@@ -20,7 +21,10 @@ export const openApiRouter = createTRPCRouter({
   inviteRouter,
   serverSettingsRouter,
   userRouter,
-  integration: createTRPCRouter({ request: integrationRequestProcedure }),
+  integration: createTRPCRouter({
+    request: integrationRequestProcedure,
+    testConnection: integrationTestStoredConnectionProcedure,
+  }),
 });
 
 export const openApiDocument = (base: string) => {

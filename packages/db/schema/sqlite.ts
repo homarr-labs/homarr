@@ -334,6 +334,7 @@ export const layouts = sqliteTable("layout", {
   rightGutterColumnCount: int().notNull().default(0),
   breakpoint: int().notNull().default(0),
   role: text().$type<LayoutRole>().notNull().default("custom"),
+  resizeSource: text(),
 });
 
 export const itemLayouts = sqliteTable(

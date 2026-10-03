@@ -236,6 +236,8 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       fields: ["CustomRating", "Studios", "Genres", "ChildCount", "DateCreated", "Overview", "Taglines"],
       userId,
       limit: 100,
+      // Root-level grouping uses the first library's type and can omit items from other libraries.
+      groupItems: false,
     });
     return result.data.map((item) => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
