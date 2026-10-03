@@ -21,7 +21,13 @@ import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
-export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
+export default function AppWidget({
+  options,
+  isEditMode,
+  height,
+  width,
+  displayScale = 1,
+}: WidgetComponentProps<"app">) {
   const tCommon = useI18n("common");
   const settings = useSettings();
   const board = useRequiredBoard();
@@ -33,33 +39,50 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
 
-  const isTiny = height < 100 || width < 100;
+  let layoutScale = displayScale;
+  if (!Number.isFinite(layoutScale) || layoutScale <= 0) layoutScale = 1;
+
+  // Widget dimensions are logical pixels; compact sizing follows the displayed tile.
+  const isTiny = height * layoutScale < 100 || width * layoutScale < 100;
   const isColumnLayout = options.layout.startsWith("column");
+  let padding = 12;
+  let fontSize = rem(14);
+  let gap = 12;
+  let titleLineClamp = 2;
+  if (isTiny) {
+    padding = 4;
+    fontSize = rem(8);
+    titleLineClamp = 1;
+  }
+  if (isColumnLayout) gap = 0;
 
   return (
-    <Box h="100%" w="100%" pos="relative">
+    <Box h="100%" w="100%" pos="relative" style={{ "--mantine-scale": 1 / layoutScale }}>
       <AppLink href={href} openInNewTab={options.openInNewTab} enabled={Boolean(href) && !isEditMode}>
         <AppDescriptionTooltip
           description={app.description}
           enabled={options.descriptionDisplayMode === "tooltip" && Boolean(app.description) && !isEditMode}
         >
           <Flex
-            p={isTiny ? 4 : "sm"}
+            p={padding}
             className={combineClasses("app-flex-wrapper", app.name, app.id, href && classes.appWithUrl)}
             h="100%"
             w="100%"
             direction={options.layout}
             justify="center"
             align="center"
-            gap={isColumnLayout ? 0 : "sm"}
+            gap={gap}
             onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
           >
-            <Stack gap={0}>
+            <Stack gap={0} className={classes.appText}>
               {options.showTitle && (
                 <Text
                   className="app-title"
+                  title={app.name}
                   fw={700}
-                  size={isTiny ? rem(8) : "sm"}
+                  size={fontSize}
+                  lh="sm"
+                  lineClamp={titleLineClamp}
                   ta={isColumnLayout ? "center" : undefined}
                 >
                   {app.name}
@@ -68,7 +91,8 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
               {options.descriptionDisplayMode === "normal" && (
                 <Text
                   className="app-description"
-                  size={isTiny ? rem(8) : "sm"}
+                  size={fontSize}
+                  lh="sm"
                   ta={isColumnLayout ? "center" : undefined}
                   c="dimmed"
                   lineClamp={4}

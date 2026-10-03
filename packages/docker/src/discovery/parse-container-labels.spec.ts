@@ -55,7 +55,7 @@ describe("parseContainerLabels", () => {
       name: "Jellyfin",
       group: "Media",
       href: "http://jellyfin:8096",
-      icon: "jellyfin.svg",
+      icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg",
     });
   });
 

@@ -24,6 +24,12 @@ Therefore it should support CloudKey Gen1, CloudKey Gen2, UnifiOS-based UDM-Pro 
   items={[{ widget: networkControllerSummaryWidget }, { widget: networkControllerStatusWidget }]}
 />
 
+VPN users are counted from active remote VPN sessions across all sites. Controllers that return HTTP 404 for
+`stat/remoteuservpn` use the legacy health counter instead; a successful empty session list counts as zero.
+This avoids the stale L2TP health counter on UniFi Network 10.6.106. VPN types absent from that endpoint cannot be
+counted. If a site's session request fails or returns an invalid response, the VPN user total is shown as unknown
+while the other network metrics remain available. VPN status still uses the controller's health subsystem.
+
 ### Adding the integration
 
 <AddingIntegration />

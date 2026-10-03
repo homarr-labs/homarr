@@ -177,7 +177,7 @@ catalog:
   mermaid: ^11.16.1
   motion: ^13.0.0
   maria2: ^0.4.1
-  next: 16.3.3
+  next: 16.3.6
   next-auth: 5.0.0-beta.32
   next-intl: 4.13.1
   next-themes: ^0.4.6
@@ -261,25 +261,25 @@ overrides:
   "@assistant-ui/core": 0.3.7
   "@assistant-ui/store": 0.3.5
   "@assistant-ui/tap": 0.9.10
-  "@grpc/grpc-js@<1.12.7": "1.12.7"
+  "@grpc/grpc-js@<1.12.7": "1.13.6"
   "@rvf/set-get@<7.0.2": "7.0.2"
   "@xmldom/xmldom@<0.8.15": "0.8.15"
   "assistant-cloud": 0.1.38
   "@babel/helpers@<7.26.10": ">=7.29.7"
   "@babel/runtime@<7.26.10": ">=7.29.7"
-  "axios@>=1.0.0 <1.18.1": "1.18.1"
-  "brace-expansion@>=1.0.0 <1.1.18": "1.1.18"
-  "brace-expansion@>=2.0.0 <2.1.4": "2.1.4"
-  "brace-expansion@>=4.0.0 <5.0.9": "5.0.9"
+  "axios@>=1.0.0 <1.18.1": "1.20.0"
+  "brace-expansion@>=1.0.0 <1.1.18": "1.1.21"
+  "brace-expansion@>=2.0.0 <2.1.4": "2.1.7"
+  "brace-expansion@>=4.0.0 <5.0.9": "5.0.12"
   "browserslist@<4.28.7": "4.28.7"
   "esbuild@<=0.24.2": ">=0.28.1"
-  "fast-uri@>=3.0.0 <3.1.6": "3.1.6"
+  "fast-uri@>=3.0.0 <3.1.6": "3.1.8"
   "@ai-sdk/provider-utils>undici": "8.10.2"
   "find-my-way@<9.6.1": "9.9.0"
   "form-data@>=4.0.0 <4.0.4": ">=4.0.6"
   "hono@<4.6.5": ">=4.13.7"
   "immutable@>=5.0.0-beta.1 <5.1.8": "5.1.8"
-  "ip-address@<10.3.1": "10.3.1"
+  "ip-address@<10.3.1": "10.7.1"
   "image-size@<=2.0.2": "2.0.3"
   "js-yaml@>=3.0.0 <3.15.2": "3.15.2"
   "js-yaml@>=4.0.0 <4.3.2": "4.3.2"
