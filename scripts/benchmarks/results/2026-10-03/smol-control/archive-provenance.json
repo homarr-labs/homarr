@@ -1,0 +1,25 @@
+{
+  "method": "Original JSON SHA-256 preserved; production manifest result/log paths made relative. Archived JSON is formatted with oxfmt without changing values; archived SHA-256 records the formatted file. Failure HTML, screenshots and bulky archives are excluded. Comparison logs have ANSI and trailing whitespace normalized.",
+  "files": [
+    {
+      "path": "build/build-1791003148192.json",
+      "original_sha256": "67a7e9e6405922a3f973505dfa4e24e1fee2daafe865b9515ffbe3c2f1be3d5d",
+      "archived_sha256": "67a7e9e6405922a3f973505dfa4e24e1fee2daafe865b9515ffbe3c2f1be3d5d"
+    },
+    {
+      "path": "control.json",
+      "original_sha256": "e5ce7566b185f1743ae179987ea9f7fc71da07e8787162f69e6bdb08e76d3bfd",
+      "archived_sha256": "e5ce7566b185f1743ae179987ea9f7fc71da07e8787162f69e6bdb08e76d3bfd"
+    },
+    {
+      "path": "runtime/board-fixture.json",
+      "original_sha256": "f204649c25fa47037a00e515c3cbe861e6b89f1648dcbc41247cd6bca1041406",
+      "archived_sha256": "f204649c25fa47037a00e515c3cbe861e6b89f1648dcbc41247cd6bca1041406"
+    },
+    {
+      "path": "runtime/runtime-1791003888676.json",
+      "original_sha256": "8dc32e6ccc9675f6cd33489e0dec6d5684257c83cc2caaf23cd1863202693091",
+      "archived_sha256": "c1089f3d941e335d59364e76146983e35c51dd81b838cd2a44abce2ca2b39dbe"
+    }
+  ]
+}

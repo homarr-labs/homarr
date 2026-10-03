@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 4,
+  "claimEligible": false,
+  "claimIneligibleReasons": ["cached mode does not force an application rebuild"],
+  "createdAt": "2026-10-03T03:23:18.181Z",
+  "run": {
+    "startedAt": "2026-10-03T03:19:00.503Z",
+    "finishedAt": "2026-10-03T03:23:18.181Z"
+  },
+  "mode": "cached",
+  "builder": "homarr-migration-final-20261003-candidate",
+  "runLabel": "candidate",
+  "declaredRevision": "57955d9f5e6c5c80bded9dcf502a14aa71114af0",
+  "series": {
+    "id": "bun-migration",
+    "cacheState": "cold",
+    "repetition": 1,
+    "totalRepetitions": 2
+  },
+  "source": {
+    "contextDirectory": "/tmp/homarr-benchmark-docker-bun-final",
+    "headSha": "57955d9f5e6c5c80bded9dcf502a14aa71114af0",
+    "dirty": false,
+    "measuredRevision": "57955d9f5e6c5c80bded9dcf502a14aa71114af0",
+    "fingerprint": "10152ba541e12684feeac20a81a7bd1527972ff55b4a7abbe8feb95b06f1b7b5",
+    "baseFingerprint": "10152ba541e12684feeac20a81a7bd1527972ff55b4a7abbe8feb95b06f1b7b5",
+    "fileCount": 4190,
+    "immutableSnapshot": true,
+    "syntheticSourceChange": null
+  },
+  "builderCache": {
+    "expected": [
+      {
+        "logicalId": "homarr-bun-cache",
+        "target": "/root/.bun/install/cache",
+        "mustIncreaseUsage": false
+      },
+      {
+        "logicalId": "homarr-next-build-linux/amd64",
+        "target": "/app/apps/nextjs/.next/cache",
+        "mustIncreaseUsage": true
+      }
+    ],
+    "before": {
+      "cacheMountCount": 0,
+      "cacheMounts": [],
+      "recordCount": 0,
+      "recordsFingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "after": {
+      "cacheMountCount": 2,
+      "cacheMounts": [
+        {
+          "description": "cached mount /app/apps/nextjs/.next/cache from exec /bin/sh -c TURBO_PLATFORM=\"${TARGETPLATFORM:-linux/amd64}\"     bun run turbo build --filter=@homarr/nextjs... --filter=@homarr/cli with id \"/homarr-next-build-linux/amd64\"",
+          "logicalId": "homarr-next-build-linux/amd64",
+          "recordId": "nrm874gq7nai5m7v6e6dkg3bu",
+          "size": "1.548GB",
+          "target": "/app/apps/nextjs/.next/cache",
+          "usageCount": 2
+        },
+        {
+          "description": "cached mount /root/.bun/install/cache from exec /bin/sh -c bun install --frozen-lockfile --concurrent-scripts=1 with id \"/homarr-bun-cache\"",
+          "logicalId": "homarr-bun-cache",
+          "recordId": "e814d9q3797d2gtdb8c84d0tb",
+          "size": "2.481GB",
+          "target": "/root/.bun/install/cache",
+          "usageCount": 2
+        }
+      ],
+      "recordCount": 32,
+      "recordsFingerprint": "464ab8868b3577c819a7000f46dd2481d34fcc684947557df6630954a1f4264b"
+    },
+    "afterStability": {
+      "attempts": 7,
+      "pollIntervalMs": 2000,
+      "stableForMs": 10999,
+      "timeoutMs": 30000
+    }
+  },
+  "host": {
+    "architecture": "x64",
+    "cpuCount": 20,
+    "dockerServer": {
+      "apiVersion": "1.54",
+      "architecture": "amd64",
+      "operatingSystem": "linux",
+      "targetPlatform": "linux/amd64",
+      "version": "29.3.0"
+    },
+    "platform": "linux"
+  },
+  "image": {
+    "requested": "homarr-migration-benchmark:candidate-warmup-0",
+    "id": "sha256:7397ff992d374dd07d52ade59f1ccfc810a3e2bf934df9384e8cc547ee859148",
+    "digest": null,
+    "revision": "57955d9f5e6c5c80bded9dcf502a14aa71114af0",
+    "sourceFingerprint": "10152ba541e12684feeac20a81a7bd1527972ff55b4a7abbe8feb95b06f1b7b5",
+    "architecture": "amd64",
+    "targetPlatform": "linux/amd64",
+    "localUncompressedBytes": 401902753
+  },
+  "build": {
+    "wallTimeMs": 238361,
+    "cachedStepCount": 0,
+    "completedStepCount": 33,
+    "nextCompileMs": 73000
+  },
+  "logPath": "/home/habs/.codex/worktrees/84a3/homarr/benchmark-results/production-migration-final/candidate-warmup-0/build-1790997798181.log"
+}

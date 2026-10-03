@@ -1,0 +1,15 @@
+{
+  "method": "Original JSON SHA-256 preserved; production manifest result/log paths made relative. Archived JSON is formatted with oxfmt without changing values; archived SHA-256 records the formatted file. Failure HTML, screenshots and bulky archives are excluded. Comparison logs have ANSI and trailing whitespace normalized.",
+  "files": [
+    {
+      "path": "bun.json",
+      "original_sha256": "d13e9dad3bf99b250b15a9fe7d82ecf10c62f9cd9315a98238a6a176eb26e63f",
+      "archived_sha256": "0ce20fbf7de2c868bafa770aaae1a3434d02d3dade3595e03c2e5b487fc9997f"
+    },
+    {
+      "path": "pnpm.json",
+      "original_sha256": "4c8bd41bda69c66d61385e52720ec214942e4002b03ba4ecb9e1851627f2df03",
+      "archived_sha256": "5afb90a2c7d15515b27009811ef662657bce6ab35f72d39db6df3d8684e6d990"
+    }
+  ]
+}

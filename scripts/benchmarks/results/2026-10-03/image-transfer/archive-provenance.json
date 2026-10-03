@@ -1,0 +1,10 @@
+{
+  "method": "Original JSON SHA-256 preserved; production manifest result/log paths made relative. Archived JSON is formatted with oxfmt without changing values; archived SHA-256 records the formatted file. Failure HTML, screenshots and bulky archives are excluded. Comparison logs have ANSI and trailing whitespace normalized.",
+  "files": [
+    {
+      "path": "image-transfer.json",
+      "original_sha256": "7c660d3fafd91de07003bb6db85e8a8031ede413e5bdf86f17324c3c6b03ec1a",
+      "archived_sha256": "fadc2b49143f8e3d51a96c374752550f514312c9e82984e140e2f15f5d4f62aa"
+    }
+  ]
+}

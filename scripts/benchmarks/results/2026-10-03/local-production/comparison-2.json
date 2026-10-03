@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "comparison": "runtime-migration",
+  "claimEligible": true,
+  "claimIneligibleReasons": [],
+  "claimScope": {
+    "build": "alternating warm incremental Docker source rebuilds",
+    "runtime": "fresh authenticated Chromium documents against one warmed, network-isolated app container"
+  },
+  "limitations": [
+    "build series report controlled medians, not statistical significance",
+    "runtime documents share one warmed server",
+    "widget settlement covers observed non-subscription tRPC requests followed by the configured quiet window",
+    "startup, RAM levels, initial bundle data, and cold Spotlight timings remain single-container diagnostics"
+  ],
+  "build": {
+    "seriesId": "bun-migration",
+    "baselineFingerprint": "1ba50b576c3590b89561beb943feba9a76a7316ddb1baa9b06ffff40ed6c8eff",
+    "candidateFingerprint": "10152ba541e12684feeac20a81a7bd1527972ff55b4a7abbe8feb95b06f1b7b5",
+    "wallTimeMs": {
+      "baseline": {
+        "count": 2,
+        "min": 49956,
+        "median": 52009.5,
+        "p95": null,
+        "max": 54063,
+        "standardDeviation": 2054,
+        "outliers": [54063]
+      },
+      "candidate": {
+        "count": 2,
+        "min": 36882,
+        "median": 42296,
+        "p95": null,
+        "max": 47710,
+        "standardDeviation": 5414,
+        "outliers": [47710]
+      },
+      "comparison": {
+        "baseline": 52009.5,
+        "candidate": 42296,
+        "delta": -9713.5,
+        "improvementPercent": 18.676395658485472
+      }
+    },
+    "nextCompileMs": {
+      "baseline": {
+        "count": 2,
+        "min": 2200,
+        "median": 2700,
+        "p95": null,
+        "max": 3200,
+        "standardDeviation": 500,
+        "outliers": [3200]
+      },
+      "candidate": {
+        "count": 2,
+        "min": 1989,
+        "median": 2694.5,
+        "p95": null,
+        "max": 3400,
+        "standardDeviation": 706,
+        "outliers": [3400]
+      },
+      "comparison": {
+        "baseline": 2700,
+        "candidate": 2694.5,
+        "delta": -5.5,
+        "improvementPercent": 0.2037037037037037
+      }
+    }
+  },
+  "runtime": {
+    "boardMountedMs": {
+      "baseline": {
+        "count": 20,
+        "min": 146,
+        "median": 245,
+        "p95": 335,
+        "max": 356,
+        "standardDeviation": 52,
+        "outliers": [356]
+      },
+      "candidate": {
+        "count": 20,
+        "min": 145,
+        "median": 381,
+        "p95": 608,
+        "max": 758,
+        "standardDeviation": 192,
+        "outliers": []
+      },
+      "comparison": {
+        "baseline": 245,
+        "candidate": 381,
+        "delta": 136,
+        "improvementPercent": -55.51020408163265
+      }
+    },
+    "fcpMs": {
+      "baseline": {
+        "count": 20,
+        "min": 132,
+        "median": 180,
+        "p95": 228,
+        "max": 240,
+        "standardDeviation": 26,
+        "outliers": []
+      },
+      "candidate": {
+        "count": 20,
+        "min": 132,
+        "median": 156,
+        "p95": 176,
+        "max": 176,
+        "standardDeviation": 12,
+        "outliers": []
+      },
+      "comparison": {
+        "baseline": 180,
+        "candidate": 156,
+        "delta": -24,
+        "improvementPercent": 13.333333333333334
+      }
+    },
+    "lcpMs": {
+      "baseline": {
+        "count": 20,
+        "min": 972,
+        "median": 1116,
+        "p95": 1252,
+        "max": 1336,
+        "standardDeviation": 89,
+        "outliers": []
+      },
+      "candidate": {
+        "count": 20,
+        "min": 992,
+        "median": 1112,
+        "p95": 1168,
+        "max": 1184,
+        "standardDeviation": 54,
+        "outliers": []
+      },
+      "comparison": {
+        "baseline": 1116,
+        "candidate": 1112,
+        "delta": -4,
+        "improvementPercent": 0.35842293906810035
+      }
+    },
+    "ttfbMs": {
+      "baseline": {
+        "count": 20,
+        "min": 64,
+        "median": 98,
+        "p95": 115,
+        "max": 118,
+        "standardDeviation": 16,
+        "outliers": []
+      },
+      "candidate": {
+        "count": 20,
+        "min": 50,
+        "median": 68.5,
+        "p95": 85,
+        "max": 95,
+        "standardDeviation": 12,
+        "outliers": [95]
+      },
+      "comparison": {
+        "baseline": 98,
+        "candidate": 68.5,
+        "delta": -29.5,
+        "improvementPercent": 30.102040816326532
+      }
+    },
+    "widgetImplementationsMountedMs": {
+      "baseline": {
+        "count": 20,
+        "min": 1034,
+        "median": 1181,
+        "p95": 1347,
+        "max": 1460,
+        "standardDeviation": 112,
+        "outliers": []
+      },
+      "candidate": {
+        "count": 20,
+        "min": 1055,
+        "median": 1176.5,
+        "p95": 1267,
+        "max": 1290,
+        "standardDeviation": 63,
+        "outliers": []
+      },
+      "comparison": {
+        "baseline": 1181,
+        "candidate": 1176.5,
+        "delta": -4.5,
+        "improvementPercent": 0.3810330228619814
+      }
+    },
+    "widgetDataSettledMs": {
+      "baseline": {
+        "count": 20,
+        "min": 1642,
+        "median": 1751.5,
+        "p95": 1908,
+        "max": 1965,
+        "standardDeviation": 84,
+        "outliers": [1965]
+      },
+      "candidate": {
+        "count": 20,
+        "min": 1665,
+        "median": 1739.5,
+        "p95": 1796,
+        "max": 1853,
+        "standardDeviation": 48,
+        "outliers": []
+      },
+      "comparison": {
+        "baseline": 1751.5,
+        "candidate": 1739.5,
+        "delta": -12,
+        "improvementPercent": 0.6851270339708821
+      }
+    }
+  },
+  "diagnostics": {
+    "baseline": {
+      "startToReadyMs": 9030,
+      "coldSpotlightFeedbackMs": null,
+      "coldSpotlightReadyMs": 1294,
+      "postIdleFirstOpenMs": 126,
+      "memory": {
+        "startupBytes": 141701120,
+        "workloadBytes": 350601216,
+        "settledBytes": 331702272,
+        "maximumSampleBytes": 350601216,
+        "peakBytes": 354852864,
+        "growthBytes": -19216384,
+        "growthPercent": -5.480980419645777,
+        "settle": {
+          "count": 20,
+          "minBytes": 317775872,
+          "medianBytes": 331384832,
+          "p95Bytes": 336580608,
+          "maxBytes": 338563072,
+          "standardDeviationBytes": 5542893,
+          "trendBytesPerHour": 86083243.6429079,
+          "anonymous": {
+            "count": 20,
+            "minBytes": 303280128,
+            "medianBytes": 316776448,
+            "p95Bytes": 322183168,
+            "maxBytes": 324091904,
+            "standardDeviationBytes": 5410335,
+            "trendBytesPerHour": 82999900.56295313
+          },
+          "file": {
+            "count": 20,
+            "minBytes": 1359872,
+            "medianBytes": 1402880,
+            "p95Bytes": 1445888,
+            "maxBytes": 1449984,
+            "standardDeviationBytes": 27320,
+            "trendBytesPerHour": 566751.7150162369
+          }
+        },
+        "cpu": {
+          "startupToWorkload": {
+            "usageUsec": 28834526,
+            "userUsec": 24576377,
+            "systemUsec": 4258150,
+            "nrThrottled": 33,
+            "throttledUsec": 6350158
+          },
+          "workloadToSettled": {
+            "usageUsec": 6976213,
+            "userUsec": 5511925,
+            "systemUsec": 1464287,
+            "nrThrottled": 6,
+            "throttledUsec": 1153449
+          }
+        }
+      }
+    },
+    "candidate": {
+      "startToReadyMs": 9357,
+      "coldSpotlightFeedbackMs": null,
+      "coldSpotlightReadyMs": 1267,
+      "postIdleFirstOpenMs": 134,
+      "memory": {
+        "startupBytes": 188801024,
+        "workloadBytes": 598462464,
+        "settledBytes": 532578304,
+        "maximumSampleBytes": 598462464,
+        "peakBytes": 630530048,
+        "growthBytes": -65736704,
+        "growthPercent": -10.984265171892217,
+        "settle": {
+          "count": 20,
+          "minBytes": 527568896,
+          "medianBytes": 532725760,
+          "p95Bytes": 572534784,
+          "maxBytes": 573534208,
+          "standardDeviationBytes": 14647771,
+          "trendBytesPerHour": -257971114.36307943,
+          "anonymous": {
+            "count": 20,
+            "minBytes": 520278016,
+            "medianBytes": 525713408,
+            "p95Bytes": 565846016,
+            "maxBytes": 566222848,
+            "standardDeviationBytes": 14709947,
+            "trendBytesPerHour": -258517883.71356043
+          },
+          "file": {
+            "count": 20,
+            "minBytes": 1359872,
+            "medianBytes": 1402880,
+            "p95Bytes": 1441792,
+            "maxBytes": 1449984,
+            "standardDeviationBytes": 27018,
+            "trendBytesPerHour": 560465.2788305023
+          }
+        },
+        "cpu": {
+          "startupToWorkload": {
+            "usageUsec": 22253384,
+            "userUsec": 18971649,
+            "systemUsec": 3281734,
+            "nrThrottled": 1,
+            "throttledUsec": 62591
+          },
+          "workloadToSettled": {
+            "usageUsec": 11860962,
+            "userUsec": 10602322,
+            "systemUsec": 1258640,
+            "nrThrottled": 0,
+            "throttledUsec": 0
+          }
+        }
+      }
+    }
+  }
+}

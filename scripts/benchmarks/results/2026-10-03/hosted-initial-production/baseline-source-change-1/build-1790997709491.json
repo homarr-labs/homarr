@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 4,
+  "claimEligible": true,
+  "claimIneligibleReasons": [],
+  "createdAt": "2026-10-03T03:21:49.491Z",
+  "run": {
+    "startedAt": "2026-10-03T03:20:44.300Z",
+    "finishedAt": "2026-10-03T03:21:49.491Z"
+  },
+  "mode": "source-change",
+  "builder": "homarr-benchmark-37092424531-baseline",
+  "runLabel": "baseline",
+  "declaredRevision": "3adb63850d8fd8f9ea2b3d72db82f4591f950e41",
+  "series": {
+    "id": "bun-migration",
+    "cacheState": "warm",
+    "repetition": 1,
+    "totalRepetitions": 2
+  },
+  "source": {
+    "contextDirectory": "/home/runner/work/_temp/homarr-baseline",
+    "headSha": "3adb63850d8fd8f9ea2b3d72db82f4591f950e41",
+    "dirty": false,
+    "measuredRevision": "3adb63850d8fd8f9ea2b3d72db82f4591f950e41",
+    "fingerprint": "47384527d50dbc380a862a4d1481421cdb77d6de45051cd0848ebcbb2f61211d",
+    "baseFingerprint": "bb36b1ea47504bbb9175e6f735841e0f2ad3dcf4aac1cb1b18be76c8b72a9e2a",
+    "fileCount": 4170,
+    "immutableSnapshot": true,
+    "syntheticSourceChange": {
+      "file": "apps/nextjs/src/app/[locale]/layout.tsx",
+      "id": "bun-migration-1",
+      "from": "siteName: appName,",
+      "to": "siteName: \"Homarr build benchmark bun-migration-1\","
+    }
+  },
+  "builderCache": {
+    "expected": [
+      {
+        "logicalId": "homarr-next-build-linux/amd64",
+        "target": "/app/apps/nextjs/.next/cache",
+        "mustIncreaseUsage": true
+      },
+      {
+        "logicalId": "pnpm-store",
+        "target": "/pnpm/store",
+        "mustIncreaseUsage": false
+      }
+    ],
+    "before": {
+      "cacheMountCount": 2,
+      "cacheMounts": [
+        {
+          "description": "cached mount /app/apps/nextjs/.next/cache from exec /bin/sh -c TURBO_PLATFORM=\"${TARGETPLATFORM:-linux/amd64}\"     pnpm turbo build --filter=@homarr/nextjs... --filter=@homarr/cli with id \"/homarr-next-build-linux/amd64\"",
+          "logicalId": "homarr-next-build-linux/amd64",
+          "recordId": "mh8sl2w8wj99qsavjik6gc1f3",
+          "size": "1.537GB",
+          "target": "/app/apps/nextjs/.next/cache",
+          "usageCount": 2
+        },
+        {
+          "description": "cached mount /pnpm/store from exec /bin/sh -c pnpm config set store-dir /pnpm/store &&     sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml &&     pnpm fetch --ignore-scripts &&     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml with id \"/pnpm-store\"",
+          "logicalId": "pnpm-store",
+          "recordId": "j7iz4s1fraeyfafqmjzsk0ci8",
+          "size": "2.189GB",
+          "target": "/pnpm/store",
+          "usageCount": 3
+        }
+      ],
+      "recordCount": 39,
+      "recordsFingerprint": "f423ee1b74e6337e4d2e1c1a8cfab37b1d5aeaa5b0bda5f3f4a196927e45f866"
+    },
+    "after": {
+      "cacheMountCount": 2,
+      "cacheMounts": [
+        {
+          "description": "cached mount /app/apps/nextjs/.next/cache from exec /bin/sh -c TURBO_PLATFORM=\"${TARGETPLATFORM:-linux/amd64}\"     pnpm turbo build --filter=@homarr/nextjs... --filter=@homarr/cli with id \"/homarr-next-build-linux/amd64\"",
+          "logicalId": "homarr-next-build-linux/amd64",
+          "recordId": "mh8sl2w8wj99qsavjik6gc1f3",
+          "size": "1.568GB",
+          "target": "/app/apps/nextjs/.next/cache",
+          "usageCount": 4
+        },
+        {
+          "description": "cached mount /pnpm/store from exec /bin/sh -c pnpm config set store-dir /pnpm/store &&     sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml &&     pnpm fetch --ignore-scripts &&     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml with id \"/pnpm-store\"",
+          "logicalId": "pnpm-store",
+          "recordId": "j7iz4s1fraeyfafqmjzsk0ci8",
+          "size": "2.189GB",
+          "target": "/pnpm/store",
+          "usageCount": 3
+        }
+      ],
+      "recordCount": 51,
+      "recordsFingerprint": "bf70d18d0378ed7b37fc53d0e8912af21389743031da5fda78d32c41e32680d8"
+    },
+    "afterStability": {
+      "attempts": 7,
+      "pollIntervalMs": 2000,
+      "stableForMs": 10632,
+      "timeoutMs": 30000
+    }
+  },
+  "host": {
+    "architecture": "x64",
+    "cpuCount": 4,
+    "dockerServer": {
+      "apiVersion": "1.48",
+      "architecture": "amd64",
+      "operatingSystem": "linux",
+      "targetPlatform": "linux/amd64",
+      "version": "28.0.4"
+    },
+    "platform": "linux"
+  },
+  "image": {
+    "requested": "homarr-migration-benchmark:baseline-source-change-1",
+    "id": "sha256:d7e18dee22e385f6bbce7f0f886339852ba315af1311f44ff76a066bd6f7e3a8",
+    "digest": null,
+    "revision": "3adb63850d8fd8f9ea2b3d72db82f4591f950e41",
+    "sourceFingerprint": "47384527d50dbc380a862a4d1481421cdb77d6de45051cd0848ebcbb2f61211d",
+    "architecture": "amd64",
+    "targetPlatform": "linux/amd64",
+    "localUncompressedBytes": 481715955
+  },
+  "build": {
+    "wallTimeMs": 50114,
+    "cachedStepCount": 21,
+    "completedStepCount": 19,
+    "nextCompileMs": 3600
+  },
+  "logPath": "/home/runner/work/homarr/homarr/benchmark-results/production-migration/baseline-source-change-1/build-1790997709491.log"
+}

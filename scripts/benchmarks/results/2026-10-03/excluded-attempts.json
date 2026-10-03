@@ -1,0 +1,41 @@
+{
+  "attempts": [
+    {
+      "dataset": "initial local 404-command package dataset",
+      "scope": "228 workspace typechecks",
+      "reason": "The Node shebang won from workspace cwd; these are retained as declared-script diagnostics, not Node versus Bun compiler results."
+    },
+    {
+      "dataset": "bun-workspaces-final",
+      "reason": "Preparatory workspace run lacked regenerated definitions; excluded."
+    },
+    {
+      "dataset": "bun-workspaces-final-verified",
+      "reason": "Preparatory run inherited node_modules/.cache/tsbuildinfo.json; excluded and reset before the final checks."
+    },
+    {
+      "dataset": "early production benchmark preparations",
+      "reason": "Selectors, PSS script escaping, search hydration and fixture controller requests were corrected before the final fixed workload. No partial runs are used as zero or successful measurements."
+    },
+    {
+      "dataset": "same-image HTTP/1.0 and HTTP/1.1 controls",
+      "reason": "The red streamed-response failure and short green check are diagnostic; short runs are not eligible runtime timings."
+    },
+    {
+      "dataset": "hosted initial run 37092424531",
+      "reason": "Baseline nested PATH lacked pinned pnpm; production cancellation accounting failed after 11 successful candidate loads. Preserved separately; corrected package and production captures supersede these for claims."
+    },
+    {
+      "dataset": "first analysis of final local and hosted production captures",
+      "reason": "The same-source build guard incorrectly rejected migration revisions. Captured eligible measurements were retained and rechecked with the migration comparator; no measurement was rerun or relabeled."
+    },
+    {
+      "dataset": "512 MiB resource controls",
+      "reason": "Functional acceptance only. No settle period, so performance eligibility is intentionally false."
+    },
+    {
+      "dataset": "bun --smol control",
+      "reason": "One complete diagnostic trial; not a three-container performance comparison."
+    }
+  ]
+}

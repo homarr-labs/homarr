@@ -1,0 +1,55 @@
+{
+  "code_revision": "cd0ef4708c9aa0e90e62025317ac1876ad6ee736",
+  "base": "dev",
+  "draft_pull_request": "https://github.com/homarr-labs/homarr/pull/6978",
+  "local_act": {
+    "version": "0.2.89",
+    "command": "bun run ci:act:all",
+    "completed": true,
+    "exit_code": 0,
+    "log": "diagnostics/act-merged-final.log",
+    "jobs": [
+      "Database change selection",
+      "Migration journals",
+      "SQLite and PostgreSQL migrations",
+      "Database gate",
+      "Fast gate",
+      "Container and MySQL conversion/restart smoke"
+    ]
+  },
+  "frozen_install": {
+    "completed": true,
+    "exit_code": 0,
+    "log": "diagnostics/final-frozen-install.log"
+  },
+  "locked_package_entries_unchanged": 2482,
+  "github_runs": {
+    "merged_code_ci": 37099341363,
+    "final_packages": 37095716553,
+    "production_capture": 37094671119,
+    "production_artifact_recheck": 37099981354
+  },
+  "measurement_counts": {
+    "initial_local_packages": 404,
+    "final_local_workspaces_and_commands": 258,
+    "final_hosted_packages": 416,
+    "local_runtime_containers_per_image": 3,
+    "hosted_runtime_containers_per_image": 3,
+    "fresh_dashboard_loads_per_image_per_host": 60,
+    "smol_control": 1,
+    "extra_512_mib_controls_per_image": 1
+  },
+  "review_threads": {
+    "total": 7,
+    "unresolved": 0,
+    "fixes_after": "03:00 Europe/Berlin on 2026-10-03"
+  },
+  "bounds": [
+    "Baseline snapshots retain pre-existing formatting failures.",
+    "Local pnpm ignore-scripts rename failures are preserved; corrected hosted conflict validations pass both managers.",
+    "CPU/RAM/disk comparisons describe the whole migration and disclosed fixture, not a JavaScript-engine-only comparison.",
+    "512 MiB probes omit settling and are not eligible performance comparisons.",
+    "No Homarr ARM64 runtime, cold registry pull, live-provider traffic mix or human conflict-resolution duration was measured.",
+    "Go services and native tools remain native; GitHub JavaScript actions use the runner runtime."
+  ]
+}

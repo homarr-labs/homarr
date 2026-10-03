@@ -1,0 +1,7 @@
+{
+  "base_revision": "57955d9f5e6c5c80bded9dcf502a14aa71114af0",
+  "control_revision": "38f7be4a605f2cbaa144f1b9e4e1269214e8af61",
+  "method": "One diagnostic run with the same complete workload and limits; only Next server startup/restart adds --smol. No production default is changed. This is not a three-container performance claim.",
+  "build": "build/build-1791003148192.json",
+  "runtime": "runtime/runtime-1791003888676.json"
+}

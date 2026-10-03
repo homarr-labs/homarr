@@ -1,0 +1,10 @@
+{
+  "method": "Original JSON SHA-256 preserved; production manifest result/log paths made relative. Archived JSON is formatted with oxfmt without changing values; archived SHA-256 records the formatted file. Failure HTML, screenshots and bulky archives are excluded. Comparison logs have ANSI and trailing whitespace normalized.",
+  "files": [
+    {
+      "path": "package-managers.json",
+      "original_sha256": "a25987cedfec5d874c66e84d94a02617109640b90f150270202e5cf4b463310c",
+      "archived_sha256": "4f7ce54c633e456280f3b122f7582a5027857b91269ce3f475717456dcb20256"
+    }
+  ]
+}
