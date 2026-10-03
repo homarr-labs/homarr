@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import shlex
 import stat as stat_module
 import subprocess
 import time
@@ -45,6 +46,12 @@ class Benchmark:
         self.args = args
         self.root = Path(args.work_dir).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
+        shim_directory = self.root / "manager-bin"
+        shim_directory.mkdir(exist_ok=True)
+        pnpm_shim = shim_directory / "pnpm"
+        pnpm_shim.write_text("#!/bin/sh\nexec " + shlex.quote(str(Path(args.node).resolve())) + " " +
+                             shlex.quote(str(Path(args.pnpm).resolve())) + ' "$@"\n')
+        pnpm_shim.chmod(0o755)
         self.output = Path(args.output).resolve()
         self.output.mkdir(parents=True, exist_ok=True)
         self.records = []
@@ -74,7 +81,7 @@ class Benchmark:
                 env.pop(variable, None)
             env.update({"CI": "true", "NEXT_TELEMETRY_DISABLED": "1", "TURBO_TELEMETRY_DISABLED": "1",
                         "BUN_INSTALL_CACHE_DIR": str(cache), "XDG_CACHE_HOME": str(self.root / (manager + "-metadata"))})
-            env["PATH"] = str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + env["PATH"]
+            env["PATH"] = str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + str(shim_directory) + ":" + env["PATH"]
             command = [args.node, args.pnpm] if manager == "pnpm" else [args.bun]
             self.variants.append(dict(manager=manager, sha=sha, path=path, cache=cache, env=env, command=command))
         self.metadata = {"started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -86,6 +93,7 @@ class Benchmark:
                                       "bun": capture([args.bun, "--version"]),
                                       "pnpm": capture([args.node, args.pnpm, "--version"], cwd="/tmp")},
                          "revisions": {v["manager"]: v["sha"] for v in self.variants},
+                         "nested_pnpm": "Task-owned PATH shim invokes the same pinned Node and pnpm entrypoint as top-level measurements",
                          "method": "Sequential paired trials; alternate manager order. Cold means empty task-owned package cache and node_modules, not a dropped OS page cache. GNU time reports maximum process RSS including child resource accounting, not the sum of simultaneously running processes. Full repository graphs differ with the migration."}
         previous = self.output / "package-managers.json"
         if previous.exists():
