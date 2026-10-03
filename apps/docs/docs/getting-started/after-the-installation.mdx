@@ -16,7 +16,9 @@ import {
 } from "@tabler/icons-react";
 
 After Homarr starts, open its URL. An unfinished installation redirects to the onboarding screen at `/init`. Choose
-**Get started** for a new installation or **Restore backup** to import a compatible SQLite backup.
+**Get started** for a new installation or **Restore backup** to import a compatible SQLite backup. Before creating the
+administrator, you can return to Welcome with **Back**, including after refreshing `/init`. Creating the administrator
+commits this setup stage; later steps do not rewind it.
 
 <Callout type="info" title="Persist /appdata before you continue">
   Onboarding writes the administrator and board configuration to the database. If onboarding returns after a restart,

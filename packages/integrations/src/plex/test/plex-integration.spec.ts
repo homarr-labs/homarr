@@ -71,6 +71,34 @@ beforeEach(() => {
 });
 
 describe("PlexIntegration.getMediaReleasesAsync", () => {
+  test.each([
+    ["album", "music"],
+    ["artist", "music"],
+    ["track", "music"],
+    ["movie", "movie"],
+    ["show", "tv"],
+    ["unsupported", "unknown"],
+  ])("classifies %s releases as %s", async (type, expectedType) => {
+    mockFetch.mockImplementation((url) => {
+      const urlString = String(url);
+      if (urlString.endsWith("/identity")) {
+        return respond({ MediaContainer: { machineIdentifier: "server-id" } });
+      }
+      if (urlString.endsWith("/library/recentlyAdded")) {
+        return respond({ MediaContainer: { Metadata: [createMetadataItem(type, { type })] } });
+      }
+      if (urlString.endsWith("/library/sections")) {
+        return respond({ MediaContainer: { Directory: [] } });
+      }
+      throw new Error(`Unexpected Plex request: ${urlString}`);
+    });
+
+    const releases = await createIntegration().getMediaReleasesAsync();
+
+    expect(releases).toHaveLength(1);
+    expect(releases[0]).toMatchObject({ title: "Movie", type: expectedType });
+  });
+
   test("uses the series title for TV seasons and episodes", async () => {
     mockFetch.mockImplementation((url) => {
       const urlString = String(url);

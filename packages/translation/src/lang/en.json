@@ -5738,6 +5738,7 @@
       "title": "Make this board useful",
       "description": "Pick up where you left off. Progress follows the content already on this board.",
       "collapse": "Collapse setup checklist",
+      "dismiss": "Dismiss setup checklist",
       "resume": "Continue setup ({completed}/{total})",
       "progress": "Board setup progress",
       "step": {

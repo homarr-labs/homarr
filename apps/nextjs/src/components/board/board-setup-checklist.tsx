@@ -2,7 +2,7 @@
 
 import { ActionIcon, Affix, Button, Group, Paper, Progress, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconCheck, IconChevronDown, IconChecklist } from "@tabler/icons-react";
+import { IconCheck, IconChevronDown, IconChecklist, IconX } from "@tabler/icons-react";
 
 import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -22,6 +22,10 @@ export const BoardSetupChecklist = () => {
     key: `homarr-board-setup-checklist-${board.id}`,
     defaultValue: false,
   });
+  const [dismissed, setDismissed] = useLocalStorage({
+    key: `homarr-board-setup-checklist-dismissed-${board.id}`,
+    defaultValue: false,
+  });
   const t = useI18n("board.setupChecklist");
   const tCommon = useI18n("common.action");
   const progress = getBoardSetupProgress({
@@ -29,7 +33,7 @@ export const BoardSetupChecklist = () => {
     usableIntegrationCount: integrations.length,
   });
 
-  if (!isEditMode || progress.isComplete) return null;
+  if (!isEditMode || progress.isComplete || dismissed) return null;
 
   if (collapsed) {
     return (
@@ -58,11 +62,18 @@ export const BoardSetupChecklist = () => {
                 {t("description")}
               </Text>
             </div>
-            <Tooltip label={t("collapse")}>
-              <ActionIcon variant="subtle" aria-label={t("collapse")} onClick={() => setCollapsed(true)}>
-                <IconChevronDown size={18} />
-              </ActionIcon>
-            </Tooltip>
+            <Group gap={4} wrap="nowrap">
+              <Tooltip label={t("collapse")}>
+                <ActionIcon variant="subtle" aria-label={t("collapse")} onClick={() => setCollapsed(true)}>
+                  <IconChevronDown size={18} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label={t("dismiss")}>
+                <ActionIcon variant="subtle" aria-label={t("dismiss")} onClick={() => setDismissed(true)}>
+                  <IconX size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
           </Group>
           <Progress
             value={progress.totalCount === 0 ? 0 : (progress.completedCount / progress.totalCount) * 100}
