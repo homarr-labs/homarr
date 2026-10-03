@@ -34,6 +34,8 @@ def main():
     for phase, title in [('warmup', 'Cold image build'), ('source-change', 'Warm source rebuild')]:
         values = [[build['build']['wallTimeMs'] / 1000 for entry, build in builds[label] if entry['phase'] == phase] for label in ['baseline', 'candidate']]
         lines.append(f'| {title} | {display(values[0])} | {display(values[1])} |')
+        totals = [[entry['wall_seconds'] for entry, build in builds[label] if entry['phase'] == phase] for label in ['baseline', 'candidate']]
+        lines.append(f'| {title}: full harness command | {display(totals[0])} | {display(totals[1])} |')
         values = [[build['build']['nextCompileMs'] / 1000 for entry, build in builds[label] if entry['phase'] == phase and build['build']['nextCompileMs'] is not None] for label in ['baseline', 'candidate']]
         lines.append(f'| {title}: Next compile | {display(values[0])} | {display(values[1])} |')
     lines += ['', 'Three fresh containers per image, two CPUs and 1 GiB each, UID/GID 1000. Every run loads the same eight-widget seeded board in 20 fresh authenticated browser contexts, checks widget data, opens search seven times, exercises four management routes and WebSockets, then samples for ten minutes. Browser and excluded ingress proxy traffic are isolated from external providers.',
@@ -53,6 +55,9 @@ def main():
         ('Startup cgroup memory, MiB', lambda r: r['summary']['startupBytes'] / 2**20),
         ('Workload cgroup memory, MiB', lambda r: r['summary']['workloadBytes'] / 2**20),
         ('Settle median cgroup memory, MiB', lambda r: r['summary']['settle']['medianBytes'] / 2**20),
+        ('Settle minimum cgroup memory, MiB', lambda r: r['summary']['settle']['minBytes'] / 2**20),
+        ('Settle p95 cgroup memory, MiB', lambda r: r['summary']['settle']['p95Bytes'] / 2**20),
+        ('Settle maximum cgroup memory, MiB', lambda r: r['summary']['settle']['maxBytes'] / 2**20),
         ('Cgroup peak memory, MiB', lambda r: r['summary']['peakBytes'] / 2**20),
         ('Settle anonymous memory, MiB', lambda r: r['summary']['settle']['anonymous']['medianBytes'] / 2**20),
         ('Settle file memory, MiB', lambda r: r['summary']['settle']['file']['medianBytes'] / 2**20),
@@ -64,6 +69,13 @@ def main():
     def settle_process_pss(runtime, name):
         checkpoints = [c for c in runtime['checkpoints'] if c['name'].startswith('settle-')]
         return median(sum(p['pssBytes'] for p in c['processes'] if name in p['command'] or (name == 'next-server' and p['command'] == 'bun')) for c in checkpoints) / 2**20
+
+    def settle_memory_change(runtime):
+        checkpoints = [c for c in runtime['checkpoints'] if c['name'].startswith('settle-')]
+        return (checkpoints[-1]['container']['currentBytes'] - checkpoints[0]['container']['currentBytes']) / 2**20
+
+    metrics.append(('First-to-last settle memory change, MiB', settle_memory_change))
+    metrics.append(('Final Redis allocator used memory, MiB', lambda r: r['checkpoints'][-1]['redis']['usedMemoryBytes'] / 2**20))
 
     for name in ['next-server', 'redis-server', 'nginx']:
         title = 'Settle application-server PSS, MiB' if name == 'next-server' else f'Settle {name} PSS, MiB'
