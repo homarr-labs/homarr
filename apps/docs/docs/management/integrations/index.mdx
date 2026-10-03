@@ -67,6 +67,29 @@ or groups. Lists are filtered on the server and only include connections the cur
 
 ## Connection problems
 
+### Docker service URLs
+
+Use the service name and **container port** when Homarr and the service share a user-defined Docker network.
+For example, Sonarr with `ports: ["6767:8989"]` is reachable from Homarr at `http://sonarr:8989`.
+Use `http://sonarr:6767` only if Sonarr actually listens on `6767` inside its container.
+The browser-facing app URL can use the published host port or reverse proxy.
+See [Docker Compose networking](https://docs.docker.com/compose/how-tos/networking/).
+
+Homarr uses native name resolution by default. Leave `ENABLE_DNS_CACHING` unset or set it to `false`:
+the optional cache can retain an old IP after a container is recreated and can override `extra_hosts` entries.
+If an outbound proxy is configured, exclude local service names with `NO_PROXY`, for example `sonarr,radarr,jellyfin`.
+
+To check Docker DNS independently of Homarr, replace `homarr` with your container name:
+
+```sh
+docker exec homarr node -e 'require("node:dns").lookup("sonarr", { all: true }, (error, addresses) => console.log(error?.code ?? addresses))'
+```
+
+`ENOTFOUND` here indicates a container resolver or network problem. Check both services' network membership and
+Docker's embedded DNS; changing a Next.js setting cannot repair that resolver.
+
+### Other connection failures
+
 If a connection test fails:
 
 1. Check the integration page for the required base URL and credentials.

@@ -1,0 +1,75 @@
+services:
+  homarr:
+    image: ${HOMARR_DNS_IMAGE:-homarr:dns-network-6997}
+    environment:
+      SECRET_ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+      NO_EXTERNAL_CONNECTION: "true"
+    ports:
+      - "127.0.0.1::7575"
+    extra_hosts:
+      - "overridden-service:10.203.199.11"
+    volumes:
+      - homarr-data:/appdata
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:7575/api/health/ready').then(r=>process.exit(r.status===200?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+  sonarr:
+    image: ghcr.io/hotio/sonarr@sha256:71d939c562a273767d97f51516f349e8459542cf868058e4b49891513210bdd5
+    volumes:
+      - sonarr-data:/config
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8989/ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+  radarr:
+    image: ghcr.io/hotio/radarr@sha256:c054e15a3bb7a0fd9e450b12ceed1298a8230a0b44382234d0cec5e0767044a2
+    volumes:
+      - radarr-data:/config
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:7878/ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 90
+  fixture:
+    image: node:24.18.0-alpine
+    environment:
+      PROOF_INSTANCE: ${PROOF_INSTANCE:-original}
+    command:
+      [
+        "node",
+        "-e",
+        "require('node:http').createServer((req,res)=>{res.setHeader('content-type','application/json');res.end(JSON.stringify({healthy:true,instance:process.env.PROOF_INSTANCE}))}).listen(6767,'0.0.0.0')",
+      ]
+    networks:
+      default:
+        ipv4_address: ${PROOF_SERVICE_IP:-10.203.199.10}
+        aliases: ["overridden-service"]
+  hosts-override:
+    image: node:24.18.0-alpine
+    command:
+      [
+        "node",
+        "-e",
+        "require('node:http').createServer((req,res)=>{res.setHeader('content-type','application/json');res.end(JSON.stringify({healthy:true,instance:'hosts-override'}))}).listen(6767,'0.0.0.0')",
+      ]
+    networks:
+      default:
+        ipv4_address: 10.203.199.11
+volumes:
+  homarr-data:
+  sonarr-data:
+  radarr-data:
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.203.199.0/24
