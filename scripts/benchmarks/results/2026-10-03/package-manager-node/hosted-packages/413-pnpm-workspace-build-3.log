@@ -1,5 +1,0 @@
-$ esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text
-
-  cli.cjs  4.3mb ⚠️
-
-⚡ Done in 337ms

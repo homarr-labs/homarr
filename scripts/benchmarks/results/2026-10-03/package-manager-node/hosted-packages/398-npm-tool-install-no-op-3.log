@@ -1,6 +1,0 @@
-
-up to date in 233ms
-npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts:
-npm warn allow-scripts   esbuild@0.25.12 (install: (install scripts present))
-npm warn allow-scripts
-npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
