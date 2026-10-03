@@ -13,6 +13,7 @@ export type RuntimeMemoryCheckpoint = {
     peakBytes: number | null;
     anonymousBytes: number;
     fileBytes: number;
+    oomKillCount?: number;
   };
   cpu: {
     usageUsec: number;
@@ -522,7 +523,7 @@ export const parseRuntimeMemorySnapshot = (name: string, output: string): Runtim
   const redisUsed = readNumericLine(output, "redis_used_memory");
   const redisPeak = readNumericLine(output, "redis_used_memory_peak");
 
-  return {
+  const snapshot: RuntimeMemoryCheckpoint = {
     name,
     capturedAt: new Date().toISOString(),
     container: {
@@ -535,6 +536,9 @@ export const parseRuntimeMemorySnapshot = (name: string, output: string): Runtim
     processes,
     redis: redisUsed === null || redisPeak === null ? null : { usedMemoryBytes: redisUsed, peakMemoryBytes: redisPeak },
   };
+  const oomKillCount = readNumericLine(output, "cgroup_oom_kill");
+  if (oomKillCount !== null) snapshot.container.oomKillCount = oomKillCount;
+  return snapshot;
 };
 
 const cpuDelta = (start: RuntimeMemoryCheckpoint | undefined, end: RuntimeMemoryCheckpoint | undefined) =>

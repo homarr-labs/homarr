@@ -153,6 +153,7 @@ echo "memory_current=$(cat /sys/fs/cgroup/memory.current)"
 memory_peak="$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || true)"
 case "$memory_peak" in ''|'max') ;; *) echo "memory_peak=$memory_peak" ;; esac
 awk '/^anon / { print "cgroup_anon=" $2 } /^file / { print "cgroup_file=" $2 }' /sys/fs/cgroup/memory.stat
+awk '/^oom_kill / { print "cgroup_oom_kill=" $2 }' /sys/fs/cgroup/memory.events
 awk '/^usage_usec / { print "cpu_usage_usec=" $2 } /^user_usec / { print "cpu_user_usec=" $2 } /^system_usec / { print "cpu_system_usec=" $2 } /^nr_throttled / { print "cpu_nr_throttled=" $2 } /^throttled_usec / { print "cpu_throttled_usec=" $2 }' /sys/fs/cgroup/cpu.stat
 for status_file in /proc/[0-9]*/status; do
   process_dir="${"$"}{status_file%/status}"
@@ -1683,6 +1684,8 @@ net.createServer((client) => {
   };
   const metricEligibility = getRuntimeMetricEligibility(eligibilityInput);
   const claimIneligibleReasons = getRuntimeClaimIneligibleReasons(eligibilityInput);
+  const oomKillCount = Math.max(0, ...checkpoints.map((checkpoint) => checkpoint.container.oomKillCount ?? 0));
+  if (oomKillCount > 0) claimIneligibleReasons.push(`Container OOM-killed ${oomKillCount} processes`);
   const claimEligible = claimIneligibleReasons.length === 0;
   const result = {
     schemaVersion: 7,
