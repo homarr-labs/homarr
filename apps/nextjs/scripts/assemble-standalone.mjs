@@ -43,7 +43,19 @@ function collectTraces(directory) {
 }
 collectTraces(compiled);
 rmSync(standalone, { recursive: true, force: true });
-for (const file of files) {
+// Install directory links before copying files reached through those links.
+const orderedFiles = [...files].map((file) => ({
+  file,
+  symbolicLink: lstatSync(join(compiled, file)).isSymbolicLink(),
+}));
+orderedFiles.sort((left, right) => {
+  if (left.symbolicLink !== right.symbolicLink) {
+    if (left.symbolicLink) return -1;
+    return 1;
+  }
+  return left.file.localeCompare(right.file);
+});
+for (const { file } of orderedFiles) {
   const source = join(compiled, file);
   const destination = join(standalone, file);
   mkdirSync(dirname(destination), { recursive: true });
