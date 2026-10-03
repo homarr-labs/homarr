@@ -16,6 +16,9 @@ on:
       package_managers:
         type: boolean
         default: true
+      comparison_run:
+        type: string
+        default: ""
   workflow_dispatch:
     inputs:
       baseline:
@@ -33,6 +36,10 @@ on:
         description: Benchmark installs, workspaces, tools, and lockfile conflicts
         type: boolean
         default: true
+      comparison_run:
+        description: Recheck captured production artifacts from this completed run ID
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -84,9 +91,12 @@ jobs:
           if-no-files-found: error
 
   production:
-    if: inputs.production
+    if: inputs.production || inputs.comparison_run != ''
     runs-on: ubuntu-latest
     timeout-minutes: 150
+    permissions:
+      contents: read
+      actions: read
     env:
       BASELINE_REF: ${{ inputs.baseline }}
       CANDIDATE_REF: ${{ inputs.candidate || github.sha }}
@@ -100,6 +110,7 @@ jobs:
           persist-credentials: false
       - uses: ./tooling/github/setup
       - name: Install benchmark browser
+        if: inputs.comparison_run == ''
         run: bun x --bun playwright install --with-deps chromium
       - name: Create isolated production worktrees
         run: |
@@ -107,6 +118,7 @@ jobs:
           git -C "$RUNNER_TEMP/production-repository" worktree add --detach "$RUNNER_TEMP/homarr-baseline" "$BASELINE_REF"
           git -C "$RUNNER_TEMP/production-repository" worktree add --detach "$RUNNER_TEMP/homarr-candidate" "$CANDIDATE_REF"
       - name: Measure balanced builds and dashboard workloads
+        if: inputs.comparison_run == ''
         run: |
           python3 scripts/benchmarks/production-migration.py \
             --baseline "$RUNNER_TEMP/homarr-baseline" \
@@ -114,6 +126,24 @@ jobs:
             --bun "$(command -v bun)" \
             --output benchmark-results/production-migration \
             --builder-prefix "homarr-benchmark-${{ github.run_id }}"
+      - name: Restore captured production measurements
+        if: inputs.comparison_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CAPTURE_RUN: ${{ inputs.comparison_run }}
+        run: |
+          gh run download "$CAPTURE_RUN" \
+            --name "production-benchmarks-$CAPTURE_RUN" \
+            --dir benchmark-results/production-migration
+      - name: Recheck captured comparisons without repeating measurements
+        if: inputs.comparison_run != ''
+        run: |
+          python3 scripts/benchmarks/production-migration.py \
+            --baseline "$RUNNER_TEMP/homarr-baseline" \
+            --candidate "$RUNNER_TEMP/homarr-candidate" \
+            --bun "$(command -v bun)" \
+            --output benchmark-results/production-migration --phase compare
       - name: Preserve production measurements and failures
         if: always() && !env.ACT
         uses: actions/upload-artifact@v7

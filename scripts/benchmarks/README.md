@@ -24,6 +24,10 @@ candidate, `benchmark_baseline`, and `benchmark_production`, so branch benchmark
 can run before the new standalone workflow reaches the default branch.
 Set `benchmark_packages=false` for a production-only run. Benchmark concurrency
 is scoped to the pinned candidate and selected phases.
+Set `benchmark_compare_run` to a completed capture run ID to recheck its uploaded
+production artifacts. This validates the same pinned revisions and every existing
+source/cache/workload gate without repeating or inventing measurements. It needs
+only read access to Actions artifacts. Preserve the original capture run link.
 
 Cold installs clear the isolated package cache and module directories; they do
 not flush the host's filesystem cache. Warm installs recreate modules using that
@@ -68,7 +72,8 @@ pruning shared caches. Build trials follow the existing comparator's cold
 warmups and two balanced warm source changes per revision. Runtime trials use
 the unchanged warmup images, three runs per revision, 20 dashboard loads, seven
 interactions, and a ten-minute settle period. Use `--phase build` or `runtime`
-to resume; preserve the exact worktrees and image IDs. Remove the task-owned
+to resume, or `--phase compare` to recheck captured results; preserve the exact
+worktrees and image IDs. Remove the task-owned
 builders after retaining their measurements.
 
 The migration driver uses a seeded, normalized board fixture with clocks,

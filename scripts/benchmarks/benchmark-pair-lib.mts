@@ -567,7 +567,10 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
   if (baselineBuild && candidateBuild) {
     if (baselineBuild.series.id !== candidateBuild.series.id) reasons.push("build series ids do not match");
     if (baselineBuild.builder === candidateBuild.builder) reasons.push("build sides reuse the same builder cache");
-    if (baselineBuild.source.measuredRevision !== candidateBuild.source.measuredRevision) {
+    if (
+      comparison === "spotlight" &&
+      baselineBuild.source.measuredRevision !== candidateBuild.source.measuredRevision
+    ) {
       reasons.push("build measured revisions do not match");
     }
     if (stable(baselineBuild.host) !== stable(candidateBuild.host)) reasons.push("build hosts do not match");

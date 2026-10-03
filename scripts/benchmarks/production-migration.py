@@ -14,7 +14,7 @@ def main():
     parser.add_argument("--candidate", required=True, help="Clean, pinned Git worktree")
     parser.add_argument("--output", required=True)
     parser.add_argument("--bun", default="bun")
-    parser.add_argument("--phase", choices=["build", "runtime", "all"], default="all")
+    parser.add_argument("--phase", choices=["build", "runtime", "compare", "all"], default="all")
     parser.add_argument("--builder-prefix", default="homarr-migration-benchmark")
     parser.add_argument("--runtime-repetitions", type=int, default=3)
     args = parser.parse_args()
@@ -35,6 +35,16 @@ def main():
     if "revisions" in manifest and manifest["revisions"] != revisions:
         raise RuntimeError("Output directory belongs to different source revisions")
     manifest["revisions"] = revisions
+    if args.phase == "compare":
+        for entry in manifest["builds"] + manifest["runtimes"]:
+            for field in ["result", "log"]:
+                if not entry.get(field) or Path(entry[field]).exists():
+                    continue
+                directory = output / f"{entry['label']}-{entry['phase']}-{entry['repetition']}"
+                candidates = list(directory.rglob(Path(entry[field]).name))
+                if len(candidates) != 1:
+                    raise RuntimeError(f"Cannot uniquely resolve captured artifact: {entry[field]}")
+                entry[field] = str(candidates[0])
 
     def save():
         temporary = manifest_path.with_suffix(".tmp")
@@ -120,7 +130,7 @@ def main():
                        "RUNTIME_BENCHMARK_SPOTLIGHT_IDLE_POLICY": "preload-only",
                        "RUNTIME_BENCHMARK_WIDGET_KINDS": "clock,countdown,downloads,notebook,healthMonitoring,systemResources,systemDisks,bookmarks"}
                 run(label, "runtime", repetition, env)
-    if args.phase in ["runtime", "all"]:
+    if args.phase in ["runtime", "compare", "all"]:
         for repetition in range(1, args.runtime_repetitions + 1):
             command = [args.bun, "scripts/benchmarks/benchmark-compare.mts", "--comparison", "runtime-migration"]
             for label in ["baseline", "candidate"]:
