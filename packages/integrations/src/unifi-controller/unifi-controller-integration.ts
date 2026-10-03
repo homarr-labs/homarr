@@ -1,6 +1,7 @@
 import type tls from "node:tls";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
+import { z } from "zod/v4";
 
 import {
   getAllTrustedCertificatesAsync,
@@ -25,6 +26,8 @@ import type { NetworkControllerSummaryIntegration } from "../interfaces/network-
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
 import type { HealthSubsystem } from "./unifi-controller-types";
 
+const remoteVpnSessionsSchema = z.array(z.object({ up: z.boolean() }));
+
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class UnifiControllerIntegration extends Integration implements NetworkControllerSummaryIntegration {
   private readonly httpSessionStore = createSessionStore<{ cookie: string; csrfToken?: string }>(this.integration);
@@ -45,6 +48,21 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
   public async getNetworkSummaryAsync(): Promise<NetworkControllerSummary> {
     const client = await this.createControllerClientAsync();
     const stats = await client.getSitesStats();
+    const vpnUserCounts = await Promise.all(
+      stats.map(async (site) => {
+        try {
+          const sessions: unknown = await client.customApiRequest(
+            `/api/s/${encodeURIComponent(site.name)}/stat/remoteuservpn`,
+          );
+          return remoteVpnSessionsSchema.parse(sessions).filter((session) => session.up).length;
+        } catch (error) {
+          // Older controllers may not expose remote sessions. An empty successful
+          // response is authoritative; only an unsupported endpoint uses health.
+          if (!isAxiosError(error) || error.response?.status !== 404) throw error;
+          return this.getNumericValueOverAllSites([site], "vpn", (vpn) => vpn.remote_user_num_active, "sum");
+        }
+      }),
+    );
 
     return {
       wanStatus: this.getStatusValueOverAllSites(stats, "wan", (site) => site.status === "ok"),
@@ -66,7 +84,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       },
       vpn: {
         status: this.getStatusValueOverAllSites(stats, "vpn", (site) => site.status === "ok"),
-        users: this.getNumericValueOverAllSites(stats, "vpn", (site) => site.remote_user_num_active, "sum"),
+        users: vpnUserCounts.reduce((total, count) => total + count, 0),
       },
     } satisfies NetworkControllerSummary;
   }
