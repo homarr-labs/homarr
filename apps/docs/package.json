@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --bun next dev --port 3003",
-    "start": "serve out --listen 3003 --config ../serve.json",
+    "start": "bun --bun serve out --listen 3003 --config ../serve.json",
     "build": "bun run validate:coverage && bun --bun next build",
     "typecheck": "bun --bun next typegen && bun --bun tsc --noEmit",
     "lint": "oxlint",

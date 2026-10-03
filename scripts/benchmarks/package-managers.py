@@ -212,6 +212,7 @@ class Benchmark:
                 for v in variants:
                     path = v["path"] / relative
                     if repetition == 1:
+                        (path / "node_modules/.cache/tsbuildinfo.json").unlink(missing_ok=True)
                         for buildinfo in path.glob("**/*.tsbuildinfo"):
                             if "node_modules" not in buildinfo.parts:
                                 buildinfo.unlink()

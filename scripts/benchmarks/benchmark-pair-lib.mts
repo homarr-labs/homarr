@@ -669,6 +669,12 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
     reasons.push("runtime claim scopes do not match");
   }
   if (comparison === "runtime-migration") {
+    if (
+      !input.baselineRuntime.provenance.ingressProxy.imageId ||
+      !input.candidateRuntime.provenance.ingressProxy.imageId
+    ) {
+      reasons.push("runtime migration requires immutable ingress proxy image IDs");
+    }
     const baselineNode = input.baselineRuntime.provenance.container.node;
     const candidateNode = input.candidateRuntime.provenance.container.node;
     if (baselineNode.engine !== "V8" || baselineNode.bunVersion || !baselineNode.v8Version) {
