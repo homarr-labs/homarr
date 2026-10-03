@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules
-.pnpm-store/
+.bun-cache/
 .pnp
 .pnp.js
 .idea/
@@ -36,7 +36,7 @@ tools/homarr-dev/homarr-dev
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+bun-debug.log*
 
 # local env files
 .env
@@ -81,7 +81,7 @@ skills-lock.json
 # docusaurus
 apps/docs/.docusaurus
 apps/docs/build
-.pnpm-store
+.bun-cache
 benchmark-results
 
 # local performance investigation (never ship benchmark data or restored backups)

@@ -19,11 +19,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Prebuilt debian dependencies
-      uses: ./.github/actions/prebuilt-debian
-      id: prebuilt-debian
-      with:
-        architecture: ${{ inputs.architecture }}
     - name: Start docker container for ${{ inputs.architecture }}
       run: |
         docker run --name homarr \
@@ -43,8 +38,6 @@ runs:
       shell: bash
     - name: Extract source from ${{ inputs.architecture }} container (debian)
       run: |
-        docker cp ${{ steps.prebuilt-debian.outputs.path }}/. homarr:/app/build && \
-        docker cp ${{ steps.prebuilt-debian.outputs.path }}/. homarr:/app/node_modules/better-sqlite3/build/Release && \
         docker exec homarr tar -czf extraction-debian.tar.gz -C /app . && \
         docker cp homarr:/app/extraction-debian.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz
       shell: bash

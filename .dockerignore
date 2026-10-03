@@ -6,8 +6,8 @@ npm-debug.log
 README.md
 .next
 .turbo
-.pnpm-store
-**/.pnpm-store
+.bun-cache
+**/.bun-cache
 coverage
 **/coverage
 **/.docusaurus
@@ -23,3 +23,8 @@ apps/nextjs/.next
 .env
 .env.*
 !.env.example
+
+benchmark-results
+scripts/benchmarks/results
+**/__pycache__
+**/*.tsbuildinfo

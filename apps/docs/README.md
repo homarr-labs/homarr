@@ -7,23 +7,23 @@ The source for [homarr.dev](https://homarr.dev), built with Next.js and Fumadocs
 From the repository root:
 
 ```bash
-pnpm dev:docs
+bun run dev:docs
 ```
 
 The site runs on `http://127.0.0.1:3003`. To use a local Workshop API:
 
 ```bash
-WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+WORKSHOP_API_URL=http://127.0.0.1:8090 bun run dev:docs
 ```
 
 ## Validate
 
 ```bash
-pnpm --filter @homarr/docs typecheck
-pnpm --filter @homarr/docs build
-pnpm --filter @homarr/docs validate:links
-pnpm --filter @homarr/docs verify:search
-pnpm --filter @homarr/docs verify:seo
+bun run --filter @homarr/docs typecheck
+bun run --filter @homarr/docs build
+bun run --filter @homarr/docs validate:links
+bun run --filter @homarr/docs verify:search
+bun run --filter @homarr/docs verify:seo
 ```
 
 The static export is written to `out/`. The build validates docs pages and typed metadata for integrations and widgets
@@ -54,7 +54,7 @@ Verify public item pages without changing the remote database:
 ```bash
 REMOTE_WORKSHOP_URL=https://workshop.example.com
 WORKSHOP_TEST_URL=http://127.0.0.1:8093 WORKSHOP_REMOTE_API_URL="$REMOTE_WORKSHOP_URL" \
-  node apps/workshop/tests/remote-workshop.integration.mjs
+  bun apps/workshop/tests/remote-workshop.integration.mjs
 ```
 
 Stop it with `docker stop homarr-docs-static-preview`. Rebuild and restart the preview after changing source files;
@@ -132,7 +132,7 @@ The launcher uses Homarr's existing public Kapa Website ID. The root layout load
 client-side navigation and follows the docs light or dark theme. **Search** and `Ctrl+K` / `Cmd+K` always use Fumadocs search, including when Kapa is unavailable.
 
 Set `KAPA_WEBSITE_ID` at build time to use a different Kapa Website Widget integration. An explicitly empty value
-disables the widget, for example `KAPA_WEBSITE_ID= pnpm --filter @homarr/docs build`. This is a public integration ID
+disables the widget, for example `KAPA_WEBSITE_ID= bun run --filter @homarr/docs build`. This is a public integration ID
 included in exported pages, not a Kapa API key. Rebuild the static export after changing it.
 
 In the Kapa dashboard, confirm the integration is live and enable the production and preview domains. Restoring the
@@ -164,5 +164,5 @@ Carbon loads one visible placement after the desktop TOC, below API examples, or
 The homepage is excluded at every viewport size. Navigation reloads the ad script; resizing changes placement only when crossing its breakpoint. Ad blockers
 or no-fill responses must not prevent content, navigation, or search from working.
 
-To preview Carbon locally, start docs with `NEXT_PUBLIC_ENABLE_CARBON_ADS=true pnpm dev:docs`. Production builds
+To preview Carbon locally, start docs with `NEXT_PUBLIC_ENABLE_CARBON_ADS=true bun run dev:docs`. Production builds
 enable ads automatically. When the TOC collapses into a toggle, the ad appears below the content before “Edit this page”.

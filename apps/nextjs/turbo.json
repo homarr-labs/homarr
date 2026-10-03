@@ -1,0 +1,18 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/static-data/**",
+        ".env*",
+        "$TURBO_ROOT$/.env*"
+      ],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "!.next/standalone/**", "next-env.d.ts"]
+    },
+    "typecheck": {
+      "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/static-data/**"]
+    }
+  }
+}

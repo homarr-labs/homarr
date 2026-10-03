@@ -33,7 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
       - name: Setup
         uses: ./tooling/github/setup
-      - run: pnpm run scripts:update-readme-integrations
+      - run: bun run scripts:update-readme-integrations
       - name: Commit changes
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}

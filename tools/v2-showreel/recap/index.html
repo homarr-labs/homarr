@@ -69,7 +69,7 @@
     <div id="stage"></div>
     <script type="module">
       // Candidate announcement images for the Homarr v2 blog post: real screenshots from the post, dressed in
-      // the motion reel's lobster, type and colours. node render.mjs recap [1 2 3 4] renders them.
+      // the motion reel's lobster, type and colours. bun render.mjs recap [1 2 3 4] renders them.
       const V = new URLSearchParams(location.search).get("v") ?? "1";
       const BLOG = "../out/recap/blog/"; // symlink to the post's img folder, made by render.mjs
       const stage = document.getElementById("stage");
@@ -117,7 +117,7 @@
         return box;
       }
 
-      // The reel's 3D lobster, rendered transparent by `node render.mjs lobster`; bbox of the logo in that frame.
+      // The reel's 3D lobster, rendered transparent by `bun render.mjs lobster`; bbox of the logo in that frame.
       const LOB = [475, 209, 922, 672];
       function lobster(left, top, w) {
         const s = w / LOB[2];

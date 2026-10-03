@@ -22,7 +22,7 @@ docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml
 Start Fumadocs in another terminal:
 
 ```sh
-WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+WORKSHOP_API_URL=http://127.0.0.1:8090 bun run dev:docs
 ```
 
 PocketBase runs at `http://127.0.0.1:8090`; create the first superuser under `/_/`. Workshop is available at
