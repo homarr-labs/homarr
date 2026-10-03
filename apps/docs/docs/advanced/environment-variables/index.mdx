@@ -49,6 +49,8 @@ Workshop service operators can find its server-only configuration in the
 
 `DEMO_MODE=true` seeds demo data and makes Assistant return a fixed response without calling a model provider. `DEMO_READ_ONLY` defaults to `true`, blocking dashboard and configuration changes. Authenticated users can still save and manage their own Assistant conversations so canned chats work. Set `DEMO_READ_ONLY=false` for editable preview deployments.
 
+The seeded board in a read-only demo fetches widget data when it opens without periodic polling. To run multiple demo replicas, use one shared PostgreSQL database and an external Redis instance, and set the same `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` on every replica. The default SQLite database and Redis run inside each container; separate databases produce different seeded integration IDs and sessions, causing widget errors when requests reach another replica.
+
 ### Workshop service
 
 These variables configure the separate Workshop service, not the Homarr application container.
@@ -77,9 +79,10 @@ See [Single Sign-On](/docs/advanced/single-sign-on) for more informations.
 
 The `SECRET_ENCRYPTION_KEY` is required. If none is specified before starting the container, a random key will be shown in the error message and the container will exit.
 
-| Environment Variable    | Description                                 | Possible values         | Default |
-| ----------------------- | ------------------------------------------- | ----------------------- | ------- |
-| `SECRET_ENCRYPTION_KEY` | Secret used to encrypt secrets in database. | 64 character hex string | -       |
+| Environment Variable    | Description                                          | Possible values         | Default                   |
+| ----------------------- | ---------------------------------------------------- | ----------------------- | ------------------------- |
+| `SECRET_ENCRYPTION_KEY` | Secret used to encrypt secrets in database.          | 64 character hex string | -                         |
+| `AUTH_SECRET`           | Auth.js secret; use the same value on every replica. | Random secret string    | Generated on each startup |
 
 <Alert type="info">
 
