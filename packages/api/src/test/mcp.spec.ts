@@ -66,6 +66,7 @@ const MCP_TOOL_ALLOWLIST = {
     "integration_search",
     "integration_searchInIntegration",
     "integration_searchMediaRequests",
+    "integration_test",
     "invite_getAll",
     "kubernetes_contexts_getContexts",
     "kubernetes_ingresses_getIngresses",

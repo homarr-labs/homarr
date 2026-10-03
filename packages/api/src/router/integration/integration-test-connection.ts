@@ -23,9 +23,8 @@ export const testConnectionAsync = async (
   }[] = [],
 ) => {
   logger.info("Testing connection", {
-    integrationName: integration.name,
+    integrationId: integration.id,
     integrationKind: integration.kind,
-    integrationUrl: integration.url,
   });
 
   const decryptedDbSecrets = dbSecrets
@@ -36,17 +35,13 @@ export const testConnectionAsync = async (
           value: decryptSecret(secret.value),
           source: "db" as const,
         };
-      } catch (error) {
+      } catch {
         logger.warn(
-          new ErrorWithMetadata(
-            "Failed to decrypt secret from database",
-            {
-              integrationName: integration.name,
-              integrationKind: integration.kind,
-              secretKind: secret.kind,
-            },
-            { cause: error },
-          ),
+          new ErrorWithMetadata("Failed to decrypt secret from database", {
+            integrationId: integration.id,
+            integrationKind: integration.kind,
+            secretKind: secret.kind,
+          }),
         );
         return null;
       }
@@ -94,9 +89,8 @@ export const testConnectionAsync = async (
   const result = await integrationInstance.testConnectionAsync();
   if (result.success) {
     logger.info("Tested connection successfully", {
-      integrationName: integration.name,
+      integrationId: integration.id,
       integrationKind: integration.kind,
-      integrationUrl: integration.url,
     });
   }
   return result;

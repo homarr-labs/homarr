@@ -387,15 +387,11 @@ export async function createIntegrationAsync(
     return instance;
   } catch (error) {
     logger.warn(
-      new ErrorWithMetadata(
-        "Integration client creation failed",
-        {
-          integrationId: integration.id,
-          integrationKind: integration.kind,
-          durationMs: Date.now() - startedAt,
-        },
-        { cause: error },
-      ),
+      new ErrorWithMetadata("Integration client creation failed", {
+        integrationId: integration.id,
+        integrationKind: integration.kind,
+        durationMs: Date.now() - startedAt,
+      }),
     );
     throw error;
   }

@@ -37,7 +37,7 @@ export class TestConnectionService {
 
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
     logger.debug("Testing connection", {
-      url: this.url.toString(),
+      origin: this.url.origin,
     });
 
     const testingResult = await testingCallbackAsync({
@@ -73,15 +73,17 @@ export class TestConnectionService {
 
     if (testingResult.success) {
       logger.debug("Testing connection succeeded", {
-        url: this.url.toString(),
+        origin: this.url.origin,
       });
 
       return testingResult;
     }
 
+    let errorType = "certificate";
+    if (testingResult.error instanceof TestConnectionError) errorType = testingResult.error.type;
     logger.debug("Testing connection failed", {
-      url: this.url.toString(),
-      error: `${testingResult.error.name}: ${testingResult.error.message}`,
+      origin: this.url.origin,
+      errorType,
     });
 
     if (!(testingResult.error instanceof IntegrationRequestError)) {
@@ -98,7 +100,7 @@ export class TestConnectionService {
 
   private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {
     logger.debug("Fetching certificate", {
-      url: this.url.toString(),
+      origin: this.url.origin,
     });
 
     const url = this.url;
@@ -125,7 +127,7 @@ export class TestConnectionService {
     socket.destroy();
 
     logger.debug("Fetched certificate", {
-      url: this.url.toString(),
+      origin: this.url.origin,
       subject: x509?.subject,
       issuer: x509?.issuer,
     });
