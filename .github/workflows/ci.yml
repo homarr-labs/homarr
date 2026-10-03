@@ -129,8 +129,13 @@ jobs:
       - name: Copy environment defaults
         run: cp .env.example .env
 
-      - name: Lint, typecheck, and build affected workspaces
-        run: bun run turbo run lint typecheck build --affected --continue=dependencies-successful --concurrency=2
+      - name: Lint, typecheck, and build workspaces
+        run: |
+          scope=(--affected)
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            scope=()
+          fi
+          bun run turbo run lint typecheck build "${scope[@]}" --continue=dependencies-successful --concurrency=2
 
       - name: Validate workspace configuration
         run: bun run lint:ws
