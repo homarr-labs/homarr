@@ -93,9 +93,10 @@ try:
                 policy = 'local:rw'
             elif phase.startswith('remote'):
                 policy = 'remote:r'
-            extra = ['--force'] if phase == 'prime' else []
+            if phase == 'prime':
+                policy = 'local:w' if args.local else 'local:w,remote:w'
             start = time.monotonic()
-            completed = subprocess.run(command + ['--cache=' + policy, *extra], env=env, text=True, capture_output=True)
+            completed = subprocess.run(command + ['--cache=' + policy], env=env, text=True, capture_output=True)
             elapsed = time.monotonic() - start
             (out / (phase + '.log')).write_text(sanitize(completed.stdout + completed.stderr))
             if completed.returncode:
