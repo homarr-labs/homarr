@@ -1,9 +1,0 @@
-Scope: all 41 workspace projects
-✓ Lockfile passes supply-chain policies (verified 1s ago)
-Lockfile is up to date, resolution step is skipped
-Packages: +2173
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 0, reused 1, downloaded 0, added 0
-Progress: resolved 0, reused 2056, downloaded 0, added 1105
-Progress: resolved 0, reused 2056, downloaded 0, added 2173, done
-[ERR_PNPM_ENOENT] ENOENT: no such file or directory, rename 'node_modules/drizzle-kit/node_modules/_tmp_2907809_430523c913b917a2b8625f771c911103' -> 'node_modules/drizzle-kit/node_modules/esbuild'

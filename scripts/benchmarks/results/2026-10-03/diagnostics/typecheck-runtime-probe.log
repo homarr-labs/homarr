@@ -1,2 +1,0 @@
-$ tsc --noEmit
-BENCHMARK_RUNTIME {"node":"v24.18.0","bun":null,"execPath":"/home/habs/.local/share/mise/installs/node/24.18.0/bin/node","argv":["/home/habs/.local/share/mise/installs/node/24.18.0/bin/node","/tmp/homarr-bun-comparison-20261003/bun/node_modules/.bin/tsc"]}

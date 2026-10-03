@@ -1,4 +1,0 @@
-{"name":"Pinned cross-revision migration","claimEligible":true,"reasons":[]}
-{"name":"Spotlight must reject cross-revision data","claimEligible":false,"reasons":["build measured revisions do not match","runtime image revisions do not match","runtime host, browser, container, or workload configuration does not match","baseline Spotlight idle policy is not mounted"]}
-{"name":"Per-variant changed measured revision","claimEligible":false,"reasons":["candidate build measured revision changes within the series","candidate warmup measured revision does not match the measured series","runtime image revisions do not match their build revisions"]}
-{"name":"Runtime must match warmup image","claimEligible":false,"reasons":["candidate runtime image identity does not match the candidate warmup image"]}

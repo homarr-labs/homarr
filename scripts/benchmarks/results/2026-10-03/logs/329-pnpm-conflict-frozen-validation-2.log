@@ -1,9 +1,0 @@
-Scope: all 41 workspace projects
-✓ Lockfile passes supply-chain policies (verified 1s ago)
-Lockfile is up to date, resolution step is skipped
-Packages: +2177
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 0, reused 1, downloaded 0, added 0
-Progress: resolved 0, reused 2056, downloaded 0, added 1342
-Progress: resolved 0, reused 2056, downloaded 0, added 2177, done
-[ERR_PNPM_ENOENT] ENOENT: no such file or directory, rename 'node_modules/vite/node_modules/_tmp_2933848_db806d9313644238f5d383a1cf4aeaf8' -> 'node_modules/vite/node_modules/esbuild'

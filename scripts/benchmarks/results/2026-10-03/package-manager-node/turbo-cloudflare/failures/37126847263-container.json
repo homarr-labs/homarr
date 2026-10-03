@@ -1,9 +1,0 @@
-{
-  "source": "ce916a425b8463f2ec1954f4a35e75dca057f0ad",
-  "run": 37126847263,
-  "status": "FAIL",
-  "stage": "converted database boots and survives restart",
-  "cause": "Assembly omitted the middleware entrypoint because NFT lists dependencies, not the entrypoint itself",
-  "evidence": "The login response had no form, text or scripts; the standalone middleware file was absent",
-  "fix": "Include existing NFT entrypoint files in standalone assembly"
-}

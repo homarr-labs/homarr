@@ -4,6 +4,10 @@ The current target uses Bun for package management and Node for application,
 compiler, migration, and operational CLI runtimes. Archived full Bun runtime
 measurements describe a rejected configuration, not the current target.
 
+Captured reports and logs are preserved in
+[archive commit 8f7d3bcd1](https://github.com/homarr-labs/homarr/tree/8f7d3bcd14109bfb13fa664d31710b88d820ad66/scripts/benchmarks/results).
+Keep new captures in ignored `benchmark-results/` or Actions artifacts.
+
 Run from the repository root with Node 24.18.0, pnpm 11.15.1, Bun 1.4.2,
 Python 3, GNU time, tar, and zstd. Install pnpm outside the Bun checkout:
 

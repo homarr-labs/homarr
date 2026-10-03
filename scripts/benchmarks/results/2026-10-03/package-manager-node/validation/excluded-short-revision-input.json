@@ -1,9 +1,0 @@
-{
-  "workflow_run": 37119704886,
-  "stage": "Fast gate checkout",
-  "input_ref": "bb57b87fb",
-  "reason": "A branch or tag with the name 'bb57b87fb' could not be found",
-  "replacement_run": 37119959088,
-  "replacement_ref": "bb57b87fb7f2068f87241cdcbd9d97912b0238ac",
-  "method": "Manual invocation supplied a short SHA, which actions/checkout interpreted as a branch/tag. Repeated with the full 40-character SHA; no application measurements were taken from the rejected invocation."
-}
