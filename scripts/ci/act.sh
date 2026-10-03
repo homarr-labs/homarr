@@ -33,7 +33,8 @@ head_sha=$(git rev-parse HEAD)
 head_ref=$(git branch --show-current)
 head_ref=${head_ref:-act-local}
 event_file=$(mktemp "${TMPDIR:-/tmp}/homarr-act-event.XXXXXX")
-trap 'rm -f "$event_file"' EXIT
+environment_file=$(mktemp "${TMPDIR:-/tmp}/homarr-act-env.XXXXXX")
+trap 'rm -f "$event_file" "$environment_file"' EXIT
 
 json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g; s/\t/\\t/g'; }
 
@@ -105,7 +106,7 @@ fi
 
 git_common_dir=$(cd "$(git rev-parse --git-common-dir)" && pwd)
 # Bun loads .env automatically; reproduce GitHub's checkout without local settings.
-container_options="--volume /dev/null:$PWD/.env:ro --volume homarr-act-bun-1-4-2-node-24-18-0-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
+container_options="--volume $environment_file:$PWD/.env --volume homarr-act-bun-1-4-2-node-24-18-0-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
 case "$git_common_dir" in
   "$PWD" | "$PWD"/*) ;;
   *) container_options="$container_options --volume $git_common_dir:$git_common_dir:ro" ;;
