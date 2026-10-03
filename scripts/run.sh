@@ -64,7 +64,11 @@ fi
 # Keep an explicitly configured secret stable across replicas. Single-container
 # installations still get a generated secret when none is provided.
 if [ -z "${AUTH_SECRET:-}" ]; then
-  export AUTH_SECRET="$(openssl rand -base64 32)"
+  AUTH_SECRET="$(openssl rand -base64 32)" || {
+    echo "ERROR: Failed to generate AUTH_SECRET, aborting startup" >&2
+    exit 1
+  }
+  export AUTH_SECRET
 fi
 
 # Start nginx proxy
