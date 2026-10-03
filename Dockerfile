@@ -28,7 +28,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
     --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
     --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}" \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
     bun run turbo build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM alpine:3.24.1 AS runner

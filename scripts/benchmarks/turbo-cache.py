@@ -22,8 +22,8 @@ env = dict(os.environ, CI='true', SKIP_ENV_VALIDATION='true')
 turbo = args.turbo or root / 'node_modules/.bin/turbo'
 command = [str(turbo.resolve()), 'run']
 
-def hashes():
-    completed = subprocess.run(command + ['lint', 'format', 'typecheck', 'build', '--filter=@homarr/common', '--filter=@homarr/nextjs', '--filter=@homarr/docs', '--filter=@homarr/cli', '--dry=json'], cwd=root, env=env, text=True, capture_output=True, check=True)
+def hashes(environment=None):
+    completed = subprocess.run(command + ['lint', 'format', 'typecheck', 'build', '--filter=@homarr/common', '--filter=@homarr/nextjs', '--filter=@homarr/docs', '--filter=@homarr/cli', '--dry=json'], cwd=root, env=environment or env, text=True, capture_output=True, check=True)
     return {task['taskId']: task['hash'] for task in json.loads(completed.stdout)['tasks']}
 
 configs = ['turbo.json', 'apps/nextjs/turbo.json', 'apps/docs/turbo.json', 'packages/cli/turbo.json', 'packages/db/turbo.json']
@@ -39,6 +39,11 @@ checks = [
     ('.oxfmtrc.json', '@homarr/common#format', 'newline', True),
     ('static-data/contributors.json', '@homarr/nextjs#build', 'newline', True),
     ('tools/motion-reel/three/lab-types.ts', '@homarr/docs#build', 'newline', True),
+    ('apps/docs/docs/advanced/command-line/index.mdx', '@homarr/docs#build', 'newline', True),
+    ('apps/docs/.env.turbo-cache-probe', '@homarr/docs#build', 'environment', True),
+    ('apps/nextjs/.env.turbo-cache-probe', '@homarr/nextjs#build', 'environment', True),
+    ('.env.turbo-cache-probe', '@homarr/nextjs#build', 'environment', True),
+    ('.env.turbo-cache-probe', '@homarr/cli#build', 'environment', False),
     ('static-data/contributors.json', '@homarr/cli#build', 'newline', False),
     ('packages/core/src/cache-invalidation-probe.spec.tsx', '@homarr/nextjs#build', 'test', False),
 ]
@@ -74,6 +79,10 @@ try:
                     data = json.loads(original)
                     data['version'] = '0.0.0-cache-probe'
                     path.write_text(json.dumps(data, indent=2) + '\n')
+                elif mode == 'environment':
+                    if original is not None:
+                        raise RuntimeError(f'Refusing to replace existing environment probe: {path}')
+                    path.write_text('TURBO_CACHE_PROBE_VALUE=example\n')
                 elif mode == 'test':
                     path.write_text('export const ignoredBuildTest = true;\n')
                 else:
@@ -82,6 +91,9 @@ try:
                 records.append({'input': file, 'task': task, 'expectedInvalidation': expected, 'actualInvalidation': before[task] != after[task], 'beforeHash': before[task], 'afterHash': after[task]})
             finally:
                 restore(path, original)
+        for variable, task in [('TURBO_PLATFORM', '@homarr/nextjs#build'), ('TURBO_PLATFORM', '@homarr/docs#build'), ('TURBO_PLATFORM', '@homarr/cli#build'), ('TURBO_PLATFORM', '@homarr/db#build'), ('WORKSHOP_URL', '@homarr/docs#build')]:
+            after = hashes(dict(env, **{variable: 'turbo-cache-invalidation-probe'}))
+            records.append({'input': variable, 'task': task, 'expectedInvalidation': True, 'actualInvalidation': before[task] != after[task], 'beforeHash': before[task], 'afterHash': after[task]})
         (out / f'invalidation-{stage}.json').write_text(json.dumps(records, indent=2) + '\n')
         if stage == 'after' and not all(record['expectedInvalidation'] == record['actualInvalidation'] for record in records):
             raise RuntimeError('Cache invalidation failed')

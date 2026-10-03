@@ -2,7 +2,13 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/package.json", "$TURBO_ROOT$/static-data/**"]
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/static-data/**",
+        ".env*",
+        "$TURBO_ROOT$/.env*"
+      ]
     },
     "typecheck": {
       "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/static-data/**"]

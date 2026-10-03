@@ -16,6 +16,10 @@ on:
       package_managers:
         type: boolean
         default: true
+      turbo:
+        description: Verify signed remote caching for both Next.js apps and static bundles
+        type: boolean
+        default: false
       comparison_run:
         type: string
         default: ""
@@ -36,6 +40,10 @@ on:
         description: Benchmark installs, workspaces, tools, and lockfile conflicts
         type: boolean
         default: true
+      turbo:
+        description: Verify signed remote caching for both Next.js apps and static bundles
+        type: boolean
+        default: false
       comparison_run:
         description: Recheck captured production artifacts from this completed run ID
         type: string
@@ -160,3 +168,34 @@ jobs:
             python3 scripts/benchmarks/summarize-production-migration.py \
               benchmark-results/production-migration/production-migration.json >> "$GITHUB_STEP_SUMMARY"
           fi
+
+  turbo-cache:
+    if: inputs.turbo
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TURBO_API: ${{ secrets.TURBO_API }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.candidate || github.sha }}
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - run: cp .env.example .env
+      - name: Verify local and signed remote restoration without existing outputs
+        run: python3 scripts/benchmarks/turbo-remote-cache.py --output benchmark-results/turbo-remote-cache
+      - name: Validate restored documentation
+        run: |
+          bun run --filter @homarr/docs validate:links
+          bun run --filter @homarr/docs verify:search
+          bun run --filter @homarr/docs verify:seo
+      - name: Preserve remote cache evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: turbo-remote-cache-${{ github.run_id }}
+          path: benchmark-results/turbo-remote-cache/
+          if-no-files-found: error

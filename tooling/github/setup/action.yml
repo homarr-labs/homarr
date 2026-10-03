@@ -1,6 +1,11 @@
 name: "Setup and install"
 description: "Common setup steps for Actions"
 
+inputs:
+  next-cache:
+    description: Restore Next.js compiler caches for build jobs
+    default: "false"
+
 runs:
   using: composite
   steps:
@@ -11,6 +16,17 @@ runs:
     - uses: oven-sh/setup-bun@v2
       with:
         bun-version: 1.4.2
+
+    - name: Identify the build platform
+      shell: bash
+      run: |
+        node --input-type=module -e '
+          import { appendFileSync } from "node:fs";
+          const arch = { x64: "amd64", arm64: "arm64" }[process.arch] ?? process.arch;
+          let libc = "musl";
+          if (process.report.getReport().header.glibcVersionRuntime) libc = "glibc";
+          appendFileSync(process.env.GITHUB_ENV, `TURBO_PLATFORM=${process.platform}/${arch}/${libc}/node-${process.versions.node}\n`);
+        '
 
     - name: Restore Bun dependency cache
       if: "!env.ACT"
@@ -24,11 +40,22 @@ runs:
     - shell: bash
       run: bun install --frozen-lockfile --concurrent-scripts=1
 
-    - name: Restore local Turbo artifacts without remote credentials
-      if: "!env.ACT && !env.TURBO_TOKEN"
+    - name: Restore local Turbo artifacts
+      if: "!env.ACT"
       uses: actions/cache@v5
       with:
         path: .turbo/cache
         key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-
+
+    - name: Restore Next.js compiler caches
+      if: inputs.next-cache == 'true' && !env.ACT
+      uses: actions/cache@v5
+      with:
+        path: |
+          apps/nextjs/.next/cache
+          apps/docs/.next/cache
+        key: ${{ env.TURBO_PLATFORM }}-next-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ env.TURBO_PLATFORM }}-next-${{ hashFiles('bun.lock') }}-

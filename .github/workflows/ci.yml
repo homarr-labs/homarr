@@ -46,6 +46,10 @@ on:
         description: Include package manager, workspace, and conflict benchmarks
         type: boolean
         default: true
+      benchmark_turbo:
+        description: Verify signed Turbo remote caching and output restoration
+        type: boolean
+        default: false
       benchmark_compare_run:
         description: Recheck production artifacts from a completed benchmark run ID
         type: string
@@ -75,7 +79,9 @@ jobs:
     permissions:
       contents: read
       actions: read
+    secrets: inherit
     with:
+      turbo: ${{ inputs.benchmark_turbo || false }}
       baseline: ${{ inputs.benchmark_baseline || '3adb63850d8fd8f9ea2b3d72db82f4591f950e41' }}
       candidate: ${{ inputs.ref || github.sha }}
       production: ${{ inputs.benchmark_production || false }}
@@ -100,7 +106,6 @@ jobs:
       TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
-      TURBO_PLATFORM: linux/amd64
     steps:
       - name: Require database validation
         env:
@@ -125,6 +130,8 @@ jobs:
 
       - name: Setup
         uses: ./tooling/github/setup
+        with:
+          next-cache: "true"
 
       - name: Copy environment defaults
         run: cp .env.example .env

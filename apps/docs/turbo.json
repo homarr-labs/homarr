@@ -2,13 +2,21 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "env": ["$TURBO_EXTENDS$", "HOMARR_WEBSITE_URL", "WORKSHOP_API_URL", "WORKSHOP_WEB_URL", "KAPA_WEBSITE_ID"],
+      "env": [
+        "$TURBO_EXTENDS$",
+        "HOMARR_WEBSITE_URL",
+        "WORKSHOP_API_URL",
+        "WORKSHOP_WEB_URL",
+        "KAPA_WEBSITE_ID",
+        "WORKSHOP_URL"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/packages/definitions/src/docs/**",
-        "$TURBO_ROOT$/tools/motion-reel/three/**"
+        "$TURBO_ROOT$/tools/motion-reel/three/**",
+        ".env*"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "out/**", "next-env.d.ts"]
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "out/**", "next-env.d.ts", ".source/**"]
     },
     "typecheck": {
       "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/tools/motion-reel/three/**"]

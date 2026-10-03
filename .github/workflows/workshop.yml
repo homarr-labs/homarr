@@ -117,6 +117,11 @@ jobs:
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=workshop-linux-amd64
           cache-to: type=gha,scope=workshop-linux-amd64,mode=max
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
 
   publish-arm64:
     if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'release/v2' || github.ref_name == 'main')
@@ -147,6 +152,11 @@ jobs:
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=workshop-linux-arm64
           cache-to: type=gha,scope=workshop-linux-arm64,mode=max
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
 
   publish:
     if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'release/v2' || github.ref_name == 'main')
