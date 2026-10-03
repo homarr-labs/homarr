@@ -25,4 +25,6 @@ apps/nextjs/.next
 !.env.example
 
 benchmark-results
+scripts/benchmarks/results
+**/__pycache__
 **/*.tsbuildinfo
