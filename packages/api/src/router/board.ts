@@ -4,7 +4,12 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import { createId, generateResponsiveGridFor } from "@homarr/common";
+import {
+  createId,
+  generateResponsiveGridFor,
+  getLayoutResizeSource,
+  serializeLayoutResizeSource,
+} from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -864,6 +869,7 @@ export const boardRouter = createTRPCRouter({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         id: layoutsMap.get(layout.id)!,
         boardId: newBoardId,
+        resizeSource: null,
       }));
 
       const sectionMap = new Map<string, string>(boardSections.map((section) => [section.id, createId()]));
@@ -1358,6 +1364,7 @@ export const boardRouter = createTRPCRouter({
       const itemSectionLayoutsToUpdate: InferInsertModel<typeof itemLayouts>[] = [];
       const sectionLayoutsToUpdate: InferInsertModel<typeof sectionLayouts>[] = [];
       const layoutsToUpdate = filterUpdatedItems(input.layouts, board.layouts);
+      const resizeSourcesToUpdate = new Map<string, string | null>();
 
       for (const updatedLayout of layoutsToUpdate) {
         const dbLayout = existingLayoutsById.get(updatedLayout.id);
@@ -1386,6 +1393,7 @@ export const boardRouter = createTRPCRouter({
                   rightGutterColumnCount: updatedLayout.rightGutterColumnCount,
                 },
               });
+        resizeSourcesToUpdate.set(updatedLayout.id, projectedLayout.resizeSource);
         itemSectionLayoutsToUpdate.push(...projectedLayout.itemSectionLayouts);
         sectionLayoutsToUpdate.push(...projectedLayout.sectionLayouts);
       }
@@ -1441,6 +1449,7 @@ export const boardRouter = createTRPCRouter({
               await transaction
                 .update(schema.layouts)
                 .set({
+                  ...getResizeSourceUpdate(resizeSourcesToUpdate, layout.id),
                   name: layout.name,
                   columnCount: layout.columnCount,
                   leftGutterColumnCount: layout.leftGutterColumnCount,
@@ -1499,6 +1508,7 @@ export const boardRouter = createTRPCRouter({
               transaction
                 .update(layouts)
                 .set({
+                  ...getResizeSourceUpdate(resizeSourcesToUpdate, layout.id),
                   name: layout.name,
                   columnCount: layout.columnCount,
                   leftGutterColumnCount: layout.leftGutterColumnCount,
@@ -1564,6 +1574,10 @@ export const boardRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
+            await transaction
+              .update(schema.layouts)
+              .set({ resizeSource: null })
+              .where(eq(schema.layouts.id, targetLayout.id));
             await transaction.delete(schema.itemLayouts).where(eq(schema.itemLayouts.layoutId, targetLayout.id));
             await transaction.delete(schema.sectionLayouts).where(eq(schema.sectionLayouts.layoutId, targetLayout.id));
             if (projectedLayout.itemSectionLayouts.length > 0) {
@@ -1576,6 +1590,7 @@ export const boardRouter = createTRPCRouter({
         },
         handleSync(db) {
           db.transaction((transaction) => {
+            transaction.update(layouts).set({ resizeSource: null }).where(eq(layouts.id, targetLayout.id)).run();
             transaction.delete(itemLayouts).where(eq(itemLayouts.layoutId, targetLayout.id)).run();
             transaction.delete(sectionLayouts).where(eq(sectionLayouts.layoutId, targetLayout.id)).run();
             if (projectedLayout.itemSectionLayouts.length > 0) {
@@ -2511,8 +2526,14 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
   }
 };
 
+const getResizeSourceUpdate = (sources: ReadonlyMap<string, string | null>, layoutId: string) => {
+  if (!sources.has(layoutId)) return {};
+  return { resizeSource: sources.get(layoutId) ?? null };
+};
+
 interface BoardForLayoutProjection {
   id: string;
+  layouts: Array<{ id: string; resizeSource?: string | null }>;
   items: Array<{
     id: string;
     layouts: Array<{
@@ -2547,7 +2568,13 @@ const getUpdatedBoardLayout = (
     current: BoardLayoutGeometry;
   },
 ) => {
-  const elements = options.previous.elements ?? getElementsForLayout(board, options.previous.layoutId);
+  const currentElements = options.previous.elements ?? getElementsForLayout(board, options.previous.layoutId);
+  const savedLayout = board.layouts.find((layout) => layout.id === options.previous.layoutId);
+  let serializedSource: string | null | undefined;
+  if (options.previous.layoutId === options.current.layoutId) serializedSource = savedLayout?.resizeSource;
+  const source = getLayoutResizeSource(options.previous, currentElements, serializedSource);
+  const elements = source.elements;
+  const previousGeometry = { ...source.geometry, layoutId: options.previous.layoutId };
   const emptyRoots = board.sections
     .filter((section) => section.kind === "empty")
     .toSorted((first, second) => (first.yOffset ?? 0) - (second.yOffset ?? 0) || first.id.localeCompare(second.id));
@@ -2586,12 +2613,12 @@ const getUpdatedBoardLayout = (
     const sourceLanes = boardLanes.filter(
       (sourceLane) =>
         rootByLane.has(sourceLane) &&
-        getBoardLaneColumnCount(options.previous, sourceLane) > 0 &&
+        getBoardLaneColumnCount(previousGeometry, sourceLane) > 0 &&
         targetLaneBySourceLane.get(sourceLane) === lane,
     );
     const previousWidth =
       sourceLanes.length === 1
-        ? getBoardLaneColumnCount(options.previous, sourceLanes[0] ?? "main")
+        ? getBoardLaneColumnCount(previousGeometry, sourceLanes[0] ?? "main")
         : Number.MAX_SAFE_INTEGER;
 
     return [
@@ -2644,6 +2671,7 @@ const getUpdatedBoardLayout = (
   return {
     itemSectionLayouts: itemSectionLayoutsCollection,
     sectionLayouts: sectionLayoutsCollection,
+    resizeSource: serializeLayoutResizeSource(source, options.current, updatedElements),
   };
 };
 
@@ -2948,7 +2976,11 @@ const getFullBoardWithWhereAsync = async (
   return {
     ...otherBoardProperties,
     layouts: layouts
-      .map(({ boardId: _, ...layout }) => layout)
+      .map(({ boardId: _, resizeSource, ...layout }) => {
+        const result: typeof layout & { resizeSource?: string | null } = layout;
+        if (resizeSource) result.resizeSource = resizeSource;
+        return result;
+      })
       .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
     sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({

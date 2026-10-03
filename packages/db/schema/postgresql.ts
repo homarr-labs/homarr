@@ -349,6 +349,7 @@ export const layouts = pgTable("layout", {
   rightGutterColumnCount: smallint().notNull().default(0),
   breakpoint: smallint().notNull().default(0),
   role: varchar({ length: 16 }).$type<LayoutRole>().notNull().default("custom"),
+  resizeSource: text(),
 });
 
 export const itemLayouts = pgTable(

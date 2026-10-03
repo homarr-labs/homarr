@@ -42,6 +42,11 @@ Tiles use fixed `200 × 200` logical-pixel cells with a `24px` gap. Homarr scale
 width instead of changing each widget's proportions. **Reset from Base** regenerates a Mobile or custom layout from the
 current Base layout.
 
+Changing column or sidebar counts keeps a saved source arrangement while its generated positions remain unedited.
+Widening back restores that arrangement, including Container sizes. Moving, resizing, adding, or removing content
+starts a new source arrangement on the next layout resize. This cannot restore positions lost before this behavior
+was introduced; widen the affected Container before moving widgets into its right-hand columns.
+
 ### Containers and rails
 
 A **Container** groups apps, widgets, and nested Containers. It can have a label, collapse control, app-opening action,
