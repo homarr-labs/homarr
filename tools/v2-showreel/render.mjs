@@ -1,10 +1,10 @@
 // Frame-accurate renderer: seeks the page to each frame time and captures it.
-//   node render.mjs stills 1 2.5 front-door@3  → out/stills/*.png (scene@t = authored scene time)
-//   node render.mjs video [--from a] [--to b] [--workers 3] [--fps 60] [--sub 1] [--chunk 120] [--recycle 6]
+//   bun render.mjs stills 1 2.5 front-door@3  → out/stills/*.png (scene@t = authored scene time)
+//   bun render.mjs video [--from a] [--to b] [--workers 3] [--fps 60] [--sub 1] [--chunk 120] [--recycle 6]
 //     resumable: finished chunks in out/seg are skipped; delete out/seg to start over
-//   node render.mjs cues                      → out/cues.json
-//   node render.mjs lobster outro@3 [name]    → out/recap/frames/<name>.png (the 3D logo alone, transparent)
-//   node render.mjs recap [1 2 3 4]           → out/recap/homarr-v2-recap-N.png from recap/index.html?v=N
+//   bun render.mjs cues                      → out/cues.json
+//   bun render.mjs lobster outro@3 [name]    → out/recap/frames/<name>.png (the 3D logo alone, transparent)
+//   bun render.mjs recap [1 2 3 4]           → out/recap/homarr-v2-recap-N.png from recap/index.html?v=N
 import { chromium } from "playwright-core";
 import { createServer } from "node:http";
 import { readFile, mkdir, writeFile, rename, symlink } from "node:fs/promises";
@@ -125,7 +125,7 @@ if (mode === "stills") {
   }
   await browser.close();
 } else if (mode === "eval") {
-  // node render.mjs eval <scene@t|t> "<js expression>"  → prints the result after seeking
+  // bun render.mjs eval <scene@t|t> "<js expression>"  → prints the result after seeking
   const { browser, page } = await openPage(port);
   const [name, lt] = args[1].includes("@") ? args[1].split("@") : [null, args[1]];
   const t = name ? await page.evaluate(([n, x]) => window.__at(n, x), [name, Number(lt)]) : Number(lt);
@@ -172,7 +172,7 @@ if (mode === "stills") {
   // The page reads the blog post's screenshots through this link and the lobster from `lobster outro@3`.
   const blog = join(out, "blog");
   if (!existsSync(blog)) await symlink(resolve(root, "../../apps/docs/blog/2026/09-03-homarr-2.0/img"), blog);
-  if (!existsSync(join(out, "frames/lobster-front.png"))) throw new Error('run: PATCH=\'{"x":0,"y":0,"scale":1.1,"dust":0,"sparks":-1}\' node render.mjs lobster outro@3 lobster-front');
+  if (!existsSync(join(out, "frames/lobster-front.png"))) throw new Error('run: PATCH=\'{"x":0,"y":0,"scale":1.1,"dust":0,"sparks":-1}\' bun render.mjs lobster outro@3 lobster-front');
   for (const v of args.length > 1 ? args.slice(1) : ["1", "2", "3", "4"]) {
     const { browser, page } = await openPage(port, `recap/index.html?v=${v}`);
     const f = join(out, `homarr-v2-recap-${v}.png`);

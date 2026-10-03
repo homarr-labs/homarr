@@ -1,4 +1,4 @@
-// Screenshots reel times (seconds): node preview.mjs 21.4 23.05 -> preview/t_21.400.png
+// Screenshots reel times (seconds): bun preview.mjs 21.4 23.05 -> preview/t_21.400.png
 import { chromium } from "playwright";
 import { mkdirSync } from "node:fs";
 const times = process.argv.slice(2).map(Number);
