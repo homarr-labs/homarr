@@ -32,6 +32,9 @@ Workspace memory means GNU time's maximum process RSS for the existing typecheck
 command: one first run and two incremental runs. This is neither an additive
 memory budget nor the production memory of a library. Libraries share their app's
 process. Failed commands remain in the JSON and cannot support speedup claims.
+The sharing inventory resolves every declared external dependency from every
+JavaScript workspace, grouping installed paths/inodes by name and version. Bun
+runtime built-ins are reported separately from installed packages.
 Standalone converter/showreel installs compare their original npm locks with Bun,
 and include CLI startup and showreel build measurements. The complete migration changes the dependency graph, so these measurements do
 not isolate package-manager implementation performance. Docs and CLI builds use

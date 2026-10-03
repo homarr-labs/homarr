@@ -182,6 +182,12 @@ class Benchmark:
         script = "const fs=require('fs');const out=[];for(const p of ['apps/nextjs','apps/docs','packages/ui','packages/widgets']){for(const d of ['react','@mantine/core']){try{const resolved=require.resolve(d,{paths:[process.cwd()+'/'+p]});const s=fs.statSync(resolved);let folder=require('path').dirname(resolved);while(!fs.existsSync(folder+'/package.json')||JSON.parse(fs.readFileSync(folder+'/package.json')).name!==d){const parent=require('path').dirname(folder);if(parent===folder)throw new Error('Package manifest not found');folder=parent;}out.push({workspace:p,dependency:d,path:fs.realpathSync(resolved).replace(process.cwd(),'CHECKOUT'),device:s.dev,inode:s.ino,version:JSON.parse(fs.readFileSync(folder+'/package.json')).version});}catch(e){out.push({workspace:p,dependency:d,error:String(e)})}}}console.log(JSON.stringify(out))"
         data = json.loads(capture([self.args.node, "-e", script], cwd=v["path"], env=v["env"]))
         self.metadata.setdefault("shared_resolution", {})[v["manager"]] = data
+        runtime = self.args.node
+        if v["manager"] == "bun":
+            runtime = self.args.bun
+        inventory_script = Path(__file__).resolve().parent / "workspace-sharing.mjs"
+        inventory = json.loads(capture([runtime, str(inventory_script), str(v["path"])], cwd=v["path"], env=v["env"]))
+        self.metadata.setdefault("complete_workspace_sharing", {})[v["manager"]] = inventory
         modules = [v["path"] / "node_modules", *v["path"].glob("apps/*/node_modules"), *v["path"].glob("packages/*/node_modules"), *v["path"].glob("tooling/*/node_modules")]
         self.metadata.setdefault("installation_sizes", {})[v["manager"]] = {"modules": tree_size(modules), "cache": tree_size(v["cache"]), "cache_and_modules_unique_inodes": tree_size([v["cache"], *modules])}
         lock = v["path"] / ("pnpm-lock.yaml" if v["manager"] == "pnpm" else "bun.lock")
