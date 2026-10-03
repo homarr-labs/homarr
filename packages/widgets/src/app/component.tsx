@@ -51,7 +51,7 @@ export default function AppWidget({
   let titleLineClamp = 2;
   if (isTiny) {
     padding = 4;
-    fontSize = rem(8);
+    fontSize = rem(12);
     titleLineClamp = 1;
   }
   if (isColumnLayout) gap = 0;
