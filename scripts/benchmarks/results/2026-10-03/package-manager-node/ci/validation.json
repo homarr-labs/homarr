@@ -13,5 +13,20 @@
   "hosted_final_validation_run": 37121624101,
   "benchmark_scope": "Bun package management, Node application runtimes",
   "performance_candidate": "8a12ea1e4af800f9dbf0c1e753af1b953f6b7c42",
-  "final_lock_change": "Three nested brace-expansion entries refreshed after performance capture; final act validates the updated graph."
+  "final_lock_change": "Three nested brace-expansion entries refreshed after performance capture; final act validates the updated graph.",
+  "hosted_final_validation": "success",
+  "review_threads": {
+    "total": 7,
+    "unresolved": 0
+  },
+  "hosted_quality_tasks": [
+    {
+      "successful": 80,
+      "total": 80
+    },
+    {
+      "successful": 2,
+      "total": 2
+    }
+  ]
 }
