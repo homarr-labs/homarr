@@ -18,6 +18,7 @@ FROM oven/bun:1.4.2-alpine AS bun-tool
 FROM node:24.18.0-alpine AS dependencies
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
+RUN apk add --no-cache libstdc++ python3 make g++
 COPY bun.lock bunfig.toml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs
@@ -34,7 +35,8 @@ COPY packages/ui ./packages/ui
 COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
-RUN --mount=type=cache,id=workshop-bun-cache,target=/root/.bun/install/cache bun install --filter @homarr/docs --frozen-lockfile
+RUN --mount=type=cache,id=workshop-bun-cache,target=/root/.bun/install/cache \
+    npm_config_nodedir=/usr/local bun install --filter @homarr/docs --frozen-lockfile --concurrent-scripts=1
 
 FROM dependencies AS website
 ARG KAPA_WEBSITE_ID=1e4656f4-abeb-4343-bbae-1d8626f52378

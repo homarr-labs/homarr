@@ -8,7 +8,7 @@
         "$TURBO_ROOT$/packages/definitions/src/docs/**",
         "$TURBO_ROOT$/tools/motion-reel/three/**"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "out/**", "next-env.d.ts"]
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "out/**", "next-env.d.ts"]
     },
     "typecheck": {
       "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/tools/motion-reel/three/**"]

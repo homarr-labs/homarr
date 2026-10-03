@@ -30,7 +30,15 @@
         "!**/LICENSE*",
         "!**/*.stories.{ts,tsx}"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".output/**", ".vercel/output/**", "build/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**",
+        "next-env.d.ts",
+        ".output/**",
+        ".vercel/output/**",
+        "build/**"
+      ]
     },
     "dev": {
       "persistent": true,
