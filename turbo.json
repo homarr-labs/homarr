@@ -1,6 +1,8 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "remoteCache": { "signature": true },
+  "remoteCache": {
+    "signature": true
+  },
   "globalEnv": ["CI", "NODE_ENV", "SKIP_ENV_VALIDATION"],
   "ui": "stream",
   "futureFlags": {
@@ -63,5 +65,6 @@
     "//#clean": {
       "cache": false
     }
-  }
+  },
+  "agentGuidance": false
 }

@@ -46,7 +46,7 @@ docker compose -p "$WORKSHOP_TEST_PROJECT" -f apps/workshop/docker-compose.yml e
   pocketbase superuser create \
   workshop-test@example.invalid 'WorkshopLocalTest123!' --dir=/pb_data
 
-WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" node apps/workshop/tests/workshop.integration.mjs
+WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" bun apps/workshop/tests/workshop.integration.mjs
 
 for client_id in workshop-test-client workshop-rotated-client; do
   GITHUB_CLIENT_ID="$client_id" GITHUB_CLIENT_SECRET="workshop-test-secret" PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" \
