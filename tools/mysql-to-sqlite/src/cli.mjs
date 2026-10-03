@@ -14,7 +14,7 @@ try {
   });
   if (values.help) {
     console.log(
-      "Usage: bun src/cli.mjs --output /output/db.sqlite --homarr-stopped\nSet MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE; optional MYSQL_PORT (3306), MYSQL_SSL_CA (PEM file). Supports Homarr v1.77.1 only.",
+      "Usage: node src/cli.mjs --output /output/db.sqlite --homarr-stopped\nSet MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE; optional MYSQL_PORT (3306), MYSQL_SSL_CA (PEM file). Supports Homarr v1.77.1 only.",
     );
   } else {
     for (const key of ["MYSQL_HOST", "MYSQL_USER", "MYSQL_PASSWORD", "MYSQL_DATABASE"]) {

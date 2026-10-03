@@ -21,8 +21,8 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "test": "bun --bun vitest run --root ../.. packages/workshop/src",
-    "typecheck": "bun --bun tsc --noEmit"
+    "test": "vitest run --root ../.. packages/workshop/src",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@homarr/custom-widgets": "workspace:^0.1.0",

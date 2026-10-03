@@ -193,7 +193,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.backup"),
           icon: IconDatabaseExport,
           href: "/manage/tools/backup",
-          hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "bun-sqlite",
+          hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
         },
       ],
     },

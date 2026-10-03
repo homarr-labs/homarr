@@ -78,7 +78,7 @@ Prefer these directions; verify the exact dependency in package manifests before
 
 ### Databases
 
-Drizzle schemas live in `packages/db/schema/`. `DB_DRIVER` selects `bun-sqlite` or `node-postgres`; MySQL and MariaDB are no longer runtime drivers in v2. Existing MySQL installations must use the documented converter before upgrading. Migrations live under `packages/db/migrations/sqlite/` and `packages/db/migrations/postgresql/`.
+Drizzle schemas live in `packages/db/schema/`. `DB_DRIVER` selects `better-sqlite3` or `node-postgres`; MySQL and MariaDB are no longer runtime drivers in v2. Existing MySQL installations must use the documented converter before upgrading. Migrations live under `packages/db/migrations/sqlite/` and `packages/db/migrations/postgresql/`.
 
 ### Widgets
 

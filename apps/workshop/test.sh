@@ -9,8 +9,8 @@ export HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true
 export OPENROUTER_API_KEY=workshop-test-openrouter-key
 
 docker build --target pocketbase-test -f apps/workshop/Dockerfile .
-bun apps/workshop/tests/workshop-contracts.mjs
-bun apps/workshop/tests/workshop-migration.mjs
+node apps/workshop/tests/workshop-contracts.mjs
+node apps/workshop/tests/workshop-migration.mjs
 
 cleanup() {
   PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose --profile test -p "$WORKSHOP_TEST_PROJECT" \
@@ -40,13 +40,13 @@ WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" \
   EXPECTED_HOMARR_WEBSITE_URL=https://preview.example.invalid \
   EXPECTED_WORKSHOP_API_URL=https://api.preview.example.invalid \
   EXPECTED_WORKSHOP_WEB_URL=https://preview.example.invalid/workshop \
-  bun apps/workshop/tests/runtime-config.integration.mjs
+  node apps/workshop/tests/runtime-config.integration.mjs
 
 docker compose -p "$WORKSHOP_TEST_PROJECT" -f apps/workshop/docker-compose.yml exec -T workshop \
   pocketbase superuser create \
   workshop-test@example.invalid 'WorkshopLocalTest123!' --dir=/pb_data
 
-WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" bun apps/workshop/tests/workshop.integration.mjs
+WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" node apps/workshop/tests/workshop.integration.mjs
 
 for client_id in workshop-test-client workshop-rotated-client; do
   GITHUB_CLIENT_ID="$client_id" GITHUB_CLIENT_SECRET="workshop-test-secret" PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" \
@@ -61,7 +61,7 @@ for client_id in workshop-test-client workshop-rotated-client; do
     sleep 1
   done
   WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" EXPECTED_GITHUB_CLIENT_ID="$client_id" \
-    bun apps/workshop/tests/oauth-sync.integration.mjs
+    node apps/workshop/tests/oauth-sync.integration.mjs
 done
 
 OPENROUTER_API_KEY="" PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \

@@ -71,6 +71,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.2

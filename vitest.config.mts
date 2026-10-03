@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { configDefaults, defineConfig } from "vitest/config";
 
-// Docker-backed suites are opt-in through bun run test:integration.
+// Docker-backed suites are opt-in through pnpm test:integration.
 const integrationTests = [
   "**/*.integration.spec.ts",
   "packages/db/test/postgresql-migration.spec.ts",
@@ -20,10 +20,8 @@ export default defineConfig({
   test: {
     setupFiles: ["./vitest.setup.ts"],
     clearMocks: true,
-    // Bun needs Zod to pass through the module runner for its named exports.
-    server: { deps: { inline: ["zod"] } },
     coverage: {
-      provider: "istanbul",
+      provider: "v8",
       reporter: ["html", "json-summary", "json"],
       all: true,
       exclude: (configDefaults.coverage.exclude ?? []).concat("apps/nextjs/.next/"),

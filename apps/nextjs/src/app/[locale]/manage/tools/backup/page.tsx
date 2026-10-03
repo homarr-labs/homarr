@@ -11,7 +11,7 @@ import { BackupImportCard } from "./_components/backup-import-card";
 
 export async function generateMetadata() {
   const session = await auth();
-  if (!session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "bun-sqlite") {
+  if (!session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3") {
     return {};
   }
 
@@ -24,7 +24,7 @@ export async function generateMetadata() {
 
 export default async function BackupPage() {
   const session = await auth();
-  if (!session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "bun-sqlite") {
+  if (!session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3") {
     notFound();
   }
 

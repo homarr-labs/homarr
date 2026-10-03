@@ -1,14 +1,12 @@
-// @vitest-environment node
-
 import crypto from "crypto";
 import fs from "fs";
 import os from "os";
 import path from "path";
 
 import AdmZip from "adm-zip";
-import { Database } from "bun:sqlite";
-import { drizzle } from "drizzle-orm/bun-sqlite";
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
@@ -62,7 +60,7 @@ describe("SQLite backup", () => {
       const { sqlite } = createTestDb(dbPath);
 
       const backupPath = path.join(tmpDir, "db.backup.sqlite");
-      sqlite.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+      sqlite.pragma("wal_checkpoint(TRUNCATE)");
       sqlite.exec(`VACUUM INTO '${backupPath}'`);
       sqlite.close();
 
@@ -269,7 +267,7 @@ describe("SQLite backup", () => {
       `);
 
       const backupPath = path.join(tmpDir, "db.vacuum.sqlite");
-      sqlite.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+      sqlite.pragma("wal_checkpoint(TRUNCATE)");
       sqlite.exec(`VACUUM INTO '${backupPath}'`);
 
       const backupDb = new Database(backupPath, { readonly: true });

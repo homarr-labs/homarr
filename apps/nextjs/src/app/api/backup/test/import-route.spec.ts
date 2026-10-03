@@ -5,29 +5,24 @@ import os from "os";
 import path from "path";
 
 import AdmZip from "adm-zip";
-import { Database } from "bun:sqlite";
-import { drizzle } from "drizzle-orm/bun-sqlite";
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 const routeMocks = vi.hoisted(() => ({
   auth: vi.fn(),
-  warn: vi.fn(),
   claimAllowed: vi.fn(),
   onboardingFindFirst: vi.fn(),
   dbEnv: {
-    DRIVER: "bun-sqlite",
+    DRIVER: "better-sqlite3",
     URL: "",
   },
   commonEnv: {
     SECRET_ENCRYPTION_KEY: "1".repeat(64),
   },
-}));
-
-vi.mock("@homarr/core/infrastructure/logs", () => ({
-  createLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: routeMocks.warn }),
 }));
 
 vi.mock("@homarr/auth/next", () => ({ auth: routeMocks.auth }));
@@ -109,7 +104,7 @@ describe("POST /api/backup/import", () => {
     vi.useFakeTimers();
     temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "homarr-import-route-test-"));
     activeDatabasePath = path.join(temporaryDirectory, "db.sqlite");
-    routeMocks.dbEnv.DRIVER = "bun-sqlite";
+    routeMocks.dbEnv.DRIVER = "better-sqlite3";
     routeMocks.dbEnv.URL = activeDatabasePath;
     routeMocks.auth.mockResolvedValue({ user: { permissions: ["admin"] } });
     routeMocks.claimAllowed.mockResolvedValue(false);
@@ -219,6 +214,7 @@ describe("POST /api/backup/import", () => {
     const backup = createBackup(temporaryDirectory, "cleanup-failure", "Restored despite cleanup failure");
     const removeDirectory = fs.rmSync.bind(fs);
     const cleanupError = new Error("simulated cleanup failure");
+    const errorLog = vi.spyOn(console, "error").mockImplementation(() => undefined);
     vi.spyOn(fs, "rmSync").mockImplementation((target, options) => {
       if (String(target).includes(".homarr-restore-")) throw cleanupError;
       return removeDirectory(target, options);
@@ -229,9 +225,10 @@ describe("POST /api/backup/import", () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ success: true });
     expect(readBoardNames(activeDatabasePath)).toEqual(["Restored despite cleanup failure"]);
-    expect(routeMocks.warn).toHaveBeenCalledWith("Failed to remove temporary restore directory after restore", {
-      cause: cleanupError,
-    });
+    expect(errorLog).toHaveBeenCalledWith(
+      "[backup/import] Failed to remove temporary restore directory:",
+      cleanupError,
+    );
   });
 
   it("rejects a concurrent restore while the first request owns the restore lock", async () => {

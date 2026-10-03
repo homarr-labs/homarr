@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { closeSync, constants, fsyncSync, openSync } from "node:fs";
 import { link, lstat, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
-import { Database as DatabaseSync } from "bun:sqlite";
+import { DatabaseSync } from "node:sqlite";
 import { isDeepStrictEqual } from "node:util";
 import mysql from "mysql2/promise";
 
@@ -172,7 +172,7 @@ export async function convert({ connectionOptions, output, homarrStopped, signal
     if (integrity.length !== 1 || integrity[0].integrity_check !== "ok")
       throw new Error("SQLite integrity check failed.");
     database.exec("COMMIT; PRAGMA foreign_keys = ON");
-    database.close(true);
+    database.close();
     database = undefined;
     await connection.rollback();
     await connection.end();
@@ -191,12 +191,7 @@ export async function convert({ connectionOptions, output, homarrStopped, signal
     return { release: schema.release, output: destination, counts };
   } finally {
     try {
-      try {
-        // Bun defers closing live statements; settle rollback before removing the file.
-        if (database?.inTransaction) database.exec("ROLLBACK");
-      } finally {
-        database?.close(true);
-      }
+      database?.close();
     } finally {
       try {
         await connection?.end();

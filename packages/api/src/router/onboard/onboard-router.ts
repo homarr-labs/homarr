@@ -1104,9 +1104,8 @@ export const onboardRouter = createTRPCRouter({
               .update(onboarding)
               .set({ previousStep: "setup", step: "finish" })
               .where(eq(onboarding.step, "setup"))
-              .returning({ step: onboarding.step })
-              .all();
-            if (transitionResult.length !== 1) {
+              .run();
+            if (transitionResult.changes !== 1) {
               throw new TRPCError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
             }
             for (const plan of appPlans) {

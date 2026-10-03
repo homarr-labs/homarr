@@ -11,11 +11,11 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "dev": "bun run with-env bun ./src/main.ts",
+    "dev": "bun run with-env tsx ./src/main.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "typecheck": "bun --bun tsc --noEmit",
-    "with-env": "bun --bun dotenv -e ../../.env --"
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",

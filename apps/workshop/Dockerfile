@@ -13,7 +13,10 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM oven/bun:1.4.2-alpine AS dependencies
+FROM oven/bun:1.4.2-alpine AS bun-tool
+
+FROM node:24.18.0-alpine AS dependencies
+COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
 COPY bun.lock bunfig.toml package.json turbo.json ./
 COPY patches ./patches

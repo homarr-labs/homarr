@@ -20,6 +20,6 @@ export const createDb = <TSchema extends Record<string, unknown>>(schema: TSchem
 
   return createDbMapping({
     "node-postgres": () => createPostgresDb(config),
-    "bun-sqlite": () => createSqliteDb(config),
+    "better-sqlite3": () => createSqliteDb(config),
   });
 };

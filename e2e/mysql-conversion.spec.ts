@@ -4,7 +4,7 @@ import { promisify } from "node:util";
 import path from "node:path";
 
 import { chromium, expect as expectBrowser } from "@playwright/test";
-import { Database } from "bun:sqlite";
+import Database from "better-sqlite3";
 import { expect, test } from "vitest";
 
 import { decryptSecretWithKey } from "../packages/common/src/encryption";
@@ -70,8 +70,8 @@ test("converted MySQL data boots, authenticates and survives a v2 restart", asyn
         // Inspect after shutdown so WAL data is settled; the second boot proves persisted state.
         const db = new Database(output, { readonly: true });
         try {
-          expect(db.query("PRAGMA integrity_check").get()).toEqual({ integrity_check: "ok" });
-          expect(db.query("PRAGMA foreign_key_check").all()).toEqual([]);
+          expect(db.pragma("integrity_check", { simple: true })).toBe("ok");
+          expect(db.pragma("foreign_key_check")).toEqual([]);
           expect(db.prepare("SELECT id, name FROM board WHERE id = ?").get(fixtureBoard)).toEqual({
             id: fixtureBoard,
             name: "converted-board",

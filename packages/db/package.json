@@ -19,25 +19,25 @@
   },
   "scripts": {
     "build": "bun run build:sqlite && bun run build:postgresql",
-    "build:postgresql": "bun build migrations/postgresql/migrate.ts --target=bun --format=cjs --outfile=migrations/postgresql/migrate.cjs",
-    "build:sqlite": "bun build migrations/sqlite/migrate.ts --target=bun --format=cjs --outfile=migrations/sqlite/migrate.cjs",
+    "build:postgresql": "esbuild migrations/postgresql/migrate.ts --bundle --platform=node --outfile=migrations/postgresql/migrate.cjs",
+    "build:sqlite": "esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "migration:custom": "bun run with-env bun ./migrations/custom/run-custom.ts",
-    "migration:postgresql:drop": "bun run with-env bun --bun drizzle-kit drop --config ./configs/postgresql.config.ts",
-    "migration:postgresql:generate": "bun run with-env bun --bun drizzle-kit generate --config ./configs/postgresql.config.ts",
-    "migration:postgresql:run": "bun run with-env bun --bun drizzle-kit migrate --config ./configs/postgresql.config.ts && bun run seed  && bun run migration:custom",
-    "migration:sqlite:drop": "bun run with-env bun --bun drizzle-kit drop --config ./configs/sqlite.config.ts",
-    "migration:sqlite:generate": "bun run with-env bun --bun drizzle-kit generate --config ./configs/sqlite.config.ts",
-    "migration:sqlite:run": "bun run with-env bun ./migrations/sqlite/migrate.ts ./migrations/sqlite",
-    "push:postgresql": "bun run with-env bun --bun drizzle-kit push --config ./configs/postgresql.config.ts",
-    "push:sqlite": "bun run with-env bun --bun drizzle-kit push --config ./configs/sqlite.config.ts",
-    "seed": "bun run with-env bun ./migrations/run-seed.ts",
-    "studio": "bun run with-env bun --bun drizzle-kit studio --config ./configs/sqlite.config.ts",
-    "studio:postgresql": "bun run with-env bun --bun drizzle-kit studio --config ./configs/postgresql.config.ts",
-    "typecheck": "bun --bun tsc --noEmit",
-    "with-env": "bun --bun dotenv -e ../../.env --"
+    "migration:custom": "bun run with-env tsx ./migrations/custom/run-custom.ts",
+    "migration:postgresql:drop": "bun run with-env drizzle-kit drop --config ./configs/postgresql.config.ts",
+    "migration:postgresql:generate": "bun run with-env drizzle-kit generate --config ./configs/postgresql.config.ts",
+    "migration:postgresql:run": "bun run with-env drizzle-kit migrate --config ./configs/postgresql.config.ts && bun run seed  && bun run migration:custom",
+    "migration:sqlite:drop": "bun run with-env drizzle-kit drop --config ./configs/sqlite.config.ts",
+    "migration:sqlite:generate": "bun run with-env drizzle-kit generate --config ./configs/sqlite.config.ts",
+    "migration:sqlite:run": "bun run with-env drizzle-kit migrate --config ./configs/sqlite.config.ts && bun run seed && bun run migration:custom",
+    "push:postgresql": "bun run with-env drizzle-kit push --config ./configs/postgresql.config.ts",
+    "push:sqlite": "bun run with-env drizzle-kit push --config ./configs/sqlite.config.ts",
+    "seed": "bun run with-env tsx ./migrations/run-seed.ts",
+    "studio": "bun run with-env drizzle-kit studio --config ./configs/sqlite.config.ts",
+    "studio:postgresql": "bun run with-env drizzle-kit studio --config ./configs/postgresql.config.ts",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@auth/core": "catalog:",
@@ -55,7 +55,8 @@
     "drizzle-orm": "catalog:",
     "drizzle-zod": "catalog:",
     "pg": "catalog:",
-    "superjson": "catalog:"
+    "superjson": "catalog:",
+    "better-sqlite3": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
@@ -63,6 +64,7 @@
     "@types/pg": "catalog:",
     "dotenv-cli": "catalog:",
     "esbuild": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@types/better-sqlite3": "catalog:"
   }
 }

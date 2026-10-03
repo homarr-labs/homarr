@@ -211,9 +211,8 @@ export const groupRouter = createTRPCRouter({
               .update(onboarding)
               .set({ previousStep: "group", step: "setup" })
               .where(eq(onboarding.step, "group"))
-              .returning({ step: onboarding.step })
-              .all();
-            if (transitionResult.length !== 1) {
+              .run();
+            if (transitionResult.changes !== 1) {
               throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
             }
             transaction.insert(groups).values(groupRow).run();

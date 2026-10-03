@@ -42,7 +42,7 @@ export default async function InitPage() {
   const homeBoard = availableBoards.find((board) => board.id === homeBoardId);
   const initialBoard = homeBoard ?? (availableBoards.length === 1 ? availableBoards[0] : null);
   const currentStep = normalizeOnboardingStep(state?.step);
-  const databaseDriver = dbEnv.DRIVER === "bun-sqlite" ? "sqlite" : "postgresql";
+  const databaseDriver = dbEnv.DRIVER === "better-sqlite3" ? "sqlite" : "postgresql";
   const { workshopApiUrl, workshopWebUrl } = canReadSetupContext
     ? resolveHomarrUrlConfig({
         homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,

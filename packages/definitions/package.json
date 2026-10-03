@@ -20,9 +20,9 @@
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
-    "postinstall": "bun ./src/docs/codegen.ts",
+    "postinstall": "tsx ./src/docs/codegen.ts",
     "lint": "oxlint",
-    "typecheck": "bun --bun tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",

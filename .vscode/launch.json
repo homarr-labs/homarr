@@ -5,7 +5,7 @@
       "name": "dev",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run dev",
+      "command": "pnpm dev",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -13,7 +13,7 @@
       "name": "docker dev",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run docker:dev",
+      "command": "pnpm docker:dev",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -21,7 +21,7 @@
       "name": "lint fix",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run lint:fix",
+      "command": "pnpm lint:fix",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -29,7 +29,7 @@
       "name": "format fix",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run format:fix",
+      "command": "pnpm format:fix",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -37,7 +37,7 @@
       "name": "db push",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run db:push",
+      "command": "pnpm db:push",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -45,15 +45,15 @@
       "name": "db studio",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run db:studio",
+      "command": "pnpm db:studio",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
     {
-      "name": "SQLite migration run",
+      "name": "db migration run",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run db:migration:sqlite:run",
+      "command": "pnpm db:migration:run",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -61,7 +61,7 @@
       "name": "test",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run test",
+      "command": "pnpm test",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -69,7 +69,7 @@
       "name": "test ui",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run test:ui",
+      "command": "pnpm test:ui",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     }

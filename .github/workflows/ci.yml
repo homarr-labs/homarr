@@ -232,11 +232,11 @@ jobs:
 
       - name: Install Playwright Chromium
         if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
-        run: bun x --bun playwright install --with-deps chromium
+        run: bun x playwright install --with-deps chromium
 
       - name: Install Playwright system deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: bun x --bun playwright install-deps chromium
+        run: bun x playwright install-deps chromium
 
       - name: Install standalone converter test dependencies
         run: bun install --cwd tools/mysql-to-sqlite --frozen-lockfile
@@ -245,7 +245,7 @@ jobs:
         env:
           NODE_ENV: development
           CI: "true"
-        run: bun x --bun vitest run --project e2e e2e/mysql-conversion.spec.ts --maxWorkers 1
+        run: bun x vitest run --project e2e e2e/mysql-conversion.spec.ts --maxWorkers 1
 
       - name: Upload E2E artifacts
         if: failure() && !env.ACT

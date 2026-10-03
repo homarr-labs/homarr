@@ -4,9 +4,9 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
-import { Database as BetterSqlite3 } from "bun:sqlite";
-import { drizzle } from "drizzle-orm/bun-sqlite";
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import BetterSqlite3 from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import {
   getOnboardingClaimTokenFromCookieHeader,
@@ -221,7 +221,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  if (dbEnv.DRIVER !== "bun-sqlite") {
+  if (dbEnv.DRIVER !== "better-sqlite3") {
     return NextResponse.json({ error: "SQLite restore is only available for SQLite databases" }, { status: 400 });
   }
 
@@ -293,8 +293,6 @@ export async function POST(req: Request) {
     fs.writeFileSync(tempPath, dbEntry.getData());
 
     tempDb = new BetterSqlite3(tempPath);
-    tempDb.exec("PRAGMA foreign_keys = ON");
-    tempDb.exec("PRAGMA busy_timeout = 5000");
     const drizzleDb = drizzle(tempDb, { casing: DB_CASING, schema });
     migrate(drizzleDb, { migrationsFolder });
     await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
@@ -322,14 +320,9 @@ export async function POST(req: Request) {
       reEncryptSecrets(tempDb, importedKey);
     }
 
-    const foreignKeyViolations = tempDb.prepare("PRAGMA foreign_key_check").all();
-    if (foreignKeyViolations.length > 0) {
-      throw new Error("Backup database contains foreign-key violations");
-    }
-
     const homeBoardName = getHomeBoardName(tempDb);
 
-    tempDb.close(true);
+    tempDb.close();
     tempDb = null;
 
     fs.renameSync(tempPath, dbPath);
@@ -362,7 +355,7 @@ export async function POST(req: Request) {
   } finally {
     restoreInProgress = false;
     try {
-      tempDb?.close(true);
+      tempDb?.close();
     } catch (error) {
       logger.warn("Failed to close temporary database after restore", { cause: error });
     }

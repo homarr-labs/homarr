@@ -12,6 +12,7 @@ sidebar_position: 1
 
 ### Prerequisites
 
+- **Node.js 24.18.0**: application and tooling runtime, pinned in `mise.toml`.
 - **Bun 1.4.2**: Install the version pinned in `mise.toml` from the [official website](https://bun.sh/docs/installation).
 - **Git**: You can download it from the [official website](https://git-scm.com/).
 - **Docker or Docker Desktop**: Required for the Redis service and the developer Docker CLI.
@@ -25,11 +26,7 @@ are shared across packages. Catalog versions, patches and overrides live in the 
 bun install --frozen-lockfile
 ```
 
-SQLite uses Bun's built-in driver. Existing `DB_DRIVER=better-sqlite3` settings are accepted as an alias for
-`bun-sqlite`; database files and backups remain SQLite-compatible.
-
-Drizzle Kit's SQLite push and Studio commands use the development-only `@libsql/client` adapter because Drizzle Kit
-does not support `bun:sqlite`. Application queries and migrations use Bun's built-in driver.
+Next.js, operational commands and SQLite run on Node.js. Bun installs dependencies and dispatches package scripts.
 
 ### Run the Homarr application
 

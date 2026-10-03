@@ -1,9 +1,9 @@
 import { mkdir } from "fs/promises";
 import path from "path";
 import { createId } from "@paralleldrive/cuid2";
-import { Database } from "bun:sqlite";
-import { BunSQLiteDatabase, drizzle } from "drizzle-orm/bun-sqlite";
-import { migrate } from "drizzle-orm/bun-sqlite/migrator";
+import Database from "better-sqlite3";
+import { BetterSQLite3Database, drizzle } from "drizzle-orm/better-sqlite3";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { DB_CASING } from "../../packages/core/src/infrastructure/db/constants";
 import * as sqliteSchema from "../../packages/db/schema/sqlite";
@@ -30,4 +30,4 @@ export const createSqliteDbFileAsync = async () => {
   };
 };
 
-export type SqliteDatabase = BunSQLiteDatabase<typeof sqliteSchema>;
+export type SqliteDatabase = BetterSQLite3Database<typeof sqliteSchema>;

@@ -15,13 +15,13 @@
     ".": "./index.ts"
   },
   "scripts": {
-    "build": "bun build src/index.ts --target=bun --format=cjs --outfile=cli.cjs --external=bcrypt --external=cpu-features",
+    "build": "esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text",
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "run": "bun run with-env bun cli.cjs",
-    "typecheck": "bun --bun tsc --noEmit",
-    "with-env": "bun --bun dotenv -e .env --"
+    "run": "bun run with-env node cli.cjs",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e .env --"
   },
   "dependencies": {
     "@drizzle-team/brocli": "catalog:",

@@ -136,8 +136,10 @@ class Benchmark:
 
     def install_command(self, variant, scripts=True, offline=False):
         argv = variant["command"] + ["install", "--frozen-lockfile"]
+        if variant["manager"] == "bun":
+            argv += ["--concurrent-scripts=1"]
         if variant["manager"] == "pnpm":
-            argv += ["--store-dir", str(variant["cache"]), "--reporter=append-only"]
+            argv += ["--store-dir", str(variant["cache"]), "--reporter=append-only", "--child-concurrency=1"]
         if not scripts:
             argv += ["--ignore-scripts"]
         if offline:
@@ -192,7 +194,7 @@ class Benchmark:
         data = json.loads(capture([self.args.node, "-e", script], cwd=v["path"], env=v["env"]))
         self.metadata.setdefault("shared_resolution", {})[v["manager"]] = data
         runtime = self.args.node
-        if v["manager"] == "bun":
+        if v["manager"] == "bun" and not json.loads((v["path"] / "package.json").read_text()).get("engines", {}).get("node"):
             runtime = self.args.bun
         inventory_script = Path(__file__).resolve().parent / "workspace-sharing.mjs"
         inventory = json.loads(capture([runtime, str(inventory_script), str(v["path"])], cwd=v["path"], env=v["env"]))
@@ -279,7 +281,7 @@ class Benchmark:
                         result["output_bytes"] = tree_size(v["path"] / "dist")["apparent_bytes"]
                         self.save()
                     else:
-                        runtime = self.args.node if v["manager"] == "npm" else self.args.bun
+                        runtime = self.args.node if json.loads((v["path"] / "package.json").read_text()).get("engines", {}).get("node") else self.args.bun
                         self.measure(v, "tool-help", repetition, [runtime, "src/cli.mjs", "--help"], detail={"tool": tool})
 
     def commands(self):
@@ -290,7 +292,7 @@ class Benchmark:
                 for name in ["lint", "format"]:
                     self.measure(v, "repository-" + name, repetition, v["command"] + ["run", name],
                                  detail={"cache_state": "turbo cache allowed"})
-                runtime = [self.args.node, "--expose-gc", "--import", str(v["path"] / "node_modules/tsx/dist/loader.mjs")] if v["manager"] == "pnpm" else [self.args.bun, "--expose-gc"]
+                runtime = [self.args.node, "--expose-gc", "--import", str(v["path"] / "node_modules/tsx/dist/loader.mjs")] if json.loads((v["path"] / "package.json").read_text()).get("engines", {}).get("node") else [self.args.bun, "--expose-gc"]
                 # One common workload and accounting method; import production code
                 # relative to the corresponding revision's checkout.
                 source = Path("scripts/benchmarks/request-handler-memory.mts").read_text()

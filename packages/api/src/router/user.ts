@@ -149,9 +149,9 @@ export const userRouter = createTRPCRouter({
           db.transaction((trx) => {
             trx.insert(users).values(user).run();
             // Delete invite as it's used
-            const result = trx.delete(invites).where(inviteWhere).returning({ id: invites.id }).all();
+            const result = trx.delete(invites).where(inviteWhere).run();
 
-            if (result.length === 0) {
+            if (result.changes === 0) {
               throw new TRPCError({
                 code: "FORBIDDEN",
                 message: "Invalid invite",

@@ -18,7 +18,7 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "typecheck": "bun --bun tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@homarr/auth": "workspace:^0.1.0",

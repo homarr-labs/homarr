@@ -4,6 +4,10 @@ description: "Common setup steps for Actions"
 runs:
   using: composite
   steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 24.18.0
+
     - uses: oven-sh/setup-bun@v2
       with:
         bun-version: 1.4.2
@@ -18,4 +22,13 @@ runs:
           ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-
 
     - shell: bash
-      run: bun install --frozen-lockfile
+      run: bun install --frozen-lockfile --concurrent-scripts=1
+
+    - name: Restore local Turbo artifacts without remote credentials
+      if: "!env.ACT && !env.TURBO_TOKEN"
+      uses: actions/cache@v5
+      with:
+        path: .turbo/cache
+        key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-

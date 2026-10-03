@@ -25,17 +25,17 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "check:architecture": "bun ./scripts/check-architecture.mjs",
-    "generate:catalog": "bun ./scripts/generate-component-metadata.ts",
+    "check:architecture": "node ./scripts/check-architecture.mjs",
+    "generate:catalog": "tsx ./scripts/generate-component-metadata.ts",
     "generate:components": "bun run generate:catalog",
     "generate": "bun run generate:catalog",
-    "evaluate:ai": "bun ./scripts/evaluate-ai-authoring.ts",
-    "evaluate:assistant-ai": "bun ./scripts/evaluate-ai-authoring.ts --assistant",
-    "test:reference-apis": "bun ./scripts/verify-reference-apis.ts",
+    "evaluate:ai": "tsx ./scripts/evaluate-ai-authoring.ts",
+    "evaluate:assistant-ai": "tsx ./scripts/evaluate-ai-authoring.ts --assistant",
+    "test:reference-apis": "tsx ./scripts/verify-reference-apis.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "test": "bun --bun vitest run",
-    "typecheck": "bun --bun tsc --noEmit"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/autocomplete": "catalog:",

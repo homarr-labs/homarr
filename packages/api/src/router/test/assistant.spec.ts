@@ -32,7 +32,7 @@ vi.mock("@homarr/core/infrastructure/logs", () => ({
   }),
 }));
 vi.mock("@homarr/core/infrastructure/db/env", () => ({
-  dbEnv: { DRIVER: "bun-sqlite" },
+  dbEnv: { DRIVER: "better-sqlite3" },
 }));
 
 const adminSession = {

@@ -12,7 +12,7 @@ Requires Bun 1.4.2.
 bun install --frozen-lockfile
 # Supply MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE.
 # MYSQL_SSL_CA optionally points to a PEM CA file for TLS.
-bun src/cli.mjs --output /new/path/db.sqlite --homarr-stopped
+node src/cli.mjs --output /new/path/db.sqlite --homarr-stopped
 ```
 
 Stop **all** Homarr processes using the source database first. A SELECT-only database account is sufficient. The converter checks the migration journal and table/column types before copying. Different schemas and incomplete migrations are rejected. The application binary version is not detected; older releases with identical schemas are compatible. Upgrade to the latest stable v1 release before conversion.

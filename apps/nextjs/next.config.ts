@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
    * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     preloadEntriesOnStart: true,

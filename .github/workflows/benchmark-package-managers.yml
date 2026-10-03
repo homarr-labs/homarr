@@ -111,7 +111,7 @@ jobs:
       - uses: ./tooling/github/setup
       - name: Install benchmark browser
         if: inputs.comparison_run == ''
-        run: bun x --bun playwright install --with-deps chromium
+        run: bun x playwright install --with-deps chromium
       - name: Create isolated production worktrees
         run: |
           git clone --shared --no-checkout "$GITHUB_WORKSPACE" "$RUNNER_TEMP/production-repository"

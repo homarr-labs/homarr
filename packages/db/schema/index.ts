@@ -8,7 +8,7 @@ import * as sqliteSchema from "./sqlite";
 export type PostgreSqlSchema = typeof pgSchema;
 
 export const schema = createSchema({
-  "bun-sqlite": () => sqliteSchema,
+  "better-sqlite3": () => sqliteSchema,
   "node-postgres": () => pgSchema,
 });
 

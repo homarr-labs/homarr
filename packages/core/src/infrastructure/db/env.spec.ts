@@ -4,7 +4,7 @@ describe("database driver configuration", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.stubEnv("SKIP_ENV_VALIDATION", "true");
-    vi.stubEnv("DB_DRIVER", "bun-sqlite");
+    vi.stubEnv("DB_DRIVER", "better-sqlite3");
     vi.stubEnv("DB_DIALECT", "sqlite");
     vi.stubEnv("DB_URL", ":memory:");
   });
@@ -32,7 +32,7 @@ describe("database driver configuration", () => {
     },
   );
 
-  it.each(["bun-sqlite", "node-postgres"])("preserves supported driver %s", async (driver) => {
+  it.each(["better-sqlite3", "node-postgres"])("preserves supported driver %s", async (driver) => {
     vi.stubEnv("DB_DRIVER", driver);
     const { dbEnv } = await import("./env");
     expect(dbEnv.DRIVER).toBe(driver);

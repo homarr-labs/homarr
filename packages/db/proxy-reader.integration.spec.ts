@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { Database } from "bun:sqlite";
+import Database from "better-sqlite3";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { Client } from "pg";
 import { stringify } from "superjson";
@@ -44,7 +44,7 @@ describe("proxy settings reader database compatibility", () => {
     database.close();
 
     try {
-      configureDriver({ DRIVER: "bun-sqlite", URL: databasePath });
+      configureDriver({ DRIVER: "better-sqlite3", URL: databasePath });
       await expect(readSettingsAsync()).resolves.toEqual({ locale: "de", onboardingStep: "finish" });
 
       const malformedDatabase = new Database(databasePath);

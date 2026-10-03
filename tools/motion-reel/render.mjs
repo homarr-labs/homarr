@@ -4,7 +4,7 @@ import { mkdirSync, existsSync, renameSync, readFileSync } from "node:fs";
 
 // Renders one warp (see make_warp.py) into resumable 30-frame lossless chunks. The warp maps output time u to reel
 // time t; motion blur uses a 180° shutter in output time, with fewer sub-frames where the reel is barely moving.
-// Usage: WARP=warp-a.json OUT=chunks-a WORKERS=4 bun render.mjs
+// Usage: WARP=warp-a.json OUT=chunks-a WORKERS=4 node render.mjs
 const FPS = 60,
   SHUTTER = 0.5;
 const WORKERS = +(process.env.WORKERS || 6),

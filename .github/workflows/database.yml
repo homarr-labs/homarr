@@ -64,7 +64,7 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./tooling/github/setup
-      - run: bun x --bun vitest run --project db-node packages/db/test/migration-journal.spec.ts
+      - run: bun x vitest run --project db-node packages/db/test/migration-journal.spec.ts
 
   migrations:
     name: SQLite and PostgreSQL migrations
@@ -79,8 +79,8 @@ jobs:
           persist-credentials: false
       - uses: ./tooling/github/setup
       - name: Reject retired database configuration
-        run: bun x --bun vitest run --project dom packages/core/src/infrastructure/db/env.spec.ts
-      - run: bun x --bun vitest run --project db-node --project integration packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts packages/db/proxy-reader.integration.spec.ts --maxWorkers 1
+        run: bun x vitest run --project dom packages/core/src/infrastructure/db/env.spec.ts
+      - run: bun x vitest run --project db-node --project integration packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts packages/db/proxy-reader.integration.spec.ts --maxWorkers 1
 
   database-gate:
     name: Database gate

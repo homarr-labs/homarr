@@ -3,7 +3,7 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
-import { Database } from "bun:sqlite";
+import Database from "better-sqlite3";
 
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
@@ -15,7 +15,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  if (dbEnv.DRIVER !== "bun-sqlite") {
+  if (dbEnv.DRIVER !== "better-sqlite3") {
     return NextResponse.json({ error: "SQLite backup is only available for SQLite databases" }, { status: 400 });
   }
 
@@ -29,10 +29,9 @@ export async function GET() {
 
   try {
     sourceDb = new Database(dbPath, { readonly: true });
-    sourceDb.exec("PRAGMA busy_timeout = 5000");
-    sourceDb.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+    sourceDb.pragma("wal_checkpoint(TRUNCATE)");
     sourceDb.exec(`VACUUM INTO '${tempPath}'`);
-    sourceDb.close(true);
+    sourceDb.close();
     sourceDb = null;
 
     const dbBuffer = fs.readFileSync(tempPath);
@@ -66,7 +65,7 @@ export async function GET() {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Export failed: ${message}` }, { status: 500 });
   } finally {
-    sourceDb?.close(true);
+    sourceDb?.close();
     try {
       if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
     } catch (cleanupErr) {

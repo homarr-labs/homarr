@@ -16,7 +16,7 @@ const adminCredentials = {
   password: "Comp(exP4sswOrd",
 };
 
-// Run this opt-in asset generator with bun run test:docs-screenshots when the documented UI changes.
+// Run this opt-in asset generator with pnpm test:docs-screenshots when the documented UI changes.
 describe.skipIf(process.env.UPDATE_DOCS_SCREENSHOTS !== "true")("Assistant documentation screenshots", () => {
   test("captures the management page and conversation panel", async () => {
     const { db, localMountPath } = await createSqliteDbFileAsync();

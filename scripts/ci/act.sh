@@ -84,6 +84,7 @@ args=(
   --platform "ubuntu-latest=$runner_image"
   --container-architecture linux/amd64
   --bind
+  --env "TURBO_CACHE_DIR=$PWD/.turbo/cache"
   # Jobs share the dependency volume; installs must not race.
   --concurrent-jobs 1
 )
@@ -101,7 +102,7 @@ if [[ -n "$job" ]]; then
 fi
 
 git_common_dir=$(cd "$(git rev-parse --git-common-dir)" && pwd)
-container_options="--volume homarr-act-node-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
+container_options="--volume homarr-act-bun-1-4-2-node-24-18-0-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
 case "$git_common_dir" in
   "$PWD" | "$PWD"/*) ;;
   *) container_options="$container_options --volume $git_common_dir:$git_common_dir:ro" ;;

@@ -1,0 +1,15 @@
+{
+  "name": "homarr-prebuilt-debian",
+  "private": true,
+  "dependencies": {
+    "better-sqlite3": "12.11.1"
+  },
+  "engines": {
+    "bun": ">=1.4.2",
+    "node": ">=24.18.0"
+  },
+  "packageManager": "bun@1.4.2",
+  "trustedDependencies": [
+    "better-sqlite3"
+  ]
+}

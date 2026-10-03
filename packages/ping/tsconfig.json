@@ -1,7 +1,7 @@
 {
   "extends": "@homarr/tsconfig/base.json",
   "compilerOptions": {
-    "types": ["node", "bun-types/sqlite"],
+    "types": ["node"],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["*.ts", "src"],
