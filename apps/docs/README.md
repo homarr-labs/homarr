@@ -54,7 +54,7 @@ Verify public item pages without changing the remote database:
 ```bash
 REMOTE_WORKSHOP_URL=https://workshop.example.com
 WORKSHOP_TEST_URL=http://127.0.0.1:8093 WORKSHOP_REMOTE_API_URL="$REMOTE_WORKSHOP_URL" \
-  node apps/workshop/tests/remote-workshop.integration.mjs
+  bun apps/workshop/tests/remote-workshop.integration.mjs
 ```
 
 Stop it with `docker stop homarr-docs-static-preview`. Rebuild and restart the preview after changing source files;

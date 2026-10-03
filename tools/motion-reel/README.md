@@ -26,15 +26,15 @@ Run everything from this directory.
 python3 setup.py      # fonts, icons and the three.js bundle into assets/
 python3 make_warp.py  # warp-a (original reel), warp-b (v2), warp-global and warp-v2cut
 python3 score.py global && python3 score.py v2cut
-WARP=warp-a.json OUT=chunks-a WORKERS=4 node render.mjs
-WARP=warp-b.json OUT=chunks-b WORKERS=4 node render.mjs
+WARP=warp-a.json OUT=chunks-a WORKERS=4 bun render.mjs
+WARP=warp-b.json OUT=chunks-b WORKERS=4 bun render.mjs
 ./assemble.sh
 ```
 
 Rendering is CPU-bound and takes about 20 minutes with eight workers (both halves at once). Chunks are resumable: stop the renderer at any
 time and run it again. Delete a chunk directory after changing `reel.js` or the warp.
 
-Use `node preview.mjs <reel seconds...>` to screenshot single frames into `preview/` while you work. Scene start times
+Use `bun preview.mjs <reel seconds...>` to screenshot single frames into `preview/` while you work. Scene start times
 are listed in the scene headers in `reel.js`.
 
 ## Files

@@ -3,7 +3,7 @@
 Start manually with the QA app's local date:
 
 ```sh
-BENCHMARK_DATE=2026-09-24 node tools/assistant-benchmark/server.mjs
+BENCHMARK_DATE=2026-09-24 bun tools/assistant-benchmark/server.mjs
 ```
 
 The server listens only on `127.0.0.1:18094`, makes no outbound requests, and

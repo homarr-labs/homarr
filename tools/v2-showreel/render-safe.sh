@@ -11,4 +11,4 @@ fi
 mkdir -p out/tmp
 TMPDIR="$PWD/out/tmp" systemd-run --user --scope --quiet --unit="showreel-render-$$" \
   -p MemoryMax="${MEM_MAX:-7G}" -p MemoryHigh="${MEM_HIGH:-6G}" -p MemorySwapMax=0 -p CPUQuota="${CPU_QUOTA:-1000%}" \
-  nice -n 10 ionice -c 3 node render.mjs video --workers "${WORKERS:-3}" --sub "${SUB:-4}" "$@"
+  nice -n 10 ionice -c 3 bun render.mjs video --workers "${WORKERS:-3}" --sub "${SUB:-4}" "$@"
