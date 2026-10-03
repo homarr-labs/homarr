@@ -6,11 +6,14 @@ on:
       baseline:
         description: pnpm baseline revision
         required: true
-        default: dev
+        default: 3adb63850d8fd8f9ea2b3d72db82f4591f950e41
       candidate:
-        description: Bun candidate revision
-        required: true
-        default: feat/bun-migration
+        description: Bun candidate revision (empty uses the selected workflow revision)
+        required: false
+      production:
+        description: Also benchmark production builds and dashboard runtime
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -21,7 +24,7 @@ jobs:
     timeout-minutes: 120
     env:
       BASELINE_REF: ${{ inputs.baseline }}
-      CANDIDATE_REF: ${{ inputs.candidate }}
+      CANDIDATE_REF: ${{ inputs.candidate || github.sha }}
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
@@ -58,4 +61,42 @@ jobs:
         with:
           name: package-manager-benchmarks-${{ github.run_id }}
           path: benchmark-results/bun-migration/
+          if-no-files-found: error
+
+  production:
+    if: inputs.production
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      BASELINE_REF: ${{ inputs.baseline }}
+      CANDIDATE_REF: ${{ inputs.candidate || github.sha }}
+      TURBO_TELEMETRY_DISABLED: "1"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - name: Install benchmark browser
+        run: bun x --bun playwright install --with-deps chromium
+      - name: Create isolated production worktrees
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/homarr-baseline" "$BASELINE_REF"
+          git worktree add --detach "$RUNNER_TEMP/homarr-candidate" "$CANDIDATE_REF"
+      - name: Measure balanced builds and dashboard workloads
+        run: |
+          python3 scripts/benchmarks/production-migration.py \
+            --baseline "$RUNNER_TEMP/homarr-baseline" \
+            --candidate "$RUNNER_TEMP/homarr-candidate" \
+            --bun "$(command -v bun)" \
+            --output benchmark-results/production-migration \
+            --builder-prefix "homarr-benchmark-${{ github.run_id }}"
+      - name: Preserve production measurements and failures
+        if: always() && !env.ACT
+        uses: actions/upload-artifact@v7
+        with:
+          name: production-benchmarks-${{ github.run_id }}
+          path: benchmark-results/production-migration/
           if-no-files-found: error

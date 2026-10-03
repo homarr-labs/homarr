@@ -50,7 +50,10 @@ class Benchmark:
         self.records = []
         self.variants = []
         for manager, ref in [("pnpm", args.base), ("bun", args.head)]:
-            sha = capture(["git", "rev-parse", ref + "^{commit}"])
+            try:
+                sha = capture(["git", "rev-parse", "--verify", "--end-of-options", ref + "^{commit}"])
+            except subprocess.CalledProcessError:
+                sha = capture(["git", "rev-parse", "--verify", "--end-of-options", "origin/" + ref + "^{commit}"])
             path = self.root / manager
             if not path.exists():
                 path.mkdir()
@@ -67,6 +70,8 @@ class Benchmark:
             cache = self.root / (manager + "-cache")
             cache.mkdir(exist_ok=True)
             env = os.environ.copy()
+            for variable in ["TURBO_API", "TURBO_TEAM", "TURBO_TOKEN", "TURBO_REMOTE_CACHE_SIGNATURE_KEY"]:
+                env.pop(variable, None)
             env.update({"CI": "true", "NEXT_TELEMETRY_DISABLED": "1", "TURBO_TELEMETRY_DISABLED": "1",
                         "BUN_INSTALL_CACHE_DIR": str(cache), "XDG_CACHE_HOME": str(self.root / (manager + "-metadata"))})
             env["PATH"] = str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + env["PATH"]
@@ -277,6 +282,24 @@ class Benchmark:
                 target.write_text(source)
                 self.measure(v, "request-handler-retention", repetition, runtime + [str(target)])
 
+    def builds(self):
+        for repetition in range(1, self.args.repetitions + 1):
+            variants = self.variants if repetition % 2 else list(reversed(self.variants))
+            for v in variants:
+                for workspace in ["apps/docs", "packages/cli"]:
+                    if any(r["phase"] == "workspace-build" and r["manager"] == v["manager"] and r["workspace"] == workspace and r["repetition"] == repetition for r in self.records):
+                        continue
+                    if repetition == 1 and workspace == "apps/docs":
+                        for directory in [".next", "out"]:
+                            shutil.rmtree(v["path"] / workspace / directory, ignore_errors=True)
+                    result = self.measure(v, "workspace-build", repetition, v["command"] + ["run", "build"],
+                                          cwd=v["path"] / workspace,
+                                          detail={"workspace": workspace, "cache_state": "first build; empty Next output/cache" if repetition == 1 else "repeat build; Next cache retained", "prior_typecheck_artifacts": "retained"})
+                    if result["exit_code"] == 0:
+                        artifact = v["path"] / workspace / ("out" if workspace == "apps/docs" else "cli.cjs")
+                        result["artifact"] = tree_size(artifact) if artifact.is_dir() else {"bytes": artifact.stat().st_size}
+                        self.save()
+
     def lock_versions(self, v, contents):
         parser = self.variants[1]["path"] / "node_modules" / ("yaml" if v["manager"] == "pnpm" else "json5")
         script = "const fs=require('fs');const parser=require(process.argv[1]);const lock=parser.parse(fs.readFileSync(0,'utf8'));const versions=process.argv[2]==='pnpm'?Object.keys(lock.packages):Object.values(lock.packages).map(v=>v[0]);console.log(JSON.stringify([...new Set(versions)].sort()))"
@@ -291,6 +314,9 @@ class Benchmark:
                 variants = self.variants if repetition % 2 else list(reversed(self.variants))
                 for original in variants:
                     v = dict(original)
+                    completed = any(r["phase"] == "conflict-regenerate" and r["manager"] == v["manager"] and r.get("case") == case and r["repetition"] == repetition and "frozen_validation_exit_code" in r for r in self.records)
+                    if completed:
+                        continue
                     root = self.root / f"conflict-{v['manager']}-{case}-{repetition}"
                     if root.exists():
                         raise RuntimeError(f"Conflict fixture already exists: {root}")
@@ -377,8 +403,14 @@ class Benchmark:
                     self.save()
                     # Keep logs and exact manifests/locks, release the installed package tree.
                     self.clear_modules(v)
-                    if result["exit_code"] or frozen["exit_code"] or not intent_ok:
-                        raise RuntimeError("Conflict resolution failed validation")
+                    if result["exit_code"] or not intent_ok:
+                        raise RuntimeError("Conflict resolution failed manifest/lock validation")
+                    if frozen["exit_code"]:
+                        print((self.output / frozen["log"]).read_text()[-4000:], flush=True)
+                        if v["manager"] == "bun":
+                            raise RuntimeError("Candidate frozen conflict installation failed")
+                        # A baseline installer failure is benchmark evidence; retain it
+                        # and measure the other scenarios instead of hiding the failure.
 
 
 def main():
@@ -391,7 +423,7 @@ def main():
     parser.add_argument("--bun", default="bun")
     parser.add_argument("--pnpm", required=True, help="Pinned pnpm.cjs entrypoint")
     parser.add_argument("--repetitions", type=int, default=3)
-    parser.add_argument("--phase", choices=["install", "workspaces", "conflicts", "commands", "tools", "all"], default="all")
+    parser.add_argument("--phase", choices=["install", "workspaces", "conflicts", "commands", "tools", "builds", "all"], default="all")
     args = parser.parse_args()
     if args.repetitions < 3:
         parser.error("Use at least three repetitions")
@@ -406,6 +438,8 @@ def main():
         benchmark.commands()
     if args.phase in ["tools", "all"]:
         benchmark.tools()
+    if args.phase in ["builds", "all"]:
+        benchmark.builds()
 
 
 if __name__ == "__main__":

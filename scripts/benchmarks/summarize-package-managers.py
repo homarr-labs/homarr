@@ -23,8 +23,13 @@ def main():
     groups = defaultdict(list)
     for record in measurements:
         if record["phase"] != "workspace-typecheck":
-            scope = record.get("tool", record.get("case", "repository"))
-            groups[scope, record["phase"], record["manager"]].append(record)
+            scope = record.get("tool", record.get("case", record.get("workspace", "repository")))
+            phase = record["phase"]
+            if phase == "workspace-build":
+                phase += "-first" if record["repetition"] == 1 else "-repeat"
+            if phase == "repository-lint":
+                phase += "-first" if record["repetition"] == 1 else "-cached"
+            groups[scope, phase, record["manager"]].append(record)
     for (scope, phase, manager), records in sorted(groups.items()):
         passed = [r for r in records if r["exit_code"] == 0]
         if not passed:

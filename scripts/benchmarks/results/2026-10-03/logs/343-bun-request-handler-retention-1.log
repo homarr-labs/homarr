@@ -1,0 +1,17 @@
+{
+  "memoryMetric": "external",
+  "allocations": 64,
+  "allocationBytes": 1048576,
+  "allocatedPerScenarioBytes": 67108864,
+  "maxRetainedBytes": 16777216,
+  "positiveTtlMs": 25,
+  "zeroTtlGrowthBytes": 3277794,
+  "integrationGrowthBytes": 2317306,
+  "expiredPositiveTtlGrowthBytes": 1111482,
+  "positiveControlGrowthBytes": 67110855,
+  "positiveControlMinimumBytes": 53687091.2,
+  "zeroTtlPass": true,
+  "integrationPass": true,
+  "expiredPositiveTtlPass": true,
+  "positiveControlPass": true
+}

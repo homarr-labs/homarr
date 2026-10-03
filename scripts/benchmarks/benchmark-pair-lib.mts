@@ -77,7 +77,7 @@ type RuntimeResult = {
   };
   host: {
     architecture: string;
-    node: { version: string; v8Version: string };
+    node: { version: string; v8Version: string | null; bunVersion?: string | null; engine?: string };
     platform: string;
     release: string;
   };
@@ -95,7 +95,14 @@ type RuntimeResult = {
       cpuLimit: number;
       memoryLimitBytes: number;
       network: { internal: boolean };
-      node: { architecture: string; platform: string; version: string; v8Version: string };
+      node: {
+        architecture: string;
+        platform: string;
+        version: string;
+        v8Version: string | null;
+        bunVersion?: string | null;
+        engine?: string;
+      };
     };
     docker: { engine: unknown; version: unknown };
     ingressProxy: { excludedFromMemorySamples: boolean; implementation: string };
@@ -128,6 +135,7 @@ type RuntimeResult = {
   };
   checkpoints: Array<{ capturedAt: string; name: string }>;
   workload: {
+    boardFixture?: { kinds: string[]; items: number; normalizedLayout: boolean } | null;
     settleMs: number;
     sampleIntervalMs: number;
     settleSampleCount: number;
@@ -157,6 +165,7 @@ type RuntimeResult = {
 };
 
 export type BenchmarkPairInput = {
+  comparison?: "spotlight" | "runtime-migration";
   baselineWarmup: BuildResult;
   candidateWarmup: BuildResult;
   baselineBuilds: BuildResult[];
@@ -360,7 +369,7 @@ const validateWarmup = (label: string, warmup: BuildResult, builds: BuildResult[
   }
 };
 
-const runtimeConfiguration = (runtime: RuntimeResult) => ({
+const runtimeConfiguration = (runtime: RuntimeResult, comparison: "spotlight" | "runtime-migration") => ({
   host: runtime.host,
   browser: {
     ...runtime.provenance.browser,
@@ -371,10 +380,17 @@ const runtimeConfiguration = (runtime: RuntimeResult) => ({
   container: {
     cpuLimit: runtime.provenance.container.cpuLimit,
     memoryLimitBytes: runtime.provenance.container.memoryLimitBytes,
-    node: runtime.provenance.container.node,
+    node:
+      comparison === "runtime-migration"
+        ? {
+            architecture: runtime.provenance.container.node.architecture,
+            platform: runtime.provenance.container.node.platform,
+          }
+        : runtime.provenance.container.node,
   },
   docker: runtime.provenance.docker,
   workload: {
+    boardFixture: runtime.workload.boardFixture ?? null,
     settleMs: runtime.workload.settleMs,
     sampleIntervalMs: runtime.workload.sampleIntervalMs,
     settleSampleCount: runtime.workload.settleSampleCount,
@@ -533,6 +549,7 @@ const runtimeMetric = (runtime: RuntimeResult, key: keyof RuntimePageSample) =>
   summarize(runtime.workload.pageLoadSamples.map((sample) => sample[key]));
 
 export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
+  const comparison = input.comparison ?? "spotlight";
   const reasons: string[] = [];
   validateBuildSide("baseline", input.baselineBuilds, reasons);
   validateBuildSide("candidate", input.candidateBuilds, reasons);
@@ -632,23 +649,40 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
     }
   }
 
-  if (input.baselineRuntime.image.revision !== input.candidateRuntime.image.revision) {
+  if (comparison === "spotlight" && input.baselineRuntime.image.revision !== input.candidateRuntime.image.revision) {
     reasons.push("runtime image revisions do not match");
   }
   if (input.baselineRuntime.image.architecture !== input.candidateRuntime.image.architecture) {
     reasons.push("runtime image architectures do not match");
   }
-  if (stable(runtimeConfiguration(input.baselineRuntime)) !== stable(runtimeConfiguration(input.candidateRuntime))) {
+  if (
+    stable(runtimeConfiguration(input.baselineRuntime, comparison)) !==
+    stable(runtimeConfiguration(input.candidateRuntime, comparison))
+  ) {
     reasons.push("runtime host, browser, container, or workload configuration does not match");
   }
   if (stable(input.baselineRuntime.claimScope) !== stable(input.candidateRuntime.claimScope)) {
     reasons.push("runtime claim scopes do not match");
   }
-  if (input.baselineRuntime.workload.spotlightIdlePolicy !== "mounted") {
-    reasons.push("baseline Spotlight idle policy is not mounted");
-  }
-  if (input.candidateRuntime.workload.spotlightIdlePolicy !== "preload-only") {
-    reasons.push("candidate Spotlight idle policy is not preload-only");
+  if (comparison === "runtime-migration") {
+    const baselineNode = input.baselineRuntime.provenance.container.node;
+    const candidateNode = input.candidateRuntime.provenance.container.node;
+    if (baselineNode.engine !== "V8" || baselineNode.bunVersion || !baselineNode.v8Version) {
+      reasons.push("runtime migration baseline is not a verified Node/V8 process");
+    }
+    if (candidateNode.engine !== "JavaScriptCore" || !candidateNode.bunVersion || candidateNode.v8Version !== null) {
+      reasons.push("runtime migration candidate is not a verified Bun/JavaScriptCore process");
+    }
+    if (input.baselineRuntime.workload.spotlightIdlePolicy !== input.candidateRuntime.workload.spotlightIdlePolicy) {
+      reasons.push("runtime migration Spotlight workload policies do not match");
+    }
+  } else {
+    if (input.baselineRuntime.workload.spotlightIdlePolicy !== "mounted") {
+      reasons.push("baseline Spotlight idle policy is not mounted");
+    }
+    if (input.candidateRuntime.workload.spotlightIdlePolicy !== "preload-only") {
+      reasons.push("candidate Spotlight idle policy is not preload-only");
+    }
   }
 
   const buildMetric = (key: "wallTimeMs" | "nextCompileMs") => {
@@ -664,6 +698,7 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
 
   return {
     schemaVersion: 1,
+    comparison,
     claimEligible: reasons.length === 0,
     claimIneligibleReasons: unique(reasons),
     claimScope: {
