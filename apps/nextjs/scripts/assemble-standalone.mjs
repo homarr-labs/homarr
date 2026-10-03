@@ -31,6 +31,9 @@ function collectTraces(directory) {
       continue;
     }
     if (!entry.name.endsWith(".nft.json")) continue;
+    // NFT lists dependencies, excluding the entrypoint itself (including proxy).
+    const entrypoint = path.slice(0, -".nft.json".length);
+    if (existsSync(entrypoint)) files.add(relative(compiled, entrypoint));
     const trace = JSON.parse(readFileSync(path, "utf8"));
     for (const file of trace.files) {
       const target = relative(compiled, resolve(dirname(path), file));
