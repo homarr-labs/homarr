@@ -49,7 +49,7 @@ Workshop service operators can find its server-only configuration in the
 
 `DEMO_MODE=true` seeds demo data and makes Assistant return a fixed response without calling a model provider. `DEMO_READ_ONLY` defaults to `true`, blocking dashboard and configuration changes. Authenticated users can still save and manage their own Assistant conversations so canned chats work. Set `DEMO_READ_ONLY=false` for editable preview deployments.
 
-The seeded board in a read-only demo fetches widget data when it opens without periodic polling. To run multiple demo replicas, use one shared PostgreSQL database and an external Redis instance, and set the same `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` on every replica. The default SQLite database and Redis run inside each container; separate databases produce different seeded integration IDs and sessions, causing widget errors when requests reach another replica.
+The seeded board in a read-only demo fetches widget data when it opens without periodic polling. A disposable demo can run as one replica with the default local SQLite and Redis; without a persistent `/appdata` mount, its data and sessions reset when the container is replaced. Multiple replicas need one shared PostgreSQL database because each local database otherwise seeds different board and integration IDs and stores separate sessions. Use shared Redis for cross-replica events, and set the same `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` on every replica.
 
 ### Workshop service
 
