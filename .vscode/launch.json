@@ -53,7 +53,7 @@
       "name": "db migration run",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm db:migration:run",
+      "command": "bun run db:migration:sqlite:run",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },

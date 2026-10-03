@@ -9,7 +9,7 @@ bun run ci:act:all
 bun run ci:act:cleanup
 ```
 
-`fast` runs the database checks and quality gate. `docker` and `all` use the manual validation event to run those checks, build the container once, and run the converter boot/restart smoke test. `cleanup` validates the manual cleanup path without calling GitHub. The wrapper supports regular clones and Git worktrees, including non-default Docker contexts. Linux dependencies are kept in Docker volumes instead of overwriting host `node_modules`. The first run downloads the Act runner and Playwright browser dependencies.
+`fast` runs the database checks and quality gate and requires an `origin/dev` tracking ref. `docker` and `all` use the manual validation event to run those checks, build the container once, and run the converter boot/restart smoke test. `cleanup` validates the manual cleanup path without calling GitHub. The wrapper supports regular clones and Git worktrees, including non-default Docker contexts. Linux dependencies are kept in Docker volumes instead of overwriting host `node_modules`. The first run downloads the Act runner and Playwright browser dependencies.
 
 For rootless Docker, set `ACT_TESTCONTAINERS_HOST` to a host address reachable from the runner when loopback callbacks are unavailable.
 
