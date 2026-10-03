@@ -83,6 +83,7 @@ args=(
   --eventpath "$event_file"
   --platform "ubuntu-latest=$runner_image"
   --container-architecture linux/amd64
+  --env-file /dev/null
   --bind
   --env "DB_DRIVER=better-sqlite3"
   --env "TURBO_CACHE_DIR=$PWD/.turbo/cache"
@@ -103,7 +104,8 @@ if [[ -n "$job" ]]; then
 fi
 
 git_common_dir=$(cd "$(git rev-parse --git-common-dir)" && pwd)
-container_options="--volume homarr-act-bun-1-4-2-node-24-18-0-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
+# Bun loads .env automatically; reproduce GitHub's checkout without local settings.
+container_options="--volume /dev/null:$PWD/.env:ro --volume homarr-act-bun-1-4-2-node-24-18-0-modules:$PWD/node_modules --volume homarr-act-bun-cache:/root/.bun/install/cache"
 case "$git_common_dir" in
   "$PWD" | "$PWD"/*) ;;
   *) container_options="$container_options --volume $git_common_dir:$git_common_dir:ro" ;;
