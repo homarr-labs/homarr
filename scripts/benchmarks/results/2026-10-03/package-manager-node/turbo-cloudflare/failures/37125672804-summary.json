@@ -1,0 +1,369 @@
+{
+  "source": "e3db513826a895961478427e3690c7b1e5d87e55",
+  "platform": "linux/amd64/glibc/node-24.18.0",
+  "mode": "signed-remote",
+  "records": [
+    {
+      "phase": "prime",
+      "elapsedSeconds": 214.76241688,
+      "tasks": [
+        {
+          "taskId": "@homarr/cli#build",
+          "hash": "34bd0472f536f2ab",
+          "cache": {
+            "local": false,
+            "remote": false,
+            "status": "MISS",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033492239,
+            "endTime": 1791033492722,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/db#build",
+          "hash": "b69cd0c3548dd22b",
+          "cache": {
+            "local": false,
+            "remote": false,
+            "status": "MISS",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033491698,
+            "endTime": 1791033492239,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/docs#build",
+          "hash": "be356c606744025a",
+          "cache": {
+            "local": false,
+            "remote": false,
+            "status": "MISS",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033492240,
+            "endTime": 1791033632897,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/nextjs#build",
+          "hash": "e45612ae20394133",
+          "cache": {
+            "local": false,
+            "remote": false,
+            "status": "MISS",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033492725,
+            "endTime": 1791033699400,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/nextjs#build:standalone",
+          "hash": "bc380a6f2a0eafe7",
+          "cache": {
+            "local": false,
+            "remote": false,
+            "status": "MISS",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033699403,
+            "endTime": 1791033699533,
+            "exitCode": 0
+          }
+        }
+      ],
+      "archiveBytes": {
+        "@homarr/cli#build": 844016,
+        "@homarr/db#build": 1214080,
+        "@homarr/docs#build": 75705049,
+        "@homarr/nextjs#build": 91771608,
+        "@homarr/nextjs#build:standalone": 43903327
+      },
+      "outputs": {
+        "@homarr/nextjs#build": {
+          "sha256": "6aa4d5ebc28f6ade32f6d05e837822c7d940852f3b42fb2f542886d02fbe9ecf",
+          "files": 8595,
+          "bytes": 536591347
+        },
+        "@homarr/nextjs#build:standalone": {
+          "sha256": "cf1e2746d443590e45287dd8dff3e04c7732aa63a10cded9e97ff65f5ffda936",
+          "files": 7699,
+          "bytes": 238318228
+        },
+        "@homarr/docs#build": {
+          "sha256": "477b302e098a1f4809004d78f6ba6187de8a954b24e52151a5eac5e3c396a985",
+          "files": 7489,
+          "bytes": 611974018
+        },
+        "@homarr/cli#build": {
+          "sha256": "c10f9c71048a8af80eadfd5a59e12e164c7d6172dd0c35b8f0bd14c832807e38",
+          "files": 1,
+          "bytes": 4365167
+        },
+        "@homarr/db#build": {
+          "sha256": "cfff1350ecfd6785be8c2ea8063f9436f16c639525f7761e49f2cbcaf6168a00",
+          "files": 2,
+          "bytes": 7168565
+        }
+      }
+    },
+    {
+      "phase": "local-restore",
+      "elapsedSeconds": 2.9518649660000165,
+      "tasks": [
+        {
+          "taskId": "@homarr/cli#build",
+          "hash": "34bd0472f536f2ab",
+          "cache": {
+            "local": true,
+            "remote": false,
+            "status": "HIT",
+            "source": "LOCAL",
+            "timeSaved": 482,
+            "sha": "e3db513826a895961478427e3690c7b1e5d87e55"
+          },
+          "execution": {
+            "startTime": 1791033713631,
+            "endTime": 1791033713640,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/db#build",
+          "hash": "b69cd0c3548dd22b",
+          "cache": {
+            "local": true,
+            "remote": false,
+            "status": "HIT",
+            "source": "LOCAL",
+            "timeSaved": 540,
+            "sha": "e3db513826a895961478427e3690c7b1e5d87e55"
+          },
+          "execution": {
+            "startTime": 1791033713618,
+            "endTime": 1791033713631,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/docs#build",
+          "hash": "be356c606744025a",
+          "cache": {
+            "local": true,
+            "remote": false,
+            "status": "HIT",
+            "source": "LOCAL",
+            "timeSaved": 140483,
+            "sha": "e3db513826a895961478427e3690c7b1e5d87e55"
+          },
+          "execution": {
+            "startTime": 1791033713632,
+            "endTime": 1791033715026,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/nextjs#build",
+          "hash": "e45612ae20394133",
+          "cache": {
+            "local": true,
+            "remote": false,
+            "status": "HIT",
+            "source": "LOCAL",
+            "timeSaved": 206597,
+            "sha": "e3db513826a895961478427e3690c7b1e5d87e55"
+          },
+          "execution": {
+            "startTime": 1791033713641,
+            "endTime": 1791033715187,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/nextjs#build:standalone",
+          "hash": "bc380a6f2a0eafe7",
+          "cache": {
+            "local": true,
+            "remote": false,
+            "status": "HIT",
+            "source": "LOCAL",
+            "timeSaved": 34,
+            "sha": "e3db513826a895961478427e3690c7b1e5d87e55"
+          },
+          "execution": {
+            "startTime": 1791033715187,
+            "endTime": 1791033716374,
+            "exitCode": 0
+          }
+        }
+      ],
+      "archiveBytes": {
+        "@homarr/cli#build": 844016,
+        "@homarr/db#build": 1214080,
+        "@homarr/docs#build": 75705049,
+        "@homarr/nextjs#build": 91771608,
+        "@homarr/nextjs#build:standalone": 43903327
+      },
+      "outputs": {
+        "@homarr/nextjs#build": {
+          "sha256": "6aa4d5ebc28f6ade32f6d05e837822c7d940852f3b42fb2f542886d02fbe9ecf",
+          "files": 8595,
+          "bytes": 536591347
+        },
+        "@homarr/nextjs#build:standalone": {
+          "sha256": "cf1e2746d443590e45287dd8dff3e04c7732aa63a10cded9e97ff65f5ffda936",
+          "files": 7699,
+          "bytes": 238318228
+        },
+        "@homarr/docs#build": {
+          "sha256": "477b302e098a1f4809004d78f6ba6187de8a954b24e52151a5eac5e3c396a985",
+          "files": 7489,
+          "bytes": 611974018
+        },
+        "@homarr/cli#build": {
+          "sha256": "c10f9c71048a8af80eadfd5a59e12e164c7d6172dd0c35b8f0bd14c832807e38",
+          "files": 1,
+          "bytes": 4365167
+        },
+        "@homarr/db#build": {
+          "sha256": "cfff1350ecfd6785be8c2ea8063f9436f16c639525f7761e49f2cbcaf6168a00",
+          "files": 2,
+          "bytes": 7168565
+        }
+      }
+    },
+    {
+      "phase": "remote-restore-1",
+      "elapsedSeconds": 6.416155258000003,
+      "tasks": [
+        {
+          "taskId": "@homarr/cli#build",
+          "hash": "34bd0472f536f2ab",
+          "cache": {
+            "local": false,
+            "remote": true,
+            "status": "HIT",
+            "source": "REMOTE",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033725017,
+            "endTime": 1791033725459,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/db#build",
+          "hash": "b69cd0c3548dd22b",
+          "cache": {
+            "local": false,
+            "remote": true,
+            "status": "HIT",
+            "source": "REMOTE",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033724527,
+            "endTime": 1791033725017,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/docs#build",
+          "hash": "be356c606744025a",
+          "cache": {
+            "local": false,
+            "remote": true,
+            "status": "HIT",
+            "source": "REMOTE",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033725018,
+            "endTime": 1791033727240,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/nextjs#build",
+          "hash": "e45612ae20394133",
+          "cache": {
+            "local": false,
+            "remote": true,
+            "status": "HIT",
+            "source": "REMOTE",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033725460,
+            "endTime": 1791033728623,
+            "exitCode": 0
+          }
+        },
+        {
+          "taskId": "@homarr/nextjs#build:standalone",
+          "hash": "bc380a6f2a0eafe7",
+          "cache": {
+            "local": false,
+            "remote": true,
+            "status": "HIT",
+            "source": "REMOTE",
+            "timeSaved": 0
+          },
+          "execution": {
+            "startTime": 1791033728624,
+            "endTime": 1791033730777,
+            "exitCode": 0
+          }
+        }
+      ],
+      "archiveBytes": {
+        "@homarr/cli#build": 844016,
+        "@homarr/db#build": 1214080,
+        "@homarr/docs#build": 75705049,
+        "@homarr/nextjs#build": 91771608,
+        "@homarr/nextjs#build:standalone": 43903327
+      },
+      "outputs": {
+        "@homarr/nextjs#build": {
+          "sha256": "6aa4d5ebc28f6ade32f6d05e837822c7d940852f3b42fb2f542886d02fbe9ecf",
+          "files": 8595,
+          "bytes": 536591347
+        },
+        "@homarr/nextjs#build:standalone": {
+          "sha256": "cf1e2746d443590e45287dd8dff3e04c7732aa63a10cded9e97ff65f5ffda936",
+          "files": 7699,
+          "bytes": 238318228
+        },
+        "@homarr/docs#build": {
+          "sha256": "76482a72363b4d835674559b16e47f7e000f6cd5c46f41b02367d2872710d4e6",
+          "files": 7489,
+          "bytes": 611974390
+        },
+        "@homarr/cli#build": {
+          "sha256": "c10f9c71048a8af80eadfd5a59e12e164c7d6172dd0c35b8f0bd14c832807e38",
+          "files": 1,
+          "bytes": 4365167
+        },
+        "@homarr/db#build": {
+          "sha256": "cfff1350ecfd6785be8c2ea8063f9436f16c639525f7761e49f2cbcaf6168a00",
+          "files": 2,
+          "bytes": 7168565
+        }
+      }
+    }
+  ],
+  "status": "FAIL",
+  "error": "remote-restore-1: restored outputs differ from the original build"
+}

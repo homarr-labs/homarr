@@ -1,0 +1,8 @@
+{
+  "source": "5cd543e11399c79892f1cba7898e426c0fea68ba",
+  "platform": "linux/amd64/glibc/node-24.18.0",
+  "mode": "signed-remote",
+  "records": [],
+  "status": "FAIL",
+  "error": "prime failed; see sanitized log"
+}

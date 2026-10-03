@@ -1,0 +1,10 @@
+
+   • Packages in scope: @homarr/cli, @homarr/db, @homarr/docs, @homarr/nextjs
+   • Running build, build:standalone in 4 packages
+   • Remote caching enabled
+
+
+  Tasks:    5 successful, 5 total
+ Cached:    5 cached, 5 total
+   Time:    6.35s >>> FULL TURBO
+Summary:    /home/runner/work/homarr/homarr/.turbo/runs/3KBb6Dq50R1YMEG8viHutXPE6Ve.json

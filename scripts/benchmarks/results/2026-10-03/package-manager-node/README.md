@@ -47,7 +47,7 @@ Local build timing is excluded; hosted build timing uses the valid balanced seri
 All three local paired checks reject only that build chronology.
 
 `image-transfer/` measures immutable image exports, compression and warm imports;
-`turbo/` records the final 12 invalidation controls and compiled-artifact restoration.
+`turbo/` records the earlier 12 invalidation controls and compiled-artifact restoration.
 `github-cache.json` preserves separate-run, single-observation cache restoration
 sizes/timestamps; it does not establish a paired transfer speedup.
 
@@ -55,3 +55,8 @@ Performance measurements precede the final three nested `brace-expansion` lock
 entry updates. Their original revision pins remain authoritative. Final frozen
 installation and CI validate the updated graph; `validation/` records 66 matching
 dependency override checks, their three earlier mismatches and the corrected result.
+
+`turbo-cloudflare/` records the final cache integration: 25 invalidation controls,
+coherence repair, split artifacts, and three signed remote restorations for both
+Next.js sites and the CLI/migration bundles. These measurements use the later
+implementation and include the final security lock updates.

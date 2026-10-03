@@ -1,0 +1,27 @@
+{
+  "source": "0924884348c3304e3309c10a27be17d8182b1661",
+  "command": "bash scripts/ci/act.sh docker",
+  "status": "PASS",
+  "fastGate": {
+    "successful": 82,
+    "cached": 77
+  },
+  "applicationBundleCheck": {
+    "successful": 4,
+    "cached": 3
+  },
+  "dockerBuild": {
+    "successful": 5,
+    "cached": 2
+  },
+  "containerSmoke": {
+    "testFiles": 1,
+    "tests": 2,
+    "status": "PASS"
+  },
+  "databaseChecks": "PASS",
+  "runtime": "Node 24.18.0",
+  "packageManager": "Bun 1.4.2",
+  "logSha256": "ee5018b664524c68a8f1dd2700365444050e6acf515c9e0193ceae0a12d46e22",
+  "retryReason": "Initial attempt hit a rootless Docker host-port collision; preserved in failures/local-act-port-collision.json."
+}

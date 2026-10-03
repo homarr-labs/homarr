@@ -1,0 +1,9 @@
+{
+  "source": "0924884348c3304e3309c10a27be17d8182b1661",
+  "status": "FAIL",
+  "step": "PostgreSQL test container startup",
+  "cause": "RootlessKit PortManager.AddPort: bind: address already in use (host port 32978)",
+  "codeChange": false,
+  "hostedValidation": "PASS: 37129820272",
+  "excludedFromTimingComparison": true
+}
