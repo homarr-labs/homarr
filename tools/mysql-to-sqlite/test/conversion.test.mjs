@@ -150,11 +150,15 @@ test("real v1.77.1 MySQL converts losslessly and rejects unsafe sources", { time
     `MYSQL_HOST=127.0.0.1\nMYSQL_PORT=${connectionOptions.port}\nMYSQL_USER=${connectionOptions.user}\nMYSQL_PASSWORD=${connectionOptions.password}\nMYSQL_DATABASE=homarr\n`,
     { mode: 0o600 },
   );
+  const { stdout: securityOptions } = await exec("docker", ["info", "--format", "{{json .SecurityOptions}}"]);
+  let containerUser = `${process.getuid()}:${process.getgid()}`;
+  // Rootless Docker maps container root to the caller who owns the bind mount.
+  if (JSON.parse(securityOptions).includes("name=rootless")) containerUser = "0:0";
   await exec("docker", [
     "run",
     "--rm",
     "--user",
-    `${process.getuid()}:${process.getgid()}`,
+    containerUser,
     "--network",
     "host",
     "--env-file",
