@@ -118,4 +118,4 @@ if [[ -n "${ACT_SECRET_FILE:-}" ]]; then
   args+=(--secret-file "$ACT_SECRET_FILE")
 fi
 
-exec act "${args[@]}"
+act "${args[@]}"
