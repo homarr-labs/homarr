@@ -22,6 +22,20 @@ discovery or management.
 Integration URLs must be reachable from the Homarr container. Browser-facing app URLs may use a different hostname;
 see [Managing integrations](/docs/management/integrations#configuration).
 
+### Memory limits
+
+For v2, start with a **1 GiB container memory budget** for a small installation, then monitor normal board navigation,
+integration refreshes, and configuration changes. This is a starting recommendation, not a minimum or a guarantee;
+large integration responses and concurrent users can require more memory. Reassess limits carried over from v1.
+
+If you set a Compose limit, use `mem_limit: 1g` on the Homarr service. A 512 MiB limit can leave too little JavaScript
+heap headroom, even when total container usage is below that limit. `JavaScript heap out of memory` indicates the
+Node.js heap ceiling was reached; it does not by itself establish a memory leak.
+
+Increase the container budget before overriding `NODE_OPTIONS`. The JavaScript heap shares that budget with native
+allocations and the image's Redis and nginx processes; setting the heap limit to the full container limit can instead
+cause the container to be killed.
+
 ### Update
 
 Update the image and recreate the container with the same configuration. Homarr runs database migrations automatically
