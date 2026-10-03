@@ -29,6 +29,7 @@ export async function GET() {
 
   try {
     sourceDb = new Database(dbPath, { readonly: true });
+    sourceDb.exec("PRAGMA busy_timeout = 5000");
     sourceDb.exec("PRAGMA wal_checkpoint(TRUNCATE)");
     sourceDb.exec(`VACUUM INTO '${tempPath}'`);
     sourceDb.close(true);

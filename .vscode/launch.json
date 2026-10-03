@@ -50,10 +50,10 @@
       "skipFiles": ["<node_internals>/**"]
     },
     {
-      "name": "db migration run",
+      "name": "SQLite migration run",
       "type": "node-terminal",
       "request": "launch",
-      "command": "bun run db:migration:run",
+      "command": "bun run db:migration:sqlite:run",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },

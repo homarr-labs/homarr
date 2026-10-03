@@ -76,6 +76,7 @@ const createProxyReaderAsync = async (): Promise<ProxyReader> => {
       ]);
       const connection = new Database(dbEnv.URL);
       connection.exec("PRAGMA foreign_keys = ON");
+      connection.exec("PRAGMA busy_timeout = 5000");
       const database = drizzle(connection, { schema: proxySchema });
       return createProxyReader(database, proxySchema, async () => {
         connection.close(true);

@@ -8,5 +8,6 @@ export const createSqliteDb = <TSchema extends Record<string, unknown>>(config: 
   const connection = new Database(dbEnv.URL);
   // Preserve better-sqlite3's default; Bun leaves foreign keys disabled.
   connection.exec("PRAGMA foreign_keys = ON");
+  connection.exec("PRAGMA busy_timeout = 5000");
   return drizzleSqlite<TSchema>(connection, config);
 };

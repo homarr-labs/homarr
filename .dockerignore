@@ -23,3 +23,6 @@ apps/nextjs/.next
 .env
 .env.*
 !.env.example
+
+benchmark-results
+**/*.tsbuildinfo

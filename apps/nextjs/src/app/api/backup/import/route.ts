@@ -293,6 +293,8 @@ export async function POST(req: Request) {
     fs.writeFileSync(tempPath, dbEntry.getData());
 
     tempDb = new BetterSqlite3(tempPath);
+    tempDb.exec("PRAGMA foreign_keys = ON");
+    tempDb.exec("PRAGMA busy_timeout = 5000");
     const drizzleDb = drizzle(tempDb, { casing: DB_CASING, schema });
     migrate(drizzleDb, { migrationsFolder });
     await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
@@ -318,6 +320,11 @@ export async function POST(req: Request) {
 
     if (importedKey) {
       reEncryptSecrets(tempDb, importedKey);
+    }
+
+    const foreignKeyViolations = tempDb.prepare("PRAGMA foreign_key_check").all();
+    if (foreignKeyViolations.length > 0) {
+      throw new Error("Backup database contains foreign-key violations");
     }
 
     const homeBoardName = getHomeBoardName(tempDb);

@@ -30,7 +30,6 @@ if [[ -z "${DOCKER_HOST:-}" ]]; then
 fi
 
 head_sha=$(git rev-parse HEAD)
-base_sha=$(git merge-base origin/dev HEAD)
 head_ref=$(git branch --show-current)
 head_ref=${head_ref:-act-local}
 event_file=$(mktemp "${TMPDIR:-/tmp}/homarr-act-event.XXXXXX")
@@ -55,6 +54,7 @@ elif [[ "$mode" == "docker" || "$mode" == "all" ]]; then
 }
 EOF
 else
+  base_sha=$(git merge-base origin/dev HEAD)
   event_name="pull_request"
   safe_ref=$(json_escape "$head_ref")
   cat >"$event_file" <<EOF

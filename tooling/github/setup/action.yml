@@ -8,5 +8,14 @@ runs:
       with:
         bun-version: 1.4.2
 
+    - name: Restore Bun dependency cache
+      if: "!env.ACT"
+      uses: actions/cache@v5
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-${{ hashFiles('bun.lock', 'bunfig.toml', 'package.json', 'patches/**') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-
+
     - shell: bash
       run: bun install --frozen-lockfile

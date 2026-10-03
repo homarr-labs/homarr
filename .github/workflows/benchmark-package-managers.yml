@@ -1,0 +1,61 @@
+name: Package manager benchmarks
+
+on:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: pnpm baseline revision
+        required: true
+        default: dev
+      candidate:
+        description: Bun candidate revision
+        required: true
+        default: feat/bun-migration
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      BASELINE_REF: ${{ inputs.baseline }}
+      CANDIDATE_REF: ${{ inputs.candidate }}
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - name: Install pinned baseline package manager
+        working-directory: ${{ runner.temp }}
+        run: npm install --prefix "$RUNNER_TEMP/benchmark-tools" --ignore-scripts --no-audit --no-fund pnpm@11.15.1
+      - name: Measure installs, cache restoration, workspaces, and merge conflicts
+        run: |
+          python3 scripts/benchmarks/package-managers.py \
+            --base "$BASELINE_REF" --head "$CANDIDATE_REF" \
+            --node "$(command -v node)" --bun "$(command -v bun)" \
+            --pnpm "$RUNNER_TEMP/benchmark-tools/node_modules/pnpm/bin/pnpm.cjs" \
+            --work-dir "$RUNNER_TEMP/package-manager-comparison" \
+            --output benchmark-results/bun-migration
+      - name: Add benchmark summary
+        if: always()
+        run: |
+          if test -f benchmark-results/bun-migration/package-managers.json; then
+            python3 scripts/benchmarks/summarize-package-managers.py \
+              benchmark-results/bun-migration/package-managers.json >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve measurements and failures
+        if: always() && !env.ACT
+        uses: actions/upload-artifact@v7
+        with:
+          name: package-manager-benchmarks-${{ github.run_id }}
+          path: benchmark-results/bun-migration/
+          if-no-files-found: error
