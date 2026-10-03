@@ -201,10 +201,11 @@ const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProp
   const value = item.value(data, isCompact || displayedWidth <= 64 ? "sm" : "md");
   let tooltip = item.tooltip?.(data, t);
   let padding: number | "sm" = "sm";
-  let valueSize: "xs" | "lg" = "lg";
+  let valueSize = "lg";
   if (isCompact) {
     padding = 2;
-    valueSize = "xs";
+    // Reserve padding and borders so four-character values fit narrow mobile cards.
+    valueSize = `calc(${Math.min(12, Math.max(0, displayedWidth - 6) / 3)}px * var(--board-canvas-ui-scale, 1))`;
     let compactTooltip = `${label}: ${value}`;
     if (tooltip) compactTooltip += `. ${tooltip}`;
     tooltip = compactTooltip;
