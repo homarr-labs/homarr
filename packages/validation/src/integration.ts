@@ -29,7 +29,8 @@ export const integrationCreateSchema = z.object({
 });
 
 export const integrationUpdateSchema = z.object({
-  id: z.string().cuid2(),
+  // Updates address an existing row, including externally seeded IDs.
+  id: z.string().nonempty(),
   name: z.string().nonempty().max(127),
   url: z.string().url(),
   secrets: z.array(

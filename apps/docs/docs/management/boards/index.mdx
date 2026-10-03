@@ -38,14 +38,20 @@ Mobile and Base are protected layouts. New boards use three Mobile columns; Base
 creation. Additional layouts use unique breakpoints. Homarr selects the layout with the highest breakpoint that fits
 the current viewport.
 
-Tiles use fixed `200 × 200` logical-pixel cells with a `24px` gap. Homarr scales the complete layout to the available
-width instead of changing each widget's proportions. **Reset from Base** regenerates a Mobile or custom layout from the
+The logical grid uses fixed `200 × 200` cells with a `12px` gap. Visible tile spacing also depends on card insets and
+canvas scaling. Homarr scales the complete layout to the available width instead of changing each widget's proportions. **Reset from Base** regenerates a Mobile or custom layout from the
 current Base layout.
+
+Changing column or sidebar counts keeps a saved source arrangement while its generated positions remain unedited.
+Widening back restores that arrangement, including Container sizes. Moving, resizing, adding, or removing content
+starts a new source arrangement on the next layout resize. This cannot restore positions lost before this behavior
+was introduced; widen the affected Container before moving widgets into its right-hand columns.
 
 ### Containers and rails
 
 A **Container** groups apps, widgets, and nested Containers. It can have a label, collapse control, app-opening action,
-border color, and CSS classes.
+border color, and CSS classes. Click anywhere on a collapsible Container’s header to collapse or expand it.
+The header also supports Enter and Space; its app-opening action and edit controls work independently.
 
 Items can occupy the outermost rows and columns of a Container. The drop preview shows the position where the item
 will remain when released.
@@ -60,6 +66,9 @@ with enabled sidebars shown beside the main canvas.
 
 Enter edit mode from the board header to add, move, resize, configure, or remove content. Save the board to persist the
 layout.
+
+Dismissing the setup checklist is remembered per board in the current browser, independently of board contents.
+Clearing browser site data restores it; dismissal does not sync across browsers.
 
 - Drag from an item's inactive content area; Containers use their grip.
 - Hold `Ctrl` on Windows/Linux or `Cmd` on macOS to select several items.

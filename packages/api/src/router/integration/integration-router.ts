@@ -44,6 +44,7 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
+import { integrationTestStoredConnectionProcedure } from "./integration-test-stored-connection";
 import { mapTestConnectionError } from "./map-test-connection-error";
 
 const logger = createLogger({ module: "integrationRouter" });
@@ -51,6 +52,7 @@ const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
 
 export const integrationRouter = createTRPCRouter({
   request: integrationRequestProcedure,
+  testConnection: integrationTestStoredConnectionProcedure,
   getKinds: publicProcedure
     .meta({
       mcp: {
