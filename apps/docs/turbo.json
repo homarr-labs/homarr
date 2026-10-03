@@ -12,6 +12,14 @@
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
+        "!**/*.test.ts",
+        "!**/*.test.tsx",
+        "!**/*.spec.ts",
+        "!**/*.spec.tsx",
+        "!**/__tests__/**",
+        "!README.md",
+        "!AGENTS.md",
+        "!PRODUCT.md",
         "$TURBO_ROOT$/packages/definitions/src/docs/**",
         "$TURBO_ROOT$/tools/motion-reel/three/**",
         ".env*"

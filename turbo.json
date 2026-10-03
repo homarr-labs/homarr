@@ -62,6 +62,12 @@
     },
     "//#clean": {
       "cache": false
+    },
+    "build:standalone": {
+      "dependsOn": ["build"],
+      "env": ["TURBO_PLATFORM"],
+      "outputs": [".next/standalone/**"],
+      "inputs": ["package.json"]
     }
   },
   "agentGuidance": false

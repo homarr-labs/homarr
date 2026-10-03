@@ -21,6 +21,23 @@ WORKDIR /app
 RUN apk add --no-cache libstdc++ python3 make g++
 COPY bun.lock bunfig.toml package.json turbo.json ./
 COPY patches ./patches
+COPY apps/docs/package.json ./apps/docs/package.json
+COPY packages/common/package.json ./packages/common/package.json
+COPY packages/core/package.json ./packages/core/package.json
+COPY packages/custom-widgets/package.json ./packages/custom-widgets/package.json
+COPY packages/definitions/package.json ./packages/definitions/package.json
+COPY packages/db/package.json ./packages/db/package.json
+COPY packages/server-settings/package.json ./packages/server-settings/package.json
+COPY packages/settings/package.json ./packages/settings/package.json
+COPY packages/translation/package.json ./packages/translation/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/validation/package.json ./packages/validation/package.json
+COPY packages/workshop/package.json ./packages/workshop/package.json
+COPY tooling/typescript/package.json ./tooling/typescript/package.json
+COPY packages/definitions/src ./packages/definitions/src
+RUN --mount=type=cache,id=workshop-bun-cache,target=/root/.bun/install/cache \
+    npm_config_nodedir=/usr/local bun install --filter @homarr/docs --filter homarr --frozen-lockfile --concurrent-scripts=1
+
 COPY apps/docs ./apps/docs
 COPY tools/motion-reel/three ./tools/motion-reel/three
 COPY packages/common ./packages/common
@@ -35,8 +52,6 @@ COPY packages/ui ./packages/ui
 COPY packages/validation ./packages/validation
 COPY packages/workshop ./packages/workshop
 COPY tooling/typescript ./tooling/typescript
-RUN --mount=type=cache,id=workshop-bun-cache,target=/root/.bun/install/cache \
-    npm_config_nodedir=/usr/local bun install --filter @homarr/docs --frozen-lockfile --concurrent-scripts=1
 
 FROM dependencies AS website
 ARG TARGETPLATFORM

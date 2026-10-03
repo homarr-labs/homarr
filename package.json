@@ -255,7 +255,7 @@
     }
   },
   "scripts": {
-    "build": "cross-env CI=true turbo build",
+    "build": "cross-env CI=true turbo run build build:standalone",
     "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
     "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",
     "benchmark:board-graph": "node --experimental-strip-types scripts/benchmarks/board-static-graph.mts",

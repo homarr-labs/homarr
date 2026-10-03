@@ -25,6 +25,7 @@ env = dict(os.environ, CI='true', SKIP_ENV_VALIDATION='true', TURBO_TELEMETRY_DI
 
 outputs = {
     '@homarr/nextjs#build': ['apps/nextjs/.next', 'apps/nextjs/next-env.d.ts'],
+    '@homarr/nextjs#build:standalone': ['apps/nextjs/.next/standalone'],
     '@homarr/docs#build': ['apps/docs/.next', 'apps/docs/out', 'apps/docs/.source', 'apps/docs/next-env.d.ts'],
     '@homarr/cli#build': ['packages/cli/cli.cjs'],
     '@homarr/db#build': ['packages/db/migrations/sqlite/migrate.cjs', 'packages/db/migrations/postgresql/migrate.cjs'],
@@ -43,6 +44,8 @@ def fingerprint():
             files = sorted(base.rglob('*')) if base.is_dir() else [base]
             for path in files:
                 name = path.relative_to(root).as_posix()
+                if task == '@homarr/nextjs#build' and '/.next/standalone/' in name:
+                    continue
                 if '/.next/cache/' in name or '/.next/dev/' in name:
                     continue
                 if path.is_symlink():
@@ -81,8 +84,8 @@ source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(
 report = {'source': source, 'platform': env.get('TURBO_PLATFORM'), 'mode': 'local' if args.local else 'signed-remote', 'records': records}
 try:
     with tempfile.TemporaryDirectory(prefix='homarr-turbo-remote-') as cache:
-        filters = ['--filter=' + task.split('#')[0] for task in outputs]
-        command = ['bun', 'run', 'turbo', 'run', 'build', *filters, '--concurrency=2', '--summarize', '--output-logs=errors-only', '--cache-dir=' + cache]
+        filters = ['--filter=' + package for package in sorted({task.split('#')[0] for task in outputs})]
+        command = ['bun', 'run', 'turbo', 'run', 'build', 'build:standalone', *filters, '--concurrency=2', '--summarize', '--output-logs=errors-only', '--cache-dir=' + cache]
         for phase in ['prime', 'local-restore', 'remote-restore-1', 'remote-restore-2', 'remote-restore-3']:
             if args.local and phase.startswith('remote'):
                 continue
@@ -110,7 +113,7 @@ try:
             if phase != 'prime':
                 expected_source = 'REMOTE' if phase.startswith('remote') else 'LOCAL'
                 if len(tasks) != len(outputs) or any(task['cache'].get('status') != 'HIT' or task['cache'].get('source') != expected_source for task in tasks):
-                    raise RuntimeError(f'{phase}: expected four {expected_source} hits')
+                    raise RuntimeError(f'{phase}: expected five {expected_source} hits')
                 if record['outputs'] != records[0]['outputs']:
                     raise RuntimeError(f'{phase}: restored outputs differ from the original build')
             print(json.dumps({'phase': phase, 'elapsedSeconds': elapsed, 'tasks': tasks, 'archiveBytes': artifact_sizes}), flush=True)

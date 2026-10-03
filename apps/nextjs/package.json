@@ -11,7 +11,8 @@
     "lint": "oxlint",
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
     "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "build:standalone": "node scripts/cache-standalone.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "catalog:",
