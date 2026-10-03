@@ -29,6 +29,7 @@ export class StatsIntegration extends Integration {
       const signal = AbortSignal.timeout(15_000);
       return await this.provider.getHttpAuthenticationAsync({
         signal,
+        url: new URL(this.integration.url),
         secret: (kind) => this.getSecretValue(kind),
         hasSecret: (kind) => this.hasSecretValue(kind),
         requestAsync: this.createRequestAsync(signal, undefined, undefined, true),
@@ -50,6 +51,7 @@ export class StatsIntegration extends Integration {
     }
     return await this.provider.fetchAsync({
       signal,
+      url: new URL(this.integration.url),
       secret: (kind) => this.getSecretValue(kind),
       hasSecret: (kind) => this.hasSecretValue(kind),
       requestAsync: this.createRequestAsync(signal, testing, authentication),

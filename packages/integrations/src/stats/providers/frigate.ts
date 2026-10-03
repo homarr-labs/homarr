@@ -34,6 +34,9 @@ export const frigateStatsProvider = {
 } satisfies StatsProvider;
 
 async function getHttpAuthenticationAsync(context: StatsFetchContext) {
+  if (context.url.protocol !== "https:") {
+    throw new Error("Frigate authentication requires an HTTPS integration URL to protect credentials");
+  }
   try {
     const username = context.secret("username");
     const password = context.secret("password");

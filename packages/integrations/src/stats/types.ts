@@ -26,6 +26,8 @@ export interface StatsAuthenticationContext {
 }
 
 export interface StatsFetchContext extends StatsAuthenticationContext {
+  /** Base integration URL. Credential exchanges must verify its protocol before reading or sending secrets. */
+  url: URL;
   /** Relative service path. The shared client applies trusted certificates and a deadline. */
   requestAsync: (path: `/${string}`, init?: RequestInit) => Promise<unknown>;
   /** Private response metadata for cookie-based exchanges; the body is discarded, never parsed or exposed. */

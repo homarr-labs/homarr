@@ -32,13 +32,16 @@ const credentials = [
   { kind: "password" as const, value: "private-test-password" },
 ];
 const fetchAsync = vi.mocked(fetchWithTrustedCertificatesAsync);
-const createIntegration = (decryptedSecrets: IntegrationInput["decryptedSecrets"] = credentials) =>
+const createIntegration = (
+  decryptedSecrets: IntegrationInput["decryptedSecrets"] = credentials,
+  url = "https://frigate.test:8971",
+) =>
   new StatsIntegration(
     {
       id: "frigate-test",
       kind: "frigate",
       name: "Frigate",
-      url: "https://frigate.test:8971",
+      url,
       externalUrl: null,
       decryptedSecrets,
     },
@@ -186,6 +189,13 @@ describe("authenticated Frigate", () => {
     expect(inspect(failure, { depth: 10 })).not.toContain(credentials[1]?.value);
     expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(token);
     expect(inspect(logger.warn.mock.calls, { depth: 10 })).not.toContain(credentials[1]?.value);
+  });
+
+  test("rejects HTTP integration URLs without transmitting credentials", async () => {
+    const integration = createIntegration(credentials, "http://frigate.test:8971");
+    await expect(integration.getHttpAuthenticationAsync()).rejects.toThrow();
+    await expect(integration.getStatsAsync()).rejects.toThrow();
+    expect(fetchAsync).not.toHaveBeenCalled();
   });
 
   test("requires saved credentials and defaults to the authenticated port", () => {
