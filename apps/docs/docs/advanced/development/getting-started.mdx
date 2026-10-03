@@ -28,6 +28,9 @@ bun install --frozen-lockfile
 SQLite uses Bun's built-in driver. Existing `DB_DRIVER=better-sqlite3` settings are accepted as an alias for
 `bun-sqlite`; database files and backups remain SQLite-compatible.
 
+Drizzle Kit's SQLite push and Studio commands use the development-only `@libsql/client` adapter because Drizzle Kit
+does not support `bun:sqlite`. Application queries and migrations use Bun's built-in driver.
+
 ### Run the Homarr application
 
 1. Copy `.env.example` to `.env`.
