@@ -31,7 +31,7 @@ export async function GET() {
     sourceDb = new Database(dbPath, { readonly: true });
     sourceDb.exec("PRAGMA wal_checkpoint(TRUNCATE)");
     sourceDb.exec(`VACUUM INTO '${tempPath}'`);
-    sourceDb.close();
+    sourceDb.close(true);
     sourceDb = null;
 
     const dbBuffer = fs.readFileSync(tempPath);
@@ -65,7 +65,7 @@ export async function GET() {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: `Export failed: ${message}` }, { status: 500 });
   } finally {
-    sourceDb?.close();
+    sourceDb?.close(true);
     try {
       if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
     } catch (cleanupErr) {

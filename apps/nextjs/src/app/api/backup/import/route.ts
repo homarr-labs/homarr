@@ -322,7 +322,7 @@ export async function POST(req: Request) {
 
     const homeBoardName = getHomeBoardName(tempDb);
 
-    tempDb.close();
+    tempDb.close(true);
     tempDb = null;
 
     fs.renameSync(tempPath, dbPath);
@@ -355,7 +355,7 @@ export async function POST(req: Request) {
   } finally {
     restoreInProgress = false;
     try {
-      tempDb?.close();
+      tempDb?.close(true);
     } catch (error) {
       logger.warn("Failed to close temporary database after restore", { cause: error });
     }

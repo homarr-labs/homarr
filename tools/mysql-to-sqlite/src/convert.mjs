@@ -172,7 +172,7 @@ export async function convert({ connectionOptions, output, homarrStopped, signal
     if (integrity.length !== 1 || integrity[0].integrity_check !== "ok")
       throw new Error("SQLite integrity check failed.");
     database.exec("COMMIT; PRAGMA foreign_keys = ON");
-    database.close();
+    database.close(true);
     database = undefined;
     await connection.rollback();
     await connection.end();
@@ -191,7 +191,12 @@ export async function convert({ connectionOptions, output, homarrStopped, signal
     return { release: schema.release, output: destination, counts };
   } finally {
     try {
-      database?.close();
+      try {
+        // Bun defers closing live statements; settle rollback before removing the file.
+        if (database?.inTransaction) database.exec("ROLLBACK");
+      } finally {
+        database?.close(true);
+      }
     } finally {
       try {
         await connection?.end();
