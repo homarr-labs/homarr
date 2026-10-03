@@ -456,6 +456,10 @@ def main():
         benchmark.tools()
     if args.phase in ["builds", "all"]:
         benchmark.builds()
+    candidate_failures = [r for r in benchmark.records if r["manager"] == "bun" and r["exit_code"]]
+    if candidate_failures:
+        raise RuntimeError("Candidate benchmark commands failed; preserved measurements cannot pass the benchmark gate: " +
+                           ", ".join(r["log"] for r in candidate_failures))
 
 
 if __name__ == "__main__":

@@ -17,6 +17,8 @@ Use a fresh work directory and output directory for each revision pair. Individu
 `--phase install`, `workspaces`, `conflicts`, `commands`, `tools`, and `builds` runs resume the same results.
 The manual **Package manager benchmarks** workflow runs this harness and uploads
 measurements and logs, including failures. It does not publish images or modify PRs.
+Candidate command failures fail the benchmark gate. Baseline failures remain
+visible and cannot support a performance comparison for that command.
 The existing CI workflow also exposes `operation=benchmark`, `ref` for the
 candidate, `benchmark_baseline`, and `benchmark_production`, so branch benchmarks
 can run before the new standalone workflow reaches the default branch.
