@@ -725,9 +725,11 @@ try {
       "--env",
       `UPSTREAM_HOST=${containerName}`,
       "--entrypoint",
-      "node",
+      "sh",
       imageInspect.Id,
-      "-e",
+      "-c",
+      'exec "$(command -v bun || command -v node)" -e "$1"',
+      "--",
       `const net = require("node:net");
 net.createServer((client) => {
   const upstream = net.connect(7575, process.env.UPSTREAM_HOST);
@@ -750,8 +752,10 @@ net.createServer((client) => {
       await execFileAsync("docker", [
         "exec",
         containerId,
-        "node",
-        "-p",
+        "sh",
+        "-c",
+        'exec "$(command -v bun || command -v node)" -p "$1"',
+        "--",
         "JSON.stringify({architecture:process.arch,platform:process.platform,version:process.version,v8Version:process.versions.v8})",
       ])
     ).stdout,
@@ -761,8 +765,10 @@ net.createServer((client) => {
       await execFileAsync("docker", [
         "exec",
         containerId,
-        "node",
-        "-e",
+        "sh",
+        "-c",
+        'exec "$(command -v bun || command -v node)" -e "$1"',
+        "--",
         `Promise.all([
   fetch("https://example.com", { signal: AbortSignal.timeout(3000) }).then((response) => ({ blocked: false, status: response.status }), (error) => ({ blocked: true, code: error.cause?.code ?? error.name })),
   fetch("http://1.1.1.1", { signal: AbortSignal.timeout(3000) }).then((response) => ({ blocked: false, status: response.status }), (error) => ({ blocked: true, code: error.cause?.code ?? error.name })),
@@ -1551,7 +1557,7 @@ net.createServer((client) => {
       ingressProxy: {
         containerId: proxyContainerId,
         excludedFromMemorySamples: true,
-        implementation: "Node.js TCP proxy",
+        implementation: "JavaScript TCP proxy",
       },
       docker: {
         engine: {

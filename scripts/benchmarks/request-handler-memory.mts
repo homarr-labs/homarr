@@ -6,7 +6,7 @@ const allocationBytes = Number(process.env.REQUEST_MEMORY_ALLOCATION_BYTES ?? 10
 const maxRetainedBytes = Number(process.env.REQUEST_MEMORY_MAX_RETAINED_BYTES ?? 16 * 1024 * 1024);
 const positiveTtlMs = Number(process.env.REQUEST_MEMORY_POSITIVE_TTL_MS ?? 25);
 
-if (!globalThis.gc) throw new Error("Run this benchmark with node --expose-gc");
+if (!globalThis.gc) throw new Error("Run this benchmark with bun --expose-gc");
 if (!Number.isInteger(allocations) || allocations < 2) throw new Error("REQUEST_MEMORY_ALLOCATIONS must be >= 2");
 if (!Number.isInteger(allocationBytes) || allocationBytes < 1) {
   throw new Error("REQUEST_MEMORY_ALLOCATION_BYTES must be positive");
