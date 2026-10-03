@@ -8,7 +8,6 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { chromium } from "@playwright/test";
 import type { BrowserContext, BrowserContextOptions, Page, Request } from "@playwright/test";
-import { serialize } from "superjson";
 
 import {
   getBrowserNetworkIsolationLaunchArgs,
@@ -46,12 +45,7 @@ const interactionIterations = Number(process.env.RUNTIME_BENCHMARK_INTERACTION_I
 const pageIterations = Number(process.env.RUNTIME_BENCHMARK_PAGE_ITERATIONS ?? 20);
 const readyMarkerPolicy = process.env.RUNTIME_BENCHMARK_REQUIRE_READY_MARKERS;
 const requireImplementationMarkers = readyMarkerPolicy === "true";
-const memoryLimitMiB = Number(process.env.RUNTIME_BENCHMARK_MEMORY_MIB ?? 1024);
-if (!Number.isSafeInteger(memoryLimitMiB) || memoryLimitMiB <= 0) {
-  throw new Error("RUNTIME_BENCHMARK_MEMORY_MIB must be a positive integer");
-}
 const outputDirectory = path.resolve(process.env.RUNTIME_BENCHMARK_OUTPUT_DIR ?? "benchmark-results/docker-runtime");
-const fixtureWidgetKinds = (process.env.RUNTIME_BENCHMARK_WIDGET_KINDS ?? "").split(",").filter(Boolean);
 const routePaths = (
   process.env.RUNTIME_BENCHMARK_ROUTES ?? "/manage,/manage/apps,/manage/integrations,/manage/settings"
 )
@@ -153,10 +147,9 @@ echo "memory_current=$(cat /sys/fs/cgroup/memory.current)"
 memory_peak="$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || true)"
 case "$memory_peak" in ''|'max') ;; *) echo "memory_peak=$memory_peak" ;; esac
 awk '/^anon / { print "cgroup_anon=" $2 } /^file / { print "cgroup_file=" $2 }' /sys/fs/cgroup/memory.stat
-awk '/^oom_kill / { print "cgroup_oom_kill=" $2 }' /sys/fs/cgroup/memory.events
 awk '/^usage_usec / { print "cpu_usage_usec=" $2 } /^user_usec / { print "cpu_user_usec=" $2 } /^system_usec / { print "cpu_system_usec=" $2 } /^nr_throttled / { print "cpu_nr_throttled=" $2 } /^throttled_usec / { print "cpu_throttled_usec=" $2 }' /sys/fs/cgroup/cpu.stat
 for status_file in /proc/[0-9]*/status; do
-  process_dir="${"$"}{status_file%/status}"
+  process_dir="\${status_file%/status}"
   process_values="$(awk '/^Name:/ { name=$2 } /^Pid:/ { pid=$2 } /^PPid:/ { ppid=$2 } /^VmRSS:/ { rss=$2 } END { print pid "|" ppid "|" rss "|" name }' "$status_file")"
   process_pss="$(awk '/^Pss:/ { print $2 }' "$process_dir/smaps_rollup" 2>/dev/null || echo 0)"
   echo "process=$process_values|$process_pss"
@@ -185,7 +178,7 @@ const waitForReadyAsync = async (baseUrl: string) => {
 };
 
 const captureCheckpointAsync = async (containerId: string, name: string): Promise<RuntimeMemoryCheckpoint> => {
-  const { stdout } = await execFileAsync("docker", ["exec", "--user", "1000", containerId, "sh", "-c", memoryScript], {
+  const { stdout } = await execFileAsync("docker", ["exec", containerId, "sh", "-c", memoryScript], {
     maxBuffer: 4 * 1024 * 1024,
   });
   await writeFile(path.join(outputDirectory, `${name}.txt`), stdout);
@@ -194,26 +187,16 @@ const captureCheckpointAsync = async (containerId: string, name: string): Promis
 
 const waitForBoardWidgetsAsync = async (page: Page) => {
   const boardSelector = "[data-homarr-dev-benchmark-board]";
-  await page.locator(`${boardSelector}:visible`).waitFor({ state: "visible", timeout: 30_000 });
+  await page.locator(boardSelector).waitFor({ state: "visible", timeout: 30_000 });
   await page.waitForFunction((selector) => {
-    const board = [...document.querySelectorAll(selector)].find(
-      (element) =>
-        element instanceof HTMLElement &&
-        element.getClientRects().length > 0 &&
-        getComputedStyle(element).visibility !== "hidden",
-    );
+    const board = document.querySelector(selector);
     const items = [...(board?.querySelectorAll('[data-type="item"]') ?? [])];
-    return items.length > 0 && items.every((item) => item.childElementCount > 0);
+    return items.length > 0 && items.every((item) => item.querySelector(".grid-stack-item-content") !== null);
   }, boardSelector);
 
   if (requireImplementationMarkers) {
     await page.waitForFunction((selector) => {
-      const board = [...document.querySelectorAll(selector)].find(
-        (element) =>
-          element instanceof HTMLElement &&
-          element.getClientRects().length > 0 &&
-          getComputedStyle(element).visibility !== "hidden",
-      );
+      const board = document.querySelector(selector);
       const items = [...(board?.querySelectorAll('[data-type="item"]') ?? [])];
       return (
         items.length > 0 &&
@@ -258,12 +241,7 @@ const waitForSpotlightIdlePreparationAsync = async (page: Page) => {
 
 const readBoardWidgetStateAsync = async (page: Page) =>
   await page.evaluate((selector) => {
-    const board = [...document.querySelectorAll(selector)].find(
-      (element) =>
-        element instanceof HTMLElement &&
-        element.getClientRects().length > 0 &&
-        getComputedStyle(element).visibility !== "hidden",
-    );
+    const board = document.querySelector(selector);
     return {
       widgetCount: board?.querySelectorAll('[data-type="item"]').length ?? 0,
       implementationMarkerCount: board?.querySelectorAll("[data-homarr-widget-ready]").length ?? 0,
@@ -288,7 +266,6 @@ type WidgetDataRequestTracker = {
   lastActivityAtMs: number;
   observedOperationCount: number;
   recoveryBalance: Map<string, number>;
-  cacheRecoveredAbortedRequests: Set<string>;
 };
 
 const trackWidgetDataRequests = (page: Page): WidgetDataRequestTracker => {
@@ -299,7 +276,6 @@ const trackWidgetDataRequests = (page: Page): WidgetDataRequestTracker => {
     lastActivityAtMs: performance.now(),
     observedOperationCount: 0,
     recoveryBalance: new Map(),
-    cacheRecoveredAbortedRequests: new Set(),
   };
   page.on("request", (request) => {
     if (request.method() !== "GET") return;
@@ -377,54 +353,6 @@ const trackWidgetDataRequests = (page: Page): WidgetDataRequestTracker => {
   return tracker;
 };
 
-const getSuccessfulWidgetQueryIdentitiesAsync = async (page: Page) => {
-  // Server hydration can fulfil a query while its duplicate HTTP request is
-  // cancelled. Inspect the mounted provider without changing its cache.
-  const queries = await page.evaluate(() => {
-    type Query = {
-      queryKey: [unknown, { type?: string; input?: unknown }?];
-      state: { status: string; data: unknown; dataUpdatedAt: number };
-    };
-    type Fiber = {
-      memoizedProps?: { client?: { getQueryCache?: () => { getAll: () => Query[] } } };
-      return?: Fiber | null;
-    };
-    const board = [...document.querySelectorAll("[data-homarr-dev-benchmark-board]")].find(
-      (element) => element instanceof HTMLElement && element.getClientRects().length > 0,
-    );
-    if (!board) return [];
-    const fiberKey = Object.keys(board).find((property) => property.startsWith("__reactFiber$"));
-    if (!fiberKey) return [];
-    let fiber: Fiber | null | undefined = (board as unknown as Record<string, Fiber>)[fiberKey];
-    while (fiber) {
-      const client = fiber.memoizedProps?.client;
-      if (typeof client?.getQueryCache === "function") {
-        return client
-          .getQueryCache()
-          .getAll()
-          .flatMap((query) => {
-            if (query.state.status !== "success" || query.state.data === undefined || query.state.dataUpdatedAt <= 0) {
-              return [];
-            }
-            const [queryPath, details] = query.queryKey;
-            if (!Array.isArray(queryPath) || details?.type !== "query") return [];
-            return [{ procedure: queryPath.join("."), input: details.input }];
-          });
-      }
-      fiber = fiber.return;
-    }
-    return [];
-  });
-  return new Set<string>(
-    queries.flatMap(({ procedure, input }: { procedure: string; input: unknown }) => {
-      if (!isRuntimeWidgetDataRequest("GET", procedure)) return [];
-      const url = new URL(`http://benchmark.invalid/api/trpc/${procedure}`);
-      url.searchParams.set("input", JSON.stringify(serialize(input)));
-      return getTrpcRequestIdentities(url.href).map(({ identity }) => identity);
-    }),
-  );
-};
-
 const waitForWidgetDataSettledAsync = async (
   page: Page,
   tracker: WidgetDataRequestTracker,
@@ -437,20 +365,6 @@ const waitForWidgetDataSettledAsync = async (
     }
     const unrecoveredRequests = getUnrecoveredWidgetDataRequests(tracker.recoveryBalance);
     const remainingQuietMs = widgetDataQuietMs - (performance.now() - tracker.lastActivityAtMs);
-    if (
-      !allowUnrecoveredAborts &&
-      unrecoveredRequests.length > 0 &&
-      tracker.activeRequests.size === 0 &&
-      remainingQuietMs <= 0
-    ) {
-      const successfulQueries = await getSuccessfulWidgetQueryIdentitiesAsync(page);
-      for (const identity of unrecoveredRequests) {
-        if (!successfulQueries.has(identity)) continue;
-        tracker.recoveryBalance.set(identity, 0);
-        tracker.cacheRecoveredAbortedRequests.add(identity);
-      }
-      if (getUnrecoveredWidgetDataRequests(tracker.recoveryBalance).length === 0) continue;
-    }
     if (
       tracker.observedOperationCount > 0 &&
       tracker.activeRequests.size === 0 &&
@@ -467,7 +381,6 @@ const waitForWidgetDataSettledAsync = async (
           observedOperationCount: tracker.observedOperationCount,
           quietWindowObserved: true,
           unrecoveredAbortedRequests: unrecoveredRequests,
-          cacheRecoveredAbortedRequests: [...tracker.cacheRecoveredAbortedRequests].toSorted(),
         };
       }
     }
@@ -780,17 +693,13 @@ try {
     "--cpus",
     "2",
     "--memory",
-    String(memoryLimitMiB * 1024 ** 2),
+    "1g",
     "--network",
     isolationNetworkName,
     "--volume",
     `${appDataDirectory}:/appdata`,
     "--env",
     "DEMO_MODE=true",
-    "--env",
-    "PUID=1000",
-    "--env",
-    "PGID=1000",
     "--env",
     "DEMO_READ_ONLY=false",
     "--env",
@@ -804,10 +713,6 @@ try {
     imageInspect.Id,
   ]);
   containerId = runResult.stdout.trim();
-  const proxyImageId = JSON.parse(
-    (await execFileAsync("docker", ["image", "inspect", process.env.RUNTIME_BENCHMARK_PROXY_IMAGE ?? imageInspect.Id]))
-      .stdout,
-  )[0].Id as string;
   proxyContainerId = (
     await execDockerLifecycleAsync([
       "run",
@@ -820,11 +725,9 @@ try {
       "--env",
       `UPSTREAM_HOST=${containerName}`,
       "--entrypoint",
-      "sh",
-      proxyImageId,
-      "-c",
-      'exec "$(command -v bun || command -v node)" -e "$1"',
-      "--",
+      "node",
+      imageInspect.Id,
+      "-e",
       `const net = require("node:net");
 net.createServer((client) => {
   const upstream = net.connect(7575, process.env.UPSTREAM_HOST);
@@ -842,81 +745,24 @@ net.createServer((client) => {
   const baseUrl = `http://127.0.0.1:${port}`;
   await waitForReadyAsync(baseUrl);
   const startToReadyMs = Math.round(performance.now() - containerStartedAt);
-  let boardFixture: { kinds: string[]; items: number; normalizedLayout: boolean } | null = null;
-  if (fixtureWidgetKinds.length > 0) {
-    const fixtureScript = `void (async () => {
-      let SQLite;
-      if (process.versions.bun) SQLite = (await import("bun:sqlite")).Database;
-      else SQLite = (await import("node:sqlite")).DatabaseSync;
-      const sqlite = new SQLite(process.env.DB_URL);
-      sqlite.exec("PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON");
-      const kinds = JSON.parse(process.argv[1]);
-      const placeholders = kinds.map(() => "?").join(",");
-      sqlite.prepare("DELETE FROM item WHERE kind NOT IN (" + placeholders + ")").run(...kinds);
-      const rows = sqlite.prepare("SELECT id,board_id,kind FROM item ORDER BY board_id,kind,id").all();
-      const present = new Set(rows.map(row => row.kind));
-      if (kinds.some(kind => !present.has(kind))) throw Error("Benchmark fixture is missing a selected widget kind");
-      const layouts = sqlite.prepare("SELECT id,board_id,column_count FROM layout").all();
-      const update = sqlite.prepare("UPDATE item_layout SET x_offset=?,y_offset=?,width=?,height=? WHERE item_id=? AND layout_id=?");
-      for (const layout of layouts) {
-        const columns = Math.max(1, Math.min(4, layout.column_count));
-        const width = Math.max(1, Math.floor(layout.column_count / columns));
-        rows.filter(row => row.board_id === layout.board_id).forEach((row,index) => {
-          update.run((index % columns) * width, Math.floor(index / columns) * 2, width, 2, row.id, layout.id);
-        });
-      }
-      sqlite.prepare("UPDATE app SET icon_url=?").run('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><rect width="24" height="24" fill="coral"/></svg>');
-      const violations = sqlite.prepare("PRAGMA foreign_key_check").all();
-      if (violations.length) throw Error("Benchmark fixture has foreign-key violations");
-      if (process.versions.bun) sqlite.close(true);
-      else sqlite.close();
-      console.log(JSON.stringify({kinds:[...present].sort(),items:rows.length,normalizedLayout:true}));
-    })();`;
-    boardFixture = JSON.parse(
-      (
-        await execFileAsync("docker", [
-          "exec",
-          containerId,
-          "sh",
-          "-c",
-          'exec "$(command -v bun || command -v node)" -e "$1" "$2"',
-          "--",
-          fixtureScript,
-          JSON.stringify(fixtureWidgetKinds),
-        ])
-      ).stdout,
-    );
-    await writeFile(path.join(outputDirectory, "board-fixture.json"), `${JSON.stringify(boardFixture, null, 2)}\n`);
-  }
   const containerNode = JSON.parse(
     (
       await execFileAsync("docker", [
         "exec",
         containerId,
-        "sh",
-        "-c",
-        'exec "$(command -v bun || command -v node)" -p "$1"',
-        "--",
-        "JSON.stringify({architecture:process.arch,platform:process.platform,version:process.version,v8Version:process.versions.bun ? null : process.versions.v8,bunVersion:process.versions.bun ?? null,engine:process.versions.bun ? 'JavaScriptCore' : 'V8'})",
+        "node",
+        "-p",
+        "JSON.stringify({architecture:process.arch,platform:process.platform,version:process.version,v8Version:process.versions.v8})",
       ])
     ).stdout,
-  ) as {
-    architecture: string;
-    platform: string;
-    version: string;
-    v8Version: string | null;
-    bunVersion: string | null;
-    engine: string;
-  };
+  ) as { architecture: string; platform: string; version: string; v8Version: string };
   const serverNetworkIsolationCanary = JSON.parse(
     (
       await execFileAsync("docker", [
         "exec",
         containerId,
-        "sh",
-        "-c",
-        'exec "$(command -v bun || command -v node)" -e "$1"',
-        "--",
+        "node",
+        "-e",
         `Promise.all([
   fetch("https://example.com", { signal: AbortSignal.timeout(3000) }).then((response) => ({ blocked: false, status: response.status }), (error) => ({ blocked: true, code: error.cause?.code ?? error.name })),
   fetch("http://1.1.1.1", { signal: AbortSignal.timeout(3000) }).then((response) => ({ blocked: false, status: response.status }), (error) => ({ blocked: true, code: error.cause?.code ?? error.name })),
@@ -1244,7 +1090,7 @@ net.createServer((client) => {
   const loginJourneyBoardStartedAt = performance.now();
   await page.locator('button[type="submit"]').click();
   await page.waitForURL(`${baseUrl}/`, { timeout: 30_000, waitUntil: "domcontentloaded" });
-  await page.locator("[data-homarr-dev-benchmark-board]:visible").waitFor({ state: "visible", timeout: 30_000 });
+  await page.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 30_000 });
   const loginJourneyBoardMountedMs = Math.round(performance.now() - loginJourneyBoardStartedAt);
   const loginBoardState = await waitForBoardWidgetsAsync(page);
   const { widgetCount, implementationMarkerCount, widgetErrorCount } = loginBoardState;
@@ -1360,7 +1206,6 @@ net.createServer((client) => {
   );
   if (idleSpotlightNetworkFailure) throw new Error(idleSpotlightNetworkFailure);
 
-  console.log("Runtime phase: warm interactions");
   const warmInteractionSamplesMs: number[] = [];
   for (let iteration = 0; iteration < interactionIterations; iteration += 1) {
     const warmInteractionStartedAt = performance.now();
@@ -1411,9 +1256,7 @@ net.createServer((client) => {
     if (!response?.ok()) {
       throw new Error(`Board iteration ${iteration + 1} returned HTTP ${String(response?.status() ?? "none")}`);
     }
-    await iterationPage
-      .locator("[data-homarr-dev-benchmark-board]:visible")
-      .waitFor({ state: "visible", timeout: 30_000 });
+    await iterationPage.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 30_000 });
     const iterationBoardMountedMs = Math.round(performance.now() - iterationStartedAt);
     const iterationBoardState = await waitForBoardWidgetsAsync(iterationPage);
     if (
@@ -1452,17 +1295,14 @@ net.createServer((client) => {
       ttfbMs: iterationMetrics.ttfbMs,
       widgetImplementationsMountedMs: iterationWidgetImplementationsMountedMs,
       widgetDataObservedOperationCount: iterationWidgetData.observedOperationCount,
-      widgetDataCacheRecoveredAbortedRequests: iterationWidgetData.cacheRecoveredAbortedRequests,
       widgetDataSettledMs: iterationWidgetDataSettledMs,
     });
     if (iterationErrors.length > 0) {
       throw new Error(`Board iteration ${iteration + 1} page errors: ${iterationErrors.join("; ")}`);
     }
     await iterationContext.close();
-    console.log(`Runtime dashboard load ${iteration + 1}/${pageIterations} complete`);
   }
 
-  console.log("Runtime phase: cold interaction");
   const coldContext = await createBenchmarkContextAsync({ storageState: authenticatedStorageState });
   await coldContext.addInitScript(() => {
     // Keep the cold-interaction probe cold instead of racing the application's
@@ -1477,13 +1317,7 @@ net.createServer((client) => {
   if (!coldResponse?.ok()) {
     throw new Error(`Cold-interaction board returned HTTP ${String(coldResponse?.status() ?? "none")}`);
   }
-  await coldPage.locator("[data-homarr-dev-benchmark-board]:visible").waitFor({ state: "visible", timeout: 30_000 });
-  await coldPage.waitForFunction(() => {
-    const button = [...document.querySelectorAll('[data-homarr-dev-benchmark-interaction="search"]')].find(
-      (element) => element instanceof HTMLElement && element.getClientRects().length > 0,
-    );
-    return button !== undefined && Object.keys(button).some((key) => key.startsWith("__reactProps$"));
-  });
+  await coldPage.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 30_000 });
   await coldPage.evaluate(() => {
     const state = {
       clickedAtMs: null as number | null,
@@ -1546,7 +1380,6 @@ net.createServer((client) => {
   await coldPage.close();
   await coldContext.close();
 
-  console.log("Runtime phase: route transitions");
   const routeContext = await createBenchmarkContextAsync({ storageState: authenticatedStorageState });
   await installMeasurementScriptsAsync(routeContext);
   const routePage = await routeContext.newPage();
@@ -1577,14 +1410,12 @@ net.createServer((client) => {
   if (routePageErrors.length > 0) throw new Error(`Route browser page errors: ${routePageErrors.join("; ")}`);
   checkpoints.push(await captureCheckpointAsync(containerId, "workload"));
 
-  console.log("Runtime phase: settle sampling");
   const settleDeadline = Date.now() + settleMs;
   let sample = 0;
   while (Date.now() < settleDeadline) {
     await new Promise((resolve) => setTimeout(resolve, Math.min(sampleIntervalMs, settleDeadline - Date.now())));
     sample += 1;
     checkpoints.push(await captureCheckpointAsync(containerId, `settle-${sample}`));
-    console.log(`Runtime settle sample ${sample} complete`);
   }
 
   if (pageErrors.length > 0) throw new Error(`Browser page errors: ${pageErrors.join("; ")}`);
@@ -1664,9 +1495,7 @@ net.createServer((client) => {
     ),
     widgetDataSettledMs: summarize(pageLoadSamples.map((measurement) => measurement.widgetDataSettledMs)),
   };
-  const oomKillCount = Math.max(0, ...checkpoints.map((checkpoint) => checkpoint.container.oomKillCount ?? 0));
   const eligibilityInput = {
-    oomKillCount,
     expectedSha,
     expectedSourceFingerprint,
     browserNetworkIsolated,
@@ -1715,15 +1544,14 @@ net.createServer((client) => {
       browser: browserProvenance,
       container: {
         cpuLimit: 2,
-        memoryLimitBytes: memoryLimitMiB * 1024 ** 2,
+        memoryLimitBytes: 1024 ** 3,
         network: { id: isolationNetworkId, internal: true, name: isolationNetworkName },
         node: containerNode,
       },
       ingressProxy: {
         containerId: proxyContainerId,
-        imageId: proxyImageId,
         excludedFromMemorySamples: true,
-        implementation: "JavaScript TCP proxy",
+        implementation: "Node.js TCP proxy",
       },
       docker: {
         engine: {
@@ -1763,7 +1591,6 @@ net.createServer((client) => {
     },
     workload: {
       baseUrl,
-      boardFixture,
       startToReadyMs,
       settleMs,
       sampleIntervalMs,
@@ -1816,23 +1643,7 @@ net.createServer((client) => {
   await context.close();
   await routeContext.close();
 } catch (error) {
-  for (const [contextIndex, context] of (browser?.contexts() ?? []).entries()) {
-    for (const [pageIndex, failedPage] of context.pages().entries()) {
-      const prefix = path.join(outputDirectory, `failure-${contextIndex}-${pageIndex}`);
-      await failedPage.screenshot({ path: `${prefix}.png`, timeout: 5_000 }).catch(() => undefined);
-      await writeFile(`${prefix}.html`, await failedPage.content()).catch(() => undefined);
-      console.error(`Failed page ${contextIndex}/${pageIndex}: ${failedPage.url()}`);
-    }
-  }
   if (containerId) {
-    const nginxErrors = await execFileAsync("docker", [
-      "exec",
-      containerId,
-      "sh",
-      "-c",
-      "tail -30 /var/log/nginx/error.log 2>/dev/null || true",
-    ]).catch(() => null);
-    if (nginxErrors?.stdout) console.error(`Nginx errors: ${nginxErrors.stdout}`);
     const logs = await execFileAsync("docker", ["logs", "--tail", "100", containerId]).catch(() => null);
     if (logs?.stdout) console.error(logs.stdout);
     if (logs?.stderr) console.error(logs.stderr);

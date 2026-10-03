@@ -24,17 +24,7 @@ const requireOne = (flag: string) => {
 };
 const readJson = async <T,>(file: string) => JSON.parse(await readFile(path.resolve(file), "utf8")) as T;
 
-const comparisonValues = values.get("--comparison") ?? ["spotlight"];
-const comparison = comparisonValues[0];
-if (
-  comparisonValues.length !== 1 ||
-  (comparison !== "spotlight" && comparison !== "runtime-migration" && comparison !== "package-manager-migration")
-) {
-  throw new Error("--comparison must be spotlight, runtime-migration or package-manager-migration");
-}
-
 const input: BenchmarkPairInput = {
-  comparison,
   baselineWarmup: await readJson<BuildResult>(requireOne("--baseline-warmup")),
   candidateWarmup: await readJson<BuildResult>(requireOne("--candidate-warmup")),
   baselineBuilds: await Promise.all(requireMany("--baseline-build").map(readJson<BuildResult>)),

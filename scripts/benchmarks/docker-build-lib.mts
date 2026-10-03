@@ -52,15 +52,12 @@ export const applyDockerBuildSyntheticSourceChange = (
   id: string,
 ): { entries: DockerBuildSourceEntry[]; change: DockerBuildSyntheticSourceChange } => {
   const file = "apps/nextjs/src/app/[locale]/layout.tsx";
-  let from = 'siteName: "Homarr",';
+  const from = 'siteName: "Homarr",';
   const to = `siteName: ${JSON.stringify(`Homarr build benchmark ${id}`)},`;
   let changed = false;
   const nextEntries = entries.map((entry) => {
     if (entry.file !== file || entry.content === undefined) return entry;
     const source = entry.content.toString("utf8");
-    if (!source.includes(from) && source.includes("siteName: appName,")) {
-      from = "siteName: appName,";
-    }
     if (source.split(from).length !== 2) {
       throw new Error(`Expected exactly one build benchmark source marker in ${file}`);
     }

@@ -23,37 +23,14 @@ on:
           - validate
           - publish
           - cleanup
-          - benchmark
       pr_number:
         description: PR number for publish or cleanup
         required: false
         type: number
       ref:
-        description: Git ref to validate, publish, or benchmark
+        description: Git ref to validate or publish
         required: false
         type: string
-
-      benchmark_baseline:
-        description: pnpm baseline revision for benchmarks
-        required: false
-        type: string
-        default: 3adb63850d8fd8f9ea2b3d72db82f4591f950e41
-      benchmark_production:
-        description: Include Docker builds and dashboard runtime benchmarks
-        type: boolean
-        default: false
-      benchmark_packages:
-        description: Include package manager, workspace, and conflict benchmarks
-        type: boolean
-        default: true
-      benchmark_turbo:
-        description: Verify signed Turbo remote caching and output restoration
-        type: boolean
-        default: false
-      benchmark_compare_run:
-        description: Recheck production artifacts from a completed benchmark run ID
-        type: string
-        default: ""
 
 permissions:
   contents: read
@@ -61,7 +38,7 @@ permissions:
 concurrency:
   # Every event for a PR shares one group so a close event cancels stale image
   # publication and a newer synchronize run cannot be overwritten by an older run.
-  group: ${{ github.workflow }}-${{ inputs.operation == 'benchmark' && format('benchmark-{0}-{1}-{2}-{3}', inputs.ref || github.sha, inputs.benchmark_packages, inputs.benchmark_production, inputs.benchmark_compare_run) || github.event.pull_request.number || inputs.pr_number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || inputs.pr_number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'pull_request_target' || github.event_name == 'workflow_dispatch' || github.ref != 'refs/heads/main' }}
 
 env:
@@ -72,31 +49,15 @@ env:
   PREVIEW_IMAGE: ghcr.io/homarr-labs/homarr-test
 
 jobs:
-  package-manager-benchmarks:
-    name: Package manager benchmarks
-    if: github.event_name == 'workflow_dispatch' && inputs.operation == 'benchmark'
-    uses: ./.github/workflows/benchmark-package-managers.yml
-    permissions:
-      contents: read
-      actions: read
-    secrets: inherit
-    with:
-      turbo: ${{ inputs.benchmark_turbo || false }}
-      baseline: ${{ inputs.benchmark_baseline || '3adb63850d8fd8f9ea2b3d72db82f4591f950e41' }}
-      candidate: ${{ inputs.ref || github.sha }}
-      production: ${{ inputs.benchmark_production || false }}
-      package_managers: ${{ inputs.benchmark_packages }}
-      comparison_run: ${{ inputs.benchmark_compare_run }}
-
   database-validation:
     name: Database validation
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || (inputs.operation != 'cleanup' && inputs.operation != 'benchmark'))
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     uses: ./.github/workflows/database.yml
 
   fast-gate:
     name: Fast gate
     needs: database-validation
-    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || (inputs.operation != 'cleanup' && inputs.operation != 'benchmark')) }}
+    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

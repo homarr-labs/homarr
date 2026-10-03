@@ -77,7 +77,7 @@ type RuntimeResult = {
   };
   host: {
     architecture: string;
-    node: { version: string; v8Version: string | null; bunVersion?: string | null; engine?: string };
+    node: { version: string; v8Version: string };
     platform: string;
     release: string;
   };
@@ -95,17 +95,10 @@ type RuntimeResult = {
       cpuLimit: number;
       memoryLimitBytes: number;
       network: { internal: boolean };
-      node: {
-        architecture: string;
-        platform: string;
-        version: string;
-        v8Version: string | null;
-        bunVersion?: string | null;
-        engine?: string;
-      };
+      node: { architecture: string; platform: string; version: string; v8Version: string };
     };
     docker: { engine: unknown; version: unknown };
-    ingressProxy: { excludedFromMemorySamples: boolean; implementation: string; imageId?: string };
+    ingressProxy: { excludedFromMemorySamples: boolean; implementation: string };
   };
   browserNetworkIsolation: {
     active: boolean;
@@ -135,7 +128,6 @@ type RuntimeResult = {
   };
   checkpoints: Array<{ capturedAt: string; name: string }>;
   workload: {
-    boardFixture?: { kinds: string[]; items: number; normalizedLayout: boolean } | null;
     settleMs: number;
     sampleIntervalMs: number;
     settleSampleCount: number;
@@ -164,10 +156,7 @@ type RuntimeResult = {
   };
 };
 
-export type BenchmarkComparison = "spotlight" | "runtime-migration" | "package-manager-migration";
-
 export type BenchmarkPairInput = {
-  comparison?: BenchmarkComparison;
   baselineWarmup: BuildResult;
   candidateWarmup: BuildResult;
   baselineBuilds: BuildResult[];
@@ -371,7 +360,7 @@ const validateWarmup = (label: string, warmup: BuildResult, builds: BuildResult[
   }
 };
 
-const runtimeConfiguration = (runtime: RuntimeResult, comparison: BenchmarkComparison) => ({
+const runtimeConfiguration = (runtime: RuntimeResult) => ({
   host: runtime.host,
   browser: {
     ...runtime.provenance.browser,
@@ -382,21 +371,10 @@ const runtimeConfiguration = (runtime: RuntimeResult, comparison: BenchmarkCompa
   container: {
     cpuLimit: runtime.provenance.container.cpuLimit,
     memoryLimitBytes: runtime.provenance.container.memoryLimitBytes,
-    node:
-      comparison === "runtime-migration"
-        ? {
-            architecture: runtime.provenance.container.node.architecture,
-            platform: runtime.provenance.container.node.platform,
-          }
-        : runtime.provenance.container.node,
+    node: runtime.provenance.container.node,
   },
   docker: runtime.provenance.docker,
-  ingressProxy: {
-    implementation: runtime.provenance.ingressProxy.implementation,
-    imageId: runtime.provenance.ingressProxy.imageId ?? null,
-  },
   workload: {
-    boardFixture: runtime.workload.boardFixture ?? null,
     settleMs: runtime.workload.settleMs,
     sampleIntervalMs: runtime.workload.sampleIntervalMs,
     settleSampleCount: runtime.workload.settleSampleCount,
@@ -555,7 +533,6 @@ const runtimeMetric = (runtime: RuntimeResult, key: keyof RuntimePageSample) =>
   summarize(runtime.workload.pageLoadSamples.map((sample) => sample[key]));
 
 export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
-  const comparison = input.comparison ?? "spotlight";
   const reasons: string[] = [];
   validateBuildSide("baseline", input.baselineBuilds, reasons);
   validateBuildSide("candidate", input.candidateBuilds, reasons);
@@ -569,10 +546,7 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
   if (baselineBuild && candidateBuild) {
     if (baselineBuild.series.id !== candidateBuild.series.id) reasons.push("build series ids do not match");
     if (baselineBuild.builder === candidateBuild.builder) reasons.push("build sides reuse the same builder cache");
-    if (
-      comparison === "spotlight" &&
-      baselineBuild.source.measuredRevision !== candidateBuild.source.measuredRevision
-    ) {
+    if (baselineBuild.source.measuredRevision !== candidateBuild.source.measuredRevision) {
       reasons.push("build measured revisions do not match");
     }
     if (stable(baselineBuild.host) !== stable(candidateBuild.host)) reasons.push("build hosts do not match");
@@ -658,50 +632,23 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
     }
   }
 
-  if (comparison === "spotlight" && input.baselineRuntime.image.revision !== input.candidateRuntime.image.revision) {
+  if (input.baselineRuntime.image.revision !== input.candidateRuntime.image.revision) {
     reasons.push("runtime image revisions do not match");
   }
   if (input.baselineRuntime.image.architecture !== input.candidateRuntime.image.architecture) {
     reasons.push("runtime image architectures do not match");
   }
-  if (
-    stable(runtimeConfiguration(input.baselineRuntime, comparison)) !==
-    stable(runtimeConfiguration(input.candidateRuntime, comparison))
-  ) {
+  if (stable(runtimeConfiguration(input.baselineRuntime)) !== stable(runtimeConfiguration(input.candidateRuntime))) {
     reasons.push("runtime host, browser, container, or workload configuration does not match");
   }
   if (stable(input.baselineRuntime.claimScope) !== stable(input.candidateRuntime.claimScope)) {
     reasons.push("runtime claim scopes do not match");
   }
-  if (comparison !== "spotlight") {
-    if (
-      !input.baselineRuntime.provenance.ingressProxy.imageId ||
-      !input.candidateRuntime.provenance.ingressProxy.imageId
-    ) {
-      reasons.push("migration comparison requires immutable ingress proxy image IDs");
-    }
-    const baselineNode = input.baselineRuntime.provenance.container.node;
-    const candidateNode = input.candidateRuntime.provenance.container.node;
-    if (baselineNode.engine !== "V8" || baselineNode.bunVersion || !baselineNode.v8Version) {
-      reasons.push("runtime migration baseline is not a verified Node/V8 process");
-    }
-    if (comparison === "runtime-migration") {
-      if (candidateNode.engine !== "JavaScriptCore" || !candidateNode.bunVersion || candidateNode.v8Version !== null) {
-        reasons.push("runtime migration candidate is not a verified Bun/JavaScriptCore process");
-      }
-    } else if (candidateNode.engine !== "V8" || candidateNode.bunVersion || !candidateNode.v8Version) {
-      reasons.push("package-manager migration candidate is not a verified Node/V8 process");
-    }
-    if (input.baselineRuntime.workload.spotlightIdlePolicy !== input.candidateRuntime.workload.spotlightIdlePolicy) {
-      reasons.push("migration comparison Spotlight workload policies do not match");
-    }
-  } else {
-    if (input.baselineRuntime.workload.spotlightIdlePolicy !== "mounted") {
-      reasons.push("baseline Spotlight idle policy is not mounted");
-    }
-    if (input.candidateRuntime.workload.spotlightIdlePolicy !== "preload-only") {
-      reasons.push("candidate Spotlight idle policy is not preload-only");
-    }
+  if (input.baselineRuntime.workload.spotlightIdlePolicy !== "mounted") {
+    reasons.push("baseline Spotlight idle policy is not mounted");
+  }
+  if (input.candidateRuntime.workload.spotlightIdlePolicy !== "preload-only") {
+    reasons.push("candidate Spotlight idle policy is not preload-only");
   }
 
   const buildMetric = (key: "wallTimeMs" | "nextCompileMs") => {
@@ -717,7 +664,6 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
 
   return {
     schemaVersion: 1,
-    comparison,
     claimEligible: reasons.length === 0,
     claimIneligibleReasons: unique(reasons),
     claimScope: {

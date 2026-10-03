@@ -103,7 +103,7 @@ RUN --mount=type=cache,id=homarr-next-build-\${TARGETPLATFORM},target=${nextBuil
   it("reads exact logical cache identity from real buildx du descriptions", () => {
     expect(
       parseDockerBuildCacheMountDescription(
-        'cached mount /app/apps/nextjs/.next/cache from exec /bin/sh -c bun run build with id "/homarr-next-build-linux/arm64"',
+        'cached mount /app/apps/nextjs/.next/cache from exec /bin/sh -c pnpm build with id "/homarr-next-build-linux/arm64"',
       ),
     ).toEqual({ logicalId: "homarr-next-build-linux/arm64", target: nextBuildCacheTarget });
     expect(parseDockerBuildCacheMountDescription("unrecognized output")).toBeNull();

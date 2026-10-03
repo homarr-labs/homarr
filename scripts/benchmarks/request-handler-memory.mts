@@ -6,7 +6,7 @@ const allocationBytes = Number(process.env.REQUEST_MEMORY_ALLOCATION_BYTES ?? 10
 const maxRetainedBytes = Number(process.env.REQUEST_MEMORY_MAX_RETAINED_BYTES ?? 16 * 1024 * 1024);
 const positiveTtlMs = Number(process.env.REQUEST_MEMORY_POSITIVE_TTL_MS ?? 25);
 
-if (!globalThis.gc) throw new Error("Run this benchmark with bun --expose-gc");
+if (!globalThis.gc) throw new Error("Run this benchmark with node --expose-gc");
 if (!Number.isInteger(allocations) || allocations < 2) throw new Error("REQUEST_MEMORY_ALLOCATIONS must be >= 2");
 if (!Number.isInteger(allocationBytes) || allocationBytes < 1) {
   throw new Error("REQUEST_MEMORY_ALLOCATION_BYTES must be positive");
@@ -19,22 +19,19 @@ const collectGarbage = async () => {
   }
 };
 
-// Bun does not expose ArrayBuffer accounting through process.memoryUsage().arrayBuffers.
-// External memory includes TypedArray backing stores on both runtimes; the positive
-// control below must still observe the deliberately retained allocation.
 const retainedRoots: unknown[] = [];
-const measureExternalGrowthAsync = async (workload: () => Promise<unknown>) => {
+const measureArrayBufferGrowthAsync = async (workload: () => Promise<unknown>) => {
   await collectGarbage();
-  const before = process.memoryUsage().external;
+  const before = process.memoryUsage().arrayBuffers;
   const retainedRoot = await workload();
   retainedRoots.push(retainedRoot);
   await collectGarbage();
-  const growth = process.memoryUsage().external - before;
+  const growth = process.memoryUsage().arrayBuffers - before;
   retainedRoots.pop();
   return growth;
 };
 
-const zeroTtlGrowthBytes = await measureExternalGrowthAsync(async () => {
+const zeroTtlGrowthBytes = await measureArrayBufferGrowthAsync(async () => {
   const handler = createRequestHandler<Uint8Array, { id: number }>({
     cacheTtlMs: 0,
     requestAsync: async () => new Uint8Array(allocationBytes),
@@ -45,7 +42,7 @@ const zeroTtlGrowthBytes = await measureExternalGrowthAsync(async () => {
   return handler;
 });
 
-const integrationGrowthBytes = await measureExternalGrowthAsync(async () => {
+const integrationGrowthBytes = await measureArrayBufferGrowthAsync(async () => {
   const handler = createIntegrationRequestHandler<number, "mock", Record<string, never>>({
     cacheTtlMs: 0,
     requestAsync: async (integration) =>
@@ -70,7 +67,7 @@ const integrationGrowthBytes = await measureExternalGrowthAsync(async () => {
   return handler;
 });
 
-const expiredPositiveTtlGrowthBytes = await measureExternalGrowthAsync(async () => {
+const expiredPositiveTtlGrowthBytes = await measureArrayBufferGrowthAsync(async () => {
   const handler = createRequestHandler<Uint8Array, { id: number }>({
     cacheTtlMs: positiveTtlMs,
     requestAsync: async () => new Uint8Array(allocationBytes),
@@ -82,13 +79,12 @@ const expiredPositiveTtlGrowthBytes = await measureExternalGrowthAsync(async () 
   return handler;
 });
 
-const positiveControlGrowthBytes = await measureExternalGrowthAsync(async () =>
+const positiveControlGrowthBytes = await measureArrayBufferGrowthAsync(async () =>
   Array.from({ length: allocations }, () => new Uint8Array(allocationBytes)),
 );
 const positiveControlMinimumBytes = allocations * allocationBytes * 0.8;
 
 const result = {
-  memoryMetric: "external",
   allocations,
   allocationBytes,
   allocatedPerScenarioBytes: allocations * allocationBytes,
