@@ -216,11 +216,11 @@ catalog:
   turbo: ^2.10.4
   typescript: 7.0.2
   vite: ^8.1.4
-  undici: 7.29.1
+  undici: 7.30.0
   use-deep-compare-effect: ^1.8.1
   video.js: ^8.23.9
   vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.10
+  vitest: ^5.0.3
   winston: 3.19.0
   ws: ^8.21.0
   xml2js: ^0.6.2
