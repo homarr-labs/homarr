@@ -7,23 +7,23 @@
 @homarr/db:build: $ bun run build:sqlite && bun run build:postgresql
 @homarr/db:build: $ bun build migrations/sqlite/migrate.ts --target=bun --format=cjs --outfile=migrations/sqlite/migrate.cjs
 @homarr/db:build: Bundled 1349 modules in 68ms
-@homarr/db:build: 
+@homarr/db:build:
 @homarr/db:build:   migrate.cjs  2.91 MB  (entry point)
-@homarr/db:build: 
+@homarr/db:build:
 @homarr/db:build: $ bun build migrations/postgresql/migrate.ts --target=bun --format=cjs --outfile=migrations/postgresql/migrate.cjs
 @homarr/db:build: Bundled 1349 modules in 68ms
-@homarr/db:build: 
+@homarr/db:build:
 @homarr/db:build:   migrate.cjs  2.91 MB  (entry point)
-@homarr/db:build: 
+@homarr/db:build:
 @homarr/cli:build: cache miss, executing faf98f24b23735e7
 @homarr/cli:build: $ bun build src/index.ts --target=bun --format=cjs --outfile=cli.cjs --external=bcrypt --external=cpu-features
 @homarr/cli:build: Bundled 1795 modules in 90ms
-@homarr/cli:build: 
+@homarr/cli:build:
 @homarr/cli:build:   cli.cjs  2.1 MB  (entry point)
-@homarr/cli:build: 
+@homarr/cli:build:
 
   Tasks:    2 successful, 2 total
  Cached:    0 cached, 2 total
-   Time:    333ms 
+   Time:    333ms
 Summary:    /home/habs/.codex/worktrees/84a3/homarr/.turbo/runs/3KB0KwSvIlSN9m6Ek62h9y1omfF.json
 
