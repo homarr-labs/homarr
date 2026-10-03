@@ -106,9 +106,9 @@ Workshop contributors can set up PocketBase and Fumadocs with the dedicated
 
 ## CI and focused validation
 
-The main CI workflow runs lint, typechecking, affected workspace builds, workspace configuration checks, OpenAPI validation, and Custom Widget architecture and bundle checks. Unit and E2E suites do not run in CI. Preview images publish after the Fast gate and both architecture builds succeed; browser tests do not block publication. The container job builds an amd64 image when no preview image was built.
+The main CI workflow validates SQLite and PostgreSQL migrations before lint, typechecking, affected workspace builds, workspace configuration, OpenAPI, and Custom Widget architecture and bundle checks. Manual container validation builds an amd64 image and exercises MySQL conversion, authentication, and restart persistence. Preview publication requires the Fast gate and both architecture builds.
 
-Workshop CI runs only when its workflow or Docker build inputs change. It validates Compose configuration and publishes production images on its configured release branches. Its Docker integration and image tests are manual; workspace typechecks run in the main Fast gate.
+Workshop CI runs when its workflow or Docker build inputs change. Pull requests exercise production images on amd64 and arm64; release branches publish them after Compose validation. Workspace typechecks run in the main Fast gate.
 
 Choose the smallest relevant suite when changing behavior:
 

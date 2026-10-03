@@ -37,7 +37,7 @@
 ### Features
 
 * add per-widget secret storage for release provider authentication ([77884a3](https://github.com/homarr-labs/homarr/commit/77884a31794e12a6f7bc59d96c8f61aa429ca68d))
-* **config:** enable bun run global virtual store for worktree support ([#6098](https://github.com/homarr-labs/homarr/issues/6098)) ([3864727](https://github.com/homarr-labs/homarr/commit/3864727502a64052c4e3838468094b30bf04a133))
+* **config:** enable pnpm global virtual store for worktree support ([#6098](https://github.com/homarr-labs/homarr/issues/6098)) ([3864727](https://github.com/homarr-labs/homarr/commit/3864727502a64052c4e3838468094b30bf04a133))
 * **docker-widget:** add per-column visibility toggle ([#6093](https://github.com/homarr-labs/homarr/issues/6093)) ([0765262](https://github.com/homarr-labs/homarr/commit/076526293d13379004461633d7ba4c2e83bd5ffe))
 * **docs:** addd in documentation for archiveteam warrior ([f66469d](https://github.com/homarr-labs/homarr/commit/f66469d79797a2da214588f4e8253b03633c59a5))
 * simplify caching — TanStack Query as single source of truth ([#6075](https://github.com/homarr-labs/homarr/issues/6075)) ([f19033e](https://github.com/homarr-labs/homarr/commit/f19033e0d53d248aed678737f3d04d5d8c7815b5))
@@ -239,7 +239,7 @@
 
 ### Reverts
 
-- **deps:** downgrade bun run to v10 ([#5673](https://github.com/homarr-labs/homarr/issues/5673)) ([44a2973](https://github.com/homarr-labs/homarr/commit/44a2973b1aba1e2c6bd818be022205f3cdb7c943))
+- **deps:** downgrade pnpm to v10 ([#5673](https://github.com/homarr-labs/homarr/issues/5673)) ([44a2973](https://github.com/homarr-labs/homarr/commit/44a2973b1aba1e2c6bd818be022205f3cdb7c943))
 
 ## [1.60.1-beta.2](https://github.com/homarr-labs/homarr/compare/v1.60.1-beta.1...v1.60.1-beta.2) (2026-05-07)
 
@@ -3540,7 +3540,7 @@
 - permission required for home page ([#1711](https://github.com/homarr-labs/homarr/issues/1711)) ([5fbbf03](https://github.com/homarr-labs/homarr/commit/5fbbf037ce8a06642533c7f68c1c34ed8b01e4e4))
 - permissions not restricted for certain management pages / actions ([#1219](https://github.com/homarr-labs/homarr/issues/1219)) ([1421ccc](https://github.com/homarr-labs/homarr/commit/1421ccc917fc54a8afcf6ba700d4b0590fa90ed5))
 - ping urls are not reset when restarting ([#924](https://github.com/homarr-labs/homarr/issues/924)) ([365e267](https://github.com/homarr-labs/homarr/commit/365e267b8d7ba75e47af974dec6f427592095185))
-- bun run dev did not work caused by tsx update ([#638](https://github.com/homarr-labs/homarr/issues/638)) ([fb92c3e](https://github.com/homarr-labs/homarr/commit/fb92c3e95c164b4297c74bbe18461cd08b003112))
+- pnpm dev did not work caused by tsx update ([#638](https://github.com/homarr-labs/homarr/issues/638)) ([fb92c3e](https://github.com/homarr-labs/homarr/commit/fb92c3e95c164b4297c74bbe18461cd08b003112))
 - prevent flickering by removing auto color scheme and default background color ([#1299](https://github.com/homarr-labs/homarr/issues/1299)) ([cd77acd](https://github.com/homarr-labs/homarr/commit/cd77acdfabf6f58aa1973e8db9408379801a8085))
 - prowlarr integration indexers status changed from id to indexerId ([#1837](https://github.com/homarr-labs/homarr/issues/1837)) ([ee8831a](https://github.com/homarr-labs/homarr/commit/ee8831affe34a33b80a0993aa538c2b16c035f11))
 - rdb files can not be saved because of permission issues bug: redis can not save RDB files [#318](https://github.com/homarr-labs/homarr/issues/318) ([#472](https://github.com/homarr-labs/homarr/issues/472)) ([fd44ee4](https://github.com/homarr-labs/homarr/commit/fd44ee48f4dbd67a1f86a6a3fe7c7c986b87443a))
@@ -4779,7 +4779,7 @@
 - pass token to cli ([653f42b](https://github.com/homarr-labs/homarr/commit/653f42bccb8a5893eb64d66c4963068b37011cd7))
 - permissions not restricted for certain management pages / actions ([#1219](https://github.com/homarr-labs/homarr/issues/1219)) ([1421ccc](https://github.com/homarr-labs/homarr/commit/1421ccc917fc54a8afcf6ba700d4b0590fa90ed5))
 - ping urls are not reset when restarting ([#924](https://github.com/homarr-labs/homarr/issues/924)) ([365e267](https://github.com/homarr-labs/homarr/commit/365e267b8d7ba75e47af974dec6f427592095185))
-- bun run dev did not work caused by tsx update ([#638](https://github.com/homarr-labs/homarr/issues/638)) ([fb92c3e](https://github.com/homarr-labs/homarr/commit/fb92c3e95c164b4297c74bbe18461cd08b003112))
+- pnpm dev did not work caused by tsx update ([#638](https://github.com/homarr-labs/homarr/issues/638)) ([fb92c3e](https://github.com/homarr-labs/homarr/commit/fb92c3e95c164b4297c74bbe18461cd08b003112))
 - prevent flickering by removing auto color scheme and default background color ([#1299](https://github.com/homarr-labs/homarr/issues/1299)) ([cd77acd](https://github.com/homarr-labs/homarr/commit/cd77acdfabf6f58aa1973e8db9408379801a8085))
 - rdb files can not be saved because of permission issues bug: redis can not save RDB files [#318](https://github.com/homarr-labs/homarr/issues/318) ([#472](https://github.com/homarr-labs/homarr/issues/472)) ([fd44ee4](https://github.com/homarr-labs/homarr/commit/fd44ee48f4dbd67a1f86a6a3fe7c7c986b87443a))
 - redirect url from login not working ([#952](https://github.com/homarr-labs/homarr/issues/952)) ([349c494](https://github.com/homarr-labs/homarr/commit/349c49462fdf29741910e036e4494909c13b6124))

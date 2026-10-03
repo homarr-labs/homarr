@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "bun src/cli.mjs",
-    "test": "bun test/*.test.mjs"
+    "test": "bun test test/*.test.mjs"
   },
   "dependencies": {
     "mysql2": "3.23.1"

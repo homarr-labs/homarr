@@ -14,6 +14,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.2
