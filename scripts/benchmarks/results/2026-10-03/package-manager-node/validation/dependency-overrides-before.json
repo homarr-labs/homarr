@@ -1,0 +1,32 @@
+{
+  "matched": 66,
+  "violations": [
+    {
+      "parent": "readdir-glob/minimatch",
+      "dependency": "brace-expansion",
+      "declared": "^2.0.1",
+      "selector": ">=2.0.0 <2.1.4",
+      "expected": "2.1.7",
+      "actual": "2.1.4",
+      "importedRange": "2.1.4"
+    },
+    {
+      "parent": "serve-handler/minimatch",
+      "dependency": "brace-expansion",
+      "declared": "^1.1.7",
+      "selector": ">=1.0.0 <1.1.18",
+      "expected": "1.1.21",
+      "actual": "1.1.18",
+      "importedRange": "1.1.18"
+    },
+    {
+      "parent": "archiver-utils/glob/minimatch",
+      "dependency": "brace-expansion",
+      "declared": "^2.0.2",
+      "selector": ">=2.0.0 <2.1.4",
+      "expected": "2.1.7",
+      "actual": "2.1.4",
+      "importedRange": "2.1.4"
+    }
+  ]
+}

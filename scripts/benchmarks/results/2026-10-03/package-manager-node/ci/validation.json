@@ -1,0 +1,17 @@
+{
+  "source_sha": "2ed5a3beb940b60150f6dce155c15c85e5788c03",
+  "local_act": {
+    "exit_code": 0,
+    "successful_jobs": 6,
+    "quality_tasks_passed": 80,
+    "quality_tasks_cached": 0,
+    "quality_wall_seconds": 259.261,
+    "converted_data_boot_auth_restart": "pass"
+  },
+  "hosted_production_capture_run": 37114393994,
+  "hosted_production_recheck_run": 37119529946,
+  "hosted_final_validation_run": 37121624101,
+  "benchmark_scope": "Bun package management, Node application runtimes",
+  "performance_candidate": "8a12ea1e4af800f9dbf0c1e753af1b953f6b7c42",
+  "final_lock_change": "Three nested brace-expansion entries refreshed after performance capture; final act validates the updated graph."
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "unchanged Node pair",
+    "expectedEligible": true,
+    "actualEligible": true,
+    "reasons": []
+  },
+  {
+    "name": "Bun candidate rejected",
+    "expectedEligible": false,
+    "actualEligible": false,
+    "reasons": [
+      "runtime host, browser, container, or workload configuration does not match",
+      "package-manager migration candidate is not a verified Node/V8 process"
+    ]
+  },
+  {
+    "name": "Node version drift rejected",
+    "expectedEligible": false,
+    "actualEligible": false,
+    "reasons": ["runtime host, browser, container, or workload configuration does not match"]
+  },
+  {
+    "name": "source drift rejected",
+    "expectedEligible": false,
+    "actualEligible": false,
+    "reasons": [
+      "candidate runtime image does not match the candidate warmup image",
+      "candidate runtime image does not match the candidate build source"
+    ]
+  },
+  {
+    "name": "original runtime mode still rejects Node candidate",
+    "expectedEligible": false,
+    "actualEligible": false,
+    "reasons": ["runtime migration candidate is not a verified Bun/JavaScriptCore process"]
+  }
+]

@@ -1,6 +1,6 @@
 # Bun migration measurements, 2026-10-03
 
-Draft [PR #6978](https://github.com/homarr-labs/homarr/pull/6978) contains the complete comparison report. Every dataset uses the pinned revisions disclosed in its metadata. Measurements on local and GitHub hosts are separate.
+Draft [PR #6978](https://github.com/homarr-labs/homarr/pull/6978) links to the complete measurements. The current target is Bun package management with Node runtimes; see `package-manager-node/` for that comparison. The other directories below preserve the rejected full Bun runtime experiment. Every dataset uses the pinned revisions disclosed in its metadata. Measurements on local and GitHub hosts are separate.
 
 - `package-managers.json` / `.md`: initial local installs, cache, tools, conflict harness and retention controls. Its initial typechecks are declared-script diagnostics; both used Node.
 - `local-workspaces/`: 258 final explicit-runtime typechecks, docs/operational CLI builds and root command measurements.

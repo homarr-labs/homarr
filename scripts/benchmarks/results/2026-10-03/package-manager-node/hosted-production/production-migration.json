@@ -1,0 +1,118 @@
+{
+  "builds": [
+    {
+      "label": "baseline",
+      "phase": "warmup",
+      "repetition": 0,
+      "exit_code": 0,
+      "wall_seconds": 309.264194686,
+      "result": "baseline-warmup-0/build-1791021401563.json",
+      "log": "baseline-warmup-0/driver.log"
+    },
+    {
+      "label": "candidate",
+      "phase": "warmup",
+      "repetition": 0,
+      "exit_code": 0,
+      "wall_seconds": 234.161850974,
+      "result": "candidate-warmup-0/build-1791021635723.json",
+      "log": "candidate-warmup-0/driver.log"
+    },
+    {
+      "label": "baseline",
+      "phase": "source-change",
+      "repetition": 1,
+      "exit_code": 0,
+      "wall_seconds": 75.3408369849999,
+      "result": "baseline-source-change-1/build-1791021711066.json",
+      "log": "baseline-source-change-1/driver.log"
+    },
+    {
+      "label": "candidate",
+      "phase": "source-change",
+      "repetition": 1,
+      "exit_code": 0,
+      "wall_seconds": 58.19784992099994,
+      "result": "candidate-source-change-1/build-1791021769263.json",
+      "log": "candidate-source-change-1/driver.log"
+    },
+    {
+      "label": "candidate",
+      "phase": "source-change",
+      "repetition": 2,
+      "exit_code": 0,
+      "wall_seconds": 56.09400224700016,
+      "result": "candidate-source-change-2/build-1791021825357.json",
+      "log": "candidate-source-change-2/driver.log"
+    },
+    {
+      "label": "baseline",
+      "phase": "source-change",
+      "repetition": 2,
+      "exit_code": 0,
+      "wall_seconds": 69.3910263780001,
+      "result": "baseline-source-change-2/build-1791021894750.json",
+      "log": "baseline-source-change-2/driver.log"
+    }
+  ],
+  "runtimes": [
+    {
+      "label": "baseline",
+      "phase": "runtime",
+      "repetition": 1,
+      "exit_code": 0,
+      "wall_seconds": 742.6321200110001,
+      "result": "baseline-runtime-1/runtime-1791022636974.json",
+      "log": "baseline-runtime-1/driver.log"
+    },
+    {
+      "label": "candidate",
+      "phase": "runtime",
+      "repetition": 1,
+      "exit_code": 0,
+      "wall_seconds": 739.8581231809999,
+      "result": "candidate-runtime-1/runtime-1791023376856.json",
+      "log": "candidate-runtime-1/driver.log"
+    },
+    {
+      "label": "candidate",
+      "phase": "runtime",
+      "repetition": 2,
+      "exit_code": 0,
+      "wall_seconds": 739.1687598659996,
+      "result": "candidate-runtime-2/runtime-1791024115973.json",
+      "log": "candidate-runtime-2/driver.log"
+    },
+    {
+      "label": "baseline",
+      "phase": "runtime",
+      "repetition": 2,
+      "exit_code": 0,
+      "wall_seconds": 739.7827456359996,
+      "result": "baseline-runtime-2/runtime-1791024855806.json",
+      "log": "baseline-runtime-2/driver.log"
+    },
+    {
+      "label": "baseline",
+      "phase": "runtime",
+      "repetition": 3,
+      "exit_code": 0,
+      "wall_seconds": 738.841130451,
+      "result": "baseline-runtime-3/runtime-1791025594652.json",
+      "log": "baseline-runtime-3/driver.log"
+    },
+    {
+      "label": "candidate",
+      "phase": "runtime",
+      "repetition": 3,
+      "exit_code": 0,
+      "wall_seconds": 738.7259547809999,
+      "result": "candidate-runtime-3/runtime-1791026333380.json",
+      "log": "candidate-runtime-3/driver.log"
+    }
+  ],
+  "revisions": {
+    "baseline": "3adb63850d8fd8f9ea2b3d72db82f4591f950e41",
+    "candidate": "8a12ea1e4af800f9dbf0c1e753af1b953f6b7c42"
+  }
+}

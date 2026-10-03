@@ -1,0 +1,20 @@
+{
+  "method": "One observation per revision on separate GitHub runners; cache-hit-to-restored includes download and extraction. These are descriptive observations, not paired trials or statistical claims. The Bun binary cache is excluded.",
+  "baseline": {
+    "workflow_url": "https://github.com/homarr-labs/homarr/actions/runs/37079873186",
+    "sha": "3adb63850d8fd8f9ea2b3d72db82f4591f950e41",
+    "dependency_cache_archive_bytes": 472086715,
+    "cache_hit_to_restored_ms": 12998.5791,
+    "setup_node_action_duration_ms": 18747
+  },
+  "candidate": {
+    "workflow_url": "https://github.com/homarr-labs/homarr/actions/runs/37119959088",
+    "sha": "bb57b87fb7f2068f87241cdcbd9d97912b0238ac",
+    "dependency_cache_key": "Linux-X64-bun-1.4.2-7c108bb6839c69f33ddc7ca2c09e0fb92a658d6ce684aab6aaeeb6225496869b",
+    "dependency_cache_archive_bytes": 444834717,
+    "cache_hit_at": "2026-10-03T11:34:04.1152362Z",
+    "restored_at": "2026-10-03T11:34:15.8813652Z",
+    "cache_hit_to_restored_ms": 11766.129,
+    "bun_version": "1.4.2"
+  }
+}

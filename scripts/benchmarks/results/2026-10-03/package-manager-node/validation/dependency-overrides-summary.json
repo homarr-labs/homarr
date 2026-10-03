@@ -1,0 +1,10 @@
+{
+  "beforeMatched": 66,
+  "beforeViolations": 3,
+  "afterMatched": 66,
+  "afterViolations": 0,
+  "method": "Read every installed lockfile package manifest, match declared dependency ranges against root version-qualified overrides, and resolve actual installed versions. Parent-specific overrides take precedence. Expanded brace-expansion selectors to include already-resolved older patched releases; frozen install now resolves 1.1.21 and 2.1.7. Only three nested package entries changed.",
+  "benchmarkCandidate": "8a12ea1e4af800f9dbf0c1e753af1b953f6b7c42",
+  "validationCandidate": "2ed5a3beb940b60150f6dce155c15c85e5788c03",
+  "limitation": "Package, dev and production performance measurements precede the final three nested lock-entry updates. Final CI validates the updated graph; timings remain attributed to their original source pins."
+}

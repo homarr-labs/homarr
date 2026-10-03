@@ -1,44 +1,46 @@
 # Node typechecks by workspace
 
-Node 24.18 for both managers. Three trials per workspace: one first run and two incremental runs. Peak process RSS uses GNU time child accounting; it is not additive library runtime RAM. All 228 commands passed.
+Node 24.18 for both managers. All 228 commands passed across 38 workspaces.
 
-| Workspace                  | pnpm median s | Bun median s | pnpm peak RSS MiB | Bun peak RSS MiB |
-| -------------------------- | ------------: | -----------: | ----------------: | ---------------: |
-| apps/docs                  |         1.951 |        1.380 |             525.5 |            484.6 |
-| apps/nextjs                |         3.063 |        2.678 |            1451.1 |           1444.1 |
-| apps/tasks                 |         1.954 |        1.439 |             864.8 |            854.7 |
-| apps/websocket             |         1.931 |        1.470 |             885.1 |            854.5 |
-| packages/analytics         |         1.912 |        1.385 |             885.1 |            907.1 |
-| packages/api               |         2.025 |        1.547 |             901.7 |            921.7 |
-| packages/auth              |         1.168 |        0.746 |             465.3 |            461.3 |
-| packages/boards            |         1.994 |        1.471 |             924.1 |            857.0 |
-| packages/cli               |         1.934 |        1.477 |             899.3 |            876.8 |
-| packages/common            |         0.904 |        0.508 |             292.0 |            306.9 |
-| packages/core              |         0.701 |        0.260 |             157.6 |            156.1 |
-| packages/cron-job-status   |         0.726 |        0.289 |             168.2 |            174.4 |
-| packages/cron-jobs         |         1.920 |        1.476 |             865.1 |            866.7 |
-| packages/cron-jobs-core    |         0.860 |        0.407 |             249.8 |            256.1 |
-| packages/custom-widgets    |         0.939 |        0.500 |             300.3 |            294.5 |
-| packages/db                |         1.984 |        1.505 |             913.8 |            870.7 |
-| packages/definitions       |         0.731 |        0.306 |             170.2 |            178.5 |
-| packages/docker            |         0.740 |        0.313 |             184.1 |            197.1 |
-| packages/form              |         0.795 |        0.397 |             212.6 |            219.3 |
-| packages/forms-collection  |         1.975 |        1.476 |             923.5 |            870.9 |
-| packages/icons             |         0.871 |        0.432 |             256.0 |            258.0 |
-| packages/image-proxy       |         0.968 |        0.505 |             326.6 |            345.3 |
-| packages/integrations      |         1.229 |        0.822 |             493.9 |            486.3 |
-| packages/modals            |         0.973 |        0.504 |             320.8 |            333.2 |
-| packages/modals-collection |         1.936 |        1.525 |             897.1 |            869.7 |
-| packages/notifications     |         0.761 |        0.304 |             175.9 |            185.4 |
-| packages/onboarding        |         1.958 |        1.499 |             883.4 |            903.5 |
-| packages/ping              |         0.790 |        0.358 |             219.1 |            223.2 |
-| packages/redis             |         0.753 |        0.309 |             180.4 |            186.6 |
-| packages/request-handler   |         1.186 |        0.765 |             478.0 |            525.0 |
-| packages/server-settings   |         0.838 |        0.414 |             218.6 |            229.3 |
-| packages/settings          |         0.917 |        0.501 |             300.4 |            321.1 |
-| packages/spotlight         |         1.968 |        1.501 |             881.3 |            895.4 |
-| packages/translation       |         0.850 |        0.453 |             247.1 |            260.1 |
-| packages/ui                |         0.972 |        0.562 |             329.1 |            333.7 |
-| packages/validation        |         0.871 |        0.431 |             239.4 |            243.8 |
-| packages/widgets           |         2.001 |        1.416 |             919.6 |            947.7 |
-| packages/workshop          |         0.656 |        0.194 |             139.5 |            138.9 |
+First run: one trial per manager script. Incremental: two trials per manager script. RSS is maximum process RSS; library workspaces do not have independent production processes.
+
+| Workspace                  | First seconds pnpm / Bun | First peak MiB pnpm / Bun | Incremental median seconds pnpm / Bun | Incremental peak MiB pnpm / Bun | Passed / total |
+| -------------------------- | -----------------------: | ------------------------: | ------------------------------------: | ------------------------------: | -------------: |
+| apps/docs                  |            14.29 / 13.53 |         1546.97 / 1499.13 |                           1.93 / 1.38 |                 523.53 / 484.55 |          6 / 6 |
+| apps/nextjs                |            41.70 / 40.02 |         5271.90 / 5376.05 |                           3.04 / 2.67 |               1428.01 / 1399.04 |          6 / 6 |
+| apps/tasks                 |            34.13 / 33.31 |         3612.78 / 3706.75 |                           1.95 / 1.43 |                 862.82 / 847.60 |          6 / 6 |
+| apps/websocket             |            35.14 / 34.49 |         3849.43 / 3696.43 |                           1.89 / 1.46 |                 882.09 / 851.68 |          6 / 6 |
+| packages/analytics         |            33.81 / 33.93 |         3697.46 / 3753.69 |                           1.89 / 1.37 |                 877.10 / 897.04 |          6 / 6 |
+| packages/api               |            34.27 / 33.99 |         3942.01 / 3988.23 |                           2.01 / 1.54 |                 899.74 / 914.64 |          6 / 6 |
+| packages/auth              |            13.46 / 13.04 |         1470.62 / 1468.53 |                           1.16 / 0.74 |                 465.23 / 458.21 |          6 / 6 |
+| packages/boards            |            35.01 / 33.65 |         3769.82 / 3700.68 |                           1.97 / 1.46 |                 897.67 / 853.78 |          6 / 6 |
+| packages/cli               |            34.18 / 34.00 |         3637.55 / 3666.65 |                           1.89 / 1.43 |                 888.17 / 868.81 |          6 / 6 |
+| packages/common            |              1.00 / 0.51 |           330.43 / 330.28 |                           0.89 / 0.47 |                 291.09 / 299.41 |          6 / 6 |
+| packages/core              |              0.78 / 0.35 |           198.17 / 188.13 |                           0.69 / 0.24 |                 156.79 / 154.89 |          6 / 6 |
+| packages/cron-job-status   |              0.80 / 0.34 |           204.19 / 194.48 |                           0.72 / 0.28 |                 168.06 / 171.23 |          6 / 6 |
+| packages/cron-jobs         |            34.73 / 33.77 |         3800.52 / 3606.79 |                           1.91 / 1.43 |                 862.93 / 860.86 |          6 / 6 |
+| packages/cron-jobs-core    |            12.32 / 11.89 |           866.30 / 869.29 |                           0.85 / 0.39 |                 246.71 / 248.01 |          6 / 6 |
+| packages/custom-widgets    |            12.40 / 11.88 |           875.71 / 881.50 |                           0.91 / 0.49 |                 292.15 / 287.33 |          6 / 6 |
+| packages/db                |            35.09 / 35.06 |         3893.43 / 3990.52 |                           1.95 / 1.50 |                 906.70 / 869.91 |          6 / 6 |
+| packages/definitions       |            12.36 / 11.89 |           640.09 / 623.32 |                           0.72 / 0.29 |                 170.08 / 174.36 |          6 / 6 |
+| packages/docker            |            11.67 / 11.18 |           499.12 / 505.39 |                           0.73 / 0.31 |                 183.29 / 190.73 |          6 / 6 |
+| packages/form              |              1.55 / 1.09 |           401.37 / 371.11 |                           0.79 / 0.37 |                 212.56 / 216.93 |          6 / 6 |
+| packages/forms-collection  |            34.23 / 33.63 |         3593.07 / 3813.31 |                           1.92 / 1.45 |                 918.83 / 861.91 |          6 / 6 |
+| packages/icons             |            12.56 / 12.07 |           911.82 / 890.80 |                           0.86 / 0.41 |                 253.08 / 247.85 |          6 / 6 |
+| packages/image-proxy       |              1.11 / 0.65 |           375.64 / 383.82 |                           0.95 / 0.49 |                 325.66 / 335.19 |          6 / 6 |
+| packages/integrations      |            13.64 / 13.15 |         1570.02 / 1545.20 |                           1.22 / 0.80 |                 489.05 / 482.09 |          6 / 6 |
+| packages/modals            |            13.87 / 13.37 |         1427.44 / 1338.47 |                           0.95 / 0.48 |                 317.82 / 319.90 |          6 / 6 |
+| packages/modals-collection |            33.57 / 33.87 |         3798.57 / 3601.38 |                           1.91 / 1.50 |                 884.18 / 869.46 |          6 / 6 |
+| packages/notifications     |              0.79 / 0.33 |           187.70 / 185.38 |                           0.75 / 0.30 |                 174.93 / 182.15 |          6 / 6 |
+| packages/onboarding        |            33.86 / 34.76 |         3801.89 / 3776.27 |                           1.95 / 1.48 |                 880.29 / 902.25 |          6 / 6 |
+| packages/ping              |              0.90 / 0.43 |           256.11 / 261.68 |                           0.78 / 0.34 |                 216.09 / 216.01 |          6 / 6 |
+| packages/redis             |              0.80 / 0.35 |           208.38 / 202.80 |                           0.75 / 0.30 |                 179.41 / 181.56 |          6 / 6 |
+| packages/request-handler   |            13.62 / 13.12 |         1504.16 / 1528.07 |                           1.18 / 0.76 |                 474.71 / 501.54 |          6 / 6 |
+| packages/server-settings   |            12.33 / 11.80 |           592.90 / 587.53 |                           0.82 / 0.38 |                 216.70 / 223.09 |          6 / 6 |
+| packages/settings          |            13.02 / 12.54 |           992.03 / 981.10 |                           0.92 / 0.48 |                 299.42 / 308.53 |          6 / 6 |
+| packages/spotlight         |            34.75 / 34.57 |         3615.39 / 3886.99 |                           1.96 / 1.50 |                 870.41 / 875.33 |          6 / 6 |
+| packages/translation       |              1.49 / 1.00 |           368.71 / 433.51 |                           0.85 / 0.42 |                 246.21 / 253.78 |          6 / 6 |
+| packages/ui                |            15.02 / 14.65 |         1535.63 / 1382.31 |                           0.96 / 0.54 |                 321.90 / 325.22 |          6 / 6 |
+| packages/validation        |            12.19 / 11.75 |           646.44 / 649.36 |                           0.87 / 0.41 |                 235.30 / 236.18 |          6 / 6 |
+| packages/widgets           |            35.20 / 34.59 |         3900.30 / 3905.43 |                           1.99 / 1.41 |                 894.54 / 930.46 |          6 / 6 |
+| packages/workshop          |              1.13 / 0.68 |           346.91 / 344.64 |                           0.64 / 0.19 |                 139.48 / 136.92 |          6 / 6 |

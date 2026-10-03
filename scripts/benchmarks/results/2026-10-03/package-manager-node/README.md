@@ -24,3 +24,34 @@ trials. Warm restarts retain the corresponding dev cache.
 The first production capture at `4eac5762b` exposed the missing SQLite binding and
 failed. The corrected image and capture are identified separately; do not treat
 that failed run as production acceptance.
+
+`hosted-production/` contains the corrected image's balanced builds and six
+independent Node container trials, captured in
+[run 37114393994](https://github.com/homarr-labs/homarr/actions/runs/37114393994).
+Its original comparison still required a Bun runtime and rejected the Node
+candidate after all workloads passed. The package-manager-specific checker
+revalidated those same measurements in
+[run 37119529946](https://github.com/homarr-labs/homarr/actions/runs/37119529946).
+`validation/` preserves that rejection and controls rejecting Bun, Node version
+drift and source drift. The original runtime comparison still requires Bun.
+
+Production RAM uses cgroup totals, anonymous memory and file cache. Candidate
+process PSS was unreadable under the container's permissions and is omitted from
+the summary; captured zero fallback values do not mean zero process memory.
+The independent development PSS measurements remain available.
+
+`local-production/` preserves six successful runtime trials and their descriptive
+memory levels. Its combined comparison rejects build order: baseline builds were
+reused after the native-binding repair, and earlier build timing overlapped act.
+Local build timing is excluded; hosted build timing uses the valid balanced series.
+All three local paired checks reject only that build chronology.
+
+`image-transfer/` measures immutable image exports, compression and warm imports;
+`turbo/` records the final 12 invalidation controls and compiled-artifact restoration.
+`github-cache.json` preserves separate-run, single-observation cache restoration
+sizes/timestamps; it does not establish a paired transfer speedup.
+
+Performance measurements precede the final three nested `brace-expansion` lock
+entry updates. Their original revision pins remain authoritative. Final frozen
+installation and CI validate the updated graph; `validation/` records 66 matching
+dependency override checks, their three earlier mismatches and the corrected result.

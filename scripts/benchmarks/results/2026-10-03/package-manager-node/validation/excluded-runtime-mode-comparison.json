@@ -1,0 +1,7 @@
+{
+  "captureRun": 37114393994,
+  "comparison": "runtime-migration",
+  "claimEligible": false,
+  "claimIneligibleReasons": ["runtime migration candidate is not a verified Bun/JavaScriptCore process"],
+  "method": "Original comparison rejection after six successful Node workloads. The package-manager-specific checker revalidated the same pinned measurements in run 37119529946."
+}

@@ -1,0 +1,3666 @@
+{
+  "schemaVersion": 7,
+  "claimEligible": true,
+  "claimIneligibleReasons": [],
+  "claimScope": ["pageLoads", "largestContentfulPaint", "widgetDataSettled", "settleStability"],
+  "metricEligibility": {
+    "pageLoads": {
+      "claimEligible": true,
+      "ineligibleReasons": [],
+      "kind": "comparative",
+      "limitations": [
+        "samples share one container instance",
+        "application ingress traverses a local TCP proxy sidecar excluded from memory samples"
+      ],
+      "requiredSampleCount": 20,
+      "sampleCount": 20,
+      "sampleUnit": "fresh authenticated Chromium document",
+      "scope": "fresh authenticated dashboard document load timings"
+    },
+    "largestContentfulPaint": {
+      "claimEligible": true,
+      "ineligibleReasons": [],
+      "kind": "comparative",
+      "limitations": [
+        "samples share one container instance",
+        "application ingress traverses a local TCP proxy sidecar excluded from memory samples"
+      ],
+      "requiredSampleCount": 20,
+      "sampleCount": 20,
+      "sampleUnit": "fresh authenticated Chromium document",
+      "scope": "dashboard LCP observed for at least 5000ms and finalized by trusted input"
+    },
+    "widgetDataSettled": {
+      "claimEligible": true,
+      "ineligibleReasons": [],
+      "kind": "comparative",
+      "limitations": [
+        "samples share one container instance",
+        "covers observed widget read-side tRPC requests; excludes subscriptions and widget.app.ping",
+        "application ingress traverses a local TCP proxy sidecar excluded from memory samples"
+      ],
+      "requiredSampleCount": 20,
+      "sampleCount": 20,
+      "sampleUnit": "fresh authenticated Chromium document",
+      "scope": "widget tRPC completion followed by a 500ms quiet window and two animation frames"
+    },
+    "settleStability": {
+      "claimEligible": true,
+      "ineligibleReasons": [],
+      "kind": "within-run",
+      "limitations": [
+        "one container instance",
+        "eligible only for within-run memory stability and trend, not cross-build RAM level claims"
+      ],
+      "requiredSampleCount": 20,
+      "sampleCount": 20,
+      "sampleUnit": "time-series checkpoint",
+      "scope": "one warmed container observed for at least 600000ms"
+    },
+    "startup": {
+      "claimEligible": false,
+      "ineligibleReasons": ["single container start is diagnostic only"],
+      "kind": "diagnostic",
+      "limitations": ["n=1 container start"],
+      "requiredSampleCount": null,
+      "sampleCount": 1,
+      "sampleUnit": "container start",
+      "scope": "start-to-ready timing"
+    },
+    "memoryLevels": {
+      "claimEligible": false,
+      "ineligibleReasons": ["memory levels have one container observation per workload stage"],
+      "kind": "diagnostic",
+      "limitations": ["n=1 container per workload stage", "settle checkpoints are correlated time samples"],
+      "requiredSampleCount": null,
+      "sampleCount": 1,
+      "sampleUnit": "container instance",
+      "scope": "startup, workload, peak, and settled RAM levels"
+    },
+    "coldSpotlightInteraction": {
+      "claimEligible": false,
+      "ineligibleReasons": ["cold Spotlight interaction has one observation"],
+      "kind": "diagnostic",
+      "limitations": ["n=1 cold interaction"],
+      "requiredSampleCount": null,
+      "sampleCount": 1,
+      "sampleUnit": "cold browser interaction",
+      "scope": "first feedback and full-ready Spotlight latency"
+    }
+  },
+  "createdAt": "2026-10-03T11:57:53.539Z",
+  "image": {
+    "requested": "sha256:9af49fff8e4f8b27c65760f7f6fe9c70f149451dd3575b57f6a470c18a3c3952",
+    "id": "sha256:9af49fff8e4f8b27c65760f7f6fe9c70f149451dd3575b57f6a470c18a3c3952",
+    "digest": null,
+    "revision": "8a12ea1e4af800f9dbf0c1e753af1b953f6b7c42",
+    "sourceFingerprint": "8c437b6c6a00720ee371c9ba426060e70a3da406ce464f31c749517e2e67813b",
+    "architecture": "amd64",
+    "localUncompressedBytes": 476583786
+  },
+  "host": {
+    "architecture": "x64",
+    "cpus": [
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500",
+      "13th Gen Intel(R) Core(TM) i5-13500"
+    ],
+    "node": {
+      "executable": "/tmp/homarr-bun/bin/bun",
+      "version": "v26.3.0",
+      "v8Version": "14.6.202.34-node.20"
+    },
+    "platform": "linux",
+    "release": "6.8.0-90-generic",
+    "totalMemoryBytes": 67194388480
+  },
+  "provenance": {
+    "browser": {
+      "engine": "chromium",
+      "executablePath": "/home/habs/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome",
+      "headless": true,
+      "httpCachePolicy": "Chromium default cache enabled within each browser context",
+      "launchArguments": [
+        "--proxy-server=http://127.0.0.1:38871",
+        "--proxy-bypass-list=127.0.0.1;localhost",
+        "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost"
+      ],
+      "version": "149.0.7827.55",
+      "viewport": {
+        "deviceScaleFactor": 1,
+        "height": 720,
+        "width": 1280
+      }
+    },
+    "container": {
+      "cpuLimit": 2,
+      "memoryLimitBytes": 1073741824,
+      "network": {
+        "id": "2944e7df0094572963b0f11b5935125104f7507c64de2419ed3286c47ef46365",
+        "internal": true,
+        "name": "homarr-runtime-benchmark-1577149-internal"
+      },
+      "node": {
+        "architecture": "x64",
+        "platform": "linux",
+        "version": "v24.18.0",
+        "v8Version": "13.6.233.17-node.50",
+        "bunVersion": null,
+        "engine": "V8"
+      }
+    },
+    "ingressProxy": {
+      "containerId": "ee55daf7eb94b531ec437a5cab8eeb54e217f4293409a40244e4594d785a0e3b",
+      "imageId": "sha256:93056e7ed3ce7139487ba8deface179e25c1909fb22b2992f6934d43b534bff6",
+      "excludedFromMemorySamples": true,
+      "implementation": "JavaScript TCP proxy"
+    },
+    "docker": {
+      "engine": {
+        "architecture": "x86_64",
+        "cgroupDriver": "systemd",
+        "cgroupVersion": "2",
+        "cpuCount": 20,
+        "kernelVersion": "6.8.0-90-generic",
+        "memoryBytes": 67194388480,
+        "operatingSystem": "Ubuntu 24.04.4 LTS",
+        "osType": "linux",
+        "serverVersion": "29.3.0",
+        "storageDriver": "overlay2"
+      },
+      "version": {
+        "Client": {
+          "Platform": {
+            "Name": "Docker Engine - Community"
+          },
+          "Version": "29.3.0",
+          "ApiVersion": "1.54",
+          "DefaultAPIVersion": "1.54",
+          "GitCommit": "5927d80",
+          "GoVersion": "go1.25.7",
+          "Os": "linux",
+          "Arch": "amd64",
+          "BuildTime": "Thu Mar  5 14:25:48 2026",
+          "Context": "default"
+        },
+        "Server": {
+          "Platform": {
+            "Name": "Docker Engine - Community"
+          },
+          "Version": "29.3.0",
+          "ApiVersion": "1.54",
+          "MinAPIVersion": "1.40",
+          "Os": "linux",
+          "Arch": "amd64",
+          "Components": [
+            {
+              "Name": "Engine",
+              "Version": "29.3.0",
+              "Details": {
+                "ApiVersion": "1.54",
+                "Arch": "amd64",
+                "BuildTime": "Thu Mar  5 14:25:48 2026",
+                "Experimental": "false",
+                "GitCommit": "83bca51",
+                "GoVersion": "go1.25.7",
+                "KernelVersion": "6.8.0-90-generic",
+                "MinAPIVersion": "1.40",
+                "Os": "linux"
+              }
+            },
+            {
+              "Name": "containerd",
+              "Version": "v2.2.1",
+              "Details": {
+                "GitCommit": "dea7da592f5d1d2b7755e3a161be07f43fad8f75"
+              }
+            },
+            {
+              "Name": "runc",
+              "Version": "1.3.4",
+              "Details": {
+                "GitCommit": "v1.3.4-0-gd6d73eb8"
+              }
+            },
+            {
+              "Name": "docker-init",
+              "Version": "0.19.0",
+              "Details": {
+                "GitCommit": "de40ad0"
+              }
+            },
+            {
+              "Name": "rootlesskit",
+              "Version": "2.3.6",
+              "Details": {
+                "ApiVersion": "1.1.1",
+                "NetworkDriver": "slirp4netns",
+                "PortDriver": "builtin",
+                "StateDir": "/run/user/1000/dockerd-rootless"
+              }
+            },
+            {
+              "Name": "slirp4netns",
+              "Version": "1.2.1",
+              "Details": {
+                "GitCommit": "09e31e92fa3d2a1d3ca261adaeb012c8d75a8194"
+              }
+            }
+          ],
+          "GitCommit": "83bca51",
+          "GoVersion": "go1.25.7",
+          "KernelVersion": "6.8.0-90-generic",
+          "BuildTime": "2026-03-05T14:25:48.000000000+00:00"
+        }
+      }
+    }
+  },
+  "browserNetworkIsolation": {
+    "active": true,
+    "allowedOrigins": ["http://127.0.0.1:32934", "ws://127.0.0.1:32934"],
+    "blockedProxyAttemptCount": 510,
+    "externalBrowserRequests": [
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "06740a2fe1b2a814734302d20a18c5b8d60b3366b17956d1fbea323e8454fe21"
+      },
+      {
+        "failedCount": 8,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons/svg/google.svg",
+        "protocol": "https:",
+        "requestCount": 8,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "0928f94ce8e5af9b4b3751e8e22a6041d683a48761f36c418450248827302702"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "0c5783a093278e5b398d5fe3f86ccde6212bfef8d11106ad10d38a5505b6a416"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/audiobookshelf.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "0de52c0a081dacd5a6e25804026cb63c059eab49a7c50a9899f06a7211069f69"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/sabnzbd.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "12527e687f3664103bce8d18214a796390934efed79fb917075572eddebf7953"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/umami.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "1377bd0fad3fbc0572aab3c3efaef71026d6b48acecdfbff454ebb1122b06696"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/adguard-home.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "15b2bfcf15b89325a312a6a9b9df029abc8131e924692e7cd34b18ec07cbb266"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/selfhst/icons/svg/technitium.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "16b7ba27f40a9cab96fb40e3154c834bec6b260cfe951a0dc7b8eeefc64771d7"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "17cf0e2100b96641767fecee1c439bb54a33df17fac41a061a86a6ee43fbe6b7"
+      },
+      {
+        "failedCount": 25,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/vitest.svg",
+        "protocol": "https:",
+        "requestCount": 25,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "1b6de2b751bc312bd508560058aa2ac87397a9024001519975a64894ceeef43a"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/trilium.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "1bd230eee84dd9cca9c0eff4b7c10a60eae4175de15534da2b807555465c9c75"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/nzbget.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "1dddd1efcedaf3d95742b0abacdc536ca5b6387f244fab50b2b0879243ea23ba"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/bazarr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "1eeb1bd6045080cbe8624bc4068ea7d51f0085ff574d70c7a62b6297ee09ded6"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "22080c7123f37840e2f74ab80b888826b454accafa957a7ec6fc2dbce76cffdd"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/fileflows.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "23fe33b9b9b92cbe649a9d8b3f29237aa86cd47a6c95dc04cbe24bdbe539a95d"
+      },
+      {
+        "failedCount": 3,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/jackett.svg",
+        "protocol": "https:",
+        "requestCount": 3,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "24d0af639244396e5595e3b939e7e3f5b46287d0532c38a19f9420636507e361"
+      },
+      {
+        "failedCount": 4,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/autobrr.svg",
+        "protocol": "https:",
+        "requestCount": 4,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "28422e351e8a3d6b2b924dc064565deaee0e21ca197ebf1309c652482b74788c"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/xteve.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "2b8a27b860ce7c5b5b4a50fbf6f4912c5ffbe9ee8902663e3777e2ea3885c286"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/your-spotify.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "2cc3da049aa3cd4853e468d871ccdd1834a700ce43699435044df27c768607c3"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/bindery.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "2e4c73a199879b58cc0eac2499d4557b21575d6e0bbc37f52441385297d3bd22"
+      },
+      {
+        "failedCount": 8,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons/svg/youtube.svg",
+        "protocol": "https:",
+        "requestCount": 8,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "318a4a8c69fccad9c4e88e14803d3d7e068aeff5ac8e55063e64a1852cc43f68"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/overseerr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "3902c2cfaa510be183e6a2ba272533f5963e5961b629a628f77770304d9ca575"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "394069ce2bf65d6ef87d14a67e9a3974833f4b7bdf8b80325c93eab556561255"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "3bb543fff464a81840d535c90192829e0d2977435bc475e2e4ae662c48ab91f0"
+      },
+      {
+        "failedCount": 4,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/jellystat.svg",
+        "protocol": "https:",
+        "requestCount": 4,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "3fa8e0e116b153eccebac65f3436bf788222cd4c37dc3f43565ddb1560352486"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/deluge.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "414d79ffbc310d5fcfffefd1a210f2aefaa7cbd9afa94501c20c796155f69396"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/selfhst/icons/png/archiveteam-warrior.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "43f585024e162fd857513c306dbb048959716d7f85241b5142564b267f370bb0"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "456f13c15af3309c16f9c72f4c7619c5ae305417a79fadf50a48f3b9f4511d63"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "4a09b1231fb1f578048689797b04aded25c4082258858a581abbd8100d16445f"
+      },
+      {
+        "failedCount": 4,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/tube-archivist.png",
+        "protocol": "https:",
+        "requestCount": 4,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "53c9641fffa65a92ad4fde6310daba8fa0135bb541c62ce64b4fc9fbea1fb7f0"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/unraid.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "53c9e74f7722bf0490c37311886837ae33cc99d4659620fa3fc8259f51500704"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "5463a0670172797bcb306499e533efd0517f77ace4024dcc249aba7996be2485"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/tandoor-recipes.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "5abf99a19b13792fddd4f3be904a909b2e960e1fadff62edfdfa76cf6409245c"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "5edf07bb8e0f3658228d86514a98a6e23e10e3684364afff450eef13943cad1c"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "67f1b9a2917101d2503c76e7c9bd0ef0307d8640304c71ec97a83c202d80fe33"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/changedetection.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "67fc525b55b28caa897d4ea803c0889a3a5c96c8410f66e6285a0aef802ed02d"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/lidarr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "692b016f6166fb876f412271b5ca9710f07f8e63328874b081ef2ca72a981a2f"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "6c205ce6e6609eece4ecf7b96d009852be67f0a6e0176a3737b9e1a1835bec3c"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/healthchecks.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "6c6a38d68169fb0af2107d9a2e4cc421d1bcaed223746a5e8afe28989524fd80"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "6cf1864af06003aa00faffb848ec1d27603b88d12b56636cd3ea109a27c10fb1"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/prowlarr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "721bf5cdd71af867ce421b500ed8bbadcc84bf47556c24b01ca8920c14238659"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "731bc59bdcbe6dadfd911365b853e9da9c0b13c4b0e5f04a3e42b88dddb1f869"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/spoolman.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "7dc74724cd52d6ee4025b9bacd5af4b487c4015f00c2ad260ad7e71739a96ada"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/patchmon.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "7eeb717e6aedc3f843a2aed5c40fd02621a524158976135e031ccd2e8bf4a4ff"
+      },
+      {
+        "failedCount": 3,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/frigate.svg",
+        "protocol": "https:",
+        "requestCount": 3,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "81ea6f3a36e1fa9c145ba8f7732cd28eeba7b026b4b878c606aa97162b3b8b1f"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/unmanic.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "8561c10ee4df8c269bd51936d15ea58bb0cfe8352d940d1d573250c8921836d9"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@main/png/readarr.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "8a7ebc1f23be94b35e397d38d0e5fffaa00a792cdd9c66b9aa94c526694da0c7"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "8ab41e9df23e15046a6912980d241b337eb5df35cec23700bc7f025e7b5ea243"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/romm.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "8e58e163f233260a50e638661678ebb8006c9490a5de260bb6f1f6091997d284"
+      },
+      {
+        "failedCount": 4,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/scrutiny.svg",
+        "protocol": "https:",
+        "requestCount": 4,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "8f1d6071d49c5b265824ee024f4831a1b59a492169637b0642690b66a1b30178"
+      },
+      {
+        "failedCount": 77,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://seccdn.libravatar.org",
+        "pathname": "/avatar/7c4ff521986b4ff8d29440beec01972d",
+        "protocol": "https:",
+        "requestCount": 77,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "8f4808d1753322b7bd8a861af6a2da35574cda054f348769b33d1a2f64f24b76"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/PapirusDevelopmentTeam/papirus_icons@latest/src/system_downloads_3.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "9479b81824e3b49891291245b0c67a8fb42701ea6afdbe14be75989f17fd1d85"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "953a7fd435081c23b2e8f11fa321e4a9ed2d7da235b110c387ef0c0082cbfb3b"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/prometheus.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "979329ec12e59ff2a11833210495df745c5e614e718820dff56f0ba879b46bde"
+      },
+      {
+        "failedCount": 8,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
+        "protocol": "https:",
+        "requestCount": 8,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "a4fed407d1f16e751948c71437ce0a44a003e9c080a93bbf5b2eb7cae752e818"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "a59057a946ba1104ab74d509777a190168e5ce2363e4553a6529c7148f58004d"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/linkwarden.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "a8d506bd022db7f6422f075daa3a38e93286b9bc2d57cd71d69712a16edf3527"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/paperless-ngx.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "a8df52d5f47640135b97061a9b23cec8a285cc8c5c6d2dd8033b1bd804b84cfa"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/tdarr.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "aacab8a9ce89b629f2493d92a4742fcb8e56d193edcf4815ceba2994e7cd57ac"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/homebox.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "ab983fc87c06fd74ef9a1e55533a0247e987da645273532d36f034341704d758"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/stash.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "acbdef414fea4ae688c46d005220df6e5e397602ef3f3976b3b34058ea7cdfad"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "b2773f634e123c5c1c61fcfb163aa09f99ef551e316397617b3790b40d7856a3"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/syncthing.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "b47d6f00421f1d7a80b6041ae62eae90a0863c9b9927904cb03aaf3545747dd1"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "b5e76fbdb525393cd8484b99d4628df569d3a360eb5be71a11310a08d3866ddf"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "b7b17ea2c08f19dcbe665847a44e2c75da98266a3f1327d622589f28390e3895"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "b9c647e05860ea08fb26f73a77798ffca53303b306837d35901f1eb2b3f48992"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/plex.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "b9e2cb1cc028dd6d455f6732f72a2a2f0d91e45b0b0829923c429cad64eb1ab4"
+      },
+      {
+        "failedCount": 25,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg",
+        "protocol": "https:",
+        "requestCount": 25,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "ba1a24a69b20f6336c865b9fb89d52202e289bb768dd8d438c5e05c9bc28818a"
+      },
+      {
+        "failedCount": 3,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
+        "protocol": "https:",
+        "requestCount": 3,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "c40a4d0bc1503d3af133051eb5640ae0ddf64db8f0d4f87f609b05df2b1b5e4e"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/radarr.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "c5399c31f128fbfa92a5897f8370dd2fe662870f67162bc0acd451daee3371ff"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/miniflux.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "c8ab8403f8e1074c10577cf8db0e5a62555c65a07eda8361f653a47c262872e0"
+      },
+      {
+        "failedCount": 3,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/netalertx.svg",
+        "protocol": "https:",
+        "requestCount": 3,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "d09d91664bf29bb2dcb2dd8528616e6fbf0323d39ceeea00c4444ce431faac07"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/synology.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "d10abd1eb6148b6c16c04e3b828ab5b302fc7dab3000463271af498c170dd292"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/caddy.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "d3585875bb39f165f0ebe720305757c3d91d6ca87a0009f75e504869bc49907c"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/mealie.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "d46372a0f753f1c75a17c0dc612c5ee8b0c226980d47a8e3820f05ab9856dcc8"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "d64c9185e48a25b2e782f8ac6fa121162eba3785107d4742ef1424324b8328e3"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/maintainerr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "dcf8fd0420f8fbe836e838db3fabd2bbca87baa83cab05eb330913998c32e2ce"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/karakeep.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "df6f943c5895b2146509732d865104400e4e9f378c2248f4be03b6eac855089f"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/pi-hole.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "dffa4ebf98e5aff2198950b03511ee868f9156f993c0ed8339ab875c8482b84f"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e1cdf445f7bf143a7b11dff94bea4f14fe5b2f44ce073b102ec91eeac0f43629"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/netdata.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e2438e0116195ca584289bc8904915027ec567d2ec6c4b27452360ad6dff772e"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e25106ae6af7f09f40dcf09b7e33204aa774c7da9484991bef158e48117c7658"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/ical.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e613d6aa10dfec9bb7c591014648ee1194374d7e25e135c3d76bf835ed7bdf8a"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e687422e1c8d5f9684d29b66ae810689715ad9f65a7cb00aa4fa1e606a7de7f6"
+      },
+      {
+        "failedCount": 96,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons/svg/crowdin.svg",
+        "protocol": "https:",
+        "requestCount": 96,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e7a1a99469fecd4541d9b0793577ee37dd4c945cbcc3c1772b6775223a208e01"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/gatus.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "e8056c0738cd1b9dda339618f667f186d2932f83437e1b345200fffff0a91e23"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "ea9cafaae1379d420ff07ec0f608ad615f8b354377bb6759b3ce48bc04bae949"
+      },
+      {
+        "failedCount": 11,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg",
+        "protocol": "https:",
+        "requestCount": 11,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "ed90850abe545cd94a3385fd09fbab0a3d59368c54b9b193acfc4c5e67dc88d0"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/png/plant-it.png",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "ef56c2e4951a47a43ce214a37b41e06adeed9b00f5778cf18b99ed8d87c81616"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "efeee5c90885ee014bf4a0a60348fabe03bfaf03147d1ddc9220d03da77fe5f4"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/selfhst/icons/svg/llama-cpp.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "f330a396ebf62c3a19113facd4bb1d43555ec1366013a40f6019d85e5bd9777d"
+      },
+      {
+        "failedCount": 3,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/komga.svg",
+        "protocol": "https:",
+        "requestCount": 3,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "f4b5fee11e3baf8c2aea5a4c4de4c484fb9862ec7cb5cda920f7b1d7c989049b"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "f930b0e5650ed60196ac19094f2a76d46dbb3f61293eef8161ff96bd1d175e44"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "fa6099954d37088ee94cca546b6a35744e3ba7a0a94abd4eb120ee4c9ce63be0"
+      },
+      {
+        "failedCount": 2,
+        "failureTexts": ["net::ERR_TUNNEL_CONNECTION_FAILED"],
+        "methods": ["GET"],
+        "origin": "https://cdn.jsdelivr.net",
+        "pathname": "/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg",
+        "protocol": "https:",
+        "requestCount": 2,
+        "resourceTypes": ["image"],
+        "responseStatuses": [],
+        "urlHash": "fe49b80501f2b6c9e504e81954003ffded3913c280ab7925c2f5a51a88060296"
+      }
+    ],
+    "externalBrowserWebSockets": [],
+    "hostResolverPolicy": "deny all DNS except localhost and 127.0.0.1",
+    "httpCachePolicy": "Chromium default cache enabled within each browser context",
+    "observedOrigins": ["http://127.0.0.1:32934", "https://cdn.jsdelivr.net", "https://seccdn.libravatar.org"],
+    "proxy": {
+      "host": "127.0.0.1",
+      "port": 38871,
+      "policy": "deny",
+      "attempts": [
+        {
+          "count": 431,
+          "method": "CONNECT",
+          "origin": "https://cdn.jsdelivr.net",
+          "pathname": "/",
+          "protocol": "https:",
+          "urlHash": "2f30b0f0e2ed4c898e295760129f6b963dacd3690864a9a85c102ca653c12073",
+          "targetHash": "3291d2d2396064b80e24c996a631658baaaa452225c471dc3409c3a2ec6b75d6"
+        },
+        {
+          "count": 1,
+          "method": "CONNECT",
+          "origin": "https://homarr-benchmark-ws.invalid:80",
+          "pathname": "/",
+          "protocol": "https:",
+          "urlHash": "4b59a4fca2ba5bce20c7924196e10ee685d4f116d7f142188e43f80d53e12129",
+          "targetHash": "bf79c78bee6fc464f37f6ffd5d3389c696ae82e9b27d658de0cf30de31703c09"
+        },
+        {
+          "count": 1,
+          "method": "CONNECT",
+          "origin": "https://homarr-benchmark-wss.invalid",
+          "pathname": "/",
+          "protocol": "https:",
+          "urlHash": "a39b16dd62ac450e96750fa192f4fc56aed4ae1a8d35a460f0cd11c1fad79a34",
+          "targetHash": "f1720168f1348814b9690ee1a1b1bb815cbcb6f160a75e57cc340e992810a89f"
+        },
+        {
+          "count": 77,
+          "method": "CONNECT",
+          "origin": "https://seccdn.libravatar.org",
+          "pathname": "/",
+          "protocol": "https:",
+          "urlHash": "1cc2a09b3009472ed370f22948d25a7f0a956e2026f1c6c66992e48d0f7c5161",
+          "targetHash": "5084fb702c3459da12657780da900e82d59bd3bc4433dcdc246b938ed000ad29"
+        }
+      ]
+    },
+    "canaries": {
+      "http": {
+        "attemptCount": 1,
+        "responseHeader": "true",
+        "status": 502,
+        "url": "http://homarr-benchmark.invalid/__network-isolation-canary__"
+      },
+      "webSockets": [
+        {
+          "closeCode": null,
+          "errorEvent": true,
+          "opened": false,
+          "timedOut": false,
+          "closeCount": 1,
+          "frameReceivedCount": 0,
+          "frameSentCount": 0,
+          "socketErrorCount": 1,
+          "attemptCount": 1,
+          "browserEventCount": 1,
+          "connectTarget": "homarr-benchmark-ws.invalid:80",
+          "url": "ws://homarr-benchmark-ws.invalid/__websocket-network-isolation-canary__"
+        },
+        {
+          "closeCode": null,
+          "errorEvent": true,
+          "opened": false,
+          "timedOut": false,
+          "closeCount": 1,
+          "frameReceivedCount": 0,
+          "frameSentCount": 0,
+          "socketErrorCount": 1,
+          "attemptCount": 1,
+          "browserEventCount": 1,
+          "connectTarget": "homarr-benchmark-wss.invalid:443",
+          "url": "wss://homarr-benchmark-wss.invalid/__websocket-network-isolation-canary__"
+        }
+      ]
+    },
+    "observedWebSockets": [
+      {
+        "closeCount": 1,
+        "frameReceivedCount": 0,
+        "frameSentCount": 0,
+        "origin": "ws://127.0.0.1:32934",
+        "pathname": "/websockets",
+        "protocol": "ws:",
+        "urlHash": "1d12c615f20edff9586e9ba4525202c0b905bc56c56818d20c0c8791a99b486c",
+        "requestCount": 1,
+        "socketErrorCount": 0
+      }
+    ],
+    "unexpectedExternalResponses": []
+  },
+  "serverNetworkIsolation": {
+    "active": true,
+    "canary": {
+      "domain": {
+        "blocked": true,
+        "code": "TimeoutError"
+      },
+      "directIp": {
+        "blocked": true,
+        "code": "ENETUNREACH"
+      }
+    },
+    "network": {
+      "id": "2944e7df0094572963b0f11b5935125104f7507c64de2419ed3286c47ef46365",
+      "internal": true,
+      "name": "homarr-runtime-benchmark-1577149-internal"
+    },
+    "policy": "application container attached only to an internal Docker network"
+  },
+  "workload": {
+    "baseUrl": "http://127.0.0.1:32934",
+    "boardFixture": {
+      "kinds": [
+        "bookmarks",
+        "clock",
+        "countdown",
+        "downloads",
+        "healthMonitoring",
+        "notebook",
+        "systemDisks",
+        "systemResources"
+      ],
+      "items": 10,
+      "normalizedLayout": true
+    },
+    "startToReadyMs": 10028,
+    "settleMs": 600000,
+    "sampleIntervalMs": 30000,
+    "settleSampleCount": 20,
+    "lcpObservationMs": 5000,
+    "lcpStabilityMs": 500,
+    "widgetDataQuietMs": 500,
+    "spotlightIdleMs": 2500,
+    "spotlightIdlePolicy": "preload-only",
+    "interactionIterations": 7,
+    "widgetCount": 8,
+    "implementationMarkerPolicy": "true",
+    "widgetImplementationMarkerCount": 8,
+    "widgetErrorCount": 0,
+    "loginJourneyBoardMountedMs": 2410,
+    "loginJourneyWidgetImplementationsMountedMs": 3381,
+    "loginJourneyWidgetData": {
+      "completedOperationCount": 2,
+      "observedOperationCount": 2,
+      "quietWindowObserved": true,
+      "unrecoveredAbortedRequests": [],
+      "cacheRecoveredAbortedRequests": []
+    },
+    "loginJourneyWidgetDataSettledMs": 3836,
+    "pageLoadSamples": [
+      {
+        "boardMountedMs": 353,
+        "fcpMs": 172,
+        "lcpFinalizedByInputMs": 5005,
+        "lcpMs": 1240,
+        "ttfbMs": 109,
+        "widgetImplementationsMountedMs": 1282,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 1894
+      },
+      {
+        "boardMountedMs": 486,
+        "fcpMs": 324,
+        "lcpFinalizedByInputMs": 5005,
+        "lcpMs": 1712,
+        "ttfbMs": 230,
+        "widgetImplementationsMountedMs": 1807,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2521
+      },
+      {
+        "boardMountedMs": 371,
+        "fcpMs": 200,
+        "lcpFinalizedByInputMs": 5003,
+        "lcpMs": 1428,
+        "ttfbMs": 97,
+        "widgetImplementationsMountedMs": 1469,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2137
+      },
+      {
+        "boardMountedMs": 309,
+        "fcpMs": 196,
+        "lcpFinalizedByInputMs": 5003,
+        "lcpMs": 1356,
+        "ttfbMs": 127,
+        "widgetImplementationsMountedMs": 1394,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2016
+      },
+      {
+        "boardMountedMs": 340,
+        "fcpMs": 232,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1444,
+        "ttfbMs": 137,
+        "widgetImplementationsMountedMs": 1473,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2104
+      },
+      {
+        "boardMountedMs": 294,
+        "fcpMs": 168,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1364,
+        "ttfbMs": 105,
+        "widgetImplementationsMountedMs": 1397,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2030
+      },
+      {
+        "boardMountedMs": 356,
+        "fcpMs": 228,
+        "lcpFinalizedByInputMs": 5005,
+        "lcpMs": 1344,
+        "ttfbMs": 129,
+        "widgetImplementationsMountedMs": 1381,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2007
+      },
+      {
+        "boardMountedMs": 295,
+        "fcpMs": 180,
+        "lcpFinalizedByInputMs": 5003,
+        "lcpMs": 1308,
+        "ttfbMs": 108,
+        "widgetImplementationsMountedMs": 1352,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 1962
+      },
+      {
+        "boardMountedMs": 295,
+        "fcpMs": 188,
+        "lcpFinalizedByInputMs": 5003,
+        "lcpMs": 1388,
+        "ttfbMs": 109,
+        "widgetImplementationsMountedMs": 1422,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2086
+      },
+      {
+        "boardMountedMs": 267,
+        "fcpMs": 164,
+        "lcpFinalizedByInputMs": 5005,
+        "lcpMs": 1404,
+        "ttfbMs": 97,
+        "widgetImplementationsMountedMs": 1452,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2111
+      },
+      {
+        "boardMountedMs": 309,
+        "fcpMs": 188,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1336,
+        "ttfbMs": 114,
+        "widgetImplementationsMountedMs": 1381,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2038
+      },
+      {
+        "boardMountedMs": 283,
+        "fcpMs": 192,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1400,
+        "ttfbMs": 97,
+        "widgetImplementationsMountedMs": 1433,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2065
+      },
+      {
+        "boardMountedMs": 402,
+        "fcpMs": 228,
+        "lcpFinalizedByInputMs": 5003,
+        "lcpMs": 1444,
+        "ttfbMs": 119,
+        "widgetImplementationsMountedMs": 1485,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2106
+      },
+      {
+        "boardMountedMs": 375,
+        "fcpMs": 196,
+        "lcpFinalizedByInputMs": 5003,
+        "lcpMs": 1492,
+        "ttfbMs": 92,
+        "widgetImplementationsMountedMs": 1534,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2189
+      },
+      {
+        "boardMountedMs": 308,
+        "fcpMs": 204,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1292,
+        "ttfbMs": 103,
+        "widgetImplementationsMountedMs": 1332,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 1966
+      },
+      {
+        "boardMountedMs": 241,
+        "fcpMs": 148,
+        "lcpFinalizedByInputMs": 5005,
+        "lcpMs": 1252,
+        "ttfbMs": 84,
+        "widgetImplementationsMountedMs": 1288,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 1913
+      },
+      {
+        "boardMountedMs": 308,
+        "fcpMs": 184,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1308,
+        "ttfbMs": 111,
+        "widgetImplementationsMountedMs": 1331,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 1974
+      },
+      {
+        "boardMountedMs": 354,
+        "fcpMs": 188,
+        "lcpFinalizedByInputMs": 5002,
+        "lcpMs": 1356,
+        "ttfbMs": 115,
+        "widgetImplementationsMountedMs": 1401,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2022
+      },
+      {
+        "boardMountedMs": 286,
+        "fcpMs": 180,
+        "lcpFinalizedByInputMs": 5007,
+        "lcpMs": 1388,
+        "ttfbMs": 109,
+        "widgetImplementationsMountedMs": 1417,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2052
+      },
+      {
+        "boardMountedMs": 315,
+        "fcpMs": 188,
+        "lcpFinalizedByInputMs": 5004,
+        "lcpMs": 1300,
+        "ttfbMs": 83,
+        "widgetImplementationsMountedMs": 1344,
+        "widgetDataObservedOperationCount": 2,
+        "widgetDataCacheRecoveredAbortedRequests": [],
+        "widgetDataSettledMs": 2015
+      }
+    ],
+    "pageLoadSummary": {
+      "boardMountedMs": {
+        "count": 20,
+        "min": 241,
+        "median": 309,
+        "p95": 402,
+        "max": 486,
+        "standardDeviation": 53,
+        "outliers": [486]
+      },
+      "fcpMs": {
+        "count": 20,
+        "min": 148,
+        "median": 188,
+        "p95": 232,
+        "max": 324,
+        "standardDeviation": 36,
+        "outliers": [232, 324]
+      },
+      "lcpFinalizedByInputMs": {
+        "count": 20,
+        "min": 5002,
+        "median": 5004,
+        "p95": 5005,
+        "max": 5007,
+        "standardDeviation": 1,
+        "outliers": []
+      },
+      "lcpMs": {
+        "count": 20,
+        "min": 1240,
+        "median": 1360,
+        "p95": 1492,
+        "max": 1712,
+        "standardDeviation": 100,
+        "outliers": [1712]
+      },
+      "ttfbMs": {
+        "count": 20,
+        "min": 83,
+        "median": 109,
+        "p95": 137,
+        "max": 230,
+        "standardDeviation": 30,
+        "outliers": [230]
+      },
+      "widgetImplementationsMountedMs": {
+        "count": 20,
+        "min": 1282,
+        "median": 1399,
+        "p95": 1534,
+        "max": 1807,
+        "standardDeviation": 110,
+        "outliers": [1807]
+      },
+      "widgetDataSettledMs": {
+        "count": 20,
+        "min": 1894,
+        "median": 2034,
+        "p95": 2189,
+        "max": 2521,
+        "standardDeviation": 128,
+        "outliers": [2521]
+      }
+    },
+    "coldSpotlightFeedbackMs": null,
+    "coldSpotlightReadyMs": 1002,
+    "idleSpotlightNetworkCounts": {
+      "trpcRequestCount": 0,
+      "nonWidgetTrpcRequestCount": 0
+    },
+    "postIdleWarmInteractionMs": 150,
+    "postIdleWarmInteractionSummary": {
+      "count": 7,
+      "min": 110,
+      "median": 130,
+      "p95": null,
+      "max": 150,
+      "standardDeviation": 14,
+      "outliers": []
+    },
+    "warmInteractionSamplesMs": [150, 150, 143, 130, 110, 124, 121],
+    "routeTimings": [
+      {
+        "path": "/manage",
+        "durationMs": 380,
+        "status": 200
+      },
+      {
+        "path": "/manage/apps",
+        "durationMs": 290,
+        "status": 200
+      },
+      {
+        "path": "/manage/integrations",
+        "durationMs": 316,
+        "status": 200
+      },
+      {
+        "path": "/manage/settings",
+        "durationMs": 580,
+        "status": 200
+      }
+    ],
+    "trpcRequestCount": 178,
+    "widgetRequestCount": 145,
+    "webSocketCount": 1,
+    "websocketReadyMs": 7,
+    "legacyQueryCacheWriteCount": 0,
+    "legacyQueryCacheWriteBytes": 0,
+    "initialNetworkCounts": {
+      "legacyQueryCacheWriteBytes": 0,
+      "legacyQueryCacheWriteCount": 0,
+      "trpcRequestCount": 5,
+      "webSocketCount": 0,
+      "widgetRequestCount": 1
+    },
+    "loginJourneyNetworkCounts": {
+      "trpcRequestCount": 6,
+      "widgetRequestCount": 1,
+      "webSocketCount": 0,
+      "legacyQueryCacheWriteCount": 0,
+      "legacyQueryCacheWriteBytes": 0
+    },
+    "initialBrowserMetrics": {
+      "cls": 0.0051,
+      "decodedScriptBytes": 4531036,
+      "domContentLoadedMs": 422,
+      "fcpMs": 672,
+      "jsHeapBytes": 60300000,
+      "lcpElement": {
+        "className": null,
+        "id": null,
+        "origin": null,
+        "pathname": null,
+        "size": 9810,
+        "tagName": "P",
+        "text": "Your apps, live integrations, and notes, all in one place."
+      },
+      "lcpFinalizedByInputMs": 5006,
+      "lcpMs": 1680,
+      "lcpUpdatedAtMs": 1858,
+      "loadMs": 588,
+      "longTaskCount": 7,
+      "longTaskTotalMs": 925,
+      "largestScripts": [
+        {
+          "decodedBodySize": 557078,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/35uhvcx8e76-8.js",
+          "transferSize": 165936
+        },
+        {
+          "decodedBodySize": 337445,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/1qxr1mrfdycbu.js",
+          "transferSize": 102930
+        },
+        {
+          "decodedBodySize": 301309,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/0xx8nlfx864m0.js",
+          "transferSize": 66877
+        },
+        {
+          "decodedBodySize": 259941,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/34hgt48s7o5bq.js",
+          "transferSize": 75027
+        },
+        {
+          "decodedBodySize": 228085,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/0b3nqrndjso87.js",
+          "transferSize": 71702
+        },
+        {
+          "decodedBodySize": 189612,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/3qb6fim5tcj_h.js",
+          "transferSize": 53779
+        },
+        {
+          "decodedBodySize": 155747,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/1f90445nny4gs.js",
+          "transferSize": 43156
+        },
+        {
+          "decodedBodySize": 122246,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/1bugl8e46xjch.js",
+          "transferSize": 44285
+        },
+        {
+          "decodedBodySize": 106808,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/1fs53i1autrvv.js",
+          "transferSize": 34049
+        },
+        {
+          "decodedBodySize": 105744,
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/0xd8_5_9bponh.js",
+          "transferSize": 30533
+        }
+      ],
+      "resourceCount": 134,
+      "slowestResources": [
+        {
+          "durationMs": 303,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/16p4bmcmkk1eg.js",
+          "transferSize": 17526
+        },
+        {
+          "durationMs": 277,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/187mamd3lxuem.js",
+          "transferSize": 243386
+        },
+        {
+          "durationMs": 276,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/logo/logo.png",
+          "transferSize": 3708
+        },
+        {
+          "durationMs": 276,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/1heutw68l1vor.js",
+          "transferSize": 15046
+        },
+        {
+          "durationMs": 272,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/3u5q7qdx3mqxd.js",
+          "transferSize": 12573
+        },
+        {
+          "durationMs": 269,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/1lu9oydcn_lqy.js",
+          "transferSize": 79845
+        },
+        {
+          "durationMs": 267,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/3cir64vbgp_40.js",
+          "transferSize": 10459
+        },
+        {
+          "durationMs": 265,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/3l9t3oj864_79.js",
+          "transferSize": 4598
+        },
+        {
+          "durationMs": 263,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/18k1322nxrm-t.js",
+          "transferSize": 92580
+        },
+        {
+          "durationMs": 253,
+          "initiatorType": "link",
+          "origin": "http://127.0.0.1:32934",
+          "pathname": "/_next/static/chunks/3b55qm7uhuimn.js",
+          "transferSize": 12138
+        }
+      ],
+      "ttfbMs": 252,
+      "transferBytes": 2171728
+    },
+    "initialWidgetData": {
+      "completedOperationCount": 2,
+      "observedOperationCount": 2,
+      "quietWindowObserved": true,
+      "unrecoveredAbortedRequests": [],
+      "cacheRecoveredAbortedRequests": []
+    },
+    "initialWidgetDataSettledMs": 2333
+  },
+  "checkpoints": [
+    {
+      "name": "startup",
+      "capturedAt": "2026-10-03T11:45:44.970Z",
+      "container": {
+        "currentBytes": 139902976,
+        "peakBytes": 159109120,
+        "anonymousBytes": 131686400,
+        "fileBytes": 798720,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 4090164,
+        "userUsec": 3183792,
+        "systemUsec": 906371,
+        "nrThrottled": 1,
+        "throttledUsec": 21401
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 7864320,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 185659392,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 2850816,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 99,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 216064,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 959241,
+        "peakMemoryBytes": 1064019
+      }
+    },
+    {
+      "name": "first-board",
+      "capturedAt": "2026-10-03T11:46:01.721Z",
+      "container": {
+        "currentBytes": 300888064,
+        "peakBytes": 307154944,
+        "anonymousBytes": 287612928,
+        "fileBytes": 876544,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 11254083,
+        "userUsec": 9315069,
+        "systemUsec": 1939014,
+        "nrThrottled": 9,
+        "throttledUsec": 1258993
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 138,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 211968,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8028160,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 346632192,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3330048,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 1280774,
+        "peakMemoryBytes": 1281070
+      }
+    },
+    {
+      "name": "workload",
+      "capturedAt": "2026-10-03T11:47:53.422Z",
+      "container": {
+        "currentBytes": 359288832,
+        "peakBytes": 362283008,
+        "anonymousBytes": 343552000,
+        "fileBytes": 1613824,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 34009655,
+        "userUsec": 28496219,
+        "systemUsec": 5513435,
+        "nrThrottled": 35,
+        "throttledUsec": 5851402
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 185,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 180224,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8519680,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 410226688,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2252511,
+        "peakMemoryBytes": 2252807
+      }
+    },
+    {
+      "name": "settle-1",
+      "capturedAt": "2026-10-03T11:48:23.507Z",
+      "container": {
+        "currentBytes": 314212352,
+        "peakBytes": 363315200,
+        "anonymousBytes": 299790336,
+        "fileBytes": 1617920,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 35801438,
+        "userUsec": 30132054,
+        "systemUsec": 5669383,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 224,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 210944,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8683520,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 366415872,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2318975,
+        "peakMemoryBytes": 2319271
+      }
+    },
+    {
+      "name": "settle-2",
+      "capturedAt": "2026-10-03T11:48:53.593Z",
+      "container": {
+        "currentBytes": 315965440,
+        "peakBytes": 363315200,
+        "anonymousBytes": 301744128,
+        "fileBytes": 1622016,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 36096731,
+        "userUsec": 30355474,
+        "systemUsec": 5741256,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 264,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 178176,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8683520,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 368041984,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2384403,
+        "peakMemoryBytes": 2384699
+      }
+    },
+    {
+      "name": "settle-3",
+      "capturedAt": "2026-10-03T11:49:23.679Z",
+      "container": {
+        "currentBytes": 317984768,
+        "peakBytes": 363315200,
+        "anonymousBytes": 303869952,
+        "fileBytes": 1626112,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 36384991,
+        "userUsec": 30579831,
+        "systemUsec": 5805160,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 303,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 209920,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8683520,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 370974720,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2450851,
+        "peakMemoryBytes": 2451147
+      }
+    },
+    {
+      "name": "settle-4",
+      "capturedAt": "2026-10-03T11:49:53.759Z",
+      "container": {
+        "currentBytes": 320040960,
+        "peakBytes": 363315200,
+        "anonymousBytes": 305639424,
+        "fileBytes": 1630208,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 36671589,
+        "userUsec": 30806768,
+        "systemUsec": 5864820,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 343,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 205824,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8847360,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 372375552,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2516299,
+        "peakMemoryBytes": 2516595
+      }
+    },
+    {
+      "name": "settle-5",
+      "capturedAt": "2026-10-03T11:50:23.842Z",
+      "container": {
+        "currentBytes": 321658880,
+        "peakBytes": 363315200,
+        "anonymousBytes": 307515392,
+        "fileBytes": 1638400,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 36942571,
+        "userUsec": 31019900,
+        "systemUsec": 5922670,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8847360,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 373755904,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 382,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 209920,
+          "command": "sh"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2583068,
+        "peakMemoryBytes": 2583364
+      }
+    },
+    {
+      "name": "settle-6",
+      "capturedAt": "2026-10-03T11:50:53.923Z",
+      "container": {
+        "currentBytes": 323629056,
+        "peakBytes": 363315200,
+        "anonymousBytes": 309411840,
+        "fileBytes": 1642496,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 37223022,
+        "userUsec": 31239431,
+        "systemUsec": 5983590,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8847360,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 375713792,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 422,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 178176,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2648194,
+        "peakMemoryBytes": 2648490
+      }
+    },
+    {
+      "name": "settle-7",
+      "capturedAt": "2026-10-03T11:51:24.000Z",
+      "container": {
+        "currentBytes": 325697536,
+        "peakBytes": 363315200,
+        "anonymousBytes": 311316480,
+        "fileBytes": 1646592,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 37498999,
+        "userUsec": 31459502,
+        "systemUsec": 6039497,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8847360,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 377401344,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 461,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 216064,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2714659,
+        "peakMemoryBytes": 2714955
+      }
+    },
+    {
+      "name": "settle-8",
+      "capturedAt": "2026-10-03T11:51:54.085Z",
+      "container": {
+        "currentBytes": 327667712,
+        "peakBytes": 363315200,
+        "anonymousBytes": 313204736,
+        "fileBytes": 1650688,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 37777878,
+        "userUsec": 31683158,
+        "systemUsec": 6094720,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 8847360,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 379002880,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 501,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 206848,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2780094,
+        "peakMemoryBytes": 2780390
+      }
+    },
+    {
+      "name": "settle-9",
+      "capturedAt": "2026-10-03T11:52:24.171Z",
+      "container": {
+        "currentBytes": 329678848,
+        "peakBytes": 363315200,
+        "anonymousBytes": 315183104,
+        "fileBytes": 1654784,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 38081101,
+        "userUsec": 31919365,
+        "systemUsec": 6161735,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9011200,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 381554688,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 540,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 174080,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2846554,
+        "peakMemoryBytes": 2846850
+      }
+    },
+    {
+      "name": "settle-10",
+      "capturedAt": "2026-10-03T11:52:54.255Z",
+      "container": {
+        "currentBytes": 331534336,
+        "peakBytes": 363315200,
+        "anonymousBytes": 317079552,
+        "fileBytes": 1658880,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 38370493,
+        "userUsec": 32132542,
+        "systemUsec": 6237951,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9175040,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 383823872,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 580,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 224256,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2911989,
+        "peakMemoryBytes": 2912285
+      }
+    },
+    {
+      "name": "settle-11",
+      "capturedAt": "2026-10-03T11:53:24.343Z",
+      "container": {
+        "currentBytes": 334499840,
+        "peakBytes": 363315200,
+        "anonymousBytes": 319115264,
+        "fileBytes": 1662976,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 38638867,
+        "userUsec": 32333212,
+        "systemUsec": 6305655,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9175040,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 385249280,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 619,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 211968,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 2978452,
+        "peakMemoryBytes": 2978748
+      }
+    },
+    {
+      "name": "settle-12",
+      "capturedAt": "2026-10-03T11:53:54.428Z",
+      "container": {
+        "currentBytes": 336347136,
+        "peakBytes": 363315200,
+        "anonymousBytes": 320991232,
+        "fileBytes": 1671168,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 38906364,
+        "userUsec": 32528370,
+        "systemUsec": 6377994,
+        "nrThrottled": 41,
+        "throttledUsec": 6777648
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9175040,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 386760704,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 659,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 210944,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3043885,
+        "peakMemoryBytes": 3044181
+      }
+    },
+    {
+      "name": "settle-13",
+      "capturedAt": "2026-10-03T11:54:24.518Z",
+      "container": {
+        "currentBytes": 330465280,
+        "peakBytes": 363315200,
+        "anonymousBytes": 315482112,
+        "fileBytes": 1675264,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 39662452,
+        "userUsec": 33183585,
+        "systemUsec": 6478866,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9175040,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 381411328,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 698,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 211968,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3110348,
+        "peakMemoryBytes": 3110644
+      }
+    },
+    {
+      "name": "settle-14",
+      "capturedAt": "2026-10-03T11:54:54.596Z",
+      "container": {
+        "currentBytes": 330612736,
+        "peakBytes": 363315200,
+        "anonymousBytes": 315621376,
+        "fileBytes": 1679360,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 39970481,
+        "userUsec": 33418631,
+        "systemUsec": 6551849,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9338880,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 381857792,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 738,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 200704,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3175778,
+        "peakMemoryBytes": 3176074
+      }
+    },
+    {
+      "name": "settle-15",
+      "capturedAt": "2026-10-03T11:55:24.677Z",
+      "container": {
+        "currentBytes": 331026432,
+        "peakBytes": 363315200,
+        "anonymousBytes": 315797504,
+        "fileBytes": 1683456,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 40238087,
+        "userUsec": 33635683,
+        "systemUsec": 6602404,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9502720,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 382406656,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 777,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 229376,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3242243,
+        "peakMemoryBytes": 3242539
+      }
+    },
+    {
+      "name": "settle-16",
+      "capturedAt": "2026-10-03T11:55:54.766Z",
+      "container": {
+        "currentBytes": 330907648,
+        "peakBytes": 363315200,
+        "anonymousBytes": 315875328,
+        "fileBytes": 1687552,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 40504698,
+        "userUsec": 33831009,
+        "systemUsec": 6673689,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9502720,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 381890560,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 817,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 230400,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3307679,
+        "peakMemoryBytes": 3307975
+      }
+    },
+    {
+      "name": "settle-17",
+      "capturedAt": "2026-10-03T11:56:24.853Z",
+      "container": {
+        "currentBytes": 331075584,
+        "peakBytes": 363315200,
+        "anonymousBytes": 316022784,
+        "fileBytes": 1691648,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 40773964,
+        "userUsec": 34041603,
+        "systemUsec": 6732361,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9830400,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 382193664,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 856,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 201728,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3374142,
+        "peakMemoryBytes": 3374438
+      }
+    },
+    {
+      "name": "settle-18",
+      "capturedAt": "2026-10-03T11:56:54.940Z",
+      "container": {
+        "currentBytes": 330878976,
+        "peakBytes": 363315200,
+        "anonymousBytes": 316157952,
+        "fileBytes": 1699840,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 41039853,
+        "userUsec": 34260199,
+        "systemUsec": 6779654,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9830400,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 382459904,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 896,
+          "parentPid": 0,
+          "rssBytes": 819200,
+          "pssBytes": 200704,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3439571,
+        "peakMemoryBytes": 3439867
+      }
+    },
+    {
+      "name": "settle-19",
+      "capturedAt": "2026-10-03T11:57:25.028Z",
+      "container": {
+        "currentBytes": 330973184,
+        "peakBytes": 363315200,
+        "anonymousBytes": 316243968,
+        "fileBytes": 1703936,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 41287888,
+        "userUsec": 34445901,
+        "systemUsec": 6841987,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9830400,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 382242816,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 935,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 205824,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3506035,
+        "peakMemoryBytes": 3506331
+      }
+    },
+    {
+      "name": "settle-20",
+      "capturedAt": "2026-10-03T11:57:53.519Z",
+      "container": {
+        "currentBytes": 331702272,
+        "peakBytes": 363315200,
+        "anonymousBytes": 316416000,
+        "fileBytes": 1708032,
+        "oomKillCount": 0
+      },
+      "cpu": {
+        "usageUsec": 41547875,
+        "userUsec": 34638561,
+        "systemUsec": 6909314,
+        "nrThrottled": 43,
+        "throttledUsec": 7243769
+      },
+      "processes": [
+        {
+          "pid": 1,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 0,
+          "command": "sh"
+        },
+        {
+          "pid": 36,
+          "parentPid": 1,
+          "rssBytes": 5898240,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 37,
+          "parentPid": 1,
+          "rssBytes": 9830400,
+          "pssBytes": 0,
+          "command": "redis-server"
+        },
+        {
+          "pid": 38,
+          "parentPid": 1,
+          "rssBytes": 382435328,
+          "pssBytes": 0,
+          "command": "next-server"
+        },
+        {
+          "pid": 39,
+          "parentPid": 36,
+          "rssBytes": 3051520,
+          "pssBytes": 0,
+          "command": "nginx"
+        },
+        {
+          "pid": 975,
+          "parentPid": 0,
+          "rssBytes": 983040,
+          "pssBytes": 214016,
+          "command": "sh"
+        }
+      ],
+      "redis": {
+        "usedMemoryBytes": 3571484,
+        "peakMemoryBytes": 3571780
+      }
+    }
+  ],
+  "summary": {
+    "startupBytes": 139902976,
+    "workloadBytes": 359288832,
+    "settledBytes": 331702272,
+    "maximumSampleBytes": 359288832,
+    "peakBytes": 363315200,
+    "growthBytes": -28749824,
+    "growthPercent": -8.001869648984803,
+    "settle": {
+      "count": 20,
+      "minBytes": 314212352,
+      "medianBytes": 330539008,
+      "p95Bytes": 334499840,
+      "maxBytes": 336347136,
+      "standardDeviationBytes": 6133186,
+      "trendBytesPerHour": 104841361.4920348,
+      "anonymous": {
+        "count": 20,
+        "minBytes": 299790336,
+        "medianBytes": 315551744,
+        "p95Bytes": 319115264,
+        "maxBytes": 320991232,
+        "standardDeviationBytes": 5808710,
+        "trendBytesPerHour": 98369881.24334472
+      },
+      "file": {
+        "count": 20,
+        "minBytes": 1617920,
+        "medianBytes": 1660928,
+        "p95Bytes": 1703936,
+        "maxBytes": 1708032,
+        "standardDeviationBytes": 27443,
+        "trendBytesPerHour": 569433.1522359062
+      }
+    },
+    "cpu": {
+      "startupToWorkload": {
+        "usageUsec": 29919491,
+        "userUsec": 25312427,
+        "systemUsec": 4607064,
+        "nrThrottled": 34,
+        "throttledUsec": 5830001
+      },
+      "workloadToSettled": {
+        "usageUsec": 7538220,
+        "userUsec": 6142342,
+        "systemUsec": 1395879,
+        "nrThrottled": 8,
+        "throttledUsec": 1392367
+      }
+    }
+  }
+}
