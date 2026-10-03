@@ -46,6 +46,10 @@ const interactionIterations = Number(process.env.RUNTIME_BENCHMARK_INTERACTION_I
 const pageIterations = Number(process.env.RUNTIME_BENCHMARK_PAGE_ITERATIONS ?? 20);
 const readyMarkerPolicy = process.env.RUNTIME_BENCHMARK_REQUIRE_READY_MARKERS;
 const requireImplementationMarkers = readyMarkerPolicy === "true";
+const memoryLimitMiB = Number(process.env.RUNTIME_BENCHMARK_MEMORY_MIB ?? 1024);
+if (!Number.isSafeInteger(memoryLimitMiB) || memoryLimitMiB <= 0) {
+  throw new Error("RUNTIME_BENCHMARK_MEMORY_MIB must be a positive integer");
+}
 const outputDirectory = path.resolve(process.env.RUNTIME_BENCHMARK_OUTPUT_DIR ?? "benchmark-results/docker-runtime");
 const fixtureWidgetKinds = (process.env.RUNTIME_BENCHMARK_WIDGET_KINDS ?? "").split(",").filter(Boolean);
 const routePaths = (
@@ -775,7 +779,7 @@ try {
     "--cpus",
     "2",
     "--memory",
-    "1g",
+    String(memoryLimitMiB * 1024 ** 2),
     "--network",
     isolationNetworkName,
     "--volume",
@@ -1708,7 +1712,7 @@ net.createServer((client) => {
       browser: browserProvenance,
       container: {
         cpuLimit: 2,
-        memoryLimitBytes: 1024 ** 3,
+        memoryLimitBytes: memoryLimitMiB * 1024 ** 2,
         network: { id: isolationNetworkId, internal: true, name: isolationNetworkName },
         node: containerNode,
       },
