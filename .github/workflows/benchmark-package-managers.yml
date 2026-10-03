@@ -123,3 +123,10 @@ jobs:
             benchmark-results/production-migration/
             !benchmark-results/production-migration/**/failure-*.html
           if-no-files-found: error
+      - name: Add production summary
+        if: always()
+        run: |
+          if test -f benchmark-results/production-migration/production-migration.json; then
+            python3 scripts/benchmarks/summarize-production-migration.py \
+              benchmark-results/production-migration/production-migration.json >> "$GITHUB_STEP_SUMMARY"
+          fi

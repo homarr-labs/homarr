@@ -20,6 +20,8 @@ measurements and logs, including failures. It does not publish images or modify 
 The existing CI workflow also exposes `operation=benchmark`, `ref` for the
 candidate, `benchmark_baseline`, and `benchmark_production`, so branch benchmarks
 can run before the new standalone workflow reaches the default branch.
+Set `benchmark_packages=false` for a production-only run. Benchmark concurrency
+is scoped to the pinned candidate and selected phases.
 
 Cold installs clear the isolated package cache and module directories; they do
 not flush the host's filesystem cache. Warm installs recreate modules using that
@@ -71,6 +73,10 @@ live provider latency. Each image runs as UID/GID 1000 with two CPUs and 1 GiB;
 PSS is collected as the same UID. Both variants use the baseline image for
 the excluded TCP ingress proxy, keeping its runtime constant. A hydrated search control is required before
 timing its first click. Failed attempts and eligibility reasons are preserved.
+Cancelled browser requests must be recovered by an exact successful response or
+the mounted query provider's successful data for the exact procedure and input.
+The latter accounts for streamed server hydration; it does not mutate the cache
+or accept transport failures. Cache recoveries are retained in the page samples.
 The comparison mode accepts different pinned source revisions and JavaScript
 engines while retaining image identity, cache continuity, workload, browser,
 and isolation checks. Existing Spotlight comparisons keep their original rules.
@@ -79,3 +85,16 @@ The archived initial workspace measurements exposed a Node shebang fallback
 when Bun was invoked from a workspace directory. Workspace typecheck and
 dotenv scripts now invoke Bun explicitly. Keep the initial measurements labeled
 as declared-script results; use the final forced-Bun runs for runtime comparisons.
+
+After runtime measurements, compare image size, layer bytes, single-thread zstd
+compression, and local imports:
+
+```sh
+python3 scripts/benchmarks/image-transfer.py \
+  benchmark-results/production-migration/production-migration.json \
+  --output benchmark-results/image-transfer
+```
+
+Local imports reuse the existing Docker layer store. They measure warm local
+import work, not a cold pull or registry/network transfer. The script never
+prunes shared images or data. Its exported archives are local scratch artifacts.
