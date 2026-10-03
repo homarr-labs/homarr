@@ -119,11 +119,11 @@ export const integrationDefs = {
   frigate: {
     httpAuth: { type: "adapter" },
     name: "Frigate",
-    secretKinds: [[]],
+    secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/frigate.svg",
     category: ["miscellaneous"],
     documentationSlug: "frigate",
-    defaultPort: 5000,
+    defaultPort: 8971,
   },
   komga: {
     httpAuth: { type: "apiKeyHeader", name: "X-API-Key" },

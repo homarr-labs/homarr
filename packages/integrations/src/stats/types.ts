@@ -1,4 +1,4 @@
-import type { RequestInit } from "undici";
+import type { Headers, RequestInit } from "undici";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 
 import type { IntegrationHttpAuthentication } from "../http-auth";
@@ -28,6 +28,8 @@ export interface StatsAuthenticationContext {
 export interface StatsFetchContext extends StatsAuthenticationContext {
   /** Relative service path. The shared client applies trusted certificates and a deadline. */
   requestAsync: (path: `/${string}`, init?: RequestInit) => Promise<unknown>;
+  /** Private response metadata for cookie-based exchanges; the body is discarded, never parsed or exposed. */
+  requestResponseAsync: (path: `/${string}`, init?: RequestInit) => Promise<{ status: number; headers: Headers }>;
   signal: AbortSignal;
 }
 
