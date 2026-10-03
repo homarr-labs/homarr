@@ -27,7 +27,8 @@ see [Managing integrations](/docs/management/integrations#configuration).
 <Alert type="warning">
 **Back up before upgrading from v1 to v2.** v2 migrates the existing database in place. For SQLite, this is
 `/appdata/db/db.sqlite` by default; v1 cannot use the upgraded database. Switching back to the v1 image alone is not a
-rollback.
+rollback. Image-rollback tools that revert only the container image do not restore the database; you still need
+the pre-upgrade backup.
 
 Stop Homarr before copying the complete `/appdata` directory or volume. Keep the pre-upgrade copy, your container
 configuration, and `SECRET_ENCRYPTION_KEY` securely. If you use an external PostgreSQL database, back it up with its
@@ -58,7 +59,8 @@ v2 uses fixed `200 × 200` logical-pixel cells and scales the whole board to fit
 width; choose a count that fits your content.
 
 Back up before changing columns: reducing the count can resize Containers and displace widgets. Check the layout in
-edit mode before saving. Increasing the count again does not automatically restore the previous arrangement.
+edit mode before saving. In v2.0.0, increasing the count again may not restore the previous arrangement after widgets
+or Containers have been displaced or resized; keep a backup rather than relying on reversing the column change.
 
 ### Uninstall
 
