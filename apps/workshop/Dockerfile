@@ -18,6 +18,7 @@ WORKDIR /app
 COPY bun.lock bunfig.toml package.json turbo.json ./
 COPY patches ./patches
 COPY apps/docs ./apps/docs
+COPY tools/motion-reel/three ./tools/motion-reel/three
 COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 COPY packages/custom-widgets ./packages/custom-widgets
