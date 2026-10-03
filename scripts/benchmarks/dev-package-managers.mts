@@ -35,8 +35,12 @@ try {
   await page.locator('button[type="submit"]').click();
   await page.locator(`[${marker}]:visible`).waitFor();
   await page.waitForFunction(() => document.querySelectorAll("[data-homarr-widget-ready]").length >= 8);
-  const firstBoardReadyMs = performance.now() - boardStart;
+  const firstBoardImplementationsMountedMs = performance.now() - boardStart;
+  await page.waitForLoadState("networkidle");
+  const firstBoardNetworkIdleMs = performance.now() - boardStart;
   const widgetCount = await page.locator("[data-homarr-widget-ready]").count();
+  const widgetErrorCount = await page.locator("[data-homarr-widget-error]").count();
+  if (widgetCount !== 8 || widgetErrorCount !== 0) throw new Error("Incomplete or failed demo board");
   const hmr: { elapsedMs: number; documentReloads: number }[] = [];
   for (let iteration = 0; iteration < 5; iteration++) {
     const token = `pm-benchmark-${iteration}`;
@@ -53,7 +57,19 @@ try {
   }
   await fs.writeFile(
     output,
-    JSON.stringify({ firstLoginPageMs, firstBoardReadyMs, widgetCount, hmr, errors }, null, 2) + "\n",
+    JSON.stringify(
+      {
+        firstLoginPageMs,
+        firstBoardImplementationsMountedMs,
+        firstBoardNetworkIdleMs,
+        widgetCount,
+        widgetErrorCount,
+        hmr,
+        errors,
+      },
+      null,
+      2,
+    ) + "\n",
   );
   if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
 } finally {

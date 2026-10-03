@@ -1,5 +1,9 @@
 # pnpm and Bun comparison
 
+The current target uses Bun for package management and Node for application,
+compiler, migration, and operational CLI runtimes. Archived full Bun runtime
+measurements describe a rejected configuration, not the current target.
+
 Run from the repository root with Node 24.18.0, pnpm 11.15.1, Bun 1.4.2,
 Python 3, GNU time, tar, and zstd. Install pnpm outside the Bun checkout:
 
@@ -30,8 +34,10 @@ source/cache/workload gate without repeating or inventing measurements. It needs
 only read access to Actions artifacts. Preserve the original capture run link.
 
 Cold installs clear the isolated package cache and module directories; they do
-not flush the host's filesystem cache. Warm installs recreate modules using that
-cache. Offline installs verify a restored tar/zstd cache. Local extraction timing
+not flush the host's filesystem or native prebuild/toolchain caches. Warm installs
+recreate modules using that cache. Offline package-manager flags verify a restored
+tar/zstd package cache; lifecycle scripts may use other caches or network access.
+Local extraction timing
 excludes GitHub upload/download latency. Each install mode has three trials.
 
 Workspace memory means GNU time's maximum process RSS for the existing typecheck
@@ -39,8 +45,8 @@ command: one first run and two incremental runs. This is neither an additive
 memory budget nor the production memory of a library. Libraries share their app's
 process. Failed commands remain in the JSON and cannot support speedup claims.
 The sharing inventory resolves every declared external dependency from every
-JavaScript workspace, grouping installed paths/inodes by name and version. Bun
-runtime built-ins are reported separately from installed packages.
+JavaScript workspace, grouping installed paths/inodes by name and version. The
+current inventory uses Node resolution for both dependency layouts.
 Standalone converter/showreel installs compare their original npm locks with Bun,
 and include CLI startup and showreel build measurements. The complete migration changes the dependency graph, so these measurements do
 not isolate package-manager implementation performance. Docs and CLI builds use
@@ -91,10 +97,32 @@ The comparison mode accepts different pinned source revisions and JavaScript
 engines while retaining image identity, cache continuity, workload, browser,
 and isolation checks. Existing Spotlight comparisons keep their original rules.
 
-The archived initial workspace measurements exposed a Node shebang fallback
-when Bun was invoked from a workspace directory. Workspace typecheck and
-dotenv scripts now invoke Bun explicitly. Keep the initial measurements labeled
-as declared-script results; use the final forced-Bun runs for runtime comparisons.
+## Development
+
+After preparing the two checkouts with `--phase install`, provide a seeded demo
+SQLite database normalized to the production driver's eight-widget fixture and
+an isolated Redis service:
+
+```sh
+python3 scripts/benchmarks/dev-package-managers.py \
+  --work-dir /tmp/homarr-package-comparison \
+  --fixture /tmp/seeded-eight-widget-demo.sqlite --redis-port 6387 \
+  --package-results benchmark-results/bun-migration/package-managers.json \
+  --node /path/to/node --bun /path/to/bun \
+  --pnpm /tmp/benchmark-tools/node_modules/pnpm/bin/pnpm.cjs \
+  --output benchmark-results/package-manager-dev
+```
+
+Three alternating trials per manager measure cold development launch, the first
+hydrated login page, authenticated dashboard readiness, five browser-confirmed
+HMR edits, and a restart retaining Next's development cache. Temporary source
+edits are restored. Memory sums proportional set size across the entire launch
+process group, including package-manager wrappers; the browser and Redis are
+excluded. Settled memory uses the last 30 seconds of a 60-second idle period.
+Keep timed local workloads sequential. Production memory uses the separate
+container harness and its longer settle period.
+
+## Image transfer
 
 After runtime measurements, compare image size, layer bytes, single-thread zstd
 compression, and local imports:

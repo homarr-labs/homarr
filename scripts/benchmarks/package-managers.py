@@ -94,7 +94,7 @@ class Benchmark:
                                       "pnpm": capture([args.node, args.pnpm, "--version"], cwd="/tmp")},
                          "revisions": {v["manager"]: v["sha"] for v in self.variants},
                          "nested_pnpm": "Task-owned PATH shim invokes the same pinned Node and pnpm entrypoint as top-level measurements",
-                         "method": "Sequential paired trials; alternate manager order. Cold means empty task-owned package cache and node_modules, not a dropped OS page cache. GNU time reports maximum process RSS including child resource accounting, not the sum of simultaneously running processes. Full repository graphs differ with the migration."}
+                         "method": "Sequential paired trials; alternate manager order. Cold means empty task-owned package cache and node_modules; OS page cache and native prebuild/toolchain caches are retained. Offline flags constrain package fetching, not lifecycle scripts or their network access. GNU time reports maximum process RSS including child resource accounting, not the sum of simultaneously running processes. Full repository graphs differ with the migration."}
         previous = self.output / "package-managers.json"
         if previous.exists():
             saved = json.loads(previous.read_text())

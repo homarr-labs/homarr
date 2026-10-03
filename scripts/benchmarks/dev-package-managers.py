@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Compare actual Node Next development startup, authenticated pages, HMR and process-group PSS."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -38,6 +39,7 @@ def main():
     parser.add_argument("--work-dir", required=True, help="Prepared pnpm and bun checkouts from package-managers.py")
     parser.add_argument("--fixture", required=True, help="Seeded eight-widget demo SQLite database")
     parser.add_argument("--output", required=True)
+    parser.add_argument("--package-results", required=True, help="package-managers.json identifying prepared source revisions")
     parser.add_argument("--node", required=True)
     parser.add_argument("--bun", required=True)
     parser.add_argument("--pnpm", required=True)
@@ -50,6 +52,8 @@ def main():
     work = Path(args.work_dir).resolve()
     harness = Path(__file__).with_suffix(".mts").resolve()
     result = {"method": "Sequential alternating managers; Node 24.18 for both. Cold removes .next; warm restarts retain the Next dev cache. First login and authenticated eight-widget board exercise compilation. Five DOM-confirmed source edits per server. PSS sums the entire dev launch process group, including package-manager wrappers, sampling once per second; browser and external Redis excluded. Sixty-second post-HMR idle period. No OS page-cache flush or production-memory claim.",
+              "revisions": json.loads(Path(args.package_results).read_text())["metadata"]["revisions"],
+              "harness_sha256": {file.name: hashlib.sha256(file.read_bytes()).hexdigest() for file in [Path(__file__), harness]},
               "versions": {"node": subprocess.check_output([args.node, "--version"], text=True).strip(),
                            "bun": subprocess.check_output([args.bun, "--version"], text=True).strip()}, "trials": []}
     destination = output / "dev-package-managers.json"
@@ -64,7 +68,10 @@ def main():
             database = output / f"{manager}-{repetition}.sqlite"
             shutil.copyfile(args.fixture, database)
             shutil.rmtree(workspace / "apps/nextjs/.next", ignore_errors=True)
-            env = os.environ.copy()
+            defaults = json.loads(subprocess.check_output(
+                [args.node, "-e", "const fs=require('fs');console.log(JSON.stringify(require(process.argv[1]).parse(fs.readFileSync(process.argv[2]))))",
+                 str(workspace / "node_modules/dotenv"), str(workspace / ".env.example")], text=True))
+            env = {**defaults, **os.environ}
             for key in ["TURBO_TOKEN", "TURBO_TEAM", "TURBO_API"]:
                 env.pop(key, None)
             env.update({"PATH": str(work / "manager-bin") + ":" + str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + env["PATH"],
@@ -74,7 +81,7 @@ def main():
                         "REDIS_HOST": "127.0.0.1", "REDIS_PORT": str(args.redis_port), "DEMO_MODE": "true",
                         "DEMO_READ_ONLY": "false", "UNSAFE_ENABLE_MOCK_INTEGRATION": "true", "NO_EXTERNAL_CONNECTION": "true",
                         "SECRET_ENCRYPTION_KEY": "0" * 64, "AUTH_SECRET": "local-package-manager-benchmark",
-                        "AUTH_URL": f"http://localhost:{args.port}", "LOG_LEVEL": "warn"})
+                        "AUTH_URL": f"http://localhost:{args.port}", "AUTH_PROVIDERS": "credentials", "LOG_LEVEL": "warn"})
             command = [args.node, args.pnpm, "run", "dev"]
             if manager == "bun":
                 command = [args.bun, "run", "dev"]
@@ -100,6 +107,8 @@ def main():
                         with browser_log.open("w") as browser_stream:
                             browser = subprocess.Popen([args.bun, str(harness)], env=browser_env, stdout=browser_stream, stderr=subprocess.STDOUT)
                             while browser.poll() is None:
+                                if server.poll() is not None:
+                                    raise RuntimeError(f"Dev server exited during browser measurements: {log}")
                                 samples.append(memory(server.pid))
                                 if time.monotonic() - started > 900:
                                     raise RuntimeError(f"Dev browser timed out: {browser_log}")
@@ -109,6 +118,8 @@ def main():
                         idle_started = time.monotonic()
                         settled = []
                         while time.monotonic() - idle_started < 60:
+                            if server.poll() is not None:
+                                raise RuntimeError(f"Dev server exited during memory settling: {log}")
                             sample = memory(server.pid)
                             samples.append(sample)
                             if time.monotonic() - idle_started >= 30:
