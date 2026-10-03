@@ -8,6 +8,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { chromium } from "@playwright/test";
 import type { BrowserContext, BrowserContextOptions, Page, Request } from "@playwright/test";
+import { serialize } from "superjson";
 
 import {
   getBrowserNetworkIsolationLaunchArgs,
@@ -282,6 +283,7 @@ type WidgetDataRequestTracker = {
   lastActivityAtMs: number;
   observedOperationCount: number;
   recoveryBalance: Map<string, number>;
+  cacheRecoveredAbortedRequests: Set<string>;
 };
 
 const trackWidgetDataRequests = (page: Page): WidgetDataRequestTracker => {
@@ -292,6 +294,7 @@ const trackWidgetDataRequests = (page: Page): WidgetDataRequestTracker => {
     lastActivityAtMs: performance.now(),
     observedOperationCount: 0,
     recoveryBalance: new Map(),
+    cacheRecoveredAbortedRequests: new Set(),
   };
   page.on("request", (request) => {
     if (request.method() !== "GET") return;
@@ -369,6 +372,54 @@ const trackWidgetDataRequests = (page: Page): WidgetDataRequestTracker => {
   return tracker;
 };
 
+const getSuccessfulWidgetQueryIdentitiesAsync = async (page: Page) => {
+  // Server hydration can fulfil a query while its duplicate HTTP request is
+  // cancelled. Inspect the mounted provider without changing its cache.
+  const queries = await page.evaluate(() => {
+    type Query = {
+      queryKey: [unknown, { type?: string; input?: unknown }?];
+      state: { status: string; data: unknown; dataUpdatedAt: number };
+    };
+    type Fiber = {
+      memoizedProps?: { client?: { getQueryCache?: () => { getAll: () => Query[] } } };
+      return?: Fiber | null;
+    };
+    const board = [...document.querySelectorAll("[data-homarr-dev-benchmark-board]")].find(
+      (element) => element instanceof HTMLElement && element.getClientRects().length > 0,
+    );
+    if (!board) return [];
+    const fiberKey = Object.keys(board).find((property) => property.startsWith("__reactFiber$"));
+    if (!fiberKey) return [];
+    let fiber: Fiber | null | undefined = (board as unknown as Record<string, Fiber>)[fiberKey];
+    while (fiber) {
+      const client = fiber.memoizedProps?.client;
+      if (typeof client?.getQueryCache === "function") {
+        return client
+          .getQueryCache()
+          .getAll()
+          .flatMap((query) => {
+            if (query.state.status !== "success" || query.state.data === undefined || query.state.dataUpdatedAt <= 0) {
+              return [];
+            }
+            const [queryPath, details] = query.queryKey;
+            if (!Array.isArray(queryPath) || details?.type !== "query") return [];
+            return [{ procedure: queryPath.join("."), input: details.input }];
+          });
+      }
+      fiber = fiber.return;
+    }
+    return [];
+  });
+  return new Set<string>(
+    queries.flatMap(({ procedure, input }: { procedure: string; input: unknown }) => {
+      if (!isRuntimeWidgetDataRequest("GET", procedure)) return [];
+      const url = new URL(`http://benchmark.invalid/api/trpc/${procedure}`);
+      url.searchParams.set("input", JSON.stringify(serialize(input)));
+      return getTrpcRequestIdentities(url.href).map(({ identity }) => identity);
+    }),
+  );
+};
+
 const waitForWidgetDataSettledAsync = async (
   page: Page,
   tracker: WidgetDataRequestTracker,
@@ -381,6 +432,20 @@ const waitForWidgetDataSettledAsync = async (
     }
     const unrecoveredRequests = getUnrecoveredWidgetDataRequests(tracker.recoveryBalance);
     const remainingQuietMs = widgetDataQuietMs - (performance.now() - tracker.lastActivityAtMs);
+    if (
+      !allowUnrecoveredAborts &&
+      unrecoveredRequests.length > 0 &&
+      tracker.activeRequests.size === 0 &&
+      remainingQuietMs <= 0
+    ) {
+      const successfulQueries = await getSuccessfulWidgetQueryIdentitiesAsync(page);
+      for (const identity of unrecoveredRequests) {
+        if (!successfulQueries.has(identity)) continue;
+        tracker.recoveryBalance.set(identity, 0);
+        tracker.cacheRecoveredAbortedRequests.add(identity);
+      }
+      if (getUnrecoveredWidgetDataRequests(tracker.recoveryBalance).length === 0) continue;
+    }
     if (
       tracker.observedOperationCount > 0 &&
       tracker.activeRequests.size === 0 &&
@@ -397,6 +462,7 @@ const waitForWidgetDataSettledAsync = async (
           observedOperationCount: tracker.observedOperationCount,
           quietWindowObserved: true,
           unrecoveredAbortedRequests: unrecoveredRequests,
+          cacheRecoveredAbortedRequests: [...tracker.cacheRecoveredAbortedRequests].toSorted(),
         };
       }
     }
@@ -1381,6 +1447,7 @@ net.createServer((client) => {
       ttfbMs: iterationMetrics.ttfbMs,
       widgetImplementationsMountedMs: iterationWidgetImplementationsMountedMs,
       widgetDataObservedOperationCount: iterationWidgetData.observedOperationCount,
+      widgetDataCacheRecoveredAbortedRequests: iterationWidgetData.cacheRecoveredAbortedRequests,
       widgetDataSettledMs: iterationWidgetDataSettledMs,
     });
     if (iterationErrors.length > 0) {

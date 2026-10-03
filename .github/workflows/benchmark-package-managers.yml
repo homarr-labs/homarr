@@ -13,6 +13,9 @@ on:
       production:
         type: boolean
         default: false
+      package_managers:
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
       baseline:
@@ -26,12 +29,17 @@ on:
         description: Also benchmark production builds and dashboard runtime
         type: boolean
         default: false
+      package_managers:
+        description: Benchmark installs, workspaces, tools, and lockfile conflicts
+        type: boolean
+        default: true
 
 permissions:
   contents: read
 
 jobs:
   benchmark:
+    if: inputs.package_managers
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
@@ -111,5 +119,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: production-benchmarks-${{ github.run_id }}
-          path: benchmark-results/production-migration/
+          path: |
+            benchmark-results/production-migration/
+            !benchmark-results/production-migration/**/failure-*.html
           if-no-files-found: error

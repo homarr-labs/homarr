@@ -57,7 +57,11 @@ def main():
         rows = [r for records in variants.values() for r in records]
         lines.append(f"| {workspace} | " + " | ".join(values) + f" | {sum(r['exit_code'] == 0 for r in rows)} / {len(rows)} |")
     lines += ["", "## Disk and sharing", "", "Sizes deduplicate hardlinks by device/inode and include directory blocks. Cache archives use local tar/zstd; restore timings exclude network transfer.", ""]
-    for manager, sizes in metadata.get("installation_sizes", {}).items():
+    installation_sizes = metadata.get("installation_sizes", {})
+    if metadata.get("dependency_preparation"):
+        lines.append("Installed trees were reused for this workspace/build run. Complete cache and install disk comparisons are reported in the install benchmark.")
+        installation_sizes = {}
+    for manager, sizes in installation_sizes.items():
         lines.append(f"- {manager}: modules {sizes['modules']['allocated_bytes'] / 1024**2:.1f} MiB; cache {sizes['cache']['allocated_bytes'] / 1024**2:.1f} MiB; combined unique-inode allocation {sizes['cache_and_modules_unique_inodes']['allocated_bytes'] / 1024**2:.1f} MiB.")
     for manager, lock in metadata.get("lockfiles", {}).items():
         lines.append(f"- {manager} lock: {lock['bytes']:,} bytes, {lock['lines']:,} lines.")
