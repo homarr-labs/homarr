@@ -1,0 +1,30 @@
+{
+  "firstLoginPageMs": 7731.729598,
+  "firstBoardImplementationsMountedMs": 7790.160795,
+  "firstBoardNetworkIdleMs": 9622.169340999999,
+  "widgetCount": 8,
+  "widgetErrorCount": 0,
+  "hmr": [
+    {
+      "elapsedMs": 410.37721800000145,
+      "documentReloads": 0
+    },
+    {
+      "elapsedMs": 175.485811999999,
+      "documentReloads": 0
+    },
+    {
+      "elapsedMs": 144.5185590000001,
+      "documentReloads": 0
+    },
+    {
+      "elapsedMs": 199.2642369999994,
+      "documentReloads": 0
+    },
+    {
+      "elapsedMs": 151.19300999999905,
+      "documentReloads": 0
+    }
+  ],
+  "errors": []
+}

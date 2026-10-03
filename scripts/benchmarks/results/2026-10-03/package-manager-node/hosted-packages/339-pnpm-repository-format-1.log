@@ -1,0 +1,323 @@
+$ turbo format --continue -- --check
+
+   • Packages in scope: @homarr/analytics, @homarr/api, @homarr/auth, @homarr/boards, @homarr/cli, @homarr/common, @homarr/core, @homarr/cron-job-status, @homarr/cron-jobs, @homarr/cron-jobs-core, @homarr/custom-widgets, @homarr/db, @homarr/definitions, @homarr/docker, @homarr/docs, @homarr/form, @homarr/forms-collection, @homarr/github, @homarr/icons, @homarr/image-proxy, @homarr/integrations, @homarr/modals, @homarr/modals-collection, @homarr/nextjs, @homarr/notifications, @homarr/onboarding, @homarr/ping, @homarr/redis, @homarr/request-handler, @homarr/server-settings, @homarr/settings, @homarr/spotlight, @homarr/tasks, @homarr/translation, @homarr/tsconfig, @homarr/ui, @homarr/validation, @homarr/websocket, @homarr/widgets, @homarr/workshop
+   • Running format in 40 packages
+   • Remote caching disabled
+
+::group::@homarr/notifications:format
+cache miss, executing 60f5482ecb436945
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 99ms on 5 files using 4 threads.
+::endgroup::
+::group::@homarr/api:format
+cache miss, executing 988c9503f6de6cb6
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 350ms on 232 files using 4 threads.
+::endgroup::
+::group::@homarr/db:format
+cache miss, executing fbb587062ad1b27e
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 327ms on 109 files using 4 threads.
+::endgroup::
+::group::@homarr/websocket:format
+cache miss, executing ec94f83397b7dd2d
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 142ms on 3 files using 4 threads.
+::endgroup::
+::group::@homarr/redis:format
+cache miss, executing f6e257eb5f3ecf2a
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 177ms on 8 files using 4 threads.
+::endgroup::
+::group::@homarr/core:format
+cache miss, executing 6c90867916fec820
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 166ms on 40 files using 4 threads.
+::endgroup::
+::group::@homarr/server-settings:format
+cache miss, executing dae9ed85ab4b1762
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 157ms on 4 files using 4 threads.
+::endgroup::
+::group::@homarr/settings:format
+cache miss, executing 8fba8e6c37eb3af6
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 98ms on 7 files using 4 threads.
+::endgroup::
+::group::@homarr/widgets:format
+cache miss, executing 49f10b0ad81a2598
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 484ms on 482 files using 4 threads.
+::endgroup::
+::group::@homarr/nextjs:format
+cache miss, executing 24e68ed4a4f6f847
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 1163ms on 738 files using 4 threads.
+::endgroup::
+::group::@homarr/modals-collection:format
+cache miss, executing c17123462d86d4d3
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 91ms on 13 files using 4 threads.
+::endgroup::
+::group::@homarr/common:format
+cache miss, executing 0c08a9a4e0974998
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 96ms on 52 files using 4 threads.
+::endgroup::
+::group::@homarr/icons:format
+cache miss, executing 70591490f1d2a782
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 106ms on 14 files using 4 threads.
+::endgroup::
+::group::@homarr/form:format
+cache miss, executing f425b107ec1f4252
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 87ms on 5 files using 4 threads.
+::endgroup::
+::group::@homarr/image-proxy:format
+cache miss, executing 9348c2b30571b820
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 83ms on 3 files using 4 threads.
+::endgroup::
+::group::@homarr/modals:format
+cache miss, executing bfe0c421838d8053
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 114ms on 15 files using 4 threads.
+::endgroup::
+::group::@homarr/spotlight:format
+cache miss, executing 88e3bebb64ca9224
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 143ms on 58 files using 4 threads.
+::endgroup::
+::group::@homarr/analytics:format
+cache miss, executing f6a4f8b5fed68577
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 72ms on 8 files using 4 threads.
+::endgroup::
+::group::@homarr/ui:format
+cache miss, executing 8277305a67d9219c
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 90ms on 68 files using 4 threads.
+::endgroup::
+::group::@homarr/boards:format
+cache miss, executing ef06ca1f2d319897
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 104ms on 9 files using 4 threads.
+::endgroup::
+::group::@homarr/ping:format
+cache miss, executing 399427691127a08c
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 70ms on 4 files using 4 threads.
+::endgroup::
+::group::@homarr/translation:format
+cache miss, executing ab50754019cbc07b
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 93ms on 23 files using 4 threads.
+::endgroup::
+::group::@homarr/request-handler:format
+cache miss, executing 73a9f079775c2111
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 160ms on 72 files using 4 threads.
+::endgroup::
+::group::@homarr/cron-jobs-core:format
+cache miss, executing 3b5a5547880a039d
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 82ms on 10 files using 4 threads.
+::endgroup::
+::group::@homarr/tasks:format
+cache miss, executing ab8c6ad2b7bf4f90
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 74ms on 6 files using 4 threads.
+::endgroup::
+::group::@homarr/onboarding:format
+cache miss, executing ca3eea0533c54202
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 95ms on 24 files using 4 threads.
+::endgroup::
+::group::@homarr/workshop:format
+cache miss, executing 84593982b2e960f1
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 104ms on 8 files using 4 threads.
+::endgroup::
+::group::@homarr/cli:format
+cache miss, executing d213be5721cd2db1
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 101ms on 15 files using 4 threads.
+::endgroup::
+::group::@homarr/docker:format
+cache miss, executing 550b183b246d2901
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 110ms on 17 files using 4 threads.
+::endgroup::
+::group::@homarr/auth:format
+cache miss, executing 162bbd57f88423f2
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 145ms on 50 files using 4 threads.
+::endgroup::
+::group::@homarr/integrations:format
+cache miss, executing cc93a4295a7b860f
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 253ms on 270 files using 4 threads.
+::endgroup::
+::group::@homarr/validation:format
+cache miss, executing 240139296a563896
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 97ms on 25 files using 4 threads.
+::endgroup::
+::group::@homarr/forms-collection:format
+cache miss, executing 2023457cc3a38a38
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 110ms on 14 files using 4 threads.
+::endgroup::
+::group::@homarr/cron-jobs:format
+cache miss, executing 8954200c9e3f391f
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 88ms on 9 files using 4 threads.
+::endgroup::
+::group::@homarr/custom-widgets:format
+cache miss, executing e0019bdcde6561d7
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 242ms on 143 files using 4 threads.
+::endgroup::
+::group::@homarr/definitions:format
+cache miss, executing 4c4e81310b31ff3d
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 94ms on 41 files using 4 threads.
+::endgroup::
+::group::@homarr/cron-job-status:format
+cache miss, executing 9f04b9c0b39ddda6
+$ oxfmt . --check
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 71ms on 5 files using 4 threads.
+::endgroup::
+[;31m@homarr/docs:format[;0m
+cache miss, executing 871d13747ba3d53e
+$ oxfmt . --check
+Checking formatting...
+
+docs/getting-started/installation/helm.md (467ms)
+
+Format issues found in above 1 files. Run without `--check` to fix.
+Finished in 2581ms on 566 files using 4 threads.
+[ELIFECYCLE] Command failed with exit code 1.
+@homarr/docs#format:  WARNING  command finished with error, but continuing...
+::error::command (/home/runner/work/_temp/package-manager-comparison/pnpm/apps/docs) /home/runner/work/_temp/package-manager-comparison/manager-bin/pnpm run format --check exited (1)
+@homarr/docs#format:  ERROR  command (/home/runner/work/_temp/package-manager-comparison/pnpm/apps/docs) /home/runner/work/_temp/package-manager-comparison/manager-bin/pnpm run format --check exited (1)
+
+ Tasks:    37 successful, 38 total
+Cached:    0 cached, 38 total
+  Time:    12.49s 
+Failed:    @homarr/docs#format
+
+ ERROR  run failed: command  exited (1)
+[ELIFECYCLE] Command failed with exit code 1.

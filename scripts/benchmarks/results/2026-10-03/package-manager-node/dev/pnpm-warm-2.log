@@ -1,0 +1,399 @@
+[WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+$ pnpm -F nextjs dev
+$ pnpm with-env next dev
+$ dotenv -e ../../.env -- next dev
+▲ Next.js 16.3.6 (Turbopack)
+- Local:         http://localhost:3197
+- Network:       http://94.130.203.146:3197
+✓ Ready in 398ms
+✓ Running next.config.ts took 1491ms
+- Experiments (use with caution):
+  · optimizePackageImports
+
+ GET /auth/login 200 in 4.4s (next.js: 2.7s, proxy.ts: 341ms, application-code: 1295ms)
+ GET /api/auth/session 200 in 1589ms (next.js: 1412ms, application-code: 177ms)
+ GET /api/auth/providers 200 in 938ms (next.js: 758ms, application-code: 180ms)
+ GET /api/auth/session 200 in 137ms (next.js: 125ms, application-code: 12ms)
+ GET /api/auth/csrf 200 in 150ms (next.js: 139ms, application-code: 11ms)
+ POST /api/auth/callback/credentials? 200 in 156ms (next.js: 4ms, application-code: 152ms)
+ GET /api/auth/session 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ POST /auth/login 200 in 1024ms (next.js: 195ms, proxy.ts: 11ms, application-code: 818ms)
+  └─ ƒ revalidatePathActionAsync("/") in 3ms packages/common/src/revalidate-path-action.ts
+ GET /auth/login 200 in 1037ms (next.js: 180ms, proxy.ts: 12ms, application-code: 846ms)
+ GET /api/auth/session 200 in 146ms (next.js: 131ms, application-code: 15ms)
+ GET /api/auth/session 200 in 13ms (next.js: 4ms, application-code: 10ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+ GET /api/trpc/assistant.getRuntimeOptions,assistant.getRuntimeOptions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%7D 200 in 1622ms (next.js: 1451ms, application-code: 170ms)
+ GET /api/trpc/assistant.listThreads?input=%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D 200 in 1634ms (next.js: 1453ms, application-code: 182ms)
+Error: Redis connection readiness timed out
+    at Timeout.<anonymous> (../../packages/redis/src/lib/connection.ts:44:45)
+  42 |       const onError = () => finish(new Error("Redis connection is unavailable"));
+  43 |       const onEnd = () => finish(new Error("Redis connection ended"));
+> 44 |       const timer = setTimeout(() => finish(new Error("Redis connection readiness timed out")), 200);
+     |                                             ^
+  45 |       timer.unref();
+  46 |       client.once("ready", onReady);
+  47 |       client.once("error", onError);
+Encountered an error attempting to restore client cache from persisted location. As a precaution, the persisted cache will be discarded.
+ GET / 200 in 2.7s (next.js: 1630ms, proxy.ts: 9ms, application-code: 1062ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+ GET /api/auth/session 200 in 144ms (next.js: 131ms, application-code: 13ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+ GET /api/trpc/assistant.listThreads?input=%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D 200 in 166ms (next.js: 147ms, application-code: 20ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+ GET /api/trpc/assistant.getRuntimeOptions,assistant.getRuntimeOptions,board.getBoardByName?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22name%22%3A%22default%22%7D%7D%7D 200 in 75ms (next.js: 10ms, application-code: 65ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+ GET /api/trpc/integration.byIds,widget.healthMonitoring.getSystemHealthStatus?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%5B%22qa8j34zm4ex9vnh1sknsjf8o%22%5D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22integrationIds%22%3A%5B%22qa8j34zm4ex9vnh1sknsjf8o%22%5D%7D%7D%7D 200 in 122ms (next.js: 5ms, application-code: 117ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+ GET /api/auth/session 200 in 145ms (next.js: 131ms, application-code: 14ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import trace:
+  external:
+    [externals]/node:crypto [external]
+    ./node_modules/undici/lib/web/fetch/body.js [App Route]
+    ./node_modules/undici/lib/web/fetch/response.js [App Route]
+    ./node_modules/undici/index.js [App Route]
+    ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+    ./packages/core/src/infrastructure/http/index.ts [App Route]
+    ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+    ./packages/auth/configuration.ts [App Route]
+    ./packages/auth/next.ts [App Route]
+    ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+
+
+ GET /api/trpc/updateChecker.getAvailableUpdates?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%7D 200 in 154ms (next.js: 117ms, application-code: 37ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+ GET / 200 in 331ms (next.js: 114ms, proxy.ts: 7ms, application-code: 211ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+✓ Compiled in 1281ms
+ GET / 200 in 301ms (next.js: 67ms, proxy.ts: 5ms, application-code: 229ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+✓ Compiled in 184ms
+ GET / 200 in 315ms (next.js: 60ms, proxy.ts: 6ms, application-code: 249ms)
+⚠ [externals]/node:crypto
+Warning: unexpected export *
+export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+
+Import traces:
+  #1 [external]:
+    [externals]/node:crypto [external]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+    ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+
+  #2 [external]:
+    [externals]/node:crypto [external]
+    ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+    ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+    ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+
+
+ GET / 200 in 281ms (next.js: 133ms, proxy.ts: 7ms, application-code: 141ms)
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '3477090552'
+}
+✓ Compiled in 724ms
+[ELIFECYCLE] Command failed.
+[ELIFECYCLE] Command failed.
+/tmp/homarr-bun-pm-node-comparison/pnpm/apps/nextjs:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @homarr/nextjs@0.1.0 dev: `pnpm with-env next dev`
+Command failed with signal "SIGTERM"
+[?25h

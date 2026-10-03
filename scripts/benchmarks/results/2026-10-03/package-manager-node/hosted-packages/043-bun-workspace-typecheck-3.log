@@ -1,0 +1,4 @@
+$ node ../../node_modules/next/dist/bin/next typegen && tsc --noEmit
+[MDX] generated files in 4.184148999999991ms
+Generating route types...
+✓ Types generated successfully

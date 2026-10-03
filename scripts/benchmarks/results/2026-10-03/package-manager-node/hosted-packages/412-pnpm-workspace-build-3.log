@@ -1,0 +1,74 @@
+$ pnpm validate:coverage && next build
+$ tsx ./scripts/validate-docs-coverage.ts
+Integration and widget documentation coverage passed
+▲ Next.js 16.3.6 (Turbopack)
+[MDX] generated files in 5.008858000000032ms
+✓ Running next.config.mjs took 265ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.6s
+  Running TypeScript ...
+  Finished TypeScript in 1281ms ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/579) ...
+  Generating static pages using 3 workers (144/579) 
+  Generating static pages using 3 workers (289/579) 
+  Generating static pages using 3 workers (434/579) 
+✓ Generating static pages using 3 workers (579/579) in 14.0s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about-us
+├ ○ /api-reference
+├   /api-reference/[...slug]
+│ ├ ● /api-reference/apps/appRouter-getPaginated
+│ ├ ● /api-reference/apps/appRouter-all
+│ ├ ● /api-reference/apps/appRouter-create
+│ └ ● [+40 more paths]
+├ ○ /api/search
+├ ○ /blog
+├   /blog/[...slug]
+│ ├ ● /blog/documentation-migration
+│ ├ ● /blog/translations
+│ ├ ● /blog/2023/01/11/version0.11
+│ └ ● [+8 more paths]
+├ ○ /blog/rss.xml
+├   /docs/[[...slug]]
+│ ├ ● /docs
+│ ├ ● /docs/advanced
+│ ├ ● /docs/advanced/mysql-to-sqlite
+│ └ ● [+221 more paths]
+├   /docs/category/[category]
+│ ├ ● /docs/category/advanced
+│ ├ ● /docs/category/developer-guides
+│ ├ ● /docs/category/community
+│ └ ● [+5 more paths]
+├ ○ /llms-full.txt
+├   /llms.mdx/api-reference/[...slug]
+│ ├ ● /llms.mdx/api-reference/apps/appRouter-getPaginated/content.md
+│ ├ ● /llms.mdx/api-reference/apps/appRouter-all/content.md
+│ ├ ● /llms.mdx/api-reference/apps/appRouter-create/content.md
+│ └ ● [+40 more paths]
+├   /llms.mdx/blog/[...slug]
+│ ├ ● /llms.mdx/blog/translations/content.md
+│ ├ ● /llms.mdx/blog/2023/01/11/version0.11/content.md
+│ ├ ● /llms.mdx/blog/2023/04/16/version0.12-more-widgets/content.md
+│ └ ● [+8 more paths]
+├   /llms.mdx/docs/[[...slug]]
+│ ├ ● /llms.mdx/docs/content.md
+│ ├ ● /llms.mdx/docs/advanced/content.md
+│ ├ ● /llms.mdx/docs/advanced/mysql-to-sqlite/content.md
+│ └ ● [+221 more paths]
+├ ○ /llms.txt
+├ ○ /robots.txt
+├ ○ /search
+├ ○ /sitemap.xml
+├ ○ /workshop
+└ ○ /workshop/admin
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+

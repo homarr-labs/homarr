@@ -1,0 +1,18 @@
+Scope: all 41 workspace projects
+✓ Lockfile passes supply-chain policies (verified 3m ago)
+Lockfile is up to date, resolution step is skipped
+Packages: +2177
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 0, reused 1, downloaded 0, added 0
+Progress: resolved 0, reused 2056, downloaded 0, added 155
+Progress: resolved 0, reused 2056, downloaded 0, added 263
+Progress: resolved 0, reused 2056, downloaded 0, added 710
+Progress: resolved 0, reused 2056, downloaded 0, added 1336
+Progress: resolved 0, reused 2056, downloaded 0, added 2177
+Progress: resolved 0, reused 2056, downloaded 0, added 2177, done
+node_modules/bcrypt install$ node-gyp-build
+node_modules/bcrypt install: Done
+
+packages/definitions postinstall$ tsx ./src/docs/codegen.ts
+packages/definitions postinstall: Done
+Done in 8.3s using pnpm v11.15.1

@@ -1,0 +1,4 @@
+$ next typegen && tsc --noEmit
+[MDX] generated files in 3.865304999999978ms
+Generating route types...
+✓ Types generated successfully

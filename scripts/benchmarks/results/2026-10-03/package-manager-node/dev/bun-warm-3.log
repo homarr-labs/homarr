@@ -1,0 +1,365 @@
+$ bun run --filter @homarr/nextjs dev
+@homarr/nextjs dev: $ dotenv -e ../../.env -- node ../../node_modules/next/dist/bin/next dev
+@homarr/nextjs dev: ▲ Next.js 16.3.6 (Turbopack)
+@homarr/nextjs dev: - Local:         http://localhost:3197
+@homarr/nextjs dev: - Network:       http://94.130.203.146:3197
+@homarr/nextjs dev: ✓ Ready in 327ms
+@homarr/nextjs dev: ✓ Running next.config.ts took 1198ms
+@homarr/nextjs dev: - Experiments (use with caution):
+@homarr/nextjs dev:   · optimizePackageImports
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /auth/login 200 in 4.5s (next.js: 2.8s, proxy.ts: 353ms, application-code: 1322ms)
+@homarr/nextjs dev:  GET /api/auth/session 200 in 1678ms (next.js: 1412ms, application-code: 266ms)
+@homarr/nextjs dev:  GET /api/auth/providers 200 in 896ms (next.js: 620ms, application-code: 275ms)
+@homarr/nextjs dev:  GET /api/auth/csrf 200 in 62ms (next.js: 44ms, application-code: 18ms)
+@homarr/nextjs dev:  GET /api/auth/session 200 in 66ms (next.js: 52ms, application-code: 14ms)
+@homarr/nextjs dev:  POST /api/auth/callback/credentials? 200 in 173ms (next.js: 6ms, application-code: 167ms)
+@homarr/nextjs dev:  GET /api/auth/session 200 in 18ms (next.js: 3ms, application-code: 15ms)
+@homarr/nextjs dev:  POST /auth/login 200 in 1059ms (next.js: 82ms, proxy.ts: 104ms, application-code: 873ms)
+@homarr/nextjs dev:   └─ ƒ revalidatePathActionAsync("/") in 2ms packages/common/src/revalidate-path-action.ts
+@homarr/nextjs dev:  GET /auth/login 200 in 975ms (next.js: 183ms, proxy.ts: 16ms, application-code: 776ms)
+@homarr/nextjs dev:  GET /api/auth/session 200 in 53ms (next.js: 34ms, application-code: 19ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/auth/session 200 in 255ms (next.js: 8ms, application-code: 247ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/trpc/assistant.listThreads?input=%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D 200 in 1605ms (next.js: 1424ms, application-code: 182ms)
+@homarr/nextjs dev:  GET /api/trpc/assistant.getRuntimeOptions,assistant.getRuntimeOptions?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%7D 200 in 1619ms (next.js: 1418ms, application-code: 201ms)
+@homarr/nextjs dev: Error: Redis connection readiness timed out
+@homarr/nextjs dev:     at Timeout.<anonymous> (../../packages/redis/src/lib/connection.ts:44:45)
+@homarr/nextjs dev:   42 |       const onError = () => finish(new Error("Redis connection is unavailable"));
+@homarr/nextjs dev:   43 |       const onEnd = () => finish(new Error("Redis connection ended"));
+@homarr/nextjs dev: > 44 |       const timer = setTimeout(() => finish(new Error("Redis connection readiness timed out")), 200);
+@homarr/nextjs dev:      |                                             ^
+@homarr/nextjs dev:   45 |       timer.unref();
+@homarr/nextjs dev:   46 |       client.once("ready", onReady);
+@homarr/nextjs dev:   47 |       client.once("error", onError);
+@homarr/nextjs dev: Encountered an error attempting to restore client cache from persisted location. As a precaution, the persisted cache will be discarded.
+@homarr/nextjs dev:  GET / 200 in 2.4s (next.js: 1610ms, proxy.ts: 5ms, application-code: 782ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/auth/session 200 in 61ms (next.js: 47ms, application-code: 14ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/trpc/assistant.listThreads?input=%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D 200 in 69ms (next.js: 50ms, application-code: 20ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/trpc/assistant.getRuntimeOptions,assistant.getRuntimeOptions,board.getBoardByName?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%2C%221%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%2C%222%22%3A%7B%22json%22%3A%7B%22name%22%3A%22default%22%7D%7D%7D 200 in 79ms (next.js: 8ms, application-code: 72ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/trpc/integration.byIds,widget.healthMonitoring.getSystemHealthStatus?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%5B%22qa8j34zm4ex9vnh1sknsjf8o%22%5D%7D%2C%221%22%3A%7B%22json%22%3A%7B%22integrationIds%22%3A%5B%22qa8j34zm4ex9vnh1sknsjf8o%22%5D%7D%7D%7D 200 in 120ms (next.js: 8ms, application-code: 111ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/auth/session 200 in 68ms (next.js: 53ms, application-code: 15ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import trace:
+@homarr/nextjs dev:   external:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/body.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/lib/web/fetch/response.js [App Route]
+@homarr/nextjs dev:     ./node_modules/undici/index.js [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/http-agent.ts [App Route]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/http/index.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/providers/oidc/oidc-provider.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/configuration.ts [App Route]
+@homarr/nextjs dev:     ./packages/auth/next.ts [App Route]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/api/trpc/[trpc]/route.ts [App Route]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET /api/trpc/updateChecker.getAvailableUpdates?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%2C%22v%22%3A1%7D%7D%7D 200 in 84ms (next.js: 50ms, application-code: 34ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET / 200 in 326ms (next.js: 122ms, proxy.ts: 8ms, application-code: 196ms)
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET / 200 in 278ms (next.js: 72ms, proxy.ts: 8ms, application-code: 198ms)
+@homarr/nextjs dev: ✓ Compiled in 1575ms
+@homarr/nextjs dev: ⚠ [externals]/node:crypto
+@homarr/nextjs dev: Warning: unexpected export *
+@homarr/nextjs dev: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+@homarr/nextjs dev: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+@homarr/nextjs dev: 
+@homarr/nextjs dev: Import traces:
+@homarr/nextjs dev:   #1 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/boards/(content)/(home)/_definition.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/(home)/(board)/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev:   #2 [external]:
+@homarr/nextjs dev:     [externals]/node:crypto [external]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/redis-transport.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/transports/index.ts [Server Component]
+@homarr/nextjs dev:     ./packages/core/src/infrastructure/logs/index.ts [Server Component]
+@homarr/nextjs dev:     ./apps/nextjs/src/app/[locale]/layout.tsx [Server Component]
+@homarr/nextjs dev: 
+@homarr/nextjs dev: 
+@homarr/nextjs dev:  GET / 200 in 234ms (next.js: 53ms, proxy.ts: 5ms, application-code: 176ms)
+@homarr/nextjs dev: ✓ Compiled in 452ms
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)

@@ -1,0 +1,2 @@
+Usage: node src/cli.mjs --output /output/db.sqlite --homarr-stopped
+Set MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE; optional MYSQL_PORT (3306), MYSQL_SSL_CA (PEM file). Supports Homarr v1.77.1 only.

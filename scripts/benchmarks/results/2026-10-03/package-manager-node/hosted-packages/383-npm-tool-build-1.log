@@ -1,0 +1,8 @@
+
+> build
+> esbuild src/main.ts --bundle --format=esm --outfile=dist/reel.js --target=chrome120 --loader:.svg=text
+
+
+  dist/reel.js  1.5mb ⚠️
+
+⚡ Done in 82ms
