@@ -8,7 +8,7 @@ import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { handleTransactionsAsync, eq, inArray, like, or } from "@homarr/db";
+import { handleTransactionsAsync, and, eq, inArray, like, notExists, or } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   apps,
@@ -25,6 +25,7 @@ import {
   sectionLayouts,
   sections,
   serverSettings,
+  users,
 } from "@homarr/db/schema";
 import {
   emptySuperJSON,
@@ -145,6 +146,23 @@ export const onboardRouter = createTRPCRouter({
       throw new TRPCError({ code: "PRECONDITION_FAILED", message: "The welcome step is already complete." });
     }
     await nextOnboardingStepAsync(ctx.db);
+  }),
+
+  returnToWelcome: onboardingProcedure.requiresStep("user").mutation(async ({ ctx }) => {
+    const returnedRows = await ctx.db
+      .update(onboarding)
+      .set({ step: "start", previousStep: null })
+      .where(
+        and(
+          eq(onboarding.step, "user"),
+          eq(onboarding.previousStep, "start"),
+          notExists(ctx.db.select({ id: users.id }).from(users)),
+        ),
+      )
+      .returning({ id: onboarding.id });
+    if (returnedRows.length !== 1) {
+      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Administrator setup can no longer be restarted." });
+    }
   }),
 
   testIntegration: onboardingProcedure
