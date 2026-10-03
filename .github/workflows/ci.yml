@@ -142,7 +142,7 @@ jobs:
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             scope=()
           fi
-          bun run turbo run lint typecheck build build:standalone "${scope[@]}" --continue=dependencies-successful --concurrency=2
+          bun run turbo run lint typecheck build assemble:standalone "${scope[@]}" --continue=dependencies-successful --concurrency=2
 
       - name: Validate workspace configuration
         run: bun run lint:ws
@@ -155,7 +155,7 @@ jobs:
 
       - name: Validate Custom Widget bundle budget
         run: |
-          bun run turbo run build build:standalone --filter=@homarr/nextjs
+          bun run turbo run build assemble:standalone --filter=@homarr/nextjs
           bun run check:custom-widget-bundle
 
   container:

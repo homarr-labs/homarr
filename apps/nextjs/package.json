@@ -12,7 +12,8 @@
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "build:standalone": "node scripts/cache-standalone.mjs"
+    "build:standalone": "node scripts/cache-standalone.mjs",
+    "assemble:standalone": "node scripts/assemble-standalone.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "catalog:",

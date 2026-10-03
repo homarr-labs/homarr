@@ -23,6 +23,11 @@ if not args.local and not all(os.environ.get(name) for name in credentials):
     parser.error('All four TURBO remote cache credentials are required')
 env = dict(os.environ, CI='true', SKIP_ENV_VALIDATION='true', TURBO_TELEMETRY_DISABLED='1', NEXT_TELEMETRY_DISABLED='1')
 
+# A simultaneous CI upload for the same inputs can legitimately have different
+# Next profiling metadata or a random build ID. Verify our own uploaded bytes.
+if not args.local:
+    env['TURBO_TEAM'] += '-benchmark-' + os.environ.get('GITHUB_RUN_ID', str(time.time_ns()))
+
 outputs = {
     '@homarr/nextjs#build': ['apps/nextjs/.next', 'apps/nextjs/next-env.d.ts'],
     '@homarr/nextjs#build:standalone': ['apps/nextjs/.next/standalone'],
@@ -81,11 +86,11 @@ def sanitize(log):
 
 records = []
 source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
-report = {'source': source, 'platform': env.get('TURBO_PLATFORM'), 'mode': 'local' if args.local else 'signed-remote', 'records': records}
+report = {'source': source, 'platform': env.get('TURBO_PLATFORM'), 'mode': 'local' if args.local else 'signed-remote', 'cacheNamespace': 'isolated-per-run', 'records': records}
 try:
     with tempfile.TemporaryDirectory(prefix='homarr-turbo-remote-') as cache:
         filters = ['--filter=' + package for package in sorted({task.split('#')[0] for task in outputs})]
-        command = ['bun', 'run', 'turbo', 'run', 'build', 'build:standalone', *filters, '--concurrency=2', '--summarize', '--output-logs=errors-only', '--cache-dir=' + cache]
+        command = ['bun', 'run', 'turbo', 'run', 'build', 'assemble:standalone', *filters, '--concurrency=2', '--summarize', '--output-logs=errors-only', '--cache-dir=' + cache]
         for phase in ['prime', 'local-restore', 'remote-restore-1', 'remote-restore-2', 'remote-restore-3']:
             if args.local and phase.startswith('remote'):
                 continue
@@ -108,7 +113,8 @@ try:
             summary = json.loads(summary_file.read_text())
             tasks = [{key: task.get(key) for key in ['taskId', 'hash', 'cache', 'execution']} for task in summary['tasks'] if task['taskId'] in outputs]
             artifact_sizes = {task['taskId']: sum(p.stat().st_size for p in Path(cache).glob(task['hash'] + '*.tar.zst')) for task in tasks}
-            record = {'phase': phase, 'elapsedSeconds': elapsed, 'tasks': tasks, 'archiveBytes': artifact_sizes, 'outputs': fingerprint()}
+            assembly = next((task.get('execution') for task in summary['tasks'] if task['taskId'] == '@homarr/nextjs#assemble:standalone'), None)
+            record = {'phase': phase, 'elapsedSeconds': elapsed, 'tasks': tasks, 'assembly': assembly, 'archiveBytes': artifact_sizes, 'outputs': fingerprint()}
             records.append(record)
             if phase != 'prime':
                 expected_source = 'REMOTE' if phase.startswith('remote') else 'LOCAL'

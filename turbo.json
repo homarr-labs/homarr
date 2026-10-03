@@ -68,6 +68,10 @@
       "env": ["TURBO_PLATFORM"],
       "outputs": [".next/standalone/**"],
       "inputs": ["package.json"]
+    },
+    "assemble:standalone": {
+      "dependsOn": ["build:standalone"],
+      "cache": false
     }
   },
   "agentGuidance": false
