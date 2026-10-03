@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import signal
+import socket
 import subprocess
 import time
 
@@ -67,6 +68,11 @@ def main():
             workspace = work / manager
             database = output / f"{manager}-{repetition}.sqlite"
             shutil.copyfile(args.fixture, database)
+            # This port must belong to the isolated benchmark Redis service.
+            with socket.create_connection(("127.0.0.1", args.redis_port), timeout=10) as redis:
+                redis.sendall(b"*1\r\n$7\r\nFLUSHDB\r\n")
+                if redis.recv(1024) != b"+OK\r\n":
+                    raise RuntimeError("Unable to reset the isolated benchmark Redis database")
             shutil.rmtree(workspace / "apps/nextjs/.next", ignore_errors=True)
             defaults = json.loads(subprocess.check_output(
                 [args.node, "-e", "const fs=require('fs');console.log(JSON.stringify(require(process.argv[1]).parse(fs.readFileSync(process.argv[2]))))",
@@ -76,12 +82,14 @@ def main():
                 env.pop(key, None)
             env.update({"PATH": str(work / "manager-bin") + ":" + str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + env["PATH"],
                         "PORT": str(args.port), "NODE_ENV": "development", "NEXT_TELEMETRY_DISABLED": "1",
-                        "TURBO_TELEMETRY_DISABLED": "1", "SKIP_ENV_VALIDATION": "true", "DB_DRIVER": "better-sqlite3",
+                        "TURBO_TELEMETRY_DISABLED": "1", "DB_DRIVER": "better-sqlite3",
                         "DB_DIALECT": "sqlite", "DB_URL": str(database), "REDIS_IS_EXTERNAL": "true",
                         "REDIS_HOST": "127.0.0.1", "REDIS_PORT": str(args.redis_port), "DEMO_MODE": "true",
                         "DEMO_READ_ONLY": "false", "UNSAFE_ENABLE_MOCK_INTEGRATION": "true", "NO_EXTERNAL_CONNECTION": "true",
                         "SECRET_ENCRYPTION_KEY": "0" * 64, "AUTH_SECRET": "local-package-manager-benchmark",
                         "AUTH_URL": f"http://localhost:{args.port}", "AUTH_PROVIDERS": "credentials", "LOG_LEVEL": "warn"})
+            env.pop("CI", None)
+            env.pop("SKIP_ENV_VALIDATION", None)
             command = [args.node, args.pnpm, "run", "dev"]
             if manager == "bun":
                 command = [args.bun, "run", "dev"]

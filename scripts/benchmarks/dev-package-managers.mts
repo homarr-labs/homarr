@@ -41,6 +41,7 @@ try {
   const widgetCount = await page.locator("[data-homarr-widget-ready]").count();
   const widgetErrorCount = await page.locator("[data-homarr-widget-error]").count();
   if (widgetCount !== 8 || widgetErrorCount !== 0) throw new Error("Incomplete or failed demo board");
+  const originalMarkerValue = await page.locator(`[${marker}]`).getAttribute(marker);
   const hmr: { elapsedMs: number; documentReloads: number }[] = [];
   for (let iteration = 0; iteration < 5; iteration++) {
     const token = `pm-benchmark-${iteration}`;
@@ -53,7 +54,11 @@ try {
     );
     hmr.push({ elapsedMs: performance.now() - start, documentReloads: documentLoads - loadsBefore });
     await fs.writeFile(source, original);
-    await page.waitForFunction((marker) => document.querySelector(`[${marker}]`)?.getAttribute(marker) === "", marker);
+    await page.waitForFunction(
+      ({ marker, originalMarkerValue }) =>
+        document.querySelector(`[${marker}]`)?.getAttribute(marker) === originalMarkerValue,
+      { marker, originalMarkerValue },
+    );
   }
   await fs.writeFile(
     output,
