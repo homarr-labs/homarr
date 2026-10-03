@@ -41,6 +41,9 @@ export class GitHubIconRepository extends IconRepository {
     if (!listOfFiles || !Array.isArray(listOfFiles.tree)) {
       throw new Error("GitHub icon index response does not contain a file tree");
     }
+    if (typeof listOfFiles.truncated !== "boolean") {
+      throw new Error("GitHub icon index response does not contain a boolean truncated flag");
+    }
     if (listOfFiles.truncated) {
       throw new Error("GitHub icon index response contains a truncated file tree");
     }

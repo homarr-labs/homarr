@@ -23,7 +23,7 @@ Icons in Homarr are automatically requested from multiple sources:
 Using these icon sources, Homarr provides a total collection of over 11,000 icons at your fingertips.
 The image picker searches this collection after a short typing delay. When a name is available, such as an app or search engine name, the picker uses it as the initial search. Results show your locally uploaded images first, followed by SVG icons and then other image formats.
 
-GitHub icon indexes are refreshed on startup and weekly. A GitHub rate limit can temporarily prevent Dashboard Icons, selfh.st, and Simple Icons from refreshing; previously cached icons remain available. The server log reports the HTTP status and, when GitHub provides them, remaining request quota and reset time (Unix seconds). After the limit resets, an administrator can rerun **Icons Updater** under **Manage → Tools → Tasks**. Direct image URLs and local uploads remain usable while indexing is unavailable.
+GitHub icon indexes are refreshed on startup and weekly. A GitHub rate limit can temporarily prevent Dashboard Icons, selfh.st, and Simple Icons from refreshing; previously cached icons remain available. Invalid or incomplete GitHub tree responses also leave the cached provider icons intact. The server log reports the HTTP status and, when GitHub provides them, remaining request quota and reset time (Unix seconds). After the limit resets, an administrator can rerun **Icons Updater** under **Manage → Tools → Tasks**. Direct image URLs and local uploads remain usable while indexing is unavailable.
 
 ### Finding Missing Icons
 
