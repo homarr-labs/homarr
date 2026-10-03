@@ -81,7 +81,7 @@ class Benchmark:
                 env.pop(variable, None)
             env.update({"CI": "true", "NEXT_TELEMETRY_DISABLED": "1", "TURBO_TELEMETRY_DISABLED": "1",
                         "BUN_INSTALL_CACHE_DIR": str(cache), "XDG_CACHE_HOME": str(self.root / (manager + "-metadata"))})
-            env["PATH"] = str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + str(shim_directory) + ":" + env["PATH"]
+            env["PATH"] = str(shim_directory) + ":" + str(Path(args.node).parent) + ":" + str(Path(args.bun).parent) + ":" + env["PATH"]
             command = [args.node, args.pnpm] if manager == "pnpm" else [args.bun]
             self.variants.append(dict(manager=manager, sha=sha, path=path, cache=cache, env=env, command=command))
         self.metadata = {"started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -101,6 +101,7 @@ class Benchmark:
             if saved["metadata"]["revisions"] != self.metadata["revisions"]:
                 raise RuntimeError("Output directory belongs to different revisions")
             saved["metadata"]["method"] = self.metadata["method"]
+            saved["metadata"]["nested_pnpm"] = self.metadata["nested_pnpm"]
             self.metadata = saved["metadata"]
             self.records = saved["measurements"]
         self.save()
