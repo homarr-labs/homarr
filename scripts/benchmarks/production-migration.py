@@ -15,6 +15,7 @@ def main():
     parser.add_argument("--output", required=True)
     parser.add_argument("--bun", default="bun")
     parser.add_argument("--phase", choices=["build", "runtime", "compare", "all"], default="all")
+    parser.add_argument("--comparison", choices=["package-manager-migration", "runtime-migration"], default="package-manager-migration")
     parser.add_argument("--builder-prefix", default="homarr-migration-benchmark")
     parser.add_argument("--runtime-repetitions", type=int, default=3)
     args = parser.parse_args()
@@ -132,7 +133,7 @@ def main():
                 run(label, "runtime", repetition, env)
     if args.phase in ["runtime", "compare", "all"]:
         for repetition in range(1, args.runtime_repetitions + 1):
-            command = [args.bun, "scripts/benchmarks/benchmark-compare.mts", "--comparison", "runtime-migration"]
+            command = [args.bun, "scripts/benchmarks/benchmark-compare.mts", "--comparison", args.comparison]
             for label in ["baseline", "candidate"]:
                 warmup = next(r for r in manifest["builds"] if r["label"] == label and r["phase"] == "warmup" and r["exit_code"] == 0)
                 command += [f"--{label}-warmup", warmup["result"]]

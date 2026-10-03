@@ -26,8 +26,11 @@ const readJson = async <T,>(file: string) => JSON.parse(await readFile(path.reso
 
 const comparisonValues = values.get("--comparison") ?? ["spotlight"];
 const comparison = comparisonValues[0];
-if (comparisonValues.length !== 1 || (comparison !== "spotlight" && comparison !== "runtime-migration")) {
-  throw new Error("--comparison must be spotlight or runtime-migration");
+if (
+  comparisonValues.length !== 1 ||
+  (comparison !== "spotlight" && comparison !== "runtime-migration" && comparison !== "package-manager-migration")
+) {
+  throw new Error("--comparison must be spotlight, runtime-migration or package-manager-migration");
 }
 
 const input: BenchmarkPairInput = {

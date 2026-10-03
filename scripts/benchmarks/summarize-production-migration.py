@@ -24,9 +24,10 @@ def main():
     runtimes = {label: [result(entry) for entry in manifest['runtimes'] if entry['label'] == label and entry['exit_code'] == 0 and entry['result']] for label in ['baseline', 'candidate']}
     lines = ['## Production benchmark', '', f"Baseline `{manifest['revisions']['baseline']}`; candidate `{manifest['revisions']['candidate']}`.",
              '', 'Dedicated builders; cold warmups followed by balanced warm source changes. Cold build timings have one observation per image. Warm rebuilds have two observations per image.',
-             '', '| Build metric | Node/pnpm seconds (range) | Bun seconds (range) |', '|---|---:|---:|']
+             '', '| Build metric | Baseline seconds (range) | Candidate seconds (range) |', '|---|---:|---:|']
 
     def display(values):
+        values = [value for value in values if value is not None]
         if not values:
             return '—'
         return f'{median(values):.2f} ({min(values):.2f}–{max(values):.2f}; n={len(values)})'
@@ -40,7 +41,7 @@ def main():
         lines.append(f'| {title}: Next compile | {display(values[0])} | {display(values[1])} |')
     lines += ['', 'Three fresh containers per image, two CPUs and 1 GiB each, UID/GID 1000. Every run loads the same eight-widget seeded board in 20 fresh authenticated browser contexts, checks widget data, opens search seven times, exercises four management routes and WebSockets, then samples for ten minutes. Browser and excluded ingress proxy traffic are isolated from external providers.',
               '', 'Page figures are medians of each container’s page-sample median, with the range across containers. Memory, startup and cold-search values are descriptive observations from independent containers. The 20 settle samples within each container are correlated; they are not 20 independent memory trials.',
-              '', '| Runtime metric | Node median (range) | Bun median (range) |', '|---|---:|---:|']
+              '', '| Runtime metric | Baseline median (range) | Candidate median (range) |', '|---|---:|---:|']
     metrics = [
         ('Start to ready, seconds', lambda r: r['workload']['startToReadyMs'] / 1000),
         ('Board mounted, ms', lambda r: median(p['boardMountedMs'] for p in r['workload']['pageLoadSamples'])),
@@ -68,7 +69,10 @@ def main():
 
     def settle_process_pss(runtime, name):
         checkpoints = [c for c in runtime['checkpoints'] if c['name'].startswith('settle-')]
-        return median(sum(p['pssBytes'] for p in c['processes'] if name in p['command'] or (name == 'next-server' and p['command'] == 'bun')) for c in checkpoints) / 2**20
+        groups = [[p for p in c['processes'] if name in p['command'] or (name == 'next-server' and p['command'] == 'bun')] for c in checkpoints]
+        if any(not group or any(p['pssBytes'] == 0 and p['rssBytes'] > 0 for p in group) for group in groups):
+            return None
+        return median(sum(p['pssBytes'] for p in group) for group in groups) / 2**20
 
     def settle_memory_change(runtime):
         checkpoints = [c for c in runtime['checkpoints'] if c['name'].startswith('settle-')]
@@ -86,11 +90,11 @@ def main():
     for route in ['/manage', '/manage/apps', '/manage/integrations', '/manage/settings']:
         values = [[next(r['durationMs'] for r in runtime['workload']['routeTimings'] if r['path'] == route) for runtime in runtimes[label]] for label in ['baseline', 'candidate']]
         lines.append(f'| {route} route navigation, ms | {display(values[0])} | {display(values[1])} |')
-    lines += ['', '| Validation | Node | Bun |', '|---|---:|---:|']
+    lines += ['', '| Validation | Baseline | Candidate |', '|---|---:|---:|']
     for title, metric in [('Claim-eligible runtime runs', lambda r: int(r['claimEligible'])), ('Fresh dashboard loads', lambda r: len(r['workload']['pageLoadSamples'])), ('Settle checkpoints', lambda r: r['workload']['settleSampleCount']), ('Widget errors', lambda r: r['workload']['widgetErrorCount'])]:
         values = [sum(metric(r) for r in runtimes[label]) for label in ['baseline', 'candidate']]
         lines.append(f'| {title} | {values[0]} | {values[1]} |')
-    lines += ['', 'These compare complete migrations, including different dependency graphs and base-image packages. They do not isolate the JavaScript engine. Cold builds and runtime diagnostics are not claims of statistical significance. Eligibility and raw per-run data remain authoritative.', '']
+    lines += ['', 'These compare complete migrations, including different dependency graphs and base-image packages. They do not isolate the JavaScript engine. Unreadable process PSS is omitted, never interpreted as zero memory. Cold builds and runtime diagnostics are not claims of statistical significance. Eligibility and raw per-run data remain authoritative.', '']
     text = '\n'.join(lines)
     if args.output:
         Path(args.output).write_text(text)

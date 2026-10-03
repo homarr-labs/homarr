@@ -93,9 +93,11 @@ Cancelled browser requests must be recovered by an exact successful response or
 the mounted query provider's successful data for the exact procedure and input.
 The latter accounts for streamed server hydration; it does not mutate the cache
 or accept transport failures. Cache recoveries are retained in the page samples.
-The comparison mode accepts different pinned source revisions and JavaScript
-engines while retaining image identity, cache continuity, workload, browser,
-and isolation checks. Existing Spotlight comparisons keep their original rules.
+The default package-manager comparison requires matching Node/V8 runtimes while
+accepting different pinned source revisions. Use `--comparison runtime-migration`
+only to compare Node against Bun's JavaScriptCore. Both modes retain image identity,
+cache continuity, workload, browser and isolation checks. Existing Spotlight
+comparisons keep their original rules.
 
 ## Development
 

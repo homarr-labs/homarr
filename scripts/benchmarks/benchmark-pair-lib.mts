@@ -164,8 +164,10 @@ type RuntimeResult = {
   };
 };
 
+export type BenchmarkComparison = "spotlight" | "runtime-migration" | "package-manager-migration";
+
 export type BenchmarkPairInput = {
-  comparison?: "spotlight" | "runtime-migration";
+  comparison?: BenchmarkComparison;
   baselineWarmup: BuildResult;
   candidateWarmup: BuildResult;
   baselineBuilds: BuildResult[];
@@ -369,7 +371,7 @@ const validateWarmup = (label: string, warmup: BuildResult, builds: BuildResult[
   }
 };
 
-const runtimeConfiguration = (runtime: RuntimeResult, comparison: "spotlight" | "runtime-migration") => ({
+const runtimeConfiguration = (runtime: RuntimeResult, comparison: BenchmarkComparison) => ({
   host: runtime.host,
   browser: {
     ...runtime.provenance.browser,
@@ -671,23 +673,27 @@ export const compareBenchmarkPair = (input: BenchmarkPairInput) => {
   if (stable(input.baselineRuntime.claimScope) !== stable(input.candidateRuntime.claimScope)) {
     reasons.push("runtime claim scopes do not match");
   }
-  if (comparison === "runtime-migration") {
+  if (comparison !== "spotlight") {
     if (
       !input.baselineRuntime.provenance.ingressProxy.imageId ||
       !input.candidateRuntime.provenance.ingressProxy.imageId
     ) {
-      reasons.push("runtime migration requires immutable ingress proxy image IDs");
+      reasons.push("migration comparison requires immutable ingress proxy image IDs");
     }
     const baselineNode = input.baselineRuntime.provenance.container.node;
     const candidateNode = input.candidateRuntime.provenance.container.node;
     if (baselineNode.engine !== "V8" || baselineNode.bunVersion || !baselineNode.v8Version) {
       reasons.push("runtime migration baseline is not a verified Node/V8 process");
     }
-    if (candidateNode.engine !== "JavaScriptCore" || !candidateNode.bunVersion || candidateNode.v8Version !== null) {
-      reasons.push("runtime migration candidate is not a verified Bun/JavaScriptCore process");
+    if (comparison === "runtime-migration") {
+      if (candidateNode.engine !== "JavaScriptCore" || !candidateNode.bunVersion || candidateNode.v8Version !== null) {
+        reasons.push("runtime migration candidate is not a verified Bun/JavaScriptCore process");
+      }
+    } else if (candidateNode.engine !== "V8" || candidateNode.bunVersion || !candidateNode.v8Version) {
+      reasons.push("package-manager migration candidate is not a verified Node/V8 process");
     }
     if (input.baselineRuntime.workload.spotlightIdlePolicy !== input.candidateRuntime.workload.spotlightIdlePolicy) {
-      reasons.push("runtime migration Spotlight workload policies do not match");
+      reasons.push("migration comparison Spotlight workload policies do not match");
     }
   } else {
     if (input.baselineRuntime.workload.spotlightIdlePolicy !== "mounted") {
