@@ -1,0 +1,77 @@
+[
+  {
+    "phase": "cold",
+    "exitCode": 0,
+    "elapsedSeconds": 241.01649302407168,
+    "command": [
+      "docker",
+      "buildx",
+      "build",
+      "--builder",
+      "homarr-turbo-validation-20261003",
+      "--load",
+      "--progress=plain",
+      "--platform=linux/amd64",
+      "--tag",
+      "homarr:turbo-cache-cold",
+      "/tmp/homarr-turbo-cache-pr"
+    ],
+    "taskCache": {
+      "@homarr/db": "miss",
+      "@homarr/cli": "miss",
+      "@homarr/nextjs": "miss"
+    },
+    "turboTaskTime": "1m41.888s",
+    "nextCompile": "72s"
+  },
+  {
+    "phase": "copy-only",
+    "exitCode": 0,
+    "elapsedSeconds": 62.70929449889809,
+    "command": [
+      "docker",
+      "buildx",
+      "build",
+      "--builder",
+      "homarr-turbo-validation-20261003",
+      "--load",
+      "--progress=plain",
+      "--platform=linux/amd64",
+      "--tag",
+      "homarr:turbo-cache-copy-only",
+      "/tmp/homarr-turbo-cache-pr"
+    ],
+    "taskCache": {
+      "@homarr/db": "hit",
+      "@homarr/cli": "hit",
+      "@homarr/nextjs": "hit"
+    },
+    "turboTaskTime": "1.681s",
+    "nextCompile": null
+  },
+  {
+    "phase": "app-source",
+    "exitCode": 0,
+    "elapsedSeconds": 53.77476320206188,
+    "command": [
+      "docker",
+      "buildx",
+      "build",
+      "--builder",
+      "homarr-turbo-validation-20261003",
+      "--load",
+      "--progress=plain",
+      "--platform=linux/amd64",
+      "--tag",
+      "homarr:turbo-cache-app-source",
+      "/tmp/homarr-turbo-cache-pr"
+    ],
+    "taskCache": {
+      "@homarr/db": "hit",
+      "@homarr/nextjs": "miss",
+      "@homarr/cli": "hit"
+    },
+    "turboTaskTime": "19.962s",
+    "nextCompile": "2.7s"
+  }
+]

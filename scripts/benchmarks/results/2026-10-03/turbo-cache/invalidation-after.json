@@ -1,0 +1,98 @@
+[
+  {
+    "input": "package.json",
+    "task": "@homarr/nextjs#build",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "de0c79b18374a926",
+    "afterHash": "d1b94f32571696cd"
+  },
+  {
+    "input": "packages/core/src/infrastructure/db/env.ts",
+    "task": "@homarr/cli#build",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "195d5e28fffd435a",
+    "afterHash": "9422796933ff5938"
+  },
+  {
+    "input": "packages/core/src/infrastructure/db/env.ts",
+    "task": "@homarr/db#build",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "30cf3baf869fafc5",
+    "afterHash": "e1f66e4531ce49f0"
+  },
+  {
+    "input": "tooling/typescript/base.json",
+    "task": "@homarr/cli#build",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "195d5e28fffd435a",
+    "afterHash": "8ef6c75c878c155a"
+  },
+  {
+    "input": "packages/core/src/infrastructure/db/env.ts",
+    "task": "@homarr/common#typecheck",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "3381dd321ee600cb",
+    "afterHash": "7cd494223a31f680"
+  },
+  {
+    "input": "tooling/typescript/base.json",
+    "task": "@homarr/common#typecheck",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "3381dd321ee600cb",
+    "afterHash": "2c553513f896b6ed"
+  },
+  {
+    "input": ".oxlintrc.json",
+    "task": "@homarr/common#lint",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "0d0b5a79e3ab924d",
+    "afterHash": "260f4810a57edfe0"
+  },
+  {
+    "input": ".oxfmtrc.json",
+    "task": "@homarr/common#format",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "0ebfc1c80051c8b5",
+    "afterHash": "a73aa5b8eddc57e7"
+  },
+  {
+    "input": "static-data/contributors.json",
+    "task": "@homarr/nextjs#build",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "de0c79b18374a926",
+    "afterHash": "f5e53eb3961686a4"
+  },
+  {
+    "input": "tools/motion-reel/three/lab-types.ts",
+    "task": "@homarr/docs#build",
+    "expectedInvalidation": true,
+    "actualInvalidation": true,
+    "beforeHash": "46603a4f193cff7e",
+    "afterHash": "72c3d5a02de9d940"
+  },
+  {
+    "input": "static-data/contributors.json",
+    "task": "@homarr/cli#build",
+    "expectedInvalidation": false,
+    "actualInvalidation": false,
+    "beforeHash": "195d5e28fffd435a",
+    "afterHash": "195d5e28fffd435a"
+  },
+  {
+    "input": "packages/core/src/cache-invalidation-probe.spec.tsx",
+    "task": "@homarr/nextjs#build",
+    "expectedInvalidation": false,
+    "actualInvalidation": false,
+    "beforeHash": "de0c79b18374a926",
+    "afterHash": "de0c79b18374a926"
+  }
+]

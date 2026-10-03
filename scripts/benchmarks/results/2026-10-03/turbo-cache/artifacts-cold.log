@@ -1,0 +1,31 @@
+
+   • Packages in scope: @homarr/cli, @homarr/db
+   • Running build in 2 packages
+   • Remote caching disabled
+
+@homarr/db:build: cache miss, executing 30cf3baf869fafc5
+@homarr/db:build: [WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+@homarr/db:build: $ pnpm run build:sqlite && pnpm run build:postgresql
+@homarr/db:build: $ esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs
+@homarr/db:build: 
+@homarr/db:build:   migrations/sqlite/migrate.cjs  3.5mb ⚠️
+@homarr/db:build: 
+@homarr/db:build: ⚡ Done in 160ms
+@homarr/db:build: $ esbuild migrations/postgresql/migrate.ts --bundle --platform=node --outfile=migrations/postgresql/migrate.cjs
+@homarr/db:build: 
+@homarr/db:build:   migrations/postgresql/migrate.cjs  3.5mb ⚠️
+@homarr/db:build: 
+@homarr/db:build: ⚡ Done in 162ms
+@homarr/cli:build: cache miss, executing 195d5e28fffd435a
+@homarr/cli:build: [WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+@homarr/cli:build: $ esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text
+@homarr/cli:build: 
+@homarr/cli:build:   cli.cjs  4.3mb ⚠️
+@homarr/cli:build: 
+@homarr/cli:build: ⚡ Done in 226ms
+
+  Tasks:    2 successful, 2 total
+ Cached:    0 cached, 2 total
+   Time:    2.491s 
+Summary:    /tmp/homarr-turbo-cache-pr/.turbo/runs/3KB0ep2sqWR5Zt98MpYXEUNyI7t.json
+

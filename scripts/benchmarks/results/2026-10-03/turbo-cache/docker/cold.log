@@ -1,0 +1,1161 @@
+#0 building with "homarr-turbo-validation-20261003" instance using docker-container driver
+
+#1 [internal] booting buildkit
+#1 pulling image moby/buildkit:buildx-stable-1
+#1 pulling image moby/buildkit:buildx-stable-1 0.9s done
+#1 creating container buildx_buildkit_homarr-turbo-validation-202610030
+#1 creating container buildx_buildkit_homarr-turbo-validation-202610030 1.4s done
+#1 DONE 2.4s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile:
+#2 transferring dockerfile: 4.45kB done
+#2 DONE 0.1s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1.25
+#3 DONE 1.4s
+
+#4 docker-image://docker.io/docker/dockerfile:1.25@sha256:0adf442eae370b6087e08edc7c50b552d80ddf261576f4ebd6421006b2461f12
+#4 resolve docker.io/docker/dockerfile:1.25@sha256:0adf442eae370b6087e08edc7c50b552d80ddf261576f4ebd6421006b2461f12 0.0s done
+#4 DONE 0.1s
+
+#4 docker-image://docker.io/docker/dockerfile:1.25@sha256:0adf442eae370b6087e08edc7c50b552d80ddf261576f4ebd6421006b2461f12
+#4 sha256:219d9d834a17b552767dc25d1ede801eed11890df7684cf6f9adae1e5f70530f 0B / 14.09MB 0.2s
+#4 sha256:219d9d834a17b552767dc25d1ede801eed11890df7684cf6f9adae1e5f70530f 7.34MB / 14.09MB 0.3s
+#4 sha256:219d9d834a17b552767dc25d1ede801eed11890df7684cf6f9adae1e5f70530f 11.53MB / 14.09MB 0.5s
+#4 sha256:219d9d834a17b552767dc25d1ede801eed11890df7684cf6f9adae1e5f70530f 14.09MB / 14.09MB 0.6s done
+#4 extracting sha256:219d9d834a17b552767dc25d1ede801eed11890df7684cf6f9adae1e5f70530f
+#4 extracting sha256:219d9d834a17b552767dc25d1ede801eed11890df7684cf6f9adae1e5f70530f 0.2s done
+#4 DONE 0.9s
+
+#5 [internal] load metadata for docker.io/library/node:24.18.0-alpine
+#5 DONE 1.1s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 313B done
+#6 DONE 0.1s
+
+#7 [base 1/1] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#7 resolve docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.1s done
+#7 DONE 0.3s
+
+#8 [internal] load build context
+#8 transferring context: 30.70MB 0.6s done
+#8 DONE 0.8s
+
+#7 [base 1/1] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#7 sha256:21af007bacf625b557dda6dbce062088808612be54a955980b3d8efb8ea7d082 448B / 448B 0.2s done
+#7 sha256:57eb903fc7a4b0006b1253f877823b15c51433ccd41a20392812682211c46a6c 1.26MB / 1.26MB 0.3s done
+#7 sha256:55afa1ecc21d2bb5e5045f32dafee56272ffd89860bac26f6c32123439af26a4 3.85MB / 3.85MB 0.4s done
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 0B / 52.52MB 0.3s
+#7 extracting sha256:55afa1ecc21d2bb5e5045f32dafee56272ffd89860bac26f6c32123439af26a4
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 3.15MB / 52.52MB 0.5s
+#7 extracting sha256:55afa1ecc21d2bb5e5045f32dafee56272ffd89860bac26f6c32123439af26a4 0.1s done
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 13.63MB / 52.52MB 0.8s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 19.92MB / 52.52MB 0.9s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 30.41MB / 52.52MB 1.1s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 36.70MB / 52.52MB 1.2s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 41.94MB / 52.52MB 1.4s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 48.23MB / 52.52MB 1.5s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 52.52MB / 52.52MB 1.7s
+#7 sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 52.52MB / 52.52MB 1.7s done
+#7 extracting sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65
+#7 extracting sha256:7e2a5e2761f53b694faaee16c5ad1e400cb41224f693337aac52e74bee3b2f65 1.5s done
+#7 DONE 3.6s
+
+#7 [base 1/1] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#7 extracting sha256:57eb903fc7a4b0006b1253f877823b15c51433ccd41a20392812682211c46a6c
+#7 extracting sha256:57eb903fc7a4b0006b1253f877823b15c51433ccd41a20392812682211c46a6c 0.2s done
+#7 DONE 3.9s
+
+#7 [base 1/1] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#7 extracting sha256:21af007bacf625b557dda6dbce062088808612be54a955980b3d8efb8ea7d082 0.1s done
+#7 DONE 3.9s
+
+#9 [builder  1/11] WORKDIR /app
+#9 DONE 0.1s
+
+#10 [runner  2/19] RUN apk add --no-cache redis nginx bash gettext su-exec openssl
+#10 0.782 ( 1/19) Upgrading libcrypto3 (3.5.7-r0 -> 3.5.9-r0)
+#10 0.948 ( 2/19) Upgrading libssl3 (3.5.7-r0 -> 3.5.9-r0)
+#10 0.977 ( 3/19) Installing ncurses-terminfo-base (6.6_p20260516-r0)
+#10 0.993 ( 4/19) Installing libncursesw (6.6_p20260516-r0)
+#10 1.005 ( 5/19) Installing readline (8.3.3-r1)
+#10 1.018 ( 6/19) Installing bash (5.3.9-r1)
+#10 1.068   Executing bash-5.3.9-r1.post-install
+#10 1.071 ( 7/19) Installing libintl (1.0-r0)
+#10 1.081 ( 8/19) Installing gettext-envsubst (1.0-r0)
+#10 1.100 ( 9/19) Installing libgomp (15.2.0-r5)
+#10 1.114 (10/19) Installing libunistring (1.4.2-r0)
+#10 1.141 (11/19) Installing gettext-libs (1.0-r0)
+#10 1.159 (12/19) Installing xz-libs (5.8.4-r0)
+#10 1.171 (13/19) Installing libxml2 (2.13.9-r2)
+#10 1.191 (14/19) Installing gettext (1.0-r0)
+#10 1.320 (15/19) Installing pcre2 (10.49-r0)
+#10 1.344 (16/19) Installing nginx (1.30.4-r1)
+#10 1.357   Executing nginx-1.30.4-r1.pre-install
+#10 1.467   Executing nginx-1.30.4-r1.post-install
+#10 1.478 (17/19) Installing openssl (3.5.9-r0)
+#10 1.501 (18/19) Installing redis (8.8.0-r0)
+#10 1.520   Executing redis-8.8.0-r0.pre-install
+#10 1.637   Executing redis-8.8.0-r0.post-install
+#10 1.641 (19/19) Installing su-exec (0.3-r0)
+#10 1.660 Executing busybox-1.37.0-r31.trigger
+#10 1.676 OK: 38.8 MiB in 35 packages
+#10 DONE 2.0s
+
+#11 [builder  2/11] RUN apk add --no-cache libc6-compat curl bash python3 make g++
+#11 0.763 ( 1/42) Installing ncurses-terminfo-base (6.6_p20260516-r0)
+#11 0.777 ( 2/42) Installing libncursesw (6.6_p20260516-r0)
+#11 0.829 ( 3/42) Installing readline (8.3.3-r1)
+#11 0.846 ( 4/42) Installing bash (5.3.9-r1)
+#11 0.899   Executing bash-5.3.9-r1.post-install
+#11 0.903 ( 5/42) Installing brotli-libs (1.2.0-r1)
+#11 0.937 ( 6/42) Installing c-ares (1.34.8-r0)
+#11 0.952 ( 7/42) Installing libunistring (1.4.2-r0)
+#11 0.996 ( 8/42) Installing libidn2 (2.3.8-r0)
+#11 1.008 ( 9/42) Installing nghttp2-libs (1.70.0-r0)
+#11 1.018 (10/42) Installing libpsl (0.21.5-r3)
+#11 1.034 (11/42) Installing zstd-libs (1.5.7-r2)
+#11 1.065 (12/42) Installing libcurl (8.22.0-r0)
+#11 1.082 (13/42) Installing curl (8.22.0-r0)
+#11 1.109 (14/42) Installing libstdc++-dev (15.2.0-r5)
+#11 1.349 (15/42) Installing jansson (2.15.0-r0)
+#11 1.362 (16/42) Installing binutils (2.45.1-r1)
+#11 1.492 (17/42) Installing libgcc-static (15.2.0-r5)
+#11 1.547 (18/42) Installing libgomp (15.2.0-r5)
+#11 1.561 (19/42) Installing libatomic (15.2.0-r5)
+#11 1.575 (20/42) Installing gmp (6.3.0-r4)
+#11 1.593 (21/42) Installing isl26 (0.26-r2)
+#11 1.656 (22/42) Installing mpfr4 (4.2.2-r0)
+#11 1.678 (23/42) Installing mpc1 (1.3.1-r1)
+#11 1.689 (24/42) Installing gcc (15.2.0-r5)
+#11 ...
+
+#12 [runner  3/19] RUN mkdir /appdata
+#12 DONE 0.3s
+
+#11 [builder  2/11] RUN apk add --no-cache libc6-compat curl bash python3 make g++
+#11 3.564 (25/42) Installing musl-dev (1.2.6-r2)
+#11 3.655 (26/42) Installing g++ (15.2.0-r5)
+#11 4.187 (27/42) Installing musl-obstack (1.2.3-r2)
+#11 4.195 (28/42) Installing libucontext (1.5.1-r0)
+#11 4.202 (29/42) Installing gcompat (1.1.0-r4)
+#11 4.210 (30/42) Installing make (4.4.1-r4)
+#11 4.222 (31/42) Installing libexpat (2.8.5-r0)
+#11 4.234 (32/42) Installing libbz2 (1.0.8-r6)
+#11 4.244 (33/42) Installing libffi (3.5.2-r1)
+#11 4.256 (34/42) Installing gdbm (1.26-r0)
+#11 4.269 (35/42) Installing xz-libs (5.8.4-r0)
+#11 4.279 (36/42) Installing mpdecimal (4.0.1-r0)
+#11 4.289 (37/42) Installing libpanelw (6.6_p20260516-r0)
+#11 4.297 (38/42) Installing sqlite-libs (3.53.4-r0)
+#11 4.332 (39/42) Installing python3 (3.14.8-r0)
+#11 4.618 (40/42) Installing python3-pycache-pyc0 (3.14.8-r0)
+#11 4.779 (41/42) Installing pyc (3.14.8-r0)
+#11 4.779 (42/42) Installing python3-pyc (3.14.8-r0)
+#11 4.779 Executing busybox-1.37.0-r31.trigger
+#11 4.805 OK: 307.4 MiB in 60 packages
+#11 DONE 5.4s
+
+#13 [builder  3/11] RUN corepack enable pnpm
+#13 DONE 0.4s
+
+#14 [builder  4/11] COPY .npmrc pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+#14 DONE 0.2s
+
+#15 [builder  5/11] COPY patches ./patches
+#15 DONE 0.2s
+
+#16 [builder  6/11] COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
+#16 DONE 0.2s
+
+#17 [builder  7/11] COPY --parents ./packages/definitions/src ./
+#17 DONE 0.3s
+
+#18 [builder  8/11] RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked     pnpm config set store-dir /pnpm/store &&     sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml &&     pnpm fetch --ignore-scripts &&     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
+#18 0.399 ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-11.15.1.tgz
+#18 3.196 ? Verifying lockfile against supply-chain policies (2332 entries)...
+#18 3.206 Importing packages to virtual store
+#18 3.327 Already up to date
+#18 3.405 Progress: resolved 1, reused 0, downloaded 0, added 0
+#18 4.411 Progress: resolved 2060, reused 0, downloaded 0, added 0
+#18 5.411 Progress: resolved 2060, reused 0, downloaded 263, added 262
+#18 6.411 Progress: resolved 2060, reused 0, downloaded 451, added 448
+#18 7.411 Progress: resolved 2060, reused 0, downloaded 584, added 587
+#18 8.411 Progress: resolved 2060, reused 0, downloaded 703, added 703
+#18 9.415 Progress: resolved 2060, reused 0, downloaded 828, added 829
+#18 10.42 Progress: resolved 2060, reused 0, downloaded 969, added 971
+#18 11.41 Progress: resolved 2060, reused 0, downloaded 1102, added 1095
+#18 12.42 Progress: resolved 2060, reused 0, downloaded 1254, added 1236
+#18 13.43 Progress: resolved 2060, reused 0, downloaded 1351, added 1338
+#18 14.44 Progress: resolved 2060, reused 0, downloaded 1510, added 1507
+#18 15.45 Progress: resolved 2060, reused 0, downloaded 1662, added 1665
+#18 16.45 Progress: resolved 2060, reused 0, downloaded 1829, added 1833
+#18 17.45 Progress: resolved 2060, reused 0, downloaded 1953, added 1953
+#18 18.45 Progress: resolved 2060, reused 0, downloaded 2042, added 2047
+#18 19.45 Progress: resolved 2060, reused 0, downloaded 2049, added 2051
+#18 20.20 ✓ Lockfile passes supply-chain policies (2332 entries in 17s)
+#18 20.45 Progress: resolved 2060, reused 0, downloaded 2053, added 2055
+#18 21.45 Progress: resolved 2060, reused 0, downloaded 2054, added 2057
+#18 22.45 Progress: resolved 2060, reused 0, downloaded 2054, added 2058
+#18 23.45 Progress: resolved 2060, reused 0, downloaded 2055, added 2059
+#18 29.20 Progress: resolved 2060, reused 0, downloaded 2055, added 2060
+#18 29.20 Progress: resolved 2060, reused 0, downloaded 2055, added 2060, done
+#18 29.57 
+#18 DONE 50.2s
+
+#19 [builder  9/11] RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked     npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1
+#19 3.537 Scope: all 41 workspace projects
+#19 3.757 ✓ Lockfile passes supply-chain policies (verified 33s ago)
+#19 3.775 Lockfile is up to date, resolution step is skipped
+#19 4.664 .                                        |    +2176 -302 ++++++++++++++++++++---
+#19 4.677 Progress: resolved 0, reused 1, downloaded 0, added 0
+#19 5.678 Progress: resolved 0, reused 2055, downloaded 0, added 36
+#19 6.678 Progress: resolved 0, reused 2055, downloaded 0, added 150
+#19 7.679 Progress: resolved 0, reused 2055, downloaded 0, added 218
+#19 8.679 Progress: resolved 0, reused 2055, downloaded 0, added 239
+#19 9.679 Progress: resolved 0, reused 2055, downloaded 0, added 277
+#19 10.68 Progress: resolved 0, reused 2055, downloaded 0, added 320
+#19 11.68 Progress: resolved 0, reused 2055, downloaded 0, added 374
+#19 12.68 Progress: resolved 0, reused 2055, downloaded 0, added 478
+#19 13.68 Progress: resolved 0, reused 2055, downloaded 0, added 588
+#19 14.68 Progress: resolved 0, reused 2055, downloaded 0, added 619
+#19 15.68 Progress: resolved 0, reused 2055, downloaded 0, added 639
+#19 16.68 Progress: resolved 0, reused 2055, downloaded 0, added 643
+#19 17.68 Progress: resolved 0, reused 2055, downloaded 0, added 687
+#19 18.68 Progress: resolved 0, reused 2055, downloaded 0, added 719
+#19 19.68 Progress: resolved 0, reused 2055, downloaded 0, added 772
+#19 20.68 Progress: resolved 0, reused 2055, downloaded 0, added 896
+#19 21.68 Progress: resolved 0, reused 2055, downloaded 0, added 1066
+#19 22.68 Progress: resolved 0, reused 2055, downloaded 0, added 1286
+#19 23.68 Progress: resolved 0, reused 2055, downloaded 0, added 1508
+#19 24.68 Progress: resolved 0, reused 2055, downloaded 0, added 1777
+#19 25.69 Progress: resolved 0, reused 2055, downloaded 0, added 1898
+#19 26.69 Progress: resolved 0, reused 2055, downloaded 0, added 1969
+#19 27.69 Progress: resolved 0, reused 2055, downloaded 0, added 2114
+#19 28.43 Progress: resolved 0, reused 2055, downloaded 0, added 2176, done
+#19 28.81 .../@turbo/gen/node_modules/esbuild postinstall$ node install.js
+#19 28.89 .../@turbo/gen/node_modules/esbuild postinstall: Done
+#19 28.96 node_modules/tsx/node_modules/esbuild postinstall$ node install.js
+#19 29.02 node_modules/tsx/node_modules/esbuild postinstall: Done
+#19 29.09 node_modules/better-sqlite3 install$ prebuild-install || node-gyp rebuild --release
+#19 29.20 node_modules/better-sqlite3 install: (node:64) [DEP0176] DeprecationWarning: fs.R_OK is deprecated, use fs.constants.R_OK instead
+#19 29.20 node_modules/better-sqlite3 install: (Use `node --trace-deprecation ...` to show where the warning was created)
+#19 29.63 node_modules/better-sqlite3 install: Done
+#19 29.72 node_modules/esbuild postinstall$ node install.js
+#19 29.78 node_modules/esbuild postinstall: Done
+#19 29.87 node_modules/bcrypt install$ node-gyp-build
+#19 29.97 node_modules/bcrypt install: Done
+#19 29.98 .../tsx/node_modules/esbuild postinstall$ node install.js
+#19 30.05 .../tsx/node_modules/esbuild postinstall: Done
+#19 30.10 node_modules/ssh2 install$ node install.js
+#19 30.18 node_modules/ssh2 install: gyp info it worked if it ends with ok
+#19 30.18 node_modules/ssh2 install: gyp info using node-gyp@12.4.0
+#19 30.18 node_modules/ssh2 install: gyp info using node@24.18.0 | linux | x64
+#19 30.25 node_modules/ssh2 install: gyp info find Python using Python version 3.14.8 found at "/usr/bin/python3"
+#19 30.25 node_modules/ssh2 install: gyp info spawn /usr/bin/python3
+#19 30.25 node_modules/ssh2 install: gyp info spawn args [
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '/root/.cache/node/corepack/v1/pnpm/11.15.1/dist/node_modules/node-gyp/gyp/gyp_main.py',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args 'binding.gyp',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-f',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args 'make',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-I',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '/app/node_modules/ssh2/lib/protocol/crypto/build/config.gypi',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-I',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '/root/.cache/node/corepack/v1/pnpm/11.15.1/dist/node_modules/node-gyp/addon.gypi',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-I',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '/usr/local/include/node/common.gypi',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dlibrary=shared_library',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dvisibility=default',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dnode_root_dir=/usr/local',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dnode_gyp_dir=/root/.cache/node/corepack/v1/pnpm/11.15.1/dist/node_modules/node-gyp',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dnode_lib_file=/usr/local/$(Configuration)/node.lib',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dmodule_root_dir=/app/node_modules/ssh2/lib/protocol/crypto',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Dnode_engine=v8',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '--depth=.',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '--no-parallel',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '--generator-output',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args 'build',
+#19 30.25 node_modules/ssh2 install: gyp info spawn args '-Goutput_dir=.'
+#19 30.25 node_modules/ssh2 install: gyp info spawn args ]
+#19 30.64 node_modules/ssh2 install: gyp info spawn make
+#19 30.64 node_modules/ssh2 install: gyp info spawn args [ 'BUILDTYPE=Release', '-C', 'build' ]
+#19 30.64 node_modules/ssh2 install: make: Entering directory '/app/node_modules/ssh2/lib/protocol/crypto/build'
+#19 30.64 node_modules/ssh2 install:   CXX(target) Release/obj.target/sshcrypto/src/binding.o
+#19 31.77 node_modules/ssh2 install: In file included from ../src/binding.cc:16:
+#19 31.77 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'bool Nan::IdleNotification(int)':
+#19 31.77 node_modules/ssh2 install: ../../../../../nan/nan.h:700:39: error: 'class v8::Isolate' has no member named 'IdleNotificationDeadline'
+#19 31.77 node_modules/ssh2 install:   700 |     return v8::Isolate::GetCurrent()->IdleNotificationDeadline(
+#19 31.77 node_modules/ssh2 install:       |                                       ^~~~~~~~~~~~~~~~~~~~~~~~
+#19 31.78 node_modules/ssh2 install: ../../../../../nan/nan.h: In constructor 'Nan::Utf8String::Utf8String(v8::Local<v8::Value>)':
+#19 31.78 node_modules/ssh2 install: ../../../../../nan/nan.h:1166:36: warning: 'int v8::String::WriteUtf8(v8::Isolate*, char*, int, int*, int) const' is deprecated: Use WriteUtf8V2 instead. [-Wdeprecated-declarations]
+#19 31.78 node_modules/ssh2 install:  1166 |         length_ = string->WriteUtf8(v8::Isolate::GetCurrent(), str_,
+#19 31.78 node_modules/ssh2 install:       |                   ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#19 31.78 node_modules/ssh2 install:  1167 |                                     static_cast<int>(len), 0, flags);
+#19 31.78 node_modules/ssh2 install:       |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#19 31.78 node_modules/ssh2 install: In file included from /usr/local/include/node/v8-object.h:12,
+#19 31.78 node_modules/ssh2 install:                  from /usr/local/include/node/v8-array-buffer.h:14,
+#19 31.78 node_modules/ssh2 install:                  from /usr/local/include/node/v8.h:24,
+#19 31.78 node_modules/ssh2 install:                  from /usr/local/include/node/node.h:74,
+#19 31.78 node_modules/ssh2 install:                  from ../src/binding.cc:14:
+#19 31.78 node_modules/ssh2 install: /usr/local/include/node/v8-primitive.h:212:7: note: declared here
+#19 31.78 node_modules/ssh2 install:   212 |   int WriteUtf8(Isolate* isolate, char* buffer, int length = -1,
+#19 31.78 node_modules/ssh2 install:       |       ^~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'v8::Local<v8::Value> Nan::Encode(const void*, size_t, Encoding)':
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2360:24: warning: 'v8::Local<v8::Value> node::Encode(v8::Isolate*, const uint16_t*, size_t)' is deprecated: Use TryEncode(...) instead [-Wdeprecated-declarations]
+#19 31.79 node_modules/ssh2 install:  2360 |     return node::Encode(
+#19 31.79 node_modules/ssh2 install:       |            ~~~~~~~~~~~~^
+#19 31.79 node_modules/ssh2 install:  2361 |         isolate
+#19 31.79 node_modules/ssh2 install:       |         ~~~~~~~         
+#19 31.79 node_modules/ssh2 install:  2362 |       , reinterpret_cast<const uint16_t *>(buf)
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install:  2363 |       , len / 2);
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~        
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/node.h:1282:50: note: declared here
+#19 31.79 node_modules/ssh2 install:  1282 |                 NODE_EXTERN v8::Local<v8::Value> Encode(v8::Isolate* isolate,
+#19 31.79 node_modules/ssh2 install:       |                                                  ^~~~~~
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/node.h:116:42: note: in definition of macro 'NODE_DEPRECATED'
+#19 31.79 node_modules/ssh2 install:   116 |     __attribute__((deprecated(message))) declarator
+#19 31.79 node_modules/ssh2 install:       |                                          ^~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2365:24: warning: 'v8::Local<v8::Value> node::Encode(v8::Isolate*, const char*, size_t, encoding)' is deprecated: Use TryEncode(...) instead [-Wdeprecated-declarations]
+#19 31.79 node_modules/ssh2 install:  2365 |     return node::Encode(
+#19 31.79 node_modules/ssh2 install:       |            ~~~~~~~~~~~~^
+#19 31.79 node_modules/ssh2 install:  2366 |         isolate
+#19 31.79 node_modules/ssh2 install:       |         ~~~~~~~         
+#19 31.79 node_modules/ssh2 install:  2367 |       , reinterpret_cast<const char *>(buf)
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install:  2368 |       , len
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~             
+#19 31.79 node_modules/ssh2 install:  2369 |       , node_enc);
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~       
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/node.h:1274:38: note: declared here
+#19 31.79 node_modules/ssh2 install:  1274 |     NODE_EXTERN v8::Local<v8::Value> Encode(v8::Isolate* isolate,
+#19 31.79 node_modules/ssh2 install:       |                                      ^~~~~~
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/node.h:116:42: note: in definition of macro 'NODE_DEPRECATED'
+#19 31.79 node_modules/ssh2 install:   116 |     __attribute__((deprecated(message))) declarator
+#19 31.79 node_modules/ssh2 install:       |                                          ^~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'void Nan::SetAccessor(v8::Local<v8::ObjectTemplate>, v8::Local<v8::String>, GetterCallback, SetterCallback, v8::Local<v8::Value>, v8::AccessControl, v8::PropertyAttribute, imp::Sig)':
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2560:8: error: 'class v8::ObjectTemplate' has no member named 'SetAccessor'
+#19 31.79 node_modules/ssh2 install:  2560 |   tpl->SetAccessor(
+#19 31.79 node_modules/ssh2 install:       |        ^~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'void Nan::SetAccessor(v8::Local<v8::ObjectTemplate>, v8::Local<v8::String>, GetterCallback, SetterCallback, v8::Local<v8::Value>, v8::AccessControl, v8::PropertyAttribute)':
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2608:8: error: 'class v8::ObjectTemplate' has no member named 'SetAccessor'
+#19 31.79 node_modules/ssh2 install:  2608 |   tpl->SetAccessor(
+#19 31.79 node_modules/ssh2 install:       |        ^~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'bool Nan::SetAccessor(v8::Local<v8::Object>, v8::Local<v8::String>, GetterCallback, SetterCallback, v8::Local<v8::Value>, v8::AccessControl, v8::PropertyAttribute)':
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2654:15: error: 'class v8::Object' has no member named 'SetAccessor'
+#19 31.79 node_modules/ssh2 install:  2654 |   return obj->SetAccessor(
+#19 31.79 node_modules/ssh2 install:       |               ^~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'void Nan::SetNamedPropertyHandler(v8::Local<v8::ObjectTemplate>, PropertyGetterCallback, PropertySetterCallback, PropertyQueryCallback, PropertyDeleterCallback, PropertyEnumeratorCallback, v8::Local<v8::Value>)':
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2731:7: error: invalid conversion from 'Nan::imp::NativePropertyGetter' {aka 'void (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>&)'} to 'v8::NamedPropertyGetterCallback' {aka 'v8::Intercepted (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2731 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |       ^~~~~~~
+#19 31.79 node_modules/ssh2 install:       |       |
+#19 31.79 node_modules/ssh2 install:       |       Nan::imp::NativePropertyGetter {aka void (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>&)}
+#19 31.79 node_modules/ssh2 install: In file included from /usr/local/include/node/v8-function.h:15,
+#19 31.79 node_modules/ssh2 install:                  from /usr/local/include/node/v8.h:33:
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:792:35: note: initializing argument 1 of 'v8::NamedPropertyHandlerConfiguration::NamedPropertyHandlerConfiguration(v8::NamedPropertyGetterCallback, v8::NamedPropertySetterCallback, v8::NamedPropertyQueryCallback, v8::NamedPropertyDeleterCallback, v8::NamedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   792 |       NamedPropertyGetterCallback getter,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2731:16: error: invalid conversion from 'Nan::imp::NativePropertySetter' {aka 'void (*)(v8::Local<v8::Name>, v8::Local<v8::Value>, const v8::PropertyCallbackInfo<v8::Value>&)'} to 'v8::NamedPropertySetterCallback' {aka 'v8::Intercepted (*)(v8::Local<v8::Name>, v8::Local<v8::Value>, const v8::PropertyCallbackInfo<void>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2731 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |                ^~~~~~~
+#19 31.79 node_modules/ssh2 install:       |                |
+#19 31.79 node_modules/ssh2 install:       |                Nan::imp::NativePropertySetter {aka void (*)(v8::Local<v8::Name>, v8::Local<v8::Value>, const v8::PropertyCallbackInfo<v8::Value>&)}
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:793:35: note: initializing argument 2 of 'v8::NamedPropertyHandlerConfiguration::NamedPropertyHandlerConfiguration(v8::NamedPropertyGetterCallback, v8::NamedPropertySetterCallback, v8::NamedPropertyQueryCallback, v8::NamedPropertyDeleterCallback, v8::NamedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   793 |       NamedPropertySetterCallback setter = nullptr,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2731:25: error: invalid conversion from 'Nan::imp::NativePropertyQuery' {aka 'void (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Integer>&)'} to 'v8::NamedPropertyQueryCallback' {aka 'v8::Intercepted (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Integer>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2731 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |                         ^~~~~~
+#19 31.79 node_modules/ssh2 install:       |                         |
+#19 31.79 node_modules/ssh2 install:       |                         Nan::imp::NativePropertyQuery {aka void (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Integer>&)}
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:794:34: note: initializing argument 3 of 'v8::NamedPropertyHandlerConfiguration::NamedPropertyHandlerConfiguration(v8::NamedPropertyGetterCallback, v8::NamedPropertySetterCallback, v8::NamedPropertyQueryCallback, v8::NamedPropertyDeleterCallback, v8::NamedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   794 |       NamedPropertyQueryCallback query = nullptr,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2731:33: error: invalid conversion from 'void (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Boolean>&)' to 'v8::NamedPropertyDeleterCallback' {aka 'v8::Intercepted (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Boolean>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2731 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |                                 ^~~~~~~~
+#19 31.79 node_modules/ssh2 install:       |                                 |
+#19 31.79 node_modules/ssh2 install:       |                                 void (*)(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Boolean>&)
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:795:36: note: initializing argument 4 of 'v8::NamedPropertyHandlerConfiguration::NamedPropertyHandlerConfiguration(v8::NamedPropertyGetterCallback, v8::NamedPropertySetterCallback, v8::NamedPropertyQueryCallback, v8::NamedPropertyDeleterCallback, v8::NamedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   795 |       NamedPropertyDeleterCallback deleter = nullptr,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h: In function 'void Nan::SetIndexedPropertyHandler(v8::Local<v8::ObjectTemplate>, IndexGetterCallback, IndexSetterCallback, IndexQueryCallback, IndexDeleterCallback, IndexEnumeratorCallback, v8::Local<v8::Value>)':
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2801:7: error: invalid conversion from 'Nan::imp::NativeIndexGetter' {aka 'void (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Value>&)'} to 'v8::IndexedPropertyGetterCallbackV2' {aka 'v8::Intercepted (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Value>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2801 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |       ^~~~~~~
+#19 31.79 node_modules/ssh2 install:       |       |
+#19 31.79 node_modules/ssh2 install:       |       Nan::imp::NativeIndexGetter {aka void (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Value>&)}
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:871:39: note: initializing argument 1 of 'v8::IndexedPropertyHandlerConfiguration::IndexedPropertyHandlerConfiguration(v8::IndexedPropertyGetterCallbackV2, v8::IndexedPropertySetterCallbackV2, v8::IndexedPropertyQueryCallbackV2, v8::IndexedPropertyDeleterCallbackV2, v8::IndexedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   871 |       IndexedPropertyGetterCallbackV2 getter = nullptr,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2801:16: error: invalid conversion from 'Nan::imp::NativeIndexSetter' {aka 'void (*)(unsigned int, v8::Local<v8::Value>, const v8::PropertyCallbackInfo<v8::Value>&)'} to 'v8::IndexedPropertySetterCallbackV2' {aka 'v8::Intercepted (*)(unsigned int, v8::Local<v8::Value>, const v8::PropertyCallbackInfo<void>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2801 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |                ^~~~~~~
+#19 31.79 node_modules/ssh2 install:       |                |
+#19 31.79 node_modules/ssh2 install:       |                Nan::imp::NativeIndexSetter {aka void (*)(unsigned int, v8::Local<v8::Value>, const v8::PropertyCallbackInfo<v8::Value>&)}
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:872:39: note: initializing argument 2 of 'v8::IndexedPropertyHandlerConfiguration::IndexedPropertyHandlerConfiguration(v8::IndexedPropertyGetterCallbackV2, v8::IndexedPropertySetterCallbackV2, v8::IndexedPropertyQueryCallbackV2, v8::IndexedPropertyDeleterCallbackV2, v8::IndexedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   872 |       IndexedPropertySetterCallbackV2 setter = nullptr,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2801:25: error: invalid conversion from 'Nan::imp::NativeIndexQuery' {aka 'void (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Integer>&)'} to 'v8::IndexedPropertyQueryCallbackV2' {aka 'v8::Intercepted (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Integer>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2801 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |                         ^~~~~~
+#19 31.79 node_modules/ssh2 install:       |                         |
+#19 31.79 node_modules/ssh2 install:       |                         Nan::imp::NativeIndexQuery {aka void (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Integer>&)}
+#19 31.79 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:873:38: note: initializing argument 3 of 'v8::IndexedPropertyHandlerConfiguration::IndexedPropertyHandlerConfiguration(v8::IndexedPropertyGetterCallbackV2, v8::IndexedPropertySetterCallbackV2, v8::IndexedPropertyQueryCallbackV2, v8::IndexedPropertyDeleterCallbackV2, v8::IndexedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.79 node_modules/ssh2 install:   873 |       IndexedPropertyQueryCallbackV2 query = nullptr,
+#19 31.79 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#19 31.79 node_modules/ssh2 install: ../../../../../nan/nan.h:2801:33: error: invalid conversion from 'Nan::imp::NativeIndexDeleter' {aka 'void (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Boolean>&)'} to 'v8::IndexedPropertyDeleterCallbackV2' {aka 'v8::Intercepted (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Boolean>&)'} [-fpermissive]
+#19 31.79 node_modules/ssh2 install:  2801 |       getter_, setter_, query_, deleter_, enumerator_, obj));
+#19 31.79 node_modules/ssh2 install:       |                                 ^~~~~~~~
+#19 31.79 node_modules/ssh2 install:       |                                 |
+#19 31.79 node_modules/ssh2 install:       |                                 Nan::imp::NativeIndexDeleter {aka void (*)(unsigned int, const v8::PropertyCallbackInfo<v8::Boolean>&)}
+#19 31.80 node_modules/ssh2 install: /usr/local/include/node/v8-template.h:874:40: note: initializing argument 4 of 'v8::IndexedPropertyHandlerConfiguration::IndexedPropertyHandlerConfiguration(v8::IndexedPropertyGetterCallbackV2, v8::IndexedPropertySetterCallbackV2, v8::IndexedPropertyQueryCallbackV2, v8::IndexedPropertyDeleterCallbackV2, v8::IndexedPropertyEnumeratorCallback, v8::Local<v8::Value>, v8::PropertyHandlerFlags)'
+#19 31.80 node_modules/ssh2 install:   874 |       IndexedPropertyDeleterCallbackV2 deleter = nullptr,
+#19 31.80 node_modules/ssh2 install:       |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: In file included from ../../../../../nan/nan.h:2966:
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h: In constructor 'Nan::ScriptOrigin::ScriptOrigin(v8::Local<v8::Value>)':
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h:19:55: error: no matching function for call to 'v8::ScriptOrigin::ScriptOrigin(v8::Isolate*, v8::Local<v8::Value>&)'
+#19 31.81 node_modules/ssh2 install:    19 |       v8::ScriptOrigin(v8::Isolate::GetCurrent(), name) {}
+#19 31.81 node_modules/ssh2 install:       |                                                       ^
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h:19:55: note: there are 3 candidates
+#19 31.81 node_modules/ssh2 install: In file included from /usr/local/include/node/v8-script.h:20,
+#19 31.81 node_modules/ssh2 install:                  from /usr/local/include/node/v8-debug.h:10,
+#19 31.81 node_modules/ssh2 install:                  from /usr/local/include/node/v8-isolate.h:19,
+#19 31.81 node_modules/ssh2 install:                  from /usr/local/include/node/v8-snapshot.h:9,
+#19 31.81 node_modules/ssh2 install:                  from /usr/local/include/node/v8-context.h:15,
+#19 31.81 node_modules/ssh2 install:                  from /usr/local/include/node/v8.h:26:
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:65:13: note: candidate 1: 'v8::ScriptOrigin::ScriptOrigin(v8::Local<v8::Value>, int, int, bool, int, v8::Local<v8::Value>, bool, bool, bool, v8::Local<v8::Data>)'
+#19 31.81 node_modules/ssh2 install:    65 |   V8_INLINE ScriptOrigin(Local<Value> resource_name,
+#19 31.81 node_modules/ssh2 install:       |             ^~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:65:39: note: no known conversion for argument 1 from 'v8::Isolate*' to 'v8::Local<v8::Value>'
+#19 31.81 node_modules/ssh2 install:    65 |   V8_INLINE ScriptOrigin(Local<Value> resource_name,
+#19 31.81 node_modules/ssh2 install:       |                          ~~~~~~~~~~~~~^~~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate 2: 'constexpr v8::ScriptOrigin::ScriptOrigin(const v8::ScriptOrigin&)'
+#19 31.81 node_modules/ssh2 install:    63 | class V8_EXPORT ScriptOrigin {
+#19 31.81 node_modules/ssh2 install:       |                 ^~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate expects 1 argument, 2 provided
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate 3: 'constexpr v8::ScriptOrigin::ScriptOrigin(v8::ScriptOrigin&&)'
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate expects 1 argument, 2 provided
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h: In constructor 'Nan::ScriptOrigin::ScriptOrigin(v8::Local<v8::Value>, v8::Local<v8::Integer>)':
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h:25:52: error: no matching function for call to 'v8::ScriptOrigin::ScriptOrigin(v8::Isolate*, v8::Local<v8::Value>&, int)'
+#19 31.81 node_modules/ssh2 install:    25 |                    , To<int32_t>(line).FromMaybe(0)) {}
+#19 31.81 node_modules/ssh2 install:       |                                                    ^
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h:25:52: note: there are 3 candidates
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:65:13: note: candidate 1: 'v8::ScriptOrigin::ScriptOrigin(v8::Local<v8::Value>, int, int, bool, int, v8::Local<v8::Value>, bool, bool, bool, v8::Local<v8::Data>)'
+#19 31.81 node_modules/ssh2 install:    65 |   V8_INLINE ScriptOrigin(Local<Value> resource_name,
+#19 31.81 node_modules/ssh2 install:       |             ^~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:65:39: note: no known conversion for argument 1 from 'v8::Isolate*' to 'v8::Local<v8::Value>'
+#19 31.81 node_modules/ssh2 install:    65 |   V8_INLINE ScriptOrigin(Local<Value> resource_name,
+#19 31.81 node_modules/ssh2 install:       |                          ~~~~~~~~~~~~~^~~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate 2: 'constexpr v8::ScriptOrigin::ScriptOrigin(const v8::ScriptOrigin&)'
+#19 31.81 node_modules/ssh2 install:    63 | class V8_EXPORT ScriptOrigin {
+#19 31.81 node_modules/ssh2 install:       |                 ^~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate expects 1 argument, 3 provided
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate 3: 'constexpr v8::ScriptOrigin::ScriptOrigin(v8::ScriptOrigin&&)'
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate expects 1 argument, 3 provided
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h: In constructor 'Nan::ScriptOrigin::ScriptOrigin(v8::Local<v8::Value>, v8::Local<v8::Integer>, v8::Local<v8::Integer>)':
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h:33:54: error: no matching function for call to 'v8::ScriptOrigin::ScriptOrigin(v8::Isolate*, v8::Local<v8::Value>&, int, int)'
+#19 31.81 node_modules/ssh2 install:    33 |                    , To<int32_t>(column).FromMaybe(0)) {}
+#19 31.81 node_modules/ssh2 install:       |                                                      ^
+#19 31.81 node_modules/ssh2 install: ../../../../../nan/nan_scriptorigin.h:33:54: note: there are 3 candidates
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:65:13: note: candidate 1: 'v8::ScriptOrigin::ScriptOrigin(v8::Local<v8::Value>, int, int, bool, int, v8::Local<v8::Value>, bool, bool, bool, v8::Local<v8::Data>)'
+#19 31.81 node_modules/ssh2 install:    65 |   V8_INLINE ScriptOrigin(Local<Value> resource_name,
+#19 31.81 node_modules/ssh2 install:       |             ^~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:65:39: note: no known conversion for argument 1 from 'v8::Isolate*' to 'v8::Local<v8::Value>'
+#19 31.81 node_modules/ssh2 install:    65 |   V8_INLINE ScriptOrigin(Local<Value> resource_name,
+#19 31.81 node_modules/ssh2 install:       |                          ~~~~~~~~~~~~~^~~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate 2: 'constexpr v8::ScriptOrigin::ScriptOrigin(const v8::ScriptOrigin&)'
+#19 31.81 node_modules/ssh2 install:    63 | class V8_EXPORT ScriptOrigin {
+#19 31.81 node_modules/ssh2 install:       |                 ^~~~~~~~~~~~
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate expects 1 argument, 4 provided
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate 3: 'constexpr v8::ScriptOrigin::ScriptOrigin(v8::ScriptOrigin&&)'
+#19 31.81 node_modules/ssh2 install: /usr/local/include/node/v8-message.h:63:17: note: candidate expects 1 argument, 4 provided
+#19 31.89 node_modules/ssh2 install: In file included from ../../../../../nan/nan_callbacks.h:87,
+#19 31.89 node_modules/ssh2 install:                  from ../../../../../nan/nan.h:182:
+#19 31.89 node_modules/ssh2 install: ../../../../../nan/nan_callbacks_12_inl.h: In instantiation of 'v8::Local<v8::Object> Nan::FunctionCallbackInfo<T>::Holder() const [with T = v8::Value]':
+#19 31.89 node_modules/ssh2 install: ../src/binding.cc:358:77:   required from here
+#19 31.89 node_modules/ssh2 install:   358 |     ChaChaPolyCipher* obj = ObjectWrap::Unwrap<ChaChaPolyCipher>(info.Holder());
+#19 31.89 node_modules/ssh2 install:       |                                                                  ~~~~~~~~~~~^~
+#19 31.89 node_modules/ssh2 install: ../../../../../nan/nan_callbacks_12_inl.h:112:62: error: 'const class v8::FunctionCallbackInfo<v8::Value>' has no member named 'Holder'
+#19 31.89 node_modules/ssh2 install:   112 |   inline v8::Local<v8::Object> Holder() const { return info_.Holder(); }
+#19 31.89 node_modules/ssh2 install:       |                                                        ~~~~~~^~~~~~
+#19 31.99 node_modules/ssh2 install: make: *** [sshcrypto.target.mk:116: Release/obj.target/sshcrypto/src/binding.o] Error 1
+#19 31.99 node_modules/ssh2 install: make: Leaving directory '/app/node_modules/ssh2/lib/protocol/crypto/build'
+#19 32.00 node_modules/ssh2 install: gyp ERR! build error 
+#19 32.00 node_modules/ssh2 install: gyp ERR! stack Error: `make` failed with exit code: 2
+#19 32.00 node_modules/ssh2 install: gyp ERR! stack at ChildProcess.<anonymous> (/root/.cache/node/corepack/v1/pnpm/11.15.1/dist/node_modules/node-gyp/lib/build.js:219:23)
+#19 32.00 node_modules/ssh2 install: gyp ERR! System Linux 6.8.0-90-generic
+#19 32.00 node_modules/ssh2 install: gyp ERR! command "/usr/local/bin/node" "/root/.cache/node/corepack/v1/pnpm/11.15.1/dist/node_modules/node-gyp/bin/node-gyp.js" "--target=v24.18.0" "--real_openssl_major=3" "rebuild"
+#19 32.00 node_modules/ssh2 install: gyp ERR! cwd /app/node_modules/ssh2/lib/protocol/crypto
+#19 32.00 node_modules/ssh2 install: gyp ERR! node -v v24.18.0
+#19 32.00 node_modules/ssh2 install: gyp ERR! node-gyp -v v12.4.0
+#19 32.00 node_modules/ssh2 install: gyp ERR! $npm_package_name ssh2
+#19 32.00 node_modules/ssh2 install: gyp ERR! $npm_package_version 1.16.0
+#19 32.00 node_modules/ssh2 install: gyp ERR! not ok 
+#19 32.01 node_modules/ssh2 install: Failed to build optional crypto binding
+#19 32.01 node_modules/ssh2 install: Done
+#19 32.90 packages/definitions postinstall$ tsx ./src/docs/codegen.ts
+#19 33.67 packages/definitions postinstall: Done
+#19 33.77 Done in 30.7s using pnpm v11.15.1
+#19 DONE 35.1s
+
+#20 [builder 10/11] COPY . .
+#20 DONE 2.5s
+
+#21 [builder 11/11] RUN --mount=type=secret,id=TURBO_API,env=TURBO_API     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY     --mount=type=cache,id=homarr-next-build-linux/amd64,target=/app/apps/nextjs/.next/cache,sharing=locked     --mount=type=cache,id=homarr-turbo-linux/amd64,target=/app/.turbo,sharing=locked     TURBO_PLATFORM="linux/amd64"     pnpm turbo build --filter=@homarr/nextjs... --filter=@homarr/cli
+#21 0.977 [WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+#21 0.981 [WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+#21 1.442 
+#21 1.442 Attention:
+#21 1.442 Turborepo now collects completely anonymous telemetry regarding usage.
+#21 1.442 This information is used to shape the Turborepo roadmap and prioritize features.
+#21 1.442 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#21 1.442 https://turborepo.dev/docs/telemetry
+#21 1.442 
+#21 1.751 
+#21 1.751    • Packages in scope: @homarr/analytics, @homarr/api, @homarr/auth, @homarr/boards, @homarr/cli, @homarr/common, @homarr/core, @homarr/cron-job-status, @homarr/cron-jobs, @homarr/cron-jobs-core, @homarr/custom-widgets, @homarr/db, @homarr/definitions, @homarr/docker, @homarr/form, @homarr/forms-collection, @homarr/icons, @homarr/image-proxy, @homarr/integrations, @homarr/modals, @homarr/modals-collection, @homarr/nextjs, @homarr/notifications, @homarr/onboarding, @homarr/ping, @homarr/redis, @homarr/request-handler, @homarr/server-settings, @homarr/settings, @homarr/spotlight, @homarr/tasks, @homarr/translation, @homarr/tsconfig, @homarr/ui, @homarr/validation, @homarr/websocket, @homarr/widgets, @homarr/workshop
+#21 1.751    • Running build in 38 packages
+#21 1.751    • Remote caching disabled
+#21 1.751 
+#21 1.938 @homarr/db:build: cache miss, executing c971cb31984a1869
+#21 2.544 @homarr/db:build: $ pnpm run build:sqlite && pnpm run build:postgresql
+#21 3.171 @homarr/db:build: $ esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs
+#21 3.381 @homarr/db:build: 
+#21 3.381 @homarr/db:build:   migrations/sqlite/migrate.cjs  3.5mb ⚠️
+#21 3.381 @homarr/db:build: 
+#21 3.381 @homarr/db:build: ⚡ Done in 199ms
+#21 3.988 @homarr/db:build: $ esbuild migrations/postgresql/migrate.ts --bundle --platform=node --outfile=migrations/postgresql/migrate.cjs
+#21 4.187 @homarr/db:build: 
+#21 4.187 @homarr/db:build:   migrations/postgresql/migrate.cjs  3.5mb ⚠️
+#21 4.187 @homarr/db:build: 
+#21 4.187 @homarr/db:build: ⚡ Done in 191ms
+#21 4.233 @homarr/cli:build: cache miss, executing f3c48f3640a71494
+#21 4.234 @homarr/nextjs:build: cache miss, executing dc41d0a5afab387f
+#21 4.726 @homarr/cli:build: $ esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text
+#21 4.759 @homarr/nextjs:build: $ HOMARR_VERSION=$(node -p "require('../../package.json').version") pnpm with-env next build
+#21 4.978 @homarr/cli:build: 
+#21 4.978 @homarr/cli:build:   cli.cjs  4.3mb ⚠️
+#21 4.978 @homarr/cli:build: 
+#21 4.978 @homarr/cli:build: ⚡ Done in 242ms
+#21 5.319 @homarr/nextjs:build: $ dotenv -e ../../.env -- next build
+#21 5.893 @homarr/nextjs:build: ▲ Next.js 16.3.6 (Turbopack)
+#21 7.464 @homarr/nextjs:build: ✓ Running next.config.ts took 1571ms
+#21 7.484 @homarr/nextjs:build: Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#21 7.484 @homarr/nextjs:build: This information is used to shape Next.js' roadmap and prioritize features.
+#21 7.484 @homarr/nextjs:build: You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#21 7.484 @homarr/nextjs:build: https://nextjs.org/telemetry
+#21 7.484 @homarr/nextjs:build: 
+#21 7.520 @homarr/nextjs:build: - Experiments (use with caution):
+#21 7.520 @homarr/nextjs:build:   · optimizePackageImports
+#21 7.520 @homarr/nextjs:build: 
+#21 7.594 @homarr/nextjs:build:   Creating an optimized production build ...
+#21 81.37 @homarr/nextjs:build: ✓ Compiled successfully in 72s
+#21 81.37 @homarr/nextjs:build:   Skipping validation of types
+#21 81.39 @homarr/nextjs:build:   Finished TypeScript config validation in 16ms ...
+#21 81.40 @homarr/nextjs:build:   Collecting page data using 19 workers ...
+#21 96.02 @homarr/nextjs:build: ✓ Finished writing to filesystem cache in 15.2s
+#21 98.12 @homarr/nextjs:build:   Generating static pages using 19 workers (0/19) ...
+#21 99.21 @homarr/nextjs:build:   Generating static pages using 19 workers (4/19) 
+#21 99.33 @homarr/nextjs:build:   Generating static pages using 19 workers (9/19) 
+#21 99.35 @homarr/nextjs:build:   Generating static pages using 19 workers (14/19) 
+#21 99.61 @homarr/nextjs:build: ✓ Generating static pages using 19 workers (19/19) in 1484ms
+#21 99.61 @homarr/nextjs:build: Turbopack build encountered 10 warnings:
+#21 99.61 @homarr/nextjs:build: [externals]/node:crypto
+#21 99.61 @homarr/nextjs:build: Warning: unexpected export *
+#21 99.61 @homarr/nextjs:build: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+#21 99.61 @homarr/nextjs:build: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import trace:
+#21 99.61 @homarr/nextjs:build:   external:
+#21 99.61 @homarr/nextjs:build:     [externals]/node:crypto [external]
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/assistant/chat/route.ts [App Route]
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./apps/nextjs/src/app/api/backup/import/route.ts:333:13
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m331 |[0m       [36mtry[0m {
+#21 99.61 @homarr/nextjs:build:   [90m332 |[0m         [36mconst[0m sidecar = [32m`[0m${dbPath[32m}[0m${suffix[32m}`[0m;
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m333 |[0m         [36mif[0m (fs.existsSync(sidecar)) fs.unlinkSync(sidecar);
+#21 99.61 @homarr/nextjs:build:   [90m    |[0m             [33m[1m^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m334 |[0m       } [36mcatch[0m (cleanupErr) {
+#21 99.61 @homarr/nextjs:build:   [90m335 |[0m         logger.warn([32m"Failed to remove SQLite sidecar file after restore"[0m, { suffix, dbPat...
+#21 99.61 @homarr/nextjs:build:   [90m336 |[0m       }
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.existsSync(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import trace:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/backup/import/route.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/backup/import/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:19:8
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m17 |[0m   }
+#21 99.61 @homarr/nextjs:build:   [90m18 |[0m
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m19 |[0m   [36mif[0m (!fsSync.existsSync(folder)) {
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m        [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m20 |[0m     [36mawait[0m fs.mkdir(folder, { recursive: [36mtrue[0m });
+#21 99.61 @homarr/nextjs:build:   [90m21 |[0m   }
+#21 99.61 @homarr/nextjs:build:   [90m22 |[0m
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.existsSync(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:28:24
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m26 |[0m       .filter((file) => file.endsWith([32m".crt"[0m) || file.endsWith([32m".pem"[0m))
+#21 99.61 @homarr/nextjs:build:   [90m27 |[0m       .map([36masync[0m (file) => ({
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m28 |[0m         content: [36mawait[0m fs.readFile(path.join(folder, file), [32m"utf8"[0m),
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                        [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m29 |[0m         fileName: file,
+#21 99.61 @homarr/nextjs:build:   [90m30 |[0m       })),
+#21 99.61 @homarr/nextjs:build:   [90m31 |[0m   );
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readFile(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:51:25
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m49 |[0m
+#21 99.61 @homarr/nextjs:build:   [90m50 |[0m   [36mconst[0m fullPath = path.join(folder, fileName);
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m51 |[0m   [36mconst[0m content = [36mawait[0m fs.readFile(fullPath, [32m"utf8"[0m);
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                         [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m52 |[0m
+#21 99.61 @homarr/nextjs:build:   [90m53 |[0m   [36mawait[0m fs.rm(fullPath);
+#21 99.61 @homarr/nextjs:build:   [90m54 |[0m   [36mtry[0m {
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readFile(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:23:28
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m21 |[0m   }
+#21 99.61 @homarr/nextjs:build:   [90m22 |[0m
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m23 |[0m   [36mconst[0m dirContent = [36mawait[0m fs.readdir(folder);
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                            [33m[1m^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m24 |[0m   [36mreturn[0m [36mawait[0m [33mPromise[0m.all(
+#21 99.61 @homarr/nextjs:build:   [90m25 |[0m     dirContent
+#21 99.61 @homarr/nextjs:build:   [90m26 |[0m       .filter((file) => file.endsWith([32m".crt"[0m) || file.endsWith([32m".pem"[0m))
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readdir(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:45:31
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m43 |[0m   }
+#21 99.61 @homarr/nextjs:build:   [90m44 |[0m
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m45 |[0m   [36mconst[0m existingFiles = [36mawait[0m fs.readdir(folder, { withFileTypes: [36mtrue[0m });
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                               [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m46 |[0m   [36mif[0m (!existingFiles.some((file) => file.isFile() && file.name === fileName)) {
+#21 99.61 @homarr/nextjs:build:   [90m47 |[0m     [36mthrow[0m [36mnew[0m [33mError[0m([32m`File [0m${fileName[32m} does not exist`[0m);
+#21 99.61 @homarr/nextjs:build:   [90m48 |[0m   }
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readdir(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:28:36
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m26 |[0m       .filter((file) => file.endsWith([32m".crt"[0m) || file.endsWith([32m".pem"[0m))
+#21 99.61 @homarr/nextjs:build:   [90m27 |[0m       .map([36masync[0m (file) => ({
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m28 |[0m         content: [36mawait[0m fs.readFile(path.join(folder, file), [32m"utf8"[0m),
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                                    [33m[1m^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m29 |[0m         fileName: file,
+#21 99.61 @homarr/nextjs:build:   [90m30 |[0m       })),
+#21 99.61 @homarr/nextjs:build:   [90m31 |[0m   );
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:50:20
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m48 |[0m   }
+#21 99.61 @homarr/nextjs:build:   [90m49 |[0m
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m50 |[0m   [36mconst[0m fullPath = path.join(folder, fileName);
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                    [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m51 |[0m   [36mconst[0m content = [36mawait[0m fs.readFile(fullPath, [32m"utf8"[0m);
+#21 99.61 @homarr/nextjs:build:   [90m52 |[0m
+#21 99.61 @homarr/nextjs:build:   [90m53 |[0m   [36mawait[0m fs.rm(fullPath);
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:73:22
+#21 99.61 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#21 99.61 @homarr/nextjs:build:   [90m71 |[0m   }
+#21 99.61 @homarr/nextjs:build:   [90m72 |[0m
+#21 99.61 @homarr/nextjs:build: [33m[1m>[0m [90m73 |[0m   [36mawait[0m fs.writeFile(path.join(folder, fileName), content);
+#21 99.61 @homarr/nextjs:build:   [90m   |[0m                      [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#21 99.61 @homarr/nextjs:build:   [90m74 |[0m };
+#21 99.61 @homarr/nextjs:build:   [90m75 |[0m
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#21 99.61 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#21 99.61 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#21 99.61 @homarr/nextjs:build: To resolve this, you can
+#21 99.61 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#21 99.61 @homarr/nextjs:build: - only use them in development, or
+#21 99.61 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+#21 99.61 @homarr/nextjs:build: - remove them.
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: Import traces:
+#21 99.61 @homarr/nextjs:build:   App Route:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Server Component:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/auth/next.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Instrumentation:
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#21 99.61 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#21 99.61 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build: 
+#21 99.61 @homarr/nextjs:build:   Finalizing page optimization ...
+#21 102.8 @homarr/nextjs:build: 
+#21 102.8 @homarr/nextjs:build: Route (app)
+#21 102.8 @homarr/nextjs:build: ┌ ○ /_not-found
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/auth/invite/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/auth/login
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/boards
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/boards/[name]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/boards/[name]/settings
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/custom-widget-configuration/[token]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/init
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/[...not-found]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/about
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/apps
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/apps/edit/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/apps/new
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/assistant
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/boards
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/edit/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/new
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/preview/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/publish/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/workshop
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/workshop/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/integrations
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/integrations/edit/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/integrations/new
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/medias
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/search-engines
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/search-engines/edit/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/search-engines/new
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/settings
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/api
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/backup
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/certificates
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/certificates/hostnames
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/docker
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/docker/logs/[containerId]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/configmaps
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/ingresses
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/namespaces
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/nodes
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/pods
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/secrets
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/services
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/volumes
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/logs
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/tasks
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/[userId]/general
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/[userId]/security
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/create
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]/members
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]/permissions
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]/settings
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/invites
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/manage/workshop
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/reference/api
+#21 102.8 @homarr/nextjs:build: ├ ƒ /[locale]/widgets/[kind]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/[...trpc]
+#21 102.8 @homarr/nextjs:build: ├ ○ /api/about/contributors/crowdin
+#21 102.8 @homarr/nextjs:build: ├ ○ /api/about/contributors/github
+#21 102.8 @homarr/nextjs:build: ├ ○ /api/about/contributors/opencollective
+#21 102.8 @homarr/nextjs:build: ├ ○ /api/about/dependencies
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/assistant/chat
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/auth/[...nextauth]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/backup/export
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/backup/import
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/backup/migrations
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/backup/sql-wasm
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/custom-widgets/[resource]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/custom-widgets/configuration-request/[token]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/health/live
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/health/ready
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/image-proxy/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/mcp
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/mcp/[transport]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/mcp/oauth/authorize
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/mcp/oauth/register
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/mcp/oauth/token
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/onboarding/claim
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/openapi
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/trpc/[trpc]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /api/user-medias/[id]
+#21 102.8 @homarr/nextjs:build: ├ ƒ /manifest.webmanifest
+#21 102.8 @homarr/nextjs:build: └ ƒ /well-known/[...path]
+#21 102.8 @homarr/nextjs:build: 
+#21 102.8 @homarr/nextjs:build: 
+#21 102.8 @homarr/nextjs:build: ƒ Proxy (Middleware)
+#21 102.8 @homarr/nextjs:build: 
+#21 102.8 @homarr/nextjs:build: ○  (Static)   prerendered as static content
+#21 102.8 @homarr/nextjs:build: ƒ  (Dynamic)  server-rendered on demand
+#21 102.8 @homarr/nextjs:build: 
+#21 103.3 
+#21 103.3  Tasks:    3 successful, 3 total
+#21 103.3 Cached:    0 cached, 3 total
+#21 103.3   Time:    1m41.888s 
+#21 103.3 
+#21 DONE 108.7s
+
+#22 [runner  4/19] COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
+#22 DONE 0.2s
+
+#23 [runner  5/19] RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
+#23 DONE 0.3s
+
+#24 [runner  6/19] RUN chmod +x /usr/bin/homarr
+#24 DONE 0.2s
+
+#25 [runner  7/19] RUN mkdir -p /var/cache/nginx &&     mkdir -p /var/log/nginx &&     mkdir -p /var/lib/nginx &&     touch /run/nginx/nginx.pid &&     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
+#25 DONE 0.3s
+
+#26 [runner  8/19] COPY --from=builder /app/apps/nextjs/next.config.ts .
+#26 DONE 0.6s
+
+#27 [runner  9/19] COPY --from=builder /app/apps/nextjs/package.json .
+#27 DONE 0.2s
+
+#28 [runner 10/19] COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+#28 DONE 0.2s
+
+#29 [runner 11/19] COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
+#29 DONE 0.6s
+
+#30 [runner 12/19] COPY --from=builder /app/packages/db/migrations ./db/migrations
+#30 DONE 1.0s
+
+#31 [runner 13/19] COPY --from=builder /app/apps/nextjs/.next/standalone ./
+#31 DONE 4.0s
+
+#32 [runner 14/19] COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
+#32 DONE 0.8s
+
+#33 [runner 15/19] COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+#33 DONE 0.3s
+
+#34 [runner 16/19] COPY scripts/run.sh ./run.sh
+#34 DONE 0.1s
+
+#35 [runner 17/19] COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
+#35 DONE 0.2s
+
+#36 [runner 18/19] COPY packages/redis/redis.conf /app/redis.conf
+#36 DONE 0.1s
+
+#37 [runner 19/19] COPY nginx.conf /etc/nginx/templates/nginx.conf
+#37 DONE 0.2s
+
+#38 exporting to docker image format
+#38 exporting layers
+#38 exporting layers 6.8s done
+#38 exporting manifest sha256:4f6f25390d4dce4b0d2a06aa1a4d9f65f1bb378a8dd90e86ebe0356d0b652931 0.1s done
+#38 exporting config sha256:7887605d1bb66a3e3bbd981609d4d26bd71b37c6ac8814b3ab6795d9b18f52a8 0.0s done
+#38 sending tarball
+#38 ...
+
+#39 importing to docker
+#39 loading layer 7c1ccd5d0fdd 93B / 93B
+#39 loading layer 4d4c78e4572f 131.07kB / 10.66MB
+#39 loading layer 556ef7e6b0da 97B / 97B
+#39 loading layer 059015cf0844 32.77kB / 835.07kB
+#39 loading layer d6e9b7be8a34 195B / 195B
+#39 loading layer dd7b65a438d8 190B / 190B
+#39 loading layer 6588ed5e541d 266B / 266B
+#39 loading layer 8db908338cbb 1.86kB / 1.86kB
+#39 loading layer b2802d45a700 1.29kB / 1.29kB
+#39 loading layer 4e2ba371c6ac 3.55kB / 3.55kB
+#39 loading layer a4a974f22bf8 32.77kB / 1.22MB
+#39 loading layer 29f425845431 32.77kB / 1.47MB
+#39 loading layer 7937b22cb507 524.29kB / 51.50MB
+#39 loading layer 9ff74383d7d1 131.07kB / 11.59MB
+#39 loading layer 9979f0502a73 32.77kB / 1.00MB
+#39 loading layer af1b394ae2cb 1.75kB / 1.75kB
+#39 loading layer bcb7c4e17574 1.19kB / 1.19kB
+#39 loading layer 8334219f7e4c 234B / 234B
+#39 loading layer 04f349fb954d 496B / 496B
+#39 loading layer 9ff74383d7d1 11.59MB / 11.59MB 0.9s done
+#39 loading layer 7c1ccd5d0fdd 93B / 93B 4.1s done
+#39 loading layer 4d4c78e4572f 10.66MB / 10.66MB 4.0s done
+#39 loading layer 556ef7e6b0da 97B / 97B 3.8s done
+#39 loading layer 059015cf0844 835.07kB / 835.07kB 3.7s done
+#39 loading layer d6e9b7be8a34 195B / 195B 3.6s done
+#39 loading layer dd7b65a438d8 190B / 190B 3.5s done
+#39 loading layer 6588ed5e541d 266B / 266B 3.4s done
+#39 loading layer 8db908338cbb 1.86kB / 1.86kB 3.4s done
+#39 loading layer b2802d45a700 1.29kB / 1.29kB 3.3s done
+#39 loading layer 4e2ba371c6ac 3.55kB / 3.55kB 3.2s done
+#39 loading layer a4a974f22bf8 1.22MB / 1.22MB 3.1s done
+#39 loading layer 29f425845431 1.47MB / 1.47MB 3.0s done
+#39 loading layer 7937b22cb507 51.50MB / 51.50MB 2.9s done
+#39 loading layer 9979f0502a73 1.00MB / 1.00MB 0.4s done
+#39 loading layer af1b394ae2cb 1.75kB / 1.75kB 0.3s done
+#39 loading layer bcb7c4e17574 1.19kB / 1.19kB 0.3s done
+#39 loading layer 8334219f7e4c 234B / 234B 0.2s done
+#39 loading layer 04f349fb954d 496B / 496B 0.1s done
+#39 DONE 4.1s
+
+#38 exporting to docker image format
+#38 sending tarball 4.8s done
+#38 DONE 11.7s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "AUTH_PROVIDERS") (line 95)

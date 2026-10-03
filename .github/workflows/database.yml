@@ -20,6 +20,7 @@ jobs:
       migrations: ${{ steps.select.outputs.migrations }}
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -59,6 +60,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
         with:
           persist-credentials: false
       - uses: ./tooling/github/setup
@@ -72,6 +74,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
         with:
           persist-credentials: false
       - uses: ./tooling/github/setup

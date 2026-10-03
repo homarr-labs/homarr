@@ -1,0 +1,164 @@
+[
+  {
+    "phase": "cold",
+    "elapsedSeconds": 2.5541260889731348,
+    "tasks": [
+      {
+        "taskId": "@homarr/cli#build",
+        "hash": "195d5e28fffd435a",
+        "cache": {
+          "local": false,
+          "remote": false,
+          "status": "MISS",
+          "timeSaved": 0
+        },
+        "execution": {
+          "startTime": 1791015750581,
+          "endTime": 1791015751376,
+          "exitCode": 0
+        }
+      },
+      {
+        "taskId": "@homarr/db#build",
+        "hash": "30cf3baf869fafc5",
+        "cache": {
+          "local": false,
+          "remote": false,
+          "status": "MISS",
+          "timeSaved": 0
+        },
+        "execution": {
+          "startTime": 1791015748972,
+          "endTime": 1791015750580,
+          "exitCode": 0
+        }
+      }
+    ],
+    "artifacts": {
+      "packages/cli/cli.cjs": {
+        "sha256": "0bacb0316ca817c821317841d9f1fbd16db93c8fad597e7738d28ca0902ec0b8",
+        "bytes": 4457913
+      },
+      "packages/db/migrations/sqlite/migrate.cjs": {
+        "sha256": "9571a13cac50e49679c061b8b949dcadc78c7ae3b9e1bfe4ff00321819beafbf",
+        "bytes": 3662016
+      },
+      "packages/db/migrations/postgresql/migrate.cjs": {
+        "sha256": "5e4a8e3d680fda137e73e26603304169e360de6780fc615b00e3b30be956800f",
+        "bytes": 3662043
+      }
+    }
+  },
+  {
+    "phase": "warm",
+    "elapsedSeconds": 0.09704016894102097,
+    "tasks": [
+      {
+        "taskId": "@homarr/cli#build",
+        "hash": "195d5e28fffd435a",
+        "cache": {
+          "local": true,
+          "remote": false,
+          "status": "HIT",
+          "source": "LOCAL",
+          "timeSaved": 795,
+          "sha": "25120cd2bebf52e42d911eacadf630a059fc8af7",
+          "dirtyHash": "a57a028595eab82997079098733c13b91edcaa665e0eca8c17ad6122142d4391"
+        },
+        "execution": {
+          "startTime": 1791015751494,
+          "endTime": 1791015751494,
+          "exitCode": 0
+        }
+      },
+      {
+        "taskId": "@homarr/db#build",
+        "hash": "30cf3baf869fafc5",
+        "cache": {
+          "local": true,
+          "remote": false,
+          "status": "HIT",
+          "source": "LOCAL",
+          "timeSaved": 1607,
+          "sha": "25120cd2bebf52e42d911eacadf630a059fc8af7",
+          "dirtyHash": "a57a028595eab82997079098733c13b91edcaa665e0eca8c17ad6122142d4391"
+        },
+        "execution": {
+          "startTime": 1791015751493,
+          "endTime": 1791015751493,
+          "exitCode": 0
+        }
+      }
+    ],
+    "artifacts": {
+      "packages/cli/cli.cjs": {
+        "sha256": "0bacb0316ca817c821317841d9f1fbd16db93c8fad597e7738d28ca0902ec0b8",
+        "bytes": 4457913
+      },
+      "packages/db/migrations/sqlite/migrate.cjs": {
+        "sha256": "9571a13cac50e49679c061b8b949dcadc78c7ae3b9e1bfe4ff00321819beafbf",
+        "bytes": 3662016
+      },
+      "packages/db/migrations/postgresql/migrate.cjs": {
+        "sha256": "5e4a8e3d680fda137e73e26603304169e360de6780fc615b00e3b30be956800f",
+        "bytes": 3662043
+      }
+    }
+  },
+  {
+    "phase": "restore",
+    "elapsedSeconds": 0.11547788395546377,
+    "tasks": [
+      {
+        "taskId": "@homarr/cli#build",
+        "hash": "195d5e28fffd435a",
+        "cache": {
+          "local": true,
+          "remote": false,
+          "status": "HIT",
+          "source": "LOCAL",
+          "timeSaved": 795,
+          "sha": "25120cd2bebf52e42d911eacadf630a059fc8af7",
+          "dirtyHash": "a57a028595eab82997079098733c13b91edcaa665e0eca8c17ad6122142d4391"
+        },
+        "execution": {
+          "startTime": 1791015751615,
+          "endTime": 1791015751623,
+          "exitCode": 0
+        }
+      },
+      {
+        "taskId": "@homarr/db#build",
+        "hash": "30cf3baf869fafc5",
+        "cache": {
+          "local": true,
+          "remote": false,
+          "status": "HIT",
+          "source": "LOCAL",
+          "timeSaved": 1607,
+          "sha": "25120cd2bebf52e42d911eacadf630a059fc8af7",
+          "dirtyHash": "a57a028595eab82997079098733c13b91edcaa665e0eca8c17ad6122142d4391"
+        },
+        "execution": {
+          "startTime": 1791015751598,
+          "endTime": 1791015751614,
+          "exitCode": 0
+        }
+      }
+    ],
+    "artifacts": {
+      "packages/cli/cli.cjs": {
+        "sha256": "0bacb0316ca817c821317841d9f1fbd16db93c8fad597e7738d28ca0902ec0b8",
+        "bytes": 4457913
+      },
+      "packages/db/migrations/sqlite/migrate.cjs": {
+        "sha256": "9571a13cac50e49679c061b8b949dcadc78c7ae3b9e1bfe4ff00321819beafbf",
+        "bytes": 3662016
+      },
+      "packages/db/migrations/postgresql/migrate.cjs": {
+        "sha256": "5e4a8e3d680fda137e73e26603304169e360de6780fc615b00e3b30be956800f",
+        "bytes": 3662043
+      }
+    }
+  }
+]

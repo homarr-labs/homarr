@@ -30,7 +30,6 @@ if [[ -z "${DOCKER_HOST:-}" ]]; then
 fi
 
 head_sha=$(git rev-parse HEAD)
-base_sha=$(git rev-parse HEAD~1 2>/dev/null || echo "$head_sha")
 head_ref=$(git branch --show-current)
 head_ref=${head_ref:-act-local}
 event_file=$(mktemp "${TMPDIR:-/tmp}/homarr-act-event.XXXXXX")
@@ -46,7 +45,7 @@ if [[ "$mode" == "cleanup" ]]; then
   "repository": { "full_name": "homarr-labs/homarr" }
 }
 EOF
-elif [[ "$mode" == "docker" ]]; then
+elif [[ "$mode" == "docker" || "$mode" == "all" ]]; then
   event_name="workflow_dispatch"
   cat >"$event_file" <<EOF
 {
@@ -55,6 +54,7 @@ elif [[ "$mode" == "docker" ]]; then
 }
 EOF
 else
+  base_sha=$(git merge-base origin/dev HEAD)
   event_name="pull_request"
   safe_ref=$(json_escape "$head_ref")
   cat >"$event_file" <<EOF
@@ -84,7 +84,17 @@ args=(
   --platform "ubuntu-latest=$runner_image"
   --container-architecture linux/amd64
   --bind
+  # Jobs share the dependency volume; installs must not race.
+  --concurrent-jobs 1
 )
+
+# Ryuk mounts the host socket; rootless runners need a reachable host address.
+if [[ "$DOCKER_HOST" == unix://* ]]; then
+  args+=(--env "TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=${DOCKER_HOST#unix://}")
+fi
+if [[ -n "${ACT_TESTCONTAINERS_HOST:-}" ]]; then
+  args+=(--env "TESTCONTAINERS_HOST_OVERRIDE=$ACT_TESTCONTAINERS_HOST")
+fi
 
 if [[ -n "$job" ]]; then
   args+=(--job "$job")

@@ -1,0 +1,688 @@
+#0 building with "homarr-turbo-validation-20261003" instance using docker-container driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 4.45kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.25
+#2 DONE 0.6s
+
+#3 docker-image://docker.io/docker/dockerfile:1.25@sha256:0adf442eae370b6087e08edc7c50b552d80ddf261576f4ebd6421006b2461f12
+#3 resolve docker.io/docker/dockerfile:1.25@sha256:0adf442eae370b6087e08edc7c50b552d80ddf261576f4ebd6421006b2461f12 0.0s done
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/node:24.18.0-alpine
+#4 DONE 0.3s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 374B done
+#5 DONE 0.0s
+
+#6 [base 1/1] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#6 resolve docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 276.93kB 0.2s done
+#7 DONE 0.3s
+
+#8 [builder  3/11] RUN corepack enable pnpm
+#8 CACHED
+
+#9 [builder  4/11] COPY .npmrc pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+#9 CACHED
+
+#10 [builder  6/11] COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
+#10 CACHED
+
+#11 [builder  7/11] COPY --parents ./packages/definitions/src ./
+#11 CACHED
+
+#12 [builder  8/11] RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked     pnpm config set store-dir /pnpm/store &&     sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml &&     pnpm fetch --ignore-scripts &&     sed -i 's/nodeLinker: isolated/nodeLinker: hoisted/' pnpm-workspace.yaml
+#12 CACHED
+
+#13 [builder  1/11] WORKDIR /app
+#13 CACHED
+
+#14 [builder  2/11] RUN apk add --no-cache libc6-compat curl bash python3 make g++
+#14 CACHED
+
+#15 [builder  5/11] COPY patches ./patches
+#15 CACHED
+
+#16 [builder  9/11] RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked     npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1
+#16 CACHED
+
+#17 [builder 10/11] COPY . .
+#17 DONE 1.2s
+
+#18 [builder 11/11] RUN --mount=type=secret,id=TURBO_API,env=TURBO_API     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY     --mount=type=cache,id=homarr-next-build-linux/amd64,target=/app/apps/nextjs/.next/cache,sharing=locked     --mount=type=cache,id=homarr-turbo-linux/amd64,target=/app/.turbo,sharing=locked     TURBO_PLATFORM="linux/amd64"     pnpm turbo build --filter=@homarr/nextjs... --filter=@homarr/cli
+#18 0.882 [WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+#18 0.884 [WARN] Your node_modules are out of sync with your lockfile. The value of the enableGlobalVirtualStore setting has changed
+#18 0.979 
+#18 0.979 Attention:
+#18 0.979 Turborepo now collects completely anonymous telemetry regarding usage.
+#18 0.979 This information is used to shape the Turborepo roadmap and prioritize features.
+#18 0.979 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#18 0.979 https://turborepo.dev/docs/telemetry
+#18 0.979 
+#18 1.014 
+#18 1.014    • Packages in scope: @homarr/analytics, @homarr/api, @homarr/auth, @homarr/boards, @homarr/cli, @homarr/common, @homarr/core, @homarr/cron-job-status, @homarr/cron-jobs, @homarr/cron-jobs-core, @homarr/custom-widgets, @homarr/db, @homarr/definitions, @homarr/docker, @homarr/form, @homarr/forms-collection, @homarr/icons, @homarr/image-proxy, @homarr/integrations, @homarr/modals, @homarr/modals-collection, @homarr/nextjs, @homarr/notifications, @homarr/onboarding, @homarr/ping, @homarr/redis, @homarr/request-handler, @homarr/server-settings, @homarr/settings, @homarr/spotlight, @homarr/tasks, @homarr/translation, @homarr/tsconfig, @homarr/ui, @homarr/validation, @homarr/websocket, @homarr/widgets, @homarr/workshop
+#18 1.014    • Running build in 38 packages
+#18 1.014    • Remote caching disabled
+#18 1.014 
+#18 1.221 @homarr/db:build: cache hit, replaying logs c971cb31984a1869
+#18 1.221 @homarr/db:build: $ pnpm run build:sqlite && pnpm run build:postgresql
+#18 1.221 @homarr/db:build: $ esbuild migrations/sqlite/migrate.ts --bundle --platform=node --outfile=migrations/sqlite/migrate.cjs
+#18 1.221 @homarr/db:build: 
+#18 1.221 @homarr/db:build:   migrations/sqlite/migrate.cjs  3.5mb ⚠️
+#18 1.221 @homarr/db:build: 
+#18 1.221 @homarr/db:build: ⚡ Done in 199ms
+#18 1.221 @homarr/db:build: $ esbuild migrations/postgresql/migrate.ts --bundle --platform=node --outfile=migrations/postgresql/migrate.cjs
+#18 1.221 @homarr/db:build: 
+#18 1.221 @homarr/db:build:   migrations/postgresql/migrate.cjs  3.5mb ⚠️
+#18 1.221 @homarr/db:build: 
+#18 1.221 @homarr/db:build: ⚡ Done in 191ms
+#18 1.222 @homarr/nextjs:build: cache miss, executing 9e0eee54833df8f6
+#18 1.283 @homarr/cli:build: cache hit, replaying logs f3c48f3640a71494
+#18 1.283 @homarr/cli:build: $ esbuild src/index.ts --bundle --platform=node --outfile=cli.cjs --external:bcrypt --external:cpu-features --loader:.html=text --loader:.node=text
+#18 1.283 @homarr/cli:build: 
+#18 1.283 @homarr/cli:build:   cli.cjs  4.3mb ⚠️
+#18 1.283 @homarr/cli:build: 
+#18 1.283 @homarr/cli:build: ⚡ Done in 242ms
+#18 1.830 @homarr/nextjs:build: $ HOMARR_VERSION=$(node -p "require('../../package.json').version") pnpm with-env next build
+#18 2.422 @homarr/nextjs:build: $ dotenv -e ../../.env -- next build
+#18 2.867 @homarr/nextjs:build: ▲ Next.js 16.3.6 (Turbopack)
+#18 3.883 @homarr/nextjs:build: ✓ Running next.config.ts took 1016ms
+#18 3.899 @homarr/nextjs:build: - Experiments (use with caution):
+#18 3.899 @homarr/nextjs:build:   · optimizePackageImports
+#18 3.899 @homarr/nextjs:build: 
+#18 3.953 @homarr/nextjs:build:   Creating an optimized production build ...
+#18 8.399 @homarr/nextjs:build: ✓ Compiled successfully in 2.7s
+#18 8.402 @homarr/nextjs:build:   Skipping validation of types
+#18 8.409 @homarr/nextjs:build:   Finished TypeScript config validation in 6ms ...
+#18 8.412 @homarr/nextjs:build:   Collecting page data using 19 workers ...
+#18 13.44 @homarr/nextjs:build:   Generating static pages using 19 workers (0/19) ...
+#18 14.44 @homarr/nextjs:build:   Generating static pages using 19 workers (4/19) 
+#18 14.53 @homarr/nextjs:build:   Generating static pages using 19 workers (9/19) 
+#18 14.56 @homarr/nextjs:build:   Generating static pages using 19 workers (14/19) 
+#18 14.82 @homarr/nextjs:build: ✓ Generating static pages using 19 workers (19/19) in 1387ms
+#18 14.83 @homarr/nextjs:build: Turbopack build encountered 10 warnings:
+#18 14.83 @homarr/nextjs:build: [externals]/node:crypto
+#18 14.83 @homarr/nextjs:build: Warning: unexpected export *
+#18 14.83 @homarr/nextjs:build: export * used with module [externals]/node:crypto [external] (node:crypto, cjs) which is a CommonJS module with exports only available at runtime
+#18 14.83 @homarr/nextjs:build: List all export names manually (`export { a, b, c } from "...") or rewrite the module to ESM, to avoid the additional runtime code.`
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import trace:
+#18 14.83 @homarr/nextjs:build:   external:
+#18 14.83 @homarr/nextjs:build:     [externals]/node:crypto [external]
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/assistant/chat/route.ts [App Route]
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./apps/nextjs/src/app/api/backup/import/route.ts:333:13
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m331 |[0m       [36mtry[0m {
+#18 14.83 @homarr/nextjs:build:   [90m332 |[0m         [36mconst[0m sidecar = [32m`[0m${dbPath[32m}[0m${suffix[32m}`[0m;
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m333 |[0m         [36mif[0m (fs.existsSync(sidecar)) fs.unlinkSync(sidecar);
+#18 14.83 @homarr/nextjs:build:   [90m    |[0m             [33m[1m^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m334 |[0m       } [36mcatch[0m (cleanupErr) {
+#18 14.83 @homarr/nextjs:build:   [90m335 |[0m         logger.warn([32m"Failed to remove SQLite sidecar file after restore"[0m, { suffix, dbPat...
+#18 14.83 @homarr/nextjs:build:   [90m336 |[0m       }
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.existsSync(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import trace:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/backup/import/route.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/backup/import/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:19:8
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m17 |[0m   }
+#18 14.83 @homarr/nextjs:build:   [90m18 |[0m
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m19 |[0m   [36mif[0m (!fsSync.existsSync(folder)) {
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m        [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m20 |[0m     [36mawait[0m fs.mkdir(folder, { recursive: [36mtrue[0m });
+#18 14.83 @homarr/nextjs:build:   [90m21 |[0m   }
+#18 14.83 @homarr/nextjs:build:   [90m22 |[0m
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.existsSync(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:28:24
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m26 |[0m       .filter((file) => file.endsWith([32m".crt"[0m) || file.endsWith([32m".pem"[0m))
+#18 14.83 @homarr/nextjs:build:   [90m27 |[0m       .map([36masync[0m (file) => ({
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m28 |[0m         content: [36mawait[0m fs.readFile(path.join(folder, file), [32m"utf8"[0m),
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                        [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m29 |[0m         fileName: file,
+#18 14.83 @homarr/nextjs:build:   [90m30 |[0m       })),
+#18 14.83 @homarr/nextjs:build:   [90m31 |[0m   );
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readFile(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:51:25
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m49 |[0m
+#18 14.83 @homarr/nextjs:build:   [90m50 |[0m   [36mconst[0m fullPath = path.join(folder, fileName);
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m51 |[0m   [36mconst[0m content = [36mawait[0m fs.readFile(fullPath, [32m"utf8"[0m);
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                         [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m52 |[0m
+#18 14.83 @homarr/nextjs:build:   [90m53 |[0m   [36mawait[0m fs.rm(fullPath);
+#18 14.83 @homarr/nextjs:build:   [90m54 |[0m   [36mtry[0m {
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readFile(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:23:28
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m21 |[0m   }
+#18 14.83 @homarr/nextjs:build:   [90m22 |[0m
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m23 |[0m   [36mconst[0m dirContent = [36mawait[0m fs.readdir(folder);
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                            [33m[1m^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m24 |[0m   [36mreturn[0m [36mawait[0m [33mPromise[0m.all(
+#18 14.83 @homarr/nextjs:build:   [90m25 |[0m     dirContent
+#18 14.83 @homarr/nextjs:build:   [90m26 |[0m       .filter((file) => file.endsWith([32m".crt"[0m) || file.endsWith([32m".pem"[0m))
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readdir(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:45:31
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m43 |[0m   }
+#18 14.83 @homarr/nextjs:build:   [90m44 |[0m
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m45 |[0m   [36mconst[0m existingFiles = [36mawait[0m fs.readdir(folder, { withFileTypes: [36mtrue[0m });
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                               [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m46 |[0m   [36mif[0m (!existingFiles.some((file) => file.isFile() && file.name === fileName)) {
+#18 14.83 @homarr/nextjs:build:   [90m47 |[0m     [36mthrow[0m [36mnew[0m [33mError[0m([32m`File [0m${fileName[32m} does not exist`[0m);
+#18 14.83 @homarr/nextjs:build:   [90m48 |[0m   }
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: fs.readdir(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:28:36
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m26 |[0m       .filter((file) => file.endsWith([32m".crt"[0m) || file.endsWith([32m".pem"[0m))
+#18 14.83 @homarr/nextjs:build:   [90m27 |[0m       .map([36masync[0m (file) => ({
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m28 |[0m         content: [36mawait[0m fs.readFile(path.join(folder, file), [32m"utf8"[0m),
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                                    [33m[1m^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m29 |[0m         fileName: file,
+#18 14.83 @homarr/nextjs:build:   [90m30 |[0m       })),
+#18 14.83 @homarr/nextjs:build:   [90m31 |[0m   );
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:50:20
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m48 |[0m   }
+#18 14.83 @homarr/nextjs:build:   [90m49 |[0m
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m50 |[0m   [36mconst[0m fullPath = path.join(folder, fileName);
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                    [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m51 |[0m   [36mconst[0m content = [36mawait[0m fs.readFile(fullPath, [32m"utf8"[0m);
+#18 14.83 @homarr/nextjs:build:   [90m52 |[0m
+#18 14.83 @homarr/nextjs:build:   [90m53 |[0m   [36mawait[0m fs.rm(fullPath);
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: ./packages/core/src/infrastructure/certificates/files/index.ts:73:22
+#18 14.83 @homarr/nextjs:build: Warning: Dynamic filesystem access causes tracing of the whole project
+#18 14.83 @homarr/nextjs:build:   [90m71 |[0m   }
+#18 14.83 @homarr/nextjs:build:   [90m72 |[0m
+#18 14.83 @homarr/nextjs:build: [33m[1m>[0m [90m73 |[0m   [36mawait[0m fs.writeFile(path.join(folder, fileName), content);
+#18 14.83 @homarr/nextjs:build:   [90m   |[0m                      [33m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+#18 14.83 @homarr/nextjs:build:   [90m74 |[0m };
+#18 14.83 @homarr/nextjs:build:   [90m75 |[0m
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+#18 14.83 @homarr/nextjs:build: This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+#18 14.83 @homarr/nextjs:build: This can slow down deployments or lead to failures when size limits are exceeded.
+#18 14.83 @homarr/nextjs:build: To resolve this, you can
+#18 14.83 @homarr/nextjs:build: - make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+#18 14.83 @homarr/nextjs:build: - only use them in development, or
+#18 14.83 @homarr/nextjs:build: - opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+#18 14.83 @homarr/nextjs:build: - remove them.
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: Import traces:
+#18 14.83 @homarr/nextjs:build:   App Route:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/image-proxy/src/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Server Component:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/providers/oidc/oidc-provider.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/configuration.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/auth/next.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Instrumentation:
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/certificates/files/index.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/request.ts
+#18 14.83 @homarr/nextjs:build:     ./packages/core/src/infrastructure/http/index.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/overrides.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/tasks/src/main.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation-node.ts
+#18 14.83 @homarr/nextjs:build:     ./apps/nextjs/src/instrumentation.ts
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build: 
+#18 14.83 @homarr/nextjs:build:   Finalizing page optimization ...
+#18 20.53 @homarr/nextjs:build: 
+#18 20.53 @homarr/nextjs:build: Route (app)
+#18 20.53 @homarr/nextjs:build: ┌ ○ /_not-found
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/auth/invite/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/auth/login
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/boards
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/boards/[name]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/boards/[name]/settings
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/custom-widget-configuration/[token]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/init
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/[...not-found]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/about
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/apps
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/apps/edit/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/apps/new
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/assistant
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/boards
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/edit/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/new
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/preview/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/publish/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/workshop
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/custom-widgets/workshop/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/integrations
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/integrations/edit/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/integrations/new
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/medias
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/search-engines
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/search-engines/edit/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/search-engines/new
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/settings
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/api
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/backup
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/certificates
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/certificates/hostnames
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/docker
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/docker/logs/[containerId]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/configmaps
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/ingresses
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/namespaces
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/nodes
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/pods
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/secrets
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/services
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/kubernetes/volumes
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/logs
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/tools/tasks
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/[userId]/general
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/[userId]/security
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/create
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]/members
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]/permissions
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/groups/[id]/settings
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/users/invites
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/manage/workshop
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/reference/api
+#18 20.53 @homarr/nextjs:build: ├ ƒ /[locale]/widgets/[kind]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/[...trpc]
+#18 20.53 @homarr/nextjs:build: ├ ○ /api/about/contributors/crowdin
+#18 20.53 @homarr/nextjs:build: ├ ○ /api/about/contributors/github
+#18 20.53 @homarr/nextjs:build: ├ ○ /api/about/contributors/opencollective
+#18 20.53 @homarr/nextjs:build: ├ ○ /api/about/dependencies
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/assistant/chat
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/auth/[...nextauth]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/backup/export
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/backup/import
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/backup/migrations
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/backup/sql-wasm
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/custom-widgets/[resource]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/custom-widgets/configuration-request/[token]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/health/live
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/health/ready
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/image-proxy/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/mcp
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/mcp/[transport]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/mcp/oauth/authorize
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/mcp/oauth/register
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/mcp/oauth/token
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/onboarding/claim
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/openapi
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/trpc/[trpc]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /api/user-medias/[id]
+#18 20.53 @homarr/nextjs:build: ├ ƒ /manifest.webmanifest
+#18 20.53 @homarr/nextjs:build: └ ƒ /well-known/[...path]
+#18 20.53 @homarr/nextjs:build: 
+#18 20.53 @homarr/nextjs:build: 
+#18 20.53 @homarr/nextjs:build: ƒ Proxy (Middleware)
+#18 20.53 @homarr/nextjs:build: 
+#18 20.53 @homarr/nextjs:build: ○  (Static)   prerendered as static content
+#18 20.53 @homarr/nextjs:build: ƒ  (Dynamic)  server-rendered on demand
+#18 20.53 @homarr/nextjs:build: 
+#18 20.95 
+#18 20.95  Tasks:    3 successful, 3 total
+#18 20.95 Cached:    2 cached, 3 total
+#18 20.95   Time:    19.962s 
+#18 20.95 
+#18 DONE 26.1s
+
+#19 [runner  6/19] RUN chmod +x /usr/bin/homarr
+#19 CACHED
+
+#20 [runner  9/19] COPY --from=builder /app/apps/nextjs/package.json .
+#20 CACHED
+
+#21 [runner 10/19] COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+#21 CACHED
+
+#22 [runner  2/19] RUN apk add --no-cache redis nginx bash gettext su-exec openssl
+#22 CACHED
+
+#23 [runner  7/19] RUN mkdir -p /var/cache/nginx &&     mkdir -p /var/log/nginx &&     mkdir -p /var/lib/nginx &&     touch /run/nginx/nginx.pid &&     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
+#23 CACHED
+
+#24 [runner  8/19] COPY --from=builder /app/apps/nextjs/next.config.ts .
+#24 CACHED
+
+#25 [runner 11/19] COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
+#25 CACHED
+
+#26 [runner  3/19] RUN mkdir /appdata
+#26 CACHED
+
+#27 [runner  5/19] RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
+#27 CACHED
+
+#28 [runner  4/19] COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
+#28 CACHED
+
+#29 [runner 12/19] COPY --from=builder /app/packages/db/migrations ./db/migrations
+#29 CACHED
+
+#30 [runner 13/19] COPY --from=builder /app/apps/nextjs/.next/standalone ./
+#30 DONE 4.6s
+
+#31 [runner 14/19] COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
+#31 DONE 0.9s
+
+#32 [runner 15/19] COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+#32 DONE 0.3s
+
+#33 [runner 16/19] COPY scripts/run.sh ./run.sh
+#33 DONE 0.2s
+
+#34 [runner 17/19] COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
+#34 DONE 0.2s
+
+#35 [runner 18/19] COPY packages/redis/redis.conf /app/redis.conf
+#35 DONE 0.2s
+
+#36 [runner 19/19] COPY nginx.conf /etc/nginx/templates/nginx.conf
+#36 DONE 0.3s
+
+#37 exporting to docker image format
+#37 exporting layers
+#37 exporting layers 5.6s done
+#37 exporting manifest sha256:36606329567d28872d3608816133809d6dfe01ffe3942498631c675fb8f3773e 0.0s done
+#37 exporting config sha256:655b884166922cf0eedc215313d5460d481aaca583f40e67267fc4c33d2b4c80 0.0s done
+#37 sending tarball
+#37 ...
+
+#38 importing to docker
+#38 loading layer 32927e886e7b 524.29kB / 51.50MB
+#38 loading layer e84d70421236 131.07kB / 11.59MB
+#38 loading layer b0a4a4351d39 32.77kB / 1.00MB
+#38 loading layer 0b130d787dd3 1.75kB / 1.75kB
+#38 loading layer f1883f186cf3 1.19kB / 1.19kB
+#38 loading layer 52ec0044e1b2 233B / 233B
+#38 loading layer 295ccc6fce55 499B / 499B
+#38 loading layer f1883f186cf3 1.19kB / 1.19kB 0.2s done
+#38 loading layer 32927e886e7b 51.50MB / 51.50MB 2.9s done
+#38 loading layer e84d70421236 11.59MB / 11.59MB 0.9s done
+#38 loading layer b0a4a4351d39 1.00MB / 1.00MB 0.4s done
+#38 loading layer 0b130d787dd3 1.75kB / 1.75kB 0.3s done
+#38 loading layer 52ec0044e1b2 233B / 233B 0.2s done
+#38 loading layer 295ccc6fce55 499B / 499B 0.1s done
+#38 DONE 2.9s
+
+#37 exporting to docker image format
+#37 sending tarball 3.6s done
+#37 DONE 9.3s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "AUTH_PROVIDERS") (line 95)

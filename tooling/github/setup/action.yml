@@ -12,3 +12,12 @@ runs:
 
     - shell: bash
       run: pnpm install --frozen-lockfile
+
+    - name: Restore local Turbo artifacts without remote credentials
+      if: "!env.ACT && !env.TURBO_TOKEN"
+      uses: actions/cache@v5
+      with:
+        path: .turbo/cache
+        key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('pnpm-lock.yaml') }}-

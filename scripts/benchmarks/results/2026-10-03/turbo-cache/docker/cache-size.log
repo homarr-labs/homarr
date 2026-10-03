@@ -1,0 +1,34 @@
+#0 building with "homarr-turbo-validation-20261003" instance using docker-container driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 182B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.18.0-alpine
+#2 DONE 0.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [stage-0 1/2] FROM docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#4 resolve docker.io/library/node:24.18.0-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.0s done
+#4 CACHED
+
+#5 [stage-0 2/2] RUN --mount=type=cache,id=homarr-turbo-linux/amd64,target=/cache,sharing=locked du -sk /cache && du -k /cache/cache/*
+#5 0.122 262724	/cache
+#5 0.122 4124	/cache/cache/9e0eee54833df8f6-manifest.json
+#5 0.122 4	/cache/cache/9e0eee54833df8f6-meta.json
+#5 0.122 124796	/cache/cache/9e0eee54833df8f6.tar.zst
+#5 0.122 4	/cache/cache/c971cb31984a1869-manifest.json
+#5 0.122 4	/cache/cache/c971cb31984a1869-meta.json
+#5 0.122 1192	/cache/cache/c971cb31984a1869.tar.zst
+#5 0.122 4124	/cache/cache/dc41d0a5afab387f-manifest.json
+#5 0.122 2832	/cache/cache/dc41d0a5afab387f-manifest.json.tmp
+#5 0.122 4	/cache/cache/dc41d0a5afab387f-meta.json
+#5 0.122 124796	/cache/cache/dc41d0a5afab387f.tar.zst
+#5 0.122 4	/cache/cache/f3c48f3640a71494-manifest.json
+#5 0.122 4	/cache/cache/f3c48f3640a71494-meta.json
+#5 0.122 828	/cache/cache/f3c48f3640a71494.tar.zst
+#5 DONE 0.3s
+WARNING: No output specified with docker-container driver. Build result will only remain in the build cache. To push result image into registry use --push or to load image into docker use --load
