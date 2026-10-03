@@ -37,7 +37,11 @@ function collectTraces(directory) {
     const trace = JSON.parse(readFileSync(path, "utf8"));
     for (const file of trace.files) {
       const target = relative(compiled, resolve(dirname(path), file));
-      if (!target.startsWith("../") && !target.startsWith("standalone/")) files.add(target);
+      if (target.startsWith("../") || target.startsWith("standalone/")) continue;
+      // Native aliases link to dependencies owned by the other cache artifact.
+      // Recreate the link, without rewriting files through it during archiving.
+      if (target.startsWith("node_modules/") && !lstatSync(join(compiled, target)).isSymbolicLink()) continue;
+      files.add(target);
     }
   }
 }
