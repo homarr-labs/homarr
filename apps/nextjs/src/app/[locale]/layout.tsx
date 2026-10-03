@@ -167,7 +167,7 @@ export default async function Layout(props: {
       />
     ),
     (innerProps) => <JotaiProvider {...innerProps} />,
-    (innerProps) => <TRPCReactProvider {...innerProps} />,
+    (innerProps) => <TRPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} />,
     (innerProps) => (

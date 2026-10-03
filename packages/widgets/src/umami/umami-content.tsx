@@ -12,7 +12,7 @@ import classes from "./component.module.css";
 import { UmamiEventsContent } from "./umami-events-content";
 import { getUmamiLayout } from "./umami-layout";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
-import { formatTimeFrameLabel, formatXLabel, umamiQueryOptions } from "./umami-utils";
+import { formatTimeFrameLabel, formatXLabel, useUmamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
@@ -48,6 +48,7 @@ export function UmamiContent({
 }: UmamiContentProps) {
   const t = useI18n("widget.umami");
   const locale = useCurrentIntlLocale();
+  const umamiQueryOptions = useUmamiQueryOptions();
   const tickColor = "var(--mantine-color-dimmed)";
 
   const statsQuery = clientApi.widget.umami.getVisitorStats.useQuery(
