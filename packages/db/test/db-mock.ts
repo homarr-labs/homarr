@@ -8,6 +8,7 @@ import * as sqliteSchema from "../schema/sqlite";
 
 export const createDb = (debug?: boolean) => {
   const sqlite = new Database(":memory:");
+  sqlite.exec("PRAGMA foreign_keys = ON");
   const db = drizzle(sqlite, { schema: sqliteSchema, logger: debug, casing: DB_CASING });
   migrate(db, {
     migrationsFolder: "./packages/db/migrations/sqlite",

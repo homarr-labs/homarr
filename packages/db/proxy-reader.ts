@@ -75,6 +75,7 @@ const createProxyReaderAsync = async (): Promise<ProxyReader> => {
         import("./proxy/sqlite"),
       ]);
       const connection = new Database(dbEnv.URL);
+      connection.exec("PRAGMA foreign_keys = ON");
       const database = drizzle(connection, { schema: proxySchema });
       return createProxyReader(database, proxySchema, async () => {
         connection.close(true);

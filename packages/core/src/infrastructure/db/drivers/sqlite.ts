@@ -6,5 +6,7 @@ import type { SharedDrizzleConfig } from "./shared";
 
 export const createSqliteDb = <TSchema extends Record<string, unknown>>(config: SharedDrizzleConfig<TSchema>) => {
   const connection = new Database(dbEnv.URL);
+  // Preserve better-sqlite3's default; Bun leaves foreign keys disabled.
+  connection.exec("PRAGMA foreign_keys = ON");
   return drizzleSqlite<TSchema>(connection, config);
 };
