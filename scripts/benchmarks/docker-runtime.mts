@@ -1664,7 +1664,9 @@ net.createServer((client) => {
     ),
     widgetDataSettledMs: summarize(pageLoadSamples.map((measurement) => measurement.widgetDataSettledMs)),
   };
+  const oomKillCount = Math.max(0, ...checkpoints.map((checkpoint) => checkpoint.container.oomKillCount ?? 0));
   const eligibilityInput = {
+    oomKillCount,
     expectedSha,
     expectedSourceFingerprint,
     browserNetworkIsolated,
@@ -1684,8 +1686,6 @@ net.createServer((client) => {
   };
   const metricEligibility = getRuntimeMetricEligibility(eligibilityInput);
   const claimIneligibleReasons = getRuntimeClaimIneligibleReasons(eligibilityInput);
-  const oomKillCount = Math.max(0, ...checkpoints.map((checkpoint) => checkpoint.container.oomKillCount ?? 0));
-  if (oomKillCount > 0) claimIneligibleReasons.push(`Container OOM-killed ${oomKillCount} processes`);
   const claimEligible = claimIneligibleReasons.length === 0;
   const result = {
     schemaVersion: 7,

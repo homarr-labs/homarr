@@ -258,6 +258,7 @@ export const inspectTrpcBatchStreamResponse = async (
 };
 
 type RuntimeMetricEligibilityInput = {
+  oomKillCount?: number;
   expectedSha: string | null;
   expectedSourceFingerprint: string | null;
   browserNetworkIsolated: boolean;
@@ -277,6 +278,7 @@ type RuntimeMetricEligibilityInput = {
 };
 
 const getRuntimeProvenanceIneligibleReasons = ({
+  oomKillCount,
   browserNetworkIsolated,
   serverNetworkIsolated,
   expectedSha,
@@ -287,6 +289,7 @@ const getRuntimeProvenanceIneligibleReasons = ({
   sourceFingerprint,
 }: Pick<
   RuntimeMetricEligibilityInput,
+  | "oomKillCount"
   | "browserNetworkIsolated"
   | "serverNetworkIsolated"
   | "expectedSha"
@@ -297,6 +300,7 @@ const getRuntimeProvenanceIneligibleReasons = ({
   | "sourceFingerprint"
 >) => {
   const reasons: string[] = [];
+  if (oomKillCount && oomKillCount > 0) reasons.push(`Container OOM-killed ${oomKillCount} processes`);
   const expectedArchitecture = normalizeDockerArchitecture(nodeArchitecture);
 
   if (imageArchitecture !== expectedArchitecture) {
