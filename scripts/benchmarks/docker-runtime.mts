@@ -188,16 +188,26 @@ const captureCheckpointAsync = async (containerId: string, name: string): Promis
 
 const waitForBoardWidgetsAsync = async (page: Page) => {
   const boardSelector = "[data-homarr-dev-benchmark-board]";
-  await page.locator(boardSelector).waitFor({ state: "visible", timeout: 30_000 });
+  await page.locator(`${boardSelector}:visible`).waitFor({ state: "visible", timeout: 30_000 });
   await page.waitForFunction((selector) => {
-    const board = document.querySelector(selector);
+    const board = [...document.querySelectorAll(selector)].find(
+      (element) =>
+        element instanceof HTMLElement &&
+        element.getClientRects().length > 0 &&
+        getComputedStyle(element).visibility !== "hidden",
+    );
     const items = [...(board?.querySelectorAll('[data-type="item"]') ?? [])];
     return items.length > 0 && items.every((item) => item.childElementCount > 0);
   }, boardSelector);
 
   if (requireImplementationMarkers) {
     await page.waitForFunction((selector) => {
-      const board = document.querySelector(selector);
+      const board = [...document.querySelectorAll(selector)].find(
+        (element) =>
+          element instanceof HTMLElement &&
+          element.getClientRects().length > 0 &&
+          getComputedStyle(element).visibility !== "hidden",
+      );
       const items = [...(board?.querySelectorAll('[data-type="item"]') ?? [])];
       return (
         items.length > 0 &&
@@ -242,7 +252,12 @@ const waitForSpotlightIdlePreparationAsync = async (page: Page) => {
 
 const readBoardWidgetStateAsync = async (page: Page) =>
   await page.evaluate((selector) => {
-    const board = document.querySelector(selector);
+    const board = [...document.querySelectorAll(selector)].find(
+      (element) =>
+        element instanceof HTMLElement &&
+        element.getClientRects().length > 0 &&
+        getComputedStyle(element).visibility !== "hidden",
+    );
     return {
       widgetCount: board?.querySelectorAll('[data-type="item"]').length ?? 0,
       implementationMarkerCount: board?.querySelectorAll("[data-homarr-widget-ready]").length ?? 0,
@@ -718,6 +733,10 @@ try {
     imageInspect.Id,
   ]);
   containerId = runResult.stdout.trim();
+  const proxyImageId = JSON.parse(
+    (await execFileAsync("docker", ["image", "inspect", process.env.RUNTIME_BENCHMARK_PROXY_IMAGE ?? imageInspect.Id]))
+      .stdout,
+  )[0].Id as string;
   proxyContainerId = (
     await execDockerLifecycleAsync([
       "run",
@@ -731,7 +750,7 @@ try {
       `UPSTREAM_HOST=${containerName}`,
       "--entrypoint",
       "sh",
-      imageInspect.Id,
+      proxyImageId,
       "-c",
       'exec "$(command -v bun || command -v node)" -e "$1"',
       "--",
@@ -1154,7 +1173,7 @@ net.createServer((client) => {
   const loginJourneyBoardStartedAt = performance.now();
   await page.locator('button[type="submit"]').click();
   await page.waitForURL(`${baseUrl}/`, { timeout: 30_000, waitUntil: "domcontentloaded" });
-  await page.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 30_000 });
+  await page.locator("[data-homarr-dev-benchmark-board]:visible").waitFor({ state: "visible", timeout: 30_000 });
   const loginJourneyBoardMountedMs = Math.round(performance.now() - loginJourneyBoardStartedAt);
   const loginBoardState = await waitForBoardWidgetsAsync(page);
   const { widgetCount, implementationMarkerCount, widgetErrorCount } = loginBoardState;
@@ -1321,7 +1340,9 @@ net.createServer((client) => {
     if (!response?.ok()) {
       throw new Error(`Board iteration ${iteration + 1} returned HTTP ${String(response?.status() ?? "none")}`);
     }
-    await iterationPage.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 30_000 });
+    await iterationPage
+      .locator("[data-homarr-dev-benchmark-board]:visible")
+      .waitFor({ state: "visible", timeout: 30_000 });
     const iterationBoardMountedMs = Math.round(performance.now() - iterationStartedAt);
     const iterationBoardState = await waitForBoardWidgetsAsync(iterationPage);
     if (
@@ -1384,7 +1405,7 @@ net.createServer((client) => {
   if (!coldResponse?.ok()) {
     throw new Error(`Cold-interaction board returned HTTP ${String(coldResponse?.status() ?? "none")}`);
   }
-  await coldPage.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 30_000 });
+  await coldPage.locator("[data-homarr-dev-benchmark-board]:visible").waitFor({ state: "visible", timeout: 30_000 });
   await coldPage.waitForFunction(() => {
     const button = [...document.querySelectorAll('[data-homarr-dev-benchmark-interaction="search"]')].find(
       (element) => element instanceof HTMLElement && element.getClientRects().length > 0,
@@ -1626,6 +1647,7 @@ net.createServer((client) => {
       },
       ingressProxy: {
         containerId: proxyContainerId,
+        imageId: proxyImageId,
         excludedFromMemorySamples: true,
         implementation: "JavaScript TCP proxy",
       },
@@ -1729,6 +1751,14 @@ net.createServer((client) => {
     }
   }
   if (containerId) {
+    const nginxErrors = await execFileAsync("docker", [
+      "exec",
+      containerId,
+      "sh",
+      "-c",
+      "tail -30 /var/log/nginx/error.log 2>/dev/null || true",
+    ]).catch(() => null);
+    if (nginxErrors?.stdout) console.error(`Nginx errors: ${nginxErrors.stdout}`);
     const logs = await execFileAsync("docker", ["logs", "--tail", "100", containerId]).catch(() => null);
     if (logs?.stdout) console.error(logs.stdout);
     if (logs?.stderr) console.error(logs.stderr);

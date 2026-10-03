@@ -35,7 +35,7 @@
     "format": "oxfmt .",
     "lint": "oxlint",
     "test": "bun --bun vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bun --bun tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/autocomplete": "catalog:",

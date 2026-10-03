@@ -108,7 +108,10 @@ def main():
             for label in order:
                 warmup = next(r for r in manifest["builds"] if r["label"] == label and r["phase"] == "warmup")
                 build = json.loads(Path(warmup["result"]).read_text())
-                env = {"RUNTIME_BENCHMARK_IMAGE": build["image"]["id"],
+                proxy_warmup = next(r for r in manifest["builds"] if r["label"] == "baseline" and r["phase"] == "warmup")
+                proxy_image = json.loads(Path(proxy_warmup["result"]).read_text())["image"]["id"]
+                env = {"RUNTIME_BENCHMARK_PROXY_IMAGE": proxy_image,
+                       "RUNTIME_BENCHMARK_IMAGE": build["image"]["id"],
                        "RUNTIME_BENCHMARK_SHA": build["image"]["revision"],
                        "RUNTIME_BENCHMARK_SOURCE_FINGERPRINT": build["image"]["sourceFingerprint"],
                        "RUNTIME_BENCHMARK_SETTLE_MS": "600000", "RUNTIME_BENCHMARK_SAMPLE_INTERVAL_MS": "30000",

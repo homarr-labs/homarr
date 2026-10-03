@@ -83,8 +83,9 @@ jobs:
         run: bun x --bun playwright install --with-deps chromium
       - name: Create isolated production worktrees
         run: |
-          git worktree add --detach "$RUNNER_TEMP/homarr-baseline" "$BASELINE_REF"
-          git worktree add --detach "$RUNNER_TEMP/homarr-candidate" "$CANDIDATE_REF"
+          git clone --shared --no-checkout "$GITHUB_WORKSPACE" "$RUNNER_TEMP/production-repository"
+          git -C "$RUNNER_TEMP/production-repository" worktree add --detach "$RUNNER_TEMP/homarr-baseline" "$BASELINE_REF"
+          git -C "$RUNNER_TEMP/production-repository" worktree add --detach "$RUNNER_TEMP/homarr-candidate" "$CANDIDATE_REF"
       - name: Measure balanced builds and dashboard workloads
         run: |
           python3 scripts/benchmarks/production-migration.py \

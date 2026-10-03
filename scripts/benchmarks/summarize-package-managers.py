@@ -38,7 +38,7 @@ def main():
         timings = [r["wall_seconds"] for r in passed]
         rss = [r["peak_rss_kib"] / 1024 for r in passed]
         lines.append(f"| {scope}: {phase} | {manager} | {len(passed)} / {len(records)} | {median(timings):.3f} | {min(timings):.3f}–{max(timings):.3f} | {median(rss):.1f} |")
-    lines += ["", "## Workspace typecheck memory and time", "", "First run: one trial per runtime. Incremental: two trials per runtime. RSS is maximum process RSS; library workspaces do not have independent production processes.",
+    lines += ["", "## Workspace typecheck memory and time", "", "First run: one trial per manager script. Incremental: two trials per manager script. RSS is maximum process RSS; library workspaces do not have independent production processes.", metadata.get("workspace_runtime_note", ""),
               "", "| Workspace | First seconds pnpm / Bun | First peak MiB pnpm / Bun | Incremental median seconds pnpm / Bun | Incremental peak MiB pnpm / Bun | Passed / total |",
               "|---|---:|---:|---:|---:|---:|"]
     workspaces = defaultdict(lambda: defaultdict(list))

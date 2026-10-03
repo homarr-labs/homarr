@@ -14,8 +14,8 @@
     "dev": "bun run with-env bun ./src/main.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "typecheck": "bun --bun tsc --noEmit",
+    "with-env": "bun --bun dotenv -e ../../.env --"
   },
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",

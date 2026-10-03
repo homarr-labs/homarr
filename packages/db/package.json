@@ -36,8 +36,8 @@
     "seed": "bun run with-env bun ./migrations/run-seed.ts",
     "studio": "bun run with-env bun --bun drizzle-kit studio --config ./configs/sqlite.config.ts",
     "studio:postgresql": "bun run with-env bun --bun drizzle-kit studio --config ./configs/postgresql.config.ts",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "typecheck": "bun --bun tsc --noEmit",
+    "with-env": "bun --bun dotenv -e ../../.env --"
   },
   "dependencies": {
     "@auth/core": "catalog:",

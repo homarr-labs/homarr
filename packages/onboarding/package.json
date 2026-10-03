@@ -20,7 +20,7 @@
     "format": "oxfmt .",
     "lint": "oxlint",
     "test": "bun --bun vitest run --root ../.. packages/onboarding/src",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bun --bun tsc --noEmit"
   },
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",

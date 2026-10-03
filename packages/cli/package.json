@@ -20,8 +20,8 @@
     "format": "oxfmt .",
     "lint": "oxlint",
     "run": "bun run with-env bun cli.cjs",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e .env --"
+    "typecheck": "bun --bun tsc --noEmit",
+    "with-env": "bun --bun dotenv -e .env --"
   },
   "dependencies": {
     "@drizzle-team/brocli": "catalog:",

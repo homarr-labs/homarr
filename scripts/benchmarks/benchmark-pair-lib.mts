@@ -105,7 +105,7 @@ type RuntimeResult = {
       };
     };
     docker: { engine: unknown; version: unknown };
-    ingressProxy: { excludedFromMemorySamples: boolean; implementation: string };
+    ingressProxy: { excludedFromMemorySamples: boolean; implementation: string; imageId?: string };
   };
   browserNetworkIsolation: {
     active: boolean;
@@ -389,6 +389,10 @@ const runtimeConfiguration = (runtime: RuntimeResult, comparison: "spotlight" | 
         : runtime.provenance.container.node,
   },
   docker: runtime.provenance.docker,
+  ingressProxy: {
+    implementation: runtime.provenance.ingressProxy.implementation,
+    imageId: runtime.provenance.ingressProxy.imageId ?? null,
+  },
   workload: {
     boardFixture: runtime.workload.boardFixture ?? null,
     settleMs: runtime.workload.settleMs,

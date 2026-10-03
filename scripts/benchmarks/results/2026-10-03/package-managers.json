@@ -398,7 +398,8 @@
           "files": 174297
         }
       }
-    }
+    },
+    "workspace_runtime_note": "Pre-fix declared-script measurements: direct workspace bun run did not discover the root bunfig.toml, so tsc ran Node v24.18.0 on both revisions. The Bun docs script used Bun for next typegen before Node tsc. Final explicitly forced Bun workspace measurements are recorded separately."
   },
   "measurements": [
     {

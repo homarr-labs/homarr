@@ -22,7 +22,7 @@
     "format": "oxfmt .",
     "postinstall": "bun ./src/docs/codegen.ts",
     "lint": "oxlint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bun --bun tsc --noEmit"
   },
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",

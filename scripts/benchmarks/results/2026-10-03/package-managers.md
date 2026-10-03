@@ -68,7 +68,8 @@ Times below are medians of successful trials; failures are counted explicitly.
 
 ## Workspace typecheck memory and time
 
-First run: one trial per runtime. Incremental: two trials per runtime. RSS is maximum process RSS; library workspaces do not have independent production processes.
+First run: one trial per manager script. Incremental: two trials per manager script. RSS is maximum process RSS; library workspaces do not have independent production processes.
+Pre-fix declared-script measurements: direct workspace bun run did not discover the root bunfig.toml, so tsc ran Node v24.18.0 on both revisions. The Bun docs script used Bun for next typegen before Node tsc. Final explicitly forced Bun workspace measurements are recorded separately.
 
 | Workspace                  | First seconds pnpm / Bun | First peak MiB pnpm / Bun | Incremental median seconds pnpm / Bun | Incremental peak MiB pnpm / Bun | Passed / total |
 | -------------------------- | -----------------------: | ------------------------: | ------------------------------------: | ------------------------------: | -------------: |

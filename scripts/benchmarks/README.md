@@ -65,8 +65,14 @@ The migration driver uses a seeded, normalized board fixture with clocks,
 countdown, downloads, health monitoring, notebook, system resources/disks, and
 bookmarks. External traffic is denied for both variants. It does not measure
 live provider latency. Each image runs as UID/GID 1000 with two CPUs and 1 GiB;
-PSS is collected as the same UID. A hydrated search control is required before
+PSS is collected as the same UID. Both variants use the baseline image for
+the excluded TCP ingress proxy, keeping its runtime constant. A hydrated search control is required before
 timing its first click. Failed attempts and eligibility reasons are preserved.
 The comparison mode accepts different pinned source revisions and JavaScript
 engines while retaining image identity, cache continuity, workload, browser,
 and isolation checks. Existing Spotlight comparisons keep their original rules.
+
+The archived initial workspace measurements exposed a Node shebang fallback
+when Bun was invoked from a workspace directory. Workspace typecheck and
+dotenv scripts now invoke Bun explicitly. Keep the initial measurements labeled
+as declared-script results; use the final forced-Bun runs for runtime comparisons.

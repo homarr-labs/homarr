@@ -10,8 +10,8 @@
     "format": "oxfmt .",
     "lint": "oxlint",
     "start": "bun run with-env bun --bun next start",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "typecheck": "bun --bun tsc --noEmit",
+    "with-env": "bun --bun dotenv -e ../../.env --"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "catalog:",
