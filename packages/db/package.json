@@ -50,21 +50,21 @@
     "@mantine/core": "catalog:",
     "@paralleldrive/cuid2": "catalog:",
     "@testcontainers/postgresql": "catalog:",
+    "better-sqlite3": "catalog:",
     "dotenv": "catalog:",
     "drizzle-kit": "catalog:",
     "drizzle-orm": "catalog:",
     "drizzle-zod": "catalog:",
     "pg": "catalog:",
-    "superjson": "catalog:",
-    "better-sqlite3": "catalog:"
+    "superjson": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@libsql/client": "catalog:",
+    "@types/better-sqlite3": "catalog:",
     "@types/pg": "catalog:",
     "dotenv-cli": "catalog:",
     "esbuild": "catalog:",
-    "typescript": "catalog:",
-    "@types/better-sqlite3": "catalog:"
+    "typescript": "catalog:"
   }
 }

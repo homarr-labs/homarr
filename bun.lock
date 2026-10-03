@@ -1057,6 +1057,7 @@
     "better-sqlite3",
   ],
   "patchedDependencies": {
+    "dns-caching@0.2.9": "patches/dns-caching.patch",
     "@types/node-unifi@2.5.1": "patches/@types__node-unifi.patch",
     "trpc-to-openapi@3.3.0": "patches/trpc-to-openapi.patch",
     "mantine-datatable@9.3.1": "patches/mantine-datatable@9.3.1.patch",

@@ -84,6 +84,7 @@ args=(
   --platform "ubuntu-latest=$runner_image"
   --container-architecture linux/amd64
   --bind
+  --env "DB_DRIVER=better-sqlite3"
   --env "TURBO_CACHE_DIR=$PWD/.turbo/cache"
   # Jobs share the dependency volume; installs must not race.
   --concurrent-jobs 1
