@@ -1,4 +1,4 @@
-import { generateResponsiveGridFor } from "@homarr/common";
+import { generateResponsiveGridFor, getLayoutResizeSource } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
 import type { BoardLane, LayoutRole, WidgetKind } from "@homarr/definitions";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
@@ -10,6 +10,7 @@ export interface BoardPreviewLayout {
   rightGutterColumnCount: number;
   breakpoint: number;
   role: LayoutRole;
+  resizeSource?: string | null;
 }
 
 interface BoardPreviewItemLayout {
@@ -77,7 +78,13 @@ export const projectBoardLayout = (
   sourceLayout: LayoutGeometry,
   targetLayout: LayoutGeometry,
 ) => {
-  const elements = getElementsForLayout(board, sourceLayout.id);
+  const currentElements = getElementsForLayout(board, sourceLayout.id);
+  let serializedSource: string | null | undefined;
+  if (sourceLayout.id === targetLayout.id) {
+    serializedSource = board.layouts.find((layout) => layout.id === sourceLayout.id)?.resizeSource;
+  }
+  const source = getLayoutResizeSource(sourceLayout, currentElements, serializedSource);
+  const elements = source.elements;
 
   if (
     sourceLayout.id === targetLayout.id &&
@@ -85,7 +92,7 @@ export const projectBoardLayout = (
     sourceLayout.leftGutterColumnCount === targetLayout.leftGutterColumnCount &&
     sourceLayout.rightGutterColumnCount === targetLayout.rightGutterColumnCount
   ) {
-    return elements;
+    return currentElements;
   }
 
   const emptyRoots = board.sections
@@ -124,12 +131,12 @@ export const projectBoardLayout = (
     const sourceLanes = boardLanes.filter(
       (sourceLane) =>
         rootByLane.has(sourceLane) &&
-        getBoardLaneColumnCount(sourceLayout, sourceLane) > 0 &&
+        getBoardLaneColumnCount(source.geometry, sourceLane) > 0 &&
         targetLaneBySourceLane.get(sourceLane) === lane,
     );
     const previousWidth =
       sourceLanes.length === 1
-        ? getBoardLaneColumnCount(sourceLayout, sourceLanes[0] ?? "main")
+        ? getBoardLaneColumnCount(source.geometry, sourceLanes[0] ?? "main")
         : Number.MAX_SAFE_INTEGER;
 
     return generateResponsiveGridFor({

@@ -352,6 +352,7 @@ export const onboardRouter = createTRPCRouter({
               leftGutterColumnCount: 0,
               rightGutterColumnCount: 0,
               breakpoint: 0,
+              resizeSource: null,
               role: "mobile" as const,
             },
             {
@@ -362,6 +363,7 @@ export const onboardRouter = createTRPCRouter({
               leftGutterColumnCount: 0,
               rightGutterColumnCount: 0,
               breakpoint: 768,
+              resizeSource: null,
               role: "base" as const,
             },
           ]
