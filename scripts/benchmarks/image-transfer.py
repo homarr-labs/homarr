@@ -53,6 +53,12 @@ def main():
                                    "architecture": inspection["Architecture"],
                                    "layer_ids": inspection["RootFS"]["Layers"],
                                    "revision": build["image"]["revision"]}
+        footprint = subprocess.check_output(["docker", "run", "--rm", "--network", "none", "--read-only",
+                                            "--entrypoint", "sh", image_id, "-c",
+                                            'du -sk /app; find /app -type f | wc -l; for runtime in /usr/local/bin/node /usr/local/bin/bun; do if test -e "$runtime"; then du -sk "$runtime"; fi; done'], text=True).splitlines()
+        report["images"][label]["application_allocated_bytes"] = int(footprint[0].split()[0]) * 1024
+        report["images"][label]["application_files"] = int(footprint[1])
+        report["images"][label]["runtime_files_allocated_bytes"] = {line.split()[1]: int(line.split()[0]) * 1024 for line in footprint[2:]}
         tar_path = output / f"{label}.tar"
         archive_path = output / f"{label}.tar.zst"
         measure(label, "docker-save", 1, ["docker", "save", "--output", str(tar_path), image_id])
