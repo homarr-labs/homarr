@@ -41,6 +41,8 @@ RUN apk add --no-cache libstdc++ ca-certificates redis nginx bash gettext su-exe
     touch /run/nginx/nginx.pid
 VOLUME /appdata
 COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
+# Bundled CLI/migrations resolve the native binding from the application root.
+COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 RUN printf '#!/bin/sh\ncd /app/apps/cli && exec node ./cli.cjs "$@"\n' > /usr/bin/homarr && \
     chmod +x /usr/bin/homarr
 COPY --from=builder /app/packages/db/migrations ./db/migrations
