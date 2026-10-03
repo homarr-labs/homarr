@@ -14,6 +14,7 @@ import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 const routeMocks = vi.hoisted(() => ({
   auth: vi.fn(),
+  warn: vi.fn(),
   claimAllowed: vi.fn(),
   onboardingFindFirst: vi.fn(),
   dbEnv: {
@@ -23,6 +24,10 @@ const routeMocks = vi.hoisted(() => ({
   commonEnv: {
     SECRET_ENCRYPTION_KEY: "1".repeat(64),
   },
+}));
+
+vi.mock("@homarr/core/infrastructure/logs", () => ({
+  createLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: routeMocks.warn }),
 }));
 
 vi.mock("@homarr/auth/next", () => ({ auth: routeMocks.auth }));
@@ -214,7 +219,6 @@ describe("POST /api/backup/import", () => {
     const backup = createBackup(temporaryDirectory, "cleanup-failure", "Restored despite cleanup failure");
     const removeDirectory = fs.rmSync.bind(fs);
     const cleanupError = new Error("simulated cleanup failure");
-    const errorLog = vi.spyOn(console, "error").mockImplementation(() => undefined);
     vi.spyOn(fs, "rmSync").mockImplementation((target, options) => {
       if (String(target).includes(".homarr-restore-")) throw cleanupError;
       return removeDirectory(target, options);
@@ -225,10 +229,9 @@ describe("POST /api/backup/import", () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ success: true });
     expect(readBoardNames(activeDatabasePath)).toEqual(["Restored despite cleanup failure"]);
-    expect(errorLog).toHaveBeenCalledWith(
-      "[backup/import] Failed to remove temporary restore directory:",
-      cleanupError,
-    );
+    expect(routeMocks.warn).toHaveBeenCalledWith("Failed to remove temporary restore directory after restore", {
+      cause: cleanupError,
+    });
   });
 
   it("rejects a concurrent restore while the first request owns the restore lock", async () => {

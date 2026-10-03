@@ -84,7 +84,14 @@ args=(
   --platform "ubuntu-latest=$runner_image"
   --container-architecture linux/amd64
   --bind
+  # Jobs share the dependency volume; installs must not race.
+  --concurrent-jobs 1
 )
+
+# Ryuk runs on the host daemon and needs the host's actual socket path.
+if [[ "$DOCKER_HOST" == unix://* ]]; then
+  args+=(--env "TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=${DOCKER_HOST#unix://}")
+fi
 
 if [[ -n "$job" ]]; then
   args+=(--job "$job")
