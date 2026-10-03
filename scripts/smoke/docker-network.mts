@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
@@ -7,12 +8,23 @@ import { promisify } from "node:util";
 
 const execAsync = promisify(execFile);
 const composeFile = resolve(import.meta.dirname, "docker-network.compose.yml");
-const project = "homarr-dns-6997";
+const project = `homarr-dns-${randomUUID()}`;
 const temporaryDirectory = await mkdtemp(`${tmpdir()}/homarr-dns-proof-`);
 const overrideFile = `${temporaryDirectory}/cache.json`;
 let override = false;
 let baseUrl = "";
 let apiKey = "";
+let ownsProject = false;
+
+async function assertUnusedProject() {
+  const label = `label=com.docker.compose.project=${project}`;
+  for (const resource of ["container", "network", "volume"]) {
+    const args = [resource, "ls", "--quiet", "--filter", label];
+    if (resource === "container") args.push("--all");
+    const result = await execAsync("docker", args);
+    assert.equal(result.stdout.trim(), "", "Disposable proof project already has resources; no mutation allowed");
+  }
+}
 
 async function compose(args: string[], environment: Record<string, string> = {}) {
   const files = ["-f", composeFile];
@@ -117,6 +129,9 @@ async function recreateFixture(address: string, instance: string) {
 }
 
 try {
+  await assertUnusedProject();
+  // The unpredictable, empty namespace belongs only to this invocation, including partial startup.
+  ownsProject = true;
   await compose(["up", "-d", "--wait", "--wait-timeout", "180"]);
   await refreshUrl();
   for (const path of ["/api/health/ready", "/api/health/live"]) {
@@ -206,7 +221,12 @@ try {
   );
   console.log("PASS control ENABLE_DNS_CACHING=true reproduces failure after fixture IP change");
 } finally {
-  await compose(["down", "--volumes", "--remove-orphans"]);
-  await rm(temporaryDirectory, { recursive: true, force: true });
-  console.log("Removed the disposable Compose stack and volumes");
+  try {
+    if (ownsProject) {
+      await compose(["down", "--volumes"]);
+      console.log("Removed this invocation's disposable Compose stack and volumes");
+    }
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
 }

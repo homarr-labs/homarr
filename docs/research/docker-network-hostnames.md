@@ -75,9 +75,10 @@ node scripts/smoke/docker-network.mts
 CI=true pnpm exec vitest run packages/core/src/test/infrastructure/dns/init.spec.ts packages/core/src/test/infrastructure/http/http-agent.spec.ts --project dom
 ```
 
-The smoke runner uses the dedicated `homarr-dns-6997` project and `10.203.199.0/24` subnet, binds
-Homarr only to loopback, and removes its containers, network, and disposable volumes afterward.
-Sonarr/Radarr images are pinned to the tested digests. No existing services or data are touched.
+The smoke runner uses a fresh `homarr-dns-<uuid>` project, verifies its namespace is empty before
+startup, and removes only that invocation's containers, network and disposable volumes afterward.
+Homarr binds only to loopback; Sonarr/Radarr images are pinned. The fixed `10.203.199.0/24` subnet
+prevents concurrent runs; a collision fails without cleaning another project.
 
 Focused DNS/HTTP tests passed (20 tests). Temporarily restoring the old default made the new
 address-family contract fail, confirming that it detects a regression. The read-only review found no
