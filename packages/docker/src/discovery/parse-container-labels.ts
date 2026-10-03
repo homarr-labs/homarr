@@ -34,10 +34,10 @@ const resolveIcon = (labels: Record<string, string>, useHomepageFallback: boolea
 
   // Homepage's Dashboard Icons keys default to PNG; URLs and local paths pass through.
   const dashboardIcon = /^([a-zA-Z0-9][a-zA-Z0-9_-]*)(?:\.(png|svg|webp))?$/.exec(homepageIcon);
-  if (!dashboardIcon) return homepageIcon;
+  if (!dashboardIcon?.[1]) return homepageIcon;
 
   const extension = dashboardIcon[2] ?? "png";
-  return `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/${extension}/${dashboardIcon[1]}.${extension}`;
+  return `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/${extension}/${dashboardIcon[1].toLowerCase()}.${extension}`;
 };
 
 const parseIntegrationKind = (value: string | undefined): IntegrationKind | undefined =>

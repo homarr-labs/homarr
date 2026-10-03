@@ -67,7 +67,8 @@ When `homarr.name` is absent, onboarding also understands these Homepage labels:
 `homepage.name` and `homepage.href` are required for the fallback. Homarr does not combine partial Homarr metadata with
 Homepage metadata: once `homarr.name` is present, use `homarr.*` labels for the remaining fields too.
 
-Homepage Dashboard Icons keys such as `sonarr` or `jellyfin.svg` are converted to full icon URLs. Bare keys use PNG;
+Homepage Dashboard Icons keys such as `sonarr` or `jellyfin.svg` are converted to full icon URLs. Keys are lowercased
+to match published filenames. Bare keys use PNG;
 `.png`, `.svg`, and `.webp` select the corresponding format. Explicit URLs and local paths are preserved. Homepage's
 `mdi-`, `si-`, and `sh-` icon prefixes are not converted; use a full icon URL for those sets. Local paths must also be
 available on the Homarr server. `homarr.icon` continues to accept an icon URL.
