@@ -1,156 +1,246 @@
 {
   "init": {
-    "step": {
-      "start": {
-        "title": "Homarrへようこそ",
-        "subtitle": "Homarrインスタンスの設定を始めましょう。",
-        "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
-        "action": {
-          "scratch": "自分でゼロから作成",
-          "importOldmarr": "1.0 より前の Homarr からインポート",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+    "studio": {
+      "navigationLabel": "初期登録セクション",
+      "back": "戻る",
+      "buildBoard": "ボードを作る",
+      "common": {
+        "unknownError": "問題が発生しました。あなたの選択はまだここにあります。もう一度やり直してください。"
+      },
+      "claim": {
+        "checking": "このオンボーディングセッションを保護しています…",
+        "checkingTitle": "安全なセットアップを準備中",
+        "lockedTitle": "別のブラウザでセットアップを開いています",
+        "lockedDescription": "そこで続けるか、セキュリティで保護された最初の実行セッションが再試行する前に期限切れになるのを待ちます。",
+        "signInTitle": "管理者のサインインが必要です",
+        "signInDescription": "管理者は既に存在します。ログインして資格情報またはサービスアクセスを公開せずにセットアップを再開してください。",
+        "signIn": "サインインして再開する",
+        "errorTitle": "セットアップを保護できませんでした",
+        "errorDescription": "ページを再読み込みして、セキュアな最初の実行セッションを再試行してください。"
+      },
+      "navigation": {
+        "essentials": "エッセンシャル",
+        "discover": "Discover",
+        "connect": "接続する",
+        "board": "ボード",
+        "extend": "拡張",
+        "review": "レビュー"
+      },
+      "welcome": {
+        "title": "お帰り。",
+        "description": "Homarr v{version}へようこそ。必需品をご案内し、最初のボードの構築をお手伝いします。",
+        "start": "始めよう",
+        "restore": "バックアップを復元",
+        "restoreTitle": "バックアップから復元",
+        "restoreDescription": "フルSQLiteバックアップはボード、人、アプリ、統合、設定を復元します。Homarrは何かを置き換える前にそれを検証します。",
+        "errorTitle": "セットアップを開始できませんでした",
+        "errorDescription": "セットアップの選択肢はまだここにあります。再試行するか、続行する場合はページを再読み込みしてください。"
+      },
+      "account": {
+        "title": "管理者を作成",
+        "description": "管理者ユーザーの認証情報を指定します。",
+        "username": "管理者のユーザー名",
+        "passwordHint": "8 文字以上の最小文字のみが必要です。その他のパスワード強度チェックは提案されます。",
+        "create": "管理者を作成",
+        "errorTitle": "管理者を作成できませんでした",
+        "recoveryTitle": "管理者アカウントが作成されました",
+        "recoveryDescription": "自動サインインが完了しませんでした。セットアップを続行するには、作成した管理者資格情報でサインインしてください。",
+        "recoveryAction": "サインインして続ける",
+        "unknownError": "管理者を作成できませんでした。"
+      },
+      "externalGroup": {
+        "title": "管理者グループに接続",
+        "description": "LDAPまたはOIDCによって送信された正確なグループ名を使用してください。このグループのメンバーは管理者アクセスを受け取ります。",
+        "name": "外部管理者グループ",
+        "nameDescription": "これは大文字と小文字を区別し、IDプロバイダーと一致する必要があります。",
+        "continue": "グループを保存して続ける",
+        "errorTitle": "グループを保存できませんでした",
+        "unknownError": "管理者グループを保存できませんでした。"
+      },
+      "essentials": {
+        "title": "使い慣れたデフォルトから開始",
+        "description": "誰もが最初に見る言語と外観を設定し、次にサービスで使用されるアドレスパターンをHomarrに与えます。",
+        "language": "デフォルトの言語",
+        "theme": "デフォルトのテーマ",
+        "themeAuto": "システム",
+        "themeLight": "ライト",
+        "themeDark": "ダーク",
+        "serverOriginHelp": "Homarrは検出されたサービスURLを予め入力するためにこのアドレスを使用します。あなたは個別にすべてのサービスを編集することができます。",
+        "serverDescription": "これはショートカットであり、制限ではありません。検出されたすべてのサービスは編集可能です。",
+        "serverOrigin": "ドメイン、IP、またはリバースプロキシ パス",
+        "serverOriginDescription": "例: home.lan, 192.168.1.10 または https://home.example.com/services 各サービスの追加方法を選択してください。",
+        "analytics": "匿名の製品分析を共有",
+        "analyticsDescription": "Homarrが機能の信頼性を向上させるのに役立ちます。サービス資格情報やダッシュボードコンテンツが送信されません。"
+      },
+      "discover": {
+        "title": "このインストールが実際にどのようなものになるかご覧ください",
+        "description": "Homarrは機能を確認します。DockerソケットまたはKubernetesコンテキストがないと、手動でのセットアップがブロックされることはありません。",
+        "database": "データベース",
+        "docker": "Dockerと互換性のあるソケット",
+        "kubernetes": "Kubernetes",
+        "assistantWorkshop": "アシスタントとワークショップ",
+        "found": "{integrations} 統合と {apps} 追加アプリが見つかりました",
+        "retryKubernetes": "Kubernetes を再度チェック",
+        "retryWorkshop": "ワークショップを再度確認",
+        "unknownVersion": "不明なバージョン",
+        "kubernetesAvailable": "Kubernetes {version} に接続",
+        "kubernetesDisabled": "有効になっていません。Dockerまたは手動サービスを継続してください",
+        "kubernetesUnavailable": "Kubernetesは有効になっていますが、このHomarrプロセスからアクセスできません",
+        "workshopAvailable": "コミュニティワークショップおよびホストされているアシスタントサービスにアクセスできます",
+        "workshopUnavailable": "ローカルおよびカスタムアシスタントプロバイダは引き続き利用可能です",
+        "partialTitle": "いくつかのソースをスキャンできませんでした",
+        "partialDescription": "到達可能なホストからの結果は保持されます。ソケットの権限を確認するか、次のセクションで手動でサービスを追加してください。",
+        "status": {
+          "checking": "利用可能か確認しています…",
+          "available": "利用可能",
+          "partial": "一部利用可能",
+          "empty": "到達可能、一致する実行中のサービスがありません",
+          "disabled": "サーバー設定により無効",
+          "unavailable": "このHomarrプロセスから利用できません"
         }
       },
-      "import": {
-        "title": "データのインポート",
-        "subtitle": "既存のHomarrインスタンスからデータをインポートできます。",
-        "dropzone": {
-          "title": "ここにzipファイルをドラッグするか、クリックして参照してください",
-          "description": "アップロードされたzipファイルは処理され、インポートするものを選択することができます"
+      "connect": {
+        "title": "ボードを役に立たせるものを接続する",
+        "description": "複数のサービスを一度に選択します。Docker ラベルは優先順位を取る、イメージマッチングの約定のギャップがあり、すべての URL と資格情報はレビュー可能です。",
+        "discoveredIntegrations": "検出された統合インスタンス ({count})",
+        "detectedIntegrationLabel": "{name}をインポートします。 {kind} として検出されました",
+        "detectedAppLabel": "検出されたアプリ {name}をインポート",
+        "otherIntegrations": "別の連携を追加",
+        "configureIntegrations": "連携を設定する",
+        "discoveredApps": "検出されたアプリ ({count})",
+        "appAddressRequired": "{name}のアドレスを追加するか、選択から削除してください。",
+        "empty": "連携機能が選択されていません。Homarrは一般的なウィジェットを持つ便利なスターターボードを作成します。",
+        "dockerSource": "Docker",
+        "manualSource": "マニュアル",
+        "url": "サービスURL",
+        "noCredentials": "資格情報なし",
+        "noCredentialsDescription": "この統合には資格情報は必要ありません。",
+        "credentialMethod": "認証方法",
+        "getApiKey": "このサービスのAPIキー設定を開く",
+        "openGuide": "このサービスのセットアップガイドを開く",
+        "testConnection": "接続をテスト",
+        "testSuccess": "接続が機能します",
+        "testSuccessDescription": "Homarrは現在のアドレスと資格情報に接続されています。",
+        "testError": "接続失敗",
+        "testErrorDescription": "サービスアドレスと資格情報を確認し、もう一度やり直してください。",
+        "needsConfiguration": "設定が必要です",
+        "tested": "接続がテストされました",
+        "testFailed": "接続テストに失敗しました",
+        "incompleteConfirmation": "未完了の連携はスキップされます。連携せずに続行しますか？"
+      },
+      "board": {
+        "title": "基板が構築される前に形成します。",
+        "description": "Homarrは保護されたモバイルとベースのレイアウトを作成し、選択したサービスからアプリや互換性のあるウィジェットを配置します。",
+        "target": "設定するボード",
+        "targetDescription": "このセットアップが更新される正確な既存のボードを選択します。",
+        "targetPlaceholder": "ボードを選択",
+        "targetRequired": "続行する前に設定するボードを選択します。",
+        "name": "ボード名",
+        "nameDescription": "掲示板のURL、文字、数字、ダッシュ、アンダースコアのみで使用されます。",
+        "nameRequired": "続行する前にボード名を入力してください。",
+        "primaryColor": "原色",
+        "secondaryColor": "セカンダリーカラー",
+        "resetColors": "色をリセット",
+        "radius": "ウィジェットの角の半径",
+        "radiusOptions": {
+          "xs": "タイトな",
+          "sm": "Subtle",
+          "md": "バランス",
+          "lg": "四捨五入済み",
+          "xl": "ソフト"
         },
-        "fileInfo": {
-          "action": {
-            "change": "ファイルを変更する"
-          }
+        "columns": "ボードの列",
+        "columnsDescription": "列は、アイテムのサイズと位置を決める水平グリッドを定義します。12 はほとんどの人に十分です。",
+        "columnCount": "{count, plural, one {#カラム} other {#カラム}}",
+        "leftSidebar": "Left sidebar",
+        "rightSidebar": "右サイドバー",
+        "previewLabel": "最初のボードレイアウトのライブプレビュー"
+      },
+      "extend": {
+        "title": "高度な機能",
+        "tabsLabel": "アシスタント、ワークショップ、MCP のセットアップ",
+        "assistant": "アシスタント",
+        "workshop": "ワークショップ",
+        "assistantSetup": {
+          "loginTitle": "管理者のサインインが必要です",
+          "loginDescription": "プロバイダーのキーとモデルへのアクセス権は付与されます。セットアップを終了し、サインインを完了すると、Homarrはアシスタントの設定を直接開きます。",
+          "loginAction": "ログインしてアシスタントを設定する"
         },
-        "importSettings": {
-          "title": "設定をインポート",
-          "description": "インポートの動作を設定"
+        "workshopSetup": {
+          "title": "Homarrワークショップ",
+          "description": "コミュニティのブラウズカスタムウィジェット、要求された機能を調べ、それらをインストールし、サーバー間でコードをコピーせずに独自の作業を公開します。",
+          "available": "利用可能",
+          "checking": "確認中…",
+          "unavailable": "Unavailable",
+          "discoverTitle": "Discover",
+          "discoverDescription": "実際の自己ホストワークフロー用に構築されたウィジェットを見つけます。",
+          "installTitle": "レビューとインストール",
+          "installDescription": "何かを追加する前にメタデータと設定を参照してください。",
+          "publishTitle": "共有",
+          "publishDescription": "再利用可能なウィジェットをコミュニティに公開します。",
+          "browse": "ワークショップを閲覧する"
         },
-        "boardSelection": {
-          "title": "{count} 個のボードを見つけました",
-          "description": "インポートしたいサイズのボードをすべて選択してください",
-          "action": {
-            "selectAll": "すべてを選択",
-            "unselectAll": "すべて選択解除"
-          }
-        },
-        "summary": {
-          "title": "インポート結果",
-          "description": "以下のサマリーで、インポートする内容を確認できます",
-          "action": {
-            "import": "インポートを確認して続ける"
-          },
-          "entities": {
-            "apps": "アプリ",
-            "boards": "ボード",
-            "integrations": "連携機能",
-            "credentialUsers": "認証情報ユーザー"
-          }
-        },
-        "tokenModal": {
-          "title": "インポートトークンを入力してください",
-          "field": {
-            "token": {
-              "label": "トークン",
-              "description": "以前のhomarrインスタンスから表示されたインポートトークンを入力してください"
-            }
-          },
-          "notification": {
-            "error": {
-              "title": "無効なトークン",
-              "message": "入力されたトークンは無効です"
-            }
-          }
+        "mcpSetup": {
+          "title": "Homarr MCP",
+          "description": "Claude、Codex、または他のMCPクライアントをHomarrの型付けツールに接続します。APIキーは明示的かつ取り消し可能なアクセスを維持します。",
+          "endpoint": "Streamable HTTP エンドポイント",
+          "keyTitle": "このキーを今すぐコピー",
+          "keyDescription": "セキュリティのため、HomarrはこのAPIキーを再び表示できません。",
+          "copyKey": "API キーをコピー",
+          "createKey": "MCP API キーを作成",
+          "errorTitle": "MCP API キーを作成できませんでした",
+          "loginRequired": "セットアップ後に管理者としてサインインしてAPIキーを作成します。",
+          "configuration": "クライアント設定",
+          "copy": "設定をコピー",
+          "copied": "コピーしました",
+          "advanced": "MCP ツール、権限、およびセットアップの詳細を開く"
         }
       },
-      "user": {
-        "title": "管理者ユーザー",
-        "subtitle": "管理者ユーザーの認証情報を指定します。",
-        "notification": {
-          "success": {
-            "title": "ユーザーが作成されました",
-            "message": "ユーザーが正常に作成されました"
-          },
-          "error": {
-            "title": "ユーザーの作成に失敗しました"
-          }
-        }
-      },
-      "group": {
-        "title": "外部グループ",
-        "subtitle": "外部ユーザーに使用するグループを指定します。",
-        "form": {
-          "name": {
-            "label": "グループ名",
-            "description": "名前は外部プロバイダの管理者グループと一致する必要があります"
-          }
-        }
-      },
-      "settings": {
-        "title": "設定",
-        "subtitle": "サーバーの設定。"
-      },
-      "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
-        "action": {
-          "continue": "",
-          "skip": ""
-        },
-        "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
-          "error": {
-            "title": "",
-            "message": ""
-          },
-          "helpers": {
-            "tooltip": "",
-            "description": ""
-          }
-        },
-        "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
-          "mode": {
-            "subdomain": "",
-            "hostPort": ""
-          }
-        },
-        "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+      "review": {
+        "title": "サービスの周りに設置されたボードが1つあります",
+        "description": "Homarrは保存されていない接続をテストし、選択したアプリケーションをインポートし、外観とレイアウトを適用し、構成された正確なボードを開きます。",
+        "board": "最初のボード",
+        "columns": "ボードの列",
+        "columnsValue": "{count, plural, one {#カラム} other {#カラム}}",
+        "sidebars": "サイドバー",
+        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "layouts": "レスポンシブなレイアウト",
+        "layoutsValue": "モバイル + ベース",
+        "integrations": "連携機能",
+        "integrationsValue": "{count, plural, =0 {選択されていない} one {# integrations} other {# integrations}}",
+        "apps": "アプリタイル",
+        "appsValue": "{count, plural, =0 {スターターアプリのみ} one {# アプリタイル} other {# アプリタイル}}",
+        "language": "言語",
+        "theme": "テーマ",
+        "themeAuto": "システム設定",
+        "themeLight": "ライト",
+        "themeDark": "ダーク",
+        "colors": "ボードの色",
+        "radius": "ウィジェットの半径",
+        "automaticTitle": "Homarrが作成するもの",
+        "automaticDescription": "互換性のあるウィジェット、アイコン、アプリリンク、統合リレーションシップ、レスポンシブ配置は、共有されたHomarrカタログから提供されています。後ですべての結果を編集できます。",
+        "dockerWarningTitle": "セットアップ中にいくつかの Docker ラベルが変更されました",
+        "dockerWarningDescription": "{count, plural, one {# 選択した Docker 結果は、サービスが変更され、別のボードをターゲットにしたり、ウィジェットが互換性がないため適用できませんでした} other {# 選択された Docker 結果は、サービスが変更され、別のボードをターゲットにしたり、ウィジェットが互換性がないため、適用できませんでした}}",
+        "errorTitle": "ボードを構築できませんでした",
+        "progress": {
+          "applying": "接続をテストし、ボードを構築する",
+          "done": "ボードの準備ができました"
         }
       },
       "finish": {
-        "title": "設定終了",
-        "subtitle": "準備ができています！",
-        "description": "セットアッププロセスが正常に完了しました。今すぐHomarrの使用を開始できます。次のアクションを選択してください：",
-        "action": {
-          "goToBoard": "{name} ボードへ移動",
-          "createBoard": "あなたの最初のボードを作成する",
-          "inviteUser": "他のユーザーを招待する",
-          "docs": "ドキュメントを読む"
-        }
+        "title": "最初のボードの準備ができました。",
+        "description": "Homarrは選択したピースを接続し、残りを編集可能にしました。 今すぐボードを開きます; ショートインプロダクトツアーでは、編集モード、ウィジェット、レイアウト、検索を表示できます。",
+        "openBoard": "ボードを開く",
+        "manageTitle": "管理",
+        "manageDescription": "アプリ、統合、ボード、ユーザー、サーバーの設定を微調整します。",
+        "workshopTitle": "ワークショップ",
+        "workshopDescription": "コミュニティのカスタムウィジェットを見つけてインストールします。",
+        "docsTitle": "Homarrを学ぶ",
+        "docsDescription": "ボード、ウィジェット、統合、ツールのフォーカスされたガイドをお読みください。"
       }
-    },
-    "backToStart": "最初に戻る"
+    }
   },
   "user": {
-    "title": "ユーザー",
     "name": "ユーザー",
     "page": {
       "login": {
@@ -159,12 +249,10 @@
       },
       "invite": {
         "title": "Homarrに参加",
+        "titleWithAppName": "{appName} に参加",
         "subtitle": "Homarrへようこそ！アカウントを作成してください",
+        "subtitleWithAppName": "{appName}へようこそ！アカウントを作成してください",
         "description": "あなたは {username} に招待されました"
-      },
-      "init": {
-        "title": "新しいHomarrのインストール",
-        "subtitle": "最初の管理者ユーザーを作成してください"
       }
     },
     "field": {
@@ -192,11 +280,16 @@
       "previousPassword": {
         "label": "以前のパスワード"
       },
-      "homeBoard": {
-        "label": "ホームボード"
-      },
       "pingIconsEnabled": {
         "label": "Pingにアイコンを使う"
+      },
+      "byteUnitSystem": {
+        "label": "データサイズの単位",
+        "description": "Homarrがバイトサイズとバイトレートを表示する方法を選択します。ビットレートは常に10進数を使用します。",
+        "options": {
+          "binary": "バイナリ",
+          "decimal": "小数点以下桁数"
+        }
       },
       "enableRightClickOnWidgets": {
         "label": "",
@@ -247,7 +340,6 @@
           }
         }
       },
-      "create": "ユーザーを作成する",
       "changePassword": {
         "label": "パスワードの変更",
         "notification": {
@@ -256,56 +348,6 @@
           },
           "error": {
             "message": "パスワードを変更できません"
-          }
-        }
-      },
-      "changeHomeBoard": {
-        "notification": {
-          "success": {
-            "message": "ホームボードは正常に変更されました"
-          },
-          "error": {
-            "message": "ホームボードを変更することができません"
-          }
-        }
-      },
-      "changeSearchPreferences": {
-        "notification": {
-          "success": {
-            "message": "検索設定は正常に変更されました"
-          },
-          "error": {
-            "message": "検索設定を変更することができません"
-          }
-        }
-      },
-      "changeFirstDayOfWeek": {
-        "notification": {
-          "success": {
-            "message": "週の最初の日は、正常に変更されました"
-          },
-          "error": {
-            "message": "週の最初の日を変更することができません"
-          }
-        }
-      },
-      "changePingIconsEnabled": {
-        "notification": {
-          "success": {
-            "message": "Pingアイコンの切り替えに成功しました"
-          },
-          "error": {
-            "message": "Pingアイコンを切り替えることができません"
-          }
-        }
-      },
-      "changeDdgBangs": {
-        "notification": {
-          "success": {
-            "message": ""
-          },
-          "error": {
-            "message": ""
           }
         }
       },
@@ -338,16 +380,6 @@
           }
         }
       },
-      "editProfile": {
-        "notification": {
-          "success": {
-            "message": "プロファイルが正常に更新されました"
-          },
-          "error": {
-            "message": "プロファイルを更新できません"
-          }
-        }
-      },
       "delete": {
         "label": "ユーザーを恒久的に削除",
         "description": "ユーザー設定を含むこのユーザーを削除します。ボードは削除されません。ユーザーには通知されません。",
@@ -356,18 +388,13 @@
       "select": {
         "label": "ユーザーを選択",
         "notFound": "ユーザーが見つかりません"
-      },
-      "transfer": {
-        "label": "新しいオーナーを選択"
       }
     }
   },
   "group": {
-    "title": "グループ",
     "name": "グループ",
     "search": "グループを探す",
     "field": {
-      "name": "名称",
       "members": "メンバー",
       "homeBoard": {
         "label": "ホームボード",
@@ -385,6 +412,19 @@
           "admin": {
             "label": "管理者",
             "description": "この権限を持つメンバーは、すべての機能と設定にフルアクセスできます"
+          }
+        }
+      },
+      "custom-widget": {
+        "title": "カスタム ウィジェット",
+        "item": {
+          "manage": {
+            "label": "カスタム ウィジェットの管理",
+            "description": "メンバーにカスタム ウィジェットの定義の作成、編集、削除を許可する"
+          },
+          "secret-write": {
+            "label": "カスタム ウィジェットのシークレットを設定",
+            "description": "メンバーとそのAPIキーが暗号化されたカスタムウィジェットの資格情報を設定できるようにする"
           }
         }
       },
@@ -493,6 +533,35 @@
             "description": "メンバーに任意の検索エンジンの管理と削除を許可する"
           }
         }
+      },
+      "matrix": {
+        "none": "アクセスできません",
+        "impliedHint": "付与: {permissions}",
+        "grantedViaAdmin": "管理者はすでにこれを持っています。管理者を「アクセスできません」に設定すると個別に設定できます。",
+        "preset": {
+          "label": "プリセット",
+          "viewer": "ビューアー",
+          "viewerDescription": "読み取り専用: ボードとメディアを表示し、既存のアプリと統合を使用します。",
+          "editor": "エディター",
+          "editorDescription": "日々の管理:ボード、アプリ、統合、検索エンジンの作成と編集。",
+          "admin": "管理者",
+          "adminDescription": "ユーザー管理を含むすべての機能と設定への無制限のアクセス。",
+          "custom": "カスタム"
+        },
+        "effective": {
+          "title": "有効な権限",
+          "description": "間接的に付与された権限を含め、このグループのメンバーが実行することができます。",
+          "empty": "権限が選択されていません"
+        },
+        "noneDescription": "メンバーはこのエリアにアクセスできません。",
+        "level": {
+          "view": "表示",
+          "use": "使用",
+          "interact": "相互作用",
+          "modify": "変更",
+          "full": "フル"
+        },
+        "capabilityIncluded": "既に「{level}」に含まれています"
       }
     },
     "memberNotice": {
@@ -607,21 +676,24 @@
     "search": "アプリを探す",
     "page": {
       "list": {
-        "title": "アプリ",
+        "ariaLabel": "設定されたアプリ",
         "noResults": {
           "title": "アプリは、まだありません",
-          "action": "最初のアプリを作成する"
+          "description": "アプリは、ボードに必要なサービスやツールへのリンクです。",
+          "action": "最初のアプリを作成する",
+          "filteredTitle": "検索条件に一致するアプリはありません",
+          "filteredDescription": "\"{search}\" に一致するアプリはありません。別の名前または URL をお試しください。",
+          "createOnlyTitle": "アプリのみを追加できます",
+          "createOnlyDescription": "権限によりアプリを作成できますが、既存の権限は参照できません。管理者にアプリ管理権限を問い合わせて、完全な一覧を表示してください。"
         }
       },
       "create": {
         "title": "アプリを新規作成",
         "notification": {
           "success": {
-            "title": "作成成功",
             "message": "アプリが正常に作成されました"
           },
           "error": {
-            "title": "作成失敗",
             "message": "アプリを作成できませんでした"
           }
         }
@@ -630,11 +702,9 @@
         "title": "アプリを編集",
         "notification": {
           "success": {
-            "title": "変更は正常に適用されました",
             "message": "アプリは正常に保存されました"
           },
           "error": {
-            "title": "変更を適用できません",
             "message": "アプリを保存できませんでした"
           }
         }
@@ -644,25 +714,17 @@
         "message": "アプリ {name} を削除してもよろしいですか？",
         "notification": {
           "success": {
-            "title": "削除成功",
             "message": "アプリが正常に削除されました"
           },
           "error": {
-            "title": "削除失敗",
             "message": "アプリを削除できませんでした"
           }
         }
       }
     },
     "field": {
-      "name": {
-        "label": "名称"
-      },
       "description": {
         "label": "説明"
-      },
-      "url": {
-        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -678,34 +740,582 @@
         "search": "アプリを探す",
         "noResults": "検索結果はありません",
         "action": "{app} を選択",
-        "title": "このボードに追加するアプリを選択"
+        "title": "このボードに追加するアプリを選択",
+        "toggle": "クリックして選択",
+        "selected": "選択済み",
+        "multiple": "{count} を追加",
+        "selectedCount": "{count, plural, one {# selected} other {# selected}}",
+        "appsSelected": "{count, plural, other {# 個のアプリを選択中}}",
+        "selectMultiple": "複数を選択",
+        "cancelMultiple": "複数選択を終了",
+        "customApplication": "カスタム アプリケーション",
+        "application": "アプリケーション"
       },
       "create": {
         "title": "新しいアプリを作成",
         "description": "新しいアプリを作成する",
         "action": "アプリの作成を開く"
+      }
+    }
+  },
+  "tips": {
+    "dismiss": "チップを閉じる",
+    "multiSelectApps": "ヒント：複数のアプリを同時に選択するにはCtrl / ⌘を押します。"
+  },
+  "customWidget": {
+    "secretEntry": {
+      "title": "API ソースの設定",
+      "description": "サーバーのURLを確認して資格情報を入力してください。シークレットの値はHomarrによって暗号化され、要求しているエージェントに返されることはありません。",
+      "loading": "安全なリクエストを読み込み中…",
+      "applying": "この設定を適用中…このページを開いたままにしてください。",
+      "saved": "API ソースが設定されています。このページを閉じることができます。",
+      "unavailable": "リクエストは利用できません",
+      "saveError": "API ソースを設定できません",
+      "source": "API ソース: {name}",
+      "baseUrl": "サーバー URL",
+      "networkScope": "ネットワークアクセス",
+      "save": "API設定を保存",
+      "expires": "この一回限りのリクエストは {time} に期限が切れます。"
+    },
+    "page": {
+      "list": {
+        "noResults": "",
+        "noDescription": "説明がありません",
+        "enabled": "有効",
+        "disabled": "無効",
+        "disabledDescription": "このウィジェットは設定されたままですが、ボードに読み込まれません。",
+        "requestCount": "{count, plural, one {# request} other {# requests}}",
+        "invalidDefinition": "無効な定義",
+        "migrationRequired": "移行が必要です",
+        "migrationInstructions": "format@@0を開いて、手動レクリエーションのオリジナルの v1 定義をコピーまたはエクスポートします。 また、LLM とともに移行プロンプトを使用することもできます。移行後も既存のボード配置が機能し続けます。",
+        "missingCredentials": "{count, plural, one {クレデンシャルが} other {# クレデンシャルが}}",
+        "missingCredentialsDescription": "{count, plural, one {このウィジェットにはまだ1つの資格情報が必要です。} other {このウィジェットにはまだ#の資格情報が必要です。}} URLと暗号化された値を設定するには、このバッジを選択してください。"
       },
-      "add": "アプリを追加する"
+      "create": {
+        "title": "",
+        "subtitle": ""
+      },
+      "tabs": {
+        "ariaLabel": "カスタム ウィジェットセクション",
+        "installed": "インストール済み",
+        "workshop": "ワークショップ"
+      }
+    },
+    "action": {
+      "pasteImportHint": "Ctrl+V または Command+V を使用して完全なカスタム ウィジェット JSON を貼り付け",
+      "delete": "",
+      "deleteConfirm": "",
+      "export": "",
+      "duplicate": "",
+      "aiPrompt": "AIによるデザイン",
+      "copyAiPrompt": "",
+      "enable": "",
+      "disable": "",
+      "menu": "",
+      "downloadSkill": "カスタムウィジェットスキルを表示",
+      "publishWorkshop": "ワークショップに公開",
+      "migrate": "カスタムウィジェットの移行",
+      "configureSources": "ソースの設定",
+      "copyLegacyDefinition": "元のウィジェットのコンテンツをコピー",
+      "exportLegacyDefinition": "元のウィジェットのコンテンツをエクスポート",
+      "copyMigrationPrompt": "LLM移行プロンプトをコピー",
+      "pasteMigration": "移行したウィジェットを貼り付け",
+      "importMigration": "移行済みの JSON ファイルをインポート"
+    },
+    "sourceSetupDialog": {
+      "title": "ウィジェットのソースを設定",
+      "description": "このウィジェットが接続されている場所を確認し、暗号化された資格情報を追加または置き換えます。",
+      "credentialsRequired": "要求された資格情報が追加されるまでリクエストは失敗します。",
+      "save": "設定を保存"
+    },
+    "field": {
+      "description": ""
+    },
+    "editor": {
+      "errorBoundary": {
+        "title": "問題が発生しました"
+      },
+      "action": {
+        "components": "コンポーネント",
+        "format": "書式",
+        "insertStarter": "Insert starter",
+        "redo": "Redo",
+        "copied": "コピーしました",
+        "schema": "スキーマ"
+      },
+      "reference": {
+        "minimal": "最小限の例",
+        "full": "完全な例"
+      },
+      "componentReference": {
+        "search": "コンポーネントを検索",
+        "empty": "一致するコンポーネントがありません",
+        "count": "{count, number} コンポーネントが利用可能です"
+      },
+      "status": {
+        "errors": "{count, number} エラー",
+        "warnings": "{count, number} 警告",
+        "ready": "問題は見つかりませんでした",
+        "position": "Ln {line, number}, Col {column, number}",
+        "characters": "{count, number} 文字",
+        "charactersWithLimit": "{count, number} / {limit, number}"
+      },
+      "diagnostics": {
+        "title": "テンプレートの診断",
+        "line": "ライン {line, number}",
+        "ast": "{value}",
+        "bindingTypeConflict": "入力 \"{value}\" は互換性のない値タイプのコントロールで共有されます。",
+        "runtimeBindingTypeConflict": "入力 \"{value}\" は {firstType} と {secondType} の両方として結合されます。",
+        "dynamicRequestId": "リテラルリクエストIDが必要です。ダイナミックリクエストIDは受け付けられません。",
+        "dynamicInputBinding": "bindにはリテラル入力名が必要です。",
+        "inlineRequestProps": "ネットワーク コンポーネントは requestId とパラメータを受け付けます。インライン URL、メソッド、ヘッダー、および body props はブロックされます。",
+        "invalidRequestManifest": "名前付きリクエストは有効なリクエストマップでなければなりません。 {value}",
+        "missingRequestId": "このネットワークコンポーネントにはリテラルの requestId が必要です。",
+        "templateEmpty": "JSX テンプレートを入力します。",
+        "templateTooLong": "テンプレートは 50,000 文字制限を超えています。",
+        "unknownRequest": "ID \"{value}\" の名前付きリクエストは存在しません。"
+      }
+    },
+    "workbench": {
+      "configure": "設定",
+      "sectionNavigation": "カスタム ウィジェットセクション",
+      "widgetPreview": "ウィジェットのプレビュー",
+      "generalInformation": "一般情報",
+      "invalidWidget": "無効なウィジェット",
+      "section": {
+        "general": "一般",
+        "sources": "API ソース",
+        "requests": "リクエスト",
+        "options": "オプション",
+        "jsx": "JSX",
+        "preview": "プレビュー"
+      },
+      "status": {
+        "unsaved": "変動が保存されていません",
+        "invalid": "注意が必要です",
+        "ready": "準備完了"
+      },
+      "saveError": {
+        "title": "ウィジェットは保存されませんでした",
+        "description": "これらの検証エラーを修正し、再度保存します。",
+        "more": "+{count} のエラーがワークベンチに表示されます。",
+        "errors": "検証エラー",
+        "copy": "エラーをコピー",
+        "copied": "エラーがコピーされました"
+      },
+      "action": {
+        "preview": "テストとプレビュー",
+        "previewLoading": "要求をテスト中"
+      },
+      "requests": {
+        "title": "名前付きクエリとアクション",
+        "label": "リクエスト",
+        "description": "クエリはデータをロードします。アクションはユーザーが操作した後にのみ実行されます。任意の HTTP メソッドはどちらの種類でも有効です。"
+      },
+      "options": {
+        "title": "ウィジェットのオプション"
+      },
+      "builder": {
+        "advancedManifest": "高度な生マニフェストを作成",
+        "advancedJson": "高度なマニフェストJSON",
+        "manifestFilename": "widget.json",
+        "request": "リクエスト {count, number}",
+        "requestId": "要求ID",
+        "type": "ダウンロードクライアントの種類",
+        "method": "方法",
+        "source": "API ソース",
+        "run": "実行",
+        "runLoad": "ウィジェットがロードされたとき",
+        "runManual": "SubFetch から",
+        "permission": "権限",
+        "path": "パス",
+        "pathDescription": "ウィジェットのオプションには '{option:name}' を、呼び出し値には '{param:name}' を使用します。",
+        "requestDetails": "クエリ、身体、行動",
+        "queryValues": "クエリ値",
+        "queryKey": "クエリキー",
+        "queryKeyInvalid": "文字で始まり、文字、数字または_のみを含む一意のIDを使用してください。",
+        "valueSource": "Value source",
+        "literal": "リテラル",
+        "widgetOption": "ウィジェットオプション",
+        "invocationParameter": "呼び出しパラメータ",
+        "option": "Option",
+        "parameterName": "パラメーター名",
+        "value": "値",
+        "removeQueryValue": "クエリの値を削除",
+        "addQueryValue": "クエリの値を追加",
+        "jsonBody": "JSON 本文",
+        "jsonBodyDescription": "任意です。 $option と $param の参照を任意の深さに挿入します。",
+        "insertOptionReference": "オプション参照の挿入",
+        "insertParameterReference": "パラメータ参照を挿入",
+        "confirmation": "確認メッセージ",
+        "invalidation": "成功後に更新",
+        "invalidationDescription": "カンマ区切りのクエリ ID",
+        "noAuth": "ソース認証なしで送信",
+        "moveRequestUp": "上へ移動",
+        "moveRequestDown": "リクエストを下に移動",
+        "removeRequest": "リクエストを削除",
+        "addRequest": "リクエストを追加",
+        "optionName": "オプション名",
+        "label": "ラベル",
+        "control": "コントロール",
+        "description": "説明",
+        "default": "デフォルト",
+        "optionDetails": "制約と動的選択",
+        "minimum": "最小",
+        "maximum": "最大値",
+        "step": "Step",
+        "choiceLabel": "選択ラベル",
+        "choiceValue": "選択値",
+        "newChoice": "新しい選択",
+        "addChoice": "選択肢を追加",
+        "removeChoice": "選択肢を削除",
+        "choicesRequest": "リクエストから選択肢を読み込む",
+        "itemsPath": "アイテムのパス",
+        "itemsPathPlaceholder": "項目 (オプション)",
+        "valuePath": "値のパス",
+        "labelPath": "ラベルのパス",
+        "group": "グループ",
+        "advancedOption": "高度なオプション",
+        "moveOptionUp": "オプションを上に移動",
+        "moveOptionDown": "オプションを下に移動",
+        "removeOption": "オプションを削除",
+        "addOption": "オプションを追加",
+        "invalidJson": "不正な JSON",
+        "invalidWidget": "無効なウィジェット"
+      },
+      "jsx": {
+        "title": "JSX テンプレート",
+        "label": "テンプレート"
+      },
+      "sources": {
+        "title": "API ソースと資格情報",
+        "newName": "API {count, number}",
+        "duplicateSourceId": "API ソース ID は一意である必要があります。",
+        "credentialRemoved": "認証情報を削除しました",
+        "credentialRemovedDescription": "格納された値が削除されました。",
+        "primary": "プライマリAPI",
+        "id": "ソースID",
+        "name": "ジョブ名",
+        "baseUrl": "ベースURL",
+        "baseUrlError": {
+          "invalid": "完全な URL を入力してください。",
+          "protocol": "HTTP または HTTPS の URL を使用します。",
+          "credentials": "このURLからユーザー名とパスワードを削除します。代わりに以下の資格情報を設定してください。",
+          "queryOrFragment": "このベース URL からクエリ文字列またはフラグメントを削除します。名前付きリクエストにクエリ値を追加します。"
+        },
+        "networkScope": "ネットワークアクセス",
+        "authentication": "認証",
+        "headerName": "ヘッダー名",
+        "queryParameter": "クエリパラメータ",
+        "configured": "設定 — 置き換えを入力",
+        "clear": "晴れ",
+        "remove": "ソースとそのリクエストを削除",
+        "advanced": "高度な設定",
+        "add": "別の API ソースを追加",
+        "sourceType": "連携機能",
+        "manualSource": "HTTP API",
+        "existingIntegration": "既存の統合",
+        "integrationType": "連携タイプ",
+        "selectIntegration": "設定された統合",
+        "noIntegrations": "一致するインテグレーションはありません",
+        "integrationUnavailable": "選択したインテグレーションは利用できません。別のインテグレーションを選択してください。",
+        "integrationDescription": "保存されたインテグレーションURLと資格情報を使用します。変更は自動的に適用されます。リクエストを実行するには完全なインテグレーションアクセスが必要です。"
+      },
+      "ai": {
+        "title": "任意のAIで作成または修正する",
+        "description": "API ドキュメントの URL を最初に追加します。修正については、可能な場合はプレビューを実行してください。 プロンプトを任意のAIにコピーします。詳細を確認することができます。最後のJSONをここに貼り付けてください。",
+        "request": "このウィジェットは何をすべきですか?",
+        "documentationUrl": "API ドキュメント URL (オプション)",
+        "paste": "貼り付け",
+        "response": "AI応答",
+        "manualCopyDescription": "クリップボードへのアクセスは利用できません。以下のプロンプトを選択し、手動でコピーしてください。",
+        "manualPasteDescription": "クリップボードへのアクセスが利用できないか、コピーされた応答に修正が必要です。ここにAIのJSON応答を貼り付けます。",
+        "selectAll": "すべてを選択",
+        "loadResponse": "負荷応答",
+        "loaded": "ウィジェットをエディタに読み込んでいます",
+        "invalidResponse": "クリップボードに有効なv2ウィジェットが含まれていません",
+        "invalidResponseDetail": "AI応答が無効です: {message}"
+      },
+      "preview": {
+        "invalid": "このウィジェットをプレビューするために検証エラーを修正しました。",
+        "fixtureError": "フィクスチャーのプレビューエラー",
+        "requestData": "データを要求する",
+        "status": {
+          "idle": "リクエストはテストされていません",
+          "loading": "要求をテスト中",
+          "success": "すべての負荷要求に成功しました",
+          "error": "1つ以上の負荷要求に失敗しました"
+        },
+        "result": {
+          "loading": {
+            "title": "APIリクエストのテスト",
+            "description": "Homarrはプレビューセッションを作成し、ウィジェットデータをロードしています。"
+          },
+          "success": {
+            "title": "プレビュー準備完了",
+            "description": "{succeeded, plural, =0 {このウィジェットには読み込みリクエストがありません!} one {# 読み込みリクエストは成功しました!} other {# 読み込みリクエストは成功しました。}} 読み込みデータを開いてレスポンスを調べます。"
+          },
+          "error": {
+            "title": "プレビューはリクエストエラーで完了しました",
+            "description": "{succeeded, number} が成功し、 {failed, number} が失敗しました。応答とエラーの詳細のオープンデータ。"
+          }
+        },
+        "instanceOptions": "インスタンスオプション",
+        "liveActions": "設定された API に対してアクションを実行する",
+        "liveActionsDescription": "オフは安全なシミュレーションです。オンにすると実際のサービスに影響します。",
+        "noActions": "アクションが定義されていません。",
+        "containedFailures": "ランタイム失敗はウィジェット内に含まれています。リクエストジャーナルにシークレット値は含まれていません。",
+        "validation": {
+          "title": "検証",
+          "ready": "ウィジェットの定義は有効です。"
+        },
+        "accessibility": {
+          "title": "アクセシビリティチェック",
+          "ready": "一般的なアクセシビリティの省略は検出されません。",
+          "pending": "ウィジェットの定義が有効な場合、アクセシビリティチェックが実行されます。",
+          "imageAlt": "すべての画像に代替テキストを追加するには、装飾画像にのみ空の代替テキストを使用します。",
+          "actionIconLabel": "すべてのActionIconにaria-labelまたはタイトルを追加します。",
+          "inputLabel": "表示ラベルまたはアクセス可能な名前をすべて入力に追加します。"
+        },
+        "journal": "編集されたリクエスト雑誌",
+        "actionParameters": "アクションパラメータ (JSON)",
+        "invalidParameters": "宣言された文字列、数値、およびブールパラメータ型を使用します。",
+        "runDestructive": "破壊行為を実行",
+        "runAction": "実行アクション",
+        "deleteConfirmation": "このプレビューアクションは、設定された API を介してリモートデータを変更します。",
+        "simulated": "シミュレートされたアクション",
+        "httpStatus": "HTTP {status, number}",
+        "tab": {
+          "widget": "ウィジェット",
+          "data": "データ",
+          "options": "オプション",
+          "state": "作業状態",
+          "actions": "操作",
+          "diagnostics": "診断"
+        },
+        "size": {
+          "compact": "コンパクト化",
+          "standard": "標準",
+          "wide": "幅広い順"
+        },
+        "fixture": {
+          "live": "ライブ",
+          "loading": "読み込み中",
+          "empty": "空",
+          "error": "エラー"
+        }
+      }
+    },
+    "preview": {
+      "request": {
+        "permission": {
+          "view": "表示",
+          "modify": "変更",
+          "full": "フル"
+        }
+      }
+    },
+    "notification": {
+      "created": "",
+      "updated": "",
+      "deleted": "",
+      "imported": "",
+      "migrated": "レガシーウィジェットは正常に移行されました。既存のボード配置ではv2定義が使用されるようになりました。",
+      "migrationError": "レガシーウィジェットの移行に失敗しました。ファイルが homarr-custom-widget-v2 スキーマを使用していることを確認してください。",
+      "legacyDefinitionCopied": "元のウィジェットのコンテンツがコピーされました。格納された資格情報値は含まれません。",
+      "legacyDefinitionCopyError": "元のウィジェットのコンテンツのコピーに失敗しました。",
+      "migrationPromptCopied": "編集されたマイグレーションプロンプトがコピーされました。LLMに貼り付け、JSONレスポンスをコピーし、ここにPaste migratedウィジェットを選択します。",
+      "migrationPromptCopyError": "移行プロンプトのコピーに失敗しました。",
+      "sourcesConfigured": "ウィジェットのソースと資格情報を保存しました。",
+      "sourceConfigurationError": "ウィジェット ソースの設定に失敗しました。",
+      "aiPromptCopiedWithCount": "AIプロンプトをクリップボードにコピーしました（{count, number}文字）。",
+      "aiPromptCopyError": "",
+      "aiPromptSent": "プロンプトが送信されました。アシスタントがバックグラウンドで動作しながら編集を続けることができます。",
+      "updateError": "",
+      "importError": "",
+      "exportError": "",
+      "duplicated": "",
+      "duplicateError": "",
+      "toggleError": "",
+      "deleteError": "",
+      "previewError": ""
+    },
+    "importReview": {
+      "title": "カスタム ウィジェットのインポートを確認",
+      "description": "このウィジェットが接続されている場所と、インポートする前に必要なコントロールにアクセスするボードを確認します。",
+      "migrationTitle": "Review migrated v2 replacement",
+      "migrationDescription": "この生成されたv2定義を確認します。既存のボード配置を同じウィジェット IDにリンクしたまま保存されたv1レコードをアトミックに置き換えることを確認します。",
+      "fileLabel": "カスタム ウィジェット JSON ファイルを選択します。",
+      "name": "ジョブ名",
+      "origin": "基底元",
+      "authentication": "認証",
+      "networkScope": "ネットワークの範囲",
+      "methods": "HTTPメソッド",
+      "permissions": "必要なボード権限",
+      "sourceSetup": {
+        "title": "API ソースの設定",
+        "description": "このウィジェットがどこに接続しているかを確認し、資格情報を追加します。プライベートURLとループバックURLは、Homarrインストールに固有です。",
+        "suggestedUrl": "おすすめの URL",
+        "confirmUrl": "このサーバーのURLがHomarrのインストールに正しいことを確認します。",
+        "ready": "URL 準備完了",
+        "needsUrl": "URLを確認",
+        "credentialsMissing": "資格情報がありません",
+        "credentialsOptional": "資格情報なしでインストールし、後で設定することができますが、リクエストは追加されるまで失敗します。"
+      },
+      "actionWarning": {
+        "title": "このウィジェットはリモートデータを変更できます",
+        "description": "すべての名前付きアクション、継承された資格情報、インポート後の破壊的な確認を確認します。秘密はファイルに含まれません。"
+      },
+      "cancel": "インポートをキャンセル",
+      "confirm": "ウィジェットをインポート",
+      "confirmMigration": "v2の交換を確認する"
+    },
+    "secret": {
+      "apiKey": "API キーまたはトークン",
+      "username": "",
+      "password": "",
+      "savedPlaceholder": ""
+    }
+  },
+  "workshop": {
+    "title": "ワークショップ",
+    "browseWorkshop": "ワークショップを閲覧する",
+    "openCommunity": "ワークショップを開く",
+    "openOnWorkshop": "ワークショップのウェブサイトで {title} を開く",
+    "back": "ワークショップに戻る",
+    "search": "ウィジェットを検索",
+    "searchCss": "CSS テーマを検索",
+    "sort": "並べ替え",
+    "sortTop": "上位評価",
+    "sortNewest": "最新",
+    "listAriaLabel": "ワークショップウィジェット",
+    "listAriaLabelCss": "ワークショップの CSS テーマ",
+    "empty": "検索条件に一致するウィジェットがありません。",
+    "emptyDescription": "ワークショップに公開されたコミュニティウィジェットがここに表示されます。",
+    "emptyFilteredTitle": "検索条件に一致するウィジェットがありません",
+    "emptyFilteredDescription": "ワークショップウィジェットが \"{search}\" に一致しません。",
+    "emptyCss": "この検索に一致するCSSテーマがありません。",
+    "unavailableTitle": "Homarrワークショップは利用できないようです",
+    "unavailable": "コミュニティサービスが一時的にダウンしている可能性があります。しばらくしてからもう一度お試しください。インストールされているウィジェットは影響を受けません。",
+    "loadError": "この提出物を読み込めませんでした。",
+    "noDescription": "説明がありません",
+    "author": "作成者： {name}",
+    "communityMember": "コミュニティメンバー",
+    "outdated": "古い順",
+    "outdatedWarning": "著者はこの提出物を古くなっているとマークしました．インポートする前に注意深く確認してください．",
+    "score": "スコア: {count, number}",
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "voteError": "投票を保存できませんでした。",
+    "signIn": "GitHub でサインイン",
+    "signInError": "GitHub のサインインに失敗しました。Workshop OAuth プロバイダーが設定されていることとポップアップが許可されていることを確認してください。",
+    "signOut": "サインアウト",
+    "signInHint": "投票またはレポートするにはサインインしてください。インストールにはワークショップアカウントは必要ありません。",
+    "securityNotice": "ワークショップウィジェットは宣言されたAPIソースを呼び出したり、ローカルで設定した資格情報を使用して宣言されたアクションを実行することができます。秘密は含まれません。",
+    "securityNoticeCss": "コミュニティ CSS はボードの外観と使いやすさを変更できます。インポートする前に確認してください。ボードの設定を保存するまで何も保存されません。",
+    "install": "インストール",
+    "installReviewTitle": "インストールする前にレビュー",
+    "installError": "このウィジェットはインストールできません",
+    "installErrorDescription": "ワークショップの提出は有効なカスタム JSX v2 ウィジェットではありません。",
+    "useCss": "Import CSS",
+    "importCss": "ワークショップからCSSをインポート",
+    "importCssConfirm": "現在のカスタム CSS を \"{title}\" に置き換えますか？ボードの設定を保存するまで何も保存されません。",
+    "screenshotAlt": "{title}のスクリーンショット {count, number}",
+    "screenshotViewer": "{title} スクリーンショットビューアー",
+    "screenshotsLabel": "{title} スクリーン ショット",
+    "zoomScreenshot": "フルサイズを表示",
+    "previousScreenshot": "以前のスクリーンショット",
+    "nextScreenshot": "次のスクリーンショット",
+    "showScreenshotThumbnails": "スクリーンショットのサムネイルを表示",
+    "hideScreenshotThumbnails": "スクリーンショットのサムネイルを非表示",
+    "closeScreenshotViewer": "スクリーンショットビューアを閉じる",
+    "technicalDetails": "技術的な詳細",
+    "sourceCode": "ワークショップのエントリ",
+    "export": "エクスポート",
+    "report": "レポート",
+    "reportTitle": "提出を報告",
+    "reportReason": "理由：",
+    "reportExplanation": "ワークショップのモデレータは何を知っているべきですか?",
+    "reportSend": "レポートを送信",
+    "reportSent": "レポートが送信されました",
+    "reportSentDescription": "ワークショップモデレータがこの提出物を確認できるようになりました。",
+    "reportCount": "{count, plural, one {# reports} other {# reports}}",
+    "reportWarning": "{count, plural, one {この提出物には # 個のオープンなコミュニティレポートがあります!} other {この提出物には # 個のオープンなコミュニティレポートがあります。}} インストール可能ですが、最初にコンテンツを確認する必要があります。",
+    "reportVisibility": "レポートの詳細は、この提出物の著者およびワークショップ管理者にのみ表示されます。",
+    "reportCategory": {
+      "outdated": "古いまたは動作していません",
+      "malicious": "悪意のある",
+      "spam": "スパム",
+      "copyright": "著作権",
+      "inappropriate": "不適切です",
+      "other": "その他"
+    },
+    "publish": {
+      "title": "ワークショップに公開",
+      "introTitle": "このウィジェットをコミュニティと共有",
+      "introDescription": "Homarrは現在のウィジェットの資格情報なしコピーをエクスポートします。インストールする前にリストの詳細を知るように明確なリストの詳細を追加します。",
+      "listingDetails": "ワークショップ一覧",
+      "listingDetailsDescription": "これらの詳細は、エクスポートされたウィジェット定義と一緒に公開されます。",
+      "success": "すぐに公開されました。コミュニティメンバーがこのウィジェットをインストールして報告できるようになりました。",
+      "successTitle": "ウィジェットが稼働しています",
+      "manageDescription": "提出物を開いて、リスティングを更新したり、レポートを確認したり、古いマークを付けたり、削除したりすることができます。提出物の管理は、Workshop の Web サイトで直接処理されます。",
+      "viewSubmission": "提出物の表示と管理",
+      "done": "完了",
+      "signInHint": "ワークショップIDで公開するにはサインインしてください。",
+      "titleField": "タイトル",
+      "descriptionField": "説明",
+      "screenshots": "スクリーンショット",
+      "screenshotsDescription": "最大 5 つの PNG、JPEG、または WebP 画像",
+      "screenshotsPlaceholder": "スクリーンショットを選択",
+      "invalidScreenshot": "PNG、JPEG、またはWebPイメージをそれぞれ {maxSize} 以下で使用してください。",
+      "privateSourceWarning": "このウィジェットには、 {sources}以下のプライベートソースURLが含まれています。公開する前に、個人ホストまたはIPアドレスを安全なサービスプレースホルダに置き換えてください。",
+      "reviewSourcesTitle": "プライベートソースURLを確認する",
+      "privateSourceConfirmation": "これらのソースURLを確認し、プライベートインフラストラクチャの詳細を公開していません",
+      "action": "今すぐ公開",
+      "publicationNote": "公開はすぐに開始されます。後でワークショップで提出を管理できます。",
+      "definitionChanged": "パブリケーションの準備中にウィジェットが変更されました。再度プライベートソース URL を確認してから再試行してください。",
+      "error": "公開に失敗しました"
     }
   },
   "integration": {
+    "completion": {
+      "modalTitle": "サービス準備完了",
+      "title": "{name} が接続されています",
+      "description": "接続はテストに合格しました。次にこのボードに表示するものを選択してください。",
+      "connectionReady": "サービス接続の準備ができました",
+      "appReady": "アプリのショートカットの準備ができました",
+      "compatibleWidgets": "{count, plural, =0 {互換性のあるウィジェットはありません} one {# 互換ウィジェット} other {# 互換ウィジェット}}",
+      "chooseWidget": "ウィジェットを選択",
+      "recipes": {
+        "title": "このボードにお勧めします",
+        "description": "すでにこのボード上の接続されたサービスとウィジェットに基づいています。",
+        "newConnectionReason": "{integration} 経由で利用可能になりました",
+        "existingConnectionReason": "すでに接続しているサービスで動作します",
+        "dismiss": "このサービスのおすすめをこのボードで却下する"
+      }
+    },
     "page": {
       "list": {
-        "title": "連携機能",
+        "ariaLabel": "設定された統合",
         "search": "連携機能を検索",
+        "scopedNote": "管理することが許可されている統合のみを表示します。",
         "noResults": {
-          "title": "連携機能は、まだありません"
+          "title": "連携機能は、まだありません",
+          "description": "Homarrウィジェットでデータとアクションを使用するためにサービスを接続します。",
+          "action": "最初の連携を作成する",
+          "filteredTitle": "検索条件に一致するインテグレーションがありません",
+          "filteredDescription": "\"{search}\" に一致する統合はありません。別の名前、タイプ、またはURLをお試しください。",
+          "createOnlyTitle": "連携のみを追加できます",
+          "createOnlyDescription": "権限により連携を作成できますが、既存の権限は管理できません。必要な権限へのアクセスを管理者に依頼してください。"
         }
       },
       "create": {
         "title": "新しい {name} 連携機能",
         "notification": {
           "success": {
-            "title": "作成完了",
             "message": "連携機能が正常に作成されました"
           },
           "error": {
-            "title": "作成失敗",
             "message": "連携機能を作成できません"
           }
         },
@@ -729,11 +1339,9 @@
         "title": "{name} 連携機能を編集",
         "notification": {
           "success": {
-            "title": "変更の適用成功",
             "message": "連携機能が正常に作成されました"
           },
           "error": {
-            "title": "変更の適用失敗",
             "message": "連携機能を保存できません"
           }
         },
@@ -750,23 +1358,15 @@
         "message": "連携機能 {name} を削除してもよろしいですか？",
         "notification": {
           "success": {
-            "title": "削除成功",
             "message": "連携機能は正常に削除されました"
           },
           "error": {
-            "title": "削除失敗",
             "message": "連携機能の削除ができませんでした"
           }
         }
       }
     },
     "field": {
-      "name": {
-        "label": "名称"
-      },
-      "url": {
-        "label": "URL"
-      },
       "attemptSearchEngineCreation": {
         "label": "検索エンジンを作成",
         "description": "連携機能 \"{kind}\" は、検索エンジンで使用できます。検索エンジンを自動的に設定するには、これにチェックを入れてください。"
@@ -777,6 +1377,10 @@
       "createApp": {
         "label": "アプリの作成",
         "description": "連携機能と同じ名前とアイコンを持つアプリを作成します。 アプリケーションを作成するには、以下の入力フィールドを空のままにしてください。"
+      },
+      "linkApp": {
+        "label": "既存のアプリをリンク",
+        "description": "この連携機能を既に使用できるアプリに接続します。"
       },
       "appHref": {
         "placeholder": "カスタムアプリ URL"
@@ -791,7 +1395,11 @@
     "grid": {
       "widgetCount": "",
       "noWidgets": "",
-      "detected": ""
+      "detected": "",
+      "connected": "{count, plural, one {# connected} other {# connected}}",
+      "tiedWidgets": "タイドウィジェット",
+      "more": "+{count} 以上",
+      "loadError": "連携機能をロードできませんでした。新しい接続を作成する前にもう一度お試しください。"
     },
     "category": {
       "dnsHole": "",
@@ -822,7 +1430,10 @@
       "analytics": "",
       "vpn": "",
       "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "uptimeMonitoring": "",
+      "beszel": "Beszel",
+      "systemMonitoring": "システム監視",
+      "security": "セキュリティ"
     },
     "testConnection": {
       "action": {
@@ -1107,6 +1718,22 @@
         "slug": {
           "label": "",
           "newLabel": ""
+        },
+        "wazuhIndexerUrl": {
+          "label": "インデクサURL",
+          "newLabel": "新しいインデクサURL"
+        },
+        "wazuhIndexerUsername": {
+          "label": "インデクサのユーザー名",
+          "newLabel": "新しいインデクサーユーザー名"
+        },
+        "wazuhIndexerPassword": {
+          "label": "インデクサのパスワード",
+          "newLabel": "新しいインデクサーのパスワード"
+        },
+        "wazuhDashboardUrl": {
+          "label": "ダッシュボード URL (オプション)",
+          "newLabel": "新しいダッシュボード URL"
         }
       }
     },
@@ -1115,54 +1742,19 @@
       "interact": "連携機能とやりとりする",
       "full": "完全な連携機能アクセス"
     },
-    "audiobookshelf": {
-      "name": "",
-      "description": ""
-    },
-    "navidrome": {
-      "name": "",
-      "description": ""
-    },
-    "uptimeKuma": {
-      "name": "",
-      "description": "",
-      "secret": {
-        "slug": {
-          "description": ""
-        },
-        "apiKey": {
-          "description": ""
-        }
-      }
-    },
-    "traefik": {
-      "name": "",
-      "description": ""
-    },
-    "paperlessNgx": {
-      "name": "",
-      "description": ""
-    },
-    "patchmon": {
-      "name": "",
-      "description": ""
-    },
-    "bazarr": {
-      "name": "",
-      "description": ""
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "どのDockerコンテナがイメージアップデートを利用できるかを監視します"
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "ローカルのllama.cpp llama-serverを監視: ヘルス、モデル、および生成メトリック"
     }
   },
   "media": {
     "plural": "メディア",
     "search": "メディアを探す",
     "field": {
-      "name": "名称",
+      "preview": "プレビュー",
       "size": "サイズ",
-      "creator": "作成者"
+      "creator": "作成者",
+      "actions": "操作"
     },
     "action": {
       "upload": {
@@ -1190,10 +1782,12 @@
         }
       },
       "copy": {
-        "label": "URL をコピーする"
+        "label": "URL をコピーする",
+        "labelNamed": "{name} の URL をコピー"
       },
       "open": {
-        "label": "メディアを開く"
+        "label": "メディアを開く",
+        "labelNamed": "{name} を開く"
       }
     },
     "noResults": {
@@ -1208,7 +1802,6 @@
       "add": "追加",
       "apply": "適用",
       "backToOverview": "概要に戻る",
-      "skip": "",
       "change": "変更する",
       "create": "作成",
       "createAnother": "作成・新規入力",
@@ -1231,16 +1824,31 @@
       "tryAgain": "リトライ",
       "loading": "読み込み中",
       "show": "",
-      "hide": ""
+      "hide": "",
+      "undo": "元に戻す",
+      "editNamed": "{name} を編集",
+      "deleteNamed": "{name} を削除",
+      "clearSearch": "検索をクリア",
+      "copy": "コピー",
+      "copied": "コピーしました",
+      "refresh": "更新"
+    },
+    "pagination": {
+      "pageOf": "ページ {page} / {totalPages}"
     },
     "here": "こちら",
+    "serviceUrlTemplate": {
+      "serverTitle": "通常のサーバーアドレス",
+      "urlModeLabel": "サービスアドレスパターン",
+      "hostPort": "同じホスト、異なるポート",
+      "subdomain": "サービスごとに1つのサブドメイン",
+      "path": "サービスごとに1つのパス"
+    },
     "iconPicker": {
       "label": "アイコン URL",
+      "description": "ライブラリを検索し、画像の URL を貼り付けるか、ファイルをアップロードします。",
       "header": "{countIcons} 画像を名前で検索",
       "headerLoading": "名前で画像を検索",
-      "noResults": "",
-      "error": "",
-      "description": "ライブラリを検索し、画像の URL を貼り付けるか、ファイルをアップロードします。",
       "clear": "画像をクリア",
       "uploadImage": "画像をアップロード",
       "results": "画像検索結果",
@@ -1249,7 +1857,9 @@
       "otherImages": "その他の画像",
       "urlLoading": "画像を確認中…",
       "urlReady": "画像を使用する準備ができました",
-      "urlError": "この画像を読み込めませんでした。URLを確認して再度お試し下さい。"
+      "urlError": "この画像を読み込めませんでした。URLを確認して再度お試し下さい。",
+      "noResults": "",
+      "error": ""
     },
     "colorScheme": {
       "options": {
@@ -1261,7 +1871,6 @@
     "information": {
       "min": "最小",
       "max": "最大",
-      "days": "日数",
       "hours": "時間",
       "minutes": "分"
     },
@@ -1298,16 +1907,16 @@
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "ダークモードに切り替え",
-        "switchToLightMode": "ライトモードに切り替え",
+        "open": "アカウントメニューを開く",
         "management": "管理",
-        "docker": "",
         "preferences": "個人設定",
         "logout": "ログアウト",
         "login": "ログイン",
         "homeBoard": "あなたのホーム ボード",
-        "loggedOut": "ログアウトしました",
-        "updateAvailable": "{countUpdates} 個のアップデート利用可能: {tag}"
+        "updateAvailable": "{countUpdates} 個のアップデート利用可能: {tag}",
+        "assistant": "アシスタント",
+        "assistantThinking": "考え",
+        "modifier": "Mod"
       }
     },
     "dangerZone": "危険な操作",
@@ -1355,13 +1964,66 @@
         "kilometersPerHour": "km/h",
         "milesPerHour": "mph"
       }
+    },
+    "widgetQuery": {
+      "loading": "ウィジェットのデータを読み込み中"
+    },
+    "total": "合計",
+    "filesystemUsage": "{count, plural, one {# ファイルシステムの使用状況を表示} other {# ファイルシステムの使用状況を表示}}",
+    "field": {
+      "name": "ジョブ名"
+    },
+    "label": {
+      "new": "新規作成"
+    },
+    "entity": {
+      "apps": "アプリケーション",
+      "boards": "ボード",
+      "certificates": "証明書",
+      "customWidgets": "カスタム ウィジェット",
+      "groups": "グループ",
+      "integrations": "連携機能",
+      "invites": "招待",
+      "logs": "ログ",
+      "media": "メディア",
+      "searchEngines": "検索エンジン",
+      "tasks": "タスク",
+      "users": "ユーザー"
     }
   },
   "section": {
-    "dynamic": {
+    "option": {
+      "showLabel": {
+        "label": "ラベルを表示",
+        "description": "内容の上にコンテナラベルを表示します。"
+      },
+      "collapsible": {
+        "label": "折りたたみを許可",
+        "description": "視聴者がこのコンテナを展開し、折りたたむようにします。"
+      },
+      "showOpenAll": {
+        "label": "開いているすべてのアクションを表示",
+        "description": "このコンテナ内のすべてのアプリを新しいタブで開くアクションを表示します。"
+      },
+      "scrollable": {
+        "label": "スクロール可能",
+        "description": "このコンテナをセットサイズに保ち、サイズに合うように成長するのではなく、内容をスクロールします。"
+      }
+    },
+    "action": {
+      "openAllInNewTabsFor": "すべてのアプリをタブで {name} で開く"
+    },
+    "openAllInNewTabs": {
+      "title": "すべてのタブを開く",
+      "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、Homarr はすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
+    },
+    "container": {
+      "untitled": "無題のコンテナ",
       "action": {
-        "create": "新しいダイナミックセクション",
-        "remove": "ダイナミックセクションを削除する"
+        "create": "新しいコンテナ",
+        "remove": "コンテナを削除",
+        "expand": "展開",
+        "collapse": "折りたたむ"
       },
       "option": {
         "title": {
@@ -1375,55 +2037,12 @@
         }
       },
       "remove": {
-        "title": "ダイナミックセクションの削除",
-        "message": "この動的セクションを削除してもよろしいですか？アイテムは親セクションの同じ場所に移動されます。"
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "名称"
-        }
-      },
-      "action": {
-        "create": "新しいカテゴリー",
-        "edit": "カテゴリー名の変更",
-        "remove": "カテゴリーを削除",
-        "moveUp": "上に移動",
-        "moveDown": "下へ移動",
-        "createAbove": "上に新しいカテゴリー",
-        "createBelow": "下に新しいカテゴリ",
-        "openAllInNewTabs": "すべてのタブを開く"
-      },
-      "create": {
-        "title": "新しいカテゴリー",
-        "submit": "カテゴリーを追加"
-      },
-      "remove": {
-        "title": "カテゴリーの削除",
-        "message": "カテゴリー {name} を削除してもよろしいですか？"
-      },
-      "edit": {
-        "title": "カテゴリー名変更",
-        "submit": "カテゴリー名を変更"
-      },
-      "menu": {
-        "label": {
-          "create": "新しいカテゴリー",
-          "changePosition": "ポジションを変更する",
-          "settings": ""
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "すべてのタブを開く",
-        "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、Homarr はすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
+        "message": "このコンテナを削除しますか？その内容は周囲に移動します。"
       }
     }
   },
   "item": {
     "action": {
-      "create": "新しいアイテム",
-      "import": "アイテムをインポート",
       "edit": "アイテムを編集",
       "moveResize": "アイテムを移動/サイズ変更",
       "duplicate": "アイテムを複製",
@@ -1432,7 +2051,7 @@
     "menu": {
       "label": {
         "settings": "設定",
-        "refresh": "",
+        "settingsFor": "{name} の設定",
         "options": "",
         "actions": ""
       },
@@ -1441,21 +2060,96 @@
         "error": "",
         "loading": "",
         "idle": ""
+      },
+      "notification": {
+        "saveError": {
+          "title": "ウィジェットを保存できません",
+          "message": "ウィジェットの変更がロールバックされました"
+        }
       }
     },
     "create": {
       "title": "追加するアイテムを選択",
       "search": "アイテムをフィルタする",
-      "addToBoard": "ボードに追加"
+      "addToBoard": "ボードに追加",
+      "addAtPosition": "ここにアイテムを追加",
+      "destination": {
+        "label": "追加先",
+        "description": "ウィジェットを表示する場所を選択します。後で移動できます。",
+        "mainCanvas": "メインキャンバス（キャンバス）",
+        "leftRail": "レール（左）",
+        "rightRail": "Right rail"
+      },
+      "connectionStatus": {
+        "ready": "準備完了",
+        "needsSetup": "セットアップが必要",
+        "noConnectionRequired": "接続は必要ありません"
+      },
+      "customWidget": "カスタム ウィジェット",
+      "standalone": "スタンドアロン版",
+      "missingIntegration": {
+        "title": "サービスを最初に接続する",
+        "noPermission": "このウィジェットには互換性のあるサービス接続が必要です。管理者に接続を依頼して、もう一度お試しください。"
+      },
+      "notification": {
+        "success": {
+          "title": "ウィジェットが追加されました",
+          "message": "{name} がこのボードに追加されました。",
+          "relocatedMessage": "選択した宛先が利用できなかったため、{name} が {destination} に追加されました。"
+        },
+        "error": {
+          "title": "アイテムを追加できません",
+          "message": "このアイテムはこのボードに追加できませんでした"
+        }
+      }
+    },
+    "selection": {
+      "summary": "{count, plural, one {# selected item} other {# selected item}}",
+      "selected": "{count, plural, one {# selected} other {# selected}}",
+      "copy": "コピー",
+      "copied": "{count, plural, other {# 件の項目をクリップボードにコピーしました}}",
+      "copyError": "選択したアイテムをコピーできませんでした。お使いのブラウザはクリップボードへのアクセスを許可していない可能性があります。",
+      "paste": "貼り付け",
+      "pasteShortcut": "コピーした項目をここに貼り付けます (Ctrl / ⌘+ V)",
+      "pasted": "{count, plural, other {# 件の項目を貼り付けました}}",
+      "pasteError": "クリップボードを読み取ることができませんでした。ブラウザがクリップボードへのアクセスを許可していない可能性があります。",
+      "pasteInvalid": "クリップボードに有効なHomarrボードアイテムが含まれていません。",
+      "pasteUnavailable": "コピーされたアイテムはこのボードに収まりません。",
+      "removed": "{count, plural, other {# 件の項目を削除しました}}",
+      "move": "移動",
+      "moveTo": "選択したアイテムを移動",
+      "delete": "削除",
+      "clear": "選択をクリア",
+      "clearShortcut": "選択をクリア (エスケープ)",
+      "saveErrorTitle": "アイテムを更新できません",
+      "saveErrorMessage": "変更を保存できませんでした。ボードが更新されました。",
+      "moveUnavailableTitle": "選択したアイテムを移動できません",
+      "moveUnavailableMessage": "宛先には、選択範囲全体のための十分なスペースがありません。"
     },
     "moveResize": {
       "title": "アイテムの移動/サイズ変更",
+      "entryLabel": "{name}, 列 {column}, 行 {row}",
+      "target": {
+        "numbered": "{name}, 宛先 {index}",
+        "located": "{name}, {location}, 宛先 {index}"
+      },
+      "keyboard": {
+        "instructions": "Enterキーまたはスペースを押してキーボード編集を開始します。移動するには矢印キー、サイズ変更するにはShift+矢印キー、および停止するにはエスケープを使用します。",
+        "started": "キーボード編集を開始しました。移動するには矢印キー、サイズ変更するにはShift+矢印キー、停止するにはエスケープキーを使用してください。",
+        "stopped": "キーボードの編集が停止しました。",
+        "boundary": "この変更は、このセクション内には適用されません。"
+      },
       "field": {
+        "section": {
+          "label": "セクションまたは鉄道"
+        },
         "width": {
-          "label": "幅"
+          "label": "幅",
+          "shortLabel": "W"
         },
         "height": {
-          "label": "高さ"
+          "label": "高さ",
+          "shortLabel": "H"
         },
         "xOffset": {
           "label": "X オフセット"
@@ -1469,10 +2163,27 @@
       "title": "アイテムの編集",
       "tab": {
         "widget": "",
-        "app": ""
+        "app": "",
+        "integration": "連携を編集"
       },
       "app": {
         "propagationNotice": ""
+      },
+      "integration": {
+        "action": "コネクションを編集",
+        "description": "このウィジェットから離れることなく、選択した接続をテストまたは修復します。",
+        "editLabel": "{name} 連携機能を編集",
+        "fullAccessRequired": "フルアクセスが必要です",
+        "propagationNotice": "この統合への変更は、使用されるすべての場所に適用されます。接続は保存される前にテストされます。",
+        "loading": "連携機能を読み込み中",
+        "loadError": "このインテグレーションを読み込めませんでした。接続設定を変更する前にもう一度お試しください。"
+      },
+      "preview": {
+        "integrationRequired": "このウィジェットをプレビューするための接続を選択してください。",
+        "size": "ファイルサイズ"
+      },
+      "settings": {
+        "label": "ウィジェットの設定"
       },
       "advancedOptions": {
         "label": "高度な設定",
@@ -1480,7 +2191,8 @@
       },
       "field": {
         "integrations": {
-          "label": "連携機能"
+          "label": "連携機能",
+          "removeLabel": "{name} インテグレーションを削除"
         },
         "title": {
           "label": "タイトル"
@@ -1494,17 +2206,18 @@
       }
     },
     "remove": {
-      "title": "アイテム削除",
       "message": "このアイテムを削除してもよろしいですか？"
+    },
+    "advancedFocus": {
+      "open": "詳細表示を開く",
+      "close": "詳細ビューを閉じる",
+      "label": "{widget} の高度な表示"
     }
   },
   "widget": {
     "integrationSelect": {
       "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "placeholder": ""
     },
     "app": {
       "name": "アプリ",
@@ -1513,9 +2226,6 @@
         "appId": {
           "label": "アプリを選択"
         },
-        "openInNewTab": {
-          "label": "新しいタブで開く"
-        },
         "showTitle": {
           "label": "アプリ名を表示"
         },
@@ -1523,11 +2233,8 @@
           "label": "ステータスチェックを有効にする"
         },
         "layout": {
-          "label": "レイアウト",
           "option": {
-            "row": "水平方向",
             "row-reverse": "水平方向（反転）",
-            "column": "垂直方向",
             "column-reverse": "垂直方向（反転）"
           }
         },
@@ -1552,23 +2259,60 @@
       "name": "ブックマーク",
       "description": "複数のアプリリンクを表示します",
       "option": {
-        "title": {
-          "label": "タイトル"
+        "showTitle": {
+          "label": "ウィジェットのタイトルを表示"
+        },
+        "titleSize": {
+          "label": "ウィジェットのタイトルサイズ (px)"
         },
         "layout": {
           "label": "レイアウト",
           "option": {
-            "row": {
-              "label": "水平"
-            },
-            "column": {
-              "label": "垂直"
-            },
-            "grid": {
-              "label": "グリッド"
+            "adaptive": {
+              "label": "Adaptive"
             },
             "gridHorizontal": {
               "label": "グリッドは水平方向"
+            },
+            "icons": {
+              "label": "アイコン"
+            }
+          }
+        },
+        "variant": {
+          "label": "外観",
+          "option": {
+            "soft": {
+              "label": "ソフト"
+            },
+            "filled": {
+              "label": "塗りつぶし"
+            },
+            "outline": {
+              "label": "概要"
+            },
+            "plain": {
+              "label": "Plain"
+            }
+          }
+        },
+        "spacing": {
+          "label": "カードの間隔",
+          "option": {
+            "xs": {
+              "label": "極小"
+            },
+            "sm": {
+              "label": "小さい"
+            },
+            "md": {
+              "label": "中間"
+            },
+            "lg": {
+              "label": "大きい"
+            },
+            "xl": {
+              "label": "特大"
             }
           }
         },
@@ -1581,17 +2325,28 @@
         "hideHostname": {
           "label": "ホスト名を非表示"
         },
-        "openNewTab": {
-          "label": "新しいタブで開く"
-        },
         "withBorder": {
           "label": ""
         },
+        "grow": {
+          "label": "行を埋めるためにカードを展開します"
+        },
+        "customUrls": {
+          "label": "カスタムリンク"
+        },
         "items": {
           "label": "ブックマーク",
-          "add": "ブックマークに追加"
+          "remove": "ブックマークを削除",
+          "apps": {
+            "label": "ブックマークを追加",
+            "description": "URLを貼り付けるか、既存のアプリを見つけます。下のブックマークをドラッグして並べ替えます。",
+            "placeholder": "URLを貼り付けるか、アプリを検索",
+            "addUrl": "このURLを追加",
+            "hint": "URLを追加するにはEnterキーを押します。カンマ区切りまたは1行あたりのURLを貼り付けて、いくつかのURLを追加します。"
+          }
         }
-      }
+      },
+      "empty": "ウィジェットの設定で URL または App を追加する"
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -1600,33 +2355,61 @@
         "showBroadcastMessage": {
           "label": ""
         }
+      },
+      "noProjectSelected": "プロジェクトが選択されていません",
+      "runnerStatus": "Runner: {status}",
+      "projectId": "プロジェクト: {id}",
+      "sessionReceived": "受信したセッション: {value}",
+      "sessionSent": "セッション送信: {value}",
+      "sessionId": "セッション: {id}",
+      "startedAt": "{date} を開始しました",
+      "emptyItems": "このスナップショットにはアクティブなジョブまたは最近のジョブがありません",
+      "metric": {
+        "running": "実行中",
+        "completed": "完了",
+        "failed": "失敗",
+        "canceled": "キャンセルしました",
+        "download": "ダウンロード",
+        "upload": "アップロード"
+      },
+      "status": {
+        "running": "実行中",
+        "completed": "完了",
+        "failed": "失敗",
+        "canceled": "キャンセルしました",
+        "stopped": "停止しました",
+        "idle": "アイドル",
+        "unknown": "不明"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "利用可能な更新があるコンテナの数を表示します。",
+      "title": "What's Up Docker",
+      "monitored": "監視中",
+      "updatesAvailable": "{count, plural, one {# アップデートが} other {# アップデートが}}",
+      "updateAvailable": "アップデートがあります",
+      "openReleaseNotes": "リリースノートを開く",
+      "option": {
+        "showRing": {
+          "label": "更新の着信音を表示"
+        },
+        "showUpdateList": {
+          "label": "コンテナ更新リストを表示",
+          "description": "利用可能な画像の更新がある各監視対象のコンテナを一覧表示します"
+        }
       }
     },
     "dnsHoleSummary": {
       "name": "DNS Hole 概要",
       "description": "DNS Hole の概要を表示します",
       "option": {
-        "layout": {
-          "label": "レイアウト",
-          "option": {
-            "row": {
-              "label": "水平"
-            },
-            "column": {
-              "label": "垂直"
-            },
-            "grid": {
-              "label": "グリッド"
-            }
-          }
-        },
         "usePiHoleColors": {
           "label": "Pi-Hole の色を使用"
         }
       },
       "error": {
-        "internalServerError": "DNS Hole Summary の取得に失敗しました",
-        "integrationsDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました"
+        "internalServerError": "DNS Hole Summary の取得に失敗しました"
       },
       "data": {
         "adsBlockedToday": "今日のブロック",
@@ -1634,32 +2417,24 @@
         "dnsQueriesToday": "今日のクエリ",
         "domainsBeingBlocked": "ブロックリストにあるドメイン"
       },
-      "domainsTooltip": "複数の連携機能により、Homarr はブロックされているドメインの正確な数を計算できません"
+      "domainsTooltip": "複数の連携機能により、Homarr はブロックされているドメインの正確な数を計算できません",
+      "status": {
+        "enabled": "有効",
+        "disabled": "無効",
+        "unknown": "不明"
+      }
     },
     "dnsHoleControls": {
       "name": "DNS Hole の 制御",
       "description": "ダッシュボードから PiHole または AdGuard をコントロールする",
       "option": {
-        "layout": {
-          "label": "レイアウト",
-          "option": {
-            "row": {
-              "label": "水平"
-            },
-            "column": {
-              "label": "垂直"
-            },
-            "grid": {
-              "label": "グリッド"
-            }
-          }
-        },
         "showToggleAllButtons": {
           "label": "すべてのボタンを表示"
         }
       },
       "error": {
-        "internalServerError": "DNS Hole の 制御に失敗しました"
+        "internalServerError": "DNS Hole の 制御に失敗しました",
+        "bulkActionsFailed": "{count, plural, one {# アクション} other {# アクション failed}}"
       },
       "controls": {
         "enableAll": "すべて有効",
@@ -1670,8 +2445,6 @@
         "disabled": "無効",
         "processing": "処理中",
         "disconnected": "切断されました",
-        "hours": "時間",
-        "minutes": "分",
         "unlimited": "無制限にする場合は、空白のままにしてください"
       }
     },
@@ -1683,15 +2456,9 @@
           "label": "都市名部にカスタム表示",
           "description": "時計の上にカスタムタイトルまたは都市/国の名前を表示します。"
         },
-        "customTitle": {
-          "label": "タイトル"
-        },
         "is24HourFormat": {
           "label": "24 時間表示",
           "description": "12 時間形式の代わりに 24 時間形式を使用します"
-        },
-        "showSeconds": {
-          "label": "秒を表示"
         },
         "useCustomTimezone": {
           "label": "固定のタイムゾーンを使用"
@@ -1711,29 +2478,295 @@
           "label": "時間の書式をカスタマイズ",
           "description": "時刻の書式に ISO-8601を使用します（これは他のオプションを上書きします）"
         },
-        "customDateFormat": {
-          "label": "日付の書式をカスタマイズ",
-          "description": "日付の書式に ISO-8601を使用します（これは他のオプションを上書きします）"
-        },
         "showWeather": {
           "label": "",
           "description": ""
         },
-        "weatherLocation": {
-          "label": ""
-        },
         "isWeatherFormatFahrenheit": {
           "label": ""
+        },
+        "animateWeatherIcon": {
+          "label": "天気アイコンのアニメーション",
+          "description": "天気アイコンをアニメーション化します。デフォルトでは無効になっており、動きを減らす必要がある場合は常に無効になります。"
+        },
+        "colorWeatherByDayNight": {
+          "label": "昼/夜で天気を色",
+          "description": "天気アイコンと気温を昼の色または夜の色で色分けします 選択された場所で昼間か夜間かに基づいています"
+        },
+        "dayWeatherColor": {
+          "label": "日中の色"
+        },
+        "nightWeatherColor": {
+          "label": "夜の色"
+        },
+        "worldClockCities": {
+          "label": "世界の時計都市",
+          "description": "上級者向けに最大6都市まで追加および注文します。"
         }
+      },
+      "timezoneList": {
+        "timezone": "タイムゾーン",
+        "cityLabel": "市区町村ラベル",
+        "searchPlaceholder": "タイムゾーンを検索",
+        "noResults": "タイムゾーンが見つかりません",
+        "unsupportedOption": "サポートされていない: {timeZone}",
+        "add": "都市を追加",
+        "remove": "{city} を削除",
+        "reorder": "{city} を再注文",
+        "limit": "{count} / {maximum} 都市が設定されました"
+      },
+      "worldClock": {
+        "primary": "プライマリー時計",
+        "local": "現地時間",
+        "today": "今日",
+        "tomorrow": "明日",
+        "yesterday": "昨日",
+        "noSecondaryCities": "ここでそれらを比較するためにウィジェットオプションに都市を追加します。",
+        "unsupportedPrimaryTitle": "プライマリタイムゾーンは利用できません",
+        "unsupportedPrimary": "{timeZone} はこのブラウザではサポートされていません。明確にマークされたフォールバックとしてUTCを表示しています。",
+        "unsupportedTimeZone": "サポートされていないタイムゾーン: {timeZone}",
+        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "advancedLabel": "高度な世界の時計",
+        "cities": "世界時計",
+        "cityCount": "{count} timezones",
+        "timeBarLabel": "{city}の24時間時間体制の位置",
+        "dayProgress": "{percent}%が経過しました · {hours}h {minutes}m",
+        "phaseLegend": "時間帯の凡例です",
+        "tick": {
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
+        },
+        "phaseRange": {
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
+        },
+        "phase": {
+          "night": "夜",
+          "dawn": "Dawn",
+          "day": "日",
+          "dusk": "夕暮れ"
+        }
+      }
+    },
+    "airQuality": {
+      "name": "空気の質と紫外線値",
+      "description": "場所のための空気質、紫外線指標、汚染物質と花粉を表示します。",
+      "option": {
+        "location": {
+          "label": "空気質の場所"
+        },
+        "aqiStandard": {
+          "label": "AQI標準",
+          "options": {
+            "auto": "ロケールの自動設定",
+            "european": "ヨーロッパ産AQI",
+            "us": "アメリカ AQI"
+          }
+        },
+        "showUv": {
+          "label": "UV指数を表示"
+        },
+        "showPollutants": {
+          "label": "汚染物質濃度を表示"
+        },
+        "showPollen": {
+          "label": "花粉濃度を表示"
+        }
+      },
+      "category": {
+        "good": "良い",
+        "fair": "公平な",
+        "moderate": "モデレート",
+        "unhealthySensitive": "敏感なグループには健康でない",
+        "unhealthy": "異常",
+        "poor": "悪い",
+        "veryPoor": "非常に悪い",
+        "veryUnhealthy": "非常に不健康です",
+        "extremelyPoor": "極貧状態",
+        "hazardous": "<unk>",
+        "unknown": "AQI読み込みがありません"
+      },
+      "uv": {
+        "label": "UVインデックス",
+        "category": {
+          "low": "低い",
+          "moderate": "モデレート",
+          "high": "高い",
+          "veryHigh": "非常に高い",
+          "extreme": "極端な",
+          "unknown": "読書なし"
+        }
+      },
+      "dominantPollutant": "Dominant pollutant",
+      "aqiLabel": "AQI",
+      "strongestPollen": "最高の花粉format@@0",
+      "unit": {
+        "concentration": "{value} μg/m3",
+        "pollen": "{value} グレイン/m3"
+      },
+      "pollutant": {
+        "pm2_5": "PM2.5",
+        "pm10": "PM10",
+        "ozone": "オゾーン",
+        "nitrogenDioxide": "二酸化窒素（二酸化窒素）",
+        "sulphurDioxide": "Sulphur dioxide",
+        "carbonMonoxide": "一酸化炭素（一酸化炭素）"
+      },
+      "pollen": {
+        "alder": "Alder",
+        "birch": "シラカバ語",
+        "grass": "草",
+        "mugwort": "マグウォルト",
+        "olive": "オリーブ",
+        "ragweed": "レイジウド語"
+      },
+      "compact": {
+        "sixHourTrend": "次の6時間のAQIトレンド"
+      },
+      "advanced": {
+        "observedAt": "{time} に更新",
+        "next24Hours": "次の24時間",
+        "pollutants": "汚染物質濃度：",
+        "pollen": "花粉濃度：",
+        "sevenDayForecast": "7日間の最大予測",
+        "aqiValue": "AQI {value}",
+        "uvValue": "UV {value}",
+        "uvShort": "UV {value}",
+        "noForecast": "利用可能な予測データがありません"
+      }
+    },
+    "countdown": {
+      "name": "Countdowns",
+      "description": "今後のイベントや定期的な記念日を追跡します。",
+      "option": {
+        "events": {
+          "label": "イベント",
+          "description": "最大20回のワンタイムカウントダウンまたは年間カウントダウンを追加して注文します。日付は選択したタイムゾーンに入力されます。"
+        },
+        "showProgress": {
+          "label": "進行状況を表示"
+        },
+        "showSeconds": {
+          "label": "秒を表示",
+          "description": "今後のイベントごとに秒数を表示します。"
+        }
+      },
+      "dateTimeEventList": {
+        "newEvent": "新しいイベント",
+        "add": "イベントを追加",
+        "remove": "{event} を削除",
+        "reorder": "{event} を再注文",
+        "eventLabel": "イベントラベル",
+        "timezone": "タイムゾーン",
+        "unsupportedOption": "サポートされていない: {timeZone}",
+        "recurrence": "繰り返し",
+        "recurrenceOption": {
+          "none": "繰り返さない",
+          "yearly": "毎年"
+        },
+        "target": "イベントの日時",
+        "trackProgress": "開始日から進捗状況を追跡",
+        "start": "進行状況の開始日時",
+        "confirmDateTime": "日付と時刻を確認",
+        "limit": "{count} の {maximum} イベントが設定されています"
+      },
+      "empty": {
+        "title": "カウントダウンはまだありません",
+        "description": "ウィジェットオプションにイベントを追加してカウントダウンを開始します。"
+      },
+      "completed": "完了",
+      "yearly": "年ごと",
+      "progress": "イベントの進捗状況",
+      "upcoming": "近日公開",
+      "completedEvents": "完了したイベント",
+      "invalid": {
+        "title": "いくつかのイベントを表示できません",
+        "description": "{count, plural, one {1つのイベントに無効な日付またはサポートされていないタイムゾーンがあります。} other {# events have an invalid date or unsupported timezone.}}",
+        "value": "Unavailable"
+      },
+      "alert": {
+        "notifications": "ブラウザの通知",
+        "permissionDenied": "通知はこのブラウザでブロックされています。",
+        "reached": "カウントダウンが目標に達しました。"
+      }
+    },
+    "timer": {
+      "name": "Timer / Pomodoro",
+      "description": "シンプルなタイマーまたは設定可能なポモドーロシーケンスを実行します。",
+      "option": {
+        "mode": {
+          "label": "モード",
+          "options": {
+            "timer": "タイマー",
+            "pomodoro": "Pomodoro"
+          }
+        },
+        "timerMinutes": {
+          "label": "タイマー時間"
+        },
+        "focusMinutes": {
+          "label": "分をフォーカス"
+        },
+        "shortBreakMinutes": {
+          "label": "短い休憩時間"
+        },
+        "longBreakMinutes": {
+          "label": "長い休憩時間"
+        },
+        "sessionsBeforeLongBreak": {
+          "label": "長い休憩時間の前にセッションにフォーカス"
+        },
+        "autoStartBreaks": {
+          "label": "自動的にブレークを開始"
+        },
+        "autoStartFocus": {
+          "label": "自動的にフォーカスセッションを開始"
+        }
+      },
+      "phase": {
+        "timer": "タイマー",
+        "focus": "フォーカス",
+        "shortBreak": "短い休憩時間",
+        "longBreak": "長い休憩時間"
+      },
+      "action": {
+        "start": "開始",
+        "pause": "一時停止",
+        "reset": "Reset"
+      },
+      "attention": {
+        "timerComplete": "Timer complete",
+        "phaseReady": "{phase} 準備完了"
+      },
+      "progress": "タイマーの進行状況： {progress}%",
+      "compact": {
+        "completedFocus": "{count, plural, =0 {フォーカスセッションが完了していません} one {# フォーカスセッションが完了しました} other {# フォーカスセッションが完了しました}}"
+      },
+      "alert": {
+        "title": "Timer complete",
+        "completed": "{phase} が完了しました。"
+      },
+      "advanced": {
+        "sequence": "Pomodoro sequence",
+        "focusSession": "フォーカス {session}",
+        "settings": "永続設定",
+        "settingsHint": "ウィジェットのコンテキストメニューを使用して、これらのボード設定を編集します。",
+        "localAlerts": "ローカルアラート",
+        "notifications": "ブラウザの通知",
+        "sound": "タイマーの音",
+        "localAlertsHint": "タイマーサウンドはデフォルトで有効になっています。サウンドと通知はこのブラウザーでこのウィジェットにのみ適用されます。",
+        "notificationsDenied": "通知はこのブラウザでブロックされています。"
       }
     },
     "minecraftServerStatus": {
       "name": "Minecraft サーバーステータス",
       "description": "Minecraft サーバーのステータスを表示します",
       "option": {
-        "title": {
-          "label": "タイトル"
-        },
         "domain": {
           "label": "サーバーアドレス"
         },
@@ -1753,11 +2786,21 @@
       "noStation": "駅が選択されていません",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "",
+          "description": "カスタムURLはパブリックIPアドレスに解決する必要があります。プライベートホストとローカルホストは拒否されます。"
         },
         "station": {
-          "label": "駅"
+          "label": "駅",
+          "placeholder": "ステーションを検索"
         }
+      },
+      "error": {
+        "customSourceUnavailable": "時刻表ソースが利用できません。URLがパブリックIPアドレスに解決されていることを確認してください。",
+        "stationSearch": "ステーションを検索できません。カスタム URL とボードへのアクセスを確認してください。"
+      },
+      "warning": {
+        "stale": "時刻表を更新できませんでした。 {time} で最後に更新された出発を表示しています。",
+        "staleCompact": "古いデータ"
       }
     },
     "notebook": {
@@ -1789,6 +2832,9 @@
         "directionRtl": "",
         "blockquote": "引用",
         "horizontalLine": "水平線",
+        "details": "折りたたみ可能なセクションを切り替える",
+        "expandDetails": "折りたたみ可能なセクションを展開",
+        "collapseDetails": "折りたたみ可能なセクションを閉じる",
         "bulletList": "箇条書きリスト",
         "orderedList": "順序付きリスト",
         "checkList": "チェックリスト",
@@ -1797,16 +2843,20 @@
         "link": "リンク",
         "unlink": "リンクを削除",
         "image": "画像を埋め込む",
-        "addTable": "テーブルを追加",
+        "insertTable": "テーブルを挿入",
+        "insertTableSize": "{columns} × {rows} テーブルを挿入",
         "deleteTable": "テーブルを削除",
         "colorCell": "色付きテキスト",
-        "mergeCell": "セル結合の切り替え",
+        "mergeCells": "セルを結合",
+        "splitCell": "セルの分割",
         "addColumnLeft": "前に列を追加",
         "addColumnRight": "後に列を追加",
         "deleteColumn": "列を削除",
         "addRowTop": "前に行を追加",
         "addRowBelow": "後に行を追加",
-        "deleteRow": "行の削除"
+        "deleteRow": "行の削除",
+        "toggleHeaderRow": "ヘッダー行の切り替え",
+        "toggleHeaderColumn": "ヘッダーカラムの切り替え"
       },
       "align": {
         "left": "左寄せ",
@@ -1817,8 +2867,6 @@
         "clearColor": "色を消去",
         "source": "ソース",
         "widthPlaceholder": "% またはピクセル単位の値",
-        "columns": "列数",
-        "rows": "行数",
         "width": "幅",
         "height": "高さ"
       },
@@ -1830,7 +2878,9 @@
           "discard": "変更を破棄",
           "keepEditing": "編集を続ける"
         }
-      }
+      },
+      "saveFailed": "メモを保存できません",
+      "documentStats": "{words, plural, one {# 単語} other {# 単語}} · {characters, plural, one {# 文字} other {# 文字}}"
     },
     "anchorNote": {
       "name": "アンカーノート",
@@ -1838,9 +2888,6 @@
       "option": {
         "noteId": {
           "label": "ノート"
-        },
-        "showTitle": {
-          "label": "タイトルを表示"
         },
         "showUpdatedAt": {
           "label": "最終更新を表示"
@@ -1851,14 +2898,20 @@
       "notFound": "ノートが見つかりません",
       "noNotes": "ノートがありません",
       "integrationRequired": "アンカー統合を最初に選択してください",
-      "updatedAt": "{date} に更新しました",
       "untitled": "タイトルなし",
-      "edit": "編集",
-      "save": "保存",
-      "cancel": "キャンセル",
       "readOnlyViewer": "このノートを閲覧することができます。編集は無効になっています",
       "saveForbidden": "このノートを編集する権限がありません。",
-      "saveFailed": "このノートを保存できませんでした。もう一度やり直してください。"
+      "saveFailed": "このノートを保存できませんでした。もう一度やり直してください。",
+      "createdAt": "作成された {date}",
+      "permission": {
+        "owner": "所有者",
+        "editor": "エディター",
+        "viewer": "ビューアー"
+      },
+      "status": {
+        "pinned": "ピン留めしました",
+        "archived": "アーカイブ済み"
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1917,6 +2970,25 @@
         "clickable": {
           "label": "クリック可能"
         }
+      },
+      "state": {
+        "on": "オン",
+        "off": "オフ",
+        "unavailable": "Unavailable",
+        "unknown": "不明"
+      },
+      "advanced": {
+        "entityId": "エンティティID: {id}",
+        "lastChanged": "{date} が変更されました",
+        "attribute": {
+          "unit": "単位",
+          "deviceClass": "デバイスクラス",
+          "icon": "アイコン"
+        }
+      },
+      "error": {
+        "loadFailed": "エンティティを読み込めません",
+        "toggleFailed": "エンティティを更新できません"
       }
     },
     "smartHome-executeAutomation": {
@@ -1932,11 +3004,31 @@
       },
       "spotlightAction": {
         "run": "{name} を実行"
+      },
+      "advanced": {
+        "lastExecuted": "最終実行日時 {time}",
+        "automationId": "自動化ID: {id}",
+        "ready": "実行する準備ができました",
+        "noPermission": "このオートメーションを実行する権限がありません"
+      },
+      "status": {
+        "running": "自動実行",
+        "success": "自動化完了"
+      },
+      "error": {
+        "executeFailed": "オートメーションを実行できません"
       }
     },
     "stockPrice": {
       "name": "株価",
       "description": "会社の現在の株価を表示します",
+      "advanced": {
+        "currentPrice": "現在の価格",
+        "previousClose": "前の閉じる",
+        "changePercentage": "変更 (%)",
+        "minimum": "最小",
+        "maximum": "最大値"
+      },
       "option": {
         "stock": {
           "label": "株式銘柄"
@@ -2007,6 +3099,10 @@
               "label": "1 ヵ月"
             }
           }
+        },
+        "showDetails": {
+          "label": "詳細を表示",
+          "description": "コンパクトビューで名前、変更、および時間範囲を表示します。シンボルと価格だけをオフにします。"
         }
       }
     },
@@ -2034,6 +3130,13 @@
         "showUnmonitored": {
           "label": "監視されていない状態で表示"
         }
+      },
+      "advanced": {
+        "previousMonth": "前の月を表示",
+        "nextMonth": "次の月を表示",
+        "eventCount": "{count, plural, one {# イベント} other {# イベント}}",
+        "loading": "カレンダーイベントを読み込み中...",
+        "noEvents": "今月の予定はありません"
       }
     },
     "weather": {
@@ -2046,15 +3149,17 @@
         "disableTemperatureDecimals": {
           "label": "温度の小数点以下を無効にする"
         },
+        "animateIcons": {
+          "label": "天気アイコンのアニメーション"
+        },
+        "showHumidity": {
+          "label": "湿度を表示"
+        },
         "showCurrentWindSpeed": {
-          "label": "現在の風速を表示",
-          "description": "現在の天気のみ表示"
+          "label": "現在の風速を表示"
         },
         "useImperialSpeed": {
           "label": "風速にmphを使用する"
-        },
-        "location": {
-          "label": "天候の場所"
         },
         "showCity": {
           "label": "都市名を表示"
@@ -2065,13 +3170,10 @@
         "forecastDayCount": {
           "label": "天気予報の日数",
           "description": "ウィジェットの幅が十分でない場合、より少ない日数が表示されます"
-        },
-        "dateFormat": {
-          "label": "日付の形式",
-          "description": "日付がどのように見えるか"
         }
       },
       "currentWindSpeed": "時速 {currentWindSpeed} {unit}",
+      "disabled": "データ通信が無効になっているため天気データは利用できません",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日没",
@@ -2094,6 +3196,47 @@
         "thunderstorm": "雷雨",
         "thunderstormWithHail": "雹を伴う雷雨",
         "unknown": "不明"
+      },
+      "details": "天気の詳細を表示",
+      "detailsFor": "{date} の天気の詳細を表示",
+      "advanced": {
+        "forecast": "7日間の予測",
+        "hourlyForecast": "次の24時間",
+        "day": "日",
+        "time": "時刻",
+        "conditions": "条件",
+        "temperature": "温度",
+        "feelsLike": "{temperature} のような感じ",
+        "feelsLikeLabel": "以下のような感じ",
+        "feelsLikeRange": "次のような感じ: {maximum} / {minimum}",
+        "highLow": "High {maximum} · low {minimum}",
+        "observedAt": "{time} に更新",
+        "humidity": "Humidity",
+        "averageHumidity": "平均湿度: {humidity}%",
+        "currentHumidity": "電流 modify",
+        "wind": "風 ({unit})",
+        "currentWind": "現在の風 / 突風時",
+        "windValue": "{speed} / {gusts} {unit}",
+        "windDetail": "最大風速/突風: {speed} / {gusts} {unit}",
+        "nextHourPrecipitation": "降水量",
+        "precipitationChance": "降水の確率",
+        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationDetail": "降水量: {probability}% · {amount} mm",
+        "todayUv": "今日の最大UVインデックス",
+        "uvIndex": "最大UV指数: {value}",
+        "daylight": "昼間照明: {duration}",
+        "hourlyTooltip": "{feelsLike}{temperatureUnit} ・ {amount} mm・ {humidity}% 湿度・ {speed} {speedUnit} 風",
+        "hourlyTooltipWithoutHumidity": "{feelsLike}{temperatureUnit} ・ {amount} mm・ {speed} {speedUnit} 風",
+        "detailLabel": {
+          "feelsLike": "以下のような感じ",
+          "precipitation": "<unk>",
+          "humidity": "平均<unk>",
+          "wind": "最大風 / 突風の最大",
+          "uv": "最大UVインデックス",
+          "daylight": "Daylight"
+        },
+        "sun": "日の出/日没",
+        "noForecast": "利用可能な予測データがありません"
       }
     },
     "indexerManager": {
@@ -2106,8 +3249,15 @@
       },
       "title": "インデクサーマネージャー",
       "testAll": "すべてのテスト",
+      "status": {
+        "healthy": "正常",
+        "unhealthy": "異常",
+        "disabled": "無効",
+        "unknown": "ヘルスが利用できません"
+      },
       "error": {
-        "internalServerError": "インデクサーのステータスの取得に失敗しました"
+        "internalServerError": "インデクサーのステータスの取得に失敗しました",
+        "testAll": "インデクサのテストに失敗しました。もう一度やり直してください。"
       }
     },
     "healthMonitoring": {
@@ -2136,11 +3286,6 @@
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
         },
-        "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
-        },
         "defaultTab": {
           "label": "デフォルトのタブ"
         },
@@ -2163,17 +3308,27 @@
         "minutes": "{count} 分",
         "used": "使用中",
         "available": "利用可能",
-        "lastSeen": "最終ステータス更新: {lastSeen}"
+        "lastSeen": "最終ステータス更新: {lastSeen}",
+        "updatesAvailable": "{count, plural, one {# アップデートが} other {# アップデートが}}",
+        "rebootRequired": "再起動が必要です",
+        "rebootNotRequired": "再起動は必要ありません"
       },
-      "memory": {},
+      "smartStatus": {
+        "attributesWithinThresholds": "SMART: しきい値内の属性",
+        "attributesFailed": "SMART: {attributes} に失敗しました",
+        "noCriticalWarning": "SMART: SSDによって報告された警告なし",
+        "criticalWarning": "SMART: SSDによって報告された致命的な警告"
+      },
+      "gauge": {
+        "cpuUsage": "CPU 使用率",
+        "cpuTemperature": "CPU温度",
+        "memoryUsage": "メモリ使用量",
+        "gpuUsage": "{name} GPU 使用率"
+      },
       "error": {
         "internalServerError": "ヘルスステータスの取得に失敗しました"
       },
       "cluster": {
-        "summary": {
-          "cpu": "CPU",
-          "memory": "RAM"
-        },
         "resource": {
           "node": {
             "name": "Nodes"
@@ -2209,8 +3364,6 @@
         "table": {
           "header": {
             "name": "名称",
-            "cpu": "CPU",
-            "memory": "RAM",
             "node": "Node"
           }
         }
@@ -2220,33 +3373,29 @@
       "name": "Dockerのステータス",
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
       "option": {
-        "columns": {
-          "label": ""
+        "endpointIds": {
+          "label": "Docker 環境",
+          "description": "すべての Docker 環境からコンテナを表示するには空のままにしてください",
+          "placeholder": "すべての Docker 環境"
         },
-        "enableRowSorting": {
-          "label": "アイテムの並び替えを有効にする"
+        "containerFilter": {
+          "label": "フィルタするコンテナ"
+        },
+        "filterIsWhitelist": {
+          "label": "ホワイトリストとしてフィルター"
         },
         "defaultSort": {
-          "label": "デフォルトで並び替えに使用される列",
           "option": {
             "name": "名称",
             "state": "状態",
             "cpuUsage": "CPU 使用率",
             "memoryUsage": "メモリ使用量"
           }
-        },
-        "descendingDefaultSort": {
-          "label": "並び替えを反転"
-        },
-        "columnOrder": {
-          "label": ""
-        },
-        "columnWidths": {
-          "label": ""
         }
       },
       "error": {
         "internalServerError": "コンテナステータスの取得に失敗しました",
+        "endpointsUnavailable": "Docker エンドポイントは利用できません",
         "layoutSaveTitle": "",
         "layoutSaveMessage": ""
       },
@@ -2255,7 +3404,6 @@
       }
     },
     "coolify": {
-      "name": "Coolify",
       "description": "サーバーとアプリケーションを使用した Coolify インスタンスの概要",
       "option": {
         "showServers": {
@@ -2281,17 +3429,49 @@
         "internalServerError": "Coolify データの取得に失敗しました"
       },
       "server": {
-        "buildServer": "ビルド"
+        "buildServer": "ビルド",
+        "resourceCounts": "{applications, plural, one {#アプリ} other {#アプリ}} / {services, plural, one {# サービス} other {# サービス}}",
+        "reachability": "到達性",
+        "usability": "使いやすさ"
+      },
+      "source": {
+        "url": "ソース: {url}",
+        "unavailable": "{source}: unavailable"
       },
       "instances": {
         "title": "インスタンス"
+      },
+      "action": {
+        "openResource": "{name} を開く",
+        "openLogs": "{name} ログを開く",
+        "showIp": "IPアドレスを表示",
+        "hideIp": "IP アドレスを隠す"
+      },
+      "status": {
+        "running": "実行中",
+        "stopped": "停止しました",
+        "exited": "終了",
+        "starting": "開始",
+        "restarting": "再起動中",
+        "unknown": "不明",
+        "online": "オンライン",
+        "offline": "オフライン",
+        "reachable": "到達可能",
+        "unreachable": "到達不可",
+        "usable": "使用可能",
+        "unusable": "使用不可"
       }
     },
     "vpn": {
       "name": "",
       "description": "",
       "serviceUnavailable": "",
-      "option": {}
+      "status": {
+        "running": "実行中",
+        "notRunning": "実行していません",
+        "unavailable": "Unavailable",
+        "vpn": "VPN: {status}"
+      }
     },
     "ups": {
       "name": "",
@@ -2318,14 +3498,19 @@
         "runtime": "",
         "load": "",
         "input": "",
-        "output": ""
+        "output": "",
+        "batteryVoltage": "バッテリー電圧",
+        "power": "パワー",
+        "temperature": "温度",
+        "manufacturer": "メーカー",
+        "model": "モデル",
+        "serial": "シリアル番号"
       },
       "error": {
         "internalServerError": ""
       }
     },
     "tracearr": {
-      "name": "Tracearr",
       "description": "詳細なストリームとトランスコーディングデータによるメディアサーバーのモニタリングの強化",
       "option": {
         "showStreams": {
@@ -2413,10 +3598,7 @@
           "label": "",
           "description": "",
           "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "none": ""
         },
         "chartType": {
           "label": "",
@@ -2447,25 +3629,20 @@
         "eventNames": {
           "label": "",
           "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "placeholder": ""
         },
         "topCount": {
           "label": "",
           "description": ""
+        },
+        "events": {
+          "loading": "イベントを読み込み中...",
+          "noEvents": "予定が見つかりません",
+          "configureWebsiteFirst": "イベントをロードするウェブサイトを選択してください"
         }
       },
       "event": {
-        "occurrences": "",
         "label": ""
-      },
-      "topPages": {
-        "direct": ""
-      },
-      "topReferrers": {
-        "direct": ""
       },
       "events": {
         "selectPrompt": ""
@@ -2475,6 +3652,9 @@
         "noWebsite": "",
         "noData": "",
         "internalServerError": ""
+      },
+      "top": {
+        "direct": "Direct"
       }
     },
     "common": {
@@ -2502,7 +3682,8 @@
       },
       "integration": {
         "noData": "連携機能が見つかりません",
-        "description": "<here></here> をクリックして新しい連携機能を作成する"
+        "description": "<here></here> をクリックして新しい連携機能を作成する",
+        "manage": "連携機能の管理"
       },
       "app": {
         "noData": "アプリが見つかりません",
@@ -2513,7 +3694,61 @@
         "noIntegration": "連携機能が選択されていません",
         "noData": "利用可能な連携機能のデータがありません"
       },
-      "option": {}
+      "integrationDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました",
+      "updatedAt": "{date} に更新しました",
+      "title": {
+        "label": "タイトル"
+      },
+      "openInNewTab": {
+        "label": "新しいタブで開く"
+      },
+      "showTitle": {
+        "label": "タイトルを表示"
+      },
+      "weatherLocation": {
+        "label": "天候の場所"
+      },
+      "layout": {
+        "label": "レイアウト",
+        "option": {
+          "horizontal": "水平方向",
+          "vertical": "垂直方向",
+          "grid": "グリッド"
+        }
+      },
+      "select": {
+        "loading": "読み込み中...",
+        "loadError": "オプションの読み込みに失敗しました"
+      },
+      "dateFormat": {
+        "label": "日付の形式",
+        "description": "日付がどのように見えるか"
+      },
+      "visibleStorageVolumes": {
+        "label": "ストレージの表示音量",
+        "description": "選択されたすべての統合がOpenMediaVaultまたはSynologyである場合にのみ利用できます。すべての検出されたストレージボリュームを表示するには空のままにしてください。",
+        "placeholder": "ストレージボリュームを選択"
+      },
+      "tableOptions": {
+        "columns": {
+          "label": "表示する列"
+        },
+        "columnOrder": {
+          "label": "列の順序"
+        },
+        "columnWidths": {
+          "label": "列の幅"
+        },
+        "enableRowSorting": {
+          "label": "アイテムの並び替えを有効にする"
+        },
+        "defaultSort": {
+          "label": "デフォルトで並び替えに使用される列"
+        },
+        "invertSorting": {
+          "label": "並び替えを反転"
+        }
+      }
     },
     "video": {
       "name": "ビデオストリーム",
@@ -2572,6 +3807,7 @@
         "transcoding": "",
         "paused": "",
         "remaining": "",
+        "seasonEpisode": "S{season} E{episode}",
         "metadata": {
           "title": "詳細統計情報",
           "video": {
@@ -2589,11 +3825,16 @@
             "resolution": "対応詳細",
             "target": "ターゲットコーデック"
           }
-        }
+        },
+        "unknownUser": "不明なユーザー"
+      },
+      "summary": {
+        "sessions": "{count, plural, one {# session} other {# sessions}}",
+        "playing": "{count} 再生中",
+        "transcoding": "{count} トランスコード"
       }
     },
     "paperlessNgx": {
-      "name": "",
       "description": "",
       "documentsTotal": "",
       "documentsInbox": "",
@@ -2638,7 +3879,6 @@
       }
     },
     "patchmon": {
-      "name": "",
       "description": "",
       "title": "",
       "totalHosts": "",
@@ -2705,36 +3945,30 @@
           "description": ""
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "securityUpdatesThresholdMode": {
           "label": "",
           "description": ""
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "hostsWithSecurityUpdatesThresholdMode": {
           "label": "",
           "description": ""
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "upToDateHostsThresholdMode": {
           "label": "",
@@ -2753,12 +3987,10 @@
           "description": ""
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": ""
         },
         "showOsDistribution": {
           "label": "",
@@ -2789,6 +4021,14 @@
             "bars": "",
             "donut": ""
           }
+        },
+        "threshold": {
+          "warningAt": {
+            "description": "このしきい値に達したときに黄色を入力してください"
+          },
+          "criticalAt": {
+            "description": "このしきい値に達したときに赤を入力してください"
+          }
         }
       },
       "error": {
@@ -2796,12 +4036,12 @@
       }
     },
     "bazarr": {
-      "name": "",
       "description": "",
       "episodes": "",
       "movies": "",
       "providers": "",
       "status": "",
+      "announcements": "お知らせ",
       "option": {
         "showMissingEpisodes": {
           "label": "",
@@ -2848,7 +4088,8 @@
       "users": "ユーザー",
       "photos": "写真",
       "videos": "動画",
-      "storage": "ストレージ使用量"
+      "storage": "ストレージ使用量",
+      "albumLimit": "最大のアルバム（ {count} まで）"
     },
     "immich-albumCarousel": {
       "name": "Immich アルバム",
@@ -2872,24 +4113,21 @@
         }
       },
       "description": "Immichアルバムの写真のスライド",
-      "noPhotos": "このアルバムには写真がありません"
+      "noPhotos": "このアルバムには写真がありません",
+      "albumPhoto": "アルバムの写真",
+      "actions": {
+        "previousPhoto": "前の写真",
+        "nextPhoto": "次の写真",
+        "pauseSlideshow": "Pause slideshow",
+        "resumeSlideshow": "スライドショーを再開",
+        "toggleSlideshow": "スライドショーを一時停止または再開",
+        "photo": "写真 {number}"
+      }
     },
     "downloads": {
       "name": "クライアントをダウンロード",
       "description": "Torrent クライアントと Usenet クライアントの両方から、ダウンロードを表示および管理できます。",
       "option": {
-        "columns": {
-          "label": "表示する列"
-        },
-        "enableRowSorting": {
-          "label": "アイテムの並べ替えを有効にする"
-        },
-        "defaultSort": {
-          "label": "デフォルトで並べ替えに使用される列"
-        },
-        "descendingDefaultSort": {
-          "label": "並べ替えを反転"
-        },
         "showCompletedUsenet": {
           "label": "完了とマークされた使用済みの項目を表示"
         },
@@ -2914,12 +4152,6 @@
         "limitPerIntegration": {
           "label": "連携機能ごとに項目を制限",
           "description": "これは、連携機能ごとに表示されるアイテム数を制限します。グローバルではありません"
-        },
-        "columnOrder": {
-          "label": ""
-        },
-        "columnWidths": {
-          "label": ""
         }
       },
       "errors": {
@@ -2951,7 +4183,7 @@
         },
         "id": {
           "columnTitle": "Id",
-          "detailsTitle": ""
+          "detailsTitle": "Id"
         },
         "integration": {
           "columnTitle": "連携機能"
@@ -3080,6 +4312,10 @@
     "mediaRequests-requestList": {
       "name": "メディアリクエストリスト",
       "description": "Overseerr または Jellyseerr からの全てのメディアリクエストのリストを見る",
+      "empty": {
+        "title": "メディアリクエストはまだありません",
+        "description": "リクエストを開始するには、ムービーまたはショーを検索します。"
+      },
       "option": {
         "linksTargetNewTab": {
           "label": "リンクを新しいタブで開く"
@@ -3113,12 +4349,16 @@
         "failed": "失敗",
         "completed": "完了"
       },
+      "unknown": "不明",
       "toBeDetermined": "未確定"
     },
     "mediaRequests-requestStats": {
       "name": "メディアリクエストの統計",
       "description": "メディアリクエストに関する統計",
-      "option": {},
+      "empty": {
+        "title": "まだリクエストアクティビティがありません",
+        "description": "統計は最初のメディアリクエストの後に表示されます。"
+      },
       "titles": {
         "stats": {
           "main": "メディア統計",
@@ -3128,8 +4368,7 @@
           "declined": "拒否済みです",
           "available": "利用可能",
           "tv": "テレビのリクエスト",
-          "movie": "映画のリクエスト",
-          "total": "合計"
+          "movie": "映画のリクエスト"
         },
         "users": {
           "main": "トップユーザー",
@@ -3155,7 +4394,6 @@
       },
       "currentIndex": "全 {total} 中 {start} ～ {end}",
       "healthCheck": {
-        "title": "ヘルスチェック",
         "queued": "処理待ち",
         "status": {
           "healthy": "正常",
@@ -3164,41 +4402,36 @@
       },
       "panel": {
         "statistics": {
-          "empty": "空",
-          "transcodes": "トランスコード",
-          "transcodesCount": "トランスコード回数",
-          "healthChecksCount": "ヘルスチェック回数",
           "filesCount": "ファイル数",
           "savedSpace": "保存されたスペース",
-          "healthChecks": "ヘルスチェック",
           "videoCodecs": "コーデック",
           "videoContainers": "コンテナ",
           "videoResolutions": "解像度"
         },
         "workers": {
-          "empty": "空",
           "table": {
-            "file": "ファイル",
             "eta": "残り時間",
-            "progress": "進捗状況",
-            "transcode": "トランスコード",
-            "healthCheck": "ヘルスチェック"
+            "progress": "進捗状況"
           }
         },
         "queue": {
-          "empty": "空",
           "table": {
-            "file": "ファイル",
-            "size": "サイズ",
-            "transcode": "トランスコード",
-            "healthCheck": "ヘルスチェック"
+            "size": "サイズ"
           }
+        },
+        "common": {
+          "empty": "空",
+          "file": "ファイル",
+          "healthCheck": "ヘルスチェック",
+          "transcode": "トランスコード",
+          "transcodes": "トランスコード",
+          "healthChecks": "ヘルスチェック"
         }
       }
     },
     "mediaMissing": {
       "name": "",
-      "description": "",
+      "description": "{radarr}、 {sonarr} 、 {bindery} の欠落とキューに入れられた映画、エピソード、本を表示します",
       "option": {
         "showMissing": {
           "label": ""
@@ -3216,7 +4449,8 @@
       },
       "type": {
         "movie": "",
-        "episode": ""
+        "episode": "",
+        "book": "本"
       },
       "empty": {
         "missing": "",
@@ -3247,6 +4481,13 @@
         "showPosterImage": {
           "label": "ポスターの画像を表示"
         }
+      },
+      "error": {
+        "allFeedsFailed": "RSSフィードを読み込むことができません。フィードURLを確認して再度お試し下さい。"
+      },
+      "warning": {
+        "partial": "{count, plural, one {# RSS フィードを読み込めませんでした} other {# RSS フィードを}}",
+        "stale": "RSSフィードを更新できませんでした。以前に読み込まれたエントリを表示しています。"
       }
     },
     "releases": {
@@ -3322,17 +4563,8 @@
               "label": "正規表現"
             }
           },
-          "edit": {
-            "label": "編集"
-          },
           "editForm": {
-            "title": "リポジトリの編集",
-            "cancel": {
-              "label": "キャンセル"
-            },
-            "confirm": {
-              "label": "確認"
-            }
+            "title": "リポジトリの編集"
           },
           "importForm": {
             "title": "Docker からインポート"
@@ -3349,8 +4581,7 @@
             "label": "",
             "token": "",
             "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "notConfigured": ""
           }
         }
       },
@@ -3377,17 +4608,32 @@
           "noProviderResponse": "プロバイダーからの応答がありません",
           "unexpected": ""
         }
-      }
+      },
+      "expandDetails": "{name} の詳細を表示",
+      "collapseDetails": "{name} の詳細を隠す"
     },
     "networkControllerSummary": {
-      "option": {},
-      "card": {
-        "vpn": {
-          "countConnected": "{count} 接続済み"
+      "advanced": {
+        "updated": "更新日時",
+        "metric": {
+          "latency": "レイテンシー",
+          "ping": "Ping",
+          "uptime": "稼働時間",
+          "users": "ユーザー",
+          "guests": "ゲスト"
         }
       },
+      "card": {
+        "vpn": {
+          "countConnected": "{count, plural, one {# connected} other {# connected}}",
+          "label": "VPN"
+        },
+        "wan": "WAN",
+        "web": "ウェブ",
+        "wifi": "Wi-Fi",
+        "lan": "LAN"
+      },
       "error": {
-        "integrationsDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました",
         "unknownContentOption": "ネットワークコントローラサマリーウィジェットの不明なコンテンツオプション： "
       },
       "name": "ネットワークコントローラーの概要",
@@ -3424,7 +4670,6 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました",
         "unknownContentOption": "ネットワークステータスサマリーウィジェットの不明なコンテンツオプション： "
       },
       "name": "ネットワークの状態",
@@ -3454,7 +4699,6 @@
         "versiontitle": "バージョン",
         "cputitle": "CPU 使用率",
         "memorytitle": "メモリ使用率",
-        "cpu": "CPU",
         "memory": "メモリ",
         "interfaces": {
           "name": "名称",
@@ -3462,6 +4706,16 @@
           "recv": "受信",
           "title": "ネットワークインターフェース"
         }
+      },
+      "empty": {
+        "noInterfaces": "ネットワークインターフェースデータがまだありません"
+      },
+      "versionUnknown": "不明なバージョン",
+      "metricAccessible": "{metric}: {value}%, {status}",
+      "status": {
+        "normal": "標準",
+        "warning": "警告",
+        "critical": "Critical"
       }
     },
     "notifications": {
@@ -3471,8 +4725,21 @@
       "option": {
         "hideLogos": {
           "label": ""
+        },
+        "messageFormat": {
+          "label": "メッセージの形式",
+          "option": {
+            "auto": "自動",
+            "plain": "プレーンテキスト",
+            "markdown": "Markdown",
+            "html": "HTML"
+          }
         }
-      }
+      },
+      "openService": "通知サービスを開く",
+      "deleteNotification": "Goティフィスから通知を削除",
+      "deleteFailed": "通知を削除できませんでした",
+      "deleteFailedMessage": "通知を削除できませんでした。もう一度やり直してください。"
     },
     "speedtestTracker": {
       "name": "スピードテストトラッカー",
@@ -3514,7 +4781,6 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
       "description": "",
       "option": {
         "showAverageUptime": {
@@ -3551,10 +4817,14 @@
       },
       "error": {
         "internalServerError": ""
+      },
+      "status": {
+        "up": "合計アップ",
+        "down": "ダウンロード速度",
+        "paused": "一時停止"
       }
     },
     "traefik": {
-      "name": "",
       "description": "",
       "option": {
         "showTcp": {
@@ -3575,7 +4845,6 @@
       },
       "resource": {
         "routers": "",
-        "services": "",
         "middlewares": ""
       },
       "status": {
@@ -3585,7 +4854,20 @@
       },
       "error": {
         "internalServerError": ""
-      }
+      },
+      "resourceType": {
+        "router": "Router",
+        "service": "サービス",
+        "middleware": "ミドルウェア"
+      },
+      "resourceStatus": {
+        "enabled": "有効",
+        "disabled": "無効",
+        "warning": "警告",
+        "error": "エラー",
+        "unknown": "不明"
+      },
+      "failedEndpoint": "失敗: {endpoint}"
     },
     "audioStats": {
       "name": "",
@@ -3651,9 +4933,7 @@
           "label": "グラフの表示",
           "description": "表示するグラフを選択します。",
           "option": {
-            "cpu": "CPU",
             "memory": "メモリ",
-            "gpu": "GPU",
             "network": "ネットワーク"
           }
         },
@@ -3668,12 +4948,11 @@
         }
       },
       "card": {
-        "cpu": "CPU",
         "memory": "MEM",
-        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
-        "down": "DOWN"
+        "down": "DOWN",
+        "memoryTooltip": "{used} / {available} ({percent}%)"
       }
     },
     "systemDisks": {
@@ -3699,151 +4978,88 @@
         },
         "showBackgroundBar": {
           "label": "バックグラウンドの使用状況バーを表示"
-        },
-        "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
         }
       },
       "status": {
-        "unhealthy": "異常"
+        "unhealthy": "異常",
+        "smart": "SMART",
+        "free": "{percentage}%無料"
+      }
+    },
+    "customApi": {
+      "name": "カスタム ウィジェット",
+      "description": "設定されたカスタム JSX 定義をレンダリングします。",
+      "customJsx": {
+        "noTemplate": "JSX テンプレートが構成されていません。",
+        "templateWarnings": "{count} テンプレート警告:",
+        "requestIdRequired": "このネットワーク制御には requestId という名前が必要です。",
+        "unsavedPreview": "名前付きリクエストをテストする前に、エディタで最初のリクエストテストを実行します。",
+        "invalidParams": "要求パラメータが無効です。",
+        "loading": "リクエストを読み込んでいます...",
+        "loadRequest": "リクエストを読み込む",
+        "requestFailed": "リクエストに失敗しました。",
+        "retry": "リクエストを再試行",
+        "actionCompleted": "アクションが正常に完了しました。",
+        "actionSimulated": "アクションシミュレートされました。リクエストは送信されませんでした。",
+        "actionsDisabledEditMode": "ボードが編集モードになっている間はアクションは無効になります。",
+        "widgetItemUnavailable": "このウィジェットアイテムは利用できません。",
+        "toggle": "切り替え",
+        "copied": "コピーしました",
+        "confirmDelete": "この破壊的な行動を確認してください。"
+      },
+      "option": {
+        "definitionId": {
+          "label": "カスタム ウィジェット"
+        },
+        "refreshInterval": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "noDefinition": "",
+      "definitionNotFound": "カスタム ウィジェットは利用できません",
+      "migrationRequired": "このレガシーのカスタムウィジェットは保存されますが、実行する前に、カスタムウィジェットの管理からカスタム JSX v2 に移行する必要があります。",
+      "manageMigration": "カスタム ウィジェットの管理を開く",
+      "contactAdmin": "管理者に連絡してください。",
+      "configurationNeedsRepair": "このウィジェットのオプションが変更されました。ウィジェットを編集して設定を修復します。",
+      "removeFromBoard": "ボードから削除",
+      "editModePending": "このウィジェットをロードするためにボードを保存します。",
+      "picker": {
+        "group": "カスタム JSX ウィジェット",
+        "empty": "カスタム ウィジェットが見つかりません",
+        "preview": "プレビュー",
+        "sources": "{count, plural, one {# source} other {# source}}",
+        "requests": "{count, plural, one {# request} other {# requests}}",
+        "migrationRequired": "移行が必要です",
+        "migrationDescription": "この配置されたv1ウィジェットはまだ実行できません。編集されたプロンプトをLLMにコピーしてから、単一のJSONレスポンスをHomarrに貼り付けます。",
+        "manageMigration": "カスタム ウィジェットの管理を開く",
+        "contactAdmin": "管理者に連絡してください。"
+      },
+      "configuration": {
+        "needsAttention": "設定は注意が必要です: {message}",
+        "advancedOptions": "高度な設定",
+        "invalidJson": "不正な JSON"
       }
     },
     "beszelSystemTable": {
       "name": "",
       "description": "",
       "option": {
-        "statusFilter": {
-          "label": ""
-        },
         "sortBy": {
           "label": ""
         },
         "sortDirection": {
           "label": ""
-        },
-        "showCpu": {
-          "label": ""
-        },
-        "showMemory": {
-          "label": ""
-        },
-        "showDisk": {
-          "label": ""
-        },
-        "showGpu": {
-          "label": ""
-        },
-        "showLoadAvg": {
-          "label": ""
-        },
-        "showNet": {
-          "label": ""
-        },
-        "showTemp": {
-          "label": ""
-        },
-        "showBattery": {
-          "label": ""
-        },
-        "showServices": {
-          "label": ""
-        },
-        "showUptime": {
-          "label": ""
-        },
-        "showAgent": {
-          "label": ""
-        },
-        "columnOrder": {
-          "label": ""
-        },
-        "columnWidths": {
-          "label": ""
         }
       },
-      "noRecords": "",
       "error": {
-        "internalServerError": "",
         "layoutSaveTitle": "",
         "layoutSaveMessage": ""
-      },
-      "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
       }
     },
     "beszelSystemGrid": {
       "name": "",
-      "description": "",
-      "option": {
-        "statusFilter": {
-          "label": ""
-        },
-        "showCpu": {
-          "label": ""
-        },
-        "showMemory": {
-          "label": ""
-        },
-        "showDisk": {
-          "label": ""
-        },
-        "showGpu": {
-          "label": ""
-        },
-        "showLoadAvg": {
-          "label": ""
-        },
-        "showNet": {
-          "label": ""
-        },
-        "showTemp": {
-          "label": ""
-        },
-        "showBattery": {
-          "label": ""
-        },
-        "showServices": {
-          "label": ""
-        },
-        "showUptime": {
-          "label": ""
-        },
-        "showAgent": {
-          "label": ""
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      },
-      "empty": {
-        "noSystems": ""
-      },
-      "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
-      }
+      "description": ""
     },
     "beszelAlerts": {
       "name": "",
@@ -3857,11 +5073,12 @@
         }
       },
       "empty": "",
-      "error": {
-        "internalServerError": ""
-      },
       "history": "",
       "resolved": "",
+      "alertDescription": {
+        "statusDuration": "{minutes} 分間ダウン",
+        "threshold": "{value} が {minutes} 分を超えています"
+      },
       "status": {
         "triggered": "",
         "ok": ""
@@ -3908,16 +5125,16 @@
         "noSystems": ""
       },
       "error": {
-        "internalServerError": "",
         "liveConnectionFailed": "",
         "switchToHistorical": "",
-        "systemNotFound": ""
+        "systemNotFound": "",
+        "selectionSaveTitle": "選択を保存できません",
+        "selectionSaveMessage": "システムまたは期間選択を保存できませんでした。もう一度やり直してください。"
       },
       "chart": {
         "cpu": {
           "title": "",
-          "subtitle": "",
-          "series": ""
+          "subtitle": ""
         },
         "memory": {
           "title": "",
@@ -3932,7 +5149,7 @@
         },
         "diskIO": {
           "title": "",
-          "subtitle": "",
+          "subtitle": "ファイルシステムでのThroughput",
           "read": "",
           "write": ""
         },
@@ -3959,39 +5176,550 @@
           "title": "",
           "subtitle": ""
         }
+      },
+      "period": {
+        "live": "ライブ",
+        "oneHour": "1時間",
+        "twelveHours": "12時間",
+        "oneDay": "24時間",
+        "oneWeek": "1W",
+        "thirtyDays": "30日"
       }
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "利用可能な更新があるコンテナの数を表示します。",
-      "title": "What's Up Docker",
-      "monitored": "監視中",
-      "updatesAvailable": "{count, plural, one {# アップデートが} other {# アップデートが}}",
-      "updateAvailable": "アップデートがあります",
-      "openReleaseNotes": "リリースノートを開く",
+    "assistant": {
+      "name": "アシスタント",
+      "description": "あなたのボードに直接完全なアシスタントの会話を持っています。",
+      "unavailable": {
+        "title": "アシスタントが利用できません",
+        "description": "サインインし、管理者に管理パネルからアシスタントを設定するよう依頼します。"
+      },
+      "compact": {
+        "title": "アシスタント",
+        "description": "ここでチャットするにはウィジェットのサイズを変更するか、会話全体を開きます。",
+        "open": "アシスタントを開く",
+        "openTitle": "アシスタントをサイドパネルで開く",
+        "openDescription": "会話は一つのアクティブな表面に留まります。",
+        "returnToWidget": "会話をこのウィジェットに戻す",
+        "otherWidgetTitle": "別のウィジェットでアシスタントを有効にする",
+        "otherWidgetDescription": "一度にアクティブな会話サーフェスは 1 つだけです。",
+        "useHere": "このウィジェットでアシスタントを使用する"
+      }
+    },
+    "beszel": {
+      "error": {
+        "internalServerError": "Beszel に接続できません。統合設定を確認してください。"
+      },
+      "empty": {
+        "noSystems": "システムが見つかりません"
+      },
+      "options": {
+        "statusFilter": {
+          "label": "ステータスフィルター"
+        },
+        "showCpu": {
+          "label": "CPU を表示"
+        },
+        "showMemory": {
+          "label": "メモリを表示"
+        },
+        "showDisk": {
+          "label": "ディスクを表示"
+        },
+        "showGpu": {
+          "label": "GPU を表示"
+        },
+        "showLoadAvg": {
+          "label": "負荷平均を表示"
+        },
+        "showNet": {
+          "label": "ネットワークを表示"
+        },
+        "showTemp": {
+          "label": "温度を表示"
+        },
+        "showBattery": {
+          "label": "バッテリーを表示"
+        },
+        "showServices": {
+          "label": "サービスを表示"
+        },
+        "showUptime": {
+          "label": "稼働時間を表示"
+        },
+        "showAgent": {
+          "label": "エージェントのバージョンを表示"
+        }
+      },
+      "metric": {
+        "system": "システム",
+        "source": "連携機能",
+        "hostname": "ホスト名",
+        "cpuModel": "CPUモデル",
+        "cores": "コア",
+        "memoryTotal": "メモリの合計",
+        "memory": "メモリ",
+        "disk": "ディスク",
+        "loadAvg": "平均を読み込む",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "バット語",
+        "uptime": "稼働時間",
+        "agent": "エージェント"
+      }
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "ローカルllama.cpp サーバーのヘルス、ロードされたモデル、生成速度を表示します。",
+      "title": "llama.cpp",
+      "status": {
+        "unhealthy": "健康でない ({status})"
+      },
+      "idle": "アイドル",
+      "speedTooltip": {
+        "current": "現在の生成速度",
+        "average": "起動後の平均生成速度",
+        "request": "このリクエスト開始からの平均速度"
+      },
+      "busy": "{count, plural, one {# request running} other {# requests running}}",
+      "modelInfo": {
+        "context": "コンテキスト",
+        "size": "ファイルのサイズ",
+        "parameters": "パラメータ",
+        "model": "モデル",
+        "quantization": "量子化"
+      },
+      "stats": {
+        "tokensProcessed": "処理されたトークン",
+        "contextUsage": "コンテキスト / KV の使用",
+        "cacheHitRate": "キャッシュのヒット率",
+        "tokensGenerated": "生成されたトークン"
+      },
+      "error": {
+        "unreachable": "llama-server is not reachable"
+      },
+      "unit": {
+        "speed": "{value} トークン/秒",
+        "parameters": "{value}B",
+        "none": "—",
+        "speedShort": "t/s"
+      },
       "option": {
         "showTitle": {
           "label": "タイトルを表示"
         },
-        "showRing": {
-          "label": "更新の着信音を表示"
+        "showModelInfo": {
+          "label": "モデル情報を表示"
         },
-        "layout": {
-          "label": "レイアウト",
+        "showContextUsage": {
+          "label": "コンテキストの使用状況を表示"
+        },
+        "showCacheHitRate": {
+          "label": "キャッシュのヒット率を表示"
+        },
+        "showSpeedStats": {
+          "label": "速度統計を表示"
+        },
+        "showRequests": {
+          "label": "リクエストの読み込みを表示"
+        },
+        "showTokenStats": {
+          "label": "トークンの合計を表示"
+        },
+        "showSpeculative": {
+          "label": "投機的デコードを表示"
+        }
+      },
+      "advanced": {
+        "promptSpeed": "プロンプト速度",
+        "avgSpeed": "平均生成",
+        "requests": "リクエスト",
+        "deferred": "遅延しました",
+        "slots": "{processing}/{total} スロットがビジーです",
+        "speculative": "投機的デコード",
+        "avgPrompt": "Avg prompt",
+        "specDrafts": "Spec. drafts",
+        "specAccepted": "Spec. accepted tokens",
+        "specDraftTokens": "Spec. 下書きトークン"
+      }
+    },
+    "stats": {
+      "name": "統計",
+      "description": "統合の統計情報を 1 つの設定可能なウィジェットにまとめます。",
+      "configure": "メトリクスを設定",
+      "refresh": "統計情報を更新",
+      "empty": "ウィジェットの設定を開き、連携を選択し、メトリクスを追加します。",
+      "editorHelp": "このウィジェットで選択された統合からメトリックを追加します。変更はダッシュボードに保存されます。",
+      "source": "連携機能",
+      "metric": "メトリック",
+      "noMetrics": "この統合に利用可能な統計情報がありません",
+      "add": "メトリックを追加",
+      "label": "カスタムラベル",
+      "hidden": "非表示",
+      "compact": "コンパクトな数値",
+      "moveUp": "上に移動",
+      "moveDown": "下へ移動",
+      "remove": "メトリックを削除",
+      "loading": "読み込み中…",
+      "unavailable": "Unavailable",
+      "refreshFailed": "更新に失敗しました — 保存したデータを表示しています",
+      "stale": "保存されたデータ — 更新するには更新",
+      "table": {
+        "value": "値",
+        "status": "ステータス"
+      },
+      "option": {
+        "table": {
+          "label": "テーブルビュー"
+        },
+        "rows": {
+          "label": "コンパクトな行"
+        },
+        "showIcon": {
+          "label": "ソースアイコンを表示"
+        },
+        "spacing": {
+          "label": "間隔",
           "option": {
-            "horizontal": {
-              "label": "水平方向"
+            "xs": {
+              "label": "コンパクト化"
             },
-            "vertical": {
-              "label": "垂直方向"
+            "sm": {
+              "label": "快適さ"
+            },
+            "md": {
+              "label": "Spacious"
             }
           }
         },
-        "showUpdateList": {
-          "label": "コンテナ更新リストを表示",
-          "description": "利用可能な画像の更新がある各監視対象のコンテナを一覧表示します"
+        "entries": {
+          "label": "メトリック"
+        },
+        "plain": {
+          "label": "カードの背景を削除"
         }
-      }
+      },
+      "fetchFailed": "統計情報を取得できません",
+      "viewOptions": "このビューをカスタマイズ",
+      "moreMetrics": "{count} さらに詳細表示する",
+      "localHelp": "レイアウト、書式設定、表示はこのビューにのみ適用されます。共有ボードの設定は同じです。",
+      "plain": "カードの背景を削除",
+      "resetView": "表示をリセット",
+      "allHidden": "すべてのメトリックはこのビューで非表示になります。このビューをカスタマイズして復元します。"
+    },
+    "wazuh": {
+      "target": {
+        "api": "Wazuh server API",
+        "indexer": "Wazuh indexer",
+        "wazuh": "Wazuh"
+      },
+      "severity": {
+        "low": "低い",
+        "medium": "中間",
+        "high": "高い",
+        "critical": "Critical"
+      },
+      "error": {
+        "unauthorized": {
+          "title": "{target} は資格情報を拒否しました",
+          "description": "Wazuh統合に保存されているユーザー名とパスワードを確認してください。サーバーAPI(ポート 55000)とインデクサ(ポート 9200)は別々のユーザーを使用します。"
+        },
+        "certificate": {
+          "title": "{target} 証明書は信頼されていません",
+          "description": "Wazuh はデフォルトで自己署名証明書を使用します。統合で「テスト接続」を実行し、証明書を信頼するか、format@@0 → format@@1 で認証局を追加します。"
+        },
+        "unreachable": {
+          "title": "{target} に到達できません",
+          "description": "ホストが接続を拒否または削除しました。URL、ポート、ファイアウォールを確認してください。インデクサーはデフォルトのオールインワンインストールでローカルホストのみリッスンします。"
+        },
+        "timeout": {
+          "title": "{target} がタイムアウトしました",
+          "description": "15秒以内に応答がありません。サービスがオーバーロードされているか、アドレスが間違っている可能性があります。"
+        },
+        "status": {
+          "title": "{target} がエラーを返しました",
+          "description": "The request failed with HTTP status {status}."
+        },
+        "invalidResponse": {
+          "title": "{target} からの予期しない応答",
+          "description": "URLがWazuhサーバーAPIまたはインデクサーを指していることを確認してください。"
+        },
+        "indexerRequired": {
+          "title": "Wazuh indexer credentials required",
+          "description": "警告、脆弱性、ファイルの整合性イベントは Wazuh インデクサーから読み込まれます。統合にインデクサー URL 、ユーザー名、パスワードを追加します。"
+        },
+        "unknown": {
+          "title": "{target} からデータを読み込めませんでした",
+          "description": "詳細については、Homarrログを確認してください。"
+        }
+      },
+      "range": {
+        "1h": "1時間",
+        "24h": "24時間",
+        "7d": "7d",
+        "30d": "30日"
+      },
+      "levelTooltip": "ルールレベル {level} ({severity})"
+    },
+    "wazuhAgents": {
+      "name": "Wazuhエージェント",
+      "description": "ステータス、OS、バージョン、最後のキープアライブを持つWazuhエージェントのソート可能なリスト",
+      "option": {
+        "statusFilter": {
+          "label": "エージェントを表示"
+        },
+        "sortBy": {
+          "label": "並び替え"
+        },
+        "showVersion": {
+          "label": "Wazuh バージョンの列を表示"
+        },
+        "showGroups": {
+          "label": "グループの列を表示"
+        }
+      },
+      "title": "エージェント",
+      "total": "{count} エージェント",
+      "status": {
+        "active": "活動中",
+        "disconnected": "切断されました",
+        "neverConnected": "接続していません",
+        "pending": "保留中"
+      },
+      "statusLabel": {
+        "active": "活動中",
+        "disconnected": "切断されました",
+        "never_connected": "接続していません",
+        "pending": "保留中",
+        "unknown": "不明"
+      },
+      "live": "ライブ",
+      "snapshot": "スナップショット {age} 古い",
+      "snapshotHint": "{time}で取得されたWazuh ダッシュボードのエージェントスナップショット(wazuh-monitoring)を参照してください。",
+      "staleSnapshot": "エージェントの {time} スナップショットが古くなっています。Wazuh ダッシュボードのモニタリングジョブが実行されていることを確認するか、サーバーの API 資格情報を追加してください。",
+      "noDisconnected": "すべてのエージェントが接続されています",
+      "empty": "このフィルターに一致するエージェントはありません",
+      "column": {
+        "status": "ステータス",
+        "name": "ジョブ名",
+        "ip": "IP",
+        "os": "OS",
+        "version": "バージョン",
+        "lastKeepAlive": "Keepliving",
+        "groups": "グループ"
+      },
+      "outdated": "最新のエージェントバージョンより古い ({version})"
+    },
+    "wazuhAlerts": {
+      "name": "Wazuh アラートのフィード",
+      "description": "最近の Wazuh アラートレベル、MITRE ATT&CK テクニック、エージェント、IP ソース",
+      "option": {
+        "minLevel": {
+          "label": "最小ルールレベル",
+          "description": "Wazuh レベル: 0-6 low, 7-11 medium, 12-14 high, 15 + critical"
+        },
+        "hours": {
+          "label": "時間ウィンドウ (時間)"
+        },
+        "limit": {
+          "label": "アラートの数"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "エージェントの表示"
+        },
+        "showSourceIp": {
+          "label": "送信元IPを表示"
+        },
+        "showRuleId": {
+          "label": "ルールIDを表示"
+        }
+      },
+      "title": "アラート・レベル {level}+ {hours}時間",
+      "empty": "このレベルでは警告はありません。静かに。",
+      "rule": "ルール {id}",
+      "openInDashboard": "Wazuhダッシュボードでこのアラートを開く"
+    },
+    "wazuhSummary": {
+      "name": "Wazuh アラートの重要度",
+      "description": "前回の傾向を伴う深刻度の内訳を警告する",
+      "option": {
+        "range": {
+          "label": "時間範囲"
+        },
+        "showTrend": {
+          "label": "前の期間に対するトレンドを表示"
+        },
+        "showFooter": {
+          "label": "フッターを表示"
+        }
+      },
+      "title": "アラートの重要度・ {range}",
+      "alerts": "アラート",
+      "none": "アラートはありません",
+      "trend": {
+        "new": "新規作成",
+        "tooltip": "前の期間: {previous}"
+      },
+      "previous": "前の {range}: {count}",
+      "maxLevel": "最大レベル {level}",
+      "health": "インデクサの状態: {status}",
+      "manager": "マネージャー {version}"
+    },
+    "wazuhTimeline": {
+      "name": "Wazuh alerts timeline",
+      "description": "Wazuhアラートの重大度ごとの積み上げチャート",
+      "option": {
+        "range": {
+          "label": "時間範囲"
+        },
+        "interval": {
+          "label": "間隔"
+        },
+        "chartType": {
+          "label": "グラフの種類"
+        },
+        "yScale": {
+          "label": "Y軸スケール",
+          "description": "平方根は、数千の低いものに次いで高度および重大なアラートを表示します。"
+        },
+        "minLevel": {
+          "label": "最小ルールレベル"
+        },
+        "showLegend": {
+          "label": "合計で凡例を表示"
+        }
+      },
+      "title": "アラートタイムライン・ {range}",
+      "total": "{count} アラート",
+      "interval": "{interval} ごと"
+    },
+    "wazuhTopList": {
+      "name": "Wazuh Top list",
+      "description": "トップルール、エージェント、ソースIPまたはMITRE ATT&CK戦術とアラート カウント",
+      "option": {
+        "kind": {
+          "label": "ランク"
+        },
+        "range": {
+          "label": "時間範囲"
+        },
+        "limit": {
+          "label": "Number of entries"
+        },
+        "minLevel": {
+          "label": "最小ルールレベル"
+        },
+        "showBars": {
+          "label": "バーを表示"
+        }
+      },
+      "title": {
+        "rules": "トップルール · {range}",
+        "agents": "トップエージェント · {range}",
+        "sourceIps": "トップソース IP · {range}",
+        "mitreTactics": "MITRE戦術・ {range}",
+        "mitreTechniques": "MITRE techniques · {range}"
+      },
+      "empty": {
+        "rules": "この期間にアラートはありません",
+        "agents": "この期間にアラートはありません",
+        "sourceIps": "この期間中に送信元IPのアラートはありません",
+        "mitreTactics": "この期間にMITRE ATT&CKにマップされたアラートはありません",
+        "mitreTechniques": "この期間にMITRE ATT&CKにマップされたアラートはありません"
+      },
+      "totalTooltip": "{count} マッチングアラート",
+      "private": "LAN",
+      "public": "公開",
+      "agents": "{count} エージェントを見る",
+      "others": "{count} 件以上の他のエントリのアラート"
+    },
+    "wazuhVulnerabilities": {
+      "name": "Wazuh の脆弱性",
+      "description": "脆弱性は、CVEと最も脆弱なエージェントに数えられます",
+      "option": {
+        "cveOrder": {
+          "label": "CVEs をランク付けする"
+        },
+        "minSeverity": {
+          "label": "CVEの重要度"
+        },
+        "cveLimit": {
+          "label": "CVE数"
+        },
+        "agentLimit": {
+          "label": "エージェントの数"
+        },
+        "showAgents": {
+          "label": "脆弱なエージェントを表示する"
+        }
+      },
+      "title": "脆弱性",
+      "topCves": "上位CVEs",
+      "score": "スコア",
+      "agentsShort": "エージェント",
+      "topAgents": "最も脆弱なエージェント",
+      "criticalHigh": "クリティカル/高",
+      "totalTooltip": "{count} エージェントの {agents} に関する調査結果。",
+      "affected": "{count} エージェント",
+      "empty": "脆弱性は検出されませんでした",
+      "distribution": "重度分布。スコアがない場合、 {unscored} の結果は表示されません。",
+      "worst": "最悪: {id}（{score}）、{agents}台のエージェント"
+    },
+    "wazuhFim": {
+      "name": "Wazuh ファイルの整合性",
+      "description": "最近のファイルの整合性監視 (syscheck) イベント",
+      "option": {
+        "range": {
+          "label": "時間範囲"
+        },
+        "event": {
+          "label": "イベント"
+        },
+        "limit": {
+          "label": "イベント数"
+        },
+        "includeRegistry": {
+          "label": "Windowsレジストリイベントを含める"
+        }
+      },
+      "title": "ファイルの整合性・ {range}",
+      "event": {
+        "added": "追加された日",
+        "modified": "修正されました",
+        "deleted": "削除済",
+        "unknown": "変更済み"
+      },
+      "empty": "この期間内にファイルの整合性イベントはありません",
+      "user": "作成者： {user}",
+      "registry": "Registry"
+    },
+    "wazuhAuthFailures": {
+      "name": "Wazuh 認証失敗",
+      "description": "失敗したログインとエージェントごとのブルートフォースアラート（時間ごとの輝線）。",
+      "option": {
+        "hours": {
+          "label": "時間ウィンドウ (時間)"
+        },
+        "limit": {
+          "label": "エージェントの数"
+        },
+        "showSourceIps": {
+          "label": "トップのソースIPを表示"
+        }
+      },
+      "title": "認証失敗 · {hours}時間",
+      "seriesTooltip": "{hours}h以上のすべてのエージェント",
+      "peak": "ピーク {count}/bucket",
+      "empty": "この期間に失敗したログインはありません",
+      "failed": "ログイン失敗",
+      "failedHint": "シングル認証に失敗しました（sshd、PAM、Windowsログオン、無効なユーザー）",
+      "bruteForce": "ブルート力",
+      "bruteForceHint": "相関するブルートフォースルール (短期間で複数の失敗、MITRE T1110)",
+      "sourceIps": "送信元IP",
+      "ipTooltip": "{ip}: {count} 失敗",
+      "bruteForceCount": "{count} ブルート力"
     }
   },
   "widgetPreview": {
@@ -4004,7 +5732,75 @@
     }
   },
   "board": {
+    "emptyState": {
+      "title": "最初のビューを作成",
+      "description": "ウィジェットまたはアプリを追加するか、サービスを接続してこのボードにデータを使用します。",
+      "addWidget": "ウィジェットを追加",
+      "addApp": "アプリを追加",
+      "connectService": "サービスに接続"
+    },
+    "setupChecklist": {
+      "title": "このボードを便利にする",
+      "description": "中断した場所をピックアップします。進行状況はすでにこのボード上のコンテンツに従います。",
+      "collapse": "セットアップチェックリストを閉じる",
+      "resume": "セットアップを続ける ({completed}/{total})",
+      "progress": "ボードセットアップの進捗状況",
+      "step": {
+        "content": {
+          "label": "便利なコンテンツを追加",
+          "description": "ウィジェットを選択し、設定する前に設定します。"
+        },
+        "app": {
+          "label": "アプリをピン留めする",
+          "description": "このボードからワンクリックでサービスやツールを維持します。"
+        },
+        "service": {
+          "label": "サービスに接続",
+          "description": "互換性のあるウィジェットのライブデータとアクションのロックを解除します。",
+          "permissionDescription": "管理者はサービスを接続してライブデータのロックを解除できます。",
+          "action": "接続する"
+        }
+      }
+    },
     "action": {
+      "addContent": "ボードコンテンツを追加",
+      "settings": "ボードの設定",
+      "switch": "ボードを切り替える",
+      "switcher": {
+        "title": "ボードを切り替える",
+        "search": {
+          "empty": "\"{search}\" に一致するボードはありません。"
+        },
+        "results": "利用可能なボード",
+        "preview": "{name} と {count} アイテムのプレビュー",
+        "currentHidden": "現在のボード: {name}",
+        "keyboard": {
+          "navigate": "Navigate",
+          "open": "開く",
+          "instructions": "ボードをフィルタリングするには、矢印キーを使用して結果を移動し、Enterキーを使用してボードを開きます。"
+        },
+        "empty": {
+          "title": "他のボードはありません",
+          "description": "あなたがアクセスできる他のボードはありません。"
+        },
+        "error": "ボードをロードできませんでした。"
+      },
+      "create": {
+        "availability": {
+          "checking": "利用可能か確認中…",
+          "available": "{name} が利用可能です"
+        },
+        "notification": {
+          "success": {
+            "title": "ボードが作成されました",
+            "message": "ボード {name} が作成されました"
+          },
+          "error": {
+            "title": "ボードを作成できません",
+            "message": "Board {name} could not be created"
+          }
+        }
+      },
       "duplicate": {
         "title": "ボードを複製する",
         "message": "これにより、ボード {name} はすべてのコンテンツと共に複製されます。ウィジェットが使用許可のない連携機能を参照している場合には、削除されます。",
@@ -4020,75 +5816,24 @@
         }
       },
       "edit": {
+        "enter": "ボードを編集",
+        "save": "ボードを保存",
+        "exit": "編集モードを終了",
         "notification": {
           "success": {
-            "title": "変更は正常に適用されました",
             "message": "ボードは正常に保存されました"
           },
           "error": {
-            "title": "変更を適用できません",
             "message": "ボードを保存できませんでした"
+          },
+          "loadError": {
+            "title": "編集を開始できません",
+            "message": "ボードエディタを読み込めませんでした。ダッシュボードはまだ表示モードで利用できます。"
           }
         },
         "confirmLeave": {
           "title": "変動が保存されていません",
           "message": "保存されていない変更があります。このページから移動してもいいですか？"
-        }
-      },
-      "oldImport": {
-        "label": "1.0.0 より前の Homarr からインポート",
-        "notification": {
-          "success": {
-            "title": "インポート成功",
-            "message": "ボードは、正常にインポートされました"
-          },
-          "error": {
-            "title": "インポート失敗",
-            "message": "ボードをインポートできませんでした。詳細はログを確認してください"
-          }
-        },
-        "form": {
-          "file": {
-            "label": "JSON ファイルを選択",
-            "invalidError": "無効な設定ファイルです"
-          },
-          "apps": {
-            "label": "アプリ",
-            "avoidDuplicates": {
-              "label": "重複の回避",
-              "description": "同じ href を持つアプリが既に存在するアプリを無視します"
-            },
-            "onlyImportApps": {
-              "label": "アプリのみインポート",
-              "description": "アプリのみを追加します。ボードを手動で再作成する必要があります"
-            }
-          },
-          "name": {
-            "label": "ボード名"
-          },
-          "screenSize": {
-            "label": "画面サイズ",
-            "description": "1.0 以前のバージョンでは、3種類のモードが存在するため、画面サイズごとに列数を選択することができました。",
-            "option": {
-              "sm": "小",
-              "md": "中",
-              "lg": "大"
-            }
-          },
-          "sidebarBehavior": {
-            "label": "サイドバーの動作",
-            "description": "サイドバーは 1.0 で削除され、内部のアイテムで何が起こるかを選択できます。",
-            "option": {
-              "lastSection": {
-                "label": "最後のセクション",
-                "description": "最後のセクションの下に、サイドバーが表示されます"
-              },
-              "removeItems": {
-                "label": "アイテムを削除",
-                "description": "サイドバーに含まれるアイテムは、削除されます"
-              }
-            }
-          }
         }
       },
       "quickCreateApp": {
@@ -4097,6 +5842,12 @@
           "createAndUse": "追加して使用する"
         }
       }
+    },
+    "landmark": {
+      "canvas": "ダッシュボードのキャンバス",
+      "leftRail": "左のダッシュボードレール",
+      "rightRail": "右のダッシュボードレール",
+      "items": "ダッシュボードアイテム"
     },
     "field": {
       "pageTitle": {
@@ -4167,7 +5918,8 @@
         }
       },
       "primaryColor": {
-        "label": "原色"
+        "label": "原色",
+        "locked": "管理者はインスタンスのブランドカラーをすべてのボードに保持します。"
       },
       "secondaryColor": {
         "label": "セカンダリーカラー"
@@ -4207,9 +5959,6 @@
           "xl": "とても大きい"
         }
       },
-      "name": {
-        "label": "名称"
-      },
       "isPublic": {
         "label": "公開",
         "description": "公開ボードは、アカウントがなくても誰でもアクセスできます。"
@@ -4229,8 +5978,43 @@
           "title": "レイアウト",
           "responsive": {
             "title": "レスポンシブなレイアウト",
+            "description": "各レイアウトは、独自のウィジェットの位置とサイズを保持します。Mobile と Base は常に利用可能で、任意の追加ブレークポイントにカスタムレイアウトを追加します。",
             "action": {
               "add": "レイアウトを追加する"
+            }
+          },
+          "role": {
+            "mobile": "モバイル",
+            "base": "Base",
+            "custom": "カスタム"
+          },
+          "custom": {
+            "defaultName": "カスタムレイアウト"
+          },
+          "mobile": {
+            "breakpointDescription": "モバイルは常に次のレイアウトブレークポイントまで0pxから使用されます。"
+          },
+          "preview": {
+            "columns": "列数",
+            "empty": "このレイアウトは空です",
+            "dynamicSection": "動的セクション",
+            "editorWidthLabel": "{layoutName} · {width}px"
+          },
+          "reset": {
+            "action": "基地からリセット",
+            "confirm": {
+              "title": "Reset {layoutName}?",
+              "message": "レイアウトに保存されているすべての位置とサイズをベースから生成された新しいレイアウトに置き換えます。元に戻すことはできません。"
+            }
+          },
+          "edit": {
+            "action": "レイアウトを編集",
+            "saveAndEdit": "保存して編集",
+            "save": "レイアウトを保存",
+            "cancel": {
+              "action": "レイアウト編集をキャンセル",
+              "title": "レイアウト変更を破棄しますか？",
+              "message": "このレイアウトに保存していない変更は破棄されます。"
             }
           }
         },
@@ -4268,10 +6052,7 @@
             "rename": {
               "label": "ボード名を変更する",
               "description": "名前を変更すると、このボードへのリンクが壊れます。",
-              "button": "名前を変更する",
-              "modal": {
-                "title": "ボード名の変更"
-              }
+              "button": "名前を変更する"
             },
             "visibility": {
               "label": "ボードの表示を変更する",
@@ -4295,9 +6076,7 @@
               }
             },
             "delete": {
-              "label": "このボードを削除",
               "description": "ボードを削除すると、元に戻すことはできません。確認してください。",
-              "button": "このボードを削除する",
               "confirm": {
                 "title": "ボードの削除",
                 "description": "このボードを削除してもよろしいですか？これにより、ボードとそのコンテンツは完全に削除されます。"
@@ -4342,28 +6121,41 @@
   },
   "layout": {
     "field": {
-      "name": {
-        "label": "名前"
-      },
       "columnCount": {
         "label": "列の数"
       },
       "breakpoint": {
         "label": "ブレークポイント",
         "description": "レイアウトは、次の大きなブレークポイントまで、このブレークポイントより大きいすべての画面で使用されます。"
+      },
+      "gutters": {
+        "label": "固定サイドバー",
+        "description": "両側に最大3つのダッシュボード列を予約します。残りのキャンバスは自動的にリフローします。",
+        "left": {
+          "label": "Left sidebar",
+          "description": "ダッシュボードがスクロールしている間は、この領域を表示します。",
+          "thumbLabel": "Left sidebar width"
+        },
+        "right": {
+          "label": "右サイドバー",
+          "description": "ダッシュボードがスクロールしている間は、この領域を表示します。",
+          "thumbLabel": "右サイドバーの幅"
+        },
+        "width": {
+          "label": "列の幅"
+        },
+        "preview": {
+          "label": "ダッシュボードレイアウトのプレビュー"
+        }
       }
     }
   },
   "management": {
     "metaTitle": "管理",
-    "title": {
-      "morning": "おはようございます、 {username}",
-      "afternoon": "こんにちは、 {username}",
-      "evening": "こんばんは、 {username}"
-    },
     "notFound": {
       "title": "見つかりません",
-      "text": "要求されたリソースが見つかりませんでした"
+      "text": "要求されたリソースが見つかりませんでした",
+      "backToHome": "管理ホームに戻る"
     },
     "error": {
       "title": "",
@@ -4372,19 +6164,10 @@
     },
     "navbar": {
       "items": {
-        "workshop": "Workshop",
         "home": "ホーム",
-        "boards": "ボード",
-        "apps": "アプリ",
-        "integrations": "連携機能",
-        "searchEngies": "検索エンジン",
-        "medias": "メディア",
         "users": {
-          "label": "ユーザー",
           "items": {
-            "manage": "管理",
-            "invites": "招待",
-            "groups": "グループ"
+            "manage": "管理"
           }
         },
         "tools": {
@@ -4392,10 +6175,7 @@
           "items": {
             "docker": "Docker",
             "kubernetes": "Kubernetes",
-            "logs": "ログ",
             "api": "API",
-            "certificates": "証明書",
-            "tasks": "タスク",
             "backup": ""
           }
         },
@@ -4409,21 +6189,12 @@
             "sourceCode": "ソースコード"
           }
         },
-        "about": "このアプリについて"
+        "about": "このアプリについて",
+        "assistant": "アシスタント"
       }
     },
     "page": {
       "home": {
-        "statistic": {
-          "board": "ボード",
-          "user": "ユーザー",
-          "invite": "招待",
-          "integration": "連携機能",
-          "app": "アプリ",
-          "group": "グループ",
-          "searchEngine": "検索エンジン",
-          "media": "メディア"
-        },
         "statisticLabel": {
           "boards": "ボード",
           "resources": "リソース",
@@ -4461,13 +6232,8 @@
               "tooltip": "このボードは、あなたのモバイルボードとして表示されます"
             }
           },
-          "duplicate": {
-            "label": "ボードを複製する"
-          },
           "delete": {
-            "label": "永久削除",
             "confirm": {
-              "title": "ボードの削除",
               "description": "{name} ボードを削除してもよろしいですか？"
             }
           }
@@ -4476,28 +6242,82 @@
           "public": "このボードは公開中です",
           "private": "このボードは非公開です"
         },
-        "noResults": {
-          "title": ""
+        "preview": {
+          "label": "{name}のレイアウトプレビュー ( {count} アイテム)",
+          "unknownCreator": "不明なクリエイター"
         },
-        "modal": {
-          "createBoard": {
-            "field": {
-              "name": {
-                "label": "名称"
-              }
-            }
-          }
+        "noResults": {
+          "title": "",
+          "description": "アプリやウィジェットを一箇所に並べ替えるボードを作成します。"
         }
       },
       "media": {
         "includeFromAllUsers": "すべてのユーザーのメディアを含める"
       },
       "user": {
-        "back": "ユーザーへ戻る",
         "fieldsDisabledExternalProvider": "外部認証プロバイダーによって管理されているため、特定のフィールドは無効になります。",
         "setting": {
           "general": {
             "title": "一般",
+            "header": {
+              "title": "ヘッダースタジオ",
+              "badge": "個人用",
+              "description": "行内の任意の場所でコントロールをドラッグします。左、中央、右のいずれかでコントロールが移動します。",
+              "device": {
+                "desktop": "デスクトップ",
+                "mobile": "モバイル"
+              },
+              "zones": {
+                "left": "左寄せ",
+                "center": "中央寄せ",
+                "right": "右寄せ"
+              },
+              "action": {
+                "hide": "ヘッダーを隠す",
+                "show": "ヘッダーを表示",
+                "configure": "{item} を移動または設定",
+                "remove": "{item} を削除",
+                "dropIntoZone": "{zone} セクションに移動"
+              },
+              "preview": {
+                "board": "{name} のダッシュボードプレビュー",
+                "empty": "ダッシュボードレイアウトが利用できません"
+              },
+              "available": {
+                "title": "利用可能なコントロール",
+                "description": "コントロールを追加し、そのボタンを上の位置にドラッグします。",
+                "requiredAlways": "このコントロールは必須ですが、ヘッダーの任意の場所に移動できます。",
+                "allAdded": "すべての組み込み制御は、すでにヘッダーにあります。",
+                "add": "{item} を追加",
+                "boardShortcut": "ボードショートカット",
+                "chooseBoard": "ボードを選択"
+              },
+              "configuration": {
+                "description": "このコントロールは、ライブヘッダーと同じサイズを維持します。",
+                "searchDisplay": {
+                  "input": "検索バー",
+                  "icon": "アイコンのみ"
+                },
+                "logoDisplay": {
+                  "logo": "ロゴのみ",
+                  "logoAndText": "ロゴ + テキスト"
+                }
+              },
+              "items": {
+                "logo": "ロゴ",
+                "search": "検索",
+                "home": "ホームボード",
+                "boardSwitcher": "ボード",
+                "assistant": "アシスタント",
+                "docker": "Docker",
+                "boardEdit": "ボードを編集",
+                "boardSettings": "ボードの設定",
+                "settings": "設定",
+                "themeToggle": "テーマの切り替え",
+                "user": "アカウント",
+                "boardUnavailable": "ボードが利用できません"
+              }
+            },
             "item": {
               "language": "言語と地域",
               "board": {
@@ -4531,14 +6351,10 @@
           },
           "security": {
             "title": "セキュリティ"
-          },
-          "board": {
-            "title": "ボード"
           }
         },
         "list": {
-          "metaTitle": "ユーザー管理",
-          "title": "ユーザー"
+          "metaTitle": "ユーザー管理"
         },
         "edit": {
           "metaTitle": "ユーザー {username} を編集"
@@ -4592,9 +6408,6 @@
             }
           },
           "field": {
-            "id": {
-              "label": "ID"
-            },
             "creator": {
               "label": "作成者"
             },
@@ -4618,10 +6431,7 @@
           },
           "setting": {
             "title": "設定",
-            "alert": "グループ設定は、リスト内のグループの順序によって優先されます。上部の設定は、下部の設定を上書きします。",
-            "board": {
-              "title": "ボード"
-            }
+            "alert": "グループ設定は、リスト内のグループの順序によって優先されます。上部の設定は、下部の設定を上書きします。"
           },
           "members": {
             "title": "メンバー",
@@ -4629,10 +6439,7 @@
             "notFound": "メンバーが見つかりません"
           },
           "permissions": {
-            "title": "権限",
-            "form": {
-              "unsavedChanges": "保存していない変更があります！"
-            }
+            "title": "権限"
           }
         }
       },
@@ -4641,12 +6448,10 @@
         "notification": {
           "success": {
             "message": "設定の保存が完了しました"
-          },
-          "error": {
-            "message": "設定の保存に失敗しました"
           }
         },
         "section": {
+          "analyticsDocumentation": "Homarrが収集する分析データを正確に見る",
           "analytics": {
             "title": "統計情報",
             "general": {
@@ -4675,7 +6480,6 @@
             }
           },
           "board": {
-            "title": "ボード",
             "homeBoard": {
               "label": "グローバルホームボード",
               "mobileLabel": "グローバルモバイルボード",
@@ -4694,7 +6498,6 @@
             }
           },
           "user": {
-            "title": "ユーザー",
             "enableGravatar": {
               "label": "Gravatar を有効化",
               "description": "カスタムアバターが設定されておらず、メールが設定されている場合は、Libavatar/Gravatarからユーザーのアバターにフォールバックします"
@@ -4710,12 +6513,86 @@
           "appearance": {
             "title": "外観",
             "defaultColorScheme": {
-              "label": "既定の配色設定",
+              "label": "既定の配色設定"
+            }
+          },
+          "branding": {
+            "title": "インスタンスのブランド",
+            "groups": {
+              "identity": "Identity",
+              "appearance": "外観",
+              "customCss": "Custom CSS",
+              "authentication": "認証"
+            },
+            "identity": {
+              "description": "アプリのロゴは、アプリ内で使用される大きなマーク、サインインページで使用されるマーク、インストールされているアプリで使用されます。 ブラウザのアイコン(favicon)は、タブやブックマークに使用される小さな四角形で、空白の場合はアプリケーションのロゴに戻ります。"
+            },
+            "appName": {
+              "label": "アプリケーション名"
+            },
+            "greeting": {
+              "label": "カスタムグリーティングの設定"
+            },
+            "logo": {
+              "label": "アプリのロゴ",
+              "placeholder": "/logo/logo.png"
+            },
+            "favicon": {
+              "label": "ブラウザアイコン (favicon)",
+              "placeholder": "アプリのロゴを使用"
+            },
+            "primaryColor": {
+              "label": "原色"
+            },
+            "secondaryColor": {
+              "label": "セカンダリアクセントformat@@0"
+            },
+            "lockPrimaryColor": {
+              "label": "すべてのボードにこの色を表示する",
+              "description": "基板の色がアプリケーションアクセントの置き換えを防ぎます。"
+            },
+            "signInBackground": {
+              "label": "認証の背景",
+              "placeholder": "https://example.com/background.jpg"
+            },
+            "signInOverlay": {
+              "label": "背景をオーバーレイする"
+            },
+            "defaultRadius": {
+              "label": "角のスタイル",
               "options": {
-                "auto": "",
-                "light": "ライト",
-                "dark": "ダーク"
+                "xs": "タイトな",
+                "sm": "Subtle",
+                "md": "バランス",
+                "lg": "四捨五入済み",
+                "xl": "ソフト"
               }
+            },
+            "customCss": {
+              "label": "グローバルカスタム CSS",
+              "description": "すべてのページに適用されます。ボードのカスタムCSSはそれを上書きできます。"
+            },
+            "authVisibility": {
+              "description": "すべての認証ページに表示される内容を選択します。",
+              "appName": "アプリケーション名",
+              "logo": "アプリのロゴ",
+              "greeting": "あいさつ中"
+            },
+            "summary": {
+              "title": "現在のブランド",
+              "cornerStyle": "角のスタイル",
+              "palette": "Palette",
+              "backgroundConfigured": "カスタム背景・ {overlay}%オーバーレイ表示",
+              "backgroundDefault": "既定の背景",
+              "greetingConfigured": "カスタムグリーティングの設定",
+              "greetingDefault": "既定の挨拶：",
+              "boardColorLocked": "盤の色がロックされています",
+              "boardColorFlexible": "ボードの色を許可する",
+              "appName": "ジョブ名",
+              "logo": "ロゴ",
+              "greeting": "あいさつ中",
+              "on": "オン",
+              "off": "オフ"
             }
           },
           "culture": {
@@ -4723,12 +6600,177 @@
             "defaultLocale": {
               "label": "デフォルトの言語"
             }
+          },
+          "assistant": {
+            "loading": "アシスタント設定を読み込み中",
+            "title": "アシスタント",
+            "description": "インスタンス全体のアシスタントの OpenAI 互換のモデル エンドポイントを接続します。",
+            "security": {
+              "description": "API キーと追加のヘッダー値は、Homarr データベースで暗号化されます。これらはブラウザには返されません。 モデル要求は、Homarrサーバから直接、設定されたエンドポイントに送信されます。"
+            },
+            "overview": {
+              "connectionReady": "接続準備完了",
+              "unsavedChanges": "変動が保存されていません",
+              "setupRequired": "セットアップが必要",
+              "disabled": "無効",
+              "noModel": "モデルが選択されていません"
+            },
+            "connection": {
+              "endpointTitle": "プロバイダーとエンドポイント",
+              "description": "OpenAIチャットコンプリーション APIを実装するサービスをプリセットまたは接続します。",
+              "save": "プロバイダの接続を保存"
+            },
+            "credentials": {
+              "title": "資格情報",
+              "description": "このエンドポイントが必要とするシークレットを追加します。保存された値は暗号化されたままであり、読み返すことはできません。",
+              "required": "キーが必要です",
+              "optional": "キーは省略可能です",
+              "workshop": "ユーザ毎のGitHubサインイン"
+            },
+            "provider": {
+              "title": "プロバイダー",
+              "groups": {
+                "free": "Homarrで無料",
+                "hosted": "ホストされたプロバイダー",
+                "local": "ローカルプロバイダー",
+                "custom": "カスタム"
+              },
+              "options": {
+                "homarr": {
+                  "description": "限られた数のアシスタントの使用は、Homarrチームによって支払われる毎日無料です。 コミュニティワークショップでサインインして手当を使用してください。"
+                },
+                "openrouter": {
+                  "description": "ツール対応の大型モデルカタログを備えたホスト型モデルルーティング。"
+                },
+                "openai": {
+                  "description": "OpenAI チャットの完了 公式APIエンドポイントを通じて。"
+                },
+                "anthropic": {
+                  "description": "AnthropicのOpenAI SDK互換エンドポイントをご覧ください。"
+                },
+                "google-gemini": {
+                  "description": "ジェミニはGoogleのOpenAI対応APIエンドポイントを介して。"
+                },
+                "xai": {
+                  "description": "xAIのOpenAI対応APIを介してGrokモデル。"
+                },
+                "groq": {
+                  "description": "GroqのOpenAI互換APIを通じた高速ホスト推論。"
+                },
+                "mistral": {
+                  "description": "公式APIを介してミストラルモデル。"
+                },
+                "deepseek": {
+                  "description": "DeepSeek モデルは OpenAI 互換の API を使用しています。"
+                },
+                "together": {
+                  "description": "共にオープンモデルをホストすることで、共にオープンAIと互換性のあるAPIを実現しました。"
+                },
+                "ollama": {
+                  "description": "OpenAI対応のAPIを使用するローカルまたはネットワークOllamaサーバー。"
+                },
+                "lm-studio": {
+                  "description": "OpenAI対応を有効にしたLMスタジオローカルサーバー。"
+                },
+                "llama-cpp": {
+                  "description": "ローカルまたはネットワーク llama.cpp サーバーは、OpenAI 互換の API を使用しています。"
+                },
+                "custom": {
+                  "label": "カスタムエンドポイント",
+                  "description": "OpenAI Chat Completionsと互換性のあるその他のエンドポイント。"
+                }
+              },
+              "homarrAuth": {
+                "title": "無料デイリーアシスタントの使用が含まれています",
+                "description": "APIキーは必要ありません。Homarrチームは毎日限られた数のアシスタントをカバーしています。 コミュニティワークショップでサインインして、小遣いを別々にしてください。"
+              }
+            },
+            "baseUrl": {
+              "title": "API ベース URL",
+              "description": "APIプレフィックス(通常 /v1)を含めます。コンテナでは、localhostはHomarrコンテナを参照します。"
+            },
+            "apiKey": {
+              "title": "API キー",
+              "required": "このプロバイダが必要です。値は暗号化され、書き込みのみです。",
+              "optional": "ローカルエンドポイントに対して任意です。サービスにベアラー認証が必要ない場合は空白のままにしてください。",
+              "placeholder": "API キーを入力",
+              "savedTitle": "暗号化された API キーが保存されました",
+              "savedDescription": "Homarrはこのキーを使用できますが、値を表示または回復することはできません。",
+              "remove": "保存された API キーを削除",
+              "removeFlow": {
+                "title": "保存した API キーを削除しますか？",
+                "description": "このプロバイダはAPIキーを必要とします。削除すると、別のキーが保存されるまでモデルの検出やアシスタント応答を停止することができます。",
+                "optionalDescription": "この鍵が削除されると、エンドポイントはベアラー認証の受信を停止します。認証されていないリクエストを受け付けるか、別の保存されたヘッダーを使用することを確認します。",
+                "cancel": "保存されたキーを保持",
+                "confirm": "API キーを削除"
+              }
+            },
+            "headers": {
+              "title": "追加のリクエストヘッダー",
+              "description": "オプションの認証またはルーティングヘッダー。ヘッダーの値は暗号化され、書き込みのみです。",
+              "add": "ヘッダーを追加",
+              "name": "ヘッダー名",
+              "value": "ヘッダーの値",
+              "valuePlaceholder": "シークレットまたはルーティング値",
+              "remove": "ヘッダーを削除",
+              "configured": "追加の暗号化されたヘッダが設定されています。ヘッダを追加すると、保存されたセット全体が置き換えられます。",
+              "empty": "このプロバイダには追加のヘッダーは保存されていません。",
+              "savedBadge": "ヘッダーを保存しました",
+              "pendingRemoval": "保留中の削除",
+              "clear": "保存時にストアドヘッダーを削除",
+              "keep": "保存されているヘッダーを保持"
+            },
+            "model": {
+              "title": "モデル",
+              "description": "検出されたモデルを選択するか、エンドポイントモデル ID を入力します。",
+              "placeholder": "モデル ID",
+              "refresh": "モデルを更新",
+              "chooseModel": "新しい会話に使用するモデルを選択します。",
+              "discoveryPath": "モデルの検出パス",
+              "discoveryPathDescription": "APIベースURLに追加されました。空白の場合は検出を無効にし、手動モデル ID を使用します。",
+              "manual": "モデル ID を手動で入力するか、モデルを検出するために接続を保存します。",
+              "manualFallback": "ディスカバリーは利用できません。モデルIDを手動で入力することができます。",
+              "saveConnectionFirst": "モデルを選択する前にプロバイダ接続を保存します。",
+              "discovering": "このプロバイダーで利用可能なモデルを更新中…",
+              "discovered": "{count, plural, one {#モデルを発見しました。ツールのサポートは選択したエンドポイントとモデルに依存します。} other {#モデルを発見しました。ツールのサポートは選択したエンドポイントとモデルに依存します。}}",
+              "discoveryFailed": "モデルの検出が完了しませんでした",
+              "context": "{count} コンテキスト ウィンドウ",
+              "toolsConfirmed": "宣伝されたツール",
+              "toolsUnknown": "ツールのサポートを確認"
+            },
+            "serverTools": {
+              "title": "サーバーツール",
+              "webSearch": {
+                "label": "ウェブ検索",
+                "description": "リクエストに現在の情報が必要な場合、OpenRouter経由でライブWebを検索できるようにします。検索の使用法はOpenRouterによって別々に請求されます。",
+                "proxyDescription": "OpenRouterのWeb検索サーバーツールをこのエンドポイントに送信します。 カスタムエンドポイントがHomarrルータプロキシなどのOpenRouterサーバツールフォーマットを転送する場合にのみこれを有効にします。",
+                "limit": "モデルでは、リクエストごとに3件、1件につき5件の検索結果が出ます。"
+              }
+            },
+            "enabled": {
+              "label": "アシスタントを有効にする",
+              "description": "サインイン済みのすべてのユーザーにアシスタントを表示します。既存のHomarr権限はすべての内部ツールコールに適用されます。"
+            },
+            "save": "アシスタントを保存",
+            "notification": {
+              "connectionSaved": {
+                "title": "プロバイダーの接続が保存されました",
+                "message": "エンドポイントと暗号化された資格情報は、モデル選択の準備ができています。",
+                "credentialsCleared": "エンドポイントが変更されたため、以前の資格情報がクリアされました。必要に応じて新しい宛先の資格情報を追加してください。"
+              },
+              "saved": {
+                "title": "アシスタント設定を保存しました",
+                "message": "新しいモデルと可用性の設定がアクティブです。"
+              },
+              "error": {
+                "title": "アシスタント設定を保存できませんでした"
+              }
+            }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "タスク",
           "status": {
             "idle": "アイドル",
             "running": "実行中",
@@ -4746,6 +6788,11 @@
               "label": "Pings"
             }
           },
+          "action": {
+            "run": "{name} を今すぐ実行",
+            "enable": "{name} を有効にする",
+            "disable": "{name} を無効にする"
+          },
           "interval": {
             "seconds": "{interval, plural, =1 {秒} other {# 秒}}周期",
             "minutes": "{interval, plural, =1 {分} other {# 分}}周期",
@@ -4761,13 +6808,7 @@
               }
             }
           },
-          "settings": {
-            "title": "{jobName} の タスク設定"
-          },
           "field": {
-            "name": {
-              "label": "名称"
-            },
             "interval": {
               "label": "スケジュール間隔"
             },
@@ -4780,11 +6821,6 @@
           },
           "table": {
             "search": "{count} のタスクを検索..."
-          },
-          "action": {
-            "refresh": {
-              "label": "更新"
-            }
           },
           "refresh": {
             "success": {
@@ -4819,7 +6855,6 @@
           }
         },
         "api": {
-          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "APIトークンが作成されました",
@@ -4845,7 +6880,6 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
                   "createdBy": "作成者",
                   "actions": "アクション"
                 }
@@ -4901,43 +6935,12 @@
               "availableTools": {
                 "title": "",
                 "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
-              },
-              "troubleshooting": {
-                "title": "",
-                "missingHeader": {
-                  "title": "",
-                  "description": ""
-                },
-                "invalidFormat": {
-                  "title": "",
-                  "description": ""
-                },
-                "invalidKey": {
-                  "title": "",
-                  "description": ""
-                },
-                "connectionRefused": {
-                  "title": "",
-                  "description": ""
-                },
-                "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                "filteredDescription": "拡張されたカテゴリ間の{count} マッチングツール。",
+                "search": "検索ツール",
+                "noResults": {
+                  "title": "この検索に一致するツールはありません。",
+                  "description": "MCP ツールが \"{search}\" と一致しません。名前空間、ツール名、または説明を試してください。"
                 }
-              },
-              "copy": "",
-              "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
               }
             }
           }
@@ -4954,79 +6957,35 @@
               "title": "",
               "warningTitle": "",
               "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "submit": ""
             }
           },
           "import": {
             "title": "",
-            "description": "",
-            "warning": "",
-            "dropzone": {
-              "title": "",
-              "description": ""
-            },
-            "changeFile": "",
-            "button": "",
-            "success": {
-              "title": "",
-              "message": ""
-            },
-            "error": ""
-          },
-          "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
-            "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
-            },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "description": ""
           },
           "restore": {
             "dropzone": {
               "title": "",
-              "description": ""
+              "description": "Homarr SQLite バックアップから .zip ファイルを受け入れます (最大 {maxSize})"
             },
             "analyzing": "",
             "changeFile": "",
             "continueToRestore": "",
-            "tryAgain": "",
             "analysisError": "",
             "preview": {
               "title": "",
               "exported": "",
               "entity": "",
               "count": "",
-              "boards": "",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "item": ""
               },
               "migrationsApplied": "",
               "migrationsAppliedPlural": "",
               "migrationsOlderVersion": "",
               "migrationsOlderVersionPlural": "",
               "migrationsUpToDate": "",
-              "upToDate": "",
               "migrationsPending": ""
             },
             "migration": {
@@ -5037,21 +6996,21 @@
               "title": "",
               "warningTitle": "",
               "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
               "submit": ""
             },
             "progress": {
               "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "restarting": "",
+              "relogin": "データベースを復元すると、現在のセッションが無効になりました。サーバーの準備ができたら、Homarrからサインインするように送信されます。"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Restore complete",
+              "message": "データベースが復元されました。以前のセッションが無効になったため、もう一度サインインして復元されたボードを表示してください。",
+              "button": "今すぐサインイン"
+            },
+            "timeout": {
+              "title": "サーバーがオンラインに戻ってきませんでした",
+              "message": "データベースの復元は完了しましたが、Homarrは再び準備ができませんでした。接続を確認するか、手動でこのページを更新してください。"
             },
             "failed": {
               "title": ""
@@ -5059,6 +7018,9 @@
             "invalidMissingMetadata": "",
             "invalidMissingDb": "",
             "analyzeError": ""
+          },
+          "confirm": {
+            "typePrompt": "続行するには \"{phrase}\" と入力してください"
           }
         }
       },
@@ -5093,7 +7055,11 @@
               "toggleBoardEdit": "ボード編集モードの切り替え",
               "toggleColorScheme": "ライト/ダークモードの切り替え",
               "saveNotebook": "ノートブックを保存 (ノートブックウィジェット内のみ)",
-              "openSpotlight": "検索を開く"
+              "openSpotlight": "検索を開く",
+              "openSpotlightApps": "アプリ検索を開く",
+              "openSpotlightAssistant": "アシスタントモードを開く",
+              "openSpotlightPreferences": "設定モードを開く",
+              "openAssistant": "オープンアシスタント"
             },
             "note": "ヒント：CtrlキーとMacOSの⌘キーの両方を参照します"
           }
@@ -5103,6 +7069,63 @@
   },
   "docker": {
     "title": "コンテナ",
+    "reconciliation": {
+      "title": "Assisted Docker セットアップ",
+      "suggestions": "{count, plural, =0 {候補はありません} one {# 候補はありません} other {# 候補は}}",
+      "attention": "{count} は注意が必要です",
+      "endpointUnavailable": "これらのエンドポイントが利用できないため、一部のサービスをチェックできませんでした: {names}",
+      "empty": "表示 Docker サービスが見つかりませんでした。",
+      "emptyFilter": "このビューに一致するサービスはありません。",
+      "ambiguous": "複数の既存のアイテムがこのサービスに一致する可能性があります。Homarrは自動的に一つを選択しません。",
+      "filter": {
+        "attention": "注意が必要です",
+        "represented": "既に設定されています",
+        "all": "すべて"
+      },
+      "state": {
+        "newRecognized": "接続の準備ができました",
+        "newApp": "新しいサービス",
+        "represented": "既に表現されています",
+        "linked": "リンク",
+        "moved": "住所が変更されました"
+      },
+      "url": {
+        "manual": "住所を手動で入力してください"
+      },
+      "health": {
+        "layer": {
+          "docker": "Docker",
+          "integrationConfiguration": "連携機能",
+          "authentication": "認証",
+          "apiRequest": "API",
+          "appRepresentation": "アプリ",
+          "widgetConfiguration": "ウィジェット",
+          "widgetQuery": "ウィジェットのクエリ"
+        },
+        "status": {
+          "available": "利用可能",
+          "configured": "設定済み",
+          "linked": "リンク",
+          "missing": "見つかりません",
+          "changed": "変更済み",
+          "unused": "未使用",
+          "notApplicable": "該当なし",
+          "notObserved": "観察されていません"
+        }
+      },
+      "action": {
+        "review": "レビュー",
+        "dismiss": "却下する",
+        "restoreDismissed": "却下された復元（{count}）",
+        "setupIntegration": "連携のセットアップ",
+        "reviewIntegration": "統合を確認",
+        "viewRepresentation": "セットアップを表示"
+      },
+      "loadError": {
+        "title": "Dockerセットアップアシスタントをロードできませんでした",
+        "message": "Docker サービス情報は利用できません。このページを離れないでもう一度お試しください。"
+      }
+    },
     "table": {
       "updated": "{when} に更新しました",
       "refresh": {
@@ -5115,9 +7138,6 @@
       "totalMemory": ""
     },
     "field": {
-      "name": {
-        "label": "名称"
-      },
       "state": {
         "label": "状態",
         "option": {
@@ -5131,9 +7151,6 @@
         }
       },
       "stats": {
-        "cpu": {
-          "label": "CPU"
-        },
         "memory": {
           "label": "メモリ"
         }
@@ -5196,8 +7213,11 @@
         }
       },
       "remove": {
-        "label": "削除",
         "confirm": "",
+        "confirmation": {
+          "title": "{count, plural, one {#コンテナを削除しますか?} other {コンテナを削除しますか?}}",
+          "message": "{count, plural, one {#個のコンテナを完全に削除します: {names}} other {これにより#個のコンテナが永久に削除されます: {names}}}"
+        },
         "notification": {
           "success": {
             "title": "コンテナー削除",
@@ -5209,8 +7229,13 @@
           }
         }
       },
+      "result": {
+        "failure": {
+          "title": "いくつかのコンテナアクションが失敗しました",
+          "message": "{total, plural, one {{failed} の # アクション: {names}} other {{failed} アクションの {names}}}"
+        }
+      },
       "refresh": {
-        "label": "更新する",
         "notification": {
           "success": {
             "title": "コンテナを更新しました",
@@ -5241,18 +7266,33 @@
     },
     "error": {
       "internalServerError": "Docker コンテナの取得に失敗しました",
+      "endpointUnavailable": "{count, plural, one {# Dockerエンドポイントは利用できません: {names}} other {# Docker エンドポイントは利用できません: {names}}}",
       "noColumns": ""
     }
   },
   "kubernetes": {
+    "context": {
+      "label": "Kubernetes のコンテキスト",
+      "loadError": {
+        "title": "Kubernetes コンテキストを読み込めませんでした",
+        "message": "コンテキスト情報は利用できません。このページに移動せずにもう一度お試しください。"
+      },
+      "status": {
+        "available": "利用可能",
+        "degraded": "Metrics unavailable",
+        "unavailable": "Unavailable"
+      },
+      "unavailable": "この Kubernetes コンテキストに到達できません。別のコンテキストを選択するか、認証情報とエンドポイントを確認してください。",
+      "metricsUnavailable": "このコンテキストに到達することはできますが、メトリックサーバーは利用できません。インベントリはCPUとメモリを使用せずに使用できます。"
+    },
     "cluster": {
       "title": "クラスターダッシュボード",
       "label": "クラスター",
       "providers": "プロバイダー",
       "version": "バージョン",
-      "architecture": "アーキテクチャ",
       "capacity": {
         "title": "容量",
+        "metricsUnavailable": "メトリクスサーバーは利用できません。在庫と予約容量は表示されたままですが、ライブCPUとメモリ使用量は表示できません。",
         "resource": {
           "reserved": "予約済",
           "used": "使用中"
@@ -5271,38 +7311,10 @@
       }
     },
     "nodes": {
-      "label": "ノード",
       "field": {
-        "name": {
-          "label": "名前"
-        },
-        "state": {
-          "label": "状態",
-          "option": {
-            "ready": "準備完了",
-            "NotReady": "準備未完了"
-          }
-        },
-        "cpu": {
-          "label": "CPU"
-        },
-        "memory": {
-          "label": "RAM"
-        },
-        "pods": {
-          "label": "Pods"
-        },
-        "operatingSystem": {
-          "label": "OS"
-        },
-        "architecture": {
-          "label": "アーキテクチャ"
-        },
+        "metricsUnavailable": "Unavailable",
         "kubernetesVersion": {
           "label": "Kubernetes バージョン"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
         }
       },
       "table": {
@@ -5310,43 +7322,17 @@
       }
     },
     "namespaces": {
-      "label": "ネームスペース",
-      "field": {
-        "name": {
-          "label": "名前"
-        },
-        "state": {
-          "label": "状態",
-          "option": {
-            "active": "活動中",
-            "terminating": "終了中"
-          }
-        },
-        "creationTimestamp": {
-          "label": "作成日"
-        }
-      },
       "table": {
         "search": "{count} 個のネームスペースを検索"
       }
     },
     "ingresses": {
-      "label": "Ingress",
       "field": {
-        "name": {
-          "label": "名前"
-        },
-        "namespace": {
-          "label": "ネームスペース"
-        },
         "className": {
           "label": "クラス名"
         },
         "rulesAndPaths": {
           "label": "ルールとパス"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
         }
       },
       "table": {
@@ -5354,17 +7340,7 @@
       }
     },
     "services": {
-      "label": "サービス",
       "field": {
-        "name": {
-          "label": "名前"
-        },
-        "namespace": {
-          "label": "ネームスペース"
-        },
-        "type": {
-          "label": "種類"
-        },
         "ports": {
           "label": "ポート"
         },
@@ -5373,9 +7349,6 @@
         },
         "clusterIP": {
           "label": "クラスター IP"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
         }
       },
       "table": {
@@ -5383,25 +7356,12 @@
       }
     },
     "pods": {
-      "label": "Pods",
       "field": {
-        "name": {
-          "label": "名前"
-        },
-        "namespace": {
-          "label": "ネームスペース"
-        },
         "image": {
           "label": "イメージ"
         },
         "applicationType": {
           "label": "アプリケーションタイプ"
-        },
-        "status": {
-          "label": "状態"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
         }
       },
       "table": {
@@ -5409,51 +7369,17 @@
       }
     },
     "secrets": {
-      "label": "シークレット",
-      "field": {
-        "name": {
-          "label": "名前"
-        },
-        "namespace": {
-          "label": "ネームスペース"
-        },
-        "type": {
-          "label": "種類"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
-        }
-      },
       "table": {
         "search": "{count} 個のシークレットを検索"
       }
     },
     "configmaps": {
-      "label": "ConfigMaps",
-      "field": {
-        "name": {
-          "label": "名前"
-        },
-        "namespace": {
-          "label": "ネームスペース"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
-        }
-      },
       "table": {
         "search": "{count} 個の ConfigMap から検索"
       }
     },
     "volumes": {
-      "label": "ボリューム",
       "field": {
-        "name": {
-          "label": "名前"
-        },
-        "namespace": {
-          "label": "ネームスペース"
-        },
         "accessModes": {
           "label": "アクセスモード"
         },
@@ -5468,12 +7394,6 @@
         },
         "volumeName": {
           "label": "ボリューム名"
-        },
-        "status": {
-          "label": "状態"
-        },
-        "creationTimestamp": {
-          "label": "作成日"
         }
       },
       "table": {
@@ -5482,6 +7402,29 @@
     },
     "error": {
       "internalServerError": "Kubernetes データの取得に失敗しました"
+    },
+    "field": {
+      "name": {
+        "label": "ジョブ名"
+      },
+      "namespace": {
+        "label": "ネームスペース"
+      },
+      "creationTimestamp": {
+        "label": "作成日"
+      },
+      "state": {
+        "label": "作業状態"
+      },
+      "status": {
+        "label": "ステータス"
+      },
+      "type": {
+        "label": "ダウンロードクライアントの種類"
+      },
+      "architecture": {
+        "label": "アーキテクチャ"
+      }
     }
   },
   "permission": {
@@ -5515,71 +7458,27 @@
   },
   "navigationStructure": {
     "manage": {
-      "workshop": {
-        "label": "Workshop"
-      },
       "label": "管理",
-      "boards": {
-        "label": "ボード"
-      },
-      "integrations": {
-        "label": "連携機能",
+      "custom-widgets": {
         "edit": {
-          "label": "編集"
-        },
-        "new": {
-          "label": "New"
-        }
-      },
-      "search-engines": {
-        "label": "検索エンジン",
-        "new": {
-          "label": "New"
-        },
-        "edit": {
-          "label": "編集"
-        }
-      },
-      "medias": {
-        "label": "メディア"
-      },
-      "apps": {
-        "label": "アプリ",
-        "new": {
-          "label": "New"
-        },
-        "edit": {
-          "label": "編集"
-        }
-      },
-      "users": {
-        "label": "ユーザー",
-        "create": {
-          "label": "作成"
-        },
-        "general": "一般",
-        "security": "セキュリティ",
-        "board": "ボード",
-        "groups": {
-          "label": "グループ"
-        },
-        "invites": {
-          "label": "招待"
-        }
-      },
-      "tools": {
-        "label": "ツール",
-        "tasks": {
-          "label": "タスク"
-        },
-        "docker": {
-          "label": "Docker",
-          "logs": {
+          "flow": {
             "label": ""
           }
         },
+        "workshop": {
+          "label": "ワークショップ"
+        },
+        "publish": {
+          "label": "ワークショップに公開"
+        }
+      },
+      "users": {
+        "general": "一般",
+        "security": "セキュリティ"
+      },
+      "tools": {
+        "label": "ツール",
         "kubernetes": {
-          "label": "Kubernetes",
           "nodes": {
             "label": "ノード"
           },
@@ -5605,11 +7504,7 @@
             "label": "ボリューム"
           }
         },
-        "logs": {
-          "label": "ログ"
-        },
         "certificates": {
-          "label": "証明書",
           "hostnames": {
             "label": "ホスト名"
           }
@@ -5620,12 +7515,60 @@
       },
       "about": {
         "label": "このアプリについて"
+      },
+      "assistant": {
+        "label": "アシスタント"
       }
     }
   },
   "search": {
     "placeholder": "何でも検索",
     "nothingFound": "何も見つかりませんでした",
+    "modePicker": {
+      "search": {
+        "label": "検索",
+        "placeholder": "アプリ、ボード、ページ、コマンド、設定を検索"
+      },
+      "apps": {
+        "label": "アプリケーション",
+        "placeholder": "アプリ、ボード、統合を検索"
+      },
+      "command": {
+        "label": "マーク",
+        "placeholder": "アクションとコマンドを検索"
+      },
+      "preferences": {
+        "label": "設定",
+        "placeholder": "設定の検索と変更"
+      },
+      "assistant": {
+        "label": "アシスタント",
+        "placeholder": "アシスタントに聞く"
+      },
+      "external": {
+        "label": "ウェブ",
+        "placeholder": "外部検索エンジンで検索"
+      },
+      "media": {
+        "label": "メディア",
+        "placeholder": "ムービーまたはショーを検索",
+        "fallback": "\"{query}\" のメディアを検索"
+      },
+      "userGroup": {
+        "label": "人",
+        "placeholder": "ユーザーとグループを検索"
+      },
+      "continueWith": "次で続ける",
+      "dialogAriaLabel": "{mode} コマンドメニュー",
+      "navigationLabel": "検索モード",
+      "modeAriaLabel": "{mode} モード",
+      "resultsAriaLabel": "{mode} 結果",
+      "footer": {
+        "navigate": "Navigate",
+        "open": "開く",
+        "close": "閉じる"
+      }
+    },
     "error": {
       "fetch": "データの取得中にエラーが発生しました"
     },
@@ -5634,7 +7577,6 @@
         "help": "アプリ、連携機能、またはボードを検索",
         "group": {
           "app": {
-            "title": "アプリ",
             "children": {
               "action": {
                 "open": {
@@ -5650,7 +7592,6 @@
             }
           },
           "board": {
-            "title": "ボード",
             "children": {
               "action": {
                 "open": {
@@ -5670,9 +7611,6 @@
                 "title": "ボードのアクションを選択"
               }
             }
-          },
-          "integration": {
-            "title": "連携"
           }
         }
       },
@@ -5700,9 +7638,6 @@
               },
               "newBoard": {
                 "label": "新しいボードを作成する"
-              },
-              "importBoard": {
-                "label": "ボードをインポート"
               },
               "newApp": {
                 "label": "新しいアプリを作成する"
@@ -5773,7 +7708,6 @@
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5781,7 +7715,6 @@
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5789,7 +7722,6 @@
                 }
               },
               "ddgBangs": {
-                "label": "",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5801,6 +7733,13 @@
                 "children": {
                   "detail": {
                     "title": ""
+                  }
+                }
+              },
+              "byteUnitSystem": {
+                "children": {
+                  "detail": {
+                    "title": "データサイズの単位を選択"
                   }
                 }
               },
@@ -5821,7 +7760,6 @@
                 }
               },
               "pingIconsEnabled": {
-                "label": "",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5829,7 +7767,6 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
                 "children": {
                   "detail": {
                     "title": ""
@@ -5857,6 +7794,7 @@
             "description": "",
             "disabled": {
               "noIntegration": "",
+              "signInRequired": "メディアリクエストの統合を検索するにはサインインしてください。",
               "scoped": ""
             }
           }
@@ -5873,7 +7811,6 @@
         "help": "外部検索エンジンを使用",
         "group": {
           "searchEngine": {
-            "title": "検索エンジン",
             "tipDdgBangs": "",
             "bang": {
               "searchWithQuery": "",
@@ -5924,20 +7861,6 @@
         "group": {
           "mode": {
             "title": "モード"
-          },
-          "help": {
-            "title": "ヘルプ",
-            "option": {
-              "documentation": {
-                "label": "ドキュメンテーション"
-              },
-              "submitIssue": {
-                "label": "問題を送信する"
-              },
-              "discord": {
-                "label": "コミュニティ・ディスコード"
-              }
-            }
           }
         }
       },
@@ -5949,9 +7872,10 @@
               "other": {
                 "label": "他の検索エンジンで検索する"
               },
-              "no-default": {
-                "label": "デフォルトの検索エンジンはありません",
-                "description": "設定でデフォルトの検索エンジンを設定"
+              "no-engines": {
+                "label": "検索エンジンが設定されていません",
+                "descriptionCreate": "コマンドメニューから検索する検索エンジンを追加",
+                "descriptionUnavailable": "管理者に検索エンジンの設定を依頼する"
               },
               "search": {
                 "label": "\"{query}\" を {name} で検索"
@@ -6031,7 +7955,6 @@
         "help": "ユーザーまたはグループの検索",
         "group": {
           "user": {
-            "title": "ユーザー",
             "children": {
               "action": {
                 "detail": {
@@ -6044,7 +7967,6 @@
             }
           },
           "group": {
-            "title": "グループ",
             "children": {
               "action": {
                 "detail": {
@@ -6068,9 +7990,6 @@
     "engine": {
       "search": "検索エンジンを探す",
       "field": {
-        "name": {
-          "label": "名称"
-        },
         "short": {
           "label": "略称"
         },
@@ -6083,12 +8002,19 @@
       },
       "page": {
         "list": {
-          "title": "検索エンジン",
+          "ariaLabel": "設定された検索エンジン",
           "noResults": {
             "title": "まだ検索エンジンはありません",
-            "action": "最初の検索エンジンを作成する"
+            "description": "検索エンジンでは、Spotlightはサイトまたは接続されたサービスにクエリを送信できます。",
+            "action": "最初の検索エンジンを作成する",
+            "filteredTitle": "検索エンジンが一致しません",
+            "filteredDescription": "検索エンジンが一致しません \"{search}\". 別の名前またはURLをお試しください。"
           },
-          "interactive": "インタラクティブ、連携機能を使用"
+          "interactive": "インタラクティブ、連携機能を使用",
+          "type": {
+            "generic": "URL テンプレート",
+            "fromIntegration": "連携機能"
+          }
         },
         "create": {
           "title": "新しい検索エンジン",
@@ -6107,11 +8033,9 @@
           "title": "検索エンジンの編集",
           "notification": {
             "success": {
-              "title": "変更は正常に適用されました",
               "message": "検索エンジンは正常に保存されました"
             },
             "error": {
-              "title": "変更の適用失敗",
               "message": "検索エンジンを保存できませんでした"
             }
           },
@@ -6250,6 +8174,10 @@
     }
   },
   "log": {
+    "context": {
+      "widgetError": "ウィジェットがこの時間帯にエラーを報告しました",
+      "expiredWidgetError": "このウィジェットのエラーの周りのログは保持されなくなりました"
+    },
     "level": {
       "option": {
         "debug": "デバッグ",
@@ -6261,7 +8189,6 @@
   },
   "onboardingTour": {
     "learnMore": "",
-    "next": "",
     "prev": "",
     "done": "",
     "skip": "",
@@ -6288,7 +8215,7 @@
       },
       "integrationsList": {
         "title": "",
-        "description": ""
+        "description": "これらは、Homarrに接続されたサービスです。すべての資格情報は、残りの時に暗号化されます。"
       },
       "integrationsCreate": {
         "title": "",
@@ -6324,6 +8251,360 @@
         "title": "",
         "description": ""
       }
+    }
+  },
+  "metadata": {
+    "description": "*arrスタックとホームラブ全体のセルフホスト型ダッシュボード。50以上のサービス、リアルタイムウィジェット、設定ファイルなしと統合できます。",
+    "dashboardTitle": "{appName} ダッシュボード"
+  },
+  "assistant": {
+    "title": "アシスタント",
+    "open": "オープンアシスタント",
+    "close": "アシスタントを閉じる",
+    "minimize": "アシスタントを最小化する",
+    "spotlight": "アシスタントに聞く",
+    "spotlightDescription": "コマンドメニューを離れずにプロンプトを入力して送信します。",
+    "spotlightPrompt": {
+      "title": "アシスタントに聞く",
+      "description": "上にプロンプトを入力します。入力してバックグラウンドで送信します。",
+      "send": "プロンプトの送信",
+      "empty": "上にプロンプトを入力してください"
+    },
+    "unavailable": {
+      "checking": "アシスタントが利用可能か確認中…",
+      "error": "アシスタントの空き状況を確認できませんでした。もう一度お試しください。",
+      "notConfigured": "管理者は最初にアシスタントを設定して有効にする必要があります。",
+      "signIn": "アシスタントを使用するにはサインインしてください。"
+    },
+    "newConversation": "新しい会話",
+    "conversations": "会話",
+    "conversationActions": "会話アクション",
+    "searchConversations": "会話を検索",
+    "noMatchingConversations": "一致する会話がありません",
+    "moreActions": "より多くのレスポンスアクション",
+    "renameConversation": {
+      "action": "名前の変更",
+      "label": "会話名",
+      "save": "名前を保存",
+      "failedTitle": "会話の名前を変更できませんでした",
+      "failedDescription": "Homarrはこの会話の名前を変更できませんでした。もう一度やり直してください。"
+    },
+    "deleteConversation": {
+      "title": "会話を削除しますか？",
+      "description": "“{title}” とそのメッセージは完全に削除されます。",
+      "failedTitle": "会話を削除できませんでした",
+      "failedDescription": "Homarrはこの会話を削除できませんでした。もう一度やり直してください。"
+    },
+    "closeHistory": "会話履歴を閉じる",
+    "openHistory": "会話履歴を開く",
+    "emptyTitle": "何をお手伝いできますか？",
+    "emptyDescription": "Homarrのセットアップについて質問したり、ライブインスタンスのデータを調べたり、変更を行いたいときにアクションを承認したりします。",
+    "suggestions": {
+      "health": {
+        "label": "サービスの健康状態を確認",
+        "prompt": "私の統合を確認し、注意が必要なものをまとめてください。"
+      },
+      "explore": {
+        "label": "私のHomarrを探索",
+        "prompt": "このHomarrインスタンスで何を表示し、管理できるかを表示します。"
+      },
+      "media": {
+        "label": "リクエストするメディアを検索",
+        "prompt": "リクエストする映画やシリーズを見つけるのを手伝ってください。"
+      },
+      "style": {
+        "label": "ダッシュボードを改善",
+        "prompt": "ボードの外観またはカスタムCSSを改善するのに役立ちます。最初にボードを表示してから、変更を行っている間、現在の設定を保存してください。"
+      },
+      "designWidget": {
+        "label": "ウィジェットをデザイン",
+        "prompt": "カスタムウィジェットの作成とインストール "
+      }
+    },
+    "composerPlaceholder": "アシスタントに質問…",
+    "runtime": {
+      "model": "モデル",
+      "searchModels": "モデルを検索",
+      "noModels": "利用可能なモデルがありません",
+      "otherModels": "その他のモデル",
+      "imageInput": "画像の入力を受け入れます",
+      "thinking": "思考モード",
+      "reasoning": {
+        "auto": "自動",
+        "none": "オフ",
+        "minimal": "最小",
+        "low": "低い",
+        "medium": "中間",
+        "high": "高い"
+      }
+    },
+    "providerQuota": {
+      "title": "Homarr プロバイダー",
+      "communityWorkshop": "コミュニティワークショップ",
+      "dailyAllowance": "デイリーリクエスト手当日",
+      "remainingLabel": "{remaining} / {limit} Homarr プロバイダーのリクエストが残っています",
+      "loading": "Homarrプロバイダの手当を読み込み中",
+      "signInRequired": "Homarrプロバイダにはワークショップのサインインが必要です",
+      "signInDescription": "コミュニティワークショップを通じてGitHubにサインインして、別々の毎日の手当を受け取りましょう。",
+      "exhaustedDescription": "あなたのHomarrプロバイダの手当は、今日のために使用されます。それは深夜UTCにリセットされます。",
+      "unavailableDescription": "ワークショップにサインインするか、Homarrプロバイダーの許可がリセットされるのを待ちます。",
+      "signIn": "GitHub でサインイン",
+      "signInError": "GitHub のサインインに失敗しました。しばらくしてからもう一度お試しください。",
+      "loadError": "Homarrプロバイダの手当を読み込めませんでした。",
+      "reset": "{relative} を <time></time> にリセット",
+      "toolCalls": "各モデル要求と完了したツールコールは、1つのリクエストを使用します。",
+      "retry": "再読み込み手当額",
+      "level": {
+        "ok": "成功",
+        "warning": "警告",
+        "bad": "低い",
+        "dead": "使用中"
+      }
+    },
+    "stop": "応答を停止する",
+    "send": "メッセージを送信",
+    "copy": "応答をコピー",
+    "copyMessage": "メッセージをコピー",
+    "editMessage": "メッセージの編集",
+    "updateMessage": "メッセージの更新",
+    "regenerate": "レスポンスを再生成",
+    "helpful": "役に立つもの",
+    "notHelpful": "役に立たない",
+    "readAloud": "読み上げ応答",
+    "stopReading": "応答の読み込みを停止する",
+    "feedbackError": "フィードバックを保存できませんでした。もう一度お試しください。",
+    "exportMarkdown": "マークダウンとしてエクスポート",
+    "exportConversation": {
+      "action": "会話をマークダウンとしてエクスポート",
+      "failedTitle": "会話をエクスポートできませんでした",
+      "failedDescription": "Homarrはこの会話を読み込むことができませんでした。もう一度お試しください。"
+    },
+    "reasoning": "考え",
+    "previousResponse": "前の応答",
+    "nextResponse": "次の応答",
+    "removeAttachment": "添付ファイルを削除",
+    "downloadFile": "{name} をダウンロード",
+    "attachedImage": "添付された画像",
+    "externalImageBlocked": "外部画像がプライバシーのためブロックされています",
+    "image": {
+      "loading": "画像を読み込み中",
+      "failed": "この画像を読み込めませんでした。",
+      "retry": "画像をもう一度お試しください"
+    },
+    "quoteSelection": "引用",
+    "dismissQuote": "見積もりを削除",
+    "attachments": {
+      "add": "画像またはドキュメントを添付",
+      "errorTitle": "添付ファイルを追加できませんでした",
+      "imageUnsupported": "選択されたモデルは画像入力をサポートしていません。"
+    },
+    "mentions": {
+      "menu": "Homarrコンテキストを追加",
+      "context": "コンテキスト",
+      "app": "アプリケーション",
+      "integration": "連携機能",
+      "board": "ボード",
+      "widget": "ウィジェット",
+      "tools": "利用可能なツール"
+    },
+    "markdown": {
+      "diagram": "図",
+      "renderingDiagram": "図をレンダリング中…",
+      "diagramUnavailable": "このダイアグラムをレンダリングできませんでした。"
+    },
+    "commands": {
+      "menu": "アシスタントコマンド",
+      "health": "サービスヘルスチェックを準備する",
+      "explore": "この Homarr インスタンスの概要を準備する",
+      "media": "メディア検索の準備",
+      "style": "ボードの外観またはカスタム CSS 変更を準備します",
+      "designWidget": "プロンプト1つのカスタムウィジェットビルドを準備する"
+    },
+    "usage": {
+      "tokens": "トークン",
+      "contextWindow": "コンテキスト ウィンドウ",
+      "requestDetails": "要求の詳細",
+      "used": "最新のステップ",
+      "remaining": "残り",
+      "capacity": "容量",
+      "input": "Input",
+      "output": "出力",
+      "cached": "キャッシュされた入力",
+      "cacheWrite": "キャッシュの書き込み",
+      "reasoning": "理由",
+      "inputShort": "in",
+      "outputShort": "アウト",
+      "cachedShort": "キャッシュ",
+      "reasoningShort": "理由",
+      "firstOutput": "最初の出力",
+      "homarrTiming": "Homarrが観察されました",
+      "endToEnd": "End to end",
+      "observedThroughput": "観察されたスループット。",
+      "providerTiming": "プロバイダーが報告されました",
+      "loadingProviderDetails": "生成の詳細を読み込み中…",
+      "providerDetailsPending": "OpenRouterはまだいくつかの世代の詳細を処理しています。再試行してください。",
+      "providerLatency": "プロバイダーのレイテンシ",
+      "generationTime": "生成時間",
+      "moderationLatency": "モデレーション",
+      "providerThroughput": "プロバイダーのスループット。",
+      "fallbacks": "フォールバック",
+      "fallbackLatency": "フォールバックレイテンシー",
+      "cacheDiscount": "キャッシュ割引",
+      "normalizedTokens": "OpenRouter正規化された入力 / 出力",
+      "byok": "BYOK",
+      "cost": "コスト",
+      "reported": "プロバイダによって報告されました",
+      "estimated": "モデル価格からの推定値",
+      "upstreamCost": "上流推論（上流）",
+      "webSearches": "ウェブ検索",
+      "finishReason": "理由を完了",
+      "notReported": "報告されていない",
+      "agentSteps": "エージェントのステップ",
+      "step": "手順 {number}",
+      "generation": "生成"
+    },
+    "toolInput": "Input",
+    "toolOutput": "出力",
+    "toolActivity": {
+      "iconSearch": "“{query}”アイコンを探しています",
+      "iconBrowse": "利用可能なアイコンを参照"
+    },
+    "toolNavigation": {
+      "openPreview": "プレビューを開く",
+      "openWidget": "ウィジェットを開く"
+    },
+    "webSearch": {
+      "title": "ウェブ検索",
+      "completed": "OpenRouterはこの応答をライブWebで検索しました。",
+      "searches": "{count, plural, one {# search} other {# searches}}",
+      "sources": "{count, plural, one {# source} other {# source}}"
+    },
+    "responseError": {
+      "title": "アシスタントを終了できませんでした",
+      "description": "もう一度やり直してください。問題が解決しない場合は、管理者に設定されたモデルのエンドポイントを確認するよう依頼してください。"
+    },
+    "toolPreparationError": {
+      "title": "このリクエストは準備できませんでした",
+      "description": "完全な詳細を提供する前にモデルが停止しました。レスポンスを再試行するか、リクエストを再記述してください。変更はありません。"
+    },
+    "busy": {
+      "title": "アシスタントはすでに動作しています",
+      "description": "現在の応答を待ち、または実行を停止するために開きます。"
+    },
+    "pendingAction": {
+      "answerTitle": "回答が必要",
+      "answerFallback": "続行する回答を選択してください",
+      "formTitle": "アプリの詳細を確認",
+      "boardFormTitle": "ボードの変更を確認する",
+      "review": "レビュー",
+      "sendBlocked": "送信前に保留中のリクエストを解決する"
+    },
+    "activity": {
+      "thinking": "アシスタントが考えています",
+      "working": "プロンプトで作業中",
+      "ready": "対応準備完了",
+      "completed": "応答を開く",
+      "approval": "承認が必要です",
+      "failed": "アシスタントには注意が必要です",
+      "expand": "アシスタント応答を開く",
+      "dismiss": "アシスタントアクティビティを閉じる"
+    },
+    "scrollToLatest": "最新情報までスクロール",
+    "refresh": {
+      "action": "現在のビューを更新",
+      "working": "現在のビューを更新中",
+      "completeTitle": "更新を表示",
+      "completeDescription": "表示されるHomarrデータが再読み込みされました。",
+      "failedTitle": "ビューを更新できませんでした",
+      "failedDescription": "変更はまだ保存されます。リフレッシュ操作をもう一度お試しください。"
+    },
+    "askUser": {
+      "preparing": "質問を準備中",
+      "answered": "あなたの回答",
+      "other": "その他",
+      "otherLabel": "あなたの回答",
+      "otherPlaceholder": "別の回答を入力…",
+      "submit": "回答を送信",
+      "cancelOther": "他の回答をキャンセル",
+      "optionKind": {
+        "affirmative": "確認",
+        "negative": "同意しない",
+        "alternative": "Option",
+        "custom": "カスタム"
+      }
+    },
+    "configureApp": {
+      "title": "アプリの詳細を確認",
+      "description": "ローカルアイコンを選択し、アシスタントが作成の承認を要求する前に調整します。",
+      "preparing": "アプリの詳細を準備中",
+      "continue": "これらの詳細を使用する",
+      "ready": "アプリの詳細の準備ができました",
+      "automaticContinue": "これらのアプリの詳細を自動的に使用する"
+    },
+    "configureBoardSettings": {
+      "title": "ボードの変更を確認する",
+      "loading": "現在のボード設定を読み込んでいます",
+      "loadErrorTitle": "ボードの設定を読み込めませんでした",
+      "loadErrorDescription": "ボードが存在しないか、変更する権限がない可能性があります。",
+      "proposedCount": "アシスタントが {count} フィールドを提案しました",
+      "changeCount": "{count} 変更の準備ができました",
+      "ready": "ボードの変更の準備ができました",
+      "cancelled": "現在のボードの設定を保持しました",
+      "noChanges": "設定は変更されません",
+      "keepCurrent": "現在の設定を保持",
+      "continue": "承認を続ける",
+      "automaticContinue": "提案されたボードの変更を自動的に承認する",
+      "resetAll": "すべての変更をリセット",
+      "tabs": {
+        "css": "Custom CSS",
+        "appearance": "外観",
+        "background": "背景",
+        "general": "一般"
+      },
+      "cssDescription": "完全なスタイルシートを編集します。既存のルールは、ここで削除されない限り保持されます。",
+      "cssCharacters": "16384文字中{count}",
+      "copyCss": "Copy CSS",
+      "copied": "コピーしました",
+      "restoreCss": "Restore current CSS",
+      "remoteCssTitle": "このCSSはリモートリソースを読み込みます",
+      "remoteCssDescription": "インポートされたスタイルシートとリモート URL ボードがロードされると、別のサーバーに接続します。続行する前に確認してください。"
+    },
+    "configureWidget": {
+      "title": "ウィジェットを確認",
+      "preparing": "ウィジェットの設定を準備中",
+      "review": "ウィジェットと連携を確認する",
+      "ready": "ウィジェットの設定の準備ができました",
+      "cancelled": "ウィジェットは追加されませんでした",
+      "automaticContinue": "提案されたウィジェット設定を自動的に承認する",
+      "definitionLoadErrorTitle": "ウィジェットの設定を読み込めませんでした",
+      "definitionLoadErrorDescription": "Homarr could not load this widget's settings. Try again.",
+      "loadErrorTitle": "連携機能を読み込めませんでした",
+      "loadErrorDescription": "Homarrはこのウィジェットで利用可能な統合をロードできませんでした。",
+      "noIntegrationTitle": "互換性のある統合が必要です",
+      "noIntegrationDescription": "ダッシュボードに追加する前に、このウィジェットでサポートされているインテグレーションを設定します。",
+      "connectIntegration": "サービスに接続",
+      "manageIntegrations": "連携機能の管理",
+      "skip": "追加しない",
+      "errorTitle": "ウィジェットの設定を準備できませんでした",
+      "errorDescription": "モデルは完全なウィジェットの設定を提供していません。ウィジェットが追加されませんでした。"
+    },
+    "approvalRequired": "承認が必要です",
+    "complete": "Complete",
+    "denied": "拒否しました",
+    "failed": "失敗",
+    "working": "作業中",
+    "approvalDescription": "実行する前にこの変更を確認します。",
+    "approveAndRun": "承認して実行する",
+    "deny": "拒否",
+    "autoApproval": {
+      "label": "自動承認",
+      "composerLabel": "承認してください",
+      "title": "自動承認",
+      "description": "この会話のフォームを自動的に準備し、保護された変更を承認します。 質問はまだ回答を待っています。あなたが会話を切り替えると、あなたのHomarrの権限が適用されます。",
+      "enable": "この会話を有効にする",
+      "disable": "自動承認をオフにする",
+      "enabled": "自動承認がオンになっています",
+      "approving": "自動的に承認中"
     }
   }
 }
