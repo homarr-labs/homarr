@@ -87,10 +87,10 @@ WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
   EXPECTED_HOMARR_WEBSITE_URL="$TEST_WEBSITE_URL" \
   EXPECTED_WORKSHOP_API_URL="$TEST_API_URL" \
   EXPECTED_WORKSHOP_WEB_URL="$TEST_WORKSHOP_URL" \
-  node apps/workshop/tests/runtime-config.integration.mjs
+  bun apps/workshop/tests/runtime-config.integration.mjs
 
 WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
-  node apps/workshop/tests/static-export.integration.mjs
+  bun apps/workshop/tests/static-export.integration.mjs
 
 docker exec "$WORKSHOP_IMAGE_TEST_NAME" pocketbase superuser create \
   workshop-image@example.invalid 'WorkshopImageTest123!' --dir=/pb_data
@@ -98,7 +98,7 @@ WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
   EXPECTED_HOMARR_WEBSITE_URL="$TEST_WEBSITE_URL" \
   EXPECTED_WORKSHOP_API_URL="$TEST_API_URL" \
   EXPECTED_WORKSHOP_WEB_URL="$TEST_WORKSHOP_URL" \
-  node apps/workshop/tests/workshop-social-metadata.integration.mjs
+  bun apps/workshop/tests/workshop-social-metadata.integration.mjs
 
 curl --fail --location --silent "http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT/workshop" >/dev/null
 curl --fail --silent \

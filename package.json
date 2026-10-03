@@ -259,7 +259,7 @@
     "benchmark:compare": "bun scripts/benchmarks/benchmark-compare.mts",
     "benchmark:board-graph": "bun scripts/benchmarks/board-static-graph.mts",
     "benchmark:docker": "bun scripts/benchmarks/docker-runtime.mts",
-    "benchmark:request-memory": "bun scripts/benchmarks/request-handler-memory.mts",
+    "benchmark:request-memory": "bun --expose-gc scripts/benchmarks/request-handler-memory.mts",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "check:custom-widgets": "bun run --filter @homarr/custom-widgets check:architecture",
