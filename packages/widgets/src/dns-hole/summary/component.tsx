@@ -206,7 +206,7 @@ const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProp
     padding = 2;
     // Reserve padding and borders so four-character values fit narrow mobile cards.
     valueSize = `calc(${Math.min(12, Math.max(0, displayedWidth - 6) / 3)}px * var(--board-canvas-ui-scale, 1))`;
-    let compactTooltip = `${label}: ${value}`;
+    let compactTooltip = label;
     if (tooltip) compactTooltip += `. ${tooltip}`;
     tooltip = compactTooltip;
   }
