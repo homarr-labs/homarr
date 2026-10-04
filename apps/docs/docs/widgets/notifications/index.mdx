@@ -1,44 +1,40 @@
 ---
-title: 'Notifications'
-description: 'Display notification history from an integration'
+title: "Notifications"
+description: "Display notification history from an integration"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { notificationsWidget } from '.';
-import { ntfyIntegration } from '@site/docs/integrations/ntfy';
-import { nextcloudIntegration } from '@site/docs/integrations/nextcloud';
-import { gotifyIntegration } from '@site/docs/integrations/gotify';
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { notificationsWidget } from ".";
+import { ntfyIntegration } from "@site/docs/integrations/ntfy";
+import { nextcloudIntegration } from "@site/docs/integrations/nextcloud";
+import { gotifyIntegration } from "@site/docs/integrations/gotify";
 
-<WidgetHeader
-  widget={notificationsWidget}
-  categories={['Notifications', "Messaging"]}
-/>
+<WidgetHeader widget={notificationsWidget} categories={["Notifications", "Messaging"]} />
 
-The notifications widget allows you to display notifications from various integrations in a unified view.
-
-### Screenshots
-
-import notificationsScreenshot from './img/notifications.png';
-
-<img src={notificationsScreenshot} alt="notifications" width={256} height={256} />
+Displays notification history from the configured integration. Advanced view shows full message bodies, sources, and
+available service icons.
 
 ### Supported Integrations
 
 <WidgetIntegrations
-  items={[
-    { integration: ntfyIntegration },
-    { integration: nextcloudIntegration },
-    { integration: gotifyIntegration }
-  ]}
+  items={[{ integration: ntfyIntegration }, { integration: nextcloudIntegration }, { integration: gotifyIntegration }]}
 />
 
 ### Adding the widget
 
 <AddingWidget />
+
+### Message formatting and deletion
+
+Automatic formatting follows Gotify's `extras["client::display"].contentType`: `text/markdown` renders Markdown,
+`text/html` renders sanitized HTML, and absent or unknown types remain plain text. Markdown ignores embedded HTML.
+For producers without this metadata, select Markdown or HTML in the widget's message format setting.
+Scripts, event handlers, and unsafe links are removed; remote images in formatted messages may load in your browser.
+
+The service link is a separate icon, so selecting message text or using message links does not open Gotify.
+Deleting a Gotify notification requires **Interact** permission on its integration and permanently removes the
+message from Gotify for all clients. Other notification integrations remain read-only.

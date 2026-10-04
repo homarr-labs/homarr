@@ -1,14 +1,15 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import { Alert, Button, Group, Loader, rem, Stack, Text } from "@mantine/core";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Alert, Button, Group, Loader, rem, Stack, Text, ThemeIcon } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
 import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
-import { IconAlertTriangle, IconArrowRight, IconFileZip, IconUpload, IconX } from "@tabler/icons-react";
+import { IconAlertTriangle, IconArrowRight, IconCheck, IconFileZip, IconUpload, IconX } from "@tabler/icons-react";
 
-import "@mantine/dropzone/styles.css";
+import "@mantine/dropzone/styles.css"; // oxlint-disable-line import/no-unassigned-import
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useByteFormatter } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
 
 import type { RestoreStep } from "./types";
 import { BackupPreviewPanel } from "./backup-preview-panel";
@@ -22,15 +23,107 @@ interface DatabaseRestoreFlowProps {
   onRestoreComplete?: () => void;
 }
 
+const DEFAULT_RESTART_DELAY_MS = 500;
+const RESTART_READINESS_TIMEOUT_MS = 45_000;
+const RESTART_POLL_INTERVAL_MS = 750;
+const RESTART_REQUEST_TIMEOUT_MS = 5_000;
+const MAX_BACKUP_FILE_BYTES = 256 * 1024 * 1024;
+
+export type ServerReadinessResult = "ready" | "timedOut" | "aborted";
+
+interface WaitForServerReadinessOptions {
+  restartAfterMs: number;
+  signal: AbortSignal;
+  timeoutMs?: number;
+  pollIntervalMs?: number;
+  requestTimeoutMs?: number;
+  requestReady?: (signal: AbortSignal) => Promise<boolean>;
+}
+
+const waitAsync = (durationMs: number, signal: AbortSignal) =>
+  new Promise<boolean>((resolve) => {
+    if (signal.aborted) {
+      resolve(false);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      signal.removeEventListener("abort", handleAbort);
+      resolve(true);
+    }, durationMs);
+    const handleAbort = () => {
+      window.clearTimeout(timer);
+      resolve(false);
+    };
+    signal.addEventListener("abort", handleAbort, { once: true });
+  });
+
+const requestServerReadinessAsync = async (signal: AbortSignal) => {
+  const response = await fetch("/api/health/ready", { cache: "no-store", signal });
+  return response.ok;
+};
+
+export const waitForServerReadinessAsync = async ({
+  restartAfterMs,
+  signal,
+  timeoutMs = RESTART_READINESS_TIMEOUT_MS,
+  pollIntervalMs = RESTART_POLL_INTERVAL_MS,
+  requestTimeoutMs = RESTART_REQUEST_TIMEOUT_MS,
+  requestReady = requestServerReadinessAsync,
+}: WaitForServerReadinessOptions): Promise<ServerReadinessResult> => {
+  if (!(await waitAsync(Math.max(0, restartAfterMs), signal))) return "aborted";
+
+  const deadline = Date.now() + Math.max(0, timeoutMs);
+  while (!signal.aborted) {
+    const remainingMs = deadline - Date.now();
+    if (remainingMs < 0) return "timedOut";
+
+    const requestController = new AbortController();
+    const abortRequest = () => requestController.abort();
+    signal.addEventListener("abort", abortRequest, { once: true });
+    const requestTimer = window.setTimeout(abortRequest, Math.min(requestTimeoutMs, remainingMs));
+
+    let ready = false;
+    try {
+      ready = await requestReady(requestController.signal);
+    } catch {
+      // The server is expected to be temporarily unreachable while it restarts.
+    } finally {
+      window.clearTimeout(requestTimer);
+      signal.removeEventListener("abort", abortRequest);
+    }
+
+    if (signal.aborted) return "aborted";
+    if (ready) return "ready";
+
+    const delayMs = Math.min(pollIntervalMs, deadline - Date.now());
+    if (delayMs <= 0) return "timedOut";
+    if (!(await waitAsync(delayMs, signal))) return "aborted";
+  }
+
+  return "aborted";
+};
+
 export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: DatabaseRestoreFlowProps) => {
-  const t = useScopedI18n("management.page.tool.backup.restore");
+  const t = useI18n("management.page.tool.backup.restore");
+  const tCommon = useI18n("common");
+  const { formatBytes } = useByteFormatter();
   const [file, setFile] = useState<FileWithPath | null>(null);
   const [step, setStep] = useState<RestoreStep>("upload");
   const [importError, setImportError] = useState<string | null>(null);
-  const apiDoneRef = useRef(false);
-  const animDoneRef = useRef(false);
-  const apiErrorRef = useRef<string | null>(null);
+  const [restoreStatus, setRestoreStatus] = useState<"restoring" | "restarting" | "timedOut">("restoring");
+  const restartControllerRef = useRef<AbortController | null>(null);
+  const redirectTimerRef = useRef<number | null>(null);
+  const restoreDestinationRef = useRef<string | null>(null);
   const { analysis, loading, error: analysisError, migrationProgress, analyzeFile, reset } = useBackupAnalysis();
+
+  useEffect(
+    () => () => {
+      restartControllerRef.current?.abort();
+      if (redirectTimerRef.current !== null) window.clearTimeout(redirectTimerRef.current);
+    },
+    [],
+  );
 
   const handleFileDrop = useCallback(
     (files: FileWithPath[]) => {
@@ -39,68 +132,110 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
       setFile(droppedFile);
       setStep("preview");
       setImportError(null);
+      setRestoreStatus("restoring");
       void analyzeFile(droppedFile);
     },
     [analyzeFile],
   );
 
   const handleClear = useCallback(() => {
+    if (redirectTimerRef.current !== null) {
+      window.clearTimeout(redirectTimerRef.current);
+      redirectTimerRef.current = null;
+    }
     setFile(null);
     setStep("upload");
     setImportError(null);
-    apiDoneRef.current = false;
-    animDoneRef.current = false;
-    apiErrorRef.current = null;
+    setRestoreStatus("restoring");
+    restartControllerRef.current?.abort();
+    restartControllerRef.current = null;
     reset();
   }, [reset]);
 
-  const tryFinalize = useCallback(() => {
-    if (!apiDoneRef.current) return;
+  const startReadinessCheck = useCallback((restartAfterMs: number, destination = restoreDestinationRef.current) => {
+    restartControllerRef.current?.abort();
+    restoreDestinationRef.current = destination;
+    const restartController = new AbortController();
+    restartControllerRef.current = restartController;
+    setRestoreStatus("restarting");
 
-    if (apiErrorRef.current) {
-      setImportError(apiErrorRef.current);
-      setStep("error");
-      return;
+    void waitForServerReadinessAsync({ restartAfterMs, signal: restartController.signal }).then((result) => {
+      if (restartControllerRef.current !== restartController || result === "aborted") return;
+      if (result === "ready") {
+        if (destination === "/auth/login") {
+          setStep("complete");
+          redirectTimerRef.current = window.setTimeout(() => window.location.assign(destination), 2000);
+        } else if (destination) {
+          window.location.assign(destination);
+        } else {
+          window.location.reload();
+        }
+        return;
+      }
+      restartControllerRef.current = null;
+      setRestoreStatus("timedOut");
+    });
+  }, []);
+
+  const handleSignInAgain = useCallback(() => {
+    if (redirectTimerRef.current !== null) {
+      window.clearTimeout(redirectTimerRef.current);
+      redirectTimerRef.current = null;
     }
-
-    if (!animDoneRef.current) return;
-    onRestoreComplete?.();
-    window.location.reload();
-  }, [onRestoreComplete]);
+    window.location.assign("/auth/login");
+  }, []);
 
   const handleConfirm = useCallback(async () => {
     if (!file) return;
     setStep("restoring");
     setImportError(null);
-    apiDoneRef.current = false;
-    animDoneRef.current = false;
-    apiErrorRef.current = null;
+    setRestoreStatus("restoring");
+    restartControllerRef.current?.abort();
+    restartControllerRef.current = null;
 
+    let restartAfterMs = DEFAULT_RESTART_DELAY_MS;
+    let homeBoardName: string | null = null;
     try {
       const formData = new FormData();
       formData.append("file", file);
       const response = await fetch("/api/backup/import", { method: "POST", body: formData });
+      const data = (await response.json().catch(() => null)) as {
+        error?: unknown;
+        homeBoardName?: unknown;
+        restartAfterMs?: unknown;
+      } | null;
 
       if (!response.ok) {
-        try {
-          const data = await response.json();
-          apiErrorRef.current = data.error ?? t("failed.title");
-        } catch {
-          apiErrorRef.current = `Server returned ${response.status}`;
-        }
+        const message = typeof data?.error === "string" ? data.error : `Server returned ${response.status}`;
+        setImportError(message);
+        setStep("error");
+        return;
       }
-    } catch {
-      apiErrorRef.current = t("failed.title");
-    } finally {
-      apiDoneRef.current = true;
-      tryFinalize();
-    }
-  }, [file, t, tryFinalize]);
 
-  const handleAnimationComplete = useCallback(() => {
-    animDoneRef.current = true;
-    tryFinalize();
-  }, [tryFinalize]);
+      if (
+        typeof data?.restartAfterMs === "number" &&
+        Number.isFinite(data.restartAfterMs) &&
+        data.restartAfterMs >= 0
+      ) {
+        restartAfterMs = data.restartAfterMs;
+      }
+      if (typeof data?.homeBoardName === "string") homeBoardName = data.homeBoardName;
+    } catch (error) {
+      console.error("Restore request failed", error);
+      setImportError(t("failed.title"));
+      setStep("error");
+      return;
+    }
+
+    onRestoreComplete?.();
+    let destination: string | null = null;
+    if (variant === "standalone" && homeBoardName) {
+      destination = `/boards/${encodeURIComponent(homeBoardName)}`;
+    } else if (variant === "card") {
+      destination = "/auth/login";
+    }
+    startReadinessCheck(restartAfterMs, destination);
+  }, [file, onRestoreComplete, startReadinessCheck, t, variant]);
 
   if (step === "upload") {
     return (
@@ -110,7 +245,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         rejectColor="red.6"
         accept={[MIME_TYPES.zip, "application/x-zip-compressed"]}
         multiple={false}
-        maxSize={1024 * 1024 * 256}
+        maxSize={MAX_BACKUP_FILE_BYTES}
         radius="md"
       >
         <Group justify="center" gap="xl" mih={variant === "standalone" ? 200 : 160} style={{ pointerEvents: "none" }}>
@@ -134,7 +269,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
               {t("dropzone.title")}
             </Text>
             <Text size="sm" c="dimmed" inline mt={7}>
-              {t("dropzone.description")}
+              {t("dropzone.description", { maxSize: formatBytes(MAX_BACKUP_FILE_BYTES) })}
             </Text>
           </div>
         </Group>
@@ -145,19 +280,19 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
   if (step === "preview") {
     return (
       <Stack gap="md">
-        <Group justify="space-between">
-          <Group gap="sm">
+        <Group justify="space-between" wrap="nowrap">
+          <Group gap="sm" wrap="nowrap" miw={0}>
             <IconFileZip size={20} />
-            <div>
-              <Text size="sm" fw={500}>
+            <Group>
+              <Text size="sm" fw={500} truncate>
                 {file?.name}
               </Text>
-              <Text size="xs" c="dimmed">
-                {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}
+              <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                {file ? formatBytes(file.size) : ""}
               </Text>
-            </div>
+            </Group>
           </Group>
-          <Button variant="subtle" size="xs" onClick={handleClear}>
+          <Button variant="subtle" size="xs" onClick={handleClear} style={{ flexShrink: 0 }}>
             {t("changeFile")}
           </Button>
         </Group>
@@ -183,8 +318,11 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           <>
             <BackupPreviewPanel analysis={analysis} />
             <Group justify="flex-end">
-              <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep("confirm")}>
-                {t("continueToRestore")}
+              <Button
+                rightSection={<IconArrowRight size={16} />}
+                onClick={() => (variant === "standalone" ? void handleConfirm() : setStep("confirm"))}
+              >
+                {variant === "standalone" ? t("confirm.submit") : t("continueToRestore")}
               </Button>
             </Group>
           </>
@@ -206,9 +344,28 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     return (
       <RestoreProgressPanel
         active
-        migrations={analysis?.migrations.pending ?? []}
-        onComplete={handleAnimationComplete}
+        status={restoreStatus}
+        reloginRequired={variant === "card"}
+        onRetry={() => startReadinessCheck(0)}
+        onReload={() => window.location.reload()}
       />
+    );
+  }
+
+  if (step === "complete") {
+    return (
+      <Stack gap="md" align="center" py="lg">
+        <ThemeIcon size={64} radius="xl" color="green" variant="light">
+          <IconCheck size={32} style={{ width: rem(40), height: rem(40) }} stroke={1.5} />
+        </ThemeIcon>
+        <Text size="lg" fw={600} ta="center">
+          {t("complete.title")}
+        </Text>
+        <Text size="sm" c="dimmed" ta="center" maw={480}>
+          {t("complete.message")}
+        </Text>
+        <Button onClick={handleSignInAgain}>{t("complete.button")}</Button>
+      </Stack>
     );
   }
 
@@ -220,7 +377,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         </Alert>
         <Group>
           <Button variant="subtle" onClick={handleClear}>
-            {t("tryAgain")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Group>
       </Stack>

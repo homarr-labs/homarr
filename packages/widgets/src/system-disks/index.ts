@@ -1,14 +1,18 @@
 import { IconServer2 } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
+import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
 
 export const { definition, componentLoader } = createWidgetDefinition("systemDisks", {
+  supportsAdvancedFocus: true,
   icon: IconServer2,
   queryKey: [["widget", "healthMonitoring"]],
-  refetchInterval: 5,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
+  refetchInterval: 10,
+  ...getWidgetIntegrationConfig("systemDisks"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
@@ -26,7 +30,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
       {
         visibleStorageVolumes: {
           shouldHide(_, integrationKinds) {
-            return integrationKinds.length === 0 || !integrationKinds.every((kind) => kind === "synology");
+            return !supportsStorageVolumeSelection(integrationKinds);
           },
         },
       },

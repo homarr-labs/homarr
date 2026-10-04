@@ -4,6 +4,7 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("video", {
+  supportsAdvancedFocus: false,
   icon: IconDeviceCctv,
   createOptions() {
     return optionsBuilder.from((factory) => ({

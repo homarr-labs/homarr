@@ -688,211 +688,6 @@
       "add": "アプリを追加する"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
-      },
-      "create": {
-        "title": "",
-        "subtitle": ""
-      },
-      "edit": {
-        "title": ""
-      }
-    },
-    "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
-    },
-    "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
-    },
-    "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "",
       "description": ""
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "どのDockerコンテナがイメージアップデートを利用できるかを監視します"
-    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "どのDockerコンテナがイメージアップデートを利用できるかを監視します"
     }
   },
   "media": {
@@ -1441,20 +1236,20 @@
     "here": "こちら",
     "iconPicker": {
       "label": "アイコン URL",
-      "description": "ライブラリを検索し、画像の URL を貼り付けるか、ファイルをアップロードします。",
-      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。",
+      "header": "{countIcons} 画像を名前で検索",
       "headerLoading": "名前で画像を検索",
+      "noResults": "",
+      "error": "",
+      "description": "ライブラリを検索し、画像の URL を貼り付けるか、ファイルをアップロードします。",
       "clear": "画像をクリア",
       "uploadImage": "画像をアップロード",
       "results": "画像検索結果",
       "localImages": "あなたの画像",
       "svgIcons": "SVGアイコン",
       "otherImages": "その他の画像",
-      "urlLoading": "",
+      "urlLoading": "画像を確認中…",
       "urlReady": "画像を使用する準備ができました",
-      "urlError": "この画像を読み込めませんでした。URLを確認して再度お試し下さい。",
-      "noResults": "",
-      "error": ""
+      "urlError": "この画像を読み込めませんでした。URLを確認して再度お試し下さい。"
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "利用可能な更新があるコンテナの数を表示します。",
-      "title": "What's Up Docker",
-      "monitored": "監視中",
-      "updatesAvailable": "{count, plural, one {# アップデートが} other {# アップデートが}}",
-      "updateAvailable": "アップデートがあります",
-      "openReleaseNotes": "リリースノートを開く",
-      "option": {
-        "showTitle": {
-          "label": "タイトルを表示"
-        },
-        "showRing": {
-          "label": "更新の着信音を表示"
-        },
-        "layout": {
-          "label": "レイアウト",
-          "option": {
-            "horizontal": {
-              "label": "水平方向"
-            },
-            "vertical": {
-              "label": "垂直方向"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "コンテナ更新リストを表示",
-          "description": "利用可能な画像の更新がある各監視対象のコンテナを一覧表示します"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "情報",
         "processor": "プロセッサー: {cpuModelName}",
-        "memory": "メモリ: {memory} GiB",
-        "memoryAvailable": "利用可能: {memoryAvailable} GiB ({percent}%)",
+        "memory": "メモリ: {memory}",
+        "memoryAvailable": "利用可能: {memoryAvailable} ({percent}%)",
         "version": "Version: {version}",
         "uptime": "稼働時間: {months} ヶ月 {days} 日 {hours} 時間 {minutes} 分",
         "loadAverage": "平均負荷：",
@@ -2535,7 +2298,7 @@
       "description": "",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "バッテリーを表示"
         },
         "showLoad": {
           "label": ""
@@ -2641,7 +2404,7 @@
             "today": "今日",
             "24h": "過去24時間",
             "7d": "過去7日間",
-            "30d": "",
+            "30d": "過去30日間",
             "month": "",
             "lastMonth": ""
           }
@@ -3137,7 +2900,7 @@
           "label": "完了とマークされたその他の項目を表示"
         },
         "activeTorrentThreshold": {
-          "label": "このしきい値より低速で完了したトレントを非表示にします (KiB/s)"
+          "label": "このしきい値より低速で完了したトレントを非表示にします"
         },
         "categoryFilter": {
           "label": "フィルターするカテゴリ/ラベル"
@@ -3927,7 +3690,7 @@
               "label": "割合 (例 76%)"
             },
             "absolute": {
-              "label": "絶対値（例：800GB / 1TB）"
+              "label": "絶対値"
             },
             "free": {
               "label": "空き領域の割合（例：24%空き）"
@@ -3946,26 +3709,6 @@
       "status": {
         "unhealthy": "異常"
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "",
           "subtitle": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "利用可能な更新があるコンテナの数を表示します。",
+      "title": "What's Up Docker",
+      "monitored": "監視中",
+      "updatesAvailable": "{count, plural, one {# アップデートが} other {# アップデートが}}",
+      "updateAvailable": "アップデートがあります",
+      "openReleaseNotes": "リリースノートを開く",
+      "option": {
+        "showTitle": {
+          "label": "タイトルを表示"
+        },
+        "showRing": {
+          "label": "更新の着信音を表示"
+        },
+        "layout": {
+          "label": "レイアウト",
+          "option": {
+            "horizontal": {
+              "label": "水平方向"
+            },
+            "vertical": {
+              "label": "垂直方向"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "コンテナ更新リストを表示",
+          "description": "利用可能な画像の更新がある各監視対象のコンテナを一覧表示します"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "ホーム",
         "boards": "ボード",
         "apps": "アプリ",
         "integrations": "連携機能",
-        "customWidgets": "",
         "searchEngies": "検索エンジン",
         "medias": "メディア",
         "users": {
@@ -4876,7 +4651,7 @@
             "title": "統計情報",
             "general": {
               "title": "匿名の解析を送信",
-              "text": "Homarrは、オープンソースソフトウェアUmamiを使用して匿名化された分析を送信します。 有効にすると、以下が収集されます。Homarrバージョン、データベースタイプ(MySQL/PostgreSQL/SQLite)、Docker/Kubernetesステータス、認証方法、各機能の数。 すべてのデータは匿名で集計されます。個人情報、URL、名前、または識別可能なデータは収集されません。 これにより、オープンソースチームは利用パターンを理解し、開発に優先順位を付けることができます。"
+              "text": "Homarrは、オープンソースソフトウェアUmamiを使用して匿名化された分析を送信します。 有効にすると、以下が収集されます。Homarrバージョン、データベースタイプ(PostgreSQL/SQLite)、Docker/Kubernetesステータス、認証方法、各機能の数。 すべてのデータは匿名で集計されます。個人情報、URL、名前、または識別可能なデータは収集されません。 これにより、オープンソースチームは利用パターンを理解し、開発に優先順位を付けることができます。"
             }
           },
           "crawlingAndIndexing": {
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "管理",
       "boards": {
         "label": "ボード"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "編集"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {
@@ -6501,7 +6267,7 @@
     "skip": "",
     "manage": {
       "welcome": {
-        "title": "",
+        "title": "Homarrへようこそ！",
         "description": ""
       },
       "boardsList": {

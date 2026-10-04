@@ -4,14 +4,15 @@ import type { KubernetesNamespace, KubernetesNamespaceState } from "@homarr/defi
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 export const namespacesRouter = createTRPCRouter({
   getNamespaces: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesNamespace[]> => {
-      const { coreApi } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesNamespace[]> => {
+      const { coreApi } = getKubernetesClient(input.contextId);
 
       try {
         const namespaces = await coreApi.listNamespace();

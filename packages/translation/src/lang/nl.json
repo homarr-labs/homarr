@@ -688,211 +688,6 @@
       "add": "Een app toevoegen"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
-      },
-      "create": {
-        "title": "",
-        "subtitle": ""
-      },
-      "edit": {
-        "title": ""
-      }
-    },
-    "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
-    },
-    "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
-    },
-    "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -1344,10 +1139,6 @@
       "name": "",
       "description": ""
     },
-    "wud": {
-      "name": "Wat is er een Docker",
-      "description": "Controleer welke van uw Docker containers afbeeldingen updates beschikbaar hebben"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Documentbeheersysteem voor het archiveren en organiseren van gescande documenten"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "",
       "description": ""
+    },
+    "wud": {
+      "name": "Wat is er een Docker",
+      "description": "Controleer welke van uw Docker containers afbeeldingen updates beschikbaar hebben"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "hier",
     "iconPicker": {
       "label": "Icoon-URL",
-      "description": "Zoek in de bibliotheek, plak een afbeelding-URL of upload een bestand.",
-      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
+      "header": "Zoek {countIcons} afbeeldingen op naam",
       "headerLoading": "Afbeeldingen zoeken op naam",
+      "noResults": "",
+      "error": "",
+      "description": "Zoek in de bibliotheek, plak een afbeelding-URL of upload een bestand.",
       "clear": "Verwijder afbeelding",
       "uploadImage": "Afbeelding uploaden",
       "results": "Zoekresultaten afbeeldingen",
@@ -1452,9 +1249,7 @@
       "otherImages": "Andere afbeeldingen",
       "urlLoading": "Controleren van afbeelding…",
       "urlReady": "Afbeelding is klaar voor gebruik",
-      "urlError": "Deze afbeelding kan niet worden geladen. Controleer de URL en probeer het opnieuw.",
-      "noResults": "",
-      "error": ""
+      "urlError": "Deze afbeelding kan niet worden geladen. Controleer de URL en probeer het opnieuw."
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1599,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
-        }
-      }
-    },
-    "wud": {
-      "name": "Wat is er een Docker",
-      "description": "Laat zien hoeveel containers er updates beschikbaar hebben.",
-      "title": "Wat is er een Docker",
-      "monitored": "Gecontroleerd",
-      "updatesAvailable": "{count, plural, one {# update beschikbaar} other {# updates zijn beschikbaar}}",
-      "updateAvailable": "Update beschikbaar",
-      "openReleaseNotes": "Open release notities",
-      "option": {
-        "showTitle": {
-          "label": "Toon titel"
-        },
-        "showRing": {
-          "label": "Update ring tonen"
-        },
-        "layout": {
-          "label": "Lay-out",
-          "option": {
-            "horizontal": {
-              "label": "Horizontaal"
-            },
-            "vertical": {
-              "label": "Verticaal"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Toon container update lijst",
-          "description": "Lijst van alle gemonitorde container met een afbeelding update beschikbaar"
         }
       }
     },
@@ -2391,8 +2154,8 @@
       "popover": {
         "information": "Informatie",
         "processor": "Processor: {cpuModelName}",
-        "memory": "Geheugen: {memory}GiB",
-        "memoryAvailable": "Beschikbaar: {memoryAvailable}GiB ({percent}%)",
+        "memory": "Geheugen: {memory}",
+        "memoryAvailable": "Beschikbaar: {memoryAvailable} ({percent}%)",
         "version": "Versie: {version}",
         "uptime": "Uptime: {months} maanden, {days} dagen, {hours} uren, {minutes} minuten",
         "loadAverage": "Gemiddelde belasting:",
@@ -3137,7 +2900,7 @@
           "label": "Diverse items gemarkeerd als voltooid weergeven"
         },
         "activeTorrentThreshold": {
-          "label": "Voltooide torrent verbergen onder deze drempel (in kiB/s)"
+          "label": "Voltooide torrent verbergen onder deze drempel"
         },
         "categoryFilter": {
           "label": "Categorieën/labels om te filteren"
@@ -3452,7 +3215,7 @@
         "queued": ""
       },
       "type": {
-        "movie": "",
+        "movie": "Film",
         "episode": ""
       },
       "empty": {
@@ -3927,7 +3690,7 @@
               "label": "Percentage (bijv. 76%)"
             },
             "absolute": {
-              "label": "Absolute waarden (bijv. 800GB / 1TB)"
+              "label": "Absolute waarden"
             },
             "free": {
               "label": "Vrije ruimte percentage (bijv. 24% vrij)"
@@ -3946,26 +3709,6 @@
       "status": {
         "unhealthy": "Niet-gezond"
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "Beszel-systemen (tabel)",
@@ -4215,6 +3958,38 @@
         "dockerNetwork": {
           "title": "Docker netwerk I/O",
           "subtitle": "Netwerkverkeer van Docker-containers"
+        }
+      }
+    },
+    "wud": {
+      "name": "Wat is er een Docker",
+      "description": "Laat zien hoeveel containers er updates beschikbaar hebben.",
+      "title": "Wat is er een Docker",
+      "monitored": "Gecontroleerd",
+      "updatesAvailable": "{count, plural, one {# update beschikbaar} other {# updates zijn beschikbaar}}",
+      "updateAvailable": "Update beschikbaar",
+      "openReleaseNotes": "Open release notities",
+      "option": {
+        "showTitle": {
+          "label": "Toon titel"
+        },
+        "showRing": {
+          "label": "Update ring tonen"
+        },
+        "layout": {
+          "label": "Lay-out",
+          "option": {
+            "horizontal": {
+              "label": "Horizontaal"
+            },
+            "vertical": {
+              "label": "Verticaal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Toon container update lijst",
+          "description": "Lijst van alle gemonitorde container met een afbeelding update beschikbaar"
         }
       }
     }
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Home",
         "boards": "Borden",
         "apps": "Apps",
         "integrations": "Integraties",
-        "customWidgets": "",
         "searchEngies": "Zoekmachines",
         "medias": "Media",
         "users": {
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Sleep je back-up ZIP hierheen",
-              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max 256 MB)"
+              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max {maxSize})"
             },
             "analyzing": "Back-up analyseren...",
             "changeFile": "Bestand wijzigen",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Beheren",
       "boards": {
         "label": "Borden"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Bewerken"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

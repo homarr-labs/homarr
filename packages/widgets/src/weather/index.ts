@@ -2,17 +2,32 @@ import { IconCloud } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("weather", {
   icon: IconCloud,
+  supportsAdvancedFocus: true,
+  queryKey: [["widget", "weather", "atLocation"]],
+  refetchInterval: 600,
+  queryMatcher: ({ input }, scope) => {
+    const location = scope.options.location;
+    if (location === null || typeof location !== "object" || !("latitude" in location) || !("longitude" in location)) {
+      return false;
+    }
+    return widgetQueryInputMatches(input, {
+      latitude: location.latitude,
+      longitude: location.longitude,
+    });
+  },
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
         isFormatFahrenheit: factory.switch(),
         disableTemperatureDecimals: factory.switch(),
-        showCurrentWindSpeed: factory.switch({ withDescription: true }),
+        animateIcons: factory.switch(),
+        showHumidity: factory.switch({ defaultValue: false }),
+        showCurrentWindSpeed: factory.switch(),
         useImperialSpeed: factory.switch(),
         location: factory.location({
           defaultValue: {
@@ -35,10 +50,10 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
           defaultValue: "dddd, MMMM D",
           withDescription: true,
         }),
-        showCity: factory.switch(),
-        hasForecast: factory.switch(),
+        showCity: factory.switch({ defaultValue: false }),
+        hasForecast: factory.switch({ defaultValue: false }),
         forecastDayCount: factory.slider({
-          defaultValue: 5,
+          defaultValue: 3,
           validate: z.number().min(1).max(7),
           step: 1,
           withDescription: true,

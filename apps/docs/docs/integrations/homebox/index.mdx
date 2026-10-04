@@ -1,0 +1,42 @@
+---
+title: "Homebox"
+description: "A self-hosted inventory and household asset management application."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { homeboxIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={homeboxIntegration} categories={["Inventory management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Homebox's `/api/v1/groups/statistics` endpoint and displays items, locations, labels, items with a warranty, total value, and users. The `/api/v1/groups` response supplies the currency shown with the total value.
+
+### Adding the integration
+
+The default Homebox port is `7745`.
+
+<AddingIntegration />
+
+### Secrets
+
+Homebox requires the username (email address) and password of a Homebox account. Homarr authenticates for each stats fetch and does not retain the session token between fetches.
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Use the email address of a Homebox account as the username.",
+        "Enter that account's password in the Password field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

@@ -6,10 +6,10 @@ import { IconRefresh } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 export const ResetTours = () => {
-  const t = useScopedI18n("management.page.user.setting.general.item.onboardingTours");
+  const t = useI18n("management.page.user.setting.general.item.onboardingTours");
   const router = useRouter();
   const utils = clientApi.useUtils();
   const { data: tourStatus } = clientApi.user.getTourStatus.useQuery();

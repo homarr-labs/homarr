@@ -11,10 +11,11 @@ import { clientApi } from "@homarr/api/client";
 import classes from "./terminal.module.css";
 
 interface DockerLogsTerminalProps {
+  endpointId: string;
   containerId: string;
 }
 
-export const DockerLogsTerminal = ({ containerId }: DockerLogsTerminalProps) => {
+export const DockerLogsTerminal = ({ endpointId, containerId }: DockerLogsTerminalProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<Terminal | null>(null);
   const pendingLogsRef = useRef<string[]>([]);
@@ -31,7 +32,7 @@ export const DockerLogsTerminal = ({ containerId }: DockerLogsTerminalProps) => 
   }, []);
 
   clientApi.docker.subscribeLogs.useSubscription(
-    { id: containerId, tail: 200 },
+    { endpointId, id: containerId, tail: 200 },
     {
       onData: writeToTerminal,
       onError(err) {

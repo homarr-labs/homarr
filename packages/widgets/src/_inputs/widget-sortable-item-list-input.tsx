@@ -16,7 +16,6 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon, Card, Center, Fieldset, Loader, Stack } from "@mantine/core";
 import { IconGripHorizontal } from "@tabler/icons-react";
 
@@ -32,8 +31,14 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
 }: CommonWidgetInputProps<"sortableItemList">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
-  const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
-  const values = form.values.options[property] as TOptionValue[];
+  const fieldPath = `options.${property}`;
+  const initialValues = useMemo(
+    () =>
+      Array.isArray(initialOptions[property]) ? (initialOptions[property] as TOptionValue[]) : options.defaultValue,
+    [initialOptions, options.defaultValue, property],
+  );
+  const currentValue = form.values.options[property];
+  const values = Array.isArray(currentValue) ? (currentValue as TOptionValue[]) : options.defaultValue;
   const { data, isLoading, error } = options.useData(initialValues);
   const dataMap = useMemo(
     () => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])),
@@ -54,6 +59,11 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   const activeIndex = activeId ? getIndex(activeId) : -1;
 
   useEffect(() => {
+    if (Array.isArray(currentValue)) return;
+    form.setFieldValue(fieldPath, options.defaultValue);
+  }, [currentValue, fieldPath, form, options.defaultValue]);
+
+  useEffect(() => {
     if (!activeId) {
       isFirstAnnouncement.current = true;
     }
@@ -70,22 +80,67 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
     [tempMap, dataMap],
   );
 
-  const updateItems = (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
-    form.setFieldValue(`options.${property}`, callback);
-  };
+  const updateItems = useCallback(
+    (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
+      form.setFieldValue(fieldPath, callback);
+    },
+    [fieldPath, form],
+  );
 
   const addItem = (item: TItem) => {
     setTempMap((prev) => {
-      prev.set(options.uniqueIdentifier(item) as TOptionValue, item);
-      return prev;
+      const next = new Map(prev);
+      next.set(options.uniqueIdentifier(item) as TOptionValue, item);
+      return next;
     });
-    updateItems((values) => [...values, options.uniqueIdentifier(item) as TOptionValue]);
+    updateItems((currentValues) => [...currentValues, options.uniqueIdentifier(item) as TOptionValue]);
   };
+
+  const migrateItems = useCallback(
+    (items: TItem[], optionsPatch: Record<string, unknown>) => {
+      const migratedEntries = items.map((item) => [options.uniqueIdentifier(item) as TOptionValue, item] as const);
+      setTempMap((previous) => {
+        const next = new Map(previous);
+        for (const [value, item] of migratedEntries) next.set(value, item);
+        return next;
+      });
+      form.setFieldValue("options", (currentOptions) => {
+        const currentItems = Array.isArray(currentOptions[property])
+          ? (currentOptions[property] as TOptionValue[])
+          : options.defaultValue;
+        const nextItems = [...currentItems];
+        for (const [value] of migratedEntries) {
+          if (!nextItems.includes(value)) nextItems.push(value);
+        }
+        return { ...currentOptions, ...optionsPatch, [property]: nextItems };
+      });
+    },
+    [form, options, property],
+  );
+
+  const removeItem = useCallback(
+    (value: TOptionValue) => {
+      updateItems((currentValues) => currentValues.filter((candidate) => candidate !== value));
+      setTempMap((previous) => {
+        if (!previous.has(value)) return previous;
+        const next = new Map(previous);
+        next.delete(value);
+        return next;
+      });
+    },
+    [updateItems],
+  );
 
   return (
     <Fieldset legend={t("label")}>
       <Stack>
-        <options.addButton addItem={addItem} values={values} />
+        <options.addButton
+          addItem={addItem}
+          migrateItems={migrateItems}
+          removeItem={removeItem}
+          values={values}
+          initialOptions={initialOptions}
+        />
 
         <DndContext
           sensors={sensors}
@@ -115,19 +170,6 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
               <React.Fragment>
                 {values.map((value, index) => {
                   const item = getItem(value);
-                  const removeItem = () => {
-                    form.setValues((previous) => {
-                      const previousValues = previous.options?.[property] as TOptionValue[];
-                      return {
-                        ...previous,
-                        options: {
-                          ...previous.options,
-                          [property]: previousValues.filter((id) => id !== value),
-                        },
-                      };
-                    });
-                  };
-
                   if (!item) {
                     return null;
                   }
@@ -138,7 +180,8 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
                       id={value}
                       index={index}
                       item={item}
-                      removeItem={removeItem}
+                      removeItem={() => removeItem(value)}
+                      removeLabel={t("remove")}
                       options={options}
                     />
                   );
@@ -163,6 +206,7 @@ interface ItemProps<TItem, TOptionValue extends UniqueIdentifier> {
   item: TItem;
   index: number;
   removeItem: () => void;
+  removeLabel: string;
   options: CommonWidgetInputProps<"sortableItemList">["options"];
 }
 
@@ -171,26 +215,12 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
   index,
   item,
   removeItem,
+  removeLabel,
   options,
 }: ItemProps<TItem, TOptionValue>) => {
   const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({
     id,
   });
-
-  const Handle = (props: Partial<ActionIconProps>) => {
-    return (
-      <ActionIcon
-        variant="transparent"
-        color="gray"
-        {...props}
-        {...listeners}
-        ref={setActivatorNodeRef}
-        style={{ cursor: "grab" }}
-      >
-        <IconGripHorizontal />
-      </ActionIcon>
-    );
-  };
 
   return (
     <Card
@@ -221,8 +251,19 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
         key={index}
         item={item}
         removeItem={removeItem}
+        removeLabel={removeLabel}
         rootAttributes={attributes}
-        handle={Handle}
+        handle={
+          <ActionIcon
+            variant="transparent"
+            color="gray"
+            {...listeners}
+            ref={setActivatorNodeRef}
+            style={{ cursor: "grab" }}
+          >
+            <IconGripHorizontal />
+          </ActionIcon>
+        }
       />
     </Card>
   );

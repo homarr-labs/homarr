@@ -9,6 +9,7 @@ import {
   IconHome,
   IconLanguage,
   IconLayoutBoard,
+  IconRulerMeasure,
   IconSearch,
   IconSettings,
   IconWorldWww,
@@ -20,7 +21,7 @@ import localeData from "dayjs/plugin/localeData";
 import { clientApi } from "@homarr/api/client";
 import { colorSchemes } from "@homarr/definitions";
 import type { UserPreferenceKey } from "@homarr/settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createChildrenOptions } from "../lib/children";
@@ -37,6 +38,23 @@ dayjs.extend(localeData);
 
 type ChildrenFactory = ReturnType<typeof createChildrenOptions<Record<string, unknown>>>;
 
+export type UserFieldPreferenceKey =
+  | "defaultSearchEngine"
+  | "openSearchInNewTab"
+  | "ddgBangs"
+  | "byteUnitSystem"
+  | "pingIconsEnabled"
+  | "enableRightClickOnWidgets";
+
+export const userFieldPreferenceLabels: Partial<Record<UserPreferenceKey, UserFieldPreferenceKey>> = {
+  defaultSearchEngineId: "defaultSearchEngine",
+  openSearchInNewTab: "openSearchInNewTab",
+  ddgBangs: "ddgBangs",
+  byteUnitSystem: "byteUnitSystem",
+  pingIconsEnabled: "pingIconsEnabled",
+  enableRightClickOnWidgets: "enableRightClickOnWidgets",
+} satisfies Partial<Record<UserPreferenceKey, UserFieldPreferenceKey>>;
+
 export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
   colorScheme: IconDeviceDesktop,
   locale: IconLanguage,
@@ -44,6 +62,7 @@ export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
   openSearchInNewTab: IconExternalLink,
   ddgBangs: IconWorldWww,
   firstDayOfWeek: IconCalendarWeek,
+  byteUnitSystem: IconRulerMeasure,
   homeBoardId: IconHome,
   mobileHomeBoardId: IconLayoutBoard,
   pingIconsEnabled: IconActivity,
@@ -82,7 +101,7 @@ const createAsyncSelectableChildren = <TItem,>(
     useActions: (_, query) => {
       const { value, setValue, isPending } = useUserPreference(preferenceKey);
       const result = useQuery();
-      const t = useScopedI18n("search.mode.command.group.preferences.option");
+      const t = useI18n("search.mode.command.group.preferences.option");
 
       if (result.isLoading) return [createLoadingPreferenceAction()];
 
@@ -103,7 +122,7 @@ const firstDayOfWeekOptions: DayOfWeek[] = [1, 6, 0];
 
 export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, ChildrenFactory>> = {
   colorScheme: createStaticChildren("colorScheme", () => {
-    const t = useScopedI18n("common.colorScheme.options");
+    const t = useI18n("common.colorScheme.options");
     return colorSchemes.map((s) => ({ key: s, label: t(s), value: s }));
   }),
   locale: languageChildrenOptions,
@@ -121,6 +140,13 @@ export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, C
       value: day,
     })),
   ),
+  byteUnitSystem: createStaticChildren("byteUnitSystem", () => {
+    const t = useI18n("user.field.byteUnitSystem.options");
+    return [
+      { key: "decimal", label: `${t("decimal")} (KB, MB, GB)`, value: "decimal" },
+      { key: "binary", label: `${t("binary")} (KiB, MiB, GiB)`, value: "binary" },
+    ];
+  }),
   homeBoardId: createAsyncSelectableChildren(
     "homeBoardId",
     () => clientApi.board.getAllBoards.useQuery(),

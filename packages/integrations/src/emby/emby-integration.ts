@@ -10,8 +10,21 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
-import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
+import { convertJellyfinType, parseLocation, ticksToMs } from "../jellyfin/jellyfin-integration";
 import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
+
+const transcodingInfoSchema = z.object({
+  Bitrate: z.number().nullish(),
+  Framerate: z.number().nullish(),
+  AudioChannels: z.number().nullish(),
+  AudioCodec: z.string().nullish(),
+  VideoCodec: z.string().nullish(),
+  Container: z.string().nullish(),
+  IsVideoDirect: z.boolean().nullish(),
+  IsAudioDirect: z.boolean().nullish(),
+  Width: z.number().nullish(),
+  Height: z.number().nullish(),
+});
 
 const sessionSchema = z.object({
   NowPlayingItem: z
@@ -20,9 +33,16 @@ const sessionSchema = z.object({
       SeriesName: z.string().nullish(),
       Name: z.string().nullish(),
       SeasonName: z.string().nullish(),
+      ParentIndexNumber: z.number().nullish(),
       EpisodeTitle: z.string().nullish(),
+      IndexNumber: z.number().nullish(),
       Album: z.string().nullish(),
       EpisodeCount: z.number().nullish(),
+      RunTimeTicks: z.number().nullish(),
+      Width: z.number().nullish(),
+      Height: z.number().nullish(),
+      MediaStreams: z.array(z.object({ BitRate: z.number().nullish() })).nullish(),
+      MediaSources: z.array(z.object({ Bitrate: z.number().nullish() })).nullish(),
     })
     .optional(),
   Id: z.string(),
@@ -31,6 +51,15 @@ const sessionSchema = z.object({
   DeviceName: z.string().nullish(),
   UserId: z.string().optional(),
   UserName: z.string().nullish(),
+  RemoteEndPoint: z.string().nullish(),
+  PlayState: z
+    .object({
+      IsPaused: z.boolean().nullish(),
+      PositionTicks: z.number().nullish(),
+      PlayMethod: z.string().nullish(),
+    })
+    .nullish(),
+  TranscodingInfo: transcodingInfoSchema.nullish(),
 });
 
 const itemSchema = z.object({
@@ -110,20 +139,72 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
         if (sessionInfo.NowPlayingItem) {
+          const isEpisode = sessionInfo.NowPlayingItem.Type === BaseItemKind.Episode;
+          const transcodingInfo = sessionInfo.TranscodingInfo;
+          const positionMs = ticksToMs(sessionInfo.PlayState?.PositionTicks);
+          const durationMs = ticksToMs(sessionInfo.NowPlayingItem.RunTimeTicks);
+          // Emby only reliably fills in MediaSources[].Bitrate for a transcoding session -
+          // /Sessions has no `fields` selector to force it, so fall back to summing the individual
+          // media streams' own bitrates (populated from the source file's metadata) for direct play.
+          const mediaStreamsBitrateBps = sessionInfo.NowPlayingItem.MediaStreams?.reduce(
+            (sum, stream) => sum + (stream.BitRate ?? 0),
+            0,
+          );
+          const bitrateBps =
+            transcodingInfo?.Bitrate ??
+            sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ??
+            (mediaStreamsBitrateBps || null);
+          const bitrateKbps = bitrateBps !== null ? Math.round(bitrateBps / 1000) : null;
+
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
             seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
-            episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
+            seasonNumber: isEpisode ? (sessionInfo.NowPlayingItem.ParentIndexNumber ?? null) : null,
+            episodeName: isEpisode ? sessionInfo.NowPlayingItem.EpisodeTitle : null,
+            episodeNumber: isEpisode ? (sessionInfo.NowPlayingItem.IndexNumber ?? null) : null,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
             playback: {
-              state: null,
-              positionMs: null,
-              durationMs: null,
+              state: sessionInfo.PlayState?.IsPaused ? "paused" : "playing",
+              positionMs,
+              durationMs,
             },
-            location: null,
-            metadata: null,
+            location: parseLocation(sessionInfo.RemoteEndPoint),
+            metadata: {
+              video: {
+                resolution:
+                  sessionInfo.NowPlayingItem.Width && sessionInfo.NowPlayingItem.Height
+                    ? {
+                        width: sessionInfo.NowPlayingItem.Width,
+                        height: sessionInfo.NowPlayingItem.Height,
+                      }
+                    : null,
+                frameRate: transcodingInfo?.Framerate ?? null,
+              },
+              audio: {
+                channelCount: transcodingInfo?.AudioChannels ?? null,
+                codec: transcodingInfo?.AudioCodec ?? null,
+              },
+              transcoding: {
+                resolution:
+                  transcodingInfo?.Width && transcodingInfo.Height
+                    ? {
+                        width: transcodingInfo.Width,
+                        height: transcodingInfo.Height,
+                      }
+                    : null,
+                target: {
+                  audioCodec: transcodingInfo?.AudioCodec ?? null,
+                  videoCodec: transcodingInfo?.VideoCodec ?? null,
+                },
+                container: transcodingInfo?.Container ?? null,
+                isVideoDirect: transcodingInfo?.IsVideoDirect ?? true,
+                isAudioDirect: transcodingInfo?.IsAudioDirect ?? true,
+                containerChanged: sessionInfo.PlayState?.PlayMethod === "DirectStream",
+              },
+              bitrateKbps,
+            },
           };
         }
 

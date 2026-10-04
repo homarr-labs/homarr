@@ -4,6 +4,8 @@ description: "Disk usage of your system"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -17,7 +19,7 @@ import { synologyIntegration } from "@site/docs/integrations/synology";
 
 <WidgetHeader widget={systemDisksWidget} categories={["Storage", "Disks"]} />
 
-This widget displays filesystem and SMART disk usage for supported server and NAS integrations.
+This widget displays filesystem and SMART disk usage for supported server and NAS integrations. Compact mode uses a one-column card list with the configured primary value, available temperature, and solid health bar.
 
 ### Supported Integrations
 
@@ -41,6 +43,10 @@ This widget displays filesystem and SMART disk usage for supported server and NA
     },
   ]}
 />
+
+Advanced view keeps your configured volume filters while showing each integration name, usage percentage, used and total space, free-space percentage, SMART status, available temperature, and the usage background bar regardless of compact display options.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

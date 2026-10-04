@@ -1,0 +1,62 @@
+import { describe, expect, test } from "vitest";
+
+import { integrationKinds } from "../integration";
+import {
+  getWidgetKindsForIntegration,
+  integrationWidgetSupport,
+  widgetIntegrationConfigs,
+  widgetIntegrationLimits,
+  widgetIntegrationSupport,
+  widgetKindsWithOptionalIntegrations,
+} from "../widget-integration-map";
+
+describe("widget integration config", () => {
+  test("derives forward and reverse support without losing relationships", () => {
+    for (const [widgetKind, capability] of Object.entries(widgetIntegrationConfigs)) {
+      expect(widgetIntegrationSupport[widgetKind as keyof typeof widgetIntegrationSupport]).toEqual(
+        capability.supportedIntegrations,
+      );
+      for (const integrationKind of capability.supportedIntegrations) {
+        expect(integrationWidgetSupport[integrationKind]).toContain(widgetKind);
+      }
+    }
+
+    for (const integrationKind of integrationKinds) {
+      expect(getWidgetKindsForIntegration(integrationKind)).toEqual(integrationWidgetSupport[integrationKind]);
+    }
+  });
+
+  test("supports the mock integration for every integration-backed widget", () => {
+    for (const config of Object.values(widgetIntegrationConfigs)) {
+      expect(config.supportedIntegrations).toContain("mock");
+    }
+  });
+
+  test("derives optional connections and server selection limits", () => {
+    expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar"]));
+    expect(widgetIntegrationLimits).toEqual({
+      "smartHome-entityState": 1,
+      "smartHome-executeAutomation": 1,
+      mediaTranscoding: 1,
+      "immich-serverStats": 1,
+      "immich-albumCarousel": 1,
+      paperlessNgx: 1,
+      patchmon: 1,
+      bazarr: 1,
+      audioStats: 1,
+      umami: 1,
+      archiveTeamWarrior: 1,
+      anchorNote: 1,
+      wud: 1,
+      llamacpp: 1,
+      wazuhAgents: 1,
+      wazuhAlerts: 1,
+      wazuhSummary: 1,
+      wazuhTimeline: 1,
+      wazuhTopList: 1,
+      wazuhVulnerabilities: 1,
+      wazuhFim: 1,
+      wazuhAuthFailures: 1,
+    });
+  });
+});

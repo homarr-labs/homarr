@@ -3,7 +3,7 @@
 import "../widgets-common.css";
 import "./styles.css";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
   Avatar,
@@ -46,19 +46,31 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/common";
+import { useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useByteFormatter } from "@homarr/settings";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { HomarrDataTable } from "../common/homarr-data-table";
+import { formatLocalizedDateTime } from "../common/locale";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
+import {
+  DOWNLOAD_COLUMN_ACCESSORS,
+  filterDownloadItemsByStatus,
+  getAvailableDownloadStates,
+  getDownloadColumnAccessors,
+  getDownloadsStatsDisplay,
+} from "./helpers";
 
 dayjs.extend(relativeTime);
 
-type DownloadsT = ReturnType<typeof useScopedI18n<"widget.downloads">>;
+type DownloadsT = ReturnType<typeof useI18n<"widget.downloads">>;
 type DownloadState = ExtendedDownloadClientItem["state"];
 
 interface SizeConfig {
@@ -81,6 +93,7 @@ interface ColumnContext {
   hasTorrents: boolean;
   hasMultipleClients: boolean;
   hasMultipleTypes: boolean;
+  isAdvanced: boolean;
   size: SizeConfig;
 }
 
@@ -131,17 +144,12 @@ const stateColorMap: Record<DownloadState, string> = {
   unknown: "gray",
 };
 
-const rowBgAlpha: Partial<Record<DownloadState, string>> = {
-  failed: "rgba(255, 0, 0, 0.04)",
-  paused: "rgba(255, 200, 0, 0.03)",
-};
-
 const columnVisibilityChecks: Partial<Record<string, (ctx: ColumnContext) => boolean>> = {
   upSpeed: (ctx) => ctx.hasTorrents && ctx.size.showSpeedColumns,
   ratio: (ctx) => ctx.hasTorrents,
   sent: (ctx) => ctx.hasTorrents,
-  integration: (ctx) => ctx.hasMultipleClients,
-  type: (ctx) => ctx.hasMultipleTypes,
+  integration: (ctx) => ctx.isAdvanced || ctx.hasMultipleClients,
+  type: (ctx) => ctx.isAdvanced || ctx.hasMultipleTypes,
   downSpeed: (ctx) => ctx.size.showSpeedColumns,
   time: (ctx) => ctx.size.showTimeColumn,
   state: (ctx) => ctx.size.showStateColumn,
@@ -152,7 +160,8 @@ const speedColumnConfig = {
   up: { Icon: IconUpload, color: "green" as const },
 } as const;
 
-function getSizeConfig(width: number): SizeConfig {
+export function getSizeConfig(width: number, _height = Number.POSITIVE_INFINITY, isAdvanced = false): SizeConfig {
+  if (isAdvanced) return DEFAULT_SIZE_CONFIG;
   for (const { maxWidth, config } of SIZE_BREAKPOINTS) {
     if (width < maxWidth) return config;
   }
@@ -164,24 +173,6 @@ function progressColor(state: DownloadState, progress: number): string {
   if (progress >= 1) return "green";
   return "blue";
 }
-
-const columnAccessors = [
-  "name",
-  "progress",
-  "size",
-  "downSpeed",
-  "upSpeed",
-  "time",
-  "state",
-  "added",
-  "ratio",
-  "received",
-  "sent",
-  "category",
-  "integration",
-  "index",
-  "type",
-] as const;
 
 function toCategoryArray(category: string | string[]): string[] {
   if (Array.isArray(category)) return category;
@@ -208,6 +199,15 @@ function formatRatio(ratio: number): string {
   if (ratio >= 100) return ratio.toFixed(0);
   if (ratio >= 10) return ratio.toFixed(1);
   return ratio.toFixed(2);
+}
+
+function formatSizePair(
+  used: number,
+  total: number,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+): string {
+  const formatted = formatBytesPair(used, total);
+  return `${formatted.used} / ${formatted.total}`;
 }
 
 function showCompletedItem(
@@ -262,8 +262,12 @@ function compareSortValues(
   return 0;
 }
 
-function buildProgressTooltip(record: ExtendedDownloadClientItem): string {
-  const parts = [`${formatBytes(record.received)} / ${formatBytes(record.size)}`];
+function buildProgressTooltip(
+  record: ExtendedDownloadClientItem,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+  formatByteRate: (bytes: number) => string,
+): string {
+  const parts = [formatSizePair(record.received, record.size, formatBytesPair)];
   if (record.downSpeed) parts.push(`↓ ${formatByteRate(record.downSpeed)}`);
   if (record.time !== 0) parts.push(`ETA: ${dayjs().add(record.time, "milliseconds").fromNow(true)}`);
   return parts.join(" · ");
@@ -278,11 +282,12 @@ function SpeedCell({
   fontSize: SizeConfig["fontSize"];
   direction: keyof typeof speedColumnConfig;
 }) {
+  const { formatByteRate } = useByteFormatter();
   if (!speed) return null;
   const { Icon, color } = speedColumnConfig[direction];
   return (
     <Group gap={4} wrap="nowrap">
-      <Icon size={12} style={{ flexShrink: 0, opacity: 0.5 }} />
+      <Icon size="var(--mantine-font-size-xs)" style={{ flexShrink: 0, opacity: 0.5 }} />
       <Text size={fontSize} c={color}>
         {formatByteRate(speed)}
       </Text>
@@ -298,31 +303,40 @@ export default function DownloadClientsWidget({
   boardId,
   itemId,
   width,
+  height,
+  displayMode,
 }: WidgetComponentProps<"downloads">) {
-  const allInteractAccess = useIntegrationsWithInteractAccess();
+  const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
+  const allInteractAccess = useIntegrationsWithInteractAccess();
   const integrationInteractSet = useMemo(
     () => new Set(allInteractAccess.filter(({ id }) => integrationIds.includes(id)).map(({ id }) => id)),
     [allInteractAccess, integrationIds],
   );
 
-  const {
-    data: currentItems = [],
-    isFetching,
-    isError,
-  } = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
+  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
   });
+  const currentItems = getUsableWidgetQueryData(downloadsQuery);
+  const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
+  const { isFetching } = downloadsQuery;
 
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
+  const queryIndicators = (
+    <Group gap={0}>
+      <IntegrationErrorIndicator results={currentItems ?? []} />
+    </Group>
+  );
 
   const [clientFilter, setClientFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [showStats, { toggle: toggleStats }] = useDisclosure(false);
+  const isAdvanced = displayMode === "advanced";
+  const statsDisplay = getDownloadsStatsDisplay(showStats, isAdvanced);
 
   const utils = clientApi.useUtils();
   const mutationOptions = {
@@ -336,6 +350,7 @@ export default function DownloadClientsWidget({
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation(mutationOptions);
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
+    scope: { id: `downloads-options:${boardId ?? "preview"}:${itemId ?? "preview"}` },
     onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
   });
   const persistOption = useTableLayoutPersistence({
@@ -348,26 +363,27 @@ export default function DownloadClientsWidget({
 
   let defaultSortDirection: DataTableSortStatus<ExtendedDownloadClientItem>["direction"] = "asc";
   if (options.descendingDefaultSort) defaultSortDirection = "desc";
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>({
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus<ExtendedDownloadClientItem>>(() => ({
     columnAccessor: options.defaultSort,
     direction: defaultSortDirection,
-  });
+  }));
+  const hasMountedSortDefaults = useRef(false);
   useEffect(() => {
+    if (!hasMountedSortDefaults.current) {
+      hasMountedSortDefaults.current = true;
+      return;
+    }
     setSortStatus({ columnAccessor: options.defaultSort, direction: defaultSortDirection });
   }, [options.defaultSort, defaultSortDirection]);
 
-  const data = useMemo<ExtendedDownloadClientItem[]>(() => {
-    return currentItems
+  const eligibleData = useMemo<ExtendedDownloadClientItem[]>(() => {
+    return availableItems
       .filter(({ integration }) => integrationIds.includes(integration.id))
       .flatMap((pair) =>
         pair.data.items
           .filter(({ category }) => matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist))
           .filter((item) => showCompletedItem(item, options))
-          .filter(
-            ({ state }) =>
-              (clientFilter.length === 0 || clientFilter.includes(pair.integration.id)) &&
-              (statusFilter.length === 0 || statusFilter.includes(state)),
-          )
+          .filter(() => clientFilter.length === 0 || clientFilter.includes(pair.integration.id))
           .map((item): ExtendedDownloadClientItem => {
             const received = item.received ?? Math.floor(item.size * item.progress);
             const ids = [pair.integration.id];
@@ -390,7 +406,7 @@ export default function DownloadClientsWidget({
           }),
       );
   }, [
-    currentItems,
+    availableItems,
     integrationIds,
     integrationInteractSet,
     mutateDeleteItem,
@@ -398,8 +414,9 @@ export default function DownloadClientsWidget({
     mutateResumeItem,
     options,
     clientFilter,
-    statusFilter,
   ]);
+
+  const data = useMemo(() => filterDownloadItemsByStatus(eligibleData, statusFilter), [eligibleData, statusFilter]);
 
   const sortedData = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof ExtendedDownloadClientItem;
@@ -412,7 +429,7 @@ export default function DownloadClientsWidget({
   }, [data, sortStatus]);
 
   const clients = useMemo<ExtendedClientStatus[]>(() => {
-    return currentItems
+    return availableItems
       .filter(({ integration }) => integrationIds.includes(integration.id))
       .map(({ integration, data: clientData }): ExtendedClientStatus => {
         const interact = integrationInteractSet.has(integration.id);
@@ -449,7 +466,7 @@ export default function DownloadClientsWidget({
         };
       });
   }, [
-    currentItems,
+    availableItems,
     integrationIds,
     integrationInteractSet,
     options.applyFilterToRatio,
@@ -461,11 +478,14 @@ export default function DownloadClientsWidget({
   const hasMultipleClients = clients.length > 1;
   const hasMultipleTypes = new Set(data.map(({ type }) => type)).size > 1;
 
-  const size = useMemo(() => getSizeConfig(width), [width]);
-  const optionsColumnSet = useMemo(() => new Set<string>(options.columns), [options.columns]);
+  const size = useMemo(() => getSizeConfig(width, height, isAdvanced), [height, isAdvanced, width]);
+  const optionsColumnSet = useMemo(
+    () => new Set<string>(getDownloadColumnAccessors(options.columns, isAdvanced)),
+    [isAdvanced, options.columns],
+  );
   const columnContext = useMemo<ColumnContext>(
-    () => ({ optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size }),
-    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size],
+    () => ({ optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, isAdvanced, size }),
+    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, isAdvanced, size],
   );
 
   let progressColumnWidth = 120;
@@ -479,7 +499,7 @@ export default function DownloadClientsWidget({
         title: "",
         width: 36,
         render: (record) => (
-          <Tooltip label={record.integration.name} withArrow>
+          <Tooltip key={displayMode} label={record.integration.name} withArrow>
             <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} />
           </Tooltip>
         ),
@@ -489,9 +509,11 @@ export default function DownloadClientsWidget({
         title: t("items.name.columnTitle"),
         sortable: true,
         ellipsis: true,
+        width: 240,
         render: (record) => (
           <Tooltip
-            label={buildHoverTooltip(record, t)}
+            key={displayMode}
+            label={buildHoverTooltip(record, t, formatBytesPair, formatByteRate)}
             multiline
             w={280}
             withArrow
@@ -525,7 +547,14 @@ export default function DownloadClientsWidget({
         render: (record) => {
           const pct = Math.floor(record.progress * 100);
           return (
-            <Tooltip label={buildProgressTooltip(record)} withArrow openDelay={300} position="top" color="dark">
+            <Tooltip
+              key={displayMode}
+              label={buildProgressTooltip(record, formatBytesPair, formatByteRate)}
+              withArrow
+              openDelay={300}
+              position="top"
+              color="dark"
+            >
               <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
                 <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
                   {`${pct}%`}
@@ -586,7 +615,7 @@ export default function DownloadClientsWidget({
         title: t("items.state.columnTitle"),
         width: 90,
         render: (record) => (
-          <Badge size="xs" variant="light" color={stateColorMap[record.state]}>
+          <Badge size="xs" variant="dot" color={stateColorMap[record.state]}>
             {t(`states.${record.state}`)}
           </Badge>
         ),
@@ -666,11 +695,11 @@ export default function DownloadClientsWidget({
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, t, size, progressColumnWidth]);
+  }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
-    columnAccessors,
+    columnAccessors: DOWNLOAD_COLUMN_ACCESSORS,
     columnOrder: options.columnOrder,
     columnWidths: options.columnWidths,
     itemId,
@@ -701,7 +730,7 @@ export default function DownloadClientsWidget({
     return traffic.up / traffic.down;
   }, [clients]);
 
-  const availableStatuses = useMemo(() => [...new Set(data.map(({ state }) => state))], [data]);
+  const availableStatuses = useMemo(() => getAvailableDownloadStates(eligibleData), [eligibleData]);
 
   const queueStats = useMemo(() => {
     const stateCounts: Record<string, number> = {};
@@ -715,29 +744,29 @@ export default function DownloadClientsWidget({
     return { stateCounts, totalSize, completedSize, totalItems: data.length };
   }, [data]);
 
-  if (options.columns.length === 0) {
+  if (!isAdvanced && options.columns.length === 0) {
     return (
-      <Center h="100%">
-        <Text>{t("errors.noColumns")}</Text>
-      </Center>
+      <Box h="100%" pos="relative">
+        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+          {queryIndicators}
+        </Box>
+        <Center h="100%">
+          <Text>{t("errors.noColumns")}</Text>
+        </Center>
+      </Box>
     );
   }
 
-  if (isError && currentItems.length === 0) {
-    return (
-      <Center h="100%">
-        <Text c="red">{t("errors.noCommunications")}</Text>
-      </Center>
-    );
-  }
+  if (isInitialWidgetQueryPending(downloadsQuery)) return <WidgetQueryLoadingState />;
 
   let rowContextMenuHandler: typeof handleContextMenu | undefined = handleContextMenu;
   if (isEditMode) rowContextMenuHandler = undefined;
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
-      {showStats && (
+      {statsDisplay.visible && (
         <GlobalStatsBar
+          key={`stats-${displayMode}`}
           queueStats={queueStats}
           totalSpeed={totalSpeed}
           totalUpSpeed={totalUpSpeed}
@@ -748,10 +777,13 @@ export default function DownloadClientsWidget({
       )}
 
       <Box style={{ flex: 1, minHeight: 0, position: "relative" }}>
+        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+          {queryIndicators}
+        </Box>
         <HomarrDataTable
           isEditMode={isEditMode}
           cellPadding={`${size.cellPadding}px 8px`}
-          fetching={isFetching && currentItems.length === 0}
+          fetching={isFetching && (currentItems?.length ?? 0) === 0}
           fz={size.fontSize}
           records={sortedData}
           columns={effectiveColumns}
@@ -763,7 +795,6 @@ export default function DownloadClientsWidget({
           className="downloads-table"
           customRowAttributes={(_, index) => ({ "data-row-index": index })}
           onRowContextMenu={rowContextMenuHandler}
-          rowBackgroundColor={(record) => rowBgAlpha[record.state]}
           rowExpansion={{
             trigger: "click",
             allowMultiple: true,
@@ -781,6 +812,7 @@ export default function DownloadClientsWidget({
       </Box>
 
       <WidgetFooter
+        key={`footer-${displayMode}`}
         clients={clients}
         totalSpeed={totalSpeed}
         totalUpSpeed={totalUpSpeed}
@@ -793,8 +825,8 @@ export default function DownloadClientsWidget({
         availableStatuses={availableStatuses}
         pauseQueue={mutatePauseQueue}
         resumeQueue={mutateResumeQueue}
-        showStats={showStats}
-        toggleStats={toggleStats}
+        showStats={statsDisplay.visible}
+        toggleStats={statsDisplay.canToggle ? toggleStats : undefined}
       />
 
       {contextMenu && <RowContextMenu state={contextMenu} onClose={closeContextMenu} t={t} />}
@@ -802,9 +834,14 @@ export default function DownloadClientsWidget({
   );
 }
 
-function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): React.ReactNode {
+function buildHoverTooltip(
+  record: ExtendedDownloadClientItem,
+  t: DownloadsT,
+  formatBytesPair: (used: number, total: number) => { used: string; total: string },
+  formatByteRate: (bytes: number) => string,
+): React.ReactNode {
   const lines: { label: string; value: string }[] = [
-    { label: t("items.size.detailsTitle"), value: `${formatBytes(record.received)} / ${formatBytes(record.size)}` },
+    { label: t("items.size.detailsTitle"), value: formatSizePair(record.received, record.size, formatBytesPair) },
     { label: t("items.state.detailsTitle"), value: t(`states.${record.state}`) },
   ];
 
@@ -846,7 +883,9 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
 }
 
 function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
+  const locale = useCurrentIntlLocale();
+  const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const progressPercent = Math.floor(item.progress * 100);
   const categoryDisplay = formatCategoryDisplay(item.category);
 
@@ -866,30 +905,30 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
           thickness={5}
           roundCaps
           sections={[{ value: progressPercent, color: progressColor(item.state, item.progress) }]}
-          label={<Text ta="center" fw={700} style={{ fontSize: 10 }}>{`${progressPercent}%`}</Text>}
+          label={<Text size="xs" ta="center" fw={700}>{`${progressPercent}%`}</Text>}
         />
 
-        <Stack gap={4} style={{ flex: 1 }}>
-          <Group gap="xs" wrap="nowrap">
-            <Avatar size={16} radius={0} src={getIconUrl(item.integration.kind)} />
-            <Text size="xs" fw={600} truncate>
+        <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
+          <Group gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
+            <Avatar size="var(--mantine-font-size-md)" radius={0} src={getIconUrl(item.integration.kind)} />
+            <Text size="sm" fw={600} truncate style={{ minWidth: 0 }}>
               {item.name}
             </Text>
-            <Badge size="xs" variant="light" color={stateColorMap[item.state]} ml="auto" style={{ flexShrink: 0 }}>
+            <Badge size="xs" variant="dot" color={stateColorMap[item.state]} ml="auto" style={{ flexShrink: 0 }}>
               {t(`states.${item.state}`)}
             </Badge>
           </Group>
 
-          <SimpleGrid cols={3} spacing={4} verticalSpacing={2}>
+          <SimpleGrid cols={3} spacing="xs" verticalSpacing={4} style={{ minWidth: 0 }}>
             <DetailPair
               label={t("items.size.detailsTitle")}
-              value={`${formatBytes(item.received)} / ${formatBytes(item.size)}`}
+              value={formatSizePair(item.received, item.size, formatBytesPair)}
             />
             {item.downSpeed !== undefined && item.downSpeed > 0 && (
               <DetailPair
                 label={t("items.downSpeed.detailsTitle")}
                 value={formatByteRate(item.downSpeed)}
-                icon={<IconDownload size={10} />}
+                icon={<IconDownload size="var(--mantine-font-size-xs)" />}
                 color="blue"
               />
             )}
@@ -897,7 +936,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
               <DetailPair
                 label={t("items.upSpeed.detailsTitle")}
                 value={formatByteRate(item.upSpeed)}
-                icon={<IconUpload size={10} />}
+                icon={<IconUpload size="var(--mantine-font-size-xs)" />}
                 color="green"
               />
             )}
@@ -909,7 +948,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
               <DetailPair label={t("items.sent.detailsTitle")} value={formatBytes(item.sent)} />
             )}
             {item.added !== undefined && (
-              <DetailPair label={t("items.added.detailsTitle")} value={dayjs(item.added).format("YYYY-MM-DD HH:mm")} />
+              <DetailPair label={t("items.added.detailsTitle")} value={formatLocalizedDateTime(item.added, locale)} />
             )}
             {categoryDisplay && <DetailPair label={t("items.category.detailsTitle")} value={categoryDisplay} />}
             <DetailPair label={t("items.id.detailsTitle")} value={item.id} />
@@ -932,17 +971,17 @@ function DetailPair({
   color?: string;
 }) {
   return (
-    <Group gap={4} wrap="nowrap">
-      <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap", fontSize: 10 }}>
+    <Stack gap={0} style={{ minWidth: 0, overflow: "hidden" }}>
+      <Text size="xs" c="dimmed" truncate>
         {label}:
       </Text>
-      <Group gap={2} wrap="nowrap">
+      <Group gap={2} wrap="nowrap" style={{ minWidth: 0 }}>
         {icon}
-        <Text size="xs" fw={500} c={color} truncate style={{ fontSize: 10 }}>
+        <Text size="sm" fw={500} c={color} truncate style={{ minWidth: 0 }}>
           {value}
         </Text>
       </Group>
-    </Group>
+    </Stack>
   );
 }
 
@@ -961,7 +1000,8 @@ function GlobalStatsBar({
   hasTorrents: boolean;
   clients: ExtendedClientStatus[];
 }) {
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
+  const { formatByteRate, formatBytesPair } = useByteFormatter();
 
   let overallProgress = 0;
   if (queueStats.totalSize > 0) overallProgress = queueStats.completedSize / queueStats.totalSize;
@@ -980,22 +1020,22 @@ function GlobalStatsBar({
 
           <Tooltip label={t("stats.totalSize")} withArrow>
             <Group gap={4}>
-              <IconDatabase size={12} style={{ opacity: 0.6 }} />
-              <Text size="xs">{`${formatBytes(queueStats.completedSize)} / ${formatBytes(queueStats.totalSize)}`}</Text>
+              <IconDatabase size="var(--mantine-font-size-xs)" style={{ opacity: 0.6 }} />
+              <Text size="xs">{formatSizePair(queueStats.completedSize, queueStats.totalSize, formatBytesPair)}</Text>
             </Group>
           </Tooltip>
         </Group>
 
         <Group gap="md">
           <Group gap={4}>
-            <IconDownload size={12} style={{ opacity: 0.6 }} />
+            <IconDownload size="var(--mantine-font-size-xs)" style={{ opacity: 0.6 }} />
             <Text size="xs" fw={600} c="blue">
               {formatByteRate(totalSpeed)}
             </Text>
           </Group>
           {totalUpSpeed > 0 && (
             <Group gap={4}>
-              <IconUpload size={12} style={{ opacity: 0.6 }} />
+              <IconUpload size="var(--mantine-font-size-xs)" style={{ opacity: 0.6 }} />
               <Text size="xs" fw={600} c="green">
                 {formatByteRate(totalUpSpeed)}
               </Text>
@@ -1046,7 +1086,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
         left={0}
         w="100vw"
         h="100vh"
-        style={{ zIndex: 1000 }}
+        style={{ zIndex: "var(--mantine-z-index-popover)" }}
         onClick={onClose}
         onContextMenu={(e) => {
           e.preventDefault();
@@ -1068,7 +1108,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
             <Menu.Label>{truncateText(item.name, 40)}</Menu.Label>
 
             <Menu.Item
-              leftSection={<IconInfoCircle size={14} />}
+              leftSection={<IconInfoCircle size="var(--mantine-font-size-sm)" />}
               onClick={() => {
                 void navigator.clipboard.writeText(item.name).catch(() => {});
                 onClose();
@@ -1079,7 +1119,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
 
             {item.id && (
               <Menu.Item
-                leftSection={<IconCopy size={14} />}
+                leftSection={<IconCopy size="var(--mantine-font-size-sm)" />}
                 onClick={() => {
                   void navigator.clipboard.writeText(item.id).catch(() => {});
                   onClose();
@@ -1093,7 +1133,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
               <>
                 <Menu.Divider />
                 <Menu.Item
-                  leftSection={<PauseResumeIcon size={14} />}
+                  leftSection={<PauseResumeIcon size="var(--mantine-font-size-sm)" />}
                   onClick={() => {
                     pauseResumeInvoke?.();
                     onClose();
@@ -1105,7 +1145,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
                 {!showDeleteConfirm && (
                   <Menu.Item
                     color="red"
-                    leftSection={<IconTrash size={14} />}
+                    leftSection={<IconTrash size="var(--mantine-font-size-sm)" />}
                     onClick={(e) => {
                       e.stopPropagation();
                       openDelete();
@@ -1119,7 +1159,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
                   <>
                     <Menu.Item
                       color="red"
-                      leftSection={<IconTrash size={14} />}
+                      leftSection={<IconTrash size="var(--mantine-font-size-sm)" />}
                       onClick={() => {
                         item.actions?.delete({ fromDisk: false });
                         onClose();
@@ -1129,7 +1169,7 @@ function RowContextMenu({ state, onClose, t }: { state: ContextMenuState; onClos
                     </Menu.Item>
                     <Menu.Item
                       color="red"
-                      leftSection={<IconTrashX size={14} />}
+                      leftSection={<IconTrashX size="var(--mantine-font-size-sm)" />}
                       onClick={() => {
                         item.actions?.delete({ fromDisk: true });
                         onClose();
@@ -1162,7 +1202,7 @@ interface WidgetFooterProps {
   pauseQueue: (args: { integrationIds: string[] }) => void;
   resumeQueue: (args: { integrationIds: string[] }) => void;
   showStats: boolean;
-  toggleStats: () => void;
+  toggleStats?: () => void;
 }
 
 function WidgetFooter({
@@ -1181,7 +1221,8 @@ function WidgetFooter({
   showStats,
   toggleStats,
 }: WidgetFooterProps) {
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
+  const { formatByteRate } = useByteFormatter();
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
   const someInteract = clients.some(({ interact }) => interact);
   const hasActiveFilter = clientFilter.length > 0 || statusFilter.length > 0;
@@ -1296,15 +1337,17 @@ function WidgetFooter({
                 }
               }}
             >
-              <FilterIcon size={14} />
+              <FilterIcon size="var(--mantine-font-size-sm)" />
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label={statsTooltip}>
-            <ActionIcon size="xs" variant={statsIconVariant} aria-label={statsTooltip} onClick={toggleStats}>
-              <StatsIcon size={14} />
-            </ActionIcon>
-          </Tooltip>
+          {toggleStats ? (
+            <Tooltip label={statsTooltip}>
+              <ActionIcon size="xs" variant={statsIconVariant} aria-label={statsTooltip} onClick={toggleStats}>
+                <StatsIcon size="var(--mantine-font-size-sm)" />
+              </ActionIcon>
+            </Tooltip>
+          ) : null}
 
           <Group gap={2}>
             {clients.map(({ integration }) => (
@@ -1329,7 +1372,7 @@ function WidgetFooter({
                   disabled={integrationsStatuses.paused.length === 0}
                   onClick={() => resumeQueue({ integrationIds: integrationsStatuses.paused })}
                 >
-                  <IconPlayerPlay size={14} />
+                  <IconPlayerPlay size="var(--mantine-font-size-sm)" />
                 </ActionIcon>
               </Tooltip>
             )}
@@ -1337,12 +1380,18 @@ function WidgetFooter({
             {!showStats && (
               <Group gap={2}>
                 <Text size="xs" fw={600} c="blue">
-                  <IconDownload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
+                  <IconDownload
+                    size="var(--mantine-font-size-xs)"
+                    style={{ verticalAlign: "middle", marginRight: 2 }}
+                  />
                   {formatByteRate(totalSpeed)}
                 </Text>
                 {totalUpSpeed > 0 && (
                   <Text size="xs" fw={600} c="green">
-                    <IconUpload size={10} style={{ verticalAlign: "middle", marginRight: 2 }} />
+                    <IconUpload
+                      size="var(--mantine-font-size-xs)"
+                      style={{ verticalAlign: "middle", marginRight: 2 }}
+                    />
                     {formatByteRate(totalUpSpeed)}
                   </Text>
                 )}
@@ -1359,7 +1408,7 @@ function WidgetFooter({
                   disabled={integrationsStatuses.active.length === 0}
                   onClick={() => pauseQueue({ integrationIds: integrationsStatuses.active })}
                 >
-                  <IconPlayerPause size={14} />
+                  <IconPlayerPause size="var(--mantine-font-size-sm)" />
                 </ActionIcon>
               </Tooltip>
             )}
@@ -1374,7 +1423,7 @@ function ClientIndicator({ integration }: { integration: ExtendedClientStatus["i
   const isConnected = useIntegrationConnected(integration.updatedAt, { timeout: 30000 });
 
   let tooltipLabel = integration.name;
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
   if (!isConnected) tooltipLabel = `${integration.name} ${t("disconnected")}`;
 
   let avatarFilter: string | undefined;

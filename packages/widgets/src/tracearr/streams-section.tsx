@@ -3,10 +3,24 @@ import { IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
 
 import { formatDuration } from "@homarr/common";
 import type { TracearrStream } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
-export function StreamsList({ streams, width }: { streams: TracearrStream[]; width: number }) {
-  const t = useScopedI18n("widget.tracearr");
+import type { SourcedTracearrItem } from "./source";
+
+type SourcedTracearrStream = SourcedTracearrItem<TracearrStream>;
+
+export function StreamsList({
+  streams,
+  width,
+  showSource,
+  transparent = false,
+}: {
+  streams: SourcedTracearrStream[];
+  width: number;
+  showSource: boolean;
+  transparent?: boolean;
+}) {
+  const t = useI18n("widget.tracearr");
 
   if (streams.length === 0) {
     return (
@@ -19,14 +33,30 @@ export function StreamsList({ streams, width }: { streams: TracearrStream[]; wid
   return (
     <Stack gap="xs">
       {streams.map((stream) => (
-        <StreamCard key={stream.id} stream={stream} compact={width < 300} />
+        <StreamCard
+          key={stream.key}
+          stream={stream}
+          compact={width < 300}
+          showSource={showSource}
+          transparent={transparent}
+        />
       ))}
     </Stack>
   );
 }
 
-function StreamCard({ stream, compact }: { stream: TracearrStream; compact: boolean }) {
-  const t = useScopedI18n("widget.tracearr");
+function StreamCard({
+  stream,
+  compact,
+  showSource,
+  transparent,
+}: {
+  stream: SourcedTracearrStream;
+  compact: boolean;
+  showSource: boolean;
+  transparent: boolean;
+}) {
+  const t = useI18n("widget.tracearr");
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
 
@@ -45,7 +75,12 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
           : null;
 
   return (
-    <Paper p="xs" radius="lg" style={{ position: "relative", overflow: "hidden" }}>
+    <Paper
+      p="xs"
+      radius="lg"
+      bg={transparent ? "transparent" : undefined}
+      style={{ position: "relative", overflow: "hidden" }}
+    >
       {stream.posterUrl && (
         <Box
           style={{
@@ -68,9 +103,9 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
         <Group justify="space-between" wrap="nowrap">
           <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
             {stream.state === "playing" ? (
-              <IconPlayerPlay size={14} color="var(--mantine-color-green-6)" />
+              <IconPlayerPlay size="var(--mantine-font-size-sm)" color="var(--mantine-color-green-6)" />
             ) : (
-              <IconPlayerPause size={14} color="var(--mantine-color-yellow-6)" />
+              <IconPlayerPause size="var(--mantine-font-size-sm)" color="var(--mantine-color-yellow-6)" />
             )}
             <Text size="sm" fw={600} lineClamp={1}>
               {stream.username}
@@ -115,13 +150,13 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
           </Group>
         )}
 
-        <Group gap="xs" wrap="nowrap">
-          {stream.device && (
+        {(stream.device || showSource) && (
+          <Group gap="xs" wrap="nowrap">
             <Text size="xs" c="dimmed" lineClamp={1}>
-              {stream.player ?? stream.device}
+              {[stream.player ?? stream.device, showSource ? stream.integrationName : null].filter(Boolean).join(" · ")}
             </Text>
-          )}
-        </Group>
+          </Group>
+        )}
       </Stack>
     </Paper>
   );

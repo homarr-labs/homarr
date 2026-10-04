@@ -1,6 +1,7 @@
 import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
 
 import { objectEntries } from "@homarr/common";
+import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -12,18 +13,25 @@ const labelDisplayModeOptions = {
   hidden: IconEyeOff,
 } as const;
 
+const getChartOptionLabel = (key: "cpu" | "memory" | "gpu" | "network", t: (key: never) => string) => {
+  if (key === "cpu") return invariantTechnicalLabels.cpu;
+  if (key === "gpu") return invariantTechnicalLabels.gpu;
+  return t(`widget.systemResources.option.visibleCharts.option.${key}` as never);
+};
+
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "healthMonitoring"]],
-  refetchInterval: 5,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+  refetchInterval: 10,
+  ...getWidgetIntegrationConfig("systemResources"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),
       visibleCharts: factory.multiSelect({
         options: (["cpu", "memory", "gpu", "network"] as const).map((key) => ({
           value: key,
-          label: (t) => t(`widget.systemResources.option.visibleCharts.option.${key}`),
+          label: (t) => getChartOptionLabel(key, t),
         })),
         defaultValue: ["cpu", "memory", "network"],
         withDescription: true,

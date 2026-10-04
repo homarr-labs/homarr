@@ -1,45 +1,56 @@
 ---
-title: 'Media Requests Stats'
-description: 'Statistics about your media requests'
+title: "Media Requests Stats"
+description: "Statistics about your media requests"
 hide_title: true
 ---
 
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { IconAd } from "@tabler/icons-react";
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import { mediaRequestStatsWidget } from '.';
-import { jellyseerrIntegration } from '@site/docs/integrations/jellyseerr';
-import { overseerrIntegration } from '@site/docs/integrations/overseerr';
+import Tabs from "@/components/mdx/legacy-tabs";
+import { TabItem } from "@/components/mdx/legacy-tabs";
+import { mediaRequestStatsWidget } from ".";
+import { jellyseerrIntegration } from "@site/docs/integrations/jellyseerr";
+import { overseerrIntegration } from "@site/docs/integrations/overseerr";
+import { seerrIntegration } from "@site/docs/integrations/seerr";
 
+<WidgetHeader widget={mediaRequestStatsWidget} categories={["Media requests"]} />
 
-<WidgetHeader
-  widget={mediaRequestStatsWidget}
-  categories={['Media requests']}
-/>
-
-Provide a statistics overview of your media requests, such as mount of requests, open requests, approvement and rejections.
+Provides an overview of media requests, including totals, availability, approvals, and rejections. Compact mode keeps every configured stat and section title visible; the user ranking remains scrollable instead of being truncated.
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: jellyseerrIntegration,
-}, {
-  integration: overseerrIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: jellyseerrIntegration,
+    },
+    {
+      integration: overseerrIntegration,
+    },
+    {
+      integration: seerrIntegration,
+    },
+  ]}
+/>
 
 ### Screenshots
 
-import mediaRequestStats from './img/stats.png';
+import mediaRequestStats from "./img/stats.png";
 
-<img src={mediaRequestStats} alt="media-request-stats" width={256} height={256} />
+<img src={mediaRequestStats.src} alt="media-request-stats" width={256} height={256} />
 
 ### Interactions
 
 - Hover over the widget to reveal a **search button** that opens Spotlight in media request search mode, scoped to the widget's integrations.
+- When no requests exist yet, the widget offers media search and explains when statistics will appear.
+- A warning indicator identifies unavailable integrations while totals from healthy integrations remain visible.
+
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

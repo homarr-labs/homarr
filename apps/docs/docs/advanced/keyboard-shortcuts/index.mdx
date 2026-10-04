@@ -6,22 +6,63 @@ tags:
 
 Homarr has the following keyboard shortcuts:
 
-| Shortcut | Description |
-| -------- | ----------- |
-| `MOD` + `K` | Opens the search bar |
-| `MOD` + `J` | Toggles Dark Mode |
-| `MOD` + `E` | Toggles Edit Mode |
+| Shortcut                                            | Description                                                                                                                |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `MOD` + `K`                                         | Opens search, including local apps, boards, integrations, pages, commands, and preferences                                 |
+| `MOD` + `P`                                         | Opens app search                                                                                                           |
+| `MOD` + `/`                                         | Opens Homarr Assistant inside search                                                                                       |
+| `MOD` + `Shift` + `/` (`MOD` + `?`)                 | Opens preference search                                                                                                    |
+| `Shift` + `A`                                       | Opens the full Homarr Assistant                                                                                            |
+| `MOD` + `J`                                         | Toggles Dark Mode                                                                                                          |
+| `MOD` + `E`                                         | Toggles Edit Mode                                                                                                          |
+| Hold `Shift` for 500 ms over a supported widget     | Opens its temporary advanced view                                                                                          |
+| Hold `Shift` + `Ctrl`/`Cmd` over a supported widget | Keeps its advanced view open until it is closed                                                                            |
+| `Esc`                                               | Stops keyboard tile editing, cancels an active pointer or touch move/resize, or closes an open advanced view or board menu |
 
-:::tip
+## Search and commands
+
+Search is designed as the fastest route to Homarr. Start typing after `MOD` + `K` to find local apps, boards,
+integrations, pages, commands, and preferences without entering a separate mode first. Local Homarr results appear
+before configured search-engine actions and Assistant fallbacks. Commands include opening the board switcher without
+leaving the keyboard. Type `!` to enter Web mode when you want to browse configured engine shortcuts or discover
+DuckDuckGo bangs; bang discovery is excluded from ordinary Search results.
+
+Use the dedicated shortcuts above to start in apps, Assistant, or preferences. Inside search, choose a mode to narrow
+the same query when needed. Media request search is available only when a supported Seerr integration is configured.
+
+## Widget advanced view
+
+Supported widgets open a temporary advanced view when you hold `Shift` over them for 500 ms. Hold `Shift` plus `Ctrl`
+on Windows/Linux or `Cmd` on macOS over the widget to keep the advanced view open, or use its menu.
+
+## Board editing
+
+`MOD` + `E` enters edit mode. Homarr keeps the current board visible while the editor prepares; movement and resizing become available when it is ready.
+
+When a tile is focused in edit mode:
+
+| Shortcut             | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `Enter` or `Space`   | Starts or stops keyboard editing                                            |
+| Arrow keys           | Moves the focused tile within its current canvas, rail, or Container        |
+| `Shift` + Arrow keys | Resizes from the tile's lower-right corner: Left/Up shrink; Right/Down grow |
+| `Esc`                | Stops keyboard editing without undoing its changes                          |
+
+Keyboard moves and resizes apply immediately. To move an item between a canvas, rail, or Container, drag it there or use **Move / resize item** for precise numeric placement.
+Commands at a grid boundary or at the tile's minimum size are ignored and announced instead of moving or shrinking the tile.
+
+On touch screens, press and hold a tile before moving it; a quick tap does not start a drag. Resize handles accept direct touch input. During a pointer or touch move or resize, `Esc` cancels the interaction and restores the layout from before it started.
+
+<Alert type="tip">
 
 Here `MOD` refers to the modifier key, which is `Ctrl` on Windows and `Cmd` on macOS.
 
-:::
+</Alert>
 
-:::note
+<Alert type="note">
 
 The focus of your browser must be set on Homarr. If you click outside of Homarr, you might need to click once somewhere in Homarr to send all keystrokes again to Homarr.
 
 If the shortcuts are not working, ensure that you have selected the correct keyboard layout.
 
-:::
+</Alert>

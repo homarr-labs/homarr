@@ -9,7 +9,7 @@ import { useSettings } from "@homarr/settings";
 export interface UserProps {
   name: string | null;
   image: string | null;
-  email: string | null;
+  email?: string | null;
 }
 
 interface UserAvatarProps {

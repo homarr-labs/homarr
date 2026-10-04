@@ -26,7 +26,7 @@ export const ResourceAccordionItem = ({
 }: PropsWithChildren<ResourceAccordionItemProps>) => {
   return (
     <Accordion.Item value={value}>
-      <Accordion.Control icon={isTiny ? null : <Icon size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <Icon size="var(--mantine-font-size-md)" />}>
         <Group style={{ rowGap: "0" }} gap="xs">
           <Text size="xs">{title}</Text>
           <Badge variant="dot" color={badge.color} size="xs">

@@ -710,14 +710,7 @@
       "delete": "Usuń niestandardowy widget",
       "deleteConfirm": "Czy na pewno chcesz usunąć \"{name}\"? Tej akcji nie można cofnąć.",
       "export": "Eksportuj",
-      "addMapping": "Dodaj mapowanie",
-      "addColumn": "Dodaj kolumnę",
       "edit": "Edytuj",
-      "removeMapping": "Usuń mapowanie",
-      "removeColumn": "Usuń kolumnę",
-      "addItem": "Dodaj element",
-      "removeItem": "Usuń element",
-      "addBar": "Dodaj pasek",
       "duplicate": "Duplikuj",
       "copyAiPrompt": "Skopiuj prompt AI",
       "enable": "Włącz",
@@ -727,140 +720,7 @@
     "field": {
       "name": "Nazwa",
       "description": "Opis",
-      "iconUrl": "Adres URL ikony",
-      "url": "Adres URL",
-      "authType": "Typ uwierzytelniania",
-      "headerName": "Nazwa parametru Header/Query",
-      "method": "Metoda",
-      "requestBody": "Body Zapytania",
-      "displayType": "Typ Wyświetlania",
-      "jsonPath": "Ścieżka JSON",
-      "jsonPathHint": "Użyj składni JSONPath do wyodrębnienia wartości, np. $.data.temperature lub $.items[0].name",
-      "label": "Etykieta",
-      "unit": "Jednostka",
-      "mappings": "Mapowania",
-      "tablePath": "Ścieżka JSON tablicy",
-      "tablePathHint": "Ścieżka do tablicy w odpowiedzi, np. $.data.items",
-      "columns": "Kolumny",
-      "header": "Nagłówek",
-      "items": "Elementy",
-      "gridColumns": "Kolumny Siatki",
-      "cardStyle": "Styl Karty",
-      "bars": "Paski",
-      "valuePath": "Ścieżka JSON wartości",
-      "maxPath": "Ścieżka JSON wartości maksymalnej",
-      "showPercentage": "Pokaż Procent",
-      "barSize": "Rozmiar Paska",
-      "goodValues": "Dobre wartości (oddzielone przecinkami)",
-      "dotSize": "Rozmiar Kropki",
-      "valueSize": "Rozmair Wartości",
-      "labelPosition": "Pozycja Etykiety",
-      "kvLayout": "Układ",
-      "striped": "Paskowane rzędy",
-      "compact": "Tryb Kompaktowy",
-      "maxHeight": "Maksymalna Wysokość (px)",
-      "color": "Kolor",
-      "buttonLabel": "Etykieta Przycisku",
-      "buttonColor": "Kolor Przycisku",
-      "confirmText": "Tekst Potwierdzający",
-      "confirmTextHint": "Jeśli ustawione, okno dialogowe potwierdzenia pojawi się przed wykonaniem żądania",
-      "successMessage": "Wiadomość o powodzeniu",
-      "successMessageHint": "Wiadomość wyświetlana po pomyślnym wykonaniu",
-      "enabled": "Włączony",
-      "template": {
-        "label": "Szablon JSX",
-        "description": "Szablon Mantine JSX. Uzyskaj dostęp do pól odpowiedzi API poprzez powiązanie danych (np. data.name). Używaj tylko kopmonentów na białej liście. Zabronione: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura CPU",
-      "exampleLabelShort": "Temp CPU",
-      "exampleHeader": "Nazwa",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "niebieski"
-    },
-    "cardStyleOption": {
-      "filled": "Wypełnione",
-      "outline": "Obrys",
-      "subtle": "Subtelny"
-    },
-    "layoutOption": {
-      "list": "Lista",
-      "grid": "Siatka"
-    },
-    "sizeOption": {
-      "sm": "Mały",
-      "md": "Średni",
-      "lg": "Duży",
-      "xl": "Bardzo duży"
-    },
-    "labelPositionOption": {
-      "above": "Powyżej",
-      "below": "Poniżej"
-    },
-    "fieldset": {
-      "general": "Ogólne",
-      "connection": "Połączenie API",
-      "display": "Konfiguracja Wyświetlania"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Pokaż jedną wyodrębnioną wartość z etykietą i jednostką",
-      "keyValue": "Pokaż wiele oznaczonych wartości obok siebie",
-      "table": "Pokaż wiersze danych w formacie tabeli",
-      "statGrid": "Kolorowe kart statystyk w siatce - takie jak widgety Pi-Hole lub Speedtest",
-      "progressBars": "Paski postępu pokazujące użycie lub ukończenie — dla dysku, pamięci, kwot",
-      "statusIndicator": "Kolorowe kropki stanu pokazujące stan online/offline lub stan zdrowia",
-      "countGrid": "Kompaktowe numer + licznik etykiety w ścisłej siatce",
-      "raw": "Sformatowany JSON do debugowania",
-      "actionButton": "Przycisk, który wywołuje zapytanie po kliknięciu",
-      "customJsx": "Własny układ JSX za pomocą komponentów Mantine z białej listy z pełnym powiązaniem danych API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "None",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "Klucz API (Nagłówek)",
-      "apiKeyQuery": "Klucz API (Query)"
-    },
-    "displayType": {
-      "singleValue": "Pojedyncza Wartość",
-      "keyValue": "Klucz-Wartość",
-      "table": "Tabela",
-      "statGrid": "Siatka statystyk",
-      "progressBars": "Paski Postępu",
-      "statusIndicator": "Wskaźnik statusu",
-      "countGrid": "Count Grid",
-      "raw": "Nieprzetworzony JSON",
-      "actionButton": "Przycisk Akcji",
-      "customJsx": "Niestandardowy JSX"
-    },
-    "secret": {
-      "apiKey": "Klucz API / Token",
-      "username": "Nazwa użytkownika",
-      "password": "Hasło",
-      "savedPlaceholder": "•••••• (zapisane, pozostaw puste aby zachować)"
-    },
-    "preview": {
-      "title": "Podgląd",
-      "test": "Test",
-      "hint": "Kliknij test, aby wyświetlić podgląd odpowiedzi API w aktualnej konfiguracji.",
-      "rawResponse": "Nieprzetworzona odpowiedź JSON"
+      "iconUrl": "Adres URL ikony"
     },
     "notification": {
       "created": "Widget \"{name}\" został utworzony pomyślnie.",
@@ -868,9 +728,6 @@
       "deleted": "Widget \"{name}\" usunięty.",
       "imported": "Widget został zaimportowany pomyślnie.",
       "aiPromptCopied": "Prompt AI skopiowany do schowka",
-      "aiPromptDescription": "Skopiuj wstępnie zbudowany prompt, aby wkleić do dowolnego czatu AI (ChatGPT, Claude, Gemini...). Zawiera pełny schemat widgetu i odpowiedź API, aby AI mógł wygenerować gotową konfigurację JSON dla Ciebie.",
-      "aiPromptCopy": "Skopiuj do schowka",
-      "aiPromptNoResponse": "Wskazówka: Uruchom najpierw test, aby dołączyć odpowiedź API w prompcie w celu uzyskania lepszych wyników.",
       "aiPromptCopyError": "Nie udało się skopiować prompta do schowka. Twoja przeglądarka może nie obsługiwać tej funkcji.",
       "createError": "Nie udało się utworzyć widżetu. Sprawdź, czy endpoint API jest osiągalny.",
       "updateError": "Nie udało się zaktualizować widgetu. Zmiany nie zostały zapisane.",
@@ -883,14 +740,6 @@
       "previewError": "Nie udało się pobrać podglądu. Sprawdź URL i spróbuj ponownie.",
       "executed": "Akcja wykonana pomyślnie.",
       "executeError": "Akcja nie powiodła się: {error}"
-    },
-    "table": {
-      "name": "Nazwa",
-      "url": "Adres URL",
-      "display": "Widok"
-    },
-    "widget": {
-      "disabled": "Ten widget jest wyłączony"
     }
   },
   "integration": {
@@ -1344,10 +1193,6 @@
       "name": "Traefik",
       "description": "Chmurowy reverse proxy i load balancer"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Monitoruj, który z twoich kontenerów Docker ma dostępne aktualizacje obrazów"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "System zarządzania dokumentami do archiwizacji i organizacji zeskanowaych dokumnteów"
@@ -1359,6 +1204,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Aplikacja towarzysząca Sonarr i Radarr do zarządzania i pobierania napisów"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Monitoruj, który z twoich kontenerów Docker ma dostępne aktualizacje obrazów"
     }
   },
   "media": {
@@ -1441,9 +1290,11 @@
     "here": "tutaj",
     "iconPicker": {
       "label": "adres URL ikony",
+      "header": "Szukaj zdjęć {countIcons} według nazwy",
+      "headerLoading": "Szukaj obrazów według nazwy",
+      "noResults": "Brak ikon pasujących do \"{search}\".",
+      "error": "Nie udało się załadować ikon.",
       "description": "Przeszukaj bibliotekę, wklej adres URL obrazu lub wgraj plik.",
-      "header": "Wpisz nazwę lub obiekty do filtrowania ikon... Homarr przeszuka dla Ciebie ikony {countIcons}.",
-      "headerLoading": "Wpisz, aby wyszukać ikony…",
       "clear": "Wyczyść obraz",
       "uploadImage": "Prześlij obraz",
       "results": "Wyniki wyszukiwania obrazów",
@@ -1452,9 +1303,7 @@
       "otherImages": "Inne obrazy",
       "urlLoading": "Sprawdzanie obrazu…",
       "urlReady": "Obraz jest gotowy do użycia",
-      "urlError": "Nie można załadować tego obrazu. Sprawdź adres URL i spróbuj ponownie.",
-      "noResults": "Brak ikon pasujących do \"{search}\".",
-      "error": "Nie udało się załadować ikon."
+      "urlError": "Nie można załadować tego obrazu. Sprawdź adres URL i spróbuj ponownie."
     },
     "colorScheme": {
       "options": {
@@ -1807,38 +1656,6 @@
         }
       }
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Pokaż, ile oglądanych kontenerów ma dostępne aktualizacje.",
-      "title": "What's Up Docker",
-      "monitored": "Monitorowane",
-      "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} other {# dostępne aktualizacje}}",
-      "updateAvailable": "Dostępna aktualizacja",
-      "openReleaseNotes": "Otwórz notatki o wydaniu",
-      "option": {
-        "showTitle": {
-          "label": "Pokaż tytuł"
-        },
-        "showRing": {
-          "label": "Pokaż pierścień aktualizacji"
-        },
-        "layout": {
-          "label": "Układ",
-          "option": {
-            "horizontal": {
-              "label": "Poziomy"
-            },
-            "vertical": {
-              "label": "Pionowy"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Pokaż listę aktualizacji kontenera",
-          "description": "Wymienia każdy monitorowany kontener z dostępną aktualizacją obrazu"
-        }
-      }
-    },
     "dnsHoleSummary": {
       "name": "Podsumowanie DNS Hole",
       "description": "Wyświetla podsumowanie Twojego DNS Hole",
@@ -1892,7 +1709,7 @@
           }
         },
         "showToggleAllButtons": {
-          "label": "Pokaż  \"pokaż wszystkie przyciski\" przycisk"
+          "label": "Pokaż przyciski „przełącz wszystkie\""
         }
       },
       "error": {
@@ -2312,8 +2129,8 @@
       "dailyForecast": {
         "sunrise": "Wschód słońca",
         "sunset": "Zachód słońca",
-        "maxWindSpeed": "Maksymalna prędkość wiatru: {maxWindSpeed} km/h",
-        "maxWindGusts": "Maksymalne porywy wiatru: {maxWindGusts} km/h",
+        "maxWindSpeed": "Maksymalna prędkość wiatru: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maksymalne porywy wiatru: {maxWindGusts} {unit}",
         "humidity": "Wilgotność: {humidity}%"
       },
       "kind": {
@@ -2348,7 +2165,7 @@
       }
     },
     "healthMonitoring": {
-      "name": "Monitorowanie zdrowia  systemu",
+      "name": "Monitorowanie zdrowia systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
       "tab": {
         "system": "System",
@@ -2391,11 +2208,11 @@
       "popover": {
         "information": "Informacja",
         "processor": "Procesor: {cpuModelName}",
-        "memory": "Pamięć: {memory}GiB",
-        "memoryAvailable": "Dostępna pamięć {memoryAvailable} GB ({percent}%)",
+        "memory": "Pamięć: {memory}",
+        "memoryAvailable": "Dostępna pamięć {memoryAvailable} ({percent}%)",
         "version": "Wersja: {version}",
         "uptime": "Czas pracy: {months} mies., {days} dni, {hours} godzin, {minutes} minut",
-        "loadAverage": "Średnie obciążenie",
+        "loadAverage": "Średnie obciążenie:",
         "minute": "1 minuta",
         "minutes": "{count} minut",
         "used": "Używane",
@@ -2719,7 +2536,7 @@
         "query": "Miasto / kod pocztowy",
         "latitude": "Szerokość geograficzna (Latitude)",
         "longitude": "Długość geograficzna (Longitude)",
-        "disabledTooltip": "Podaj miasto lub kod pocztowy.",
+        "disabledTooltip": "Podaj miasto lub kod pocztowy",
         "unknownLocation": "Nieznana lokalizacja",
         "search": "Szukaj",
         "table": {
@@ -3137,7 +2954,7 @@
           "label": "Pokaż różne wpisy oznaczone jako ukończone"
         },
         "activeTorrentThreshold": {
-          "label": "Ukryj ukończony torrent poniżej tego progu (w kiB/s)"
+          "label": "Ukryj ukończony torrent poniżej tego progu"
         },
         "categoryFilter": {
           "label": "Kategorie/etykiety do filtrowania"
@@ -3150,7 +2967,7 @@
         },
         "limitPerIntegration": {
           "label": "Limit elementów na integrację",
-          "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie."
+          "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie"
         },
         "columnOrder": {
           "label": "Kolejność kolumn"
@@ -3496,11 +3313,11 @@
         },
         "staleReleaseWithin": {
           "label": "Nieaktualne wydanie w ciągu",
-          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań"
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań."
         },
         "showOnlyHighlighted": {
           "label": "Pokaż tylko wyróżnione",
-          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”"
+          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”."
         },
         "showDetails": {
           "label": "Pokaż szczegóły"
@@ -3580,7 +3397,7 @@
           "invalid": "Nieprawidłowa definicja repozytorium, sprawdź wartości",
           "noProvider": {
             "label": "Brak dostawcy",
-            "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
+            "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów"
           },
           "tokens": {
             "label": "Tokeny dostawcy",
@@ -3609,7 +3426,7 @@
         "messages": {
           "invalidIdentifier": "Nieprawidłowy identyfikator",
           "noMatchingVersion": "Nie znaleziono pasującej wersji",
-          "noReleasesFound": "Nie znaleziono wydań!",
+          "noReleasesFound": "Nie znaleziono wydań",
           "noProviderSelected": "Nie wybrano dostawcy",
           "noProviderResponse": "Brak odpowiedzi od dostawcy",
           "unexpected": "Nieoczekiwany błąd dostawcy"
@@ -3625,10 +3442,10 @@
       },
       "error": {
         "integrationsDisconnected": "Brak dostępnych danych, wszystkie integracje rozłączone",
-        "unknownContentOption": "Nieznana opcja zawartości dla widżetu podsumowania kontrolera sieci:"
+        "unknownContentOption": "Nieznana opcja zawartości dla widżetu podsumowania kontrolera sieci: "
       },
       "name": "Podsumowanie kontrolera sieci",
-      "description": "Wyświetla podsumowanie kontrolera sieci (np. UniFi Controller)."
+      "description": "Wyświetla podsumowanie kontrolera sieci (np. UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
@@ -3662,7 +3479,7 @@
       },
       "error": {
         "integrationsDisconnected": "Brak dostępnych danych, wszystkie integracje są rozłączone",
-        "unknownContentOption": "Nieznana opcja zawartości dla widżetu statusu sieci:"
+        "unknownContentOption": "Nieznana opcja zawartości dla widżetu statusu sieci: "
       },
       "name": "Stan sieci",
       "description": "Wyświetl podłączone urządzenia w sieci"
@@ -3713,7 +3530,7 @@
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
-      "description": "Wyświetla wyniki testów prędkości z Twojej instancji Speedtest Tracker",
+      "description": "Wyświetla wyniki testów prędkości z Twojej instancji Speedtest Tracker.",
       "option": {
         "showLatestResult": {
           "label": "Pokaż ostatni wynik"
@@ -3745,7 +3562,7 @@
       "unhealthy": "Zły",
       "ok": "Ok",
       "fail": "Błąd",
-      "noSectionsEnabled": "Włącz co najmniej jedną sekcję w opcjach widgetu",
+      "noSectionsEnabled": "Włącz co najmniej jedną sekcję w opcjach widgetu.",
       "error": {
         "internalServerError": "Nie udało się pobrać danych testu prędkości"
       }
@@ -3927,7 +3744,7 @@
               "label": "Procentowo (np. 76%)"
             },
             "absolute": {
-              "label": "Wartości bezwzględne (np. 800 GB / 1 TB)"
+              "label": "Wartości bezwzględne"
             },
             "free": {
               "label": "Procent wolnego miejsca (np. 24% wolne)"
@@ -3960,12 +3777,7 @@
         }
       },
       "noDefinition": "Nie wybrano definicji",
-      "definitionNotFound": "Nie znaleziono definicji widgetu. Być może została usunięta.",
-      "noDisplayOutput": "No display output",
-      "executeConfirm": "Czy jesteś pewien, że chcesz wykonać to zadanie?",
-      "executing": "Wykonywanie...",
-      "executeSuccess": "Akcja wykonana pomyślnie",
-      "executeFailed": "Akcja nie powiodła się. Sprawdź konfigurację widgetu."
+      "definitionNotFound": "Nie znaleziono definicji widgetu. Być może została usunięta."
     },
     "beszelSystemTable": {
       "name": "Systemy Beszel (Tabela)",
@@ -4217,6 +4029,38 @@
           "subtitle": "Ruch sieciowy kontenerów Docker"
         }
       }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Pokaż, ile oglądanych kontenerów ma dostępne aktualizacje.",
+      "title": "What's Up Docker",
+      "monitored": "Monitorowane",
+      "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} other {# dostępne aktualizacje}}",
+      "updateAvailable": "Dostępna aktualizacja",
+      "openReleaseNotes": "Otwórz notatki o wydaniu",
+      "option": {
+        "showTitle": {
+          "label": "Pokaż tytuł"
+        },
+        "showRing": {
+          "label": "Pokaż pierścień aktualizacji"
+        },
+        "layout": {
+          "label": "Układ",
+          "option": {
+            "horizontal": {
+              "label": "Poziomy"
+            },
+            "vertical": {
+              "label": "Pionowy"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Pokaż listę aktualizacji kontenera",
+          "description": "Wymienia każdy monitorowany kontener z dostępną aktualizacją obrazu"
+        }
+      }
     }
   },
   "widgetPreview": {
@@ -4232,7 +4076,7 @@
     "action": {
       "duplicate": {
         "title": "Duplikuj tablicę",
-        "message": "Spowoduje to zduplikowanie tablicy {name} wraz ze wszystkimi jej treściami. Jeśli widżety odwołują się do integracji, których nie możesz używać, zostaną usunięte",
+        "message": "Spowoduje to zduplikowanie tablicy {name} wraz ze wszystkimi jej treściami. Jeśli widżety odwołują się do integracji, których nie możesz używać, zostaną usunięte.",
         "notification": {
           "success": {
             "title": "Tablica została zduplikowana",
@@ -4269,7 +4113,7 @@
           },
           "error": {
             "title": "Import nie powiódł się",
-            "message": "Nie udało się zaimportować tablicy. Sprawdź logi, aby uzyskać więcej informacji."
+            "message": "Nie udało się zaimportować tablicy. Sprawdź logi, aby uzyskać więcej informacji"
           }
         },
         "form": {
@@ -4281,11 +4125,11 @@
             "label": "Aplikacje",
             "avoidDuplicates": {
               "label": "Unikaj duplikatów",
-              "description": "Ignoruje aplikacje, dla których już istnieje aplikacja z tym samym adresem href."
+              "description": "Ignoruje aplikacje, dla których już istnieje aplikacja z tym samym adresem href"
             },
             "onlyImportApps": {
               "label": "Import tylko aplikacje",
-              "description": "Dodaje tylko aplikacje, tablica musi zostać odtworzona ręcznie."
+              "description": "Dodaje tylko aplikacje, tablica musi zostać odtworzona ręcznie"
             }
           },
           "name": {
@@ -4416,14 +4260,14 @@
       },
       "disableStatus": {
         "label": "Wyłącz status aplikacji",
-        "description": "Wyłącza sprawdzanie statusu wszystkich aplikacji na tej tablicy."
+        "description": "Wyłącza sprawdzanie statusu wszystkich aplikacji na tej tablicy"
       },
       "columnCount": {
         "label": "Liczba kolumn"
       },
       "itemRadius": {
         "label": "Promień elementu",
-        "description": "Zmienia zaokrąglenie kafelków na Twojej tablicy.",
+        "description": "Zmienia zaokrąglenie kafelków na Twojej tablicy",
         "option": {
           "xs": "Bardzo mały",
           "sm": "Mały",
@@ -4537,11 +4381,11 @@
         "title": "Witamy w Homarr",
         "description": "Elegancki, nowoczesny pulpit nawigacyjny, który daje Ci dostęp do wszystkich Twoich aplikacji i usług w zasięgu ręki.",
         "link": "Utwórz swoją pierwszą tablicę",
-        "notice": "Aby ta strona zniknęła, utwórz tablicę i ustaw ją jako tablicę główną."
+        "notice": "Aby ta strona zniknęła, utwórz tablicę i ustaw ją jako tablicę główną"
       },
       "notFound": {
         "title": "Tablica nie znaleziona",
-        "description": "Wskazana tablica nie została znaleziona lub nie masz do niej dostępu.”",
+        "description": "Wskazana tablica nie została znaleziona lub nie masz do niej dostępu.”.",
         "link": "Wyświetl wszystkie tablice",
         "notice": "Sprawdź link lub skontaktuj się z administratorem, jeśli uważasz, że powinien być dostępny"
       },
@@ -4550,7 +4394,7 @@
         "admin": {
           "description": "Nie ustawiłeś jeszcze tablicy głównej dla serwera.",
           "link": "Skonfiguruj tablicę główną dla całego serwera",
-          "notice": "Aby ta strona zniknęła dla wszystkich użytkowników, ustaw tablicę główną dla serwera\n\n"
+          "notice": "Aby ta strona zniknęła dla wszystkich użytkowników, ustaw tablicę główną dla serwera"
         },
         "user": {
           "description": "Nie ustawiłeś jeszcze tablicy głównej.",
@@ -4560,7 +4404,7 @@
         "anonymous": {
           "description": "Administrator serwera nie ustawił jeszcze tablicy głównej.",
           "link": "Pokaż tablice publiczne",
-          "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera."
+          "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera"
         }
       }
     }
@@ -4588,7 +4432,7 @@
     },
     "notFound": {
       "title": "Nie znaleziono",
-      "text": "Nie znaleziono żądanego zasobu."
+      "text": "Nie znaleziono żądanego zasobu"
     },
     "error": {
       "title": "Nie można załadować tej strony",
@@ -4597,6 +4441,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Strona główna",
         "boards": "Tablice",
         "apps": "Aplikacje",
@@ -4719,7 +4564,7 @@
       },
       "user": {
         "back": "Powrót do użytkowników",
-        "fieldsDisabledExternalProvider": "Niektóre pola są zablokowane, ponieważ są zarządzane przez zewnętrznego dostawcę uwierzytelniania",
+        "fieldsDisabledExternalProvider": "Niektóre pola są zablokowane, ponieważ są zarządzane przez zewnętrznego dostawcę uwierzytelniania.",
         "setting": {
           "general": {
             "title": "Ogólne",
@@ -5224,7 +5069,7 @@
           "restore": {
             "dropzone": {
               "title": "Upuść tutaj kopię zapasową ZIP",
-              "description": "Akceptuje pliki .zip z kopii zapasowej Homarr SQLite (maksymalnie 256 MB)"
+              "description": "Akceptuje pliki .zip z kopii zapasowej Homarr SQLite (maksymalnie {maxSize})"
             },
             "analyzing": "Analizowanie kopii zapasowej...",
             "changeFile": "Zmień plik",
@@ -5740,6 +5585,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Zarządzaj",
       "boards": {
         "label": "Tablice"

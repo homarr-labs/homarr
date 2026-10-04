@@ -1,50 +1,55 @@
 ---
-title: 'Stock Price'
-description: 'Displays the current stock price of a company.'
+title: "Stock Price"
+description: "Displays the current stock price of a company."
 hide_title: true
 ---
 
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { stockPriceWidget } from '.';
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { stockPriceWidget } from ".";
 
-<WidgetHeader
-  widget={stockPriceWidget}
-  categories={['Finance', "Market"]}
-/>
+<WidgetHeader widget={stockPriceWidget} categories={["Finance", "Market"]} />
 
 Using the Stocks widget, you can show the current stock prices of your favorite companies on your dashboard.
+The widget prioritizes the symbol, current price, and trend. Company name, change, time range, and a taller chart appear progressively when both widget dimensions can support them.
+
+In advanced view, the widget always shows the returned symbol and company name, configured range and interval, current and previous close, absolute and percentage change, range minimum and maximum, and the full price-history chart. These values use the same configured Yahoo Finance query as the compact widget; advanced view does not change the symbol, range, or interval.
 
 ### Screenshots
 
-import apple from './img/apple.png';
-import google from './img/google.png';
-import ethereum from './img/ethereum.png';
-import nvidia from './img/nvidia.png';
+import apple from "./img/apple.png";
+import google from "./img/google.png";
+import ethereum from "./img/ethereum.png";
+import nvidia from "./img/nvidia.png";
 
 <div className="flex gap-1">
   <div className="flex flex-col gap-1">
     <div className="flex gap-1">
-      <img src={apple} alt="stock-price apple" width={128} height={128} />
-      <img src={google} alt="stock-price google" width={128} height={128} />
+      <img src={apple.src} alt="stock-price apple" width={128} height={128} />
+      <img src={google.src} alt="stock-price google" width={128} height={128} />
     </div>
-    <img src={ethereum} alt="stock-price ethereum" width={128 * 2 + 4} height={128 + 2} />
+    <img src={ethereum.src} alt="stock-price ethereum" width={128 * 2 + 4} height={128 + 2} />
   </div>
-  <img src={nvidia} alt="stock-price nvidia" width={128 * 2 + 2} height={128 * 2 + 4} />
+  <img src={nvidia.src} alt="stock-price nvidia" width={128 * 2 + 2} height={128 * 2 + 4} />
 </div>
-  
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={stockPriceWidget.configuration} />
 
 ### Examples
+
 Here's a small collection of examples, that you can use for testing or actual use (in no particular order):
+
 - AAPL
 - GOOGL
 - AMZN

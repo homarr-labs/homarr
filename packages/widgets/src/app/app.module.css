@@ -1,4 +1,31 @@
+.appText {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.appText > * {
+  flex-shrink: 0;
+}
+
+.appText[data-column] {
+  width: 100%;
+}
+
+.appText[data-column] .appTitle {
+  text-align: center;
+}
+
+.appText[data-column] .appTitle[data-compact] {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  text-align: start;
+}
+
 .appIcon {
+  /* Keep labels and descriptions from consuming all of a short tile. */
+  min-height: 40%;
   max-height: 100%;
   max-width: 100%;
   overflow: auto;

@@ -29,12 +29,12 @@ vi.mock("../../integration/integration-test-connection", () => ({
 }));
 
 describe("all should return all integrations", () => {
-  test("with any session should return all integrations", async () => {
+  test("with integration full access should return all integrations", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
-      session: defaultSessionWithPermissions(),
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     await db.insert(integrations).values([
@@ -56,6 +56,172 @@ describe("all should return all integrations", () => {
     expect(result.length).toBe(2);
     expect(result[0]!.kind).toBe("plex");
     expect(result[1]!.kind).toBe("homeAssistant");
+    expect(result.every(({ permissions }) => permissions.hasFullAccess && permissions.hasUseAccess)).toBe(true);
+  });
+
+  test("with integration full access and no per-integration rows should return all integrations with full access", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-full-all"]),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Home assistant",
+        kind: "homeAssistant",
+        url: "http://homeassist.local",
+      },
+      {
+        id: "2",
+        name: "Home plex server",
+        kind: "plex",
+        url: "http://plex.local",
+      },
+    ]);
+
+    const result = await caller.all();
+    expect(result).toHaveLength(2);
+    for (const integration of result) {
+      expect(integration.permissions.hasFullAccess).toBe(true);
+    }
+  });
+
+  test("with integration use access should return all integrations", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-use-all"]),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Home assistant",
+        kind: "homeAssistant",
+        url: "http://homeassist.local",
+      },
+      {
+        id: "2",
+        name: "Home plex server",
+        kind: "plex",
+        url: "http://plex.local",
+      },
+    ]);
+
+    const result = await caller.all();
+    expect(result.length).toBe(2);
+  });
+
+  test("without global integration access should only return integrations with use access", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Home assistant",
+        kind: "homeAssistant",
+        url: "http://homeassist.local",
+      },
+      {
+        id: "2",
+        name: "Home plex server",
+        kind: "plex",
+        url: "http://plex.local",
+      },
+    ]);
+    await db.insert(users).values({ id: defaultUserId });
+    await db.insert(integrationUserPermissions).values({
+      integrationId: "1",
+      userId: defaultUserId,
+      permission: "use",
+    });
+
+    const result = await caller.all();
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
+    expect(result[0]!.permissions.hasUseAccess).toBe(true);
+  });
+
+  test("with a per-integration interact grant should return the integration with use access", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Home assistant",
+        kind: "homeAssistant",
+        url: "http://homeassist.local",
+      },
+      {
+        id: "2",
+        name: "Home plex server",
+        kind: "plex",
+        url: "http://plex.local",
+      },
+    ]);
+    await db.insert(users).values({ id: defaultUserId });
+    await db.insert(integrationUserPermissions).values({
+      integrationId: "1",
+      userId: defaultUserId,
+      permission: "interact",
+    });
+
+    const result = await caller.all();
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
+    expect(result[0]!.permissions.hasUseAccess).toBe(true);
+  });
+});
+
+describe("search should return accessible integrations", () => {
+  test("without global integration access should only return integrations with use access as plain rows", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(),
+    });
+
+    await db.insert(integrations).values([
+      {
+        id: "1",
+        name: "Home assistant",
+        kind: "homeAssistant",
+        url: "http://homeassist.local",
+      },
+      {
+        id: "2",
+        name: "Home plex server",
+        kind: "plex",
+        url: "http://plex.local",
+      },
+    ]);
+    await db.insert(users).values({ id: defaultUserId });
+    await db.insert(integrationUserPermissions).values({
+      integrationId: "1",
+      userId: defaultUserId,
+      permission: "use",
+    });
+
+    const result = await caller.search({ query: "Home" });
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
+    expect(result[0]).not.toHaveProperty("userPermissions");
+    expect(result[0]).not.toHaveProperty("groupPermissions");
   });
 });
 
@@ -312,7 +478,7 @@ describe("create should create a new integration", () => {
     const fakeNow = new Date("2023-07-01T00:00:00Z");
     vi.useFakeTimers();
     vi.setSystemTime(fakeNow);
-    await caller.create(input);
+    const result = await caller.create(input);
     vi.useRealTimers();
 
     const dbIntegration = await db.query.integrations.findFirst();
@@ -327,6 +493,15 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
     expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
+    expect(result).toEqual({
+      integration: {
+        id: dbIntegration!.id,
+        name: input.name,
+        kind: input.kind,
+        url: input.url,
+      },
+      appId: null,
+    });
   });
 
   test("with create integration access should not create a search engine for media request search integrations", async () => {
@@ -347,7 +522,7 @@ describe("create should create a new integration", () => {
     const fakeNow = new Date("2023-07-01T00:00:00Z");
     vi.useFakeTimers();
     vi.setSystemTime(fakeNow);
-    await caller.create(input);
+    const result = await caller.create(input);
     vi.useRealTimers();
 
     const dbIntegration = await db.query.integrations.findFirst();
@@ -363,6 +538,7 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
     expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
+    expect(result).toMatchObject({ appId: dbIntegration!.appId, integration: { id: dbIntegration!.id } });
 
     expect(dbSearchEngine).toBeUndefined();
   });

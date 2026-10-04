@@ -1,0 +1,35 @@
+---
+title: "Air Quality & UV"
+description: "Displays air quality, ultraviolet index, pollutants and pollen for a location."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { airQualityWidget } from ".";
+
+<WidgetHeader widget={airQualityWidget} categories={["Health", "Weather"]} />
+
+The Air Quality & UV widget shows current and forecast AQI, UV, pollutant, and pollen data for a location. Choose the
+European or US AQI scale; automatic mode uses the US scale for US locales and the European scale elsewhere.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={airQualityWidget.configuration} />
+
+### Data source
+
+Data comes from the Open-Meteo Air Quality API and refreshes every 15 minutes. A recent successful response can remain
+visible for up to 24 hours when the API is unavailable.
+
+Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests. If you need to allowlist the
+service, use `https://air-quality-api.open-meteo.com`.

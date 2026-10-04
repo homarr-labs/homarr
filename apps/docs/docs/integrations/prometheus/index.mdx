@@ -1,0 +1,25 @@
+---
+title: "Prometheus"
+description: "An open-source systems monitoring and alerting toolkit."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { prometheusIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={prometheusIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Prometheus' `/api/v1/targets` endpoint and displays active targets, split into up and down counts. Targets with another health value remain included in the total.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Use the Prometheus server URL. If the server is protected with HTTP Basic authentication, configure both the integration username and password; Homarr sends them with the targets request. The provider uses this fixed endpoint and does not execute arbitrary PromQL queries.

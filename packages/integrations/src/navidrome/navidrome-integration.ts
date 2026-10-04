@@ -6,6 +6,7 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { NavidromeDashboardData, NavidromeNowPlayingEntry, SubsonicResponseBody } from "./navidrome-types";
@@ -25,6 +26,15 @@ const asArray = <TValue>(value: TValue | TValue[] | undefined): TValue[] =>
   [value].flat().filter((item): item is TValue => item !== undefined);
 
 export class NavidromeIntegration extends Integration implements IMediaServerIntegration {
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const query = this.getAuthParams();
+
+    return {
+      headers: {},
+      query,
+    };
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const url = this.url("/rest/ping.view", this.getAuthParams());
     const response = await input.fetchAsync(url);

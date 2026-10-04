@@ -5,7 +5,7 @@ import { clientApi } from "@homarr/api/client";
 import { AppForm } from "@homarr/forms-collection";
 import { createModal, modalSizeForm } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 interface QuickAddAppModalProps {
@@ -13,13 +13,15 @@ interface QuickAddAppModalProps {
 }
 
 export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, innerProps }) => {
-  const tScoped = useScopedI18n("app.page.create.notification");
-  const t = useI18n();
+  const tScoped = useI18n("app.page.create.notification");
+  const tCommon = useI18n("common");
+  const tBoard = useI18n("board");
+  const utils = clientApi.useUtils();
 
   const { mutate, isPending } = clientApi.app.create.useMutation({
     onError: () => {
       showErrorNotification({
-        title: tScoped("error.title"),
+        title: tCommon("notification.create.error"),
         message: tScoped("error.message"),
       });
     },
@@ -28,8 +30,9 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
   const handleSubmit = (values: z.infer<typeof appManageSchema>) => {
     mutate(values, {
       onSuccess(app) {
+        void utils.app.invalidate();
         showSuccessNotification({
-          title: tScoped("success.title"),
+          title: tCommon("notification.create.success"),
           message: tScoped("success.message"),
         });
 
@@ -42,7 +45,7 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
   return (
     <AppForm
       buttonLabels={{
-        submit: t("board.action.quickCreateApp.modal.createAndUse"),
+        submit: tBoard("action.quickCreateApp.modal.createAndUse"),
         submitAndCreateAnother: undefined,
       }}
       showBackToOverview={false}

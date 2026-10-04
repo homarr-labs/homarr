@@ -1027,7 +1027,8 @@
       "analytics": "分析",
       "vpn": "VPN",
       "mediaLibrary": "媒体库",
-      "uptimeMonitoring": "运行时间监控"
+      "uptimeMonitoring": "运行时间监控",
+      "systemMonitoring": "系统监控"
     },
     "testConnection": {
       "action": {
@@ -1344,10 +1345,6 @@
       "name": "Traefik",
       "description": "云原生反向代理和负载均衡器"
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "监控您哪些 Docker 容器有可用的镜像更新"
-    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "用于归档和整理扫描文档的文档管理系统"
@@ -1359,6 +1356,14 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Sonarr 和 Radarr 的配套应用，用于管理和下载字幕"
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "监控本地 llama.cpp llama-server：健康状态、模型与生成指标"
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "监控您哪些 Docker 容器有可用的镜像更新"
     }
   },
   "media": {
@@ -1441,20 +1446,20 @@
     "here": "这里",
     "iconPicker": {
       "label": "图标 URL",
+      "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标",
+      "headerLoading": "按名称搜索图像",
+      "noResults": "没有与“{search}”匹配的图标。",
+      "error": "无法加载图标。",
       "description": "搜索库，粘贴图片URL，或上传文件。",
-      "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。",
-      "headerLoading": "输入以搜索图标…",
       "clear": "清除图像",
       "uploadImage": "上传图片",
       "results": "图像搜索结果",
       "localImages": "你的映像",
       "svgIcons": "SVG 图标",
       "otherImages": "其他映像",
-      "urlLoading": "",
+      "urlLoading": "正在检查图片…",
       "urlReady": "图像已准备好使用",
-      "urlError": "无法加载此图像。请检查URL，然后重试。",
-      "noResults": "没有与“{search}”匹配的图标。",
-      "error": "无法加载图标。"
+      "urlError": "无法加载此图像。请检查URL，然后重试。"
     },
     "colorScheme": {
       "options": {
@@ -1804,38 +1809,6 @@
       "option": {
         "showBroadcastMessage": {
           "label": "显示广播消息"
-        }
-      }
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "显示有多少个已监控的容器有可用更新。",
-      "title": "What's Up Docker",
-      "monitored": "已监控",
-      "updatesAvailable": "{count, plural, one {# 个更新可用} other {# 个更新可用}}",
-      "updateAvailable": "有可用更新",
-      "openReleaseNotes": "打开发布说明",
-      "option": {
-        "showTitle": {
-          "label": "显示标题"
-        },
-        "showRing": {
-          "label": "显示更新进度环"
-        },
-        "layout": {
-          "label": "布局",
-          "option": {
-            "horizontal": {
-              "label": "水平"
-            },
-            "vertical": {
-              "label": "垂直"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "显示容器更新列表",
-          "description": "列出每个有镜像更新可用的已监控容器"
         }
       }
     },
@@ -2391,8 +2364,8 @@
       "popover": {
         "information": "信息",
         "processor": "处理器：{cpuModelName}",
-        "memory": "内存：{memory} GiB",
-        "memoryAvailable": "可用：{memoryAvailable}GiB ({percent}%)",
+        "memory": "内存：{memory}",
+        "memoryAvailable": "可用：{memoryAvailable} ({percent}%)",
         "version": "版本：{version}",
         "uptime": "运行时间：{months} 月，{days} 天，{hours} 时，{minutes} 分",
         "loadAverage": "平均负载：",
@@ -3137,7 +3110,7 @@
           "label": "显示标记为已完成的杂项"
         },
         "activeTorrentThreshold": {
-          "label": "隐藏在此阈值下已完成的 Torrent (kiB/s)"
+          "label": "隐藏在此阈值下已完成的 Torrent"
         },
         "categoryFilter": {
           "label": "要过滤的分类/标签"
@@ -3927,7 +3900,7 @@
               "label": "百分比 (例如76%)"
             },
             "absolute": {
-              "label": "绝对值 (例如，800GB / 1TB)"
+              "label": "绝对值"
             },
             "free": {
               "label": "空闲空间百分比(例如24%空闲)"
@@ -4215,6 +4188,113 @@
         "dockerNetwork": {
           "title": "Docker 网络 I/O",
           "subtitle": "Docker 容器的网络流量"
+        }
+      }
+    },
+    "llamacpp": {
+      "name": "llama.cpp",
+      "description": "显示本地 llama.cpp 服务器的健康状态、加载模型和生成速度。",
+      "title": "llama.cpp",
+      "status": {
+        "unhealthy": "异常 ({status})"
+      },
+      "idle": "空闲",
+      "speedTooltip": {
+        "current": "当前生成速度",
+        "average": "启动以来的平均生成速度",
+        "request": "本次请求开始以来的平均速度"
+      },
+      "busy": "{count, plural, other {# 个请求处理中}}",
+      "modelInfo": {
+        "context": "上下文",
+        "size": "文件大小",
+        "parameters": "参数量",
+        "model": "模型",
+        "quantization": "量化"
+      },
+      "stats": {
+        "tokensProcessed": "已处理 Token",
+        "contextUsage": "上下文 / KV 占用",
+        "cacheHitRate": "提示缓存命中率",
+        "tokensGenerated": "已生成 Token"
+      },
+      "error": {
+        "unreachable": "无法连接 llama-server"
+      },
+      "unit": {
+        "speed": "{value} t/s",
+        "parameters": "{value}B",
+        "none": "—",
+        "speedShort": "t/s"
+      },
+      "option": {
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showModelInfo": {
+          "label": "显示模型信息"
+        },
+        "showContextUsage": {
+          "label": "显示上下文占用"
+        },
+        "showCacheHitRate": {
+          "label": "显示缓存命中率"
+        },
+        "showSpeedStats": {
+          "label": "显示速度统计"
+        },
+        "showRequests": {
+          "label": "显示请求负载"
+        },
+        "showTokenStats": {
+          "label": "显示 Token 总量"
+        },
+        "showSpeculative": {
+          "label": "显示投机解码"
+        }
+      },
+      "advanced": {
+        "promptSpeed": "Prompt 速度",
+        "avgSpeed": "平均生成速度",
+        "requests": "请求数",
+        "deferred": "排队中",
+        "slots": "Slot 占用 {processing}/{total}",
+        "speculative": "投机解码",
+        "avgPrompt": "平均 Prompt 速度",
+        "specDrafts": "投机草稿数",
+        "specAccepted": "投机接受 Token",
+        "specDraftTokens": "投机草稿 Token"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "显示有多少个已监控的容器有可用更新。",
+      "title": "What's Up Docker",
+      "monitored": "已监控",
+      "updatesAvailable": "{count, plural, one {# 个更新可用} other {# 个更新可用}}",
+      "updateAvailable": "有可用更新",
+      "openReleaseNotes": "打开发布说明",
+      "option": {
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showRing": {
+          "label": "显示更新进度环"
+        },
+        "layout": {
+          "label": "布局",
+          "option": {
+            "horizontal": {
+              "label": "水平"
+            },
+            "vertical": {
+              "label": "垂直"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "显示容器更新列表",
+          "description": "列出每个有镜像更新可用的已监控容器"
         }
       }
     }
@@ -5224,7 +5304,7 @@
           "restore": {
             "dropzone": {
               "title": "将备份 ZIP 文件拖放到此处",
-              "description": "仅接受来自 Homarr SQLite 备份的 .zip 文件（最大 256 MB）"
+              "description": "接受 Homarr SQLite 备份的 .zip 文件（最大 {maxSize}）"
             },
             "analyzing": "正在分析备份……",
             "changeFile": "更改文件",

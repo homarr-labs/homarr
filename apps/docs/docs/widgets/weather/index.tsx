@@ -28,7 +28,23 @@ export const weatherWidget: WidgetDefinition = {
         values: {
           type: "boolean",
         },
-        defaultValue: "yes",
+        defaultValue: "no",
+      },
+      {
+        name: "Show humidity",
+        description: "Display humidity in current conditions, hourly details, and daily forecasts",
+        values: {
+          type: "boolean",
+        },
+        defaultValue: "no",
+      },
+      {
+        name: "Animate weather icons",
+        description: "Animate condition icons unless the operating system requests reduced motion",
+        values: {
+          type: "boolean",
+        },
+        defaultValue: "no",
       },
       {
         name: "Use imperial speed units",
@@ -73,7 +89,7 @@ export const weatherWidget: WidgetDefinition = {
         name: "Amount of forecast days",
         description: "Number of days to show in the forecast",
         values: "1-7",
-        defaultValue: "5",
+        defaultValue: "3",
       },
     ],
   },

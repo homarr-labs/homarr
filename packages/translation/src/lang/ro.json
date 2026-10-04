@@ -51,7 +51,7 @@
           }
         },
         "tokenModal": {
-          "title": "Introdu token-ul de import",
+          "title": "Introdu codul de import",
           "field": {
             "token": {
               "label": "Token-ul",
@@ -540,7 +540,7 @@
         "confirm": "Sunteţi sigur că doriţi să ştergeţi grupul {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupul {name} a fost șters cu succes"
           },
           "error": {
             "message": "Imposibil de șters grupul {name}"
@@ -686,211 +686,6 @@
         "action": "Deschide crearea aplicației"
       },
       "add": "Adăugați o aplicație"
-    }
-  },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Widget-uri personalizate",
-        "noResults": "Nici un widget personalizat încă. Creați primul!",
-        "loading": "Încărcare..."
-      },
-      "create": {
-        "title": "Creați widget personalizat",
-        "subtitle": "Definiți un URL API, autentificare și cum să afișați datele de răspuns."
-      },
-      "edit": {
-        "title": "Editare widget personalizat"
-      }
-    },
-    "action": {
-      "create": "Crează",
-      "import": "Importă",
-      "save": "Salvează",
-      "delete": "Ștergere widget personalizat",
-      "deleteConfirm": "Sunteţi sigur că doriţi să ştergeţi \"{name}\"? Această acţiune nu poate fi anulată.",
-      "export": "Exportă",
-      "addMapping": "Adaugă Mapare",
-      "addColumn": "Adaugă Coloană",
-      "edit": "Editare",
-      "removeMapping": "Elimină maparea",
-      "removeColumn": "Elimină coloana",
-      "addItem": "Adaugă element",
-      "removeItem": "Elimină element",
-      "addBar": "Adaugă Bară",
-      "duplicate": "Duplicate",
-      "copyAiPrompt": "Copiază solicitarea AI",
-      "enable": "Activare",
-      "disable": "Dezactivează",
-      "menu": "Acțiuni"
-    },
-    "field": {
-      "name": "Nume",
-      "description": "Descriere",
-      "iconUrl": "Iconiță URL",
-      "url": "URL",
-      "authType": "Tip Auth",
-      "headerName": "Nume parametru antet/interogare",
-      "method": "Metodă",
-      "requestBody": "Cere corp",
-      "displayType": "Tip de afișare",
-      "jsonPath": "Cale JSON",
-      "jsonPathHint": "Folosește sintaxa JSONPath pentru a extrage valori, ex. $.data.temperature sau $.items[0].name",
-      "label": "Etichetă",
-      "unit": "Unitate",
-      "mappings": "Mapări",
-      "tablePath": "Array Calea JSON",
-      "tablePathHint": "Calea către array în răspuns, de ex. $.data.items",
-      "columns": "Coloane",
-      "header": "Antet",
-      "items": "Articole",
-      "gridColumns": "Coloane grilă",
-      "cardStyle": "Stilul cardului",
-      "bars": "Bare",
-      "valuePath": "Calea JSON Valoare",
-      "maxPath": "Valoarea maximă a căii JSON",
-      "showPercentage": "Arată procentul",
-      "barSize": "Dimensiune bară",
-      "goodValues": "Valori bune (separate prin virgulă)",
-      "dotSize": "Dot Size",
-      "valueSize": "Dimensiune Valoare",
-      "labelPosition": "Poziția Etichetei",
-      "kvLayout": "Aspect",
-      "striped": "Rânduri mutate",
-      "compact": "Mod compact",
-      "maxHeight": "Max Height (px)",
-      "color": "Culoare",
-      "buttonLabel": "Eticheta butonului",
-      "buttonColor": "Culoare buton",
-      "confirmText": "Text Confirmare",
-      "confirmTextHint": "Dacă este setat, va apărea un dialog de confirmare înainte de a executa cererea",
-      "successMessage": "Mesaj de succes",
-      "successMessageHint": "Mesaj afișat după executarea cu succes",
-      "enabled": "Activat",
-      "template": {
-        "label": "Şablon JSX",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura procesorului",
-      "exampleLabelShort": "Temp CPU",
-      "exampleHeader": "Nume",
-      "exampleUnit": "C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-cheie",
-      "jsonPath": "$.data.valoare",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.utilizate",
-      "maxPath": "$.data.total",
-      "goodValues": "online, adevărat, sus",
-      "color": "albastru"
-    },
-    "cardStyleOption": {
-      "filled": "Completat",
-      "outline": "Conturul",
-      "subtle": "Subtil"
-    },
-    "layoutOption": {
-      "list": "Listă",
-      "grid": "Grilă"
-    },
-    "sizeOption": {
-      "sm": "Mică",
-      "md": "Medie",
-      "lg": "Mare",
-      "xl": "Foarte mare"
-    },
-    "labelPositionOption": {
-      "above": "Deasupra",
-      "below": "Sub"
-    },
-    "fieldset": {
-      "general": "Generalități",
-      "connection": "Conexiune API",
-      "display": "Configurare afișare"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Arată o valoare extrasă cu o etichetă și o unitate",
-      "keyValue": "Arată mai multe valori etichetate una lângă alta",
-      "table": "Arată rândurile de date într-un format de tabel",
-      "statGrid": "Cărți de stat colorate într-o grilă - cum ar fi widget-uri Pi-Hole sau Speedtest",
-      "progressBars": "Bare de progres care indică utilizarea sau finalizarea — pentru disc, memorie, cote",
-      "statusIndicator": "Puncte de stare colorate care arată online/offline sau starea de sănătate",
-      "countGrid": "Numărul compact + contoare de etichete într-o grilă strânsă",
-      "raw": "Ieșire JSON pretipărită pentru depanare",
-      "actionButton": "Un buton care declanșează o solicitare când este apăsat",
-      "customJsx": "Aranjare JSX personalizată folosind componente Mantine whitelisted cu legare completă a datelor API"
-    },
-    "method": {
-      "GET": "OBȚINE",
-      "POST": "POS",
-      "PUT": "Pune",
-      "DELETE": "Şterge",
-      "PATCH": "PLICURI"
-    },
-    "authType": {
-      "none": "Niciunul",
-      "bearer": "Token purtător",
-      "basic": "Autorizare de bază",
-      "apiKeyHeader": "Cheie API (Mediu)",
-      "apiKeyQuery": "Cheie API (Interogare)"
-    },
-    "displayType": {
-      "singleValue": "Valoare unică",
-      "keyValue": "Valoare Cheie",
-      "table": "Tabel",
-      "statGrid": "Grilă statistici",
-      "progressBars": "Bare de progres",
-      "statusIndicator": "Indicator Stare",
-      "countGrid": "Numără grila",
-      "raw": "JSON crud",
-      "actionButton": "Butonul de acţiune",
-      "customJsx": "JSX personalizat"
-    },
-    "secret": {
-      "apiKey": "Cheie API / Token",
-      "username": "Nume",
-      "password": "Parolă",
-      "savedPlaceholder": "• • • (salvat, lasati gol pentru a fi păstrat)"
-    },
-    "preview": {
-      "title": "Previzualizare",
-      "test": "Testare",
-      "hint": "Faceți clic pe Test pentru a previzualiza răspunsul API cu configurația curentă.",
-      "rawResponse": "Răspuns brut JSON"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" creat cu succes.",
-      "updated": "Widget \"{name}\" a fost actualizat cu succes.",
-      "deleted": "Widget-ul \"{name}\" a fost șters.",
-      "imported": "Widget importat cu succes.",
-      "aiPromptCopied": "Cererea AI a fost copiată în clipboard",
-      "aiPromptDescription": "Copiați un prompt pre-construit pentru a lipi în orice robot de chat AI (ChatGPT, Claude, Gemini...). Acesta include schema completă de widget și răspunsul dvs. API astfel încât AI să poată genera o configurație JSON gata de import pentru dvs.",
-      "aiPromptCopy": "Copiază în clipboard",
-      "aiPromptNoResponse": "Sfat: Rulează mai întâi un test pentru a include răspunsul tău API în prompt pentru rezultate mai bune.",
-      "aiPromptCopyError": "Copierea promptă în clipboard. Este posibil ca browserul să nu suporte această funcție.",
-      "createError": "Crearea widget-ului a eșuat. Verificați dacă API-ul este accesibil.",
-      "updateError": "Actualizarea widget-ului a eșuat. Modificările nu au fost salvate.",
-      "importError": "Importul widget-ului a eșuat. Asigurați-vă că fișierul este un widget personalizat valid JSON export.",
-      "exportError": "Exportarea widget-ului a eșuat.",
-      "duplicated": "Widget \"{name}\" duplicat.",
-      "duplicateError": "Esuare duplicare widget.",
-      "toggleError": "Eroare la comutarea stării widget-ului.",
-      "deleteError": "Ștergerea widget-ului a eșuat.",
-      "previewError": "Previzualizarea nu a reușit. Verificați URL-ul și încercați din nou.",
-      "executed": "Acțiune executată cu succes.",
-      "executeError": "Acțiune eșuată: {error}"
-    },
-    "table": {
-      "name": "Nume",
-      "url": "URL",
-      "display": "Afişare"
-    },
-    "widget": {
-      "disabled": "Acest widget este dezactivat"
     }
   },
   "integration": {
@@ -1344,10 +1139,6 @@
       "name": "Traefik",
       "description": "Convertizorul opus invers proxy și echilibru de încărcare"
     },
-    "wud": {
-      "name": "Ce este Docker",
-      "description": "Monitorizează ce containere Docker au disponibile actualizări ale imaginilor"
-    },
     "paperlessNgx": {
       "name": "Ngx",
       "description": "Sistem de administrare a documentelor pentru arhivarea și organizarea documentelor scanate"
@@ -1359,6 +1150,10 @@
     "bazarr": {
       "name": "Bazarr",
       "description": "Aplicaţie de companie pentru Sonarr şi Radarr care gestionează şi descarcă subtitrări"
+    },
+    "wud": {
+      "name": "Ce este Docker",
+      "description": "Monitorizează ce containere Docker au disponibile actualizări ale imaginilor"
     }
   },
   "media": {
@@ -1441,9 +1236,11 @@
     "here": "aici",
     "iconPicker": {
       "label": "Iconiță URL",
-      "description": "Căutaţi biblioteca, lipiţi un URL de imagine sau încărcaţi un fişier.",
       "header": "Căutare {countIcons} imagini după nume",
       "headerLoading": "Căutare imagini după nume",
+      "noResults": "Nicio pictogramă nu se potrivește \"{search}\".",
+      "error": "Nu s-au putut încărca pictogramele.",
+      "description": "Căutaţi biblioteca, lipiţi un URL de imagine sau încărcaţi un fişier.",
       "clear": "Șterge imaginea",
       "uploadImage": "Încarcă imaginea",
       "results": "Rezultatele căutării imaginii",
@@ -1452,9 +1249,7 @@
       "otherImages": "Alte imagini",
       "urlLoading": "Se verifică imaginea…",
       "urlReady": "Imaginea este gata de utilizare",
-      "urlError": "Această imagine nu a putut fi încărcată. Verificați adresa URL și încercați din nou.",
-      "noResults": "Nicio pictogramă nu se potrivește \"{search}\".",
-      "error": "Nu s-au putut încărca pictogramele."
+      "urlError": "Această imagine nu a putut fi încărcată. Verificați adresa URL și încercați din nou."
     },
     "colorScheme": {
       "options": {
@@ -1507,7 +1302,7 @@
         "switchToLightMode": "Comutați la modul lumină",
         "management": "Gestionare",
         "docker": "Doctor",
-        "preferences": "Preferințele dvs.",
+        "preferences": "Preferințele dvs",
         "logout": "Deconectare",
         "login": "Utilizator",
         "homeBoard": "Tabloul de bord",
@@ -1807,38 +1602,6 @@
         }
       }
     },
-    "wud": {
-      "name": "Ce este Docker",
-      "description": "Arată câte containere vizionate au actualizări disponibile.",
-      "title": "Ce este Docker",
-      "monitored": "Monitorizat",
-      "updatesAvailable": "{count, plural, one {# actualizare disponibilă} other {# actualizări disponibile}}",
-      "updateAvailable": "Actualizare disponibilă",
-      "openReleaseNotes": "Deschide notele de lansare",
-      "option": {
-        "showTitle": {
-          "label": "Afișare titlu"
-        },
-        "showRing": {
-          "label": "Arată inel de actualizare"
-        },
-        "layout": {
-          "label": "Aspect",
-          "option": {
-            "horizontal": {
-              "label": "Orizontal"
-            },
-            "vertical": {
-              "label": "Verticală"
-            }
-          }
-        },
-        "showUpdateList": {
-          "label": "Arată lista de actualizări containere",
-          "description": "Listează fiecare container monitorizat care are o actualizare a imaginii disponibilă"
-        }
-      }
-    },
     "dnsHoleSummary": {
       "name": "Sumar de gură DNS",
       "description": "Afişează rezumatul cutiei DNS",
@@ -1875,7 +1638,7 @@
     },
     "dnsHoleControls": {
       "name": "Controale DNS",
-      "description": "Controlați PiHole sau AdGuard din planșa dvs.",
+      "description": "Controlați PiHole sau AdGuard din planșa dvs",
       "option": {
         "layout": {
           "label": "Aspect",
@@ -3947,26 +3710,6 @@
         "unhealthy": "nesănătoase"
       }
     },
-    "customApi": {
-      "name": "API personalizat",
-      "description": "Afișează datele din orice API extern cu configurație personalizată.",
-      "option": {
-        "definitionId": {
-          "label": "ID Definiție"
-        },
-        "refreshInterval": {
-          "label": "Interval reîmprospătare",
-          "description": "Cât de des să refetch datele de la API (în secunde)"
-        }
-      },
-      "noDefinition": "Nicio definiție selectată",
-      "definitionNotFound": "Definiția widget-ului nu a fost găsită. Este posibil să fi fost ștearsă.",
-      "noDisplayOutput": "Niciun rezultat afișat",
-      "executeConfirm": "Sunteţi sigur că doriţi să executaţi această acţiune?",
-      "executing": "Executare...",
-      "executeSuccess": "Acțiune executată cu succes",
-      "executeFailed": "Acțiune eșuată. Verificați configurația widgetului."
-    },
     "beszelSystemTable": {
       "name": "Sisteme Beszel (Tabel)",
       "description": "Vizualizare tabel a tuturor sistemelor monitorizate Beszel cu coloane sortabile și indicatori de stare",
@@ -4035,7 +3778,7 @@
         "loadAvg": "Încărcare medie",
         "net": "Rețea",
         "temp": "Temp",
-        "battery": "Bat.",
+        "battery": "Bat",
         "services": "Servicii",
         "uptime": "Uptime",
         "agent": "Agent"
@@ -4096,7 +3839,7 @@
         "loadAvg": "Încărcare medie",
         "net": "Rețea",
         "temp": "Temp",
-        "battery": "Bat.",
+        "battery": "Bat",
         "services": "Servicii",
         "uptime": "Uptime",
         "agent": "Agent"
@@ -4217,6 +3960,38 @@
           "subtitle": "Trafic de rețea al containerelor Docker"
         }
       }
+    },
+    "wud": {
+      "name": "Ce este Docker",
+      "description": "Arată câte containere vizionate au actualizări disponibile.",
+      "title": "Ce este Docker",
+      "monitored": "Monitorizat",
+      "updatesAvailable": "{count, plural, one {# actualizare disponibilă} other {# actualizări disponibile}}",
+      "updateAvailable": "Actualizare disponibilă",
+      "openReleaseNotes": "Deschide notele de lansare",
+      "option": {
+        "showTitle": {
+          "label": "Afișare titlu"
+        },
+        "showRing": {
+          "label": "Arată inel de actualizare"
+        },
+        "layout": {
+          "label": "Aspect",
+          "option": {
+            "horizontal": {
+              "label": "Orizontal"
+            },
+            "vertical": {
+              "label": "Verticală"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Arată lista de actualizări containere",
+          "description": "Listează fiecare container monitorizat care are o actualizare a imaginii disponibilă"
+        }
+      }
     }
   },
   "widgetPreview": {
@@ -4334,7 +4109,7 @@
         "label": "URL imagine logo"
       },
       "faviconImageUrl": {
-        "label": "URL imagine fichar@@0icon"
+        "label": "URL imagine favicon"
       },
       "backgroundImageUrl": {
         "label": "URL-ul imaginii de fundal",
@@ -4597,11 +4372,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Acasă",
         "boards": "Planșe",
         "apps": "Aplicații",
         "integrations": "Integrări",
-        "customWidgets": "Widget-uri personalizate",
         "searchEngies": "Motoare de căutare",
         "medias": "Medias",
         "users": {
@@ -5134,7 +4909,7 @@
                 "title": "Depanare",
                 "missingHeader": {
                   "title": "\"Lipsă header ApiKey",
-                  "description": "Clientul dvs. nu trimite headerul {header} . Verificați dacă secțiunea {section} din configurația MCP este corectă. Unii clienți necesită repornirea după modificarea configurării."
+                  "description": "Clientul dvs. nu trimite headerul {header}. Verificați dacă secțiunea {section} din configurația MCP este corectă. Unii clienți necesită repornirea după modificarea configurării."
                 },
                 "invalidFormat": {
                   "title": "\"Format ApiKey nevalid\"",
@@ -5224,7 +4999,7 @@
           "restore": {
             "dropzone": {
               "title": "Trage aici fișierul ZIP al copiei de rezervă",
-              "description": "Acceptă fișiere .zip de la o copie de rezervă SQLite Homarr (max 256 MB)"
+              "description": "Acceptă fișiere .zip de la o copie de rezervă SQLite Homarr (max {maxSize})"
             },
             "analyzing": "Se analizează copia de rezervă...",
             "changeFile": "Schimbă fișierul",
@@ -5740,6 +5515,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gestionați",
       "boards": {
         "label": "Planșe"
@@ -5772,18 +5550,6 @@
         },
         "edit": {
           "label": "Editare"
-        }
-      },
-      "custom-widgets": {
-        "label": "Widget-uri personalizate",
-        "new": {
-          "label": "Nou"
-        },
-        "edit": {
-          "label": "Editare",
-          "flow": {
-            "label": "Fluxuri"
-          }
         }
       },
       "users": {
@@ -6255,7 +6021,7 @@
                 "label": "Tablou principal"
               },
               "preferences": {
-                "label": "Preferințele dvs."
+                "label": "Preferințele dvs"
               }
             }
           }

@@ -16,46 +16,56 @@ import type Player from "video.js/dist/types/player";
 
 import { createDocumentationLink } from "@homarr/definitions";
 
-export default function VideoWidget({ options }: WidgetComponentProps<"video">) {
+export default function VideoWidget({ options, isEditMode }: WidgetComponentProps<"video">) {
   if (options.feedUrl.trim() === "") {
     return <NoUrl />;
   }
 
-  if (options.feedUrl.trim().startsWith("https://www.youtube.com/watch")) {
+  if (isYouTubeUrl(options.feedUrl)) {
     return <ForYoutubeUseIframe />;
   }
 
-  return <Feed options={options} />;
+  return <Feed options={options} isEditMode={isEditMode} />;
 }
 
+export const isYouTubeUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.hostname === "youtu.be" || url.hostname === "youtube.com" || url.hostname.endsWith(".youtube.com");
+  } catch {
+    return false;
+  }
+};
+
 const NoUrl = () => {
-  const t = useI18n();
+  const t = useI18n("widget.video");
 
   return (
     <Center h="100%">
       <Stack align="center">
         <IconDeviceCctvOff />
-        <Title order={4}>{t("widget.video.error.noUrl")}</Title>
+        <Title order={4}>{t("error.noUrl")}</Title>
       </Stack>
     </Center>
   );
 };
 
 const ForYoutubeUseIframe = () => {
-  const t = useI18n();
+  const t = useI18n("widget.video");
+  const tCommon = useI18n("common");
 
   return (
     <Center h="100%">
       <Stack align="center" gap="xs">
         <IconBrandYoutube />
-        <Title order={4}>{t("widget.video.error.forYoutubeUseIframe")}</Title>
-        <Anchor href={createDocumentationLink("/docs/widgets/iframe")}>{t("common.action.checkoutDocs")}</Anchor>
+        <Title order={4}>{t("error.forYoutubeUseIframe")}</Title>
+        <Anchor href={createDocumentationLink("/docs/widgets/iframe")}>{tCommon("action.checkoutDocs")}</Anchor>
       </Stack>
     </Center>
   );
 };
 
-const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
+const Feed = ({ options, isEditMode }: Pick<WidgetComponentProps<"video">, "options"> & { isEditMode: boolean }) => {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player>(null);
 
@@ -98,8 +108,8 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
 
   useEffect(() => {
     if (!playerRef.current) return;
-    playerRef.current.controls(options.hasControls);
-  }, [options.hasControls]);
+    playerRef.current.controls(!isEditMode && options.hasControls);
+  }, [isEditMode, options.hasControls]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -113,7 +123,7 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
   }, [playerRef]);
 
   return (
-    <Group justify="center" w="100%" h="100%" pos="relative">
+    <Group justify="center" w="100%" h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
       <Box w="100%" h="100%" ref={videoRef} />
     </Group>
   );

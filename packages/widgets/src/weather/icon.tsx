@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { List, Stack, Text } from "@mantine/core";
 import {
   IconCloud,
@@ -14,31 +15,38 @@ import {
   IconTemperaturePlus,
   IconWind,
 } from "@tabler/icons-react";
-import dayjs from "dayjs";
-
 import { metricToImperial } from "@homarr/common";
 import type { TranslationObject } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
 
 interface WeatherIconProps {
   code: number;
+  isDay?: boolean;
   size?: string | number;
+  style?: CSSProperties;
 }
 
 /**
  * Icon which should be displayed when specific code is defined
  * @param code weather code from api
  * @param size size of the icon, accepts relative sizes too
+ * @param style CSS overrides (e.g. from `zoomCompensatedSize`) - prefer this over `size` for a
+ * board-zoom-safe size, since `size` becomes a raw SVG width/height attribute that `var()` isn't
+ * guaranteed to resolve inside (see `iconSizes` in @homarr/ui).
  * @returns Icon corresponding to the weather code
  */
-export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
+export const WeatherIcon = ({ code, isDay = true, size = 50, style }: WeatherIconProps) => {
+  if (code === 0 && !isDay) return <IconMoon style={{ float: "left", ...style }} size={size} />;
   const { icon: Icon } = weatherDefinitions.find((definition) => definition.codes.includes(code)) ?? unknownWeather;
 
-  return <Icon style={{ float: "left" }} size={size} />;
+  return <Icon style={{ float: "left", ...style }} size={size} />;
 };
+
+export const getWeatherKind = (code: number) =>
+  (weatherDefinitions.find((definition) => definition.codes.includes(code)) ?? unknownWeather).name;
 
 interface WeatherDescriptionProps {
   weatherOnly?: boolean;
@@ -82,29 +90,40 @@ export const WeatherDescription = ({
   maxWindGusts,
   humidity,
 }: WeatherDescriptionProps) => {
-  const t = useScopedI18n("widget.weather");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.weather");
+  const tCommon = useI18n("common");
+  const locale = useCurrentIntlLocale();
 
-  const { name } = weatherDefinitions.find((definition) => definition.codes.includes(weatherCode)) ?? unknownWeather;
+  const name = getWeatherKind(weatherCode);
 
   if (weatherOnly) {
-    return <Text fz="16px">{t(`kind.${name}`)}</Text>;
+    return <Text fz="md">{t(`kind.${name}`)}</Text>;
   }
 
   return (
     <Stack align="center" gap="0">
-      <Text fz="24px">{dayjs(time).format(dateFormat)}</Text>
-      <Text fz="16px">{t(`kind.${name}`)}</Text>
+      <Text fz="xl">{formatWeatherDate(time, locale, dateFormat)}</Text>
+      <Text fz="md">{t(`kind.${name}`)}</Text>
       <List>
-        <List.Item icon={<IconTemperaturePlus size={15} />}>{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
-        <List.Item icon={<IconTemperatureMinus size={15} />}>{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
-        <List.Item icon={<IconSun size={15} />}>{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
-        <List.Item icon={<IconMoon size={15} />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
+        <List.Item
+          icon={<IconTemperaturePlus size="var(--mantine-font-size-sm)" />}
+        >{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
+        <List.Item
+          icon={<IconTemperatureMinus size="var(--mantine-font-size-sm)" />}
+        >{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
+        <List.Item
+          icon={<IconSun size="var(--mantine-font-size-sm)" />}
+        >{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
+        <List.Item
+          icon={<IconMoon size="var(--mantine-font-size-sm)" />}
+        >{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
         {humidity !== undefined && (
-          <List.Item icon={<IconDroplets size={15} />}>{t("dailyForecast.humidity", { humidity })}</List.Item>
+          <List.Item icon={<IconDroplets size="var(--mantine-font-size-sm)" />}>
+            {t("dailyForecast.humidity", { humidity })}
+          </List.Item>
         )}
         {maxWindSpeed !== undefined && (
-          <List.Item icon={<IconWind size={15} />}>
+          <List.Item icon={<IconWind size="var(--mantine-font-size-sm)" />}>
             {t("dailyForecast.maxWindSpeed", {
               maxWindSpeed: (useImperialSpeed ? metricToImperial(maxWindSpeed) : maxWindSpeed).toFixed(1),
               unit: useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),
@@ -112,7 +131,7 @@ export const WeatherDescription = ({
           </List.Item>
         )}
         {maxWindGusts !== undefined && (
-          <List.Item icon={<IconWind size={15} />}>
+          <List.Item icon={<IconWind size="var(--mantine-font-size-sm)" />}>
             {t("dailyForecast.maxWindGusts", {
               maxWindGusts: (useImperialSpeed ? metricToImperial(maxWindGusts) : maxWindGusts).toFixed(1),
               unit: useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),
@@ -122,6 +141,50 @@ export const WeatherDescription = ({
       </List>
     </Stack>
   );
+};
+
+export const formatWeatherDate = (
+  value: string | undefined,
+  locale: string,
+  pattern: WidgetProps<"weather">["options"]["dateFormat"] | undefined,
+) => {
+  if (!value) return "?";
+  const resolvedPattern = pattern ?? "dddd, MMMM D";
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00Z` : value);
+  if (Number.isNaN(date.getTime())) return "?";
+
+  const parts = new Intl.DateTimeFormat(locale, {
+    weekday: "long",
+    year: "numeric",
+    month: resolvedPattern.includes("MMMM") ? "long" : resolvedPattern.includes("MMM") ? "short" : "2-digit",
+    day: resolvedPattern.includes("DD") ? "2-digit" : "numeric",
+    timeZone: "UTC",
+  })
+    .formatToParts(date)
+    .reduce<Record<string, string>>((result, part) => {
+      if (part.type !== "literal") result[part.type] = part.value;
+      return result;
+    }, {});
+
+  switch (resolvedPattern) {
+    case "dddd, D MMMM":
+      return `${parts.weekday}, ${parts.day} ${parts.month}`;
+    case "MMM D":
+      return `${parts.month} ${parts.day}`;
+    case "D MMM":
+      return `${parts.day} ${parts.month}`;
+    case "DD/MM/YYYY":
+      return `${parts.day}/${parts.month}/${parts.year}`;
+    case "MM/DD/YYYY":
+      return `${parts.month}/${parts.day}/${parts.year}`;
+    case "DD/MM":
+      return `${parts.day}/${parts.month}`;
+    case "MM/DD":
+      return `${parts.month}/${parts.day}`;
+    case "dddd, MMMM D":
+    default:
+      return `${parts.weekday}, ${parts.month} ${parts.day}`;
+  }
 };
 
 interface WeatherDefinitionType {

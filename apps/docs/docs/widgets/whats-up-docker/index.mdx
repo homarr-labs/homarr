@@ -8,6 +8,7 @@ import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 import { wudWidget } from ".";
 import { wudIntegration } from "@site/docs/integrations/whats-up-docker";
 
@@ -25,6 +26,10 @@ This widget shows two stats from your WUD instance: the total number of monitore
     },
   ]}
 />
+
+<WidgetInteractionGuide />
+
+In advanced view, the widget always shows its title, update ring, monitored-container summary, and the full list of available container updates. The configured horizontal or vertical layout still applies. Visibility options only affect the compact board view. A failed refresh keeps the last WUD snapshot visible with a stale-data warning.
 
 ### Adding the widget
 

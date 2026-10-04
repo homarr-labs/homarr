@@ -13,11 +13,7 @@ export type PatchMonStatKey =
 
 export type ColorablePatchMonStatKey = Extract<
   PatchMonStatKey,
-  | "hostsNeedingUpdates"
-  | "securityUpdates"
-  | "hostsWithSecurityUpdates"
-  | "upToDateHosts"
-  | "totalOutdatedPackages"
+  "hostsNeedingUpdates" | "securityUpdates" | "hostsWithSecurityUpdates" | "upToDateHosts" | "totalOutdatedPackages"
 >;
 
 export type StatSeverity = "green" | "yellow" | "red" | "neutral";

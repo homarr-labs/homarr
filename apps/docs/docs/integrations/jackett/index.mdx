@@ -1,0 +1,31 @@
+---
+title: "Jackett"
+description: "Jackett exposes configured indexers through Torznab."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { jackettIntegration } from ".";
+import { indexerManagerWidget } from "@site/docs/widgets/indexer-manager";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={jackettIntegration} categories={["Indexer"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: indexerManagerWidget }, { widget: statsWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets secrets={[{ credentials: ["apiKey"], steps: ["Copy the API key from Jackett's dashboard."] }]} />
+
+Jackett's API-key interface exposes configured indexers but does not provide their health history. The indexer widget displays “Health unavailable” for these entries. **Test all** performs an upstream Torznab search for each indexer and reports failures; it does not download results or change indexer configuration. Some indexers require a search query and may reject this generic test.
+
+Statistics exposes the configured-indexer count. An error count is not available from this interface.

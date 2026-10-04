@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
-import { useModalAction } from "@homarr/modals";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 
 import type { AccessQueryData } from "./access-settings";
@@ -11,7 +10,7 @@ import { AccessDisplayRow, AccessSelectRow } from "./access-table-rows";
 import { useAccessContext } from "./context";
 import type { AccessFormType, HandleCountChange } from "./form";
 import { FormProvider, useForm } from "./form";
-import { UserSelectModal } from "./user-select-modal";
+import { UserSelect } from "./user-select";
 
 export interface FormProps<TPermission extends string> {
   entity: {
@@ -41,9 +40,7 @@ export const UsersAccessForm = <TPermission extends string>({
   const [users, setUsers] = useState<Map<string, UserItemContentProps["user"]>>(
     new Map(accessQueryData.users.map(({ user }) => [user.id, user])),
   );
-  const { openModal } = useModalAction(UserSelectModal);
-  const t = useI18n();
-  const tPermissions = useScopedI18n("permission");
+  const tPermissions = useI18n("permission");
   const form = useForm({
     initialValues: {
       items: accessQueryData.users.map(({ user, permission }) => ({
@@ -52,25 +49,8 @@ export const UsersAccessForm = <TPermission extends string>({
       })),
     },
   });
-
-  const handleAddUser = () => {
-    const presentUserIds = form.values.items.map(({ principalId: id }) => id);
-
-    openModal({
-      presentUserIds: entity.ownerId ? presentUserIds.concat(entity.ownerId) : presentUserIds,
-      onSelect: (user) => {
-        setUsers((prev) => new Map(prev).set(user.id, user));
-        form.setFieldValue("items", [
-          {
-            principalId: user.id,
-            permission: defaultPermission,
-          },
-          ...form.values.items,
-        ]);
-        handleCountChange((prev) => prev + 1);
-      },
-    });
-  };
+  const presentUserIds = form.values.items.map(({ principalId: id }) => id);
+  if (entity.ownerId) presentUserIds.push(entity.ownerId);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values as AccessFormType<TPermission>))}>
@@ -101,11 +81,23 @@ export const UsersAccessForm = <TPermission extends string>({
           </Table>
 
           <Group justify="space-between">
-            <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
-              {t("common.action.add")}
-            </Button>
+            <UserSelect
+              presentUserIds={presentUserIds}
+              onSelect={(user) => {
+                setUsers((prev) => new Map(prev).set(user.id, user));
+                form.setFieldValue("items", [
+                  {
+                    principalId: user.id,
+                    permission: defaultPermission,
+                  },
+                  ...form.values.items,
+                ]);
+                handleCountChange((prev) => prev + 1);
+              }}
+              triggerProps={{ rightSection: <IconPlus size="1rem" />, variant: "light" }}
+            />
             <Button type="submit" loading={isPending}>
-              {t("permission.action.saveUser")}
+              {tPermissions("action.saveUser")}
             </Button>
           </Group>
         </Stack>

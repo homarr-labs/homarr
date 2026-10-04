@@ -36,6 +36,13 @@ export const userPreferenceDefinitions = [
     aliases: ["calendar", "week", "weekday"],
   },
   {
+    key: "byteUnitSystem",
+    kind: "select",
+    guest: false,
+    mutationGroup: "byteUnitSystem",
+    aliases: ["data", "size", "storage", "unit", "binary", "decimal", "GB", "GiB"],
+  },
+  {
     key: "homeBoardId",
     kind: "board",
     guest: false,

@@ -62,6 +62,27 @@ describe("locale and onboarding proxy", () => {
     expect(mocks.getDefaultLocale).toHaveBeenCalledOnce();
   });
 
+  it("allows administrator sign-in while onboarding is unfinished", async () => {
+    mocks.getOnboardingStep.mockResolvedValue("setup");
+    const { proxy } = await loadProxy();
+
+    const response = await proxy(createRequest("/en/auth/login"));
+
+    expect(response.status).toBe(200);
+    expect(mocks.getOnboardingStep).not.toHaveBeenCalled();
+  });
+
+  it("does not treat nested routes ending in init or auth/login as onboarding access routes", async () => {
+    mocks.getOnboardingStep.mockResolvedValue("setup");
+    const { proxy } = await loadProxy();
+
+    const initResponse = await proxy(createRequest("/en/boards/init"));
+    const loginResponse = await proxy(createRequest("/en/settings/auth/login"));
+
+    expect(initResponse.headers.get("location")).toBe("http://localhost/init");
+    expect(loginResponse.headers.get("location")).toBe("http://localhost/init");
+  });
+
   it("uses the configured default locale for a missing or invalid locale cookie", async () => {
     mocks.getDefaultLocale.mockResolvedValue("de");
     const { proxy } = await loadProxy();

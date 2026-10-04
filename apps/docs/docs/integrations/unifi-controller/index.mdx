@@ -1,40 +1,54 @@
 ---
-title: 'Unifi Controller'
+title: "Unifi Controller"
 description: "Unifi Controller is a network management platform for Unifi devices."
 hide_title: true
 ---
 
-import { IntegrationHeader } from '@site/src/components/integrations/header';
-import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
-import { AddingIntegration } from '@site/src/components/integrations/adding';
-import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { IconTopologyFull } from "@tabler/icons-react";
-import { unifiControllerIntegration } from '.';
-import { networkControllerSummaryWidget } from '@site/docs/widgets/network-controller-summary';
-import { networkControllerStatusWidget } from '@site/docs/widgets/network-controller-status';
+import { unifiControllerIntegration } from ".";
+import { networkControllerSummaryWidget } from "@site/docs/widgets/network-controller-summary";
+import { networkControllerStatusWidget } from "@site/docs/widgets/network-controller-status";
 
-
-<IntegrationHeader
-  integration={unifiControllerIntegration}
-  categories={['Network controller']}
-/>
+<IntegrationHeader integration={unifiControllerIntegration} categories={["Network controller"]} />
 
 This integration is using the [node-unifi](https://www.npmjs.com/package/node-unifi) library under the hood to connect to the Unifi Controller.
-Therfore it should support CloudKey Gen1, CloudKey Gen2, UnifiOS-based UDM-Pro controllers as well as self-hosted UniFi controllers.
+Therefore it should support CloudKey Gen1, CloudKey Gen2, UnifiOS-based UDM-Pro controllers as well as self-hosted UniFi controllers.
 
 ### Widgets & Capabilities
+
 <IntegrationCapabilites
-    items={[
-        { widget: networkControllerSummaryWidget },
-        { widget: networkControllerStatusWidget}
-    ]}
+  items={[{ widget: networkControllerSummaryWidget }, { widget: networkControllerStatusWidget }]}
 />
 
+VPN users are counted from active remote VPN sessions across all sites. Controllers that return HTTP 404 for
+`stat/remoteuservpn` use the legacy health counter instead; a successful empty session list counts as zero.
+This avoids the stale L2TP health counter on UniFi Network 10.6.106. VPN types absent from that endpoint cannot be
+counted. If a site's session request fails or returns an invalid response, the VPN user total is shown as unknown
+while the other network metrics remain available. VPN status still uses the controller's health subsystem.
+
 ### Adding the integration
+
 <AddingIntegration />
 
+Use the local HTTPS address of your controller:
+
+- UniFi OS consoles such as Dream Router, Dream Machine, Cloud Gateway, and CloudKey use `https://<host>` (port 443).
+- Self-hosted UniFi Network Servers normally use `https://<host>:8443`.
+- If you omit the port, Homarr tries port 443 first and then port 8443 when the first port cannot be reached.
+
+Use a local administrator account. Cloud-only accounts and accounts with multi-factor authentication are not supported by the underlying client.
+
 ### Secrets
-<IntegrationSecrets secrets={[{
-    credentials: ['username', 'password'],
-    steps: []
-}]} />
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: [],
+    },
+  ]}
+/>

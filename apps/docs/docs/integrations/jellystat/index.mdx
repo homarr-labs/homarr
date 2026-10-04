@@ -1,0 +1,38 @@
+---
+title: "Jellystat"
+description: "A self-hosted statistics dashboard for Jellyfin."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { jellystatIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={jellystatIntegration} categories={["Media management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Jellystat's `stats/getViewsByLibraryType` endpoint for the last 30 days and displays audio, movie, series, and other play counts. These are playback views, not library inventory totals.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Jellystat and go to Settings > API Key.",
+        "Create or copy an API key, then paste it into Homarr's API Key field.",
+      ],
+    },
+  ]}
+/>

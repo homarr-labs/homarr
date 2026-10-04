@@ -2,12 +2,14 @@
 
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { RingProgress, Text } from "@mantine/core";
+import { Center, RingProgress, Text } from "@mantine/core";
 import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
+import { getCompactStatLayout } from "../common/compact-stat-layout";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
@@ -31,10 +33,40 @@ const statIcons = {
 const gridHiddenWhenHeroShown = new Set(["documentsTotal", "documentsInbox"]);
 
 const gridColsByWidth = [
-  { minWidth: 380, cols: 3 },
+  { minWidth: 300, cols: 3 },
   { minWidth: 220, cols: 2 },
   { minWidth: 0, cols: 1 },
 ] as const;
+
+const rootClassByLayout = {
+  default: "",
+  short: classes.rootShort,
+  narrowShort: classes.rootShort,
+} as const;
+
+const gridClassByLayout = {
+  default: "",
+  short: classes.gridShort,
+  narrowShort: classes.gridShort,
+} as const;
+
+const statTileClassByLayout = {
+  default: "",
+  short: classes.statTileShort,
+  narrowShort: `${classes.statTileShort} ${classes.statTileNarrowShort}`,
+} as const;
+
+const statLabelClassByLayout = {
+  default: "",
+  short: classes.statLabelShort,
+  narrowShort: classes.statLabelShort,
+} as const;
+
+const statValueClassByLayout = {
+  default: "",
+  short: "",
+  narrowShort: classes.statValueNarrowShort,
+} as const;
 
 const ringSizeByWidth = [
   { minWidth: 400, size: 88 },
@@ -70,12 +102,34 @@ const heroPartVisibility = {
   ring: "showInboxRing",
 } as const;
 
-export default function PaperlessNgxWidget({ integrationIds, options, width }: WidgetComponentProps<"paperlessNgx">) {
-  const t = useScopedI18n("widget.paperlessNgx");
-  const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery({
+export default function PaperlessNgxWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayScale = 1,
+  displayMode = "compact",
+}: WidgetComponentProps<"paperlessNgx">) {
+  const t = useI18n("widget.paperlessNgx");
+  const tCommon = useI18n("common");
+  const {
+    data: stats,
+    error,
+    isPending,
+  } = clientApi.widget.paperlessNgx.getStats.useQuery({
     integrationId: integrationIds[0] ?? "",
   });
 
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Text c="dimmed" size="sm">
+          {tCommon("action.loading")}
+        </Text>
+      </Center>
+    );
+  }
+  if (error && stats === undefined) throw error;
   if (!stats) return <WidgetEmptyState />;
 
   const canShowInboxHero = options.showDocumentsInbox && options.showDocumentsTotal;
@@ -95,9 +149,22 @@ export default function PaperlessNgxWidget({ integrationIds, options, width }: W
     .map(([, statKey]) => statKey)
     .filter((statKey) => !(showHero && gridHiddenWhenHeroShown.has(statKey)));
 
-  const gridCols = getGridCols(width);
-  const ringSize = getRingSize(width);
-  const iconSize = getIconSize(width);
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (displayMode === "compact" && Number.isFinite(displayScale) && displayScale > 0) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const advanced = displayMode === "advanced";
+  const layout = getCompactStatLayout({
+    width: responsiveWidth,
+    height: responsiveHeight,
+    visibleCount: visibleStatKeys.length,
+    compactDisplay: !advanced,
+    defaultColumns: getGridCols(responsiveWidth),
+    defaultIconSize: getIconSize(responsiveWidth),
+  });
+  const ringSize = getRingSize(responsiveWidth);
   const ringLabelSize = getRingLabelSize(ringSize);
   const hasContent = showHero || visibleStatKeys.length > 0;
 
@@ -140,7 +207,7 @@ export default function PaperlessNgxWidget({ integrationIds, options, width }: W
   } as const;
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${rootClassByLayout[layout.state]}`}>
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
           {visibleHeroParts.map(([partKey]) => (
@@ -158,14 +225,19 @@ export default function PaperlessNgxWidget({ integrationIds, options, width }: W
       )}
 
       {visibleStatKeys.length > 0 && (
-        <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
+        <div
+          className={`${classes.grid} ${gridClassByLayout[layout.state]}`}
+          style={{ "--stat-cols": layout.columns } as CSSProperties}
+        >
           {visibleStatKeys.map((statKey) => {
             const Icon = statIcons[statKey];
             return (
-              <div key={statKey} className={classes.statTile}>
-                <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
-                <span className={classes.statValue}>{statValues[statKey]}</span>
-                <span className={classes.statLabel}>{t(statKey)}</span>
+              <div key={statKey} className={`${classes.statTile} ${statTileClassByLayout[layout.state]}`}>
+                <Icon className={classes.statIcon} style={zoomCompensatedSize(layout.iconSize)} stroke={1.5} />
+                <span className={`${classes.statValue} ${statValueClassByLayout[layout.state]}`}>
+                  {statValues[statKey]}
+                </span>
+                <span className={`${classes.statLabel} ${statLabelClassByLayout[layout.state]}`}>{t(statKey)}</span>
               </div>
             );
           })}

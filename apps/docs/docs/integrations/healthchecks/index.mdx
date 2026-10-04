@@ -1,0 +1,36 @@
+---
+title: "Healthchecks"
+description: "Healthchecks is a simple monitoring service for scheduled jobs and periodic tasks."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { healthchecksIntegration } from ".";
+
+<IntegrationHeader integration={healthchecksIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) reads Healthchecks' Management API v3 and displays aggregate counts for checks in the `up`, `down`, `grace`, and `new` states. It does not request individual check endpoints.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open the Healthchecks project settings.",
+        "Create a project-specific read-only API key.",
+        "Copy the key into Homarr's API Key field.",
+      ],
+      body: "The read-only key is sufficient: Homarr only uses GET /api/v3/checks/.",
+    },
+  ]}
+/>

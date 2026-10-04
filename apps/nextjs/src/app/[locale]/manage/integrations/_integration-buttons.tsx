@@ -1,65 +1,57 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { ActionIcon } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmActionIcon } from "@homarr/ui";
 
 interface DeleteIntegrationActionButtonProps {
-  count: number;
   integration: { id: string; name: string };
 }
 
-export const DeleteIntegrationActionButton = ({ count, integration }: DeleteIntegrationActionButtonProps) => {
-  const t = useScopedI18n("integration.page.delete");
-  const router = useRouter();
-  const { openConfirmModal } = useConfirmModal();
+export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegrationActionButtonProps) => {
+  const t = useI18n("integration.page.delete");
+  const tCommon = useI18n("common");
   const utils = clientApi.useUtils();
   const { mutateAsync, isPending } = clientApi.integration.delete.useMutation();
 
+  const onConfirm = () =>
+    mutateAsync(
+      { id: integration.id },
+      {
+        onSuccess: () => {
+          showSuccessNotification({
+            title: tCommon("notification.delete.success"),
+            message: t("notification.success.message"),
+          });
+          void revalidatePathActionAsync("/manage/integrations");
+          void utils.integration.invalidate();
+          void utils.widget.invalidate();
+        },
+        onError: () => {
+          showErrorNotification({
+            title: tCommon("notification.delete.error"),
+            message: t("notification.error.message"),
+          });
+        },
+      },
+    );
+
   return (
-    <ActionIcon
+    <InlineConfirmActionIcon
+      confirmLabel={tCommon("action.confirm")}
+      confirmationAriaLabel={tCommon("action.confirm")}
+      onConfirm={onConfirm}
       loading={isPending}
       variant="subtle"
       color="red"
-      onClick={() => {
-        openConfirmModal({
-          title: t("title"),
-          children: t("message", integration),
-          onConfirm: () => {
-            void mutateAsync(
-              { id: integration.id },
-              {
-                onSuccess: () => {
-                  showSuccessNotification({
-                    title: t("notification.success.title"),
-                    message: t("notification.success.message"),
-                  });
-                  if (count === 1) {
-                    router.replace("/manage/integrations");
-                  }
-                  void revalidatePathActionAsync("/manage/integrations");
-                  void utils.integration.invalidate();
-                },
-                onError: () => {
-                  showErrorNotification({
-                    title: t("notification.error.title"),
-                    message: t("notification.error.message"),
-                  });
-                },
-              },
-            );
-          },
-        });
-      }}
-      aria-label={t("title")}
+      size={44}
+      aria-label={tCommon("action.deleteNamed", { name: integration.name })}
     >
       <IconTrash color="red" size={16} stroke={1.5} />
-    </ActionIcon>
+    </InlineConfirmActionIcon>
   );
 };

@@ -1,17 +1,16 @@
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const minecraftServerStatusRequestHandler = createWidgetRequestHandler({
-  async requestAsync(input: { domain: string; isBedrockServer: boolean }) {
+  // Domains are supplied through a public procedure and form an unbounded key space.
+  requestTimeoutMs: 10_000,
+  async requestAsync(input: { domain: string; isBedrockServer: boolean }, signal) {
     const path = `${input.isBedrockServer ? "/bedrock" : ""}/3/${input.domain}`;
 
-    const response = await withTimeoutAsync(async (signal) =>
-      fetchWithTrustedCertificatesAsync(`https://api.mcsrvstat.us${path}`, { signal }),
-    );
+    const response = await fetchWithTrustedCertificatesAsync(`https://api.mcsrvstat.us${path}`, { signal });
     return responseSchema.parse(await response.json());
   },
 });
