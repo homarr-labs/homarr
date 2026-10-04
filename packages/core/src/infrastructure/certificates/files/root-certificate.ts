@@ -7,7 +7,7 @@ import { getCertificateFolder } from "./index";
 
 const maxCertificateBytes = 64 * 1024;
 const fileNamePattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*\.(crt|pem)$/;
-const pemPattern = /^\s*-----BEGIN CERTIFICATE-----\s+([A-Za-z0-9+/=\s]+)-----END CERTIFICATE-----\s*$/;
+const pemPattern = /^\s*-----BEGIN CERTIFICATE-----\s+([A-Za-z0-9+/=][A-Za-z0-9+/=\s]*)-----END CERTIFICATE-----\s*$/;
 
 export class RootCertificateError extends Error {
   constructor(
@@ -25,8 +25,11 @@ const validateFileName = (fileName: string) => {
 };
 
 const describeCertificate = (fileName: string, content: Buffer, requireCurrent: boolean) => {
+  if (content.length > maxCertificateBytes) {
+    throw new RootCertificateError("BAD_REQUEST", "Expected one PEM root CA certificate, at most 64 KiB");
+  }
   const pem = pemPattern.exec(content.toString("utf8"));
-  if (content.length > maxCertificateBytes || !pem?.[1]) {
+  if (!pem?.[1]) {
     throw new RootCertificateError("BAD_REQUEST", "Expected one PEM root CA certificate, at most 64 KiB");
   }
 
