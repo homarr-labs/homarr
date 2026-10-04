@@ -5,18 +5,83 @@ import { z } from "zod/v4";
 
 import {
   addCustomRootCertificateAsync,
+  ensureCustomRootCertificateAsync,
+  getCustomRootCertificateAsync,
   removeCustomRootCertificateAsync,
+  RootCertificateError,
 } from "@homarr/core/infrastructure/certificates";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
-import { certificateValidFileNameSchema, checkCertificateFile } from "@homarr/validation/certificates";
+import {
+  certificateValidFileNameSchema,
+  checkCertificateFile,
+  rootCertificateFileNameSchema,
+  rootCertificateMetadataSchema,
+} from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "certificateRouter" });
 
+const withCertificateErrorsAsync = async <T>(operation: () => Promise<T>) => {
+  try {
+    return await operation();
+  } catch (error) {
+    if (error instanceof RootCertificateError) {
+      throw new TRPCError({ code: error.code, message: error.message });
+    }
+    throw error;
+  }
+};
+
+export const getCertificateProcedure = permissionRequiredProcedure
+  .requiresPermission("admin")
+  .meta({
+    openapi: {
+      method: "GET",
+      path: "/api/certificates/{fileName}",
+      tags: ["certificates"],
+      protect: true,
+      summary: "Inspect a named custom root CA certificate",
+      description:
+        "Return public metadata or null when absent. Requires admin permission. Does not return PEM contents.",
+    },
+  })
+  .input(z.object({ fileName: rootCertificateFileNameSchema }))
+  .output(rootCertificateMetadataSchema.nullable())
+  .query(({ input }) => withCertificateErrorsAsync(() => getCustomRootCertificateAsync(input.fileName)));
+
+export const ensureRootCertificateProcedure = permissionRequiredProcedure
+  .requiresPermission("admin")
+  .meta({
+    openapi: {
+      method: "POST",
+      path: "/api/certificates/root",
+      tags: ["certificates"],
+      protect: true,
+      summary: "Ensure a named custom root CA certificate without overwriting",
+      description:
+        "Accept one currently valid self-signed PEM root CA (64 KiB maximum). Identical bytes are idempotent; different existing bytes return CONFLICT. Requires admin permission.",
+    },
+  })
+  .input(
+    z.object({
+      fileName: rootCertificateFileNameSchema,
+      certificate: z
+        .string()
+        .min(1)
+        .max(64 * 1024),
+    }),
+  )
+  .output(z.object({ created: z.boolean(), certificate: rootCertificateMetadataSchema }))
+  .mutation(({ input }) =>
+    withCertificateErrorsAsync(() => ensureCustomRootCertificateAsync(input.fileName, input.certificate)),
+  );
+
 export const certificateRouter = createTRPCRouter({
+  getCertificate: getCertificateProcedure,
+  ensureRootCertificate: ensureRootCertificateProcedure,
   addCertificate: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(
