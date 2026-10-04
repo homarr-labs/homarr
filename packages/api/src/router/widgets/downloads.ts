@@ -52,16 +52,26 @@ export const downloadsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50)",
+          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays is a positive whole number of days and defaults to 7. Archived history is scanned in pages of 100, up to 100 pages.",
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "downloads"))
-    .input(z.object({ limitPerIntegration: z.number().default(50) }))
+    .input(
+      z.object({
+        limitPerIntegration: z.number().default(50),
+        includeArchivedHistory: z.boolean().default(false),
+        historyWindowDays: z.number().int().min(1).default(7),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], DownloadClientQueryResult>(
         ctx.integrations,
         async (integration) => {
-          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+          const innerHandler = downloadClientRequestHandler.handler(integration, {
+            limit: input.limitPerIntegration,
+            includeArchivedHistory: input.includeArchivedHistory,
+            historyWindowDays: input.historyWindowDays,
+          });
           const { data, timestamp } = await innerHandler.getDataAsync();
           return {
             integrationId: integration.id,
