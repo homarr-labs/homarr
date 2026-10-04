@@ -323,7 +323,7 @@ export function BeszelStatsView({
     (visibility.disk && diskData.length > 0 ? 1 : 0) +
     (visibility.diskIO && diskIOData.length > 0 ? 1 : 0) +
     (visibility.network && networkData.length > 0 ? 1 : 0) +
-    (visibility.gpuUsage && gpuUsageData.length > 0 ? 1 : 0) +
+    (visibility.gpuUsage && gpuSeries.length > 0 && gpuUsageData.length > 0 ? 1 : 0) +
     (visibility.gpuMemory && hasGpuMemory && gpuMemoryData.length > 0 ? 1 : 0) +
     (visibility.gpuPower && hasGpuPower && gpuPowerData.length > 0 ? 1 : 0) +
     (showDocker && containerSeries.length > 0

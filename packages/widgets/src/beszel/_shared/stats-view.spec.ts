@@ -55,7 +55,13 @@ vi.mock("@homarr/api/client", () => ({
   },
 }));
 
-vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
+vi.mock("@homarr/translation/client", () => ({
+  useI18n: () => (key: string) => key,
+  useCurrentIntlLocale: () => "en-US",
+}));
+vi.mock("@homarr/settings", () => ({
+  useByteFormatter: () => ({ formatBytes: String, formatByteRate: String }),
+}));
 vi.mock("./use-live-stats", () => ({ useLiveStats: () => ({ data: undefined }) }));
 vi.mock("./chart", async (importOriginal) => {
   const actual = await importOriginal<typeof ChartModule>();
