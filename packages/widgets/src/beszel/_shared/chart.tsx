@@ -6,7 +6,7 @@ import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
 
-import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
+import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
 
@@ -324,3 +324,69 @@ export const useDockerChartData = (
     });
     return padTimeGrid(mapped, timePeriod, locale);
   }, [containerStats, containerNames, metric, timePeriod, locale]);
+
+export interface BeszelGpuDevice {
+  id: string;
+  seriesName: string;
+}
+
+export type BeszelGpuMetric = "usage" | "memory" | "power";
+
+export const buildGpuDevices = (systemStats: BeszelSystemStatsRecord[] | undefined) => {
+  const devices = new Map<string, BeszelGpuDevice>();
+  for (const record of systemStats ?? []) {
+    for (const [id, gpu] of Object.entries(record.stats.g ?? {})) {
+      if (!devices.has(id)) devices.set(id, { id, seriesName: `${gpu.n} (${id})` });
+    }
+  }
+  return [...devices.values()].toSorted((a, b) => a.id.localeCompare(b.id));
+};
+
+export const useGpuDevices = (systemStats: BeszelSystemStatsRecord[] | undefined) =>
+  useMemo(() => buildGpuDevices(systemStats), [systemStats]);
+
+export const hasGpuMetric = (systemStats: BeszelSystemStatsRecord[] | undefined, metric: BeszelGpuMetric) => {
+  if (metric === "usage") return (systemStats ?? []).some((record) => Object.keys(record.stats.g ?? {}).length > 0);
+
+  return (systemStats ?? []).some((record) =>
+    Object.values(record.stats.g ?? {}).some((device) => (metric === "memory" ? device.mu : device.p) !== undefined),
+  );
+};
+
+const gpuExtractors: Record<BeszelGpuMetric, (device: BeszelGPUData | undefined) => number> = {
+  usage: (device) => device?.u ?? 0,
+  memory: (device) => (device?.mu ?? 0) * 1024 * 1024,
+  power: (device) => device?.p ?? 0,
+};
+
+export const useGpuChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  devices: BeszelGpuDevice[],
+  metric: BeszelGpuMetric,
+  timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
+) =>
+  useMemo(
+    () => buildGpuChartData(systemStats, devices, metric, timePeriod, locale),
+    [systemStats, devices, metric, timePeriod, locale],
+  );
+
+export const buildGpuChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  devices: BeszelGpuDevice[],
+  metric: BeszelGpuMetric,
+  timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
+) => {
+  if (!systemStats?.length) return [];
+  const extract = gpuExtractors[metric];
+  const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
+  const mapped = ordered.map((record) => {
+    const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
+    for (const device of devices) {
+      point[device.seriesName] = extract(record.stats.g?.[device.id]);
+    }
+    return point;
+  });
+  return padTimeGrid(mapped, timePeriod, locale);
+};
