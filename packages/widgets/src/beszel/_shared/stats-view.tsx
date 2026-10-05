@@ -28,6 +28,7 @@ import {
 import { createByteChartAxisFormatters, formatPercent } from "./format";
 import { makeTooltipProps } from "./tooltip";
 import { useLiveStats } from "./use-live-stats";
+import { useDemoReadOnly } from "../../demo-read-only";
 
 const CHART_HEIGHT = 180;
 const MEBIBYTE = 1024 * 1024;
@@ -97,9 +98,10 @@ export function BeszelStatsView({
   );
   const showDocker = visibility.dockerCpu || visibility.dockerMemory || visibility.dockerNetwork;
   const isLive = timePeriod === "1m";
+  const demoReadOnly = useDemoReadOnly();
   const historicalQuery = clientApi.widget.beszel.getSystemStats.useQuery(
     { integrationIds, systemId, timePeriod, includeDocker: showDocker },
-    { refetchInterval: isLive ? false : 5_000, enabled: !isLive && systemId !== "" },
+    { refetchInterval: isLive || demoReadOnly ? false : 5_000, enabled: !isLive && systemId !== "" },
   );
   const historicalData = isLive ? historicalQuery.data : getUsableWidgetQueryData(historicalQuery);
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, systemId, isLive && systemId !== "");

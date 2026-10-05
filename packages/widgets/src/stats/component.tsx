@@ -22,6 +22,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
 import { useWidgetRuntimeActions } from "../runtime-hooks";
 import { statsEntriesSchema } from "./config";
 import { StatsTable } from "./table";
@@ -41,6 +42,7 @@ export default function StatsWidget({
   displayScale = 1,
 }: WidgetComponentProps<"stats">) {
   const board = useRequiredBoard();
+  const demoReadOnly = useDemoReadOnly();
   const advanced = displayMode === "advanced";
   const t = useI18n("widget.stats");
   const utils = clientApi.useUtils();
@@ -81,8 +83,8 @@ export default function StatsWidget({
         { integrationId },
         {
           staleTime: 30_000,
-          refetchInterval: 60_000,
-          refetchOnWindowFocus: true,
+          refetchInterval: demoReadOnly ? false : 60_000,
+          refetchOnWindowFocus: !demoReadOnly,
           refetchIntervalInBackground: false,
           retry: false,
         },
@@ -153,13 +155,13 @@ export default function StatsWidget({
   });
 
   useEffect(() => {
-    if (document.hidden) return;
+    if (demoReadOnly || document.hidden) return;
     for (const [index, integrationId] of visibleIds.entries()) {
       const snapshot = snapshots[index];
       if (!snapshot?.data || snapshot.error) continue;
       if (snapshot.data.updatedAt === null && snapshot.data.retryAt <= Date.now()) void refresh(integrationId, false);
     }
-  }, [visibleIds, snapshots, refresh]);
+  }, [demoReadOnly, visibleIds, snapshots, refresh]);
 
   const tableEntries = advanced
     ? ids.flatMap((id) => {
