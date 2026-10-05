@@ -4139,7 +4139,7 @@
         },
         "includeArchivedHistory": {
           "label": "Include archived SABnzbd history",
-          "description": "Include SABnzbd jobs that have been moved to Archive"
+          "description": "Show jobs moved to Archive."
         },
         "historyWindowDays": {
           "label": "Archived history window (days)",
