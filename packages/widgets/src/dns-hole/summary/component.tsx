@@ -122,7 +122,7 @@ const stats = [
         size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedToday"),
-    color: "var(--mantine-color-red-light)",
+    color: "var(--mantine-color-red-6)",
   },
   {
     icon: IconPercentage,
@@ -132,7 +132,7 @@ const stats = [
       return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, size === "sm" ? 0 : 2)}%`;
     },
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
-    color: "var(--mantine-color-yellow-light)",
+    color: "var(--mantine-color-yellow-6)",
   },
   {
     icon: IconSearch,
@@ -142,7 +142,7 @@ const stats = [
         size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.dnsQueriesToday"),
-    color: "var(--mantine-color-cyan-light)",
+    color: "var(--mantine-color-cyan-6)",
   },
   {
     icon: IconWorldWww,
@@ -158,7 +158,7 @@ const stats = [
     },
     tooltip: (data, t) => (data.length >= 2 ? t("widget.dnsHoleSummary.domainsTooltip") : undefined),
     label: (t) => t("widget.dnsHoleSummary.data.domainsBeingBlocked"),
-    color: "var(--mantine-color-green-light)",
+    color: "var(--mantine-color-green-6)",
   },
 ] satisfies StatItem[];
 
@@ -186,8 +186,8 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const label = translateIfNecessary(t, item.label);
   const value = item.value(data, width <= 64 ? "sm" : "md");
   const backgroundColor = usePiHoleColors
-    ? `rgb(from ${item.color} r g b / calc(var(--opacity, 1) * 0.4))`
-    : "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+    ? `color-mix(in srgb, ${item.color} calc(var(--opacity, 1) * 40%), transparent)`
+    : "color-mix(in srgb, var(--mantine-color-primaryColor-filled) calc(var(--opacity, 1) * 12%), transparent)";
 
   return (
     <Tooltip label={tooltip} disabled={!tooltip} w={250} multiline events={{ hover: true, focus: true, touch: true }}>
@@ -203,7 +203,7 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
         style={{
           flex: 1,
           border:
-            "1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))",
+            "1px solid color-mix(in srgb, var(--mantine-color-secondaryColor-filled) calc(var(--opacity, 1) * 45%), transparent)",
         }}
       >
         <Flex
