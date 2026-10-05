@@ -21,7 +21,7 @@ export const useZodForm = <
   schema: TSchema,
   options: Omit<
     Exclude<Parameters<typeof useForm<inferPossibleSchema<TSchema>>>[0], undefined>,
-    "validate" | "validateInputOnBlur" | "validateInputOnChange"
+    "validate" | "validateInputOnBlur"
   >,
 ) => {
   const t = useI18n();
@@ -32,7 +32,7 @@ export const useZodForm = <
   return useForm<inferPossibleSchema<TSchema>>({
     ...options,
     validateInputOnBlur: true,
-    validateInputOnChange: true,
+    validateInputOnChange: options.validateInputOnChange ?? true,
     validate: schemaResolver(schema, { sync: true }),
   });
 };

@@ -8,74 +8,136 @@ tags:
 sidebar_position: 1
 ---
 
-## Setting up your development environment
-
-This guide will help you set up your development environment to start contributing to homarr.
+## Set up your development environment
 
 ### Prerequisites
 
 - **Node.js 24.18 or newer**: You can download it from the [official website](https://nodejs.org/).
-- **Corepack**: Run `corepack enable` so the repository selects its pinned pnpm version.
+- **Corepack**: Run `corepack enable` so the repository selects its pinned pnpm 11 version.
 - **Git**: You can download it from the [official website](https://git-scm.com/).
 - **Docker or Docker Desktop**: Required for the Redis service and the developer Docker CLI.
 - **Go 1.25+**: Required only for the developer Docker CLI. You can download it from the [official website](https://go.dev/).
 - **GitHub CLI**: Required only for pull-request image features. Install it from the [official website](https://cli.github.com/), then authenticate with `gh auth login`.
 
-### Setting up the project
+The versions in the root `package.json` are the supported baseline. Let Corepack select the repository version instead
+of installing an unrelated global pnpm:
 
-1. Fork the repository by clicking on the "Fork" button on the top right corner of the repository page.
+```sh
+corepack enable
+corepack install
+pnpm install --frozen-lockfile
+```
 
-![Fork button](./img/fork.png)
+### Run the Homarr application
 
-2. Clone the repository to your local machine with `git clone`. You can find the url to use by clicking on the "Code" button on the top right corner of your forks repository page.
+1. Copy `.env.example` to `.env`.
+2. Run `openssl rand -hex 32` twice. Set `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` to the two different generated
+   values in `.env`; the example leaves both empty. Keep this file private and preserve `SECRET_ENCRYPTION_KEY`
+   when reusing a database.
+3. Set `DB_URL` to an absolute writable SQLite file path. Migration and application commands run from different
+   workspace directories, so a relative path can point them at different databases.
+4. Keep Redis and the optional local databases running in one terminal.
+5. Apply migrations and start Next.js in another terminal.
 
-![Clone button](./img/clone.png)
+```sh
+cp .env.example .env
+```
 
-3. Change directory to the project folder with `cd homarr`.
+Terminal 1:
 
-4. Install the dependencies with `pnpm install`.
+```sh
+pnpm docker:dev
+```
 
-5. Create `.env` from `.env.example`. In a POSIX shell, run `cp .env.example .env`; in PowerShell, run `Copy-Item .env.example .env`. Set `DB_URL` to an absolute path for your SQLite file.
+Terminal 2:
 
-6. Start Redis in the background with `pnpm docker:dev:up` if your development workflow needs it.
+```sh
+pnpm db:migration:sqlite:run
+pnpm dev
+```
 
-7. Create or update the database with `pnpm db:migration:sqlite:run`. This also seeds the default data. To run the seed explicitly later, use `pnpm db:seed`.
+The infrastructure command remains in the foreground. Open `http://127.0.0.1:3000`; the first user created through
+Homarr becomes the instance administrator.
+Use `pnpm docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
+default data; use `pnpm db:seed` to seed it explicitly later.
 
-8. Start the development server with `pnpm dev` and wait for a message that says `✓ Ready in 10.7s`
+`pnpm dev` starts only Next.js. When your work needs scheduled tasks or live subscriptions, run the relevant service
+in a separate terminal alongside it:
 
-9. Open your browser and navigate to [http://localhost:3000](http://localhost:3000). (Loading the page might take up to 2 minutes the first time)
+```sh
+pnpm --filter @homarr/tasks dev
+```
 
-### Useful npm scripts
+```sh
+pnpm --filter @homarr/websocket dev
+```
 
-#### During development
+The WebSocket service listens on port 3001. Production startup embeds both services, so these extra commands are
+only needed for development.
 
-- `pnpm dev`: Start the Next.js development server.
-- `pnpm dev:benchmark`: Run the local authenticated-board benchmark. Set `DEV_BENCHMARK_BOARD_URL` and
-  `DEV_BENCHMARK_STORAGE_STATE`; readiness-only measurements require the explicit `--smoke` flag and are not
-  suitable for performance claims.
-- `pnpm dev:cli -- dev`: Browse and run local images and remote pull-request images.
-- `pnpm dev:cli -- build <name>`: Build the current checkout as `homarr:<name>`.
-- `pnpm dev:cli -- build --pr <number>`: Build a pull request locally from a temporary checkout.
-- `pnpm dev:cli -- rebuild <name>`: Rebuild a local image from its recorded checkout or pull request.
-- `pnpm dev:cli:install`: Optionally install the developer CLI as a `homarr` binary.
-- `pnpm cli`: Run cli commands.
-- `pnpm db:migration:sqlite:run`: Run the migrations to create or update the sqlite db file.
-- `pnpm db:seed`: Explicitly seed the default database data.
-- `pnpm docker:dev:up`: Start the Redis development service in the background.
-- `pnpm db:migration:sqlite:generate`: Generate a new migration file for the sqlite db. Also works with `mysql`.
-- `pnpm db:studio`: Open a visual studio for the database.
-- `pnpm package:new`: Create a new package in the monorepo.
+Workshop contributors can set up PocketBase and Fumadocs with the dedicated
+[Workshop development guide](/docs/advanced/development/workshop).
 
-#### Checking code quality
+### Useful commands
 
-- `pnpm lint`: Run the linter to check for code quality issues.
-- `pnpm format:fix`: Run the formatter to fix code style issues.
-- `pnpm test`: Run the tests. You can also use `pnpm test:ui` to get a UI for the tests.
-- `pnpm typecheck`: Run the typescript type checker.
+- `pnpm dev` — Next.js on port 3000.
+- `pnpm dev:benchmark` — authenticated-board benchmark; readiness-only `--smoke` runs are not performance claims.
+- `pnpm dev:cli -- dev` — browse and run local images and remote pull-request images.
+- `pnpm dev:cli -- build <name>` — build the current checkout as `homarr:<name>`.
+- `pnpm dev:cli -- build --pr <number>` — build a pull request from a temporary checkout.
+- `pnpm dev:cli -- rebuild <name>` — rebuild an image from its recorded checkout or pull request.
+- `pnpm dev:cli:install` — optionally install the developer CLI as a `homarr` binary.
+- `pnpm dev:docs` — Fumadocs on port 3003.
+- `pnpm docker:dev:up` — Redis development service in the background.
+- `pnpm cli` — Homarr operations CLI.
+- `pnpm db:migration:sqlite:run` — create or update a SQLite database.
+- `pnpm db:seed` — seed the default database data explicitly.
+- `pnpm db:studio` — inspect the database.
+- `pnpm format` / `pnpm format:fix` — check or apply oxfmt.
+- `pnpm lint` / `pnpm lint:fix` — check or apply oxlint.
+- `pnpm typecheck` — typecheck all workspaces.
+- `pnpm test` — unit and contract suites.
+- `pnpm build` — production monorepo build.
+- `docker build -t homarr:local .` — build a production Docker image.
+- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:local` — run it.
 
-#### Building the project
+## CI and focused validation
 
-- `pnpm build`: Build the project for production.
-- `pnpm dev:cli -- build <name>`: Build a `homarr:<name>` image and record its checkout for later rebuilds.
-- `docker build -t homarr .`: Build a docker image for the project.
-- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:<name>`: Run the created docker image.
+The main CI workflow runs lint, typechecking, affected workspace builds, workspace configuration checks, OpenAPI validation, and Custom Widget architecture and bundle checks. Unit and E2E suites do not run in CI. Preview images publish after the Fast gate and both architecture builds succeed; browser tests do not block publication. The container job builds an amd64 image when no preview image was built.
+
+Workshop CI runs only when its workflow or Docker build inputs change. It validates Compose configuration and publishes production images on its configured release branches. Its Docker integration and image tests are manual; workspace typechecks run in the main Fast gate.
+
+Choose the smallest relevant suite when changing behavior:
+
+| Command                                           | Scope                                                          | Requirements                                                          |
+| ------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `pnpm test <file>`                                | Focused unit or contract tests                                 | Workspace dependencies                                                |
+| `pnpm test`                                       | All unit and contract tests, without Docker integration suites | Workspace dependencies                                                |
+| `pnpm test:coverage`                              | Unit and contract tests with coverage                          | Workspace dependencies                                                |
+| `pnpm test:integration <file>`                    | Docker-backed service and database compatibility tests         | Docker                                                                |
+| `pnpm test:e2e <file>`                            | Browser and container scenarios                                | Docker; Playwright Chromium and system dependencies for browser tests |
+| `pnpm test:docs-screenshots`                      | Regenerate Assistant documentation screenshots                 | Same browser prerequisites                                            |
+| `pnpm test:workshop` / `pnpm test:workshop-image` | Workshop integration / production-image validation             | Docker                                                                |
+
+Omit `<file>` to run all tests in that command's scope. E2E and screenshot commands use a local image tagged `homarr-e2e`, or an image selected with `HOMARR_E2E_IMAGE`. The default commands run once without automatic retries; coverage is opt-in. The screenshot generator is excluded from both unit and E2E commands.
+
+Keep behavioral coverage for authorization, migrations, persistence, and widget execution. Avoid tests that only search source code for particular component names, JSX, CSS, or documentation wording.
+
+## Documentation development
+
+Run `pnpm dev:docs` to open the Next.js and Fumadocs site at `http://127.0.0.1:3003`. Content lives in
+`apps/docs/docs/`; the nearest `meta.json` controls navigation. Keep integration and widget setup metadata in their
+typed `index.ts` files alongside the page.
+
+After changing content, navigation, or shared MDX components, run:
+
+```sh
+pnpm --filter @homarr/docs build
+pnpm --filter @homarr/docs validate:links
+pnpm --filter @homarr/docs verify:search
+pnpm --filter @homarr/docs verify:seo
+```
+
+The build writes a static site to `apps/docs/out/`. Check heading links, search results, and the page's Markdown export
+when changing shared components. The [Fumadocs documentation](https://fumadocs.dev/docs) describes supported components
+and source APIs; match examples to the versions installed in this repository.

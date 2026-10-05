@@ -1,0 +1,53 @@
+---
+title: "Wazuh"
+description: "Wazuh is an open source security platform for threat detection and vulnerability tracking."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { wazuhIntegration } from ".";
+
+<IntegrationHeader integration={wazuhIntegration} categories={["Security"]} />
+
+The Wazuh integration powers the **Wazuh agents**, **Wazuh alerts** and **Wazuh security summary** widgets.
+
+Wazuh stores data in two places, and each uses its own users:
+
+- The **server API** (default port `55000`) answers agent status and manager version.
+- The **indexer** (OpenSearch, default port `9200`) holds alerts (`wazuh-alerts-*`), agent snapshots (`wazuh-monitoring-*`) and vulnerabilities (`wazuh-states-vulnerabilities-*`).
+
+Alerts and severity counts need the indexer. Without server API credentials, agent counts come from the latest `wazuh-monitoring-*` snapshot, which the Wazuh dashboard writes every 15 minutes.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Pick the credential option that matches what you can reach:
+
+| Option                              | URL field                              | Widgets                     |
+| ----------------------------------- | -------------------------------------- | --------------------------- |
+| Username & Password                 | Server API, e.g. `https://wazuh:55000` | Agents, manager version     |
+| Username & Password & Indexer …     | Server API, indexer URL as a secret    | All                         |
+| Indexer username & Indexer password | Indexer, e.g. `https://wazuh:9200`     | All (agents from snapshots) |
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: ["Use a Wazuh API user, for example one with the built-in readonly role"],
+    },
+    {
+      credentials: ["wazuhIndexerUrl", "wazuhIndexerUsername", "wazuhIndexerPassword"],
+      steps: ["Use an indexer user that can read wazuh-alerts-*, wazuh-monitoring-* and wazuh-states-*"],
+    },
+  ]}
+/>
+
+### Notes
+
+- Wazuh ships with self-signed certificates. The server API certificate can be trusted from the test connection dialog. The indexer certificate is signed by the Wazuh root CA (`/etc/wazuh-indexer/certs/root-ca.pem`), which has to be uploaded under **Settings → Certificates**.
+- A default all-in-one install binds the indexer to `127.0.0.1`. Set `network.host` in `/etc/wazuh-indexer/opensearch.yml` if Homarr runs on another host.

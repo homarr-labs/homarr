@@ -1,8 +1,12 @@
 import type { WidgetKind } from "../widget";
 
-export const widgetDocSlugs: Record<WidgetKind, string | null> = {
+export const widgetDocSlugs = {
+  stats: "stats",
   clock: "clock",
   weather: "weather",
+  airQuality: "air-quality",
+  countdown: "countdown",
+  timer: "timer",
   app: "app",
   iframe: "iframe",
   video: "video",
@@ -55,5 +59,15 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   beszelSystemStats: "beszel-system-stats",
   traefik: "traefik",
   customApi: "custom-api",
+  assistant: "assistant",
   wud: "whats-up-docker",
-};
+  llamacpp: "llama-cpp",
+  wazuhAgents: null,
+  wazuhAlerts: null,
+  wazuhSummary: null,
+  wazuhTimeline: null,
+  wazuhTopList: null,
+  wazuhVulnerabilities: null,
+  wazuhFim: null,
+  wazuhAuthFailures: null,
+} satisfies Record<WidgetKind, string | null>;

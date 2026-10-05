@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
-import { ActionIcon } from "@mantine/core";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Card, Collapse, Group, Stack } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -10,9 +11,12 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useConfirmModal } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
+import { InlineConfirmActionIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { InviteCreateButton } from "./invite-create-button";
+import { InviteCreateForm } from "./invite-create-form";
 
 dayjs.extend(relativeTime);
 
@@ -21,7 +25,11 @@ interface InviteListComponentProps {
 }
 
 export const InviteListComponent = ({ initialInvites }: InviteListComponentProps) => {
-  const t = useScopedI18n("management.page.user.invite");
+  const t = useI18n("management.page.user.invite");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isCreateOpen, setIsCreateOpen] = useState(searchParams.get("create") === "true");
+  const [formKey, setFormKey] = useState(0);
   const { data, isLoading } = clientApi.invite.getAll.useQuery(undefined, {
     initialData: initialInvites,
     refetchOnMount: false,
@@ -33,7 +41,7 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
     () => [
       {
         accessorKey: "id",
-        header: t("field.id.label"),
+        header: invariantTechnicalLabels.id,
         grow: 100,
         Cell: ({ renderedCellValue }) => renderedCellValue,
       },
@@ -72,28 +80,65 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
     },
   });
 
-  return <MantineReactTable table={table} />;
+  useEffect(() => {
+    if (searchParams.get("create") !== "true") return;
+
+    setFormKey((value) => value + 1);
+    setIsCreateOpen(true);
+  }, [searchParams]);
+
+  const closeCreate = () => {
+    setIsCreateOpen(false);
+    setFormKey((value) => value + 1);
+    if (searchParams.has("create")) router.replace("/manage/users/invites", { scroll: false });
+  };
+
+  const toggleCreate = () => {
+    if (isCreateOpen) {
+      closeCreate();
+      return;
+    }
+
+    setFormKey((value) => value + 1);
+    setIsCreateOpen(true);
+  };
+
+  return (
+    <Stack>
+      <Group justify="end">
+        <InviteCreateButton onClick={toggleCreate} />
+      </Group>
+      <Collapse expanded={isCreateOpen}>
+        <Card withBorder>
+          <InviteCreateForm key={formKey} onClose={closeCreate} />
+        </Card>
+      </Collapse>
+      <MantineReactTable table={table} />
+    </Stack>
+  );
 };
 
 const RenderRowActions = ({ row }: { row: MRT_Row<RouterOutputs["invite"]["getAll"][number]> }) => {
-  const t = useScopedI18n("management.page.user.invite");
+  const t = useI18n("management.page.user.invite");
+  const tCommon = useI18n("common");
   const { mutate, isPending } = clientApi.invite.deleteInvite.useMutation();
   const utils = clientApi.useUtils();
-  const { openConfirmModal } = useConfirmModal();
   const handleDelete = useCallback(() => {
-    openConfirmModal({
-      title: t("action.delete.title"),
-      children: t("action.delete.description"),
-      onConfirm: () => {
-        mutate({ id: row.original.id });
-        void utils.invite.getAll.invalidate();
-      },
-    });
-  }, [openConfirmModal, row.original.id, mutate, utils, t]);
+    mutate({ id: row.original.id });
+    void utils.invite.getAll.invalidate();
+  }, [row.original.id, mutate, utils]);
 
   return (
-    <ActionIcon variant="subtle" color="red" onClick={handleDelete} loading={isPending}>
+    <InlineConfirmActionIcon
+      variant="subtle"
+      color="red"
+      onConfirm={handleDelete}
+      confirmLabel={tCommon("action.confirm")}
+      confirmationAriaLabel={tCommon("action.confirm")}
+      loading={isPending}
+      aria-label={t("action.delete.title")}
+    >
       <IconTrash color="red" size={20} stroke={1.5} />
-    </ActionIcon>
+    </InlineConfirmActionIcon>
   );
 };

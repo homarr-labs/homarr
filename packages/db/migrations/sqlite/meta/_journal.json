@@ -295,6 +295,55 @@
       "when": 1783786658943,
       "tag": "0041_add_right_click_preference",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "6",
+      "when": 1784305283910,
+      "tag": "0042_custom_widget_v2_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "6",
+      "when": 1786212459480,
+      "tag": "0043_add_layout_gutters",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "6",
+      "when": 1786215203092,
+      "tag": "0044_add_layout_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "6",
+      "when": 1786217088950,
+      "tag": "0045_add_assistant_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "6",
+      "when": 1787556956665,
+      "tag": "0046_add_header_preferences_and_branding",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "6",
+      "when": 1788763848930,
+      "tag": "0047_add_byte_unit_system",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "6",
+      "when": 1790988595595,
+      "tag": "0048_add_layout_resize_source",
+      "breakpoints": true
     }
   ]
 }

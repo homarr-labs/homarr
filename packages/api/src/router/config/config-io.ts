@@ -16,10 +16,12 @@ import {
   searchEngines,
   serverSettings,
 } from "@homarr/db/schema";
+import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import type { configExportSchema, configImportSchema } from "@homarr/validation/config";
 
 import { collectBoardDocumentOperations, createBoardExportDocument } from "../board/board-io";
+import { serverSettingsPatchSchema } from "../serverSettings";
 import type { DbOperation } from "../db-operations";
 import { runDbOperationsAsync } from "../db-operations";
 
@@ -172,6 +174,9 @@ export const importConfigDocumentAsync = async (
   document: ConfigImportDocument,
   creatorId: string,
 ): Promise<{ created: Record<string, number>; updated: Record<string, number> }> => {
+  // Settings travel as opaque records, so they are checked here before anything is written
+  if (document.settings) serverSettingsPatchSchema.parse(document.settings);
+
   const [existingApps, existingIntegrations, existingSearchEngines, existingGroups, existingBoards, currentSettings] =
     await Promise.all([
       db.query.apps.findMany({ columns: { id: true } }),
@@ -253,7 +258,11 @@ export const importConfigDocumentAsync = async (
     else publicBoardIds.delete(match.effectiveId);
   }
 
-  const finalBoardSettings = { ...currentSettings.board, ...document.settings?.board };
+  // Settings travel as opaque records, the board group is the only one read back here
+  const finalBoardSettings = {
+    ...currentSettings.board,
+    ...(document.settings?.board as Partial<ServerSettings["board"]> | undefined),
+  };
   const configuredHomeBoardIds = [
     referencedBoardId(finalBoardSettings.homeBoardId),
     referencedBoardId(finalBoardSettings.mobileHomeBoardId),

@@ -1,17 +1,23 @@
+import { statsRouter } from "./router/widgets/stats";
 export { createTRPCContext } from "./trpc";
+export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
+export type { McpTool } from "./mcp-tools";
 
 import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
 import { boardRouter } from "./router/board";
 import { configRouter } from "./router/config/config-router";
+import { customWidgetRouter } from "./router/custom-widget/custom-widget-router";
 import { dockerRouter } from "./router/docker/docker-router";
 import { groupRouter } from "./router/group";
 import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { kubernetesMcpRouter } from "./router/kubernetes/mcp-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
+import { airQualityRouter } from "./router/widgets/air-quality";
 import { bazarrRouter } from "./router/widgets/bazarr";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { beszelRouter } from "./router/widgets/beszel";
@@ -21,22 +27,31 @@ import { downloadsRouter } from "./router/widgets/downloads";
 import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
 import { mediaRequestsRouter } from "./router/widgets/media-requests";
 import { mediaServerRouter } from "./router/widgets/media-server";
+import { mediaOrganizerRouter } from "./router/widgets/media-organizer";
 import { patchmonRouter } from "./router/widgets/patchmon";
 import { smartHomeRouter } from "./router/widgets/smart-home";
+import { traefikRouter } from "./router/widgets/traefik";
+import { userRouter } from "./router/user";
 import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
+import { wudRouter } from "./router/widgets/wud";
 
 export const mcpRouter = createTRPCRouter({
+  stats: statsRouter,
   app: appRouterForApps,
   apiKeys: apiKeysRouter,
   board: boardRouter,
   config: configRouter,
+  customWidget: customWidgetRouter,
   docker: dockerRouter,
   group: groupRouter,
   icon: iconsRouter,
   info: infoRouter,
   integration: integrationRouter,
   invite: inviteRouter,
+  kubernetes: kubernetesMcpRouter,
   searchEngine: searchEngineRouter,
+  user: userRouter,
+  airQuality: airQualityRouter,
   bazarr: bazarrRouter,
   serverSettings: serverSettingsRouter,
   beszel: beszelRouter,
@@ -46,7 +61,10 @@ export const mcpRouter = createTRPCRouter({
   healthMonitoring: healthMonitoringRouter,
   mediaRequests: mediaRequestsRouter,
   mediaServer: mediaServerRouter,
+  mediaOrganizer: mediaOrganizerRouter,
   patchmon: patchmonRouter,
   smartHome: smartHomeRouter,
+  traefik: traefikRouter,
   widgetSecrets: widgetSecretsRouter,
+  wud: wudRouter,
 });

@@ -1,0 +1,29 @@
+.root {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.root[data-selected] {
+  border-color: var(--mantine-primary-color-filled);
+  border-width: 2px;
+}
+
+.root:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (forced-colors: active) {
+  .root:focus-visible,
+  .root[data-selected] {
+    outline: 2px solid Highlight;
+  }
+}

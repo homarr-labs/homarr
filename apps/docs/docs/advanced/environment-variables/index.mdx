@@ -14,25 +14,60 @@ tags:
 
 Homarr offers a few environment variables, which can be used to configure the container.
 
-:::info
+<Alert type="info">
+
 With docker you can add the `_FILE` suffix to any environment variable, which will read the value from a file.
 This is especially useful for [docker secrets](https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose).
-:::
+
+</Alert>
 
 ## General
 
-:::warning
-Using the `PUID` and `PGID` will require you to set the correct permissions on the mounted volumes and if used the docker socket. See more in the [Running as a different user](/docs/advanced/running-as-different-user) documentation.
-:::
+<Alert type="warning">
 
-| Environment Variable     | Description                                                                                                                                                                                                                            | Possible values                     | Default |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
-| `PUID`                   | User ID to run the container as                                                                                                                                                                                                        | Any valid user ID                   | `0`     |
-| `PGID`                   | Group ID to run the container as                                                                                                                                                                                                       | Any valid group ID                  | `0`     |
-| `LOG_LEVEL`              | Log level to use                                                                                                                                                                                                                       | `debug` / `info` / `warn` / `error` | `info`  |
-| `NO_EXTERNAL_CONNECTION` | Disables Homarr's internet-backed requests, including update checks, weather, and RSS feeds                                                                                                                                            | `true` or `false`                   | `false` |
-| `ENABLE_DNS_CACHING`     | Enables dns caching. Enabled by default, but if you experience issues with IPv6 or static IPs, see [#4006](https://github.com/homarr-labs/homarr/issues/4006) or disable this flag                                                     | `true` or `false`                   | `true`  |
-| `HOMARR_DISABLE_IPV6`    | Disables the IPv6 listener of the internal nginx proxy, even when the host supports IPv6. IPv6 is normally disabled automatically when the host has no IPv6 configured. See [#4596](https://github.com/homarr-labs/homarr/issues/4596) | `true` or `false`                   | `false` |
+Using the `PUID` and `PGID` will require you to set the correct permissions on the mounted volumes and if used the docker socket. See more in the [Running as a different user](/docs/advanced/running-as-different-user) documentation.
+
+</Alert>
+
+| Environment Variable     | Description                                                                                                                                                                                                                            | Possible values                     | Default                       |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------- |
+| `PUID`                   | User ID to run the container as                                                                                                                                                                                                        | Any valid user ID                   | `0`                           |
+| `PGID`                   | Group ID to run the container as                                                                                                                                                                                                       | Any valid group ID                  | `0`                           |
+| `LOG_LEVEL`              | Log level to use                                                                                                                                                                                                                       | `debug` / `info` / `warn` / `error` | `info`                        |
+| `BASE_URL`               | Public Homarr origin used by MCP OAuth metadata and redirects. Set this when a reverse proxy does not preserve the public host and protocol.                                                                                           | HTTP(S) origin without a path       | -                             |
+| `NO_EXTERNAL_CONNECTION` | Disables Homarr's internet-backed requests, including update checks, weather, location search, and RSS feeds                                                                                                                           | `true` or `false`                   | `false`                       |
+| `ENABLE_DNS_CACHING`     | Opt-in DNS cache. Keep disabled for Docker service names and `extra_hosts`; cached addresses can survive container recreation and DNS-first lookup can override hosts-file entries.                                                    | `true` or `false`                   | `false`                       |
+| `HOMARR_DISABLE_IPV6`    | Disables the IPv6 listener of the internal nginx proxy, even when the host supports IPv6. IPv6 is normally disabled automatically when the host has no IPv6 configured. See [#4596](https://github.com/homarr-labs/homarr/issues/4596) | `true` or `false`                   | `false`                       |
+| `HOMARR_WEBSITE_URL`     | Main Homarr documentation/site base used by runtime links. Must be an absolute HTTP(S) URL.                                                                                                                                            | HTTP(S) URL                         | `https://homarr.dev`          |
+| `WORKSHOP_API_URL`       | PocketBase API used by Homarr and standalone documentation.                                                                                                                                                                            | HTTP(S) URL                         | `HOMARR_WEBSITE_URL`          |
+| `WORKSHOP_WEB_URL`       | Public Workshop website used by links in Homarr, Custom Widgets, onboarding, and assistant context.                                                                                                                                    | HTTP(S) URL                         | `HOMARR_WEBSITE_URL/workshop` |
+
+Workshop service operators can find its server-only configuration in the
+[Workshop operator guide](/docs/advanced/development/workshop-operator#environment-variables).
+
+### Demo mode
+
+`DEMO_MODE=true` seeds demo data and makes Assistant return a fixed response without calling a model provider. `DEMO_READ_ONLY` defaults to `true`, blocking dashboard and configuration changes. Authenticated users can still save and manage their own Assistant conversations so canned chats work. Set `DEMO_READ_ONLY=false` for editable preview deployments.
+
+### Workshop service
+
+These variables configure the separate Workshop service, not the Homarr application container.
+
+| Environment Variable                        | Description                                                               | Default                           |
+| ------------------------------------------- | ------------------------------------------------------------------------- | --------------------------------- |
+| `WORKSHOP_PUBLIC_ORIGIN`                    | Public origin used in PocketBase links and email                          | Required in production            |
+| `PB_ALLOWED_ORIGINS`                        | Browser origins allowed to call PocketBase                                | `*` for the public community      |
+| `WORKSHOP_IMAGE`                            | Workshop image used by the staging Compose file                           | `ghcr.io/homarr-labs/workshop:v2` |
+| `WORKSHOP_EXPOSE_PORT`                      | Host port for the combined staging service                                | `8090`                            |
+| `PB_EXPOSE_PORT`                            | Host port for local PocketBase development                                | `8090`                            |
+| `DOCS_EXPOSE_PORT`                          | Host port for local documentation development                             | `3003`                            |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | Optional GitHub OAuth application credentials                             | -                                 |
+| `OPENROUTER_API_KEY`                        | Server-only upstream key that enables the Homarr Assistant provider       | Provider disabled                 |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`             | Daily Assistant request units per user                                    | `50`                              |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT`      | Daily Assistant request units shared by all users                         | `10000`                           |
+| `HOMARR_AI_OPENROUTER_BASE_URL`             | OpenRouter-compatible provider endpoint                                   | `https://openrouter.ai/api/v1`    |
+| `HOMARR_AI_OPENROUTER_MODEL`                | OpenRouter model exposed through `homarr/model`                           | `openai/gpt-6-luna`               |
+| `HOMARR_AI_ALLOW_INSECURE_UPSTREAM`         | Allows an HTTP upstream for local provider tests; never use in production | `false`                           |
 
 ## Authentication
 
@@ -46,30 +81,35 @@ The `SECRET_ENCRYPTION_KEY` is required. If none is specified before starting th
 | ----------------------- | ------------------------------------------- | ----------------------- | ------- |
 | `SECRET_ENCRYPTION_KEY` | Secret used to encrypt secrets in database. | 64 character hex string | -       |
 
-:::info
+<Alert type="info">
+
 A random secret can be generated by using the following command: `openssl rand -hex 32`
-:::
+
+</Alert>
 
 ## Docker
 
-| Environment Variable  | Description                                                                                                                              | Possible values                                         | Default |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------- |
-| `DOCKER_HOSTNAMES`    | Comma-separated list of hostnames to connect to                                                                                          | For example `localhost,docker.example.com`              | -       |
-| `DOCKER_PORTS`        | Comma-separated list of ports to connect to                                                                                              | For example `2375,2376`                                 | -       |
-| `DOCKER_SOCKET_PATHS` | Comma-separated list of mounted Docker-compatible socket paths. See the [Docker and Podman integration guide](/docs/integrations/docker) | For example `/var/run/docker.sock,/var/run/podman.sock` | -       |
+| Environment Variable  | Description                                                                                                                                                                                                          | Possible values                                         | Default |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------- |
+| `DOCKER_SOCKET_PATHS` | Comma-separated mounted Docker-compatible socket paths. Homarr discovers each path as a selectable Docker environment                                                                                                | For example `/var/run/docker.sock,/var/run/podman.sock` | -       |
+| `DOCKER_HOSTNAMES`    | Comma-separated plaintext TCP hostnames. Pair each hostname with the port in the same position in `DOCKER_PORTS`                                                                                                     | For example `localhost,docker.example.com`              | -       |
+| `DOCKER_PORTS`        | Comma-separated plaintext TCP ports paired with `DOCKER_HOSTNAMES`                                                                                                                                                   | For example `2375,2376`                                 | -       |
+| `DOCKER_ENDPOINTS`    | Optional advanced JSON configuration for custom names, TLS, or restricted capabilities. It takes precedence over the simple variables above. See the [Docker and Podman connection guide](/docs/integrations/docker) | A JSON array of endpoint descriptors                    | -       |
 
 ## Database
 
-| Environment Variable | Description                                                                                                                  | Possible values                               | Default                 |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ----------------------- |
-| `DB_DRIVER`          | Database driver to use. Currently `better-sqlite3` is used for sqlite, `mysql2` for mysql and `node-postgres` for postgresql | `better-sqlite3` / `mysql2` / `node-postgres` | `better-sqlite3`        |
-| `DB_DIALECT`         | Database dialect to use.                                                                                                     | `sqlite` / `mysql` / `postgresql`             | `sqlite`                |
-| `DB_URL`             | Database URL to connect to.                                                                                                  | Any valid database URL                        | `/appdata/db/db.sqlite` |
-| `DB_HOST`            | Database host to connect to.                                                                                                 | Any valid database host                       | -                       |
-| `DB_PORT`            | Database port to connect to.                                                                                                 | Any valid database port                       | -                       |
-| `DB_NAME`            | Database name to connect to.                                                                                                 | Any valid database name                       | -                       |
-| `DB_USER`            | Database user to connect with.                                                                                               | Any valid database user                       | -                       |
-| `DB_PASSWORD`        | Database password to connect with.                                                                                           | Any valid database password                   | -                       |
+SQLite is the default; PostgreSQL is also supported. Existing MySQL installations must [convert to SQLite before upgrading to v2](/docs/advanced/mysql-to-sqlite).
+
+| Environment Variable | Description                                                                               | Possible values                    | Default                 |
+| -------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------- | ----------------------- |
+| `DB_DRIVER`          | Database driver to use. Use `better-sqlite3` for SQLite or `node-postgres` for PostgreSQL | `better-sqlite3` / `node-postgres` | `better-sqlite3`        |
+| `DB_DIALECT`         | Database dialect to use.                                                                  | `sqlite` / `postgresql`            | `sqlite`                |
+| `DB_URL`             | Database URL to connect to.                                                               | Any valid database URL             | `/appdata/db/db.sqlite` |
+| `DB_HOST`            | Database host to connect to.                                                              | Any valid database host            | -                       |
+| `DB_PORT`            | Database port to connect to.                                                              | Any valid database port            | -                       |
+| `DB_NAME`            | Database name to connect to.                                                              | Any valid database name            | -                       |
+| `DB_USER`            | Database user to connect with.                                                            | Any valid database user            | -                       |
+| `DB_PASSWORD`        | Database password to connect with.                                                        | Any valid database password        | -                       |
 
 You can either use the url or host, port, name and credentials combined. The URL will be prioritized over the other values.
 
@@ -78,9 +118,11 @@ You can either use the url or host, port, name and credentials combined. The URL
 By default Redis is running within the installation. (for example in Docker).
 However for example for K8s it can be useful to use an external Redis instance.
 
-:::note
+<Alert type="note">
+
 External redis is currently not supported with Proxmox Community Scripts
-:::
+
+</Alert>
 
 | Environment Variable   | Description                                                                                          | Possible values          | Default |
 | ---------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------ | ------- |
@@ -102,10 +144,15 @@ External redis is currently not supported with Proxmox Community Scripts
 
 ## Advanced deployments
 
-:::warning
-The advanced deployments environment variables should only be used if you know what you are doing.
-:::
+<Alert type="warning">
 
-| Environment Variable     | Description                                        |
-| ------------------------ | -------------------------------------------------- |
-| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts |
+The advanced deployments environment variables should only be used if you know what you are doing.
+
+</Alert>
+
+| Environment Variable     | Description                                         |
+| ------------------------ | --------------------------------------------------- |
+| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts. |
+
+All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
+trailing slashes when Homarr or the documentation site starts.

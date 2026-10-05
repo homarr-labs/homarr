@@ -1,41 +1,383 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
-*/
+.heroBanner {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(3rem, 6vw, 6rem) clamp(1.25rem, 4vw, 4rem);
+  background: var(--ifm-color-primary);
+  color: var(--primary-foreground);
+}
 
-section {
-  margin-bottom: 2rem;
+.heroContent {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 48rem);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  width: 100%;
+  max-width: 96rem;
+  margin-inline: auto;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  max-width: 52rem;
+}
+
+.heroTitle {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(3rem, 4.45vw, 4.5rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.heroDescription {
+  max-width: 46rem;
+  margin: 1.75rem 0 0;
+  color: inherit;
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.heroActions {
+  --hero-button-bg: #fff;
+  --hero-button-fg: #27272a;
+  --hero-button-border: color-mix(in srgb, #111827 12%, transparent);
+  --hero-button-hover-bg: #f4f4f5;
+  --hero-button-hover-fg: #18181b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+}
+
+.heroButton {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--hero-button-border);
+  border-radius: 999px;
+  background: var(--hero-button-bg);
+  color: var(--hero-button-fg);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgb(49 46 129 / 10%);
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.heroButton:hover {
+  background: var(--hero-button-hover-bg);
+  color: var(--hero-button-hover-fg);
+  box-shadow: 0 4px 14px rgb(49 46 129 / 18%);
+}
+
+.partnerButton,
+.partnerButton:hover {
+  border-color: #27272a;
+  background: #27272a;
+  color: #fff;
+}
+
+.partnerButton img {
+  width: auto;
+  max-height: 1.25rem;
+}
+
+:global(.dark) .heroActions {
+  --hero-button-bg: #27272a;
+  --hero-button-fg: #f4f4f5;
+  --hero-button-border: #52525b;
+  --hero-button-hover-bg: #3f3f46;
+  --hero-button-hover-fg: #fff;
+}
+
+.heroPreview {
+  min-width: 0;
+  animation: dashboard-float 5s ease-in-out infinite;
+}
+
+.heroCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0.75rem;
+  width: min(100%, 48rem);
+  margin-inline: auto;
+  color: #343a40;
+  transform: rotate(8deg) scale(0.8) skew(8deg);
+}
+
+:global(.dark) .heroCards {
+  color: #dee2e6;
+}
+
+.widgetCard {
+  flex: none;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, currentcolor 12%, transparent) !important;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--ifm-navbar-background-color) 82%, transparent) !important;
+  color: inherit;
+  font: inherit;
+  box-shadow: 0 5px 12px rgb(31 41 55 / 10%);
+  backdrop-filter: blur(12px);
+}
+
+.heroCards :global(.app-card) {
+  cursor: default;
+}
+
+.heroCards :global(.app-card img) {
+  transition: transform 150ms ease;
+}
+
+.heroCards :global(.app-card:hover img) {
+  transform: scale(0.66) !important;
+}
+
+.resourcesWidget,
+.dockerWidget {
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 0.5rem;
+  padding: 0.75rem !important;
+}
+
+.widgetHeading,
+.resourceLabel,
+.containerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.widgetTitle {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.onlineStatus,
+.dockerCount {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.onlineStatus {
+  color: #087f5b;
+}
+
+:global(.dark) .onlineStatus {
+  color: #69dbb1;
+}
+
+.resourceMeter {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.resourceMeterCritical .resourceLabel {
+  color: #a51111;
+  font-weight: 700;
+}
+
+.resourceLabel {
+  font-size: 0.6875rem;
+}
+
+.resourceLabel > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.resourceTrack {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 0.375rem;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentcolor 16%, transparent);
+}
+
+.resourceTrack::-webkit-progress-bar {
+  background: transparent;
+}
+
+.resourceTrack::-webkit-progress-value,
+.resourceTrack::-moz-progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.resourceMeterCritical .resourceTrack::-webkit-progress-value,
+.resourceMeterCritical .resourceTrack::-moz-progress-bar {
+  background: #e03131;
+}
+
+.downloadProgress {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 0.5rem;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentcolor 18%, transparent);
+}
+
+.downloadProgress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.downloadProgress::-webkit-progress-value,
+.downloadProgress::-moz-progress-bar {
+  border-radius: inherit;
+  background: #2f9e44;
+}
+
+.containerList {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.containerRow {
+  font-size: 0.6875rem;
+  line-height: 1.25;
+}
+
+.containerName {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.containerStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: color-mix(in srgb, currentcolor 82%, transparent);
+}
+
+.statusDot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: #12b886;
+}
+
+.containerRowFailed {
+  color: #a51111;
+  font-weight: 700;
+}
+
+:global(.dark) .resourceMeterCritical .resourceLabel,
+:global(.dark) .containerRowFailed {
+  color: #ffe3e3;
+}
+
+.statusDotFailed {
+  background: #fa5252;
+  animation: failed-container-pulse 1.4s ease-in-out infinite;
 }
 
 .heroWave {
-  width: 100%;
-  height: 125px;
-}
-
-.hero h2 {
-  font-size: 2rem;
-}
-
-.hero p {
-  font-weight: 500;
-}
-
-.heroImage {
   display: block;
-  margin-left: auto;
-  border-radius: 6px;
-  max-width: min(100%, 500px);
+  width: 100%;
+  height: clamp(5rem, 9vw, 8rem);
+  margin-top: -1px;
 }
 
+@keyframes dashboard-float {
+  50% {
+    transform: translateY(10px);
+  }
+}
 
-.heroBanner {
-  padding: 4rem;
-  position: relative;
-  overflow: hidden;
+@keyframes failed-container-pulse {
+  50% {
+    opacity: 0.35;
+    transform: scale(1.65);
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .heroBanner {
+    padding: 3rem 1.5rem;
+  }
+
+  .heroContent {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .heroCopy {
+    max-width: 46rem;
+  }
+
+  .heroPreview {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 2rem;
+    padding: 3.25rem 2rem 4rem;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .heroBanner {
+    padding: 2.5rem 2rem 3.5rem;
+  }
+
+  .heroTitle {
+    font-size: 1.875rem;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+  }
+
+  .heroDescription {
+    margin-top: 1.4rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .heroActions > * {
+    flex: 1 1 0;
+  }
+
+  .partnerButton {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroPreview,
+  .statusDotFailed {
+    animation: none;
+  }
+
+  .heroCards :global(.app-card img),
+  .heroButton {
+    transition: none;
   }
 }

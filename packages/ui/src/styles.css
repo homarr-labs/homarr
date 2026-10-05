@@ -3,3 +3,11 @@
 @import "@mantine/dates/styles.css";
 @import "@gfazioli/mantine-onboarding-tour/styles.css";
 @import "mantine-react-table/styles.css";
+
+:root {
+  --homarr-z-index-widget-background-tooltip: calc(var(--mantine-z-index-modal) - 4);
+  --homarr-z-index-widget-preview-backdrop: calc(var(--mantine-z-index-modal) - 3);
+  --homarr-z-index-board-header: calc(var(--mantine-z-index-modal) - 2);
+  --homarr-z-index-widget-focus: calc(var(--mantine-z-index-modal) - 1);
+  --homarr-z-index-modal-tooltip: calc(var(--mantine-z-index-modal) + 2);
+}

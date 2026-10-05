@@ -10,7 +10,6 @@ import {
 
 import { boardExportSchema, boardImportSchema, importConflictStrategySchema } from "./board";
 import { zodEnumFromArray } from "./enums";
-import { serverSettingsSchema, serverSettingsUpdateSchema } from "./settings";
 
 /**
  * Documents of the full configuration export.
@@ -19,6 +18,15 @@ import { serverSettingsSchema, serverSettingsUpdateSchema } from "./settings";
  * entities by id (for example the app widget stores an appId) and those references live inside
  * an opaque options record, so remapping ids would silently break them.
  */
+
+/**
+ * Server settings as they travel over the API.
+ *
+ * Every group is stored as one opaque record and the set of groups grows with the application,
+ * so the shape is kept generic here. The groups that have a schema of their own (branding,
+ * analytics) are validated by `serverSettings.saveSettings` when a value is written.
+ */
+export const serverSettingsRecordSchema = z.record(z.string(), z.record(z.string(), z.unknown()));
 
 const configAppSchema = z.object({
   id: z.string(),
@@ -66,7 +74,7 @@ const configBoardGroupPermissionSchema = z.object({
 
 export const configExportSchema = z.object({
   version: z.literal(1),
-  settings: serverSettingsSchema,
+  settings: serverSettingsRecordSchema,
   apps: z.array(configAppSchema),
   integrations: z.array(configIntegrationSchema),
   searchEngines: z.array(configSearchEngineSchema),
@@ -81,7 +89,7 @@ export const configExportSchema = z.object({
 
 export const configImportSchema = z.object({
   version: z.literal(1),
-  settings: serverSettingsUpdateSchema.optional(),
+  settings: serverSettingsRecordSchema.optional(),
   apps: z.array(configAppSchema).default([]),
   integrations: z
     .array(

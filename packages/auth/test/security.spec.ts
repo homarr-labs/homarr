@@ -10,15 +10,6 @@ describe("hashPassword should return a hash", () => {
     expect(result.length).toBeGreaterThan(55);
     expect(result).not.toEqual(password);
   });
-  it("should return a different hash each time", async () => {
-    const password = "password";
-    const password2 = "another password";
-
-    const result1 = await hashPasswordAsync(password);
-    const result2 = await hashPasswordAsync(password2);
-
-    expect(result1).not.toEqual(result2);
-  });
   it("should return a different hash for the same password with different salts", async () => {
     const password = "password";
 

@@ -6,6 +6,7 @@ import { createSpotlight } from "@mantine/spotlight";
 import { atom } from "jotai";
 
 export const [spotlightStore, spotlightActions] = createSpotlight();
+export const closeSpotlight = spotlightActions.close;
 
 export interface MediaRequestSearchScope {
   integrationIds?: string[];

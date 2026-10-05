@@ -73,14 +73,27 @@ test("board composition endpoints should work over http", async () => {
   const created = await callAsync("POST", "/api/boards", { name: "http-board", columnCount: 6, isPublic: true });
   expect(created.status).toBe(200);
   const boardId: string = created.body.boardId;
+  const baseLayoutId: string = created.body.layoutId;
 
-  // Widen the grid so an item wider than the initial six columns fits
+  /** A board has a mobile and a base layout, the placements of the wider one are the interesting ones */
+  interface ApiLayout {
+    id: string;
+    columnCount: number;
+  }
+  const baseOf = (element: { layouts: { layoutId: string }[] }) =>
+    element.layouts.find(({ layoutId }) => layoutId === baseLayoutId);
+
+  // Widen the base grid so an item wider than the initial six columns fits
+  const current = await callAsync("GET", `/api/boards/${boardId}/layouts`);
+  expect(current.status).toBe(200);
+  expect(current.body).toHaveLength(2);
   const layouts = await callAsync("PUT", `/api/boards/${boardId}/layouts`, {
-    layouts: [{ id: "base-reference", name: "Base", columnCount: 12, breakpoint: 0 }],
+    layouts: current.body.map((layout: ApiLayout) =>
+      layout.id === baseLayoutId ? { ...layout, columnCount: 12 } : layout,
+    ),
   });
   expect(layouts.status).toBe(200);
-  expect(layouts.body).toHaveLength(1);
-  expect(layouts.body[0].columnCount).toBe(12);
+  expect(layouts.body.find((layout: ApiLayout) => layout.id === baseLayoutId).columnCount).toBe(12);
 
   const item = await callAsync("POST", "/api/boards/items", {
     boardId,
@@ -96,13 +109,16 @@ test("board composition endpoints should work over http", async () => {
 
   const board = await callAsync("GET", `/api/boards/${boardId}`);
   expect(board.status).toBe(200);
-  expect(board.body.items[0].layouts[0]).toMatchObject({ xOffset: 1, yOffset: 2, width: 10, height: 4 });
+  expect(baseOf(board.body.items[0])).toMatchObject({ xOffset: 1, yOffset: 2, width: 10, height: 4 });
+  // The mobile layout is only three columns wide, so the same item is clamped there
+  expect(board.body.items[0].layouts).toHaveLength(2);
+  expect(board.body.items[0].layouts.every((layout: { width: number }) => layout.width <= 10)).toBe(true);
 
   expect((await callAsync("PATCH", `/api/boards/${boardId}/items/${itemId}`, { width: 12, xOffset: 0 })).status).toBe(
     200,
   );
   const afterPatch = await callAsync("GET", `/api/boards/${boardId}/items`);
-  expect(afterPatch.body[0].layouts[0]).toMatchObject({ xOffset: 0, yOffset: 2, width: 12, height: 4 });
+  expect(baseOf(afterPatch.body[0])).toMatchObject({ xOffset: 0, yOffset: 2, width: 12, height: 4 });
 
   const collision = await callAsync("POST", "/api/boards/items", {
     boardId,
@@ -119,13 +135,12 @@ test("board composition endpoints should work over http", async () => {
   const imported = await callAsync("POST", "/api/boards/import", { ...exported.body, name: "http-copy" });
   expect(imported.status).toBe(200);
   const copy = await callAsync("GET", `/api/boards/${imported.body.boardId}`);
-  expect(copy.body.items[0].layouts[0]).toMatchObject({ xOffset: 0, yOffset: 2, width: 12, height: 4 });
+  const copiedBaseLayoutId = copy.body.layouts.find((layout: ApiLayout) => layout.columnCount === 12).id;
+  expect(
+    copy.body.items[0].layouts.find(({ layoutId }: { layoutId: string }) => layoutId === copiedBaseLayoutId),
+  ).toMatchObject({ xOffset: 0, yOffset: 2, width: 12, height: 4 });
 
-  const section = await callAsync("POST", `/api/boards/${boardId}/sections`, {
-    kind: "category",
-    name: "Media",
-    yOffset: 1,
-  });
+  const section = await callAsync("POST", `/api/boards/${boardId}/sections`, { kind: "empty", yOffset: 1 });
   expect(section.status).toBe(200);
   expect(await callAsync("GET", `/api/boards/${boardId}/sections`).then(({ body }) => body)).toHaveLength(2);
   expect((await callAsync("DELETE", `/api/boards/${boardId}/sections/${section.body.sectionId}`)).status).toBe(200);

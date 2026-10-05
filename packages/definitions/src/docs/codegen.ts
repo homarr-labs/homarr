@@ -5,8 +5,8 @@ import { XMLParser } from "fast-xml-parser";
 import { z } from "zod/v4";
 
 import { createDocumentationLink } from "./index";
-import { integrationDocSlugs } from "./integration-doc-slugs";
 import { widgetDocSlugs } from "./widget-doc-slugs";
+import { getIntegrationDocumentationSlug, integrationKinds } from "../integration";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -60,7 +60,8 @@ const updateSitemapTypeFileAsync = async (sitemapPathType: string) => {
 };
 
 const slugMapPaths = [
-  ...Object.values(integrationDocSlugs)
+  ...integrationKinds
+    .map(getIntegrationDocumentationSlug)
     .filter(Boolean)
     .map((slug) => `/docs/integrations/${slug}`),
   ...Object.values(widgetDocSlugs)
@@ -89,7 +90,7 @@ const main = async () => {
     paths = [];
   }
 
-  paths.push("/sitemap.xml");
+  paths.push("/sitemap.xml", "/blog", "/search");
   for (const p of slugMapPaths) {
     if (!paths.includes(p)) {
       paths.push(p);

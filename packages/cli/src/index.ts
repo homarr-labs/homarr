@@ -1,15 +1,50 @@
 import { run } from "@drizzle-team/brocli";
+import type { Command } from "@drizzle-team/brocli";
 
-import { apiKeysRoot } from "./commands/api-keys";
-import { fixUsernames } from "./commands/fix-usernames";
-import { integrationsRoot } from "./commands/integrations";
-import { recreateAdmin } from "./commands/recreate-admin";
-import { resetPassword } from "./commands/reset-password";
-import { usersRoot } from "./commands/users";
+import { harnessRoot, normalizeHarnessEnvironmentArgs } from "./commands/harness";
 
-const commands = [usersRoot, integrationsRoot, apiKeysRoot, resetPassword, fixUsernames, recreateAdmin];
+const harnessCommandNames = new Set(["harness", "local-harness"]);
 
-void run(commands, {
-  name: "homarr-cli",
-  version: "1.0.0",
-});
+function isHarnessInvocation(argv: string[]): boolean {
+  const command = argv[2];
+  return command !== undefined && harnessCommandNames.has(command);
+}
+
+async function main(): Promise<void> {
+  const harnessInvocation = isHarnessInvocation(process.argv);
+  let commands: Command[];
+
+  if (harnessInvocation) {
+    commands = [harnessRoot];
+  } else {
+    const [
+      { apiKeysRoot },
+      { fixUsernames },
+      { integrationsRoot },
+      { recreateAdmin },
+      { resetPassword },
+      { usersRoot },
+    ] = await Promise.all([
+      import("./commands/api-keys"),
+      import("./commands/fix-usernames"),
+      import("./commands/integrations"),
+      import("./commands/recreate-admin"),
+      import("./commands/reset-password"),
+      import("./commands/users"),
+    ]);
+    commands = [usersRoot, integrationsRoot, apiKeysRoot, resetPassword, fixUsernames, recreateAdmin, harnessRoot];
+  }
+
+  let argSource = process.argv;
+  if (harnessInvocation) {
+    argSource = normalizeHarnessEnvironmentArgs(process.argv);
+  }
+
+  await run(commands, {
+    argSource,
+    name: "homarr-cli",
+    version: "1.0.0",
+  });
+}
+
+void main();

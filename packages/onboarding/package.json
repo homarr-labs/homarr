@@ -1,0 +1,51 @@
+{
+  "name": "@homarr/onboarding",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "test": "vitest run --root ../.. packages/onboarding/src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/form": "workspace:^0.1.0",
+    "@homarr/forms-collection": "workspace:^0.1.0",
+    "@homarr/notifications": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0",
+    "@homarr/ui": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0",
+    "@mantine/core": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "@rexa-developer/tiks": "catalog:",
+    "@tabler/icons-react": "catalog:",
+    "canvas-confetti": "catalog:",
+    "react": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/canvas-confetti": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

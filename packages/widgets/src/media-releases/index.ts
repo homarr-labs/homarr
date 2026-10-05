@@ -1,10 +1,13 @@
 import { IconTicket } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("mediaReleases", {
   icon: IconTicket,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "mediaRelease"]],
   refetchInterval: null,
   createOptions() {
@@ -33,5 +36,5 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
       }),
     }));
   },
-  supportedIntegrations: ["mock", "emby", "jellyfin", "plex"],
+  ...getWidgetIntegrationConfig("mediaReleases"),
 }).withDynamicImport(() => import("./component"));

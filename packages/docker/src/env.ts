@@ -9,6 +9,8 @@ export const env = createEnv({
     DOCKER_PORTS: z.string().optional(),
     // Comma separated paths to Docker-compatible Unix sockets (e.g., /var/run/docker.sock,/run/user/1000/podman/podman.sock)
     DOCKER_SOCKET_PATHS: z.string().optional(),
+    // JSON descriptors for friendly names, TLS, Podman identity, and per-endpoint capabilities.
+    DOCKER_ENDPOINTS: z.string().optional(),
     ENABLE_DOCKER: createBooleanSchema(true),
     ENABLE_KUBERNETES: createBooleanSchema(false),
   },

@@ -25,7 +25,7 @@ vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
 const createCaller = (db: Database) => boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-/** Creates a board owned by the session user with a single empty section and one layout */
+/** Creates a board owned by the session user with a single main canvas and one base layout */
 const createBoardAsync = async (db: Database, columnCount = 12) => {
   const boardId = createId();
   const sectionId = createId();
@@ -34,9 +34,30 @@ const createBoardAsync = async (db: Database, columnCount = 12) => {
   await db.insert(users).values({ id: creatorId });
   await db.insert(boards).values({ id: boardId, name: `board-${boardId}`, creatorId });
   await db.insert(sections).values({ id: sectionId, boardId, kind: "empty", xOffset: 0, yOffset: 0 });
-  await db.insert(layouts).values({ id: layoutId, boardId, name: "Base", columnCount, breakpoint: 0 });
+  await db.insert(layouts).values({ id: layoutId, boardId, name: "Base", columnCount, breakpoint: 0, role: "base" });
 
   return { boardId, sectionId, layoutId };
+};
+
+/** Same, but with the mobile and base layouts every board gets through the web interface */
+const createResponsiveBoardAsync = async (db: Database, columnCount = 12) => {
+  const board = await createBoardAsync(db, columnCount);
+  const mobileLayoutId = createId();
+
+  // The base layout of the helper sits at breakpoint 0, which a mobile layout has to own
+  await db.update(layouts).set({ breakpoint: 768 }).where(eq(layouts.id, board.layoutId));
+  await db
+    .insert(layouts)
+    .values({
+      id: mobileLayoutId,
+      boardId: board.boardId,
+      name: "Mobile",
+      columnCount: 3,
+      breakpoint: 0,
+      role: "mobile",
+    });
+
+  return { ...board, mobileLayoutId };
 };
 
 const getLayoutOfAsync = async (db: Database, itemId: string) =>
@@ -54,7 +75,7 @@ describe("addItem should place items with the requested size", () => {
 
     // Assert
     const layout = await getLayoutOfAsync(db, itemId);
-    expect(layout).toMatchObject({ sectionId, layoutId, xOffset: 0, yOffset: 0, width: 1, height: 1 });
+    expect(layout).toMatchObject({ sectionId, layoutId, xOffset: 0, yOffset: 0, width: 2, height: 1 });
   });
 
   test("should use the default size of the widget kind", async () => {
@@ -64,11 +85,11 @@ describe("addItem should place items with the requested size", () => {
     const caller = createCaller(db);
 
     // Act
-    const { itemId } = await caller.addItem({ boardId, kind: "uptimeKuma", options: {}, integrationIds: [] });
+    const { itemId } = await caller.addItem({ boardId, kind: "bookmarks", options: {}, integrationIds: [] });
 
     // Assert
     const layout = await getLayoutOfAsync(db, itemId);
-    expect(layout).toMatchObject({ width: 2, height: 3 });
+    expect(layout).toMatchObject({ width: 2, height: 2 });
   });
 
   test("should apply an explicit size and position", async () => {
@@ -239,7 +260,7 @@ describe("updateItem should move and resize items", () => {
     const db = createDb();
     const { boardId, layoutId } = await createBoardAsync(db);
     const caller = createCaller(db);
-    const { sectionId } = await caller.addSection({ boardId, kind: "category", name: "Media", yOffset: 1 });
+    const { sectionId } = await caller.addSection({ boardId, kind: "empty", yOffset: 1 });
     const { itemId } = await caller.addItem({ boardId, kind: "clock", options: {}, integrationIds: [], sectionId });
 
     // Act
@@ -320,14 +341,14 @@ describe("updateItem should move and resize items", () => {
 });
 
 describe("sections should be manageable through the api", () => {
-  test("should add a category section and place an item inside it", async () => {
+  test("should add a second canvas and place an item inside it", async () => {
     // Arrange
     const db = createDb();
     const { boardId } = await createBoardAsync(db);
     const caller = createCaller(db);
 
     // Act
-    const { sectionId } = await caller.addSection({ boardId, kind: "category", name: "Media", yOffset: 1 });
+    const { sectionId } = await caller.addSection({ boardId, kind: "empty", yOffset: 1 });
     const { itemId } = await caller.addItem({
       boardId,
       kind: "clock",
@@ -344,10 +365,10 @@ describe("sections should be manageable through the api", () => {
 
     const boardSections = await caller.getSections({ id: boardId });
     expect(boardSections).toHaveLength(2);
-    expect(boardSections.find((section) => section.id === sectionId)?.name).toBe("Media");
+    expect(boardSections.find((section) => section.id === sectionId)?.yOffset).toBe(1);
   });
 
-  test("should add a dynamic section with an explicit size inside the empty section", async () => {
+  test("should add a container with an explicit size inside the empty section", async () => {
     // Arrange
     const db = createDb();
     const { boardId, sectionId: parentSectionId, layoutId } = await createBoardAsync(db);
@@ -356,7 +377,7 @@ describe("sections should be manageable through the api", () => {
     // Act
     const { sectionId } = await caller.addSection({
       boardId,
-      kind: "dynamic",
+      kind: "container",
       parentSectionId,
       xOffset: 2,
       yOffset: 1,
@@ -365,11 +386,11 @@ describe("sections should be manageable through the api", () => {
     });
 
     // Assert
-    const dynamicSection = expectToBeDefined(
+    const containerSection = expectToBeDefined(
       (await caller.getSections({ id: boardId })).find((section) => section.id === sectionId),
     );
-    expect(dynamicSection.kind).toBe("dynamic");
-    expect(dynamicSection.layouts.at(0)).toMatchObject({
+    expect(containerSection.kind).toBe("container");
+    expect(containerSection.layouts.at(0)).toMatchObject({
       layoutId,
       parentSectionId,
       xOffset: 2,
@@ -379,12 +400,20 @@ describe("sections should be manageable through the api", () => {
     });
   });
 
-  test("should reject an item that overlaps a dynamic section", async () => {
+  test("should reject an item that overlaps a container", async () => {
     // Arrange
     const db = createDb();
     const { boardId, sectionId: parentSectionId } = await createBoardAsync(db);
     const caller = createCaller(db);
-    await caller.addSection({ boardId, kind: "dynamic", parentSectionId, xOffset: 0, yOffset: 0, width: 4, height: 2 });
+    await caller.addSection({
+      boardId,
+      kind: "container",
+      parentSectionId,
+      xOffset: 0,
+      yOffset: 0,
+      width: 4,
+      height: 2,
+    });
 
     // Act
     const actAsync = async () =>
@@ -402,14 +431,14 @@ describe("sections should be manageable through the api", () => {
     await expect(actAsync()).rejects.toThrowError("Position is already taken");
   });
 
-  test("should bound items inside a dynamic section by the width of that section", async () => {
+  test("should bound items inside a container by the width of that section", async () => {
     // Arrange
     const db = createDb();
     const { boardId, sectionId: parentSectionId, layoutId } = await createBoardAsync(db, 12);
     const caller = createCaller(db);
     const { sectionId } = await caller.addSection({
       boardId,
-      kind: "dynamic",
+      kind: "container",
       parentSectionId,
       xOffset: 0,
       yOffset: 0,
@@ -431,14 +460,14 @@ describe("sections should be manageable through the api", () => {
     await expect(actAsync()).rejects.toThrowError("exceeds the 2 columns");
   });
 
-  test("should clamp automatic placement to the width of a dynamic section", async () => {
+  test("should clamp automatic placement to the width of a container", async () => {
     // Arrange
     const db = createDb();
     const { boardId, sectionId: parentSectionId } = await createBoardAsync(db, 12);
     const caller = createCaller(db);
     const { sectionId } = await caller.addSection({
       boardId,
-      kind: "dynamic",
+      kind: "container",
       parentSectionId,
       xOffset: 0,
       yOffset: 0,
@@ -462,17 +491,55 @@ describe("sections should be manageable through the api", () => {
     expect(layout).toMatchObject({ sectionId, xOffset: 0, width: 3 });
   });
 
-  test("should ignore a name patch on a section that has none", async () => {
+  test("should accept an update of a canvas that changes nothing", async () => {
     // Arrange
     const db = createDb();
     const { boardId, sectionId } = await createBoardAsync(db);
     const caller = createCaller(db);
 
     // Act
-    const actAsync = async () => await caller.updateSection({ boardId, sectionId, name: "ignored" });
+    // An update without a single value would otherwise be sent to the query builder, which rejects it
+    const actAsync = async () => await caller.updateSection({ boardId, sectionId });
 
     // Assert
     await expect(actAsync()).resolves.toBeUndefined();
+  });
+
+  test("should reject a sidebar canvas while no layout reserves columns for it", async () => {
+    // Arrange
+    const db = createDb();
+    const { boardId } = await createBoardAsync(db);
+    const caller = createCaller(db);
+
+    // Act
+    const actAsync = async () => await caller.addSection({ boardId, kind: "empty", lane: "left" });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("No layout reserves columns for the left sidebar");
+  });
+
+  test("should bound a canvas of a sidebar by the columns the layout reserves for it", async () => {
+    // Arrange
+    const db = createDb();
+    const { boardId, layoutId } = await createBoardAsync(db);
+    await db.update(layouts).set({ leftGutterColumnCount: 2 }).where(eq(layouts.id, layoutId));
+    const caller = createCaller(db);
+
+    // Act
+    const { sectionId } = await caller.addSection({ boardId, kind: "empty", lane: "left" });
+    const { itemId } = await caller.addItem({
+      boardId,
+      kind: "clock",
+      options: {},
+      integrationIds: [],
+      sectionId,
+      width: 5,
+      height: 1,
+    });
+
+    // Assert
+    const layout = await getLayoutOfAsync(db, itemId);
+    expect(layout).toMatchObject({ sectionId, width: 2 });
   });
 
   test("should not remove the last empty section", async () => {
@@ -485,7 +552,7 @@ describe("sections should be manageable through the api", () => {
     const actAsync = async () => await caller.removeSection({ boardId, sectionId });
 
     // Assert
-    await expect(actAsync()).rejects.toThrowError("last empty section");
+    await expect(actAsync()).rejects.toThrowError("last canvas of a board cannot be removed");
   });
 
   test("should remove a section together with its items", async () => {
@@ -493,7 +560,7 @@ describe("sections should be manageable through the api", () => {
     const db = createDb();
     const { boardId } = await createBoardAsync(db);
     const caller = createCaller(db);
-    const { sectionId } = await caller.addSection({ boardId, kind: "category", name: "Media", yOffset: 1 });
+    const { sectionId } = await caller.addSection({ boardId, kind: "empty", yOffset: 1 });
     await caller.addItem({ boardId, kind: "clock", options: {}, integrationIds: [], sectionId });
 
     // Act
@@ -516,7 +583,7 @@ describe("sections should be manageable through the api", () => {
       breakpoint: 768,
     });
     const caller = createCaller(db);
-    const { sectionId } = await caller.addSection({ boardId, kind: "category", name: "Media", yOffset: 1 });
+    const { sectionId } = await caller.addSection({ boardId, kind: "empty", yOffset: 1 });
     await caller.addItem({
       boardId,
       kind: "clock",
@@ -533,19 +600,19 @@ describe("sections should be manageable through the api", () => {
     expect(await caller.getItems({ id: boardId })).toHaveLength(0);
   });
 
-  test("should reject a dynamic section nesting cycle without updating options", async () => {
+  test("should reject a container nesting cycle without updating options", async () => {
     const db = createDb();
     const { boardId, sectionId: mainSectionId } = await createBoardAsync(db);
     const caller = createCaller(db);
     const { sectionId: parentSectionId } = await caller.addSection({
       boardId,
-      kind: "dynamic",
+      kind: "container",
       parentSectionId: mainSectionId,
       options: { title: "original" },
     });
     const { sectionId: childSectionId } = await caller.addSection({
       boardId,
-      kind: "dynamic",
+      kind: "container",
       parentSectionId,
     });
 
@@ -567,23 +634,24 @@ describe("layouts should be readable and replaceable through the api", () => {
   test("should return the created layouts after saving", async () => {
     // Arrange
     const db = createDb();
-    const { boardId, layoutId } = await createBoardAsync(db);
+    const { boardId, layoutId, mobileLayoutId } = await createResponsiveBoardAsync(db);
     const caller = createCaller(db);
 
     // Act
     const result = await caller.saveLayouts({
       id: boardId,
       layouts: [
-        { id: layoutId, name: "Base", columnCount: 20, breakpoint: 0 },
-        { id: "new-layout-reference", name: "Small", columnCount: 4, breakpoint: 768 },
+        { id: mobileLayoutId, name: "Mobile", columnCount: 3, breakpoint: 0, role: "mobile" },
+        { id: layoutId, name: "Base", columnCount: 20, breakpoint: 768, role: "base" },
+        { id: "new-layout-reference", name: "Wide", columnCount: 4, breakpoint: 1200, role: "custom" },
       ],
     });
 
     // Assert
-    expect(result).toHaveLength(2);
-    expect(result.at(0)).toMatchObject({ name: "Base", columnCount: 20, breakpoint: 0 });
-    expect(result.at(1)).toMatchObject({ name: "Small", columnCount: 4, breakpoint: 768 });
-    expect(await caller.getLayouts({ id: boardId })).toHaveLength(2);
+    expect(result).toHaveLength(3);
+    expect(result.find((layout) => layout.role === "base")).toMatchObject({ columnCount: 20, breakpoint: 768 });
+    expect(result.find((layout) => layout.name === "Wide")).toMatchObject({ columnCount: 4, breakpoint: 1200 });
+    expect(await caller.getLayouts({ id: boardId })).toHaveLength(3);
   });
 });
 
@@ -731,7 +799,7 @@ describe("export and import should round trip a board", () => {
     expect(await caller.getItems({ id: boardId })).toHaveLength(1);
   });
 
-  test("should bound a nested dynamic section by its parent even when listed first", async () => {
+  test("should bound a nested container by its parent even when listed first", async () => {
     // Arrange
     const db = createDb();
     await db.insert(users).values({ id: creatorId });
@@ -746,13 +814,13 @@ describe("export and import should round trip a board", () => {
           // The child comes before the parent it is nested in
           {
             id: "child",
-            kind: "dynamic",
+            kind: "container",
             layouts: [{ layoutId: "base", parentSectionId: "parent", xOffset: 0, yOffset: 0, width: 3, height: 2 }],
           },
           { id: "main", kind: "empty", yOffset: 0 },
           {
             id: "parent",
-            kind: "dynamic",
+            kind: "container",
             layouts: [{ layoutId: "base", parentSectionId: "main", xOffset: 0, yOffset: 0, width: 2, height: 4 }],
           },
         ],
@@ -799,7 +867,7 @@ describe("export and import should round trip a board", () => {
         { id: "main", kind: "empty", yOffset: 0 },
         {
           id: "a",
-          kind: "dynamic",
+          kind: "container",
           layouts: [
             { layoutId: "desktop", parentSectionId: "b", xOffset: 0, yOffset: 0, width: 2, height: 2 },
             { layoutId: "mobile", parentSectionId: "main", xOffset: 0, yOffset: 0, width: 4, height: 4 },
@@ -807,7 +875,7 @@ describe("export and import should round trip a board", () => {
         },
         {
           id: "b",
-          kind: "dynamic",
+          kind: "container",
           layouts: [
             { layoutId: "desktop", parentSectionId: "main", xOffset: 0, yOffset: 0, width: 6, height: 6 },
             { layoutId: "mobile", parentSectionId: "a", xOffset: 0, yOffset: 0, width: 2, height: 2 },
@@ -819,7 +887,7 @@ describe("export and import should round trip a board", () => {
     // Assert
     const sections = await caller.getSections({ id: boardId });
     expect(sections).toHaveLength(3);
-    expect(sections.filter(({ kind }) => kind === "dynamic")).toHaveLength(2);
+    expect(sections.filter(({ kind }) => kind === "container")).toHaveLength(2);
   });
 
   test("should report a typo in a parent reference as an unknown reference", async () => {
@@ -837,7 +905,7 @@ describe("export and import should round trip a board", () => {
           { id: "main", kind: "empty", yOffset: 0 },
           {
             id: "child",
-            kind: "dynamic",
+            kind: "container",
             layouts: [{ layoutId: "base", parentSectionId: "mian", xOffset: 0, yOffset: 0, width: 2, height: 2 }],
           },
         ],
@@ -847,7 +915,7 @@ describe("export and import should round trip a board", () => {
     await expect(actAsync()).rejects.toThrowError("Unknown section reference 'mian'");
   });
 
-  test("should reject a same-layout dynamic section cycle", async () => {
+  test("should reject a same-layout container cycle", async () => {
     const db = createDb();
     await db.insert(users).values({ id: creatorId });
     const caller = createCaller(db);
@@ -859,12 +927,12 @@ describe("export and import should round trip a board", () => {
         sections: [
           {
             id: "a",
-            kind: "dynamic",
+            kind: "container",
             layouts: [{ layoutId: "base", parentSectionId: "b", xOffset: 0, yOffset: 0, width: 2, height: 2 }],
           },
           {
             id: "b",
-            kind: "dynamic",
+            kind: "container",
             layouts: [{ layoutId: "base", parentSectionId: "a", xOffset: 0, yOffset: 0, width: 2, height: 2 }],
           },
         ],
@@ -872,15 +940,15 @@ describe("export and import should round trip a board", () => {
     ).rejects.toThrowError("cannot form a cycle");
   });
 
-  test("should import a category-only board when every placement names a section", async () => {
+  test("should import a board with several canvases when every placement names a section", async () => {
     const db = createDb();
     await db.insert(users).values({ id: creatorId });
     const caller = createCaller(db);
 
     const { boardId } = await caller.importBoard({
-      name: "category-only",
+      name: "canvas-only",
       layouts: [{ id: "base", name: "Base", columnCount: 12, breakpoint: 0 }],
-      sections: [{ id: "media", kind: "category", name: "Media", yOffset: 0 }],
+      sections: [{ id: "media", kind: "empty", yOffset: 0 }],
       items: [
         {
           kind: "clock",
@@ -934,7 +1002,7 @@ describe("export and import should round trip a board", () => {
 
     // Assert, the item goes right below the filled rows and getting there stays cheap.
     const layout = await getLayoutOfAsync(db, itemId);
-    expect(layout).toMatchObject({ xOffset: 0, yOffset: rows, width: 1, height: 1 });
+    expect(layout).toMatchObject({ xOffset: 0, yOffset: rows, width: 2, height: 1 });
   });
 
   test("should reject unknown references inside the document", async () => {

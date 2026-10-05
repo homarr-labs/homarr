@@ -1,0 +1,74 @@
+# syntax=docker/dockerfile:1.10
+
+ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff226ff642120ab1ad870c3f2f27300940a61e5a7fa082b6816
+
+FROM golang:1.25.7-alpine AS pocketbase-builder
+WORKDIR /src
+COPY apps/workshop/go.mod apps/workshop/go.sum ./
+RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go mod download
+COPY apps/workshop/*.go ./
+RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
+  CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/pocketbase .
+
+FROM pocketbase-builder AS pocketbase-test
+RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
+
+FROM node:24.18.0-alpine AS dependencies
+WORKDIR /app
+ENV COREPACK_HOME=/corepack
+RUN mkdir -p /corepack && corepack enable pnpm && corepack install --global pnpm@11.15.1
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
+COPY patches ./patches
+COPY apps/docs ./apps/docs
+COPY tools/motion-reel/three ./tools/motion-reel/three
+COPY packages/common ./packages/common
+COPY packages/core ./packages/core
+COPY packages/custom-widgets ./packages/custom-widgets
+COPY packages/definitions ./packages/definitions
+COPY packages/db ./packages/db
+COPY packages/server-settings ./packages/server-settings
+COPY packages/settings ./packages/settings
+COPY packages/translation ./packages/translation
+COPY packages/ui ./packages/ui
+COPY packages/validation ./packages/validation
+COPY packages/workshop ./packages/workshop
+COPY tooling/typescript ./tooling/typescript
+RUN --mount=type=cache,id=workshop-pnpm-store,target=/pnpm/store pnpm config set store-dir /pnpm/store && pnpm install --filter @homarr/docs... --frozen-lockfile
+
+FROM dependencies AS website
+ARG KAPA_WEBSITE_ID=1e4656f4-abeb-4343-bbae-1d8626f52378
+ENV KAPA_WEBSITE_ID=$KAPA_WEBSITE_ID
+ARG HOMARR_WEBSITE_URL=https://homarr.dev
+ARG WORKSHOP_API_URL=https://homarr.dev
+ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
+ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
+ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
+ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
+RUN CI=true SKIP_ENV_VALIDATION=true pnpm --filter @homarr/docs build
+
+FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
+ENV PORT=8090
+COPY --from=pocketbase-builder /out/pocketbase /usr/local/bin/pocketbase
+RUN addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
+COPY apps/workshop/entrypoint.sh /usr/local/bin/workshop-entrypoint
+RUN chmod 755 /usr/local/bin/workshop-entrypoint && mkdir -p /pb_data /pb_public && chown pocketbase:pocketbase /pb_data /pb_public
+VOLUME ["/pb_data"]
+ENTRYPOINT ["workshop-entrypoint"]
+
+FROM pocketbase-runtime AS development
+EXPOSE 8090
+HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=6 CMD wget -q --spider "http://127.0.0.1:${PORT}/api/health" || exit 1
+
+FROM pocketbase-runtime AS production
+ARG HOMARR_WEBSITE_URL=https://homarr.dev
+ARG WORKSHOP_API_URL=https://homarr.dev
+ARG WORKSHOP_WEB_URL=https://homarr.dev/workshop
+ENV HOMARR_WEBSITE_URL=$HOMARR_WEBSITE_URL
+ENV WORKSHOP_API_URL=$WORKSHOP_API_URL
+ENV WORKSHOP_WEB_URL=$WORKSHOP_WEB_URL
+COPY --from=website /app/apps/docs/out /pb_public
+COPY apps/workshop/pb_migrations /pb_migrations
+COPY apps/workshop/pb_hooks /pb_hooks
+RUN chown -R pocketbase:pocketbase /pb_hooks /pb_migrations /pb_public
+EXPOSE 8090
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -q --spider "http://127.0.0.1:${PORT}/api/health" || exit 1

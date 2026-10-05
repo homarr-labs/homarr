@@ -1,15 +1,19 @@
-export const AUTH_HANDLERS: Record<string, (headers: Headers, url: URL, apiKey: string, headerName?: string) => void> =
-  {
-    bearer: (headers, _url, apiKey) => {
-      headers.set("Authorization", `Bearer ${apiKey}`);
-    },
-    apiKeyHeader: (headers, _url, apiKey, headerName) => {
-      headers.set(headerName ?? "X-API-Key", apiKey);
-    },
-    apiKeyQuery: (_headers, url, apiKey, headerName) => {
-      url.searchParams.set(headerName ?? "api_key", apiKey);
-    },
-  };
+type HeaderSetter = Pick<Headers, "set">;
+
+export const AUTH_HANDLERS: Record<
+  string,
+  (headers: HeaderSetter, url: URL, apiKey: string, headerName?: string) => void
+> = {
+  bearer: (headers, _url, apiKey) => {
+    headers.set("Authorization", `Bearer ${apiKey}`);
+  },
+  apiKeyHeader: (headers, _url, apiKey, headerName) => {
+    headers.set(headerName ?? "X-API-Key", apiKey);
+  },
+  apiKeyQuery: (_headers, url, apiKey, headerName) => {
+    url.searchParams.set(headerName ?? "api_key", apiKey);
+  },
+};
 
 export function buildSecretMap(secrets: Array<{ kind: string; value: string }>): Record<string, string> {
   const map: Record<string, string> = {};
@@ -20,7 +24,7 @@ export function buildSecretMap(secrets: Array<{ kind: string; value: string }>):
 }
 
 export function applyAuth(
-  headers: Headers,
+  headers: HeaderSetter,
   url: URL,
   authType: string,
   secrets: Array<{ kind: string; value: string }>,

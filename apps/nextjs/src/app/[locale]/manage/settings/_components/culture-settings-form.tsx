@@ -2,7 +2,7 @@
 
 import type { UseFormReturnType } from "@homarr/form";
 import type { SupportedLanguage } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { LanguageCombobox } from "~/components/language/language-combobox";
 import { SectionCard } from "~/components/manage/section-card";
@@ -13,7 +13,7 @@ interface CultureSettingsFormProps {
 }
 
 export const CultureSettingsForm = ({ form }: CultureSettingsFormProps) => {
-  const tCulture = useScopedI18n("management.page.settings.section.culture");
+  const tCulture = useI18n("management.page.settings.section.culture");
   const localeInputProps = form.getInputProps("defaultLocale");
 
   return (
@@ -22,6 +22,7 @@ export const CultureSettingsForm = ({ form }: CultureSettingsFormProps) => {
         label={tCulture("defaultLocale.label")}
         {...localeInputProps}
         value={localeInputProps.value as SupportedLanguage}
+        withinPortal
       />
     </SectionCard>
   );

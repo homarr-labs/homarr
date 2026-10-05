@@ -1,10 +1,13 @@
 import { IconHeartbeat, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("uptimeKuma", {
   icon: IconHeartbeat,
+  supportsAdvancedFocus: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showAverageUptime: factory.switch({
@@ -33,7 +36,7 @@ export const { definition, componentLoader } = createWidgetDefinition("uptimeKum
       }),
     }));
   },
-  supportedIntegrations: ["uptimeKuma"],
+  ...getWidgetIntegrationConfig("uptimeKuma"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

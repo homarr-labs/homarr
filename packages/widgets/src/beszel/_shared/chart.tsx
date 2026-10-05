@@ -6,35 +6,40 @@ import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
 
-import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
+import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
+
+import { formatLocalizedDate } from "../../common/locale";
 
 export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
 
-const timeFormats: Record<BeszelTimePeriod, string> = {
-  "1m": "HH:mm:ss",
-  "1h": "HH:mm",
-  "12h": "HH:mm",
-  "24h": "HH:mm",
-  "1w": "MMM D",
-  "30d": "MMM D",
+const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
+  "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
+  "1h": { hour: "numeric", minute: "2-digit" },
+  "12h": { hour: "numeric", minute: "2-digit" },
+  "24h": { hour: "numeric", minute: "2-digit" },
+  "1w": { month: "short", day: "numeric" },
+  "30d": { month: "short", day: "numeric" },
 };
 
 const periodDays: Partial<Record<BeszelTimePeriod, number>> = { "1w": 7, "30d": 30 };
 
-function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod) {
-  const fmt = (timestamp: string) => dayjs(timestamp).format(timeFormats[timePeriod]);
+export const formatBeszelChartTimestamp = (timestamp: string, timePeriod: BeszelTimePeriod, locale: string): string =>
+  formatLocalizedDate(timestamp, locale, timeFormatOptions[timePeriod]);
+
+function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod, locale: string) {
+  const fmt = (timestamp: string) => formatBeszelChartTimestamp(timestamp, timePeriod, locale);
   if (timePeriod === "1m") {
     return { fmt, ordered: records };
   }
-  return { fmt, ordered: [...records].toReversed() };
+  return { fmt, ordered: records.toReversed() };
 }
 
-function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod) {
-  if (timePeriod === "1m") return padLiveTimeGrid(data);
+function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod, locale: string) {
+  if (timePeriod === "1m") return padLiveTimeGrid(data, 60, locale);
   const days = periodDays[timePeriod];
   if (!days) return data;
 
-  const fmt = (ts: string) => dayjs(ts).format(timeFormats[timePeriod]);
+  const fmt = (timestamp: string) => formatBeszelChartTimestamp(timestamp, timePeriod, locale);
   const now = dayjs();
   const existingDays = new Set(data.map((d) => dayjs(d.rawTime as string).format("YYYY-MM-DD")));
   const result = [...data];
@@ -51,7 +56,7 @@ function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeri
   return result.toSorted((a, b) => new Date(a.rawTime as string).getTime() - new Date(b.rawTime as string).getTime());
 }
 
-export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60) {
+export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60, locale = "en-US") {
   if (data.length === 0) return data;
 
   const end = dayjs(
@@ -76,16 +81,20 @@ export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60
     const timestamp = end.subtract(pointCount - index - 1, "second");
     return (
       pointsBySecond.get(timestamp.valueOf()) ?? {
-        time: timestamp.format(timeFormats["1m"]),
+        time: formatBeszelChartTimestamp(timestamp.toISOString(), "1m", locale),
         rawTime: timestamp.toISOString(),
       }
     );
   });
 }
 
-const yAxisBase = { tickMargin: 0, tick: { fontSize: 10 } } as const;
+const yAxisBase = {
+  tickMargin: 0,
+  tick: { fontSize: "var(--mantine-font-size-xs)" },
+} as const;
 const chartStyle = { minWidth: 0, minHeight: 1 } as const;
-const panelStyle = { minWidth: 0, overflow: "hidden" } as const;
+const panelStyle = { minWidth: 0 } as const;
+const chartMargin = { top: 0, right: 0, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
 interface BeszelChartPanelProps {
@@ -96,12 +105,12 @@ interface BeszelChartPanelProps {
 
 export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => (
   <Stack gap={4} style={panelStyle}>
-    <Group gap="xs">
-      <Text size="sm" fw={600}>
+    <Group gap="xs" wrap="nowrap">
+      <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
         {title}
       </Text>
       {subtitle && (
-        <Text size="xs" c="dimmed">
+        <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
           {subtitle}
         </Text>
       )}
@@ -110,7 +119,7 @@ export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelCha
   </Stack>
 ));
 
-type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withXAxis" | "withYAxis"> & {
+type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
   yAxisDomain?: [number, string];
 };
@@ -118,15 +127,25 @@ type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "with
 const BeszelAreaChart = memo(
   ({
     yAxisFormatter,
+    withXAxis = true,
     yAxisDomain,
     yAxisProps: yAxisPropsOverride,
+    xAxisProps: xAxisPropsOverride,
+    areaChartProps: areaChartPropsOverride,
     type = "default",
     ...props
   }: BeszelAreaChartProps) => {
+    const mergedXAxis = useMemo(
+      () => ({
+        interval: "preserveEnd" as const,
+        ...xAxisPropsOverride,
+      }),
+      [xAxisPropsOverride],
+    );
     const mergedYAxis = useMemo(() => {
       const base = {
         ...yAxisBase,
-        width: 48,
+        width: 56,
         tickMargin: 2,
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
@@ -147,10 +166,12 @@ const BeszelAreaChart = memo(
         type={type}
         strokeWidth={1}
         fillOpacity={0.2}
-        withXAxis
+        withXAxis={withXAxis}
         withYAxis
         w="100%"
+        areaChartProps={{ margin: chartMargin, ...areaChartPropsOverride }}
         style={chartStyle}
+        xAxisProps={mergedXAxis}
         yAxisProps={mergedYAxis}
         {...props}
       />
@@ -162,17 +183,18 @@ export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) =>
   useMemo(() => {
     if (!systemStats) return [];
-    const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+    const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
     const mapped = ordered.map((r) => ({
       time: fmt(r.created),
       rawTime: r.created,
       ...mapFn(r.stats),
     }));
-    return padTimeGrid(mapped, timePeriod);
-  }, [systemStats, mapFn, timePeriod]);
+    return padTimeGrid(mapped, timePeriod, locale);
+  }, [systemStats, mapFn, timePeriod, locale]);
 
 export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
   const prevRef = useRef<string[]>([]);
@@ -198,13 +220,19 @@ export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] |
 
 type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
 
-// c = CPU (%), m = memory (MB), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (bytes/s)
-const MB = 1024 * 1024;
+// c = CPU (%), m = memory (MiB), b = bandwidth [sent,recv] (bytes/s), ns/nr = legacy net (MiB/s)
+const MEBIBYTE = 1024 * 1024;
+const GIBIBYTE = 1024 * MEBIBYTE;
+
+export const normalizeBeszelByteRate = (
+  bytesPerSecond: number | undefined,
+  legacyMebibytesPerSecond: number | undefined,
+): number => bytesPerSecond ?? (legacyMebibytesPerSecond ?? 0) * MEBIBYTE;
 
 const defaultContainerExtractors: Record<string, ContainerExtractor> = {
   cpu: (c) => c?.c ?? 0,
-  memory: (c) => (c?.m ?? 0) * MB,
-  network: (c) => (c?.b ? c.b[0] + c.b[1] : (c?.ns ?? 0) + (c?.nr ?? 0)),
+  memory: (c) => (c?.m ?? 0) * MEBIBYTE,
+  network: (c) => normalizeBeszelByteRate(c?.b?.[0], c?.ns) + normalizeBeszelByteRate(c?.b?.[1], c?.nr),
 };
 
 export const useDiskChartData = (
@@ -212,10 +240,11 @@ export const useDiskChartData = (
   efsPaths: string[],
   rootSeriesName: string,
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) =>
   useMemo(
-    () => buildDiskChartData(systemStats, efsPaths, rootSeriesName, timePeriod),
-    [systemStats, efsPaths, rootSeriesName, timePeriod],
+    () => buildDiskChartData(systemStats, efsPaths, rootSeriesName, timePeriod, locale),
+    [systemStats, efsPaths, rootSeriesName, timePeriod, locale],
   );
 
 export const buildDiskChartData = (
@@ -223,35 +252,68 @@ export const buildDiskChartData = (
   efsPaths: string[],
   rootSeriesName: string,
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) => {
   if (!systemStats?.length) return [];
-  const { fmt, ordered } = prepareRecords(systemStats, timePeriod);
+  const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
   const mapped = ordered.map((record) => {
     const point: Record<string, unknown> = {
       time: fmt(record.created),
       rawTime: record.created,
-      [rootSeriesName]: record.stats.du,
+      [rootSeriesName]: record.stats.du * GIBIBYTE,
     };
     const efs = record.stats.efs ?? {};
     for (const path of efsPaths) {
-      point[path] = efs[path]?.du ?? 0;
+      point[path] = (efs[path]?.du ?? 0) * GIBIBYTE;
     }
     return point;
   });
-  return padTimeGrid(mapped, timePeriod);
+  return padTimeGrid(mapped, timePeriod, locale);
 };
+
+export const useDiskIOChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  efsPaths: string[],
+  rootReadSeriesName: string,
+  rootWriteSeriesName: string,
+  readLabel: string,
+  writeLabel: string,
+  timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
+) =>
+  useMemo(() => {
+    if (!systemStats?.length) return [];
+    const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
+    const mapped = ordered.map((record) => {
+      const point: Record<string, unknown> = {
+        time: fmt(record.created),
+        rawTime: record.created,
+        [rootReadSeriesName]: normalizeBeszelByteRate(record.stats.dio?.[0], record.stats.dr),
+        [rootWriteSeriesName]: normalizeBeszelByteRate(record.stats.dio?.[1], record.stats.dw),
+      };
+      const efs = record.stats.efs ?? {};
+      for (const path of efsPaths) {
+        const filesystem = efs[path];
+        point[`${path} ${readLabel}`] = normalizeBeszelByteRate(filesystem?.rb, filesystem?.r);
+        point[`${path} ${writeLabel}`] = normalizeBeszelByteRate(filesystem?.wb, filesystem?.w);
+      }
+      return point;
+    });
+    return padTimeGrid(mapped, timePeriod, locale);
+  }, [systemStats, efsPaths, rootReadSeriesName, rootWriteSeriesName, readLabel, writeLabel, timePeriod, locale]);
 
 export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
   timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
 ) =>
   useMemo(() => {
     if (!containerStats?.length) return [];
     const extract = defaultContainerExtractors[metric];
     if (!extract) return [];
-    const { fmt, ordered } = prepareRecords(containerStats, timePeriod);
+    const { fmt, ordered } = prepareRecords(containerStats, timePeriod, locale);
     const mapped = ordered.map((record) => {
       const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
       const byName = new Map(record.stats.map((c) => [c.n, c]));
@@ -260,5 +322,71 @@ export const useDockerChartData = (
       }
       return point;
     });
-    return padTimeGrid(mapped, timePeriod);
-  }, [containerStats, containerNames, metric, timePeriod]);
+    return padTimeGrid(mapped, timePeriod, locale);
+  }, [containerStats, containerNames, metric, timePeriod, locale]);
+
+export interface BeszelGpuDevice {
+  id: string;
+  seriesName: string;
+}
+
+export type BeszelGpuMetric = "usage" | "memory" | "power";
+
+export const buildGpuDevices = (systemStats: BeszelSystemStatsRecord[] | undefined) => {
+  const devices = new Map<string, BeszelGpuDevice>();
+  for (const record of systemStats ?? []) {
+    for (const [id, gpu] of Object.entries(record.stats.g ?? {})) {
+      if (!devices.has(id)) devices.set(id, { id, seriesName: `${gpu.n} (${id})` });
+    }
+  }
+  return [...devices.values()].toSorted((a, b) => a.id.localeCompare(b.id));
+};
+
+export const useGpuDevices = (systemStats: BeszelSystemStatsRecord[] | undefined) =>
+  useMemo(() => buildGpuDevices(systemStats), [systemStats]);
+
+export const hasGpuMetric = (systemStats: BeszelSystemStatsRecord[] | undefined, metric: BeszelGpuMetric) => {
+  if (metric === "usage") return (systemStats ?? []).some((record) => Object.keys(record.stats.g ?? {}).length > 0);
+
+  return (systemStats ?? []).some((record) =>
+    Object.values(record.stats.g ?? {}).some((device) => (metric === "memory" ? device.mu : device.p) !== undefined),
+  );
+};
+
+const gpuExtractors: Record<BeszelGpuMetric, (device: BeszelGPUData | undefined) => number> = {
+  usage: (device) => device?.u ?? 0,
+  memory: (device) => (device?.mu ?? 0) * 1024 * 1024,
+  power: (device) => device?.p ?? 0,
+};
+
+export const useGpuChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  devices: BeszelGpuDevice[],
+  metric: BeszelGpuMetric,
+  timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
+) =>
+  useMemo(
+    () => buildGpuChartData(systemStats, devices, metric, timePeriod, locale),
+    [systemStats, devices, metric, timePeriod, locale],
+  );
+
+export const buildGpuChartData = (
+  systemStats: BeszelSystemStatsRecord[] | undefined,
+  devices: BeszelGpuDevice[],
+  metric: BeszelGpuMetric,
+  timePeriod: BeszelTimePeriod = "1h",
+  locale = "en-US",
+) => {
+  if (!systemStats?.length) return [];
+  const extract = gpuExtractors[metric];
+  const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
+  const mapped = ordered.map((record) => {
+    const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
+    for (const device of devices) {
+      point[device.seriesName] = extract(record.stats.g?.[device.id]);
+    }
+    return point;
+  });
+  return padTimeGrid(mapped, timePeriod, locale);
+};

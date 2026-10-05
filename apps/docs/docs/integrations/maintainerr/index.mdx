@@ -1,0 +1,30 @@
+---
+title: "Maintainerr"
+description: "A media library maintenance tool for Plex, Jellyfin, and Emby."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { maintainerrIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={maintainerrIntegration} categories={["Media management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) reads Maintainerr's `/api/storage-metrics` endpoint and shows handled items, episodes, movies, and the currently reclaimable collection storage.
+
+Maintainerr does not authenticate API requests. Protect the service with your network access controls before exposing it beyond a trusted network.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets secrets={[{ credentials: [], steps: [] }]} />

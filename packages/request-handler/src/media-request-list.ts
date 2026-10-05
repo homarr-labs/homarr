@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { MediaRequest, MediaRequestStatus } from "@homarr/integrations/types";
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
@@ -28,6 +28,7 @@ export const mediaRequestListRequestHandler = createIntegrationRequestHandler<
   IntegrationKindByCategory<"mediaRequest">,
   MediaRequestListInput
 >({
+  cacheNamespace: "media-requests:list",
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
     const requests = await integrationInstance.getRequestsAsync();

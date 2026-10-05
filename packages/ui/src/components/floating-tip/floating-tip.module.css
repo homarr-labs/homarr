@@ -1,0 +1,17 @@
+.root {
+  position: fixed;
+  inset-inline: var(--mantine-spacing-md);
+  bottom: var(--floating-tip-bottom);
+  z-index: var(--floating-tip-z-index);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.alert {
+  width: fit-content;
+  max-width: min(var(--floating-tip-max-width), calc(100vw - 2 * var(--mantine-spacing-md)));
+  pointer-events: auto;
+  box-shadow: var(--mantine-shadow-xl);
+  backdrop-filter: blur(12px);
+}

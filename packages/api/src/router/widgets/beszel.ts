@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { LiveStatsEvent } from "@homarr/integrations/types";
 import {
   beszelAlertsRequestHandler,
@@ -10,15 +10,13 @@ import {
   beszelSystemsRequestHandler,
 } from "@homarr/request-handler/beszel";
 
-import { settleIntegrationQueries } from "../../settle-integrations";
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { BoundedAsyncQueue } from "./bounded-async-queue";
 
 const logger = createLogger({ module: "beszelRouter" });
 const MAX_PENDING_LIVE_EVENTS = 4;
-
-const errorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 export const beszelRouter = createTRPCRouter({
   getSystems: publicProcedure
@@ -29,7 +27,7 @@ export const beszelRouter = createTRPCRouter({
           "Get all Beszel-monitored systems with CPU, memory, disk, GPU, network, temperature, and status. REQUIRED: integrationIds (array of Beszel integration IDs from integration_all)",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemGrid"))
     .query(async ({ ctx }) => {
       const integrationIds = ctx.integrations.map((i) => i.id);
       logger.debug("getSystems called", { userId: ctx.session?.user?.id, integrationIds });
@@ -41,7 +39,6 @@ export const beszelRouter = createTRPCRouter({
           return {
             integrationId: integration.id,
             integrationName: integration.name,
-            integrationUrl: integration.url,
             systems: data,
             updatedAt: timestamp,
           };
@@ -50,11 +47,11 @@ export const beszelRouter = createTRPCRouter({
           fallback: (integration, error) => ({
             integrationId: integration.id,
             integrationName: integration.name,
-            integrationUrl: integration.url,
             systems: [],
             updatedAt: new Date(0),
-            error: errorMessage(error),
+            error: toPublicIntegrationError(error),
           }),
+          throwOnAllFailures: true,
         },
       );
       logger.debug("getSystems completed", {
@@ -74,7 +71,7 @@ export const beszelRouter = createTRPCRouter({
           "Get Beszel alerts and optional alert history for all monitored systems. REQUIRED: integrationIds (array of Beszel integration IDs from integration_all). OPTIONAL: includeHistory (default true), maxHistoryItems (default 10)",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelAlerts"))
     .input(
       z.object({
         includeHistory: z.boolean().default(true),
@@ -126,8 +123,9 @@ export const beszelRouter = createTRPCRouter({
             history: [],
             systemNameMap: {},
             updatedAt: new Date(0),
-            error: errorMessage(error),
+            error: toPublicIntegrationError(error),
           }),
+          throwOnAllFailures: true,
         },
       );
       logger.debug("getAlerts completed", {
@@ -147,7 +145,7 @@ export const beszelRouter = createTRPCRouter({
           "Get historical Beszel system metrics (CPU, memory, disk, network, temperature) and optional Docker container stats. REQUIRED: integrationIds (pass the single integrationId from the beszel_getSystems entry containing the target system — only the first ID is used), systemId (from beszel_getSystems). OPTIONAL: timePeriod (1m/1h/12h/24h/1w/30d, default 1h), includeDocker (default true)",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemStats"))
     .input(
       z.object({
         systemId: z.string(),
@@ -192,13 +190,13 @@ export const beszelRouter = createTRPCRouter({
           systemStats: [],
           containerStats: [],
           updatedAt: new Date(0),
-          error: errorMessage(error),
+          error: toPublicIntegrationError(error),
         };
       }
     }),
 
   subscribeSystemStats: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "beszel", "mock"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemStats"))
     .input(
       z.object({
         systemId: z.string(),
@@ -269,15 +267,14 @@ export const beszelRouter = createTRPCRouter({
               integrationId: integration.id,
               systemId: input.systemId,
               emittedEventCount,
-              error: errorMessage(error),
+              error,
             });
             queue.fail(
-              error instanceof TRPCError
-                ? error
-                : new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: error instanceof Error ? error.message : String(error),
-                  }),
+              new TRPCError({
+                code: "BAD_GATEWAY",
+                message: "Live integration request failed",
+                cause: error,
+              }),
             );
           }
         })();

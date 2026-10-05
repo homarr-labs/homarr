@@ -10,47 +10,52 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesSecret } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
 dayjs.extend(relativeTime);
 
 interface SecretsTableComponentProps {
+  contextId: string;
   initialSecrets: RouterOutputs["kubernetes"]["secrets"]["getSecrets"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.secrets">): MRT_ColumnDef<KubernetesSecret>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.secrets">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesSecret>[] => [
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "type",
-    header: t("field.type.label"),
+    header: tField("type.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
-export function SecretsTable(initialData: SecretsTableComponentProps) {
-  const tSecrets = useScopedI18n("kubernetes.secrets");
+export function SecretsTable({ contextId, initialSecrets }: SecretsTableComponentProps) {
+  const tSecrets = useI18n("kubernetes.secrets");
+  const tField = useI18n("kubernetes.field");
 
-  const { data } = clientApi.kubernetes.secrets.getSecrets.useQuery(undefined, {
-    initialData: initialData.initialSecrets,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.secrets.getSecrets.useQuery(
+    { contextId },
+    createKubernetesResourceQueryOptions(initialSecrets),
+  );
 
   const table = useTranslatedMantineReactTable({
     data,
@@ -70,7 +75,7 @@ export function SecretsTable(initialData: SecretsTableComponentProps) {
       autoFocus: true,
     },
 
-    columns: createColumns(tSecrets),
+    columns: createColumns(tSecrets, tField),
   });
 
   return <MantineReactTable table={table} />;

@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
 import Database from "better-sqlite3";
@@ -11,7 +10,7 @@ import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 import { getBackupSessionAsync } from "../auth";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   const session = await getBackupSessionAsync(request);
   if (!session?.user.permissions.includes("admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
@@ -54,7 +53,7 @@ export async function GET(request: NextRequest) {
     const date = new Date().toISOString().split("T")[0];
     const filename = `homarr-backup-${date}.zip`;
 
-    return new NextResponse(zipBuffer, {
+    return new NextResponse(new Uint8Array(zipBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/zip",

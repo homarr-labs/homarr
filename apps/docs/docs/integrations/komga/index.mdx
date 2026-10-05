@@ -1,0 +1,38 @@
+---
+title: "Komga"
+description: "A self-hosted media server for comics, manga, magazines, and ebooks."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { komgaIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={komgaIntegration} categories={["Media management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) counts available libraries, series, and books through Komga's v1 REST API. Unavailable libraries are excluded.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Komga's Settings > API keys page and create a key with access to the libraries.",
+        "Paste the key into Homarr's API Key field.",
+      ],
+    },
+  ]}
+/>

@@ -10,7 +10,9 @@ export interface StreamSession {
     type: "audio" | "video" | "tv" | "movie";
     name: string;
     seasonName: string | undefined;
+    seasonNumber?: number | null;
     episodeName?: string | null;
+    episodeNumber?: number | null;
     albumName?: string | null;
     episodeCount?: number | null;
     playback: {

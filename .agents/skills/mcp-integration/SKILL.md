@@ -1,110 +1,98 @@
 ---
 name: mcp-integration
-description: Expose tRPC procedures as MCP tools for AI clients. Use when modifying procedures in packages/api/src/router, adding a new tRPC procedure or router, or deciding what to expose via Homarr's MCP interface. Covers .meta({ mcp }), router registration in packages/api/src/mcp.ts, input schema rules, and what to expose vs skip.
+description: Expose Homarr tRPC procedures safely through MCP. Use when adding or changing tRPC procedures under packages/api, adding MCP metadata, registering an eager MCP router, shaping tool inputs and descriptions, or reviewing MCP authorization, sensitive data, and destructive actions.
 ---
 
 # MCP Integration
 
-Every new tRPC procedure that provides useful functionality should be exposed as an MCP tool so AI assistants (Claude, Cursor, etc.) can use it. This is a first-class feature of Homarr.
+Expose a procedure only when an AI client should call it. Preserve the procedure's existing authorization and add MCP-specific safeguards for sensitive or destructive behavior.
 
-Exposing a procedure makes it callable by any AI client with an API key. Before adding `.meta({ mcp })`, review what the tool exposes: authorization requirements, sensitive data, tenant isolation, auditability, and whether the action is destructive. Prefer exposing read-only queries over mutations unless the mutation is safe and permission-scoped. When in doubt, ask for a security review before shipping a new MCP tool.
+## Assess exposure
 
-## Adding MCP to a procedure
+Prefer:
 
-Add `.meta({ mcp: { enabled: true, description: "..." } })` to the procedure chain:
+- Data queries: list, search, get, health, stats, and summaries.
+- User-requested actions with explicit permission checks and bounded inputs.
+- Serializable results that do not reveal credentials or internal-only state.
+
+Skip subscriptions, session/onboarding internals, file streams, blobs, credential values, and procedures whose authorization or audit behavior is unclear. Ask for a security review when a mutation is destructive, tenant boundaries are ambiguous, or returned data is sensitive.
+
+## Add metadata
+
+Place `.meta()` before `.input()` and `.query()` or `.mutation()`:
 
 ```typescript
-// Read-only tool (query)
-myProcedure: protectedProcedure
-  .meta({ mcp: { enabled: true, description: "Get all items with their status and metadata" } })
-  .input(z.object({ limit: z.number().default(10) }))
-  .query(async ({ ctx, input }) => { ... })
-
-// Write tool (mutation)
-myAction: protectedProcedure
-  .meta({ mcp: { enabled: true, description: "Delete an item by ID. Requires interact permission on the integration" } })
-  .input(z.object({ id: z.string() }))
-  .mutation(async ({ ctx, input }) => { ... })
-
-// No-input procedure (z.void) — works fine, no .input() needed
 getAll: protectedProcedure
-  .meta({ mcp: { enabled: true, description: "List all resources" } })
-  .query(async ({ ctx }) => { ... })
+  .meta({
+    mcp: {
+      enabled: true,
+      description: "List resources the current user can access, including stable IDs used by resource_get",
+    },
+  })
+  .input(z.object({ limit: z.number().int().min(1).max(100).default(50) }))
+  .query(async ({ ctx, input }) => {
+    // Preserve normal procedure authorization.
+  });
 ```
 
-The `.meta()` call must come **before** `.input()` and `.query()`/`.mutation()` in the chain.
+No-input procedures can omit `.input()`; the MCP extractor accepts an empty object for them.
 
-## Writing good descriptions
-
-The description is the **only thing** an AI sees to decide when and how to use the tool. Write it like you're explaining to a colleague who has never used Homarr.
-
-**Must include:**
-
-- What the tool returns or does
-- Which integrations/services it works with (if applicable)
-- How to get required IDs (e.g., "Use integration_all to get the integrationId")
-- Permission requirements (if non-obvious)
-
-**Good:**
-
-```text
-"Get calendar events for upcoming and recent media releases. Fetches from all connected Sonarr (TV), Radarr (movies), Lidarr (music), and Readarr (books) integrations. Requires integrationIds from integration_all"
-```
-
-**Bad:**
-
-```text
-"Get calendar events"
-```
-
-**For tools that return permission fields**, explain what they mean:
-
-```text
-"List all integrations. Returns permissions.hasUseAccess (read) and permissions.hasInteractAccess (actions) — false means the API key lacks that permission, not an error"
-```
-
-## Registering in the MCP router
-
-After adding `.meta()` to procedures, you must register the router in `packages/api/src/mcp.ts`. This file uses **eager imports** (no `lazy()`) because MCP tool extraction requires synchronous access to all procedure definitions.
+For mutations, state the effect and required permission in the description:
 
 ```typescript
-// packages/api/src/mcp.ts
-import { myNewRouter } from "./router/my-new-feature";
+remove: permissionRequiredProcedure
+  .meta({
+    mcp: {
+      enabled: true,
+      description: "Delete one resource by ID. Requires full access; get the ID from resource_all",
+    },
+  })
+  .input(z.object({ id: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    // Perform the permission-scoped action.
+  });
+```
+
+## Write discoverable descriptions
+
+Include every item that applies:
+
+- What the tool returns or changes.
+- Supported integrations or services.
+- Required IDs and the tool that returns them.
+- Permission requirements and the meaning of permission fields.
+- Important bounds, confirmation semantics, or irreversible effects.
+
+Use precise domain language. A description such as `Get calendar events` is insufficient because it omits supported services, required IDs, and result scope.
+
+## Shape inputs for clients
+
+- Use a top-level `z.object({...})` for parameterized tools.
+- Bound strings, arrays, numeric ranges, pagination, and payload sizes.
+- Use defaults where a safe, unsurprising value exists.
+- Prefer explicit fields over a top-level union or discriminated union.
+- Keep identifiers stable and describe how to obtain them.
+- Keep secrets out of inputs unless the procedure is explicitly a credential-configuration flow with server-owned encryption and non-return guarantees.
+
+## Register the eager router
+
+The application router in `packages/api/src/root.ts` is lazy. MCP tool extraction is synchronous, so add an eager import and registration in `packages/api/src/mcp.ts`:
+
+```typescript
+import { resourceRouter } from "./router/resource";
 
 export const mcpRouter = createTRPCRouter({
-  // ... existing routers
-  myFeature: myNewRouter,
+  resource: resourceRouter,
 });
 ```
 
-**If your router is nested** (e.g., widget sub-routers), import and register the sub-router directly — do not import a parent that uses `lazy()`.
+Register the smallest router that owns the enabled procedures. If a parent router uses `lazy()`, import the needed subrouter directly. Metadata on a procedure is not enough; a procedure absent from `mcpRouter` is not exposed.
 
-## What to expose vs. what to skip
+## Validate the tool surface
 
-**Expose:**
-
-- Data queries (list, search, get by ID)
-- Actions users would ask an AI to do (toggle, create, delete, approve)
-- Status checks (health, stats, summaries)
-
-**Skip:**
-
-- Subscriptions (WebSocket-only, not supported by MCP)
-- Internal procedures (session management, onboarding steps)
-- File upload/download procedures
-- Procedures that return non-serializable data (streams, blobs)
-
-## Input schema rules
-
-- Use `z.object({...})` for inputs — this maps cleanly to MCP tool parameters
-- `z.void()` (no `.input()`) works — the MCP handler patches these to accept empty objects
-- Avoid `z.union()` or `z.discriminatedUnion()` at the top level — AI clients struggle with these
-- Use `.default()` on optional fields so the AI doesn't need to guess values
-
-## Checklist for new features
-
-1. Add `.meta({ mcp: { enabled: true, description: "..." } })` to relevant procedures
-2. Import and register the router in `packages/api/src/mcp.ts` (eager, no lazy)
-3. Write descriptions that explain what the tool does, what it needs, and what it returns
-4. If the tool requires an ID from another tool, say which one in the description
-5. Test with `curl` against `/api/mcp/mcp` to verify the tool appears in `tools/list`
+1. Confirm the procedure still enforces its ordinary auth and permission boundary.
+2. Confirm `packages/api/src/mcp.ts` eagerly includes the procedure.
+3. Confirm the generated tool name, description, and JSON schema are unambiguous.
+4. When validating tool-list or extraction changes, use the focused API MCP spec: `pnpm test packages/api/src/test/mcp.spec.ts`.
+5. When validating protocol or transport changes, use the focused route spec: `pnpm test apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts`.
+6. If manually probing `/api/mcp/<transport>`, use a scoped API key and avoid printing credentials or secret-bearing results.

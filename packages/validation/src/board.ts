@@ -4,15 +4,17 @@ import {
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
+  boardLanes,
   boardPermissions,
   groupPermissionKeys,
+  layoutRoles,
   sectionKinds,
   widgetKinds,
 } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
-import { commonItemSchema, dynamicSectionOptionsSchema, itemAdvancedOptionsSchema, sectionSchema } from "./shared";
+import { commonItemSchema, containerSectionOptionsSchema, itemAdvancedOptionsSchema, sectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
@@ -27,6 +29,7 @@ export const boardNameSchema = z
   .max(255)
   .regex(/^[A-Za-z0-9-_]*$/);
 export const boardColumnCountSchema = z.number().min(1).max(24);
+export const boardGutterColumnCountSchema = z.number().int().min(0).max(3);
 
 export const boardByNameSchema = z.object({
   name: boardNameSchema,
@@ -72,16 +75,67 @@ export const boardSavePartialSettingsSchema = z
   })
   .partial();
 
+export const boardSettingsSchema = boardSavePartialSettingsSchema.required().extend({
+  id: z.string(),
+  name: z.string(),
+});
+
+export const boardLayoutSchema = z
+  .object({
+    id: z.string(),
+    name: z.string().trim().nonempty().max(32),
+    columnCount: boardColumnCountSchema,
+    leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
+    rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
+    breakpoint: z.number().int().min(0).max(32767),
+    role: z.enum(layoutRoles.values),
+  })
+  .refine((layout) => layout.leftGutterColumnCount + layout.rightGutterColumnCount < layout.columnCount, {
+    message: "Gutters must leave at least one dashboard column",
+    path: ["columnCount"],
+  })
+  .refine(
+    (layout) => layout.role !== "mobile" || (layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
+    {
+      message: "Mobile layouts cannot have sidebars",
+      path: ["leftGutterColumnCount"],
+    },
+  );
+
+export const responsiveBoardLayoutsSchema = z
+  .array(boardLayoutSchema)
+  .min(2)
+  .superRefine((layouts, ctx) => {
+    const mobileLayouts = layouts.filter((layout) => layout.role === "mobile");
+    const baseLayouts = layouts.filter((layout) => layout.role === "base");
+    const mobileLayout = mobileLayouts.at(0);
+    const baseLayout = baseLayouts.at(0);
+    if (mobileLayouts.length !== 1 || baseLayouts.length !== 1 || !mobileLayout || !baseLayout) {
+      ctx.addIssue({ code: "custom", message: "Boards require exactly one Mobile and one Base layout" });
+      return;
+    }
+
+    if (mobileLayout.breakpoint !== 0) {
+      ctx.addIssue({ code: "custom", message: "The Mobile layout breakpoint must be 0" });
+    }
+
+    if (new Set(layouts.map((layout) => layout.breakpoint)).size !== layouts.length) {
+      ctx.addIssue({ code: "custom", message: "Layout breakpoints must be unique" });
+    }
+
+    if (new Set(layouts.map((layout) => layout.id)).size !== layouts.length) {
+      ctx.addIssue({ code: "custom", message: "Layout IDs must be unique" });
+    }
+  });
+
 export const boardSaveLayoutsSchema = z.object({
   id: z.string(),
-  layouts: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string().trim().nonempty().max(32),
-      columnCount: boardColumnCountSchema,
-      breakpoint: z.number().min(0).max(32767),
-    }),
-  ),
+  layouts: responsiveBoardLayoutsSchema,
+});
+
+export const boardResetLayoutSchema = z.object({
+  boardId: z.string(),
+  layoutId: z.string(),
 });
 
 export const boardSaveSchema = z.object({
@@ -197,7 +251,13 @@ export const addItemToBoardSchema = z.object({
   boardId: z.string(),
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()).default({}),
-  integrationIds: z.array(z.string()).default([]),
+  /** Size shorthand of the web interface, bound by the columns a board can have */
+  size: z.object({ width: z.number().int().min(1).max(24), height: z.number().int().min(1).max(24) }).optional(),
+  integrationIds: z
+    .array(z.string())
+    .max(32)
+    .refine((ids) => new Set(ids).size === ids.length)
+    .default([]),
   advancedOptions: itemAdvancedOptionsSchema.optional(),
   ...boardItemPlacementSchema.shape,
 });
@@ -232,15 +292,15 @@ export const boardSectionLayoutInputSchema = z.object({
 export const addBoardSectionSchema = z.object({
   boardId: z.string(),
   kind: zodEnumFromArray(sectionKinds),
-  /** Only used for category sections */
-  name: z.string().min(1).max(255).optional(),
-  /** Vertical order of empty and category sections; dynamic sections use layouts or parentSectionId */
+  /** Which canvas an empty section belongs to; a sidebar needs the layouts to reserve columns for it */
+  lane: z.enum(boardLanes).optional(),
+  /** Vertical order of empty sections; container sections use layouts or parentSectionId instead */
   yOffset: gridCoordinateSchema.optional(),
-  /** Only used for dynamic sections */
-  options: dynamicSectionOptionsSchema.optional(),
-  /** Only used for dynamic sections, defaults to the shorthand below for every layout */
+  /** Only used for container sections, the title is part of these options */
+  options: containerSectionOptionsSchema.optional(),
+  /** Only used for container sections, defaults to the shorthand below for every layout */
   layouts: z.array(boardSectionLayoutInputSchema).optional(),
-  /** Dynamic section placement shorthand, applied to every layout */
+  /** Container section placement shorthand, applied to every layout */
   parentSectionId: z.string().optional(),
   xOffset: gridCoordinateSchema.optional(),
   width: gridSizeSchema.optional(),
@@ -250,9 +310,9 @@ export const addBoardSectionSchema = z.object({
 export const updateBoardSectionSchema = z.object({
   boardId: z.string(),
   sectionId: z.string(),
-  name: z.string().min(1).max(255).optional(),
+  lane: z.enum(boardLanes).optional(),
   yOffset: gridCoordinateSchema.optional(),
-  options: dynamicSectionOptionsSchema.optional(),
+  options: containerSectionOptionsSchema.optional(),
   layouts: z.array(boardSectionLayoutInputSchema).optional(),
   parentSectionId: z.string().optional(),
   xOffset: gridCoordinateSchema.optional(),
@@ -274,7 +334,10 @@ export const boardApiLayoutSchema = z.object({
   id: z.string(),
   name: z.string(),
   columnCount: z.number(),
+  leftGutterColumnCount: z.number(),
+  rightGutterColumnCount: z.number(),
   breakpoint: z.number(),
+  role: z.enum(layoutRoles.values),
 });
 
 export const boardApiSectionSchema = z.object({
@@ -356,7 +419,10 @@ const boardDocumentLayoutSchema = z.object({
   // older version or the oldmarr importer survives a round trip, but still small enough that a
   // grid of this width stays cheap to work with
   columnCount: z.number().int().min(1).max(boardDocumentGridLimit, { error: gridLimitError }),
+  leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
+  rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
   breakpoint: z.number().min(0).max(32767),
+  role: z.enum(layoutRoles.values).default(layoutRoles.defaultValue),
 });
 
 const boardDocumentSectionSchema = z.object({
@@ -364,8 +430,10 @@ const boardDocumentSectionSchema = z.object({
   id: z.string(),
   kind: zodEnumFromArray(sectionKinds),
   name: z.string().nullable().optional(),
+  /** Lane of a canvas: -1 left sidebar, 0 main, 1 right sidebar. A container is placed by its layouts */
+  xOffset: z.number().int().min(-1).max(1).nullable().optional(),
   yOffset: gridCoordinateSchema.nullable().optional(),
-  options: dynamicSectionOptionsSchema.optional(),
+  options: containerSectionOptionsSchema.optional(),
   layouts: z
     .array(
       z.object({
@@ -421,8 +489,9 @@ export const boardExportSchema = z.object({
       id: z.string(),
       kind: zodEnumFromArray(sectionKinds),
       name: z.string().nullable(),
+      xOffset: z.number().nullable(),
       yOffset: z.number().nullable(),
-      options: dynamicSectionOptionsSchema.optional(),
+      options: containerSectionOptionsSchema.optional(),
       layouts: z.array(
         z.object({
           layoutId: z.string(),
@@ -454,4 +523,14 @@ export const boardExportSchema = z.object({
       ),
     }),
   ),
+});
+
+export const updateBoardItemLayoutSchema = z.object({
+  boardId: z.string(),
+  itemId: z.string(),
+  layoutId: z.string(),
+  xOffset: z.number().int().min(0).max(32767),
+  yOffset: z.number().int().min(0).max(32767),
+  width: z.number().int().min(1).max(24),
+  height: z.number().int().min(1).max(24),
 });

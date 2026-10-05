@@ -1,14 +1,18 @@
 import { TRPCError } from "@trpc/server";
 
-import type { WidgetKind } from "@homarr/definitions";
-import { widgetDefaultSizes } from "@homarr/definitions";
+import type { LayoutRole, WidgetKind } from "@homarr/definitions";
+import { getBoardLaneColumnCount, getRootSectionLane, widgetDefaultSizes } from "@homarr/definitions";
 
 /**
  * Placement helpers shared by the board automation endpoints.
  *
  * A board consists of one or more layouts (breakpoints), each with its own column count.
  * Every item has exactly one placement per layout, stored in the `item_layout` table.
- * Dynamic sections behave the same way and occupy space inside their parent section.
+ * Container sections behave the same way and occupy space inside their parent section.
+ *
+ * A layout may reserve columns on either side for a sidebar, which splits it into the three
+ * lanes `left`, `main` and `right`. A root section belongs to one of them through its xOffset,
+ * so the columns available to an element depend on the lane of the section it sits in.
  */
 
 const maximumScannedRows = 9999;
@@ -17,11 +21,15 @@ export interface PlacementLayout {
   id: string;
   name: string;
   columnCount: number;
+  leftGutterColumnCount?: number | null;
+  rightGutterColumnCount?: number | null;
+  role?: LayoutRole;
 }
 
 export interface PlacementSection {
   id: string;
   kind: string;
+  xOffset: number | null;
   yOffset: number | null;
 }
 
@@ -91,19 +99,22 @@ type BoardWithSectionLayouts = BoardLike;
 /**
  * How many columns are available inside a section.
  *
- * A dynamic section is a sub grid of its own width, so everything placed inside of it is bound
- * by that width and not by the column count of the whole board.
+ * A container section is a sub grid of its own width, so everything placed inside of it is bound
+ * by that width. A root section is bound by the lane it sits in, which is narrower than the
+ * board whenever the layout reserves columns for a sidebar.
  */
-const getColumnCountOfSection = (board: BoardLike, sectionId: string, layout: PlacementLayout) => {
+export const getColumnCountOfSection = (board: BoardLike, sectionId: string, layout: PlacementLayout) => {
   const section = board.sections.find((boardSection) => boardSection.id === sectionId);
 
-  if (section?.kind !== "dynamic") {
-    return layout.columnCount;
+  if (!section) return layout.columnCount;
+
+  if (section.kind !== "container") {
+    return getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset));
   }
 
   const sectionLayout = section.layouts?.find((entry) => entry.layoutId === layout.id);
 
-  return sectionLayout?.width ?? layout.columnCount;
+  return sectionLayout?.width ?? getBoardLaneColumnCount(layout, "main");
 };
 
 /**
@@ -218,14 +229,17 @@ const resolveSectionId = (board: BoardLike, sectionId: string | undefined, conte
   }
 
   const emptySection = board.sections
-    .filter((section) => section.kind === "empty")
-    .toSorted((sectionA, sectionB) => (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0))
+    .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
+    .toSorted(
+      (sectionA, sectionB) =>
+        (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
+    )
     .at(0);
 
   if (!emptySection) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: `Board has no empty section to place ${context} in, provide a sectionId instead`,
+      message: `Board has no main section to place ${context} in, provide a sectionId instead`,
     });
   }
 

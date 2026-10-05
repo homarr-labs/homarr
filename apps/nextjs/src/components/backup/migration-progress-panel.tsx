@@ -3,7 +3,7 @@
 import { Box, Group, Loader, Paper, Stack, Text, ThemeIcon, Timeline } from "@mantine/core";
 import { IconCheck, IconDatabase, IconLoader } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { MigrationProgress } from "./use-backup-analysis";
 
@@ -12,7 +12,7 @@ interface MigrationProgressPanelProps {
 }
 
 export const MigrationProgressPanel = ({ progress }: MigrationProgressPanelProps) => {
-  const t = useScopedI18n("management.page.tool.backup.restore.migration");
+  const t = useI18n("management.page.tool.backup.restore.migration");
 
   return (
     <Paper p="md" radius="md" bg="var(--mantine-color-dark-7)">

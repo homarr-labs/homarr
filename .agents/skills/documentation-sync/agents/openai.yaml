@@ -1,0 +1,4 @@
+interface:
+  display_name: "Homarr Documentation Sync"
+  short_description: "Document only what users need to know"
+  default_prompt: "Use $documentation-sync only when users need new or corrected information to set up, use, or troubleshoot Homarr."

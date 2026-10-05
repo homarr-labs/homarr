@@ -7,7 +7,7 @@ import type { Database } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { boards, integrations, items, layouts, sections } from "@homarr/db/schema";
-import { emptySuperJSON } from "@homarr/definitions";
+import { emptySuperJSON, rootSectionOffsets } from "@homarr/definitions";
 import type { boardExportSchema, boardImportSchema } from "@homarr/validation/board";
 import { itemAdvancedOptionsSchema } from "@homarr/validation/shared";
 
@@ -46,15 +46,25 @@ export const createBoardExportDocument = (board: BoardForPlacement): BoardExport
     disableStatus: board.disableStatus,
   },
   layouts: board.layouts
-    .map(({ id, name, columnCount, breakpoint }) => ({ id, name, columnCount, breakpoint }))
+    .map(({ id, name, columnCount, leftGutterColumnCount, rightGutterColumnCount, breakpoint, role }) => ({
+      id,
+      name,
+      columnCount,
+      leftGutterColumnCount,
+      rightGutterColumnCount,
+      breakpoint,
+      role,
+    }))
     .toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
   sections: board.sections.map((section) => ({
     id: section.id,
     kind: section.kind,
     name: section.name,
+    // A canvas carries its lane here, a container is positioned through its layouts
+    xOffset: section.xOffset,
     yOffset: section.yOffset,
     options:
-      section.kind === "dynamic"
+      section.kind === "container"
         ? (superjson.parse<Record<string, unknown>>(section.options ?? emptySuperJSON) as never)
         : undefined,
     layouts: section.layouts.map(({ layoutId, parentSectionId, xOffset, yOffset, width, height }) => ({
@@ -86,9 +96,9 @@ export const createBoardExportDocument = (board: BoardForPlacement): BoardExport
 type DocumentSection = Omit<BoardImportDocument, "onConflict">["sections"][number];
 
 /**
- * Orders the sections so that a dynamic section comes after the section it is nested in.
+ * Orders the sections so that a container comes after the section it is nested in.
  *
- * A dynamic section is a sub grid, so the placement of everything inside of it is bound by its
+ * A container is a sub grid, so the placement of everything inside of it is bound by its
  * width. That width only exists once the section itself was placed, which means a document that
  * lists a child before its parent would otherwise be validated against the width of the board.
  *
@@ -97,7 +107,7 @@ type DocumentSection = Omit<BoardImportDocument, "onConflict">["sections"][numbe
  * document order instead of the request being rejected, and an id that simply does not exist is
  * reported by the placement itself, which knows whether it is a typo or a nesting cycle.
  */
-const sortDynamicSectionsByNesting = (sections: DocumentSection[]) => {
+const sortContainerSectionsByNesting = (sections: DocumentSection[]) => {
   const parentIdsOf = (section: DocumentSection) =>
     (section.layouts ?? []).map((layout) => layout.parentSectionId).filter((id) => id !== null && id !== undefined);
 
@@ -107,7 +117,7 @@ const sortDynamicSectionsByNesting = (sections: DocumentSection[]) => {
 
   while (remaining.length > 0) {
     const index = remaining.findIndex(
-      (section) => section.kind !== "dynamic" || parentIdsOf(section).every((id) => placedIds.has(id)),
+      (section) => section.kind !== "container" || parentIdsOf(section).every((id) => placedIds.has(id)),
     );
 
     if (index === -1) {
@@ -221,7 +231,10 @@ export const collectBoardDocumentRows = (
       id: layoutIdMap.get(layout.id)!,
       name: layout.name,
       columnCount: layout.columnCount,
+      leftGutterColumnCount: layout.leftGutterColumnCount,
+      rightGutterColumnCount: layout.rightGutterColumnCount,
       breakpoint: layout.breakpoint,
+      role: layout.role,
       boardId,
     });
   }
@@ -232,10 +245,11 @@ export const collectBoardDocumentRows = (
       id: sectionIdMap.get(section.id)!,
       boardId,
       kind: section.kind,
-      name: section.kind === "category" ? (section.name ?? null) : null,
-      xOffset: section.kind === "dynamic" ? null : 0,
-      yOffset: section.kind === "dynamic" ? null : (section.yOffset ?? index),
-      options: section.kind === "dynamic" ? superjson.stringify(section.options ?? {}) : emptySuperJSON,
+      // Only boards created before containers replaced categories still carry a name
+      name: section.kind === "container" ? null : (section.name ?? null),
+      xOffset: section.kind === "container" ? null : (section.xOffset ?? rootSectionOffsets.main),
+      yOffset: section.kind === "container" ? null : (section.yOffset ?? index),
+      options: section.kind === "container" ? superjson.stringify(section.options ?? {}) : emptySuperJSON,
     });
   }
 
@@ -247,13 +261,17 @@ export const collectBoardDocumentRows = (
       id: layoutIdMap.get(layout.id)!,
       name: layout.name,
       columnCount: layout.columnCount,
+      leftGutterColumnCount: layout.leftGutterColumnCount,
+      rightGutterColumnCount: layout.rightGutterColumnCount,
+      role: layout.role,
     })),
     sections: document.sections.map((section, index) => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       id: sectionIdMap.get(section.id)!,
       kind: section.kind,
-      yOffset: section.kind === "dynamic" ? null : (section.yOffset ?? index),
-      // Filled in while the dynamic sections are placed, items inside them are bound by their width
+      xOffset: section.kind === "container" ? null : (section.xOffset ?? rootSectionOffsets.main),
+      yOffset: section.kind === "container" ? null : (section.yOffset ?? index),
+      // Filled in while the containers are placed, items inside them are bound by their width
       layouts: [] as {
         layoutId: string;
         parentSectionId: string | null;
@@ -268,8 +286,8 @@ export const collectBoardDocumentRows = (
 
   const occupiedAreas: OccupiedArea[] = [];
 
-  for (const section of sortDynamicSectionsByNesting(document.sections)) {
-    if (section.kind !== "dynamic") continue;
+  for (const section of sortContainerSectionsByNesting(document.sections)) {
+    if (section.kind !== "container") continue;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const sectionId = sectionIdMap.get(section.id)!;

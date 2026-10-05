@@ -28,7 +28,14 @@ export const WidgetError = ({ error, resetErrorBoundary, definition }: WidgetErr
     return <BaseWidgetError {...trpcErrorData} onRetry={resetErrorBoundary} />;
   }
 
-  return <BaseWidgetError icon={IconExclamationCircle} message={String(error)} onRetry={resetErrorBoundary} />;
+  return (
+    <BaseWidgetError
+      icon={IconExclamationCircle}
+      message={(t) => t("common.error")}
+      showLogsLink
+      onRetry={resetErrorBoundary}
+    />
+  );
 };
 
 const handleWidgetTrpcError = (
@@ -60,7 +67,7 @@ const handleCommonTrpcError = (error: unknown): Omit<BaseWidgetErrorProps, "onRe
   if (errorData.code === "UNAUTHORIZED" || errorData.code === "FORBIDDEN") {
     return {
       icon: IconShield,
-      message: "You don't have permission to access this widget",
+      message: (t) => t("integration.testConnection.error.certificate.alert.permission.title"),
       showLogsLink: false,
     };
   }

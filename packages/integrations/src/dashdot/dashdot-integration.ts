@@ -26,13 +26,16 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
   }
 
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
-    const info = await this.getInfoAsync();
-    const cpuLoad = await this.getCurrentCpuLoadAsync();
-    const memoryLoad = await this.getCurrentMemoryLoadAsync();
-    const storageLoad = await this.getCurrentStorageLoadAsync();
-    const networkLoad = await this.getCurrentNetworkLoadAsync();
-    const gpuLoad = await this.getCurrentGpuLoadAsync();
+    const [info, cpuLoad, memoryLoad, storageLoad, networkLoad, gpuLoad] = await Promise.all([
+      this.getInfoAsync(),
+      this.getCurrentCpuLoadAsync(),
+      this.getCurrentMemoryLoadAsync(),
+      this.getCurrentStorageLoadAsync(),
+      this.getCurrentNetworkLoadAsync(),
+      this.getCurrentGpuLoadAsync(),
+    ]);
 
+    // Read history after the CPU request has persisted its newest sample.
     const channel = this.getChannel();
     const history = await channel.getSliceUntilTimeAsync(dayjs().subtract(15, "minutes").toDate());
 

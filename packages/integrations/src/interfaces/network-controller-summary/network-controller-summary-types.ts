@@ -22,6 +22,6 @@ export interface NetworkControllerSummary {
 
   vpn: {
     status: "enabled" | "disabled";
-    users: number;
+    users: number | null;
   };
 }

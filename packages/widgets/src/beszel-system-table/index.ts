@@ -1,22 +1,25 @@
 import { IconServerOff, IconTable } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
+import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/definitions";
+
+import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
+import type { SelectOption } from "../_inputs/widget-select-input";
 import { statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
 
 const sortOptions = [
-  { value: "name", label: "System" },
-  { value: "cpu", label: "CPU" },
-  { value: "memory", label: "Memory" },
-  { value: "disk", label: "Disk" },
-  { value: "gpu", label: "GPU" },
-  { value: "loadAvg", label: "Load Avg" },
-  { value: "netBytes", label: "Net" },
-  { value: "temp", label: "Temp" },
-  { value: "services", label: "Services" },
-  { value: "uptime", label: "Uptime" },
-  { value: "agentVersion", label: "Agent" },
-];
+  { value: "name", label: (t) => t("widget.beszel.metric.system") },
+  { value: "cpu", label: invariantTechnicalLabels.cpu },
+  { value: "memory", label: (t) => t("widget.beszel.metric.memory") },
+  { value: "disk", label: (t) => t("widget.beszel.metric.disk") },
+  { value: "gpu", label: invariantTechnicalLabels.gpu },
+  { value: "loadAvg", label: (t) => t("widget.beszel.metric.loadAvg") },
+  { value: "netBytes", label: (t) => t("widget.beszel.metric.net") },
+  { value: "temp", label: (t) => t("widget.beszel.metric.temp") },
+  { value: "services", label: (t) => t("common.services") },
+  { value: "uptime", label: (t) => t("widget.beszel.metric.uptime") },
+  { value: "agentVersion", label: (t) => t("widget.beszel.metric.agent") },
+] satisfies SelectOption[];
 
 const sortDirectionOptions = [
   { value: "asc", label: "Ascending" },
@@ -25,9 +28,12 @@ const sortDirectionOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,
-  queryKey: [["widget", "beszel"]],
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
+  queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
+  queryMatcher: (query, scope) =>
+    query.path.at(-1) === "getSystems"
+      ? widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds })
+      : matchesWidgetRuntimeQuery(query, scope),
+  ...getWidgetIntegrationConfig("beszelSystemTable"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
@@ -63,7 +69,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
-      message: (t) => t("widget.beszelSystemTable.error.internalServerError"),
+      message: (t) => t("widget.beszel.error.internalServerError"),
     },
   },
 }).withDynamicImport(() => import("./component"));

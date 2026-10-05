@@ -5,16 +5,16 @@ import { Loader, Select } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
 export const WidgetAnchorNoteInput = ({ property, kind, options }: CommonWidgetInputProps<"anchorNote">) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
   const tWidget = useWidgetInputTranslation(kind, property);
-  const tAnchor = useScopedI18n("widget.anchorNote");
+  const tAnchor = useI18n("widget.anchorNote");
   const form = useFormContext();
 
   const integrationId = form.values.integrationIds[0];
@@ -46,7 +46,7 @@ export const WidgetAnchorNoteInput = ({ property, kind, options }: CommonWidgetI
     <Select
       label={tWidget("label")}
       description={options.withDescription ? tWidget("description") : undefined}
-      placeholder={integrationId ? t("common.select.placeholder") : tAnchor("integrationRequired")}
+      placeholder={integrationId ? tCommon("select.placeholder") : tAnchor("integrationRequired")}
       nothingFoundMessage={integrationId ? tAnchor("noNotes") : tAnchor("integrationRequired")}
       searchable
       searchValue={search}

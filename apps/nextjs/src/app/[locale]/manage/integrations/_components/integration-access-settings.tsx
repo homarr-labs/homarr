@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const IntegrationAccessSettings = ({ integration, initialPermissions }: Props) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
   const utils = clientApi.useUtils();
   const { data } = clientApi.integration.getIntegrationPermissions.useQuery(
     {
@@ -49,7 +49,7 @@ export const IntegrationAccessSettings = ({ integration, initialPermissions }: P
         },
         groupPermissionMapping: integrationPermissionsMap,
       }}
-      translate={(key) => t(`integration.permission.${key}`)}
+      translate={(key) => tIntegration(`permission.${key}` as never)}
       query={{
         data,
         invalidate: () => utils.integration.getIntegrationPermissions.invalidate(),

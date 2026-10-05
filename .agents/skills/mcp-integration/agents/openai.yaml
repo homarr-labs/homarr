@@ -1,0 +1,4 @@
+interface:
+  display_name: "Homarr MCP Integration"
+  short_description: "Expose tRPC procedures safely through MCP"
+  default_prompt: "Use $mcp-integration to expose this Homarr tRPC procedure as a safe, discoverable MCP tool."

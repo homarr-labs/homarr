@@ -4,14 +4,15 @@ import type { KubernetesBaseResource } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 export const configMapsRouter = createTRPCRouter({
   getConfigMaps: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesBaseResource[]> => {
-      const { coreApi } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesBaseResource[]> => {
+      const { coreApi } = getKubernetesClient(input.contextId);
 
       try {
         const configMaps = await coreApi.listConfigMapForAllNamespaces();

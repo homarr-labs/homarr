@@ -16,6 +16,7 @@ interface RequestMediaModalProps {
 }
 
 export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions, innerProps }) => {
+  const utils = clientApi.useUtils();
   const { data, isPending: isPendingQuery } = clientApi.integration.getMediaRequestOptions.useQuery({
     integrationId: innerProps.integrationId,
     mediaId: innerProps.mediaId,
@@ -24,6 +25,13 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 
   const { mutate, isPending: isPendingMutation } = clientApi.integration.requestMedia.useMutation({
     onSuccess() {
+      void utils.widget.mediaRequests.invalidate();
+      void utils.integration.searchMediaRequests.invalidate();
+      void utils.integration.getMediaRequestOptions.invalidate({
+        integrationId: innerProps.integrationId,
+        mediaId: innerProps.mediaId,
+        mediaType: innerProps.mediaType,
+      });
       actions.closeModal();
       showSuccessNotification({
         message: t("common.notification.create.success"),

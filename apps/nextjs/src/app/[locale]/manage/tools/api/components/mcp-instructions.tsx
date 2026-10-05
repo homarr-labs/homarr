@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionControl,
@@ -16,6 +17,7 @@ import {
   ListItem,
   Stack,
   Text,
+  TextInput,
   ThemeIcon,
   Title,
 } from "@mantine/core";
@@ -28,6 +30,7 @@ import {
   IconLock,
   IconPlus,
   IconPlugConnected,
+  IconSearch,
   IconSparkles,
   IconTerminal,
   IconTools,
@@ -36,12 +39,11 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
-import { CopyApiKeyModal } from "./copy-api-key-modal";
 import type { McpToolGroup } from "./api-page-tabs";
 import classes from "./mcp-tools-accordion.module.css";
+import { NewApiKeyAlert } from "./new-api-key-alert";
 
 const toolTypeDisplay: Record<"query" | "mutation", { color: string; method: string }> = {
   query: { color: "blue", method: "GET" },
@@ -52,18 +54,45 @@ interface McpInstructionsProps {
   baseUrl: string;
   hasApiKeys: boolean;
   toolGroups: McpToolGroup[];
+  onApiKeyCreated: () => void;
 }
 
-export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstructionsProps) {
-  const t = useScopedI18n("management.page.tool.api.tab.mcp");
-  const { openModal } = useModalAction(CopyApiKeyModal);
+export function McpInstructions({ baseUrl, hasApiKeys, toolGroups, onApiKeyCreated }: McpInstructionsProps) {
+  const t = useI18n("management.page.tool.api.tab.mcp");
+  const tCommon = useI18n("common");
+  const [newApiKey, setNewApiKey] = useState<string | null>(null);
+  const [toolSearch, setToolSearch] = useState("");
+  const [openToolGroups, setOpenToolGroups] = useState<string[]>([]);
   const { mutate: createApiKey, isPending } = clientApi.apiKeys.create.useMutation({
-    async onSuccess(data) {
-      openModal({ apiKey: data.apiKey });
-      await revalidatePathActionAsync("/manage/tools/api");
+    onSuccess(data) {
+      setNewApiKey(data.apiKey);
+      onApiKeyCreated();
     },
   });
-  const mcpUrl = `${baseUrl}/api/mcp/mcp`;
+  const handleDismissNewApiKey = useCallback(async () => {
+    setNewApiKey(null);
+    await revalidatePathActionAsync("/manage/tools/api");
+  }, []);
+  const mcpUrl = `${baseUrl}/api/mcp`;
+  const normalizedToolSearch = toolSearch.trim().toLowerCase();
+  const filteredToolGroups = useMemo(() => {
+    if (!normalizedToolSearch) return toolGroups;
+
+    return toolGroups.flatMap((group) => {
+      const namespaceMatches = group.namespace.toLowerCase().includes(normalizedToolSearch);
+      const tools = namespaceMatches
+        ? group.tools
+        : group.tools.filter((tool) => `${tool.name} ${tool.description}`.toLowerCase().includes(normalizedToolSearch));
+
+      if (tools.length === 0) return [];
+      return [{ ...group, tools }];
+    });
+  }, [normalizedToolSearch, toolGroups]);
+  const filteredToolCount = filteredToolGroups.reduce((sum, group) => sum + group.tools.length, 0);
+  const filteredToolGroupNames = filteredToolGroups.map((group) => group.namespace);
+  const accordionStateProps = normalizedToolSearch
+    ? { defaultValue: filteredToolGroupNames }
+    : { value: openToolGroups, onChange: setOpenToolGroups };
 
   const streamableHttpConfig = JSON.stringify(
     {
@@ -93,7 +122,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
     2,
   );
 
-  const testCommand = `curl -s -X POST -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -H "ApiKey: <your-api-key>" -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}' ${mcpUrl}`;
+  const testCommand = `curl -s -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "ApiKey: <your-api-key>" -H "Mcp-Method: server/discover" -H "Mcp-Name: homarr" -d '{"jsonrpc":"2.0","method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientInfo":{"name":"test","version":"1.0"},"io.modelcontextprotocol/clientCapabilities":{}}},"id":1}' ${mcpUrl}`;
 
   return (
     <Stack gap="xl" p="md">
@@ -113,7 +142,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
         <Text size="sm">{t("description")}</Text>
       </Alert>
 
-      {!hasApiKeys && (
+      {!hasApiKeys && !newApiKey && (
         <Alert variant="light" color="yellow" icon={<IconKey size={18} />}>
           <Group justify="space-between" align="center">
             <Text size="sm">{t("noApiKey")}</Text>
@@ -130,6 +159,8 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
         </Alert>
       )}
 
+      {newApiKey && <NewApiKeyAlert apiKey={newApiKey} onDismiss={handleDismissNewApiKey} />}
+
       <div>
         <Title order={5} mb="xs">
           <Group gap="xs">
@@ -137,7 +168,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
             {t("endpoint.title")}
           </Group>
         </Title>
-        <CopyableCode value={mcpUrl} copyLabel={t("copy")} />
+        <CopyableCode value={mcpUrl} copyLabel={tCommon("action.copy")} />
       </div>
 
       <div>
@@ -237,7 +268,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                     })}
                   </ListItem>
                 </List>
-                <CopyableCode value={streamableHttpConfig} copyLabel={t("copy")} />
+                <CopyableCode value={streamableHttpConfig} copyLabel={tCommon("action.copy")} />
                 <Alert variant="light" color="yellow" icon={<IconAlertTriangle size={16} />} p="xs">
                   <Text size="xs">{t("clientConfig.streamableHttp.replaceHint")}</Text>
                 </Alert>
@@ -252,7 +283,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                 <Text size="sm" c="dimmed">
                   {t("clientConfig.stdio.description", { dependency: "npx" })}
                 </Text>
-                <CopyableCode value={stdioConfig} copyLabel={t("copy")} />
+                <CopyableCode value={stdioConfig} copyLabel={tCommon("action.copy")} />
               </Stack>
             </AccordionPanel>
           </AccordionItem>
@@ -269,7 +300,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
         <Text size="sm" c="dimmed" mb="xs">
           {t("testConnection.description")}
         </Text>
-        <CopyableCode value={testCommand} copyLabel={t("copy")} />
+        <CopyableCode value={testCommand} copyLabel={tCommon("action.copy")} />
         <Text size="xs" c="dimmed" mt="xs">
           {t("testConnection.hint")}
         </Text>
@@ -283,45 +314,64 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
           </Group>
         </Title>
         <Text size="sm" c="dimmed" mb="sm">
-          {t("availableTools.description", {
-            count: String(toolGroups.reduce((sum, g) => sum + g.tools.length, 0)),
-          })}
+          {normalizedToolSearch
+            ? t("availableTools.filteredDescription", { count: String(filteredToolCount) })
+            : t("availableTools.description", { count: String(filteredToolCount) })}
         </Text>
-        <Accordion variant="separated" multiple>
-          {toolGroups.map((group) => (
-            <AccordionItem key={group.namespace} value={group.namespace}>
-              <AccordionControl>
-                <Group gap="xs">
-                  <Text size="sm" fw={600}>
-                    {group.namespace}
-                  </Text>
-                  <Badge size="xs" variant="light" circle>
-                    {group.tools.length}
-                  </Badge>
-                </Group>
-              </AccordionControl>
-              <AccordionPanel>
-                <Stack gap={6}>
-                  {group.tools.map((tool) => (
-                    <div key={tool.name} className={classes.toolRow}>
-                      <Badge size="sm" w={50} radius="xs" variant="light" color={toolTypeDisplay[tool.type].color}>
-                        {toolTypeDisplay[tool.type].method}
-                      </Badge>
-                      <div>
-                        <Code fz="xs" fw={600}>
-                          {tool.name}
-                        </Code>
-                        <Text size="xs" c="dimmed" lh={1.4}>
-                          {tool.description}
-                        </Text>
+        <TextInput
+          value={toolSearch}
+          onChange={(event) => setToolSearch(event.currentTarget.value)}
+          leftSection={<IconSearch size={16} />}
+          placeholder={t("availableTools.search")}
+          aria-label={t("availableTools.search")}
+          mb="sm"
+        />
+        {filteredToolGroups.length === 0 ? (
+          <Alert variant="light" color="gray" title={t("availableTools.noResults.title")}>
+            <Stack gap="sm" align="flex-start">
+              <Text size="sm">{t("availableTools.noResults.description", { search: toolSearch.trim() })}</Text>
+              <Button size="compact-sm" variant="default" onClick={() => setToolSearch("")}>
+                {tCommon("action.clearSearch")}
+              </Button>
+            </Stack>
+          </Alert>
+        ) : (
+          <Accordion key={normalizedToolSearch} variant="separated" multiple {...accordionStateProps}>
+            {filteredToolGroups.map((group) => (
+              <AccordionItem key={group.namespace} value={group.namespace}>
+                <AccordionControl>
+                  <Group gap="xs">
+                    <Text size="sm" fw={600}>
+                      {group.namespace}
+                    </Text>
+                    <Badge size="xs" variant="light" circle>
+                      {group.tools.length}
+                    </Badge>
+                  </Group>
+                </AccordionControl>
+                <AccordionPanel>
+                  <Stack gap={6}>
+                    {group.tools.map((tool) => (
+                      <div key={tool.name} className={classes.toolRow}>
+                        <Badge size="sm" w={50} radius="xs" color={toolTypeDisplay[tool.type].color} variant="light">
+                          {toolTypeDisplay[tool.type].method}
+                        </Badge>
+                        <div>
+                          <Code fz="xs" fw={600}>
+                            {tool.name}
+                          </Code>
+                          <Text size="xs" c="dimmed" lh={1.4}>
+                            {tool.description}
+                          </Text>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </Stack>
-              </AccordionPanel>
-            </AccordionItem>
-          ))}
-        </Accordion>
+                    ))}
+                  </Stack>
+                </AccordionPanel>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
       </div>
     </Stack>
   );

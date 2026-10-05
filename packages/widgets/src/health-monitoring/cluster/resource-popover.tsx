@@ -16,9 +16,11 @@ import {
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
-import { capitalize, formatBytes, formatBytesPair } from "@homarr/common";
+import { capitalize } from "@homarr/common";
 import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useByteFormatter } from "@homarr/settings";
+import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 dayjs.extend(duration);
 
@@ -46,7 +48,7 @@ export const ResourcePopover = ({ item, children }: PropsWithChildren<ResourcePo
 };
 
 export const ResourceTypeEntryDetails = ({ item }: { item: Resource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover");
+  const t = useI18n("widget.healthMonitoring.cluster.popover");
   return (
     <Stack gap={0}>
       <Group wrap="nowrap" align="start" justify="apart">
@@ -92,25 +94,26 @@ const RightSection = ({ label, value }: RightSectionProps) => {
 };
 
 const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail");
+  const t = useI18n("widget.healthMonitoring.cluster.popover.detail");
+  const { formatBytesPair } = useByteFormatter();
   const memory = formatBytesPair(item.memory.used, item.memory.total);
   const storage = formatBytesPair(item.storage.used, item.storage.total);
   return (
     <List>
-      <List.Item icon={<IconCpu size={16} />}>
+      <List.Item icon={<IconCpu size="var(--mantine-font-size-md)" />}>
         {t("cpu")} - {item.cpu.cores}
       </List.Item>
-      <List.Item icon={<IconBrain size={16} />}>
-        {t("memory")} - {memory.used} / {memory.available}
+      <List.Item icon={<IconBrain size="var(--mantine-font-size-md)" />}>
+        {t("memory")} - {memory.used} / {memory.total}
       </List.Item>
-      <List.Item icon={<IconDatabase size={16} />}>
-        {t("storage")} - {storage.used} / {storage.available}
+      <List.Item icon={<IconDatabase size="var(--mantine-font-size-md)" />}>
+        {t("storage")} - {storage.used} / {storage.total}
       </List.Item>
-      <List.Item icon={<IconClockHour3 size={16} />}>
+      <List.Item icon={<IconClockHour3 size="var(--mantine-font-size-md)" />}>
         {t("uptime")} - {dayjs(dayjs().add(-item.uptime, "seconds")).fromNow(true)}
       </List.Item>
       {item.haState && (
-        <List.Item icon={<IconHeartBolt size={16} />}>
+        <List.Item icon={<IconHeartBolt size="var(--mantine-font-size-md)" />}>
           {t("haState")} - {capitalize(item.haState)}
         </List.Item>
       )}
@@ -121,7 +124,8 @@ const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
 };
 
 const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail");
+  const t = useI18n("widget.healthMonitoring.cluster.popover.detail");
+  const { formatBytesPair } = useByteFormatter();
   const storagePercent = item.total ? (item.used / item.total) * 100 : 0;
   const storage = formatBytesPair(item.used, item.total);
   return (
@@ -136,7 +140,7 @@ const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
         />
         <Group align="center" gap={0}>
           <Text>
-            {t("storage")} - {storage.used} / {storage.available}
+            {t("storage")} - {storage.used} / {storage.total}
           </Text>
         </Group>
       </Center>
@@ -148,19 +152,20 @@ const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
 };
 
 const DiskStats = ({ item }: { item: ComputeResource }) => {
+  const { formatBytes } = useByteFormatter();
   if (!item.storage.read || !item.storage.write) {
     return null;
   }
   return (
-    <List.Item icon={<IconDatabase size={16} />}>
+    <List.Item icon={<IconDatabase size="var(--mantine-font-size-md)" />}>
       <Group gap="sm">
         <Group gap={0}>
           <Text>{formatBytes(item.storage.write)}</Text>
-          <IconArrowNarrowDown size={14} />
+          <IconArrowNarrowDown size="var(--mantine-font-size-sm)" />
         </Group>
         <Group gap={0}>
           <Text>{formatBytes(item.storage.read)}</Text>
-          <IconArrowNarrowUp size={14} />
+          <IconArrowNarrowUp size="var(--mantine-font-size-sm)" />
         </Group>
       </Group>
     </List.Item>
@@ -168,19 +173,20 @@ const DiskStats = ({ item }: { item: ComputeResource }) => {
 };
 
 const NetStats = ({ item }: { item: ComputeResource }) => {
+  const { formatBytes } = useByteFormatter();
   if (!item.network.in || !item.network.out) {
     return null;
   }
   return (
-    <List.Item icon={<IconNetwork size={16} />}>
+    <List.Item icon={<IconNetwork size="var(--mantine-font-size-md)" />}>
       <Group gap="sm">
         <Group gap={0}>
           <Text>{formatBytes(item.network.in)}</Text>
-          <IconArrowNarrowDown size={14} />
+          <IconArrowNarrowDown size="var(--mantine-font-size-sm)" />
         </Group>
         <Group gap={0}>
           <Text>{formatBytes(item.network.out)}</Text>
-          <IconArrowNarrowUp size={14} />
+          <IconArrowNarrowUp size="var(--mantine-font-size-sm)" />
         </Group>
       </Group>
     </List.Item>
@@ -188,7 +194,7 @@ const NetStats = ({ item }: { item: ComputeResource }) => {
 };
 
 const StorageType = ({ item }: { item: StorageResource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail.storageType");
+  const t = useI18n("widget.healthMonitoring.cluster.popover.detail.storageType");
   if (item.isShared) {
     return <Badge color="blue">{t("shared")}</Badge>;
   } else {
@@ -197,17 +203,18 @@ const StorageType = ({ item }: { item: StorageResource }) => {
 };
 
 const ResourceIcon = ({ type, size }: { type: Resource["type"]; size: number }) => {
+  const style = zoomCompensatedSize(size);
   switch (type) {
     case "node":
-      return <IconServer size={size} />;
+      return <IconServer style={style} />;
     case "lxc":
-      return <IconDeviceLaptop size={size} />;
+      return <IconDeviceLaptop style={style} />;
     case "qemu":
-      return <IconDeviceLaptop size={size} />;
+      return <IconDeviceLaptop style={style} />;
     case "storage":
-      return <IconDatabase size={size} />;
+      return <IconDatabase style={style} />;
     default:
       console.error(`Unknown resource type: ${type as string}`);
-      return <IconQuestionMark size={size} />;
+      return <IconQuestionMark style={style} />;
   }
 };

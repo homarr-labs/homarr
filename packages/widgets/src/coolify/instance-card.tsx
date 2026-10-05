@@ -1,13 +1,16 @@
 "use client";
 
-import { Accordion, Anchor, Badge, Card, Group, Image, Text } from "@mantine/core";
+import { useState } from "react";
+import { Accordion, Anchor, Badge, Card, Group, Image, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
-import { buildServerResourceCounts, getBadgeColor, parseStatus } from "./coolify-utils";
+import classes from "./component.module.css";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { buildServerResourceCounts, getBadgeColor, isCoolifyServerOnline, parseStatus } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
 import { ServicesSection } from "./services-section";
 import type { CoolifyOptions, InstanceData } from "./types";
@@ -17,11 +20,12 @@ interface InstanceCardProps {
   instance: InstanceData;
   options: CoolifyOptions;
   isTiny: boolean;
+  isAdvanced: boolean;
   widgetKey: string;
 }
 
-export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceCardProps) {
-  const t = useScopedI18n("widget.coolify");
+export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey }: InstanceCardProps) {
+  const t = useI18n("widget.coolify");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${cardKey}`,
@@ -31,17 +35,16 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
     key: `coolify-sections-${cardKey}`,
     defaultValue: ["applications"],
   });
-
+  const [advancedOpenSections, setAdvancedOpenSections] = useState(["servers", "applications", "services"]);
   const serverResourceCounts = buildServerResourceCounts(
     instance.instanceInfo.servers,
     instance.instanceInfo.applications,
     instance.instanceInfo.services,
   );
 
-  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
-  const relativeTime = useTimeAgo(instance.updatedAt);
-
-  const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
+  const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
+  const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
+  const onlineServers = instance.instanceInfo.servers.filter(isCoolifyServerOnline).length;
   const runningApps = instance.instanceInfo.applications.filter(
     (a) => parseStatus(a.status ?? "") === "running",
   ).length;
@@ -50,18 +53,29 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
   ).length;
 
   return (
-    <Card p={0} radius="sm">
-      <Group
-        p="xs"
-        justify="space-between"
-        wrap="nowrap"
-        style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
-      >
-        <Group gap={4} wrap="nowrap">
+    <Card p={0} radius="sm" bg="transparent">
+      <Group p="xs" justify="space-between" wrap="nowrap" className={classes.neutralDividerBottom}>
+        <Group gap={4} wrap="nowrap" miw={0}>
           <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
-          <Anchor href={baseUrl} target="_blank" fz={isTiny ? "10px" : "xs"} fw={600} c="inherit" lineClamp={1}>
-            {instance.integrationName}
-          </Anchor>
+          <Stack gap={0} miw={0}>
+            <Anchor
+              component={baseUrl ? "a" : "span"}
+              href={baseUrl}
+              target={baseUrl ? "_blank" : undefined}
+              rel={baseUrl ? SAFE_NEW_TAB_REL : undefined}
+              fz={isTiny ? "10px" : "xs"}
+              fw={600}
+              c="inherit"
+              lineClamp={1}
+            >
+              {instance.integrationName}
+            </Anchor>
+            {isAdvanced && (
+              <Text fz="10px" c="dimmed" truncate="end">
+                {t("source.url", { url: displayUrl })}
+              </Text>
+            )}
+          </Stack>
         </Group>
         <Group gap={4} wrap="nowrap">
           {options.showServers && (
@@ -90,13 +104,22 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
         </Group>
       </Group>
 
-      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+      <Accordion
+        className={classes.accordion}
+        variant="filled"
+        chevronPosition="right"
+        multiple
+        keepMounted={false}
+        value={isAdvanced ? advancedOpenSections : openSections}
+        onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
+      >
         {options.showServers && (
           <ServersSection
             servers={instance.instanceInfo.servers}
             serverResourceCounts={serverResourceCounts}
             baseUrl={baseUrl}
             isTiny={isTiny}
+            isAdvanced={isAdvanced}
             showIp={showIp}
             onToggleIp={() => setShowIp((prev) => !prev)}
           />
@@ -105,18 +128,31 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
           <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
         )}
         {options.showServices && (
-          <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+          <ServicesSection
+            services={instance.instanceInfo.services}
+            baseUrl={baseUrl}
+            isTiny={isTiny}
+            isAdvanced={isAdvanced}
+          />
         )}
       </Accordion>
 
-      <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
-        <Text size="10px" c="dimmed">
-          v{instance.instanceInfo.version}
-        </Text>
-        <Text size="10px" c="dimmed">
-          {t("footer.updated", { when: relativeTime })}
-        </Text>
-      </Group>
+      <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
     </Card>
   );
 }
+
+const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
+  const t = useI18n("widget.coolify");
+  const relativeTime = useTimeAgo(updatedAt, 60_000);
+  return (
+    <Group justify="space-between" p={4} className={classes.neutralDividerTop}>
+      <Text size="10px" c="dimmed">
+        v{version}
+      </Text>
+      <Text size="10px" c="dimmed">
+        {t("footer.updated", { when: relativeTime })}
+      </Text>
+    </Group>
+  );
+};

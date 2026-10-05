@@ -6,6 +6,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { IntegrationHttpAuthentication } from "../http-auth";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -27,37 +28,34 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     this.sessionStore = createSessionStore(integration);
   }
 
+  public override async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    const session = await this.getSessionAsync();
+    if (session.type === "cookie") {
+      const cookie = `${session.loginToken};${session.sessionId}`;
+      return { headers: { Cookie: cookie }, redactValues: [cookie, session.loginToken, session.sessionId] };
+    }
+    return {
+      headers: { "X-OPENMEDIAVAULT-SESSIONID": session.sessionId },
+      redactValues: [session.sessionId],
+    };
+  }
+
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     const systemResponses = await this.makeAuthenticatedRpcCallAsync("system", "getInformation");
-    const fileSystemResponse = await this.makeAuthenticatedRpcCallAsync(
-      "filesystemmgmt",
-      "enumerateMountedFilesystems",
-      { includeroot: true },
-    );
+    const fileSystem = await this.getFileSystemsAsync();
     const smartResponse = await this.makeAuthenticatedRpcCallAsync("smart", "enumerateDevices");
     const cpuTempResponse = await this.makeAuthenticatedRpcCallAsync("cputemp", "get");
 
     const systemResult = systemInformationSchema.safeParse(await systemResponses.json());
-    const fileSystemResult = fileSystemSchema.safeParse(await fileSystemResponse.json());
     const smartResult = smartSchema.safeParse(await smartResponse.json());
     const cpuTempResult = cpuTempSchema.safeParse(await cpuTempResponse.json());
 
     if (!systemResult.success) {
       throw new Error("Invalid system information response");
     }
-    if (!fileSystemResult.success) {
-      throw new Error("Invalid file system response");
-    }
     if (!smartResult.success) {
       throw new Error("Invalid SMART information response");
     }
-
-    const fileSystem = fileSystemResult.data.response.map((fileSystem) => ({
-      deviceName: fileSystem.devicename,
-      used: fileSystem.used,
-      available: fileSystem.available.toString(),
-      percentage: fileSystem.percentage,
-    }));
 
     const smart = smartResult.data.response.map((smart) => ({
       deviceName: smart.devicename,
@@ -90,9 +88,37 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     };
   }
 
+  public async listStorageVolumesAsync(): Promise<{ value: string; label: string }[]> {
+    const fileSystem = await this.getFileSystemsAsync();
+    const { id: integrationId, name: integrationName } = this.integration;
+
+    return fileSystem.map(({ deviceName }) => ({
+      value: `${integrationId}:${deviceName}`,
+      label: `${deviceName} (${integrationName})`,
+    }));
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await this.getSessionAsync(input.fetchAsync);
     return { success: true };
+  }
+
+  private async getFileSystemsAsync(): Promise<SystemHealthMonitoring["fileSystem"]> {
+    const response = await this.makeAuthenticatedRpcCallAsync("filesystemmgmt", "enumerateMountedFilesystems", {
+      includeroot: true,
+    });
+    const result = fileSystemSchema.safeParse(await response.json());
+
+    if (!result.success) {
+      throw new Error("Invalid file system response");
+    }
+
+    return result.data.response.map((fileSystem) => ({
+      deviceName: fileSystem.devicename,
+      used: fileSystem.used,
+      available: fileSystem.available.toString(),
+      percentage: fileSystem.percentage,
+    }));
   }
 
   private async makeAuthenticatedRpcCallAsync(

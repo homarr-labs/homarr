@@ -1,5 +1,5 @@
 import SuperJSON from "superjson";
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
@@ -17,7 +17,18 @@ import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
 import type { WidgetComponentProps } from "../../../../../widgets/src/definition";
-import { canAccessAllFeedsAsync, restrictUrlsAsync } from "../../widgets/rssFeed";
+import { canAccessAllFeedsAsync, restrictUrlsAsync, rssFeedRouter } from "../../widgets/rssFeed";
+
+const mocks = vi.hoisted(() => ({ logger: { warn: vi.fn() }, getFeed: vi.fn() }));
+
+vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => mocks.logger }));
+vi.mock("@homarr/request-handler/rss-feeds", () => ({
+  rssFeedsRequestHandler: {
+    handler: (input: unknown) => ({ getDataAsync: async () => await mocks.getFeed(input) }),
+  },
+}));
+
+beforeEach(() => vi.clearAllMocks());
 
 const createSession = (permissions: GroupPermissionKey[] = []): Session => ({
   user: {
@@ -29,6 +40,53 @@ const createSession = (permissions: GroupPermissionKey[] = []): Session => ({
 });
 
 describe("rssFeedRouter", () => {
+  describe("getFeeds", () => {
+    test("redacts feed secrets from logs and returns a generic error when every feed fails", async () => {
+      const feedUrl = "https://user:password@example.com/feed?token=secret";
+      mocks.getFeed.mockRejectedValue(new Error(`Failed to fetch ${feedUrl}`));
+      const caller = rssFeedRouter.createCaller({
+        db: createDb(),
+        deviceType: undefined,
+        session: createSession(["board-create"]),
+      });
+
+      await expect(caller.getFeeds({ urls: [feedUrl], maximumAmountPosts: 5 })).rejects.toMatchObject({
+        code: "BAD_GATEWAY",
+        message: "All RSS feed requests failed",
+      });
+      expect(mocks.logger.warn).toHaveBeenCalledWith("RSS feed fetch failed", {
+        feedIndex: 0,
+        origin: "https://example.com",
+        errorType: "Error",
+        errorMessage: "Failed to fetch [redacted URL]",
+      });
+      const logged = JSON.stringify(mocks.logger.warn.mock.calls);
+      expect(logged).not.toContain("password");
+      expect(logged).not.toContain("token");
+      expect(logged).not.toContain("secret");
+    });
+
+    test("returns successful entries and only a failure count when some feeds fail", async () => {
+      const failedUrl = "https://user:password@example.com/feed?token=secret";
+      mocks.getFeed.mockImplementation(async (input: { url: string }) => {
+        if (input.url === failedUrl) throw new Error(`Failed to fetch ${failedUrl}`);
+        return { data: { entries: [{ id: "entry" }] } };
+      });
+      const caller = rssFeedRouter.createCaller({
+        db: createDb(),
+        deviceType: undefined,
+        session: createSession(["board-create"]),
+      });
+
+      const result = await caller.getFeeds({ urls: ["https://example.com/feed", failedUrl], maximumAmountPosts: 5 });
+
+      expect(result).toEqual({ entries: [{ id: "entry" }], failedFeedCount: 1 });
+      expect(JSON.stringify(result)).not.toContain("password");
+      expect(JSON.stringify(result)).not.toContain("token");
+      expect(JSON.stringify(result)).not.toContain("secret");
+    });
+  });
+
   describe("canAccessAllFeedsAsync", () => {
     test("should return false for unauthenticated users", async () => {
       // Arrange

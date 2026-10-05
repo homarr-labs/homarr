@@ -1,22 +1,25 @@
-import type { useScopedI18n } from "@homarr/translation/client";
+import type { useI18n } from "@homarr/translation/client";
+import { useDemoReadOnly } from "../demo-read-only";
 
 import { timeFrameValues } from "./index";
 
-export const umamiQueryOptions = { refetchInterval: 60_000 } as const;
+export const useUmamiQueryOptions = (): { refetchInterval: number | false } => ({
+  refetchInterval: useDemoReadOnly() ? false : 60_000,
+});
 
 export const EVENT_COLORS = ["blue.5", "orange.5", "green.5", "red.5", "violet.5", "teal.5", "yellow.5", "pink.5"];
 
-export function formatXLabel(timestamp: string, timeFrame: string): string {
+export function formatXLabel(timestamp: string, timeFrame: string, locale: string): string {
   const date = new Date(timestamp);
   switch (timeFrame) {
     case "today":
     case "24h":
-      return `${date.getHours().toString().padStart(2, "0")}:00`;
+      return date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
     case "7d":
     case "30d":
     case "month":
     case "lastMonth":
-      return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
     default:
       return timestamp;
   }
@@ -24,10 +27,7 @@ export function formatXLabel(timestamp: string, timeFrame: string): string {
 
 export type TimeFrame = (typeof timeFrameValues)[number];
 
-export function formatTimeFrameLabel(
-  timeFrame: TimeFrame,
-  t: ReturnType<typeof useScopedI18n<"widget.umami">>,
-): string {
+export function formatTimeFrameLabel(timeFrame: TimeFrame, t: ReturnType<typeof useI18n<"widget.umami">>): string {
   if (timeFrameValues.includes(timeFrame)) {
     return t(`option.timeFrame.option.${timeFrame}`);
   }

@@ -13,7 +13,7 @@ import { ClientSideDockerLogsTerminal } from "./client";
 
 interface DockerContainerLogsPageProps {
   params: Promise<{ containerId: string }>;
-  searchParams: Promise<{ name?: string }>;
+  searchParams: Promise<{ endpointId?: string; name?: string }>;
 }
 
 export default async function DockerContainerLogsPage({ params, searchParams }: DockerContainerLogsPageProps) {
@@ -23,10 +23,12 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
   }
 
   const { containerId } = await params;
-  const { name } = await searchParams;
+  const { endpointId, name } = await searchParams;
+  const resolvedEndpointId = endpointId ?? (await getOnlyDockerEndpointIdAsync());
+  if (!resolvedEndpointId) notFound();
 
   try {
-    await api.docker.logs({ id: containerId, tail: 1 });
+    await api.docker.logs({ endpointId: resolvedEndpointId, id: containerId, tail: 1 });
   } catch {
     notFound();
   }
@@ -40,8 +42,17 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
         />
       </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
-        <ClientSideDockerLogsTerminal containerId={containerId} />
+        <ClientSideDockerLogsTerminal endpointId={resolvedEndpointId} containerId={containerId} />
       </Box>
     </>
   );
 }
+
+const getOnlyDockerEndpointIdAsync = async () => {
+  try {
+    const endpoints = await api.docker.getEndpoints();
+    return endpoints.length === 1 ? endpoints[0]?.id : undefined;
+  } catch {
+    return undefined;
+  }
+};

@@ -32,7 +32,7 @@ const adminId = createId();
 const session = {
   user: {
     id: adminId,
-    permissions: ["admin", "board-create"] satisfies GroupPermissionKey[],
+    permissions: ["admin", "board-create", "integration-use-all"] satisfies GroupPermissionKey[],
     colorScheme: "light",
   },
   expires: new Date(Date.now() + 100_000).toISOString(),
@@ -74,8 +74,9 @@ const createSourceInstanceAsync = async () => {
 
   await boardRouter.createCaller({ db, deviceType: undefined, session }).addItem({
     boardId,
-    kind: "clock",
-    options: { is24HourFormat: true },
+    // The calendar accepts the Sonarr integration, which the item has to keep across a round trip
+    kind: "calendar",
+    options: { releaseType: ["inCinemas"] },
     integrationIds: [integrationId],
     xOffset: 2,
     yOffset: 1,

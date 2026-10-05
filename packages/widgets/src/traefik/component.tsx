@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Badge, Group, ScrollArea, Text } from "@mantine/core";
+import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import {
   IconAlertTriangle,
   IconCircleCheck,
@@ -13,10 +13,13 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSummary } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 
@@ -36,6 +39,8 @@ const emptyProtocol: TraefikProtocolSummary = {
 const emptyDashboard: TraefikDashboardData = {
   version: null,
   entryPoints: [],
+  resources: [],
+  failedEndpoints: [],
   http: emptyProtocol,
   tcp: emptyProtocol,
   udp: {
@@ -47,20 +52,76 @@ const emptyDashboard: TraefikDashboardData = {
 type ProtocolKey = "http" | "tcp" | "udp";
 type ResourceKey = "routers" | "services" | "middlewares";
 
-export default function TraefikWidget({ integrationIds, options, width }: WidgetComponentProps<"traefik">) {
-  if (integrationIds.length === 0) {
+interface TraefikDashboardSource {
+  integrationId: string;
+  integrationName: string;
+  dashboard: TraefikDashboardData;
+}
+
+export const getTraefikSourceDetails = (sources: readonly TraefikDashboardSource[]) => ({
+  resources: sources.flatMap(({ integrationId, integrationName, dashboard }) =>
+    dashboard.resources.map((resource, index) => ({
+      ...resource,
+      integrationId,
+      integrationName,
+      key: `${integrationId}:${resource.protocol}:${resource.type}:${resource.name}:${index}`,
+    })),
+  ),
+  failedEndpoints: sources.flatMap(({ integrationId, integrationName, dashboard }) =>
+    dashboard.failedEndpoints.map((endpoint, index) => ({
+      endpoint,
+      integrationId,
+      integrationName,
+      key: `${integrationId}:${endpoint}:${index}`,
+    })),
+  ),
+});
+
+export function getTraefikProtocolKeys(
+  options: Pick<WidgetComponentProps<"traefik">["options"], "showTcp" | "showUdp">,
+  isAdvanced: boolean,
+): ProtocolKey[] {
+  const protocols: ProtocolKey[] = ["http"];
+  if (isAdvanced || options.showTcp) protocols.push("tcp");
+  if (isAdvanced || options.showUdp) protocols.push("udp");
+  return protocols;
+}
+
+export function getVisibleTraefikEntryPoints(values: string[], width: number, isAdvanced: boolean): string[] {
+  const entryPoints = dedupe(values);
+  return isAdvanced ? entryPoints : entryPoints.slice(0, getEntryPointLimit(width));
+}
+
+export default function TraefikWidget(props: WidgetComponentProps<"traefik">) {
+  if (props.integrationIds.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  const t = useScopedI18n("widget.traefik");
-  const { data } = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });
+  return <TraefikWidgetContent {...props} />;
+}
+
+function TraefikWidgetContent({
+  integrationIds,
+  options,
+  width,
+  displayMode = "compact",
+}: WidgetComponentProps<"traefik">) {
+  const t = useI18n("widget.traefik");
+  const tCommon = useI18n("common");
+  const dashboardQuery = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });
+  const data = getUsableWidgetQueryData(dashboardQuery);
 
   if (!data) return <WidgetEmptyState />;
+  const successfulData = data.flatMap((item) =>
+    item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],
+  );
 
-  const combined = data.reduce<TraefikDashboardData>(
+  const combined = successfulData.reduce<TraefikDashboardData>(
     (acc, item) => ({
       version: acc.version ?? item.dashboard.version,
       entryPoints: [...acc.entryPoints, ...item.dashboard.entryPoints],
+      resources: [...acc.resources, ...item.dashboard.resources],
+      failedEndpoints: [...acc.failedEndpoints, ...item.dashboard.failedEndpoints],
       http: combineProtocol(acc.http, item.dashboard.http),
       tcp: combineProtocol(acc.tcp, item.dashboard.tcp),
       udp: {
@@ -71,62 +132,171 @@ export default function TraefikWidget({ integrationIds, options, width }: Widget
     emptyDashboard,
   );
 
+  const isAdvanced = displayMode === "advanced";
   const totalRouters = combined.http.routers.total + combined.tcp.routers.total + combined.udp.routers.total;
-  const totalErrors = getProtocolErrors(combined.http) + getProtocolErrors(combined.tcp) + getUdpErrors(combined.udp);
+  const totalErrors =
+    getProtocolErrors(combined.http) +
+    getProtocolErrors(combined.tcp) +
+    getUdpErrors(combined.udp) +
+    combined.failedEndpoints.length;
   const totalWarnings =
     getProtocolWarnings(combined.http) + getProtocolWarnings(combined.tcp) + getUdpWarnings(combined.udp);
-  const protocolKeys: ProtocolKey[] = ["http"];
-  if (options.showTcp) protocolKeys.push("tcp");
-  if (options.showUdp) protocolKeys.push("udp");
+  const protocolKeys = getTraefikProtocolKeys(options, isAdvanced);
+  const entryPoints = getVisibleTraefikEntryPoints(combined.entryPoints, width, isAdvanced);
+  const displayedVersion = successfulData.length === 1 ? successfulData[0]?.dashboard.version : null;
 
-  return (
-    <ScrollArea h="100%">
-      <div className={classes.root}>
-        <Group justify="space-between" gap="xs" wrap="nowrap">
-          <div className={classes.titleBlock}>
-            <Text className={classes.title}>{data.length === 1 ? data[0]?.integrationName : t("instances")}</Text>
-            <Text className={classes.subtitle}>{combined.version ? `v${combined.version}` : t("versionUnknown")}</Text>
-          </div>
-          <HealthBadge errors={totalErrors} warnings={totalWarnings} />
-        </Group>
-
-        <div className={classes.hero}>
-          <SummaryMetric
-            icon={<IconRoute size={getHeroIconSize(width)} />}
-            label={t("summary.routers")}
-            value={totalRouters}
-          />
-          <SummaryMetric
-            icon={<IconDoorEnter size={getHeroIconSize(width)} />}
-            label={t("summary.entryPoints")}
-            value={dedupe(combined.entryPoints).length}
-          />
+  const summary = (
+    <div className={classes.root}>
+      <Group justify="space-between" gap="xs" wrap="nowrap">
+        <div className={classes.titleBlock}>
+          <Text className={classes.title}>
+            {successfulData.length === 1 ? successfulData[0]?.integrationName : t("instances")}
+          </Text>
+          <Text className={classes.subtitle}>
+            {displayedVersion
+              ? `v${displayedVersion}`
+              : successfulData.length > 1
+                ? successfulData.map(({ integrationName }) => integrationName).join(" · ")
+                : t("versionUnknown")}
+          </Text>
         </div>
+        <HealthBadge errors={totalErrors} warnings={totalWarnings} />
+      </Group>
 
-        <div className={classes.protocolGrid}>
-          {protocolKeys.map((protocol) => (
-            <ProtocolCard key={protocol} protocol={protocol} data={combined[protocol]} />
+      {isAdvanced && (
+        <Group gap={4} wrap="wrap">
+          {successfulData.map(({ integrationId, integrationName, dashboard }) => (
+            <Badge key={integrationId} variant="outline" size="sm" radius="sm">
+              {integrationName} · {dashboard.version ? `v${dashboard.version}` : t("versionUnknown")}
+            </Badge>
+          ))}
+        </Group>
+      )}
+
+      <div className={classes.hero}>
+        <SummaryMetric
+          icon={<IconRoute style={zoomCompensatedSize(getHeroIconSize(width))} />}
+          label={t("summary.routers")}
+          value={totalRouters}
+        />
+        <SummaryMetric
+          icon={<IconDoorEnter style={zoomCompensatedSize(getHeroIconSize(width))} />}
+          label={t("summary.entryPoints")}
+          value={dedupe(combined.entryPoints).length}
+        />
+      </div>
+
+      <div className={classes.protocolGrid}>
+        {protocolKeys.map((protocol) => (
+          <ProtocolCard key={protocol} protocol={protocol} data={combined[protocol]} tCommon={tCommon} />
+        ))}
+      </div>
+
+      {(isAdvanced || options.showEntryPoints) && entryPoints.length > 0 && (
+        <div className={classes.entryPoints}>
+          {entryPoints.map((entryPoint) => (
+            <Badge key={entryPoint} variant="light" size="sm" radius="sm">
+              {entryPoint}
+            </Badge>
           ))}
         </div>
+      )}
+    </div>
+  );
 
-        {options.showEntryPoints && combined.entryPoints.length > 0 && (
-          <div className={classes.entryPoints}>
-            {dedupe(combined.entryPoints)
-              .slice(0, getEntryPointLimit(width))
-              .map((entryPoint) => (
-                <Badge key={entryPoint} variant="light" size="sm" radius="sm">
-                  {entryPoint}
-                </Badge>
-              ))}
-          </div>
-        )}
-      </div>
-    </ScrollArea>
+  if (!isAdvanced) {
+    return (
+      <Box h="100%" pos="relative">
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+          <IntegrationErrorIndicator results={data} />
+        </Group>
+        <ScrollArea h="100%">{summary}</ScrollArea>
+      </Box>
+    );
+  }
+
+  const sourceDetails = getTraefikSourceDetails(successfulData);
+  const resources = sourceDetails.resources.toSorted(
+    (left, right) =>
+      resourceStatusOrder[left.status] - resourceStatusOrder[right.status] || left.name.localeCompare(right.name),
+  );
+  const resourceList = (
+    <Stack gap="xs">
+      {sourceDetails.failedEndpoints.map(({ endpoint, integrationName, key }) => (
+        <Badge key={key} color="red" variant="light">
+          {integrationName} · {t("failedEndpoint", { endpoint })}
+        </Badge>
+      ))}
+      {resources.map((resource) => (
+        <Group key={resource.key} justify="space-between" wrap="nowrap" p="xs">
+          <Stack gap={0} style={{ minWidth: 0 }}>
+            <Text size="sm" fw={600} truncate>
+              {resource.name}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {resource.protocol.toUpperCase()} · {t(`resourceType.${resource.type}`)} · {resource.provider ?? "—"} ·{" "}
+              {resource.integrationName}
+            </Text>
+          </Stack>
+          <Badge
+            color={
+              resource.status === "error"
+                ? "red"
+                : resource.status === "warning"
+                  ? "yellow"
+                  : resource.status === "enabled"
+                    ? "green"
+                    : "gray"
+            }
+          >
+            {t(`resourceStatus.${resource.status}`)}
+          </Badge>
+        </Group>
+      ))}
+    </Stack>
+  );
+
+  if (width < 900) {
+    return (
+      <Box h="100%" pos="relative">
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+          <IntegrationErrorIndicator results={data} />
+        </Group>
+        <ScrollArea h="100%">
+          <Stack gap="md" p="md">
+            {summary}
+            {resourceList}
+          </Stack>
+        </ScrollArea>
+      </Box>
+    );
+  }
+
+  return (
+    <Box h="100%" pos="relative">
+      <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+        <IntegrationErrorIndicator results={data} />
+      </Group>
+      <SimpleGrid cols={2} spacing="md" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
+        <ScrollArea h="100%">{summary}</ScrollArea>
+        <ScrollArea h="100%">{resourceList}</ScrollArea>
+      </SimpleGrid>
+    </Box>
   );
 }
 
-function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: TraefikDashboardData[ProtocolKey] }) {
-  const t = useScopedI18n("widget.traefik");
+const resourceStatusOrder = { error: 0, warning: 1, disabled: 2, unknown: 3, enabled: 4 } as const;
+
+function ProtocolCard({
+  protocol,
+  data,
+  tCommon,
+}: {
+  protocol: ProtocolKey;
+  data: TraefikDashboardData[ProtocolKey];
+  tCommon: ReturnType<typeof useI18n<"common">>;
+}) {
+  const t = useI18n("widget.traefik");
   const rows: { key: ResourceKey; icon: typeof IconRoute; summary: TraefikResourceSummary }[] = [
     { key: "routers", icon: IconRoute, summary: data.routers },
     { key: "services", icon: IconServer, summary: data.services },
@@ -134,6 +304,11 @@ function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: Traefik
   if ("middlewares" in data) {
     rows.push({ key: "middlewares", icon: IconStack2, summary: data.middlewares });
   }
+  const resourceLabels = {
+    routers: t("resource.routers"),
+    services: tCommon("services"),
+    middlewares: t("resource.middlewares"),
+  };
 
   return (
     <div className={classes.protocolCard}>
@@ -142,8 +317,8 @@ function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: Traefik
         {rows.map(({ key, icon: Icon, summary }) => (
           <div key={key} className={classes.protocolRow}>
             <Group gap={4} wrap="nowrap" className={classes.protocolLabel}>
-              <Icon size={14} />
-              <Text>{t(`resource.${key}`)}</Text>
+              <Icon size="var(--mantine-font-size-sm)" />
+              <Text>{resourceLabels[key]}</Text>
             </Group>
             <StatusCount summary={summary} />
           </div>
@@ -184,11 +359,16 @@ function SummaryMetric({ icon, label, value }: { icon: ReactNode; label: string;
 }
 
 function HealthBadge({ errors, warnings }: { errors: number; warnings: number }) {
-  const t = useScopedI18n("widget.traefik");
+  const t = useI18n("widget.traefik");
 
   if (errors > 0) {
     return (
-      <Badge color="red" variant="light" leftSection={<IconAlertTriangle size={12} />} radius="sm">
+      <Badge
+        color="red"
+        variant="light"
+        leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />}
+        radius="sm"
+      >
         {t("status.errors", { count: errors })}
       </Badge>
     );
@@ -196,14 +376,24 @@ function HealthBadge({ errors, warnings }: { errors: number; warnings: number })
 
   if (warnings > 0) {
     return (
-      <Badge color="yellow" variant="light" leftSection={<IconAlertTriangle size={12} />} radius="sm">
+      <Badge
+        color="yellow"
+        variant="light"
+        leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />}
+        radius="sm"
+      >
         {t("status.warnings", { count: warnings })}
       </Badge>
     );
   }
 
   return (
-    <Badge color="green" variant="light" leftSection={<IconCircleCheck size={12} />} radius="sm">
+    <Badge
+      color="green"
+      variant="light"
+      leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />}
+      radius="sm"
+    >
       {t("status.healthy")}
     </Badge>
   );

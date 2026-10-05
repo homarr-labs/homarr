@@ -1,0 +1,20 @@
+.chartSurface {
+  min-width: 0;
+  min-height: 0;
+  background-color: transparent !important;
+}
+
+.chartSurface :global(.mantine-ScrollArea-viewport),
+.chartSurface :global(.recharts-wrapper),
+.chartSurface :global(.recharts-surface) {
+  background-color: transparent !important;
+}
+
+.listSurface {
+  min-width: 0;
+  min-height: 0;
+  padding: 4px 6px;
+  border: 1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.32));
+  border-radius: var(--mantine-radius-sm);
+  background-color: transparent;
+}

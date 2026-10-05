@@ -118,11 +118,19 @@ describe("board mutations should require access to the board", () => {
     expect(await callAsync(db, stranger, "PATCH", `/api/boards/${boardId}/items/${itemId}`, { width: 2 })).toBe(404);
     expect(await callAsync(db, stranger, "DELETE", `/api/boards/${boardId}/items/${itemId}`)).toBe(404);
     expect(await callAsync(db, stranger, "POST", `/api/boards/${boardId}/sections`, { kind: "empty" })).toBe(404);
-    expect(await callAsync(db, stranger, "PATCH", `/api/boards/${boardId}/sections/${sectionId}`, { name: "x" })).toBe(
+    expect(await callAsync(db, stranger, "PATCH", `/api/boards/${boardId}/sections/${sectionId}`, { yOffset: 1 })).toBe(
       404,
     );
     expect(await callAsync(db, stranger, "DELETE", `/api/boards/${boardId}/sections/${sectionId}`)).toBe(404);
-    expect(await callAsync(db, stranger, "PUT", `/api/boards/${boardId}/layouts`, { layouts: [] })).toBe(404);
+    // The payload has to be a valid set of layouts, otherwise the schema answers before the board is checked
+    expect(
+      await callAsync(db, stranger, "PUT", `/api/boards/${boardId}/layouts`, {
+        layouts: [
+          { id: createId(), name: "Mobile", columnCount: 3, breakpoint: 0, role: "mobile" },
+          { id: createId(), name: "Base", columnCount: 12, breakpoint: 768, role: "base" },
+        ],
+      }),
+    ).toBe(404);
     expect(await callAsync(db, stranger, "PUT", `/api/boards/${boardId}/permissions/users`, { permissions: [] })).toBe(
       404,
     );

@@ -1,9 +1,12 @@
 import { IconCloud, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("coolify", {
+  supportsAdvancedFocus: true,
   icon: IconCloud,
   createOptions() {
     return optionsBuilder.from((factory) => ({
@@ -18,7 +21,7 @@ export const { definition, componentLoader } = createWidgetDefinition("coolify",
       }),
     }));
   },
-  supportedIntegrations: ["coolify"],
+  ...getWidgetIntegrationConfig("coolify"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

@@ -1,32 +1,43 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 
-import type { Prefetch } from "../definition";
+import type { QueryClient } from "@tanstack/react-query";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import { createTrpcQueryKey } from "../trpc-query-key";
+import { getDirectBookmarkUrl } from "./bookmark-item";
 
 const logger = createLogger({ module: "bookmarksWidgetPrefetch" });
 
-const prefetchAllAsync: Prefetch<"bookmarks"> = async (queryClient, items) => {
-  const appIds = items.flatMap((item) => item.options.items);
-  const distinctAppIds = [...new Set(appIds)];
+const getAppIds = (options: Record<string, unknown>) => {
+  if (!Array.isArray(options.items)) return [];
+  return options.items.filter((value): value is string => typeof value === "string" && !getDirectBookmarkUrl(value));
+};
 
-  const dbApps = await db.query.apps.findMany({
-    where: inArray(apps.id, distinctAppIds),
-  });
+const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, unknown> }[]) => {
+  const appIds = items.flatMap((item) => getAppIds(item.options));
+  const distinctAppIds = [...new Set(appIds)];
+  if (distinctAppIds.length === 0) return;
+
+  const dbAppsPromise = Promise.resolve(db.query.apps.findMany({ where: inArray(apps.id, distinctAppIds) })).catch(
+    (error: unknown) => {
+      logger.error(new Error("Failed to prefetch apps for bookmarks", { cause: error }));
+      throw error;
+    },
+  );
 
   for (const item of items) {
-    if (item.options.items.length === 0) {
+    const itemAppIds = getAppIds(item.options);
+    if (itemAppIds.length === 0) {
       continue;
     }
 
-    queryClient.setQueryData(
-      createTrpcQueryKey("app.byIds", item.options.items),
-      dbApps.filter((app) => item.options.items.includes(app.id)),
-    );
+    void queryClient.prefetchQuery({
+      queryKey: createTrpcQueryKey("app.byIds", itemAppIds),
+      queryFn: async () => (await dbAppsPromise).filter((app) => itemAppIds.includes(app.id)),
+    });
   }
-
-  logger.info("Successfully prefetched apps for bookmarks", { count: dbApps.length });
 };
 
-export default prefetchAllAsync;
+export default prefetchAll;

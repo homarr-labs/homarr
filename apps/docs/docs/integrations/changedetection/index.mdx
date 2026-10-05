@@ -1,0 +1,34 @@
+---
+title: "Changedetection.io"
+description: "An open source web page change detection and notification service."
+hide_title: true
+---
+
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { changedetectionIntegration } from ".";
+
+<IntegrationHeader integration={changedetectionIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) displays the number of unviewed watches with detected changes and the total number of watches. It reads the Changedetection.io API response from `/api/v1/watch`.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Changedetection.io and go to Settings > API.",
+        "Copy the API key and paste it into the API Key field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>

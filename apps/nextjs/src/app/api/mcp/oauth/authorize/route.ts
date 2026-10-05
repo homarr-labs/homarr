@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 
 import { auth } from "@homarr/auth/next";
 
+import { getMcpBaseUrl } from "../../_base-url";
 import { consumePendingAuth, createAuthCode, getClient, storePendingAuth } from "../_store";
 
 export async function GET(req: NextRequest) {
@@ -37,6 +38,7 @@ export async function GET(req: NextRequest) {
       pending.codeChallenge,
       pending.codeChallengeMethod,
       pending.redirectUri,
+      pending.resource,
     );
     if (!code) {
       return Response.json(
@@ -59,6 +61,7 @@ export async function GET(req: NextRequest) {
   const codeChallenge = url.searchParams.get("code_challenge");
   const codeChallengeMethod = url.searchParams.get("code_challenge_method") ?? "S256";
   const state = url.searchParams.get("state");
+  const resource = url.searchParams.get("resource");
 
   if (!clientId || !redirectUri || !codeChallenge) {
     return Response.json(
@@ -75,6 +78,18 @@ export async function GET(req: NextRequest) {
       {
         error: "invalid_request",
         error_description: "Only S256 code_challenge_method is supported",
+      },
+      { status: 400 },
+    );
+  }
+
+  const baseUrl = getMcpBaseUrl(req.headers);
+  const allowedResources = new Set([`${baseUrl}/api/mcp`, `${baseUrl}/api/mcp/mcp`]);
+  if (resource && !allowedResources.has(resource)) {
+    return Response.json(
+      {
+        error: "invalid_target",
+        error_description: "The resource must be the canonical Homarr MCP endpoint",
       },
       { status: 400 },
     );
@@ -103,7 +118,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (session?.user) {
-    const code = createAuthCode(clientId, session.user.id, codeChallenge, codeChallengeMethod, redirectUri);
+    const code = createAuthCode(clientId, session.user.id, codeChallenge, codeChallengeMethod, redirectUri, resource);
     if (!code) {
       return Response.json(
         {
@@ -126,6 +141,7 @@ export async function GET(req: NextRequest) {
     codeChallenge,
     codeChallengeMethod,
     state,
+    resource,
   });
   if (!id) {
     return Response.json(
@@ -137,7 +153,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const loginUrl = new URL("/auth/login", url.origin);
+  const loginUrl = new URL("/auth/login", baseUrl);
   loginUrl.searchParams.set("callbackUrl", `/api/mcp/oauth/authorize?pending=${id}`);
   return Response.redirect(loginUrl.toString());
 }

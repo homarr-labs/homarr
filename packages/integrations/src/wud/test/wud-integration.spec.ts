@@ -198,7 +198,7 @@ describe("WudIntegration authentication", () => {
     expect(requestInit?.timeout).toBe(10_000);
   });
 
-  test("does not send credentials over a non-HTTPS URL", async () => {
+  test("sends configured Basic auth credentials over an HTTP URL", async () => {
     mockFetch.mockResolvedValue(
       new Response(JSON.stringify(sampleContainersResponse), {
         status: 200,
@@ -209,7 +209,7 @@ describe("WudIntegration authentication", () => {
     const integration = new WudIntegration({
       id: "test-wud-http",
       name: "Test WUD HTTP",
-      url: "http://wud.example.com",
+      url: "http://wud:3000",
       externalUrl: null,
       decryptedSecrets: [
         { kind: "username", value: TEST_USERNAME },
@@ -221,7 +221,7 @@ describe("WudIntegration authentication", () => {
 
     const [, requestInit] = mockFetch.mock.calls[0] ?? [];
     const headers = (requestInit?.headers ?? {}) as Record<string, string>;
-    expect(headers.Authorization).toBeUndefined();
+    expect(headers.Authorization).toBe(`Basic ${Buffer.from(`${TEST_USERNAME}:${TEST_PASSWORD}`).toString("base64")}`);
   });
 });
 
@@ -238,15 +238,16 @@ describe("WudIntegration testing endpoint", () => {
       fetchAsync: vi.fn().mockResolvedValue(response),
     }) as unknown as IntegrationTestingInput;
 
-  test("returns success when /api/app responds 200", async () => {
-    const input = makeInput(new Response(JSON.stringify({ name: "wud", version: "5.0.0" }), { status: 200 }));
+  test("returns success when /api/containers responds 200", async () => {
+    const input = makeInput(new Response(JSON.stringify(sampleContainersResponse), { status: 200 }));
 
     const result = await invokeTesting(createIntegration(), input);
 
     expect(result.success).toBe(true);
+    expect(String(vi.mocked(input.fetchAsync).mock.calls[0]?.[0])).toBe(`${TEST_URL}/api/containers`);
   });
 
-  test("returns a status-code failure when /api/app responds non-OK", async () => {
+  test("returns a status-code failure when /api/containers responds non-OK", async () => {
     const input = makeInput(new Response("unauthorized", { status: 401 }));
 
     const result = await invokeTesting(createIntegration(), input);
@@ -255,7 +256,7 @@ describe("WudIntegration testing endpoint", () => {
   });
 
   test("passes the Basic auth header through to fetchAsync when configured", async () => {
-    const response = new Response(JSON.stringify({ name: "wud", version: "5.0.0" }), { status: 200 });
+    const response = new Response(JSON.stringify(sampleContainersResponse), { status: 200 });
     const input = makeInput(response);
 
     await invokeTesting(createIntegrationWithBasicAuth(), input);

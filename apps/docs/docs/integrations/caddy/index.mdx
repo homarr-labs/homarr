@@ -1,0 +1,27 @@
+---
+title: "Caddy"
+description: "Fast, extensible, and production-ready open source web server."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { caddyIntegration } from ".";
+
+<IntegrationHeader integration={caddyIntegration} categories={["Reverse proxy"]} />
+
+### Widgets & Capabilities
+
+The [Stats widget](/docs/widgets/stats) reads Caddy's `/reverse_proxy/upstreams` admin API endpoint and displays the
+configured upstream count, active requests, and remembered failed requests.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Configure the integration URL to reach Caddy's admin API. Caddy listens on `localhost:2019` by default; when Homarr
+runs in a separate container, configure Caddy's admin endpoint on a private network address that Homarr can reach, or
+use a private socket or network path appropriate for your deployment. The admin API controls Caddy and must not be
+exposed to the public internet. If you change the admin address with `CADDY_ADMIN` or the global `admin` option, use
+that address in Homarr. Homarr sends no Caddy credentials; keep the endpoint private using Caddy's network and socket
+access controls.

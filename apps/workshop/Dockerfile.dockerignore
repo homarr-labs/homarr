@@ -1,0 +1,8 @@
+.git
+**/.next
+**/.source
+**/.turbo
+**/node_modules
+**/pb_data
+apps/docs/out
+coverage

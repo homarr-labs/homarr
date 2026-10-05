@@ -1,7 +1,7 @@
 import SuperJSON from "superjson";
 
-import { createId, objectKeys } from "@homarr/common";
-import { customWidgetImportSchema } from "@homarr/validation/custom-widget";
+import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
+import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,
   credentialsAdminGroup,
@@ -11,11 +11,12 @@ import {
   getIntegrationName,
   integrationDefs,
   integrationKinds,
+  normalizeBoardLayoutRoles,
 } from "@homarr/definitions";
-import type { WidgetKind } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
-import type { Database } from "..";
+import type { Database, InferInsertModel } from "..";
 import { eq, inArray } from "..";
 import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
 import {
@@ -27,6 +28,7 @@ import {
 import {
   apps,
   boards,
+  customWidgetDefinitions,
   groupMembers,
   groupPermissions,
   groups,
@@ -38,102 +40,12 @@ import {
   onboarding,
   searchEngines,
   sections,
+  sectionLayouts,
   users,
-  customWidgetDefinitions,
 } from "../schema";
 import type { Integration } from "../schema";
 
 const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
-
-const CUSTOM_WIDGET_SEEDS: Array<{ id: string; data: Record<string, unknown> }> = [
-  {
-    id: "seed-dog-facts",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Random Dog Fact",
-      description: "Displays a random fun fact about dogs",
-      url: "https://dogapi.dog/api/v2/facts",
-      authType: "none",
-      method: "GET",
-      displayType: "singleValue",
-      displayConfig: {
-        type: "singleValue",
-        jsonPath: "$.data[0].attributes.body",
-        label: "Dog Fact",
-        unit: "",
-        valueSize: "sm",
-        labelPosition: "above",
-      },
-    },
-  },
-  {
-    id: "seed-currency-exchange",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Currency Exchange (JPY)",
-      description: "Converts 50 Japanese Yen to EUR and USD using European Central Bank rates",
-      url: "https://api.frankfurter.dev/v1/latest?from=JPY&to=EUR,USD&amount=50",
-      authType: "none",
-      method: "GET",
-      displayType: "keyValue",
-      displayConfig: {
-        type: "keyValue",
-        mappings: [
-          { label: "50 JPY → EUR", jsonPath: "$.rates.EUR", unit: "€" },
-          { label: "50 JPY → USD", jsonPath: "$.rates.USD", unit: "$" },
-        ],
-        layout: "list",
-        columns: 2,
-      },
-    },
-  },
-  {
-    id: "seed-jellyfin",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Jellyfin library",
-      description: "Counts the number of movies, series, episodes and songs in the library",
-      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
-      url: "https://jellyfin.homelab.com/Items/Counts",
-      authType: "apiKeyHeader",
-      headerName: "X-Emby-Token",
-      method: "GET",
-      requestBody: null,
-      displayType: "countGrid",
-      displayConfig: {
-        type: "countGrid",
-        items: [
-          { label: "Movies", jsonPath: "$.MovieCount", unit: "" },
-          { label: "Series", jsonPath: "$.SeriesCount", unit: "" },
-          { label: "Episodes", jsonPath: "$.EpisodeCount", unit: "" },
-          { label: "Songs", jsonPath: "$.SongCount", unit: "" },
-        ],
-        columns: 4,
-        valueSize: "lg",
-      },
-    },
-  },
-  {
-    id: "seed-pokedex",
-    data: {
-      $schema: "homarr-custom-widget-v2",
-      name: "Pokédex",
-      description: "Browseable Pokémon list",
-      iconUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-      url: "https://pokeapi.co/api/v2/pokemon?limit=75",
-      authType: "none",
-      headerName: null,
-      method: "GET",
-      requestBody: null,
-      displayType: "customJsx",
-      displayConfig: {
-        type: "customJsx",
-        template:
-          '<Stack gap="md" p="xs">\n  <Card\n    withBorder\n    radius="xl"\n    p="md"\n    shadow="md"\n    style={{\n      background: "linear-gradient(135deg, rgba(250,82,82,0.22), rgba(253,126,20,0.10), rgba(255,255,255,0.03))",\n      border: "1px solid rgba(250,82,82,0.35)",\n      overflow: "hidden"\n    }}\n  >\n    <Group justify="space-between" wrap="nowrap">\n      <Stack gap={2}>\n        <Title order={3}>Pokédex</Title>\n      </Stack>\n    </Group>\n  </Card>\n\n  <PaginatedList pageSize={12}>\n    <Grid gutter="sm">\n      {data.results.map((pokemon, i) =>\n        <Grid.Col span={1.5}>\n          <Anchor href={pokemon.url} target="_blank" underline="never">\n            <Card\n              withBorder\n              radius="xl"\n              p="xs"\n              shadow="md"\n              style={{\n                cursor: "pointer",\n                position: "relative",\n                overflow: "hidden",\n                minHeight: 190,\n                background: "linear-gradient(160deg, rgba(255,255,255,0.12), rgba(250,82,82,0.10), rgba(0,0,0,0.04))",\n                border: "1px solid rgba(250,82,82,0.28)",\n                transition: "transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease"\n              }}\n            >\n              <Stack gap="sm" align="center">\n                <Group justify="space-between" wrap="nowrap" style={{ width: "100%" }}>\n                  <Badge size="sm" color="red" variant="filled">\n                    #{String(i + 1).padStart(3, "0")}\n                  </Badge>\n                  <Text fw={800} tt="capitalize" ta="right" truncate style={{ maxWidth: 120 }}>\n                    {pokemon.name}\n                  </Text>\n                </Group>\n\n                <Paper\n                  radius="xl"\n                  p="xs"\n                  withBorder\n                  style={{\n                    background: "radial-gradient(circle, rgba(255,255,255,0.95), rgba(250,82,82,0.16))",\n                    border: "1px solid rgba(255,255,255,0.45)",\n                    boxShadow: "inset 0 0 20px rgba(255,255,255,0.25)"\n                  }}\n                >\n                  <Avatar\n                    src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + String(i + 1) + ".png"}\n                    alt={pokemon.name}\n                    size={92}\n                    radius="xl"\n                    style={{\n                      transition: "transform 180ms ease",\n                      filter: "drop-shadow(0 8px 10px rgba(0,0,0,0.25))"\n                    }}\n                  />\n                </Paper>\n              </Stack>\n            </Card>\n          </Anchor>\n        </Grid.Col>\n      )}\n    </Grid>\n  </PaginatedList>\n</Stack>',
-      },
-    },
-  },
-];
 
 export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
@@ -155,6 +67,215 @@ export const seedDataAsync = async (db: Database) => {
   if (isTruthyEnv(process.env.DEMO_MODE)) {
     await seedDemoUserAsync(db);
   }
+
+  await seedProtectedBoardLayoutsAsync(db);
+};
+
+export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: string) => {
+  const dbBoards = await db.query.boards.findMany({
+    where: boardId ? eq(boards.id, boardId) : undefined,
+    with: {
+      layouts: true,
+      items: { with: { layouts: true } },
+      sections: { with: { layouts: true } },
+    },
+  });
+
+  for (const board of dbBoards) {
+    if (board.layouts.length === 0) {
+      await db.insert(layouts).values([
+        {
+          id: createId(),
+          name: "Mobile",
+          columnCount: 3,
+          breakpoint: 0,
+          role: "mobile",
+          boardId: board.id,
+        },
+        {
+          id: createId(),
+          name: "Base",
+          columnCount: 10,
+          breakpoint: 768,
+          role: "base",
+          boardId: board.id,
+        },
+      ]);
+      continue;
+    }
+
+    if (board.layouts.length === 1) {
+      const [baseLayout] = board.layouts;
+      if (!baseLayout) continue;
+
+      const mobileLayout = {
+        id: createId(),
+        name: "Mobile",
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile" as const,
+        boardId: board.id,
+      };
+
+      await db.update(layouts).set({ role: "base", breakpoint: 768 }).where(eq(layouts.id, baseLayout.id));
+      await db.insert(layouts).values(mobileLayout);
+      await insertMissingProjectedPositionsAsync(
+        db,
+        board,
+        { ...baseLayout, role: "base", breakpoint: 768 },
+        mobileLayout,
+      );
+      continue;
+    }
+
+    const normalizedLayouts = normalizeBoardLayoutRoles(board.layouts);
+    const alreadyNormalized = normalizedLayouts.every((layout) => {
+      const previousLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      return layout.breakpoint === previousLayout?.breakpoint && previousLayout.role === layout.role;
+    });
+
+    if (!alreadyNormalized) {
+      for (const layout of normalizedLayouts) {
+        await db
+          .update(layouts)
+          .set({ breakpoint: layout.breakpoint, role: layout.role })
+          .where(eq(layouts.id, layout.id));
+      }
+    }
+
+    const mobileLayout = normalizedLayouts.find((layout) => layout.role === "mobile");
+    const baseLayout = normalizedLayouts.find((layout) => layout.role === "base");
+    if (mobileLayout && baseLayout) {
+      await insertMissingProjectedPositionsAsync(
+        db,
+        board,
+        { ...baseLayout, role: "base" },
+        { ...mobileLayout, role: "mobile" },
+      );
+    }
+  }
+};
+
+interface BoardWithLayoutPositions {
+  items: Array<{
+    id: string;
+    layouts: Array<{
+      layoutId: string;
+      sectionId: string;
+      width: number;
+      height: number;
+      xOffset: number;
+      yOffset: number;
+    }>;
+  }>;
+  sections: Array<{
+    id: string;
+    kind: string;
+    layouts: Array<{
+      layoutId: string;
+      parentSectionId: string | null;
+      width: number;
+      height: number;
+      xOffset: number;
+      yOffset: number;
+    }>;
+  }>;
+}
+
+const insertMissingProjectedPositionsAsync = async (
+  db: Database,
+  board: BoardWithLayoutPositions,
+  sourceLayout: InferInsertModel<typeof layouts>,
+  targetLayout: InferInsertModel<typeof layouts>,
+) => {
+  const elements = [
+    ...board.items.flatMap((item) => {
+      const layout = item.layouts.find((itemLayout) => itemLayout.layoutId === sourceLayout.id);
+      return layout
+        ? [
+            {
+              id: item.id,
+              type: "item" as const,
+              width: layout.width,
+              height: layout.height,
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              sectionId: layout.sectionId,
+            },
+          ]
+        : [];
+    }),
+    ...board.sections.flatMap((section) => {
+      if (section.kind !== "dynamic") return [];
+      const layout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === sourceLayout.id);
+      return layout?.parentSectionId
+        ? [
+            {
+              id: section.id,
+              type: "section" as const,
+              width: layout.width,
+              height: layout.height,
+              xOffset: layout.xOffset,
+              yOffset: layout.yOffset,
+              sectionId: layout.parentSectionId,
+            },
+          ]
+        : [];
+    }),
+  ];
+
+  const projectedElements = board.sections
+    .filter((section) => section.kind !== "dynamic")
+    .flatMap(
+      (section) =>
+        generateResponsiveGridFor({
+          items: elements,
+          previousWidth: sourceLayout.columnCount,
+          width: targetLayout.columnCount,
+          sectionId: section.id,
+        }).items,
+    );
+
+  const existingItemIds = new Set(
+    board.items
+      .filter((item) => item.layouts.some((layout) => layout.layoutId === targetLayout.id))
+      .map((item) => item.id),
+  );
+  const itemPositions = projectedElements
+    .filter((element) => element.type === "item" && !existingItemIds.has(element.id))
+    .map(
+      (element): InferInsertModel<typeof itemLayouts> => ({
+        itemId: element.id,
+        layoutId: targetLayout.id,
+        sectionId: element.sectionId,
+        width: element.width,
+        height: element.height,
+        xOffset: element.xOffset,
+        yOffset: element.yOffset,
+      }),
+    );
+
+  const existingSectionIds = new Set(
+    board.sections
+      .filter((section) => section.layouts.some((layout) => layout.layoutId === targetLayout.id))
+      .map((section) => section.id),
+  );
+  const sectionPositions = projectedElements
+    .filter((element) => element.type === "section" && !existingSectionIds.has(element.id))
+    .map(
+      (element): InferInsertModel<typeof sectionLayouts> => ({
+        sectionId: element.id,
+        layoutId: targetLayout.id,
+        parentSectionId: element.sectionId,
+        width: element.width,
+        height: element.height,
+        xOffset: element.xOffset,
+        yOffset: element.yOffset,
+      }),
+    );
+
+  if (itemPositions.length > 0) await db.insert(itemLayouts).values(itemPositions);
+  if (sectionPositions.length > 0) await db.insert(sectionLayouts).values(sectionPositions);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -226,7 +347,7 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
       iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
       short: "docs",
       description: "Search the Homarr documentation",
-      urlTemplate: createDocumentationLink("/search", undefined, { q: "%s" }),
+      urlTemplate: `${createDocumentationLink("/search")}?q=%s`,
       type: "generic" as const,
       integrationId: null,
     },
@@ -361,13 +482,24 @@ const seedDefaultBoardAsync = async (db: Database) => {
     yOffset: 0,
     boardId,
   });
-  await db.insert(layouts).values({
-    id: createId(),
-    name: "Base",
-    columnCount: 10,
-    breakpoint: 0,
-    boardId,
-  });
+  await db.insert(layouts).values([
+    {
+      id: createId(),
+      name: "Mobile",
+      columnCount: 3,
+      breakpoint: 0,
+      role: "mobile",
+      boardId,
+    },
+    {
+      id: createId(),
+      name: "Base",
+      columnCount: 10,
+      breakpoint: 768,
+      role: "base",
+      boardId,
+    },
+  ]);
 
   const everyoneGroupRow = await db.query.groups.findFirst({
     where: eq(groups.name, everyoneGroup),
@@ -382,11 +514,32 @@ const seedDefaultBoardAsync = async (db: Database) => {
 
 interface DemoWidget {
   kind: WidgetKind;
+  section?: "right";
+  xOffset: number;
+  yOffset: number;
   width: number;
   height: number;
   needsIntegration: boolean;
+  integrationIds?: string[];
   options?: Record<string, unknown>;
 }
+
+const demoStatsSources = [
+  { kind: "sonarr", metrics: ["shows", "episodes", "monitored", "missing"] },
+  { kind: "radarr", metrics: ["movies", "monitored", "queued"] },
+  { kind: "qBittorrent", metrics: ["download", "upload", "paused"] },
+  { kind: "proxmox", metrics: ["nodes", "vms", "lxcs"] },
+  {
+    kind: "piHole",
+    metrics: ["dnsQueriesToday", "adsBlockedToday", "adsBlockedTodayPercentage"],
+  },
+  { kind: "immich", metrics: ["photoCount", "videoCount", "userCount", "totalLibraryUsageInBytes"] },
+  { kind: "karakeep", metrics: ["bookmarks", "favorites", "archived", "highlights", "lists", "tags"] },
+  { kind: "mealie", metrics: ["recipes", "users", "categories", "tags"] },
+  { kind: "spoolman", metrics: ["spools", "remainingWeight"] },
+] as const satisfies readonly { kind: IntegrationKind; metrics: readonly string[] }[];
+
+type DemoStatsIntegrationKind = (typeof demoStatsSources)[number]["kind"];
 
 const demoApps = [
   {
@@ -430,9 +583,9 @@ const demoApps = [
     href: "https://portainer.io",
   },
   {
-    name: "Home Assistant",
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg",
-    href: "https://home-assistant.io",
+    name: "Uptime Kuma",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg",
+    href: "https://uptime.kuma.pet",
   },
   {
     name: "Nextcloud",
@@ -451,67 +604,311 @@ const demoApps = [
   },
 ] as const;
 
-const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
-  // Row 1: calendar + downloads + clock = 12
-  { kind: "calendar", width: 5, height: 3, needsIntegration: true },
-  { kind: "downloads", width: 5, height: 3, needsIntegration: true },
-  { kind: "clock", width: 2, height: 1, needsIntegration: false },
-  // Row 2: healthMonitoring + bookmarks = 12
-  { kind: "healthMonitoring", width: 6, height: 3, needsIntegration: true },
+const buildDemoWidgets = (
+  appIds: string[],
+  customWidgetDefinitionId: string,
+  statsIntegrationIds: Record<DemoStatsIntegrationKind, string>,
+): DemoWidget[] => [
+  // Daily focus
+  { kind: "calendar", xOffset: 0, yOffset: 0, width: 2, height: 2, needsIntegration: true },
   {
-    kind: "bookmarks",
-    width: 6,
+    kind: "weather",
+    xOffset: 2,
+    yOffset: 0,
+    width: 2,
+    height: 2,
+    needsIntegration: false,
+    options: {
+      location: { name: "Paris", latitude: 48.85341, longitude: 2.3488 },
+      hasForecast: false,
+      showHumidity: false,
+      showCurrentWindSpeed: false,
+      showCity: true,
+      animateIcons: false,
+    },
+  },
+  {
+    kind: "clock",
+    xOffset: 4,
+    yOffset: 0,
+    width: 1,
+    height: 2,
+    needsIntegration: false,
+    options: { customTitleToggle: false, showDate: false, customTimeFormat: "HH:mm" },
+  },
+  {
+    kind: "timer",
+    xOffset: 5,
+    yOffset: 0,
+    width: 2,
+    height: 1,
+    needsIntegration: false,
+    options: {
+      mode: "pomodoro",
+      focusMinutes: 25,
+      shortBreakMinutes: 5,
+      longBreakMinutes: 15,
+      sessionsBeforeLongBreak: 4,
+      autoStartBreaks: false,
+      autoStartFocus: false,
+    },
+  },
+  {
+    kind: "airQuality",
+    xOffset: 5,
+    yOffset: 1,
+    width: 2,
+    height: 1,
+    needsIntegration: false,
+    options: {
+      location: { name: "Paris", latitude: 48.85341, longitude: 2.3488 },
+      aqiStandard: "european",
+      showUv: false,
+      showPollutants: false,
+      showPollen: false,
+    },
+  },
+  { kind: "downloads", xOffset: 7, yOffset: 0, width: 5, height: 2, needsIntegration: true },
+
+  // Homarr workspace
+  {
+    kind: "notebook",
+    xOffset: 0,
+    yOffset: 2,
+    width: 5,
     height: 3,
     needsIntegration: false,
-    options: { title: "Homelab", items: appIds, layout: "grid", openNewTab: true },
+    options: {
+      showToolbar: false,
+      allowReadOnlyCheck: true,
+      content: `
+<p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%"></p>
+<h2>Welcome to <strong><span style="color: rgb(250, 82, 82)">Homarr demo</span></strong></h2>
+<p>Your apps, live integrations, and notes, all in one place.</p>
+<p><strong>Hold Shift over any widget</strong> to reveal its advanced view. You can also rearrange the board or edit this notebook.</p>
+<p><a href="https://homarr.dev/docs/getting-started" target="_blank" rel="noopener noreferrer">Get started with Homarr</a></p>
+`,
+    },
   },
-  // Row 3: mediaServer + mediaTranscoding + dnsHoleSummary = 12
-  { kind: "mediaServer", width: 3, height: 2, needsIntegration: true },
-  { kind: "mediaTranscoding", width: 3, height: 2, needsIntegration: true },
-  { kind: "dnsHoleSummary", width: 6, height: 2, needsIntegration: true },
-  // Row 4: dnsHoleControls + mediaReleases + notifications = 12
-  { kind: "dnsHoleControls", width: 2, height: 1, needsIntegration: true },
-  { kind: "mediaReleases", width: 4, height: 2, needsIntegration: true },
-  { kind: "notifications", width: 6, height: 2, needsIntegration: true },
-  // Row 5: requestList + requestStats + indexerManager = 12
-  { kind: "mediaRequests-requestList", width: 4, height: 3, needsIntegration: true },
-  { kind: "mediaRequests-requestStats", width: 4, height: 2, needsIntegration: true },
-  { kind: "indexerManager", width: 4, height: 2, needsIntegration: true },
-  // Row 6: networkControllerSummary + networkControllerStatus + rssFeed = 12
-  { kind: "networkControllerSummary", width: 3, height: 2, needsIntegration: true },
-  { kind: "networkControllerStatus", width: 3, height: 2, needsIntegration: true },
+  { kind: "beszelSystemGrid", xOffset: 5, yOffset: 2, width: 4, height: 3, needsIntegration: true },
+  { kind: "assistant", xOffset: 9, yOffset: 2, width: 3, height: 3, needsIntegration: false },
+
+  // Operations center
+  { kind: "mediaRequests-requestList", xOffset: 0, yOffset: 5, width: 3, height: 2, needsIntegration: true },
+  { kind: "mediaMissing", xOffset: 9, yOffset: 5, width: 3, height: 2, needsIntegration: true },
+  { kind: "mediaServer", xOffset: 0, yOffset: 7, width: 3, height: 2, needsIntegration: true },
+  { kind: "mediaRequests-requestStats", xOffset: 9, yOffset: 7, width: 3, height: 2, needsIntegration: true },
   {
     kind: "rssFeed",
-    width: 6,
+    xOffset: 0,
+    yOffset: 9,
+    width: 3,
     height: 2,
     needsIntegration: false,
     options: {
       feedUrls: ["https://selfh.st/rss/", "https://hnrss.org/newest?q=self-hosted"],
-      maximumAmountPosts: 20,
+      maximumAmountPosts: 12,
       textLinesClamp: 2,
-      hideDescription: false,
+      hideDescription: true,
     },
   },
-  // Row 7-8: app widgets (2x1 each, 6 per row = 12)
+  { kind: "indexerManager", xOffset: 9, yOffset: 9, width: 3, height: 2, needsIntegration: true },
+
+  // Infrastructure and activity
+  { kind: "dockerContainers", xOffset: 0, yOffset: 11, width: 4, height: 3, needsIntegration: false },
+  { kind: "mediaReleases", xOffset: 4, yOffset: 11, width: 4, height: 3, needsIntegration: true },
+
+  // Community Workshop
+  {
+    kind: "customApi",
+    xOffset: 8,
+    yOffset: 11,
+    width: 4,
+    height: 3,
+    needsIntegration: false,
+    options: { definitionId: customWidgetDefinitionId, refreshInterval: 300 },
+  },
+
+  // Network and health
+  {
+    kind: "healthMonitoring",
+    xOffset: 3,
+    yOffset: 5,
+    width: 6,
+    height: 2,
+    needsIntegration: true,
+  },
+  {
+    kind: "dnsHoleSummary",
+    xOffset: 3,
+    yOffset: 7,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+    options: { layout: "grid", usePiHoleColors: false },
+  },
+  {
+    kind: "beszelSystemStats",
+    xOffset: 6,
+    yOffset: 7,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+  },
+  { kind: "notifications", xOffset: 3, yOffset: 9, width: 2, height: 2, needsIntegration: true },
+  { kind: "beszelAlerts", xOffset: 5, yOffset: 9, width: 4, height: 2, needsIntegration: true },
+
+  // Infrastructure detail
+  { kind: "beszelSystemTable", xOffset: 0, yOffset: 14, width: 12, height: 3, needsIntegration: true },
+  {
+    kind: "networkControllerStatus",
+    xOffset: 0,
+    yOffset: 17,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+    options: { content: "wifi" },
+  },
+  { kind: "ups", xOffset: 3, yOffset: 17, width: 3, height: 2, needsIntegration: true },
+  {
+    kind: "bookmarks",
+    xOffset: 6,
+    yOffset: 17,
+    width: 4,
+    height: 2,
+    needsIntegration: false,
+    options: { title: "Launchpad", layout: "grid", items: appIds.slice(0, 6), openNewTab: true },
+  },
+  {
+    kind: "countdown",
+    xOffset: 10,
+    yOffset: 17,
+    width: 2,
+    height: 2,
+    needsIntegration: false,
+    options: {
+      events: [
+        {
+          id: "demo-new-year",
+          label: "New year 2030",
+          targetUtc: "2030-01-01T00:00:00.000Z",
+          startUtc: "2026-01-01T00:00:00.000Z",
+          timeZone: "Europe/Paris",
+          recurrence: "none",
+        },
+      ],
+      showProgress: true,
+      showSeconds: false,
+    },
+  },
+  // Everyday tools
+  { kind: "stockPrice", xOffset: 0, yOffset: 19, width: 2, height: 2, needsIntegration: false },
+  { kind: "releases", xOffset: 2, yOffset: 19, width: 2, height: 2, needsIntegration: false },
+  {
+    kind: "timetable",
+    xOffset: 4,
+    yOffset: 19,
+    width: 2,
+    height: 2,
+    needsIntegration: false,
+    options: { baseUrl: "https://search.ch", station: { value: "8507000", label: "Bern" } },
+  },
+  { kind: "uptimeKuma", xOffset: 6, yOffset: 19, width: 3, height: 2, needsIntegration: true },
+  { kind: "firewall", xOffset: 9, yOffset: 19, width: 3, height: 2, needsIntegration: true },
+
+  // Integration showcase
+  {
+    kind: "immich-albumCarousel",
+    xOffset: 0,
+    yOffset: 21,
+    width: 3,
+    height: 3,
+    needsIntegration: true,
+    options: { albumId: "demo-paris", rotationIntervalSeconds: 8, showPhotoInfo: true, randomizePhotos: false },
+  },
+  { kind: "coolify", xOffset: 3, yOffset: 21, width: 3, height: 3, needsIntegration: true },
+  { kind: "systemResources", xOffset: 6, yOffset: 21, width: 3, height: 3, needsIntegration: true },
+  { kind: "systemDisks", xOffset: 9, yOffset: 21, width: 3, height: 3, needsIntegration: true },
+
+  { kind: "immich-serverStats", xOffset: 0, yOffset: 24, width: 2, height: 3, needsIntegration: true },
+  { kind: "paperlessNgx", xOffset: 2, yOffset: 24, width: 2, height: 3, needsIntegration: true },
+  { kind: "patchmon", xOffset: 4, yOffset: 24, width: 2, height: 3, needsIntegration: true },
+  {
+    kind: "speedtestTracker",
+    xOffset: 6,
+    yOffset: 24,
+    width: 4,
+    height: 3,
+    needsIntegration: true,
+    options: { showLatestResult: true, showStats: true, showRecentResults: false, showPingGraph: false },
+  },
+  { kind: "audioStats", xOffset: 10, yOffset: 24, width: 2, height: 3, needsIntegration: true },
+
+  { kind: "vpn", xOffset: 0, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+  { kind: "bazarr", xOffset: 3, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+  { kind: "archiveTeamWarrior", xOffset: 6, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+  { kind: "wud", xOffset: 9, yOffset: 27, width: 3, height: 2, needsIntegration: true },
+
+  {
+    kind: "anchorNote",
+    xOffset: 0,
+    yOffset: 29,
+    width: 2,
+    height: 2,
+    needsIntegration: true,
+    options: { noteId: "homarr-demo-note", showTitle: true, showUpdatedAt: true },
+  },
+  { kind: "tracearr", xOffset: 2, yOffset: 29, width: 4, height: 2, needsIntegration: true },
+  { kind: "traefik", xOffset: 6, yOffset: 29, width: 6, height: 2, needsIntegration: true },
+
+  {
+    kind: "umami",
+    xOffset: 0,
+    yOffset: 31,
+    width: 12,
+    height: 2,
+    needsIntegration: true,
+    options: { websiteId: "homarr-demo", timeFrame: "24h", viewMode: "chart", chartType: "bar" },
+  },
+
+  // One grid demonstrates how real integrations can share a single operational overview.
+  {
+    kind: "stats",
+    xOffset: 0,
+    yOffset: 33,
+    width: 12,
+    height: 5,
+    needsIntegration: false,
+    integrationIds: demoStatsSources.map(({ kind }) => statsIntegrationIds[kind]),
+    options: {
+      table: false,
+      rows: false,
+      entries: demoStatsSources.flatMap(({ kind, metrics }) =>
+        metrics.map((metric) => ({
+          id: `demo-stats-${kind}-${metric}`,
+          integrationId: statsIntegrationIds[kind],
+          metric,
+          label: "",
+          hidden: false,
+          compact: false,
+        })),
+      ),
+    },
+  },
+
+  // Right app rail
   ...appIds.map(
-    (appId): DemoWidget => ({
+    (appId, index): DemoWidget => ({
       kind: "app",
-      width: 2,
+      section: "right",
+      xOffset: 0,
+      yOffset: index,
+      width: 1,
       height: 1,
       needsIntegration: false,
       options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
     }),
   ),
-  // Row 9: beszelSystemGrid + beszelAlerts = 12
-  { kind: "beszelSystemGrid", width: 8, height: 3, needsIntegration: true },
-  { kind: "beszelAlerts", width: 4, height: 3, needsIntegration: true },
-  // Row 10: beszelSystemTable + beszelSystemStats = 12
-  { kind: "beszelSystemTable", width: 6, height: 3, needsIntegration: true },
-  { kind: "beszelSystemStats", width: 6, height: 4, needsIntegration: true },
-  // Row 11: notebook + dockerContainers + weather = 12
-  { kind: "notebook", width: 4, height: 4, needsIntegration: false },
-  { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },
-  { kind: "weather", width: 2, height: 1, needsIntegration: false },
 ];
 
 const seedDemoUserAsync = async (db: Database) => {
@@ -552,7 +949,7 @@ const seedDemoUserAsync = async (db: Database) => {
 
   await db.update(onboarding).set({
     step: "finish",
-    previousStep: "settings",
+    previousStep: "setup",
   });
 
   const integrationId = createId();
@@ -563,6 +960,19 @@ const seedDemoUserAsync = async (db: Database) => {
     kind: "mock",
     appId: null,
   });
+
+  const statsIntegrationIds = {} as Record<DemoStatsIntegrationKind, string>;
+  for (const source of demoStatsSources) {
+    const id = createId();
+    statsIntegrationIds[source.kind] = id;
+    await db.insert(integrations).values({
+      id,
+      name: getIntegrationName(source.kind),
+      url: "https://demo.homarr.dev",
+      kind: source.kind,
+      appId: null,
+    });
+  }
 
   const appIds: string[] = [];
   for (const app of demoApps) {
@@ -576,19 +986,78 @@ const seedDemoUserAsync = async (db: Database) => {
     });
   }
 
+  const customWidgetDefinitionId = createId();
+  const customWidgetDefinition = customWidgetDefinitionSchema.parse({
+    $schema: "homarr-custom-widget-v2",
+    name: "Community Workshop",
+    description: "Live Custom Widget and Custom CSS submissions shared by the Homarr community.",
+    sources: {
+      default: {
+        name: "Homarr Workshop",
+        baseUrl: "https://v2.preview.homarr.dev",
+        networkScope: "public",
+        auth: "none",
+      },
+    },
+    requests: {
+      workshop: {
+        path: "/api/collections/workshop_listings/records",
+        query: { perPage: 50 },
+        cacheSeconds: 300,
+      },
+    },
+    options: {},
+    template: `<Stack p="md" gap="xs" h="100%">
+  <Group justify="space-between" wrap="nowrap">
+    <Stack gap={0}><Text size="xs" c="indigo" fw={700}>COMMUNITY WORKSHOP</Text><Title order={3}>Made by Homarr users</Title></Stack>
+    <Badge color="indigo" variant="light">{data.workshop?.totalItems ?? "—"} shared</Badge>
+  </Group>
+  <Text size="xs" c="dimmed">Build Custom Widgets or dashboard CSS, then share it with the community.</Text>
+  {status.workshop?.loading ? <Stack gap="xs"><Skeleton height={26} radius="sm" /><Skeleton height={26} radius="sm" /><Skeleton height={26} radius="sm" /></Stack> : status.workshop?.error ? <Stack gap="xs"><Alert color="red" title="The Workshop could not be loaded">{status.workshop.error}</Alert><RefreshButton /></Stack> : (data.workshop?.items ?? []).length === 0 ? <Stack gap="xs"><Alert color="gray" title="Nothing shared yet">The first community submission could be yours.</Alert><RefreshButton /></Stack> : <Stack gap={4} style={{ flex: 1 }}>{(data.workshop?.items ?? []).slice(0, 4).map(submission => <Group key={submission.id} justify="space-between" wrap="nowrap"><Text size="sm" fw={600} lineClamp={1}>{submission.title}</Text><Group gap="xs" wrap="nowrap"><Text size="xs" c="dimmed">@{submission.authorName ?? "community"}</Text><Badge size="xs" color="gray" variant="light">{submission.upvotes ?? 0} ↑</Badge></Group></Group>)}{data.workshop?.totalItems > 4 ? <Text size="xs" c="dimmed">and {data.workshop.totalItems - 4} more in the Workshop</Text> : null}</Stack>}
+  <Anchor href="https://homarr.dev/docs/getting-started" target="_blank" rel="noreferrer" bg="indigo" c="white" fw={700} px="md" py="xs" radius="md" underline="never">Install Homarr now →</Anchor>
+</Stack>`,
+  });
+  await db.insert(customWidgetDefinitions).values({
+    id: customWidgetDefinitionId,
+    name: customWidgetDefinition.name,
+    description: customWidgetDefinition.description ?? null,
+    iconUrl: null,
+    sources: SuperJSON.stringify(customWidgetDefinition.sources),
+    requests: SuperJSON.stringify(customWidgetDefinition.requests),
+    options: SuperJSON.stringify(customWidgetDefinition.options),
+    template: customWidgetDefinition.template,
+    enabled: true,
+    creatorId: userId,
+  });
+
   const boardId = createId();
   await db.insert(boards).values({
     id: boardId,
     name: "default",
     isPublic: false,
     creatorId: userId,
+    pageTitle: "Homarr demo",
+    backgroundImageUrl: "/images/demo-dashboard-background.svg",
+    primaryColor: "#748FFC",
+    secondaryColor: "#3BC9DB",
+    opacity: 90,
+    itemRadius: "xl",
   });
 
-  const sectionId = createId();
+  const mainSectionId = createId();
   await db.insert(sections).values({
-    id: sectionId,
+    id: mainSectionId,
     kind: "empty",
     xOffset: 0,
+    yOffset: 0,
+    boardId,
+  });
+
+  const rightSectionId = createId();
+  await db.insert(sections).values({
+    id: rightSectionId,
+    kind: "empty",
+    xOffset: 1,
     yOffset: 0,
     boardId,
   });
@@ -597,22 +1066,20 @@ const seedDemoUserAsync = async (db: Database) => {
   await db.insert(layouts).values({
     id: layoutId,
     name: "Base",
-    columnCount: 12,
-    breakpoint: 0,
+    columnCount: 13,
+    rightGutterColumnCount: 1,
+    breakpoint: 768,
+    role: "base",
     boardId,
   });
 
-  const demoWidgets = buildDemoWidgets(appIds);
-  let xOffset = 0;
-  let yOffset = 0;
-  let rowMaxHeight = 0;
+  const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId, statsIntegrationIds);
   for (const widget of demoWidgets) {
-    if (xOffset + widget.width > 12) {
-      xOffset = 0;
-      yOffset += rowMaxHeight;
-      rowMaxHeight = 0;
+    let sectionId = mainSectionId;
+    if (widget.section === "right") {
+      sectionId = rightSectionId;
     }
-    rowMaxHeight = Math.max(rowMaxHeight, widget.height);
+
     const itemId = createId();
     await db.insert(items).values({
       id: itemId,
@@ -624,18 +1091,15 @@ const seedDemoUserAsync = async (db: Database) => {
       itemId,
       sectionId,
       layoutId,
-      xOffset,
-      yOffset,
+      xOffset: widget.xOffset,
+      yOffset: widget.yOffset,
       width: widget.width,
       height: widget.height,
     });
-    if (widget.needsIntegration) {
-      await db.insert(integrationItems).values({
-        itemId,
-        integrationId,
-      });
+    const integrationIds = widget.integrationIds ?? (widget.needsIntegration ? [integrationId] : []);
+    if (integrationIds.length > 0) {
+      await db.insert(integrationItems).values(integrationIds.map((id) => ({ itemId, integrationId: id })));
     }
-    xOffset += widget.width;
   }
 
   await db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, userId));
@@ -646,40 +1110,33 @@ const seedDemoUserAsync = async (db: Database) => {
 };
 
 const seedDefaultCustomWidgetsAsync = async (db: Database) => {
-  const seedIds = CUSTOM_WIDGET_SEEDS.map((s) => s.id);
+  const seedIds = BUNDLED_CUSTOM_WIDGETS.map(({ id }) => id);
   const existing = await db.query.customWidgetDefinitions.findMany({
     columns: { id: true },
     where: inArray(customWidgetDefinitions.id, seedIds),
   });
-  const existingIds = new Set(existing.map((row) => row.id));
-
-  const seedValues = CUSTOM_WIDGET_SEEDS.filter((seed) => !existingIds.has(seed.id)).map((seed) => {
-    const parsed = customWidgetImportSchema.parse(seed.data);
+  const existingIds = new Set(existing.map(({ id }) => id));
+  const values = BUNDLED_CUSTOM_WIDGETS.filter(({ id }) => !existingIds.has(id)).map(({ id, widget }) => {
+    const definition = customWidgetDefinitionSchema.parse(widget);
     return {
-      id: seed.id,
-      name: parsed.name,
-      description: parsed.description ?? null,
-      iconUrl: parsed.iconUrl ?? null,
-      url: parsed.url,
-      authType: parsed.authType,
-      headerName: parsed.headerName ?? null,
-      method: parsed.method,
-      requestBody: parsed.requestBody ?? null,
-      displayType: parsed.displayType,
-      displayConfig: SuperJSON.stringify(parsed.displayConfig),
+      id,
+      name: definition.name,
+      description: definition.description ?? null,
+      iconUrl: definition.iconUrl ?? null,
+      sources: SuperJSON.stringify(definition.sources),
+      requests: SuperJSON.stringify(definition.requests),
+      options: SuperJSON.stringify(definition.options),
+      template: definition.template,
       enabled: false,
       creatorId: null,
     };
   });
-
-  if (seedValues.length === 0) {
-    console.log("Skipping seeding of default custom widgets as they already exist");
+  if (values.length === 0) {
+    console.log("Skipping seeding of bundled custom widgets because they already exist");
     return;
   }
-
-  await db.insert(customWidgetDefinitions).values(seedValues);
-
-  console.log(`Created ${seedValues.length} default custom widgets through seeding process`);
+  await db.insert(customWidgetDefinitions).values(values);
+  console.log(`Created ${values.length} bundled custom widgets through seeding process`);
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {
@@ -695,7 +1152,7 @@ const seedBoardWidgetsAsync = async (db: Database) => {
   if (!board) return;
 
   const section = board.sections.find((sec) => sec.kind === "empty");
-  const layout = board.layouts[0];
+  const layout = board.layouts.find((candidate) => candidate.role === "base") ?? board.layouts[0];
   if (!section || !layout) return;
 
   const allIntegrations = await db.query.integrations.findMany();

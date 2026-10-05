@@ -4,13 +4,16 @@ import { useMemo } from "react";
 import { AreaChart, ChartTooltip } from "@mantine/charts";
 import { Stack, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { ReferenceLine, XAxis } from "recharts";
+import { XAxis } from "recharts";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import { formatBitRate } from "@homarr/common";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { SectionLabel } from "./section-label";
+
+const formatChartBitRate = (value: number) => formatBitRate(value);
 
 interface XAxisTicks {
   midnightTs: number | null;
@@ -40,17 +43,17 @@ function buildXAxisTicks(data: { ts: number }[]): XAxisTicks {
 
   return {
     midnightTs: foundMidnight,
-    xTicks: Array.from(tickSet).sort((tsA, tsB) => tsA - tsB),
+    xTicks: Array.from(tickSet).toSorted((tsA, tsB) => tsA - tsB),
     topDateTicks: topTicks,
   };
 }
 
-function makeXTickRenderer(midnightTs: number | null) {
+function makeXTickRenderer(midnightTs: number | null, locale: string) {
   return ({ x, y, payload }: { x: number | string; y: number | string; payload: { value: number } }) => {
     const date = new Date(payload.value);
-    const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const timeStr = date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
     const isMidnight = midnightTs !== null && payload.value === midnightTs;
-    const dateStr = isMidnight ? date.toLocaleDateString([], { month: "short", day: "numeric" }) : null;
+    const dateStr = isMidnight ? date.toLocaleDateString(locale, { month: "short", day: "numeric" }) : null;
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -67,23 +70,29 @@ function makeXTickRenderer(midnightTs: number | null) {
   };
 }
 
-function renderTopDateTick(props: {
-  x: number | string;
-  y: number | string;
-  payload: { value: number };
-  index: number;
-}) {
-  const { x, y, payload, index } = props;
-  const date = new Date(payload.value);
-  const dateStr = date.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
-  const anchor = index === 0 ? "start" : "middle";
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text x={0} y={-4} textAnchor={anchor} fontSize={10} fill="var(--mantine-color-dimmed)">
-        {dateStr}
-      </text>
-    </g>
-  );
+function makeTopDateTickRenderer(locale: string) {
+  return ({
+    x,
+    y,
+    payload,
+    index,
+  }: {
+    x: number | string;
+    y: number | string;
+    payload: { value: number };
+    index: number;
+  }) => {
+    const date = new Date(payload.value);
+    const dateStr = date.toLocaleDateString(locale, { weekday: "short", month: "short", day: "numeric" });
+    const anchor = index === 0 ? "start" : "middle";
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={-4} textAnchor={anchor} fontSize={10} fill="var(--mantine-color-dimmed)">
+          {dateStr}
+        </text>
+      </g>
+    );
+  };
 }
 
 function buildYAxisConfig(maxVal: number, stepOptions: { threshold: number; step: number }[]) {
@@ -94,10 +103,10 @@ function buildYAxisConfig(maxVal: number, stepOptions: { threshold: number; step
   return { ticks, domain: [0, roundedMax] as [number, number] };
 }
 
-function formatTooltipDate(label: number | string | undefined): string {
+function formatTooltipDate(label: number | string | undefined, locale: string): string {
   const timestamp = typeof label === "number" ? label : Number(label);
   if (Number.isNaN(timestamp)) return "";
-  return new Date(timestamp).toLocaleString([], {
+  return new Date(timestamp).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -108,30 +117,40 @@ function formatTooltipDate(label: number | string | undefined): string {
 export function RecentResultsSection({
   results,
   showPingGraph,
+  uppercaseLabels = false,
 }: {
   results: SpeedtestTrackerResult[];
   showPingGraph: boolean;
+  uppercaseLabels?: boolean;
 }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
 
   return (
     <Stack gap={4} h="100%" style={{ minHeight: 0 }}>
-      <SectionLabel>{t("recentResults")}</SectionLabel>
+      <SectionLabel uppercase={uppercaseLabels}>{t("recentResults")}</SectionLabel>
       <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 4 }}>
-        <SpeedSubChart results={results} showLabel={showPingGraph} />
-        {showPingGraph && <PingSubChart results={results} />}
+        <SpeedSubChart results={results} showLabel={showPingGraph} uppercaseLabels={uppercaseLabels} />
+        {showPingGraph && <PingSubChart results={results} uppercaseLabels={uppercaseLabels} />}
       </div>
     </Stack>
   );
 }
 
-function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult[]; showLabel: boolean }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+function SpeedSubChart({
+  results,
+  showLabel,
+  uppercaseLabels,
+}: {
+  results: SpeedtestTrackerResult[];
+  showLabel: boolean;
+  uppercaseLabels: boolean;
+}) {
+  const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
   return (
     <div style={{ flex: 2, minHeight: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-      {showLabel && <SectionLabel>{t("recentResultsSpeed")}</SectionLabel>}
+      {showLabel && <SectionLabel uppercase={uppercaseLabels}>{t("recentResultsSpeed")}</SectionLabel>}
       <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
         {height > 0 && <SpeedHistoryChart results={results} height={height} />}
       </div>
@@ -139,13 +158,13 @@ function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult
   );
 }
 
-function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+function PingSubChart({ results, uppercaseLabels }: { results: SpeedtestTrackerResult[]; uppercaseLabels: boolean }) {
+  const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
   return (
     <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-      <SectionLabel>{t("recentResultsPing")}</SectionLabel>
+      <SectionLabel uppercase={uppercaseLabels}>{t("recentResultsPing")}</SectionLabel>
       <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
         {height > 0 && <PingHistoryChart results={results} height={height} />}
       </div>
@@ -156,20 +175,18 @@ function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
 function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
+  const locale = useCurrentIntlLocale();
 
   const data = useMemo(
     () =>
-      [...results]
-        .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
+      results
+        .toSorted((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
         .filter((result) => (result.download_bits ?? 0) > 0)
         .map((result) => ({
           ts: result.created_at.getTime(),
-          Download: parseFloat(((result.download_bits ?? 0) / 1_000_000).toFixed(2)),
-          Upload:
-            result.upload_bits != null && result.upload_bits > 0
-              ? parseFloat((result.upload_bits / 1_000_000).toFixed(2))
-              : 0,
+          Download: result.download_bits ?? 0,
+          Upload: result.upload_bits != null && result.upload_bits > 0 ? result.upload_bits : 0,
         })),
     [results],
   );
@@ -177,14 +194,15 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   const yConfig = useMemo(
     () =>
       buildYAxisConfig(Math.max(...data.map((item) => Math.max(item.Download, item.Upload)), 0), [
-        { threshold: 400, step: 100 },
-        { threshold: Infinity, step: 200 },
+        { threshold: 400_000_000, step: 100_000_000 },
+        { threshold: Infinity, step: 200_000_000 },
       ]),
     [data],
   );
 
   const { midnightTs, xTicks, topDateTicks } = useMemo(() => buildXAxisTicks(data), [data]);
-  const renderXTick = useMemo(() => makeXTickRenderer(midnightTs), [midnightTs]);
+  const renderXTick = useMemo(() => makeXTickRenderer(midnightTs, locale), [locale, midnightTs]);
+  const renderTopDateTick = useMemo(() => makeTopDateTickRenderer(locale), [locale]);
 
   if (data.length === 0) return null;
 
@@ -203,7 +221,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       withLegend
       fillOpacity={0.2}
       styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
-      valueFormatter={(val: number) => `${val} Mbps`}
+      valueFormatter={formatChartBitRate}
       xAxisProps={{
         type: "number",
         domain: ["dataMin", "dataMax"],
@@ -215,10 +233,17 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       yAxisProps={{
         ticks: yConfig.ticks,
         domain: yConfig.domain,
-        tickFormatter: (val: number) => `${val}`,
-        width: 50,
+        tickFormatter: formatChartBitRate,
+        width: 70,
         tick: { fontSize: 10 },
       }}
+      referenceLines={xTicks.map((tickTs) => ({
+        x: tickTs,
+        yAxisId: "left",
+        stroke: "var(--mantine-color-dimmed)",
+        strokeDasharray: "3 3",
+        strokeOpacity: 0.35,
+      }))}
       tooltipProps={{
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content: (props: any) => {
@@ -230,9 +255,9 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
           if (!active || !payload?.length) return null;
           return (
             <ChartTooltip
-              label={formatTooltipDate(label)}
+              label={formatTooltipDate(label, locale)}
               payload={payload}
-              valueFormatter={(val: number) => `${val} Mbps`}
+              valueFormatter={formatChartBitRate}
             />
           );
         },
@@ -251,16 +276,6 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         tickLine={false}
         interval={0}
       />
-      {xTicks.map((tickTs) => (
-        <ReferenceLine
-          key={tickTs}
-          x={tickTs}
-          yAxisId="left"
-          stroke="var(--mantine-color-dimmed)"
-          strokeDasharray="3 3"
-          strokeOpacity={0.35}
-        />
-      ))}
     </AreaChart>
   );
 }
@@ -268,12 +283,13 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
 function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
+  const locale = useCurrentIntlLocale();
 
   const data = useMemo(
     () =>
-      [...results]
-        .sort((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
+      results
+        .toSorted((resultA, resultB) => resultA.created_at.getTime() - resultB.created_at.getTime())
         .map((result) =>
           result.ping === null
             ? null
@@ -298,7 +314,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
   );
 
   const { midnightTs, xTicks } = useMemo(() => buildXAxisTicks(data), [data]);
-  const renderXTick = useMemo(() => makeXTickRenderer(midnightTs), [midnightTs]);
+  const renderXTick = useMemo(() => makeXTickRenderer(midnightTs, locale), [locale, midnightTs]);
 
   if (data.length === 0) return null;
 
@@ -330,6 +346,13 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
         width: 50,
         tick: { fontSize: 10 },
       }}
+      referenceLines={xTicks.map((tickTs) => ({
+        x: tickTs,
+        yAxisId: "left",
+        stroke: "var(--mantine-color-dimmed)",
+        strokeDasharray: "3 3",
+        strokeOpacity: 0.35,
+      }))}
       tooltipProps={{
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         content: (props: any) => {
@@ -341,24 +364,13 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
           if (!active || !payload?.length) return null;
           return (
             <ChartTooltip
-              label={formatTooltipDate(label)}
+              label={formatTooltipDate(label, locale)}
               payload={payload}
               valueFormatter={(val: number) => `${val} ms`}
             />
           );
         },
       }}
-    >
-      {xTicks.map((tickTs) => (
-        <ReferenceLine
-          key={tickTs}
-          x={tickTs}
-          yAxisId="left"
-          stroke="var(--mantine-color-dimmed)"
-          strokeDasharray="3 3"
-          strokeOpacity={0.35}
-        />
-      ))}
-    </AreaChart>
+    />
   );
 }
