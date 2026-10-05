@@ -1,156 +1,246 @@
 {
   "init": {
-    "step": {
-      "start": {
-        "title": "歡迎使用 Homarr",
-        "subtitle": "讓我們開始設定 Homarr",
-        "description": "請選擇設定 Homarr 方式",
-        "action": {
-          "scratch": "重新開始",
-          "importOldmarr": "從 1.0 版本的 Homarr 匯入設定",
-          "restoreSqlite": "從 SQLite 備份還原",
-          "restoreSqliteDescription": "上傳先前 Homarr 執行個體的完整 SQLite 資料庫備份。這將還原所有面板、使用者、應用程式、整合和設定。",
-          "backToOptions": "← 返回設定選項"
+    "studio": {
+      "navigationLabel": "入門區段",
+      "back": "返回",
+      "buildBoard": "建立我的面板",
+      "common": {
+        "unknownError": "發生錯誤。您的選擇仍保留在此，請再試一次。"
+      },
+      "claim": {
+        "checking": "正在保護此初始設定工作階段……",
+        "checkingTitle": "正在準備安全設定",
+        "lockedTitle": "設定已在其他瀏覽器中開啟",
+        "lockedDescription": "請在該處繼續，或等待其安全的首次執行工作階段過期後再試一次。",
+        "signInTitle": "需要管理員登入",
+        "signInDescription": "管理員已存在。請登入以繼續設定，無須公開憑證或服務存取權。",
+        "signIn": "登入並繼續",
+        "errorTitle": "設定無法受到保護",
+        "errorDescription": "重新載入頁面以重試安全的首次執行工作階段。"
+      },
+      "navigation": {
+        "essentials": "必要項目",
+        "discover": "探索",
+        "connect": "連線",
+        "board": "面板",
+        "extend": "擴充",
+        "review": "預覽"
+      },
+      "welcome": {
+        "title": "歡迎回家。",
+        "description": "歡迎使用 Homarr v{version}。我們將引導您了解必要項目，並協助您建立第一個面板。",
+        "start": "開始使用",
+        "restore": "還原備份",
+        "restoreTitle": "從備份還原",
+        "restoreDescription": "完整的 SQLite 備份會還原面板、人員、應用程式、整合和設定。Homarr 會先驗證備份，再替換任何內容。",
+        "errorTitle": "設定無法開始",
+        "errorDescription": "您的設定選擇仍保留在此。請再試一次；如果問題持續發生，請重新載入頁面。"
+      },
+      "account": {
+        "title": "建立您的管理員帳戶",
+        "description": "指定管理員的使用者憑證",
+        "username": "管理員使用者名稱",
+        "passwordHint": "只需要符合至少 8 個字元的要求。其他密碼強度檢查僅供參考。",
+        "create": "建立管理員",
+        "errorTitle": "無法建立管理員",
+        "recoveryTitle": "已建立管理員帳戶",
+        "recoveryDescription": "自動登入未完成。請使用剛建立的管理員憑證登入，以繼續設定。",
+        "recoveryAction": "登入並繼續",
+        "unknownError": "無法建立管理員。"
+      },
+      "externalGroup": {
+        "title": "連線您的管理員群組",
+        "description": "請使用 LDAP 或 OIDC 傳送的完整群組名稱。此群組的成員將取得管理員存取權。",
+        "name": "外部管理員群組",
+        "nameDescription": "此名稱區分大小寫，且必須符合您的身分識別提供者。",
+        "continue": "儲存群組並繼續",
+        "errorTitle": "無法儲存群組",
+        "unknownError": "無法儲存管理員群組。"
+      },
+      "essentials": {
+        "title": "從熟悉的預設值開始",
+        "description": "先設定所有人看到的語言和外觀，然後提供服務所使用的位址模式給 Homarr。",
+        "language": "預設語言",
+        "theme": "預設佈景主題",
+        "themeAuto": "系統",
+        "themeLight": "日間",
+        "themeDark": "暗黑",
+        "serverOriginHelp": "Homarr 會使用此位址預先填入偵測到的服務 URL。您仍可個別編輯每項服務。",
+        "serverDescription": "這是捷徑，而非限制。每項偵測到的服務仍可編輯。",
+        "serverOrigin": "網域、IP 或反向代理路徑",
+        "serverOriginDescription": "範例：home.lan、192.168.1.10 或 https://home.example.com/services。請選擇下方附加各項服務的方式。",
+        "analytics": "分享匿名產品分析資料",
+        "analyticsDescription": "協助 Homarr 提升功能可靠性。不會傳送服務憑證或儀表板內容。"
+      },
+      "discover": {
+        "title": "查看此安裝實際能存取的內容",
+        "description": "Homarr 會就地檢查功能。缺少 Docker 通訊端或 Kubernetes 內容不會阻礙手動設定。",
+        "database": "資料庫",
+        "docker": "Docker 和相容的通訊端",
+        "kubernetes": "Kubernetes",
+        "assistantWorkshop": "助理與工作坊",
+        "found": "找到 {integrations} 個整合和 {apps} 個其他應用程式",
+        "retryKubernetes": "再次檢查 Kubernetes",
+        "retryWorkshop": "再次檢查工作坊",
+        "unknownVersion": "未知版本",
+        "kubernetesAvailable": "已連線至 Kubernetes {version}",
+        "kubernetesDisabled": "未啟用；請繼續使用 Docker 或手動服務",
+        "kubernetesUnavailable": "Kubernetes 已啟用，但無法從此 Homarr 程序存取",
+        "workshopAvailable": "可存取社群工作坊和託管的助理服務",
+        "workshopUnavailable": "本機和自訂助理提供者仍可使用",
+        "partialTitle": "部分來源無法掃描",
+        "partialDescription": "已保留可存取主機的結果。請檢查通訊端權限，或在下一節手動新增服務。",
+        "status": {
+          "checking": "正在檢查可用性……",
+          "available": "待定",
+          "partial": "部分可用",
+          "empty": "可存取，但沒有符合的執行中服務",
+          "disabled": "已由伺服器設定停用",
+          "unavailable": "無法從此 Homarr 程序存取"
         }
       },
-      "import": {
-        "title": "匯入數據",
-        "subtitle": "從現有的 Homarr 匯入數據",
-        "dropzone": {
-          "title": "將 ZIP 壓縮檔拖曳至此處或點擊瀏覽",
-          "description": "上傳的壓縮檔將被處理，您可以選擇要匯入的內容"
+      "connect": {
+        "title": "連線讓面板實用的內容",
+        "description": "一次選取多項服務。Docker 標籤優先，映像檔比對會填補缺漏，而每個 URL 和憑證都可供檢查。",
+        "discoveredIntegrations": "已偵測到的整合執行個體 ({count})",
+        "detectedIntegrationLabel": "匯入 {name}，偵測為 {kind}",
+        "detectedAppLabel": "匯入偵測到的應用程式 {name}",
+        "otherIntegrations": "新增其他整合",
+        "configureIntegrations": "設定整合",
+        "discoveredApps": "已偵測到的應用程式 ({count})",
+        "appAddressRequired": "請為 {name} 新增位址，或將其從選取項目中移除。",
+        "empty": "未選取任何整合。Homarr 仍會建立包含一般小工具的實用入門面板。",
+        "dockerSource": "Docker",
+        "manualSource": "手動",
+        "url": "服務 URL",
+        "noCredentials": "沒有憑證",
+        "noCredentialsDescription": "此整合不需要憑證。",
+        "credentialMethod": "憑證方式",
+        "getApiKey": "開啟此服務的 API 金鑰設定",
+        "openGuide": "開啟 Homarr 此服務的設定指南",
+        "testConnection": "測試連線",
+        "testSuccess": "連線成功",
+        "testSuccessDescription": "Homarr 已使用目前的位址和憑證連線。",
+        "testError": "連線失敗",
+        "testErrorDescription": "請檢查服務位址和憑證，然後再試一次。",
+        "needsConfiguration": "需要設定",
+        "tested": "連線已測試",
+        "testFailed": "連線測試失敗",
+        "incompleteConfirmation": "未完成的整合將會略過。要在沒有這些整合的情況下繼續嗎？"
+      },
+      "board": {
+        "title": "在建立面板前先規劃其外觀",
+        "description": "Homarr 會建立受保護的 Mobile 和 Base 版面配置，然後放置您所選服務中的應用程式和相容小工具。",
+        "target": "要設定的面板",
+        "targetDescription": "選擇此設定應更新的確切現有面板。",
+        "targetPlaceholder": "選取面板",
+        "targetRequired": "請先選取要設定的面板，再繼續操作。",
+        "name": "面板名稱",
+        "nameDescription": "用於面板 URL；僅限字母、數字、連字號和底線。",
+        "nameRequired": "請先輸入面板名稱再繼續。",
+        "primaryColor": "主體色",
+        "secondaryColor": "輔助色",
+        "resetColors": "重設顏色",
+        "radius": "小工具圓角半徑",
+        "radiusOptions": {
+          "xs": "緊密",
+          "sm": "微妙",
+          "md": "平衡",
+          "lg": "圓潤",
+          "xl": "柔和"
         },
-        "fileInfo": {
-          "action": {
-            "change": "更改檔案"
-          }
+        "columns": "面板欄數",
+        "columnsDescription": "欄數定義用於調整項目大小和位置的水平網格。對大多數人來說，12 欄已經足夠。",
+        "columnCount": "{count, plural, other {# 欄}}",
+        "leftSidebar": "左側邊欄",
+        "rightSidebar": "右側邊欄",
+        "previewLabel": "第一個面板版面的即時預覽"
+      },
+      "extend": {
+        "title": "進階功能",
+        "tabsLabel": "助理、Workshop 與 MCP 設定",
+        "assistant": "助理",
+        "workshop": "需要管理員登入",
+        "assistantSetup": {
+          "loginTitle": "需要管理員登入",
+          "loginDescription": "供應商金鑰與模型存取權限屬於特權功能。完成設定並登入後，Homarr 將直接開啟助理設定。",
+          "loginAction": "登入以設定助理"
         },
-        "importSettings": {
-          "title": "匯入設定",
-          "description": "設定匯入方式"
+        "workshopSetup": {
+          "title": "Homarr 工作坊",
+          "description": "瀏覽社群自訂小工具、檢視其要求的功能、安裝小工具，並發佈您自己的作品，無需在伺服器之間複製程式碼。",
+          "available": "待定",
+          "checking": "檢查中……",
+          "unavailable": "無法使用",
+          "discoverTitle": "探索",
+          "discoverDescription": "尋找為實際自託管工作流程打造的小工具。",
+          "installTitle": "檢視並安裝",
+          "installDescription": "在新增任何內容前檢視中繼資料和設定。",
+          "publishTitle": "分享",
+          "publishDescription": "將可重複使用的小工具發佈回社群。",
+          "browse": "瀏覽 Workshop"
         },
-        "boardSelection": {
-          "title": "找到 {count} 個面板",
-          "description": "選擇要匯入的面板",
-          "action": {
-            "selectAll": "選擇全部",
-            "unselectAll": "取消全選"
-          }
-        },
-        "summary": {
-          "title": "匯入概況",
-          "description": "於下方的概況中，可以看到即將匯入的內容",
-          "action": {
-            "import": "確認匯入並繼續"
-          },
-          "entities": {
-            "apps": "應用程式",
-            "boards": "面板",
-            "integrations": "集成",
-            "credentialUsers": "使用者憑證"
-          }
-        },
-        "tokenModal": {
-          "title": "輸入匯入密鑰",
-          "field": {
-            "token": {
-              "label": "密鑰",
-              "description": "輸入之前 Homarr 中顯示導入之密鑰匙"
-            }
-          },
-          "notification": {
-            "error": {
-              "title": "無效密鑰",
-              "message": "輸入的密鑰無效"
-            }
-          }
+        "mcpSetup": {
+          "title": "Homarr MCP",
+          "description": "將 Claude、Codex 或其他 MCP 用戶端連線至 Homarr 的類型化工具。API 金鑰可讓存取權限明確且可撤銷。",
+          "endpoint": "可串流的 HTTP 端點",
+          "keyTitle": "立即複製此金鑰",
+          "keyDescription": "為了安全起見，Homarr 無法再次顯示此 API 金鑰。",
+          "copyKey": "複製 API 金鑰",
+          "createKey": "建立 MCP API 金鑰",
+          "errorTitle": "無法建立 MCP API 金鑰",
+          "loginRequired": "設定完成後，請以管理員身分登入以建立 API 金鑰。",
+          "configuration": "用戶端設定",
+          "copy": "複製設定",
+          "copied": "已複製",
+          "advanced": "開啟 MCP 工具、權限和設定詳細資料"
         }
       },
-      "user": {
-        "title": "管理員",
-        "subtitle": "指定管理員的使用者憑證",
-        "notification": {
-          "success": {
-            "title": "創建使用者",
-            "message": "使用者已成功創建"
-          },
-          "error": {
-            "title": "使用者創建失敗"
-          }
-        }
-      },
-      "group": {
-        "title": "外部使用者",
-        "subtitle": "指定用於外部使用者的用戶組",
-        "form": {
-          "name": {
-            "label": "用戶組名稱",
-            "description": "名稱必須與外部提供者的管理員匹配"
-          }
-        }
-      },
-      "settings": {
-        "title": "設定",
-        "subtitle": "設定伺服器的設定"
-      },
-      "integrations": {
-        "title": "整合",
-        "subtitle": "選取你使用的服務。",
-        "description": "選擇你要連接的整合。我們將會自動為你的儀表板設定相符的小工具。",
-        "action": {
-          "continue": "繼續",
-          "skip": "暫時略過"
-        },
-        "configure": {
-          "progress": "{current}/{total}",
-          "skip": "略過此整合",
-          "finishing": "正在設定你的儀表板……",
-          "error": {
-            "title": "設定失敗",
-            "message": "設定儀表板時發生錯誤。請再試一次。"
-          },
-          "helpers": {
-            "tooltip": "URL 幫手",
-            "description": "這些幫手會嘗試猜測你的服務 URL。如果無效，請手動輸入位址。"
-          }
-        },
-        "urlTemplate": {
-          "label": "基礎 URL",
-          "placeholder": "homelab.local 或 192.168.1.1",
-          "hint": "輸入你的基礎網域或 IP 以自動填寫整合 URL",
-          "warning": "現在設定你的基礎 URL 將會自動填寫所有整合 URL，在設定過程中節省你的時間",
-          "preview": "例如 {example}",
-          "mode": {
-            "subdomain": "子網域",
-            "hostPort": "主機：連接埠"
-          }
-        },
-        "docker": {
-          "detected": "Docker 偵測到 {count} 個服務",
-          "detectedBreakdown": "{integrations} 個整合 · {apps} 個應用程式",
-          "summary": "Homarr 偵測到 {apps} 個應用程式，其中 {integrations} 個具有內建整合",
-          "appBadge": "應用程式",
-          "appSectionLabel": "要新增至儀表板的應用程式（已選取 {count} 個）",
-          "scanning": "正在掃描 Docker……",
-          "scanningDescription": "正在尋找系統上執行的容器"
+      "review": {
+        "title": "以您的服務為核心打造的單一面板",
+        "description": "Homarr 會測試未儲存的連線、匯入選取的應用程式、套用外觀和版面配置，然後開啟其設定的確切面板。",
+        "board": "第一個面板",
+        "columns": "面板欄數",
+        "columnsValue": "{count, plural, other {# 欄}}",
+        "sidebars": "側邊欄",
+        "sidebarsValue": "",
+        "layouts": "響應式佈局",
+        "layoutsValue": "行動版 + 基本版",
+        "integrations": "集成",
+        "integrationsValue": "",
+        "apps": "應用程式圖塊",
+        "appsValue": "",
+        "language": "語言",
+        "theme": "佈景主題",
+        "themeAuto": "系統偏好設定",
+        "themeLight": "日間",
+        "themeDark": "暗黑",
+        "colors": "面板顏色",
+        "radius": "小工具圓角",
+        "automaticTitle": "Homarr 將建立的內容",
+        "automaticDescription": "相容的小工具、圖示、應用程式連結、整合關係和回應式配置來自共用的 Homarr 目錄。您稍後可以編輯每項結果。",
+        "dockerWarningTitle": "設定期間部分 Docker 標籤已變更",
+        "dockerWarningDescription": "{count, plural, other {# 個選取的 Docker 結果無法套用，因為其服務已變更、指定了其他面板，或其小工具不相容。}}。",
+        "errorTitle": "無法建立面板",
+        "progress": {
+          "applying": "正在測試連線並建立您的面板",
+          "done": "您的面板已準備就緒"
         }
       },
       "finish": {
-        "title": "設定完成",
-        "subtitle": "已設定完成",
-        "description": "已成功完成設定，開始使用 Homarr，請選擇下一步操作",
-        "action": {
-          "goToBoard": "進入 {name} 面板",
-          "createBoard": "創建第一個面板",
-          "inviteUser": "邀請其他使用者",
-          "docs": "閱讀說明書"
-        }
+        "title": "您的第一個面板已準備就緒。",
+        "description": "Homarr 已連線您選取的元件，並保留其餘內容供您編輯。現在開啟面板；產品內的簡短導覽可向您展示編輯模式、小工具、版面配置和搜尋功能。",
+        "openBoard": "開啟我的面板",
+        "manageTitle": "管理",
+        "manageDescription": "微調應用程式、整合、面板、使用者和伺服器設定。",
+        "workshopTitle": "工作坊",
+        "workshopDescription": "探索並安裝社群自訂小工具。",
+        "docsTitle": "瞭解 Homarr",
+        "docsDescription": "閱讀面板、小工具、整合和工具的專題指南。"
       }
-    },
-    "backToStart": "返回起點"
+    }
   },
   "user": {
-    "title": "使用者",
     "name": "使用者",
     "page": {
       "login": {
@@ -159,12 +249,10 @@
       },
       "invite": {
         "title": "加入 Homarr",
+        "titleWithAppName": "加入 {appName}",
         "subtitle": "歡迎來到 Homarr！請創建帳戶",
+        "subtitleWithAppName": "歡迎來到 {appName}！請建立您的帳戶",
         "description": "您受到 {username} 的邀請"
-      },
-      "init": {
-        "title": "新建 Homarr 安裝",
-        "subtitle": "請創建初始管理員"
       }
     },
     "field": {
@@ -192,11 +280,16 @@
       "previousPassword": {
         "label": "過去的密碼"
       },
-      "homeBoard": {
-        "label": "主面板"
-      },
       "pingIconsEnabled": {
         "label": "為 Pings 使用 icon"
+      },
+      "byteUnitSystem": {
+        "label": "資料大小單位",
+        "description": "選擇 Homarr 顯示位元組大小和位元組速率的方式。位元速率一律使用十進位單位。",
+        "options": {
+          "binary": "二進位",
+          "decimal": "十進位"
+        }
       },
       "enableRightClickOnWidgets": {
         "label": "啟用小工具右鍵選單",
@@ -247,7 +340,6 @@
           }
         }
       },
-      "create": "創建使用者",
       "changePassword": {
         "label": "更改密碼",
         "notification": {
@@ -256,56 +348,6 @@
           },
           "error": {
             "message": "無法更改密碼"
-          }
-        }
-      },
-      "changeHomeBoard": {
-        "notification": {
-          "success": {
-            "message": "主面板已更改成功"
-          },
-          "error": {
-            "message": "無法更改主面板"
-          }
-        }
-      },
-      "changeSearchPreferences": {
-        "notification": {
-          "success": {
-            "message": "搜尋設定更改成功"
-          },
-          "error": {
-            "message": "無法更改搜尋設定"
-          }
-        }
-      },
-      "changeFirstDayOfWeek": {
-        "notification": {
-          "success": {
-            "message": "成功編輯一周的第一天"
-          },
-          "error": {
-            "message": "無法編輯一周的第一天"
-          }
-        }
-      },
-      "changePingIconsEnabled": {
-        "notification": {
-          "success": {
-            "message": "Pings icon 切換成功"
-          },
-          "error": {
-            "message": "無法切換 Pings icon"
-          }
-        }
-      },
-      "changeDdgBangs": {
-        "notification": {
-          "success": {
-            "message": "DuckDuckGo bangs 切換成功"
-          },
-          "error": {
-            "message": "無法切換 DuckDuckGo bangs"
           }
         }
       },
@@ -338,16 +380,6 @@
           }
         }
       },
-      "editProfile": {
-        "notification": {
-          "success": {
-            "message": "數據更新成功"
-          },
-          "error": {
-            "message": "數據無法更新"
-          }
-        }
-      },
       "delete": {
         "label": "永久移除使用者",
         "description": "移除此使用者，包括其偏好設定，這不會移除任何面板，且用戶不會收到通知",
@@ -356,18 +388,13 @@
       "select": {
         "label": "選擇使用者",
         "notFound": "使用者不存在"
-      },
-      "transfer": {
-        "label": "選擇新的所有者"
       }
     }
   },
   "group": {
-    "title": "用戶組",
     "name": "組",
     "search": "尋找用戶組",
     "field": {
-      "name": "名稱",
       "members": "成員",
       "homeBoard": {
         "label": "主面板",
@@ -385,6 +412,19 @@
           "admin": {
             "label": "管理員",
             "description": "擁有此權限的使用者可完全訪問全部功能和設定"
+          }
+        }
+      },
+      "custom-widget": {
+        "title": "自訂小工具",
+        "item": {
+          "manage": {
+            "label": "管理自訂小工具",
+            "description": "允許成員建立、編輯和刪除自訂小工具定義"
+          },
+          "secret-write": {
+            "label": "設定自訂小工具密鑰",
+            "description": "允許成員及其 API 金鑰設定加密的自訂小工具認證資料"
           }
         }
       },
@@ -493,6 +533,35 @@
             "description": "允許使用者管理、移除任何搜尋引擎"
           }
         }
+      },
+      "matrix": {
+        "none": "無存取權",
+        "impliedHint": "另授予：{permissions}",
+        "grantedViaAdmin": "管理員已擁有此權限。將管理員設定為「無存取權」以個別設定。",
+        "preset": {
+          "label": "預設集",
+          "viewer": "檢視者",
+          "viewerDescription": "唯讀：檢視面板和媒體，使用現有的應用程式和整合。",
+          "editor": "編輯者",
+          "editorDescription": "日常管理：建立和編輯面板、應用程式、整合和搜尋引擎。",
+          "admin": "管理員",
+          "adminDescription": "不受限制地存取所有功能和設定，包括使用者管理。",
+          "custom": "自訂"
+        },
+        "effective": {
+          "title": "有效權限",
+          "description": "此群組成員可執行的完整、不重複操作集合，包括間接授予的權限。",
+          "empty": "未選取權限"
+        },
+        "noneDescription": "成員無法存取此區域。",
+        "level": {
+          "view": "檢視",
+          "use": "使用",
+          "interact": "互動",
+          "modify": "修改",
+          "full": "完整"
+        },
+        "capabilityIncluded": "已包含在「{level}」中"
       }
     },
     "memberNotice": {
@@ -607,21 +676,24 @@
     "search": "尋找應用程式",
     "page": {
       "list": {
-        "title": "應用程式",
+        "ariaLabel": "已設定的應用程式",
         "noResults": {
           "title": "尚無應用程式",
-          "action": "創建第一個應用程式"
+          "description": "應用程式是您希望放在面板上的服務和工具連結。",
+          "action": "創建第一個應用程式",
+          "filteredTitle": "沒有應用程式符合您的搜尋",
+          "filteredDescription": "沒有應用程式符合「{search}」。請嘗試其他名稱或 URL。",
+          "createOnlyTitle": "您只能新增應用程式",
+          "createOnlyDescription": "您的權限允許您建立應用程式，但無法瀏覽現有應用程式。請向管理員要求應用程式管理權限，以查看完整清單。"
         }
       },
       "create": {
         "title": "創建應用程式",
         "notification": {
           "success": {
-            "title": "創建成功",
             "message": "應用程式已創建成功"
           },
           "error": {
-            "title": "創建失敗",
             "message": "應用程式無法創建"
           }
         }
@@ -630,11 +702,9 @@
         "title": "編輯應用程式",
         "notification": {
           "success": {
-            "title": "應用程式編輯成功",
             "message": "應用程式儲存成功"
           },
           "error": {
-            "title": "無法更改",
             "message": "應用程式無法儲存"
           }
         }
@@ -644,25 +714,17 @@
         "message": "確認移除此應用程式 {name} 嗎？",
         "notification": {
           "success": {
-            "title": "移除成功",
             "message": "應用程式已移除成功"
           },
           "error": {
-            "title": "移除失敗",
             "message": "無法移除應用程式"
           }
         }
       }
     },
     "field": {
-      "name": {
-        "label": "名稱"
-      },
       "description": {
         "label": "描述"
-      },
-      "url": {
-        "label": "網址"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -678,34 +740,582 @@
         "search": "搜尋應用程式",
         "noResults": "無結果",
         "action": "選擇 {app}",
-        "title": "選擇應用程式加入進此面板"
+        "title": "選擇應用程式加入進此面板",
+        "toggle": "點選以選取",
+        "selected": "已選取",
+        "multiple": "新增 {count}",
+        "selectedCount": "{count, plural, other {已選取 # 個}}",
+        "appsSelected": "{count, plural, other {已選取 # 個應用程式}}",
+        "selectMultiple": "選取多個",
+        "cancelMultiple": "退出多重選取",
+        "customApplication": "自訂應用程式",
+        "application": "應用程式"
       },
       "create": {
         "title": "建立新應用程式",
         "description": "建立一個新的應用程式",
         "action": "開啟應用程式創建"
+      }
+    }
+  },
+  "tips": {
+    "dismiss": "關閉提示",
+    "multiSelectApps": "提示：按住 Ctrl / ⌘ 可一次選取多個應用程式"
+  },
+  "customWidget": {
+    "secretEntry": {
+      "title": "設定 API 來源",
+      "description": "確認伺服器 URL 並輸入認證資料。密鑰值由 Homarr 加密，且永遠不會回傳給請求代理程式。",
+      "loading": "正在載入安全請求……",
+      "applying": "正在套用此設定…請保持此頁面開啟。",
+      "saved": "API 來源已設定。您可以關閉此頁面。",
+      "unavailable": "請求無法使用",
+      "saveError": "無法設定 API 來源",
+      "source": "API 來源：{name}",
+      "baseUrl": "伺服器 URL",
+      "networkScope": "網路存取",
+      "save": "儲存 API 設定",
+      "expires": "此一次性請求將於 {time} 到期。"
+    },
+    "page": {
+      "list": {
+        "noResults": "尚無自訂小工具。建立您的第一個！",
+        "noDescription": "沒有描述",
+        "enabled": "已啟用",
+        "disabled": "已停用",
+        "disabledDescription": "此小工具仍會保留設定，但不會載入到任何面板。",
+        "requestCount": "{count, plural, other {# 個請求}}",
+        "invalidDefinition": "定義無效",
+        "migrationRequired": "需要移轉",
+        "migrationInstructions": "開啟「操作」以複製或匯出原始 v1 定義，手動重新建立。您也可以使用 LLM 的移轉提示。移轉後，現有的面板配置仍可正常運作。",
+        "missingCredentials": "{count, plural, other {缺少 # 個認證資料}}",
+        "missingCredentialsDescription": "{count, plural, other {此小工具仍需要 # 個認證資料。}}選取此徽章以設定 URL 和加密值。"
       },
-      "add": "新增應用程式"
+      "create": {
+        "title": "建立自訂小工具",
+        "subtitle": "定義 API URL、驗證方式以及如何顯示回應資料。"
+      },
+      "tabs": {
+        "ariaLabel": "自訂小工具區段",
+        "installed": "已安裝",
+        "workshop": "工作坊"
+      }
+    },
+    "action": {
+      "pasteImportHint": "使用 Ctrl+V 或 Command+V 貼上完整的自訂小工具 JSON",
+      "delete": "刪除自訂小工具",
+      "deleteConfirm": "確定要刪除 \"{name}\" 嗎？此動作無法復原。",
+      "export": "匯出",
+      "duplicate": "複製",
+      "aiPrompt": "使用 AI 設計",
+      "copyAiPrompt": "複製 AI 提示",
+      "enable": "啟用",
+      "disable": "停用",
+      "menu": "動作",
+      "downloadSkill": "檢視自訂小工具技能",
+      "publishWorkshop": "發佈至 Workshop",
+      "migrate": "移轉自訂小工具",
+      "configureSources": "設定來源",
+      "copyLegacyDefinition": "複製原始小工具內容",
+      "exportLegacyDefinition": "匯出原始小工具內容",
+      "copyMigrationPrompt": "複製 LLM 移轉提示",
+      "pasteMigration": "貼上已移轉的小工具",
+      "importMigration": "匯入移轉後的 JSON 檔案"
+    },
+    "sourceSetupDialog": {
+      "title": "設定小工具來源",
+      "description": "檢視此小工具的連線位置，並新增或取代其加密認證資料。",
+      "credentialsRequired": "在新增必要的認證資料前，請求將會失敗。",
+      "save": "儲存設定"
+    },
+    "field": {
+      "description": "描述"
+    },
+    "editor": {
+      "errorBoundary": {
+        "title": "發生錯誤"
+      },
+      "action": {
+        "components": "元件",
+        "format": "格式化",
+        "insertStarter": "插入入門範例",
+        "redo": "重做",
+        "copied": "已複製",
+        "schema": "結構描述"
+      },
+      "reference": {
+        "minimal": "最小範例",
+        "full": "完整範例"
+      },
+      "componentReference": {
+        "search": "搜尋元件",
+        "empty": "沒有符合的元件",
+        "count": "可用的 {count, number} 個元件"
+      },
+      "status": {
+        "errors": "{count, number} 個錯誤",
+        "warnings": "{count, number} 個警告",
+        "ready": "未發現問題",
+        "position": "第 {line, number} 行，第 {column, number} 列",
+        "characters": "{count, number} 個字元",
+        "charactersWithLimit": "{count, number} / {limit, number}"
+      },
+      "diagnostics": {
+        "title": "範本診斷",
+        "line": "第 {line, number} 行",
+        "ast": "{value}",
+        "bindingTypeConflict": "輸入「{value}」由值類型不相容的控制項共用。",
+        "runtimeBindingTypeConflict": "輸入「{value}」同時繫結為 {firstType} 和 {secondType}。",
+        "dynamicRequestId": "必須使用字面值 requestId。不接受動態 request ID。",
+        "dynamicInputBinding": "bind 需要使用字面值輸入名稱。",
+        "inlineRequestProps": "網路元件接受 requestId 和 params；禁止使用內嵌的 URL、方法、標頭和本文屬性。",
+        "invalidRequestManifest": "具名請求必須是有效的請求對映。{value}",
+        "missingRequestId": "此網路元件需要字面值 requestId。",
+        "templateEmpty": "請輸入 JSX 範本。",
+        "templateTooLong": "範本超過 50,000 個字元的限制。",
+        "unknownRequest": "不存在 ID 為「{value}」的具名請求。"
+      }
+    },
+    "workbench": {
+      "configure": "設定",
+      "sectionNavigation": "自訂小工具區段",
+      "widgetPreview": "小工具預覽",
+      "generalInformation": "一般資訊",
+      "invalidWidget": "無效的小工具",
+      "section": {
+        "general": "一般",
+        "sources": "API 來源",
+        "requests": "請求數",
+        "options": "選項",
+        "jsx": "JSX",
+        "preview": "預覽"
+      },
+      "status": {
+        "unsaved": "未儲存編輯",
+        "invalid": "需要注意",
+        "ready": "準備"
+      },
+      "saveError": {
+        "title": "小工具未儲存",
+        "description": "請修正這些驗證錯誤後再儲存。",
+        "more": "工作台中還顯示了 +{count} 個錯誤。",
+        "errors": "驗證錯誤",
+        "copy": "複製錯誤",
+        "copied": "錯誤已複製"
+      },
+      "action": {
+        "preview": "測試並預覽",
+        "previewLoading": "正在測試請求"
+      },
+      "requests": {
+        "title": "具名查詢和動作",
+        "label": "請求數",
+        "description": "查詢會載入資料；動作只會在使用者互動後執行。兩者都可使用任何 HTTP 方法。"
+      },
+      "options": {
+        "title": "小工具選項"
+      },
+      "builder": {
+        "advancedManifest": "進階原始資訊清單",
+        "advancedJson": "進階資訊清單 JSON",
+        "manifestFilename": "widget.json",
+        "request": "請求 {count, number}",
+        "requestId": "請求 ID",
+        "type": "下載器類型",
+        "method": "方法",
+        "source": "API 來源",
+        "run": "執行",
+        "runLoad": "小工具載入時",
+        "runManual": "來自 SubFetch",
+        "permission": "權限",
+        "path": "路徑",
+        "pathDescription": "小工具選項使用 '{option:name}'，呼叫值使用 '{param:name}'。",
+        "requestDetails": "查詢、本文和行為",
+        "queryValues": "查詢值",
+        "queryKey": "查詢鍵",
+        "queryKeyInvalid": "請使用以字母開頭、只包含字母、數字、- 或 _ 的唯一 ID。",
+        "valueSource": "值來源",
+        "literal": "字面值",
+        "widgetOption": "小工具選項",
+        "invocationParameter": "呼叫參數",
+        "option": "選項",
+        "parameterName": "參數名稱",
+        "value": "值",
+        "removeQueryValue": "移除查詢值",
+        "addQueryValue": "新增查詢值",
+        "jsonBody": "JSON 本文",
+        "jsonBodyDescription": "選填。在任意深度插入 $option 和 $param 參照。",
+        "insertOptionReference": "插入選項參照",
+        "insertParameterReference": "插入參數參照",
+        "confirmation": "確認訊息",
+        "invalidation": "成功後重新整理",
+        "invalidationDescription": "以逗號分隔的查詢 ID",
+        "noAuth": "不使用來源驗證傳送",
+        "moveRequestUp": "將請求上移",
+        "moveRequestDown": "將請求下移",
+        "removeRequest": "移除請求",
+        "addRequest": "新增請求",
+        "optionName": "選項名稱",
+        "label": "標籤",
+        "control": "控制項",
+        "description": "描述",
+        "default": "預設值",
+        "optionDetails": "限制和動態選項",
+        "minimum": "最小值",
+        "maximum": "最大值",
+        "step": "步進值",
+        "choiceLabel": "選項標籤",
+        "choiceValue": "選項值",
+        "newChoice": "新選項",
+        "addChoice": "新增選項",
+        "removeChoice": "移除選項",
+        "choicesRequest": "從請求載入選項",
+        "itemsPath": "項目路徑",
+        "itemsPathPlaceholder": "項目（選填）",
+        "valuePath": "值路徑",
+        "labelPath": "標籤路徑",
+        "group": "用戶組",
+        "advancedOption": "進階選項",
+        "moveOptionUp": "將選項上移",
+        "moveOptionDown": "將選項下移",
+        "removeOption": "移除選項",
+        "addOption": "新增選項",
+        "invalidJson": "無效的 JSON",
+        "invalidWidget": "無效的小工具"
+      },
+      "jsx": {
+        "title": "JSX 範本",
+        "label": "範本"
+      },
+      "sources": {
+        "title": "API 來源和憑證",
+        "newName": "API {count, number}",
+        "duplicateSourceId": "API 來源 ID 必須是唯一的。",
+        "credentialRemoved": "憑證已移除",
+        "credentialRemovedDescription": "儲存的值已刪除。",
+        "primary": "主要 API",
+        "id": "來源 ID",
+        "name": "工作名稱",
+        "baseUrl": "基底 URL",
+        "baseUrlError": {
+          "invalid": "請輸入完整的 URL。",
+          "protocol": "請使用 HTTP 或 HTTPS URL。",
+          "credentials": "請從此 URL 移除使用者名稱和密碼，改在下方設定憑證。",
+          "queryOrFragment": "請從此基底 URL 移除查詢字串或片段，並將查詢值新增至具名請求。"
+        },
+        "networkScope": "網路存取",
+        "authentication": "認證",
+        "headerName": "標頭名稱",
+        "queryParameter": "查詢參數",
+        "configured": "已設定 — 請輸入替代值",
+        "clear": "晴朗",
+        "remove": "移除來源及其請求",
+        "advanced": "進階",
+        "add": "新增其他 API 來源",
+        "sourceType": "集成",
+        "manualSource": "HTTP API",
+        "existingIntegration": "現有整合",
+        "integrationType": "整合類型",
+        "selectIntegration": "已設定的整合",
+        "noIntegrations": "沒有可用的相符整合",
+        "integrationUnavailable": "所選整合已不再可用。請選擇其他整合。",
+        "integrationDescription": "使用已儲存的整合 URL 和憑證。變更會自動套用。執行請求需要完整的整合存取權。"
+      },
+      "ai": {
+        "title": "使用任何 AI 建立或修正",
+        "description": "如果有 API 文件 URL，請先新增。若要修正問題，請盡可能執行預覽。將提示複製到任何 AI；它可能會要求缺少的詳細資料。將其最終 JSON 貼到此處。",
+        "request": "您希望此小工具執行什麼操作？",
+        "documentationUrl": "API 文件 URL（選填）",
+        "paste": "貼上",
+        "response": "AI 回應",
+        "manualCopyDescription": "剪貼簿存取不可用。請選取下方提示並手動複製。",
+        "manualPasteDescription": "剪貼簿存取不可用，或複製的回應需要修正。請將 AI 的 JSON 回應貼到此處。",
+        "selectAll": "選擇全部",
+        "loadResponse": "載入回應",
+        "loaded": "小工具已載入編輯器",
+        "invalidResponse": "剪貼簿不包含有效的 v2 小工具",
+        "invalidResponseDetail": "AI 回應無效：{message}"
+      },
+      "preview": {
+        "invalid": "請修正驗證錯誤以預覽此小工具。",
+        "fixtureError": "預覽固定資料錯誤",
+        "requestData": "請求資料",
+        "status": {
+          "idle": "尚未測試請求",
+          "loading": "正在測試請求",
+          "success": "所有載入請求皆成功",
+          "error": "一或多個載入請求失敗"
+        },
+        "result": {
+          "loading": {
+            "title": "正在測試 API 請求",
+            "description": "Homarr 正在建立預覽工作階段並載入小工具資料。"
+          },
+          "success": {
+            "title": "預覽就緒",
+            "description": ""
+          },
+          "error": {
+            "title": "預覽完成，但請求發生錯誤",
+            "description": "{succeeded, number} 個成功、{failed, number} 個失敗。開啟「資料」以查看回應和錯誤詳細資料。"
+          }
+        },
+        "instanceOptions": "執行個體選項",
+        "liveActions": "針對已設定的 API 執行動作",
+        "liveActionsDescription": "關閉是安全的模擬模式。開啟此選項會影響實際服務。",
+        "noActions": "未定義任何動作。",
+        "containedFailures": "執行階段錯誤會限制在此小工具內。請求日誌絕不會包含秘密值。",
+        "validation": {
+          "title": "驗證",
+          "ready": "小工具定義有效。"
+        },
+        "accessibility": {
+          "title": "無障礙檢查",
+          "ready": "未偵測到常見的無障礙遺漏。",
+          "pending": "小工具定義有效後，才會執行無障礙檢查。",
+          "imageAlt": "為每個 Image 新增替代文字；只有裝飾性圖片可使用空白 alt。",
+          "actionIconLabel": "為每個 ActionIcon 新增 aria-label 或 title。",
+          "inputLabel": "為每個輸入欄位新增可見標籤或無障礙名稱。"
+        },
+        "journal": "已遮蔽的請求日誌",
+        "actionParameters": "動作參數（JSON）",
+        "invalidParameters": "請使用宣告的字串、數字和布林值參數類型。",
+        "runDestructive": "執行破壞性動作",
+        "runAction": "執行动作",
+        "deleteConfirmation": "此預覽動作會透過已設定的 API 變更遠端資料。",
+        "simulated": "動作已模擬",
+        "httpStatus": "HTTP {status, number}",
+        "tab": {
+          "widget": "小工具",
+          "data": "資料",
+          "options": "選項",
+          "state": "工作狀態",
+          "actions": "控制",
+          "diagnostics": "診斷"
+        },
+        "size": {
+          "compact": "精簡",
+          "standard": "標準",
+          "wide": "寬版"
+        },
+        "fixture": {
+          "live": "即時",
+          "loading": "正在讀取",
+          "empty": "空",
+          "error": "錯誤"
+        }
+      }
+    },
+    "preview": {
+      "request": {
+        "permission": {
+          "view": "檢視",
+          "modify": "修改",
+          "full": "完整"
+        }
+      }
+    },
+    "notification": {
+      "created": "小工具 \"{name}\" 建立成功。",
+      "updated": "小工具 \"{name}\" 更新成功。",
+      "deleted": "小工具 \"{name}\" 已刪除。",
+      "imported": "小工具匯入成功。",
+      "migrated": "舊版小工具已成功遷移。現有面板配置現在使用 v2 定義。",
+      "migrationError": "舊版小工具遷移失敗。請確認檔案使用 homarr-custom-widget-v2 結構描述。",
+      "legacyDefinitionCopied": "已複製原始小工具內容。不包含儲存的憑證值。",
+      "legacyDefinitionCopyError": "複製原始小工具內容失敗。",
+      "migrationPromptCopied": "已複製遮蔽後的遷移提示。請將其貼到 LLM，複製其單一 JSON 回應，然後選擇「在此貼上已遷移的小工具」。",
+      "migrationPromptCopyError": "複製遷移提示失敗。",
+      "sourcesConfigured": "小工具來源和憑證已儲存。",
+      "sourceConfigurationError": "設定小工具來源失敗。",
+      "aiPromptCopiedWithCount": "AI 提示已複製到剪貼簿（{count, number} 個字元）。",
+      "aiPromptCopyError": "無法將提示複製到剪貼簿。您的瀏覽器可能不支援此功能。",
+      "aiPromptSent": "提示已傳送。助理在背景處理時，您可以繼續編輯。",
+      "updateError": "更新小工具失敗。您的變更未被儲存。",
+      "importError": "匯入小工具失敗。請確保檔案是有效的自訂小工具 JSON 匯出。",
+      "exportError": "匯出小工具失敗。",
+      "duplicated": "小工具 \"{name}\" 已複製。",
+      "duplicateError": "複製小工具失敗。",
+      "toggleError": "切換小工具狀態失敗。",
+      "deleteError": "刪除小工具失敗。",
+      "previewError": "無法取得預覽。請檢查網址並重試。"
+    },
+    "importReview": {
+      "title": "檢查自訂小工具匯入",
+      "description": "匯入前，請檢查此小工具連線的位置，以及其控制項需要哪些面板存取權。",
+      "migrationTitle": "檢查遷移後的 v2 替代項目",
+      "migrationDescription": "檢查並確認此產生的 v2 定義。確認後會以原子方式取代保留的 v1 記錄，同時讓現有面板配置繼續連結至相同的小工具 ID。",
+      "fileLabel": "選擇自訂小工具 JSON 檔案",
+      "name": "工作名稱",
+      "origin": "基底來源",
+      "authentication": "認證",
+      "networkScope": "網路範圍",
+      "methods": "HTTP 方法",
+      "permissions": "所需的面板權限",
+      "sourceSetup": {
+        "title": "設定 API 來源",
+        "description": "確認此小工具的連線位置並新增憑證。私人和迴路位址 URL 僅適用於您的 Homarr 安裝。",
+        "suggestedUrl": "建議的 URL",
+        "confirmUrl": "我確認此伺服器 URL 對我的 Homarr 安裝是正確的",
+        "ready": "URL 就緒",
+        "needsUrl": "確認 URL",
+        "credentialsMissing": "缺少憑證",
+        "credentialsOptional": "您可以在沒有憑證的情況下安裝並稍後設定，但在新增憑證前請求會失敗。"
+      },
+      "actionWarning": {
+        "title": "此小工具可以變更遠端資料",
+        "description": "匯入後，請檢查每個具名動作、繼承的憑證和破壞性確認。檔案不包含秘密。"
+      },
+      "cancel": "取消匯入",
+      "confirm": "匯入小工具",
+      "confirmMigration": "確認 v2 替代項目"
+    },
+    "secret": {
+      "apiKey": "API 金鑰或權杖",
+      "username": "使用者名稱",
+      "password": "密碼",
+      "savedPlaceholder": "••••••• (已儲存，留空則保持不變)"
+    }
+  },
+  "workshop": {
+    "title": "工作坊",
+    "browseWorkshop": "瀏覽 Workshop",
+    "openCommunity": "開啟 Workshop",
+    "openOnWorkshop": "在 Workshop 網站上開啟 {title}",
+    "back": "返回 Workshop",
+    "search": "搜尋小工具",
+    "searchCss": "搜尋 CSS 主題",
+    "sort": "排序",
+    "sortTop": "評分最高",
+    "sortNewest": "最新",
+    "listAriaLabel": "Workshop 小工具",
+    "listAriaLabelCss": "Workshop CSS 主題",
+    "empty": "沒有小工具符合此搜尋。",
+    "emptyDescription": "發佈至 Workshop 的社群小工具會顯示在此處。",
+    "emptyFilteredTitle": "沒有小工具符合此搜尋",
+    "emptyFilteredDescription": "沒有 Workshop 小工具符合「{search}」。",
+    "emptyCss": "沒有 CSS 主題符合此搜尋。",
+    "unavailableTitle": "Homarr Workshop 似乎無法使用",
+    "unavailable": "社群服務可能暫時停止運作。請稍後再試。您已安裝的小工具不受影響。",
+    "loadError": "無法載入此投稿。",
+    "noDescription": "沒有描述",
+    "author": "作者：{name}",
+    "communityMember": "社群成員",
+    "outdated": "已過時",
+    "outdatedWarning": "作者已將此投稿標記為過時。匯入前請仔細檢查。",
+    "score": "分數：{count, number}",
+    "upvote": "支持",
+    "downvote": "反對",
+    "voteError": "無法儲存投票。",
+    "signIn": "使用 GitHub 登入",
+    "signInError": "GitHub 登入失敗。請確認 Workshop OAuth 提供者已設定，且允許彈出視窗。",
+    "signOut": "登出",
+    "signInHint": "登入即可投票或檢舉。安裝不需要 Workshop 帳戶。",
+    "securityNotice": "Workshop 小工具可以呼叫其宣告的 API 來源，並使用您在本機設定的憑證執行宣告的動作。絕不會包含秘密。",
+    "securityNoticeCss": "社群 CSS 可以變更面板的外觀和可用性。匯入前請先檢查；在儲存面板設定前不會儲存任何內容。",
+    "install": "安裝",
+    "installReviewTitle": "安裝前檢查",
+    "installError": "無法安裝此小工具",
+    "installErrorDescription": "Workshop 投稿不是有效的自訂 JSX v2 小工具。",
+    "useCss": "匯入 CSS",
+    "importCss": "從 Workshop 匯入 CSS",
+    "importCssConfirm": "以「{title}」取代目前的自訂 CSS？在儲存面板設定前，不會儲存任何內容。",
+    "screenshotAlt": "{title} 螢幕截圖 {count, number}",
+    "screenshotViewer": "{title} 螢幕截圖檢視器",
+    "screenshotsLabel": "{title} 螢幕截圖",
+    "zoomScreenshot": "檢視完整大小",
+    "previousScreenshot": "上一張螢幕截圖",
+    "nextScreenshot": "下一張螢幕截圖",
+    "showScreenshotThumbnails": "顯示螢幕截圖縮圖",
+    "hideScreenshotThumbnails": "隱藏螢幕截圖縮圖",
+    "closeScreenshotViewer": "關閉螢幕截圖檢視器",
+    "technicalDetails": "技術詳細資料",
+    "sourceCode": "Workshop 項目",
+    "export": "匯出",
+    "report": "檢舉",
+    "reportTitle": "檢舉投稿",
+    "reportReason": "原因",
+    "reportExplanation": "Workshop 管理員需要知道什麼？",
+    "reportSend": "傳送檢舉",
+    "reportSent": "檢舉已傳送",
+    "reportSentDescription": "Workshop 管理員現在可以檢查此投稿。",
+    "reportCount": "{count, plural, other {# 個檢舉}}",
+    "reportWarning": "{count, plural, other {此投稿有 # 個未處理的社群檢舉。}} 投稿仍可安裝，但您應先檢查其內容。",
+    "reportVisibility": "檢舉詳細資料僅對此投稿的作者和 Workshop 管理員可見。",
+    "reportCategory": {
+      "outdated": "過時或不再運作",
+      "malicious": "惡意內容",
+      "spam": "垃圾內容",
+      "copyright": "著作權",
+      "inappropriate": "不當內容",
+      "other": "其他"
+    },
+    "publish": {
+      "title": "發佈至 Workshop",
+      "introTitle": "與社群分享此小工具",
+      "introDescription": "Homarr 會匯出目前小工具的不含憑證副本。請新增清楚的清單詳細資料，讓使用者在安裝前瞭解其用途。",
+      "listingDetails": "Workshop 清單",
+      "listingDetailsDescription": "這些詳細資料會與匯出的小工具定義一同公開顯示。",
+      "success": "已立即發佈。社群成員現在可以安裝並檢舉此小工具。",
+      "successTitle": "您的小工具已上線",
+      "manageDescription": "開啟投稿即可更新其清單、檢查檢舉、標記為過時或刪除。投稿管理直接在 Workshop 網站上處理。",
+      "viewSubmission": "檢視並管理投稿",
+      "done": "完成",
+      "signInHint": "登入即可使用您的 Workshop 身分發佈。",
+      "titleField": "標題",
+      "descriptionField": "描述",
+      "screenshots": "螢幕截圖",
+      "screenshotsDescription": "最多五張 PNG、JPEG 或 WebP 圖片",
+      "screenshotsPlaceholder": "選擇螢幕截圖",
+      "invalidScreenshot": "使用 PNG、JPEG 或 WebP 圖片，每張大小不得超過 {maxSize}。",
+      "privateSourceWarning": "此小工具包含以下項目的私人來源 URL：{sources}。發佈前，請將個人主機或 IP 位址替換為安全的服務預留位置。",
+      "reviewSourcesTitle": "檢查私人來源 URL",
+      "privateSourceConfirmation": "我已檢查這些來源 URL，確認它們不會公開私人基礎架構詳細資料",
+      "action": "立即發佈",
+      "publicationNote": "發佈會立即完成。之後您可以在 Workshop 上管理投稿。",
+      "definitionChanged": "準備發佈時小工具有所變更。請再次檢查其私人來源 URL，然後重試。",
+      "error": "發佈失敗"
     }
   },
   "integration": {
+    "completion": {
+      "modalTitle": "服務就緒",
+      "title": "{name} 已連線",
+      "description": "連線測試成功。接下來請選擇要在此面板上顯示的內容。",
+      "connectionReady": "服務連線就緒",
+      "appReady": "應用程式捷徑就緒",
+      "compatibleWidgets": "",
+      "chooseWidget": "選擇小工具",
+      "recipes": {
+        "title": "此面板推薦",
+        "description": "根據已連線的服務和此面板上已有的小工具。",
+        "newConnectionReason": "現在可透過 {integration} 使用",
+        "existingConnectionReason": "可搭配您已連線的服務",
+        "dismiss": "忽略此面板對此服務的推薦"
+      }
+    },
     "page": {
       "list": {
-        "title": "集成",
+        "ariaLabel": "已設定的整合",
         "search": "選擇集成",
+        "scopedNote": "僅顯示您有權管理的整合。",
         "noResults": {
-          "title": "尚無集成"
+          "title": "尚無集成",
+          "description": "連線服務即可在 Homarr 小工具中使用其資料和動作。",
+          "action": "建立您的第一個整合",
+          "filteredTitle": "沒有整合符合您的搜尋",
+          "filteredDescription": "沒有整合符合「{search}」。請嘗試其他名稱、類型或 URL。",
+          "createOnlyTitle": "您只能新增整合",
+          "createOnlyDescription": "您的權限允許您建立整合，但無法管理現有整合。請向管理員要求所需的存取權。"
         }
       },
       "create": {
         "title": "創建 {name} 集成",
         "notification": {
           "success": {
-            "title": "創建成功",
             "message": "集成創建成功"
           },
           "error": {
-            "title": "創建失敗",
             "message": "此集成無法被創建"
           }
         },
@@ -729,11 +1339,9 @@
         "title": "編輯 {name} 集成",
         "notification": {
           "success": {
-            "title": "編輯成功",
             "message": "集成已儲存成功"
           },
           "error": {
-            "title": "無法應用變更",
             "message": "集成無法被儲存"
           }
         },
@@ -750,23 +1358,15 @@
         "message": "確認移除集成 {name} 嗎？",
         "notification": {
           "success": {
-            "title": "移除成功",
             "message": "集成移除成功"
           },
           "error": {
-            "title": "移除失敗",
             "message": "集成移除失敗"
           }
         }
       }
     },
     "field": {
-      "name": {
-        "label": "名稱"
-      },
-      "url": {
-        "label": "網址"
-      },
       "attemptSearchEngineCreation": {
         "label": "創建搜尋引擎",
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
@@ -777,6 +1377,10 @@
       "createApp": {
         "label": "創建應用程式",
         "description": "建立一個與集成相同名稱和圖示的應用程式，將下方輸入欄位留空，以使用集成網址創建應用程式"
+      },
+      "linkApp": {
+        "label": "連結現有應用程式",
+        "description": "將此整合連線至您已可使用的應用程式。"
       },
       "appHref": {
         "placeholder": "自訂應用程式網址"
@@ -791,7 +1395,11 @@
     "grid": {
       "widgetCount": "{count} 個小工具",
       "noWidgets": "無小工具",
-      "detected": "透過 Docker 偵測到"
+      "detected": "透過 Docker 偵測到",
+      "connected": "{count, plural, other {已連線：#}}",
+      "tiedWidgets": "已繫結的小工具",
+      "more": "還有 +{count} 個",
+      "loadError": "無法載入整合。建立新連線前請重試。"
     },
     "category": {
       "dnsHole": "DNS",
@@ -823,7 +1431,9 @@
       "vpn": "VPN",
       "mediaLibrary": "媒體庫",
       "uptimeMonitoring": "運作時間監控",
-      "systemMonitoring": "系統監控"
+      "beszel": "Beszel",
+      "systemMonitoring": "系統監控",
+      "security": "安全"
     },
     "testConnection": {
       "action": {
@@ -1108,6 +1718,22 @@
         "slug": {
           "label": "狀態頁面 slug",
           "newLabel": "新狀態頁面 slug"
+        },
+        "wazuhIndexerUrl": {
+          "label": "索引器 URL",
+          "newLabel": "新的 Indexer URL"
+        },
+        "wazuhIndexerUsername": {
+          "label": "Indexer 使用者名稱",
+          "newLabel": "新的 Indexer 使用者名稱"
+        },
+        "wazuhIndexerPassword": {
+          "label": "Indexer 密碼",
+          "newLabel": "新的 Indexer 密碼"
+        },
+        "wazuhDashboardUrl": {
+          "label": "儀表板 URL（選填）",
+          "newLabel": "新的儀表板 URL"
         }
       }
     },
@@ -1116,58 +1742,19 @@
       "interact": "與集成進行互動",
       "full": "完整的集成訪問權限"
     },
-    "audiobookshelf": {
-      "name": "Audiobookshelf",
-      "description": "自託管有聲書和播客伺服器"
-    },
-    "navidrome": {
-      "name": "Navidrome",
-      "description": "具有 Subsonic API 相容性的自託管音樂串流伺服器"
-    },
-    "uptimeKuma": {
-      "name": "Uptime Kuma",
-      "description": "帶有公開狀態頁面的自託管運作時間監控",
-      "secret": {
-        "slug": {
-          "description": "你的公開狀態頁面的 slug。如果未設定，預設為 \"default\"。"
-        },
-        "apiKey": {
-          "description": "用於已驗證 /metrics 存取的可選 API 金鑰"
-        }
-      }
-    },
-    "traefik": {
-      "name": "Traefik",
-      "description": "雲原生反向代理和負載平衡器"
-    },
-    "paperlessNgx": {
-      "name": "Paperless-ngx",
-      "description": "用於歸檔和組織掃描文件的文件管理系統"
-    },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Linux 主機的修補程式管理和監控"
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Sonarr 和 Radarr 的配套應用程式，管理和下載字幕"
-    },
     "llamacpp": {
       "name": "llama.cpp",
       "description": "監控本地 llama.cpp llama-server：健康狀態、模型與生成指標"
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "監控您的 Docker 容器中哪些有可用的映像更新"
     }
   },
   "media": {
     "plural": "多媒體",
     "search": "尋找多媒體",
     "field": {
-      "name": "名稱",
+      "preview": "預覽",
       "size": "大小",
-      "creator": "創建者"
+      "creator": "創建者",
+      "actions": "控制"
     },
     "action": {
       "upload": {
@@ -1195,10 +1782,12 @@
         }
       },
       "copy": {
-        "label": "複製網址"
+        "label": "複製網址",
+        "labelNamed": "複製 {name} 的 URL"
       },
       "open": {
-        "label": "開啟多媒體"
+        "label": "開啟多媒體",
+        "labelNamed": "開啟 {name}"
       }
     },
     "noResults": {
@@ -1213,7 +1802,6 @@
       "add": "新增",
       "apply": "應用",
       "backToOverview": "返回總覽",
-      "skip": "略過",
       "change": "",
       "create": "創建",
       "createAnother": "創建並重新開始",
@@ -1236,16 +1824,31 @@
       "tryAgain": "重試",
       "loading": "正在讀取",
       "show": "顯示",
-      "hide": "隱藏"
+      "hide": "隱藏",
+      "undo": "復原",
+      "editNamed": "編輯 {name}",
+      "deleteNamed": "刪除 {name}",
+      "clearSearch": "清除搜尋",
+      "copy": "複製",
+      "copied": "已複製",
+      "refresh": "刷新"
+    },
+    "pagination": {
+      "pageOf": "第 {page} 頁，共 {totalPages} 頁"
     },
     "here": "此處",
+    "serviceUrlTemplate": {
+      "serverTitle": "一般伺服器位址",
+      "urlModeLabel": "服務位址模式",
+      "hostPort": "相同主機、不同連接埠",
+      "subdomain": "每項服務使用一個子網域",
+      "path": "每項服務使用一個路徑"
+    },
     "iconPicker": {
       "label": "Icon 網址",
+      "description": "搜尋圖庫、貼上圖片網址或上傳檔案。",
       "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}",
       "headerLoading": "輸入以搜尋圖示",
-      "noResults": "沒有符合 \"{search}\" 的圖示。",
-      "error": "無法載入圖示。",
-      "description": "搜尋圖庫、貼上圖片網址或上傳檔案。",
       "clear": "清除圖片",
       "uploadImage": "上傳圖片",
       "results": "圖片搜尋結果",
@@ -1254,7 +1857,9 @@
       "otherImages": "其他圖像",
       "urlLoading": "正在檢查圖片…",
       "urlReady": "圖片已可使用",
-      "urlError": "無法載入此圖片。請檢查網址後再試一次。"
+      "urlError": "無法載入此圖片。請檢查網址後再試一次。",
+      "noResults": "沒有符合 \"{search}\" 的圖示。",
+      "error": "無法載入圖示。"
     },
     "colorScheme": {
       "options": {
@@ -1266,7 +1871,6 @@
     "information": {
       "min": "最小",
       "max": "最大",
-      "days": "天",
       "hours": "時",
       "minutes": "分"
     },
@@ -1303,16 +1907,16 @@
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "切換至暗黑模式",
-        "switchToLightMode": "切換至日間模式",
+        "open": "開啟使用者頭像選單",
         "management": "管理中心",
-        "docker": "Docker",
         "preferences": "偏好設定",
         "logout": "登出",
         "login": "登入",
         "homeBoard": "首頁",
-        "loggedOut": "已登出",
-        "updateAvailable": "{countUpdates} 可用更新：{tag}"
+        "updateAvailable": "{countUpdates} 可用更新：{tag}",
+        "assistant": "助理",
+        "assistantThinking": "思考中",
+        "modifier": "修改器"
       }
     },
     "dangerZone": "危險區域",
@@ -1360,75 +1964,85 @@
         "kilometersPerHour": "",
         "milesPerHour": ""
       }
+    },
+    "widgetQuery": {
+      "loading": "正在載入小工具資料"
+    },
+    "total": "總計",
+    "filesystemUsage": "{count, plural, other {顯示 # 個檔案系統的使用量}}",
+    "field": {
+      "name": "工作名稱"
+    },
+    "label": {
+      "new": "創建"
+    },
+    "entity": {
+      "apps": "應用程式",
+      "boards": "面板",
+      "certificates": "憑證",
+      "customWidgets": "自訂小工具",
+      "groups": "群組",
+      "integrations": "集成",
+      "invites": "邀請",
+      "logs": "Logs",
+      "media": "多媒體",
+      "searchEngines": "搜尋引擎",
+      "tasks": "任務",
+      "users": "使用者"
     }
   },
   "section": {
-    "dynamic": {
+    "option": {
+      "showLabel": {
+        "label": "顯示標籤",
+        "description": "在內容上方顯示容器標籤。"
+      },
+      "collapsible": {
+        "label": "允許摺疊",
+        "description": "讓檢視者展開和摺疊此容器。"
+      },
+      "showOpenAll": {
+        "label": "顯示全部開啟動作",
+        "description": "顯示可在新分頁中開啟此容器內每個應用程式的動作。"
+      },
+      "scrollable": {
+        "label": "可捲動",
+        "description": "讓此容器維持設定的大小，捲動其內容而不是隨內容增長。"
+      }
+    },
+    "action": {
+      "openAllInNewTabsFor": "在分頁中開啟 {name} 中的所有應用程式"
+    },
+    "openAllInNewTabs": {
+      "title": "於分頁中開啟全部",
+      "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，Homarr 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
+    },
+    "container": {
+      "untitled": "未命名容器",
       "action": {
-        "create": "創建動態區段",
-        "remove": "移除動態區段"
+        "create": "新容器",
+        "remove": "移除容器",
+        "expand": "展開",
+        "collapse": "摺疊"
       },
       "option": {
         "title": {
           "label": "標題"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "自定義 CSS html"
         },
         "borderColor": {
           "label": "邊框顏色"
         }
       },
       "remove": {
-        "title": "移除動態區段",
-        "message": "確認要移除此動態區段嗎？項目將移動到父區段的相同位置"
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "名稱"
-        }
-      },
-      "action": {
-        "create": "創建分類",
-        "edit": "移除分類",
-        "remove": "移除分類",
-        "moveUp": "上移",
-        "moveDown": "下移",
-        "createAbove": "新分類之上",
-        "createBelow": "新分類之下",
-        "openAllInNewTabs": "於分頁中開啟全部"
-      },
-      "create": {
-        "title": "創建分類",
-        "submit": "創建分類"
-      },
-      "remove": {
-        "title": "移除分類",
-        "message": "確認移除分類 {name} 嗎？"
-      },
-      "edit": {
-        "title": "重新命名分類",
-        "submit": "重新命名分類"
-      },
-      "menu": {
-        "label": {
-          "create": "創建分類",
-          "changePosition": "變更位置",
-          "settings": "設定"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "於分頁中開啟全部",
-        "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，Homarr 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
+        "message": "要移除此容器嗎？其內容將移至周圍區域。"
       }
     }
   },
   "item": {
     "action": {
-      "create": "創建項目",
-      "import": "匯入項目",
       "edit": "編輯項目",
       "moveResize": "移動 / 調整大小項目",
       "duplicate": "複製項目",
@@ -1437,7 +2051,7 @@
     "menu": {
       "label": {
         "settings": "設定",
-        "refresh": "重新整理",
+        "settingsFor": "{name} 的設定",
         "options": "選項",
         "actions": "動作"
       },
@@ -1446,21 +2060,96 @@
         "error": "錯誤",
         "loading": "正在讀取",
         "idle": "閒置"
+      },
+      "notification": {
+        "saveError": {
+          "title": "無法儲存小工具",
+          "message": "小工具變更已復原"
+        }
       }
     },
     "create": {
       "title": "選擇要新增的項目",
       "search": "篩選項目",
-      "addToBoard": "新增至面板"
+      "addToBoard": "新增至面板",
+      "addAtPosition": "在此新增項目",
+      "destination": {
+        "label": "新增至",
+        "description": "選擇小工具應顯示的位置。之後仍可移動。",
+        "mainCanvas": "主要畫布",
+        "leftRail": "左側欄",
+        "rightRail": "右側欄"
+      },
+      "connectionStatus": {
+        "ready": "準備",
+        "needsSetup": "需要設定",
+        "noConnectionRequired": "不需要連線"
+      },
+      "customWidget": "自訂小工具",
+      "standalone": "獨立",
+      "missingIntegration": {
+        "title": "請先連線服務",
+        "noPermission": "此小工具需要相容的服務連線。請管理員先連線服務，然後再試。"
+      },
+      "notification": {
+        "success": {
+          "title": "小工具已新增",
+          "message": "{name} 已新增至此面板。",
+          "relocatedMessage": "由於選取的目的地無法使用，{name} 已新增至 {destination}。"
+        },
+        "error": {
+          "title": "無法新增項目",
+          "message": "無法將項目新增至此面板"
+        }
+      }
+    },
+    "selection": {
+      "summary": "{count, plural, other {已選取 # 個項目}}",
+      "selected": "{count, plural, other {已選取 # 個}}",
+      "copy": "複製",
+      "copied": "{count, plural, other {已將 # 個項目複製到剪貼簿}}",
+      "copyError": "無法複製所選項目。您的瀏覽器可能不允許存取剪貼簿。",
+      "paste": "貼上",
+      "pasteShortcut": "在此貼上已複製的項目（Ctrl / ⌘ + V）",
+      "pasted": "{count, plural, other {已貼上 # 個項目}}",
+      "pasteError": "無法讀取剪貼簿。您的瀏覽器可能不允許存取剪貼簿。",
+      "pasteInvalid": "剪貼簿不包含有效的 Homarr 面板項目。",
+      "pasteUnavailable": "已複製的項目無法放入此面板。",
+      "removed": "{count, plural, other {已移除 # 個項目}}",
+      "move": "移動",
+      "moveTo": "移動所選項目",
+      "delete": "移除",
+      "clear": "清除選取項目",
+      "clearShortcut": "清除選取項目（Escape）",
+      "saveErrorTitle": "無法更新項目",
+      "saveErrorMessage": "無法儲存變更。面板已重新整理。",
+      "moveUnavailableTitle": "無法移動所選項目",
+      "moveUnavailableMessage": "目的地沒有足夠空間容納整個選取範圍。"
     },
     "moveResize": {
       "title": "移動 / 調整大小項目",
+      "entryLabel": "{name}，第 {column} 欄、第 {row} 列",
+      "target": {
+        "numbered": "{name}，目的地 {index}",
+        "located": "{name}，{location}，目的地 {index}"
+      },
+      "keyboard": {
+        "instructions": "按 Enter 或 Space 開始鍵盤編輯。使用方向鍵移動，按住 Shift 加方向鍵調整大小，按 Escape 停止。",
+        "started": "已開始鍵盤編輯。使用方向鍵移動，按住 Shift 加方向鍵調整大小，按 Escape 停止。",
+        "stopped": "已停止鍵盤編輯。",
+        "boundary": "此變更無法容納在此區段內。"
+      },
       "field": {
+        "section": {
+          "label": "區段或欄"
+        },
         "width": {
-          "label": "寬度"
+          "label": "寬度",
+          "shortLabel": "寬"
         },
         "height": {
-          "label": "高度"
+          "label": "高度",
+          "shortLabel": "高"
         },
         "xOffset": {
           "label": "X 軸"
@@ -1474,10 +2163,27 @@
       "title": "編輯項目",
       "tab": {
         "widget": "編輯小工具",
-        "app": "編輯應用程式"
+        "app": "編輯應用程式",
+        "integration": "編輯整合"
       },
       "app": {
         "propagationNotice": "對此應用程式的變更將會套用到所有使用它的儀表板。"
+      },
+      "integration": {
+        "action": "編輯連線",
+        "description": "不離開此小工具即可測試或修復所選連線。",
+        "editLabel": "編輯 {name} 集成",
+        "fullAccessRequired": "需要完整存取權",
+        "propagationNotice": "對此整合的變更會套用至所有使用位置。儲存前會先測試連線。",
+        "loading": "正在載入整合",
+        "loadError": "無法載入此整合。變更連線設定前請重試。"
+      },
+      "preview": {
+        "integrationRequired": "請選擇連線以預覽此小工具。",
+        "size": "檔案大小"
+      },
+      "settings": {
+        "label": "小工具設定"
       },
       "advancedOptions": {
         "label": "進階選項",
@@ -1485,7 +2191,8 @@
       },
       "field": {
         "integrations": {
-          "label": "集成"
+          "label": "集成",
+          "removeLabel": "移除 {name} 整合"
         },
         "title": {
           "label": "標題"
@@ -1499,17 +2206,18 @@
       }
     },
     "remove": {
-      "title": "移除項目",
       "message": "確認要移除此項目嗎？"
+    },
+    "advancedFocus": {
+      "open": "開啟進階檢視",
+      "close": "關閉進階檢視",
+      "label": "{widget} 進階檢視"
     }
   },
   "widget": {
     "integrationSelect": {
       "configureIntegrationFirst": "先連線整合",
-      "loading": "正在讀取……",
-      "placeholder": "選擇一個選項",
-      "noResults": "未找到結果",
-      "loadError": "載入選項失敗"
+      "placeholder": "選擇一個選項"
     },
     "app": {
       "name": "應用程式",
@@ -1518,9 +2226,6 @@
         "appId": {
           "label": "選擇應用程式"
         },
-        "openInNewTab": {
-          "label": "於新分頁中開啟"
-        },
         "showTitle": {
           "label": "顯示應用程式名稱"
         },
@@ -1528,11 +2233,8 @@
           "label": "啟用簡單的 Ping"
         },
         "layout": {
-          "label": "",
           "option": {
-            "row": "",
             "row-reverse": "",
-            "column": "",
             "column-reverse": ""
           }
         },
@@ -1557,23 +2259,60 @@
       "name": "書籤",
       "description": "顯示多個應用程式鏈結",
       "option": {
-        "title": {
-          "label": "標題"
+        "showTitle": {
+          "label": "顯示小工具標題"
+        },
+        "titleSize": {
+          "label": "小工具標題大小（px）"
         },
         "layout": {
           "label": "顯示布局",
           "option": {
-            "row": {
-              "label": "橫向"
-            },
-            "column": {
-              "label": "垂直"
-            },
-            "grid": {
-              "label": "網格"
+            "adaptive": {
+              "label": "自適應"
             },
             "gridHorizontal": {
               "label": "網格水平間距"
+            },
+            "icons": {
+              "label": "圖示"
+            }
+          }
+        },
+        "variant": {
+          "label": "外觀",
+          "option": {
+            "soft": {
+              "label": "柔和"
+            },
+            "filled": {
+              "label": "填滿"
+            },
+            "outline": {
+              "label": "外框"
+            },
+            "plain": {
+              "label": "純文字"
+            }
+          }
+        },
+        "spacing": {
+          "label": "卡片間距",
+          "option": {
+            "xs": {
+              "label": "特小"
+            },
+            "sm": {
+              "label": "小"
+            },
+            "md": {
+              "label": "中"
+            },
+            "lg": {
+              "label": "大"
+            },
+            "xl": {
+              "label": "特大"
             }
           }
         },
@@ -1586,17 +2325,28 @@
         "hideHostname": {
           "label": "隱藏 hostname"
         },
-        "openNewTab": {
-          "label": "於新分頁開啟"
-        },
         "withBorder": {
           "label": "顯示邊框"
         },
+        "grow": {
+          "label": "展開卡片以填滿列"
+        },
+        "customUrls": {
+          "label": "自訂連結"
+        },
         "items": {
           "label": "書籤",
-          "add": "新增書籤"
+          "remove": "移除書籤",
+          "apps": {
+            "label": "新增書籤",
+            "description": "貼上 URL 或尋找現有應用程式。拖曳下方書籤以重新排序。",
+            "placeholder": "貼上 URL 或搜尋應用程式",
+            "addUrl": "新增此 URL",
+            "hint": "按 Enter 新增 URL。貼上以逗號分隔或每行一個的 URL，即可新增多個。"
+          }
         }
-      }
+      },
+      "empty": "在小工具設定中新增 URL 或應用程式"
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -1605,33 +2355,61 @@
         "showBroadcastMessage": {
           "label": "顯示廣播訊息"
         }
+      },
+      "noProjectSelected": "未選取專案",
+      "runnerStatus": "執行器：{status}",
+      "projectId": "專案：{id}",
+      "sessionReceived": "已接收工作階段：{value}",
+      "sessionSent": "已傳送工作階段：{value}",
+      "sessionId": "工作階段：{id}",
+      "startedAt": "於 {date} 開始",
+      "emptyItems": "此快照中沒有進行中或最近的工作",
+      "metric": {
+        "running": "運行中",
+        "completed": "完成",
+        "failed": "失敗",
+        "canceled": "已取消",
+        "download": "下載",
+        "upload": "上傳"
+      },
+      "status": {
+        "running": "運行中",
+        "completed": "已完成",
+        "failed": "失敗",
+        "canceled": "已取消",
+        "stopped": "已停止",
+        "idle": "閒置",
+        "unknown": "未知"
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "顯示有多少受監控的容器有可用更新。",
+      "title": "What's Up Docker",
+      "monitored": "已監控",
+      "updatesAvailable": "{count, plural, other {# 個可用更新}}",
+      "updateAvailable": "有可用更新",
+      "openReleaseNotes": "開啟發佈說明",
+      "option": {
+        "showRing": {
+          "label": "顯示更新環"
+        },
+        "showUpdateList": {
+          "label": "顯示容器更新清單",
+          "description": "列出每個具有可用映像更新的受監控容器"
+        }
       }
     },
     "dnsHoleSummary": {
       "name": "DNS Hole 概況",
       "description": "顯示 DNS Hole 的概況",
       "option": {
-        "layout": {
-          "label": "顯示布局",
-          "option": {
-            "row": {
-              "label": "橫向"
-            },
-            "column": {
-              "label": "垂直"
-            },
-            "grid": {
-              "label": "網格"
-            }
-          }
-        },
         "usePiHoleColors": {
           "label": "使用 Pi-Hole 顏色"
         }
       },
       "error": {
-        "internalServerError": "取得 DNS Hole 概況失敗",
-        "integrationsDisconnected": "無可用的數據，所有集成已斷線"
+        "internalServerError": "取得 DNS Hole 概況失敗"
       },
       "data": {
         "adsBlockedToday": "今日封鎖",
@@ -1639,32 +2417,24 @@
         "dnsQueriesToday": "今日查詢",
         "domainsBeingBlocked": "黑名單的網域"
       },
-      "domainsTooltip": "由於多個集成，Homarr 無法精準計算被阻擋的網域數量"
+      "domainsTooltip": "由於多個集成，Homarr 無法精準計算被阻擋的網域數量",
+      "status": {
+        "enabled": "已啟用",
+        "disabled": "已停用",
+        "unknown": "未知"
+      }
     },
     "dnsHoleControls": {
       "name": "DNS Hole 控制",
       "description": "從面板控制 Pi-Hole 或 AdGuard",
       "option": {
-        "layout": {
-          "label": "顯示布局",
-          "option": {
-            "row": {
-              "label": "橫向"
-            },
-            "column": {
-              "label": "垂直"
-            },
-            "grid": {
-              "label": "網格"
-            }
-          }
-        },
         "showToggleAllButtons": {
           "label": "顯示全部按鈕"
         }
       },
       "error": {
-        "internalServerError": "無法控制 DNS Hole"
+        "internalServerError": "無法控制 DNS Hole",
+        "bulkActionsFailed": "{count, plural, other {# 個動作失敗}}"
       },
       "controls": {
         "enableAll": "啟用全部",
@@ -1675,8 +2445,6 @@
         "disabled": "已停用",
         "processing": "處理中",
         "disconnected": "斷線",
-        "hours": "時",
-        "minutes": "分",
         "unlimited": "留空表示無限制"
       }
     },
@@ -1688,15 +2456,9 @@
           "label": "自定義標題/城市顯示\n",
           "description": "在時鐘上顯示自定義的標題或城市/國家名稱"
         },
-        "customTitle": {
-          "label": "標題"
-        },
         "is24HourFormat": {
           "label": "24 小時制",
           "description": "使用 24 小時制替代 12 小時制"
-        },
-        "showSeconds": {
-          "label": "顯示秒數"
         },
         "useCustomTimezone": {
           "label": "使用固定時區"
@@ -1716,29 +2478,295 @@
           "label": "自訂時間格式",
           "description": "使用 ISO 8601 格式化時間 (此操作將覆蓋其他選項)"
         },
-        "customDateFormat": {
-          "label": "自訂日期格式",
-          "description": "使用 ISO 8601 格式化日期 (此操作將覆蓋其他選項)"
-        },
         "showWeather": {
           "label": "顯示天氣",
           "description": "在卡片角落顯示小型動畫天氣圖示和溫度"
         },
-        "weatherLocation": {
-          "label": "天氣位置"
-        },
         "isWeatherFormatFahrenheit": {
           "label": "使用華氏溫度"
+        },
+        "animateWeatherIcon": {
+          "label": "動畫天氣圖示",
+          "description": "動畫天氣圖示。預設為停用，且在要求減少動態效果時一律停用。"
+        },
+        "colorWeatherByDayNight": {
+          "label": "依日夜顯示天氣顏色",
+          "description": "根據所選位置目前是白天還是夜晚，為天氣圖示和溫度套用日間或夜間顏色。"
+        },
+        "dayWeatherColor": {
+          "label": "日間顏色"
+        },
+        "nightWeatherColor": {
+          "label": "夜間顏色"
+        },
+        "worldClockCities": {
+          "label": "世界時鐘城市",
+          "description": "新增並排序最多六個城市，以使用進階檢視。"
         }
+      },
+      "timezoneList": {
+        "timezone": "時區",
+        "cityLabel": "城市標籤",
+        "searchPlaceholder": "搜尋時區",
+        "noResults": "找不到時區",
+        "unsupportedOption": "不支援：{timeZone}",
+        "add": "新增城市",
+        "remove": "移除 {city}",
+        "reorder": "重新排列 {city}",
+        "limit": "已設定 {count} / {maximum} 個城市"
+      },
+      "worldClock": {
+        "primary": "主要時鐘",
+        "local": "當地時間",
+        "today": "今天",
+        "tomorrow": "明天",
+        "yesterday": "昨天",
+        "noSecondaryCities": "在小工具選項中新增城市，即可在此比較。",
+        "unsupportedPrimaryTitle": "主要時區無法使用",
+        "unsupportedPrimary": "此瀏覽器不支援 {timeZone}。顯示 UTC 作為明確標示的備用選項。",
+        "unsupportedTimeZone": "不支援的時區：{timeZone}",
+        "accessibleTime": "{city}：{time}、{date}、{timeZone}",
+        "advancedLabel": "進階世界時鐘",
+        "cities": "世界時鐘",
+        "cityCount": "{count} 個時區",
+        "timeBarLabel": "{city} 的 24 小時制時間位置",
+        "dayProgress": "已經過 {percent}% · 剩餘 {hours} 小時 {minutes} 分鐘",
+        "phaseLegend": "時段圖例",
+        "tick": {
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
+        },
+        "phaseRange": {
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
+        },
+        "phase": {
+          "night": "夜間",
+          "dawn": "黎明",
+          "day": "白天",
+          "dusk": "黃昏"
+        }
+      }
+    },
+    "airQuality": {
+      "name": "空氣品質與紫外線",
+      "description": "顯示某個位置的空氣品質、紫外線指數、污染物和花粉。",
+      "option": {
+        "location": {
+          "label": "空氣品質位置"
+        },
+        "aqiStandard": {
+          "label": "空氣品質指數標準",
+          "options": {
+            "auto": "依地區設定自動選擇",
+            "european": "歐洲空氣品質指數",
+            "us": "美國空氣品質指數"
+          }
+        },
+        "showUv": {
+          "label": "顯示紫外線指數"
+        },
+        "showPollutants": {
+          "label": "顯示污染物濃度"
+        },
+        "showPollen": {
+          "label": "顯示花粉濃度"
+        }
+      },
+      "category": {
+        "good": "良好",
+        "fair": "尚可",
+        "moderate": "中等",
+        "unhealthySensitive": "對敏感族群不健康",
+        "unhealthy": "不良",
+        "poor": "不佳",
+        "veryPoor": "非常不佳",
+        "veryUnhealthy": "非常不健康",
+        "extremelyPoor": "極差",
+        "hazardous": "危險",
+        "unknown": "沒有空氣品質指數讀數"
+      },
+      "uv": {
+        "label": "紫外線指數",
+        "category": {
+          "low": "低",
+          "moderate": "中等",
+          "high": "高",
+          "veryHigh": "非常高",
+          "extreme": "極高",
+          "unknown": "沒有讀數"
+        }
+      },
+      "dominantPollutant": "主要污染物",
+      "aqiLabel": "空氣品質指數",
+      "strongestPollen": "最高花粉濃度",
+      "unit": {
+        "concentration": "{value} µg/m³",
+        "pollen": "{value} 格令/m³"
+      },
+      "pollutant": {
+        "pm2_5": "細懸浮微粒（PM2.5）",
+        "pm10": "懸浮微粒（PM10）",
+        "ozone": "臭氧",
+        "nitrogenDioxide": "二氧化氮",
+        "sulphurDioxide": "二氧化硫",
+        "carbonMonoxide": "一氧化碳"
+      },
+      "pollen": {
+        "alder": "赤楊",
+        "birch": "樺樹",
+        "grass": "草",
+        "mugwort": "艾草",
+        "olive": "橄欖",
+        "ragweed": "豚草"
+      },
+      "compact": {
+        "sixHourTrend": "未來六小時的空氣品質指數趨勢"
+      },
+      "advanced": {
+        "observedAt": "更新於 {time}",
+        "next24Hours": "未來 24 小時",
+        "pollutants": "污染物濃度",
+        "pollen": "花粉濃度",
+        "sevenDayForecast": "7 天最高預報",
+        "aqiValue": "AQI {value}",
+        "uvValue": "UV {value}",
+        "uvShort": "UV {value}",
+        "noForecast": "沒有可用的預報資料"
+      }
+    },
+    "countdown": {
+      "name": "倒數計時",
+      "description": "追蹤即將到來的事件和週年紀念日。",
+      "option": {
+        "events": {
+          "label": "事件",
+          "description": "新增並排序最多 20 個一次性或每年重複的倒數計時。日期會以所選時區輸入。"
+        },
+        "showProgress": {
+          "label": "顯示進度"
+        },
+        "showSeconds": {
+          "label": "顯示秒數",
+          "description": "讓每個即將到來的事件都持續顯示秒數。"
+        }
+      },
+      "dateTimeEventList": {
+        "newEvent": "新增事件",
+        "add": "新增事件",
+        "remove": "移除 {event}",
+        "reorder": "重新排列 {event}",
+        "eventLabel": "事件標籤",
+        "timezone": "時區",
+        "unsupportedOption": "不支援：{timeZone}",
+        "recurrence": "重複",
+        "recurrenceOption": {
+          "none": "不重複",
+          "yearly": "每年"
+        },
+        "target": "事件日期與時間",
+        "trackProgress": "從開始日期追蹤進度",
+        "start": "進度開始日期與時間",
+        "confirmDateTime": "確認日期與時間",
+        "limit": "已設定 {count} / {maximum} 個事件"
+      },
+      "empty": {
+        "title": "尚無倒數計時",
+        "description": "在小工具選項中新增事件，即可開始倒數。"
+      },
+      "completed": "已完成",
+      "yearly": "每年",
+      "progress": "事件進度",
+      "upcoming": "即將到來",
+      "completedEvents": "已完成的事件",
+      "invalid": {
+        "title": "部分事件無法顯示",
+        "description": "{count, plural, other {# 個事件的日期無效或時區不受支援。}}",
+        "value": "無法使用"
+      },
+      "alert": {
+        "notifications": "瀏覽器通知",
+        "permissionDenied": "此瀏覽器已封鎖通知。",
+        "reached": "倒數計時已達到目標。"
+      }
+    },
+    "timer": {
+      "name": "計時器／番茄鐘",
+      "description": "執行簡單計時器或可設定的番茄鐘流程。",
+      "option": {
+        "mode": {
+          "label": "模式",
+          "options": {
+            "timer": "計時器",
+            "pomodoro": "番茄鐘"
+          }
+        },
+        "timerMinutes": {
+          "label": "計時器分鐘數"
+        },
+        "focusMinutes": {
+          "label": "專注分鐘數"
+        },
+        "shortBreakMinutes": {
+          "label": "短休息分鐘數"
+        },
+        "longBreakMinutes": {
+          "label": "長休息分鐘數"
+        },
+        "sessionsBeforeLongBreak": {
+          "label": "長休息前的專注次數"
+        },
+        "autoStartBreaks": {
+          "label": "自動開始休息"
+        },
+        "autoStartFocus": {
+          "label": "自動開始專注階段"
+        }
+      },
+      "phase": {
+        "timer": "計時器",
+        "focus": "專注",
+        "shortBreak": "短休息",
+        "longBreak": "長休息"
+      },
+      "action": {
+        "start": "啟動",
+        "pause": "暫停",
+        "reset": "重設"
+      },
+      "attention": {
+        "timerComplete": "計時器完成",
+        "phaseReady": "{phase} 已準備就緒"
+      },
+      "progress": "計時器進度：{progress}%",
+      "compact": {
+        "completedFocus": ""
+      },
+      "alert": {
+        "title": "計時器完成",
+        "completed": "{phase} 已完成。"
+      },
+      "advanced": {
+        "sequence": "番茄鐘流程",
+        "focusSession": "專注 {session}",
+        "settings": "永久設定",
+        "settingsHint": "使用小工具內容選單編輯這些看板設定。",
+        "localAlerts": "本機提醒",
+        "notifications": "瀏覽器通知",
+        "sound": "計時器音效",
+        "localAlertsHint": "計時器音效預設為啟用。音效和通知僅套用至此瀏覽器中的此小工具。",
+        "notificationsDenied": "此瀏覽器已封鎖通知。"
       }
     },
     "minecraftServerStatus": {
       "name": "Minecraft 伺服器狀態",
       "description": "顯示 Minecraft 伺服器狀態",
       "option": {
-        "title": {
-          "label": "標題"
-        },
         "domain": {
           "label": "伺服器地址"
         },
@@ -1758,11 +2786,21 @@
       "noStation": "",
       "option": {
         "baseUrl": {
-          "label": "Search.ch 網址"
+          "label": "Search.ch 網址",
+          "description": "自訂 URL 必須解析為公開 IP 位址。私人和本機主機將被拒絕。"
         },
         "station": {
-          "label": ""
+          "label": "",
+          "placeholder": "搜尋車站"
         }
+      },
+      "error": {
+        "customSourceUnavailable": "時刻表來源無法使用。請確認其 URL 能解析為公開 IP 位址。",
+        "stationSearch": "無法搜尋車站。請確認自訂 URL 和看板存取權限。"
+      },
+      "warning": {
+        "stale": "無法重新整理時刻表。顯示上次於 {time} 更新的出發資訊。",
+        "staleCompact": "資料過時"
       }
     },
     "notebook": {
@@ -1794,6 +2832,9 @@
         "directionRtl": "將文字方向設為由右至左",
         "blockquote": "引用",
         "horizontalLine": "橫線",
+        "details": "切換可摺疊區段",
+        "expandDetails": "展開可摺疊區段",
+        "collapseDetails": "摺疊可摺疊區段",
         "bulletList": "符號列表",
         "orderedList": "順序列表",
         "checkList": "檢查列表",
@@ -1802,16 +2843,20 @@
         "link": "鏈結",
         "unlink": "移除鏈結",
         "image": "崁入圖案",
-        "addTable": "新增表格",
+        "insertTable": "插入表格",
+        "insertTableSize": "插入 {columns} × {rows} 表格",
         "deleteTable": "移除表格",
         "colorCell": "單元格顏色",
-        "mergeCell": "切換單元格合併",
+        "mergeCells": "合併儲存格",
+        "splitCell": "分割儲存格",
         "addColumnLeft": "於前方新增列",
         "addColumnRight": "於後方新增列",
         "deleteColumn": "移除整列",
         "addRowTop": "於前方新增行",
         "addRowBelow": "於後方新增行",
-        "deleteRow": "移除整行"
+        "deleteRow": "移除整行",
+        "toggleHeaderRow": "切換標題列",
+        "toggleHeaderColumn": "切換標題欄"
       },
       "align": {
         "left": "左方",
@@ -1822,8 +2867,6 @@
         "clearColor": "清除顏色",
         "source": "來源",
         "widthPlaceholder": "百分比或像素值",
-        "columns": "列數",
-        "rows": "行數",
         "width": "寬度",
         "height": "高度"
       },
@@ -1835,16 +2878,15 @@
           "discard": "",
           "keepEditing": ""
         }
-      }
+      },
+      "saveFailed": "無法儲存筆記",
+      "documentStats": "{words, plural, other {# 個字詞}} · {characters, plural, other {# 個字元}}"
     },
     "anchorNote": {
       "name": "",
       "description": "",
       "option": {
         "noteId": {
-          "label": ""
-        },
-        "showTitle": {
           "label": ""
         },
         "showUpdatedAt": {
@@ -1856,14 +2898,20 @@
       "notFound": "",
       "noNotes": "",
       "integrationRequired": "",
-      "updatedAt": "",
       "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
       "readOnlyViewer": "",
       "saveForbidden": "",
-      "saveFailed": ""
+      "saveFailed": "",
+      "createdAt": "建立於 {date}",
+      "permission": {
+        "owner": "所有者",
+        "editor": "編輯者",
+        "viewer": "檢視者"
+      },
+      "status": {
+        "pinned": "已釘選",
+        "archived": "已歸檔"
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1922,6 +2970,25 @@
         "clickable": {
           "label": "可點擊"
         }
+      },
+      "state": {
+        "on": "開啟",
+        "off": "關閉",
+        "unavailable": "無法使用",
+        "unknown": "未知"
+      },
+      "advanced": {
+        "entityId": "實體 ID：{id}",
+        "lastChanged": "變更於 {date}",
+        "attribute": {
+          "unit": "單位",
+          "deviceClass": "裝置類別",
+          "icon": "圖示"
+        }
+      },
+      "error": {
+        "loadFailed": "無法載入實體",
+        "toggleFailed": "無法更新實體"
       }
     },
     "smartHome-executeAutomation": {
@@ -1937,11 +3004,31 @@
       },
       "spotlightAction": {
         "run": "執行 {name}"
+      },
+      "advanced": {
+        "lastExecuted": "上次執行於 {time}",
+        "automationId": "自動化 ID：{id}",
+        "ready": "準備執行",
+        "noPermission": "沒有執行此自動化的權限"
+      },
+      "status": {
+        "running": "正在執行自動化",
+        "success": "自動化已完成"
+      },
+      "error": {
+        "executeFailed": "無法執行自動化"
       }
     },
     "stockPrice": {
       "name": "股票價格",
       "description": "顯示公司當前股票價格",
+      "advanced": {
+        "currentPrice": "目前價格",
+        "previousClose": "前次收盤價",
+        "changePercentage": "變動 (%)",
+        "minimum": "最低",
+        "maximum": "最高"
+      },
       "option": {
         "stock": {
           "label": "股票代碼"
@@ -2012,6 +3099,10 @@
               "label": "一月"
             }
           }
+        },
+        "showDetails": {
+          "label": "顯示詳細資料",
+          "description": "在精簡檢視中顯示名稱、變動和時間範圍。關閉後僅顯示代號和價格。"
         }
       }
     },
@@ -2039,6 +3130,13 @@
         "showUnmonitored": {
           "label": "顯示未監控項目"
         }
+      },
+      "advanced": {
+        "previousMonth": "顯示上個月",
+        "nextMonth": "顯示下個月",
+        "eventCount": "{count, plural, other {# 個事件}}",
+        "loading": "正在載入行事曆事件……",
+        "noEvents": "本月沒有事件"
       }
     },
     "weather": {
@@ -2051,15 +3149,17 @@
         "disableTemperatureDecimals": {
           "label": "關閉溫度小數點"
         },
+        "animateIcons": {
+          "label": "動畫天氣圖示"
+        },
+        "showHumidity": {
+          "label": "顯示濕度"
+        },
         "showCurrentWindSpeed": {
-          "label": "顯示當前風速",
-          "description": "僅限當前天氣"
+          "label": "顯示當前風速"
         },
         "useImperialSpeed": {
           "label": ""
-        },
-        "location": {
-          "label": "天氣位置"
         },
         "showCity": {
           "label": "顯示城市"
@@ -2070,13 +3170,10 @@
         "forecastDayCount": {
           "label": "預報天數",
           "description": "當小工具寬度不足時，顯示的天數將減少"
-        },
-        "dateFormat": {
-          "label": "日期格式",
-          "description": "日期應該是什麼樣式"
         }
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
+      "disabled": "由於已停用對外連線，天氣資料無法使用",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日落",
@@ -2099,6 +3196,47 @@
         "thunderstorm": "雷暴",
         "thunderstormWithHail": "雷暴伴冰雹",
         "unknown": "未知"
+      },
+      "details": "顯示天氣詳細資料",
+      "detailsFor": "顯示 {date} 的天氣詳細資料",
+      "advanced": {
+        "forecast": "7 天預報",
+        "hourlyForecast": "未來 24 小時",
+        "day": "日期",
+        "time": "時間",
+        "conditions": "狀況",
+        "temperature": "溫度",
+        "feelsLike": "體感溫度 {temperature}",
+        "feelsLikeLabel": "體感",
+        "feelsLikeRange": "體感溫度：{maximum} / {minimum}",
+        "highLow": "最高 {maximum} · 最低 {minimum}",
+        "observedAt": "更新於 {time}",
+        "humidity": "濕度",
+        "averageHumidity": "平均濕度：{humidity}%",
+        "currentHumidity": "目前濕度",
+        "wind": "風速 / 陣風（{unit}）",
+        "currentWind": "目前風速／陣風",
+        "windValue": "{speed} / {gusts} {unit}",
+        "windDetail": "最大風速 / 陣風：{speed} / {gusts} {unit}",
+        "nextHourPrecipitation": "未來一小時降水量",
+        "precipitationChance": "降水機率",
+        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationDetail": "降水量：{probability}% · {amount} mm",
+        "todayUv": "今日最高紫外線指數",
+        "uvIndex": "最大 UV 指數：{value}",
+        "daylight": "日照時間：{duration}",
+        "hourlyTooltip": "體感溫度 {feelsLike}{temperatureUnit} · {amount} mm · 濕度 {humidity}% · 風速 {speed} {speedUnit}",
+        "hourlyTooltipWithoutHumidity": "體感溫度 {feelsLike}{temperatureUnit} · {amount} mm · 風速 {speed} {speedUnit}",
+        "detailLabel": {
+          "feelsLike": "體感",
+          "precipitation": "降水量",
+          "humidity": "平均濕度",
+          "wind": "最大風速／陣風",
+          "uv": "最高紫外線指數",
+          "daylight": "日照時間"
+        },
+        "sun": "日出／日落",
+        "noForecast": "沒有可用的預報資料"
       }
     },
     "indexerManager": {
@@ -2111,8 +3249,15 @@
       },
       "title": "索引器管理器",
       "testAll": "測試全部",
+      "status": {
+        "healthy": "健康",
+        "unhealthy": "不良",
+        "disabled": "已停用",
+        "unknown": "健康狀態無法使用"
+      },
       "error": {
-        "internalServerError": "無法取得索引器狀態"
+        "internalServerError": "無法取得索引器狀態",
+        "testAll": "索引器測試失敗。請再試一次。"
       }
     },
     "healthMonitoring": {
@@ -2141,11 +3286,6 @@
         "fileSystem": {
           "label": "顯示檔案系統訊息"
         },
-        "visibleStorageVolumes": {
-          "label": "可見儲存磁碟區",
-          "description": "僅在所有選取的整合均為 Synology 時可用。留空則顯示所有偵測到的儲存磁碟區。",
-          "placeholder": "選擇儲存磁碟區"
-        },
         "defaultTab": {
           "label": "預設頁面"
         },
@@ -2168,17 +3308,27 @@
         "minutes": "{count} 分鐘",
         "used": "已使用",
         "available": "可用",
-        "lastSeen": "最後狀態更新：{lastSeen}"
+        "lastSeen": "最後狀態更新：{lastSeen}",
+        "updatesAvailable": "{count, plural, other {有 # 個可用更新}}",
+        "rebootRequired": "需要重新啟動",
+        "rebootNotRequired": "不需要重新啟動"
       },
-      "memory": {},
+      "smartStatus": {
+        "attributesWithinThresholds": "SMART：屬性均在臨界值內",
+        "attributesFailed": "SMART：{attributes} 失敗",
+        "noCriticalWarning": "SMART：SSD 未回報警告",
+        "criticalWarning": "SMART：SSD 回報重大警告"
+      },
+      "gauge": {
+        "cpuUsage": "CPU 使用率",
+        "cpuTemperature": "CPU 溫度",
+        "memoryUsage": "記憶體使用率",
+        "gpuUsage": "{name} GPU 使用量"
+      },
       "error": {
         "internalServerError": "取得健康狀態失敗"
       },
       "cluster": {
-        "summary": {
-          "cpu": "處理器",
-          "memory": "記憶體"
-        },
         "resource": {
           "node": {
             "name": "節點數"
@@ -2214,8 +3364,6 @@
         "table": {
           "header": {
             "name": "名稱",
-            "cpu": "處理器",
-            "memory": "記憶體",
             "node": "節點"
           }
         }
@@ -2225,33 +3373,29 @@
       "name": "",
       "description": "",
       "option": {
-        "columns": {
-          "label": "要顯示的欄"
+        "endpointIds": {
+          "label": "Docker 環境",
+          "description": "留白即可顯示所有 Docker 環境中的容器",
+          "placeholder": "所有 Docker 環境"
         },
-        "enableRowSorting": {
-          "label": ""
+        "containerFilter": {
+          "label": "要篩選的容器"
+        },
+        "filterIsWhitelist": {
+          "label": "以白名單篩選"
         },
         "defaultSort": {
-          "label": "",
           "option": {
             "name": "",
             "state": "",
             "cpuUsage": "",
             "memoryUsage": ""
           }
-        },
-        "descendingDefaultSort": {
-          "label": ""
-        },
-        "columnOrder": {
-          "label": "欄位順序"
-        },
-        "columnWidths": {
-          "label": "欄位寬度"
         }
       },
       "error": {
         "internalServerError": "",
+        "endpointsUnavailable": "Docker 端點無法使用",
         "layoutSaveTitle": "表格版面配置未儲存",
         "layoutSaveMessage": "無法儲存 Docker 表格版面配置。請再次移動或調整欄位大小。"
       },
@@ -2260,7 +3404,6 @@
       }
     },
     "coolify": {
-      "name": "",
       "description": "",
       "option": {
         "showServers": {
@@ -2286,17 +3429,49 @@
         "internalServerError": ""
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "",
+        "resourceCounts": "{applications, plural, other {# 個應用程式}} / {services, plural, other {# 個服務}}",
+        "reachability": "可連線性",
+        "usability": "可用性"
+      },
+      "source": {
+        "url": "來源：{url}",
+        "unavailable": "{source}：無法使用"
       },
       "instances": {
         "title": ""
+      },
+      "action": {
+        "openResource": "開啟 {name}",
+        "openLogs": "開啟 {name} 記錄",
+        "showIp": "顯示 IP 位址",
+        "hideIp": "隱藏 IP 位址"
+      },
+      "status": {
+        "running": "運行中",
+        "stopped": "已停止",
+        "exited": "已退出",
+        "starting": "正在啟動",
+        "restarting": "正在重啟",
+        "unknown": "未知",
+        "online": "在線",
+        "offline": "離線",
+        "reachable": "可連線",
+        "unreachable": "無法連線",
+        "usable": "可使用",
+        "unusable": "不可使用"
       }
     },
     "vpn": {
       "name": "VPN",
       "description": "VPN 連線概覽",
       "serviceUnavailable": "VPN 不可用",
-      "option": {}
+      "status": {
+        "running": "運行中",
+        "notRunning": "未執行",
+        "unavailable": "無法使用",
+        "vpn": "VPN：{status}"
+      }
     },
     "ups": {
       "name": "UPS",
@@ -2323,14 +3498,19 @@
         "runtime": "執行時間",
         "load": "負載",
         "input": "輸入",
-        "output": "輸出"
+        "output": "輸出",
+        "batteryVoltage": "電池電壓",
+        "power": "功率",
+        "temperature": "溫度",
+        "manufacturer": "製造商",
+        "model": "模型",
+        "serial": "序號"
       },
       "error": {
         "internalServerError": "無法取得 UPS 資料"
       }
     },
     "tracearr": {
-      "name": "",
       "description": "",
       "option": {
         "showStreams": {
@@ -2418,10 +3598,7 @@
           "label": "事件",
           "description": "顯示特定事件的總出現次數",
           "placeholder": "選擇一個事件",
-          "loading": "正在載入事件……",
-          "noEvents": "未找到事件",
-          "none": "無事件",
-          "configureWebsiteFirst": "請先選擇網站以載入事件"
+          "none": "無事件"
         },
         "chartType": {
           "label": "圖表類型",
@@ -2452,25 +3629,20 @@
         "eventNames": {
           "label": "事件",
           "description": "選取一或多個事件來繪製圖表",
-          "placeholder": "選取事件……",
-          "loading": "正在載入事件……",
-          "noEvents": "未找到事件",
-          "configureWebsiteFirst": "請先選擇網站以載入事件"
+          "placeholder": "選取事件……"
         },
         "topCount": {
           "label": "顯示項目數",
           "description": "要顯示的熱門項目數量（最多 500）"
+        },
+        "events": {
+          "loading": "正在載入事件……",
+          "noEvents": "找不到事件",
+          "configureWebsiteFirst": "請先選取網站以載入事件"
         }
       },
       "event": {
-        "occurrences": "事件",
         "label": "事件"
-      },
-      "topPages": {
-        "direct": "直接"
-      },
-      "topReferrers": {
-        "direct": "直接"
       },
       "events": {
         "selectPrompt": "選取要繪製圖表的事件"
@@ -2480,6 +3652,9 @@
         "noWebsite": "未設定網站",
         "noData": "無可用資料",
         "internalServerError": "無法取得 Umami 資料"
+      },
+      "top": {
+        "direct": "直接"
       }
     },
     "common": {
@@ -2507,7 +3682,8 @@
       },
       "integration": {
         "noData": "未找到集成",
-        "description": "點擊 <here></here> 創建新的集成"
+        "description": "點擊 <here></here> 創建新的集成",
+        "manage": "管理集成"
       },
       "app": {
         "noData": "未找到應用程式",
@@ -2518,7 +3694,61 @@
         "noIntegration": "未選擇集成",
         "noData": "無可用的集成數據"
       },
-      "option": {}
+      "integrationDisconnected": "無可用數據，所有集成皆已斷開連線",
+      "updatedAt": "已更新於 {date}",
+      "title": {
+        "label": "標題"
+      },
+      "openInNewTab": {
+        "label": "於新分頁開啟"
+      },
+      "showTitle": {
+        "label": "顯示標題"
+      },
+      "weatherLocation": {
+        "label": "天氣位置"
+      },
+      "layout": {
+        "label": "顯示布局",
+        "option": {
+          "horizontal": "橫向",
+          "vertical": "垂直",
+          "grid": "網格"
+        }
+      },
+      "select": {
+        "loading": "正在載入……",
+        "loadError": "無法載入選項"
+      },
+      "dateFormat": {
+        "label": "日期格式",
+        "description": "日期應該是什麼樣式"
+      },
+      "visibleStorageVolumes": {
+        "label": "可見儲存區",
+        "description": "只有在所有選取的整合都是 OpenMediaVault 或 Synology 時才能使用。留白即可顯示所有偵測到的儲存區。",
+        "placeholder": "選取儲存區"
+      },
+      "tableOptions": {
+        "columns": {
+          "label": "顯示的列"
+        },
+        "columnOrder": {
+          "label": "欄順序"
+        },
+        "columnWidths": {
+          "label": "欄寬"
+        },
+        "enableRowSorting": {
+          "label": "啟用項目排序"
+        },
+        "defaultSort": {
+          "label": "默認排序列"
+        },
+        "invertSorting": {
+          "label": "倒序"
+        }
+      }
     },
     "video": {
       "name": "串流影音",
@@ -2577,6 +3807,7 @@
         "transcoding": "轉碼中",
         "paused": "已暫停",
         "remaining": "剩餘 {minutes} 分鐘",
+        "seasonEpisode": "S{season} E{episode}",
         "metadata": {
           "title": "",
           "video": {
@@ -2594,11 +3825,16 @@
             "resolution": "",
             "target": ""
           }
-        }
+        },
+        "unknownUser": "未知使用者"
+      },
+      "summary": {
+        "sessions": "{count, plural, other {# 個工作階段}}",
+        "playing": "{count} 個播放中",
+        "transcoding": "{count} 個轉碼中"
       }
     },
     "paperlessNgx": {
-      "name": "Paperless-ngx",
       "description": "你的 Paperless-ngx 文件歸檔概覽",
       "documentsTotal": "文件總數",
       "documentsInbox": "收件匣",
@@ -2642,6 +3878,192 @@
         "internalServerError": "無法取得 Paperless-ngx 資料"
       }
     },
+    "patchmon": {
+      "description": "來自 PatchMon 的主機修補狀態概覽",
+      "title": "PatchMon 統計",
+      "totalHosts": "主機總數",
+      "hostsNeedingUpdates": "需要更新",
+      "securityUpdates": "安全性更新",
+      "upToDateHosts": "已更新至最新",
+      "hostsWithSecurityUpdates": "有安全性更新的主機",
+      "recentUpdates24h": "更新 (24h)",
+      "totalOutdatedPackages": "過時套件",
+      "totalRepos": "儲存庫",
+      "osDistribution": "作業系統分佈",
+      "compliance": "修補合規性",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "更新於 {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "顯示主機總數",
+          "description": "顯示受監控的主機總數"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "顯示需要更新的主機",
+          "description": "顯示至少有一個過時套件的主機"
+        },
+        "showSecurityUpdates": {
+          "label": "顯示安全性更新總數",
+          "description": "顯示可用的安全性更新總數"
+        },
+        "showUpToDateHosts": {
+          "label": "顯示已更新至最新主機",
+          "description": "顯示沒有任何過時套件的主機"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "顯示有安全性更新的主機",
+          "description": "顯示需要安全性修補的主機"
+        },
+        "showRecentUpdates24h": {
+          "label": "顯示近期更新 (24h)",
+          "description": "顯示過去 24 小時內已套用的更新數量"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "顯示過時套件總數",
+          "description": "顯示所有主機上過時套件的總數"
+        },
+        "showTotalRepos": {
+          "label": "顯示儲存庫數量",
+          "description": "顯示正在監控的活躍儲存庫數量"
+        },
+        "enableThresholdColors": {
+          "label": "啟用閾值顏色",
+          "description": "根據嚴重性預設將統計值著色為綠色、黃色或紅色"
+        },
+        "useCustomThresholds": {
+          "label": "進階閾值",
+          "description": "使用絕對計數或主機總數百分比，對每個統計值自訂警告和嚴重閾值"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "絕對計數",
+            "percent": "主機總數百分比"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "需要更新閾值模式",
+          "description": "以絕對值或主機總數百分比比較需要更新的計數"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "需要更新警告閾值"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "需要更新嚴重閾值"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "安全性更新閾值模式",
+          "description": "以絕對值或主機總數百分比比較安全性更新的計數"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "安全性更新警告閾值"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "安全性更新嚴重閾值"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "有安全性更新主機閾值模式",
+          "description": "以絕對值或主機總數百分比比較主機計數"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "有安全性更新主機警告閾值"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "有安全性更新主機嚴重閾值"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "已更新至最新主機閾值模式",
+          "description": "以絕對值或主機總數百分比比較已更新至最新主機計數"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "已更新至最新主機警告閾值",
+          "description": "數值達到或高於此閾值但低於全覆蓋時轉為黃色"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "已更新至最新主機嚴重閾值",
+          "description": "數值低於此閾值時轉為紅色"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "過時套件閾值模式",
+          "description": "以絕對值或主機總數百分比比較過時套件計數"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "過時套件警告閾值"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "過時套件嚴重閾值"
+        },
+        "showOsDistribution": {
+          "label": "顯示作業系統分佈",
+          "description": "顯示按作業系統細分的受監控主機"
+        },
+        "osDistributionLimit": {
+          "label": "作業系統分佈限制",
+          "description": "最多顯示的作業系統數量",
+          "option": {
+            "3": "前 3 名",
+            "5": "前 5 名",
+            "10": "前 10 名",
+            "all": "全部"
+          }
+        },
+        "showOsVersion": {
+          "label": "顯示作業系統版本",
+          "description": "當可用時，在每個分佈標籤後附加作業系統版本"
+        },
+        "showComplianceHero": {
+          "label": "顯示合規性英雄",
+          "description": "顯示一個合規性環，展示已更新至最新主機的百分比"
+        },
+        "osDisplayMode": {
+          "label": "作業系統顯示模式",
+          "description": "選擇如何顯示作業系統分佈",
+          "option": {
+            "bars": "水平長條",
+            "donut": "甜甜圈圖"
+          }
+        },
+        "threshold": {
+          "warningAt": {
+            "description": "數值達到此臨界值時顯示黃色"
+          },
+          "criticalAt": {
+            "description": "數值達到此臨界值時顯示紅色"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "無法擷取 PatchMon 資料"
+      }
+    },
+    "bazarr": {
+      "description": "來自 Bazarr 實例的缺少字幕和健康狀態概覽",
+      "episodes": "缺少的集數",
+      "movies": "缺少的電影",
+      "providers": "提供者問題",
+      "status": "健康問題",
+      "announcements": "公告",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "顯示缺少的集數",
+          "description": "顯示缺少字幕的集數數量"
+        },
+        "showMissingMovies": {
+          "label": "顯示缺少的電影",
+          "description": "顯示缺少字幕的電影數量"
+        },
+        "showProviderIssues": {
+          "label": "顯示提供者問題",
+          "description": "顯示有問題的字幕提供者數量"
+        },
+        "showHealthIssues": {
+          "label": "顯示健康問題",
+          "description": "顯示 Bazarr 健康問題的數量"
+        }
+      },
+      "error": {
+        "internalServerError": "無法擷取 Bazarr 資料"
+      }
+    },
     "immich-serverStats": {
       "name": "",
       "description": "",
@@ -2666,7 +4088,8 @@
       "users": "",
       "photos": "",
       "videos": "",
-      "storage": ""
+      "storage": "",
+      "albumLimit": "最大相簿（最多顯示 {count} 個）"
     },
     "immich-albumCarousel": {
       "name": "",
@@ -2690,24 +4113,21 @@
         }
       },
       "description": "來自 Immich 相簿或完整圖庫的照片幻燈片",
-      "noPhotos": "找不到照片"
+      "noPhotos": "找不到照片",
+      "albumPhoto": "相簿照片",
+      "actions": {
+        "previousPhoto": "上一張照片",
+        "nextPhoto": "下一張照片",
+        "pauseSlideshow": "暫停投影片放映",
+        "resumeSlideshow": "繼續投影片放映",
+        "toggleSlideshow": "暫停或繼續投影片放映",
+        "photo": "相片 {number}"
+      }
     },
     "downloads": {
       "name": "下載器",
       "description": "允許查看和管理來自 Torrent 和 Usenet 的下載器",
       "option": {
-        "columns": {
-          "label": "顯示的列"
-        },
-        "enableRowSorting": {
-          "label": "啟用項目排序"
-        },
-        "defaultSort": {
-          "label": "默認排序列"
-        },
-        "descendingDefaultSort": {
-          "label": "倒序"
-        },
         "showCompletedUsenet": {
           "label": "顯示標記為已完成的 Usenet 項目"
         },
@@ -2732,12 +4152,6 @@
         "limitPerIntegration": {
           "label": "",
           "description": ""
-        },
-        "columnOrder": {
-          "label": "欄位順序"
-        },
-        "columnWidths": {
-          "label": "欄位寬度"
         }
       },
       "errors": {
@@ -2768,7 +4182,7 @@
           "detailsTitle": "下載器中的當前索引"
         },
         "id": {
-          "columnTitle": "ID",
+          "columnTitle": "項目 ID",
           "detailsTitle": "項目 ID"
         },
         "integration": {
@@ -2898,6 +4312,10 @@
     "mediaRequests-requestList": {
       "name": "多媒體請求列表",
       "description": "查看 Overrseerr 或 Jellyseerr 中所有多媒體請求列表",
+      "empty": {
+        "title": "尚無媒體請求",
+        "description": "搜尋電影或節目以開始請求。"
+      },
       "option": {
         "linksTargetNewTab": {
           "label": "於新分頁中開啟鏈結"
@@ -2931,12 +4349,16 @@
         "failed": "失敗",
         "completed": "已完成"
       },
+      "unknown": "未知",
       "toBeDetermined": "多媒體請求狀態"
     },
     "mediaRequests-requestStats": {
       "name": "多媒體請求狀態",
       "description": "多媒體請求統計",
-      "option": {},
+      "empty": {
+        "title": "尚無請求活動",
+        "description": "第一個媒體請求完成後會顯示統計資料。"
+      },
       "titles": {
         "stats": {
           "main": "多媒體狀態",
@@ -2946,8 +4368,7 @@
           "declined": "已拒絕",
           "available": "已可用",
           "tv": "電視劇請求",
-          "movie": "電影請求",
-          "total": "總計"
+          "movie": "電影請求"
         },
         "users": {
           "main": "使用者排行",
@@ -2973,7 +4394,6 @@
       },
       "currentIndex": "{total} 的 {start} - {end}",
       "healthCheck": {
-        "title": "健康檢查",
         "queued": "隊列中",
         "status": {
           "healthy": "健康",
@@ -2982,37 +4402,62 @@
       },
       "panel": {
         "statistics": {
-          "empty": "空",
-          "transcodes": "轉碼",
-          "transcodesCount": "轉碼：{value}",
-          "healthChecksCount": "健康檢查：{value}",
           "filesCount": "檔案：{value}",
           "savedSpace": "節省空間：{value}",
-          "healthChecks": "健康檢查",
           "videoCodecs": "編碼",
           "videoContainers": "容器",
           "videoResolutions": "解析度"
         },
         "workers": {
-          "empty": "空",
           "table": {
-            "file": "檔案",
             "eta": "剩餘時間",
-            "progress": "進度",
-            "transcode": "轉碼",
-            "healthCheck": "健康檢查"
+            "progress": "進度"
           }
         },
         "queue": {
-          "empty": "空",
           "table": {
-            "file": "檔案",
-            "size": "大小",
-            "transcode": "轉碼",
-            "healthCheck": "健康檢查"
+            "size": "大小"
           }
+        },
+        "common": {
+          "empty": "空",
+          "file": "檔案",
+          "healthCheck": "健康檢查",
+          "transcode": "轉碼",
+          "transcodes": "轉碼：{value}",
+          "healthChecks": "健康檢查：{value}"
         }
       }
+    },
+    "mediaMissing": {
+      "name": "缺少和佇列中的媒體",
+      "description": "顯示來自 Radarr 和 Sonarr 的缺少和佇列中的電影及影集",
+      "option": {
+        "showMissing": {
+          "label": "顯示缺少的項目"
+        },
+        "showQueued": {
+          "label": "顯示佇列中的項目"
+        },
+        "pageSize": {
+          "label": "每頁項目數"
+        }
+      },
+      "tab": {
+        "missing": "缺少",
+        "queued": "佇列中"
+      },
+      "type": {
+        "movie": "電影",
+        "episode": "集數",
+        "book": "書籍"
+      },
+      "empty": {
+        "missing": "沒有缺少的項目",
+        "queued": "沒有佇列中的項目",
+        "noTabsEnabled": "在小工具設定中至少啟用一個分頁"
+      },
+      "timeLeft": "剩餘時間"
     },
     "rssFeed": {
       "name": "RSS 訂閱",
@@ -3036,6 +4481,13 @@
         "showPosterImage": {
           "label": ""
         }
+      },
+      "error": {
+        "allFeedsFailed": "無法載入 RSS 摘要。請檢查摘要 URL 並再試一次。"
+      },
+      "warning": {
+        "partial": "{count, plural, other {# 個 RSS 訂閱來源無法載入}}",
+        "stale": "RSS 摘要無法重新整理。顯示先前載入的項目。"
       }
     },
     "releases": {
@@ -3111,17 +4563,8 @@
               "label": "正則表達式"
             }
           },
-          "edit": {
-            "label": "編輯"
-          },
           "editForm": {
-            "title": "編輯儲存庫",
-            "cancel": {
-              "label": "取消"
-            },
-            "confirm": {
-              "label": "確認"
-            }
+            "title": "編輯儲存庫"
           },
           "importForm": {
             "title": ""
@@ -3138,8 +4581,7 @@
             "label": "提供者令牌",
             "token": "令牌",
             "configured": "令牌已設定",
-            "notConfigured": "未設定令牌",
-            "save": "儲存"
+            "notConfigured": "未設定令牌"
           }
         }
       },
@@ -3166,17 +4608,32 @@
           "noProviderResponse": "",
           "unexpected": "未預期的提供者錯誤"
         }
-      }
+      },
+      "expandDetails": "顯示 {name} 的詳細資料",
+      "collapseDetails": "隱藏 {name} 的詳細資料"
     },
     "networkControllerSummary": {
-      "option": {},
-      "card": {
-        "vpn": {
-          "countConnected": "{count} 已連線"
+      "advanced": {
+        "updated": "已更新",
+        "metric": {
+          "latency": "延遲",
+          "ping": "連線延遲",
+          "uptime": "運行時間",
+          "users": "使用者",
+          "guests": "訪客"
         }
       },
+      "card": {
+        "vpn": {
+          "countConnected": "{count, plural, other {# 個已連線}}",
+          "label": "虛擬私人網路（VPN）"
+        },
+        "wan": "廣域網路（WAN）",
+        "web": "網頁",
+        "wifi": "無線網路",
+        "lan": "區域網路（LAN）"
+      },
       "error": {
-        "integrationsDisconnected": "無可用的數據，所有集成皆已斷開連線",
         "unknownContentOption": "網路控制總覽小工具出現未知的內容選項："
       },
       "name": "網路控制總覽",
@@ -3213,7 +4670,6 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "無可用數據，所有集成皆已斷開連線",
         "unknownContentOption": "網路狀態小工具的未知內容選項："
       },
       "name": "網路狀態",
@@ -3243,7 +4699,6 @@
         "versiontitle": "",
         "cputitle": "",
         "memorytitle": "",
-        "cpu": "",
         "memory": "",
         "interfaces": {
           "name": "",
@@ -3251,6 +4706,16 @@
           "recv": "",
           "title": ""
         }
+      },
+      "empty": {
+        "noInterfaces": "尚無網路介面資料"
+      },
+      "versionUnknown": "未知版本",
+      "metricAccessible": "{metric}：{value}%、{status}",
+      "status": {
+        "normal": "正常",
+        "warning": "警告",
+        "critical": "嚴重"
       }
     },
     "notifications": {
@@ -3260,8 +4725,21 @@
       "option": {
         "hideLogos": {
           "label": "隱藏標誌"
+        },
+        "messageFormat": {
+          "label": "訊息格式",
+          "option": {
+            "auto": "自動",
+            "plain": "純文字",
+            "markdown": "Markdown 格式",
+            "html": "HTML 格式"
+          }
         }
-      }
+      },
+      "openService": "開啟通知服務",
+      "deleteNotification": "從 Gotify 刪除通知",
+      "deleteFailed": "無法刪除通知",
+      "deleteFailedMessage": "無法刪除通知。請再試一次。"
     },
     "speedtestTracker": {
       "name": "",
@@ -3303,7 +4781,6 @@
       }
     },
     "uptimeKuma": {
-      "name": "Uptime Kuma",
       "description": "從你的 Uptime Kuma 狀態頁面監控運作時間統計資料",
       "option": {
         "showAverageUptime": {
@@ -3340,7 +4817,57 @@
       },
       "error": {
         "internalServerError": "無法取得運作時間資料"
+      },
+      "status": {
+        "up": "總上傳",
+        "down": "下載速度",
+        "paused": "已暫停"
       }
+    },
+    "traefik": {
+      "description": "Traefik 路由器、服務、中間件和入口點概覽",
+      "option": {
+        "showTcp": {
+          "label": "顯示 TCP"
+        },
+        "showUdp": {
+          "label": "顯示 UDP"
+        },
+        "showEntryPoints": {
+          "label": "顯示入口點"
+        }
+      },
+      "instances": "Traefik 實例",
+      "versionUnknown": "版本未知",
+      "summary": {
+        "routers": "路由器",
+        "entryPoints": "入口點"
+      },
+      "resource": {
+        "routers": "路由器",
+        "middlewares": "中間件"
+      },
+      "status": {
+        "healthy": "健康",
+        "errors": "{count} 個錯誤",
+        "warnings": "{count} 個警告"
+      },
+      "error": {
+        "internalServerError": "無法擷取 Traefik 資料"
+      },
+      "resourceType": {
+        "router": "路由器",
+        "service": "服務",
+        "middleware": "中介軟體"
+      },
+      "resourceStatus": {
+        "enabled": "已啟用",
+        "disabled": "已停用",
+        "warning": "警告",
+        "error": "錯誤",
+        "unknown": "未知"
+      },
+      "failedEndpoint": "失敗：{endpoint}"
     },
     "audioStats": {
       "name": "音訊統計",
@@ -3406,9 +4933,7 @@
           "label": "",
           "description": "",
           "option": {
-            "cpu": "",
             "memory": "",
-            "gpu": "",
             "network": ""
           }
         },
@@ -3423,12 +4948,11 @@
         }
       },
       "card": {
-        "cpu": "",
         "memory": "",
-        "gpu": "",
         "network": "",
         "up": "",
-        "down": ""
+        "down": "",
+        "memoryTooltip": "{used} / {available}（{percent}%）"
       }
     },
     "systemDisks": {
@@ -3445,7 +4969,7 @@
               "label": ""
             },
             "absolute": {
-              "label": ""
+              "label": "絕對值"
             },
             "free": {
               "label": ""
@@ -3454,151 +4978,88 @@
         },
         "showBackgroundBar": {
           "label": ""
-        },
-        "visibleStorageVolumes": {
-          "label": "可見儲存磁碟區",
-          "description": "僅在所有選取的整合均為 Synology 時可用。留空則顯示所有偵測到的儲存磁碟區。",
-          "placeholder": "選擇儲存磁碟區"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "",
+        "smart": "自我監測、分析與報告技術（SMART）",
+        "free": "剩餘 {percentage}%"
+      }
+    },
+    "customApi": {
+      "name": "自訂小工具",
+      "description": "呈現已設定的自訂 JSX 定義。",
+      "customJsx": {
+        "noTemplate": "尚未設定 JSX 範本。",
+        "templateWarnings": "{count} 個範本警告：",
+        "requestIdRequired": "此網路控制項需要具名的 requestId。",
+        "unsavedPreview": "請先在編輯器中執行初始請求測試，再測試具名請求。",
+        "invalidParams": "請求參數無效。",
+        "loading": "正在載入請求……",
+        "loadRequest": "載入請求",
+        "requestFailed": "請求失敗。",
+        "retry": "重試請求",
+        "actionCompleted": "動作已成功完成。",
+        "actionSimulated": "動作已模擬；未傳送請求。",
+        "actionsDisabledEditMode": "看板處於編輯模式時，動作已停用。",
+        "widgetItemUnavailable": "此小工具項目無法使用。",
+        "toggle": "切換",
+        "copied": "已複製",
+        "confirmDelete": "確認此破壞性動作。"
+      },
+      "option": {
+        "definitionId": {
+          "label": "自訂小工具"
+        },
+        "refreshInterval": {
+          "label": "重新整理間隔",
+          "description": "從 API 重新擷取資料的頻率 (秒)"
+        }
+      },
+      "noDefinition": "未選擇定義",
+      "definitionNotFound": "自訂小工具無法使用",
+      "migrationRequired": "此舊版自訂小工具已保留，但必須從「管理自訂小工具」遷移至 Custom JSX v2 後才能執行。",
+      "manageMigration": "開啟「管理自訂小工具」",
+      "contactAdmin": "請聯絡管理員。",
+      "configurationNeedsRepair": "此小工具的選項已變更。請編輯小工具以修復其設定。",
+      "removeFromBoard": "從看板移除",
+      "editModePending": "儲存看板以載入此小工具。",
+      "picker": {
+        "group": "自訂 JSX 小工具",
+        "empty": "找不到自訂小工具",
+        "preview": "預覽",
+        "sources": "{count, plural, other {# 個來源}}",
+        "requests": "{count, plural, other {# 個請求}}",
+        "migrationRequired": "需要遷移",
+        "migrationDescription": "此已放置的 v1 小工具目前無法執行。請將其已遮蔽的提示複製到 LLM，然後將單一 JSON 回應貼回 Homarr。",
+        "manageMigration": "開啟「管理自訂小工具」",
+        "contactAdmin": "請聯絡管理員。"
+      },
+      "configuration": {
+        "needsAttention": "設定需要注意：{message}",
+        "advancedOptions": "進階選項",
+        "invalidJson": "無效的 JSON"
       }
     },
     "beszelSystemTable": {
       "name": "Beszel 系統（表格）",
       "description": "所有 Beszel 監控系統的表格檢視，帶有可排序的欄位和狀態指示器",
       "option": {
-        "statusFilter": {
-          "label": "狀態篩選"
-        },
         "sortBy": {
           "label": "排序依據"
         },
         "sortDirection": {
           "label": "排序方向"
-        },
-        "showCpu": {
-          "label": "顯示 CPU"
-        },
-        "showMemory": {
-          "label": "顯示記憶體"
-        },
-        "showDisk": {
-          "label": "顯示磁碟"
-        },
-        "showGpu": {
-          "label": "顯示 GPU"
-        },
-        "showLoadAvg": {
-          "label": "顯示平均負載"
-        },
-        "showNet": {
-          "label": "顯示網路"
-        },
-        "showTemp": {
-          "label": "顯示溫度"
-        },
-        "showBattery": {
-          "label": "顯示電池"
-        },
-        "showServices": {
-          "label": "顯示服務"
-        },
-        "showUptime": {
-          "label": "顯示運作時間"
-        },
-        "showAgent": {
-          "label": "顯示代理版本"
-        },
-        "columnOrder": {
-          "label": "欄位順序"
-        },
-        "columnWidths": {
-          "label": "欄位寬度"
         }
       },
-      "noRecords": "找不到系統",
       "error": {
-        "internalServerError": "無法連線到 Beszel。請檢查整合設定。",
         "layoutSaveTitle": "無法儲存表格版面配置",
         "layoutSaveMessage": "無法儲存您的欄位順序或寬度。請再試一次。"
-      },
-      "column": {
-        "system": "系統",
-        "cpu": "處理器",
-        "memory": "記憶體",
-        "disk": "磁碟",
-        "gpu": "GPU",
-        "loadAvg": "平均負載",
-        "net": "網路",
-        "temp": "溫度",
-        "battery": "電池",
-        "services": "服務",
-        "uptime": "運作時間",
-        "agent": "代理"
       }
     },
     "beszelSystemGrid": {
       "name": "Beszel 系統（網格）",
-      "description": "所有 Beszel 監控系統的卡片網格檢視，帶有即時指標",
-      "option": {
-        "statusFilter": {
-          "label": "狀態篩選"
-        },
-        "showCpu": {
-          "label": "顯示 CPU"
-        },
-        "showMemory": {
-          "label": "顯示記憶體"
-        },
-        "showDisk": {
-          "label": "顯示磁碟"
-        },
-        "showGpu": {
-          "label": "顯示 GPU"
-        },
-        "showLoadAvg": {
-          "label": "顯示平均負載"
-        },
-        "showNet": {
-          "label": "顯示網路"
-        },
-        "showTemp": {
-          "label": "顯示溫度"
-        },
-        "showBattery": {
-          "label": "顯示電池"
-        },
-        "showServices": {
-          "label": "顯示服務"
-        },
-        "showUptime": {
-          "label": "顯示運作時間"
-        },
-        "showAgent": {
-          "label": "顯示代理版本"
-        }
-      },
-      "error": {
-        "internalServerError": "無法連線到 Beszel。請檢查整合設定。"
-      },
-      "empty": {
-        "noSystems": "找不到系統"
-      },
-      "metric": {
-        "cpu": "處理器",
-        "memory": "記憶體",
-        "disk": "磁碟",
-        "gpu": "GPU",
-        "loadAvg": "平均負載",
-        "net": "網路",
-        "temp": "溫度",
-        "battery": "電池",
-        "services": "服務",
-        "uptime": "運作時間",
-        "agent": "代理"
-      }
+      "description": "所有 Beszel 監控系統的卡片網格檢視，帶有即時指標"
     },
     "beszelAlerts": {
       "name": "Beszel 警報",
@@ -3612,11 +5073,12 @@
         }
       },
       "empty": "未設定警報",
-      "error": {
-        "internalServerError": "無法連線到 Beszel。請檢查整合設定。"
-      },
       "history": "歷程記錄",
       "resolved": "已解決",
+      "alertDescription": {
+        "statusDuration": "已中斷 {minutes} 分鐘",
+        "threshold": "在 {minutes} 分鐘內超過 {value}"
+      },
       "status": {
         "triggered": "已觸發",
         "ok": "正常"
@@ -3663,16 +5125,16 @@
         "noSystems": "找不到系統"
       },
       "error": {
-        "internalServerError": "無法連線到 Beszel。請檢查整合設定。",
         "liveConnectionFailed": "即時連線失敗。您的 Beszel 實例可能不支援即時串流。",
         "switchToHistorical": "切換到歷史檢視",
-        "systemNotFound": "找不到所選的系統。請選擇其他系統。"
+        "systemNotFound": "找不到所選的系統。請選擇其他系統。",
+        "selectionSaveTitle": "無法儲存選取項目",
+        "selectionSaveMessage": "無法儲存您的系統或時間範圍選取項目。請再試一次。"
       },
       "chart": {
         "cpu": {
           "title": "CPU 使用率",
-          "subtitle": "平均系統範圍 CPU 使用率",
-          "series": "處理器"
+          "subtitle": "平均系統範圍 CPU 使用率"
         },
         "memory": {
           "title": "記憶體使用率",
@@ -3714,256 +5176,95 @@
           "title": "Docker 網路 I/O",
           "subtitle": "Docker 容器的網路流量"
         }
+      },
+      "period": {
+        "live": "即時",
+        "oneHour": "1 小時",
+        "twelveHours": "12 小時",
+        "oneDay": "24 小時",
+        "oneWeek": "1 週",
+        "thirtyDays": "30 天"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "來自 PatchMon 的主機修補狀態概覽",
-      "title": "PatchMon 統計",
-      "totalHosts": "主機總數",
-      "hostsNeedingUpdates": "需要更新",
-      "securityUpdates": "安全性更新",
-      "upToDateHosts": "已更新至最新",
-      "hostsWithSecurityUpdates": "有安全性更新的主機",
-      "recentUpdates24h": "更新 (24h)",
-      "totalOutdatedPackages": "過時套件",
-      "totalRepos": "儲存庫",
-      "osDistribution": "作業系統分佈",
-      "compliance": "修補合規性",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "更新於 {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "顯示主機總數",
-          "description": "顯示受監控的主機總數"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "顯示需要更新的主機",
-          "description": "顯示至少有一個過時套件的主機"
-        },
-        "showSecurityUpdates": {
-          "label": "顯示安全性更新總數",
-          "description": "顯示可用的安全性更新總數"
-        },
-        "showUpToDateHosts": {
-          "label": "顯示已更新至最新主機",
-          "description": "顯示沒有任何過時套件的主機"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "顯示有安全性更新的主機",
-          "description": "顯示需要安全性修補的主機"
-        },
-        "showRecentUpdates24h": {
-          "label": "顯示近期更新 (24h)",
-          "description": "顯示過去 24 小時內已套用的更新數量"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "顯示過時套件總數",
-          "description": "顯示所有主機上過時套件的總數"
-        },
-        "showTotalRepos": {
-          "label": "顯示儲存庫數量",
-          "description": "顯示正在監控的活躍儲存庫數量"
-        },
-        "enableThresholdColors": {
-          "label": "啟用閾值顏色",
-          "description": "根據嚴重性預設將統計值著色為綠色、黃色或紅色"
-        },
-        "useCustomThresholds": {
-          "label": "進階閾值",
-          "description": "使用絕對計數或主機總數百分比，對每個統計值自訂警告和嚴重閾值"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "絕對計數",
-            "percent": "主機總數百分比"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "需要更新閾值模式",
-          "description": "以絕對值或主機總數百分比比較需要更新的計數"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "需要更新警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "需要更新嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "安全性更新閾值模式",
-          "description": "以絕對值或主機總數百分比比較安全性更新的計數"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "安全性更新警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "安全性更新嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "有安全性更新主機閾值模式",
-          "description": "以絕對值或主機總數百分比比較主機計數"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "有安全性更新主機警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "有安全性更新主機嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "已更新至最新主機閾值模式",
-          "description": "以絕對值或主機總數百分比比較已更新至最新主機計數"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "已更新至最新主機警告閾值",
-          "description": "數值達到或高於此閾值但低於全覆蓋時轉為黃色"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "已更新至最新主機嚴重閾值",
-          "description": "數值低於此閾值時轉為紅色"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "過時套件閾值模式",
-          "description": "以絕對值或主機總數百分比比較過時套件計數"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "過時套件警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "過時套件嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "showOsDistribution": {
-          "label": "顯示作業系統分佈",
-          "description": "顯示按作業系統細分的受監控主機"
-        },
-        "osDistributionLimit": {
-          "label": "作業系統分佈限制",
-          "description": "最多顯示的作業系統數量",
-          "option": {
-            "3": "前 3 名",
-            "5": "前 5 名",
-            "10": "前 10 名",
-            "all": "全部"
-          }
-        },
-        "showOsVersion": {
-          "label": "顯示作業系統版本",
-          "description": "當可用時，在每個分佈標籤後附加作業系統版本"
-        },
-        "showComplianceHero": {
-          "label": "顯示合規性英雄",
-          "description": "顯示一個合規性環，展示已更新至最新主機的百分比"
-        },
-        "osDisplayMode": {
-          "label": "作業系統顯示模式",
-          "description": "選擇如何顯示作業系統分佈",
-          "option": {
-            "bars": "水平長條",
-            "donut": "甜甜圈圖"
-          }
-        }
+    "assistant": {
+      "name": "助理",
+      "description": "直接在您的看板上進行完整的助理對話。",
+      "unavailable": {
+        "title": "助理無法使用",
+        "description": "請登入並要求管理員從管理面板設定助理。"
       },
+      "compact": {
+        "title": "助理",
+        "description": "調整此小工具大小即可在此聊天，或開啟完整對話。",
+        "open": "開啟助理",
+        "openTitle": "助理已在側邊面板開啟",
+        "openDescription": "對話會保留在一個作用中的介面中。",
+        "returnToWidget": "將對話返回此小工具",
+        "otherWidgetTitle": "助理已在其他小工具中啟用",
+        "otherWidgetDescription": "同一時間只會有一個對話介面保持啟用。",
+        "useHere": "在此小工具中使用助理"
+      }
+    },
+    "beszel": {
       "error": {
-        "internalServerError": "無法擷取 PatchMon 資料"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "來自 Bazarr 實例的缺少字幕和健康狀態概覽",
-      "episodes": "缺少的集數",
-      "movies": "缺少的電影",
-      "providers": "提供者問題",
-      "status": "健康問題",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "顯示缺少的集數",
-          "description": "顯示缺少字幕的集數數量"
-        },
-        "showMissingMovies": {
-          "label": "顯示缺少的電影",
-          "description": "顯示缺少字幕的電影數量"
-        },
-        "showProviderIssues": {
-          "label": "顯示提供者問題",
-          "description": "顯示有問題的字幕提供者數量"
-        },
-        "showHealthIssues": {
-          "label": "顯示健康問題",
-          "description": "顯示 Bazarr 健康問題的數量"
-        }
-      },
-      "error": {
-        "internalServerError": "無法擷取 Bazarr 資料"
-      }
-    },
-    "mediaMissing": {
-      "name": "缺少和佇列中的媒體",
-      "description": "顯示來自 Radarr 和 Sonarr 的缺少和佇列中的電影及影集",
-      "option": {
-        "showMissing": {
-          "label": "顯示缺少的項目"
-        },
-        "showQueued": {
-          "label": "顯示佇列中的項目"
-        },
-        "pageSize": {
-          "label": "每頁項目數"
-        }
-      },
-      "tab": {
-        "missing": "缺少",
-        "queued": "佇列中"
-      },
-      "type": {
-        "movie": "電影",
-        "episode": "集數"
+        "internalServerError": "無法連線至 Beszel。請檢查整合設定。"
       },
       "empty": {
-        "missing": "沒有缺少的項目",
-        "queued": "沒有佇列中的項目",
-        "noTabsEnabled": "在小工具設定中至少啟用一個分頁"
+        "noSystems": "找不到系統"
       },
-      "timeLeft": "剩餘時間"
-    },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Traefik 路由器、服務、中間件和入口點概覽",
-      "option": {
-        "showTcp": {
-          "label": "顯示 TCP"
+      "options": {
+        "statusFilter": {
+          "label": "狀態篩選器"
         },
-        "showUdp": {
-          "label": "顯示 UDP"
+        "showCpu": {
+          "label": "顯示 CPU"
         },
-        "showEntryPoints": {
-          "label": "顯示入口點"
+        "showMemory": {
+          "label": "顯示記憶體"
+        },
+        "showDisk": {
+          "label": "顯示磁碟"
+        },
+        "showGpu": {
+          "label": "顯示 GPU"
+        },
+        "showLoadAvg": {
+          "label": "顯示平均負載"
+        },
+        "showNet": {
+          "label": "顯示網路"
+        },
+        "showTemp": {
+          "label": "顯示溫度"
+        },
+        "showBattery": {
+          "label": "顯示電池"
+        },
+        "showServices": {
+          "label": "顯示服務"
+        },
+        "showUptime": {
+          "label": "顯示運作時間"
+        },
+        "showAgent": {
+          "label": "顯示代理程式版本"
         }
       },
-      "instances": "Traefik 實例",
-      "versionUnknown": "版本未知",
-      "summary": {
-        "routers": "路由器",
-        "entryPoints": "入口點"
-      },
-      "resource": {
-        "routers": "路由器",
-        "services": "服務",
-        "middlewares": "中間件"
-      },
-      "status": {
-        "healthy": "健康",
-        "errors": "{count} 個錯誤",
-        "warnings": "{count} 個警告"
-      },
-      "error": {
-        "internalServerError": "無法擷取 Traefik 資料"
+      "metric": {
+        "system": "系統",
+        "source": "集成",
+        "hostname": "主機名稱",
+        "cpuModel": "CPU 型號",
+        "cores": "核心數",
+        "memoryTotal": "記憶體總量",
+        "memory": "記憶體",
+        "disk": "磁碟",
+        "loadAvg": "平均負載",
+        "net": "網路",
+        "temp": "溫度",
+        "battery": "電池",
+        "uptime": "運行時間",
+        "agent": "代理程式"
       }
     },
     "llamacpp": {
@@ -4041,37 +5342,384 @@
         "specDraftTokens": "投機草稿 Token"
       }
     },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "顯示有多少受監控的容器有可用更新。",
-      "title": "What's Up Docker",
-      "monitored": "已監控",
-      "updatesAvailable": "{count, plural, other {# 個可用更新}}",
-      "updateAvailable": "有可用更新",
-      "openReleaseNotes": "開啟發佈說明",
+    "stats": {
+      "name": "統計",
+      "description": "在一個可設定的小工具中整合來自各項整合的統計資料。",
+      "configure": "設定指標",
+      "refresh": "重新整理統計資料",
+      "empty": "開啟小工具設定，選取整合，然後新增指標。",
+      "editorHelp": "從為此小工具選取的整合中新增指標。變更會與您的儀表板一同儲存。",
+      "source": "集成",
+      "metric": "指標",
+      "noMetrics": "此整合沒有可用的統計資料",
+      "add": "新增指標",
+      "label": "自訂標籤",
+      "hidden": "已隱藏",
+      "compact": "精簡數字",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "remove": "移除指標",
+      "loading": "正在載入……",
+      "unavailable": "無法使用",
+      "refreshFailed": "重新整理失敗 — 顯示已儲存的資料",
+      "stale": "已儲存的資料 — 重新整理以更新",
+      "table": {
+        "value": "數值",
+        "status": "狀態"
+      },
       "option": {
-        "showTitle": {
-          "label": "顯示標題"
+        "table": {
+          "label": "表格檢視"
         },
-        "showRing": {
-          "label": "顯示更新環"
+        "rows": {
+          "label": "精簡列"
         },
-        "layout": {
-          "label": "顯示布局",
+        "showIcon": {
+          "label": "顯示來源圖示"
+        },
+        "spacing": {
+          "label": "間距",
           "option": {
-            "horizontal": {
-              "label": "橫向"
+            "xs": {
+              "label": "精簡"
             },
-            "vertical": {
-              "label": "垂直"
+            "sm": {
+              "label": "舒適"
+            },
+            "md": {
+              "label": "寬敞"
             }
           }
         },
-        "showUpdateList": {
-          "label": "顯示容器更新清單",
-          "description": "列出每個具有可用映像更新的受監控容器"
+        "entries": {
+          "label": "指標"
+        },
+        "plain": {
+          "label": "移除卡片背景"
         }
-      }
+      },
+      "fetchFailed": "無法擷取統計資料",
+      "viewOptions": "自訂此檢視",
+      "moreMetrics": "進階檢視中還有 {count} 個指標",
+      "localHelp": "版面配置、格式和可見性僅套用至此檢視。共用的看板設定維持不變。",
+      "plain": "移除卡片背景",
+      "resetView": "重設檢視",
+      "allHidden": "此檢視中的所有指標均已隱藏。使用「自訂此檢視」以還原。"
+    },
+    "wazuh": {
+      "target": {
+        "api": "Wazuh 伺服器 API",
+        "indexer": "Wazuh 索引器",
+        "wazuh": "Wazuh"
+      },
+      "severity": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "critical": "嚴重"
+      },
+      "error": {
+        "unauthorized": {
+          "title": "{target} 拒絕了認證資料",
+          "description": "請檢查 Wazuh 整合中儲存的使用者名稱和密碼。伺服器 API（連接埠 55000）和索引器（連接埠 9200）使用不同的使用者。"
+        },
+        "certificate": {
+          "title": "{target} 的憑證不受信任",
+          "description": "Wazuh 預設使用自我簽署的憑證。在整合上執行「測試連線」並信任該憑證，或在「設定 → 憑證」中新增您的 CA。"
+        },
+        "unreachable": {
+          "title": "無法連線至 {target}",
+          "description": "主機拒絕或中斷了連線。請檢查 URL、連接埠和防火牆。在預設的一體式安裝中，索引器只監聽 localhost。"
+        },
+        "timeout": {
+          "title": "{target} 請求逾時",
+          "description": "15 秒內沒有回應。服務可能超載，或位址可能不正確。"
+        },
+        "status": {
+          "title": "{target} 回傳錯誤",
+          "description": "請求失敗，HTTP 狀態為 {status}。"
+        },
+        "invalidResponse": {
+          "title": "{target} 回應異常",
+          "description": "請確認 URL 指向 Wazuh 伺服器 API 或索引器，而不是儀表板。"
+        },
+        "indexerRequired": {
+          "title": "需要 Wazuh 索引器憑證",
+          "description": "警示、漏洞和檔案完整性事件會從 Wazuh 索引器讀取。請在整合中新增索引器 URL、使用者名稱和密碼。"
+        },
+        "unknown": {
+          "title": "無法從 {target} 載入資料",
+          "description": "請查看 Homarr 記錄以取得詳細資料。"
+        }
+      },
+      "range": {
+        "1h": "1 小時",
+        "24h": "24 小時",
+        "7d": "7 天",
+        "30d": "30 天"
+      },
+      "levelTooltip": "規則層級 {level}（{severity}）"
+    },
+    "wazuhAgents": {
+      "name": "Wazuh 代理程式",
+      "description": "可排序的 Wazuh 代理程式清單，包含狀態、作業系統、版本和最後保持連線時間",
+      "option": {
+        "statusFilter": {
+          "label": "顯示代理程式"
+        },
+        "sortBy": {
+          "label": "排序依據"
+        },
+        "showVersion": {
+          "label": "顯示 Wazuh 版本欄"
+        },
+        "showGroups": {
+          "label": "顯示群組欄"
+        }
+      },
+      "title": "代理程式",
+      "total": "{count} 個代理程式",
+      "status": {
+        "active": "活動中",
+        "disconnected": "斷線",
+        "neverConnected": "從未連線",
+        "pending": "待處理"
+      },
+      "statusLabel": {
+        "active": "活動中",
+        "disconnected": "斷線",
+        "never_connected": "從未連線",
+        "pending": "待處理",
+        "unknown": "未知"
+      },
+      "live": "即時",
+      "snapshot": "快照已存在 {age}",
+      "snapshotHint": "從 Wazuh 儀表板的代理程式快照（wazuh-monitoring）讀取，快照建立於 {time}。新增伺服器 API 認證資料以取得即時資料。",
+      "staleSnapshot": "{time} 的代理程式快照已過時。請確認 Wazuh 儀表板監控工作正在執行，或新增伺服器 API 認證資料。",
+      "noDisconnected": "所有代理程式都已連線",
+      "empty": "沒有代理程式符合此篩選條件",
+      "column": {
+        "status": "狀態",
+        "name": "工作名稱",
+        "ip": "IP 位址",
+        "os": "系統",
+        "version": "版本",
+        "lastKeepAlive": "保持連線",
+        "groups": "群組"
+      },
+      "outdated": "比最新代理程式版本（{version}）舊"
+    },
+    "wazuhAlerts": {
+      "name": "Wazuh 警示摘要",
+      "description": "包含等級、MITRE ATT&CK 技術、代理程式和來源 IP 的近期 Wazuh 警示",
+      "option": {
+        "minLevel": {
+          "label": "最低規則等級",
+          "description": "Wazuh 等級：0–6 低，7–11 中，12–14 高，15 以上嚴重"
+        },
+        "hours": {
+          "label": "時間範圍（小時）"
+        },
+        "limit": {
+          "label": "警示數量"
+        },
+        "showMitre": {
+          "label": "顯示 MITRE ATT&CK 技術"
+        },
+        "showAgent": {
+          "label": "顯示代理程式"
+        },
+        "showSourceIp": {
+          "label": "顯示來源 IP"
+        },
+        "showRuleId": {
+          "label": "顯示規則 ID"
+        }
+      },
+      "title": "警示 · 層級 {level}+ · {hours} 小時",
+      "empty": "此等級沒有警示。一切平靜。",
+      "rule": "規則 {id}",
+      "openInDashboard": "在 Wazuh 儀表板中開啟此警示"
+    },
+    "wazuhSummary": {
+      "name": "Wazuh 警示嚴重性",
+      "description": "警示嚴重性明細，並與上一個期間的趨勢比較",
+      "option": {
+        "range": {
+          "label": "時間範圍"
+        },
+        "showTrend": {
+          "label": "顯示與上一個期間比較的趨勢"
+        },
+        "showFooter": {
+          "label": "顯示頁尾"
+        }
+      },
+      "title": "警示嚴重性 · {range}",
+      "alerts": "警示",
+      "none": "沒有警示",
+      "trend": {
+        "new": "創建",
+        "tooltip": "上一期間：{previous}"
+      },
+      "previous": "上一個 {range}：{count}",
+      "maxLevel": "最高層級 {level}",
+      "health": "索引器健康狀態：{status}",
+      "manager": "管理器 {version}"
+    },
+    "wazuhTimeline": {
+      "name": "Wazuh 警示時間軸",
+      "description": "依嚴重性顯示一段時間內 Wazuh 警示的堆疊圖表",
+      "option": {
+        "range": {
+          "label": "時間範圍"
+        },
+        "interval": {
+          "label": "時間間隔"
+        },
+        "chartType": {
+          "label": "圖表類型"
+        },
+        "yScale": {
+          "label": "Y 軸刻度",
+          "description": "平方根刻度可讓高嚴重性和嚴重警示在數千個低嚴重性警示旁仍清楚可見"
+        },
+        "minLevel": {
+          "label": "最低規則等級"
+        },
+        "showLegend": {
+          "label": "顯示包含總數的圖例"
+        }
+      },
+      "title": "警示時間軸 · {range}",
+      "total": "{count} 個警示",
+      "interval": "每 {interval}"
+    },
+    "wazuhTopList": {
+      "name": "Wazuh 排行清單",
+      "description": "依警示數量排列的熱門規則、代理程式、來源 IP，或 MITRE ATT&CK 戰術與技術",
+      "option": {
+        "kind": {
+          "label": "排名"
+        },
+        "range": {
+          "label": "時間範圍"
+        },
+        "limit": {
+          "label": "項目數量"
+        },
+        "minLevel": {
+          "label": "最低規則等級"
+        },
+        "showBars": {
+          "label": "顯示長條"
+        }
+      },
+      "title": {
+        "rules": "熱門規則 · {range}",
+        "agents": "熱門代理程式 · {range}",
+        "sourceIps": "熱門來源 IP · {range}",
+        "mitreTactics": "MITRE 戰術 · {range}",
+        "mitreTechniques": "MITRE 技術 · {range}"
+      },
+      "empty": {
+        "rules": "此期間沒有警示",
+        "agents": "此期間沒有警示",
+        "sourceIps": "此期間沒有帶來源 IP 的警示",
+        "mitreTactics": "此期間沒有對應至 MITRE ATT&CK 的警示",
+        "mitreTechniques": "此期間沒有對應至 MITRE ATT&CK 的警示"
+      },
+      "totalTooltip": "符合條件的警示數：{count}",
+      "private": "區域網路",
+      "public": "公開",
+      "agents": "在 {count} 個代理程式上看見",
+      "others": "其他項目中還有 {count} 個警示"
+    },
+    "wazuhVulnerabilities": {
+      "name": "Wazuh 弱點",
+      "description": "弱點數量、熱門 CVE 與最易受攻擊的代理程式",
+      "option": {
+        "cveOrder": {
+          "label": "CVE 排序依據"
+        },
+        "minSeverity": {
+          "label": "CVE 嚴重性"
+        },
+        "cveLimit": {
+          "label": "CVE 數量"
+        },
+        "agentLimit": {
+          "label": "代理程式數量"
+        },
+        "showAgents": {
+          "label": "顯示最易受攻擊的代理程式"
+        }
+      },
+      "title": "弱點",
+      "topCves": "熱門 CVE",
+      "score": "分數",
+      "agentsShort": "代理程式",
+      "topAgents": "最易受攻擊的代理程式",
+      "criticalHigh": "嚴重／高",
+      "totalTooltip": "{agents} 個代理程式上有 {count} 個發現項目",
+      "affected": "{count} 個代理程式",
+      "empty": "未偵測到弱點",
+      "distribution": "嚴重性分佈。沒有分數的 {unscored} 個發現項目不會顯示。",
+      "worst": "最嚴重：{id}（{score}），位於 {agents} 個代理程式上"
+    },
+    "wazuhFim": {
+      "name": "Wazuh 檔案完整性",
+      "description": "最近的檔案完整性監控（syscheck）事件",
+      "option": {
+        "range": {
+          "label": "時間範圍"
+        },
+        "event": {
+          "label": "事件"
+        },
+        "limit": {
+          "label": "事件數量"
+        },
+        "includeRegistry": {
+          "label": "包含 Windows 登錄檔事件"
+        }
+      },
+      "title": "檔案完整性 · {range}",
+      "event": {
+        "added": "日期已新增",
+        "modified": "已修改",
+        "deleted": "已刪除",
+        "unknown": "已變更"
+      },
+      "empty": "此期間沒有檔案完整性事件",
+      "user": "由 {user}",
+      "registry": "登錄檔"
+    },
+    "wazuhAuthFailures": {
+      "name": "Wazuh 驗證失敗",
+      "description": "依代理程式顯示失敗登入與暴力破解警示，並附上每小時迷你圖",
+      "option": {
+        "hours": {
+          "label": "時間視窗（小時）"
+        },
+        "limit": {
+          "label": "代理程式數量"
+        },
+        "showSourceIps": {
+          "label": "顯示熱門來源 IP"
+        }
+      },
+      "title": "驗證失敗 · {hours} 小時",
+      "seriesTooltip": "過去 {hours} 小時內的所有代理程式",
+      "peak": "峰值 {count}/區段",
+      "empty": "此期間沒有失敗登入",
+      "failed": "失敗登入",
+      "failedHint": "單次驗證失敗（sshd、PAM、Windows 登入、無效使用者）",
+      "bruteForce": "暴力破解",
+      "bruteForceHint": "相關聯的暴力破解規則（短時間內多次失敗，MITRE T1110）",
+      "sourceIps": "來源 IP",
+      "ipTooltip": "{ip}：{count} 次失敗",
+      "bruteForceCount": "{count} 次暴力破解"
     }
   },
   "widgetPreview": {
@@ -4084,7 +5732,76 @@
     }
   },
   "board": {
+    "emptyState": {
+      "title": "建立您的第一個檢視畫面",
+      "description": "新增小工具或應用程式，或連線服務並在此面板上使用其資料。",
+      "addWidget": "新增小工具",
+      "addApp": "新增應用程式",
+      "connectService": "連線服務"
+    },
+    "setupChecklist": {
+      "title": "讓此面板發揮作用",
+      "description": "從上次離開的地方繼續。進度會根據此面板上已有的內容更新。",
+      "collapse": "收合設定檢查清單",
+      "dismiss": "",
+      "resume": "繼續設定（{completed}/{total}）",
+      "progress": "面板設定進度",
+      "step": {
+        "content": {
+          "label": "新增實用內容",
+          "description": "選擇並設定小工具後，才會將其放置到面板上。"
+        },
+        "app": {
+          "label": "釘選應用程式",
+          "description": "讓服務或工具在此面板上一鍵即可存取。"
+        },
+        "service": {
+          "label": "連線服務",
+          "description": "解鎖相容小工具的即時資料與操作。",
+          "permissionDescription": "管理員可以連線服務以解鎖即時資料。",
+          "action": "連線"
+        }
+      }
+    },
     "action": {
+      "addContent": "新增面板內容",
+      "settings": "面板設定",
+      "switch": "切換面板",
+      "switcher": {
+        "title": "切換面板",
+        "search": {
+          "empty": "沒有符合「{search}」的面板。"
+        },
+        "results": "可用面板",
+        "preview": "{name} 的預覽，包含 {count} 個項目",
+        "currentHidden": "目前面板：{name}",
+        "keyboard": {
+          "navigate": "導覽",
+          "open": "開啟",
+          "instructions": "輸入文字以篩選面板。使用方向鍵瀏覽結果，按 Enter 開啟面板。"
+        },
+        "empty": {
+          "title": "沒有其他面板",
+          "description": "您無法存取其他面板。"
+        },
+        "error": "無法載入面板。"
+      },
+      "create": {
+        "availability": {
+          "checking": "正在檢查可用性……",
+          "available": "{name} 可用"
+        },
+        "notification": {
+          "success": {
+            "title": "面板已建立",
+            "message": "面板 {name} 已建立"
+          },
+          "error": {
+            "title": "無法建立面板",
+            "message": "無法建立面板 {name}"
+          }
+        }
+      },
       "duplicate": {
         "title": "複製面板",
         "message": "這將複製看板 {name} 及其所有內容。如果小工具引用了無法使用的集成，它們將被移除",
@@ -4100,75 +5817,24 @@
         }
       },
       "edit": {
+        "enter": "編輯面板",
+        "save": "儲存面板",
+        "exit": "離開編輯模式",
         "notification": {
           "success": {
-            "title": "成功應用編輯",
             "message": "面板儲存成功"
           },
           "error": {
-            "title": "無法應用編輯",
             "message": "面板無法儲存"
+          },
+          "loadError": {
+            "title": "無法開始編輯",
+            "message": "無法載入面板編輯器。您的儀表板仍可在檢視模式中使用。"
           }
         },
         "confirmLeave": {
           "title": "未儲存編輯",
           "message": "尚未保存編輯，確認要離開嗎？"
-        }
-      },
-      "oldImport": {
-        "label": "從 1.0.0 之前的 Homarr 匯入",
-        "notification": {
-          "success": {
-            "title": "匯入成功",
-            "message": "面板匯入成功"
-          },
-          "error": {
-            "title": "匯入失敗",
-            "message": "無法匯入面板，請查閱 Logs 以取得更多詳情"
-          }
-        },
-        "form": {
-          "file": {
-            "label": "選擇 JSON 檔案",
-            "invalidError": "無效的設定檔案"
-          },
-          "apps": {
-            "label": "應用程式",
-            "avoidDuplicates": {
-              "label": "避免重複",
-              "description": "忽略已存在具有相同鏈結的應用程式"
-            },
-            "onlyImportApps": {
-              "label": "僅匯入應用程式",
-              "description": "僅新增應用程式，面板需要手動重新創建"
-            }
-          },
-          "name": {
-            "label": "面板名稱"
-          },
-          "screenSize": {
-            "label": "螢幕大小",
-            "description": "在 1.0 之前的版本中，有三種不同的模式，因此可以根據螢幕大小選擇列的數量",
-            "option": {
-              "sm": "小號",
-              "md": "中等",
-              "lg": "大號"
-            }
-          },
-          "sidebarBehavior": {
-            "label": "側邊欄行為",
-            "description": "側邊欄在 1.0 中被移除了，你可以選擇該怎麼處理其中的項目",
-            "option": {
-              "lastSection": {
-                "label": "最後區段",
-                "description": "側邊欄將顯示在最後區段的下方"
-              },
-              "removeItems": {
-                "label": "移除項目",
-                "description": "側邊欄中包含的項目將被移除"
-              }
-            }
-          }
         }
       },
       "quickCreateApp": {
@@ -4177,6 +5843,12 @@
           "createAndUse": "創立和使用"
         }
       }
+    },
+    "landmark": {
+      "canvas": "儀表板畫布",
+      "leftRail": "儀表板左側列",
+      "rightRail": "儀表板右側列",
+      "items": "儀表板項目"
     },
     "field": {
       "pageTitle": {
@@ -4247,7 +5919,8 @@
         }
       },
       "primaryColor": {
-        "label": "主體色"
+        "label": "主體色",
+        "locked": "您的管理員會在每個面板上保留執行個體品牌色。"
       },
       "secondaryColor": {
         "label": "輔助色"
@@ -4287,9 +5960,6 @@
           "xl": "非常大"
         }
       },
-      "name": {
-        "label": "名稱"
-      },
       "isPublic": {
         "label": "公開",
         "description": "每個人皆可訪問公共面板，即使沒有帳號"
@@ -4309,8 +5979,43 @@
           "title": "顯示布局",
           "responsive": {
             "title": "響應式佈局",
+            "description": "每個版面配置都會保留自己的小工具位置與大小。行動版與基礎版面配置永遠可用；您也可以在其他斷點新增自訂版面配置。",
             "action": {
               "add": "新增佈局"
+            }
+          },
+          "role": {
+            "mobile": "移動裝置",
+            "base": "基礎",
+            "custom": "自訂"
+          },
+          "custom": {
+            "defaultName": "自訂版面配置"
+          },
+          "mobile": {
+            "breakpointDescription": "行動版會從 0px 使用到下一個版面配置斷點。"
+          },
+          "preview": {
+            "columns": "列數",
+            "empty": "此版面配置為空",
+            "dynamicSection": "動態區段",
+            "editorWidthLabel": "{layoutName} · {width}px"
+          },
+          "reset": {
+            "action": "從基礎版面配置重設",
+            "confirm": {
+              "title": "重設 {layoutName}？",
+              "message": "這會以從基礎版面配置產生的新版面配置，取代此版面配置中所有已儲存的位置與大小。此操作無法復原。"
+            }
+          },
+          "edit": {
+            "action": "編輯版面配置",
+            "saveAndEdit": "儲存並編輯",
+            "save": "儲存版面配置",
+            "cancel": {
+              "action": "取消版面配置編輯",
+              "title": "捨棄版面配置變更？",
+              "message": "您對此版面配置所做的未儲存變更將會被捨棄。"
             }
           }
         },
@@ -4348,10 +6053,7 @@
             "rename": {
               "label": "重新命名面板",
               "description": "更改面板可見性",
-              "button": "更改名稱",
-              "modal": {
-                "title": "重新命名面板"
-              }
+              "button": "更改名稱"
             },
             "visibility": {
               "label": "更改面板可見性",
@@ -4375,9 +6077,7 @@
               }
             },
             "delete": {
-              "label": "移除此面板",
               "description": "面板一旦移除就無法恢復，請謹慎操作",
-              "button": "移除此面板",
               "confirm": {
                 "title": "移除面板",
                 "description": "確認要移除此面板嗎？這將永久移除面板及其所有內容"
@@ -4422,28 +6122,41 @@
   },
   "layout": {
     "field": {
-      "name": {
-        "label": "名稱"
-      },
       "columnCount": {
         "label": "欄數"
       },
       "breakpoint": {
         "label": "斷點",
         "description": "此佈局將用於所有大於此斷點的螢幕，直到達到下一個更大的斷點為止"
+      },
+      "gutters": {
+        "label": "固定側邊欄",
+        "description": "在兩側各保留最多三個儀表板欄位。剩餘畫布會自動重新排列。",
+        "left": {
+          "label": "左側邊欄",
+          "description": "儀表板捲動時保持此區域可見。",
+          "thumbLabel": "左側邊欄寬度"
+        },
+        "right": {
+          "label": "右側邊欄",
+          "description": "儀表板捲動時保持此區域可見。",
+          "thumbLabel": "右側邊欄寬度"
+        },
+        "width": {
+          "label": "欄位寬度"
+        },
+        "preview": {
+          "label": "儀表板版面配置預覽"
+        }
       }
     }
   },
   "management": {
     "metaTitle": "管理中心",
-    "title": {
-      "morning": "早安，{username}",
-      "afternoon": "午安，{username}",
-      "evening": "晚安，{username}"
-    },
     "notFound": {
       "title": "不存在",
-      "text": "找不到請求的資源"
+      "text": "找不到請求的資源",
+      "backToHome": "返回管理首頁"
     },
     "error": {
       "title": "此頁面無法載入",
@@ -4452,19 +6165,10 @@
     },
     "navbar": {
       "items": {
-        "workshop": "Workshop",
         "home": "首頁",
-        "boards": "面板",
-        "apps": "應用程式",
-        "integrations": "集成",
-        "searchEngies": "搜尋引擎",
-        "medias": "多媒體",
         "users": {
-          "label": "使用者",
           "items": {
-            "manage": "管理",
-            "invites": "邀情",
-            "groups": "群組"
+            "manage": "管理"
           }
         },
         "tools": {
@@ -4472,10 +6176,7 @@
           "items": {
             "docker": "Docker",
             "kubernetes": "Kubernetes",
-            "logs": "Logs",
             "api": "API",
-            "certificates": "憑證",
-            "tasks": "任務",
             "backup": "備份"
           }
         },
@@ -4489,21 +6190,12 @@
             "sourceCode": "源碼"
           }
         },
-        "about": "關於"
+        "about": "關於",
+        "assistant": "助理"
       }
     },
     "page": {
       "home": {
-        "statistic": {
-          "board": "面板",
-          "user": "使用者",
-          "invite": "邀請",
-          "integration": "集成",
-          "app": "應用程式",
-          "group": "群組",
-          "searchEngine": "",
-          "media": ""
-        },
         "statisticLabel": {
           "boards": "面板",
           "resources": "資源",
@@ -4541,13 +6233,8 @@
               "tooltip": "此面板將顯示為移動裝置主面板"
             }
           },
-          "duplicate": {
-            "label": "複製面板"
-          },
           "delete": {
-            "label": "永久移除",
             "confirm": {
-              "title": "移除面板",
               "description": "確認移除此面板 {name} 嗎？"
             }
           }
@@ -4556,28 +6243,82 @@
           "public": "此面板是公開的",
           "private": "此面板是私人的"
         },
-        "noResults": {
-          "title": "尚無面板"
+        "preview": {
+          "label": "{name} 的版面配置預覽，包含 {count} 個項目",
+          "unknownCreator": "未知建立者"
         },
-        "modal": {
-          "createBoard": {
-            "field": {
-              "name": {
-                "label": "名稱"
-              }
-            }
-          }
+        "noResults": {
+          "title": "尚無面板",
+          "description": "建立面板，將您的應用程式與小工具集中於一處。"
         }
       },
       "media": {
         "includeFromAllUsers": "包含來自全部使用者的多媒體"
       },
       "user": {
-        "back": "返回使用者",
         "fieldsDisabledExternalProvider": "某些字段被進用，因為它們是由外部認證提供者管理的",
         "setting": {
           "general": {
             "title": "一般",
+            "header": {
+              "title": "標頭工作室",
+              "badge": "個人",
+              "description": "拖曳控制項至列中的任意位置。左側、中央與右側會固定，而控制項會在其周圍移動。",
+              "device": {
+                "desktop": "桌面版",
+                "mobile": "移動裝置"
+              },
+              "zones": {
+                "left": "左方",
+                "center": "置中",
+                "right": "右方"
+              },
+              "action": {
+                "hide": "隱藏標頭",
+                "show": "顯示標頭",
+                "configure": "移動或設定 {item}",
+                "remove": "移除 {item}",
+                "dropIntoZone": "移至 {zone} 區段"
+              },
+              "preview": {
+                "board": "{name} 的儀表板預覽",
+                "empty": "沒有可用的儀表板版面配置"
+              },
+              "available": {
+                "title": "可用控制項",
+                "description": "新增控制項，然後將其完整按鈕拖曳至上方的位置。",
+                "requiredAlways": "此控制項為必要項目，但您可以將它移至標頭中的任意位置。",
+                "allAdded": "所有內建控制項都已在您的標頭中。",
+                "add": "新增 {item}",
+                "boardShortcut": "面板捷徑",
+                "chooseBoard": "選擇面板"
+              },
+              "configuration": {
+                "description": "此控制項會維持與即時標頭中相同的大小。",
+                "searchDisplay": {
+                  "input": "搜尋列",
+                  "icon": "僅圖示"
+                },
+                "logoDisplay": {
+                  "logo": "僅標誌",
+                  "logoAndText": "標誌 + 文字"
+                }
+              },
+              "items": {
+                "logo": "標誌",
+                "search": "搜尋",
+                "home": "主面板",
+                "boardSwitcher": "面板",
+                "assistant": "助理",
+                "docker": "Docker",
+                "boardEdit": "編輯面板",
+                "boardSettings": "面板設定",
+                "settings": "您的設定",
+                "themeToggle": "切換主題",
+                "user": "帳戶",
+                "boardUnavailable": "面板無法使用"
+              }
+            },
             "item": {
               "language": "語言與地區",
               "board": {
@@ -4611,14 +6352,10 @@
           },
           "security": {
             "title": "安全"
-          },
-          "board": {
-            "title": "面板"
           }
         },
         "list": {
-          "metaTitle": "管理使用者",
-          "title": "使用者"
+          "metaTitle": "管理使用者"
         },
         "edit": {
           "metaTitle": "編輯使用者 {username}"
@@ -4672,9 +6409,6 @@
             }
           },
           "field": {
-            "id": {
-              "label": "ID"
-            },
             "creator": {
               "label": "創建者"
             },
@@ -4698,10 +6432,7 @@
           },
           "setting": {
             "title": "設定",
-            "alert": "群組設定的優先順序由群組在列表中的順序決定，位於上方的設定會覆蓋下方的設定",
-            "board": {
-              "title": "面板"
-            }
+            "alert": "群組設定的優先順序由群組在列表中的順序決定，位於上方的設定會覆蓋下方的設定"
           },
           "members": {
             "title": "成員",
@@ -4709,10 +6440,7 @@
             "notFound": "不存在的成員"
           },
           "permissions": {
-            "title": "權限",
-            "form": {
-              "unsavedChanges": "尚有未儲存的變更"
-            }
+            "title": "權限"
           }
         }
       },
@@ -4721,12 +6449,10 @@
         "notification": {
           "success": {
             "message": "設定儲存成功"
-          },
-          "error": {
-            "message": "設定儲存失敗"
           }
         },
         "section": {
+          "analyticsDocumentation": "查看 Homarr 收集的確切分析資料",
           "analytics": {
             "title": "分析",
             "general": {
@@ -4755,7 +6481,6 @@
             }
           },
           "board": {
-            "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
               "mobileLabel": "全局移動裝置主面板",
@@ -4774,7 +6499,6 @@
             }
           },
           "user": {
-            "title": "",
             "enableGravatar": {
               "label": "",
               "description": ""
@@ -4790,12 +6514,86 @@
           "appearance": {
             "title": "外觀",
             "defaultColorScheme": {
-              "label": "預設配色方案",
+              "label": "預設配色方案"
+            }
+          },
+          "branding": {
+            "title": "執行個體品牌",
+            "groups": {
+              "identity": "識別",
+              "appearance": "外觀",
+              "customCss": "自訂 CSS",
+              "authentication": "認證"
+            },
+            "identity": {
+              "description": "應用程式標誌是應用程式內、登入頁面及已安裝應用程式中使用的較大標誌。瀏覽器圖示（favicon）是分頁與書籤中使用的小方形圖示；留空時會使用應用程式標誌。"
+            },
+            "appName": {
+              "label": "應用程式名稱"
+            },
+            "greeting": {
+              "label": "自訂問候語"
+            },
+            "logo": {
+              "label": "應用程式標誌",
+              "placeholder": "/logo/logo.png"
+            },
+            "favicon": {
+              "label": "瀏覽器圖示（favicon）",
+              "placeholder": "使用應用程式標誌"
+            },
+            "primaryColor": {
+              "label": "主體色"
+            },
+            "secondaryColor": {
+              "label": "輔助色"
+            },
+            "lockPrimaryColor": {
+              "label": "在每個面板上保留此色彩",
+              "description": "防止面板色彩取代應用程式輔助色。"
+            },
+            "signInBackground": {
+              "label": "驗證背景",
+              "placeholder": "https://example.com/background.jpg"
+            },
+            "signInOverlay": {
+              "label": "背景覆蓋層"
+            },
+            "defaultRadius": {
+              "label": "圓角樣式",
               "options": {
-                "auto": "自動",
-                "light": "日間",
-                "dark": "暗黑"
+                "xs": "緊湊",
+                "sm": "細微",
+                "md": "平衡",
+                "lg": "圓潤",
+                "xl": "柔和"
               }
+            },
+            "customCss": {
+              "label": "全域自訂 CSS",
+              "description": "套用至每個頁面。面板自訂 CSS 可以覆寫此設定。"
+            },
+            "authVisibility": {
+              "description": "選擇每個驗證頁面上顯示的內容。",
+              "appName": "應用程式名稱",
+              "logo": "應用程式標誌",
+              "greeting": "問候語"
+            },
+            "summary": {
+              "title": "目前品牌設定",
+              "cornerStyle": "圓角樣式",
+              "palette": "色盤",
+              "backgroundConfigured": "自訂背景 · {overlay}% 覆蓋層",
+              "backgroundDefault": "預設背景",
+              "greetingConfigured": "自訂問候語",
+              "greetingDefault": "預設問候語",
+              "boardColorLocked": "面板色彩已鎖定",
+              "boardColorFlexible": "允許面板色彩變更",
+              "appName": "工作名稱",
+              "logo": "標誌",
+              "greeting": "問候語",
+              "on": "開啟",
+              "off": "關閉"
             }
           },
           "culture": {
@@ -4803,12 +6601,177 @@
             "defaultLocale": {
               "label": "預設語言"
             }
+          },
+          "assistant": {
+            "loading": "正在載入助理設定",
+            "title": "助理",
+            "description": "連線至相容 OpenAI 的模型端點，以使用執行個體範圍的助理。",
+            "security": {
+              "description": "API 金鑰與其他標頭值會在 Homarr 資料庫中加密。它們絕不會傳回瀏覽器。模型請求會直接從 Homarr 伺服器傳送至設定的端點。"
+            },
+            "overview": {
+              "connectionReady": "連線就緒",
+              "unsavedChanges": "未儲存編輯",
+              "setupRequired": "需要設定",
+              "disabled": "已停用",
+              "noModel": "未選取模型"
+            },
+            "connection": {
+              "endpointTitle": "提供者與端點",
+              "description": "選擇預設集，或連線至任何實作 OpenAI Chat Completions API 的服務。",
+              "save": "儲存提供者連線"
+            },
+            "credentials": {
+              "title": "憑證",
+              "description": "新增此端點所需的密密。儲存的值會保持加密，且無法讀取。",
+              "required": "需要金鑰",
+              "optional": "選用金鑰",
+              "workshop": "每位使用者的 GitHub 登入"
+            },
+            "provider": {
+              "title": "提供者",
+              "groups": {
+                "free": "Homarr 免費提供",
+                "hosted": "託管提供者",
+                "local": "本機提供者",
+                "custom": "自訂"
+              },
+              "options": {
+                "homarr": {
+                  "description": "每天提供有限次數的免費助理使用額度，由 Homarr 團隊支付。使用 Community Workshop 登入即可使用您的額度。"
+                },
+                "openrouter": {
+                  "description": "託管模型路由，提供大量支援工具的模型目錄。"
+                },
+                "openai": {
+                  "description": "透過官方 API 端點使用 OpenAI Chat Completions。"
+                },
+                "anthropic": {
+                  "description": "透過 Anthropic 的 OpenAI SDK 相容端點使用 Claude。"
+                },
+                "google-gemini": {
+                  "description": "透過 Google 的 OpenAI 相容 API 端點使用 Gemini。"
+                },
+                "xai": {
+                  "description": "透過 xAI 的 OpenAI 相容 API 使用 Grok 模型。"
+                },
+                "groq": {
+                  "description": "透過 Groq 的 OpenAI 相容 API 進行快速託管推論。"
+                },
+                "mistral": {
+                  "description": "透過官方 API 使用 Mistral 模型。"
+                },
+                "deepseek": {
+                  "description": "透過其 OpenAI 相容 API 使用 DeepSeek 模型。"
+                },
+                "together": {
+                  "description": "透過 Together 的 OpenAI 相容 API 使用託管開放模型。"
+                },
+                "ollama": {
+                  "description": "使用其 OpenAI 相容 API 的本機或網路 Ollama 伺服器。"
+                },
+                "lm-studio": {
+                  "description": "已啟用 OpenAI 相容性的 LM Studio 本機伺服器。"
+                },
+                "llama-cpp": {
+                  "description": "使用其 OpenAI 相容 API 的本機或網路 llama.cpp 伺服器。"
+                },
+                "custom": {
+                  "label": "自訂端點",
+                  "description": "任何其他相容於 OpenAI Chat Completions 的端點。"
+                }
+              },
+              "homarrAuth": {
+                "title": "包含每日免費助理使用額度",
+                "description": "不需要 API 金鑰。Homarr 團隊每天為您提供有限次數的助理使用額度。使用 Community Workshop 登入，可讓您的額度獨立管理。"
+              }
+            },
+            "baseUrl": {
+              "title": "API 基底 URL",
+              "description": "包含 API 前綴，通常為 /v1。在容器中，localhost 指的是 Homarr 容器。"
+            },
+            "apiKey": {
+              "title": "API 金鑰",
+              "required": "此提供者要求此項目。值會加密且只能寫入。",
+              "optional": "本機端點可選填。服務不需要 bearer 驗證時請留空。",
+              "placeholder": "輸入 API 金鑰",
+              "savedTitle": "已儲存加密的 API 金鑰",
+              "savedDescription": "Homarr 可以使用此金鑰，但無法顯示或復原其值。",
+              "remove": "移除已儲存的 API 金鑰",
+              "removeFlow": {
+                "title": "移除已儲存的 API 金鑰？",
+                "description": "此提供者需要 API 金鑰。移除後，在儲存其他金鑰之前，可能會停止模型探索與助理回應。",
+                "optionalDescription": "移除此金鑰後，端點將停止接收 bearer 驗證。請確認它接受未驗證的請求，或使用其他已儲存的標頭。",
+                "cancel": "保留已儲存的金鑰",
+                "confirm": "移除 API 金鑰"
+              }
+            },
+            "headers": {
+              "title": "其他請求標頭",
+              "description": "選用的驗證或路由標頭。標頭值會加密且只能寫入。",
+              "add": "新增標頭",
+              "name": "標頭名稱",
+              "value": "標頭值",
+              "valuePlaceholder": "密密或路由值",
+              "remove": "移除標頭",
+              "configured": "已設定其他加密標頭。新增標頭會取代完整的已儲存集合。",
+              "empty": "此提供者沒有儲存其他標頭。",
+              "savedBadge": "標頭已儲存",
+              "pendingRemoval": "等待移除",
+              "clear": "儲存時移除已儲存的標頭",
+              "keep": "保留已儲存的標頭"
+            },
+            "model": {
+              "title": "模型",
+              "description": "選擇已探索的模型，或輸入確切的端點模型 ID。",
+              "placeholder": "模型 ID",
+              "refresh": "重新整理模型",
+              "chooseModel": "選擇新對話使用的模型。",
+              "discoveryPath": "模型探索路徑",
+              "discoveryPathDescription": "附加至 API 基底 URL。留空可停用探索，並使用手動模型 ID。",
+              "manual": "手動輸入模型 ID，或儲存連線以探索模型。",
+              "manualFallback": "探索功能無法使用。您仍可手動輸入模型 ID。",
+              "saveConnectionFirst": "請先儲存提供者連線，再選擇模型。",
+              "discovering": "正在重新整理此提供者可用的模型……",
+              "discovered": "{count, plural, other {已探索到 # 個模型。工具支援取決於所選端點與模型。}}",
+              "discoveryFailed": "模型探索未完成",
+              "context": "{count} 個內容視窗",
+              "toolsConfirmed": "已宣告的工具",
+              "toolsUnknown": "驗證工具支援"
+            },
+            "serverTools": {
+              "title": "伺服器工具",
+              "webSearch": {
+                "label": "網路搜尋",
+                "description": "當請求需要最新資訊時，允許模型透過 OpenRouter 搜尋即時網路。搜尋使用量由 OpenRouter 另行收費。",
+                "proxyDescription": "將 OpenRouter 的網路搜尋伺服器工具傳送至此端點。只有在自訂端點轉送 OpenRouter 伺服器工具格式時才啟用，例如 Homarr Router Proxy。",
+                "limit": "模型會決定何時搜尋；每個請求最多搜尋 3 次，每次搜尋最多取得 5 項結果。"
+              }
+            },
+            "enabled": {
+              "label": "啟用助理",
+              "description": "向所有已登入使用者顯示助理。現有的 Homarr 權限仍適用於每次內部工具呼叫。"
+            },
+            "save": "儲存助理",
+            "notification": {
+              "connectionSaved": {
+                "title": "提供者連線已儲存",
+                "message": "端點與加密憑證已準備好，可選擇模型。",
+                "credentialsCleared": "端點已變更，因此先前的憑證已清除。如有需要，請為新的目的地新增憑證。"
+              },
+              "saved": {
+                "title": "助理設定已儲存",
+                "message": "新的模型與可用性設定已啟用。"
+              },
+              "error": {
+                "title": "無法儲存助理設定"
+              }
+            }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "任務",
           "status": {
             "idle": "空閒",
             "running": "運行中",
@@ -4826,6 +6789,11 @@
               "label": "Pings"
             }
           },
+          "action": {
+            "run": "立即執行 {name}",
+            "enable": "啟用 {name}",
+            "disable": "停用 {name}"
+          },
           "interval": {
             "seconds": "",
             "minutes": "",
@@ -4841,13 +6809,7 @@
               }
             }
           },
-          "settings": {
-            "title": ""
-          },
           "field": {
-            "name": {
-              "label": ""
-            },
             "interval": {
               "label": ""
             },
@@ -4860,11 +6822,6 @@
           },
           "table": {
             "search": ""
-          },
-          "action": {
-            "refresh": {
-              "label": ""
-            }
           },
           "refresh": {
             "success": {
@@ -4899,7 +6856,6 @@
           }
         },
         "api": {
-          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "API 密鑰已創建",
@@ -4925,7 +6881,6 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
                   "createdBy": "創建者",
                   "actions": "動作"
                 }
@@ -4981,43 +6936,12 @@
               "availableTools": {
                 "title": "可用工具",
                 "description": "{count} 個工具可用。展開類別以查看個別工具及其描述。",
-                "columnType": "類型",
-                "columnName": "工具",
-                "columnDescription": "描述"
-              },
-              "troubleshooting": {
-                "title": "疑難排解",
-                "missingHeader": {
-                  "title": "\"缺少 ApiKey 標頭\"",
-                  "description": "您的客戶端未傳送 {header} 標頭。請確認 MCP 設定中的 {section} 區段是否正確。某些客戶端在設定變更後需要重新啟動。"
-                },
-                "invalidFormat": {
-                  "title": "\"無效的 ApiKey 格式\"",
-                  "description": "請確保您完整複製了 API 金鑰，而非僅複製一部分。"
-                },
-                "invalidKey": {
-                  "title": "\"無效的 API 金鑰\"",
-                  "description": "找不到金鑰 ID 或令牌錯誤。API 金鑰在建立時僅顯示一次。如果遺失，請刪除舊金鑰並建立一個新的。"
-                },
-                "connectionRefused": {
-                  "title": "連線拒絕 / 逾時",
-                  "description": "請確保該 URL 可從您的 AI 客戶端存取。如果 Homarr 在反向代理或 Docker 後執行，請使用外部 URL (而非 {localhost})。確認連接埠正確 (預設: Docker 為 7575)。"
-                },
-                "toolsNotAppearing": {
-                  "title": "工具未顯示",
-                  "description": "某些工具需要設定特定的整合 (例如 Docker、Overseerr)。工具清單取決於您 Homarr 實例中可用的內容。"
+                "filteredDescription": "展開的類別中有 {count} 個符合條件的工具。",
+                "search": "搜尋工具",
+                "noResults": {
+                  "title": "沒有工具符合此搜尋",
+                  "description": "沒有 MCP 工具符合「{search}」。請嘗試命名空間、工具名稱或描述。"
                 }
-              },
-              "copy": "複製",
-              "oneClick": {
-                "title": "一鍵安裝",
-                "subtitle": "使用 OAuth — 首次使用時在瀏覽器中進行驗證",
-                "vsCode": "在 VS Code 中安裝",
-                "cursor": "在 Cursor 中安裝",
-                "copyUrl": "複製 MCP 網址",
-                "copied": "已複製！",
-                "copyHint": "適用於 ChatGPT、Claude Code 或任何 MCP 客戶端",
-                "manualConfig": "手動設定"
               }
             }
           }
@@ -5034,47 +6958,12 @@
               "title": "敏感資料匯出",
               "warningTitle": "此匯出包含你的整個資料庫。",
               "warningBody": "備份包含所有使用者、整合密鑰（已加密）、API 金鑰、面板設定和應用程式資料。請安全儲存匯出的檔案，且不要分享它。",
-              "typePrompt": "輸入 \"{phrase}\" 以繼續",
-              "submit": "匯出資料庫",
-              "cancel": "取消"
+              "submit": "匯出資料庫"
             }
           },
           "import": {
             "title": "還原資料庫",
-            "description": "上傳先前匯出的備份 ZIP 以還原你的資料庫。這將取代你的整個資料庫。如果備份是使用不同的加密金鑰建立的，密鑰將會自動重新加密。",
-            "warning": "還原備份將會完全取代你目前的資料庫並重新啟動應用程式。此動作無法復原。",
-            "dropzone": {
-              "title": "將備份 ZIP 拖曳至此處，或點擊以瀏覽",
-              "description": "僅接受來自 Homarr SQLite 備份的 .zip 檔案"
-            },
-            "changeFile": "更換檔案",
-            "button": "還原資料庫",
-            "success": {
-              "title": "還原完成",
-              "message": "資料庫已成功還原。應用程式正在重新啟動……"
-            },
-            "error": "匯入失敗"
-          },
-          "preview": {
-            "title": "備份內容",
-            "exported": "匯出於 {date}",
-            "loading": "正在分析備份檔案……",
-            "errorTitle": "預覽錯誤",
-            "entity": "實體",
-            "count": "計數",
-            "boards": "面板",
-            "entities": {
-              "board": "面板",
-              "user": "使用者",
-              "app": "應用程式",
-              "integration": "整合",
-              "item": "小工具",
-              "media": "媒體",
-              "search_engine": "搜尋引擎"
-            },
-            "analyzeError": "無法分析備份檔案",
-            "invalidMissingMetadata": "無效備份：缺少 metadata.json",
-            "invalidMissingDb": "無效備份：缺少 db.sqlite"
+            "description": "上傳先前匯出的備份 ZIP 以還原你的資料庫。這將取代你的整個資料庫。如果備份是使用不同的加密金鑰建立的，密鑰將會自動重新加密。"
           },
           "restore": {
             "dropzone": {
@@ -5084,29 +6973,20 @@
             "analyzing": "正在分析備份……",
             "changeFile": "更換檔案",
             "continueToRestore": "繼續還原",
-            "tryAgain": "再試一次",
             "analysisError": "分析錯誤",
             "preview": {
               "title": "備份內容",
               "exported": "匯出於 {date}",
               "entity": "實體",
               "count": "計數",
-              "boards": "面板",
               "entities": {
-                "board": "面板",
-                "user": "使用者",
-                "app": "應用程式",
-                "integration": "整合",
-                "item": "小工具",
-                "media": "媒體",
-                "search_engine": "搜尋引擎"
+                "item": "小工具"
               },
               "migrationsApplied": "已套用 {count} 個遷移",
               "migrationsAppliedPlural": "已套用 {count} 個遷移",
               "migrationsOlderVersion": "此備份來自較舊的 Homarr 版本。已套用 {count} 個結構遷移以使其更新。",
               "migrationsOlderVersionPlural": "此備份來自較舊的 Homarr 版本。已套用 {count} 個結構遷移以使其更新。",
               "migrationsUpToDate": "資料庫結構為最新（已套用 {count} 個遷移）",
-              "upToDate": "最新",
               "migrationsPending": "{count} 個待處理"
             },
             "migration": {
@@ -5117,21 +6997,21 @@
               "title": "破壞性動作",
               "warningTitle": "這將永久取代你的整個資料庫。",
               "warningBody": "所有當前的面板、使用者、應用程式、整合、設定和工作階段都將遺失。此動作無法復原。應用程式將在還原後重新啟動。",
-              "typePrompt": "輸入 \"{phrase}\" 以繼續",
-              "cancel": "取消",
               "submit": "還原資料庫"
             },
             "progress": {
               "title": "正在還原資料庫……",
-              "extracting": "正在解壓縮備份檔案",
-              "migrating": "正在套用資料庫遷移",
-              "encrypting": "正在重新加密整合密鑰",
-              "swapping": "正在取代資料庫檔案",
-              "restarting": "重新啟動伺服器"
+              "restarting": "重新啟動伺服器",
+              "relogin": "還原資料庫使您目前的工作階段失效。伺服器就緒後，Homarr 會將您導向登入頁面。"
             },
             "complete": {
               "title": "還原完成",
-              "message": "資料庫已成功還原。伺服器正在重新啟動 — 請在幾秒後重新整理頁面。"
+              "message": "資料庫已成功還原。伺服器正在重新啟動 — 請在幾秒後重新整理頁面。",
+              "button": "立即登入"
+            },
+            "timeout": {
+              "title": "伺服器未重新上線",
+              "message": "資料庫還原已完成，但 Homarr 未再次就緒。請重試連線檢查，或手動重新整理此頁面。"
             },
             "failed": {
               "title": "還原失敗"
@@ -5139,6 +7019,9 @@
             "invalidMissingMetadata": "無效備份：缺少 metadata.json",
             "invalidMissingDb": "無效備份：缺少 db.sqlite",
             "analyzeError": "無法分析備份"
+          },
+          "confirm": {
+            "typePrompt": "輸入「{phrase}」以繼續"
           }
         }
       },
@@ -5173,7 +7056,11 @@
               "toggleBoardEdit": "",
               "toggleColorScheme": "",
               "saveNotebook": "",
-              "openSpotlight": ""
+              "openSpotlight": "",
+              "openSpotlightApps": "開啟應用程式搜尋",
+              "openSpotlightAssistant": "開啟助理模式",
+              "openSpotlightPreferences": "開啟偏好設定模式",
+              "openAssistant": "開啟助理"
             },
             "note": ""
           }
@@ -5183,6 +7070,63 @@
   },
   "docker": {
     "title": "容器",
+    "reconciliation": {
+      "title": "Docker 設定助理",
+      "suggestions": "",
+      "attention": "{count} 個需要注意",
+      "endpointUnavailable": "無法檢查部分服務，因為以下端點無法使用：{names}",
+      "empty": "找不到可見的 Docker 服務。",
+      "emptyFilter": "沒有服務符合此檢視畫面。",
+      "ambiguous": "可能有一個以上的現有項目符合此服務。Homarr 不會自動選擇。",
+      "filter": {
+        "attention": "需要注意",
+        "represented": "已設定",
+        "all": "全部"
+      },
+      "state": {
+        "newRecognized": "準備連線",
+        "newApp": "新服務",
+        "represented": "已有代表項目",
+        "linked": "已連結",
+        "moved": "位址已變更"
+      },
+      "url": {
+        "manual": "手動輸入位址"
+      },
+      "health": {
+        "layer": {
+          "docker": "Docker",
+          "integrationConfiguration": "集成",
+          "authentication": "認證",
+          "apiRequest": "API",
+          "appRepresentation": "應用程式",
+          "widgetConfiguration": "小工具",
+          "widgetQuery": "小工具查詢"
+        },
+        "status": {
+          "available": "待定",
+          "configured": "已設定",
+          "linked": "已連結",
+          "missing": "遺失",
+          "changed": "已變更",
+          "unused": "未使用",
+          "notApplicable": "不適用",
+          "notObserved": "未觀察到"
+        }
+      },
+      "action": {
+        "review": "預覽",
+        "dismiss": "關閉",
+        "restoreDismissed": "還原已關閉項目（{count}）",
+        "setupIntegration": "設定整合",
+        "reviewIntegration": "檢閱整合",
+        "viewRepresentation": "檢視設定"
+      },
+      "loadError": {
+        "title": "無法載入 Docker 設定助理",
+        "message": "Docker 服務資訊無法使用。請留在此頁面並重試。"
+      }
+    },
     "table": {
       "updated": "已更新於 {when}",
       "refresh": {
@@ -5195,9 +7139,6 @@
       "totalMemory": "總記憶體: {memory}"
     },
     "field": {
-      "name": {
-        "label": "名稱"
-      },
       "state": {
         "label": "狀態",
         "option": {
@@ -5211,9 +7152,6 @@
         }
       },
       "stats": {
-        "cpu": {
-          "label": ""
-        },
         "memory": {
           "label": ""
         }
@@ -5276,8 +7214,11 @@
         }
       },
       "remove": {
-        "label": "移除",
         "confirm": "再次點擊以永久移除",
+        "confirmation": {
+          "title": "{count, plural, other {移除 # 個容器？}}",
+          "message": "{count, plural, other {這會永久移除 # 個容器：{names}}}"
+        },
         "notification": {
           "success": {
             "title": "容器已移除",
@@ -5289,8 +7230,13 @@
           }
         }
       },
+      "result": {
+        "failure": {
+          "title": "部分容器操作失敗",
+          "message": "{total, plural, other {{failed} 個操作中有 # 個失敗：{names}}}"
+        }
+      },
       "refresh": {
-        "label": "刷新",
         "notification": {
           "success": {
             "title": "容器已刷新",
@@ -5321,18 +7267,33 @@
     },
     "error": {
       "internalServerError": "取得 Docker 容器失敗",
+      "endpointUnavailable": "{count, plural, other {# 個 Docker 端點無法使用：{names}}}",
       "noColumns": "在小工具設定中至少選擇一欄"
     }
   },
   "kubernetes": {
+    "context": {
+      "label": "Kubernetes 內容",
+      "loadError": {
+        "title": "無法載入 Kubernetes 內容",
+        "message": "內容資訊無法使用。請留在此頁面並重試。"
+      },
+      "status": {
+        "available": "待定",
+        "degraded": "指標無法使用",
+        "unavailable": "無法使用"
+      },
+      "unavailable": "無法連線至此 Kubernetes 內容。請選擇其他內容，或確認其憑證與端點。",
+      "metricsUnavailable": "此內容可連線，但 Metrics Server 無法使用。即使沒有即時 CPU 與記憶體使用量，清單仍可使用。"
+    },
     "cluster": {
       "title": "叢集儀表板",
       "label": "叢集",
       "providers": "提供者",
       "version": "版本",
-      "architecture": "架構",
       "capacity": {
         "title": "容量",
+        "metricsUnavailable": "Metrics Server 無法使用。清單與保留容量仍會顯示，但無法顯示即時 CPU 與記憶體使用量。",
         "resource": {
           "reserved": "已保留",
           "used": "已使用"
@@ -5351,38 +7312,10 @@
       }
     },
     "nodes": {
-      "label": "節點",
       "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "state": {
-          "label": "狀態",
-          "option": {
-            "ready": "準備",
-            "NotReady": "未準備"
-          }
-        },
-        "cpu": {
-          "label": "處理器"
-        },
-        "memory": {
-          "label": "記憶體"
-        },
-        "pods": {
-          "label": "容器組"
-        },
-        "operatingSystem": {
-          "label": "系統"
-        },
-        "architecture": {
-          "label": "架構"
-        },
+        "metricsUnavailable": "無法使用",
         "kubernetesVersion": {
           "label": "Kubernetes 版本"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
         }
       },
       "table": {
@@ -5390,43 +7323,17 @@
       }
     },
     "namespaces": {
-      "label": "命名空間",
-      "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "state": {
-          "label": "狀態",
-          "option": {
-            "active": "活動中",
-            "terminating": "終止中"
-          }
-        },
-        "creationTimestamp": {
-          "label": "已創建"
-        }
-      },
       "table": {
         "search": "搜尋 {count} 命名空間"
       }
     },
     "ingresses": {
-      "label": "進入點",
       "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "namespace": {
-          "label": "命名空間"
-        },
         "className": {
           "label": "類別名稱"
         },
         "rulesAndPaths": {
           "label": "規則與路徑"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
         }
       },
       "table": {
@@ -5434,17 +7341,7 @@
       }
     },
     "services": {
-      "label": "服務",
       "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "namespace": {
-          "label": "命名空間"
-        },
-        "type": {
-          "label": "類別"
-        },
         "ports": {
           "label": "Ports"
         },
@@ -5453,9 +7350,6 @@
         },
         "clusterIP": {
           "label": "叢集 IP"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
         }
       },
       "table": {
@@ -5463,25 +7357,12 @@
       }
     },
     "pods": {
-      "label": "容器組",
       "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "namespace": {
-          "label": "命名空間"
-        },
         "image": {
           "label": "Image"
         },
         "applicationType": {
           "label": "應用程式類別"
-        },
-        "status": {
-          "label": "狀態"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
         }
       },
       "table": {
@@ -5489,51 +7370,17 @@
       }
     },
     "secrets": {
-      "label": "密鑰",
-      "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "namespace": {
-          "label": "命名空間"
-        },
-        "type": {
-          "label": "類別"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
-        }
-      },
       "table": {
         "search": "搜尋 {count} 密鑰"
       }
     },
     "configmaps": {
-      "label": "配置映射",
-      "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "namespace": {
-          "label": "命名空間"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
-        }
-      },
       "table": {
         "search": "搜尋 {count} 配置映射"
       }
     },
     "volumes": {
-      "label": "卷",
       "field": {
-        "name": {
-          "label": "名稱"
-        },
-        "namespace": {
-          "label": "命名空間"
-        },
         "accessModes": {
           "label": "存取模式"
         },
@@ -5548,12 +7395,6 @@
         },
         "volumeName": {
           "label": "卷名稱"
-        },
-        "status": {
-          "label": "狀態"
-        },
-        "creationTimestamp": {
-          "label": "已創建"
         }
       },
       "table": {
@@ -5562,6 +7403,29 @@
     },
     "error": {
       "internalServerError": "無法擷取 Kubernetes 資料"
+    },
+    "field": {
+      "name": {
+        "label": "工作名稱"
+      },
+      "namespace": {
+        "label": "命名空間"
+      },
+      "creationTimestamp": {
+        "label": "已創建"
+      },
+      "state": {
+        "label": "工作狀態"
+      },
+      "status": {
+        "label": "狀態"
+      },
+      "type": {
+        "label": "下載器類型"
+      },
+      "architecture": {
+        "label": "架構"
+      }
     }
   },
   "permission": {
@@ -5595,71 +7459,27 @@
   },
   "navigationStructure": {
     "manage": {
-      "workshop": {
-        "label": "Workshop"
-      },
       "label": "管理",
-      "boards": {
-        "label": "面板"
-      },
-      "integrations": {
-        "label": "集成",
+      "custom-widgets": {
         "edit": {
-          "label": "編輯"
+          "flow": {
+            "label": "流程"
+          }
         },
-        "new": {
-          "label": "創建"
-        }
-      },
-      "search-engines": {
-        "label": "搜尋引擎",
-        "new": {
-          "label": "創建"
+        "workshop": {
+          "label": "工作坊"
         },
-        "edit": {
-          "label": "編輯"
-        }
-      },
-      "medias": {
-        "label": "多媒體"
-      },
-      "apps": {
-        "label": "應用程式",
-        "new": {
-          "label": "創建"
-        },
-        "edit": {
-          "label": "編輯"
+        "publish": {
+          "label": "發佈至 Workshop"
         }
       },
       "users": {
-        "label": "使用者",
-        "create": {
-          "label": "創建"
-        },
         "general": "一般",
-        "security": "安全",
-        "board": "面板",
-        "groups": {
-          "label": "用戶組"
-        },
-        "invites": {
-          "label": "邀請"
-        }
+        "security": "安全"
       },
       "tools": {
         "label": "工具",
-        "tasks": {
-          "label": ""
-        },
-        "docker": {
-          "label": "Docker",
-          "logs": {
-            "label": "日誌"
-          }
-        },
         "kubernetes": {
-          "label": "Kubernetes",
           "nodes": {
             "label": "節點"
           },
@@ -5685,11 +7505,7 @@
             "label": "卷"
           }
         },
-        "logs": {
-          "label": "Logs"
-        },
         "certificates": {
-          "label": "憑證",
           "hostnames": {
             "label": ""
           }
@@ -5700,12 +7516,60 @@
       },
       "about": {
         "label": "關於"
+      },
+      "assistant": {
+        "label": "助理"
       }
     }
   },
   "search": {
     "placeholder": "搜尋任意內容",
     "nothingFound": "不存在",
+    "modePicker": {
+      "search": {
+        "label": "搜尋",
+        "placeholder": "搜尋應用程式、面板、頁面、命令與偏好設定"
+      },
+      "apps": {
+        "label": "應用程式",
+        "placeholder": "搜尋應用程式、面板與整合"
+      },
+      "command": {
+        "label": "命令",
+        "placeholder": "搜尋操作與命令"
+      },
+      "preferences": {
+        "label": "偏好設定",
+        "placeholder": "搜尋並變更偏好設定"
+      },
+      "assistant": {
+        "label": "助理",
+        "placeholder": "詢問助理"
+      },
+      "external": {
+        "label": "網路",
+        "placeholder": "使用外部搜尋引擎搜尋"
+      },
+      "media": {
+        "label": "多媒體",
+        "placeholder": "搜尋電影或節目",
+        "fallback": "搜尋媒體「{query}」"
+      },
+      "userGroup": {
+        "label": "人員",
+        "placeholder": "搜尋使用者與群組"
+      },
+      "continueWith": "繼續使用",
+      "dialogAriaLabel": "{mode} 命令選單",
+      "navigationLabel": "搜尋模式",
+      "modeAriaLabel": "{mode} 模式",
+      "resultsAriaLabel": "{mode} 結果",
+      "footer": {
+        "navigate": "導覽",
+        "open": "開啟",
+        "close": "關閉"
+      }
+    },
     "error": {
       "fetch": "取得數據時發生錯誤"
     },
@@ -5714,7 +7578,6 @@
         "help": "搜尋應用程式，集成或面板",
         "group": {
           "app": {
-            "title": "應用程式",
             "children": {
               "action": {
                 "open": {
@@ -5730,7 +7593,6 @@
             }
           },
           "board": {
-            "title": "面板",
             "children": {
               "action": {
                 "open": {
@@ -5750,9 +7612,6 @@
                 "title": "為面板選擇一個動作"
               }
             }
-          },
-          "integration": {
-            "title": "集成"
           }
         }
       },
@@ -5780,9 +7639,6 @@
               },
               "newBoard": {
                 "label": "創建新面板"
-              },
-              "importBoard": {
-                "label": "匯入面板"
               },
               "newApp": {
                 "label": "創建新應用程式"
@@ -5853,7 +7709,6 @@
                 }
               },
               "defaultSearchEngineId": {
-                "label": "預設搜尋引擎",
                 "children": {
                   "detail": {
                     "title": "選取你的預設搜尋引擎"
@@ -5861,7 +7716,6 @@
                 }
               },
               "openSearchInNewTab": {
-                "label": "在新分頁中開啟搜尋結果",
                 "children": {
                   "detail": {
                     "title": "在新分頁中開啟搜尋結果"
@@ -5869,7 +7723,6 @@
                 }
               },
               "ddgBangs": {
-                "label": "啟用 DuckDuckGo bangs",
                 "children": {
                   "detail": {
                     "title": "啟用 DuckDuckGo bangs"
@@ -5881,6 +7734,13 @@
                 "children": {
                   "detail": {
                     "title": "選取一週的第一天"
+                  }
+                }
+              },
+              "byteUnitSystem": {
+                "children": {
+                  "detail": {
+                    "title": "選擇資料大小單位"
                   }
                 }
               },
@@ -5901,7 +7761,6 @@
                 }
               },
               "pingIconsEnabled": {
-                "label": "使用圖示顯示 Ping",
                 "children": {
                   "detail": {
                     "title": "使用圖示顯示 Ping"
@@ -5909,7 +7768,6 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "啟用小工具右鍵選單",
                 "children": {
                   "detail": {
                     "title": "啟用小工具右鍵選單"
@@ -5937,6 +7795,7 @@
             "description": "開始輸入以搜尋你的媒體請求整合",
             "disabled": {
               "noIntegration": "新增 Overseerr、Jellyseerr 或 Seerr 整合以啟用媒體搜尋。",
+              "signInRequired": "登入以搜尋媒體請求整合。",
               "scoped": "此小工具沒有可存取的媒體請求整合。"
             }
           }
@@ -5953,7 +7812,6 @@
         "help": "使用外部搜尋引擎",
         "group": {
           "searchEngine": {
-            "title": "搜尋引擎",
             "tipDdgBangs": "提示：你也可以在此使用任何 DuckDuckGo bangs，例如 !something",
             "bang": {
               "searchWithQuery": "使用 {label} 搜尋 \"{query}\"",
@@ -6004,20 +7862,6 @@
         "group": {
           "mode": {
             "title": "模式"
-          },
-          "help": {
-            "title": "幫助",
-            "option": {
-              "documentation": {
-                "label": "說明書"
-              },
-              "submitIssue": {
-                "label": "提交問題"
-              },
-              "discord": {
-                "label": "Discord 社群"
-              }
-            }
           }
         }
       },
@@ -6029,9 +7873,10 @@
               "other": {
                 "label": "使用其他搜尋引擎進行搜尋"
               },
-              "no-default": {
-                "label": "無預設搜尋引擎",
-                "description": "於偏好設定中設定預設搜尋引擎"
+              "no-engines": {
+                "label": "未設定搜尋引擎",
+                "descriptionCreate": "新增搜尋引擎，以便從命令選單進行搜尋",
+                "descriptionUnavailable": "請管理員設定搜尋引擎"
               },
               "search": {
                 "label": "使用 {name} 搜尋 {query}"
@@ -6111,7 +7956,6 @@
         "help": "搜尋使用者或用戶組",
         "group": {
           "user": {
-            "title": "使用者",
             "children": {
               "action": {
                 "detail": {
@@ -6124,7 +7968,6 @@
             }
           },
           "group": {
-            "title": "用戶組",
             "children": {
               "action": {
                 "detail": {
@@ -6148,9 +7991,6 @@
     "engine": {
       "search": "尋找搜尋引擎",
       "field": {
-        "name": {
-          "label": "名稱"
-        },
         "short": {
           "label": "不足"
         },
@@ -6163,12 +8003,19 @@
       },
       "page": {
         "list": {
-          "title": "搜尋引擎",
+          "ariaLabel": "已設定的搜尋引擎",
           "noResults": {
             "title": "尚未設定搜尋引擎",
-            "action": "創建搜尋引情"
+            "description": "搜尋引擎讓 Spotlight 將查詢傳送至網站或已連線的服務。",
+            "action": "創建搜尋引情",
+            "filteredTitle": "沒有搜尋引擎符合您的搜尋",
+            "filteredDescription": "沒有搜尋引擎符合「{search}」。請嘗試其他名稱或 URL。"
           },
-          "interactive": "交互，使用集成"
+          "interactive": "交互，使用集成",
+          "type": {
+            "generic": "URL 範本",
+            "fromIntegration": "集成"
+          }
         },
         "create": {
           "title": "創建搜尋引擎",
@@ -6187,11 +8034,9 @@
           "title": "編輯搜尋引擎",
           "notification": {
             "success": {
-              "title": "應用編輯成功",
               "message": "搜尋引擎已儲存成功"
             },
             "error": {
-              "title": "無法應用變更",
               "message": "搜尋引擎無法儲存"
             }
           },
@@ -6330,6 +8175,10 @@
     }
   },
   "log": {
+    "context": {
+      "widgetError": "小工具在此時間附近回報錯誤",
+      "expiredWidgetError": "不再保留此小工具錯誤附近的記錄"
+    },
     "level": {
       "option": {
         "debug": "",
@@ -6341,7 +8190,6 @@
   },
   "onboardingTour": {
     "learnMore": "閱讀文件",
-    "next": "下一步",
     "prev": "返回",
     "done": "完成",
     "skip": "略過導覽",
@@ -6404,6 +8252,360 @@
         "title": "你的個人資料",
         "description": "變更你的色彩方案、語言、首頁面板和偏好設定。你也可以從這裡跳轉到管理區域。"
       }
+    }
+  },
+  "metadata": {
+    "description": "適用於 *arr 堆疊與完整家庭實驗室的自架儀表板。整合 50 多項服務、即時小工具，無需設定檔。",
+    "dashboardTitle": "{appName} 儀表板"
+  },
+  "assistant": {
+    "title": "助理",
+    "open": "開啟助理",
+    "close": "關閉助理",
+    "minimize": "最小化助理",
+    "spotlight": "詢問助理",
+    "spotlightDescription": "無需離開命令選單即可輸入並傳送提示。",
+    "spotlightPrompt": {
+      "title": "詢問助理",
+      "description": "在上方輸入提示。按 Enter 在背景中傳送。",
+      "send": "傳送提示",
+      "empty": "在上方輸入提示"
+    },
+    "unavailable": {
+      "checking": "正在檢查助理是否可用……",
+      "error": "無法檢查助理是否可用。請重試。",
+      "notConfigured": "管理員必須先設定並啟用助理。",
+      "signIn": "登入以使用助理。"
+    },
+    "newConversation": "新對話",
+    "conversations": "對話",
+    "conversationActions": "對話操作",
+    "searchConversations": "搜尋對話",
+    "noMatchingConversations": "沒有符合條件的對話",
+    "moreActions": "更多回應操作",
+    "renameConversation": {
+      "action": "重新命名",
+      "label": "對話名稱",
+      "save": "儲存名稱",
+      "failedTitle": "無法重新命名對話",
+      "failedDescription": "Homarr 無法重新命名此對話。請重試。"
+    },
+    "deleteConversation": {
+      "title": "刪除對話？",
+      "description": "「{title}」及其訊息將永久刪除。",
+      "failedTitle": "無法刪除對話",
+      "failedDescription": "Homarr 無法刪除此對話。請重試。"
+    },
+    "closeHistory": "關閉對話記錄",
+    "openHistory": "開啟對話記錄",
+    "emptyTitle": "我可以如何協助？",
+    "emptyDescription": "詢問 Homarr 設定、檢查即時執行個體資料，或在您希望我進行變更時核准操作。",
+    "suggestions": {
+      "health": {
+        "label": "檢查服務健康狀態",
+        "prompt": "檢查我的整合，並摘要任何需要注意的事項。"
+      },
+      "explore": {
+        "label": "探索我的 Homarr",
+        "prompt": "向我展示此 Homarr 執行個體中可檢視和管理的內容。"
+      },
+      "media": {
+        "label": "尋找要請求的媒體",
+        "prompt": "幫我尋找要請求的電影或影集。"
+      },
+      "style": {
+        "label": "改善儀表板",
+        "prompt": "幫我改善面板的外觀或自訂 CSS。先顯示我的面板，然後在變更時保留目前設定。"
+      },
+      "designWidget": {
+        "label": "設計小工具",
+        "prompt": "建立並安裝自訂小工具，用於 "
+      }
+    },
+    "composerPlaceholder": "詢問助理……",
+    "runtime": {
+      "model": "模型",
+      "searchModels": "搜尋模型",
+      "noModels": "沒有可用的模型",
+      "otherModels": "其他模型",
+      "imageInput": "接受影像輸入",
+      "thinking": "思考模式",
+      "reasoning": {
+        "auto": "自動",
+        "none": "關閉",
+        "minimal": "最小",
+        "low": "低",
+        "medium": "中",
+        "high": "高"
+      }
+    },
+    "providerQuota": {
+      "title": "Homarr 供應商",
+      "communityWorkshop": "社群 Workshop",
+      "dailyAllowance": "每日請求額度",
+      "remainingLabel": "剩餘 {remaining} / {limit} 個 Homarr 供應商請求",
+      "loading": "正在載入 Homarr 供應商額度",
+      "signInRequired": "使用 Homarr 供應商需要登入 Workshop",
+      "signInDescription": "透過社群 Workshop 使用 GitHub 登入，即可獲得獨立的每日額度。",
+      "exhaustedDescription": "今日的 Homarr 供應商額度已用完。額度將於 UTC 午夜重設。",
+      "unavailableDescription": "請登入 Workshop，或等待 Homarr 供應商額度重設。",
+      "signIn": "使用 GitHub 登入",
+      "signInError": "GitHub 登入失敗。請稍後再試。",
+      "loadError": "無法載入 Homarr 供應商額度。",
+      "reset": "於 <time></time> 後 {relative} 重設",
+      "toolCalls": "每次模型請求和完成的工具呼叫都會使用一個請求額度。",
+      "retry": "重新載入額度",
+      "level": {
+        "ok": "正常",
+        "warning": "警告",
+        "bad": "低",
+        "dead": "已使用"
+      }
+    },
+    "stop": "停止回應",
+    "send": "傳送訊息",
+    "copy": "複製回應",
+    "copyMessage": "複製訊息",
+    "editMessage": "編輯訊息",
+    "updateMessage": "更新訊息",
+    "regenerate": "重新產生回應",
+    "helpful": "有幫助",
+    "notHelpful": "沒有幫助",
+    "readAloud": "朗讀回應",
+    "stopReading": "停止朗讀回應",
+    "feedbackError": "無法儲存您的意見回饋。請再試一次。",
+    "exportMarkdown": "匯出為 Markdown",
+    "exportConversation": {
+      "action": "將對話匯出為 Markdown",
+      "failedTitle": "無法匯出對話",
+      "failedDescription": "Homarr 無法載入此對話。請再試一次。"
+    },
+    "reasoning": "思考中",
+    "previousResponse": "上一個回應",
+    "nextResponse": "下一個回應",
+    "removeAttachment": "移除附件",
+    "downloadFile": "下載 {name}",
+    "attachedImage": "附加的影像",
+    "externalImageBlocked": "基於隱私考量，已封鎖外部影像",
+    "image": {
+      "loading": "正在載入影像",
+      "failed": "無法載入此影像。",
+      "retry": "再次嘗試載入影像"
+    },
+    "quoteSelection": "引用",
+    "dismissQuote": "移除引用",
+    "attachments": {
+      "add": "附加影像或文件",
+      "errorTitle": "無法新增附件",
+      "imageUnsupported": "選取的模型不支援影像輸入。"
+    },
+    "mentions": {
+      "menu": "新增 Homarr 內容",
+      "context": "上下文",
+      "app": "應用程式",
+      "integration": "集成",
+      "board": "面板",
+      "widget": "小工具",
+      "tools": "可用工具"
+    },
+    "markdown": {
+      "diagram": "圖表",
+      "renderingDiagram": "正在轉譯圖表……",
+      "diagramUnavailable": "無法轉譯此圖表。"
+    },
+    "commands": {
+      "menu": "助理指令",
+      "health": "準備服務健康狀態檢查",
+      "explore": "準備此 Homarr 執行個體的概覽",
+      "media": "準備媒體搜尋",
+      "style": "準備面板外觀或自訂 CSS 變更",
+      "designWidget": "準備以單一提示建立自訂小工具"
+    },
+    "usage": {
+      "tokens": "權杖",
+      "contextWindow": "內容視窗",
+      "requestDetails": "請求詳細資料",
+      "used": "最新步驟",
+      "remaining": "剩餘",
+      "capacity": "容量",
+      "input": "輸入",
+      "output": "輸出",
+      "cached": "已快取的輸入",
+      "cacheWrite": "快取寫入",
+      "reasoning": "推理",
+      "inputShort": "輸入",
+      "outputShort": "輸出",
+      "cachedShort": "已快取",
+      "reasoningShort": "推理",
+      "firstOutput": "第一個輸出",
+      "homarrTiming": "Homarr 觀測值",
+      "endToEnd": "端對端",
+      "observedThroughput": "觀測到的輸送量",
+      "providerTiming": "供應商回報",
+      "loadingProviderDetails": "正在載入產生詳細資料……",
+      "providerDetailsPending": "OpenRouter 仍在處理部分產生詳細資料。重新開啟以重試。",
+      "providerLatency": "供應商延遲",
+      "generationTime": "產生時間",
+      "moderationLatency": "審核",
+      "providerThroughput": "供應商輸送量",
+      "fallbacks": "備援",
+      "fallbackLatency": "備援延遲",
+      "cacheDiscount": "快取折扣",
+      "normalizedTokens": "OpenRouter 正規化輸入 / 輸出",
+      "byok": "BYOK",
+      "cost": "費用",
+      "reported": "由供應商回報",
+      "estimated": "根據模型定價估算",
+      "upstreamCost": "上游推理",
+      "webSearches": "網路搜尋",
+      "finishReason": "完成原因",
+      "notReported": "未回報",
+      "agentSteps": "代理程式步驟",
+      "step": "步驟 {number}",
+      "generation": "生成"
+    },
+    "toolInput": "輸入",
+    "toolOutput": "輸出",
+    "toolActivity": {
+      "iconSearch": "正在尋找「{query}」圖示",
+      "iconBrowse": "瀏覽可用圖示"
+    },
+    "toolNavigation": {
+      "openPreview": "開啟預覽",
+      "openWidget": "開啟小工具"
+    },
+    "webSearch": {
+      "title": "網頁搜尋",
+      "completed": "OpenRouter 已為此回應搜尋即時網頁。",
+      "searches": "{count, plural, other {# 次搜尋}}",
+      "sources": "{count, plural, other {# 個來源}}"
+    },
+    "responseError": {
+      "title": "助理無法完成操作",
+      "description": "請再試一次。如果問題持續，請要求管理員確認已設定的模型端點。"
+    },
+    "toolPreparationError": {
+      "title": "無法準備此請求",
+      "description": "模型在提供完整詳細資料前便停止了。請重試回應，或再次描述請求。未進行任何變更。"
+    },
+    "busy": {
+      "title": "助理目前已在處理中",
+      "description": "請等待目前的回應，或開啟它以停止執行。"
+    },
+    "pendingAction": {
+      "answerTitle": "需要回答",
+      "answerFallback": "選擇回答以繼續",
+      "formTitle": "檢視應用程式詳細資料",
+      "boardFormTitle": "檢視看板變更",
+      "review": "預覽",
+      "sendBlocked": "請先解決待處理的請求再傳送"
+    },
+    "activity": {
+      "thinking": "助理正在思考",
+      "working": "正在處理您的提示",
+      "ready": "回應已準備就緒",
+      "completed": "開啟回應",
+      "approval": "需要核准",
+      "failed": "助理需要您的注意",
+      "expand": "開啟助理回應",
+      "dismiss": "關閉助理活動"
+    },
+    "scrollToLatest": "捲動至最新內容",
+    "refresh": {
+      "action": "重新整理目前檢視畫面",
+      "working": "正在重新整理目前檢視畫面",
+      "completeTitle": "檢視畫面已重新整理",
+      "completeDescription": "可見的 Homarr 資料已重新載入。",
+      "failedTitle": "無法重新整理檢視畫面",
+      "failedDescription": "變更可能仍已儲存。請再次嘗試重新整理。"
+    },
+    "askUser": {
+      "preparing": "正在準備問題",
+      "answered": "您的回答",
+      "other": "其他",
+      "otherLabel": "您的回答",
+      "otherPlaceholder": "輸入其他答案……",
+      "submit": "傳送回答",
+      "cancelOther": "取消其他回答",
+      "optionKind": {
+        "affirmative": "確認",
+        "negative": "拒絕",
+        "alternative": "選項",
+        "custom": "自訂"
+      }
+    },
+    "configureApp": {
+      "title": "檢視應用程式詳細資料",
+      "description": "選擇本機圖示，並在助理要求建立核准前調整任何設定。",
+      "preparing": "正在準備應用程式詳細資料",
+      "continue": "使用這些詳細資料",
+      "ready": "應用程式詳細資料已準備就緒",
+      "automaticContinue": "自動使用這些應用程式詳細資料"
+    },
+    "configureBoardSettings": {
+      "title": "檢視看板變更",
+      "loading": "正在載入目前的看板設定",
+      "loadErrorTitle": "無法載入看板設定",
+      "loadErrorDescription": "看板可能已不存在，或您沒有修改它的權限。",
+      "proposedCount": "助理提出了 {count} 個欄位",
+      "changeCount": "{count} 項變更已準備就緒",
+      "ready": "看板變更已準備就緒",
+      "cancelled": "已保留目前的看板設定",
+      "noChanges": "不會變更任何設定",
+      "keepCurrent": "保留目前設定",
+      "continue": "繼續進行核准",
+      "automaticContinue": "自動接受建議的看板變更",
+      "resetAll": "重設所有變更",
+      "tabs": {
+        "css": "自訂 CSS",
+        "appearance": "外觀",
+        "background": "背景",
+        "general": "一般"
+      },
+      "cssDescription": "編輯完整樣式表。除非在此移除，否則現有規則都會保留。",
+      "cssCharacters": "{count} / 16384 個字元",
+      "copyCss": "複製 CSS",
+      "copied": "已複製",
+      "restoreCss": "還原目前的 CSS",
+      "remoteCssTitle": "此 CSS 會載入遠端資源",
+      "remoteCssDescription": "匯入的樣式表和遠端網址會在看板載入時連線至其他伺服器。請在繼續前先檢視。"
+    },
+    "configureWidget": {
+      "title": "檢視小工具",
+      "preparing": "正在準備小工具設定",
+      "review": "檢視小工具和整合",
+      "ready": "小工具設定已準備就緒",
+      "cancelled": "未新增小工具",
+      "automaticContinue": "自動接受建議的小工具設定",
+      "definitionLoadErrorTitle": "無法載入小工具設定",
+      "definitionLoadErrorDescription": "Homarr 無法載入此小工具的設定。請再試一次。",
+      "loadErrorTitle": "無法載入整合",
+      "loadErrorDescription": "Homarr 無法載入此小工具可用的整合。",
+      "noIntegrationTitle": "需要相容的整合",
+      "noIntegrationDescription": "請先設定此小工具支援的整合，再將其新增至儀表板。",
+      "connectIntegration": "連線服務",
+      "manageIntegrations": "管理集成",
+      "skip": "不要新增",
+      "errorTitle": "無法準備小工具設定",
+      "errorDescription": "模型未提供完整的小工具設定。未新增任何小工具。"
+    },
+    "approvalRequired": "需要核准",
+    "complete": "完成",
+    "denied": "已拒絕",
+    "failed": "失敗",
+    "working": "處理中",
+    "approvalDescription": "執行前請檢視此變更。",
+    "approveAndRun": "核准並執行",
+    "deny": "拒絕",
+    "autoApproval": {
+      "label": "自動核准",
+      "composerLabel": "代我核准",
+      "title": "自動核准",
+      "description": "自動準備表單，並核准此對話中的受保護變更。問題仍會等待您的回答，且仍會套用您的 Homarr 權限。切換對話時，此功能會關閉。",
+      "enable": "為此對話啟用",
+      "disable": "關閉自動核准",
+      "enabled": "自動核准已開啟",
+      "approving": "正在自動核准"
     }
   }
 }
