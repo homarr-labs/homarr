@@ -18,16 +18,20 @@ import type { BeszelTimePeriod } from "./chart";
 import {
   BeszelChartPanel,
   CPU_Y_AXIS_DOMAIN,
+  hasGpuMetric,
   normalizeBeszelByteRate,
   useContainerNames,
   useDiskChartData,
   useDiskIOChartData,
   useDockerChartData,
+  useGpuChartData,
+  useGpuDevices,
   useSystemChartData,
 } from "./chart";
-import { createByteChartAxisFormatters, formatPercent } from "./format";
+import { createByteChartAxisFormatters, formatPercent, formatWatts } from "./format";
 import { makeTooltipProps } from "./tooltip";
 import { useLiveStats } from "./use-live-stats";
+import { useDemoReadOnly } from "../../demo-read-only";
 
 const CHART_HEIGHT = 180;
 const MEBIBYTE = 1024 * 1024;
@@ -39,6 +43,9 @@ export interface BeszelStatsVisibility {
   disk: boolean;
   diskIO: boolean;
   network: boolean;
+  gpuUsage: boolean;
+  gpuMemory: boolean;
+  gpuPower: boolean;
   dockerCpu: boolean;
   dockerMemory: boolean;
   dockerNetwork: boolean;
@@ -92,14 +99,16 @@ export function BeszelStatsView({
       rate: makeTooltipProps(formatByteRate, true),
       percentTotal: makeTooltipProps(formatPercent, true),
       bytesTotal: makeTooltipProps(formatBytes, true),
+      watts: makeTooltipProps(formatWatts),
     }),
     [formatByteRate, formatBytes],
   );
   const showDocker = visibility.dockerCpu || visibility.dockerMemory || visibility.dockerNetwork;
   const isLive = timePeriod === "1m";
+  const demoReadOnly = useDemoReadOnly();
   const historicalQuery = clientApi.widget.beszel.getSystemStats.useQuery(
     { integrationIds, systemId, timePeriod, includeDocker: showDocker },
-    { refetchInterval: isLive ? false : 5_000, enabled: !isLive && systemId !== "" },
+    { refetchInterval: isLive || demoReadOnly ? false : 5_000, enabled: !isLive && systemId !== "" },
   );
   const historicalData = isLive ? historicalQuery.data : getUsableWidgetQueryData(historicalQuery);
   const { data: liveData, error: liveError } = useLiveStats(integrationIds, systemId, isLive && systemId !== "");
@@ -154,6 +163,41 @@ export function BeszelStatsView({
     timePeriod,
     locale,
   );
+
+  const gpuDevices = useGpuDevices(
+    whenVisible(visibility.gpuUsage || visibility.gpuMemory || visibility.gpuPower, systemStats),
+  );
+  const gpuSeries = useMemo(
+    () =>
+      gpuDevices.map((device, index) => ({
+        name: device.seriesName,
+        color: containerColors[index % containerColors.length] as string,
+      })),
+    [gpuDevices],
+  );
+  const gpuUsageData = useGpuChartData(
+    whenVisible(visibility.gpuUsage, systemStats),
+    gpuDevices,
+    "usage",
+    timePeriod,
+    locale,
+  );
+  const gpuMemoryData = useGpuChartData(
+    whenVisible(visibility.gpuMemory, systemStats),
+    gpuDevices,
+    "memory",
+    timePeriod,
+    locale,
+  );
+  const gpuPowerData = useGpuChartData(
+    whenVisible(visibility.gpuPower, systemStats),
+    gpuDevices,
+    "power",
+    timePeriod,
+    locale,
+  );
+  const hasGpuMemory = hasGpuMetric(systemStats, "memory");
+  const hasGpuPower = hasGpuMetric(systemStats, "power");
 
   const efsPaths = useMemo(() => {
     const paths = new Set<string>();
@@ -281,6 +325,9 @@ export function BeszelStatsView({
     (visibility.disk && diskData.length > 0 ? 1 : 0) +
     (visibility.diskIO && diskIOData.length > 0 ? 1 : 0) +
     (visibility.network && networkData.length > 0 ? 1 : 0) +
+    (visibility.gpuUsage && gpuSeries.length > 0 && gpuUsageData.length > 0 ? 1 : 0) +
+    (visibility.gpuMemory && hasGpuMemory && gpuMemoryData.length > 0 ? 1 : 0) +
+    (visibility.gpuPower && hasGpuPower && gpuPowerData.length > 0 ? 1 : 0) +
     (showDocker && containerSeries.length > 0
       ? (visibility.dockerCpu && dockerCpuData.length > 0 ? 1 : 0) +
         (visibility.dockerMemory && dockerMemoryData.length > 0 ? 1 : 0) +
@@ -364,6 +411,53 @@ export function BeszelStatsView({
             tooltipProps: tooltips.rate,
           }}
         />
+      )}
+      {gpuSeries.length > 0 && (
+        <>
+          {visibility.gpuUsage && gpuUsageData.length > 0 && (
+            <BeszelChartPanel
+              title={t("chart.gpuUsage.title")}
+              subtitle={t("chart.gpuUsage.subtitle")}
+              chartProps={{
+                h: chartHeight,
+                withXAxis: showXAxis,
+                data: gpuUsageData,
+                series: gpuSeries,
+                yAxisFormatter: formatPercent,
+                yAxisDomain: CPU_Y_AXIS_DOMAIN,
+                tooltipProps: tooltips.percent,
+              }}
+            />
+          )}
+          {visibility.gpuMemory && hasGpuMemory && gpuMemoryData.length > 0 && (
+            <BeszelChartPanel
+              title={t("chart.gpuMemory.title")}
+              subtitle={t("chart.gpuMemory.subtitle")}
+              chartProps={{
+                h: chartHeight,
+                withXAxis: showXAxis,
+                data: gpuMemoryData,
+                series: gpuSeries,
+                yAxisFormatter: byteAxisFormatters.bytes,
+                tooltipProps: tooltips.bytesTotal,
+              }}
+            />
+          )}
+          {visibility.gpuPower && hasGpuPower && gpuPowerData.length > 0 && (
+            <BeszelChartPanel
+              title={t("chart.gpuPower.title")}
+              subtitle={t("chart.gpuPower.subtitle")}
+              chartProps={{
+                h: chartHeight,
+                withXAxis: showXAxis,
+                data: gpuPowerData,
+                series: gpuSeries,
+                yAxisFormatter: formatWatts,
+                tooltipProps: tooltips.watts,
+              }}
+            />
+          )}
+        </>
       )}
       {showDocker && containerSeries.length > 0 && (
         <>

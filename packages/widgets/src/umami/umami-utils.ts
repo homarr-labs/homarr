@@ -1,8 +1,11 @@
 import type { useI18n } from "@homarr/translation/client";
+import { useDemoReadOnly } from "../demo-read-only";
 
 import { timeFrameValues } from "./index";
 
-export const umamiQueryOptions = { refetchInterval: 60_000 } as const;
+export const useUmamiQueryOptions = (): { refetchInterval: number | false } => ({
+  refetchInterval: useDemoReadOnly() ? false : 60_000,
+});
 
 export const EVENT_COLORS = ["blue.5", "orange.5", "green.5", "red.5", "violet.5", "teal.5", "yellow.5", "pink.5"];
 

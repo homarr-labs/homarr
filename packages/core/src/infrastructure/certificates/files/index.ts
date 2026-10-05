@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { rootCertificates } from "node:tls";
 
-const getCertificateFolder = () => {
+export const getCertificateFolder = () => {
   if (process.env.NODE_ENV !== "production") return process.env.LOCAL_CERTIFICATE_PATH;
   return process.env.LOCAL_CERTIFICATE_PATH ?? path.join("/appdata", "trusted-certificates");
 };

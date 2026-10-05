@@ -20,6 +20,8 @@ export const createByteChartAxisFormatters = (
 
 export const formatPercent = (value: number): string => `${value.toFixed(1)}%`;
 
+export const formatWatts = (value: number): string => `${value.toFixed(1)} W`;
+
 export const getProgressTrackSize = (size: "xs" | "sm"): number => (size === "xs" ? 6 : 9);
 
 export const formatUptime = (seconds: number): string => dayjs.duration(seconds, "seconds").humanize();

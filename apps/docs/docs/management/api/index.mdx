@@ -54,6 +54,20 @@ on every layout, and caps width to the available columns.
 `board.updateItemLayout` (`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}`) moves or resizes one item in
 one layout without replacing the board. It cannot move the item outside its section or overlap another item/container.
 
+## Root CA automation
+
+Administrators can inspect a named CA with `GET /api/certificates/{fileName}` (`certificates.getCertificate`) or
+create it with `POST /api/certificates/root` (`certificates.ensureRootCertificate`), using JSON `{ fileName, certificate }`.
+Names are limited to 128 characters, start with a letter or digit, contain only letters, digits, dots, underscores and
+hyphens, and end in `.crt` or `.pem`. Supply one currently valid self-signed PEM root CA, at most 64 KiB, without a chain
+or private key.
+
+Inspection returns public metadata or `null` when absent. Creation returns `{ created, certificate }`; identical PEM
+bytes return `created: false`, while different existing bytes or unsafe file paths return `CONFLICT` without replacement.
+`sha256` hashes the exact UTF-8 PEM bytes, including whitespace; `fingerprint256` identifies the DER certificate.
+Dates are ISO 8601. Certificate contents are never returned. Expired stored roots remain inspectable. Trust applies to
+subsequent integration requests without a restart; it does not bypass hostname verification.
+
 ## Docker targets
 
 Docker actions require `{ endpointId, id }` targets from `docker.getContainers`; `endpointId` distinguishes hosts.

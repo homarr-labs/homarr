@@ -46,6 +46,21 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     const totalMemory = systemInfo.metrics.memory.total;
     const usedMemory = Math.max(totalMemory - systemInfo.metrics.memory.available, 0);
     const uptime = dayjs(systemInfo.info.os.uptime);
+    const disks = [...systemInfo.array.disks, ...systemInfo.array.caches];
+    const fileSystem = disks.flatMap((disk) => {
+      // Only the pool member reporting filesystem statistics represents its capacity.
+      if (disk.fsSize === null || disk.fsFree === null || disk.fsUsed === null) return [];
+      if (disk.fsSize === 0) return [];
+
+      return [
+        {
+          deviceName: disk.name ?? disk.device ?? disk.id,
+          used: `${disk.fsUsed * 1024}`, // API filesystem sizes are in KiB.
+          available: `${disk.fsFree * 1024}`,
+          percentage: (disk.fsUsed / disk.fsSize) * 100,
+        },
+      ];
+    });
 
     return {
       version: systemInfo.info.os.release,
@@ -59,16 +74,11 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       rebootRequired: false,
       availablePkgUpdates: 0,
       cpuTemp: undefined, // Not implemented, see https://github.com/unraid/api/issues/1597
-      fileSystem: systemInfo.array.disks.map((disk) => ({
-        deviceName: disk.name,
-        used: `${disk.fsUsed * 1024}`, // API is in KiB (kibibytes), convert to bytes
-        available: `${(disk.size - disk.fsUsed) * 1024}`, // free space left on the disk, API is in KiB (kibibytes)
-        percentage: (disk.fsUsed / disk.size) * 100, // The units are the same, therefore the actual unit is irrelevant
-      })),
-      smart: systemInfo.array.disks.map((disk) => ({
-        deviceName: disk.name,
+      fileSystem,
+      smart: disks.map((disk) => ({
+        deviceName: disk.name ?? disk.device ?? disk.id,
         temperature: disk.temp ?? null,
-        overallStatus: disk.status,
+        overallStatus: disk.status ?? "UNKNOWN",
         // See ArrayDiskStatus from https://studio.apollographql.com/public/Unraid-API/variant/current/explorer
         healthy: disk.status === "DISK_OK",
       })),
@@ -111,8 +121,20 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
             }
           }
           disks {
+            id
             name
-            size
+            device
+            fsSize
+            fsFree
+            fsUsed
+            status
+            temp
+          }
+          caches {
+            id
+            name
+            device
+            fsSize
             fsFree
             fsUsed
             status

@@ -11,6 +11,7 @@ import { Link, zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { useDemoReadOnly } from "../demo-read-only";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
@@ -23,6 +24,7 @@ export default function CustomApiWidget({
 }: WidgetComponentProps<"customApi">) {
   const t = useI18n("widget.customApi");
   const tCustomJsx = useI18n("widget.customApi.customJsx");
+  const demoReadOnly = useDemoReadOnly();
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const definitionId = options.definitionId;
@@ -33,8 +35,9 @@ export default function CustomApiWidget({
     {
       enabled: Boolean(itemId) && Boolean(definitionId),
       refetchInterval: (currentQuery) =>
-        isTerminalCustomWidgetDefinitionError(currentQuery.state.error) ? false : intervalMs,
-      retry: (failureCount, error) => !isTerminalCustomWidgetDefinitionError(error) && failureCount < 3,
+        demoReadOnly || isTerminalCustomWidgetDefinitionError(currentQuery.state.error) ? false : intervalMs,
+      retry: (failureCount, error) =>
+        !demoReadOnly && !isTerminalCustomWidgetDefinitionError(error) && failureCount < 3,
     },
   );
 

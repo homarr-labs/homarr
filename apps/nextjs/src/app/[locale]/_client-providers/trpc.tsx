@@ -34,6 +34,7 @@ import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { useSession } from "@homarr/auth/client";
 import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
+import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
 import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
 import { useAuthContext } from "./session";
@@ -66,7 +67,7 @@ const constructWebsocketUrl = () => {
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
 };
 
-export function TRPCReactProvider({ children }: PropsWithChildren) {
+export function TRPCReactProvider({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) {
   const { data: session } = useSession();
   const { logoutRedirectInProgress } = useAuthContext();
   const sessionQueryScope = getSessionQueryScope(session);
@@ -81,7 +82,7 @@ export function TRPCReactProvider({ children }: PropsWithChildren) {
       currentScope={sessionQueryScope}
       onScopeChange={handleScopeChange}
     >
-      <ScopedTRPCReactProvider>{children}</ScopedTRPCReactProvider>
+      <ScopedTRPCReactProvider demoReadOnly={demoReadOnly}>{children}</ScopedTRPCReactProvider>
     </SessionQueryScopeGuard>
   );
 }
@@ -102,7 +103,7 @@ const clearLegacyDashboardPersistence = () => {
   }
 };
 
-const ScopedTRPCReactProvider = ({ children }: PropsWithChildren) => {
+const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) => {
   useEffect(clearLegacyDashboardPersistence, []);
   const wsClient = useMemo(
     () =>
@@ -150,21 +151,26 @@ const ScopedTRPCReactProvider = ({ children }: PropsWithChildren) => {
       },
     });
     client.setQueryDefaults([["widget"]], {
-      refetchInterval: queryCacheDefaultRefetchIntervalMs,
+      refetchInterval: demoReadOnly ? false : queryCacheDefaultRefetchIntervalMs,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     });
     for (const queryDefaults of widgetQueryRefetchIntervals) {
       const policy: { refetchInterval?: number | false; staleTime?: number } = {};
-      if (queryDefaults.intervalSeconds === null) policy.refetchInterval = false;
-      if (typeof queryDefaults.intervalSeconds === "number") {
+      if (demoReadOnly || queryDefaults.intervalSeconds === null) policy.refetchInterval = false;
+      else if (typeof queryDefaults.intervalSeconds === "number") {
         policy.refetchInterval = queryDefaults.intervalSeconds * 1000;
       }
       if ("staleTimeSeconds" in queryDefaults) policy.staleTime = queryDefaults.staleTimeSeconds * 1000;
       client.setQueryDefaults(queryDefaults.queryKey, policy);
     }
     for (const { queryKey, ...policy } of dashboardSupportingQueryPolicies) {
-      client.setQueryDefaults(queryKey, policy);
+      client.setQueryDefaults(
+        queryKey,
+        demoReadOnly
+          ? { ...policy, refetchInterval: false, refetchOnWindowFocus: false, refetchOnReconnect: false }
+          : policy,
+      );
     }
     if (typeof window === "undefined") {
       client.getQueryCache().subscribe((event) => {
@@ -239,7 +245,7 @@ const ScopedTRPCReactProvider = ({ children }: PropsWithChildren) => {
             },
           }}
         >
-          {children}
+          <DemoReadOnlyProvider value={demoReadOnly}>{children}</DemoReadOnlyProvider>
         </ReactQueryStreamedHydration>
         {process.env.NODE_ENV === "development" && <DevelopmentTools />}
       </QueryClientProvider>

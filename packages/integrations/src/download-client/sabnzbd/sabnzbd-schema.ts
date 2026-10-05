@@ -35,3 +35,5 @@ export const historySchema = z.object({
     ),
   }),
 });
+
+export type SabnzbdHistorySlot = z.infer<typeof historySchema>["history"]["slots"][number];
