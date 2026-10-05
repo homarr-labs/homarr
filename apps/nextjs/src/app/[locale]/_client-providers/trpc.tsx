@@ -230,27 +230,25 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
   }, [wsClient]);
 
   return (
-    <DemoReadOnlyProvider value={demoReadOnly}>
-      <clientApi.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryStreamedHydration
-            transformer={superjson}
-            options={{
-              dehydrate: {
-                // These promises already travel through the RSC boundary. Sending
-                // them again here duplicates large album and chart payloads.
-                shouldDehydrateQuery: (query) =>
-                  !rscStreamedQueryHashes.has(query.queryHash) &&
-                  query.meta?.rscWidgetPrefetch !== true &&
-                  defaultShouldDehydrateQuery(query),
-              },
-            }}
-          >
-            {children}
-          </ReactQueryStreamedHydration>
-          {process.env.NODE_ENV === "development" && <DevelopmentTools />}
-        </QueryClientProvider>
-      </clientApi.Provider>
-    </DemoReadOnlyProvider>
+    <clientApi.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryStreamedHydration
+          transformer={superjson}
+          options={{
+            dehydrate: {
+              // These promises already travel through the RSC boundary. Sending
+              // them again here duplicates large album and chart payloads.
+              shouldDehydrateQuery: (query) =>
+                !rscStreamedQueryHashes.has(query.queryHash) &&
+                query.meta?.rscWidgetPrefetch !== true &&
+                defaultShouldDehydrateQuery(query),
+            },
+          }}
+        >
+          <DemoReadOnlyProvider value={demoReadOnly}>{children}</DemoReadOnlyProvider>
+        </ReactQueryStreamedHydration>
+        {process.env.NODE_ENV === "development" && <DevelopmentTools />}
+      </QueryClientProvider>
+    </clientApi.Provider>
   );
 };
