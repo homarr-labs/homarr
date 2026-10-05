@@ -114,11 +114,11 @@ Use the interactive API reference to inspect the exact request body for each end
 
 A board is made up of three things, each of which can be managed on its own:
 
-| Concept      | Endpoints                                                                               | Description                                                                      |
-| ------------ | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| **Layouts**  | `GET`/`PUT /api/boards/{id}/layouts`                                                    | Responsive breakpoints. Each layout defines the number of grid columns (1 - 24)  |
-| **Sections** | `GET`/`POST /api/boards/{id}/sections`, `PATCH`/`DELETE .../sections/{id}`              | The canvases of the board and the containers nested inside them                  |
-| **Items**    | `GET /api/boards/{id}/items`, `POST /api/boards/items`, `PATCH`/`DELETE .../items/{id}` | The widgets themselves, including their position and size                        |
+| Concept      | Endpoints                                                                               | Description                                                                     |
+| ------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **Layouts**  | `GET`/`PUT /api/boards/{id}/layouts`                                                    | Responsive breakpoints. Each layout defines the number of grid columns (1 - 24) |
+| **Sections** | `GET`/`POST /api/boards/{id}/sections`, `PATCH`/`DELETE .../sections/{id}`              | The canvases of the board and the containers nested inside them                 |
+| **Items**    | `GET /api/boards/{id}/items`, `POST /api/boards/items`, `PATCH`/`DELETE .../items/{id}` | The widgets themselves, including their position and size                       |
 
 `GET /api/boards/{id}` returns all three at once.
 

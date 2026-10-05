@@ -187,6 +187,7 @@ test("configuration export and import should work over http", async () => {
     columnCount: 12,
     isPublic: true,
   });
+  const sourceBaseLayoutId: string = board.body.layoutId;
   await sourceCallAsync("POST", "/api/boards/items", {
     boardId: board.body.boardId,
     kind: "clock",
@@ -205,10 +206,13 @@ test("configuration export and import should work over http", async () => {
   expect(imported.status).toBe(200);
   expect(imported.body.created).toMatchObject({ apps: 1, boards: 1 });
 
-  // Ids are preserved, so the board can be addressed with the id from the source instance
+  // Ids are preserved, so the board and its layouts can be addressed with the ids of the source
   const copy = await targetCallAsync("GET", `/api/boards/${board.body.boardId}`);
   expect(copy.status).toBe(200);
-  expect(copy.body.items[0].layouts[0]).toMatchObject({ width: 4, height: 2 });
+  // The mobile layout is narrower and holds the same item clamped, so the base one is asserted
+  expect(
+    copy.body.items[0].layouts.find(({ layoutId }: { layoutId: string }) => layoutId === sourceBaseLayoutId),
+  ).toMatchObject({ width: 4, height: 2 });
 
   // Applying the same document twice conflicts unless a strategy is given
   expect((await targetCallAsync("POST", "/api/config/import", exported.body)).status).toBe(409);

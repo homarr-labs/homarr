@@ -66,10 +66,11 @@ const extractTypeSpecificValues = (
 
 /**
  * Keeps the narrowed shape the management UI relies on while staying documentable.
- * Integration backed engines created before an integration was required can still carry
- * no integration id, so it stays nullable instead of failing to serialize.
+ * A plain select schema would widen `type` back to a string and break every caller that
+ * switches on it. Integration backed engines created before an integration was required can
+ * still carry no integration id, so it stays nullable instead of failing to serialize.
  */
-const searchEngineByIdOutputSchema = z.union([
+const searchEngineOutputSchema = z.union([
   selectSearchEnginesSchema.extend({ type: z.literal("fromIntegration"), integrationId: z.string().nullable() }),
   selectSearchEnginesSchema.extend({ type: z.literal("generic"), urlTemplate: z.string().nullable() }),
 ]);
@@ -85,7 +86,7 @@ export const searchEngineRouter = createTRPCRouter({
       },
     })
     .input(paginatedSchema)
-    .output(z.object({ items: z.array(selectSearchEnginesSchema), totalCount: z.number() }))
+    .output(z.object({ items: z.array(searchEngineOutputSchema), totalCount: z.number() }))
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(searchEngines.name, `%${input.search.trim()}%`) : undefined;
       const searchEngineCount = await ctx.db.$count(searchEngines, whereQuery);
@@ -122,7 +123,7 @@ export const searchEngineRouter = createTRPCRouter({
       mcp: { enabled: true, description: "Get a search engine by ID. REQUIRED: id (search engine ID)" },
     })
     .input(byIdSchema)
-    .output(searchEngineByIdOutputSchema)
+    .output(searchEngineOutputSchema)
     .query(async ({ ctx, input }) => {
       const searchEngine = await ctx.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, input.id),

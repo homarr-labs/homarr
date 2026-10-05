@@ -46,16 +46,14 @@ const createResponsiveBoardAsync = async (db: Database, columnCount = 12) => {
 
   // The base layout of the helper sits at breakpoint 0, which a mobile layout has to own
   await db.update(layouts).set({ breakpoint: 768 }).where(eq(layouts.id, board.layoutId));
-  await db
-    .insert(layouts)
-    .values({
-      id: mobileLayoutId,
-      boardId: board.boardId,
-      name: "Mobile",
-      columnCount: 3,
-      breakpoint: 0,
-      role: "mobile",
-    });
+  await db.insert(layouts).values({
+    id: mobileLayoutId,
+    boardId: board.boardId,
+    name: "Mobile",
+    columnCount: 3,
+    breakpoint: 0,
+    role: "mobile",
+  });
 
   return { ...board, mobileLayoutId };
 };
