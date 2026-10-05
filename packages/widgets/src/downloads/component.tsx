@@ -319,6 +319,8 @@ export default function DownloadClientsWidget({
   const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
+    includeArchivedHistory: options.includeArchivedHistory,
+    historyWindowDays: options.historyWindowDays,
   });
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
