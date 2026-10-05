@@ -3,11 +3,13 @@ import { constants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { createLogger } from "../../logs";
 import { getCertificateFolder } from "./index";
 
+const logger = createLogger({ module: "rootCertificate" });
 const maxCertificateBytes = 64 * 1024;
 const fileNamePattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*\.(crt|pem)$/;
-const pemPattern = /^\s*-----BEGIN CERTIFICATE-----\s+([A-Za-z0-9+/=\s]+)-----END CERTIFICATE-----\s*$/;
+const pemPattern = /^\s*-----BEGIN CERTIFICATE-----\s+([A-Za-z0-9+/=][A-Za-z0-9+/=\s]*)-----END CERTIFICATE-----\s*$/;
 
 export class RootCertificateError extends Error {
   constructor(
@@ -25,8 +27,11 @@ const validateFileName = (fileName: string) => {
 };
 
 const describeCertificate = (fileName: string, content: Buffer, requireCurrent: boolean) => {
+  if (content.length > maxCertificateBytes) {
+    throw new RootCertificateError("BAD_REQUEST", "Expected one PEM root CA certificate, at most 64 KiB");
+  }
   const pem = pemPattern.exec(content.toString("utf8"));
-  if (content.length > maxCertificateBytes || !pem?.[1]) {
+  if (!pem?.[1]) {
     throw new RootCertificateError("BAD_REQUEST", "Expected one PEM root CA certificate, at most 64 KiB");
   }
 
@@ -75,7 +80,7 @@ const readCertificateAsync = async (fullPath: string) => {
     file = await fs.open(fullPath, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
   } catch (error) {
     if (hasCode(error, "ENOENT")) return null;
-    if (hasCode(error, "ELOOP")) {
+    if (hasCode(error, "ELOOP") || hasCode(error, "ENXIO")) {
       throw new RootCertificateError("CONFLICT", "Certificate path is not a regular file");
     }
     throw error;
@@ -155,6 +160,11 @@ export const ensureCustomRootCertificateAsync = async (fileName: string, pem: st
     }
     return { created: true, certificate };
   } finally {
-    await fs.unlink(temporaryPath);
+    // Cleanup must not turn a published certificate into a failed operation.
+    try {
+      await fs.unlink(temporaryPath);
+    } catch (error) {
+      logger.warn("Failed to remove temporary root certificate file", { error });
+    }
   }
 };
