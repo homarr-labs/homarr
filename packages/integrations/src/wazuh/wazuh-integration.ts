@@ -1,10 +1,12 @@
 import { removeTrailingSlash } from "@homarr/common";
+import { FetchHttpErrorHandler } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import type { fetch as undiciFetch } from "undici";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { IntegrationRequestError } from "../base/errors/http/integration-request-error";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -84,6 +86,8 @@ const findWazuhRequestError = (error: unknown): WazuhRequestError | null => {
   }
   return null;
 };
+
+const fetchHttpErrorHandler = new FetchHttpErrorHandler();
 
 const basicAuth = (username: string, password: string) =>
   `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
@@ -922,11 +926,15 @@ export class WazuhIntegration extends Integration {
       const error = findWazuhRequestError(thrown) ?? thrown;
       if (error instanceof WazuhRequestError) {
         if (error.reason === "unauthorized") return TestConnectionError.UnauthorizedResult(error.status ?? 401);
+        const url = error.target === "indexer" ? (indexer?.url ?? this.integration.url) : this.integration.url;
         if (error.reason === "status" && error.status !== undefined) {
-          const url = error.target === "indexer" ? (indexer?.url ?? this.integration.url) : this.integration.url;
           return TestConnectionError.StatusResult({ status: error.status, url });
         }
-        // Rethrow the original fetch error so the shared test-connection flow can offer certificate trust.
+        // Report TLS and network failures with the URL of the endpoint that failed. The shared test-connection
+        // flow then reads and offers to trust the certificate of that endpoint (API or indexer), not always the
+        // certificate of the integration URL.
+        const requestError = fetchHttpErrorHandler.handleRequestError(error.cause);
+        if (requestError) throw new IntegrationRequestError(this.publicIntegration, { cause: requestError, url });
         if (error.cause !== undefined) throw error.cause;
       }
       throw error;

@@ -1479,6 +1479,7 @@
             "untrusted": "The certificate is not trusted.",
             "hostnameMismatch": "The certificate hostname does not match the URL."
           },
+          "secondaryUrl": "This certificate was presented by {url}, an additional endpoint configured on this integration.",
           "alert": {
             "permission": {
               "title": "Not enough permissions",
@@ -5449,7 +5450,15 @@
         },
         "certificate": {
           "title": "{target} certificate is not trusted",
-          "description": "Wazuh uses a self-signed certificate by default. Run \"Test connection\" on the integration and trust the certificate, or add your CA under Settings → Certificates."
+          "description": "Wazuh uses self-signed certificates by default, and the server API and the indexer use different ones. Run \"Test connection\" on the integration and trust each certificate, or add the Wazuh root CA under Management → Tools → Certificates."
+        },
+        "certificateHostname": {
+          "title": "{target} certificate does not match the URL",
+          "description": "The certificate is not issued for the host in the integration URL. Use a hostname or IP address listed in the certificate, reissue the certificate with that name, or trust the hostname with \"Test connection\"."
+        },
+        "certificateExpired": {
+          "title": "{target} certificate has expired or is not valid yet",
+          "description": "Renew the Wazuh certificate, and check that the clocks of the Homarr and Wazuh hosts are correct."
         },
         "unreachable": {
           "title": "Cannot reach {target}",
