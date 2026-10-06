@@ -110,7 +110,7 @@
         "discoveredApps": "Detected apps ({count})",
         "appAddressRequired": "Add an address for {name}, or remove it from the selection.",
         "empty": "No integrations selected. Homarr will still create a useful starter board with general widgets.",
-        "dockerSource": "الحاويات",
+        "dockerSource": "Docker",
         "manualSource": "Manual",
         "url": "Service URL",
         "noCredentials": "No credentials",
@@ -206,7 +206,7 @@
         "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
         "layouts": "Responsive layouts",
         "layoutsValue": "Mobile + Base",
-        "integrations": "التكاملات",
+        "integrations": "Integrations",
         "integrationsValue": "{count, plural, =0 {None selected} one {# integration} other {# integrations}}",
         "apps": "App tiles",
         "appsValue": "{count, plural, =0 {Starter apps only} one {# app tile} other {# app tiles}}",
@@ -231,7 +231,7 @@
         "title": "Your first board is ready.",
         "description": "Homarr connected the pieces you selected and kept the rest editable. Open the board now; the short in-product tour can show you edit mode, widgets, layouts and search.",
         "openBoard": "Open my board",
-        "manageTitle": "إدارة المستخدمين",
+        "manageTitle": "Manage",
         "manageDescription": "Fine-tune apps, integrations, boards, users and server settings.",
         "workshopTitle": "Workshop",
         "workshopDescription": "Discover and install community Custom Widgets.",
@@ -1004,7 +1004,7 @@
           "queryOrFragment": "Remove the query string or fragment from this base URL. Add query values to a named request."
         },
         "networkScope": "Network access",
-        "authentication": "المصادقة",
+        "authentication": "Authentication",
         "headerName": "Header name",
         "queryParameter": "Query parameter",
         "configured": "Configured — enter a replacement",
@@ -1148,7 +1148,7 @@
       "fileLabel": "Choose a custom widget JSON file",
       "name": "Job name",
       "origin": "Base origin",
-      "authentication": "المصادقة",
+      "authentication": "Authentication",
       "networkScope": "Network scope",
       "methods": "HTTP methods",
       "permissions": "Required board permissions",
@@ -1977,18 +1977,18 @@
       "new": "New"
     },
     "entity": {
-      "apps": "البرامج",
-      "boards": "الألواح",
-      "certificates": "الشهادات",
+      "apps": "Apps",
+      "boards": "Boards",
+      "certificates": "Certificates",
       "customWidgets": "Custom widgets",
-      "groups": "المجموعات",
-      "integrations": "التكاملات",
+      "groups": "Groups",
+      "integrations": "Integrations",
       "invites": "Invites",
-      "logs": "السجلات",
+      "logs": "Logs",
       "media": "Media",
-      "searchEngines": "محركات البحث",
-      "tasks": "المهام",
-      "users": "مستخدمين"
+      "searchEngines": "Search engines",
+      "tasks": "Tasks",
+      "users": "Users"
     }
   },
   "section": {
@@ -5505,7 +5505,7 @@
         "os": "OS",
         "version": "Version",
         "lastKeepAlive": "Keepalive",
-        "groups": "المجموعات"
+        "groups": "Groups"
       },
       "outdated": "Older than the latest agent version ({version})"
     },
@@ -5985,7 +5985,7 @@
             }
           },
           "role": {
-            "mobile": "الجوال",
+            "mobile": "Mobile",
             "base": "Base",
             "custom": "Custom"
           },
@@ -6266,7 +6266,7 @@
               "description": "Drag controls anywhere in the row. Left, Centre, and Right stay fixed while controls shift around them.",
               "device": {
                 "desktop": "Desktop",
-                "mobile": "الجوال"
+                "mobile": "Mobile"
               },
               "zones": {
                 "left": "Left",
@@ -6308,9 +6308,9 @@
                 "logo": "Logo",
                 "search": "Search",
                 "home": "Home board",
-                "boardSwitcher": "الألواح",
+                "boardSwitcher": "Boards",
                 "assistant": "Assistant",
-                "docker": "الحاويات",
+                "docker": "Docker",
                 "boardEdit": "Edit board",
                 "boardSettings": "Board settings",
                 "settings": "Your settings",
@@ -6523,7 +6523,7 @@
               "identity": "Identity",
               "appearance": "Appearance",
               "customCss": "Custom CSS",
-              "authentication": "المصادقة"
+              "authentication": "Authentication"
             },
             "identity": {
               "description": "The application logo is the larger mark used within the app, on sign-in pages and for installed apps. The browser icon (favicon) is the small square used in tabs and bookmarks; when empty, it falls back to the application logo."
@@ -7095,9 +7095,9 @@
       },
       "health": {
         "layer": {
-          "docker": "الحاويات",
+          "docker": "Docker",
           "integrationConfiguration": "Integration",
-          "authentication": "المصادقة",
+          "authentication": "Authentication",
           "apiRequest": "API",
           "appRepresentation": "App",
           "widgetConfiguration": "Widget",
@@ -7531,7 +7531,7 @@
         "placeholder": "Search apps, boards, pages, commands, and preferences"
       },
       "apps": {
-        "label": "البرامج",
+        "label": "Apps",
         "placeholder": "Search apps, boards, and integrations"
       },
       "command": {
@@ -8402,9 +8402,9 @@
     "mentions": {
       "menu": "Add Homarr context",
       "context": "Context",
-      "app": "البرامج",
-      "integration": "التكاملات",
-      "board": "الألواح",
+      "app": "Apps",
+      "integration": "Integrations",
+      "board": "Boards",
       "widget": "Widgets",
       "tools": "Available tools"
     },
