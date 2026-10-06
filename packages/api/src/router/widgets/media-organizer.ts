@@ -12,7 +12,7 @@ export const mediaOrganizerRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get missing and queued movies/episodes from Radarr, Sonarr, and Sportarr. Requires query (use) access to each integration. REQUIRED: integrationIds (array of Radarr/Sonarr/Sportarr integration IDs from integration_all). OPTIONAL: pageSize (1-50, default 10)",
+          "Get missing and queued movies/episodes/events from Radarr, Sonarr, and Sportarr. Requires query (use) access to each integration. REQUIRED: integrationIds (array of Radarr/Sonarr/Sportarr integration IDs from integration_all). OPTIONAL: pageSize (1-50, default 10)",
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "mediaMissing"))
