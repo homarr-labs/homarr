@@ -10,12 +10,13 @@ import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { sportarrIntegration } from ".";
 import { calendarWidget } from "@site/docs/widgets/calendar";
+import { mediaMissingWidget } from "@site/docs/widgets/media-missing";
 import apiKeySettings from "./img/api-key-settings.png";
 import calendarWidgetBoard from "./img/calendar-widget-board.png";
 
 <IntegrationHeader integration={sportarrIntegration} categories={["Media manager", "Servarr"]} />
 
-Sportarr manages sports events the way Sonarr manages TV series. The calendar widget shows its upcoming and past events.
+Sportarr manages sports events the way Sonarr manages TV series. The calendar widget shows its events, and the media missing widget shows missing events and the download queue.
 
 ### Screenshots
 
@@ -32,7 +33,7 @@ Sportarr manages sports events the way Sonarr manages TV series. The calendar wi
 
 ### Widgets & Capabilities
 
-<IntegrationCapabilites items={[{ widget: calendarWidget }]} />
+<IntegrationCapabilites items={[{ widget: calendarWidget }, { widget: mediaMissingWidget }]} />
 
 ### Adding the integration
 

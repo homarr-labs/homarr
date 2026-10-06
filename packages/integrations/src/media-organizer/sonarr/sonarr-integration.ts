@@ -115,10 +115,26 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     return `S${seasonNumber}/E${episodeNumber}`;
   }
 
+  /**
+   * Web UI paths for links. Sonarr-API-compatible subclasses (Sportarr)
+   * override these because their UI routes differ.
+   */
+  protected getSeriesPath(series: { id?: number; titleSlug: string }): `/${string}` {
+    return `/series/${series.titleSlug}`;
+  }
+
+  protected get missingFallbackPath(): `/${string}` {
+    return "/wanted/missing";
+  }
+
+  protected get queueFallbackPath(): `/${string}` {
+    return "/activity/queue";
+  }
+
   private getLinksForSonarrCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
     const links: CalendarLink[] = [
       {
-        href: this.externalUrl(`/series/${event.series.titleSlug}`).toString(),
+        href: this.externalUrl(this.getSeriesPath(event.series)).toString(),
         name: this.calendarLinkName,
         logo: this.calendarLinkLogo,
         color: undefined,
@@ -192,8 +208,8 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
           year: episode.series?.year,
           imageUrl: episode.series?.images.find((img) => img.coverType === "poster")?.remoteUrl ?? null,
           link: episode.series?.titleSlug
-            ? this.externalUrl(`/series/${episode.series.titleSlug}`).toString()
-            : this.externalUrl("/wanted/missing").toString(),
+            ? this.externalUrl(this.getSeriesPath(episode.series)).toString()
+            : this.externalUrl(this.missingFallbackPath).toString(),
         }),
       ),
     };
@@ -235,8 +251,8 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
           seriesTitle: item.series?.title,
           imageUrl: item.series?.images.find((img) => img.coverType === "poster")?.remoteUrl ?? null,
           link: item.series?.titleSlug
-            ? this.externalUrl(`/series/${item.series.titleSlug}`).toString()
-            : this.externalUrl("/activity/queue").toString(),
+            ? this.externalUrl(this.getSeriesPath(item.series)).toString()
+            : this.externalUrl(this.queueFallbackPath).toString(),
         };
       }),
     };
@@ -261,6 +277,7 @@ const sonarrMissingEpisodeSchema = z.object({
   episodeNumber: z.number(),
   series: z
     .object({
+      id: z.number().optional(),
       title: z.string(),
       year: z.number().optional(),
       titleSlug: z.string(),
@@ -278,7 +295,7 @@ const sonarrQueueItemSchema = z.object({
   id: z.number(),
   title: z.string(),
   status: z.string(),
-  timeleft: z.string().optional(),
+  timeleft: z.string().nullish(),
   size: z.number().optional(),
   sizeleft: z.number().optional(),
   series: z
@@ -316,6 +333,7 @@ const sonarrCalendarEventSchema = z.object({
   seasonNumber: z.number().min(0),
   episodeNumber: z.number().min(0),
   series: z.object({
+    id: z.number().optional(),
     overview: z.string().optional(),
     title: z.string(),
     titleSlug: z.string(),

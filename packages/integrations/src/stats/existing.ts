@@ -185,11 +185,15 @@ for (const kind of ["jellyseerr", "seerr", "overseerr"] as const) {
     ({ pending, approved, available, processing }) => ({ pending, approved, available, processing }),
   );
 }
-for (const kind of ["sonarr", "radarr"] as const) {
+for (const kind of ["sonarr", "sportarr", "radarr"] as const) {
   const libraryMetric = metric("movies", "Movies");
   if (kind === "sonarr") {
     libraryMetric.key = "shows";
     libraryMetric.label = "Shows";
+  }
+  if (kind === "sportarr") {
+    libraryMetric.key = "shows";
+    libraryMetric.label = "Leagues";
   }
   const metrics = [
     libraryMetric,
@@ -202,6 +206,10 @@ for (const kind of ["sonarr", "radarr"] as const) {
   if (kind === "sonarr") {
     metrics[2] = metric("downloaded", "Downloaded episodes");
     metrics.push(metric("episodes", "Episodes"));
+  }
+  if (kind === "sportarr") {
+    metrics[2] = metric("downloaded", "Downloaded events");
+    metrics.push(metric("episodes", "Events"));
   }
   existingStatsProviders[kind] = adapter(
     kind,

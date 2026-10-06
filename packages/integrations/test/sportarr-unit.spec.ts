@@ -35,6 +35,7 @@ const calendarEventResponse = [
     episodeNumber: 1,
     images: [],
     series: {
+      id: 7,
       title: "Test League",
       titleSlug: "test-league",
       images: [],
@@ -66,7 +67,7 @@ const sportarrIntegrationInput = {
 };
 
 describe("SportarrIntegration branding override", () => {
-  test("uses Sportarr name and logo instead of Sonarr's on calendar links", async () => {
+  test("uses Sportarr name, logo and league route instead of Sonarr's on calendar links", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(calendarEventResponse),
@@ -77,7 +78,7 @@ describe("SportarrIntegration branding override", () => {
 
     expect(events[0]?.links[0]).toMatchObject({
       name: "Sportarr",
-      href: "http://localhost:1867/series/test-league",
+      href: "http://localhost:1867/leagues/7",
       logo: "/images/apps/sportarr.svg",
     });
   });
@@ -98,6 +99,7 @@ describe("SportarrIntegration branding override", () => {
 
     expect(events[0]?.links[0]).toMatchObject({
       name: "Sonarr",
+      href: "http://localhost:8989/series/test-league",
       logo: "/images/apps/sonarr.svg",
     });
   });
