@@ -219,3 +219,78 @@ describe("WazuhIntegration certificates", () => {
     expect(toWazuhPublicError(new Error("wrapped", { cause: error }))).toEqual({ reason, target: "indexer" });
   });
 });
+
+describe("WazuhIntegration notifications", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test("returns recent high and critical alerts from the indexer as notifications", async () => {
+    trustedFetchMock.mockImplementation(() =>
+      Promise.resolve(
+        json({
+          hits: {
+            total: { value: 1 },
+            hits: [
+              {
+                _id: "doc-1",
+                _source: {
+                  id: "1790466949.5285465",
+                  timestamp: "2026-10-06T10:00:00.000Z",
+                  rule: { id: "5712", level: 12, description: "sshd: brute force trying to get access to the system." },
+                  agent: { id: "003", name: "web-01" },
+                  data: { srcip: "203.0.113.7" },
+                },
+              },
+            ],
+          },
+        }),
+      ),
+    );
+    const integration = createIntegration(INDEXER_URL, {
+      wazuhIndexerUsername: "homarr",
+      wazuhIndexerPassword: "indexer-password",
+      wazuhDashboardUrl: "https://wazuh.example.com/",
+    });
+
+    const notifications = await integration.getNotificationsAsync();
+
+    const [url, init] = trustedFetchMock.mock.calls[0] as [string, { body: string }];
+    expect(url).toContain(`${INDEXER_URL}/wazuh-alerts-*/_search`);
+    expect(JSON.stringify(JSON.parse(init.body))).toContain('{"range":{"rule.level":{"gte":12}}}');
+    expect(notifications).toHaveLength(1);
+    expect(notifications[0]).toMatchObject({
+      id: "doc-1",
+      time: new Date("2026-10-06T10:00:00.000Z"),
+      title: "sshd: brute force trying to get access to the system.",
+      body: "Level 12 · Rule 5712\nAgent: web-01 (003)\nSource IP: 203.0.113.7",
+    });
+    expect(notifications[0]?.href).toMatch(
+      /^https:\/\/wazuh\.example\.com\/app\/threat-hunting#\/overview\/\?tab=general/,
+    );
+    expect(notifications[0]?.href).toContain("agentId=003");
+  });
+
+  test("leaves the link empty without a dashboard URL", async () => {
+    trustedFetchMock.mockImplementation(() =>
+      Promise.resolve(
+        json({
+          hits: {
+            total: { value: 1 },
+            hits: [{ _id: "doc-2", _source: { timestamp: "2026-10-06T10:00:00.000Z", rule: { level: 13 } } }],
+          },
+        }),
+      ),
+    );
+    const integration = createIntegration(INDEXER_URL, {
+      wazuhIndexerUsername: "homarr",
+      wazuhIndexerPassword: "indexer-password",
+    });
+
+    const [notification] = await integration.getNotificationsAsync();
+
+    expect(notification?.href).toBeUndefined();
+    expect(notification?.title).toBe("Wazuh rule alert");
+    expect(notification?.body).toBe("Level 13");
+  });
+});

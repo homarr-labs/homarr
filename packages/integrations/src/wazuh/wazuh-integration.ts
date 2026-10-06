@@ -12,12 +12,16 @@ import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IntegrationHttpAuthentication } from "../http-auth";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import { WazuhRequestError } from "./wazuh-errors";
 import type { KeyedBucket, SeverityRangeResult } from "./wazuh-queries";
 import {
   alertSourceFields,
   authFailureQuery,
   bruteForceQuery,
+  createAlertDashboardUrl,
+  formatAlertNotificationBody,
   getTotalHits,
   mapAlertHit,
   normalizeAgentStatus,
@@ -66,6 +70,10 @@ const TOKEN_TTL_SECONDS = 600;
 const MONITORING_SNAPSHOT_WINDOW_MS = 5 * 60 * 1000;
 /** Upper bound for agent lists; larger fleets should use the Wazuh dashboard. */
 const MAX_AGENTS = 1000;
+/** Matches Wazuh's default email_alert_level: the notifications widget lists what Wazuh would send as email. */
+const NOTIFICATION_MIN_LEVEL = 12;
+const NOTIFICATION_WINDOW_HOURS = 24;
+const NOTIFICATION_LIMIT = 25;
 
 interface WazuhSession {
   token: string;
@@ -92,7 +100,7 @@ const fetchHttpErrorHandler = new FetchHttpErrorHandler();
 const basicAuth = (username: string, password: string) =>
   `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
 
-export class WazuhIntegration extends Integration {
+export class WazuhIntegration extends Integration implements INotificationsIntegration {
   private readonly sessionStore: SessionStore<WazuhSession>;
 
   constructor(integration: IntegrationInput) {
@@ -420,6 +428,26 @@ export class WazuhIntegration extends Integration {
     });
 
     return response.hits.hits.map(mapAlertHit);
+  }
+
+  /**
+   * High and critical alerts of the last 24 hours for the notifications widget. Needs the indexer, like all alerts.
+   */
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const alerts = await this.getRecentAlertsAsync({
+      minLevel: NOTIFICATION_MIN_LEVEL,
+      limit: NOTIFICATION_LIMIT,
+      hours: NOTIFICATION_WINDOW_HOURS,
+    });
+    const dashboardUrl = this.getDashboardUrl();
+
+    return alerts.map((alert) => ({
+      id: alert.id,
+      time: new Date(alert.timestamp),
+      title: alert.description || `Wazuh rule ${alert.ruleId ?? "alert"}`,
+      body: formatAlertNotificationBody(alert),
+      href: dashboardUrl ? createAlertDashboardUrl(dashboardUrl, alert) : undefined,
+    }));
   }
 
   public async getAlertTimelineAsync(input: {
