@@ -15,7 +15,8 @@ import { piHoleIntegration } from ".";
 <IntegrationHeader integration={piHoleIntegration} categories={["DNS Hole"]} />
 
 <Alert type="note" className="my-2">
-  Homarr supports both Pi-hole v5 and v6. It automatically detects the version and uses the correct API.
+  Homarr supports both Pi-hole v5 and v6. It automatically detects the version and uses the correct API. If your reverse
+  proxy restricts API paths, allow the public `/api/info/login` endpoint used to detect Pi-hole v6.
 </Alert>
 
 ### Widgets & Capabilities
