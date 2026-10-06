@@ -1,17 +1,18 @@
 import { IconWall, IconWallOff } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
-  refetchInterval: 5,
+  supportsAdvancedFocus: true,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("firewall"),
+  ...getWidgetIntegrationConfig("firewall"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconWallOff,

@@ -48,3 +48,54 @@ const absoluteUrlRegex = /^[a-z]+:(\/\/)?/;
 export const isAbsoluteUrl = (urlOrPath: string): boolean => {
   return absoluteUrlRegex.test(urlOrPath.toLowerCase());
 };
+
+export const SAFE_NEW_TAB_REL = "noopener noreferrer";
+
+interface SafeApplicationUrlOptions {
+  baseUrl?: unknown;
+}
+
+/** Returns an absolute, credential-free HTTP(S) URL suitable for application navigation. */
+export const getSafeApplicationUrl = (value: unknown, options: SafeApplicationUrlOptions = {}): string | undefined => {
+  if (typeof value !== "string" || value.trim() === "") return undefined;
+
+  try {
+    let baseUrl: string | undefined;
+    if (options.baseUrl !== undefined) {
+      const parsedBase = parseHttpUrl(options.baseUrl);
+      if (!parsedBase) return undefined;
+      parsedBase.search = "";
+      parsedBase.hash = "";
+      baseUrl = parsedBase.toString();
+    }
+
+    return parseHttpUrl(value, baseUrl)?.toString();
+  } catch {
+    return undefined;
+  }
+};
+
+/** Returns a safe user-configured app link, including same-origin paths and custom URI schemes. */
+export const getSafeAppHref = (value: unknown): string | undefined => {
+  if (typeof value !== "string" || value.trim() === "") return undefined;
+
+  const href = value.trim();
+  if (/^(?:javascript|data|vbscript|file|blob):/i.test(href)) return undefined;
+
+  try {
+    const url = new URL(href);
+    if (url.username !== "" || url.password !== "") return undefined;
+    return url.toString();
+  } catch {
+    return /^(?:[#?]|\/(?![\\/])|\.{1,2}\/)/.test(href) ? href : undefined;
+  }
+};
+
+const parseHttpUrl = (value: unknown, baseUrl?: string): URL | undefined => {
+  if (typeof value !== "string") return undefined;
+  const url = new URL(value, baseUrl);
+  if ((url.protocol !== "http:" && url.protocol !== "https:") || url.username !== "" || url.password !== "") {
+    return undefined;
+  }
+  return url;
+};

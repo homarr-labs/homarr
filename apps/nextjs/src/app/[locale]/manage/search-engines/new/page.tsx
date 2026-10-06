@@ -15,13 +15,13 @@ export default async function SearchEngineNewPage() {
     notFound();
   }
 
-  const t = await getI18n();
+  const t = await getI18n("search.engine.page.create");
 
   return (
     <ManageContainer>
       <DynamicBreadcrumb />
       <Stack>
-        <Title>{t("search.engine.page.create.title")}</Title>
+        <Title>{t("title")}</Title>
         <SearchEngineNewForm />
       </Stack>
     </ManageContainer>

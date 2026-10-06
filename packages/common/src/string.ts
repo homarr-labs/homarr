@@ -28,3 +28,34 @@ export const bestMatch = <TItem extends Record<string, unknown>>(
     return best;
   }, null);
 };
+
+export const normalizeImageName = (value: string) => {
+  const fileName = value.split(/[?#]/, 1)[0]?.split("/").pop() ?? value;
+  const withoutExtension = fileName.replace(/\.(?:avif|gif|jpe?g|png|svg|webp)$/i, "");
+
+  return withoutExtension
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, " ")
+    .trim()
+    .toLowerCase();
+};
+
+export const getImageMatchRank = (normalizedSearch: string, candidateValue: string): number | null => {
+  const candidate = normalizeImageName(candidateValue);
+  if (!candidate) return null;
+
+  const compactSearch = normalizedSearch.replaceAll(" ", "");
+  const compactCandidate = candidate.replaceAll(" ", "");
+  if (candidate === normalizedSearch) return 0;
+  if (compactCandidate === compactSearch) return 1;
+  if (candidate.startsWith(`${normalizedSearch} `)) return 2;
+
+  const searchTokens = normalizedSearch.split(" ");
+  const candidateTokens = candidate.split(" ");
+  if (searchTokens.every((term) => candidateTokens.some((token) => token === term))) return 3;
+  if (searchTokens.every((term) => candidateTokens.some((token) => token.startsWith(term)))) return 4;
+  if (candidate.includes(normalizedSearch)) return 5;
+  return null;
+};

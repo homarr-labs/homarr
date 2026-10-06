@@ -3,6 +3,7 @@ import { lazy } from "@trpc/server";
 import { createTRPCRouter } from "../../trpc";
 
 export const widgetRouter = createTRPCRouter({
+  stats: lazy(() => import("./stats").then((mod) => mod.statsRouter)),
   archiveTeamWarrior: lazy(() => import("./archive-team-warrior").then((mod) => mod.archiveTeamWarriorRouter)),
   beszel: lazy(() => import("./beszel").then((mod) => mod.beszelRouter)),
   anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),
@@ -13,6 +14,7 @@ export const widgetRouter = createTRPCRouter({
   bazarr: lazy(() => import("./bazarr").then((mod) => mod.bazarrRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
   weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
+  airQuality: lazy(() => import("./air-quality").then((mod) => mod.airQualityRouter)),
   app: lazy(() => import("./app").then((mod) => mod.appRouter)),
   dnsHole: lazy(() => import("./dns-hole").then((mod) => mod.dnsHoleRouter)),
   smartHome: lazy(() => import("./smart-home").then((mod) => mod.smartHomeRouter)),
@@ -44,4 +46,7 @@ export const widgetRouter = createTRPCRouter({
   traefik: lazy(() => import("./traefik").then((mod) => mod.traefikRouter)),
   customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
   secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
+  wud: lazy(() => import("./wud").then((mod) => mod.wudRouter)),
+  llamacpp: lazy(() => import("./llamacpp").then((mod) => mod.llamacppRouter)),
+  wazuh: lazy(() => import("./wazuh").then((mod) => mod.wazuhRouter)),
 });

@@ -1,0 +1,135 @@
+.weatherSurface {
+  overflow: hidden;
+}
+
+.weatherContent {
+  min-width: 0;
+  min-height: 0;
+}
+
+.compactRoot {
+  overflow: hidden;
+}
+
+.compactRoot[data-tier="micro"] {
+  flex-direction: row;
+}
+
+.compactMetrics {
+  min-width: 0;
+}
+
+.advancedRoot {
+  min-width: 0;
+}
+
+.locationSummary {
+  max-width: min(100%, 20rem);
+}
+
+.metricCard,
+.dailyCard,
+.detailMetric,
+.solarDetails {
+  background-color: transparent;
+  border: 0.0625rem solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45));
+}
+
+.dailyCard {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.dailyCardButton:hover .dailyCard,
+.dailyCardButton:focus-visible .dailyCard {
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.72));
+}
+
+.dailyDetailsDropdown {
+  width: min(24.375rem, calc(100vw - 2rem));
+  padding: var(--mantine-spacing-sm);
+}
+
+.dailyDetails {
+  min-width: 0;
+}
+
+.dailyDetailsTemperature {
+  flex-shrink: 0;
+  max-width: 8.25rem;
+}
+
+.dailyCardFacts {
+  min-width: 0;
+}
+
+.dailyCardFact {
+  white-space: nowrap;
+}
+
+.detailMetric {
+  min-width: 0;
+}
+
+.solarDetails {
+  background-color: transparent;
+}
+
+.detailsButton,
+.forecastButton,
+.dailyCardButton {
+  color: inherit;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.detailsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+}
+
+.forecastButton,
+.dailyCardButton {
+  display: block;
+}
+
+.dailyCardButton,
+.dailyCard {
+  width: 100%;
+  height: 100%;
+}
+
+.detailsButton:focus-visible,
+.forecastButton:focus-visible,
+.dailyCardButton:focus-visible {
+  outline: 0.125rem solid var(--mantine-primary-color-filled);
+  outline-offset: 0.125rem;
+}
+
+@media (any-pointer: coarse) {
+  .detailsButton,
+  .forecastButton,
+  .dailyCardButton {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dailyCard {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .metricCard,
+  .dailyCard,
+  .detailMetric,
+  .solarDetails {
+    border: 0.0625rem solid CanvasText;
+  }
+}

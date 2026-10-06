@@ -2,28 +2,29 @@
 
 import { Select } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
-import type { ServerSettings } from "@homarr/server-settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import type { RouterOutputs } from "@homarr/api";
+import type { UseFormReturnType } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 
-import { CommonSettingsForm } from "./common-form";
+import { SectionCard } from "~/components/manage/section-card";
+import type { FormValues } from "./settings-form";
 
-export const SearchSettingsForm = ({ defaultValues }: { defaultValues: ServerSettings["search"] }) => {
-  const tSearch = useScopedI18n("management.page.settings.section.search");
-  const [selectableSearchEngines] = clientApi.searchEngine.getSelectable.useSuspenseQuery({ withIntegrations: false });
+interface SearchSettingsFormProps {
+  form: UseFormReturnType<FormValues>;
+  selectableSearchEngines: RouterOutputs["searchEngine"]["getSelectable"];
+}
+
+export const SearchSettingsForm = ({ form, selectableSearchEngines }: SearchSettingsFormProps) => {
+  const tSearch = useI18n("management.page.settings.section.search");
 
   return (
-    <CommonSettingsForm settingKey="search" defaultValues={defaultValues}>
-      {(form) => (
-        <>
-          <Select
-            label={tSearch("defaultSearchEngine.label")}
-            description={tSearch("defaultSearchEngine.description")}
-            data={selectableSearchEngines}
-            {...form.getInputProps("defaultSearchEngineId")}
-          />
-        </>
-      )}
-    </CommonSettingsForm>
+    <SectionCard title={tSearch("title")}>
+      <Select
+        label={tSearch("defaultSearchEngine.label")}
+        description={tSearch("defaultSearchEngine.description")}
+        data={selectableSearchEngines}
+        {...form.getInputProps("defaultSearchEngineId")}
+      />
+    </SectionCard>
   );
 };

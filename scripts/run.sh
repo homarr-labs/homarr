@@ -1,5 +1,45 @@
 #!/usr/bin/env bash
 
+MIGRATION_PID=""
+NEXTJS_PID=""
+NGINX_PID=""
+REDIS_PID=""
+SHUTTING_DOWN=false
+
+stop_process() {
+    if [ -n "$1" ]; then
+        kill -TERM "$1" 2>/dev/null
+        wait "$1" 2>/dev/null
+    fi
+}
+
+terminate() {
+    trap '' TERM INT
+    SHUTTING_DOWN=true
+    echo "Shutting down..."
+    stop_process "$MIGRATION_PID"
+    stop_process "$NEXTJS_PID"
+    stop_process "$NGINX_PID"
+    stop_process "$REDIS_PID"
+    echo "Shutdown complete."
+    exit 0
+}
+
+# Install before migrations: a foreground child defers the shell's signal trap.
+trap terminate TERM INT
+
+# Check before creating SQLite files or invoking a removed migration bundle.
+reject_mysql() {
+  echo "ERROR: MySQL is no longer supported in v2. Use the MySQL-to-SQLite converter before starting Homarr."
+  exit 1
+}
+case "$DB_DIALECT:$DB_DRIVER" in
+  mysql:*|mariadb:*|*:mysql2|*:mysql|*:mariadb) reject_mysql ;;
+esac
+case "$DB_URL" in
+  [mM][yY][sS][qQ][lL]:*|[mM][aA][rR][iI][aA][dD][bB]:*) reject_mysql ;;
+esac
+
 # Create sub directories in volume
 mkdir -p /appdata/db
 mkdir -p /appdata/redis
@@ -10,8 +50,12 @@ if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
     echo "Running DB migrations"
-    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
-    if [ $? -ne 0 ]; then
+    DISABLE_REDIS_LOGS=true node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT &
+    MIGRATION_PID=$!
+    wait "$MIGRATION_PID"
+    MIGRATION_EXIT_CODE=$?
+    MIGRATION_PID=""
+    if [ "$MIGRATION_EXIT_CODE" -ne 0 ]; then
         echo "ERROR: DB migrations failed, aborting startup"
         exit 1
     fi
@@ -21,11 +65,18 @@ fi
 export AUTH_SECRET=$(openssl rand -base64 32)
 
 # Start nginx proxy
-# 1. Replace the HOSTNAME in the nginx template file
-# 2. Create the nginx configuration file from the template
-# 3. Start the nginx server
-export HOSTNAME
-envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+# 1. Create the nginx configuration file from the template
+# 2. Start the nginx server
+# Only listen on IPv6 when the host actually has IPv6 configured (#4596).
+# Otherwise nginx aborts with "socket() [::]:7575 failed (97: Address family
+# not supported by protocol)". Check HOMARR_DISABLE_IPV6 first so users can
+# force IPv4-only even when the host supports IPv6, then probe for IPv6
+# addresses via grep (not -s: proc files always report size 0).
+export NGINX_LISTEN_IPV6=''
+if [ "${HOMARR_DISABLE_IPV6:-false}" != "true" ] && grep -q . /proc/net/if_inet6 2>/dev/null; then
+    NGINX_LISTEN_IPV6='listen [::]:7575;'
+fi
+envsubst '${NGINX_LISTEN_IPV6}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
 NGINX_PID=$!
@@ -39,25 +90,10 @@ else
     REDIS_PID=$!
 fi
 
-SHUTTING_DOWN=false
-
-terminate() {
-    SHUTTING_DOWN=true
-    echo "Shutting down..."
-    kill -TERM $NEXTJS_PID 2>/dev/null
-    wait $NEXTJS_PID 2>/dev/null
-    kill -TERM $NGINX_PID 2>/dev/null
-    wait $NGINX_PID 2>/dev/null
-    if [ -n "$REDIS_PID" ]; then
-        kill -TERM $REDIS_PID 2>/dev/null
-        wait $REDIS_PID 2>/dev/null
-    fi
-    echo "Shutdown complete."
-    exit 0
-}
-
-trap terminate TERM INT
-
+# Next.js standalone uses HOSTNAME as its bind address. Docker's generated
+# hostname can be unresolvable, so bind explicitly while nginx uses loopback.
+export HOSTNAME=0.0.0.0
+export NODE_OPTIONS="--max-semi-space-size=4 ${NODE_OPTIONS:-}"
 node apps/nextjs/server.js &
 NEXTJS_PID=$!
 

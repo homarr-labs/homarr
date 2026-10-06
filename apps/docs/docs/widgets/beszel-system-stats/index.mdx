@@ -1,8 +1,10 @@
 ---
 title: "Beszel System Stats"
-description: "Time-series charts for CPU, memory, disk, network, and Docker container metrics from Beszel."
+description: "Time-series charts for CPU, memory, disk, network, GPU, and Docker container metrics from Beszel."
 hide_title: true
 ---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
 
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
@@ -15,11 +17,11 @@ import beszelSystemStats from "./img/beszel-system-stats.png";
 
 <WidgetHeader widget={beszelSystemStatsWidget} categories={["System Monitoring", "Charts"]} />
 
-This widget displays time-series charts for a selected Beszel system, including CPU, memory, disk, network, and Docker container metrics. The Disk Usage chart combines the root disk and every extra filesystem reported by Beszel. You can use the realtime Live view or select a historical period ranging from 1 hour to 30 days. Live view keeps a one-minute window and pauses while the browser tab is hidden. If the live stream drops, the widget now shows the connection failure state immediately and can switch back to historical data.
+This widget displays time-series charts for a selected Beszel system, including CPU, memory, disk, network, GPU, and Docker container metrics. GPU utilization is shown for every GPU reported by Beszel; used VRAM and power draw are shown when Beszel reports those metrics. The Disk Usage and Disk I/O charts combine the root disk and every extra filesystem reported by Beszel, with separate read and write series for each filesystem in the I/O chart. Use the widget controls to switch between the realtime Live view and historical periods ranging from 1 hour to 30 days. Live view keeps a one-minute window and pauses while the browser tab is hidden. If the live stream drops, the widget now shows the connection failure state immediately and can switch back to historical data.
 
 ### Screenshots
 
-<img src={beszelSystemStats} alt="Beszel System Stats widget showing CPU, memory, disk and network charts" />
+<img src={beszelSystemStats.src} alt="Beszel System Stats widget showing CPU, memory, disk and network charts" />
 
 ### Supported Integrations
 
@@ -31,6 +33,8 @@ This widget displays time-series charts for a selected Beszel system, including 
     },
   ]}
 />
+
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

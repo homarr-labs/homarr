@@ -4,7 +4,9 @@ import { globalCommandGroup } from "./global-group";
 import { preferencesGroup } from "../preferences/groups";
 
 export const commandMode = {
-  modeKey: "command",
+  mode: "command",
   character: ">",
-  groups: [contextSpecificActionsSearchGroups, preferencesGroup, globalCommandGroup],
+  label: (t) => t("search.modePicker.command.label"),
+  placeholder: (t) => t("search.modePicker.command.placeholder"),
+  groups: [contextSpecificActionsSearchGroups, globalCommandGroup, preferencesGroup],
 } satisfies SearchMode;

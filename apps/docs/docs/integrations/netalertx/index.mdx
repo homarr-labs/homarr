@@ -1,0 +1,34 @@
+---
+title: "NetAlertX"
+description: "Network presence and device monitoring."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { statsWidget } from "@site/docs/widgets/stats";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { netalertxIntegration } from ".";
+
+<IntegrationHeader integration={netalertxIntegration} categories={["Monitoring"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The statistics provider calls NetAlertX v2's `/devices/totals` endpoint and reports total, connected, new, and down-alert counts. Active network scanning is controlled by NetAlertX and is not enabled by Homarr.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    { credentials: ["apiKey"], steps: ["Create or copy the NetAlertX API token and enter it as the API Key."] },
+  ]}
+/>
+
+Use the backend API address (port **20212** by default), not the web interface port.

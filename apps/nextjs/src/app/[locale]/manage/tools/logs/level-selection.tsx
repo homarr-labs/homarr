@@ -12,13 +12,13 @@ const levelByValue = Object.fromEntries(logLevels.map((logLevel) => [logLevel, l
 
 export const LogLevelSelection = () => {
   const { level, setLevel } = useLogContext();
-  const t = useI18n();
+  const t = useI18n("log.level");
 
   return (
     <Select
       data={logLevels.map((level) => ({
         value: level,
-        label: `${logLevelConfiguration[level].prefix} ${t(`log.level.option.${level}`)}`,
+        label: `${logLevelConfiguration[level].prefix} ${t(`option.${level}`)}`,
       }))}
       value={level}
       onChange={(value) => {

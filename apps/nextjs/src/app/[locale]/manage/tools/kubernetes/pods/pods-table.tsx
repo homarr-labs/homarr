@@ -10,23 +10,29 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesPod } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+
+import { createKubernetesResourceQueryOptions } from "../kubernetes-query-options";
 
 dayjs.extend(relativeTime);
 
 interface PodsTableComponentProps {
+  contextId: string;
   initialPods: RouterOutputs["kubernetes"]["pods"]["getPods"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.pods">): MRT_ColumnDef<KubernetesPod>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.pods">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesPod>[] => [
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
   },
   {
     accessorKey: "image",
@@ -38,24 +44,23 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.pods">): MRT_Col
   },
   {
     accessorKey: "status",
-    header: t("field.status.label"),
+    header: tField("status.label"),
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
-export function PodsTable(initialData: PodsTableComponentProps) {
-  const tPods = useScopedI18n("kubernetes.pods");
+export function PodsTable({ contextId, initialPods }: PodsTableComponentProps) {
+  const tPods = useI18n("kubernetes.pods");
+  const tField = useI18n("kubernetes.field");
 
-  const { data } = clientApi.kubernetes.pods.getPods.useQuery(undefined, {
-    initialData: initialData.initialPods,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.pods.getPods.useQuery(
+    { contextId },
+    createKubernetesResourceQueryOptions(initialPods),
+  );
 
   const table = useTranslatedMantineReactTable({
     data,
@@ -75,7 +80,7 @@ export function PodsTable(initialData: PodsTableComponentProps) {
       autoFocus: true,
     },
     enableGrouping: true,
-    columns: createColumns(tPods),
+    columns: createColumns(tPods, tField),
   });
 
   return <MantineReactTable table={table} />;

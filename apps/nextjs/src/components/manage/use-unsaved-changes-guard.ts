@@ -1,0 +1,50 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+
+import { useConfirmModal } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
+import { registerUnsavedChangesGuard } from "./unsaved-changes-guard";
+
+interface UnsavedChangesGuardOptions {
+  guardBeforeUnload?: boolean;
+}
+
+export function useUnsavedChangesGuard(isDirty: boolean, options: UnsavedChangesGuardOptions = {}) {
+  const tConfirmLeave = useI18n("board.action.edit.confirmLeave");
+  const tCommon = useI18n("common");
+  const router = useRouter();
+  const { openConfirmModal } = useConfirmModal();
+  const dirtyRef = useRef(isDirty);
+  const confirmationOpenRef = useRef(false);
+  const confirmNavigationRef = useRef<(href: string) => void>(() => undefined);
+  dirtyRef.current = isDirty;
+  confirmNavigationRef.current = (href) => {
+    if (confirmationOpenRef.current) return;
+    confirmationOpenRef.current = true;
+    openConfirmModal(
+      {
+        title: tConfirmLeave("title"),
+        children: tConfirmLeave("message"),
+        confirmProps: { children: tCommon("action.discard") },
+        onConfirm: () => router.push(href),
+      },
+      {
+        onClose: () => {
+          confirmationOpenRef.current = false;
+        },
+      },
+    );
+  };
+
+  useEffect(
+    () =>
+      registerUnsavedChangesGuard({
+        isDirty: () => dirtyRef.current,
+        confirmNavigation: (href) => confirmNavigationRef.current(href),
+        guardBeforeUnload: options.guardBeforeUnload,
+      }),
+    [options.guardBeforeUnload],
+  );
+}

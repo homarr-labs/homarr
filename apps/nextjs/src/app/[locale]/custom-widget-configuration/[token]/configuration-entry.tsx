@@ -1,0 +1,176 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  Card,
+  Center,
+  PasswordInput,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
+import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
+
+import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
+
+import { useI18n } from "@homarr/translation/client";
+
+interface RequestDetails {
+  widgetName: string;
+  sourceName: string;
+  kinds: Array<"apiKey" | "username" | "password">;
+  expiresAt: number;
+  status: "pending" | "applying" | "completed";
+  source: CustomWidgetSource;
+}
+
+export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
+  const t = useI18n("customWidget.secretEntry");
+  const tSecret = useI18n("customWidget.secret");
+  const [details, setDetails] = useState<RequestDetails | null>(null);
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [integrationId, setIntegrationId] = useState<string>();
+  const [baseUrl, setBaseUrl] = useState("");
+  const [networkScope, setNetworkScope] = useState<"public" | "private" | "loopback">("public");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    void fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`)
+      .then(async (response) => {
+        const body = (await response.json()) as RequestDetails | { error: string };
+        if (!response.ok || "error" in body) throw new Error("error" in body ? body.error : t("unavailable"));
+        setDetails(body);
+        const sourceBaseUrl = body.source.baseUrl ?? "";
+        setBaseUrl(isCustomWidgetSourceUrlPlaceholder(sourceBaseUrl) ? "" : sourceBaseUrl);
+        setNetworkScope(body.source.networkScope ?? "public");
+        setIntegrationId(body.source.integrationId);
+      })
+      .catch((cause: unknown) => setError(cause instanceof Error ? cause.message : t("unavailable")))
+      .finally(() => setLoading(false));
+  }, [t, token]);
+
+  const submit = async () => {
+    setSaving(true);
+    setError(null);
+    try {
+      let configuration: unknown = { baseUrl, networkScope, secrets: values };
+      if (details?.source.type === "integration") configuration = { integrationId, secrets: {} };
+      const response = await fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(configuration),
+      });
+      const body = (await response.json()) as { status?: string; error?: string };
+      if (!response.ok) throw new Error(body.error ?? t("saveError"));
+      setDetails((current) => (current ? { ...current, status: "completed" } : current));
+      setValues({});
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : t("saveError"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Center mih="100dvh" p="md">
+      <Card withBorder shadow="md" radius="lg" p="xl" w="100%" maw={480}>
+        <Stack gap="lg">
+          <ThemeIcon size={48} radius="xl" variant="light">
+            <IconLock size={24} />
+          </ThemeIcon>
+          <Stack gap={4}>
+            <Title order={1} size="h2">
+              {t("title")}
+            </Title>
+            <Text c="dimmed">{t("description")}</Text>
+          </Stack>
+          {loading && <Text c="dimmed">{t("loading")}</Text>}
+          {error && <Alert color="red">{error}</Alert>}
+          {details?.status === "completed" && (
+            <Alert color="green" icon={<IconCheck size={18} />}>
+              {t("saved")}
+            </Alert>
+          )}
+          {details?.status === "applying" && <Alert color="blue">{t("applying")}</Alert>}
+          {details?.status === "pending" && (
+            <Stack gap="md">
+              <Card withBorder bg="var(--mantine-color-default-hover)">
+                <Text fw={600}>{details.widgetName}</Text>
+                <Text size="sm" c="dimmed">
+                  {t("source", { name: details.sourceName })}
+                </Text>
+              </Card>
+              {details.source.type === "integration" && (
+                <IntegrationSourceSelect
+                  kind={details.source.integrationKind}
+                  integrationId={integrationId}
+                  onChange={setIntegrationId}
+                />
+              )}
+              {details.source.type !== "integration" && (
+                <>
+                  <TextInput
+                    label={t("baseUrl")}
+                    type="url"
+                    value={baseUrl}
+                    placeholder={details.source.baseUrl}
+                    onChange={(event) => setBaseUrl(event.currentTarget.value)}
+                    required
+                  />
+                  <Select
+                    label={t("networkScope")}
+                    data={["public", "private", "loopback"]}
+                    value={networkScope}
+                    allowDeselect={false}
+                    onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
+                  />
+                </>
+              )}
+              {details.kinds.map((kind) => {
+                const Input = kind === "username" ? TextInput : PasswordInput;
+                return (
+                  <Input
+                    key={kind}
+                    label={tSecret(kind)}
+                    leftSection={<IconKey size={16} />}
+                    value={values[kind] ?? ""}
+                    onChange={(event) => {
+                      const value = event.currentTarget.value;
+                      setValues((current) => ({ ...current, [kind]: value }));
+                    }}
+                    autoComplete="off"
+                    required
+                  />
+                );
+              })}
+              <Button
+                loading={saving}
+                disabled={
+                  (details.source.type === "integration"
+                    ? !integrationId
+                    : !URL.canParse(baseUrl) || isCustomWidgetSourceUrlPlaceholder(baseUrl)) ||
+                  details.kinds.some((kind) => !values[kind])
+                }
+                onClick={() => void submit()}
+              >
+                {t("save")}
+              </Button>
+              <Text size="xs" c="dimmed">
+                {t("expires", { time: new Date(details.expiresAt).toLocaleTimeString() })}
+              </Text>
+            </Stack>
+          )}
+        </Stack>
+      </Card>
+    </Center>
+  );
+}

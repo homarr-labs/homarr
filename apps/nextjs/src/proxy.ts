@@ -1,21 +1,56 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { api } from "@homarr/api/server";
-import { localeCookieKey } from "@homarr/definitions";
-import type { SupportedLanguage } from "@homarr/translation";
-import { supportedLanguages } from "@homarr/translation";
+import { getDefaultLocaleForProxyAsync, getOnboardingStepForProxyAsync } from "@homarr/db/proxy-reader";
+import { localeCookieKey } from "@homarr/definitions/cookie";
+import type { SupportedLanguage } from "@homarr/translation/languages";
+import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 let isOnboardingFinished = false;
+let onboardingStepPromise: Promise<string> | null = null;
+let defaultLocalePromise: Promise<string> | null = null;
+
+const getOnboardingStepDedupedAsync = () => {
+  onboardingStepPromise ??= getOnboardingStepForProxyAsync().then(
+    (step) => {
+      onboardingStepPromise = null;
+      return step;
+    },
+    (error: unknown) => {
+      onboardingStepPromise = null;
+      throw error;
+    },
+  );
+  return onboardingStepPromise;
+};
+
+const getDefaultLocaleDedupedAsync = () => {
+  defaultLocalePromise ??= getDefaultLocaleForProxyAsync().then(
+    (locale) => {
+      defaultLocalePromise = null;
+      return locale;
+    },
+    (error: unknown) => {
+      defaultLocalePromise = null;
+      throw error;
+    },
+  );
+  return defaultLocalePromise;
+};
 
 export async function proxy(request: NextRequest) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
+  const segments = pathname.split("/").filter(Boolean);
+  const routeSegments = supportedLanguages.includes(segments[0] as SupportedLanguage) ? segments.slice(1) : segments;
+  const isOnboardingAccessRoute =
+    (routeSegments.length === 1 && routeSegments[0] === "init") ||
+    (routeSegments.length === 2 && routeSegments[0] === "auth" && routeSegments[1] === "login");
 
-  if (!isOnboardingFinished && !pathname.endsWith("/init")) {
-    const currentOnboardingStep = await api.onboard.currentStep();
-    if (currentOnboardingStep.current !== "finish") {
+  if (!isOnboardingFinished && !isOnboardingAccessRoute) {
+    const currentOnboardingStep = await getOnboardingStepDedupedAsync();
+    if (currentOnboardingStep !== "finish") {
       return NextResponse.redirect(new URL("/init", request.url));
     }
 
@@ -26,7 +61,10 @@ export async function proxy(request: NextRequest) {
   const currentLocale = request.cookies.get(localeCookieKey)?.value;
   let defaultLocale: SupportedLanguage = "en";
   if (!currentLocale || !supportedLanguages.includes(currentLocale as SupportedLanguage)) {
-    defaultLocale = await api.serverSettings.getCulture().then((culture) => culture.defaultLocale);
+    const configuredLocale = await getDefaultLocaleDedupedAsync();
+    if (supportedLanguages.includes(configuredLocale as SupportedLanguage)) {
+      defaultLocale = configuredLocale as SupportedLanguage;
+    }
   }
 
   // We don't want to fallback to accept-language header so we clear it

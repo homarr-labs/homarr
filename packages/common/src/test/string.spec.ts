@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { bestMatch, capitalize } from "../string";
+import { bestMatch, capitalize, getImageMatchRank, normalizeImageName } from "../string";
 
 const capitalizeTestCases = [
   ["hello", "Hello"],
@@ -52,5 +52,29 @@ describe("bestMatch should find the best match in an array of options", () => {
     const result = bestMatch("nginx", options, ({ name }) => name);
 
     expect(result).toBeNull();
+  });
+});
+
+describe("image name matching", () => {
+  test.each([
+    ["home-assistant.svg", "home assistant"],
+    ["https://example.com/Home_Assistant.PNG?v=1", "home assistant"],
+    ["jelly.fin.webp", "jelly fin"],
+    ["Caf\u00e9.svg", "cafe"],
+    ["\u6771\u4eac.svg", "\u6771\u4eac"],
+    ["\u0939\u093f\u0928\u094d\u0926\u0940.svg", "\u0939\u093f\u0928\u094d\u0926\u0940"],
+  ])("normalizes %s", (value, expected) => {
+    expect(normalizeImageName(value)).toBe(expected);
+  });
+
+  test.each([
+    ["homeassistant", "home-assistant.svg", 1],
+    ["home assistant", "home_assistant.png", 0],
+    ["home assistant", "Home Assistant.webp", 0],
+    ["\u6771\u4eac", "\u6771\u4eac.svg", 0],
+    ["\u0939\u093f\u0928\u094d\u0926\u0940", "\u0939\u093f\u0928\u094d\u0926\u0940.png", 0],
+    ["home assistant", "unrelated.svg", null],
+  ])("ranks %s against %s", (search, candidate, expected) => {
+    expect(getImageMatchRank(normalizeImageName(search), candidate)).toBe(expected);
   });
 });

@@ -3,6 +3,8 @@ import { z } from "zod/v4";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
+import type { IntegrationHttpAuthentication } from "../../http-auth";
+import { apiKeyAuth } from "../../http-auth";
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -16,6 +18,38 @@ import { mediaOrganizerPriorities } from "../media-organizer";
 const logger = createLogger({ module: "sonarrIntegration" });
 
 export class SonarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+  public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
+    return apiKeyAuth(this.integration);
+  }
+
+  async getLibraryStatsAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v3/series"), {
+      headers: (await this.getHttpAuthenticationAsync()).headers,
+    });
+    if (!response.ok) throw new Error(`Sonarr library request failed (${response.status})`);
+    const library = z
+      .array(
+        z.object({
+          monitored: z.boolean(),
+          statistics: z
+            .object({
+              totalEpisodeCount: z.number().nonnegative(),
+              episodeFileCount: z.number().nonnegative(),
+              sizeOnDisk: z.number().nonnegative(),
+            })
+            .nullish(),
+        }),
+      )
+      .parse(await response.json());
+    return {
+      shows: library.length,
+      monitored: library.filter((series) => series.monitored).length,
+      episodes: library.reduce((sum, series) => sum + (series.statistics?.totalEpisodeCount ?? 0), 0),
+      downloaded: library.reduce((sum, series) => sum + (series.statistics?.episodeFileCount ?? 0), 0),
+      storage: library.reduce((sum, series) => sum + (series.statistics?.sizeOnDisk ?? 0), 0),
+    };
+  }
+
   /**
    * Gets the events in the Sonarr calendar between two dates.
    * @param start The start date

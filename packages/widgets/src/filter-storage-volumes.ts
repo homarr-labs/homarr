@@ -1,14 +1,33 @@
+import type { IntegrationKind } from "@homarr/definitions";
+
 interface StorageVolumeEntry {
   deviceName: string;
 }
 
+const storageVolumeSelectionIntegrationKinds = ["openmediavault", "synology"] as const satisfies IntegrationKind[];
+
+export const supportsStorageVolumeSelection = (integrationKinds: IntegrationKind[]): boolean => {
+  return (
+    integrationKinds.length > 0 &&
+    integrationKinds.every((kind) =>
+      storageVolumeSelectionIntegrationKinds.some((supportedKind) => supportedKind === kind),
+    )
+  );
+};
+
 const partitionSuffixPatterns: ReadonlyArray<{ pattern: RegExp; baseGroupIndex: number }> = [
   // SCSI/SATA/VirtIO: /dev/sda1 -> /dev/sda
   { pattern: /^(\/dev\/(?:sd|vd|hd|xvd)[a-z]+)[0-9]+$/, baseGroupIndex: 1 },
+  // SCSI/SATA/VirtIO without device node prefix: sda1 -> sda (OMV reports unprefixed names)
+  { pattern: /^((?:sd|vd)[a-z]+)[0-9]+$/, baseGroupIndex: 1 },
   // NVMe: /dev/nvme0n1p2 -> /dev/nvme0n1
   { pattern: /^(\/dev\/nvme[0-9]+n[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
+  // NVMe without device node prefix: nvme0n1p2 -> nvme0n1
+  { pattern: /^(nvme[0-9]+n[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
   // eMMC: /dev/mmcblk0p1 -> /dev/mmcblk0
   { pattern: /^(\/dev\/mmcblk[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
+  // eMMC without device node prefix: mmcblk0p1 -> mmcblk0
+  { pattern: /^(mmcblk[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
 ];
 
 export const normalizeStorageDeviceName = (deviceName: string): string => {
@@ -28,18 +47,38 @@ export const toScopedStorageVolumeValue = (integrationId: string, value: string)
   return `${integrationId}:${volumeName}`;
 };
 
-const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+// Integrations differ in whether device names carry the /dev/ prefix (Glances SMART, OMV report
+// bare names). The prefix is dropped after partition normalization, so the prefixed-only patterns still apply.
+const withoutDevicePrefix = (deviceName: string): string => deviceName.replace(/^\/dev\//, "");
+
+// The same disk under either name form: /dev/sda1, sda1 and sda are all sda.
+export const isSameStorageDevice = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
-    normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
+    withoutDevicePrefix(normalizeStorageDeviceName(leftDeviceName)) ===
+      withoutDevicePrefix(normalizeStorageDeviceName(rightDeviceName))
   );
 };
 
-const matchesVisibleStorageVolume = (
-  visibleVolume: string,
-  integrationId: string,
-  deviceName: string,
-): boolean => {
+// SMART data for NVMe can be reported per controller (Glances: nvme0), which owns every
+// namespace and partition below it (nvme0n1p3). Namespaces never match each other.
+const nvmeControllerPattern = /^(nvme[0-9]+)$/;
+const nvmeNamespacePattern = /^(nvme[0-9]+)n[0-9]+(?:p[0-9]+)?$/;
+
+const isNvmeControllerOf = (controllerName: string, deviceName: string): boolean => {
+  const controller = nvmeControllerPattern.exec(withoutDevicePrefix(controllerName))?.[1];
+  return controller !== undefined && nvmeNamespacePattern.exec(withoutDevicePrefix(deviceName))?.[1] === controller;
+};
+
+export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+  return (
+    isSameStorageDevice(leftDeviceName, rightDeviceName) ||
+    isNvmeControllerOf(leftDeviceName, rightDeviceName) ||
+    isNvmeControllerOf(rightDeviceName, leftDeviceName)
+  );
+};
+
+const matchesVisibleStorageVolume = (visibleVolume: string, integrationId: string, deviceName: string): boolean => {
   const separatorIndex = visibleVolume.indexOf(":");
   if (separatorIndex === -1) {
     return storageDeviceNamesMatch(visibleVolume, deviceName);

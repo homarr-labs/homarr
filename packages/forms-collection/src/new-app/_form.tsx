@@ -3,17 +3,16 @@
 import type { ChangeEventHandler } from "react";
 import { useEffect, useImperativeHandle, useRef } from "react";
 import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import type { z } from "zod/v4";
 
-import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { appManageSchema } from "@homarr/validation/app";
 
 import { IconPicker } from "../icon-picker/icon-picker";
-import { findBestIconMatch } from "./icon-matcher";
 
 type FormType = z.infer<typeof appManageSchema>;
 
@@ -52,7 +51,8 @@ export const AppForm = ({
   hideButtons,
   formRef,
 }: AppFormProps) => {
-  const t = useI18n();
+  const tApp = useI18n("app");
+  const tCommon = useI18n("common");
 
   const form = useZodForm(appManageSchema, {
     initialValues: toFormValues(initialValues),
@@ -80,9 +80,6 @@ export const AppForm = ({
     // when initialValues actually changes (e.g. navigating between edit pages).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValuesKey]);
-
-  // Debounce the name value with 200ms delay
-  const [debouncedName] = useDebouncedValue(form.values.name, 200);
 
   const shouldCreateAnother = useRef(false);
   const handleSubmit = (values: FormType) => {
@@ -130,43 +127,27 @@ export const AppForm = ({
     }
   };
 
-  // Auto-select icon based on app name with debounced search
-  const { data: iconsData } = clientApi.icon.findIcons.useQuery(
-    {
-      searchText: debouncedName,
-    },
-    {
-      enabled: debouncedName.length > 3,
-    },
-  );
-
-  useEffect(() => {
-    if (debouncedName && !form.values.iconUrl && iconsData?.icons) {
-      const bestMatch = findBestIconMatch(debouncedName, iconsData.icons);
-      if (bestMatch) {
-        form.setFieldValue("iconUrl", bestMatch);
-      }
-    }
-  }, [debouncedName, iconsData]);
-
   const formFields = (
     <Stack>
-      <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
-      <IconPicker {...form.getInputProps("iconUrl")} />
+      <TextInput {...form.getInputProps("name")} withAsterisk label={tCommon("field.name")} />
+      <IconPicker
+        {...form.getInputProps("iconUrl")}
+        suggestedSearch={initialValues === undefined ? form.values.name : undefined}
+      />
       <Textarea
         {...form.getInputProps("description")}
-        label={t("app.field.description.label")}
+        label={tApp("field.description.label")}
         autosize
         minRows={2}
         resize="vertical"
       />
-      <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
+      <TextInput {...form.getInputProps("href")} label={invariantTechnicalLabels.url} />
 
       <Checkbox
         checked={opened}
         onChange={handleClickDifferentUrlPing}
-        label={t("app.field.useDifferentUrlForPing.checkbox.label")}
-        description={t("app.field.useDifferentUrlForPing.checkbox.description")}
+        label={tApp("field.useDifferentUrlForPing.checkbox.label")}
+        description={tApp("field.useDifferentUrlForPing.checkbox.description")}
         mt="md"
       />
 
@@ -178,7 +159,7 @@ export const AppForm = ({
         <Group justify="end">
           {showBackToOverview && (
             <Button variant="default" component={Link} href="/manage/apps">
-              {t("common.action.backToOverview")}
+              {tCommon("action.backToOverview")}
             </Button>
           )}
           {buttonLabels.submitAndCreateAnother && (

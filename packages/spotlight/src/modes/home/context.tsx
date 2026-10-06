@@ -10,19 +10,30 @@ export type ContextSpecificItem = {
   id: string;
   name: string;
   icon: TablerIcon | string;
-  interaction: () => inferSearchInteractionDefinition<SearchInteraction>;
+  interaction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
+  aliases?: string[];
+  placement?: "primary" | "fallback";
   disabled?: boolean;
+  description?: string;
+  unavailable?: boolean;
+  alwaysVisible?: boolean;
+  dedupeKey?: string;
 };
 
 interface SpotlightContextProps {
   items: ContextSpecificItem[];
+}
+
+interface SpotlightRegistrationContextProps {
   registerItems: (key: string, results: ContextSpecificItem[]) => void;
   unregisterItems: (key: string) => void;
 }
 
 const createSpotlightContext = (displayName: string) => {
   const SpotlightContext = createContext<SpotlightContextProps | null>(null);
+  const SpotlightRegistrationContext = createContext<SpotlightRegistrationContextProps | null>(null);
   SpotlightContext.displayName = displayName;
+  SpotlightRegistrationContext.displayName = `${displayName}Registration`;
 
   const Provider = ({ children }: PropsWithChildren) => {
     const [itemsMap, setItemsMap] = useState<Map<string, { items: ContextSpecificItem[]; count: number }>>(new Map());
@@ -48,16 +59,33 @@ const createSpotlightContext = (displayName: string) => {
         const newItemsMap = new Map(prevItems);
         newItemsMap.set(key, { items: newItemsMap.get(key)?.items ?? [], count: registrationCount - 1 });
 
-        return prevItems;
+        return newItemsMap;
       });
     }, []);
 
-    const items = useMemo(() => Array.from(itemsMap.values()).flatMap(({ items }) => items), [itemsMap]);
+    const items = useMemo(() => {
+      const uniqueItems: ContextSpecificItem[] = [];
+      const itemKeys = new Set<string>();
+
+      for (const registration of itemsMap.values()) {
+        for (const item of registration.items) {
+          const itemKey = item.dedupeKey ?? item.id;
+          if (itemKeys.has(itemKey)) continue;
+
+          itemKeys.add(itemKey);
+          uniqueItems.push(item);
+        }
+      }
+
+      return uniqueItems;
+    }, [itemsMap]);
+    const itemsContext = useMemo(() => ({ items }), [items]);
+    const registration = useMemo(() => ({ registerItems, unregisterItems }), [registerItems, unregisterItems]);
 
     return (
-      <SpotlightContext.Provider value={{ items, registerItems, unregisterItems }}>
-        {children}
-      </SpotlightContext.Provider>
+      <SpotlightRegistrationContext.Provider value={registration}>
+        <SpotlightContext.Provider value={itemsContext}>{children}</SpotlightContext.Provider>
+      </SpotlightRegistrationContext.Provider>
     );
   };
 
@@ -76,7 +104,7 @@ const createSpotlightContext = (displayName: string) => {
     items: ContextSpecificItem[],
     dependencyArray: DependencyList,
   ) => {
-    const context = useContext(SpotlightContext);
+    const context = useContext(SpotlightRegistrationContext);
 
     if (!context) {
       throw new Error(
@@ -94,7 +122,7 @@ const createSpotlightContext = (displayName: string) => {
         context.unregisterItems(key);
       };
       // We ignore the results
-    }, [...dependencyArray, key]);
+    }, [...dependencyArray, context.registerItems, context.unregisterItems, key]);
   };
 
   return [SpotlightContext, Provider, useSpotlightContextItems, useRegisterSpotlightContextItems] as const;

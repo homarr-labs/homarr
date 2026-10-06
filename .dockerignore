@@ -17,7 +17,8 @@ coverage
 dev
 .build
 e2e
-apps/docs
+apps/docs/*
+!apps/docs/package.json
 apps/nextjs/.next
 .env
 .env.*

@@ -3,10 +3,14 @@ import type { ModalProps } from "@mantine/core";
 
 import type { stringOrTranslation } from "@homarr/translation";
 
-export type ModalComponent<TInnerProps> = (props: {
-  actions: { closeModal: () => void };
-  innerProps: TInnerProps;
-}) => ReactNode;
+import type { ModalPresentation } from "./modal-presentation";
+
+export interface ModalActions {
+  closeModal: () => void;
+  setCloseInterceptor?: (interceptor: (() => boolean) | null) => void;
+}
+
+export type ModalComponent<TInnerProps> = (props: { actions: ModalActions; innerProps: TInnerProps }) => ReactNode;
 
 export type CreateModalOptions = Pick<
   ModalOptions<unknown>,
@@ -23,6 +27,7 @@ export type CreateModalOptions = Pick<
   | "closeOnEscape"
 > & {
   defaultTitle: stringOrTranslation;
+  presentation?: ModalPresentation;
 };
 
 export interface ModalDefinition {
@@ -34,6 +39,7 @@ export interface ModalDefinition {
 type ModalOptions<TInnerProps> = Partial<Omit<ModalProps, "opened">> & {
   innerProps: TInnerProps;
   defaultTitle?: stringOrTranslation;
+  presentation?: ModalPresentation;
 };
 
 export interface ModalState<TModal extends ModalDefinition = ModalDefinition> {

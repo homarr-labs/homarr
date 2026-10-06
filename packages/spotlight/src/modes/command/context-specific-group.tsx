@@ -1,4 +1,4 @@
-import { Group, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 
 import { createGroup } from "../../lib/group";
 import type { ContextSpecificItem } from "../home/context";
@@ -7,6 +7,7 @@ import { useSpotlightContextActions } from "../home/context";
 export const contextSpecificActionsSearchGroups = createGroup<ContextSpecificItem>({
   title: (t) => t("search.mode.command.group.localCommand.title"),
   keyPath: "id",
+  source: { kind: "local" },
   Component(option) {
     const icon =
       typeof option.icon !== "string" ? (
@@ -16,14 +17,21 @@ export const contextSpecificActionsSearchGroups = createGroup<ContextSpecificIte
       );
 
     return (
-      <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
+      <Group w="100%" wrap="nowrap" align="center" px="md" py="xs" opacity={option.unavailable ? 0.55 : 1}>
         {icon}
-        <Text>{option.name}</Text>
+        <Stack gap={0}>
+          <Text>{option.name}</Text>
+          {option.description && (
+            <Text size="xs" c="dimmed">
+              {option.description}
+            </Text>
+          )}
+        </Stack>
       </Group>
     );
   },
-  useInteraction(option) {
-    return option.interaction();
+  useInteraction(option, query) {
+    return option.interaction(query);
   },
   filter(query, option) {
     return option.name.toLowerCase().includes(query.toLowerCase());

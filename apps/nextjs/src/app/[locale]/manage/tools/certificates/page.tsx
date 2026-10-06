@@ -13,7 +13,7 @@ import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
-import { AddCertificateButton } from "./_components/add-certificate";
+import { AddCertificateSection } from "./_components/add-certificate";
 import { RemoveCertificate } from "./_components/remove-certificate";
 
 interface CertificatesPageProps {
@@ -29,7 +29,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
   }
 
   const { locale } = await params;
-  const t = await getI18n();
+  const t = await getI18n("certificate");
   const certificates = await loadCustomRootCertificatesAsync();
   const x509Certificates = certificates
     .map((cert) => {
@@ -61,20 +61,21 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
       <Stack>
         <Group justify="space-between">
           <Stack gap={4}>
-            <Title>{t("certificate.page.list.title")}</Title>
-            <Text>{t("certificate.page.list.description")}</Text>
+            <Title>{t("page.list.title")}</Title>
+            <Text>{t("page.list.description")}</Text>
           </Stack>
 
           <Group>
             <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
-              {t("certificate.page.list.toHostnames")}
+              {t("page.list.toHostnames")}
             </Button>
-            <AddCertificateButton />
           </Group>
         </Group>
 
+        <AddCertificateSection />
+
         {x509Certificates.length === 0 && (
-          <NoResults icon={IconCertificateOff} title={t("certificate.page.list.noResults.title")} />
+          <NoResults icon={IconCertificateOff} title={t("page.list.noResults.title")} />
         )}
 
         <SimpleGrid cols={{ sm: 1, lg: 2, xl: 3 }} spacing="lg">
@@ -99,7 +100,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
                 <Stack flex={1} gap="xs" maw="calc(100% - 48px)">
                   <Group justify="space-between" wrap="nowrap">
                     <Text fw={500} lineClamp={1} style={{ wordBreak: "break-all" }}>
-                      {cert.isError ? t("certificate.page.list.invalid.title") : cert.x509.subject}
+                      {cert.isError ? t("page.list.invalid.title") : cert.x509.subject}
                     </Text>
                     <Text c="gray.6" ta="end" size="sm">
                       {cert.fileName}
@@ -108,11 +109,11 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
                   <Group justify="space-between">
                     {cert.isError ? (
                       <Text size="sm" c="gray.6">
-                        {t("certificate.page.list.invalid.description")}
+                        {t("page.list.invalid.description")}
                       </Text>
                     ) : (
                       <Text size="sm" c="gray.6" title={cert.x509.validToDate.toISOString()}>
-                        {t("certificate.page.list.expires", {
+                        {t("page.list.expires", {
                           when: new Intl.RelativeTimeFormat(locale).format(
                             dayjs(cert.x509.validToDate).diff(dayjs(), "days"),
                             "days",

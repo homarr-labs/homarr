@@ -1,7 +1,9 @@
+import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
+import { env } from "@homarr/common/env";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { items, users } from "@homarr/db/schema";
@@ -13,6 +15,16 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "rssFeed" });
 
+const safeFeedLogContext = (url: string, feedIndex: number) => {
+  try {
+    return { feedIndex, origin: new URL(url).origin };
+  } catch {
+    return { feedIndex };
+  }
+};
+
+const redactFeedFailureMessage = (message: string) => message.replace(/https?:\/\/\S+/gi, "[redacted URL]");
+
 const feedsInput = z.object({
   urls: z.array(z.string()).max(100),
   maximumAmountPosts: z.number(),
@@ -20,6 +32,8 @@ const feedsInput = z.object({
 
 export const rssFeedRouter = createTRPCRouter({
   getFeeds: publicProcedure.input(feedsInput).query(async ({ ctx, input }) => {
+    if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
+
     const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
       ? input.urls
       : await restrictUrlsAsync(ctx.db, input.urls);
@@ -34,18 +48,37 @@ export const rssFeedRouter = createTRPCRouter({
       }),
     );
 
-    return settled
-      .flatMap((result, index) => {
-        if (result.status === "fulfilled") return result.value.data.entries;
-        logger.warn("RSS feed fetch failed", { url: urls[index], error: result.reason });
-        return [];
-      })
-      .toSorted((entryA, entryB) => {
-        return entryA.published && entryB.published
-          ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
-          : 0;
-      })
-      .slice(0, input.maximumAmountPosts);
+    const failures = settled.filter((result) => result.status === "rejected");
+    settled.forEach((result, index) => {
+      if (result.status === "rejected") {
+        logger.warn("RSS feed fetch failed", {
+          ...safeFeedLogContext(urls[index] ?? "", index),
+          errorType: result.reason instanceof Error ? result.reason.name : typeof result.reason,
+          errorMessage: result.reason instanceof Error ? redactFeedFailureMessage(result.reason.message) : undefined,
+        });
+      }
+    });
+    if (settled.length > 0 && failures.length === settled.length) {
+      throw new TRPCError({
+        code: "BAD_GATEWAY",
+        message: "All RSS feed requests failed",
+      });
+    }
+
+    return {
+      entries: settled
+        .flatMap((result) => {
+          if (result.status === "fulfilled") return result.value.data.entries;
+          return [];
+        })
+        .toSorted((entryA, entryB) => {
+          return entryA.published && entryB.published
+            ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
+            : 0;
+        })
+        .slice(0, input.maximumAmountPosts),
+      failedFeedCount: failures.length,
+    };
   }),
 });
 

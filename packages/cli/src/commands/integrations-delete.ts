@@ -13,8 +13,11 @@ export const integrationsDelete = command({
   // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     if (!options.id && !options.name) {
-      console.error("Either --id or --name must be provided");
-      return;
+      throw new Error("Either --id or --name must be provided");
+    }
+
+    if (options.id && options.name) {
+      throw new Error("Use either --id or --name, not both");
     }
 
     let entry;
@@ -29,8 +32,7 @@ export const integrationsDelete = command({
     }
 
     if (!entry) {
-      console.error("Integration not found");
-      return;
+      throw new Error("Integration not found");
     }
 
     await db.delete(integrations).where(eq(integrations.id, entry.id));

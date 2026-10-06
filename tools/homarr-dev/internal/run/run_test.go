@@ -19,10 +19,10 @@ func TestPRPlanUsesAMD64(t *testing.T) {
 	}
 }
 
-func TestPRCloneIsShallow(t *testing.T) {
-	args := prCloneArgs("/tmp/checkout")
-	if !slices.Contains(args, "--depth=1") || !slices.Contains(args, "--filter=blob:none") {
-		t.Fatalf("clone args = %v", args)
+func TestPRFetchIsShallow(t *testing.T) {
+	args := prFetchArgs("https://github.com/homarr-labs/homarr.git", "refs/pull/1/head:pr-1")
+	if !slices.Contains(args, "--depth=1") {
+		t.Fatalf("fetch args = %v", args)
 	}
 }
 
@@ -30,6 +30,24 @@ func TestBuildPlanFailsWhenNoPortIsAvailable(t *testing.T) {
 	_, err := BuildPlan(Options{Tag: "dev", FindPort: func(int) int { return 0 }})
 	if err == nil {
 		t.Fatal("expected no-free-port error")
+	}
+}
+
+func TestBuildPlanPreservesEnvironmentOverrides(t *testing.T) {
+	want := []string{
+		"WORKSHOP_WEB_URL=https://app-v2.preview.homarr.dev/",
+		"FEATURE_OPTIONS=one=two",
+	}
+	plan, err := BuildPlan(Options{
+		PR:       1,
+		Env:      want,
+		FindPort: func(int) int { return 7575 },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(plan.Env, want) {
+		t.Fatalf("environment = %v, want %v", plan.Env, want)
 	}
 }
 

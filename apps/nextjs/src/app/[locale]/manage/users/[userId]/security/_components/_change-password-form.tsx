@@ -18,19 +18,20 @@ interface ChangePasswordFormProps {
 
 export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   const { data: session } = useSession();
-  const t = useI18n();
+  const tUser = useI18n("user");
+  const tCommon = useI18n("common");
   const { mutate, isPending } = clientApi.user.changePassword.useMutation({
     async onSettled() {
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
     },
     onSuccess() {
       showSuccessNotification({
-        message: t("user.action.changePassword.notification.success.message"),
+        message: tUser("action.changePassword.notification.success.message"),
       });
     },
     onError() {
       showErrorNotification({
-        message: t("user.action.changePassword.notification.error.message"),
+        message: tUser("action.changePassword.notification.error.message"),
       });
     },
   });
@@ -60,13 +61,13 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <Fieldset legend={t("user.action.changePassword.label")}>
+        <Fieldset legend={tUser("action.changePassword.label")}>
           <Stack gap="xs">
             {/* Require previous password if the current user want's to change his password */}
             {session?.user.id === user.id && (
               <PasswordInput
                 withAsterisk
-                label={t("user.field.previousPassword.label")}
+                label={tUser("field.previousPassword.label")}
                 {...form.getInputProps("previousPassword")}
               />
             )}
@@ -74,19 +75,19 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
             <CustomPasswordInput
               withPasswordRequirements
               withAsterisk
-              label={t("user.field.password.label")}
+              label={tUser("field.password.label")}
               {...form.getInputProps("password")}
             />
 
             <PasswordInput
               withAsterisk
-              label={t("user.field.passwordConfirm.label")}
+              label={tUser("field.passwordConfirm.label")}
               {...form.getInputProps("confirmPassword")}
             />
 
             <Group justify="end">
               <Button type="submit" loading={isPending}>
-                {t("common.action.confirm")}
+                {tCommon("action.confirm")}
               </Button>
             </Group>
           </Stack>

@@ -314,7 +314,12 @@ export function JsonPathTreePicker({
         {hasData && (
           <Combobox.Header>
             <Group gap="xs" px="xs" pt="xs" pb={4}>
-              <Badge size="sm" color="teal" variant="light" leftSection={<IconCircleCheck size={12} />}>
+              <Badge
+                size="sm"
+                color="teal"
+                variant="light"
+                leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />}
+              >
                 {loadedHint}
               </Badge>
               <Text size="xs" c="dimmed">
@@ -324,7 +329,7 @@ export function JsonPathTreePicker({
           </Combobox.Header>
         )}
         <Combobox.Options>
-          <ScrollArea.Autosize mah={420} type="scroll">
+          <ScrollArea.Autosize mah={420}>
             {!hasData && <Combobox.Empty>{noDataHint}</Combobox.Empty>}
             {hasData && visibleNodes.length === 0 && <Combobox.Empty>No matching paths</Combobox.Empty>}
             {visibleNodes.map((node) => (
@@ -353,7 +358,7 @@ function TreeNodeOption({ node, selected, isSearching }: { node: FlatNode; selec
       <Group gap={4} wrap="nowrap" style={{ minWidth: 0 }}>
         {node.hasChildren && (
           <IconChevronDown
-            size={14}
+            size="var(--mantine-font-size-sm)"
             style={{
               flexShrink: 0,
               color: "var(--mantine-color-dimmed)",
@@ -362,7 +367,7 @@ function TreeNodeOption({ node, selected, isSearching }: { node: FlatNode; selec
             }}
           />
         )}
-        <TypeIcon size={14} style={{ flexShrink: 0, opacity: 0.5 }} />
+        <TypeIcon size="var(--mantine-font-size-sm)" style={{ flexShrink: 0, opacity: 0.5 }} />
         <Text
           size="sm"
           fw={selected ? 600 : 400}

@@ -68,6 +68,14 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     }
   }
 
+  public async deleteNotificationAsync(id: string): Promise<void> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/message/${encodeURIComponent(id)}`), {
+      method: "DELETE",
+      headers: this.getHeaders(),
+    });
+    if (!response.ok) throw new ResponseError(response);
+  }
+
   public async getNotificationsAsync(): Promise<Notification[]> {
     const [messagesResponse, applicationsById] = await Promise.all([
       fetchWithTrustedCertificatesAsync(this.url("/message", { limit: 100 }), { headers: this.getHeaders() }),
@@ -98,6 +106,7 @@ export class GotifyIntegration extends Integration implements INotificationsInte
         time: new Date(message.date),
         title: message.title,
         body: message.message,
+        contentType: message.extras?.["client::display"]?.contentType,
         href: this.getMessagesUrl(message.appid),
         source: application
           ? {

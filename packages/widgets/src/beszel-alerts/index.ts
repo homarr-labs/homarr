@@ -1,13 +1,25 @@
 import { IconBell, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { createWidgetDefinition } from "../definition";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
+import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
+  queryKey: [["widget", "beszel", "getAlerts"]],
+  queryMatcher(query, scope) {
+    const hasRuntimeAlertsQuery = scope.runtimeQueries.some(({ path }) => path.at(-1) === "getAlerts");
+    if (hasRuntimeAlertsQuery) return matchesWidgetRuntimeQuery(query, scope);
+
+    return widgetQueryInputMatches(query.input, {
+      integrationIds: scope.integrationIds,
+      includeHistory: scope.options.showHistory,
+      maxHistoryItems: scope.options.maxHistoryItems,
+    });
+  },
+  ...getWidgetIntegrationConfig("beszelAlerts"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showHistory: factory.switch({ defaultValue: true }),
@@ -20,7 +32,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelAle
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
-      message: (t) => t("widget.beszelAlerts.error.internalServerError"),
+      message: (t) => t("widget.beszel.error.internalServerError"),
     },
   },
 }).withDynamicImport(() => import("./component"));

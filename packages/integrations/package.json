@@ -13,9 +13,13 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./anchor": "./src/anchor/anchor-types.ts",
+    "./downloads": "./src/interfaces/downloads/download-client-items.ts",
+    "./factory": "./src/factory.ts",
+    "./response-contract": "./src/base/response-contract.ts",
     "./test-connection": "./src/base/test-connection/index.ts",
-    "./client": "./src/client.ts",
-    "./types": "./src/types.ts"
+    "./types": "./src/types.ts",
+    "./stats": "./src/stats/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

@@ -1,53 +1,40 @@
 "use client";
 
-import React from "react";
-import { Card, LoadingOverlay, Stack, Title } from "@mantine/core";
+import { Anchor } from "@mantine/core";
+import { IconExternalLink } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
-import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useForm } from "@homarr/form";
-import type { defaultServerSettings } from "@homarr/server-settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import { createDocumentationLink } from "@homarr/definitions";
+import type { UseFormReturnType } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
 
-import { SwitchSetting } from "~/app/[locale]/manage/settings/_components/setting-switch";
+import { SectionCard } from "~/components/manage/section-card";
+import type { FormValues } from "./settings-form";
+import { SwitchSetting } from "./setting-switch";
 
 interface AnalyticsSettingsProps {
-  initialData: typeof defaultServerSettings.analytics;
+  form: UseFormReturnType<FormValues>;
 }
 
-export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
-  const t = useScopedI18n("management.page.settings.section.analytics");
-  const { instanceId: _, ...formDefaults } = initialData;
-  const form = useForm({
-    initialValues: formDefaults,
-    onValuesChange: (updatedValues, _prev) => {
-      if (!form.isValid()) {
-        return;
-      }
-
-      void mutateAsync({
-        settingsKey: "analytics",
-        value: updatedValues,
-      });
-    },
-  });
-
-  const { mutateAsync, isPending } = clientApi.serverSettings.saveSettings.useMutation({
-    onSettled: async () => {
-      await revalidatePathActionAsync("/manage/settings");
-    },
-  });
+export const AnalyticsSettings = ({ form }: AnalyticsSettingsProps) => {
+  const t = useI18n("management.page.settings.section");
 
   return (
-    <>
-      <Title order={2}>{t("title")}</Title>
-
-      <Card pos="relative">
-        <LoadingOverlay visible={isPending} />
-        <Stack>
-          <SwitchSetting form={form} formKey="enableGeneral" title={t("general.title")} text={t("general.text")} />
-        </Stack>
-      </Card>
-    </>
+    <SectionCard title={t("analytics.title")}>
+      <SwitchSetting
+        form={form}
+        formKey="enableGeneral"
+        title={t("analytics.general.title")}
+        text={t("analytics.general.text")}
+      />
+      <Anchor
+        href={createDocumentationLink("/docs/management/settings", "#analytics")}
+        target="_blank"
+        rel="noopener noreferrer"
+        size="sm"
+      >
+        {t("analyticsDocumentation")}
+        <IconExternalLink size={14} style={{ marginInlineStart: 4, verticalAlign: "middle" }} />
+      </Anchor>
+    </SectionCard>
   );
 };

@@ -1,0 +1,81 @@
+name: homarr-workshop
+
+services:
+  assistant-upstream:
+    profiles:
+      - test
+    image: node:24.18.0-alpine
+    command: ["node", "/mock/openrouter-mock.mjs"]
+    environment:
+      PORT: 18091
+      EXPECTED_MODEL: mock/team-selected-model
+    volumes:
+      - ./tests/openrouter-mock.mjs:/mock/openrouter-mock.mjs:ro
+    security_opt:
+      - no-new-privileges:true
+
+  workshop:
+    build:
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
+      target: development
+    restart: unless-stopped
+    environment:
+      HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:-http://localhost:3003}
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: ${PB_EXPOSE_PORT:-8090}
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:-http://localhost:8090}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      HOMARR_AI_DAILY_REQUEST_LIMIT: ${HOMARR_AI_DAILY_REQUEST_LIMIT:-50}
+      HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT: ${HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT:-10000}
+      HOMARR_AI_OPENROUTER_BASE_URL: ${HOMARR_AI_OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      HOMARR_AI_OPENROUTER_MODEL: ${HOMARR_AI_OPENROUTER_MODEL:-openai/gpt-6-luna}
+      HOMARR_AI_ALLOW_INSECURE_UPSTREAM: ${HOMARR_AI_ALLOW_INSECURE_UPSTREAM:-false}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
+    ports:
+      - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:${PB_EXPOSE_PORT:-8090}"
+    volumes:
+      - pb_data:/pb_data
+      - ./pb_hooks:/pb_hooks:ro
+      - ./pb_migrations:/pb_migrations:ro
+    security_opt:
+      - no-new-privileges:true
+
+  docs:
+    profiles:
+      - docs
+    build:
+      context: ../..
+      dockerfile: apps/workshop/Dockerfile
+      target: production
+      args:
+        HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:-http://localhost:3003}
+        WORKSHOP_API_URL: ${WORKSHOP_API_URL:-http://localhost:3003}
+        WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
+    environment:
+      HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:-http://localhost:3003}
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: ${DOCS_EXPOSE_PORT:-3003}
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:-http://localhost:3003}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      HOMARR_AI_DAILY_REQUEST_LIMIT: ${HOMARR_AI_DAILY_REQUEST_LIMIT:-50}
+      HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT: ${HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT:-10000}
+      HOMARR_AI_OPENROUTER_BASE_URL: ${HOMARR_AI_OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      HOMARR_AI_OPENROUTER_MODEL: ${HOMARR_AI_OPENROUTER_MODEL:-openai/gpt-6-luna}
+      HOMARR_AI_ALLOW_INSECURE_UPSTREAM: ${HOMARR_AI_ALLOW_INSECURE_UPSTREAM:-false}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
+    ports:
+      - "127.0.0.1:${DOCS_EXPOSE_PORT:-3003}:${DOCS_EXPOSE_PORT:-3003}"
+    volumes:
+      - pb_data:/pb_data
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  pb_data:

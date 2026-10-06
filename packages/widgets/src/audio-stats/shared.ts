@@ -133,13 +133,14 @@ export const getVisibleStats = (
   backend: AudioStatsBackend,
   options: AudioStatsDisplayOptions,
   stats: NavidromeDashboardData | AudiobookshelfDashboardData,
+  showAll = false,
 ): VisibleStat[] => {
   const visibilityOptions = statVisibilityOptionsByBackend[backend];
   const statIcons = statIconsByBackend[backend];
   const statValues = statValueGetterByBackend[backend](stats);
 
   return Object.entries(visibilityOptions)
-    .filter(([optionKey]) => Boolean(options[optionKey as keyof typeof visibilityOptions]))
+    .filter(([optionKey]) => showAll || Boolean(options[optionKey as keyof typeof visibilityOptions]))
     .map(([optionKey, statKey]) => ({
       optionKey,
       statKey,

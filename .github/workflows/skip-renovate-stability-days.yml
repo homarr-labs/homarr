@@ -1,5 +1,6 @@
 permissions:
   statuses: write
+  contents: read
 
 on:
   pull_request:
@@ -16,12 +17,20 @@ jobs:
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          gh api \
-          --method POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/${{github.repository}}/statuses/${{github.event.pull_request.head.sha}} \
-          -f 'state=success' \
-          -f 'target_url=https://docs.renovatebot.com/configuration-options#minimumreleaseage' \
-          -f 'description=Skipped for non renovate branches' \
-          -f 'context=renovate/stability-days'
+          for attempt in 1 2 3 4 5; do
+            if gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              /repos/${{github.repository}}/statuses/${{github.event.pull_request.head.sha}} \
+              -f 'state=success' \
+              -f 'target_url=https://docs.renovatebot.com/configuration-options#minimumreleaseage' \
+              -f 'description=Skipped for non renovate branches' \
+              -f 'context=renovate/stability-days' \
+              --silent; then
+              exit 0
+            fi
+            echo "status POST failed (attempt $attempt/5), retrying in 5s"
+            sleep 5
+          done
+          exit 1

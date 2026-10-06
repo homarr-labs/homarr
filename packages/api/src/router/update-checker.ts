@@ -12,8 +12,8 @@ export const updateCheckerRouter = createTRPCRouter({
       const data = await handler.getDataAsync();
       return data.data.availableUpdates;
     } catch (error) {
-      logger.error(new Error("Failed to get available updates", { cause: error }));
-      return undefined; // We return undefined to not show the indicator in the UI
+      logger.error(new Error("Failed to read the cached update check", { cause: error }));
+      return []; // An empty list hides the indicator without violating TanStack Query's data contract.
     }
   }),
 });

@@ -1,12 +1,10 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useState } from "react";
-import type { QueryKey } from "@tanstack/react-query";
-import { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { defaultShouldDehydrateQuery, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
   createWSClient,
   httpBatchStreamLink,
@@ -25,18 +23,28 @@ import { TRPCClientError } from "@trpc/client";
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
-  isPersistableWidgetQueryKey,
-  queryCacheBuster,
+  dashboardSupportingQueryPolicies,
+  isTrpcForbiddenError,
+  isWidgetDataQueryKey,
   queryCacheDefaultGcTimeMs,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
 } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
+import { useSession } from "@homarr/auth/client";
 import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
-import { widgetImports } from "@homarr/widgets";
+import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
+import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
-import { createWidgetQueryPersister } from "./query-cache-persister";
+import { useAuthContext } from "./session";
+import { getSessionQueryScope, SessionQueryScopeGuard } from "./session-query-scope";
+import { createQueryRetry } from "./query-retry";
+
+const DevelopmentTools =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("./development-tools").then(({ DevelopmentTools: Tools }) => Tools), { ssr: false })
+    : () => null;
 
 const getWebSocketProtocol = () => {
   if (typeof window === "undefined") {
@@ -59,21 +67,72 @@ const constructWebsocketUrl = () => {
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
 };
 
-const wsClient = createWSClient({
-  url: constructWebsocketUrl(),
-});
+export function TRPCReactProvider({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) {
+  const { data: session } = useSession();
+  const { logoutRedirectInProgress } = useAuthContext();
+  const sessionQueryScope = getSessionQueryScope(session);
+  const [initialSessionQueryScope] = useState(() => sessionQueryScope);
+  const handleScopeChange = useCallback(() => {
+    if (!logoutRedirectInProgress.current) reloadPage();
+  }, [logoutRedirectInProgress]);
 
-export function TRPCReactProvider(props: PropsWithChildren) {
-  const [persister] = useState(() => createWidgetQueryPersister());
-  const [queryClient] = useState(() => {
+  return (
+    <SessionQueryScopeGuard
+      initialScope={initialSessionQueryScope}
+      currentScope={sessionQueryScope}
+      onScopeChange={handleScopeChange}
+    >
+      <ScopedTRPCReactProvider demoReadOnly={demoReadOnly}>{children}</ScopedTRPCReactProvider>
+    </SessionQueryScopeGuard>
+  );
+}
+
+const reloadPage = () => window.location.reload();
+
+const clearLegacyDashboardPersistence = () => {
+  for (const storageName of ["localStorage", "sessionStorage"] as const) {
+    try {
+      const storage = window[storageName];
+      for (let index = storage.length - 1; index >= 0; index--) {
+        const key = storage.key(index);
+        if (key?.startsWith("homarr:widget-query-cache:")) storage.removeItem(key);
+      }
+    } catch {
+      // Storage can be unavailable in private or locked-down browsers.
+    }
+  }
+};
+
+const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) => {
+  useEffect(clearLegacyDashboardPersistence, []);
+  const wsClient = useMemo(
+    () =>
+      createWSClient({
+        url: constructWebsocketUrl(),
+        lazy: { enabled: true, closeMs: 30_000 },
+      }),
+    [],
+  );
+  useEffect(
+    () => () => {
+      void wsClient.close();
+    },
+    [wsClient],
+  );
+  const [{ queryClient, rscStreamedQueryHashes }] = useState(() => {
+    const streamedHashes = new Set<string>();
     const client = new QueryClient({
+      queryCache: new QueryCache({
+        onError(error, query) {
+          if (!isTrpcForbiddenError(error) || !isWidgetDataQueryKey(query.queryKey)) return;
+          query.setState({ data: undefined, dataUpdatedAt: 0, isInvalidated: true });
+        },
+      }),
       defaultOptions: {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
           gcTime: queryCacheDefaultGcTimeMs,
-          refetchOnWindowFocus: false,
-          refetchOnReconnect: false,
-          retry: 3,
+          retry: createQueryRetry(env.NODE_ENV === "development" ? 1 : 3),
         },
         mutations: {
           onError(error) {
@@ -91,23 +150,44 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         },
       },
     });
-    client.setQueryDefaults([["widget"]], { refetchInterval: queryCacheDefaultRefetchIntervalMs });
-    for (const { definition } of Object.values(widgetImports)) {
-      const def = definition as { refetchInterval?: number | null; queryKey?: QueryKey; kind: string };
-      if (def.refetchInterval === undefined) continue;
-      const key = def.queryKey ?? [["widget", def.kind]];
-      const interval = def.refetchInterval === null ? false : def.refetchInterval * 1000;
-      client.setQueryDefaults(key, { refetchInterval: interval });
+    client.setQueryDefaults([["widget"]], {
+      refetchInterval: demoReadOnly ? false : queryCacheDefaultRefetchIntervalMs,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    });
+    for (const queryDefaults of widgetQueryRefetchIntervals) {
+      const policy: { refetchInterval?: number | false; staleTime?: number } = {};
+      if (demoReadOnly || queryDefaults.intervalSeconds === null) policy.refetchInterval = false;
+      else if (typeof queryDefaults.intervalSeconds === "number") {
+        policy.refetchInterval = queryDefaults.intervalSeconds * 1000;
+      }
+      if ("staleTimeSeconds" in queryDefaults) policy.staleTime = queryDefaults.staleTimeSeconds * 1000;
+      client.setQueryDefaults(queryDefaults.queryKey, policy);
     }
-    return client;
+    for (const { queryKey, ...policy } of dashboardSupportingQueryPolicies) {
+      client.setQueryDefaults(
+        queryKey,
+        demoReadOnly
+          ? { ...policy, refetchInterval: false, refetchOnWindowFocus: false, refetchOnReconnect: false }
+          : policy,
+      );
+    }
+    if (typeof window === "undefined") {
+      client.getQueryCache().subscribe((event) => {
+        if (event.query.meta?.rscWidgetPrefetch === true) streamedHashes.add(event.query.queryHash);
+        if (event.type === "removed") streamedHashes.delete(event.query.queryHash);
+      });
+    }
+    return { queryClient: client, rscStreamedQueryHashes: streamedHashes };
   });
 
-  const [trpcClient] = useState(() => {
+  useEffect(() => () => queryClient.clear(), [queryClient]);
+
+  const trpcClient = useMemo(() => {
     return clientApi.createClient({
       links: [
         loggerLink({
-          enabled: (opts) =>
-            env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
+          enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
         }),
         splitLink({
           condition: ({ type }) => type === "subscription",
@@ -147,25 +227,28 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         }),
       ],
     });
-  });
+  }, [wsClient]);
 
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{
-          persister,
-          buster: queryCacheBuster,
-          maxAge: queryCacheDefaultGcTimeMs,
-          dehydrateOptions: {
-            shouldDehydrateQuery: (query) =>
-              query.state.status === "success" && isPersistableWidgetQueryKey(query.queryKey),
-          },
-        }}
-      >
-        <ReactQueryStreamedHydration transformer={superjson}>{props.children}</ReactQueryStreamedHydration>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </PersistQueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryStreamedHydration
+          transformer={superjson}
+          options={{
+            dehydrate: {
+              // These promises already travel through the RSC boundary. Sending
+              // them again here duplicates large album and chart payloads.
+              shouldDehydrateQuery: (query) =>
+                !rscStreamedQueryHashes.has(query.queryHash) &&
+                query.meta?.rscWidgetPrefetch !== true &&
+                defaultShouldDehydrateQuery(query),
+            },
+          }}
+        >
+          <DemoReadOnlyProvider value={demoReadOnly}>{children}</DemoReadOnlyProvider>
+        </ReactQueryStreamedHydration>
+        {process.env.NODE_ENV === "development" && <DevelopmentTools />}
+      </QueryClientProvider>
     </clientApi.Provider>
   );
-}
+};

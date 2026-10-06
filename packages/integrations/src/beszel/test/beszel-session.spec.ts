@@ -12,6 +12,7 @@ vi.hoisted(() => {
 const store = vi.hoisted(() => new Map<string, { value: string; ttlSeconds?: number }>());
 
 vi.mock("@homarr/redis", () => ({
+  getIntegrationSessionStoreKey: (integrationId: string) => `session-store:${integrationId}`,
   createGetSetChannel: (name: string) => ({
     getAsync: () => Promise.resolve(store.get(name)?.value ?? null),
     setAsync: (value: string, options?: { ttlSeconds?: number }) => {

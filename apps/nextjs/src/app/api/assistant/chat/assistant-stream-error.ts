@@ -1,0 +1,146 @@
+import { isRecord } from "@homarr/common";
+import { NoSuchToolError } from "ai";
+import type { TextStreamPart, ToolSet } from "ai";
+
+export const createAssistantAbortErrorTransform =
+  <TOOLS extends ToolSet>(clientSignal: AbortSignal) =>
+  () =>
+    new TransformStream<TextStreamPart<TOOLS>, TextStreamPart<TOOLS>>({
+      transform(part, controller) {
+        // SDK timeouts are abort parts, not errors. A user cancellation should remain silent.
+        if (part.type === "abort" && !clientSignal.aborted) {
+          controller.enqueue({
+            type: "error",
+            error: new Error(
+              "The assistant response was interrupted before completion. Retry to continue; this is not a completed result.",
+            ),
+          });
+        }
+        controller.enqueue(part);
+      },
+    });
+
+const asRecord = (value: unknown): Record<string, unknown> | null => (isRecord(value) ? value : null);
+
+const getStatusCode = (error: unknown): number | undefined => {
+  const record = asRecord(error);
+  if (!record) return undefined;
+  const statusCode =
+    typeof record.statusCode === "number"
+      ? record.statusCode
+      : typeof record.status === "number"
+        ? record.status
+        : undefined;
+  if (statusCode !== undefined) return statusCode;
+  return getStatusCode(record.cause) ?? getStatusCode(record.response);
+};
+
+const getErrorMessage = (error: unknown, seen = new Set<object>()): string => {
+  if (error instanceof Error) {
+    if (seen.has(error)) return "";
+    seen.add(error);
+    return `${error.message} ${getErrorMessage(error.cause, seen)}`.trim();
+  }
+  const record = asRecord(error);
+  if (!record) return typeof error === "string" ? error : "";
+  if (seen.has(record)) return "";
+  seen.add(record);
+  const responseBody = typeof record.responseBody === "string" ? record.responseBody : "";
+  const message = typeof record.message === "string" ? record.message : "";
+  return `${message} ${responseBody} ${getErrorMessage(record.error, seen)} ${getErrorMessage(record.cause, seen)}`.trim();
+};
+
+const hasUnavailableToolError = (error: unknown, seen = new Set<object>()): boolean => {
+  if (NoSuchToolError.isInstance(error)) return true;
+  if (typeof error === "string") {
+    return /AI_NoSuchToolError|tried to call unavailable tool/iu.test(error);
+  }
+  if (error instanceof Error) {
+    if (seen.has(error)) return false;
+    seen.add(error);
+    return (
+      /AI_NoSuchToolError|tried to call unavailable tool/iu.test(error.message) ||
+      hasUnavailableToolError(error.cause, seen)
+    );
+  }
+  const record = asRecord(error);
+  if (!record || seen.has(record)) return false;
+  seen.add(record);
+  return (
+    (typeof record.name === "string" && /AI_NoSuchToolError/iu.test(record.name)) ||
+    (typeof record.message === "string" &&
+      /AI_NoSuchToolError|tried to call unavailable tool/iu.test(record.message)) ||
+    hasUnavailableToolError(record.error, seen) ||
+    hasUnavailableToolError(record.cause, seen) ||
+    hasUnavailableToolError(record.response, seen)
+  );
+};
+
+export const getAssistantStreamErrorMessage = (error: unknown) => {
+  const statusCode = getStatusCode(error);
+  const message = getErrorMessage(error);
+
+  // Workshop has already bounded/redacted this message. Preserve its actual
+  // upstream status and detail instead of guessing a cause from the proxy status.
+  const upstreamMessage = getWorkshopUpstreamError(error);
+  if (upstreamMessage) return upstreamMessage;
+
+  if (hasUnavailableToolError(error)) {
+    return "The requested tool is unavailable at this step. Homarr did not run the action. Try again.";
+  }
+  if (/AI_InvalidToolInputError|Invalid input for tool/iu.test(message)) {
+    return /customWidget_|custom[\s-]+widget/iu.test(message)
+      ? "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines."
+      : "The model produced invalid tool input, so Homarr did not run the action. Try again.";
+  }
+  if (
+    /\bmodel(?:\s+id)?\b/iu.test(message) &&
+    /\b(invalid|unknown|unavailable|not found|not a valid)\b/iu.test(message)
+  ) {
+    return "The provider rejected the selected model. Ask an administrator to select a valid model ID.";
+  }
+  if (statusCode === 401 || statusCode === 403) {
+    return "The provider rejected the configured credentials. Ask an administrator to update the API key.";
+  }
+  if (statusCode === 402) {
+    return "The provider account has insufficient credits for this request.";
+  }
+  if (statusCode === 404) {
+    return "The selected model or chat endpoint was not found. Ask an administrator to verify the model and API URL.";
+  }
+  if (statusCode === 408 || statusCode === 504 || /\b(timeout|timed out)\b/iu.test(message)) {
+    return "The model endpoint took too long to respond. Try again.";
+  }
+  if (statusCode === 429) {
+    return "The model endpoint is rate limited. Wait a moment and try again.";
+  }
+  if (statusCode !== undefined && statusCode >= 500) {
+    return "The model provider is temporarily unavailable. Try again later.";
+  }
+  if (statusCode === 400) {
+    return "The provider rejected the request. The selected model may not support the requested input or tools.";
+  }
+  if (/\bError in input stream\b/iu.test(message)) {
+    return "The model provider interrupted the streamed response before the assistant could finish. Try again.";
+  }
+
+  return message || "The model endpoint stopped without providing an error message.";
+};
+
+const getWorkshopUpstreamError = (error: unknown, seen = new Set<object>()): string | undefined => {
+  const record = asRecord(error);
+  if (!record || seen.has(record)) return undefined;
+  seen.add(record);
+  if (record.type === "homarr_provider_upstream_error" && typeof record.message === "string") {
+    return record.message.slice(0, 1200);
+  }
+  if (typeof record.responseBody === "string" && record.responseBody.length <= 20_000) {
+    try {
+      const detail = getWorkshopUpstreamError(JSON.parse(record.responseBody), seen);
+      if (detail) return detail;
+    } catch {
+      // Non-JSON errors retain the existing status-based fallback.
+    }
+  }
+  return getWorkshopUpstreamError(record.error, seen) ?? getWorkshopUpstreamError(record.cause, seen);
+};

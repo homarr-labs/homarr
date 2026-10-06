@@ -1,13 +1,16 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { useTiks } from "@rexa-developer/tiks/react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { BackupAnalysis, MigrationFile, MigrationStatus } from "./types";
 import { PREVIEW_TABLE_KEYS } from "./types";
 
 const DRIZZLE_MIGRATIONS_TABLE = "__drizzle_migrations";
+const MIGRATION_PREVIEW_DELAY_MS = 250;
+const MIGRATION_COMPLETE_DELAY_MS = 100;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -57,7 +60,8 @@ export interface MigrationProgress {
 }
 
 export const useBackupAnalysis = () => {
-  const t = useScopedI18n("management.page.tool.backup.restore");
+  const t = useI18n("management.page.tool.backup.restore");
+  const sounds = useTiks({ theme: "soft", volume: 0.12, respectReducedMotion: true });
   const [analysis, setAnalysis] = useState<BackupAnalysis | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -118,7 +122,7 @@ export const useBackupAnalysis = () => {
                 phase: "applying",
               });
 
-              await delay(100);
+              await delay(MIGRATION_PREVIEW_DELAY_MS);
 
               try {
                 const statements = migration.sql
@@ -135,6 +139,7 @@ export const useBackupAnalysis = () => {
                   Date.now(),
                 ]);
               } catch (migrationErr) {
+                sounds.error();
                 setMigrationProgress({
                   current: i + 1,
                   total: pendingMigrations.length,
@@ -153,8 +158,9 @@ export const useBackupAnalysis = () => {
                 tag: migration.tag,
                 phase: "done",
               });
+              sounds.success();
 
-              await delay(50);
+              await delay(MIGRATION_COMPLETE_DELAY_MS);
             }
           }
 
@@ -168,12 +174,13 @@ export const useBackupAnalysis = () => {
           dbRef.current = null;
         }
       } catch (err) {
+        console.error("Backup analysis failed", err);
         setError(err instanceof Error ? err.message : t("analyzeError"));
       } finally {
         setLoading(false);
       }
     },
-    [t],
+    [sounds, t],
   );
 
   const reset = useCallback(() => {

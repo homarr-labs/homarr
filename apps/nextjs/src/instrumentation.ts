@@ -1,6 +1,7 @@
 export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("@homarr/tasks");
-    await import("@homarr/websocket");
-  }
+  if (process.env.NEXT_RUNTIME !== "nodejs") return;
+  if (process.env.NODE_ENV !== "production") return;
+
+  const { registerNodeInstrumentation } = await import("./instrumentation-node");
+  await registerNodeInstrumentation();
 }

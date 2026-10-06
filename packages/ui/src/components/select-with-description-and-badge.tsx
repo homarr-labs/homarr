@@ -18,20 +18,25 @@ export const SelectWithDescriptionBadge = (props: Props) => {
   return <SelectWithCustomItems<SelectItemWithDescriptionBadge> {...props} SelectOption={SelectOption} />;
 };
 
-const SelectOption = ({ label, description, badge }: SelectItemWithDescriptionBadge) => {
+const SelectOption = ({
+  label,
+  description,
+  badge,
+  selected = false,
+}: SelectItemWithDescriptionBadge & { selected?: boolean }) => {
   return (
-    <Group justify="space-between">
-      <div>
-        <Text fz="sm" fw={500}>
+    <Group justify="space-between" wrap="nowrap" gap="xs" w="100%">
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <Text fz="sm" fw={500} truncate={selected}>
           {label}
         </Text>
-        <Text fz="xs" opacity={0.6}>
+        <Text fz="xs" opacity={0.6} truncate={selected}>
           {description}
         </Text>
       </div>
 
       {badge && (
-        <Badge color={badge.color} variant="outline" size="sm">
+        <Badge color={badge.color} variant="outline" size="sm" style={{ flexShrink: 0 }}>
           {badge.label}
         </Badge>
       )}

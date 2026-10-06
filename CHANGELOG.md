@@ -1,3 +1,27 @@
+## [2.2.0](https://github.com/homarr-labs/homarr/compare/v2.1.2...v2.2.0) (2026-10-05)
+
+## [2.1.2](https://github.com/homarr-labs/homarr/compare/v2.1.1...v2.1.2) (2026-10-04)
+
+## [2.1.1](https://github.com/homarr-labs/homarr/compare/v2.1.0...v2.1.1) (2026-10-03)
+
+## [2.1.0](https://github.com/homarr-labs/homarr/compare/v2.0.0...v2.1.0) (2026-10-03)
+
+## [2.0.0](https://github.com/homarr-labs/homarr/compare/v1.77.2...v2.0.0) (2026-10-02)
+
+## [1.77.1](https://github.com/homarr-labs/homarr/compare/v1.77.0...v1.77.1) (2026-09-11)
+
+## [1.77.0](https://github.com/homarr-labs/homarr/compare/v1.76.2...v1.77.0) (2026-09-06)
+
+## [1.76.2](https://github.com/homarr-labs/homarr/compare/v1.76.1...v1.76.2) (2026-08-27)
+
+## [1.76.1](https://github.com/homarr-labs/homarr/compare/v1.76.0...v1.76.1) (2026-08-26)
+
+## [1.76.0](https://github.com/homarr-labs/homarr/compare/v1.75.0...v1.76.0) (2026-08-21)
+
+## [1.75.0](https://github.com/homarr-labs/homarr/compare/v1.74.0...v1.75.0) (2026-08-14)
+
+## [1.74.0](https://github.com/homarr-labs/homarr/compare/v1.73.0...v1.74.0) (2026-08-07)
+
 ## [1.73.0](https://github.com/homarr-labs/homarr/compare/v1.72.0...v1.73.0) (2026-07-31)
 
 ## [1.72.0](https://github.com/homarr-labs/homarr/compare/v1.71.0...v1.72.0) (2026-07-24)

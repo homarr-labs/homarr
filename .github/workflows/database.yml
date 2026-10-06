@@ -1,0 +1,100 @@
+name: Database migrations
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  NODE_ENV: development
+  CI: "true"
+  SKIP_ENV_VALIDATION: "true"
+  TURBO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      migrations: ${{ steps.select.outputs.migrations }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select database checks
+        id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+        shell: bash
+        run: |
+          migrations=false
+          if [[ "$EVENT_NAME" != pull_request && "$EVENT_NAME" != merge_group && "$EVENT_NAME" != push ]] ||
+             [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]] ||
+             ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            migrations=true
+          else
+            changed_files=$(mktemp)
+            trap 'rm -f "$changed_files"' EXIT
+            comparison="$BASE_SHA...HEAD"
+            if [[ "$EVENT_NAME" = push ]]; then comparison="$BASE_SHA..HEAD"; fi
+            git diff --name-only -z "$comparison" > "$changed_files"
+            while IFS= read -r -d '' file; do
+              case "$file" in
+                packages/db/*|packages/core/src/infrastructure/db/*|packages/core/src/infrastructure/certificates/*|packages/auth/*|packages/api/src/router/onboard*|packages/api/src/router/test/onboard*|packages/onboarding/*|apps/nextjs/src/app/api/backup/*|apps/nextjs/src/app/*/init/*|Dockerfile|scripts/run.sh|scripts/entrypoint.sh|deployments/*|package.json|packages/core/package.json|packages/common/package.json|packages/definitions/package.json|packages/server-settings/package.json|packages/validation/package.json|mise.toml|pnpm-lock.yaml|pnpm-workspace.yaml|patches/*|vitest*|tooling/github/*|.github/workflows/database.yml|.github/workflows/ci.yml)
+                  migrations=true
+                  ;;
+              esac
+            done < "$changed_files"
+          fi
+          echo "migrations=$migrations" >> "$GITHUB_OUTPUT"
+
+  journals:
+    name: Migration journals
+    needs: changes
+    if: needs.changes.outputs.migrations == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - run: pnpm exec vitest run --project db-node packages/db/test/migration-journal.spec.ts
+
+  migrations:
+    name: SQLite and PostgreSQL migrations
+    needs: changes
+    if: needs.changes.outputs.migrations == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ./tooling/github/setup
+      - name: Reject retired database configuration
+        run: pnpm exec vitest run --project dom packages/core/src/infrastructure/db/env.spec.ts
+      - run: pnpm exec vitest run --project db-node --project integration packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts packages/db/proxy-reader.integration.spec.ts --maxWorkers 1
+
+  database-gate:
+    name: Database gate
+    needs: [changes, journals, migrations]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require selected database checks
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          JOURNALS: ${{ needs.journals.result }}
+          MIGRATIONS: ${{ needs.migrations.result }}
+          RUN_MIGRATIONS: ${{ needs.changes.outputs.migrations }}
+        run: |
+          test "$CHANGES" = success
+          test "$RUN_MIGRATIONS" = true || test "$RUN_MIGRATIONS" = false
+          if [ "$RUN_MIGRATIONS" = true ]; then
+            test "$JOURNALS" = success
+            test "$MIGRATIONS" = success
+          fi

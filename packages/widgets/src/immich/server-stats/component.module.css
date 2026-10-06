@@ -1,10 +1,38 @@
 .statItem {
+  padding: 8px 10px;
+  border: 0.0625rem solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
+  border-radius: var(--mantine-radius-sm);
+  background-color: transparent;
+}
+
+.statItemDense {
+  min-width: 0;
+  min-height: 40px;
+  padding: 3px 6px;
+  border: 0.0625rem solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.32));
+  border-radius: var(--mantine-radius-sm);
+  background-color: transparent;
+}
+
+.statItemCompact {
   padding: 12px;
   border-radius: var(--mantine-radius-md);
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-  transition: all 0.2s ease;
+  background-color: rgb(
+    from light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6)) r g b / var(--opacity, 1)
+  );
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    background-color: rgb(
+      from light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5)) r g b / var(--opacity, 1)
+    );
+  }
+}
+
+@media (forced-colors: active) {
+  .statItem,
+  .statItemDense,
+  .statItemCompact {
+    border: 0.0625rem solid CanvasText;
   }
 }

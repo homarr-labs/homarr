@@ -13,6 +13,9 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./component": "./src/component.ts",
+    "./open": "./src/open.ts",
+    "./store": "./src/spotlight-store.ts",
     "./styles.css": "./src/styles.css"
   },
   "scripts": {

@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import {
   filterStorageVolumes,
   normalizeStorageDeviceName,
+  storageDeviceNamesMatch,
   toScopedStorageVolumeValue,
 } from "./filter-storage-volumes";
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
@@ -11,6 +12,12 @@ describe("normalizeStorageDeviceName", () => {
   test("strips partition suffixes from block device paths", () => {
     expect(normalizeStorageDeviceName("/dev/sda1")).toBe("/dev/sda");
     expect(normalizeStorageDeviceName("/dev/sda")).toBe("/dev/sda");
+  });
+
+  test("strips partition suffixes from unprefixed device names (OpenMediaVault)", () => {
+    expect(normalizeStorageDeviceName("sda1")).toBe("sda");
+    expect(normalizeStorageDeviceName("sda")).toBe("sda");
+    expect(normalizeStorageDeviceName("nvme0n1p1")).toBe("nvme0n1");
   });
 
   test("preserves Synology-style volume names", () => {
@@ -27,6 +34,22 @@ describe("normalizeStorageDeviceName", () => {
   test("does not collapse unrelated md devices", () => {
     expect(normalizeStorageDeviceName("/dev/md0")).toBe("/dev/md0");
     expect(normalizeStorageDeviceName("/dev/md1")).toBe("/dev/md1");
+  });
+});
+
+describe("storageDeviceNamesMatch", () => {
+  test("ignores the /dev/ prefix on either side", () => {
+    expect(storageDeviceNamesMatch("/dev/sda1", "sda")).toBe(true);
+    expect(storageDeviceNamesMatch("sdb1", "/dev/sdb")).toBe(true);
+    expect(storageDeviceNamesMatch("nvme0", "/dev/nvme0n1p3")).toBe(true);
+    expect(storageDeviceNamesMatch("/dev/nvme0", "nvme0n2")).toBe(true);
+  });
+
+  test("does not match different devices across prefix forms", () => {
+    expect(storageDeviceNamesMatch("/dev/sda1", "sdb")).toBe(false);
+    expect(storageDeviceNamesMatch("/dev/md0", "md1")).toBe(false);
+    expect(storageDeviceNamesMatch("nvme1", "/dev/nvme0n1p1")).toBe(false);
+    expect(storageDeviceNamesMatch("/dev/nvme0n1", "nvme0n2")).toBe(false);
   });
 });
 
@@ -131,6 +154,78 @@ describe("matchFileSystemAndSmart", () => {
     ]);
   });
 
+  test("joins NVMe partitions with controller-level SMART data (Glances)", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/nvme0n1p3", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
+    );
+
+    expect(result[0]).toMatchObject({ deviceName: "/dev/nvme0n1p3", temperature: 30, overallStatus: "PASSED" });
+  });
+
+  test("keeps each NVMe namespace name when several match one controller", () => {
+    const result = matchFileSystemAndSmart(
+      [
+        { deviceName: "/dev/nvme0n1", used: "100", available: "900", percentage: 10 },
+        { deviceName: "/dev/nvme0n2", used: "200", available: "800", percentage: 20 },
+      ],
+      [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
+    );
+
+    expect(result).toMatchObject([
+      { deviceName: "/dev/nvme0n1", used: "100", temperature: 30, overallStatus: "PASSED" },
+      { deviceName: "/dev/nvme0n2", used: "200", temperature: 30, overallStatus: "PASSED" },
+    ]);
+  });
+
+  test("does not join SMART data from a different NVMe controller", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/nvme1n1p1", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/nvme0", temperature: 30, overallStatus: "PASSED" }],
+    );
+
+    expect(result[0]).toMatchObject({ deviceName: "/dev/nvme1n1p1", temperature: null, overallStatus: "" });
+  });
+
+  test("passes the SMART healthy flag through for the status icon", () => {
+    const result = matchFileSystemAndSmart(
+      [
+        { deviceName: "/dev/sda", used: "100", available: "900", percentage: 10 },
+        { deviceName: "/dev/sdb", used: "100", available: "900", percentage: 10 },
+        { deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 },
+      ],
+      [
+        { deviceName: "/dev/sda", temperature: 35, overallStatus: "PASSED", healthy: true },
+        { deviceName: "/dev/sdb", temperature: 36, overallStatus: "FAILED", healthy: false },
+      ],
+    );
+
+    expect(result.map(({ deviceName, healthy }) => ({ deviceName, healthy }))).toEqual([
+      { deviceName: "/dev/md0", healthy: undefined },
+      { deviceName: "/dev/sda", healthy: true },
+      { deviceName: "/dev/sdb", healthy: false },
+    ]);
+  });
+
+  test("passes the SMART status reason through for the status tooltip", () => {
+    const statusReason = { type: "attributesFailed" as const, attributes: ["Reallocated_Sector_Ct"] };
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/sda", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "/dev/sda", temperature: 35, overallStatus: "FAILED", healthy: false, statusReason }],
+    );
+
+    expect(result[0]?.statusReason).toEqual(statusReason);
+  });
+
+  test("joins a prefixed partition with unprefixed SMART data and takes the SMART name", () => {
+    const result = matchFileSystemAndSmart(
+      [{ deviceName: "/dev/sda1", used: "100", available: "900", percentage: 10 }],
+      [{ deviceName: "sda", temperature: 35, overallStatus: "GOOD" }],
+    );
+
+    expect(result[0]).toMatchObject({ deviceName: "sda", temperature: 35, overallStatus: "GOOD" });
+  });
+
   test("does not join SMART data from a different md device", () => {
     const result = matchFileSystemAndSmart(
       [{ deviceName: "/dev/md0", used: "100", available: "900", percentage: 10 }],
@@ -142,5 +237,37 @@ describe("matchFileSystemAndSmart", () => {
       temperature: null,
       overallStatus: "",
     });
+  });
+
+  test("joins unprefixed OMV partitions with their base device SMART data", () => {
+    const result = matchFileSystemAndSmart(
+      [
+        { deviceName: "sda1", used: "3.13 GiB", available: "26853056512", percentage: 12 },
+        { deviceName: "sdb1", used: "396.24 GiB", available: "1542365618176", percentage: 22 },
+      ],
+      [
+        { deviceName: "sda", temperature: 0, overallStatus: "BAD_STATUS" },
+        { deviceName: "sdb", temperature: 33, overallStatus: "GOOD" },
+      ],
+    );
+
+    expect(result).toEqual([
+      {
+        deviceName: "sda",
+        used: "3.13 GiB",
+        available: "26853056512",
+        percentage: 12,
+        temperature: 0,
+        overallStatus: "BAD_STATUS",
+      },
+      {
+        deviceName: "sdb",
+        used: "396.24 GiB",
+        available: "1542365618176",
+        percentage: 22,
+        temperature: 33,
+        overallStatus: "GOOD",
+      },
+    ]);
   });
 });

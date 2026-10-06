@@ -1,47 +1,17 @@
-import { cache } from "react";
 import type { QueryClient } from "@tanstack/react-query";
 
-import { db } from "@homarr/db";
-import { getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
-import { createSettings } from "@homarr/settings/creator";
 
-import { reduceWidgetOptionsWithDefaultValues } from ".";
-import prefetchForApps from "./app/prefetch";
-import prefetchForBookmarks from "./bookmarks/prefetch";
-import prefetchForDownloads from "./downloads/prefetch";
-import type { Prefetch, WidgetOptionsRecordOf } from "./definition";
-import type { inferOptionsFromCreator } from "./options";
+import prefetchApps from "./app/prefetch";
+import prefetchBookmarks from "./bookmarks/prefetch";
 
-const cachedGetServerSettingsAsync = cache(getServerSettingsAsync);
-
-const prefetchCallbacks: Partial<{
-  [TKind in WidgetKind]: Prefetch<TKind>;
-}> = {
-  bookmarks: prefetchForBookmarks,
-  app: prefetchForApps,
-  downloads: prefetchForDownloads,
+type PrefetchItem = {
+  options: Record<string, unknown>;
 };
 
-export const prefetchForKindAsync = async <TKind extends WidgetKind>(
-  kind: TKind,
-  queryClient: QueryClient,
-  items: {
-    options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;
-    integrationIds: string[];
-  }[],
-) => {
-  const callback = prefetchCallbacks[kind];
-  if (!callback) {
-    return;
-  }
-
-  const serverSettings = await cachedGetServerSettingsAsync(db);
-
-  const itemsWithDefaultOptions = items.map((item) => ({
-    ...item,
-    options: reduceWidgetOptionsWithDefaultValues(kind, createSettings({ user: null, serverSettings }), item.options),
-  }));
-
-  await callback(queryClient, itemsWithDefaultOptions as never[]);
+// Register pending queries before dehydrating the board. Their results can then
+// cross the RSC boundary without waiting for the database read to finish.
+export const prefetchForKind = (kind: WidgetKind, queryClient: QueryClient, items: PrefetchItem[]) => {
+  if (kind === "app") prefetchApps(queryClient, items);
+  if (kind === "bookmarks") prefetchBookmarks(queryClient, items);
 };

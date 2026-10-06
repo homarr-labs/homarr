@@ -1,0 +1,41 @@
+---
+title: "Tandoor"
+description: "A recipe management application for organizing and sharing recipes."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { tandoorIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={tandoorIntegration} categories={["Recipe management"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The [Stats widget](/docs/widgets/stats) displays the number of users, recipes, and keywords visible to the API key's account.
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Tandoor and go to Settings > API.",
+        "Generate a user API key with the read scope and copy it.",
+        "Paste the key into the API Key field when creating the integration in Homarr.",
+      ],
+    },
+  ]}
+/>
+
+User and recipe totals refer to the first accessible Tandoor space, matching Homepage. Keyword totals use the API token's accessible scope.

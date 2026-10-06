@@ -13,6 +13,8 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./cookie": "./src/cookie.ts",
+    "./integration": "./src/integration.ts",
     "./docs/*": "./src/docs/*.ts"
   },
   "scripts": {

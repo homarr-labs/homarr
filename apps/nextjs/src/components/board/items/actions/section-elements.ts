@@ -1,8 +1,8 @@
 import type { Board } from "~/app/[locale]/boards/_types";
 
 export const getSectionElements = (board: Board, { sectionId, layoutId }: { sectionId: string; layoutId: string }) => {
-  const dynamicSectionsOfFirstSection = board.sections
-    .filter((section) => section.kind === "dynamic")
+  const containersOfSection = board.sections
+    .filter((section) => section.kind === "container")
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     .map(({ layouts, ...section }) => ({ ...section, ...layouts.find((layout) => layout.layoutId === layoutId)! }))
     .filter((section) => section.parentSectionId === sectionId);
@@ -14,5 +14,5 @@ export const getSectionElements = (board: Board, { sectionId, layoutId }: { sect
     }))
     .filter((item) => item.sectionId === sectionId);
 
-  return [...items, ...dynamicSectionsOfFirstSection];
+  return [...items, ...containersOfSection];
 };

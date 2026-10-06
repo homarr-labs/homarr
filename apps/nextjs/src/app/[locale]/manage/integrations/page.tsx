@@ -1,66 +1,100 @@
-import { Fragment } from "react";
-import { redirect } from "next/navigation";
-import {
-  AccordionControl,
-  AccordionItem,
-  AccordionPanel,
-  ActionIcon,
-  ActionIconGroup,
-  Anchor,
-  Divider,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTh,
-  TableThead,
-  TableTr,
-  Text,
-} from "@mantine/core";
+import { notFound, redirect } from "next/navigation";
+import { ActionIcon, ActionIconGroup, Anchor, Badge, Stack, Text } from "@mantine/core";
 import { IconPencil, IconPlugX } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { objectEntries } from "@homarr/common";
-import type { IntegrationKind } from "@homarr/definitions";
+import { getSafeApplicationUrl } from "@homarr/common";
 import { getIntegrationName } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
-import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
+import { getI18n } from "@homarr/translation/server";
+import { IntegrationAvatar, Link, SearchInput } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
-import { ActiveTabAccordion } from "../../../../components/active-tab-accordion";
+import { getIntegrationsSectionAccess } from "../_access";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
-import classes from "./page.module.css";
+
+const searchParamsSchema = z.object({ search: z.string().optional() });
 
 interface IntegrationsPageProps {
-  searchParams: Promise<{
-    tab?: IntegrationKind;
-  }>;
+  searchParams: Promise<z.infer<typeof searchParamsSchema>>;
 }
 
 export default async function IntegrationsPage(props: IntegrationsPageProps) {
-  const searchParams = await props.searchParams;
   const session = await auth();
+  if (!session) redirect("/auth/login");
 
-  if (!session) {
-    redirect("/auth/login");
-  }
-
+  const searchParams = searchParamsSchema.parse(await props.searchParams);
   const integrations = await api.integration.all();
-  const t = await getScopedI18n("integration");
+  const {
+    canManageAll: hasGlobalFullAccess,
+    canCreate,
+    canAccess,
+  } = getIntegrationsSectionAccess(session, integrations);
+  if (!canAccess) notFound();
 
-  const canCreateIntegrations = session.user.permissions.includes("integration-create");
+  const t = await getI18n("integration");
+  const tCommon = await getI18n("common");
+  // Without integration-full-all only the integrations that were explicitly delegated to the user
+  // are manageable, so the list never shows an integration they cannot open.
+  const manageableIntegrations = integrations.filter(
+    (integration) => hasGlobalFullAccess || integration.permissions.hasFullAccess,
+  );
 
-  return (
-    <ManagePageLayout
-      title={t("page.list.title")}
+  const query = searchParams.search?.trim().toLocaleLowerCase() ?? "";
+  const filteredIntegrations = manageableIntegrations
+    .filter((integration) => {
+      if (!query) return true;
+      return [integration.name, getIntegrationName(integration.kind), integration.url].some((value) =>
+        value.toLocaleLowerCase().includes(query),
+      );
+    })
+    .toSorted(
+      (integrationA, integrationB) =>
+        getIntegrationName(integrationA.kind).localeCompare(getIntegrationName(integrationB.kind)) ||
+        integrationA.name.localeCompare(integrationB.name),
+    );
+  const hasSearch = query.length > 0;
+
+  const page = (
+    <ManageCollectionPage
+      title={tCommon("entity.integrations")}
+      ariaLabel={t("page.list.ariaLabel")}
+      itemCount={filteredIntegrations.length}
+      emptyState={
+        manageableIntegrations.length === 0 && !hasGlobalFullAccess ? (
+          <NoResults
+            icon={IconPlugX}
+            title={t("page.list.noResults.createOnlyTitle")}
+            description={t("page.list.noResults.createOnlyDescription")}
+            action={{ label: t("page.list.noResults.action"), href: "/manage/integrations/new" }}
+          />
+        ) : hasSearch ? (
+          <NoResults
+            icon={IconPlugX}
+            title={t("page.list.noResults.filteredTitle")}
+            description={t("page.list.noResults.filteredDescription", { search: searchParams.search ?? "" })}
+            action={{ label: tCommon("action.clearSearch"), href: "/manage/integrations" }}
+          />
+        ) : (
+          <NoResults
+            icon={IconPlugX}
+            title={t("page.list.noResults.title")}
+            description={t("page.list.noResults.description")}
+            action={{
+              label: t("page.list.noResults.action"),
+              href: "/manage/integrations/new",
+              hidden: !canCreate,
+            }}
+          />
+        )
+      }
       primaryAction={
-        canCreateIntegrations ? (
+        canCreate ? (
           <TourTarget id="manage-integrations-create">
             <MobileAffixButton component={Link} href="/manage/integrations/new">
               {t("action.create")}
@@ -68,128 +102,90 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
           </TourTarget>
         ) : undefined
       }
-      floatingPrimaryAction={canCreateIntegrations}
+      toolbar={
+        <SearchInput
+          placeholder={`${t("page.list.search")}...`}
+          ariaLabel={t("page.list.search")}
+          defaultValue={searchParams.search}
+          flexExpand
+        />
+      }
+      floatingPrimaryAction={canCreate}
     >
-      <TourTarget id="manage-integrations-list">
-        <IntegrationList integrations={integrations} activeTab={searchParams.tab} />
-      </TourTarget>
-    </ManagePageLayout>
+      {filteredIntegrations.map((integration) => (
+        <IntegrationItem key={integration.id} integration={integration} />
+      ))}
+    </ManageCollectionPage>
   );
-}
 
-interface IntegrationListProps {
-  integrations: RouterOutputs["integration"]["all"];
-  activeTab?: IntegrationKind;
-}
+  const pageContent =
+    filteredIntegrations.length > 0 ? <TourTarget id="manage-integrations-list">{page}</TourTarget> : page;
 
-const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps) => {
-  const t = await getScopedI18n("integration");
-  const session = await auth();
-  const hasFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
-
-  if (integrations.length === 0) {
-    return <NoResults icon={IconPlugX} title={t("page.list.noResults.title")} />;
+  if (hasGlobalFullAccess) {
+    return pageContent;
   }
 
-  const groupedIntegrations = integrations.reduce(
-    (acc, integration) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!acc[integration.kind]) {
-        acc[integration.kind] = [];
-      }
-
-      acc[integration.kind].push(integration);
-
-      return acc;
-    },
-    {} as Record<IntegrationKind, RouterOutputs["integration"]["all"]>,
+  return (
+    <Stack gap="sm">
+      <Text size="sm" c="dimmed">
+        {t("page.list.scopedNote")}
+      </Text>
+      {pageContent}
+    </Stack>
   );
+}
 
-  const entries = objectEntries(groupedIntegrations);
+interface IntegrationItemProps {
+  integration: RouterOutputs["integration"]["all"][number];
+}
+
+const IntegrationItem = async ({ integration }: IntegrationItemProps) => {
+  const tCommon = await getI18n("common");
+  const kindName = getIntegrationName(integration.kind);
+  const safeUrl = getSafeApplicationUrl(integration.url);
 
   return (
-    <ActiveTabAccordion defaultValue={activeTab} radius="lg" classNames={classes}>
-      {entries.map(([kind, kindIntegrations], index) => (
-        <AccordionItem key={kind} value={kind} data-first={index === 0} data-last={index === entries.length - 1}>
-          <AccordionControl icon={<IntegrationAvatar size="sm" kind={kind} radius="sm" />}>
-            <Group>
-              <Text>{getIntegrationName(kind)}</Text>
-              <CountBadge count={kindIntegrations.length} />
-            </Group>
-          </AccordionControl>
-          <AccordionPanel>
-            <Table visibleFrom="md">
-              <TableThead>
-                <TableTr>
-                  <TableTh>{t("field.name.label")}</TableTh>
-                  <TableTh>{t("field.url.label")}</TableTh>
-                  <TableTh />
-                </TableTr>
-              </TableThead>
-              <TableTbody>
-                {kindIntegrations.map((integration) => (
-                  <TableTr key={integration.id}>
-                    <TableTd>{integration.name}</TableTd>
-                    <TableTd>
-                      <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
-                        {integration.url}
-                      </Anchor>
-                    </TableTd>
-                    <TableTd>
-                      <Group justify="end">
-                        {(hasFullAccess || integration.permissions.hasFullAccess) && (
-                          <ActionIconGroup>
-                            <ActionIcon
-                              component={Link}
-                              href={`/manage/integrations/edit/${integration.id}`}
-                              variant="subtle"
-                              color="gray"
-                              aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                            >
-                              <IconPencil size={16} stroke={1.5} />
-                            </ActionIcon>
-                            <DeleteIntegrationActionButton integration={integration} count={kindIntegrations.length} />
-                          </ActionIconGroup>
-                        )}
-                      </Group>
-                    </TableTd>
-                  </TableTr>
-                ))}
-              </TableTbody>
-            </Table>
-
-            <Stack gap="xs" hiddenFrom="md">
-              {kindIntegrations.map((integration, integrationIndex) => (
-                <Fragment key={integration.id}>
-                  {integrationIndex !== 0 && <Divider />}
-                  <Stack gap={0}>
-                    <Group justify="space-between" align="center" wrap="nowrap">
-                      <Text>{integration.name}</Text>
-                      {(hasFullAccess || integration.permissions.hasFullAccess) && (
-                        <ActionIconGroup>
-                          <ActionIcon
-                            component={Link}
-                            href={`/manage/integrations/edit/${integration.id}`}
-                            variant="subtle"
-                            color="gray"
-                            aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                          >
-                            <IconPencil size={16} stroke={1.5} />
-                          </ActionIcon>
-                          <DeleteIntegrationActionButton integration={integration} count={kindIntegrations.length} />
-                        </ActionIconGroup>
-                      )}
-                    </Group>
-                    <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
-                      {integration.url}
-                    </Anchor>
-                  </Stack>
-                </Fragment>
-              ))}
-            </Stack>
-          </AccordionPanel>
-        </AccordionItem>
-      ))}
-    </ActiveTabAccordion>
+    <ManageCollectionItem
+      leading={<IntegrationAvatar kind={integration.kind} size="md" radius="sm" />}
+      title={
+        <Text component="span" fw={600} lineClamp={1}>
+          {integration.name}
+        </Text>
+      }
+      badges={
+        <Badge size="sm" variant="light">
+          {kindName}
+        </Badge>
+      }
+      metadata={
+        safeUrl ? (
+          <Anchor
+            href={safeUrl}
+            target="_blank"
+            rel="noreferrer"
+            lineClamp={1}
+            size="sm"
+            style={{ wordBreak: "break-all" }}
+          >
+            {integration.url}
+          </Anchor>
+        ) : undefined
+      }
+      actions={
+        <ActionIconGroup>
+          <ActionIcon
+            component={Link}
+            href={`/manage/integrations/edit/${integration.id}`}
+            variant="subtle"
+            color="gray"
+            size={44}
+            aria-label={tCommon("action.editNamed", { name: integration.name })}
+          >
+            <IconPencil size={18} stroke={1.5} />
+          </ActionIcon>
+          <DeleteIntegrationActionButton integration={integration} />
+        </ActionIconGroup>
+      }
+    />
   );
 };

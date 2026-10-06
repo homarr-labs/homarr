@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 export const paginatedSchema = z.object({
   search: z.string().optional(),
-  pageSize: z.number().int().positive().default(10),
+  pageSize: z.number().int().positive().max(100).default(10),
   page: z.number().int().positive().default(1),
 });
 
@@ -12,5 +12,5 @@ export const byIdSchema = z.object({
 
 export const searchSchema = z.object({
   query: z.string(),
-  limit: z.number().int().positive().default(10),
+  limit: z.number().int().positive().max(100).default(10),
 });

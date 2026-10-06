@@ -4,7 +4,8 @@ import type { KubernetesNode, KubernetesNodeState } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
+import { calculateResourcePercentage } from "../resource-percentage";
 import { CpuResourceParser } from "../resource-parser/cpu-resource-parser";
 import { MemoryResourceParser } from "../resource-parser/memory-resource-parser";
 
@@ -12,12 +13,16 @@ export const nodesRouter = createTRPCRouter({
   getNodes: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesNode[]> => {
-      const { coreApi, metricsApi } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesNode[]> => {
+      const client = getKubernetesClient(input.contextId);
+      const { coreApi } = client;
 
       try {
-        const nodes = await coreApi.listNode();
-        const nodeMetricsClient = await metricsApi.getNodeMetrics();
+        const [nodes, nodeMetricsClient] = await Promise.all([
+          coreApi.listNode(),
+          client.getNodeMetricsAsync().catch(() => null),
+        ]);
         const cpuResourceParser = new CpuResourceParser();
         const memoryResourceParser = new MemoryResourceParser();
 
@@ -34,20 +39,26 @@ export const nodesRouter = createTRPCRouter({
           let cpuUsage = 0;
           let memoryUsage = 0;
 
-          const nodeMetric = nodeMetricsClient.items.find((metric) => metric.metadata.name === name);
+          const nodeMetric = nodeMetricsClient?.items.find((metric) => metric.metadata.name === name);
           if (nodeMetric) {
             cpuUsage += cpuResourceParser.parse(nodeMetric.usage.cpu);
             memoryUsage += memoryResourceParser.parse(nodeMetric.usage.memory);
           }
 
-          const usagePercentageCPUAllocatable = (cpuUsage / cpuAllocatable) * 100;
-          const usagePercentageMemoryAllocatable = (memoryUsage / memoryAllocatable) * 100;
+          const usagePercentageCPUAllocatable = nodeMetric
+            ? calculateResourcePercentage(cpuUsage, cpuAllocatable)
+            : null;
+          const usagePercentageMemoryAllocatable = nodeMetric
+            ? calculateResourcePercentage(memoryUsage, memoryAllocatable)
+            : null;
 
           return {
             name,
             status,
-            allocatableCpuPercentage: Number(usagePercentageCPUAllocatable.toFixed(0)),
-            allocatableRamPercentage: Number(usagePercentageMemoryAllocatable.toFixed(0)),
+            allocatableCpuPercentage:
+              usagePercentageCPUAllocatable === null ? null : Math.round(usagePercentageCPUAllocatable),
+            allocatableRamPercentage:
+              usagePercentageMemoryAllocatable === null ? null : Math.round(usagePercentageMemoryAllocatable),
             podsCount: Number(node.status?.capacity?.pods),
             operatingSystem: node.status?.nodeInfo?.operatingSystem,
             architecture: node.status?.nodeInfo?.architecture,

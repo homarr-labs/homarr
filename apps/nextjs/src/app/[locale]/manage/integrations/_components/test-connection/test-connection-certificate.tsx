@@ -6,11 +6,12 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { createId, getMantineColor } from "@homarr/common";
 import { createDocumentationLink } from "@homarr/definitions";
-import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
-import { AddCertificateModal } from "@homarr/modals-collection";
+import { createModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useCurrentLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useI18n } from "@homarr/translation/client";
+import { InlineConfirmButton } from "@homarr/ui";
 
+import { CertificateUploadForm } from "~/app/[locale]/manage/tools/certificates/_components/certificate-upload-form";
 import type { MappedCertificate, MappedTestConnectionCertificateError } from "./types";
 
 interface CertificateErrorDetailsProps {
@@ -19,84 +20,75 @@ interface CertificateErrorDetailsProps {
 }
 
 export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsProps) => {
-  const tError = useScopedI18n("integration.testConnection.error");
+  const tError = useI18n("integration.testConnection.error");
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const [showRetryButton, setShowRetryButton] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
 
-  const { openModal: openUploadModal } = useModalAction(AddCertificateModal);
-  const { openConfirmModal } = useConfirmModal();
-  const { mutateAsync: trustHostnameAsync } = clientApi.certificates.trustHostnameMismatch.useMutation();
-  const { mutateAsync: addCertificateAsync } = clientApi.certificates.addCertificate.useMutation();
+  const { mutateAsync: trustHostnameAsync, isPending: isTrustHostnamePending } =
+    clientApi.certificates.trustHostnameMismatch.useMutation();
+  const { mutateAsync: addCertificateAsync, isPending: isTrustSelfSignedPending } =
+    clientApi.certificates.addCertificate.useMutation();
 
   const rootCertificate = getHeighestCertificate(error.data.certificate);
 
-  const handleTrustHostname = () => {
+  const handleTrustHostname = async () => {
     const { hostname } = new URL(url);
-    openConfirmModal({
-      title: tError("certificate.hostnameMismatch.confirm.title"),
-      children: tError("certificate.hostnameMismatch.confirm.message"),
-      // eslint-disable-next-line no-restricted-syntax
-      async onConfirm() {
-        await trustHostnameAsync(
-          {
-            hostname,
-            certificate: error.data.certificate.pem,
-          },
-          {
-            onSuccess() {
-              showSuccessNotification({
-                title: tError("certificate.hostnameMismatch.notification.success.title"),
-                message: tError("certificate.hostnameMismatch.notification.success.message"),
-              });
-              setShowRetryButton(true);
-            },
-            onError() {
-              showErrorNotification({
-                title: tError("certificate.hostnameMismatch.notification.error.title"),
-                message: tError("certificate.hostnameMismatch.notification.error.message"),
-              });
-            },
-          },
-        );
+    await trustHostnameAsync(
+      {
+        hostname,
+        certificate: error.data.certificate.pem,
       },
-    });
+      {
+        onSuccess() {
+          showSuccessNotification({
+            title: tError("certificate.hostnameMismatch.notification.success.title"),
+            message: tError("certificate.hostnameMismatch.notification.success.message"),
+          });
+          setShowRetryButton(true);
+        },
+        onError() {
+          showErrorNotification({
+            title: tError("certificate.hostnameMismatch.notification.error.title"),
+            message: tError("certificate.hostnameMismatch.notification.error.message"),
+          });
+        },
+      },
+    );
   };
 
-  const handleTrustSelfSigned = () => {
+  const handleTrustSelfSigned = async () => {
     const { hostname } = new URL(url);
-    openConfirmModal({
-      title: tError("certificate.selfSigned.confirm.title"),
-      children: tError("certificate.selfSigned.confirm.message"),
-      // eslint-disable-next-line no-restricted-syntax
-      async onConfirm() {
-        const formData = new FormData();
-        formData.append(
-          "file",
-          new File([rootCertificate.pem], `${hostname}-${createId()}.crt`, {
-            type: "application/x-x509-ca-cert",
-          }),
-        );
-        await addCertificateAsync(formData, {
-          onSuccess() {
-            showSuccessNotification({
-              title: tError("certificate.selfSigned.notification.success.title"),
-              message: tError("certificate.selfSigned.notification.success.message"),
-            });
-            setShowRetryButton(true);
-          },
-          onError() {
-            showErrorNotification({
-              title: tError("certificate.selfSigned.notification.error.title"),
-              message: tError("certificate.selfSigned.notification.error.message"),
-            });
-          },
+    const formData = new FormData();
+    formData.append(
+      "file",
+      new File([rootCertificate.pem], `${hostname}-${createId()}.crt`, {
+        type: "application/x-x509-ca-cert",
+      }),
+    );
+    await addCertificateAsync(formData, {
+      onSuccess() {
+        showSuccessNotification({
+          title: tError("certificate.selfSigned.notification.success.title"),
+          message: tError("certificate.selfSigned.notification.success.message"),
+        });
+        setShowRetryButton(true);
+      },
+      onError() {
+        showErrorNotification({
+          title: tError("certificate.selfSigned.notification.error.title"),
+          message: tError("certificate.selfSigned.notification.error.message"),
         });
       },
     });
   };
 
   const description = <Text size="md">{tError(`certificate.description.${error.data.reason}`)}</Text>;
+  let trustConfirmLabel = tError("certificate.selfSigned.confirm.title");
+  if (error.data.reason === "hostnameMismatch") {
+    trustConfirmLabel = tError("certificate.hostnameMismatch.confirm.title");
+  }
 
   if (!isAdmin) {
     return (
@@ -130,76 +122,71 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
 
       {(error.data.reason === "untrusted" && rootCertificate.isSelfSigned) ||
       error.data.reason === "hostnameMismatch" ? (
-        <Button
-          type="button"
+        <InlineConfirmButton
           variant="default"
           fullWidth
-          onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
+          loading={error.data.reason === "hostnameMismatch" ? isTrustHostnamePending : isTrustSelfSignedPending}
+          onConfirm={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
+          confirmLabel={trustConfirmLabel}
         >
           {tError("certificate.action.trust.label")}
-        </Button>
+        </InlineConfirmButton>
       ) : null}
       {error.data.reason === "untrusted" && !rootCertificate.isSelfSigned ? (
-        <Button
-          type="button"
-          variant="default"
-          fullWidth
-          onClick={() =>
-            openUploadModal({
-              onSuccess() {
-                setShowRetryButton(true);
-              },
-            })
-          }
-        >
-          {tError("certificate.action.upload.label")}
-        </Button>
+        <Stack gap="sm">
+          {!showUploadForm && (
+            <Button variant="default" fullWidth onClick={() => setShowUploadForm(true)}>
+              {tError("certificate.action.upload.label")}
+            </Button>
+          )}
+          {showUploadForm && (
+            <Card withBorder>
+              <CertificateUploadForm
+                embedded
+                onCancel={() => setShowUploadForm(false)}
+                onSuccess={() => {
+                  setShowRetryButton(true);
+                  setShowUploadForm(false);
+                }}
+              />
+            </Card>
+          )}
+        </Stack>
       ) : null}
     </>
   );
 };
 
 const NotEnoughPermissionsAlert = () => {
-  const t = useI18n();
+  const t = useI18n("integration.testConnection.error.certificate.alert.permission");
   return (
-    <Alert
-      icon={<IconAlertTriangle size={16} />}
-      title={t("integration.testConnection.error.certificate.alert.permission.title")}
-      color="yellow"
-    >
-      {t("integration.testConnection.error.certificate.alert.permission.message")}
+    <Alert icon={<IconAlertTriangle size={16} />} title={t("title")} color="yellow">
+      {t("message")}
     </Alert>
   );
 };
 
 const HostnameMismatchAlert = () => {
-  const t = useI18n();
+  const t = useI18n("integration.testConnection.error.certificate.alert.hostnameMismatch");
   return (
-    <Alert
-      icon={<IconAlertTriangle size={16} />}
-      title={t("integration.testConnection.error.certificate.alert.hostnameMismatch.title")}
-      color="yellow"
-    >
-      {t("integration.testConnection.error.certificate.alert.hostnameMismatch.message")}
+    <Alert icon={<IconAlertTriangle size={16} />} title={t("title")} color="yellow">
+      {t("message")}
     </Alert>
   );
 };
 
 const CertificateExtractAlert = () => {
-  const t = useI18n();
+  const t = useI18n("integration.testConnection.error.certificate.alert.extract");
+  const tCommon = useI18n("common");
   return (
-    <Alert
-      icon={<IconExclamationCircle size={16} />}
-      title={t("integration.testConnection.error.certificate.alert.extract.title")}
-      color="red"
-    >
-      {t.rich("integration.testConnection.error.certificate.alert.extract.message", {
+    <Alert icon={<IconExclamationCircle size={16} />} title={t("title")} color="red">
+      {t.rich("message", {
         docsLink: () => (
           <Anchor
             href={createDocumentationLink("/docs/management/certificates", "#obtaining-certificates")}
             target="_blank"
           >
-            {t("common.here")}
+            {tCommon("here")}
           </Anchor>
         ),
       })}
@@ -214,8 +201,8 @@ interface CertificateDetailsProps {
 export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps) => {
   const { openModal } = useModalAction(PemContentModal);
   const locale = useCurrentLocale();
-  const tDetails = useScopedI18n("integration.testConnection.error.certificate.details");
-  const tCertificateField = useScopedI18n("certificate.field");
+  const tDetails = useI18n("integration.testConnection.error.certificate.details");
+  const tCertificateField = useI18n("certificate.field");
 
   return (
     <Card>
@@ -291,7 +278,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
 };
 
 const PemContentModal = createModal<{ content: string }>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
 
   return (
     <Stack>
@@ -318,7 +305,7 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
       </Card>
 
       <Button variant="light" color="gray" onClick={actions.closeModal}>
-        {t("common.action.close")}
+        {tCommon("action.close")}
       </Button>
     </Stack>
   );

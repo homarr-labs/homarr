@@ -3,10 +3,13 @@ import React from "react";
 import type { MantineSpacing } from "@mantine/core";
 import { Group, Stack, Switch, Text, UnstyledButton } from "@mantine/core";
 
-import type { Modify } from "@homarr/common/types";
 import type { UseFormReturnType } from "@homarr/form";
 
-export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
+type BooleanKeys<TFormValue> = {
+  [TKey in keyof TFormValue]: TFormValue[TKey] extends boolean ? TKey : never;
+}[keyof TFormValue];
+
+export const SwitchSetting = <TFormValue extends Record<string, unknown>>({
   form,
   ms,
   title,
@@ -14,13 +17,8 @@ export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
   formKey,
   disabled,
 }: {
-  form: Modify<
-    UseFormReturnType<TFormValue, TFormValue>,
-    {
-      setFieldValue: (key: keyof TFormValue, value: (previous: boolean) => boolean) => void;
-    }
-  >;
-  formKey: keyof TFormValue;
+  form: UseFormReturnType<TFormValue, TFormValue>;
+  formKey: string & BooleanKeys<TFormValue>;
   ms?: MantineSpacing;
   title: string;
   text: ReactNode;
@@ -31,7 +29,7 @@ export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
       return;
     }
 
-    form.setFieldValue(formKey, (previous) => !previous);
+    form.setFieldValue(formKey, (previous) => !previous as never);
   }, [form, formKey, disabled]);
 
   return (
@@ -44,7 +42,7 @@ export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
           </Text>
         </Stack>
       </UnstyledButton>
-      <Switch disabled={disabled} onClick={handleClick} checked={form.values[formKey] && !disabled} />
+      <Switch disabled={disabled} onClick={handleClick} checked={Boolean(form.values[formKey])} />
     </Group>
   );
 };

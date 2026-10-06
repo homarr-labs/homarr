@@ -1,115 +1,385 @@
 "use client";
 
-import { Button, Fieldset, Grid, Group, Input, NumberInput, Slider, Stack, Text, TextInput } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Badge,
+  Box,
+  Button,
+  Fieldset,
+  Grid,
+  Group,
+  Input,
+  NumberInput,
+  Paper,
+  Slider,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { IconEdit, IconRefresh } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
-import { useZodForm } from "@homarr/form";
+import type { UseFormReturnType } from "@homarr/form";
+import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { boardSaveLayoutsSchema } from "@homarr/validation/board";
+import { InlineConfirmButton } from "@homarr/ui";
 
+import { SectionCard } from "~/components/manage/section-card";
 import type { Board } from "../../_types";
+import { LayoutPreview } from "./_layout-preview";
+import type { FormValues } from "./_settings-form";
+import classes from "./_layout.module.css";
 
 interface Props {
   board: Board;
+  form: UseFormReturnType<FormValues>;
+  isSaving: boolean;
+  saveSettingsAsync: () => Promise<FormValues | null>;
 }
-export const LayoutSettingsContent = ({ board }: Props) => {
-  const t = useI18n();
+
+const layoutRoleOrder = { base: 0, custom: 1, mobile: 2 } as const;
+
+export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync }: Props) => {
+  const tBoard = useI18n("board");
+  const tLayout = useI18n("layout");
+  const tCommon = useI18n("common");
+  const router = useRouter();
   const utils = clientApi.useUtils();
-  const { mutate: saveLayouts, isPending } = clientApi.board.saveLayouts.useMutation({
-    onSettled() {
-      void utils.board.getBoardByName.invalidate({ name: board.name });
-      void utils.board.getHomeBoard.invalidate();
+  const [editingLayoutId, setEditingLayoutId] = useState<string | null>(null);
+  const [resettingLayoutId, setResettingLayoutId] = useState<string | null>(null);
+  const { mutateAsync: resetLayout } = clientApi.board.resetLayout.useMutation({
+    onError() {
+      showErrorNotification({
+        title: tCommon("notification.update.error"),
+        message: tCommon("notification.update.error"),
+      });
     },
   });
-  const form = useZodForm(boardSaveLayoutsSchema.omit({ id: true }).required(), {
-    initialValues: {
-      layouts: board.layouts,
-    },
-  });
+  const appIds = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          board.items.flatMap((item) =>
+            item.kind === "app" && typeof item.options.appId === "string" ? [item.options.appId] : [],
+          ),
+        ),
+      ),
+    [board.items],
+  );
+  const { data: apps = [] } = clientApi.app.byIds.useQuery(appIds, { enabled: appIds.length > 0 });
+
+  const openLayoutEditorAsync = async (layout: FormValues["layouts"][number]) => {
+    setEditingLayoutId(layout.id);
+    try {
+      const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      const savedValues = form.isDirty() || !persistedLayout ? await saveSettingsAsync() : form.values;
+      const canonicalLayout = savedValues ? findCanonicalLayout(savedValues.layouts, layout) : undefined;
+      if (!canonicalLayout) return;
+
+      router.push(`/boards/${board.name}?layout=${encodeURIComponent(canonicalLayout.id)}&edit=true&returnTo=settings`);
+    } finally {
+      setEditingLayoutId(null);
+    }
+  };
+
+  const handleReset = async (layout: FormValues["layouts"][number]) => {
+    setResettingLayoutId(layout.id);
+    try {
+      const canonicalLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+      if (!canonicalLayout) return;
+
+      await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });
+      await utils.board.getBoardByName.invalidate({ name: board.name });
+      router.refresh();
+    } catch {
+      // The mutation callback displays the error notification.
+    } finally {
+      setResettingLayoutId(null);
+    }
+  };
+
+  const nextBreakpoint = getNextCustomBreakpoint(form.values.layouts);
+  const baseLayout = form.values.layouts.find((layout) => layout.role === "base");
+  const displayedLayouts = form.values.layouts
+    .map((layout, index) => ({ layout, index }))
+    .toSorted((first, second) => layoutRoleOrder[first.layout.role] - layoutRoleOrder[second.layout.role]);
 
   return (
-    <form
-      onSubmit={form.onSubmit((values) => {
-        saveLayouts({
-          id: board.id,
-          ...values,
-        });
-      })}
-    >
-      <Stack>
-        <Stack gap="sm">
-          <Group justify="space-between" align="center">
-            <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
-            <Button
-              variant="subtle"
-              onClick={() => {
-                form.setValues({
-                  layouts: [
-                    ...form.values.layouts,
-                    {
-                      id: createId(),
-                      name: "",
-                      columnCount: 10,
-                      breakpoint: 0,
-                    },
-                  ],
-                });
-              }}
-            >
-              {t("board.setting.section.layout.responsive.action.add")}
-            </Button>
-          </Group>
-
-          {form.values.layouts.map((layout, index) => (
-            <Fieldset key={layout.id} legend={layout.name} bg="transparent">
-              <Grid>
-                <Grid.Col span={{ sm: 12, md: 6 }}>
-                  <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={t("layout.field.name.label")} />
-                </Grid.Col>
-
-                <Grid.Col span={{ sm: 12, md: 6 }}>
-                  <Input.Wrapper label={t("layout.field.columnCount.label")}>
-                    <Slider mt="xs" min={1} max={24} step={1} {...form.getInputProps(`layouts.${index}.columnCount`)} />
-                  </Input.Wrapper>
-                </Grid.Col>
-
-                <Grid.Col span={{ sm: 12, md: 6 }}>
-                  <NumberInput
-                    {...form.getInputProps(`layouts.${index}.breakpoint`)}
-                    label={t("layout.field.breakpoint.label")}
-                    description={t("layout.field.breakpoint.description")}
-                  />
-                </Grid.Col>
-              </Grid>
-              {form.values.layouts.length >= 2 && (
-                <Group justify="end">
-                  <Button
-                    variant="subtle"
-                    onClick={() => {
-                      form.setValues((previous) =>
-                        previous.layouts !== undefined && previous.layouts.length >= 2
-                          ? {
-                              layouts: form.values.layouts.filter((filteredLayout) => filteredLayout.id !== layout.id),
-                            }
-                          : previous,
-                      );
-                    }}
-                  >
-                    {t("common.action.remove")}
-                  </Button>
-                </Group>
-              )}
-            </Fieldset>
-          ))}
-        </Stack>
-
-        <Group justify="end">
-          <Button type="submit" loading={isPending}>
-            {t("common.action.saveChanges")}
+    <SectionCard title={tBoard("setting.section.layout.title")}>
+      <Stack gap="lg">
+        <Group justify="space-between" align="flex-start" wrap="wrap">
+          <Stack gap={2} maw="52rem">
+            <Text fw={500}>{tBoard("setting.section.layout.responsive.title")}</Text>
+            <Text size="sm">{tBoard("setting.section.layout.responsive.description")}</Text>
+          </Stack>
+          <Button
+            type="button"
+            variant="light"
+            disabled={nextBreakpoint === null || !baseLayout}
+            onClick={() => {
+              if (nextBreakpoint === null || !baseLayout) return;
+              const newLayout: FormValues["layouts"][number] = {
+                id: createId(),
+                name: tBoard("setting.section.layout.custom.defaultName"),
+                columnCount: baseLayout.columnCount,
+                leftGutterColumnCount: baseLayout.leftGutterColumnCount,
+                rightGutterColumnCount: baseLayout.rightGutterColumnCount,
+                breakpoint: nextBreakpoint,
+                role: "custom",
+              };
+              let insertionIndex = form.values.layouts.findIndex((layout) => layout.breakpoint > nextBreakpoint);
+              if (insertionIndex === -1) insertionIndex = form.values.layouts.length;
+              form.insertListItem("layouts", newLayout, insertionIndex);
+            }}
+          >
+            {tBoard("setting.section.layout.responsive.action.add")}
           </Button>
         </Group>
+
+        {displayedLayouts.map(({ layout, index }) => {
+          const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
+          const sourceLayout = persistedLayout ?? board.layouts.find((candidate) => candidate.role === "base");
+
+          return (
+            <Fieldset
+              key={layout.id}
+              legend={
+                <Group gap="xs">
+                  <Text>{layout.name || tBoard(`setting.section.layout.role.${layout.role}` as never)}</Text>
+                  <Badge size="sm" variant="default">
+                    {tBoard(`setting.section.layout.role.${layout.role}` as never)}
+                  </Badge>
+                </Group>
+              }
+              bg="transparent"
+            >
+              <Grid gap={{ base: "lg", xl: "xl" }} align="flex-start">
+                <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+                  <Stack gap="md">
+                    <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={tCommon("field.name")} />
+                    <Input.Wrapper label={tLayout("field.columnCount.label")}>
+                      <Slider
+                        thumbLabel={`${tLayout("field.columnCount.label")} — ${layout.name}`}
+                        mt="xs"
+                        min={1}
+                        max={24}
+                        step={1}
+                        marks={[1, 6, 12, 18, 24].map((value) => ({ value, label: String(value) }))}
+                        styles={{
+                          markLabel: { color: "light-dark(var(--mantine-color-black), var(--mantine-color-white))" },
+                        }}
+                        value={layout.columnCount}
+                        onChange={(columnCount) => {
+                          const left = Math.min(layout.leftGutterColumnCount, Math.max(0, columnCount - 1));
+                          const right = Math.min(layout.rightGutterColumnCount, Math.max(0, columnCount - left - 1));
+                          form.setFieldValue(`layouts.${index}.columnCount`, columnCount);
+                          form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, left);
+                          form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, right);
+                        }}
+                      />
+                    </Input.Wrapper>
+                    <NumberInput
+                      {...form.getInputProps(`layouts.${index}.breakpoint`)}
+                      label={tLayout("field.breakpoint.label")}
+                      description={
+                        layout.role === "mobile"
+                          ? tBoard("setting.section.layout.mobile.breakpointDescription")
+                          : tLayout("field.breakpoint.description")
+                      }
+                      disabled={layout.role === "mobile"}
+                      styles={{ description: { color: "var(--mantine-color-text)" } }}
+                      min={layout.role === "mobile" ? 0 : 1}
+                      max={32767}
+                    />
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
+                  {sourceLayout && (
+                    <LayoutPreview
+                      board={board}
+                      layout={layout}
+                      layouts={form.values.layouts}
+                      sourceLayout={sourceLayout}
+                      apps={apps}
+                    />
+                  )}
+                </Grid.Col>
+                {layout.role !== "mobile" && (
+                  <Grid.Col span={{ base: 12, lg: 4 }}>
+                    <GutterSettings
+                      left={layout.leftGutterColumnCount}
+                      right={layout.rightGutterColumnCount}
+                      columnCount={layout.columnCount}
+                      onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
+                      onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
+                    />
+                  </Grid.Col>
+                )}
+              </Grid>
+
+              <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">
+                <Group gap="xs">
+                  {layout.role !== "base" && persistedLayout && (
+                    <InlineConfirmButton
+                      type="button"
+                      variant="default"
+                      leftSection={<IconRefresh size={16} color="var(--mantine-color-red-5)" />}
+                      loading={resettingLayoutId === layout.id}
+                      disabled={isSaving}
+                      onConfirm={() => handleReset(layout)}
+                      confirmLabel={tCommon("action.confirm")}
+                    >
+                      {tBoard("setting.section.layout.reset.action")}
+                    </InlineConfirmButton>
+                  )}
+                  {layout.role === "custom" && (
+                    <Button
+                      type="button"
+                      variant="subtle"
+                      color="red"
+                      disabled={isSaving}
+                      onClick={() => {
+                        form.setFieldValue(
+                          "layouts",
+                          form.values.layouts.filter((candidate) => candidate.id !== layout.id),
+                        );
+                      }}
+                    >
+                      {tCommon("action.remove")}
+                    </Button>
+                  )}
+                </Group>
+                <Button
+                  type="button"
+                  variant="default"
+                  leftSection={<IconEdit size={16} color="var(--mantine-color-red-5)" />}
+                  loading={editingLayoutId === layout.id}
+                  disabled={isSaving || !form.isValid()}
+                  onClick={() => void openLayoutEditorAsync(layout)}
+                >
+                  {form.isDirty() || !persistedLayout
+                    ? tBoard("setting.section.layout.edit.saveAndEdit")
+                    : tBoard("setting.section.layout.edit.action")}
+                </Button>
+              </Group>
+            </Fieldset>
+          );
+        })}
       </Stack>
-    </form>
+    </SectionCard>
+  );
+};
+
+const findCanonicalLayout = (layouts: FormValues["layouts"], layout: FormValues["layouts"][number]) =>
+  layouts.find((candidate) => candidate.id === layout.id) ??
+  layouts.find((candidate) => candidate.breakpoint === layout.breakpoint && candidate.role === layout.role);
+
+const getNextCustomBreakpoint = (layouts: Array<{ breakpoint: number }>) => {
+  const sortedBreakpoints = layouts
+    .map((layout) => layout.breakpoint)
+    .toSorted((breakpointA, breakpointB) => breakpointA - breakpointB);
+  let largestGap: { start: number; end: number } | null = null;
+
+  for (let index = 0; index < sortedBreakpoints.length - 1; index++) {
+    const start = sortedBreakpoints[index];
+    const end = sortedBreakpoints[index + 1];
+    if (start === undefined || end === undefined || end - start <= 1) continue;
+    if (!largestGap || end - start > largestGap.end - largestGap.start) largestGap = { start, end };
+  }
+
+  return largestGap ? Math.floor((largestGap.start + largestGap.end) / 2) : null;
+};
+
+interface GutterSettingsProps {
+  left: number;
+  right: number;
+  columnCount: number;
+  onLeftChange: (value: number) => void;
+  onRightChange: (value: number) => void;
+}
+
+const gutterMarks = [
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+];
+
+const GutterSettings = ({ left, right, columnCount, onLeftChange, onRightChange }: GutterSettingsProps) => {
+  const t = useI18n("layout");
+  const maxGutterWidth = Math.min(3, Math.max(1, columnCount - 1));
+
+  return (
+    <Paper className={classes.gutterSettings} p="md">
+      <Stack gap="md">
+        <Box>
+          <Text fw={600}>{t("field.gutters.label")}</Text>
+          <Text size="sm" c="dimmed">
+            {t("field.gutters.description")}
+          </Text>
+        </Box>
+
+        <div className={classes.gutterControls}>
+          <div>
+            <GutterControl
+              side="left"
+              value={left}
+              max={Math.min(maxGutterWidth, columnCount - right - 1)}
+              onChange={onLeftChange}
+            />
+          </div>
+          <div>
+            <GutterControl
+              side="right"
+              value={right}
+              max={Math.min(maxGutterWidth, columnCount - left - 1)}
+              onChange={onRightChange}
+            />
+          </div>
+        </div>
+      </Stack>
+    </Paper>
+  );
+};
+
+const GutterControl = ({
+  side,
+  value,
+  max,
+  onChange,
+}: {
+  side: "left" | "right";
+  value: number;
+  max: number;
+  onChange: (value: number) => void;
+}) => {
+  const t = useI18n("layout");
+  const enabled = value > 0;
+
+  return (
+    <Stack gap="sm">
+      <Switch
+        checked={enabled}
+        disabled={max < 1}
+        onChange={(event) => onChange(event.currentTarget.checked ? Math.min(2, max) : 0)}
+        label={t(`field.gutters.${side}.label` as never)}
+      />
+      {enabled && (
+        <Input.Wrapper className={classes.gutterWidth} label={t("field.gutters.width.label")}>
+          <Slider
+            mt="xs"
+            min={1}
+            max={max}
+            value={Math.min(value, max)}
+            marks={gutterMarks.filter((mark) => mark.value <= max)}
+            restrictToMarks
+            thumbLabel={t(`field.gutters.${side}.thumbLabel` as never)}
+            onChange={(nextValue) => onChange(Math.min(nextValue, max))}
+          />
+        </Input.Wrapper>
+      )}
+    </Stack>
   );
 };

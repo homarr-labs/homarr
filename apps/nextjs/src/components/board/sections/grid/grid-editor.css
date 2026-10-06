@@ -1,0 +1,311 @@
+.board-grid-editor {
+  position: absolute;
+  inset: 0 auto auto 0;
+  overflow: visible;
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+  zoom: var(--board-grid-content-scale, 1);
+}
+
+.board-grid-entry {
+  z-index: 1;
+  overflow: visible;
+}
+
+.board-grid-entry:has([data-board-widget-header]):hover,
+.board-grid-entry:has([data-board-widget-header]):focus-within {
+  z-index: calc(var(--homarr-z-index-board-header) - 1);
+}
+
+.board-grid-entry[data-grid-preview="true"] {
+  width: var(--board-grid-preview-width) !important;
+  height: var(--board-grid-preview-height) !important;
+  translate: var(--board-grid-preview-x) var(--board-grid-preview-y);
+  transition: none;
+}
+
+.board-grid-entry[data-dnd-active="true"],
+.board-grid-entry[data-dnd-drag-source="true"] {
+  z-index: 1000;
+  transition: none;
+}
+
+.board-grid-entry[data-dnd-drag-source="true"] {
+  opacity: 0.42;
+}
+
+.board-grid-entry[data-board-item-selected="true"] {
+  z-index: 15;
+  opacity: 0.56;
+  filter: saturate(0.72) brightness(0.82);
+  transition:
+    opacity 140ms ease,
+    filter 140ms ease;
+}
+
+.board-grid-entry[data-board-item-selected="true"]::after {
+  position: absolute;
+  inset: var(--board-grid-item-inset, 0px);
+  z-index: 100;
+  content: "";
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent);
+  border: 0.125rem dashed var(--mantine-primary-color-filled);
+  border-radius: var(--board-item-radius, var(--mantine-radius-md));
+  box-shadow: inset 0 0 1.125rem color-mix(in srgb, var(--mantine-primary-color-filled) 20%, transparent);
+  pointer-events: none;
+}
+
+.board-grid-drag-overlay[data-dnd-dragging] {
+  position: fixed !important;
+  z-index: 10000;
+  top: var(--dnd-top, 0) !important;
+  left: var(--dnd-left, 0) !important;
+  width: var(--dnd-width, auto);
+  max-width: var(--dnd-width, auto);
+  height: var(--dnd-height, auto);
+  max-height: var(--dnd-height, auto);
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  color: inherit;
+  pointer-events: none !important;
+  background: transparent;
+  border: 0;
+  transform: var(--dnd-transform, none) !important;
+  transition: var(--dnd-transition) !important;
+  will-change: translate;
+}
+
+.board-grid-drag-overlay[data-dnd-dragging]:not([data-dnd-dropping]) {
+  translate: var(--dnd-translate) !important;
+}
+
+.board-grid-drag-overlay[data-dnd-dragging][style*="--dnd-scale"] {
+  scale: var(--dnd-scale) !important;
+  transform-origin: var(--dnd-transform-origin) !important;
+}
+
+.board-grid-drag-overlay-card {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  padding: var(--mantine-spacing-md);
+  overflow: hidden;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  text-align: center;
+  overflow-wrap: anywhere;
+  place-items: center;
+  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-lg);
+  zoom: var(--board-grid-overlay-content-zoom, 1);
+}
+
+/* Displaced entries must snap with the preview too; animating their offsets can trail a new swap target. */
+body[data-board-grid-interacting] .board-grid-entry,
+body[data-board-grid-interacting] .board-grid-placeholder {
+  transition: none;
+}
+
+body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="true"] > .board-grid-content-mount {
+  overflow: clip;
+}
+
+.board-grid-placeholder {
+  z-index: 0;
+  clip-path: inset(var(--board-grid-item-inset, 0px));
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
+  border: 2px dashed var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+  transition:
+    left 100ms ease,
+    top 100ms ease,
+    width 100ms ease,
+    height 100ms ease;
+}
+
+.board-grid-placeholder[data-grid-placeholder-mode="resize"] {
+  z-index: 1001;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 10%, transparent);
+}
+
+.board-grid-placeholder[data-grid-placeholder-type="section"] {
+  clip-path: none;
+  background: none;
+  border: 0;
+}
+
+.board-grid-placeholder[data-grid-placeholder-type="section"]::after {
+  position: absolute;
+  inset: var(--board-container-inset, 0px);
+  content: "";
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
+  border: 2px dashed var(--mantine-primary-color-filled);
+  border-radius: inherit;
+}
+
+.board-grid-resize-outline {
+  z-index: 1002;
+  clip-path: inset(var(--board-grid-item-inset, 0px));
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 6%, transparent);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+}
+
+.board-grid-editor[data-dnd-drop-target="true"] {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
+}
+
+.board-grid-editor[data-dnd-drop-target="true"][data-dnd-drop-valid="false"] {
+  box-shadow: inset 0 0 0 2px var(--mantine-color-red-filled);
+}
+
+[data-board-container-collapsed]
+  > [data-board-container-body]
+  > [data-section-id]
+  > .board-grid-editor[data-dnd-drop-target="true"] {
+  box-shadow: none;
+}
+
+[data-board-container-collapsed]:has(
+  > [data-board-container-body] > [data-section-id] > .board-grid-editor[data-dnd-drop-target="true"]
+)::after {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  box-sizing: border-box;
+  content: "";
+  border: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+[data-board-container-collapsed]:has(
+  > [data-board-container-body]
+    > [data-section-id]
+    > .board-grid-editor[data-dnd-drop-target="true"][data-dnd-drop-valid="false"]
+)::after {
+  border-color: var(--mantine-color-red-filled);
+}
+
+.board-grid-resize-handle {
+  position: absolute;
+  z-index: 25;
+  display: grid;
+  padding: 0;
+  color: var(--mantine-color-dimmed);
+  appearance: none;
+  background: var(--mantine-color-body);
+  border: 0.0625rem solid var(--mantine-color-default-border);
+  box-shadow: var(--mantine-shadow-xs);
+  opacity: 0;
+  scale: 0.88;
+  place-items: center;
+  touch-action: none;
+  transition:
+    opacity 120ms ease,
+    scale 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 120ms ease;
+}
+
+.board-grid-resize-handle::before {
+  position: absolute;
+  inset: -0.375rem;
+  content: "";
+}
+
+.board-grid-resize-handle > svg {
+  pointer-events: none;
+}
+
+.board-grid-entry:has(> .board-grid-resize-handle:hover) > .board-grid-resize-handle,
+.board-grid-entry:has(> .board-grid-resize-handle:active) > .board-grid-resize-handle {
+  border-color: var(--mantine-color-dimmed);
+  opacity: 1;
+  scale: 1;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="n"],
+.board-grid-resize-handle[data-grid-resize-handle="s"] {
+  left: 50%;
+  width: 1.75rem;
+  height: 1rem;
+  border-radius: var(--mantine-radius-xl);
+  translate: -50% 0;
+  cursor: ns-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="n"] {
+  top: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="s"] {
+  bottom: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="e"],
+.board-grid-resize-handle[data-grid-resize-handle="w"] {
+  top: 50%;
+  width: 1rem;
+  height: 1.75rem;
+  border-radius: var(--mantine-radius-xl);
+  translate: 0 -50%;
+  cursor: ew-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="e"] {
+  right: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="w"] {
+  left: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="ne"],
+.board-grid-resize-handle[data-grid-resize-handle="se"],
+.board-grid-resize-handle[data-grid-resize-handle="sw"],
+.board-grid-resize-handle[data-grid-resize-handle="nw"] {
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: var(--board-item-radius, var(--mantine-radius-md));
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="ne"] {
+  top: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  right: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  cursor: nesw-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="se"] {
+  right: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  bottom: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  cursor: nwse-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="sw"] {
+  bottom: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  left: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  cursor: nesw-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="nw"] {
+  top: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  left: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  cursor: nwse-resize;
+  /* Leaves a thin draggable border around the corner instead of a solid 44x44 hit area,
+     so it doesn't sit on top of the container menu button anchored in this same corner. */
+  clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, 4px 4px, 4px 40px, 40px 40px, 40px 4px, 4px 4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board-grid-entry,
+  .board-grid-placeholder,
+  .board-grid-resize-outline,
+  .board-grid-resize-handle {
+    transition: none;
+  }
+}

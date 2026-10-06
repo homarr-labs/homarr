@@ -1,0 +1,27 @@
+---
+title: "Frigate"
+description: "Open source NVR with real-time object detection."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { statsWidget } from "@site/docs/widgets/stats";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { frigateIntegration } from ".";
+
+<IntegrationHeader integration={frigateIntegration} categories={["Media"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The Frigate statistics use `/api/stats` and report camera count, service uptime, and version. Camera and object detection data requires a configured Frigate camera.
+
+### Adding the integration
+
+<AddingIntegration />
+
+Use Frigate's authenticated interface (port **8971**) with an admin account's username and password. Homarr exchanges these for a session token and verifies the account before requesting statistics. Frigate's default `frigate_token` cookie name is required. The integration URL must use `https://`; Homarr rejects `http://` URLs so credentials are never sent unencrypted, and certificates must be trusted by Homarr.
+
+Existing integrations using the unauthenticated port **5000** must update their URL and add credentials. Homarr does not fall back to the unauthenticated API; keep that listener private.

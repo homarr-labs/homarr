@@ -46,6 +46,14 @@ if [[ "$mode" == "cleanup" ]]; then
   "repository": { "full_name": "homarr-labs/homarr" }
 }
 EOF
+elif [[ "$mode" == "docker" ]]; then
+  event_name="workflow_dispatch"
+  cat >"$event_file" <<EOF
+{
+  "inputs": { "operation": "validate", "ref": "$head_sha" },
+  "repository": { "full_name": "homarr-labs/homarr" }
+}
+EOF
 else
   event_name="pull_request"
   safe_ref=$(json_escape "$head_ref")

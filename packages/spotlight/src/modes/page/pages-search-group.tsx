@@ -17,7 +17,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -30,6 +30,7 @@ export const pagesSearchGroup = createGroup<{
 }>({
   keyPath: "path",
   title: (t) => t("search.mode.page.group.page.title"),
+  source: { kind: "local" },
   Component: ({ name, icon: Icon }) => (
     <Group px="md" py="sm">
       <Icon stroke={1.5} />
@@ -59,7 +60,7 @@ export const pagesSearchGroup = createGroup<{
   },
   useOptions() {
     const { data: session } = useSession();
-    const t = useScopedI18n("search.mode.page.group.page.option");
+    const t = useI18n("search.mode.page.group.page.option");
 
     const managePages = [
       {
@@ -76,7 +77,7 @@ export const pagesSearchGroup = createGroup<{
         icon: IconBox,
         path: "/manage/apps",
         name: t("manageApp.label"),
-        hidden: !session?.user.permissions.includes("board-modify-all"),
+        hidden: !session?.user.permissions.includes("app-create"),
       },
       {
         icon: IconPlug,

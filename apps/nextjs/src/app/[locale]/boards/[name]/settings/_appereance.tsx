@@ -1,16 +1,16 @@
 "use client";
 
 import {
+  ActionIcon,
   Anchor,
-  Button,
   Collapse,
   ColorInput,
   ColorSwatch,
-  Grid,
+  Fieldset,
   Group,
   InputWrapper,
   isLightColor,
-  Select,
+  SimpleGrid,
   Slider,
   Stack,
   Text,
@@ -19,79 +19,53 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
 
-import { useZodForm } from "@homarr/form";
+import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
+import { BoardColorInput, CornerStylePicker, cornerStyleValues } from "@homarr/ui";
+import { useSettings } from "@homarr/settings";
 
-import type { Board } from "../../_types";
-import { generateColors } from "../../(content)/_theme";
-import { useSavePartialSettingsMutation } from "./_shared";
+import { generateColorScale } from "~/theme/branding";
+import type { FormValues } from "./_settings-form";
 
 interface Props {
-  board: Board;
+  form: UseFormReturnType<FormValues>;
 }
 
 const hexRegex = /^#[0-9a-fA-F]{6}$/;
 
 const progressPercentageLabel = (value: number) => `${value}%`;
 
-export const ColorSettingsContent = ({ board }: Props) => {
-  const form = useZodForm(boardSavePartialSettingsSchema, {
-    initialValues: {
-      primaryColor: board.primaryColor,
-      secondaryColor: board.secondaryColor,
-      opacity: board.opacity,
-      iconColor: board.iconColor ?? "",
-      itemRadius: board.itemRadius,
-    },
-  });
+export const ColorSettingsContent = ({ form }: Props) => {
   const [showPreview, { toggle }] = useDisclosure(false);
-  const t = useI18n();
+  const tBoard = useI18n("board");
+  const tCommon = useI18n("common");
   const theme = useMantineTheme();
-  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
+  const { branding } = useSettings();
 
   return (
-    <form
-      onSubmit={form.onSubmit((values) => {
-        savePartialSettings({
-          id: board.id,
-          ...values,
-        });
-      })}
-    >
-      <Stack>
-        <Grid>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Stack gap="xs">
-              <ColorInput
-                label={t("board.field.primaryColor.label")}
-                format="hex"
-                swatches={Object.values(theme.colors).map((color) => color[6])}
-                {...form.getInputProps("primaryColor")}
-              />
-            </Stack>
-          </Grid.Col>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <ColorInput
-              label={t("board.field.secondaryColor.label")}
-              format="hex"
-              swatches={Object.values(theme.colors).map((color) => color[6])}
-              {...form.getInputProps("secondaryColor")}
+    <Fieldset legend={tBoard("setting.section.appearance.title")} p="sm">
+      <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="md" verticalSpacing="sm">
+        <Stack gap="xs">
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
+            <BoardColorInput
+              label={tBoard("field.primaryColor.label")}
+              description={branding.lockPrimaryColor ? tBoard("field.primaryColor.locked") : undefined}
+              disabled={branding.lockPrimaryColor}
+              {...form.getInputProps("primaryColor")}
             />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <Anchor onClick={toggle}>{showPreview ? t("common.preview.hide") : t("common.preview.show")}</Anchor>
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <Collapse expanded={showPreview}>
-              <Stack>
-                <ColorsPreview previewColor={form.values.primaryColor} />
-                <ColorsPreview previewColor={form.values.secondaryColor} />
-              </Stack>
-            </Collapse>
-          </Grid.Col>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <InputWrapper label={t("board.field.opacity.label")}>
+            <BoardColorInput label={tBoard("field.secondaryColor.label")} {...form.getInputProps("secondaryColor")} />
+          </SimpleGrid>
+          <Anchor onClick={toggle} size="sm" w="fit-content">
+            {showPreview ? tCommon("preview.hide") : tCommon("preview.show")}
+          </Anchor>
+          <Collapse expanded={showPreview}>
+            <Stack gap="xs">
+              <ColorsPreview previewColor={form.values.primaryColor} />
+              <ColorsPreview previewColor={form.values.secondaryColor} />
+            </Stack>
+          </Collapse>
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm" verticalSpacing="sm">
+            <InputWrapper label={tBoard("field.opacity.label")}>
               <Slider
                 my={6}
                 min={0}
@@ -101,48 +75,42 @@ export const ColorSettingsContent = ({ board }: Props) => {
                 {...form.getInputProps("opacity")}
               />
             </InputWrapper>
-          </Grid.Col>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Group align="end">
+            <Group align="end" gap="xs" wrap="nowrap">
               <ColorInput
-                label={t("board.field.iconColor.label")}
+                label={tBoard("field.iconColor.label")}
                 format="hex"
                 swatches={Object.values(theme.colors).map((color) => color[6])}
                 flex={1}
+                style={{ minWidth: 0 }}
                 {...form.getInputProps("iconColor")}
               />
-              <Button
+              <ActionIcon
+                type="button"
                 variant="subtle"
-                leftSection={<IconX />}
+                size={36}
+                aria-label={tBoard("field.clearColor.label")}
                 onClick={() => form.setFieldValue("iconColor", "")}
                 disabled={!form.values.iconColor}
               >
-                {t("board.field.clearColor.label")}
-              </Button>
+                <IconX size={16} />
+              </ActionIcon>
             </Group>
-          </Grid.Col>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Select
-              label={t("board.field.itemRadius.label")}
-              description={t("board.field.itemRadius.description")}
-              data={[
-                { label: t("board.field.itemRadius.option.xs"), value: "xs" },
-                { label: t("board.field.itemRadius.option.sm"), value: "sm" },
-                { label: t("board.field.itemRadius.option.md"), value: "md" },
-                { label: t("board.field.itemRadius.option.lg"), value: "lg" },
-                { label: t("board.field.itemRadius.option.xl"), value: "xl" },
-              ]}
-              {...form.getInputProps("itemRadius")}
-            />
-          </Grid.Col>
-        </Grid>
-        <Group justify="end">
-          <Button type="submit" loading={isPending}>
-            {t("common.action.saveChanges")}
-          </Button>
-        </Group>
-      </Stack>
-    </form>
+          </SimpleGrid>
+        </Stack>
+        <CornerStylePicker
+          compact
+          label={tBoard("field.itemRadius.label")}
+          description={tBoard("field.itemRadius.description")}
+          value={form.values.itemRadius}
+          labels={
+            Object.fromEntries(
+              cornerStyleValues.map((cornerStyle) => [cornerStyle, tBoard(`field.itemRadius.option.${cornerStyle}`)]),
+            ) as Record<(typeof cornerStyleValues)[number], string>
+          }
+          onChange={(itemRadius) => form.setFieldValue("itemRadius", itemRadius)}
+        />
+      </SimpleGrid>
+    </Fieldset>
   );
 };
 
@@ -153,7 +121,8 @@ interface ColorsPreviewProps {
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
   const theme = useMantineTheme();
 
-  const colors = previewColor && hexRegex.test(previewColor) ? generateColors(previewColor) : generateColors("#000000");
+  const colors =
+    previewColor && hexRegex.test(previewColor) ? generateColorScale(previewColor) : generateColorScale("#000000");
 
   return (
     <Group gap={0} wrap="nowrap">

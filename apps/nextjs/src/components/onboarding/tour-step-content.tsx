@@ -13,7 +13,7 @@ interface TourStepContentProps {
 }
 
 export const TourStepContent = ({ description, documentationHref, icon }: TourStepContentProps) => {
-  const t = useI18n();
+  const t = useI18n("onboardingTour");
 
   return (
     <Stack gap="sm">
@@ -31,7 +31,7 @@ export const TourStepContent = ({ description, documentationHref, icon }: TourSt
       <Anchor href={documentationHref} target="_blank" size="xs" fw={500}>
         <Group gap={4} wrap="nowrap">
           <IconExternalLink size={14} />
-          {t("onboardingTour.learnMore")}
+          {t("learnMore")}
         </Group>
       </Anchor>
     </Stack>

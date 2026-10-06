@@ -1,0 +1,52 @@
+---
+title: "What's Up Docker"
+description: "What's Up Docker (WUD) watches your Docker containers and reports which ones have newer image versions available."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { wudIntegration } from ".";
+import { wudWidget } from "@site/docs/widgets/whats-up-docker";
+
+<IntegrationHeader integration={wudIntegration} categories={["Health Monitoring"]} />
+
+The What's Up Docker integration lets Homarr connect to your [WUD](https://github.com/getwud/wud) instance so you can see how many of your watched containers have image updates available directly from your dashboard.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: wudWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+<Alert type="info" title="URL configuration">
+
+Use the root URL of your WUD instance, for example `https://wud.example.com`. Homarr uses `/api/containers` under that URL for both connection testing and widget data.
+
+</Alert>
+
+### Secrets
+
+WUD 9 requires authentication. Enter your WUD username and password in Homarr; the initial admin credentials configured with `WUD_AUTH_ADMIN_USER` and `WUD_AUTH_ADMIN_PASSWORD` work with Basic authentication. Older WUD versions without authentication can leave both fields empty.
+
+Credentials are sent to the configured URL over HTTP or HTTPS. Use HTTPS outside a trusted internal network.
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: [],
+      steps: [],
+    },
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Use your WUD account credentials; older versions can use a configured WUD_AUTH_BASIC_* user",
+        "Enter that username and password in Homarr — Basic authentication is handled automatically",
+      ],
+    },
+  ]}
+/>

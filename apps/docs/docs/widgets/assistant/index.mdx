@@ -1,0 +1,21 @@
+---
+title: "Assistant"
+description: "Have an Assistant conversation directly on a board."
+hide_title: true
+---
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { assistantWidget } from ".";
+
+<WidgetHeader widget={assistantWidget} categories={["Productivity"]} />
+
+The Assistant widget provides the same active conversation as the app-wide Assistant. Messages, tool calls, and
+approvals stay synchronized between surfaces.
+
+An administrator must first configure [Assistant](/docs/management/assistant). Short widget layouts show an action to
+open the full Assistant instead of compressing the conversation.
+
+### Adding the widget
+
+<AddingWidget />

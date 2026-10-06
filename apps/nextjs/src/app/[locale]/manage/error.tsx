@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button, Center, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 export default function ManageErrorPage({
   error,
@@ -13,8 +13,8 @@ export default function ManageErrorPage({
   error: Error & { digest?: string };
   unstable_retry: () => void;
 }) {
-  const tError = useScopedI18n("management.error");
-  const t = useI18n();
+  const tError = useI18n("management.error");
+  const tCommon = useI18n("common");
 
   useEffect(() => {
     console.error(error);
@@ -34,7 +34,7 @@ export default function ManageErrorPage({
           </Text>
         )}
         <Button variant="light" onClick={unstable_retry}>
-          {t("common.action.tryAgain")}
+          {tCommon("action.tryAgain")}
         </Button>
       </Stack>
     </Center>

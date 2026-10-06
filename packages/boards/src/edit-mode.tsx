@@ -1,13 +1,18 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
 
 const EditModeContext = createContext<ReturnType<typeof useDisclosure> | null>(null);
 
-export const EditModeProvider = ({ children }: PropsWithChildren) => {
-  const editModeDisclosure = useDisclosure(false);
+export const EditModeProvider = ({ children, initialOpen = false }: PropsWithChildren<{ initialOpen?: boolean }>) => {
+  const editModeDisclosure = useDisclosure(initialOpen);
+  const [, { open }] = editModeDisclosure;
+
+  useEffect(() => {
+    if (initialOpen) open();
+  }, [initialOpen, open]);
 
   return <EditModeContext.Provider value={editModeDisclosure}>{children}</EditModeContext.Provider>;
 };

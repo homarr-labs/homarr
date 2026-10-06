@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -21,7 +21,6 @@ import {
   Tooltip,
 } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
-import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
@@ -35,8 +34,6 @@ import {
   IconTriangleFilled,
   IconZoomScan,
 } from "@tabler/icons-react";
-import { escapeForRegEx } from "@tiptap/react";
-
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { createId } from "@homarr/common";
@@ -48,10 +45,10 @@ import {
   normalizeReleaseProviderIdentifier,
   releaseProviderKinds,
 } from "@homarr/definitions";
-import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
+import { IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { MaskedImage } from "@homarr/ui";
 
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
@@ -64,13 +61,16 @@ interface FormValidation {
   errors: FormErrors;
 }
 
+const escapeForRegEx = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export const WidgetMultiReleasesRepositoriesInput = ({
   property,
   kind,
   itemId,
 }: CommonWidgetInputProps<"multiReleasesRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
-  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const tRepository = useI18n("widget.releases.option.repositories");
+  const actionT = useI18n("common.action");
   const form = useFormContext();
   const repositories = form.values.options[property] as ReleasesRepository[];
   const { openModal: openEditModal } = useModalAction(RepositoryEditModal);
@@ -230,19 +230,19 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                     })
                   }
                   variant="light"
-                  leftSection={<IconEdit size={15} />}
+                  leftSection={<IconEdit size="var(--mantine-font-size-sm)" />}
                   size="xs"
                 >
-                  {tRepository("edit.label")}
+                  {actionT("edit")}
                 </Button>
 
                 <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
-                  <IconTrash size={15} />
+                  <IconTrash size="var(--mantine-font-size-sm)" />
                 </ActionIcon>
               </Group>
               {Object.keys(form.errors).filter((key) => key.startsWith(`options.${property}.${index}.`)).length > 0 && (
                 <Group align="center" justify="center" gap="xs" bg="red.1">
-                  <IconTriangleFilled size={15} color="var(--mantine-color-red-filled)" />
+                  <IconTriangleFilled size="var(--mantine-font-size-sm)" color="var(--mantine-color-red-filled)" />
                   <Text size="sm" c="red">
                     {tRepository("invalid")}
                   </Text>
@@ -268,23 +268,30 @@ const providersWithAuth: ReleaseProviderKind[] = [
 ];
 
 const ProviderTokensSection = ({ itemId, repositories }: { itemId: string; repositories: ReleasesRepository[] }) => {
-  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const tRepository = useI18n("widget.releases.option.repositories");
+  const utils = clientApi.useUtils();
   const { data: configuredKinds = [], refetch } = clientApi.widget.secrets.getConfiguredKinds.useQuery({ itemId });
   const setSecret = clientApi.widget.secrets.setSecret.useMutation({
-    onSuccess: () => refetch(),
-    onError: (error) => {
+    onSuccess: () => {
+      void refetch();
+      void utils.widget.releases.getLatest.invalidate();
+    },
+    onError: () => {
       showErrorNotification({
-        title: "Failed to save token",
-        message: error.message,
+        title: tRepository("tokens.label"),
+        message: tRepository("tokens.notConfigured"),
       });
     },
   });
   const deleteSecret = clientApi.widget.secrets.deleteSecret.useMutation({
-    onSuccess: () => refetch(),
-    onError: (error) => {
+    onSuccess: () => {
+      void refetch();
+      void utils.widget.releases.getLatest.invalidate();
+    },
+    onError: () => {
       showErrorNotification({
-        title: "Failed to delete token",
-        message: error.message,
+        title: tRepository("tokens.label"),
+        message: tRepository("tokens.notConfigured"),
       });
     },
   });
@@ -332,7 +339,8 @@ const ProviderTokenInput = ({
   onSave: (value: string) => Promise<void>;
   onDelete: () => Promise<void>;
 }) => {
-  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const tRepository = useI18n("widget.releases.option.repositories");
+  const actionT = useI18n("common.action");
   const [value, setValue] = useState("");
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -372,16 +380,16 @@ const ProviderTokenInput = ({
         }}
         style={{ flex: 1 }}
         size="xs"
-        leftSection={<IconKey size={14} />}
+        leftSection={<IconKey size="var(--mantine-font-size-sm)" />}
       />
       {editing && value.trim() && (
         <Button size="xs" onClick={handleSave} loading={saving}>
-          {tRepository("tokens.save")}
+          {actionT("save")}
         </Button>
       )}
       {hasToken && !editing && (
         <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete} loading={saving}>
-          <IconTrash size={14} />
+          <IconTrash size="var(--mantine-font-size-sm)" />
         </ActionIcon>
       )}
     </Group>
@@ -413,17 +421,11 @@ interface RepositoryEditProps {
 }
 
 const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
-  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const tRepository = useI18n("widget.releases.option.repositories");
+  const actionT = useI18n("common.action");
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
-  // Allows user to not select an icon by removing the url from the input,
-  // will only try and get an icon if the name or identifier changes
-  const [autoSetIcon, setAutoSetIcon] = useState(false);
-
-  // Debounce the name value with 200ms delay
-  const [debouncedName] = useDebouncedValue(tempRepository.name, 800);
-
   const handleConfirm = useCallback(() => {
     setLoading(true);
 
@@ -447,25 +449,6 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
   const handleChange = useCallback((changedValue: Partial<ReleasesRepository>) => {
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
   }, []);
-
-  // Auto-select icon based on identifier formatted name with debounced search
-  const { data: iconsData } = clientApi.icon.findIcons.useQuery(
-    {
-      searchText: debouncedName,
-    },
-    {
-      enabled: autoSetIcon && (debouncedName?.length ?? 0) > 3,
-    },
-  );
-
-  useEffect(() => {
-    if (autoSetIcon && debouncedName && !tempRepository.iconUrl && iconsData?.icons) {
-      const bestMatch = findBestIconMatch(debouncedName, iconsData.icons);
-      if (bestMatch) {
-        handleChange({ iconUrl: bestMatch });
-      }
-    }
-  }, [debouncedName, iconsData, tempRepository, handleChange, autoSetIcon]);
 
   return (
     <Stack>
@@ -498,8 +481,6 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
               identifier: event.currentTarget.value,
               name,
             });
-
-            if (event.currentTarget.value) setAutoSetIcon(true);
           }}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
           style={{ flex: 0.7 }}
@@ -520,11 +501,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <TextInput
           label={tRepository("name.label")}
           value={tempRepository.name ?? ""}
-          onChange={(event) => {
-            handleChange({ name: event.currentTarget.value });
-
-            if (event.currentTarget.value) setAutoSetIcon(true);
-          }}
+          onChange={(event) => handleChange({ name: event.currentTarget.value })}
           error={formErrors[`${innerProps.fieldPath}.name`]}
           style={{ flex: 0.3 }}
         />
@@ -533,9 +510,9 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
           <IconPicker
             withAsterisk={false}
             value={tempRepository.iconUrl ?? ""}
+            suggestedSearch={tempRepository.name || tempRepository.identifier}
             onChange={(url) => {
               if (url === "") {
-                setAutoSetIcon(false);
                 handleChange({ iconUrl: undefined });
               } else {
                 handleChange({ iconUrl: url });
@@ -609,11 +586,11 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
       <Divider my={"sm"} />
       <Group justify="flex-end">
         <Button variant="default" onClick={handleCancel} color="gray.5">
-          {tRepository("editForm.cancel.label")}
+          {actionT("cancel")}
         </Button>
 
         <Button data-autofocus onClick={handleConfirm} loading={loading}>
-          {tRepository("editForm.confirm.label")}
+          {actionT("confirm")}
         </Button>
       </Group>
     </Stack>
@@ -644,7 +621,7 @@ const ImportRepositorySelect = ({
   disabled = false,
   onImageSelectionChanged = undefined,
 }: ImportRepositorySelectProps) => {
-  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const tRepository = useI18n("widget.releases.option.repositories");
   const provider = repository.provider;
 
   return (
@@ -720,7 +697,8 @@ interface RepositoryImportProps {
 }
 
 const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, actions }) => {
-  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const tRepository = useI18n("widget.releases.option.repositories");
+  const actionT = useI18n("common.action");
   const [loading, setLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState([] as ReleasesRepositoryImport[]);
 
@@ -880,11 +858,11 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
       <Group justify="flex-end">
         <Button variant="default" onClick={actions.closeModal} color="gray.5">
-          {tRepository("editForm.cancel.label")}
+          {actionT("cancel")}
         </Button>
 
         <Button onClick={handleConfirm} loading={loading} disabled={selectedImages.length === 0}>
-          {tRepository("editForm.confirm.label")}
+          {actionT("confirm")}
         </Button>
       </Group>
     </Stack>

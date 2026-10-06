@@ -1,9 +1,9 @@
 import { defineRouting } from "next-intl/routing";
 
-import { localeCookieKey } from "@homarr/definitions";
+import { localeCookieKey } from "@homarr/definitions/cookie";
 
-import type { SupportedLanguage } from "./config";
-import { supportedLanguages } from "./config";
+import type { SupportedLanguage } from "./languages";
+import { supportedLanguages } from "./languages";
 
 export const createRouting = (defaultLocale: SupportedLanguage) =>
   defineRouting({

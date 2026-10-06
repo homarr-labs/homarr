@@ -1,4 +1,4 @@
-import type { ForwardedRef, ReactNode } from "react";
+import type { FocusEventHandler, ForwardedRef, PointerEventHandler, ReactNode } from "react";
 import { forwardRef } from "react";
 import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon } from "@mantine/core";
@@ -8,12 +8,17 @@ import { Link } from "@homarr/ui";
 type HeaderButtonProps = (
   | {
       onClick?: () => void;
+      onFocus?: FocusEventHandler<HTMLButtonElement>;
+      onPointerEnter?: PointerEventHandler<HTMLButtonElement>;
     }
   | {
       href: string;
     }
 ) & {
   children: ReactNode;
+  onFocus?: () => void;
+  onPointerDown?: () => void;
+  onPointerEnter?: () => void;
 } & Partial<ActionIconProps>;
 
 const headerButtonActionIconProps: ActionIconProps = {

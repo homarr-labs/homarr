@@ -13,6 +13,7 @@ const BESZEL_PASSWORD = process.env.BESZEL_TEST_PASSWORD ?? "";
 const closeAgent = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 
 vi.mock("@homarr/redis", () => ({
+  getIntegrationSessionStoreKey: (integrationId: string) => `session-store:${integrationId}`,
   createGetSetChannel: () => ({
     getAsync: vi.fn().mockResolvedValue(null),
     setAsync: vi.fn().mockResolvedValue(undefined),

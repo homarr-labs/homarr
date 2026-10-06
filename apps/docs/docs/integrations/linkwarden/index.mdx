@@ -1,0 +1,39 @@
+---
+title: "Linkwarden"
+description: "Self-hosted bookmark manager for organizing and archiving links."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { linkwardenIntegration } from ".";
+import { statsWidget } from "@site/docs/widgets/stats";
+
+<IntegrationHeader integration={linkwardenIntegration} categories={["Bookmarks"]} />
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: statsWidget }]} />
+
+The Linkwarden stats widget is documented at [/docs/widgets/stats](/docs/widgets/stats).
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: [
+        "Open Linkwarden and go to your account settings.",
+        "Create an API token or access token.",
+        "Copy the token into Homarr's API Key field.",
+      ],
+    },
+  ]}
+/>

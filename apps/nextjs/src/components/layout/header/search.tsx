@@ -3,7 +3,7 @@
 import { TextInput, UnstyledButton } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
-import { openSpotlight } from "@homarr/spotlight";
+import { openSpotlight } from "@homarr/spotlight/open";
 import { useI18n } from "@homarr/translation/client";
 
 import { HeaderButton } from "./button";
@@ -14,12 +14,13 @@ export const DesktopSearchInput = () => {
 
   return (
     <TextInput
+      data-homarr-dev-benchmark-interaction="search"
       component={UnstyledButton}
       className={classes.desktopSearch}
       w={400}
       size="sm"
       leftSection={<IconSearch size={20} stroke={1.5} />}
-      onClick={openSpotlight}
+      onClick={() => openSpotlight()}
       radius="xl"
     >
       {`${t("search.placeholder")}...`}
@@ -27,9 +28,15 @@ export const DesktopSearchInput = () => {
   );
 };
 
-export const MobileSearchButton = () => {
+export const MobileSearchButton = ({ alwaysVisible = false }: { alwaysVisible?: boolean }) => {
+  const t = useI18n();
   return (
-    <HeaderButton onClick={openSpotlight} className={classes.mobileSearch}>
+    <HeaderButton
+      data-homarr-dev-benchmark-interaction="search"
+      onClick={() => openSpotlight()}
+      className={alwaysVisible ? undefined : classes.mobileSearch}
+      aria-label={t("search.placeholder")}
+    >
       <IconSearch size={20} stroke={1.5} />
     </HeaderButton>
   );

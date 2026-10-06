@@ -35,11 +35,10 @@ import {
 
 import { capitalize, objectEntries } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
-import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
+import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { createMetaTitle } from "~/metadata";
 import { getDependenciesAsync, getPackageVersion } from "~/versions/package-reader";
 import githubContributors from "@static-data/contributors.json";
 import openCollectiveContributors from "@static-data/opencollective-contributors.json";
@@ -47,15 +46,15 @@ import crowdinContributors from "@static-data/translators.json";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
-  const t = await getScopedI18n("management");
+  const t = await getI18n("management");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 
 export default async function AboutPage() {
-  const t = await getScopedI18n("management.page.about");
+  const t = await getI18n("management.page.about");
   const version = getPackageVersion();
   const dependencies = await getDependenciesAsync();
 

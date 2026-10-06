@@ -1,7 +1,9 @@
+import { invariantTechnicalLabels } from "./invariant-technical-labels";
+
 export const kubernetesNodeStates = ["Ready", "NotReady"] as const;
 export const kubernetesNamespaceStates = ["Active", "Terminating"] as const;
 export const kubernetesResourceTypes = ["Reserved", "Used"] as const;
-export const kubernetesCapacityTypes = ["Pods", "CPU", "Memory"] as const;
+export const kubernetesCapacityTypes = ["Pods", invariantTechnicalLabels.cpu, "Memory"] as const;
 export const kubernetesLabelResourceTypes = [
   "configmaps",
   "pods",
@@ -12,7 +14,6 @@ export const kubernetesLabelResourceTypes = [
   "services",
   "volumes",
 ] as const;
-
 export type KubernetesNodeState = (typeof kubernetesNodeStates)[number];
 export type KubernetesNamespaceState = (typeof kubernetesNamespaceStates)[number];
 export type KubernetesResourceType = (typeof kubernetesResourceTypes)[number];
@@ -73,8 +74,8 @@ export interface KubernetesNamespace extends KubernetesBaseResource {
 export interface KubernetesNode {
   name: string;
   status: KubernetesNodeState;
-  allocatableCpuPercentage: number;
-  allocatableRamPercentage: number;
+  allocatableCpuPercentage: number | null;
+  allocatableRamPercentage: number | null;
   podsCount: number;
   operatingSystem?: string;
   architecture?: string;
@@ -88,6 +89,7 @@ export interface KubernetesCluster {
   kubernetesVersion: string;
   architecture: string;
   nodeCount: number;
+  metricsAvailable: boolean;
   capacity: KubernetesCapacity[];
 }
 

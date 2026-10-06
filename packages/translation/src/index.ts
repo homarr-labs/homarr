@@ -1,5 +1,5 @@
-import type { SupportedLanguage } from "./config";
-import { supportedLanguages } from "./config";
+import type { SupportedLanguage } from "./languages";
+import { supportedLanguages } from "./languages";
 import type { stringOrTranslation, TranslationFunction } from "./type";
 
 export * from "./type";

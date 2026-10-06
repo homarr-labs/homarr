@@ -49,7 +49,8 @@ interface GroupsTableProps {
 }
 
 export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableProps) => {
-  const t = useI18n();
+  const tGroup = useI18n("group");
+  const tCommon = useI18n("common");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [groupIds, setGroupIds] = useState(groups.map((group) => group.id));
   const isDirty = useMemo(
@@ -67,12 +68,12 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
       {
         onSuccess() {
           showSuccessNotification({
-            message: t("group.action.changePosition.notification.success.message"),
+            message: tGroup("action.changePosition.notification.success.message"),
           });
         },
         onError() {
           showSuccessNotification({
-            message: t("group.action.changePosition.notification.error.message"),
+            message: tGroup("action.changePosition.notification.error.message"),
           });
         },
       },
@@ -126,8 +127,8 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
         <Table striped highlightOnHover>
           <TableThead>
             <TableTr>
-              <TableTh>{t("group.field.name")}</TableTh>
-              <TableTh>{t("group.field.members")}</TableTh>
+              <TableTh>{tCommon("field.name")}</TableTh>
+              <TableTh>{tGroup("field.members")}</TableTh>
             </TableTr>
           </TableThead>
           <TableTbody>
@@ -253,7 +254,7 @@ interface SaveAffixProps {
 }
 
 const SaveAffix = ({ visible, isPending, onDiscard, onSave }: SaveAffixProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
 
   return (
     <div style={{ position: "sticky", bottom: 20 }}>
@@ -261,13 +262,13 @@ const SaveAffix = ({ visible, isPending, onDiscard, onSave }: SaveAffixProps) =>
         {(transitionStyles) => (
           <Card style={transitionStyles}>
             <Group justify="space-between">
-              <Text fw={500}>{t("common.unsavedChanges")}</Text>
+              <Text fw={500}>{tCommon("unsavedChanges")}</Text>
               <Group>
                 <Button disabled={isPending} onClick={onDiscard}>
-                  {t("common.action.discard")}
+                  {tCommon("action.discard")}
                 </Button>
                 <Button loading={isPending} onClick={onSave}>
-                  {t("common.action.saveChanges")}
+                  {tCommon("action.saveChanges")}
                 </Button>
               </Group>
             </Group>

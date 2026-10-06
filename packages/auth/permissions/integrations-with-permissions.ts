@@ -6,31 +6,28 @@ import { groupMembers, integrationGroupPermissions, integrationUserPermissions }
 import { constructIntegrationPermissions } from "./integration-permissions";
 
 export const getIntegrationsWithPermissionsAsync = async (session: Session | null) => {
-  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, session?.user.id ?? ""),
-  });
-  const integrations = await db.query.integrations.findMany({
+  const groupPermissionWhere = session
+    ? inArray(
+        integrationGroupPermissions.groupId,
+        db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, session.user.id)),
+      )
+    : eq(integrationGroupPermissions.groupId, "");
+  const integrationRows = await db.query.integrations.findMany({
     columns: {
       id: true,
-      name: true,
-      url: true,
-      kind: true,
     },
     with: {
       userPermissions: {
         where: eq(integrationUserPermissions.userId, session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: inArray(
-          integrationGroupPermissions.groupId,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
+        where: groupPermissionWhere,
       },
     },
   });
 
-  return integrations.map(({ userPermissions, groupPermissions, ...integration }) => ({
-    ...integration,
+  return integrationRows.map(({ id, userPermissions, groupPermissions }) => ({
+    id,
     permissions: constructIntegrationPermissions({ userPermissions, groupPermissions }, session),
   }));
 };

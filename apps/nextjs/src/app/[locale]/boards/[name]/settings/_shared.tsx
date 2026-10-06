@@ -11,3 +11,13 @@ export const useSavePartialSettingsMutation = (board: Board) => {
     },
   });
 };
+
+export const useSaveLayoutsMutation = (board: Board) => {
+  const utils = clientApi.useUtils();
+  return clientApi.board.saveLayouts.useMutation({
+    onSettled() {
+      void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.board.getHomeBoard.invalidate();
+    },
+  });
+};

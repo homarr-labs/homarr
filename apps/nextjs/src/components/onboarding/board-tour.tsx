@@ -1,37 +1,28 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { createDocumentationLink } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
+import { TourTargetsProvider } from "~/components/layout/header/tour-target";
 import { TourShell } from "./tour-shell";
 import { TourStepContent } from "./tour-step-content";
 
 export const BoardTourProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("onboardingTour.board");
+  const t = useI18n("onboardingTour.board");
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
-  const utils = clientApi.useUtils();
-  const { data: tourStatus } = clientApi.user.getTourStatus.useQuery();
-  const { mutate: completeTour } = clientApi.user.completeTour.useMutation({
-    onSuccess() {
-      void utils.user.getTourStatus.invalidate();
-    },
-  });
-
-  const started = tourStatus !== undefined && !tourStatus.completedBoardTour;
+  const [started, setStarted] = useState(true);
+  const { mutate: completeTour } = clientApi.user.completeTour.useMutation();
 
   const handleEnd = () => {
-    utils.user.getTourStatus.setData(undefined, {
-      completedManageTour: tourStatus?.completedManageTour ?? false,
-      completedBoardTour: true,
-    });
+    setStarted(false);
     completeTour({ tour: "board" });
   };
 
@@ -76,16 +67,6 @@ export const BoardTourProvider = ({ children }: PropsWithChildren) => {
         ),
       },
       {
-        id: "board-switcher",
-        title: t("switcher.title"),
-        content: (
-          <TourStepContent
-            description={t("switcher.description")}
-            documentationHref={createDocumentationLink("/docs/management/boards")}
-          />
-        ),
-      },
-      {
         id: "board-user-menu",
         title: t("userMenu.title"),
         content: (
@@ -101,8 +82,10 @@ export const BoardTourProvider = ({ children }: PropsWithChildren) => {
   }, [hasChangeAccess, t]);
 
   return (
-    <TourShell steps={steps} started={started} onEnd={handleEnd} position={{ base: "bottom", sm: "left" }}>
-      {children}
-    </TourShell>
+    <TourTargetsProvider enabled={started}>
+      <TourShell steps={steps} started={started} onEnd={handleEnd} position={{ base: "bottom", md: "left" }}>
+        {children}
+      </TourShell>
+    </TourTargetsProvider>
   );
 };

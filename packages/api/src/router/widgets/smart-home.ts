@@ -1,15 +1,14 @@
 import { z } from "zod/v4";
+import { TRPCError } from "@trpc/server";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
-import { smartHomeEntityStateRequestHandler } from "@homarr/request-handler/smart-home-entity-state";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
+import {
+  smartHomeEntityStateRequestHandler,
+  toSafeEntityDetails,
+} from "@homarr/request-handler/smart-home-entity-state";
 
-import type { IntegrationAction } from "../../middlewares/integration";
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
-
-const createSmartHomeIntegrationMiddleware = (action: IntegrationAction) =>
-  createOneIntegrationMiddleware(action, ...getIntegrationKindsByCategory("smartHomeServer"));
 
 export const smartHomeRouter = createTRPCRouter({
   entityState: publicProcedure
@@ -21,11 +20,26 @@ export const smartHomeRouter = createTRPCRouter({
       },
     })
     .input(z.object({ entityId: z.string() }))
-    .concat(createSmartHomeIntegrationMiddleware("query"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
     .query(async ({ ctx: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
       const { data } = await innerHandler.getDataAsync();
-      return data;
+      return data.state;
+    }),
+  entityDetails: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get the state, attributes, and update timestamps for a Home Assistant entity. REQUIRED: integrationId (Home Assistant integration ID), entityId (for example 'sensor.temperature')",
+      },
+    })
+    .input(z.object({ entityId: z.string() }))
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
+    .query(async ({ ctx: { integration }, input }) => {
+      const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
+      const { data } = await innerHandler.getDataAsync();
+      return toSafeEntityDetails(data);
     }),
   switchEntity: protectedProcedure
     .meta({
@@ -35,13 +49,16 @@ export const smartHomeRouter = createTRPCRouter({
           "Toggle a Home Assistant entity (turn on/off a light, switch, etc.). REQUIRED: integrationId (Home Assistant integration ID from integration_all), entityId (e.g. 'light.living_room')",
       },
     })
-    .concat(createSmartHomeIntegrationMiddleware("interact"))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-entityState"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       const success = await client.triggerToggleAsync(input.entityId);
-
-      return success;
+      if (!success) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not toggle the entity" });
+      }
+      await smartHomeEntityStateRequestHandler.invalidateCacheAsync([integration.id]);
+      return true;
     }),
   executeAutomation: protectedProcedure
     .meta({
@@ -51,10 +68,15 @@ export const smartHomeRouter = createTRPCRouter({
           "Trigger a Home Assistant automation by its ID. REQUIRED: integrationId (Home Assistant integration ID from integration_all), automationId (the automation entity ID)",
       },
     })
-    .concat(createSmartHomeIntegrationMiddleware("interact"))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-executeAutomation"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
-      await client.triggerAutomationAsync(input.automationId);
+      const success = await client.triggerAutomationAsync(input.automationId);
+      if (!success) {
+        throw new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not execute the automation" });
+      }
+      await smartHomeEntityStateRequestHandler.invalidateCacheAsync([integration.id]);
+      return true;
     }),
 });

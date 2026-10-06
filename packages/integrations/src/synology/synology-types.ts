@@ -36,6 +36,14 @@ export const synologyAuthResponseSchema = synologyEnvelopeSchema.extend({
 
 const numericString = z.union([z.number(), z.string()]);
 
+export function parseSynologyNumber(value: number | string | undefined): number | null {
+  if (value === undefined) {
+    return null;
+  }
+  const parsed = typeof value === "number" ? value : Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 export const synologySystemInfoDataSchema = z
   .object({
     up_time: z.string().optional(),
@@ -78,6 +86,7 @@ export const synologyStorageV2VolumeSchema = z
 
 export const synologyStorageV2DataSchema = z.object({
   volumes: z.array(synologyStorageV2VolumeSchema).optional(),
+  vol_info: z.array(synologyVolumeInfoSchema).optional(),
 });
 
 export const synologyUtilizationCpuSchema = z.object({

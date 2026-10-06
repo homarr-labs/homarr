@@ -16,6 +16,7 @@
     "./client": "./src/client/index.ts",
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",
+    "./languages": "./src/languages.ts",
     "./request": "./src/request.ts",
     "./dayjs": "./src/dayjs.ts"
   },

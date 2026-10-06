@@ -13,8 +13,11 @@ export const usersDelete = command({
   // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     if (!options.id && !options.username) {
-      console.error("Either --id or --username must be provided");
-      return;
+      throw new Error("Either --id or --username must be provided");
+    }
+
+    if (options.id && options.username) {
+      throw new Error("Use either --id or --username, not both");
     }
 
     let user;
@@ -29,8 +32,7 @@ export const usersDelete = command({
     }
 
     if (!user) {
-      console.error("User not found");
-      return;
+      throw new Error("User not found");
     }
 
     await db.delete(users).where(eq(users.id, user.id));

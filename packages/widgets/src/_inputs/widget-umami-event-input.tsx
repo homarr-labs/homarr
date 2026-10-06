@@ -3,14 +3,15 @@
 import { Select, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
 export const WidgetUmamiEventInput = ({ property, kind }: CommonWidgetInputProps<"umamiEventName">) => {
-  const t = useScopedI18n("widget.umami.option.eventName");
+  const t = useI18n("widget.umami.option.eventName");
+  const tEvents = useI18n("widget.umami.option.events");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
@@ -25,7 +26,7 @@ export const WidgetUmamiEventInput = ({ property, kind }: CommonWidgetInputProps
   if (!websiteId || integrationIds.length === 0) {
     return (
       <Text size="sm" c="dimmed">
-        {t("configureWebsiteFirst")}
+        {tEvents("configureWebsiteFirst")}
       </Text>
     );
   }
@@ -36,9 +37,9 @@ export const WidgetUmamiEventInput = ({ property, kind }: CommonWidgetInputProps
     <Select
       label={tInput("label")}
       description={tInput("description")}
-      placeholder={isPending ? t("loading") : undefined}
+      placeholder={isPending ? tEvents("loading") : undefined}
       searchable
-      nothingFoundMessage={t("noEvents")}
+      nothingFoundMessage={tEvents("noEvents")}
       data={data}
       {...form.getInputProps(`options.${property}`)}
     />

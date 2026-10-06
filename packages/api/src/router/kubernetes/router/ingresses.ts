@@ -5,14 +5,22 @@ import type { KubernetesIngress, KubernetesIngressPath, KubernetesIngressRuleAnd
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 export const ingressesRouter = createTRPCRouter({
   getIngresses: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List Kubernetes ingress inventory for a context. Get the required contextId from kubernetes_contexts_getContexts. Requires admin permission.",
+      },
+    })
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesIngress[]> => {
-      const { networkingApi } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesIngress[]> => {
+      const { networkingApi } = getKubernetesClient(input.contextId);
       try {
         const ingresses = await networkingApi.listIngressForAllNamespaces();
 
