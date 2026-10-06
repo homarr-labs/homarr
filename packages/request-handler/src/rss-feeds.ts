@@ -11,10 +11,11 @@ const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
 export const rssFeedsRequestHandler = createWidgetRequestHandler({
   // Authorized editors can supply arbitrary URLs, so keep this cache process-local and bounded.
-  async requestAsync(input: { url: string; count: number }, signal) {
+  async requestAsync(input: { url: string; count: number; descriptionMaxLength: number }, signal) {
     const result = (await extract(
       input.url,
       {
+        descriptionMaxLen: input.descriptionMaxLength,
         getExtraEntryFields: (feedEntry) => {
           const media = attemptGetImageFromEntry(input.url, feedEntry);
           if (!media) {
