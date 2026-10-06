@@ -431,4 +431,12 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/custom-api"
   | "/docs/widgets/assistant"
   | "/docs/widgets/whats-up-docker"
-  | "/docs/widgets/llama-cpp";
+  | "/docs/widgets/llama-cpp"
+  | "/docs/widgets/wazuh-agents"
+  | "/docs/widgets/wazuh-alerts"
+  | "/docs/widgets/wazuh-summary"
+  | "/docs/widgets/wazuh-timeline"
+  | "/docs/widgets/wazuh-top-list"
+  | "/docs/widgets/wazuh-vulnerabilities"
+  | "/docs/widgets/wazuh-fim"
+  | "/docs/widgets/wazuh-auth-failures";

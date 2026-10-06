@@ -12,6 +12,7 @@ import { notificationsWidget } from ".";
 import { ntfyIntegration } from "@site/docs/integrations/ntfy";
 import { nextcloudIntegration } from "@site/docs/integrations/nextcloud";
 import { gotifyIntegration } from "@site/docs/integrations/gotify";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
 
 <WidgetHeader widget={notificationsWidget} categories={["Notifications", "Messaging"]} />
 
@@ -21,7 +22,12 @@ available service icons.
 ### Supported Integrations
 
 <WidgetIntegrations
-  items={[{ integration: ntfyIntegration }, { integration: nextcloudIntegration }, { integration: gotifyIntegration }]}
+  items={[
+    { integration: ntfyIntegration },
+    { integration: nextcloudIntegration },
+    { integration: gotifyIntegration },
+    { integration: wazuhIntegration, note: "High and critical alerts of the last 24 hours" },
+  ]}
 />
 
 ### Adding the widget
@@ -38,3 +44,12 @@ Scripts, event handlers, and unsafe links are removed; remote images in formatte
 The service link is a separate icon, so selecting message text or using message links does not open Gotify.
 Deleting a Gotify notification requires **Interact** permission on its integration and permanently removes the
 message from Gotify for all clients. Other notification integrations remain read-only.
+
+### Wazuh alerts
+
+With the [Wazuh integration](/docs/integrations/wazuh), the widget lists Wazuh alerts with rule level 12 and above
+(high and critical, the level at which Wazuh sends email alerts by default) from the last 24 hours, newest first, up
+to 25 alerts. Each notification shows the rule description as its title, and the level, rule, agent, source IP and
+MITRE ATT&CK techniques in its body. When the integration has a **Dashboard URL**, the link opens the alert in the
+Wazuh dashboard. Alerts are read from the Wazuh indexer, so the integration needs indexer credentials. For other
+levels or time windows, use the [Wazuh Alerts Feed](/docs/widgets/wazuh-alerts) widget.

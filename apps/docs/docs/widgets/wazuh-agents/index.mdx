@@ -1,0 +1,45 @@
+---
+title: "Wazuh Agents"
+description: "Sortable list of Wazuh agents with status, OS, version and last keepalive."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wazuhAgentsWidget } from ".";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+
+<WidgetHeader widget={wazuhAgentsWidget} categories={["Security", "Monitoring"]} />
+
+Count tiles for active, disconnected, never connected and pending agents (click one to filter), followed by a sortable table with a status dot, name and ID, IP address, operating system, Wazuh version, last keepalive and groups. Agents running an older Wazuh version than the newest one are highlighted.
+
+Wazuh rule levels are grouped into four severities across the Wazuh widgets: **low** (0-6), **medium** (7-11), **high** (12-14) and **critical** (15 and above).
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wazuhIntegration,
+      note: "Uses the server API when configured, otherwise indexer snapshots",
+    },
+  ]}
+/>
+
+### Requirements
+
+This widget works with either connection. With server API credentials it shows the live agent status. With indexer credentials only, it reads the latest `wazuh-monitoring-*` snapshot, which the Wazuh dashboard writes about every 15 minutes, and shows how old that snapshot is. See the [Wazuh integration](/docs/integrations/wazuh) for the credential options, certificates and the optional dashboard URL used for links.
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={wazuhAgentsWidget.configuration} />

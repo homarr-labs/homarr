@@ -1,0 +1,45 @@
+---
+title: "Wazuh Vulnerabilities"
+description: "Vulnerability counts, top CVEs and the most vulnerable agents."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wazuhVulnerabilitiesWidget } from ".";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+
+<WidgetHeader widget={wazuhVulnerabilitiesWidget} categories={["Security"]} />
+
+Counts of vulnerability findings by severity with a distribution bar, the top CVEs (ID, affected packages, score and number of affected agents) and the agents with the most critical and high findings.
+
+Wazuh rule levels are grouped into four severities across the Wazuh widgets: **low** (0-6), **medium** (7-11), **high** (12-14) and **critical** (15 and above).
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wazuhIntegration,
+      note: "Reads from the Wazuh indexer",
+    },
+  ]}
+/>
+
+### Requirements
+
+Findings come from the `wazuh-states-vulnerabilities-*` index on the Wazuh **indexer** (Wazuh 4.8 and later), which needs vulnerability detection enabled on the Wazuh manager. The integration needs indexer credentials. See the [Wazuh integration](/docs/integrations/wazuh) for the credential options, certificates and the optional dashboard URL used for links.
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={wazuhVulnerabilitiesWidget.configuration} />

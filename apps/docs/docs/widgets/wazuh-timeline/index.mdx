@@ -1,0 +1,45 @@
+---
+title: "Wazuh Alerts Timeline"
+description: "Stacked chart of Wazuh alerts over time by severity."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wazuhTimelineWidget } from ".";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+
+<WidgetHeader widget={wazuhTimelineWidget} categories={["Security", "Charts"]} />
+
+A stacked area or bar chart of alerts over time, split by severity, with the total per severity in the legend. The interval is picked automatically for the range unless you choose one.
+
+Wazuh rule levels are grouped into four severities across the Wazuh widgets: **low** (0-6), **medium** (7-11), **high** (12-14) and **critical** (15 and above).
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wazuhIntegration,
+      note: "Reads from the Wazuh indexer",
+    },
+  ]}
+/>
+
+### Requirements
+
+The chart is built from the Wazuh **indexer** (`wazuh-alerts-*`), so the integration needs indexer credentials. See the [Wazuh integration](/docs/integrations/wazuh) for the credential options, certificates and the optional dashboard URL used for links.
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={wazuhTimelineWidget.configuration} />

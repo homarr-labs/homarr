@@ -1,0 +1,47 @@
+---
+title: "Wazuh Alerts Feed"
+description: "Recent Wazuh alerts with level, MITRE ATT&CK techniques, agent and source IP."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wazuhAlertsWidget } from ".";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+
+<WidgetHeader widget={wazuhAlertsWidget} categories={["Security", "Alerts"]} />
+
+The most recent alerts at or above a minimum rule level. Each row shows a colour-coded level badge, the rule description, the agent, the source IP (public addresses are highlighted), MITRE ATT&CK technique chips and the relative time. When the integration has a **Dashboard URL**, clicking a row opens the alert in the Wazuh dashboard.
+
+To show Wazuh alerts next to messages from other services, add the Wazuh integration to the [Notifications](/docs/widgets/notifications) widget instead. It lists high and critical alerts (rule level 12 and above) of the last 24 hours.
+
+Wazuh rule levels are grouped into four severities across the Wazuh widgets: **low** (0-6), **medium** (7-11), **high** (12-14) and **critical** (15 and above).
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wazuhIntegration,
+      note: "Reads from the Wazuh indexer",
+    },
+  ]}
+/>
+
+### Requirements
+
+Alerts are read from the Wazuh **indexer** (`wazuh-alerts-*`); the server API has no alert search. The integration needs indexer credentials. See the [Wazuh integration](/docs/integrations/wazuh) for the credential options, certificates and the optional dashboard URL used for links.
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={wazuhAlertsWidget.configuration} />

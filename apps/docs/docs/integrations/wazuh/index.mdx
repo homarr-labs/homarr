@@ -5,13 +5,42 @@ hide_title: true
 ---
 
 import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
 import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { wazuhIntegration } from ".";
+import { wazuhSummaryWidget } from "@site/docs/widgets/wazuh-summary";
+import { wazuhTimelineWidget } from "@site/docs/widgets/wazuh-timeline";
+import { wazuhAuthFailuresWidget } from "@site/docs/widgets/wazuh-auth-failures";
+import { wazuhAgentsWidget } from "@site/docs/widgets/wazuh-agents";
+import { wazuhAlertsWidget } from "@site/docs/widgets/wazuh-alerts";
+import { wazuhVulnerabilitiesWidget } from "@site/docs/widgets/wazuh-vulnerabilities";
+import { wazuhFimWidget } from "@site/docs/widgets/wazuh-fim";
+import { wazuhTopListWidget } from "@site/docs/widgets/wazuh-top-list";
+import { notificationsWidget } from "@site/docs/widgets/notifications";
 
 <IntegrationHeader integration={wazuhIntegration} categories={["Security"]} />
 
-The Wazuh integration powers the **Wazuh agents**, **Wazuh alerts** and **Wazuh security summary** widgets.
+The Wazuh integration powers eight security widgets and can feed high and critical alerts into the Notifications widget.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites
+  items={[
+    { widget: wazuhSummaryWidget, note: "Needs the indexer" },
+    { widget: wazuhTimelineWidget, note: "Needs the indexer" },
+    { widget: wazuhAuthFailuresWidget, note: "Needs the indexer" },
+    { widget: wazuhAgentsWidget, note: "Server API, or indexer snapshots" },
+    { widget: wazuhAlertsWidget, note: "Needs the indexer" },
+    { widget: wazuhVulnerabilitiesWidget, note: "Needs the indexer and vulnerability detection" },
+    { widget: wazuhFimWidget, note: "Needs the indexer" },
+    { widget: wazuhTopListWidget, note: "Needs the indexer" },
+    {
+      widget: notificationsWidget,
+      note: "High and critical alerts (rule level 12+) of the last 24 hours; needs the indexer",
+    },
+  ]}
+/>
 
 Wazuh stores data in two places, and each uses its own users:
 
@@ -26,11 +55,11 @@ Alerts and severity counts need the indexer. Without server API credentials, age
 
 Pick the credential option that matches what you can reach:
 
-| Option                              | URL field                              | Widgets                     |
-| ----------------------------------- | -------------------------------------- | --------------------------- |
-| Username & Password                 | Server API, e.g. `https://wazuh:55000` | Agents, manager version     |
-| Username & Password & Indexer …     | Server API, indexer URL as a secret    | All                         |
-| Indexer username & Indexer password | Indexer, e.g. `https://wazuh:9200`     | All (agents from snapshots) |
+| Option                              | URL field                              | Widgets                                       |
+| ----------------------------------- | -------------------------------------- | --------------------------------------------- |
+| Username & Password                 | Server API, e.g. `https://wazuh:55000` | Agents, alert severity (manager version only) |
+| Username & Password & Indexer …     | Server API, indexer URL as a secret    | All                                           |
+| Indexer username & Indexer password | Indexer, e.g. `https://wazuh:9200`     | All (agents from snapshots)                   |
 
 ### Secrets
 
@@ -47,7 +76,19 @@ Pick the credential option that matches what you can reach:
   ]}
 />
 
+### Dashboard URL (optional)
+
+Enter the URL of your Wazuh dashboard, for example `https://wazuh.example.com`, in the optional **Dashboard URL** field. The widgets and notifications then link into the dashboard: events filtered by query, agent and time range, agent pages, vulnerability detection, file integrity and MITRE ATT&CK. Without it, the widgets use the URL of the linked app when that differs from the integration URL.
+
+### Certificates
+
+Wazuh ships with self-signed certificates, and the server API and the indexer use different ones:
+
+- The **server API** certificate (port `55000`) is self-signed. **Test connection** offers to trust it.
+- The **indexer** certificate (port `9200`) is signed by the Wazuh root CA (`/etc/wazuh-indexer/certs/root-ca.pem` on the indexer host). When the indexer URL is set, test connection checks it after the server API and shows the indexer certificate. Because it is not self-signed, upload the root CA from that dialog or under **Management → Tools → Certificates**.
+
+Both URLs use the trusted certificates for every request, so nothing needs restarting after a certificate is added. The host in each URL must be a name or IP address listed in the certificate (the default indexer certificate covers `wazuh-indexer` and the addresses given at install). Otherwise the widgets report that the certificate does not match the URL; reissue the certificate or trust the hostname from the test connection dialog.
+
 ### Notes
 
-- Wazuh ships with self-signed certificates. The server API certificate can be trusted from the test connection dialog. The indexer certificate is signed by the Wazuh root CA (`/etc/wazuh-indexer/certs/root-ca.pem`), which has to be uploaded under **Settings → Certificates**.
 - A default all-in-one install binds the indexer to `127.0.0.1`. Set `network.host` in `/etc/wazuh-indexer/opensearch.yml` if Homarr runs on another host.

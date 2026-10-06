@@ -1,0 +1,45 @@
+---
+title: "Wazuh Top List"
+description: "Top rules, agents, source IPs or MITRE ATT&CK tactics and techniques by alert count."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wazuhTopListWidget } from ".";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+
+<WidgetHeader widget={wazuhTopListWidget} categories={["Security"]} />
+
+Ranks alerts by rule, agent, source IP (`data.srcip`), MITRE ATT&CK tactic or MITRE ATT&CK technique, with an inline bar per entry. Rules show their level and ID, and every entry shows how many agents it involves.
+
+Wazuh rule levels are grouped into four severities across the Wazuh widgets: **low** (0-6), **medium** (7-11), **high** (12-14) and **critical** (15 and above).
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wazuhIntegration,
+      note: "Reads from the Wazuh indexer",
+    },
+  ]}
+/>
+
+### Requirements
+
+The ranking is an aggregation on the Wazuh **indexer** (`wazuh-alerts-*`), so the integration needs indexer credentials. See the [Wazuh integration](/docs/integrations/wazuh) for the credential options, certificates and the optional dashboard URL used for links.
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={wazuhTopListWidget.configuration} />
