@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { isRecord } from "@homarr/common";
+import { useSession } from "@homarr/auth/client";
 import { useI18n } from "@homarr/translation/client";
 import type { CustomJsxRendererMessages, CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
@@ -23,6 +24,18 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   const t = useI18n("widget.customApi.customJsx");
   const actionT = useI18n("common.action");
   const diagnosticsT = useI18n("customWidget.editor.diagnostics");
+  const { data: session } = useSession();
+  const userContext = useMemo(
+    () =>
+      session
+        ? {
+            name: session.user.name ?? null,
+            permissions: Object.freeze(session.user.permissions),
+            groups: Object.freeze(session.user.groups),
+          }
+        : undefined,
+    [session],
+  );
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
   const copyLabel = actionT("copy");
   const copiedLabel = t("copied");
@@ -78,6 +91,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
         ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
       }}
       options={isRecord(data.options) ? data.options : {}}
+      user={userContext}
       components={components}
       createBindings={SAFE_BINDINGS}
       messages={{
