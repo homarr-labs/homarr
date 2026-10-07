@@ -1,8 +1,8 @@
 # Developer Docker CLI
 
-The host-side developer CLI builds and runs local Homarr images and pull-request previews with non-blocking background operations. Run it directly from a checkout with `pnpm dev:cli -- ...`; no shell-specific setup script is required. It is separate from the recovery CLI included in production images.
+The host-side developer CLI builds and runs local Homarr images and pull-request previews with non-blocking background operations. Run it directly from a checkout with `bun run dev:cli -- ...`; no shell-specific setup script is required. It is separate from the recovery CLI included in production images.
 
-To install an optional `homarr` binary, run `pnpm dev:cli:install` and make your Go bin directory available on `PATH`. GitHub CLI authentication (`gh auth login`) is only needed for pull-request features.
+To install an optional `homarr` binary, run `bun run dev:cli:install` and make your Go bin directory available on `PATH`. GitHub CLI authentication (`gh auth login`) is only needed for pull-request features.
 
 ## Requirements
 
@@ -14,7 +14,7 @@ To install an optional `homarr` binary, run `pnpm dev:cli:install` and make your
 ## Interactive Development Browser
 
 ```bash
-pnpm dev:cli --
+bun run dev:cli --
 # or with global binary:
 homarr
 ```
@@ -66,7 +66,7 @@ Pulls and builds run asynchronously in the background. Press `t` to open the tas
 ```bash
 homarr dash
 # or
-pnpm dev:cli -- dash
+bun run dev:cli -- dash
 ```
 
 The instance dashboard displays all running and stopped Homarr containers, published ports, health states, and resource volumes.
@@ -81,7 +81,7 @@ The instance dashboard displays all running and stopped Homarr containers, publi
 
 ## CLI Commands
 
-The commands below use the installed `homarr` binary. Without global installation, prefix each command with `pnpm dev:cli --` (for example, `pnpm dev:cli -- list`).
+The commands below use the installed `homarr` binary. Without global installation, prefix each command with `bun run dev:cli --` (for example, `bun run dev:cli -- list`).
 
 ### Launch Instances
 
@@ -133,7 +133,7 @@ homarr ci 6441 --watch
 homarr shell homarr-dev
 
 # Run specific command in container
-homarr shell homarr-dev pnpm db:migration:sqlite:run
+homarr shell homarr-dev bun run db:migration:sqlite:run
 ```
 
 ### Image & Volume Management

@@ -47,6 +47,8 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
   const feed = useLiveFeed({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
+    descriptionMaxLength:
+      typeof options.descriptionMaxLength === "number" ? options.descriptionMaxLength : 250,
   });
 
   const board = useRequiredBoard();

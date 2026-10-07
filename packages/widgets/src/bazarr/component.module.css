@@ -35,11 +35,16 @@
 
 .grid[data-short] .statTile {
   flex-direction: row;
-  gap: 3px;
+  gap: calc(3px * var(--board-canvas-ui-scale, 1));
   padding: 3px 4px;
 }
 
+.grid[data-short] .statValue {
+  flex-shrink: 0;
+}
+
 .grid[data-short] .statLabel {
+  min-width: 0;
   text-align: left;
 }
 
@@ -55,7 +60,7 @@
 }
 
 .statLabel {
-  font-size: clamp(8px, 2.5cqi, 12px);
+  font-size: clamp(var(--mantine-font-size-xs), 2.5cqi, var(--mantine-font-size-sm));
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
   text-align: center;
@@ -66,7 +71,7 @@
 }
 
 .statValue {
-  font-size: clamp(14px, 5.5cqi, 24px);
+  font-size: clamp(var(--mantine-font-size-lg), 5.5cqi, var(--mantine-font-size-2xl));
   font-weight: 700;
   color: var(--mantine-primary-color-filled);
   line-height: 1.1;

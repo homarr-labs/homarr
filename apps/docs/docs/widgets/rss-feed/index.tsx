@@ -43,6 +43,12 @@ export const rssFeedWidget: WidgetDefinition = {
         defaultValue: "5",
       },
       {
+        name: "Description max length",
+        description: "Maximum number of characters to keep from the feed description",
+        values: "1-5000",
+        defaultValue: "250",
+      },
+      {
         name: "Amount posts limit",
         description: "Maximum number of posts to show",
         values: "1-9999",

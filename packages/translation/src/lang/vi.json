@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Hiển thị các mục linh tinh được đánh dấu là đã hoàn tất"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Hiển thị biểu đồ mạng"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Hiển thị biểu đồ CPU Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Lưu lượng mạng của các giao diện công khai",
           "sent": "Đã gửi",
           "recv": "Đã nhận"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Mức sử dụng CPU Docker",

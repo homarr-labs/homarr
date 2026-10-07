@@ -1,0 +1,9 @@
+diff --git a/dist/esm/package.json b/dist/esm/package.json
+new file mode 100644
+index 0000000..3dbc1ca
+--- /dev/null
++++ b/dist/esm/package.json
+@@ -0,0 +1,3 @@
++{
++  "type": "module"
++}

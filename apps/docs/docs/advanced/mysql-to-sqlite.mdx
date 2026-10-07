@@ -4,7 +4,13 @@ title: Move from MySQL to SQLite
 
 # Move from MySQL to SQLite
 
-Homarr v2 supports SQLite (the default) and PostgreSQL. MySQL installations must convert before upgrading to v2.
+Homarr v2 supports SQLite (the default) and PostgreSQL. MySQL and MariaDB are no longer supported; migrate before upgrading to v2. Changing the database connection settings alone does not move your existing data.
+
+## Choose a database
+
+Use SQLite for an instance with its own persistent database volume. Do not synchronize a running SQLite database between Swarm nodes with tools such as Syncthing.
+
+For a shared database in a multi-node deployment, use PostgreSQL. The converter below targets **SQLite only**; Homarr does not currently provide a MySQL-to-PostgreSQL converter. PostgreSQL connection settings are documented under [environment variables](/docs/advanced/environment-variables#database), but those settings do not import your MySQL data. Keep your previous Homarr image and database available until you have a validated migration plan.
 
 The standalone converter is tested against the **Homarr v1.77.1 database schema** and writes its corresponding SQLite database. Homarr v2 applies its normal migrations when it first opens that file. The converter does not modify the source database.
 

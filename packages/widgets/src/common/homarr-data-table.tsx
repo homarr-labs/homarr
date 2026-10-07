@@ -25,12 +25,14 @@ type HomarrDataTableProps<T> = DataTableProps<T> & {
   isEditMode: boolean;
   cellPadding: string;
   rowCursor?: "auto" | "default";
+  preserveColumnWidths?: boolean;
 };
 
 export function HomarrDataTable<T>({
   isEditMode,
   cellPadding,
   rowCursor = "auto",
+  preserveColumnWidths = false,
   className,
   columns,
   defaultColumnProps,
@@ -132,6 +134,15 @@ export function HomarrDataTable<T>({
     });
   }, [cellPadding, columns, defaultColumnProps?.cellsStyle, resizePreviewWidths]);
 
+  const minimumTableWidth = useMemo(() => {
+    if (!preserveColumnWidths) return undefined;
+    const totalWidth = columns
+      .filter(({ hidden }) => !hidden)
+      .reduce((total, column) => total + getColumnWidth(column.width), 0);
+    // Keep the minimum readable in displayed pixels when the board canvas is zoomed.
+    return `calc(${totalWidth}px * var(--board-canvas-inverse-scale, 1))`;
+  }, [columns, preserveColumnWidths]);
+
   return (
     <DataTable<T>
       withTableBorder={false}
@@ -147,7 +158,7 @@ export function HomarrDataTable<T>({
       columns={fittedColumns}
       onMouseDownCapture={handleMouseDownCapture}
       className={mergedClassName}
-      style={[{ pointerEvents: isEditMode ? "none" : undefined }, style]}
+      style={[{ pointerEvents: isEditMode ? "none" : undefined, "--homarr-table-min-width": minimumTableWidth }, style]}
       defaultColumnProps={{
         ...defaultColumnProps,
         noWrap: defaultColumnProps?.noWrap ?? true,

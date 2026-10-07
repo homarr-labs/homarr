@@ -33,7 +33,7 @@ try {
       <a href="child/#child">Child</a><a href="/asset.svg">Asset</a>
       <a href="https://example.com/missing">External</a><a href="#top">Top</a></main>`,
     );
-    const result = spawnSync(process.execPath, ["--import", import.meta.resolve("tsx"), validator], {
+    const result = spawnSync(process.execPath, [validator], {
       cwd: directory,
       encoding: "utf8",
     });

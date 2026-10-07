@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Відображати різні записи, як завершені"
         },
+        "includeArchivedHistory": {
+          "label": "Включаючи архівовану історію SABnzbd",
+          "description": "Показати завдання переміщені до архіву."
+        },
+        "historyWindowDays": {
+          "label": "Вікно архівованої історії (днів)",
+          "description": "Ліміт завершений SABnzbd історія до цієї кількості днів. Збільште ліміт елементу, щоб показати більше результатів."
+        },
         "activeTorrentThreshold": {
           "label": "Приховувати завершені торенти нижче за цей поріг"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Показати графік мережі"
         },
+        "showGpuUsage": {
+          "label": "Показати діаграму використання GPU"
+        },
+        "showGpuMemory": {
+          "label": "Показати GPU пам'ять"
+        },
+        "showGpuPower": {
+          "label": "Показати графік потужності GPU"
+        },
         "showDockerCpu": {
           "label": "Показати графік ЦП Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Мережевий трафік публічних інтерфейсів",
           "sent": "Надіслати",
           "recv": "Отримано"
+        },
+        "gpuUsage": {
+          "title": "Використання GPU",
+          "subtitle": "Використання через GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU пам'ять",
+          "subtitle": "Оперативна пам'ять"
+        },
+        "gpuPower": {
+          "title": "GPU Потужність",
+          "subtitle": "Живлення з відеопрограмою"
         },
         "dockerCpu": {
           "title": "Використання ЦП Docker",

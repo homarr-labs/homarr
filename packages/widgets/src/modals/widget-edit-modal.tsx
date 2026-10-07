@@ -35,6 +35,7 @@ import { z } from "zod/v4";
 import { objectEntries } from "@homarr/common";
 import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { calculateBoardUiScale } from "@homarr/boards/scale";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -316,7 +317,12 @@ const WidgetEditPreview = ({
         ) : (
           <Box
             className={classes.previewViewport}
-            style={{ ...boardAppearance?.style, width: previewWidth, height: previewHeight }}
+            style={{
+              ...boardAppearance?.style,
+              "--board-canvas-ui-scale": calculateBoardUiScale(previewScale),
+              width: previewWidth,
+              height: previewHeight,
+            }}
           >
             <WidgetCardShell
               innerRef={cardRef}
@@ -356,7 +362,7 @@ const WidgetEditPreview = ({
                               integrationIds={state.integrationIds}
                               width={contentWidth || dimensions.width}
                               height={contentHeight || dimensions.height}
-                              displayScale={displayScale}
+                              displayScale={previewScale}
                               isEditMode={isPendingCustomWidget}
                               displayMode="compact"
                               boardId={boardId}

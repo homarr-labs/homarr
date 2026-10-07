@@ -19,7 +19,7 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "run": "pnpm with-env node cli.cjs",
+    "run": "bun run with-env node cli.cjs",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e .env --"
   },

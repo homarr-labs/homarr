@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Показывать завершённые записи категории «Разное»"
         },
+        "includeArchivedHistory": {
+          "label": "Включить историю SABnzbd в архиве",
+          "description": "Показать задания, перемещенные в Архив."
+        },
+        "historyWindowDays": {
+          "label": "Окно истории архивов (дней)",
+          "description": "Лимит SABnzbd закончился до этого количества дней. Увеличивайте лимит предметов для показа большего количества результатов."
+        },
         "activeTorrentThreshold": {
           "label": "Скрывать завершённые торренты ниже этого порога"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Показать график сети"
         },
+        "showGpuUsage": {
+          "label": "Показать диаграмму использования GPU"
+        },
+        "showGpuMemory": {
+          "label": "Показать график памяти GPU"
+        },
+        "showGpuPower": {
+          "label": "Показать график питания GPU"
+        },
         "showDockerCpu": {
           "label": "Показать график ЦП Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Сетевой трафик публичных интерфейсов",
           "sent": "Отправлено",
           "recv": "Получено"
+        },
+        "gpuUsage": {
+          "title": "Использование GPU",
+          "subtitle": "Использование GPU"
+        },
+        "gpuMemory": {
+          "title": "Память GPU",
+          "subtitle": "VRAM используется GPU"
+        },
+        "gpuPower": {
+          "title": "Питание GPU",
+          "subtitle": "Нарисовать энергией GPU"
         },
         "dockerCpu": {
           "title": "Использование ЦП Docker",

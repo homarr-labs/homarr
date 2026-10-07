@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Afficher les entrées diverses marquées comme terminées"
         },
+        "includeArchivedHistory": {
+          "label": "Inclure l'historique SABnzbd archivé",
+          "description": "Afficher les jobs déplacés vers les archives."
+        },
+        "historyWindowDays": {
+          "label": "Fenêtre de l'historique archivé (jours)",
+          "description": "Limiter l'historique de SABnzbd terminé à ce nombre de jours. Augmentez la limite d'élément pour afficher plus de résultats."
+        },
         "activeTorrentThreshold": {
           "label": "Masquer les Torrents terminés sous ce seuil"
         },
@@ -5086,7 +5094,7 @@
     },
     "beszelSystemStats": {
       "name": "",
-      "description": "",
+      "description": "Graphiques de séries temporelles pour les métriques CPU, mémoire, disque, réseau, GPU et conteneur Docker",
       "option": {
         "systemId": {
           "label": "",
@@ -5109,6 +5117,15 @@
         },
         "showNetwork": {
           "label": ""
+        },
+        "showGpuUsage": {
+          "label": "Afficher le graphique d'utilisation du GPU"
+        },
+        "showGpuMemory": {
+          "label": "Afficher le graphique mémoire GPU"
+        },
+        "showGpuPower": {
+          "label": "Afficher le graphique de puissance GPU"
         },
         "showDockerCpu": {
           "label": ""
@@ -5163,6 +5180,18 @@
           "subtitle": "",
           "sent": "",
           "recv": ""
+        },
+        "gpuUsage": {
+          "title": "Utilisation du GPU",
+          "subtitle": "Utilisation par GPU"
+        },
+        "gpuMemory": {
+          "title": "Mémoire GPU",
+          "subtitle": "VRAM utilisée par le GPU"
+        },
+        "gpuPower": {
+          "title": "Puissance GPU",
+          "subtitle": "Alimentation par GPU"
         },
         "dockerCpu": {
           "title": "",

@@ -92,7 +92,7 @@ const yAxisBase = {
   tickMargin: 0,
   tick: { fontSize: "var(--mantine-font-size-xs)" },
 } as const;
-const chartStyle = { minWidth: 0, minHeight: 1 } as const;
+const chartStyle = { minWidth: 0, minHeight: 1, flexGrow: 1, flexShrink: 0 } as const;
 const panelStyle = { minWidth: 0 } as const;
 const chartMargin = { top: 0, right: 0, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];

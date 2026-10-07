@@ -1,3 +1,10 @@
+/* Phone widgets already retain their own 10px inset; avoid doubling it with shell padding. */
+@media (width < $mantine-breakpoint-sm) {
+  .board:not([data-board-layout-preview]) {
+    margin-inline: calc(-1 * var(--app-shell-padding, 0px));
+  }
+}
+
 .board[data-board-left-rail="true"]:not([data-board-layout-preview]) {
   margin-inline-start: calc(-1 * var(--app-shell-padding, 0px));
 }

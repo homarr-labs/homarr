@@ -28,7 +28,7 @@ jobs:
 
       - name: Dump contributors
         working-directory: apps/docs
-        run: pnpm api-dump-contributors
+        run: bun run api-dump-contributors
 
       - name: Commit updated contributors
         uses: EndBug/add-and-commit@v10
