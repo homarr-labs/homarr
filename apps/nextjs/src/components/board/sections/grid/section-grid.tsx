@@ -192,6 +192,7 @@ export const SectionGrid = ({
     // Separate floating parent/child headers while retaining the persisted cell footprint.
     nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveCanvasScale;
   }
+  nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedViewportHeight - outerCardInset - 1));
   const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset);
   // Fit columns to the card width. Rows fit the available height independently
   // without creating horizontal gutters or distorting text and icons.
