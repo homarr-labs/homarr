@@ -15,6 +15,7 @@
 .homarr-data-table .mantine-datatable-table {
   width: 100% !important;
   max-width: 100%;
+  min-width: var(--homarr-table-min-width, 0);
   table-layout: fixed !important;
 }
 
