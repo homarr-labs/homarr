@@ -23,7 +23,7 @@ const setup = async (permissions: Session["user"]["permissions"] = ["integration
     .insert(integrationSecrets)
     .values({ integrationId: "saved", kind: "apiKey", value: encryptSecret("private-key") });
   const session: Session = {
-    user: { id: "owner", permissions, colorScheme: "light" },
+    user: { id: "owner", permissions, groups: [], colorScheme: "light" },
     expires: new Date().toISOString(),
   };
   const router = createTRPCRouter({ testConnection: integrationTestStoredConnectionProcedure });
@@ -77,7 +77,7 @@ test("returns only safe categories for upstream failures and thrown errors", asy
   const noSecretsCaller = router.createCaller({
     db,
     session: {
-      user: { id: "owner", permissions: ["integration-full-all"], colorScheme: "light" },
+      user: { id: "owner", permissions: ["integration-full-all"], groups: [], colorScheme: "light" },
       expires: new Date().toISOString(),
     },
     deviceType: undefined,

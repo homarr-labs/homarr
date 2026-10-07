@@ -22,7 +22,7 @@ const createFakeAccessControl = (canAccess: boolean) =>
   );
 
 const createDefaultSession = (permissions: GroupPermissionKey[] = []): Session => ({
-  user: { id: createId(), permissions, colorScheme: "light" },
+  user: { id: createId(), permissions, groups: [], colorScheme: "light" },
   expires: new Date().toISOString(),
 });
 

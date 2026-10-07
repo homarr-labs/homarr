@@ -37,7 +37,7 @@ const createBoardCallerAsync = async () => {
   const sectionId = createId();
   await db.insert(sections).values({ id: sectionId, boardId, kind: "empty", xOffset: 0, yOffset: 0 });
   const session = {
-    user: { id: userId, permissions: [], colorScheme: "light" },
+    user: { id: userId, permissions: [], groups: [], colorScheme: "light" },
     expires: new Date().toISOString(),
   } satisfies Session;
   return {
