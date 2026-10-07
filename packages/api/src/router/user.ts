@@ -8,16 +8,14 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { boards, groupMembers, groupPermissions, groups, invites, onboarding, users } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
-import type { HeaderPreferences, userBaseCreateSchema } from "@homarr/validation/user";
+import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
-  getHeaderItems,
   headerPreferencesMutationSchema,
-  parseHeaderPreferences,
   userByteUnitSystemSchema,
   userChangeColorSchemeSchema,
   userChangeHomeBoardsSchema,
@@ -31,8 +29,9 @@ import {
   userInitSchema,
   userPingIconsEnabledSchema,
   userRegistrationApiSchema,
+  userPreferencesSchema,
+  userPreferencesPatchSchema,
 } from "@homarr/validation/user";
-import { serializeHeaderPreferences } from "@homarr/validation/header-preferences";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
@@ -43,10 +42,8 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
-import { getAccessibleBoardIdsForUserAsync } from "./board";
-import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
-import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
+import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
 
 const logger = createLogger({ module: "userRouter" });
 
@@ -377,6 +374,7 @@ export const userRouter = createTRPCRouter({
         provider: true,
         homeBoardId: true,
         mobileHomeBoardId: true,
+        colorScheme: true,
         byteUnitSystem: true,
         firstDayOfWeek: true,
         pingIconsEnabled: true,
@@ -419,6 +417,7 @@ export const userRouter = createTRPCRouter({
           provider: true,
           homeBoardId: true,
           mobileHomeBoardId: true,
+          colorScheme: true,
           byteUnitSystem: true,
           firstDayOfWeek: true,
           pingIconsEnabled: true,
@@ -618,6 +617,57 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
+  getPreferences: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/users/preferences",
+        tags: ["users"],
+        protect: true,
+        summary: "Get user preferences",
+        description:
+          "Read every preference as structured JSON. Omit userId for the current user; reading another user requires admin permission.",
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Read all preferences, including color scheme, home boards, search behavior and structured header layout. Optional userId defaults to the current user; another user requires admin permission. Use user_updatePreferences to patch supplied fields.",
+      },
+    })
+    .input(z.object({ userId: z.string().min(1).optional() }))
+    .output(userPreferencesSchema.extend({ userId: z.string() }))
+    .query(({ ctx, input }) => getUserPreferencesAsync(ctx, input.userId ?? ctx.session.user.id)),
+  updatePreferences: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/preferences",
+        tags: ["users"],
+        protect: true,
+        summary: "Update user preferences",
+        description:
+          "Update only supplied preferences and return the result. Omitted fields remain unchanged; null clears nullable references. Header fields and zones merge, while each supplied zone array replaces that zone. The complete merged header must retain unique items and account access. New board shortcuts must be accessible to the target user. Omit userId for yourself; another user requires admin permission. All validation completes before one write.",
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Patch one or more user preferences and return the complete result. Read current values with user_getPreferences. All preference fields are optional; supply at least one. Omitted fields remain unchanged; null clears home-board/search-engine references. Header fields and zones merge; supplied zone arrays replace their zone and must preserve unique items and account access. Optional userId defaults to yourself; changing another user requires admin permission.",
+      },
+    })
+    .input(
+      z
+        .strictObject({ userId: z.string().min(1).optional(), ...userPreferencesPatchSchema.shape })
+        .refine((input) => Object.keys(input).some((key) => key !== "userId"), "Supply at least one preference")
+        .meta({
+          minProperties: 1,
+          not: { required: ["userId"], maxProperties: 1 },
+        }),
+    )
+    .output(userPreferencesSchema.extend({ userId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      const { userId, ...patch } = input;
+      return updateUserPreferencesAsync(ctx, userId ?? ctx.session.user.id, patch);
+    }),
   changeHomeBoards: protectedProcedure
     .input(convertIntersectionToZodObject(userChangeHomeBoardsSchema.and(z.object({ userId: z.string() }))))
     .output(z.void())
@@ -633,44 +683,10 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      const user = ctx.session.user;
-      // Only admins can change other users passwords
-      if (!user.permissions.includes("admin") && user.id !== input.userId) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-        },
-        where: eq(users.id, input.userId),
+      await updateUserPreferencesAsync(ctx, input.userId, {
+        homeBoardId: input.homeBoardId,
+        mobileHomeBoardId: input.mobileHomeBoardId,
       });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      // Only allow user to select boards they have access to
-      if (input.homeBoardId) {
-        await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.homeBoardId), "view");
-      }
-      if (input.mobileHomeBoardId) {
-        await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.mobileHomeBoardId), "view");
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          homeBoardId: input.homeBoardId,
-          mobileHomeBoardId: input.mobileHomeBoardId,
-        })
-        .where(eq(users.id, input.userId));
     }),
   changeDefaultSearchEngine: protectedProcedure
     .input(
@@ -692,13 +708,13 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      await changeSearchPreferencesAsync(ctx.db, ctx.session, {
-        ...input,
-        openInNewTab: undefined,
+      await updateUserPreferencesAsync(ctx, input.userId, {
+        defaultSearchEngineId: input.defaultSearchEngineId,
+        ddgBangs: input.ddgBangsEnabled,
       });
     }),
   changeSearchPreferences: protectedProcedure
-    .input(convertIntersectionToZodObject(changeSearchPreferencesInputSchema))
+    .input(convertIntersectionToZodObject(userChangeSearchPreferencesSchema.and(z.object({ userId: z.string() }))))
     .output(z.void())
     .meta({
       openapi: {
@@ -712,7 +728,11 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      await changeSearchPreferencesAsync(ctx.db, ctx.session, input);
+      await updateUserPreferencesAsync(ctx, input.userId, {
+        defaultSearchEngineId: input.defaultSearchEngineId,
+        openSearchInNewTab: input.openInNewTab,
+        ddgBangs: input.ddgBangsEnabled,
+      });
     }),
   changeColorScheme: protectedProcedure
     .input(userChangeColorSchemeSchema)
@@ -728,44 +748,13 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      await ctx.db
-        .update(users)
-        .set({
-          colorScheme: input.colorScheme,
-        })
-        .where(eq(users.id, ctx.session.user.id));
+      await updateUserPreferencesAsync(ctx, ctx.session.user.id, { colorScheme: input.colorScheme });
     }),
   changeByteUnitSystem: protectedProcedure
     .input(userByteUnitSystemSchema.and(byIdSchema))
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-        },
-        where: eq(users.id, input.id),
-      });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          byteUnitSystem: input.byteUnitSystem,
-        })
-        .where(eq(users.id, input.id));
+      await updateUserPreferencesAsync(ctx, input.id, { byteUnitSystem: input.byteUnitSystem });
     }),
   changeEnableRightClickOnWidgets: protectedProcedure
     .meta({
@@ -782,37 +771,12 @@ export const userRouter = createTRPCRouter({
     .input(convertIntersectionToZodObject(userEnableRightClickOnWidgetsSchema.and(byIdSchema)))
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          enableRightClickOnWidgets: input.enableRightClickOnWidgets,
-        })
-        .where(eq(users.id, input.id));
+      await updateUserPreferencesAsync(ctx, input.id, { enableRightClickOnWidgets: input.enableRightClickOnWidgets });
     }),
   changePingIconsEnabled: protectedProcedure
     .input(userPingIconsEnabledSchema.and(byIdSchema))
     .mutation(async ({ input, ctx }) => {
-      // Only admins can change other users ping icons enabled
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          pingIconsEnabled: input.pingIconsEnabled,
-        })
-        .where(eq(users.id, input.id));
+      await updateUserPreferencesAsync(ctx, input.id, { pingIconsEnabled: input.pingIconsEnabled });
     }),
   changeHeaderPreferences: protectedProcedure
     .meta({
@@ -825,54 +789,11 @@ export const userRouter = createTRPCRouter({
         description:
           "Replace a user's header layout and display preferences. New board shortcuts must reference boards the target user can view; existing shortcuts may be retained. Users can update themselves; updating another user requires admin permission.",
       },
-      mcp: {
-        enabled: true,
-        description:
-          "Update the header layout preferences of a user. REQUIRED: id (user ID), headerPreferences (zones for left, center and right, visible flag, searchDisplay and logoDisplay). Admins can change any user; other users can only change their own. Board shortcut items must reference boards the target user can view",
-      },
     })
     .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const targetUser = await ctx.db.query.users.findFirst({
-        columns: { headerPreferences: true },
-        where: eq(users.id, input.id),
-      });
-      if (!targetUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const submittedBoardIds = getBoardShortcutIds(input.headerPreferences);
-      if (submittedBoardIds.length > 0) {
-        const existingBoardIds = new Set(getBoardShortcutIds(parseHeaderPreferences(targetUser.headerPreferences)));
-        const accessibleBoardIds = await getAccessibleBoardIdsForUserAsync(ctx.db, input.id);
-        const hasUnavailableShortcut = submittedBoardIds.some(
-          (boardId) => !accessibleBoardIds.has(boardId) && !existingBoardIds.has(boardId),
-        );
-        if (hasUnavailableShortcut) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "One or more board shortcuts are unavailable to this user",
-          });
-        }
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          headerPreferences: serializeHeaderPreferences(input.headerPreferences),
-        })
-        .where(eq(users.id, input.id));
+      await updateUserPreferencesAsync(ctx, input.id, { headerPreferences: input.headerPreferences });
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
@@ -890,19 +811,7 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          ddgBangs: input.ddgBangs,
-        })
-        .where(eq(users.id, input.id));
+      await updateUserPreferencesAsync(ctx, input.id, { ddgBangs: input.ddgBangs });
     }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))
@@ -919,34 +828,7 @@ export const userRouter = createTRPCRouter({
       },
     })
     .mutation(async ({ input, ctx }) => {
-      // Only admins can change other users first day of week
-      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      const dbUser = await ctx.db.query.users.findFirst({
-        columns: {
-          id: true,
-        },
-        where: eq(users.id, input.id),
-      });
-
-      if (!dbUser) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      await ctx.db
-        .update(users)
-        .set({
-          firstDayOfWeek: input.firstDayOfWeek,
-        })
-        .where(eq(users.id, input.id));
+      await updateUserPreferencesAsync(ctx, input.id, { firstDayOfWeek: input.firstDayOfWeek });
     }),
   completeTour: protectedProcedure
     .input(z.object({ tour: z.enum(["manage", "board"]) }))
@@ -989,9 +871,6 @@ export const userRouter = createTRPCRouter({
     };
   }),
 });
-
-const getBoardShortcutIds = (preferences: HeaderPreferences) =>
-  getHeaderItems(preferences.zones).flatMap((item) => (item.type === "board" ? [item.boardId] : []));
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
   const hashedPassword = await hashPasswordAsync(input.password);

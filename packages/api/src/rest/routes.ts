@@ -20,6 +20,8 @@ function existingRoute(source: AnyProcedure, operationId: string): RestRoute {
 }
 
 export const restRoutes = {
+  "user.getPreferences": existingRoute(restSources["user.getPreferences"], "user-getPreferences"),
+  "user.updatePreferences": existingRoute(restSources["user.updatePreferences"], "user-updatePreferences"),
   "apiKeys.create": existingRoute(restSources["apiKeys.create"], "apiKeysRouter-create"),
   "apiKeys.delete": existingRoute(restSources["apiKeys.delete"], "apiKeysRouter-delete"),
   "apiKeys.getAll": existingRoute(restSources["apiKeys.getAll"], "apiKeysRouter-getAll"),

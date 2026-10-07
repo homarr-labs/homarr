@@ -43,7 +43,7 @@ The same restore flow is available during first-run onboarding, before the targe
 
 ## Automating backups
 
-Both endpoints also accept an [API key](api/index.mdx) in the `ApiKey` header, so a scheduled job can create and
+Both endpoints also accept an [API key](/docs/management/api/) in the `ApiKey` header, so a scheduled job can create and
 restore backups without a browser session:
 
 ```bash
@@ -55,4 +55,4 @@ curl -H 'ApiKey: <id>.<token>' -F 'file=@homarr-backup.zip' http://localhost:757
 ```
 
 The key has to belong to a user with admin permissions. Use
-[`homarr api-keys create`](../advanced/command-line/api-keys/) to obtain one without the web interface.
+[`homarr api-keys create`](/docs/advanced/command-line/api-keys/) to obtain one without the web interface.

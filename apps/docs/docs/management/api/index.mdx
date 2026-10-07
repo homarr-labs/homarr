@@ -123,6 +123,21 @@ Dates are ISO 8601 strings, large integers are decimal strings, maps are objects
 `POST /api/media/upload` accepts multipart `files` fields: 1–32 PNG, JPEG, WebP, GIF or SVG files, with a combined
 multipart-body limit of 32 MiB. It requires `media-upload` permission and returns media IDs.
 
+## Partial preference updates
+
+Read preferences with `GET /api/users/preferences`, then update only the values you want to change with
+`PATCH /api/users/preferences`. For example, `{ "colorScheme": "light" }` changes only the color scheme;
+`{ "headerPreferences": { "visible": false } }` changes only header visibility. Omit `userId` to target yourself;
+another user requires administrator permission.
+
+Omitted fields stay unchanged. `null` clears home-board and search-engine references. Header fields and zones merge;
+each supplied zone array replaces that zone and must retain unique items and account access. All validation completes
+before one write. Older preference routes remain available in the reference's compatibility section.
+
+Server settings follow the same partial-update pattern: `PATCH /api/settings` with
+`{ "settingsKey": "board", "value": { "enableStatusByDefault": false } }` changes only that setting.
+Nested branding flags merge with their existing values.
+
 ## Full configuration
 
 Configuration export/import covers server settings, apps, integrations, search engines, groups and their permissions,

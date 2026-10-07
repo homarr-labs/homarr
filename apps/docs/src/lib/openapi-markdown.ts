@@ -142,6 +142,7 @@ export function getApiMarkdown(page: ApiPage): string {
     if (typeof operation.summary === "string") title = operation.summary;
     let description = "";
     if (typeof operation.description === "string") description = `${operation.description}\n\n`;
+    if (Array.isArray(operation.tags)) description = `Task: ${operation.tags.join(", ")}\n\n${description}`;
     const parameters = [...arrayValue(pathItem?.parameters), ...arrayValue(operation.parameters)];
     const security = operation.security ?? schema?.security;
     const components = record(schema?.components);

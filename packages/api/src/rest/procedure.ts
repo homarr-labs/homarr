@@ -17,6 +17,7 @@ export interface RestRoute extends Omit<NonNullable<OpenApiMeta["openapi"]>, "pa
 }
 
 export const restInputDefinitions: Record<string, unknown> = {};
+export const restRequestBodies: Record<string, Record<string, unknown>> = {};
 
 function documentInput(schema: Record<string, unknown>, namespace: string): Record<string, unknown> {
   const definitions = (schema.$defs ?? {}) as Record<string, unknown>;
@@ -209,11 +210,16 @@ export function createRestProcedure(name: string, source: AnyProcedure, route: R
   // Relay JSON without preempting the native middleware's authorization or transformations.
   // The published schema stays complete, and the native caller performs the full validation.
   const takesNoInput = inputs.every((schema) => schema instanceof z.ZodVoid || schema instanceof z.ZodUndefined);
-  let input = takesNoInput ? z.void() : z.object(shape).passthrough();
-  // OpenAPI's handler requires an outer object. Retain the native union in the body
-  // documentation while projecting its fields for transport parsing.
-  if (inputs.length === 1 && inputs[0] instanceof z.ZodUnion && pathKeys.length === 0 && !queryKeys) {
-    const unionSchema = documentInput(
+  const input = takesNoInput ? z.void() : z.object(shape).passthrough();
+  // The generator rebuilds body objects and drops root metadata. Retain the native
+  // body document separately, including strict keys and cross-field constraints.
+  if (
+    inputs.length === 1 &&
+    (inputs[0] instanceof z.ZodObject || inputs[0] instanceof z.ZodUnion) &&
+    pathKeys.length === 0 &&
+    !queryKeys
+  ) {
+    restRequestBodies[route.operationId ?? name.replaceAll(".", "-")] = documentInput(
       z.toJSONSchema(inputs[0], {
         io: "input",
         unrepresentable: "any",
@@ -221,7 +227,6 @@ export function createRestProcedure(name: string, source: AnyProcedure, route: R
       }),
       `${name}_body`,
     );
-    input = input.meta({ override: ({ jsonSchema }) => Object.assign(jsonSchema, unionSchema) });
   }
   const caller = createTRPCRouter({ action: source });
   const execute = async ({

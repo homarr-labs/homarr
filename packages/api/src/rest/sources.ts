@@ -161,6 +161,8 @@ export const restSources = {
   "serverSettings.saveSettings": serverSettingsRouter["_def"].record.saveSettings,
   "serverSettings.updateBoardSettings": serverSettingsRouter["_def"].record.updateBoardSettings,
   "user.changeColorScheme": userRouter["_def"].record.changeColorScheme,
+  "user.getPreferences": userRouter["_def"].record.getPreferences,
+  "user.updatePreferences": userRouter["_def"].record.updatePreferences,
   "user.changeDdgBangs": userRouter["_def"].record.changeDdgBangs,
   "user.changeDefaultSearchEngine": userRouter["_def"].record.changeDefaultSearchEngine,
   "user.changeEnableRightClickOnWidgets": userRouter["_def"].record.changeEnableRightClickOnWidgets,

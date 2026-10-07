@@ -58,6 +58,25 @@ function assertLocalReferences(value: unknown): void {
 
 assertLocalReferences(generated);
 
+const tasks = Reflect.get(generated, "x-homarr-tasks") as { id: string; title: string; description: string }[];
+assert.ok(Array.isArray(tasks) && tasks.length > 0, "OpenAPI must declare user tasks");
+const taskIds = new Set(tasks.map((task) => task.id));
+assert.equal(taskIds.size, tasks.length, "Documentation task IDs must be unique");
+for (const item of Object.values(generated.paths)) {
+  if (item === null || typeof item !== "object") continue;
+  for (const operation of Object.values(item)) {
+    if (operation === null || typeof operation !== "object" || !("operationId" in operation)) continue;
+    assert.ok(taskIds.has(Reflect.get(operation, "x-homarr-task")), `Missing task for ${operation.operationId}`);
+    assert.equal(
+      typeof Reflect.get(operation, "x-homarr-doc-tag"),
+      "string",
+      "Operation documentation paths must be stable",
+    );
+    assert.equal(typeof Reflect.get(operation, "summary"), "string", "Operation summaries are required");
+    assert.equal(typeof Reflect.get(operation, "description"), "string", "Operation descriptions are required");
+  }
+}
+
 if (writeMode) {
   await writeFile(schemaPath, serialized, "utf8");
   await writeFile(discoveryPath, `${JSON.stringify(discovery, null, 2)}\n`, "utf8");

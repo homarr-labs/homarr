@@ -7,6 +7,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 import { nullableEmailSchema, optionalEmailSchema } from "./email";
+import { headerPreferencesSchema, headerPreferencesPatchSchema } from "./header-preferences";
 
 export {
   createBoardHeaderItem,
@@ -161,6 +162,7 @@ export const userByteUnitSystemSchema = z.object({
 export const userFirstDayOfWeekSchema = z.object({
   firstDayOfWeek: z
     .number()
+    .int()
     .min(0)
     .max(6)
     .transform((value) => value as DayOfWeek),
@@ -177,3 +179,21 @@ export const userEnableRightClickOnWidgetsSchema = z.object({
 export const userDdgBangsSchema = z.object({
   ddgBangs: z.boolean(),
 });
+
+export const userPreferencesSchema = z.strictObject({
+  ...userChangeColorSchemeSchema.shape,
+  ...userByteUnitSystemSchema.shape,
+  ...userFirstDayOfWeekSchema.shape,
+  ...userPingIconsEnabledSchema.shape,
+  ...userEnableRightClickOnWidgetsSchema.shape,
+  ...userChangeHomeBoardsSchema.shape,
+  defaultSearchEngineId: userChangeSearchPreferencesSchema.shape.defaultSearchEngineId,
+  openSearchInNewTab: z.boolean(),
+  ddgBangs: z.boolean(),
+  headerPreferences: headerPreferencesSchema,
+});
+
+export const userPreferencesPatchSchema = userPreferencesSchema
+  .partial()
+  .extend({ headerPreferences: headerPreferencesPatchSchema.optional() })
+  .refine((patch) => Object.keys(patch).length > 0, "Supply at least one preference");
