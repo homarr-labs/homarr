@@ -13,10 +13,11 @@ on:
       - "packages/api/src/**"
       - "packages/auth/src/**"
       - "packages/integrations/src/**"
+      - "tools/motion-reel/three/**"
       - "tooling/**"
-      - "pnpm-lock.yaml"
+      - "bun.lock"
       - "package.json"
-      - "pnpm-workspace.yaml"
+      - "bunfig.toml"
       - "turbo.json"
       - ".github/workflows/deployment-docs.yml"
       - ".github/workflows/validate-docs.yml"
@@ -35,20 +36,30 @@ jobs:
     timeout-minutes: 15
     env:
       SKIP_ENV_VALIDATION: true
+      TURBO_API: ${{ secrets.TURBO_API }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
       - name: Setup
         uses: ./tooling/github/setup
+        with:
+          next-cache: "docs"
+          turbo-cache: "true"
       - name: Validate the published API schema against the application
-        run: pnpm check:openapi
+        run: bun run check:openapi
       - name: Validate browser access and API schema rendering
-        run: pnpm exec vitest run 'apps/nextjs/src/app/api/[...trpc]/route.spec.ts' apps/docs/src/lib/openapi.spec.ts
+        run: bun x vitest run 'apps/nextjs/src/app/api/[...trpc]/route.spec.ts' apps/docs/src/lib/openapi.spec.ts
       - name: Build docs
-        run: pnpm --filter @homarr/docs build
+        run: bun run turbo run build --filter=@homarr/docs
         env:
           CI: "true"
       - name: Validate exported links, search, and metadata
         run: |
-          pnpm --filter @homarr/docs validate:links
-          pnpm --filter @homarr/docs verify:search
-          pnpm --filter @homarr/docs verify:seo
+          bun run --filter @homarr/docs validate:links
+          bun run --filter @homarr/docs verify:search
+          bun run --filter @homarr/docs verify:seo

@@ -1,0 +1,8 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["migrations/sqlite/migrate.cjs", "migrations/postgresql/migrate.cjs"]
+    }
+  }
+}

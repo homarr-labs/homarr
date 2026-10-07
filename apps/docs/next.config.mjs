@@ -8,6 +8,9 @@ const config = {
   allowedDevOrigins: ["127.0.0.1", "100.71.78.45"],
   reactStrictMode: true,
   trailingSlash: true,
+  experimental: {
+    turbopackFileSystemCacheForBuild: true,
+  },
   images: {
     unoptimized: true,
   },

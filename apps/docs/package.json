@@ -5,10 +5,10 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --port 3003",
+    "dev": "node ../../node_modules/next/dist/bin/next dev --port 3003",
     "start": "serve out --listen 3003 --config ../serve.json",
-    "build": "pnpm validate:coverage && next build",
-    "typecheck": "next typegen && tsc --noEmit",
+    "build": "bun run validate:coverage && node ../../node_modules/next/dist/bin/next build",
+    "typecheck": "node ../../node_modules/next/dist/bin/next typegen && tsc --noEmit",
     "lint": "oxlint",
     "format": "oxfmt .",
     "clean": "git clean -xdf .next out node_modules",
@@ -66,7 +66,6 @@
     "@types/three": "catalog:",
     "cheerio": "^1.2.0",
     "next-validate-link": "1.6.7",
-    "tsx": "catalog:",
     "typescript": "catalog:",
     "zod": "catalog:"
   }

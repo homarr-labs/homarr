@@ -6,7 +6,7 @@
       <script value="dev" />
     </scripts>
     <node-interpreter value="project" />
-    <package-manager value="pnpm" />
+    <package-manager value="bun" />
     <envs />
     <method v="2" />
   </configuration>
