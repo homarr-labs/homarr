@@ -42,7 +42,7 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       }),
       descriptionMaxLength: factory.number({
         defaultValue: 250,
-        validate: z.number().min(1).max(5000),
+        validate: z.number().int().min(1).max(5000),
       }),
       maximumAmountPosts: factory.number({
         defaultValue: 100,

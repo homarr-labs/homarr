@@ -28,7 +28,7 @@ const redactFeedFailureMessage = (message: string) => message.replace(/https?:\/
 const feedsInput = z.object({
   urls: z.array(z.string()).max(100),
   maximumAmountPosts: z.number(),
-  descriptionMaxLength: z.number().default(250),
+  descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
 });
 
 export const rssFeedRouter = createTRPCRouter({
