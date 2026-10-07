@@ -2,19 +2,43 @@ import { generateOpenApiDocument } from "trpc-to-openapi";
 
 import { API_KEY_HEADER_NAME } from "@homarr/auth/api-key";
 import { defaultHeaderPreferences } from "@homarr/validation/header-preferences";
+import { z } from "zod/v4";
 
+import { describeApiDocument } from "./open-api-documentation";
+
+import { apiKeysRouter } from "./router/apiKeys";
+import { appRouter } from "./router/app";
+import { boardRouter } from "./router/board";
+import { configRouter } from "./router/config/config-router";
+import { groupRouter } from "./router/group";
+import { ensureRootCertificateProcedure, getCertificateProcedure } from "./router/certificates/certificate-router";
+import { infoRouter } from "./router/info";
+import { integrationRouter } from "./router/integration/integration-router";
+import { inviteRouter } from "./router/invite";
+import { searchEngineRouter } from "./router/search-engine/search-engine-router";
+import { serverSettingsUpdateSchema, serverSettingsRouter } from "./router/serverSettings";
+import { userRouter } from "./router/user";
 import { createTRPCRouter } from "./trpc";
-import { restResponseDefinitions } from "./rest/responses";
-import { restInputDefinitions, restRequestBodies } from "./rest/procedure";
-import { mediaUploadPaths } from "./rest/media-upload";
-export { createMediaUploadResponseAsync } from "./rest/media-upload";
-import { widgetCatalogRouter } from "./rest/widget-catalog";
-import { restRouter } from "./rest/router";
-import { describeApiDocument } from "./rest/documentation";
 
 export { normalizeRecursiveJsonSchemasForScalar } from "./open-api-scalar";
 
-export const openApiRouter = createTRPCRouter({ widgetCatalog: widgetCatalogRouter, rest: restRouter });
+export const openApiRouter = createTRPCRouter({
+  apiKeysRouter,
+  appRouter,
+  boardRouter,
+  configRouter,
+  groupRouter,
+  infoRouter,
+  integrationRouter,
+  inviteRouter,
+  searchEngineRouter,
+  serverSettingsRouter,
+  userRouter,
+  certificates: createTRPCRouter({
+    getCertificate: getCertificateProcedure,
+    ensureRootCertificate: ensureRootCertificateProcedure,
+  }),
+});
 
 export const openApiDocument = (base: string) => {
   const document = generateOpenApiDocument(openApiRouter, {
@@ -22,10 +46,6 @@ export const openApiDocument = (base: string) => {
     version: "1.2.0",
     baseUrl: base,
     docsUrl: "https://homarr.dev",
-    paths: mediaUploadPaths,
-    defs: { ...restResponseDefinitions, ...restInputDefinitions } as Parameters<
-      typeof generateOpenApiDocument
-    >[1]["defs"],
     securitySchemes: {
       apikey: {
         type: "apiKey",
@@ -35,16 +55,6 @@ export const openApiDocument = (base: string) => {
       },
     },
   });
-  for (const item of Object.values(document.paths ?? {})) {
-    for (const operation of Object.values(item ?? {})) {
-      if (!operation || typeof operation !== "object" || !("operationId" in operation)) continue;
-      const body = operation.requestBody;
-      const schema = restRequestBodies[operation.operationId];
-      if (!schema || !body || !("content" in body)) continue;
-      const json = body.content["application/json"];
-      if (json) json.schema = schema;
-    }
-  }
   // These reads support anonymous public resources and API-key-scoped private resources.
   // The generator's boolean `protect` cannot express optional authentication.
   for (const path of ["/api/boards", "/api/apps/{id}"]) {
@@ -61,6 +71,13 @@ export const openApiDocument = (base: string) => {
   const preferenceBody = document.paths?.["/api/users/preferences"]?.patch?.requestBody;
   if (preferenceBody && "content" in preferenceBody) {
     const json = preferenceBody.content["application/json"];
+    if (json) {
+      const schema = z.toJSONSchema(userRouter["_def"].record.updatePreferences["_def"].inputs[0] as z.ZodType, {
+        io: "input",
+      });
+      delete schema.$schema;
+      json.schema = schema as typeof json.schema;
+    }
     if (json)
       json.examples = {
         singlePreference: { summary: "Change only the color scheme", value: { colorScheme: "light" } },
@@ -74,6 +91,11 @@ export const openApiDocument = (base: string) => {
   const settingsBody = document.paths?.["/api/settings"]?.patch?.requestBody;
   if (settingsBody && "content" in settingsBody) {
     const json = settingsBody.content["application/json"];
+    if (json) {
+      const schema = z.toJSONSchema(serverSettingsUpdateSchema, { io: "input" });
+      delete schema.$schema;
+      json.schema = schema as typeof json.schema;
+    }
     if (json)
       json.examples = {
         boardDefault: {

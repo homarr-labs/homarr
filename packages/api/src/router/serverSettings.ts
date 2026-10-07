@@ -13,6 +13,7 @@ import {
 import { boards, serverSettings, searchEngines } from "@homarr/db/schema";
 import {
   authBrandingSchema,
+  defaultServerSettingsKeys,
   boardServerSettingsSchema,
   serverSettingsSchema,
   serverSettingsPatchSchema,
@@ -58,7 +59,7 @@ const validateBoardHomeIdsAsync = async (
   }
 };
 
-const serverSettingsUpdateSchema = z.discriminatedUnion("settingsKey", [
+export const serverSettingsUpdateSchema = z.discriminatedUnion("settingsKey", [
   z.object({ settingsKey: z.literal("analytics"), value: analyticsServerSettingsUpdateSchema }),
   z.object({
     settingsKey: z.literal("crawlingAndIndexing"),
@@ -154,10 +155,18 @@ export const serverSettingsRouter = createTRPCRouter({
           "Update one server setting group. REQUIRED: settingsKey (for example 'appearance', 'culture', 'search' or 'board'), value (object which is merged into the current settings of that group). Requires admin permission",
       },
     })
-    .input(serverSettingsUpdateSchema)
+    .input(
+      z.object({
+        settingsKey: z.enum(defaultServerSettingsKeys),
+        value: z.record(z.string(), z.unknown()),
+      }),
+    )
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      await updateServerSettingsGroupAsync(ctx.db, input);
+      const parsed = serverSettingsUpdateSchema.safeParse(input);
+      if (!parsed.success)
+        throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
+      await updateServerSettingsGroupAsync(ctx.db, parsed.data);
     }),
 });
 

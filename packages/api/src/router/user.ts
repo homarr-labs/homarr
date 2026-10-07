@@ -362,6 +362,26 @@ export const userRouter = createTRPCRouter({
         email: user.email,
       }));
     }),
+  getPreferences: protectedProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/users/preferences",
+        tags: ["users"],
+        protect: true,
+        summary: "Get user preferences",
+        description:
+          "Read every preference as structured JSON. Omit userId for the current user; reading another user requires admin permission.",
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Read all preferences, including color scheme, home boards, search behavior and structured header layout. Optional userId defaults to the current user; another user requires admin permission. Use user_updatePreferences to patch supplied fields.",
+      },
+    })
+    .input(z.object({ userId: z.string().min(1).optional() }))
+    .output(userPreferencesSchema.extend({ userId: z.string() }))
+    .query(({ ctx, input }) => getUserPreferencesAsync(ctx, input.userId ?? ctx.session.user.id)),
   getById: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .output(
@@ -617,26 +637,6 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.userId));
     }),
-  getPreferences: protectedProcedure
-    .meta({
-      openapi: {
-        method: "GET",
-        path: "/api/users/preferences",
-        tags: ["users"],
-        protect: true,
-        summary: "Get user preferences",
-        description:
-          "Read every preference as structured JSON. Omit userId for the current user; reading another user requires admin permission.",
-      },
-      mcp: {
-        enabled: true,
-        description:
-          "Read all preferences, including color scheme, home boards, search behavior and structured header layout. Optional userId defaults to the current user; another user requires admin permission. Use user_updatePreferences to patch supplied fields.",
-      },
-    })
-    .input(z.object({ userId: z.string().min(1).optional() }))
-    .output(userPreferencesSchema.extend({ userId: z.string() }))
-    .query(({ ctx, input }) => getUserPreferencesAsync(ctx, input.userId ?? ctx.session.user.id)),
   updatePreferences: protectedProcedure
     .meta({
       openapi: {

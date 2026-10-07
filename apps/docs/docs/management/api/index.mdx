@@ -109,19 +109,14 @@ The iCalendar feed integration stores a calendar URL rather than arbitrary HTTP 
 API. Neither works with `integration_request` or Custom Widget integration sources. qBittorrent generic requests require
 a saved API key and qBittorrent 5.2.0 or newer. UniFi generic requests require the controller's HTTPS URL and actual port.
 
-## Widget options and transport
+## REST and tRPC scope
 
-`GET /api/widgets` lists every widget kind, its default size and supported integrations.
-`GET /api/widgets/{kind}/options` provides every stored option, including defaults, fixed choices, validation bounds,
-units and endpoints for dynamic choices. Use these fields in board-item `options`; merge a partial update with existing
-options when retaining values. The catalog includes hidden options and runtime defaults such as the global app-ping setting.
+REST covers dashboard composition, access, configuration transfer, resource provisioning and preferences.
+Use tRPC for integration-specific widget queries/actions, Docker and Kubernetes controls, uploads, and other
+advanced operations. Both transports accept the same `ApiKey` header and enforce the same user permissions.
 
-Queries with nested inputs use `POST .../query` with JSON rather than encoding objects into URL parameters.
-Complex removals likewise use a JSON body at `POST .../remove`. The generated reference gives each action's method.
-Dates are ISO 8601 strings, large integers are decimal strings, maps are objects and sets are arrays.
-
-`POST /api/media/upload` accepts multipart `files` fields: 1–32 PNG, JPEG, WebP, GIF or SVG files, with a combined
-multipart-body limit of 32 MiB. It requires `media-upload` permission and returns media IDs.
+The generated reference documents the supported REST surface. For tRPC, use Homarr's exported `AppRouter` type
+and the procedure names used by the application; these remain coupled to your Homarr version.
 
 ## Partial preference updates
 

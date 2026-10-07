@@ -1,4 +1,3 @@
-import type { DayOfWeek } from "@mantine/dates";
 import { z } from "zod/v4";
 
 import { colorSchemes } from "@homarr/definitions";
@@ -160,12 +159,7 @@ export const userByteUnitSystemSchema = z.object({
 });
 
 export const userFirstDayOfWeekSchema = z.object({
-  firstDayOfWeek: z
-    .number()
-    .int()
-    .min(0)
-    .max(6)
-    .transform((value) => value as DayOfWeek),
+  firstDayOfWeek: z.literal([0, 1, 2, 3, 4, 5, 6]),
 });
 
 export const userPingIconsEnabledSchema = z.object({
