@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "완료된 기타 항목 표시"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "이 임계값 이하의 완료된 토렌트 숨기기"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "네트워크 차트 표시"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Docker CPU 차트 표시"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "공용 인터페이스의 네트워크 트래픽",
           "sent": "전송",
           "recv": "수신"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU 사용량",

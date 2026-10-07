@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Exibir entradas diversas marcadas como concluídas"
         },
+        "includeArchivedHistory": {
+          "label": "Incluir histórico SABnzbd arquivado",
+          "description": "Mostrar tarefas movidas para o arquivo."
+        },
+        "historyWindowDays": {
+          "label": "Janela do histórico arquivado (dias)",
+          "description": "Limite de histórico SABnzbd finalizado a este número de dias. Aumente o limite de itens para mostrar mais resultados."
+        },
         "activeTorrentThreshold": {
           "label": "Ocultar torrents concluídos abaixo deste limite"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Exibir gráfico de rede"
         },
+        "showGpuUsage": {
+          "label": "Mostrar gráfico de uso da GPU"
+        },
+        "showGpuMemory": {
+          "label": "Mostrar gráfico de memória da GPU"
+        },
+        "showGpuPower": {
+          "label": "Mostrar gráfico de energia da GPU"
+        },
         "showDockerCpu": {
           "label": "Exibir gráfico de CPU Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Tráfego de rede das interfaces públicas",
           "sent": "Enviado",
           "recv": "Recebido"
+        },
+        "gpuUsage": {
+          "title": "Uso GPU",
+          "subtitle": "Utilização por GPU"
+        },
+        "gpuMemory": {
+          "title": "Memória da GPU",
+          "subtitle": "VRAM usada pela GPU"
+        },
+        "gpuPower": {
+          "title": "Potência da GPU",
+          "subtitle": "Consumo de energia por GPU"
         },
         "dockerCpu": {
           "title": "Uso de CPU Docker",

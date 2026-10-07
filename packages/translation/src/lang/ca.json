@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Mostra les entrades diverses marcades com a completades"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Amaga els torrents completats sota aquest llindar"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Mostra el gràfic de la xarxa"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Mostra el gràfic de CPU de Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Trànsit de xarxa de les interfícies públiques",
           "sent": "Enviat",
           "recv": "Rebut"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Ús de CPU de Docker",

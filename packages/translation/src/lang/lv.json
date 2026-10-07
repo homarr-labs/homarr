@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Rādīt pabeigtus dažādus ierakstus"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Paslēpt pabeigtos torrentus zem šī sliekšņa (KiB/s)"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Rādīt tīkla diagrammu"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Rādīt Docker CPU diagrammu"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Publisko interfeisu tīkla trafika",
           "sent": "Nosūtīts",
           "recv": "Saņemts"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU lietojums",

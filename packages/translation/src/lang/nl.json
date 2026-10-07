@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Diverse items gemarkeerd als voltooid weergeven"
         },
+        "includeArchivedHistory": {
+          "label": "Inclusief gearchiveerde SABnzbd geschiedenis",
+          "description": "Toon taken verplaatst naar archief."
+        },
+        "historyWindowDays": {
+          "label": "Gearchiveerd geschiedenisvenster (dagen)",
+          "description": "Beperk de voltooide SABnzbd geschiedenis tot deze vele dagen. Verhoog de limiet om meer resultaten te tonen."
+        },
         "activeTorrentThreshold": {
           "label": "Voltooide torrent verbergen onder deze drempel"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Toon netwerkgrafiek"
         },
+        "showGpuUsage": {
+          "label": "Toon GPU-gebruiksgrafiek"
+        },
+        "showGpuMemory": {
+          "label": "GPU-geheugendiagram weergeven"
+        },
+        "showGpuPower": {
+          "label": "GPU power grafiek weergeven"
+        },
         "showDockerCpu": {
           "label": "Toon Docker CPU-grafiek"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Netwerkverkeer van openbare interfaces",
           "sent": "Verzonden",
           "recv": "Ontvangen"
+        },
+        "gpuUsage": {
+          "title": "GPU gebruik",
+          "subtitle": "Gebruik met GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU geheugen",
+          "subtitle": "VRAM gebruikt door GPU"
+        },
+        "gpuPower": {
+          "title": "GPU Vermogen",
+          "subtitle": "Energie tekenen door GPU"
         },
         "dockerCpu": {
           "title": "Docker CPU-gebruik",

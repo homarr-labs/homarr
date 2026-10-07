@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "crwdns3154:0crwdne3154:0"
         },
+        "includeArchivedHistory": {
+          "label": "crwdns10861:0crwdne10861:0",
+          "description": "crwdns10863:0crwdne10863:0"
+        },
+        "historyWindowDays": {
+          "label": "crwdns10865:0crwdne10865:0",
+          "description": "crwdns10867:0crwdne10867:0"
+        },
         "activeTorrentThreshold": {
           "label": "crwdns8689:0crwdne8689:0"
         },
@@ -5086,7 +5094,7 @@
     },
     "beszelSystemStats": {
       "name": "crwdns4905:0crwdne4905:0",
-      "description": "crwdns4907:0crwdne4907:0",
+      "description": "crwdns10869:0crwdne10869:0",
       "option": {
         "systemId": {
           "label": "crwdns5657:0crwdne5657:0",
@@ -5109,6 +5117,15 @@
         },
         "showNetwork": {
           "label": "crwdns4919:0crwdne4919:0"
+        },
+        "showGpuUsage": {
+          "label": "crwdns10871:0crwdne10871:0"
+        },
+        "showGpuMemory": {
+          "label": "crwdns10873:0crwdne10873:0"
+        },
+        "showGpuPower": {
+          "label": "crwdns10875:0crwdne10875:0"
         },
         "showDockerCpu": {
           "label": "crwdns4921:0crwdne4921:0"
@@ -5163,6 +5180,18 @@
           "subtitle": "crwdns4959:0crwdne4959:0",
           "sent": "crwdns4961:0crwdne4961:0",
           "recv": "crwdns4963:0crwdne4963:0"
+        },
+        "gpuUsage": {
+          "title": "crwdns10877:0crwdne10877:0",
+          "subtitle": "crwdns10879:0crwdne10879:0"
+        },
+        "gpuMemory": {
+          "title": "crwdns10881:0crwdne10881:0",
+          "subtitle": "crwdns10883:0crwdne10883:0"
+        },
+        "gpuPower": {
+          "title": "crwdns10885:0crwdne10885:0",
+          "subtitle": "crwdns10887:0crwdne10887:0"
         },
         "dockerCpu": {
           "title": "crwdns4965:0crwdne4965:0",

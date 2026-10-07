@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "完了とマークされたその他の項目を表示"
         },
+        "includeArchivedHistory": {
+          "label": "アーカイブされた SABnzbd 履歴を含める",
+          "description": "ジョブをアーカイブに移動しました。"
+        },
+        "historyWindowDays": {
+          "label": "アーカイブされた履歴ウィンドウ (日)",
+          "description": "SABnzbd の履歴をこの多くの日に制限します。より多くの結果を表示するには、アイテムの上限を増やします。"
+        },
         "activeTorrentThreshold": {
           "label": "このしきい値より低速で完了したトレントを非表示にします"
         },
@@ -5086,7 +5094,7 @@
     },
     "beszelSystemStats": {
       "name": "",
-      "description": "",
+      "description": "CPU、メモリ、ディスク、ネットワーク、GPU、Dockerコンテナメトリックの時系列チャート",
       "option": {
         "systemId": {
           "label": "",
@@ -5109,6 +5117,15 @@
         },
         "showNetwork": {
           "label": ""
+        },
+        "showGpuUsage": {
+          "label": "GPU 使用率チャートを表示"
+        },
+        "showGpuMemory": {
+          "label": "GPU メモリチャートを表示"
+        },
+        "showGpuPower": {
+          "label": "GPU パワーチャートを表示"
         },
         "showDockerCpu": {
           "label": ""
@@ -5163,6 +5180,18 @@
           "subtitle": "",
           "sent": "",
           "recv": ""
+        },
+        "gpuUsage": {
+          "title": "GPU 使用率",
+          "subtitle": "GPUによる利用"
+        },
+        "gpuMemory": {
+          "title": "GPU メモリ",
+          "subtitle": "GPU で使用される VRAM"
+        },
+        "gpuPower": {
+          "title": "GPU パワー",
+          "subtitle": "GPU でのパワー描画"
         },
         "dockerCpu": {
           "title": "",

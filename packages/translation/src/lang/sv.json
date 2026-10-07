@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Visa slutförda övriga poster"
         },
+        "includeArchivedHistory": {
+          "label": "Inkludera arkiverad SABnzbd historik",
+          "description": "Visa jobb som flyttats till Arkiv."
+        },
+        "historyWindowDays": {
+          "label": "Arkiverade historikfönster (dagar)",
+          "description": "Begränsa SABnzbd historik till så här många dagar. Öka objektgränsen för att visa fler resultat."
+        },
         "activeTorrentThreshold": {
           "label": "Dölj slutförda torrentar under detta tröskelvärde (i kiB/s)"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Visa nätverksdiagram"
         },
+        "showGpuUsage": {
+          "label": "Visa GPU-användnings diagram"
+        },
+        "showGpuMemory": {
+          "label": "Visa GPU-minnesdiagram"
+        },
+        "showGpuPower": {
+          "label": "Visa GPU strömdiagram"
+        },
         "showDockerCpu": {
           "label": "Visa Docker CPU-diagram"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Nätverkstrafik för offentliga gränssnitt",
           "sent": "Skickat",
           "recv": "Mottaget"
+        },
+        "gpuUsage": {
+          "title": "GPU användning",
+          "subtitle": "Utnyttjande av GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU minne",
+          "subtitle": "VRAM används av GPU"
+        },
+        "gpuPower": {
+          "title": "GPU Effekt",
+          "subtitle": "Ström ritning av GPU"
         },
         "dockerCpu": {
           "title": "Docker CPU-användning",

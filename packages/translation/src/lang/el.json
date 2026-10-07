@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Εμφάνιση ολοκληρωμένων καταχωρίσεων Miscellaneous"
         },
+        "includeArchivedHistory": {
+          "label": "Συμπερίληψη αρχειοθετημένου ιστορικού SABnzbd",
+          "description": "Εμφάνιση θέσεων εργασίας που μεταφέρθηκαν στο Αρχειοθέτημα."
+        },
+        "historyWindowDays": {
+          "label": "Παράθυρο αρχειοθετημένου ιστορικού (ημέρες)",
+          "description": "Περιορισμός τελικού ιστορικού SABnzbd σε τόσες ημέρες. Αυξήστε το όριο του αντικειμένου για να εμφανίσετε περισσότερα αποτελέσματα."
+        },
         "activeTorrentThreshold": {
           "label": "Απόκρυψη ολοκληρωμένου torrent κάτω από αυτό το όριο (σε kiB/s)"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Εμφάνιση γραφήματος δικτύου"
         },
+        "showGpuUsage": {
+          "label": "Εμφάνιση γραφήματος χρήσης GPU"
+        },
+        "showGpuMemory": {
+          "label": "Εμφάνιση γραφήματος μνήμης GPU"
+        },
+        "showGpuPower": {
+          "label": "Εμφάνιση γραφήματος ισχύος GPU"
+        },
         "showDockerCpu": {
           "label": "Εμφάνιση γραφήματος CPU Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Κίνηση δικτύου των δημόσιων διεπαφών",
           "sent": "Απεσταλμένα",
           "recv": "Ληφθέντα"
+        },
+        "gpuUsage": {
+          "title": "Χρήση GPU",
+          "subtitle": "Χρησιμοποίηση από GPU"
+        },
+        "gpuMemory": {
+          "title": "Μνήμη GPU",
+          "subtitle": "VRAM που χρησιμοποιείται από GPU"
+        },
+        "gpuPower": {
+          "title": "Ισχύς GPU",
+          "subtitle": "Ισχύς ισοπαλία από GPU"
         },
         "dockerCpu": {
           "title": "Χρήση CPU Docker",

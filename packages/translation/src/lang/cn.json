@@ -1,46 +1,46 @@
 {
   "init": {
     "studio": {
-      "navigationLabel": "在线班级",
+      "navigationLabel": "初始化向导分区",
       "back": "上一步",
-      "buildBoard": "构建我的棋盘",
+      "buildBoard": "构建我的看板",
       "common": {
-        "unknownError": "出错了。您的选择仍然在这里，请重试。"
+        "unknownError": "出错了。您所做的选择仍会保留，请重试。"
       },
       "claim": {
-        "checking": "正在确保此登机会话…",
+        "checking": "正在保护此初始化会话…",
         "checkingTitle": "正在准备安全设置",
-        "lockedTitle": "安装程序在另一个浏览器中打开",
-        "lockedDescription": "继续，或等待安全的第一次运行会话过期，然后再尝试一次。",
+        "lockedTitle": "设置已在另一个浏览器中打开",
+        "lockedDescription": "请在那边继续，或等待安全的首次运行会话过期后再试。",
         "signInTitle": "需要管理员登录",
-        "signInDescription": "管理员已经存在。登录以恢复设置，无需显示凭据或服务访问权限。",
+        "signInDescription": "管理员已存在。登录即可继续设置，无需暴露凭据或服务访问权限。",
         "signIn": "登录并恢复",
-        "errorTitle": "设置无法安全",
-        "errorDescription": "重新加载页面以重试安全的第一次运行会话。"
+        "errorTitle": "无法安全完成设置",
+        "errorDescription": "重新加载页面以重试安全的首次运行会话。"
       },
       "navigation": {
         "essentials": "要点",
         "discover": "发现",
         "connect": "连接",
-        "board": "棋盘",
+        "board": "看板",
         "extend": "扩展",
         "review": "预览"
       },
       "welcome": {
         "title": "欢迎回家。",
-        "description": "欢迎使用 Homarr v{version}。我们将引导您了解基本功能，帮助您创建第一个面板。",
+        "description": "欢迎使用 Homarr v{version}。我们将引导您了解基本功能，帮助您创建第一个看板。",
         "start": "开始使用",
         "restore": "还原备份",
         "restoreTitle": "从备份恢复",
-        "restoreDescription": "完整的 SQLite 备份恢复板、人员、应用、集成和设置。Homarr 在替换任何东西之前验证它。",
+        "restoreDescription": "完整的 SQLite 备份可恢复看板、人员、应用、集成和设置。Homarr 会在替换任何内容之前进行验证。",
         "errorTitle": "安装程序无法启动",
-        "errorDescription": "您的设置选项仍然在这里。请重试，如果继续，请重新加载页面。"
+        "errorDescription": "您的设置选项仍会保留。请重试；若问题持续，请重新加载页面。"
       },
       "account": {
         "title": "创建您的管理员",
         "description": "指定您的管理员用户的凭证。",
         "username": "管理员用户名",
-        "passwordHint": "仅需要8个字符。其他密码强度检查是建议。",
+        "passwordHint": "只需至少 8 个字符，其他密码强度检查仅作建议。",
         "create": "创建管理员",
         "errorTitle": "无法创建管理员",
         "recoveryTitle": "管理员帐户已创建",
@@ -59,49 +59,49 @@
       },
       "essentials": {
         "title": "从熟悉的默认值开始",
-        "description": "设置语言和外观，然后给Homarr提供您的服务使用的地址模式。",
+        "description": "设置所有人首先看到的语言和外观，然后为 Homarr 提供您的服务使用的地址模式。",
         "language": "默认语言",
         "theme": "默认主题",
         "themeAuto": "系统",
         "themeLight": "日间",
         "themeDark": "暗黑",
-        "serverOriginHelp": "Homarr 使用此地址预置检测到的服务 URL。您仍然可以单独编辑每个服务。",
+        "serverOriginHelp": "Homarr 使用此地址预填检测到的服务 URL。您仍然可以单独编辑每个服务。",
         "serverDescription": "这是一种快捷方式，不是一种限制。每个检测到的服务都是可以编辑的。",
-        "serverOrigin": "域名、IP或逆向代理路径",
-        "serverOriginDescription": "示例：home.lan, 192.168.1.10, 或者 https://home.example.com/services。选择每项服务的附件方式。",
+        "serverOrigin": "域名、IP 或反向代理路径",
+        "serverOriginDescription": "示例：home.lan、192.168.1.10，或 https://home.example.com/services。在下方选择每项服务的附加方式。",
         "analytics": "分享匿名产品分析",
-        "analyticsDescription": "帮助Homarr 提高功能可靠性。没有发送服务凭据或仪表板内容。"
+        "analyticsDescription": "帮助 Homarr 提升功能可靠性，不会发送服务凭据或看板内容。"
       },
       "discover": {
-        "title": "查看此安装能够实际达到的目标",
-        "description": "Homarr 检查能力已经存在。缺少的 Docker 套接字或 Kubernetes 环境从来不会阻止手动设置。",
+        "title": "查看此安装实际能够访问的内容",
+        "description": "Homarr 会在本地检查实际能力。缺少 Docker 套接字或 Kubernetes 环境不会阻止手动设置。",
         "database": "数据库",
         "docker": "Docker 和兼容套接字",
         "kubernetes": "Kubernetes",
-        "assistantWorkshop": "助理和讲习班",
+        "assistantWorkshop": "助手和工坊",
         "found": "找到 {integrations} 个集成和 {apps} 个其他应用",
         "retryKubernetes": "再次检查 Kubernetes",
-        "retryWorkshop": "再次检查创意讲习班",
+        "retryWorkshop": "再次检查工作坊",
         "unknownVersion": "未知版本",
         "kubernetesAvailable": "已连接到 Kubernetes {version}",
-        "kubernetesDisabled": "未启用；继续使用 Docker或手动服务",
-        "kubernetesUnavailable": "Kubernetes 已启用，但无法从这个Homarr进程中连接",
-        "workshopAvailable": "社区讲习班和托管助理服务是可以获得的",
-        "workshopUnavailable": "本地和自定义助理提供商仍然可用",
-        "partialTitle": "无法扫描某些来源",
-        "partialDescription": "可访问主机的结果被保留。请检查套接字权限或在下一节手动添加服务。",
+        "kubernetesDisabled": "未启用；可继续使用 Docker 或手动服务",
+        "kubernetesUnavailable": "Kubernetes 已启用，但此 Homarr 进程无法连接到它",
+        "workshopAvailable": "可访问社区工作坊和托管的助手服务",
+        "workshopUnavailable": "本地和自定义助手提供商仍然可用",
+        "partialTitle": "部分数据源无法扫描",
+        "partialDescription": "会保留来自可访问主机的结果。请检查套接字权限，或在下一节手动添加服务。",
         "status": {
           "checking": "检查可用性…",
           "available": "可用",
           "partial": "部分可用",
-          "empty": "无匹配的运行服务",
-          "disabled": "被服务器配置禁用",
-          "unavailable": "无法从这个Homarr进程"
+          "empty": "可访问，但没有匹配的运行服务",
+          "disabled": "已被服务器配置禁用",
+          "unavailable": "此 Homarr 进程无法访问"
         }
       },
       "connect": {
-        "title": "连接使棋盘有用的内容",
-        "description": "一次性选择几项服务。停靠停靠标签优先，图像匹配填补空白，每个URL和凭据都可以保持审核。",
+        "title": "连接让看板真正有用的服务",
+        "description": "可一次选择多个服务。Docker 标签优先，镜像匹配补全空缺，每个 URL 和凭据都可单独检查。",
         "discoveredIntegrations": "检测到的集成实例（{count}）",
         "detectedIntegrationLabel": "导入 {name}，检测为 {kind}",
         "detectedAppLabel": "导入检测到的应用 {name}",
@@ -109,87 +109,87 @@
         "configureIntegrations": "配置集成",
         "discoveredApps": "检测到的应用（{count}）",
         "appAddressRequired": "为 {name} 添加地址，或将其从选择中移除。",
-        "empty": "未选择集成。Homarr 仍将创建一个有用的带有常规部件的启动板。",
+        "empty": "未选择集成。Homarr 仍会创建一个带常用部件的入门看板。",
         "dockerSource": "Docker",
-        "manualSource": "手动模式",
+        "manualSource": "手动",
         "url": "服务 URL",
         "noCredentials": "无凭据",
-        "noCredentialsDescription": "这种整合不需要凭据。",
+        "noCredentialsDescription": "此集成不需要凭据。",
         "credentialMethod": "凭据方法",
         "getApiKey": "打开此服务的 API 密钥设置",
-        "openGuide": "打开Homarr的安装指南",
+        "openGuide": "打开 Homarr 针对此服务的设置指南",
         "testConnection": "测试连接",
         "testSuccess": "连接正常工作",
-        "testSuccessDescription": "Homarr 与当前地址和凭据相关联。",
+        "testSuccessDescription": "Homarr 已使用当前地址和凭据连接成功。",
         "testError": "连接失败",
         "testErrorDescription": "请检查服务地址和凭据，然后重试。",
         "needsConfiguration": "需要配置",
-        "tested": "连接测试",
+        "tested": "连接已测试",
         "testFailed": "连接测试失败",
         "incompleteConfirmation": "未完成的集成将被跳过。是否继续？"
       },
       "board": {
-        "title": "构建前形状棋盘",
-        "description": "Homarr 创建受保护的移动设备和基础布局，然后从您选择的服务中放置应用和兼容的小部件。",
-        "target": "配置看板",
-        "targetDescription": "选择此设置应更新的确切面板。",
-        "targetPlaceholder": "选择棋盘",
+        "title": "在构建前先规划看板外观",
+        "description": "Homarr 会创建受保护的「移动端」和「基础」布局，然后从您选择的服务中放置应用和兼容的小部件。",
+        "target": "要配置的看板",
+        "targetDescription": "选择此设置要更新的现有看板。",
+        "targetPlaceholder": "选择看板",
         "targetRequired": "在继续之前选择要配置的看板。",
         "name": "面板名称",
-        "nameDescription": "用于棋盘URL；字母、数字、破折号和下划线。",
-        "nameRequired": "在继续之前输入棋盘名称。",
+        "nameDescription": "用于看板 URL；仅限字母、数字、破折号和下划线。",
+        "nameRequired": "继续前请输入看板名称。",
         "primaryColor": "主体色",
         "secondaryColor": "辅助色",
         "resetColors": "重置颜色",
-        "radius": "小部件角半径",
+        "radius": "小部件圆角半径",
         "radiusOptions": {
-          "xs": "极高",
+          "xs": "紧凑",
           "sm": "淡雅",
           "md": "平衡",
           "lg": "圆角",
-          "xl": "软体"
+          "xl": "柔和"
         },
-        "columns": "棋盘列",
-        "columnsDescription": "列定义大小和位置项所用的水平网格。对于大多数人来说，12是很多的。",
+        "columns": "看板列数",
+        "columnsDescription": "列决定了用于调整项目大小和位置的横向网格。对大多数人来说，12 列已经足够。",
         "columnCount": "{count, plural, one {# 列} other {# 列}}",
-        "leftSidebar": "Left sidebar",
+        "leftSidebar": "左侧边栏",
         "rightSidebar": "右侧边栏",
-        "previewLabel": "第一张棋盘布局的实时预览"
+        "previewLabel": "第一个看板布局的实时预览"
       },
       "extend": {
         "title": "高级功能",
-        "tabsLabel": "Assistant, workshop和 MCP 设置",
-        "assistant": "助理",
-        "workshop": "讲习班",
+        "tabsLabel": "Assistant、工作坊和 MCP 设置",
+        "assistant": "助手",
+        "workshop": "工作坊",
         "assistantSetup": {
           "loginTitle": "需要管理员登录",
-          "loginDescription": "提供者密钥和模型访问权限是特权，完成设置，登录，Homarr将直接打开助理配置。",
-          "loginAction": "登录以配置助理"
+          "loginDescription": "提供商密钥和模型访问属特权功能。完成设置并登录后，Homarr 将直接打开助手配置。",
+          "loginAction": "登录以配置助手"
         },
         "workshopSetup": {
-          "title": "Homarr 讲习班",
-          "description": "浏览社区自定义小部件、检查他们所要求的能力、安装它们并在不复制服务器之间的代码的情况下发布你自己的工作。",
+          "title": "Homarr 工作坊",
+          "description": "浏览社区自定义小部件、查看它们请求的能力、安装它们，并发布您自己的作品，无需在服务器之间复制代码。",
           "available": "可用",
           "checking": "正在检查…",
-          "unavailable": "Unavailable",
+          "unavailable": "不可用",
           "discoverTitle": "发现",
-          "discoverDescription": "查找为真正的自托管工作流构建的部件。",
-          "installTitle": "审查并安装",
+          "discoverDescription": "查找为真实自托管工作流打造的小部件。",
+          "installTitle": "查看并安装",
           "installDescription": "添加任何东西前查看元数据和配置。",
           "publishTitle": "分享",
-          "publishDescription": "发布可重复使用的小部件回到社区。",
-          "browse": "浏览讲习班"
+          "publishDescription": "将可重复使用的小部件发布回社区。",
+          "browse": "浏览工作坊"
         },
         "mcpSetup": {
           "title": "Homarr MCP",
-          "description": "将 Claude, Codex 或另一个 MCP 客户端连接到 Homarr 的已输入工具 API 密钥保持明确和可撤销。",
-          "endpoint": "可流的 HTTP 端点",
+          "description": "将 Claude、Codex 或其他 MCP 客户端连接到 Homarr 的类型化工具，API 密钥用于控制访问权限。",
+          "endpoint": "流式 HTTP 端点",
           "keyTitle": "现在复制此密钥",
           "keyDescription": "为了安全，Homarr 不能再次显示此 API 密钥。",
           "copyKey": "复制 API 密钥",
           "createKey": "创建 MCP API 密钥",
           "errorTitle": "无法创建 MCP API 密钥",
-          "loginRequired": "在设置 API 密钥后以管理员身份登录。",
+          "loginRequired": "设置完成后，以管理员身份登录即可创建 API 密钥。",
           "configuration": "客户端配置",
           "copy": "复制配置",
           "copied": "已复制",
@@ -197,46 +197,46 @@
         }
       },
       "review": {
-        "title": "一个面板，围绕您的服务创建",
-        "description": "Homarr 测试未保存的连接，导入选中的应用程序，应用外观和布局，然后打开它配置的准确版面。",
-        "board": "第一个板",
-        "columns": "棋盘列",
+        "title": "一个看板，围绕您的服务构建",
+        "description": "Homarr 会测试未保存的连接、导入所选应用、应用外观与布局，然后打开按您的选择配置好的看板。",
+        "board": "第一个看板",
+        "columns": "看板列数",
         "columnsValue": "{count, plural, one {# 列} other {# 列}}",
         "sidebars": "侧边栏",
-        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "sidebarsValue": "{count, plural, =0 {无} one {# 个侧边栏} other {# 个侧边栏}}",
         "layouts": "响应式布局",
-        "layoutsValue": "移动设备+基础",
+        "layoutsValue": "移动端 + 基础",
         "integrations": "集成",
         "integrationsValue": "{count, plural, =0 {没有选择} one {# 集成} other {# 集成}}",
-        "apps": "应用瓷块",
-        "appsValue": "{count, plural, =0 {仅启动程序} one {# 应用瓷块} other {# 应用瓷块}}",
+        "apps": "应用卡片",
+        "appsValue": "{count, plural, =0 {仅入门应用} one {# 个应用卡片} other {# 个应用卡片}}",
         "language": "语言",
         "theme": "主题",
-        "themeAuto": "系统首选项",
+        "themeAuto": "跟随系统",
         "themeLight": "日间",
         "themeDark": "暗黑",
         "colors": "看板颜色",
         "radius": "小部件半径",
         "automaticTitle": "Homarr 将创建什么",
         "automaticDescription": "兼容的小部件、图标、应用链接、集成关系和响应位置来自共享的 Homarr 目录。您可以稍后编辑每个结果。",
-        "dockerWarningTitle": "设置过程中更改了一些停靠标签",
-        "dockerWarningDescription": "{count, plural, one {# 选择的 Docker 结果无法应用，因为它的服务已被更改，针对另一个棋盘，或者它的小部件不兼容} other {# 选择的 Docker 结果无法应用，因为服务被更改，目标是另一个棋盘，或者他们的小部件不兼容}}",
-        "errorTitle": "无法构建棋盘",
+        "dockerWarningTitle": "设置过程中部分 Docker 标签发生了变化",
+        "dockerWarningDescription": "{count, plural, one {# 个所选 Docker 结果无法应用，因为其服务已变化、指向了另一个看板，或其小部件不兼容} other {# 个所选 Docker 结果无法应用，因为服务已变化、指向了另一个看板，或其小部件不兼容}}",
+        "errorTitle": "无法构建看板",
         "progress": {
-          "applying": "测试连接并构建您的棋盘",
-          "done": "您的棋盘已准备好"
+          "applying": "正在测试连接并构建您的看板",
+          "done": "您的看板已就绪"
         }
       },
       "finish": {
-        "title": "您的第一个棋盘已准备就绪。",
-        "description": "Homarr 连接了您选择的片段，并保持其余的可编辑性。 现在打开面板；短暂的产品内游览可以显示您编辑模式、小部件、布局和搜索。",
-        "openBoard": "打开我的棋盘",
+        "title": "您的第一个看板已就绪。",
+        "description": "已将您选择的组件连接到一起，其余内容保持可编辑。现在打开看板，产品内简短的导览会向您展示编辑模式、小部件等。",
+        "openBoard": "打开我的看板",
         "manageTitle": "管理",
-        "manageDescription": "微调应用、集成、板、用户和服务器设置。",
-        "workshopTitle": "讲习班",
+        "manageDescription": "微调应用、集成、看板、用户和服务器设置。",
+        "workshopTitle": "工坊",
         "workshopDescription": "发现并安装社区自定义小部件。",
-        "docsTitle": "学习Homarr",
-        "docsDescription": "阅读看板、部件、集成和工具的重点指南。"
+        "docsTitle": "了解 Homarr",
+        "docsDescription": "阅读看板、小部件、集成和工具的专题指南。"
       }
     }
   },
@@ -287,8 +287,8 @@
         "label": "数据大小单位",
         "description": "选择 Homarr 如何显示字节大小和字节速率。位速率总是使用小数单位。",
         "options": {
-          "binary": "二进制文件",
-          "decimal": "小数"
+          "binary": "二进制",
+          "decimal": "十进制"
         }
       },
       "enableRightClickOnWidgets": {
@@ -423,7 +423,7 @@
             "description": "允许成员创建、编辑和删除自定义小部件定义"
           },
           "secret-write": {
-            "label": "配置自定义小部件密钥",
+            "label": "配置自定义小部件秘密值",
             "description": "允许成员和他们的 API 密钥设置加密自定义小部件凭据"
           }
         }
@@ -535,33 +535,33 @@
         }
       },
       "matrix": {
-        "none": "无访问",
+        "none": "无访问权限",
         "impliedHint": "另授予：{permissions}",
-        "grantedViaAdmin": "管理员已经有这么做了。设置管理员为“没有访问权”来单独配置它。",
+        "grantedViaAdmin": "管理员已拥有此权限。将「管理员」设为「无访问权限」即可单独配置。",
         "preset": {
-          "label": "预设值",
-          "viewer": "查看器",
-          "viewerDescription": "只读：视图板和媒体，使用已经存在的应用和集成。",
+          "label": "预设",
+          "viewer": "查看者",
+          "viewerDescription": "只读：查看看板和媒体，使用已有的应用和集成。",
           "editor": "编辑器",
-          "editorDescription": "日常管理：创建和编辑板、应用、集成和搜索引擎。",
+          "editorDescription": "日常管理：创建和编辑看板、应用、集成和搜索引擎。",
           "admin": "管理员",
           "adminDescription": "不受限制地访问每个功能和设置，包括用户管理。",
           "custom": "自定义"
         },
         "effective": {
           "title": "有效权限",
-          "description": "该组成员可以执行完整、非重复的操作，包括间接授予的权限。",
+          "description": "该组成员可执行的完整、去重后的操作集合，包括间接授予的权限。",
           "empty": "未选择权限"
         },
-        "noneDescription": "成员无法进入此区域。",
+        "noneDescription": "成员无权访问此区域。",
         "level": {
           "view": "视图",
           "use": "使用",
-          "interact": "交互功能",
+          "interact": "交互",
           "modify": "修改",
-          "full": "完整的"
+          "full": "完全"
         },
-        "capabilityIncluded": "已包含在“{level}”中"
+        "capabilityIncluded": "已包含在「{level}」中"
       }
     },
     "memberNotice": {
@@ -679,12 +679,12 @@
         "ariaLabel": "已配置的应用",
         "noResults": {
           "title": "尚无应用",
-          "description": "应用是您想要的服务和工具的链接。",
+          "description": "应用是指向您看板上所需服务和工具的链接。",
           "action": "创建您的第一个应用",
           "filteredTitle": "没有符合您搜索条件的应用",
-          "filteredDescription": "没有应用匹配“{search}”。请尝试其他名称或 URL。",
+          "filteredDescription": "没有应用匹配「{search}」。请尝试其他名称或 URL。",
           "createOnlyTitle": "您只能添加应用",
-          "createOnlyDescription": "您的权限允许您创建应用，但不允许浏览现有应用。请管理员访问应用管理权限以查看完整列表。"
+          "createOnlyDescription": "您的权限允许您创建应用，但不允许浏览现有应用。请向管理员申请应用管理权限以查看完整列表。"
         }
       },
       "create": {
@@ -744,12 +744,12 @@
         "toggle": "点击以选择",
         "selected": "已选择",
         "multiple": "添加 {count}",
-        "selectedCount": "{count, plural, one {# 选择了} other {# 选择了}}",
-        "appsSelected": "{count, plural, one {# 应用程序选择} other {# 应用程序选择}}",
-        "selectMultiple": "选择多个选项",
+        "selectedCount": "{count, plural, one {已选择 # 项} other {已选择 # 项}}",
+        "appsSelected": "{count, plural, one {已选择 # 个应用} other {已选择 # 个应用}}",
+        "selectMultiple": "选择多个",
         "cancelMultiple": "退出多选",
-        "customApplication": "自定义应用程序",
-        "application": "适用范围"
+        "customApplication": "自定义应用",
+        "application": "应用"
       },
       "create": {
         "title": "创建应用",
@@ -759,19 +759,19 @@
     }
   },
   "tips": {
-    "dismiss": "清除提示",
-    "multiSelectApps": "提示：按住 Ctrl / 按键以选择多个应用"
+    "dismiss": "关闭提示",
+    "multiSelectApps": "提示：按住 Ctrl / ⌘ 可一次选择多个应用"
   },
   "customWidget": {
     "secretEntry": {
       "title": "配置 API 源",
-      "description": "确认服务器 URL 并输入凭据。秘密值由 Homarr 加密，不会返回请求代理人。",
+      "description": "确认服务器 URL 并输入凭据。秘密值由 Homarr 加密，不会返回给请求方。",
       "loading": "正在加载安全请求…",
-      "applying": "正在应用此配置… 保持此页面打开.",
+      "applying": "正在应用此配置……请保持此页面打开。",
       "saved": "API 源已配置。您可以关闭此页面。",
       "unavailable": "请求不可用",
       "saveError": "无法配置 API 源",
-      "source": "API 来源：{name}",
+      "source": "API 源：{name}",
       "baseUrl": "服务器 URL",
       "networkScope": "网络访问权限",
       "save": "保存 API 配置",
@@ -783,13 +783,13 @@
         "noDescription": "无描述",
         "enabled": "已启用",
         "disabled": "已禁用",
-        "disabledDescription": "这个小部件保持配置，但不会加载在任何棋盘上。",
+        "disabledDescription": "此小部件仍保留配置，但不会在任何看板上加载。",
         "requestCount": "{count, plural, one {# 请求} other {# 请求}}",
         "invalidDefinition": "无效的定义",
         "migrationRequired": "需要迁移",
-        "migrationInstructions": "打开复制或导出原始的 v1 定义的动作。 您也可以用LLM使用迁移提示。现有的版面在迁移后继续工作。",
-        "missingCredentials": "{count, plural, one {凭据丢失} other {# 凭据丢失}}",
-        "missingCredentialsDescription": "{count, plural, one {这个小部件仍然需要一个凭据。} other {这个小部件仍然需要 # 凭据。}} 选择这个徽章来配置URL和加密值。"
+        "migrationInstructions": "打开「操作」即可复制或导出原始 v1 定义以便手动重建，也可以配合 LLM 使用迁移提示。迁移后，看板上已有的位置仍可正常工作。",
+        "missingCredentials": "{count, plural, one {缺少凭据} other {缺少 # 个凭据}}",
+        "missingCredentialsDescription": "{count, plural, one {此小部件还需要 1 个凭据。} other {此小部件还需要 # 个凭据。}} 选择此徽章可配置 URL 和加密值。"
       },
       "create": {
         "title": "创建自定义小组件",
@@ -798,7 +798,7 @@
       "tabs": {
         "ariaLabel": "自定义小部件部分",
         "installed": "已安装",
-        "workshop": "讲习班"
+        "workshop": "工坊"
       }
     },
     "action": {
@@ -813,9 +813,9 @@
       "disable": "禁用",
       "menu": "操作",
       "downloadSkill": "查看自定义小部件技能",
-      "publishWorkshop": "发布到讲习班",
-      "migrate": "迁移自定义部件",
-      "configureSources": "配置源",
+      "publishWorkshop": "发布到工坊",
+      "migrate": "迁移自定义小部件",
+      "configureSources": "配置数据源",
       "copyLegacyDefinition": "复制小部件的原始内容",
       "exportLegacyDefinition": "导出小部件的原始内容",
       "copyMigrationPrompt": "复制 LLM 迁移提示",
@@ -833,15 +833,15 @@
     },
     "editor": {
       "errorBoundary": {
-        "title": "出了错。"
+        "title": "出错了。"
       },
       "action": {
         "components": "组件",
         "format": "格式",
-        "insertStarter": "Insert starter",
+        "insertStarter": "插入模板",
         "redo": "重做",
         "copied": "已复制",
-        "schema": "图案"
+        "schema": "架构"
       },
       "reference": {
         "minimal": "最小示例",
@@ -856,23 +856,23 @@
         "errors": "{count, number} 错误",
         "warnings": "{count, number} 警告",
         "ready": "未发现问题",
-        "position": "Ln {line, number}, Col {column, number}",
+        "position": "第 {line, number} 行，第 {column, number} 列",
         "characters": "{count, number} 字符",
         "charactersWithLimit": "{count, number} / {limit, number}"
       },
       "diagnostics": {
-        "title": "模板检测",
+        "title": "模板诊断",
         "line": "行 {line, number}",
         "ast": "{value}",
         "bindingTypeConflict": "输入“{value}”被值类型不兼容的控件共享。",
         "runtimeBindingTypeConflict": "输入“{value}”同时绑定为 {firstType} 和 {secondType}。",
-        "dynamicRequestId": "必须填写文字请求ID。动态请求ID不被接受。",
-        "dynamicInputBinding": "绑定需要一个文字输入名称。",
-        "inlineRequestProps": "网络组件接受 requestId 和参数；内联 URL、方法、头部和身体属性被屏蔽。",
+        "dynamicRequestId": "必须使用字面量 requestId，不接受动态请求 ID。",
+        "dynamicInputBinding": "bind 需要字面量输入名称。",
+        "inlineRequestProps": "网络组件接受 requestId 和 params；内联的 URL、method、header 和 body 属性会被阻止。",
         "invalidRequestManifest": "命名请求必须是有效的请求映射。{value}",
-        "missingRequestId": "此网络组件需要一个文字请求ID。",
+        "missingRequestId": "此网络组件需要字面量 requestId。",
         "templateEmpty": "输入JSX模板。",
-        "templateTooLong": "模板超过50 000个字符的限制。",
+        "templateTooLong": "模板超出 50,000 字符上限。",
         "unknownRequest": "不存在 ID 为“{value}”的命名请求。"
       }
     },
@@ -880,11 +880,11 @@
       "configure": "配置",
       "sectionNavigation": "自定义小部件部分",
       "widgetPreview": "小部件预览",
-      "generalInformation": "通告周知",
+      "generalInformation": "基本信息",
       "invalidWidget": "无效的小部件",
       "section": {
         "general": "常规",
-        "sources": "API 来源",
+        "sources": "API 源",
         "requests": "请求",
         "options": "选项",
         "jsx": "JSX",
@@ -896,21 +896,21 @@
         "ready": "就绪"
       },
       "saveError": {
-        "title": "部件未保存",
+        "title": "小部件未保存",
         "description": "修复这些验证错误并再次保存。",
         "more": "工作台中还显示了 {count} 个错误。",
         "errors": "验证错误",
         "copy": "复制错误",
-        "copied": "复制错误"
+        "copied": "错误已复制"
       },
       "action": {
         "preview": "测试和预览",
         "previewLoading": "测试请求"
       },
       "requests": {
-        "title": "命名查询和动作",
+        "title": "命名查询与操作",
         "label": "请求",
-        "description": "查询加载数据；操作只在用户交互后运行。任何 HTTP 方法对两种类型都是有效的。"
+        "description": "查询用于加载数据；操作仅在用户交互后运行。两种类型都支持任意 HTTP 方法。"
       },
       "options": {
         "title": "小部件选项"
@@ -918,7 +918,7 @@
       "builder": {
         "advancedManifest": "高级原始清单",
         "advancedJson": "高级清单 JSON",
-        "manifestFilename": "json",
+        "manifestFilename": "widget.json",
         "request": "请求 {count, number}",
         "requestId": "请求ID",
         "type": "下载客户端类型",
@@ -926,16 +926,16 @@
         "source": "API 源",
         "run": "运行",
         "runLoad": "小部件加载时",
-        "runManual": "从子获取",
+        "runManual": "手动触发",
         "permission": "权限",
         "path": "路径",
-        "pathDescription": "使用“{option:name}”作为小部件选项和“{param:name}”作为调用值。",
-        "requestDetails": "查询、实体和行为",
+        "pathDescription": "使用 {option:name} 表示小部件选项，{param:name} 表示调用值。",
+        "requestDetails": "查询、请求体与行为",
         "queryValues": "查询值",
-        "queryKey": "查询密钥",
-        "queryKeyInvalid": "使用唯一的ID，它以字母开头，只包含字母、数字或_。",
+        "queryKey": "查询键",
+        "queryKeyInvalid": "请使用唯一 ID：以字母开头，只能包含字母、数字、- 或 _。",
         "valueSource": "值源",
-        "literal": "纯文本",
+        "literal": "字面量",
         "widgetOption": "小部件选项",
         "invocationParameter": "调用参数",
         "option": "选项",
@@ -943,7 +943,7 @@
         "value": "值",
         "removeQueryValue": "删除查询值",
         "addQueryValue": "添加查询值",
-        "jsonBody": "JSON体",
+        "jsonBody": "JSON 请求体",
         "jsonBodyDescription": "可选。在任意深度插入 $option 和 $param 引用。",
         "insertOptionReference": "插入选项引用",
         "insertParameterReference": "插入参数引用",
@@ -957,28 +957,28 @@
         "addRequest": "添加请求",
         "optionName": "选项名称",
         "label": "标签",
-        "control": "控制",
+        "control": "控件",
         "description": "描述",
-        "default": "默认设置",
-        "optionDetails": "制约因素和动态选择",
+        "default": "默认值",
+        "optionDetails": "约束条件与动态选项",
         "minimum": "最小值",
         "maximum": "最大值",
         "step": "步骤",
-        "choiceLabel": "选择标签",
-        "choiceValue": "选择值",
-        "newChoice": "新的选择",
-        "addChoice": "添加选择",
-        "removeChoice": "移除选择",
+        "choiceLabel": "选项标签",
+        "choiceValue": "选项值",
+        "newChoice": "新选项",
+        "addChoice": "添加选项",
+        "removeChoice": "移除选项",
         "choicesRequest": "从请求中加载选项",
-        "itemsPath": "项目路径",
-        "itemsPathPlaceholder": "项目 (可选)",
+        "itemsPath": "条目路径",
+        "itemsPathPlaceholder": "items（可选）",
         "valuePath": "值路径",
         "labelPath": "标签路径",
         "group": "组",
         "advancedOption": "高级选项",
         "moveOptionUp": "上移选项",
         "moveOptionDown": "下移选项",
-        "removeOption": "删除选项",
+        "removeOption": "移除选项",
         "addOption": "添加选项",
         "invalidJson": "无效的 JSON",
         "invalidWidget": "无效的小部件"
@@ -988,62 +988,62 @@
         "label": "模板"
       },
       "sources": {
-        "title": "API 来源和凭据",
+        "title": "API 源与凭据",
         "newName": "API {count, number}",
         "duplicateSourceId": "API 源 ID 必须是唯一的。",
         "credentialRemoved": "凭据已删除",
-        "credentialRemovedDescription": "已删除存储的值。",
-        "primary": "主API",
+        "credentialRemovedDescription": "已存储的值已删除。",
+        "primary": "主 API",
         "id": "源 ID",
         "name": "作业名称",
         "baseUrl": "Base URL",
         "baseUrlError": {
           "invalid": "输入完整的 URL。",
           "protocol": "使用 HTTP 或 HTTPS URL。",
-          "credentials": "从此 URL 中删除用户名和密码。请在下方配置凭据。",
-          "queryOrFragment": "从此基础 URL 中删除查询字符串或片段，将查询值添加到命名请求。"
+          "credentials": "请从此 URL 中移除用户名和密码。",
+          "queryOrFragment": "请从基础 URL 中移除查询字符串或片段，将查询值添加到命名请求中。"
         },
         "networkScope": "网络访问权限",
         "authentication": "认证",
-        "headerName": "标题名称",
+        "headerName": "请求头名称",
         "queryParameter": "查询参数",
-        "configured": "配置 - 输入一个替换",
+        "configured": "已配置 — 输入新值即可替换",
         "clear": "晴朗",
-        "remove": "删除源及其请求",
-        "advanced": "高级版",
+        "remove": "移除源及其请求",
+        "advanced": "高级",
         "add": "添加另一个 API 源",
         "sourceType": "集成",
         "manualSource": "HTTP API",
         "existingIntegration": "现有集成",
         "integrationType": "集成类型",
-        "selectIntegration": "已配置集成",
-        "noIntegrations": "没有匹配的集成可用",
+        "selectIntegration": "已配置的集成",
+        "noIntegrations": "没有可用的匹配集成",
         "integrationUnavailable": "选中的集成不再可用。选择另一个集成。",
-        "integrationDescription": "使用已保存的集成 URL 和凭据。更改应用自动。运行请求需要完整的集成权限。"
+        "integrationDescription": "使用已保存的集成 URL 和凭据，更改会自动生效。运行请求需要完整的集成访问权限。"
       },
       "ai": {
-        "title": "使用任何AI 创建或修复",
-        "description": "如果您有一个 API 文档URL，请先添加一个 API 文档URL。若要修复，请尽可能运行预览。 复制提示到 AI; 它可以询问缺失的详细信息。请在此粘贴它的 JSON 定本。",
+        "title": "用任意 AI 创建或修复",
+        "description": "如有 API 文档 URL 请先添加。若要修复，请尽量先运行预览。将提示词复制到任意 AI（它可以追问缺失的细节），再把返回的最终 JSON 粘贴到这里。",
         "request": "这个小部件应该做什么？",
         "documentationUrl": "API 文档 URL (可选)",
         "paste": "粘贴",
         "response": "AI 响应",
-        "manualCopyDescription": "剪贴板访问不可用。选择下面的提示并手动复制它。",
-        "manualPasteDescription": "剪贴板访问不可用或复制的响应需要更正。请在此粘贴AI的 JSON 答复。",
+        "manualCopyDescription": "剪贴板不可用。请选中下方提示词手动复制。",
+        "manualPasteDescription": "剪贴板不可用，或复制的响应需要修正。请在此粘贴 AI 返回的 JSON。",
         "selectAll": "全选",
         "loadResponse": "加载响应",
-        "loaded": "部件加载到编辑器",
-        "invalidResponse": "剪贴板不包含一个有效的 v2 部件",
+        "loaded": "小部件已载入编辑器",
+        "invalidResponse": "剪贴板内容不是有效的 v2 小部件",
         "invalidResponseDetail": "AI 响应无效：{message}"
       },
       "preview": {
-        "invalid": "修复验证错误以预览此部件。",
-        "fixtureError": "预览灯具错误",
+        "invalid": "请先修复验证错误，再预览此小部件。",
+        "fixtureError": "预览示例数据错误",
         "requestData": "请求数据",
         "status": {
           "idle": "请求尚未测试",
           "loading": "测试请求",
-          "success": "所有加载请求成功",
+          "success": "所有加载请求均成功",
           "error": "一个或多个加载请求失败"
         },
         "result": {
@@ -1053,37 +1053,37 @@
           },
           "success": {
             "title": "预览已准备好",
-            "description": "{succeeded, plural, =0 {这个小部件没有加载请求。} one {# 加载请求成功。} other {# 加载请求成功。}} 打开数据来检查响应。"
+            "description": "{succeeded, plural, =0 {此小部件没有加载请求。} one {# 个加载请求成功。} other {# 个加载请求成功。}} 打开「数据」查看响应内容。"
           },
           "error": {
             "title": "预览已完成，请求错误",
-            "description": "{succeeded, number} 成功 {failed, number} 失败。打开回复和错误详细信息。"
+            "description": "{succeeded, number} 个成功，{failed, number} 个失败。打开「数据」查看响应与错误详情。"
           }
         },
         "instanceOptions": "实例选项",
         "liveActions": "对已配置的 API 运行操作",
-        "liveActionsDescription": "关闭是安全的模拟。开启此功能会影响到实际服务。",
+        "liveActionsDescription": "关闭时仅为模拟，安全。开启后会影响真实服务。",
         "noActions": "没有定义动作。",
-        "containedFailures": "此部件中包含运行时故障。请求日志绝不包含秘密值。",
+        "containedFailures": "运行时故障会被限制在此小部件内。请求日志绝不包含秘密值。",
         "validation": {
           "title": "验证",
           "ready": "小部件定义是有效的。"
         },
         "accessibility": {
           "title": "无障碍检查",
-          "ready": "未检测到常见的辅助缺漏。",
-          "pending": "当小部件定义有效时，将进行辅助功能检查。",
-          "imageAlt": "将备用文本添加到每个图像，只为装饰性图像使用空常数。",
-          "actionIconLabel": "在每个动作图标上添加一个条目或标题。",
-          "inputLabel": "为每个输入添加可见标签或可访问名称。"
+          "ready": "未发现常见的无障碍疏漏。",
+          "pending": "小部件定义有效后即会运行无障碍检查。",
+          "imageAlt": "为每个 Image 添加 alt 文本；装饰性图片才使用空 alt。",
+          "actionIconLabel": "为每个 ActionIcon 添加 aria-label 或 title。",
+          "inputLabel": "为每个输入添加可见标签或无障碍名称。"
         },
-        "journal": "修改请求日记",
-        "actionParameters": "动作参数 (JSON)",
+        "journal": "已脱敏的请求日志",
+        "actionParameters": "操作参数（JSON）",
         "invalidParameters": "使用声明的字符串、数字和布尔参数类型。",
         "runDestructive": "运行破坏性操作",
         "runAction": "运行操作",
         "deleteConfirmation": "此预览操作会通过已配置的 API 更改远程数据。",
-        "simulated": "模拟动作",
+        "simulated": "操作已模拟",
         "httpStatus": "HTTP {status, number}",
         "tab": {
           "widget": "小部件",
@@ -1094,12 +1094,12 @@
           "diagnostics": "诊断信息"
         },
         "size": {
-          "compact": "紧凑的",
-          "standard": "标准的",
-          "wide": "宽度"
+          "compact": "紧凑",
+          "standard": "标准",
+          "wide": "宽"
         },
         "fixture": {
-          "live": "实时模式",
+          "live": "实时",
           "loading": "加载中",
           "empty": "空",
           "error": "错误"
@@ -1111,7 +1111,7 @@
         "permission": {
           "view": "视图",
           "modify": "修改",
-          "full": "完整的"
+          "full": "完整"
         }
       }
     },
@@ -1120,17 +1120,17 @@
       "updated": "小组件“{name}”更新成功。",
       "deleted": "小组件“{name}”已删除。",
       "imported": "小组件导入成功。",
-      "migrated": "旧部件迁移成功。现有的棋盘位置现在使用 v2 定义。",
-      "migrationError": "无法迁移旧版小部件。确保文件使用homarr-custom-widget-v2 schema。",
-      "legacyDefinitionCopied": "已复制原始小部件内容。存储凭据值不包括在内。",
+      "migrated": "旧版小部件迁移成功。已有的看板位置现已使用 v2 定义。",
+      "migrationError": "迁移旧版小部件失败。请确认文件使用 homarr-custom-widget-v2 schema。",
+      "legacyDefinitionCopied": "已复制原始小部件内容。不包含已保存的凭据值。",
       "legacyDefinitionCopyError": "复制小部件原始内容失败。",
-      "migrationPromptCopied": "编辑的迁移提示已被复制。粘贴到LLM中，复制它的单个JSON响应，然后在此选择粘贴迁移的小部件。",
+      "migrationPromptCopied": "已复制脱敏后的迁移提示。将其粘贴到 LLM，复制返回的单个 JSON 响应，然后在此选择「粘贴迁移的小部件」。",
       "migrationPromptCopyError": "复制迁移提示失败。",
       "sourcesConfigured": "小部件源和凭据已保存。",
       "sourceConfigurationError": "配置小部件源失败。",
-      "aiPromptCopiedWithCount": "AI 提示已复制到剪贴板 ({count, number} 字符)。",
+      "aiPromptCopiedWithCount": "AI 提示已复制到剪贴板（{count, number} 个字符）。",
       "aiPromptCopyError": "复制提示词到剪贴板失败，您的浏览器可能不支持此功能。",
-      "aiPromptSent": "提示已发送。当助理在后台工作时，您可以继续编辑。",
+      "aiPromptSent": "助手在后台处理时，你可以继续编辑。",
       "updateError": "更新小组件失败，您的更改未能保存。",
       "importError": "导入小组件失败。请确保文件为有效的自定义小组件 JSON 导出文件。",
       "exportError": "导出小组件失败。",
@@ -1142,29 +1142,29 @@
     },
     "importReview": {
       "title": "审阅自定义小部件导入",
-      "description": "在导入之前检查这个小部件连接到哪里以及它的控制面板需要什么样的权限。",
+      "description": "导入前请确认此小部件连接到何处，以及其控件需要哪些看板权限。",
       "migrationTitle": "审核已迁移的 v2 替换",
-      "migrationDescription": "查看并确认此生成的 v2 定义。在保持现有的与同一个小部件相关联的棋盘位置的同时以原子形式确认替代保留的 v1 记录。",
-      "fileLabel": "选择一个自定义部件 JSON 文件",
+      "migrationDescription": "查看并确认生成的 v2 定义。确认后将原子性地替换保留的 v1 记录，同时让看板上已有的位置仍关联到同一小部件 ID。",
+      "fileLabel": "选择一个小部件 JSON 文件",
       "name": "作业名称",
-      "origin": "基本来源",
+      "origin": "基础来源",
       "authentication": "认证",
-      "networkScope": "网络范围",
+      "networkScope": "网络访问",
       "methods": "HTTP 方法",
-      "permissions": "所需的棋盘权限",
+      "permissions": "所需的看板权限",
       "sourceSetup": {
         "title": "配置 API 源",
-        "description": "确认此小部件连接哪里并添加凭据。私有和循环URL是针对您的 Homarr 安装的。",
+        "description": "确认此小部件连接到何处并添加凭据。私有地址和回环地址因你的 Homarr 部署而异。",
         "suggestedUrl": "建议的 URL",
-        "confirmUrl": "我确认此服务器URL对我的 Homarr 安装是正确的",
+        "confirmUrl": "我确认此服务器 URL 适用于我的 Homarr 部署",
         "ready": "URL 已就绪",
         "needsUrl": "确认 URL",
-        "credentialsMissing": "证书丢失",
-        "credentialsOptional": "您可以在没有凭据的情况下安装并稍后配置它们，但请求将失败，直到添加它们。"
+        "credentialsMissing": "缺少凭据",
+        "credentialsOptional": "可以不带凭据先安装、稍后再配置，但在添加之前请求都会失败。"
       },
       "actionWarning": {
         "title": "这个小部件可以更改远程数据",
-        "description": "在导入后查看每个命名行动、继承的凭据和破坏性确认。秘密不包含在文件中。"
+        "description": "导入后请逐一检查命名操作、继承的凭据和破坏性确认。文件中不包含密钥。"
       },
       "cancel": "取消导入",
       "confirm": "导入小部件",
@@ -1178,48 +1178,48 @@
     }
   },
   "workshop": {
-    "title": "讲习班",
-    "browseWorkshop": "浏览讲习班",
-    "openCommunity": "开放讲习班",
-    "openOnWorkshop": "在 Workshop 网站上打开 {title}",
-    "back": "返回创意讲习班",
+    "title": "工坊",
+    "browseWorkshop": "浏览工坊",
+    "openCommunity": "打开工坊",
+    "openOnWorkshop": "在工坊网站上打开 {title}",
+    "back": "返回工坊",
     "search": "搜索小部件",
     "searchCss": "搜索 CSS 主题",
     "sort": "排序",
     "sortTop": "最高评分",
     "sortNewest": "最新的",
-    "listAriaLabel": "创意小部件",
-    "listAriaLabelCss": "讲习班 CSS 主题",
+    "listAriaLabel": "工坊小部件",
+    "listAriaLabelCss": "工坊 CSS 主题",
     "empty": "没有匹配此搜索的小部件。",
-    "emptyDescription": "发布到讲习班的社区小部件显示在这里。",
-    "emptyFilteredTitle": "没有匹配此搜索的部件",
-    "emptyFilteredDescription": "没有 Workshop 小组件匹配“{search}”。",
+    "emptyDescription": "发布到工坊的社区小部件会显示在这里。",
+    "emptyFilteredTitle": "没有匹配此搜索的小部件",
+    "emptyFilteredDescription": "没有工坊小部件匹配“{search}”。",
     "emptyCss": "没有匹配此搜索的 CSS 主题。",
-    "unavailableTitle": "Homarr Workshop 似乎不可用",
-    "unavailable": "社区服务可能暂时关闭。稍后再试。您已安装的部件不受影响。",
+    "unavailableTitle": "Homarr 工坊似乎不可用",
+    "unavailable": "社区服务可能暂时中断，请稍后再试。您已安装的小部件不受影响。",
     "loadError": "无法加载此提交。",
     "noDescription": "无描述",
     "author": "作者：{name}",
     "communityMember": "社区成员",
-    "outdated": "过期时间",
-    "outdatedWarning": "提交人将这一呈件标记为过时。在导入前仔细审查。",
-    "score": "得分: {count, number}",
-    "upvote": "Upvote",
-    "downvote": "投反对票",
+    "outdated": "已过时",
+    "outdatedWarning": "作者已将此提交项标记为过时。导入前请仔细审查。",
+    "score": "得分：{count, number}",
+    "upvote": "赞成",
+    "downvote": "反对",
     "voteError": "投票无法保存。",
     "signIn": "使用 GitHub 登录",
-    "signInError": "GitHub 登录失败。请检查Workshop OAuth 提供商是否已配置，是否允许弹出窗口。",
+    "signInError": "GitHub 登录失败。请检查工坊 OAuth 提供商是否已配置，以及是否允许弹出窗口。",
     "signOut": "登出",
-    "signInHint": "登录以投票或报告。安装不需要创意工坊账户。",
-    "securityNotice": "创意小部件可以调用他们已声明的 API 来源，并使用您本地配置的凭据执行声明的操作。秘密永远不包括在内。",
-    "securityNoticeCss": "社区CSS 可以更改看板的外观和可用性；在导入前审查；在您保存看板设置之前没有保存任何内容。",
+    "signInHint": "登录后可投票或举报。安装不需要工坊账户。",
+    "securityNotice": "工坊小部件可以调用其声明的 API 源，并使用您在本地配置的凭据执行声明的操作。秘密值绝不会包含在内。",
+    "securityNoticeCss": "社区 CSS 可以更改看板的外观和可用性。导入前请先审查；在您保存看板设置之前不会保存任何内容。",
     "install": "安装",
     "installReviewTitle": "安装前审核",
     "installError": "这个小部件无法安装",
-    "installErrorDescription": "工坊提交不是一个有效的自定义 JSX v2 部件。",
-    "useCss": "Import CSS",
-    "importCss": "从创意工坊导入 CSS",
-    "importCssConfirm": "要将当前自定义 CSS 替换为“{title}”吗？在保存面板设置之前，不会保存任何更改。",
+    "installErrorDescription": "工坊提交不是有效的自定义 JSX v2 小部件。",
+    "useCss": "导入 CSS",
+    "importCss": "从工坊导入 CSS",
+    "importCssConfirm": "要将当前自定义 CSS 替换为“{title}”吗？在保存看板设置之前不会保存任何更改。",
     "screenshotAlt": "{title} 截图 {count, number}",
     "screenshotViewer": "{title} 截图查看器",
     "screenshotsLabel": "{title} 截图",
@@ -1230,50 +1230,50 @@
     "hideScreenshotThumbnails": "隐藏截图缩略图",
     "closeScreenshotViewer": "关闭截图查看器",
     "technicalDetails": "技术细节",
-    "sourceCode": "创意工坊条目",
+    "sourceCode": "工坊条目",
     "export": "导出",
-    "report": "报告",
-    "reportTitle": "报告提交",
+    "report": "举报",
+    "reportTitle": "举报提交项",
     "reportReason": "原因",
-    "reportExplanation": "讲习班主持人应当知道什么？",
-    "reportSend": "发送报告",
-    "reportSent": "报告已发送",
-    "reportSentDescription": "研讨会主持人现在可以审查这份报告。",
-    "reportCount": "{count, plural, one {# 报告} other {# 报告}}",
-    "reportWarning": "{count, plural, one {这个提交包含# 开放的社区报告} other {这个提交包含# 开放的社区报告。}} 它仍然可以安装，但你应该先审查它的内容。",
-    "reportVisibility": "报告详细信息仅对提交者和创意工坊管理员可见。",
+    "reportExplanation": "应该让工坊审核员知道什么？",
+    "reportSend": "发送举报",
+    "reportSent": "举报已发送",
+    "reportSentDescription": "工坊审核员现在可以审查此提交项。",
+    "reportCount": "{count, plural, one {# 条举报} other {# 条举报}}",
+    "reportWarning": "{count, plural, one {此提交项有 # 条未处理的社区举报。} other {此提交项有 # 条未处理的社区举报。}} 它仍然可以安装，但建议先审查其内容。",
+    "reportVisibility": "举报详情仅对该提交项的作者和工坊管理员可见。",
     "reportCategory": {
       "outdated": "过期或不再工作",
       "malicious": "恶意的",
       "spam": "垃圾邮件",
-      "copyright": "版权所有",
+      "copyright": "版权",
       "inappropriate": "不适当的",
       "other": "其它"
     },
     "publish": {
-      "title": "发布到讲习班",
+      "title": "发布到工坊",
       "introTitle": "与社区分享这个小部件",
-      "introDescription": "Homarr 导出当前部件的无凭据副本。添加清晰的列表细节，以便人们在安装前知道它做什么。",
+      "introDescription": "Homarr 会导出当前小部件的无凭据副本。请填写清晰的清单信息，让人们在安装前了解它的用途。",
       "listingDetails": "工坊清单",
-      "listingDetailsDescription": "这些详细信息与导出的部件定义一起公开显示。",
-      "success": "立即发布。社区成员现在可以安装和报告这个部件。",
-      "successTitle": "您的小部件已经在线",
-      "manageDescription": "打开提交更新其列表、审查报告、标记过期或删除它。提交管理将直接在讲习班网站上处理。",
+      "listingDetailsDescription": "这些详细信息与导出的小部件定义一起公开显示。",
+      "success": "已立即发布。社区成员现在可以安装和举报此小部件。",
+      "successTitle": "您的小部件已上线",
+      "manageDescription": "打开提交项可更新其清单、审查举报、标记为过时或删除。提交管理将直接在工坊网站上处理。",
       "viewSubmission": "查看和管理提交",
       "done": "完成",
-      "signInHint": "登录以发布您的创意工坊身份。",
+      "signInHint": "登录后将以您的工坊身份发布。",
       "titleField": "标题",
       "descriptionField": "描述",
       "screenshots": "屏幕截图",
-      "screenshotsDescription": "最多5张PNG，JPEG或WebP图像",
+      "screenshotsDescription": "最多 5 张 PNG、JPEG 或 WebP 图片",
       "screenshotsPlaceholder": "选择截图",
       "invalidScreenshot": "请使用 PNG、JPEG 或 WebP 图片，每张大小不得超过 {maxSize}。",
-      "privateSourceWarning": "此小组件包含以下内容的私有源 URL：{sources}。发布前，请将个人主机或 IP 地址替换为安全的服务占位符。",
+      "privateSourceWarning": "此小部件包含以下内容的私有源 URL：{sources}。发布前，请将个人主机或 IP 地址替换为安全的服务占位符。",
       "reviewSourcesTitle": "查看私有源 URL",
-      "privateSourceConfirmation": "我审查了这些源URL，不会泄露私人基础设施详细信息",
+      "privateSourceConfirmation": "我已审查这些源 URL，它们不会泄露私有基础设施的详细信息",
       "action": "现在发布",
-      "publicationNote": "发布是立即的。您可以在工作台后管理提交。",
-      "definitionChanged": "小部件在准备发布时已更改。请再次查看其私有源URL，然后重试。",
+      "publicationNote": "发布会立即生效。之后您可以在工坊上管理该提交项。",
+      "definitionChanged": "小部件在准备发布时已更改。请再次查看其私有源 URL，然后重试。",
       "error": "发布失败"
     }
   },
@@ -1281,16 +1281,16 @@
     "completion": {
       "modalTitle": "服务已准备好",
       "title": "{name} 已连接",
-      "description": "连接通过了测试。请选择下一步在该板上显示什么。",
+      "description": "连接已通过测试。请选择接下来要在看板上显示的内容。",
       "connectionReady": "服务连接已准备好",
       "appReady": "应用快捷方式已准备好",
       "compatibleWidgets": "{count, plural, =0 {没有兼容的小部件} one {# 兼容的小部件} other {# 兼容的小部件}}",
       "chooseWidget": "选择小部件",
       "recipes": {
-        "title": "推荐给此棋盘",
-        "description": "基于已连接的服务和小部件。",
+        "title": "推荐用于此看板",
+        "description": "基于已连接的服务以及此看板上已有的小部件。",
         "newConnectionReason": "现可通过 {integration} 使用",
-        "existingConnectionReason": "使用您已经连接的服务",
+        "existingConnectionReason": "可与您已连接的服务配合使用",
         "dismiss": "在此看板中取消关于此服务的建议"
       }
     },
@@ -1298,15 +1298,15 @@
       "list": {
         "ariaLabel": "已配置的集成",
         "search": "搜索集成",
-        "scopedNote": "只显示您被允许管理的集成。",
+        "scopedNote": "仅显示您有权管理的集成。",
         "noResults": {
           "title": "尚无集成",
-          "description": "连接一个服务来使用 Homarr 小部件中的数据和动作。",
+          "description": "连接服务后即可在 Homarr 小部件中使用其数据和操作。",
           "action": "创建您的第一个集成",
           "filteredTitle": "没有与您的搜索匹配的集成",
           "filteredDescription": "没有集成匹配“{search}”。请尝试其他名称、类型或 URL。",
           "createOnlyTitle": "您只能添加集成",
-          "createOnlyDescription": "您的权限允许您创建集成但不管理现有的集成。请询问管理员访问您需要的集成。"
+          "createOnlyDescription": "您的权限允许您创建集成，但不能管理已有的集成。请联系管理员为您授予所需集成的访问权限。"
         }
       },
       "create": {
@@ -1380,7 +1380,7 @@
       },
       "linkApp": {
         "label": "链接已存在的应用",
-        "description": "将此集成连接到您可以使用的应用程序。"
+        "description": "将此集成连接到您已能使用的应用。"
       },
       "appHref": {
         "placeholder": "自定义应用URL"
@@ -1397,8 +1397,8 @@
       "noWidgets": "暂无小组件",
       "detected": "通过 Docker 检测到",
       "connected": "{count, plural, one {# 已连接} other {# 已连接}}",
-      "tiedWidgets": "搭配小部件",
-      "more": "+{count} 个更多",
+      "tiedWidgets": "关联的小部件",
+      "more": "还有 {count} 个",
       "loadError": "无法加载集成。请在创建新连接前重试。"
     },
     "category": {
@@ -1732,8 +1732,8 @@
           "newLabel": "新索引器密码"
         },
         "wazuhDashboardUrl": {
-          "label": "仪表盘URL (可选)",
-          "newLabel": "新建控制面板网址"
+          "label": "仪表盘 URL（可选）",
+          "newLabel": "新仪表盘 URL"
         }
       }
     },
@@ -1825,7 +1825,7 @@
       "loading": "正在加载",
       "show": "显示",
       "hide": "隐藏",
-      "undo": "撤消操作",
+      "undo": "撤销",
       "editNamed": "编辑 {name}",
       "deleteNamed": "删除 {name}",
       "clearSearch": "清除搜索",
@@ -1838,26 +1838,26 @@
     },
     "here": "这里",
     "serviceUrlTemplate": {
-      "serverTitle": "通常服务器地址",
+      "serverTitle": "常用服务器地址",
       "urlModeLabel": "服务地址模式",
-      "hostPort": "同一个主机，不同的端口",
+      "hostPort": "同一主机，不同端口",
       "subdomain": "每个服务一个子域",
       "path": "每个服务一个路径"
     },
     "iconPicker": {
       "label": "图标 URL",
-      "description": "搜索库，粘贴图片URL，或上传文件。",
+      "description": "搜索图库、粘贴图片 URL，或上传文件。",
       "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标",
-      "headerLoading": "按名称搜索图像",
-      "clear": "清除图像",
+      "headerLoading": "按名称搜索图片",
+      "clear": "清除图片",
       "uploadImage": "上传图片",
-      "results": "图像搜索结果",
+      "results": "图片搜索结果",
       "localImages": "你的映像",
       "svgIcons": "SVG 图标",
       "otherImages": "其他映像",
       "urlLoading": "正在检查图片…",
-      "urlReady": "图像已准备好使用",
-      "urlError": "无法加载此图像。请检查URL，然后重试。",
+      "urlReady": "图片已可使用",
+      "urlError": "无法加载此图片。请检查 URL 后重试。",
       "noResults": "没有与“{search}”匹配的图标。",
       "error": "无法加载图标。"
     },
@@ -1914,8 +1914,8 @@
         "login": "登录",
         "homeBoard": "您的首页",
         "updateAvailable": "{countUpdates} 可用更新：{tag}",
-        "assistant": "助理",
-        "assistantThinking": "思维方式",
+        "assistant": "助手",
+        "assistantThinking": "思考中",
         "modifier": "Mod"
       }
     },
@@ -1969,7 +1969,7 @@
       "loading": "正在加载小部件数据"
     },
     "total": "请求总计",
-    "filesystemUsage": "{count, plural, one {显示#文件系统的使用} other {显示#文件系统的使用}}",
+    "filesystemUsage": "{count, plural, one {显示 # 个文件系统的使用量} other {显示 # 个文件系统的使用量}}",
     "field": {
       "name": "作业名称"
     },
@@ -1998,16 +1998,16 @@
         "description": "在内容上方显示容器标签。"
       },
       "collapsible": {
-        "label": "允许折叠...",
-        "description": "让观众扩展并折叠此容器。"
+        "label": "允许折叠",
+        "description": "允许访客展开和折叠此容器。"
       },
       "showOpenAll": {
-        "label": "显示打开所有动作",
-        "description": "在新标签中显示打开此容器中每个应用的动作。"
+        "label": "显示全部打开操作",
+        "description": "显示一个可在新标签页中打开此容器内所有应用的操作。"
       },
       "scrollable": {
         "label": "可滚动",
-        "description": "保持容器的大小并滚动其内装物，而不是成长才适合它们。"
+        "description": "让此容器保持设定大小并滚动其内容，而不是自动撑大以容纳它们。"
       }
     },
     "action": {
@@ -2021,9 +2021,9 @@
       "untitled": "无标题容器",
       "action": {
         "create": "新容器",
-        "remove": "删除容器",
-        "expand": "扩展",
-        "collapse": "收起"
+        "remove": "移除容器",
+        "expand": "展开",
+        "collapse": "折叠"
       },
       "option": {
         "title": {
@@ -2037,7 +2037,7 @@
         }
       },
       "remove": {
-        "message": "移除此容器？其内装物将移入周围区域。"
+        "message": "移除此容器？其中的内容将移入周围区域。"
       }
     }
   },
@@ -2077,8 +2077,8 @@
         "label": "添加到",
         "description": "选择小部件应显示的位置。您仍然可以稍后移动它。",
         "mainCanvas": "主画布",
-        "leftRail": "左铁轨",
-        "rightRail": "右铁轨"
+        "leftRail": "左侧栏",
+        "rightRail": "右侧栏"
       },
       "connectionStatus": {
         "ready": "就绪",
@@ -2089,42 +2089,42 @@
       "standalone": "独立的",
       "missingIntegration": {
         "title": "先连接一个服务",
-        "noPermission": "此部件需要兼容的服务连接。请管理员连接一个，然后重试。"
+        "noPermission": "此小部件需要兼容的服务连接。请管理员连接一个，然后重试。"
       },
       "notification": {
         "success": {
           "title": "小部件已添加",
-          "message": "{name} 已添加到此面板。",
+          "message": "{name} 已添加到此看板。",
           "relocatedMessage": "由于所选目标不可用，{name} 已添加到 {destination}。"
         },
         "error": {
           "title": "无法添加项目",
-          "message": "项目不能添加到该棋盘"
+          "message": "无法将此项目添加到此看板。"
         }
       }
     },
     "selection": {
       "summary": "{count, plural, one {# 选中项目} other {# 选中项目}}",
-      "selected": "{count, plural, one {# 选择了} other {# 选择了}}",
+      "selected": "{count, plural, one {# 已选中} other {# 已选中}}",
       "copy": "复制",
-      "copied": "{count, plural, one {# 项目复制到剪贴板} other {# 项目复制到剪贴板}}",
+      "copied": "{count, plural, one {已将 # 个项目复制到剪贴板} other {已将 # 个项目复制到剪贴板}}",
       "copyError": "无法复制选中的项目。您的浏览器可能不允许剪贴板访问。",
       "paste": "粘贴",
-      "pasteShortcut": "粘贴复制的项目到此处(Ctrl / Summary + V)",
-      "pasted": "{count, plural, one {# 项目粘贴} other {# 项目粘贴}}",
+      "pasteShortcut": "在此处粘贴复制的项目（Ctrl / ⌘ + V）",
+      "pasted": "{count, plural, one {已粘贴 # 个项目} other {已粘贴 # 个项目}}",
       "pasteError": "剪贴板无法读取。您的浏览器可能不允许剪贴板访问。",
-      "pasteInvalid": "剪贴板不包含有效的 Homarr 板项目。",
-      "pasteUnavailable": "复制的项目不适合此看板。",
-      "removed": "{count, plural, one {# 项目已删除} other {# 项目已删除}}",
+      "pasteInvalid": "剪贴板中没有有效的 Homarr 看板项目。",
+      "pasteUnavailable": "复制的项目无法放入此看板。",
+      "removed": "{count, plural, one {已移除 # 个项目} other {已移除 # 个项目}}",
       "move": "移动",
       "moveTo": "移动选中项目",
       "delete": "删除",
       "clear": "清除选择",
-      "clearShortcut": "清除选择 (scape)",
+      "clearShortcut": "清除选择（Escape）",
       "saveErrorTitle": "无法更新项目",
-      "saveErrorMessage": "无法保存更改。板已刷新。",
+      "saveErrorMessage": "无法保存更改。看板已刷新。",
       "moveUnavailableTitle": "无法移动选中的项目",
-      "moveUnavailableMessage": "目标没有足够的空间用于整个选择。"
+      "moveUnavailableMessage": "目标位置没有足够空间容纳整个选择。"
     },
     "moveResize": {
       "title": "移动/调整项目大小",
@@ -2134,22 +2134,22 @@
         "located": "{name}，{location}，目标 {index}"
       },
       "keyboard": {
-        "instructions": "按Enter或Space 键开始键盘编辑。使用箭头键移动，Shift加箭头键以调整大小，逃离键停止。",
-        "started": "键盘编辑已开始。使用箭头键移动，Shift+箭头键以调整大小，逃离键停止。",
+        "instructions": "按 Enter 或空格键开始键盘编辑。使用方向键移动，Shift 加方向键调整大小，按 Esc 键停止。",
+        "started": "键盘编辑已开始。使用方向键移动，Shift 加方向键调整大小，按 Esc 键停止。",
         "stopped": "键盘编辑已停止。",
-        "boundary": "这一改动不适合于本节。"
+        "boundary": "该改动无法放入此区域。"
       },
       "field": {
         "section": {
-          "label": "节或铁轨"
+          "label": "区域或侧栏"
         },
         "width": {
           "label": "宽度",
-          "shortLabel": "瓦文"
+          "shortLabel": "宽"
         },
         "height": {
           "label": "高度",
-          "shortLabel": "H"
+          "shortLabel": "高"
         },
         "xOffset": {
           "label": "X 偏移"
@@ -2171,15 +2171,15 @@
       },
       "integration": {
         "action": "编辑连接",
-        "description": "测试或修理选中的连接而不离开此部件。",
+        "description": "无需离开此小部件即可测试或修复选中的连接。",
         "editLabel": "编辑集成 {name}",
         "fullAccessRequired": "需要完全访问",
-        "propagationNotice": "对此集成的更改适用于使用的任何地方。连接在保存之前会经过测试。",
+        "propagationNotice": "对此集成的更改会在所有使用它的地方生效。保存前会先测试连接。",
         "loading": "正在加载集成",
         "loadError": "无法加载此集成。请在更改其连接设置之前再试一次。"
       },
       "preview": {
-        "integrationRequired": "选择一个连接来预览这个部件。",
+        "integrationRequired": "选择连接以预览此小部件。",
         "size": "文件大小"
       },
       "settings": {
@@ -2283,7 +2283,7 @@
           "label": "外观",
           "option": {
             "soft": {
-              "label": "软体"
+              "label": "柔和"
             },
             "filled": {
               "label": "填充"
@@ -2300,7 +2300,7 @@
           "label": "卡片间距",
           "option": {
             "xs": {
-              "label": "超小的"
+              "label": "超小"
             },
             "sm": {
               "label": "小"
@@ -2336,13 +2336,13 @@
         },
         "items": {
           "label": "书签",
-          "remove": "删除书签",
+          "remove": "移除书签",
           "apps": {
             "label": "添加书签",
-            "description": "粘贴URL或找到现有应用。拖动下面的书签来重新排序。",
-            "placeholder": "粘贴URL或搜索应用程序",
+            "description": "粘贴 URL 或选择现有应用。拖动下方书签可调整顺序。",
+            "placeholder": "粘贴 URL 或搜索应用",
             "addUrl": "添加此 URL",
-            "hint": "按下 Enter 添加一个 URL。粘贴逗号分隔或单行URL来添加几个。"
+            "hint": "按 Enter 键添加 URL。可粘贴以逗号分隔或每行一个的多个 URL。"
           }
         }
       },
@@ -2356,14 +2356,14 @@
           "label": "显示广播消息"
         }
       },
-      "noProjectSelected": "没有选择项目",
+      "noProjectSelected": "未选择项目",
       "runnerStatus": "运行器：{status}",
       "projectId": "项目：{id}",
       "sessionReceived": "已接收会话：{value}",
       "sessionSent": "已发送会话：{value}",
       "sessionId": "会话：{id}",
       "startedAt": "开始于 {date}",
-      "emptyItems": "在这个快照中没有活动或最近任务",
+      "emptyItems": "此快照中没有活动或最近任务",
       "metric": {
         "running": "运行中",
         "completed": "完成",
@@ -2472,11 +2472,11 @@
         },
         "dateFormat": {
           "label": "日期格式",
-          "description": "日期应该是什么样的"
+          "description": "选择一个 Day.js 预设。每个选项都会显示一个实时示例及其格式标记。"
         },
         "customTimeFormat": {
           "label": "自定义时间格式",
-          "description": "使用 ISO 8601 格式化时间 (这将覆盖其他选项)"
+          "description": "选择一个 Day.js 预设。所选格式决定时钟以 12 小时制还是 24 小时制显示，以及时钟是否每秒更新。"
         },
         "showWeather": {
           "label": "显示天气",
@@ -2487,21 +2487,21 @@
         },
         "animateWeatherIcon": {
           "label": "动态天气图标",
-          "description": "动画天气图标。默认禁用，并在请求减少移动时始终禁用。"
+          "description": "为天气图标添加动画。默认关闭；当系统请求减少动态效果时始终关闭。"
         },
         "colorWeatherByDayNight": {
           "label": "日间/夜间天气颜色",
-          "description": "使用白天颜色或夜色显示天气图标和温度， 基于是当前的日间还是夜间在选定的位置。"
+          "description": "根据所选地点当前是白天还是夜晚，为天气图标和温度使用日间色或夜间色。"
         },
         "dayWeatherColor": {
-          "label": "日颜色"
+          "label": "日间颜色"
         },
         "nightWeatherColor": {
           "label": "夜间颜色"
         },
         "worldClockCities": {
           "label": "世界时钟城市",
-          "description": "添加和订购最多6个城市高级视图。"
+          "description": "最多可添加并排序六个城市，用于高级视图。"
         }
       },
       "timezoneList": {
@@ -2516,22 +2516,22 @@
         "limit": "已配置 {count}/{maximum} 个城市"
       },
       "worldClock": {
-        "primary": "主要时钟",
+        "primary": "主时钟",
         "local": "本地时间",
         "today": "今天",
         "tomorrow": "明天",
-        "yesterday": "昨日",
-        "noSecondaryCities": "在小部件选项中添加城市来比较它们。",
+        "yesterday": "昨天",
+        "noSecondaryCities": "在小部件选项中添加城市即可在此对比。",
         "unsupportedPrimaryTitle": "主时区不可用",
         "unsupportedPrimary": "此浏览器不支持 {timeZone}。将显示 UTC 作为明确标记的备用时区。",
         "unsupportedTimeZone": "不支持的时区：{timeZone}",
         "accessibleTime": "{city}：{time}，{date}，{timeZone}",
         "advancedLabel": "高级世界时钟",
         "cities": "世界时钟",
-        "cityCount": "{count} timezones",
+        "cityCount": "{count} 个时区",
         "timeBarLabel": "{city} 的 24 小时制时间位置",
         "dayProgress": "已过去 {percent}% · 剩余 {hours} 小时 {minutes} 分钟",
-        "phaseLegend": "每日时间说明",
+        "phaseLegend": "时段图例",
         "tick": {
           "midnight": "00",
           "morning": "06",
@@ -2546,16 +2546,16 @@
           "dusk": "18–21"
         },
         "phase": {
-          "night": "晚间",
-          "dawn": "黎明省",
-          "day": "日",
-          "dusk": "杜斯克"
+          "night": "夜晚",
+          "dawn": "黎明",
+          "day": "白天",
+          "dusk": "黄昏"
         }
       }
     },
     "airQuality": {
-      "name": "空气质量 & UV",
-      "description": "显示空气质量、紫外线指数、污染物和长花。",
+      "name": "空气质量与紫外线",
+      "description": "显示某地的空气质量、紫外线指数、污染物和花粉。",
       "option": {
         "location": {
           "label": "空气质量位置"
@@ -2563,48 +2563,48 @@
         "aqiStandard": {
           "label": "AQI 标准",
           "options": {
-            "auto": "自动为区域设置",
-            "european": "欧洲AQI",
-            "us": "美国AQI"
+            "auto": "按区域自动",
+            "european": "欧洲 AQI",
+            "us": "美国 AQI"
           }
         },
         "showUv": {
-          "label": "显示 UV 索引"
+          "label": "显示紫外线指数"
         },
         "showPollutants": {
-          "label": "显示污染物的浓度"
+          "label": "显示污染物浓度"
         },
         "showPollen": {
-          "label": "显示Pollen浓度值"
+          "label": "显示花粉浓度"
         }
       },
       "category": {
-        "good": "好",
-        "fair": "公平的",
-        "moderate": "中度",
-        "unhealthySensitive": "敏感群组不健康",
+        "good": "优",
+        "fair": "尚可",
+        "moderate": "中等",
+        "unhealthySensitive": "对敏感人群不健康",
         "unhealthy": "不健康",
-        "poor": "差的",
-        "veryPoor": "极度贫穷",
+        "poor": "差",
+        "veryPoor": "很差",
         "veryUnhealthy": "非常不健康",
-        "extremelyPoor": "极端贫穷",
+        "extremelyPoor": "极差",
         "hazardous": "危险",
-        "unknown": "没有读取 AQI"
+        "unknown": "无 AQI 读数"
       },
       "uv": {
-        "label": "紫外线索引",
+        "label": "紫外线指数",
         "category": {
           "low": "低",
-          "moderate": "中度",
+          "moderate": "中等",
           "high": "高",
           "veryHigh": "非常高",
           "extreme": "极限",
-          "unknown": "无读"
+          "unknown": "无读数"
         }
       },
-      "dominantPollutant": "Dominant pollutant",
+      "dominantPollutant": "主要污染物",
       "aqiLabel": "AQI",
-      "strongestPollen": "最高分数",
+      "strongestPollen": "花粉最高",
       "unit": {
         "concentration": "{value} µg/m³",
         "pollen": "{value} 花粉粒/m³"
@@ -2612,28 +2612,28 @@
       "pollutant": {
         "pm2_5": "PM2.5",
         "pm10": "PM10",
-        "ozone": "Ozone",
-        "nitrogenDioxide": "二氧化氮（二氧化氮）",
-        "sulphurDioxide": "Sulphur dioxide",
-        "carbonMonoxide": "一氧化碳量"
+        "ozone": "臭氧",
+        "nitrogenDioxide": "二氧化氮",
+        "sulphurDioxide": "二氧化硫",
+        "carbonMonoxide": "一氧化碳"
       },
       "pollen": {
-        "alder": "Alder",
-        "birch": "鸟类",
-        "grass": "草地",
-        "mugwort": "Mugwort",
-        "olive": "橄榄色",
-        "ragweed": "已断开"
+        "alder": "桤木",
+        "birch": "桦树",
+        "grass": "禾本科",
+        "mugwort": "艾蒿",
+        "olive": "橄榄",
+        "ragweed": "豚草"
       },
       "compact": {
-        "sixHourTrend": "随后六小时内AQI趋势"
+        "sixHourTrend": "未来六小时的 AQI 趋势"
       },
       "advanced": {
         "observedAt": "更新于 {time}",
-        "next24Hours": "24小时后",
-        "pollutants": "污染物的浓度：",
-        "pollen": "Pollen浓度：",
-        "sevenDayForecast": "7天最大预测",
+        "next24Hours": "未来 24 小时",
+        "pollutants": "污染物浓度",
+        "pollen": "花粉浓度",
+        "sevenDayForecast": "未来 7 天最高预测",
         "aqiValue": "AQI {value}",
         "uvValue": "UV {value}",
         "uvShort": "UV {value}",
@@ -2642,18 +2642,18 @@
     },
     "countdown": {
       "name": "倒计时",
-      "description": "跟踪即将到来的事件和经常发生的周年纪念日。",
+      "description": "跟踪即将到来的事件和每年重复的纪念日。",
       "option": {
         "events": {
           "label": "事件",
-          "description": "添加和订购最多20次一次性或每年倒计时。日期是在选定的时区中输入的。"
+          "description": "最多可添加并排序 20 个一次性或每年重复的倒计时。日期按所选时区填写。"
         },
         "showProgress": {
           "label": "显示进度"
         },
         "showSeconds": {
           "label": "显示秒数",
-          "description": "为即将发生的事件保留秒数。"
+          "description": "为每个即将到来的事件始终显示秒数。"
         }
       },
       "dateTimeEventList": {
@@ -2669,7 +2669,7 @@
           "none": "不重复",
           "yearly": "每年"
         },
-        "target": "活动日期和时间",
+        "target": "事件日期和时间",
         "trackProgress": "从开始日期跟踪进度",
         "start": "进度开始日期和时间",
         "confirmDateTime": "确认日期和时间",
@@ -2677,89 +2677,89 @@
       },
       "empty": {
         "title": "还没有倒计时",
-        "description": "在小部件选项中添加一个事件开始计数。"
+        "description": "在小部件选项中添加事件即可开始倒计时。"
       },
       "completed": "已完成",
       "yearly": "每年一次",
       "progress": "事件进度",
-      "upcoming": "即将到来的",
-      "completedEvents": "已完成的活动",
+      "upcoming": "即将到来",
+      "completedEvents": "已完成的事件",
       "invalid": {
         "title": "某些事件不能显示",
         "description": "{count, plural, one {一个事件的日期无效或不支持的时区。} other {# 事件的日期无效或不支持的时区}}",
-        "value": "Unavailable"
+        "value": "不可用"
       },
       "alert": {
         "notifications": "浏览器通知",
-        "permissionDenied": "通知在本浏览器中被阻止。",
+        "permissionDenied": "已在此浏览器中屏蔽通知。",
         "reached": "倒计时已达到目标。"
       }
     },
     "timer": {
-      "name": "Timer / Pomodoro",
-      "description": "运行一个简单的计时器或一个可配置的番茄序。",
+      "name": "定时器 / 番茄钟",
+      "description": "运行简单的计时器，或可配置的番茄钟序列。",
       "option": {
         "mode": {
           "label": "模式",
           "options": {
             "timer": "定时器",
-            "pomodoro": "Pomodoro"
+            "pomodoro": "番茄钟"
           }
         },
         "timerMinutes": {
-          "label": "计时器分钟"
+          "label": "定时时长（分钟）"
         },
         "focusMinutes": {
-          "label": "聚焦分钟"
+          "label": "专注时长（分钟）"
         },
         "shortBreakMinutes": {
-          "label": "短休息分钟"
+          "label": "短休息时长（分钟）"
         },
         "longBreakMinutes": {
-          "label": "长休息分钟"
+          "label": "长休息时长（分钟）"
         },
         "sessionsBeforeLongBreak": {
-          "label": "长休息之前的聚焦会话"
+          "label": "长休息前的专注轮数"
         },
         "autoStartBreaks": {
-          "label": "自动开始换行"
+          "label": "自动开始休息"
         },
         "autoStartFocus": {
-          "label": "自动启动焦点会话"
+          "label": "自动开始专注"
         }
       },
       "phase": {
         "timer": "定时器",
-        "focus": "聚焦点",
-        "shortBreak": "短暂休息时间",
-        "longBreak": "长课间休息时间"
+        "focus": "专注",
+        "shortBreak": "短休息",
+        "longBreak": "长休息"
       },
       "action": {
         "start": "开始",
         "pause": "暂停",
-        "reset": "Reset"
+        "reset": "重置"
       },
       "attention": {
-        "timerComplete": "Timer complete",
+        "timerComplete": "计时结束",
         "phaseReady": "{phase} 已就绪"
       },
       "progress": "计时器进度：{progress}%",
       "compact": {
-        "completedFocus": "{count, plural, =0 {没有焦点会话完成} one {# 焦点会话完成} other {# 焦点会话完成}}"
+        "completedFocus": "{count, plural, =0 {未完成任何专注轮} one {已完成 # 轮专注} other {已完成 # 轮专注}}"
       },
       "alert": {
-        "title": "Timer complete",
+        "title": "计时结束",
         "completed": "{phase} 已完成。"
       },
       "advanced": {
-        "sequence": "Pomodoro sequence",
-        "focusSession": "专注于 {session}",
+        "sequence": "番茄钟序列",
+        "focusSession": "第 {session} 轮专注",
         "settings": "永久设置",
-        "settingsHint": "使用小部件上下文菜单编辑这些棋盘设置。",
+        "settingsHint": "使用小部件右键菜单可编辑这些看板设置。",
         "localAlerts": "本地警报",
         "notifications": "浏览器通知",
         "sound": "计时器声音",
-        "localAlertsHint": "默认情况下启用计时器声音。声音和通知仅适用于此浏览器中的这个部件。",
+        "localAlertsHint": "默认开启计时器声音。声音和通知仅对浏览器中的此小部件生效。",
         "notificationsDenied": "通知在本浏览器中被阻止。"
       }
     },
@@ -2787,7 +2787,7 @@
       "option": {
         "baseUrl": {
           "label": "Search.ch URL",
-          "description": "自定义 URLs 必须解析为一个公共IP地址。私有和本地主机被拒绝。"
+          "description": "自定义 URL 必须解析到公网 IP 地址，私有地址和本地主机会被拒绝。"
         },
         "station": {
           "label": "车站",
@@ -2795,12 +2795,12 @@
         }
       },
       "error": {
-        "customSourceUnavailable": "时间表源不可用。请检查其URL是否已解析为公共IP地址。",
-        "stationSearch": "无法搜索站点。请检查自定义URL和您的看板访问权限。"
+        "customSourceUnavailable": "时刻表源不可用。请确认其 URL 能解析到公网 IP 地址。",
+        "stationSearch": "无法搜索车站。请检查自定义 URL 和看板访问权限。"
       },
       "warning": {
-        "stale": "无法刷新时刻表。显示上次于 {time} 更新的出发信息。",
-        "staleCompact": "旧数据"
+        "stale": "无法刷新时刻表，显示的出发信息最后更新于 {time}。",
+        "staleCompact": "数据已过期"
       }
     },
     "notebook": {
@@ -2843,7 +2843,7 @@
         "link": "链接",
         "unlink": "删除链接",
         "image": "嵌入图片",
-        "insertTable": "插入表",
+        "insertTable": "插入表格",
         "insertTableSize": "插入 {columns} × {rows} 表格",
         "deleteTable": "删除表格",
         "colorCell": "单元格颜色",
@@ -2855,8 +2855,8 @@
         "addRowTop": "在前面添加行",
         "addRowBelow": "在后面添加行",
         "deleteRow": "删除整行",
-        "toggleHeaderRow": "切换头部行",
-        "toggleHeaderColumn": "切换头部列"
+        "toggleHeaderRow": "切换标题行",
+        "toggleHeaderColumn": "切换标题列"
       },
       "align": {
         "left": "左边",
@@ -2906,10 +2906,10 @@
       "permission": {
         "owner": "所有者",
         "editor": "编辑器",
-        "viewer": "查看器"
+        "viewer": "查看者"
       },
       "status": {
-        "pinned": "固定的",
+        "pinned": "已固定",
         "archived": "已归档"
       }
     },
@@ -2974,15 +2974,15 @@
       "state": {
         "on": "开启",
         "off": "关闭",
-        "unavailable": "Unavailable",
+        "unavailable": "不可用",
         "unknown": "未知"
       },
       "advanced": {
         "entityId": "实体 ID：{id}",
-        "lastChanged": "更改于 {date}",
+        "lastChanged": "上次变更 {date}",
         "attribute": {
           "unit": "单位",
-          "deviceClass": "设备类",
+          "deviceClass": "设备类别",
           "icon": "图标"
         }
       },
@@ -3008,7 +3008,7 @@
       "advanced": {
         "lastExecuted": "上次运行于 {time}",
         "automationId": "自动化 ID：{id}",
-        "ready": "准备运行",
+        "ready": "可运行",
         "noPermission": "没有权限运行此自动化"
       },
       "status": {
@@ -3024,8 +3024,8 @@
       "description": "显示公司的当前股价",
       "advanced": {
         "currentPrice": "当前价格",
-        "previousClose": "上次关闭",
-        "changePercentage": "更改 (%)",
+        "previousClose": "前收盘价",
+        "changePercentage": "涨跌幅（%）",
         "minimum": "最小值",
         "maximum": "最大值"
       },
@@ -3102,7 +3102,7 @@
         },
         "showDetails": {
           "label": "显示详细信息",
-          "description": "在紧凑视图中显示名称、更改和时间范围。仅仅为符号和价格关闭。"
+          "description": "在紧凑视图中显示名称、涨跌和时间范围；关闭后仅显示代码和价格。"
         }
       }
     },
@@ -3133,7 +3133,7 @@
       },
       "advanced": {
         "previousMonth": "显示上月",
-        "nextMonth": "下个月显示",
+        "nextMonth": "显示下月",
         "eventCount": "{count, plural, one {# 事件} other {# 事件}}",
         "loading": "正在加载日历事件...",
         "noEvents": "本月无事件"
@@ -3150,7 +3150,7 @@
           "label": "禁用温度小数"
         },
         "animateIcons": {
-          "label": "动态天气图标"
+          "label": "天气图标动画"
         },
         "showHumidity": {
           "label": "显示湿度"
@@ -3173,7 +3173,7 @@
         }
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
-      "disabled": "由于禁用出站连接，天气数据不可用",
+      "disabled": "出站连接已禁用，天气数据不可用",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日落",
@@ -3200,14 +3200,14 @@
       "details": "显示天气详细信息",
       "detailsFor": "显示 {date} 的天气详情",
       "advanced": {
-        "forecast": "7天预测",
-        "hourlyForecast": "24小时后",
-        "day": "日",
+        "forecast": "未来 7 天预报",
+        "hourlyForecast": "未来 24 小时",
+        "day": "白天",
         "time": "时间",
-        "conditions": "条件",
+        "conditions": "天气状况",
         "temperature": "温度",
         "feelsLike": "体感温度 {temperature}",
-        "feelsLikeLabel": "感觉像",
+        "feelsLikeLabel": "体感温度",
         "feelsLikeRange": "体感温度：{maximum} / {minimum}",
         "highLow": "最高 {maximum} · 最低 {minimum}",
         "observedAt": "更新于 {time}",
@@ -3215,14 +3215,14 @@
         "averageHumidity": "平均湿度：{humidity}%",
         "currentHumidity": "当前湿度",
         "wind": "风速 / 阵风（{unit}）",
-        "currentWind": "当前风力/风量",
+        "currentWind": "当前风速 / 阵风",
         "windValue": "{speed} / {gusts} {unit}",
         "windDetail": "最大风速 / 阵风：{speed} / {gusts} {unit}",
-        "nextHourPrecipitation": "下一个小时降水量",
-        "precipitationChance": "降水几率",
-        "precipitationValue": "{probability}% · {amount} 毫米",
+        "nextHourPrecipitation": "未来一小时降水",
+        "precipitationChance": "降水概率",
+        "precipitationValue": "{probability}% · {amount} mm",
         "precipitationDetail": "降水：{probability}% · {amount} mm",
-        "todayUv": "今日最大UV指数",
+        "todayUv": "今日最大紫外线指数",
         "uvIndex": "最高 UV 指数：{value}",
         "daylight": "日照时长：{duration}",
         "hourlyTooltip": "体感温度 {feelsLike}{temperatureUnit} · {amount} mm · 湿度 {humidity}% · 风速 {speed} {speedUnit}",
@@ -3231,11 +3231,11 @@
           "feelsLike": "感觉像",
           "precipitation": "降水",
           "humidity": "平均湿度",
-          "wind": "最大风/风暴数",
-          "uv": "最大紫外线索引",
-          "daylight": "Daylight"
+          "wind": "最大风速 / 阵风",
+          "uv": "最大紫外线指数",
+          "daylight": "日照"
         },
-        "sun": "日出/日落数",
+        "sun": "日出 / 日落",
         "noForecast": "没有可用的预报数据"
       }
     },
@@ -3374,9 +3374,9 @@
       "description": "容器的统计信息（此小组件仅管理员权限可添加）",
       "option": {
         "endpointIds": {
-          "label": "停靠环境",
-          "description": "留空显示每个停靠环境中的容器",
-          "placeholder": "所有停靠环境"
+          "label": "Docker 环境",
+          "description": "留空则显示所有 Docker 环境中的容器",
+          "placeholder": "所有 Docker 环境"
         },
         "containerFilter": {
           "label": "要过滤的容器"
@@ -3395,7 +3395,7 @@
       },
       "error": {
         "internalServerError": "获取容器统计信息失败",
-        "endpointsUnavailable": "停靠端点不可用",
+        "endpointsUnavailable": "Docker 端点不可用",
         "layoutSaveTitle": "表格布局未保存",
         "layoutSaveMessage": "Docker 表格布局无法保存。请再次尝试移动或调整列宽。"
       },
@@ -3430,13 +3430,13 @@
       },
       "server": {
         "buildServer": "编译",
-        "resourceCounts": "{applications, plural, one {# 应用程序} other {# 应用程序}} / {services, plural, one {# 服务} other {# 服务}}",
+        "resourceCounts": "{applications, plural, one {# 应用} other {# 应用}} / {services, plural, one {# 服务} other {# 服务}}",
         "reachability": "可达性",
         "usability": "可用性"
       },
       "source": {
         "url": "来源：{url}",
-        "unavailable": "{source}: unavailable"
+        "unavailable": "{source}：不可用"
       },
       "instances": {
         "title": "实例"
@@ -3445,7 +3445,7 @@
         "openResource": "打开 {name}",
         "openLogs": "打开 {name} 日志",
         "showIp": "显示 IP 地址",
-        "hideIp": "隐藏IP地址"
+        "hideIp": "隐藏 IP 地址"
       },
       "status": {
         "running": "运行中",
@@ -3458,7 +3458,7 @@
         "offline": "离线",
         "reachable": "可访问",
         "unreachable": "无法访问",
-        "usable": "可用的",
+        "usable": "可用",
         "unusable": "不可用"
       }
     },
@@ -3469,7 +3469,7 @@
       "status": {
         "running": "运行中",
         "notRunning": "未运行",
-        "unavailable": "Unavailable",
+        "unavailable": "不可用",
         "vpn": "VPN：{status}"
       }
     },
@@ -3500,7 +3500,7 @@
         "input": "输入",
         "output": "输出",
         "batteryVoltage": "电池电压",
-        "power": "战斗力",
+        "power": "功率",
         "temperature": "温度",
         "manufacturer": "制造商",
         "model": "模型",
@@ -3726,7 +3726,7 @@
       },
       "visibleStorageVolumes": {
         "label": "可见存储卷",
-        "description": "只有当每个选定的集成都是 OpenMediaVault 或 Synology时才可用。留空则显示所有检测到的存储卷。",
+        "description": "仅当所选集成全部为 OpenMediaVault 或 Synology 时可用。留空则显示所有检测到的存储卷。",
         "placeholder": "选择存储卷"
       },
       "tableOptions": {
@@ -3779,7 +3779,7 @@
       "option": {
         "showOnlyPlaying": {
           "label": "只显示当前正在播放",
-          "description": "禁用此功能对plex不起作用"
+          "description": "并非所有媒体服务器都支持此选项。"
         },
         "showBitrate": {
           "label": "显示比特率",
@@ -3807,7 +3807,7 @@
         "transcoding": "转码中",
         "paused": "已暂停",
         "remaining": "剩余 {minutes} 分钟",
-        "seasonEpisode": "S{season} E{episode}",
+        "seasonEpisode": "第 {season} 季 第 {episode} 集",
         "metadata": {
           "title": "技术统计",
           "video": {
@@ -4041,7 +4041,7 @@
       "movies": "缺失电影",
       "providers": "提供商问题",
       "status": "健康问题",
-      "announcements": "通知",
+      "announcements": "公告",
       "option": {
         "showMissingEpisodes": {
           "label": "显示缺失剧集",
@@ -4118,7 +4118,7 @@
       "actions": {
         "previousPhoto": "上一张照片",
         "nextPhoto": "下一张照片",
-        "pauseSlideshow": "Pause slideshow",
+        "pauseSlideshow": "暂停幻灯片",
         "resumeSlideshow": "恢复幻灯片",
         "toggleSlideshow": "暂停或恢复幻灯片",
         "photo": "照片 {number}"
@@ -4136,6 +4136,14 @@
         },
         "showCompletedHttp": {
           "label": "显示标记为已完成的杂项"
+        },
+        "includeArchivedHistory": {
+          "label": "包含已归档的 SABnzbd 历史记录",
+          "description": "显示已移至归档的任务。"
+        },
+        "historyWindowDays": {
+          "label": "归档历史时间范围（天）",
+          "description": "只显示最近这么多天内已完成的 SABnzbd 历史记录。提高条目上限可显示更多结果。"
         },
         "activeTorrentThreshold": {
           "label": "隐藏在此阈值下已完成的 Torrent"
@@ -4163,14 +4171,14 @@
       },
       "items": {
         "actions": {
-          "columnTitle": "控制"
+          "columnTitle": "操作"
         },
         "added": {
           "columnTitle": "已添加",
           "detailsTitle": "添加日期"
         },
         "category": {
-          "columnTitle": "扩展的",
+          "columnTitle": "分类",
           "detailsTitle": "分类(额外信息)"
         },
         "downSpeed": {
@@ -4311,10 +4319,10 @@
     },
     "mediaRequests-requestList": {
       "name": "媒体请求列表",
-      "description": "查看 Overr 或 Jellyseerr 实例中的所有媒体请求列表",
+      "description": "查看来自您的 Seerr、Overseerr 或 Jellyseerr 实例的所有媒体请求列表。",
       "empty": {
         "title": "尚无媒体请求",
-        "description": "搜索电影或显示开始请求。"
+        "description": "搜索电影或剧集以发起请求。"
       },
       "option": {
         "linksTargetNewTab": {
@@ -4431,7 +4439,7 @@
     },
     "mediaMissing": {
       "name": "缺失和排队媒体",
-      "description": "显示来自 Radarr 和 Sonarr 的缺失和排队的电影和剧集",
+      "description": "显示来自 {radarr}、{sonarr} 和 {bindery} 的缺失和排队的电影、剧集和书籍",
       "option": {
         "showMissing": {
           "label": "显示缺失项目"
@@ -4483,11 +4491,11 @@
         }
       },
       "error": {
-        "allFeedsFailed": "无法加载 RSS 源。请检查feed URL，然后重试。"
+        "allFeedsFailed": "请检查订阅源 URL 后重试。"
       },
       "warning": {
-        "partial": "{count, plural, one {# RSS Feed 无法加载} other {# RSS Feed 无法加载}}",
-        "stale": "RSS源无法刷新。显示之前加载的条目。"
+        "partial": "{count, plural, one {# 个 RSS 源无法加载} other {# 个 RSS 源无法加载}}",
+        "stale": "RSS 源无法刷新，显示的是上次加载的内容。"
       }
     },
     "releases": {
@@ -4713,9 +4721,9 @@
       "versionUnknown": "未知版本",
       "metricAccessible": "{metric}：{value}%，{status}",
       "status": {
-        "normal": "普通的",
+        "normal": "正常",
         "warning": "警告",
-        "critical": "关键的"
+        "critical": "严重"
       }
     },
     "notifications": {
@@ -4729,7 +4737,7 @@
         "messageFormat": {
           "label": "消息格式",
           "option": {
-            "auto": "自动的",
+            "auto": "自动",
             "plain": "纯文本",
             "markdown": "Markdown",
             "html": "HTML"
@@ -4983,7 +4991,7 @@
       "status": {
         "unhealthy": "异常",
         "smart": "SMART",
-        "free": "剩余 {percentage}% 可用空间"
+        "free": "可用 {percentage}%"
       }
     },
     "customApi": {
@@ -4992,8 +5000,8 @@
       "customJsx": {
         "noTemplate": "没有配置 JSX 模板。",
         "templateWarnings": "{count} 个模板警告：",
-        "requestIdRequired": "这个网络控制需要一个命名的请求 Id 。",
-        "unsavedPreview": "在测试命名请求之前在编辑器中运行初始请求测试。",
+        "requestIdRequired": "此网络控制需要指定 requestId。",
+        "unsavedPreview": "测试命名请求前，请先在编辑器中运行初始请求测试。",
         "invalidParams": "请求参数无效。",
         "loading": "正在加载请求...",
         "loadRequest": "加载请求",
@@ -5001,11 +5009,11 @@
         "retry": "重试请求",
         "actionCompleted": "操作成功完成。",
         "actionSimulated": "模拟动作；没有发送请求。",
-        "actionsDisabledEditMode": "当棋盘处于编辑模式时操作被禁用。",
-        "widgetItemUnavailable": "此部件项不可用。",
-        "toggle": "切换键",
+        "actionsDisabledEditMode": "看板处于编辑模式时，操作已被禁用。",
+        "widgetItemUnavailable": "此小部件项不可用。",
+        "toggle": "切换",
         "copied": "已复制",
-        "confirmDelete": "确认此破坏性动作。"
+        "confirmDelete": "请确认此破坏性操作。"
       },
       "option": {
         "definitionId": {
@@ -5018,25 +5026,25 @@
       },
       "noDefinition": "未选择定义",
       "definitionNotFound": "找不到该小组件，可能已被删除。",
-      "migrationRequired": "这个旧的自定义小部件被保存，但它必须从管理自定义小部件迁移到自定义 JSX v2 后才能运行。",
-      "manageMigration": "打开管理自定义部件",
+      "migrationRequired": "此旧版自定义小部件会保留，但需先在「管理自定义小部件」中迁移到 Custom JSX v2 才能运行。",
+      "manageMigration": "打开「管理自定义小部件」",
       "contactAdmin": "联系管理员。",
       "configurationNeedsRepair": "此小部件的选项已更改。编辑小部件以修复其配置。",
-      "removeFromBoard": "从棋盘中移除",
-      "editModePending": "保存面板以加载此部件。",
+      "removeFromBoard": "从看板移除",
+      "editModePending": "保存看板以加载此小部件。",
       "picker": {
-        "group": "自定义 JSX 部件",
+        "group": "自定义 JSX 小部件",
         "empty": "找不到自定义小部件",
         "preview": "预览",
         "sources": "{count, plural, one {# 源} other {# 源}}",
         "requests": "{count, plural, one {# 请求} other {# 请求}}",
         "migrationRequired": "需要迁移",
-        "migrationDescription": "这个放置的v1部件还不能运行。复制它的编辑提示到LLM，然后粘贴单个JSON响应到Homarr。",
-        "manageMigration": "打开管理自定义部件",
+        "migrationDescription": "此 v1 小部件尚不能运行。将其脱敏后的提示词复制到 LLM，再把返回的单个 JSON 响应粘贴回 Homarr。",
+        "manageMigration": "打开「管理自定义小部件」",
         "contactAdmin": "联系管理员。"
       },
       "configuration": {
-        "needsAttention": "配置需要注意：{message}",
+        "needsAttention": "配置需要处理：{message}",
         "advancedOptions": "高级选项",
         "invalidJson": "无效的 JSON"
       }
@@ -5076,7 +5084,7 @@
       "history": "历史记录",
       "resolved": "已解决",
       "alertDescription": {
-        "statusDuration": "已关闭 {minutes} 分钟",
+        "statusDuration": "离线 {minutes} 分钟",
         "threshold": "在 {minutes} 分钟内超过 {value}"
       },
       "status": {
@@ -5086,7 +5094,7 @@
     },
     "beszelSystemStats": {
       "name": "Beszel 系统统计",
-      "description": "CPU、内存、磁盘、网络和 Docker 容器指标的时序图表",
+      "description": "CPU、内存、磁盘、网络、GPU 和 Docker 容器指标的时序图表",
       "option": {
         "systemId": {
           "label": "系统",
@@ -5109,6 +5117,15 @@
         },
         "showNetwork": {
           "label": "显示网络图表"
+        },
+        "showGpuUsage": {
+          "label": "显示 GPU 使用率图表"
+        },
+        "showGpuMemory": {
+          "label": "显示 GPU 显存图表"
+        },
+        "showGpuPower": {
+          "label": "显示 GPU 功耗图表"
         },
         "showDockerCpu": {
           "label": "显示 Docker CPU 图表"
@@ -5149,7 +5166,7 @@
         },
         "diskIO": {
           "title": "磁盘 I/O",
-          "subtitle": "根文件系统的吞吐量",
+          "subtitle": "按文件系统吞吐量",
           "read": "读取",
           "write": "写入"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "公网接口的网络流量",
           "sent": "发送",
           "recv": "已接收"
+        },
+        "gpuUsage": {
+          "title": "GPU 使用率",
+          "subtitle": "各 GPU 的使用率"
+        },
+        "gpuMemory": {
+          "title": "GPU 显存",
+          "subtitle": "各 GPU 使用的显存"
+        },
+        "gpuPower": {
+          "title": "GPU 功耗",
+          "subtitle": "各 GPU 的功耗"
         },
         "dockerCpu": {
           "title": "Docker CPU 使用率",
@@ -5180,7 +5209,7 @@
       "period": {
         "live": "实时模式",
         "oneHour": "1 小时",
-        "twelveHours": "12小时",
+        "twelveHours": "12 小时",
         "oneDay": "24 小时",
         "oneWeek": "1 周",
         "thirtyDays": "30 天"
@@ -5188,20 +5217,20 @@
     },
     "assistant": {
       "name": "助理",
-      "description": "直接在您的版面上拥有完整的助手对话。",
+      "description": "直接在您的看板上进行完整的助手对话。",
       "unavailable": {
         "title": "助理不可用",
-        "description": "登录并请管理员从管理面板配置助手。"
+        "description": "登录后请管理员在管理面板中配置助手。"
       },
       "compact": {
         "title": "助理",
-        "description": "调整这个小部件的大小以在这里聊天或打开整个对话。",
+        "description": "调整此小部件的大小即可在此聊天，或打开完整对话。",
         "open": "打开助手",
-        "openTitle": "助理在侧面板中打开",
-        "openDescription": "对话保持在一个活跃的表面。",
+        "openTitle": "助手已在侧面板中打开",
+        "openDescription": "对话始终保留在一个活动界面上。",
         "returnToWidget": "返回对话到这个小部件",
-        "otherWidgetTitle": "在另一个小部件中活动的助手",
-        "otherWidgetDescription": "每次只有一个对话表面仍然有效。",
+        "otherWidgetTitle": "助手正在另一个小部件中活动",
+        "otherWidgetDescription": "同一时间只能有一个对话界面处于活动状态。",
         "useHere": "在这个部件中使用助手"
       }
     },
@@ -5254,7 +5283,7 @@
         "system": "系统",
         "source": "集成",
         "hostname": "主机名",
-        "cpuModel": "CPU 模型",
+        "cpuModel": "CPU 型号",
         "cores": "核心",
         "memoryTotal": "内存总计",
         "memory": "内存",
@@ -5301,7 +5330,7 @@
         "speed": "{value} t/s",
         "parameters": "{value}B",
         "none": "—",
-        "speedShort": "/秒"
+        "speedShort": "t/s"
       },
       "option": {
         "showTitle": {
@@ -5333,7 +5362,7 @@
         "promptSpeed": "Prompt 速度",
         "avgSpeed": "平均生成速度",
         "requests": "请求数",
-        "deferred": "排队中",
+        "deferred": "已延迟",
         "slots": "Slot 占用 {processing}/{total}",
         "speculative": "投机解码",
         "avgPrompt": "平均 Prompt 速度",
@@ -5347,22 +5376,22 @@
       "description": "在一个可配置的部件中合并您的集成统计信息。",
       "configure": "配置指标",
       "refresh": "刷新统计",
-      "empty": "打开小部件设置，选择集成，然后添加计数。",
-      "editorHelp": "从为这个部件选择的集成中添加计量。更改将在您的仪表板中保存。",
+      "empty": "打开小部件设置，选择集成，然后添加指标。",
+      "editorHelp": "从为该小部件选择的集成中添加指标。更改会随看板一起保存。",
       "source": "集成",
-      "metric": "公制",
+      "metric": "指标",
       "noMetrics": "没有此集成可用的统计数据",
-      "add": "添加公制",
+      "add": "添加指标",
       "label": "自定义标签",
       "hidden": "隐藏",
-      "compact": "简洁号码",
+      "compact": "精简数字",
       "moveUp": "上移",
       "moveDown": "下移",
-      "remove": "移除公制",
+      "remove": "移除指标",
       "loading": "正在加载…",
-      "unavailable": "Unavailable",
-      "refreshFailed": "刷新失败 - 显示保存的数据",
-      "stale": "保存数据 — 刷新以更新",
+      "unavailable": "不可用",
+      "refreshFailed": "刷新失败 — 显示已保存的数据",
+      "stale": "已保存的数据 — 刷新以更新",
       "table": {
         "value": "值",
         "status": "状态"
@@ -5381,13 +5410,13 @@
           "label": "间距",
           "option": {
             "xs": {
-              "label": "紧凑的"
+              "label": "紧凑"
             },
             "sm": {
-              "label": "舒适的"
+              "label": "舒适"
             },
             "md": {
-              "label": "Spacious"
+              "label": "宽松"
             }
           }
         },
@@ -5395,16 +5424,16 @@
           "label": "指标"
         },
         "plain": {
-          "label": "删除卡片背景"
+          "label": "移除卡片背景"
         }
       },
       "fetchFailed": "无法获取统计",
       "viewOptions": "自定义此视图",
       "moreMetrics": "高级视图中还有 {count} 个指标",
-      "localHelp": "仅适用于此视图的布局、格式化和可见性。共享板设置保持不变。",
-      "plain": "删除卡片背景",
+      "localHelp": "布局、格式和可见性仅对此视图生效，共享的看板设置不受影响。",
+      "plain": "移除卡片背景",
       "resetView": "重置视图",
-      "allHidden": "在此视图中隐藏所有的计量。使用自定义此视图来还原它们。"
+      "allHidden": "此视图中所有指标均已隐藏。使用「自定义此视图」可恢复显示。"
     },
     "wazuh": {
       "target": {
@@ -5416,20 +5445,20 @@
         "low": "低",
         "medium": "中",
         "high": "高",
-        "critical": "关键的"
+        "critical": "严重"
       },
       "error": {
         "unauthorized": {
           "title": "{target} 拒绝了凭据",
-          "description": "检查在 Wazu 集成中保存的用户名和密码。服务器 API (端口 55000)和索引器 (9200) 使用单独的用户。"
+          "description": "检查 Wazuh 集成中保存的用户名和密码。服务器 API（端口 55000）与索引器（端口 9200）使用不同的用户。"
         },
         "certificate": {
           "title": "{target} 的证书不受信任",
-          "description": "Wazuh 默认使用自签名证书。在集成中运行“测试连接”并信任证书，或在“设置 -> 证书”下添加您的CA。"
+          "description": "Wazuh 默认使用自签名证书。请在集成中运行「测试连接」并信任该证书，或在「设置 → 证书」中添加你的 CA 证书。"
         },
         "unreachable": {
           "title": "无法连接到 {target}",
-          "description": "主机拒绝或丢弃了连接。请检查URL、端口和防火墙。索引器只在本地主机默认安装中监听。"
+          "description": "主机拒绝或中断了连接。请检查 URL、端口和防火墙。默认一体化安装中，索引器只监听本地地址。"
         },
         "timeout": {
           "title": "{target} 请求超时",
@@ -5441,28 +5470,28 @@
         },
         "invalidResponse": {
           "title": "{target} 返回了意外响应",
-          "description": "请检查URL指向Wazuh服务器 API 或索引器，而不是指向仪表盘。"
+          "description": "请确认该 URL 指向 Wazuh 服务器 API 或索引器，而不是仪表盘。"
         },
         "indexerRequired": {
           "title": "需要Wazuh 索引器凭据",
-          "description": "从Wazuh索引器读取警报、脆弱性和文件完整性事件。在集成中添加索引器 URL、用户名和密码。"
+          "description": "告警、漏洞和文件完整性事件均从 Wazuh 索引器读取。请在集成中添加索引器 URL、用户名和密码。"
         },
         "unknown": {
           "title": "无法从 {target} 加载数据",
-          "description": "检查 Homarr 日志的详细信息。"
+          "description": "详情请查看 Homarr 日志。"
         }
       },
       "range": {
         "1h": "1 小时",
         "24h": "24 小时",
-        "7d": "7天",
+        "7d": "7 天",
         "30d": "30 天"
       },
       "levelTooltip": "规则级别 {level}（{severity}）"
     },
     "wazuhAgents": {
       "name": "Wazuh 代理",
-      "description": "具有状态、OS、版本和最后存活状态的 Wazuh 代理人可排序列表",
+      "description": "可排序的 Wazuh 代理列表，含状态、系统、版本和最后保活时间",
       "option": {
         "statusFilter": {
           "label": "显示代理"
@@ -5492,58 +5521,58 @@
         "pending": "待处理",
         "unknown": "未知"
       },
-      "live": "实时模式",
-      "snapshot": "快照已存在 {age}",
-      "snapshotHint": "读取于 {time} 获取的 Wazuh 仪表板代理快照（wazuh-monitoring）。添加服务器 API 凭据以获取实时数据。",
+      "live": "实时",
+      "snapshot": "快照距今 {age}",
+      "snapshotHint": "数据来自 {time} 抓取的 Wazuh 仪表盘代理快照（wazuh-monitoring）。添加服务器 API 凭据以获取实时数据。",
       "staleSnapshot": "{time} 的代理快照已过时。请检查 Wazuh 仪表板监控任务是否正在运行，或添加服务器 API 凭据。",
-      "noDisconnected": "所有代理已连接",
-      "empty": "没有代理匹配此过滤器",
+      "noDisconnected": "所有代理均已连接",
+      "empty": "没有符合此筛选条件的代理",
       "column": {
         "status": "状态",
         "name": "作业名称",
         "ip": "IP",
         "os": "系统",
         "version": "版本",
-        "lastKeepAlive": "保持活动状态",
+        "lastKeepAlive": "保活",
         "groups": "群组"
       },
       "outdated": "比最新代理版本（{version}）更旧"
     },
     "wazuhAlerts": {
       "name": "Wazuh 警报源",
-      "description": "最近的 Wazuh 警报级别，MITRE ATT&CK 技术、代理和源 IP",
+      "description": "最近的 Wazuh 告警，含级别、MITRE ATT&CK 技术、代理和源 IP",
       "option": {
         "minLevel": {
           "label": "最小规则级别",
-          "description": "Wazuh 级别：0-6低, 7-11 medium, 12-14高, 15+ 临界值"
+          "description": "Wazuh 级别：0-6 低，7-11 中，12-14 高，15+ 严重"
         },
         "hours": {
-          "label": "时间窗口(小时)"
+          "label": "时间窗口（小时）"
         },
         "limit": {
           "label": "警报数量"
         },
         "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
+          "label": "显示 MITRE ATT&CK 技术"
         },
         "showAgent": {
           "label": "显示代理"
         },
         "showSourceIp": {
-          "label": "显示源IP"
+          "label": "显示源 IP"
         },
         "showRuleId": {
           "label": "显示规则 ID"
         }
       },
       "title": "警报 · 级别 {level}+ · {hours} 小时",
-      "empty": "这个级别没有警报。所有静音。",
+      "empty": "此级别暂无告警，一切正常。",
       "rule": "规则 {id}",
-      "openInDashboard": "在 Wazuh 仪表盘中打开此提醒"
+      "openInDashboard": "在 Wazuh 仪表盘中打开此告警"
     },
     "wazuhSummary": {
       "name": "Wazuh 警报严重程度",
-      "description": "按前期趋势分列的警报严重程度",
+      "description": "告警严重程度分布，并与上一周期对比趋势",
       "option": {
         "range": {
           "label": "时间范围"
@@ -5555,9 +5584,9 @@
           "label": "显示页脚"
         }
       },
-      "title": "警报严重性 · {range}",
-      "alerts": "提醒",
-      "none": "没有提醒",
+      "title": "告警严重程度 · {range}",
+      "alerts": "条告警",
+      "none": "无告警",
       "trend": {
         "new": "新建",
         "tooltip": "上一时段：{previous}"
@@ -5568,8 +5597,8 @@
       "manager": "管理器 {version}"
     },
     "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Wazuh警报的堆叠图表，按严重程度分列",
+      "name": "Wazuh 告警时间线",
+      "description": "按严重程度分列的 Wazuh 告警堆叠图",
       "option": {
         "range": {
           "label": "时间范围"
@@ -5582,13 +5611,13 @@
         },
         "yScale": {
           "label": "Y轴缩放",
-          "description": "平方根保持高和临界警报，几千个低警告旁边可见"
+          "description": "平方根刻度可让高级别和严重告警在数千条低级别告警旁依然可见"
         },
         "minLevel": {
           "label": "最小规则级别"
         },
         "showLegend": {
-          "label": "显示图例与合计数"
+          "label": "显示带合计的图例"
         }
       },
       "title": "警报时间线 · {range}",
@@ -5597,10 +5626,10 @@
     },
     "wazuhTopList": {
       "name": "Wazuh 顶部列表",
-      "description": "顶级规则、代理人、源IP或MITRE ATT&CK 战术和技术通过报警计数",
+      "description": "按告警数量排列的规则、代理、源 IP 或 MITRE ATT&CK 战术与技术",
       "option": {
         "kind": {
-          "label": "等级"
+          "label": "排名依据"
         },
         "range": {
           "label": "时间范围"
@@ -5612,64 +5641,64 @@
           "label": "最小规则级别"
         },
         "showBars": {
-          "label": "显示栏"
+          "label": "显示条形"
         }
       },
       "title": {
-        "rules": "热门规则 · {range}",
-        "agents": "热门代理 · {range}",
-        "sourceIps": "热门源 IP · {range}",
+        "rules": "规则排行 · {range}",
+        "agents": "代理排行 · {range}",
+        "sourceIps": "源 IP 排行 · {range}",
         "mitreTactics": "MITRE 战术 · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
+        "mitreTechniques": "MITRE 技术 · {range}"
       },
       "empty": {
-        "rules": "这段时间里没有提醒",
-        "agents": "这段时间里没有提醒",
-        "sourceIps": "在此期间没有带有源 IP 的提醒",
-        "mitreTactics": "在此期间没有映射到MITRE ATT&CK 的提醒",
-        "mitreTechniques": "在此期间没有映射到MITRE ATT&CK 的提醒"
+        "rules": "此时间段内无告警",
+        "agents": "此时间段内无告警",
+        "sourceIps": "此时间段内没有带源 IP 的告警",
+        "mitreTactics": "此时间段内没有映射到 MITRE ATT&CK 的告警",
+        "mitreTechniques": "此时间段内没有映射到 MITRE ATT&CK 的告警"
       },
-      "totalTooltip": "{count} 个匹配的警报",
+      "totalTooltip": "{count} 条匹配的告警",
       "private": "LAN",
       "public": "公开",
       "agents": "在 {count} 个代理上发现",
-      "others": "其他条目中还有 {count} 个警报"
+      "others": "其他条目中还有 {count} 条告警"
     },
     "wazuhVulnerabilities": {
-      "name": "Wazuh 脆弱性",
-      "description": "脆弱性计量、最大的CVEs和最易受伤害的代理",
+      "name": "Wazuh 漏洞",
+      "description": "漏洞数量、重点 CVE 和最易受影响的代理",
       "option": {
         "cveOrder": {
-          "label": "CVES排名由"
+          "label": "CVE 排序依据"
         },
         "minSeverity": {
           "label": "CVE 严重程度"
         },
         "cveLimit": {
-          "label": "CVES 数量"
+          "label": "CVE 数量"
         },
         "agentLimit": {
           "label": "代理数量"
         },
         "showAgents": {
-          "label": "显示最易受伤害的代理"
+          "label": "显示最易受影响的代理"
         }
       },
-      "title": "脆弱性",
-      "topCves": "顶级CVES",
+      "title": "漏洞",
+      "topCves": "重点 CVE",
       "score": "得分",
       "agentsShort": "代理",
-      "topAgents": "最易受伤害的代理",
-      "criticalHigh": "箱子/高",
+      "topAgents": "最易受影响的代理",
+      "criticalHigh": "严重 / 高",
       "totalTooltip": "{count} 个发现项，涉及 {agents} 个代理",
       "affected": "{count} 个代理",
-      "empty": "未检测到脆弱性",
-      "distribution": "严重性分布。未显示没有评分的 {unscored} 个发现项。",
+      "empty": "未检测到漏洞",
+      "distribution": "严重程度分布。{unscored} 个无评分的结果未显示。",
       "worst": "最严重：{id}（{score}），涉及 {agents} 个代理"
     },
     "wazuhFim": {
-      "name": "Wazuh 文件的完整性",
-      "description": "最近文件完整性监测 (Syscheck) 事件",
+      "name": "Wazuh 文件完整性",
+      "description": "最近的文件完整性监控（syscheck）事件",
       "option": {
         "range": {
           "label": "时间范围"
@@ -5681,7 +5710,7 @@
           "label": "事件数"
         },
         "includeRegistry": {
-          "label": "包括Windows 注册表事件"
+          "label": "包含 Windows 注册表事件"
         }
       },
       "title": "文件完整性 · {range}",
@@ -5693,30 +5722,30 @@
       },
       "empty": "在此期间没有文件完整性事件",
       "user": "由 {user} 执行",
-      "registry": "书记官处"
+      "registry": "注册表"
     },
     "wazuhAuthFailures": {
       "name": "Wazuh 身份验证失败",
-      "description": "登录失败，每个代理使用每小时闪烁的暴力提醒",
+      "description": "各代理的登录失败与暴力破解告警，附每小时迷你趋势图",
       "option": {
         "hours": {
-          "label": "时间窗口(小时)"
+          "label": "时间窗口（小时）"
         },
         "limit": {
           "label": "代理数量"
         },
         "showSourceIps": {
-          "label": "显示顶部源IP"
+          "label": "显示重点源 IP"
         }
       },
       "title": "身份验证失败 · {hours} 小时",
       "seriesTooltip": "过去 {hours} 小时内的所有代理",
       "peak": "峰值 {count}/时间段",
-      "empty": "在此期间没有失败的登录",
+      "empty": "此时间段内没有登录失败",
       "failed": "登录失败",
-      "failedHint": "单个身份验证失败 (sshd, PAM, Windows logon, invalider users)",
-      "bruteForce": "坚韧不拔的",
-      "bruteForceHint": "与此相关的暴力规则(短期内多次失败，MITRE T1110)",
+      "failedHint": "单次认证失败（sshd、PAM、Windows 登录、无效用户）",
+      "bruteForce": "暴力破解",
+      "bruteForceHint": "关联的暴力破解规则（短时间内多次失败，MITRE T1110）",
       "sourceIps": "源 IP",
       "ipTooltip": "{ip}：{count} 次失败",
       "bruteForceCount": "{count} 次暴力破解"
@@ -5734,41 +5763,41 @@
   "board": {
     "emptyState": {
       "title": "构建您的第一个视图",
-      "description": "添加一个小部件或应用，或连接一个服务，并使用它在本面板上的数据。",
+      "description": "添加小部件或应用，或连接一个服务，在此看板上使用它的数据。",
       "addWidget": "添加小部件",
       "addApp": "添加应用",
       "connectService": "连接服务"
     },
     "setupChecklist": {
-      "title": "让这个看板变得很有帮助",
-      "description": "选择你离开的地方。按照已经在本板上的内容进行进度。",
+      "title": "让这个看板更有用",
+      "description": "从上次中断的地方继续，进度会根据该看板上已有的内容更新。",
       "collapse": "折叠设置清单",
-      "dismiss": "清除设置清单",
+      "dismiss": "关闭设置清单",
       "resume": "继续设置（{completed}/{total}）",
-      "progress": "棋盘设置进度",
+      "progress": "看板设置进度",
       "step": {
         "content": {
           "label": "添加有用的内容",
-          "description": "选择一个小部件并在它放置之前进行配置。"
+          "description": "放置前先选择并配置一个小部件。"
         },
         "app": {
           "label": "固定一个应用",
-          "description": "保留一个服务或工具单击此看板。"
+          "description": "让服务或工具在看板上只需一次点击即可访问。"
         },
         "service": {
           "label": "连接服务",
-          "description": "解锁兼容小部件的实时数据和动作。",
+          "description": "为兼容的小部件解锁实时数据和操作。",
           "permissionDescription": "管理员可以连接服务解锁实时数据。",
           "action": "连接"
         }
       }
     },
     "action": {
-      "addContent": "添加棋盘内容",
-      "settings": "棋盘设置",
-      "switch": "切换面板",
+      "addContent": "添加看板内容",
+      "settings": "看板设置",
+      "switch": "切换看板",
       "switcher": {
-        "title": "切换面板",
+        "title": "切换看板",
         "search": {
           "empty": "没有与“{search}”匹配的看板。"
         },
@@ -5776,9 +5805,9 @@
         "preview": "{name} 的预览，包含 {count} 个项目",
         "currentHidden": "当前看板：{name}",
         "keyboard": {
-          "navigate": "Navigate",
+          "navigate": "导航",
           "open": "打开",
-          "instructions": "键入过滤板。使用箭头键移动结果并进入打开看板。"
+          "instructions": "输入以筛选看板，使用方向键移动结果，按 Enter 打开看板。"
         },
         "empty": {
           "title": "没有其他看板",
@@ -5793,11 +5822,11 @@
         },
         "notification": {
           "success": {
-            "title": "棋盘已创建",
+            "title": "看板已创建",
             "message": "看板 {name} 已创建"
           },
           "error": {
-            "title": "无法创建面板",
+            "title": "无法创建看板",
             "message": "无法创建看板 {name}"
           }
         }
@@ -5817,8 +5846,8 @@
         }
       },
       "edit": {
-        "enter": "编辑棋盘",
-        "save": "保存棋盘",
+        "enter": "编辑看板",
+        "save": "保存看板",
         "exit": "退出编辑模式",
         "notification": {
           "success": {
@@ -5829,7 +5858,7 @@
           },
           "loadError": {
             "title": "无法开始编辑",
-            "message": "无法加载板编辑器。您的仪表板仍然可以在视图模式下使用。"
+            "message": "无法加载看板编辑器，您的仪表板仍可在视图模式下使用。"
           }
         },
         "confirmLeave": {
@@ -5845,9 +5874,9 @@
       }
     },
     "landmark": {
-      "canvas": "仪表盘画面",
-      "leftRail": "左面板铁轨",
-      "rightRail": "右侧仪表板铁轨",
+      "canvas": "仪表盘画布",
+      "leftRail": "仪表板左侧栏",
+      "rightRail": "仪表板右侧栏",
       "items": "仪表盘项目"
     },
     "field": {
@@ -5920,7 +5949,7 @@
       },
       "primaryColor": {
         "label": "主体色",
-        "locked": "您的管理员在每个看板上保留实例品牌颜色。"
+        "locked": "您的管理员已在所有看板上锁定实例品牌色。"
       },
       "secondaryColor": {
         "label": "辅助色"
@@ -5979,21 +6008,21 @@
           "title": "布局",
           "responsive": {
             "title": "响应式布局",
-            "description": "每个布局都保持自己的小部件位置和大小。移动和基地始终可用。在任何额外的断点添加自定义布局。",
+            "description": "每个布局都保留自己的小部件位置和大小。移动端和基础布局始终可用，可在任意其他断点添加自定义布局。",
             "action": {
               "add": "添加布局"
             }
           },
           "role": {
             "mobile": "手机",
-            "base": "基数",
+            "base": "基础",
             "custom": "自定义"
           },
           "custom": {
             "defaultName": "自定义布局"
           },
           "mobile": {
-            "breakpointDescription": "移动设备总是从0px到下一个布局断点。"
+            "breakpointDescription": "移动端始终从 0px 生效，直到下一个布局断点。"
           },
           "preview": {
             "columns": "列",
@@ -6002,10 +6031,10 @@
             "editorWidthLabel": "{layoutName} · {width}px"
           },
           "reset": {
-            "action": "从基地重置",
+            "action": "从基础布局重置",
             "confirm": {
-              "title": "Reset {layoutName}?",
-              "message": "这将此布局中保存的每个位置和大小替换为基地生成的新布局。这不能撤消。"
+              "title": "重置 {layoutName}？",
+              "message": "这会将此布局中所有已保存的位置和大小替换为基础布局生成的新布局，此操作无法撤销。"
             }
           },
           "edit": {
@@ -6015,7 +6044,7 @@
             "cancel": {
               "action": "取消布局编辑",
               "title": "放弃布局更改？",
-              "message": "您未保存的对此布局的更改将被丢弃。"
+              "message": "对此布局未保存的更改将被丢弃。"
             }
           }
         },
@@ -6131,16 +6160,16 @@
       },
       "gutters": {
         "label": "固定侧边栏",
-        "description": "两侧保留最多三个面板列。剩余的画布自动调用。",
+        "description": "在两侧各保留最多三列仪表板。剩余画布会自动重排。",
         "left": {
-          "label": "Left sidebar",
-          "description": "当控制面板滚动时保持可见区域。",
-          "thumbLabel": "Left sidebar width"
+          "label": "左侧边栏",
+          "description": "仪表板滚动时保持此区域可见。",
+          "thumbLabel": "左侧边栏宽度"
         },
         "right": {
           "label": "右侧边栏",
-          "description": "当控制面板滚动时保持可见区域。",
-          "thumbLabel": "右侧侧边栏宽度"
+          "description": "仪表板滚动时保持此区域可见。",
+          "thumbLabel": "右侧边栏宽度"
         },
         "width": {
           "label": "列宽度"
@@ -6191,7 +6220,7 @@
           }
         },
         "about": "关于",
-        "assistant": "助理"
+        "assistant": "助手"
       }
     },
     "page": {
@@ -6245,11 +6274,11 @@
         },
         "preview": {
           "label": "{name} 的布局预览，包含 {count} 个项目",
-          "unknownCreator": "未知的创建者"
+          "unknownCreator": "未知创建者"
         },
         "noResults": {
           "title": "暂无面板",
-          "description": "创建一个板来在一个地方安排您的应用和小部件。"
+          "description": "创建一个看板，在一个地方整理您的应用和小部件。"
         }
       },
       "media": {
@@ -6263,7 +6292,7 @@
             "header": {
               "title": "页眉工作室",
               "badge": "个人资料",
-              "description": "将控制拖动到行中的任何位置。左边、中心和右边都固定在控制周围。",
+              "description": "可以将控件拖到行中的任意位置。左侧、中部和右侧保持固定，控件会在其周围移动。",
               "device": {
                 "desktop": "桌面",
                 "mobile": "手机"
@@ -6274,10 +6303,10 @@
                 "right": "右边"
               },
               "action": {
-                "hide": "隐藏标题",
-                "show": "显示标题",
+                "hide": "隐藏页眉",
+                "show": "显示页眉",
                 "configure": "移动或配置 {item}",
-                "remove": "删除 {item}",
+                "remove": "移除 {item}",
                 "dropIntoZone": "移入 {zone} 分区"
               },
               "preview": {
@@ -6285,16 +6314,16 @@
                 "empty": "没有可用的仪表板布局"
               },
               "available": {
-                "title": "可用的控制",
-                "description": "添加一个控制器，然后将其全部按钮拖动到上面的位置。",
-                "requiredAlways": "这个控制是必需的，但你可以在头部的任何地方移动它。",
-                "allAdded": "每个内置控制已经在您的头部。",
+                "title": "可用控件",
+                "description": "添加一个控件，然后将其整个按钮拖到上方的位置。",
+                "requiredAlways": "此控件是必需的，但您可以将其移动到页眉中的任意位置。",
+                "allAdded": "每个内置控件都已位于您的页眉中。",
                 "add": "添加 {item}",
-                "boardShortcut": "棋盘快捷方式",
+                "boardShortcut": "看板快捷方式",
                 "chooseBoard": "选择看板"
               },
               "configuration": {
-                "description": "此控件保持与在线头的大小相同。",
+                "description": "此控件保持与实际页眉中相同的大小。",
                 "searchDisplay": {
                   "input": "搜索栏",
                   "icon": "仅图标"
@@ -6309,14 +6338,14 @@
                 "search": "搜索",
                 "home": "默认面板",
                 "boardSwitcher": "面板",
-                "assistant": "助理",
+                "assistant": "助手",
                 "docker": "Docker",
-                "boardEdit": "编辑棋盘",
-                "boardSettings": "棋盘设置",
+                "boardEdit": "编辑看板",
+                "boardSettings": "看板设置",
                 "settings": "您的设置",
                 "themeToggle": "切换主题",
                 "user": "账户",
-                "boardUnavailable": "棋盘不可用"
+                "boardUnavailable": "看板不可用"
               }
             },
             "item": {
@@ -6452,7 +6481,7 @@
           }
         },
         "section": {
-          "analyticsDocumentation": "查看分析数据 Homarr 收集",
+          "analyticsDocumentation": "查看 Homarr 收集了哪些分析数据",
           "analytics": {
             "title": "分析",
             "general": {
@@ -6526,13 +6555,13 @@
               "authentication": "认证"
             },
             "identity": {
-              "description": "应用程序标志是应用程序内、登录页面和已安装应用中使用的较大标记。 浏览器图标 (favicon) 是在标签和书签中使用的小方形；当为空时，它会返回应用程序标识。"
+              "description": "应用程序标志是应用内部、登录页面和已安装应用中使用的较大标识。浏览器图标（favicon）是标签页和书签中使用的小方块；为空时会回退到应用程序标志。"
             },
             "appName": {
               "label": "应用程序名称"
             },
             "greeting": {
-              "label": "自定义问候中"
+              "label": "自定义问候"
             },
             "logo": {
               "label": "应用程序标志",
@@ -6546,11 +6575,11 @@
               "label": "主体色"
             },
             "secondaryColor": {
-              "label": "二次音效"
+              "label": "次要强调色"
             },
             "lockPrimaryColor": {
-              "label": "将此颜色保持在每个棋盘上",
-              "description": "阻止板上的颜色替换应用程序的重量。"
+              "label": "在所有看板上保持此颜色",
+              "description": "阻止看板颜色替换应用程序强调色。"
             },
             "signInBackground": {
               "label": "认证背景",
@@ -6562,36 +6591,36 @@
             "defaultRadius": {
               "label": "角样式",
               "options": {
-                "xs": "极高",
+                "xs": "紧凑",
                 "sm": "淡雅",
                 "md": "平衡",
                 "lg": "圆角",
-                "xl": "软体"
+                "xl": "柔和"
               }
             },
             "customCss": {
               "label": "全局自定义 CSS",
-              "description": "应用到每个页面。Board 自定义 CSS 可以覆盖它。"
+              "description": "应用到每个页面。看板自定义 CSS 可以覆盖它。"
             },
             "authVisibility": {
-              "description": "选择每个身份验证页面上出现的内容。",
+              "description": "选择每个认证页面上显示的内容。",
               "appName": "应用程序名称",
               "logo": "应用程序标志",
-              "greeting": "问候中"
+              "greeting": "问候"
             },
             "summary": {
               "title": "当前品牌化",
               "cornerStyle": "角样式",
-              "palette": "Palette",
+              "palette": "调色板",
               "backgroundConfigured": "自定义背景 · {overlay}% 叠加层",
               "backgroundDefault": "默认背景",
-              "greetingConfigured": "自定义问候中",
-              "greetingDefault": "默认问候中",
-              "boardColorLocked": "棋盘颜色锁定",
-              "boardColorFlexible": "允许使用棋盘颜色",
+              "greetingConfigured": "自定义问候",
+              "greetingDefault": "默认问候",
+              "boardColorLocked": "看板颜色已锁定",
+              "boardColorFlexible": "允许看板颜色",
               "appName": "作业名称",
               "logo": "徽标",
-              "greeting": "问候中",
+              "greeting": "问候",
               "on": "开启",
               "off": "关闭"
             }
@@ -6604,29 +6633,29 @@
           },
           "assistant": {
             "loading": "加载助手配置",
-            "title": "助理",
-            "description": "连接一个兼容的 OpenAI-compatible 模型端点为全实例助手。",
+            "title": "助手",
+            "description": "为全实例助手连接一个兼容 OpenAI 的模型端点。",
             "security": {
-              "description": "API 密钥和额外的标题值在 Homarr 数据库中加密。它们永远不会返回到浏览器。 模型请求从Homarr服务器直接发送到配置的端点。"
+              "description": "API 密钥和附加标头值在 Homarr 数据库中加密。它们永远不会返回给浏览器。模型请求从 Homarr 服务器直接发送到配置的端点。"
             },
             "overview": {
-              "connectionReady": "连接已准备好",
+              "connectionReady": "连接就绪",
               "unsavedChanges": "未保存更改",
               "setupRequired": "需要设置",
               "disabled": "已禁用",
-              "noModel": "没有选择模型"
+              "noModel": "未选择模型"
             },
             "connection": {
-              "endpointTitle": "提供者和端点",
-              "description": "选择一个预设或连接实现OpenAI 聊天完成的任何服务。",
+              "endpointTitle": "提供商和端点",
+              "description": "选择一个预设，或接入任何实现了 OpenAI Chat Completions API 的服务。",
               "save": "保存提供商连接"
             },
             "credentials": {
-              "title": "全权证书",
-              "description": "添加此端点所需的密钥。存储值保持加密，不能重新阅读。",
+              "title": "凭据",
+              "description": "添加此端点所需的秘密值。存储的值保持加密，无法再读取。",
               "required": "需要密钥",
-              "optional": "键可选性",
-              "workshop": "用户GitHub 登录"
+              "optional": "密钥可选",
+              "workshop": "每用户 GitHub 登录"
             },
             "provider": {
               "title": "提供者",
@@ -6638,130 +6667,130 @@
               },
               "options": {
                 "homarr": {
-                  "description": "助理每天免费使用数量有限，费用由Homarr团队支付。 使用社区车间登录使用您的津贴。"
+                  "description": "助手每天免费使用的次数有限，费用由 Homarr 团队承担。使用社区工坊登录即可使用您的额度。"
                 },
                 "openrouter": {
-                  "description": "使用大型可工具的模型目录托管模型路由。"
+                  "description": "通过大型、支持工具的模型目录提供托管模型路由。"
                 },
                 "openai": {
-                  "description": "通过官方的 API 端点，OpenAI 聊天完成。"
+                  "description": "通过官方 API 端点使用 OpenAI 聊天补全。"
                 },
                 "anthropic": {
-                  "description": "穿过Anthropic的 OpenAI SDK 兼容端口的克劳。"
+                  "description": "通过 Anthropic 的 OpenAI SDK 兼容端点使用 Claude。"
                 },
                 "google-gemini": {
-                  "description": "Gemini通过谷歌的 OpenAI兼容的 API 端点。"
+                  "description": "通过 Google 的 OpenAI 兼容 API 端点使用 Gemini。"
                 },
                 "xai": {
-                  "description": "通过 xAI的 OpenAI兼容的 API 获取模型。"
+                  "description": "通过 xAI 的 OpenAI 兼容 API 使用 Grok 模型。"
                 },
                 "groq": {
-                  "description": "通过 Groq 的 OpenAI兼容的 API 快速托管推荐。"
+                  "description": "通过 Groq 的 OpenAI 兼容 API 提供快速托管推理。"
                 },
                 "mistral": {
-                  "description": "通过官方API传送的传送模型。"
+                  "description": "通过官方 API 使用 Mistral 模型。"
                 },
                 "deepseek": {
-                  "description": "通过其OpenAI兼容的 API深化模型。"
+                  "description": "通过其 OpenAI 兼容 API 使用 DeepSeek 模型。"
                 },
                 "together": {
-                  "description": "通过 OpenAI兼容的 API 共同托管开放模型。"
+                  "description": "通过 Together 的 OpenAI 兼容 API 使用托管开放模型。"
                 },
                 "ollama": {
-                  "description": "使用 OpenAI兼容的 API 的本地或网络 Olama 服务器。"
+                  "description": "使用 OpenAI 兼容 API 的本地或网络 Ollama 服务器。"
                 },
                 "lm-studio": {
-                  "description": "启用了 OpenAI 兼容的LM Studio 本地服务器。"
+                  "description": "启用了 OpenAI 兼容性的 LM Studio 本地服务器。"
                 },
                 "llama-cpp": {
-                  "description": "一个本地或网络 llama.cpp 服务器使用其OpenAI兼容的 API。"
+                  "description": "使用 OpenAI 兼容 API 的本地或网络 llama.cpp 服务器。"
                 },
                 "custom": {
-                  "label": "自定义终点",
-                  "description": "任何与 OpenAI 聊天完成兼容的其他端点。"
+                  "label": "自定义端点",
+                  "description": "任何其他与 OpenAI 聊天补全兼容的端点。"
                 }
               },
               "homarrAuth": {
                 "title": "包含免费的每日助手使用",
-                "description": "不需要 API 密钥。Homarr 团队每天为您提供数量有限的助手使用。 使用社区车间登录以保持您的津贴分开。"
+                "description": "无需 API 密钥。Homarr 团队每天为您提供有限的助手使用额度。使用社区工坊登录可将您的额度分开计算。"
               }
             },
             "baseUrl": {
               "title": "API 基础 URL",
-              "description": "包含 API 前缀，通常是 /v1 。在容器中，本地主机指到 Homarr 容器。"
+              "description": "包含 API 前缀，通常是 /v1。在容器中，localhost 指的是 Homarr 容器。"
             },
             "apiKey": {
               "title": "API 密钥",
-              "required": "此提供商需要。该值是加密和只写的。",
-              "optional": "本地端点可选。当服务不需要无记名身份验证时，留空。",
+              "required": "此提供商需要该密钥。该值会加密且只写。",
+              "optional": "本地端点可选。当服务不需要 Bearer 认证时，留空。",
               "placeholder": "输入 API 密钥",
-              "savedTitle": "已保存 Encryped API 密钥",
+              "savedTitle": "已保存加密的 API 密钥",
               "savedDescription": "Homarr 可以使用此密钥，但它不能显示或恢复其值。",
               "remove": "移除已保存的 API 密钥",
               "removeFlow": {
                 "title": "移除保存的 API 密钥？",
-                "description": "此提供商需要 API 密钥。删除它可以停止模型发现和助手响应，直到保存另一个密钥。",
-                "optionalDescription": "当此密钥被移除后，端点将停止接收无记名身份验证。确认它接受未经验证的请求或使用另一个存储的头部。",
+                "description": "此提供商需要 API 密钥。移除后，模型发现和助手响应将停止，直到保存另一个密钥。",
+                "optionalDescription": "移除此密钥后，端点将不再接收 Bearer 认证。请确认它接受未认证的请求，或使用其他已存储的标头。",
                 "cancel": "保留保存的密钥",
                 "confirm": "移除 API 密钥"
               }
             },
             "headers": {
-              "title": "附加请求标题",
-              "description": "可选的身份验证或路由头。头部值是加密和只写。",
-              "add": "添加标题",
-              "name": "标题名称",
-              "value": "页眉值",
+              "title": "附加请求标头",
+              "description": "可选的认证或路由标头。标头值会加密且只写。",
+              "add": "添加标头",
+              "name": "标头名称",
+              "value": "标头值",
               "valuePlaceholder": "秘密或路由值",
-              "remove": "删除标题",
-              "configured": "已配置更多加密的头。添加头以取代完整的存储集。",
-              "empty": "没有为此提供商存储更多的信头。",
-              "savedBadge": "头已保存",
-              "pendingRemoval": "移除等待中",
-              "clear": "保存时删除存储的标题",
-              "keep": "保留存储的标题"
+              "remove": "移除标头",
+              "configured": "已配置其他加密标头。添加标头将替换完整的已存储集合。",
+              "empty": "此提供商没有存储其他标头。",
+              "savedBadge": "标头已保存",
+              "pendingRemoval": "待移除",
+              "clear": "保存时移除已存储的标头",
+              "keep": "保留已存储的标头"
             },
             "model": {
               "title": "模型",
-              "description": "选择一个发现的模型或输入一个确切的终点模型ID。",
+              "description": "选择一个已发现的模型，或输入确切的端点模型 ID。",
               "placeholder": "模型 ID",
               "refresh": "刷新模型",
               "chooseModel": "选择用于新对话的模型。",
               "discoveryPath": "模型发现路径",
               "discoveryPathDescription": "附加到 API 基础 URL。留空以禁用发现并使用手动模型 ID。",
-              "manual": "手动输入模型ID或保存连接以发现模型。",
-              "manualFallback": "发现不可用。您仍然可以手动输入模型ID。",
+              "manual": "手动输入模型 ID，或保存连接以发现模型。",
+              "manualFallback": "模型发现不可用。您仍然可以手动输入模型 ID。",
               "saveConnectionFirst": "在选择模型之前保存提供商连接。",
               "discovering": "正在刷新此提供商提供的可用模型……",
               "discovered": "{count, plural, one {发现# 模型。工具支持取决于所选的端点和模型。} other {发现# 模型。工具支持取决于所选的端点和模型。}}",
               "discoveryFailed": "模型发现未完成",
               "context": "{count} 个上下文窗口",
-              "toolsConfirmed": "广告工具",
+              "toolsConfirmed": "已声明工具",
               "toolsUnknown": "验证工具支持"
             },
             "serverTools": {
               "title": "服务器工具",
               "webSearch": {
-                "label": "网络搜索",
-                "description": "当请求需要当前信息时，允许模型通过 OpenRouter 搜索网络。搜索使用由OpenRouter单独收取费用。",
-                "proxyDescription": "发送OpenRouter的网页搜索服务器工具到此端点。 只有当自定义端点转发OpenRouter 服务器工具格式，如Homarr Router 代理时，才启用它。",
-                "limit": "模型决定何时搜索，每次搜索限定3个搜索和5个搜索结果。"
+                "label": "联网搜索",
+                "description": "当请求需要最新信息时，允许模型通过 OpenRouter 搜索实时网络。搜索用量由 OpenRouter 单独计费。",
+                "proxyDescription": "将 OpenRouter 的联网搜索服务器工具发送到此端点。仅当自定义端点转发 OpenRouter 服务器工具格式（如 Homarr Router 代理）时才启用。",
+                "limit": "模型自行决定何时搜索，每次请求最多进行 3 次搜索，每次搜索返回 5 条结果。"
               }
             },
             "enabled": {
               "label": "启用助手",
-              "description": "显示所有登录用户的助手。现有的 Homarr 权限仍然适用于每个内部工具通话。"
+              "description": "向所有已登录用户显示助手。现有的 Homarr 权限仍然适用于每次内部工具调用。"
             },
             "save": "保存助手",
             "notification": {
               "connectionSaved": {
-                "title": "提供者连接已保存",
+                "title": "提供商连接已保存",
                 "message": "端点和加密凭据已准备就绪，可以选择模型。",
-                "credentialsCleared": "端点已更改，所以先前的凭据已被清理。如果需要，为新的目的地添加凭据。"
+                "credentialsCleared": "端点已更改，因此先前的凭据已被清除。如有需要，请为新目标添加凭据。"
               },
               "saved": {
-                "title": "助理设置已保存",
-                "message": "新模型和可用性设置处于活动状态。"
+                "title": "助手设置已保存",
+                "message": "新的模型和可用性设置已生效。"
               },
               "error": {
                 "title": "无法保存助手设置"
@@ -7002,16 +7031,16 @@
             "progress": {
               "title": "正在恢复数据库……",
               "restarting": "正在重启服务器",
-              "relogin": "恢复您当前会话无效的数据库。Homarr 会在服务器准备就绪时发送您登录。"
+              "relogin": "恢复数据库操作已使您当前的会话失效。服务器准备就绪后，Homarr 会引导您登录。"
             },
             "complete": {
               "title": "恢复完成",
-              "message": "数据库已成功恢复。服务器正在重启——请稍后刷新页面。",
+              "message": "数据库已恢复。您之前的会话已失效，请重新登录以查看恢复后的看板。",
               "button": "立即登录"
             },
             "timeout": {
-              "title": "服务器未返回在线",
-              "message": "数据库还原完成，但Homarr未能重新准备好。重试连接检查或手动刷新此页面。"
+              "title": "服务器未能重新上线",
+              "message": "数据库恢复已完成，但 Homarr 未能重新就绪。请重试连接检查，或手动刷新此页面。"
             },
             "failed": {
               "title": "恢复失败"
@@ -7071,8 +7100,8 @@
   "docker": {
     "title": "容器",
     "reconciliation": {
-      "title": "协助停靠设置",
-      "suggestions": "{count, plural, =0 {没有建议} one {# 建议} other {# 建议}}",
+      "title": "Docker 辅助设置",
+      "suggestions": "{count, plural, =0 {没有建议} one {# 条建议} other {# 条建议}}",
       "attention": "{count} 个需要关注",
       "endpointUnavailable": "由于以下端点不可用，无法检查某些服务：{names}",
       "empty": "找不到可见的 Docker 服务。",
@@ -7086,7 +7115,7 @@
       "state": {
         "newRecognized": "准备好连接",
         "newApp": "新建服务",
-        "represented": "已代表",
+        "represented": "已有对应项",
         "linked": "已链接",
         "moved": "地址已更改"
       },
@@ -7111,12 +7140,12 @@
           "changed": "已更改",
           "unused": "未使用",
           "notApplicable": "不适用",
-          "notObserved": "未观察"
+          "notObserved": "未观察到"
         }
       },
       "action": {
         "review": "预览",
-        "dismiss": "关闭",
+        "dismiss": "忽略",
         "restoreDismissed": "恢复已忽略项（{count}）",
         "setupIntegration": "设置集成",
         "reviewIntegration": "审查集成",
@@ -7124,7 +7153,7 @@
       },
       "loadError": {
         "title": "无法加载 Docker 设置助手",
-        "message": "停靠服务信息不可用。请不要离开此页面。"
+        "message": "Docker 服务信息不可用。请不要离开此页面重试。"
       }
     },
     "table": {
@@ -7216,8 +7245,8 @@
       "remove": {
         "confirm": "再次点击以永久删除",
         "confirmation": {
-          "title": "{count, plural, one {移除# 容器？} other {移除# 容器？}}",
-          "message": "{count, plural, one {这将永久删除 # 容器： {names}} other {这将永久删除 # 容器： {names}}}"
+          "title": "{count, plural, one {移除 # 个容器？} other {移除 # 个容器？}}",
+          "message": "{count, plural, one {这将永久移除 # 个容器：{names}} other {这将永久移除 # 个容器：{names}}}"
         },
         "notification": {
           "success": {
@@ -7232,7 +7261,7 @@
       },
       "result": {
         "failure": {
-          "title": "一些容器动作失败",
+          "title": "部分容器操作失败",
           "message": "{total, plural, other {{failed} 个操作失败：{names}}}"
         }
       },
@@ -7273,18 +7302,18 @@
   },
   "kubernetes": {
     "context": {
-      "label": "Kubernetes环境",
+      "label": "Kubernetes 上下文",
       "loadError": {
-        "title": "无法加载 Kubernetes 环境",
-        "message": "上下文信息不可用。请不要离开此页面。"
+        "title": "无法加载 Kubernetes 上下文",
+        "message": "上下文信息不可用。请留在本页面重试。"
       },
       "status": {
         "available": "可用",
-        "degraded": "Metrics unavailable",
-        "unavailable": "Unavailable"
+        "degraded": "指标不可用",
+        "unavailable": "不可用"
       },
-      "unavailable": "无法达到此Kubernetes上下文。选择另一个上下文或验证其凭据和端点。",
-      "metricsUnavailable": "此上下文是可访问的，但计量服务器不可用。库存仍然可用，没有实时CPU和内存使用。"
+      "unavailable": "无法访问此 Kubernetes 上下文。请选择其他上下文，或验证其凭据和端点。",
+      "metricsUnavailable": "此上下文可正常访问，但指标服务器不可用。清单信息仍然可用，但没有实时的 CPU 和内存使用数据。"
     },
     "cluster": {
       "title": "集群面板",
@@ -7293,7 +7322,7 @@
       "version": "版本",
       "capacity": {
         "title": "容量",
-        "metricsUnavailable": "计量服务器不可用。库存和保留容量仍然可见，可在线CPU和内存使用情况无法显示。",
+        "metricsUnavailable": "指标服务器不可用。清单和预留容量仍然可见，但无法显示实时的 CPU 和内存使用数据。",
         "resource": {
           "reserved": "已预留",
           "used": "已用"
@@ -7313,7 +7342,7 @@
     },
     "nodes": {
       "field": {
-        "metricsUnavailable": "Unavailable",
+        "metricsUnavailable": "不可用",
         "kubernetesVersion": {
           "label": "Kubernetes 版本"
         }
@@ -7467,10 +7496,10 @@
           }
         },
         "workshop": {
-          "label": "讲习班"
+          "label": "工坊"
         },
         "publish": {
-          "label": "发布到讲习班"
+          "label": "发布到工坊"
         }
       },
       "users": {
@@ -7518,7 +7547,7 @@
         "label": "关于"
       },
       "assistant": {
-        "label": "助理"
+        "label": "助手"
       }
     }
   },
@@ -7528,7 +7557,7 @@
     "modePicker": {
       "search": {
         "label": "搜索",
-        "placeholder": "搜索应用、 看板、 页面、 命令和首选项"
+        "placeholder": "搜索应用、看板、页面、命令和偏好设置"
       },
       "apps": {
         "label": "应用",
@@ -7536,14 +7565,14 @@
       },
       "command": {
         "label": "命令",
-        "placeholder": "搜索动作和命令"
+        "placeholder": "搜索操作和命令"
       },
       "preferences": {
         "label": "偏好设置",
-        "placeholder": "搜索和更改首选项"
+        "placeholder": "搜索并更改偏好设置"
       },
       "assistant": {
-        "label": "助理",
+        "label": "助手",
         "placeholder": "询问助手"
       },
       "external": {
@@ -7552,20 +7581,20 @@
       },
       "media": {
         "label": "媒体",
-        "placeholder": "搜索电影或显示",
+        "placeholder": "搜索电影或剧集",
         "fallback": "搜索媒体：“{query}”"
       },
       "userGroup": {
-        "label": "人",
+        "label": "人员",
         "placeholder": "搜索用户和组"
       },
-      "continueWith": "继续",
+      "continueWith": "继续使用",
       "dialogAriaLabel": "{mode} 命令菜单",
       "navigationLabel": "搜索模式",
       "modeAriaLabel": "{mode} 模式",
       "resultsAriaLabel": "{mode} 结果",
       "footer": {
-        "navigate": "Navigate",
+        "navigate": "导航",
         "open": "打开",
         "close": "关闭"
       }
@@ -7875,7 +7904,7 @@
               },
               "no-engines": {
                 "label": "未配置搜索引擎",
-                "descriptionCreate": "从命令菜单添加搜索引擎",
+                "descriptionCreate": "添加搜索引擎后即可从命令菜单进行搜索",
                 "descriptionUnavailable": "请管理员配置搜索引擎"
               },
               "search": {
@@ -8006,7 +8035,7 @@
           "ariaLabel": "已配置的搜索引擎",
           "noResults": {
             "title": "还没有搜索引擎",
-            "description": "搜索引擎让Spotlight 发送查询到站点或连接的服务。",
+            "description": "搜索引擎让 Spotlight 可以将查询发送到站点或已连接的服务。",
             "action": "创建您的第一个搜索引擎",
             "filteredTitle": "没有符合您搜索条件的搜索引擎",
             "filteredDescription": "没有与“{search}”匹配的搜索引擎。请尝试其他名称或 URL。"
@@ -8177,7 +8206,7 @@
   "log": {
     "context": {
       "widgetError": "小部件在此时报告了一个错误",
-      "expiredWidgetError": "围绕这个小部件错误的日志不再保留"
+      "expiredWidgetError": "该小部件错误前后的日志已不再保留。"
     },
     "level": {
       "option": {
@@ -8255,21 +8284,21 @@
     }
   },
   "metadata": {
-    "description": "一个自托管的 *arr 堆栈和你整个故土的仪表板。集成了50多个服务，实时小部件，不存在配置文件。",
+    "description": "一个面向 *arr 套件和整个家庭实验室的自托管仪表板。集成 50 多个服务、实时小部件，无需配置文件。",
     "dashboardTitle": "{appName} 仪表板"
   },
   "assistant": {
-    "title": "助理",
+    "title": "助手",
     "open": "打开助手",
     "close": "关闭助手",
     "minimize": "最小化助手",
     "spotlight": "询问助手",
-    "spotlightDescription": "键入并发送提示信息，而不离开命令菜单。",
+    "spotlightDescription": "无需离开命令菜单即可输入并发送提示词。",
     "spotlightPrompt": {
       "title": "询问助手",
-      "description": "在上面键入提示符。输入后台发送提示符。",
-      "send": "发送提示",
-      "empty": "在上面输入提示"
+      "description": "在上方输入提示词，按回车即在后台发送。",
+      "send": "发送提示词",
+      "empty": "在上方输入提示词"
     },
     "unavailable": {
       "checking": "检查助手是否可用…",
@@ -8279,12 +8308,12 @@
     },
     "newConversation": "新建对话",
     "conversations": "对话",
-    "conversationActions": "对话动作",
+    "conversationActions": "对话操作",
     "searchConversations": "搜索对话",
     "noMatchingConversations": "没有匹配的对话",
     "moreActions": "更多响应操作",
     "renameConversation": {
-      "action": "重命名：",
+      "action": "重命名",
       "label": "对话名称",
       "save": "保存名称",
       "failedTitle": "无法重命名对话",
@@ -8296,29 +8325,29 @@
       "failedTitle": "对话无法删除",
       "failedDescription": "Homarr 无法删除此对话。请重试。"
     },
-    "closeHistory": "关闭聊天记录",
-    "openHistory": "打开聊天记录",
-    "emptyTitle": "我能帮助什么？",
-    "emptyDescription": "询问您的 Homarr 设置，检查实时实时数据，或在您想要我做出更改时批准操作。",
+    "closeHistory": "关闭对话历史",
+    "openHistory": "打开对话历史",
+    "emptyTitle": "我能帮您做什么？",
+    "emptyDescription": "可询问您的 Homarr 配置、查看实例的实时数据，或在您想让我做出更改时批准操作。",
     "suggestions": {
       "health": {
         "label": "检查服务健康",
-        "prompt": "检查我的集成并总结任何需要注意的内容。"
+        "prompt": "检查我的集成，并汇总需要注意的问题。"
       },
       "explore": {
-        "label": "探索我的Homarr",
-        "prompt": "在这个Homarr实例中向我展示我可以查看和管理的内容。"
+        "label": "探索我的 Homarr",
+        "prompt": "在这个 Homarr 实例中向我展示我可以查看和管理的内容。"
       },
       "media": {
         "label": "查找要请求的媒体",
-        "prompt": "帮助我找到要请求的电影或系列片。"
+        "prompt": "帮助我找到要请求的电影或剧集。"
       },
       "style": {
-        "label": "改进仪表板",
-        "prompt": "帮助我改进面板外观或自定义 CSS 。请先向我展示面板，然后保存当前设置，然后我们做出更改。"
+        "label": "优化看板外观",
+        "prompt": "帮助我改进看板外观或自定义 CSS。请先向我展示我的看板，然后保留当前设置，再做出更改。"
       },
       "designWidget": {
-        "label": "设计一个部件",
+        "label": "设计一个小部件",
         "prompt": "创建并安装一个自定义小部件 "
       }
     },
@@ -8327,13 +8356,13 @@
       "model": "模型",
       "searchModels": "搜索模型",
       "noModels": "没有可用的模型",
-      "otherModels": "其他模式",
+      "otherModels": "其他模型",
       "imageInput": "接受图像输入",
       "thinking": "思考模式",
       "reasoning": {
         "auto": "自动",
         "none": "关闭",
-        "minimal": "最小化",
+        "minimal": "最小",
         "low": "低",
         "medium": "中",
         "high": "高"
@@ -8341,20 +8370,20 @@
     },
     "providerQuota": {
       "title": "Homarr 提供商",
-      "communityWorkshop": "社区讲习班",
-      "dailyAllowance": "每日申请津贴",
-      "remainingLabel": "还剩 {remaining}/{limit} 个 Homarr 提供商请求",
-      "loading": "正在加载 Homarr 提供者权限",
-      "signInRequired": "Homarr 提供商所需的车间登录",
-      "signInDescription": "通过社区讲习班登录GitHub 以获得您的单独每日津贴。",
-      "exhaustedDescription": "您的 Homarr 提供者津贴今天已被使用。它将在 UTC 午夜重置。",
-      "unavailableDescription": "登录到创意工坊或等待您的 Homarr 提供者设置重置。",
+      "communityWorkshop": "社区工坊",
+      "dailyAllowance": "每日请求额度",
+      "remainingLabel": "Homarr 提供商请求剩余 {remaining}/{limit} 次",
+      "loading": "正在加载 Homarr 提供商额度",
+      "signInRequired": "使用 Homarr 提供商需要先登录工坊",
+      "signInDescription": "通过社区工坊使用 GitHub 登录，即可获得您的独立每日额度。",
+      "exhaustedDescription": "您的 Homarr 提供商额度今日已用完，将在 UTC 午夜重置。",
+      "unavailableDescription": "请登录工坊，或等待您的 Homarr 提供商额度重置。",
       "signIn": "使用 GitHub 登录",
       "signInError": "GitHub 登录失败。稍后再试。",
-      "loadError": "无法加载Homarr提供者津贴。",
-      "reset": "{relative} 后于 <time></time> 重置",
-      "toolCalls": "每个模型请求和已完成的工具通话使用一个请求。",
-      "retry": "重新加载津贴",
+      "loadError": "无法加载 Homarr 提供商额度。",
+      "reset": "将于 <time></time>（{relative} 后）重置",
+      "toolCalls": "每个模型请求和已完成的工具调用都消耗一次请求额度。",
+      "retry": "重新加载额度",
       "level": {
         "ok": "正常",
         "warning": "警告",
@@ -8376,31 +8405,31 @@
     "feedbackError": "您的反馈无法保存。请重试。",
     "exportMarkdown": "导出为 Markdown",
     "exportConversation": {
-      "action": "将对话导出为Markdown",
+      "action": "将对话导出为 Markdown",
       "failedTitle": "无法导出对话",
       "failedDescription": "Homarr 无法加载此对话。请重试。"
     },
-    "reasoning": "思维方式",
+    "reasoning": "思考",
     "previousResponse": "上一个响应",
     "nextResponse": "下一个响应",
     "removeAttachment": "移除附件",
     "downloadFile": "下载 {name}",
-    "attachedImage": "附加图像",
-    "externalImageBlocked": "外部图像因隐私而被阻止",
+    "attachedImage": "附加的图片",
+    "externalImageBlocked": "出于隐私考虑，外部图片已被拦截。",
     "image": {
-      "loading": "正在加载图像",
-      "failed": "无法加载此图像。",
-      "retry": "再次尝试图像"
+      "loading": "正在加载图片",
+      "failed": "无法加载此图片。",
+      "retry": "重试加载图片"
     },
     "quoteSelection": "引用",
-    "dismissQuote": "删除引用",
+    "dismissQuote": "移除引用",
     "attachments": {
-      "add": "附加图像或文档",
+      "add": "附加图片或文档",
       "errorTitle": "无法添加附件",
-      "imageUnsupported": "所选模型不支持图像输入。"
+      "imageUnsupported": "所选模型不支持图片输入。"
     },
     "mentions": {
-      "menu": "添加 Homarr 环境",
+      "menu": "添加 Homarr 上下文",
       "context": "上下文",
       "app": "应用",
       "integration": "集成",
@@ -8410,54 +8439,54 @@
     },
     "markdown": {
       "diagram": "图表",
-      "renderingDiagram": "渲染图…",
+      "renderingDiagram": "正在渲染图表…",
       "diagramUnavailable": "此图表无法渲染。"
     },
     "commands": {
       "menu": "助手命令",
       "health": "准备服务健康检查",
-      "explore": "准备此Homarr实例的概述",
+      "explore": "准备此 Homarr 实例的概述",
       "media": "准备媒体搜索",
-      "style": "准备版面外观或自定义 CSS 更改",
-      "designWidget": "准备一个一提示的自定义小部件构建。"
+      "style": "准备看板外观或自定义 CSS 的更改",
+      "designWidget": "准备一次单提示词的自定义小部件构建。"
     },
     "usage": {
       "tokens": "令牌",
       "contextWindow": "上下文窗口",
       "requestDetails": "请求详情",
       "used": "最新步骤",
-      "remaining": "剩余时间",
+      "remaining": "剩余",
       "capacity": "容量",
       "input": "输入",
       "output": "输出",
       "cached": "缓存输入",
       "cacheWrite": "缓存写入",
-      "reasoning": "原因",
-      "inputShort": "在",
-      "outputShort": "出",
+      "reasoning": "推理",
+      "inputShort": "输入",
+      "outputShort": "输出",
       "cachedShort": "已缓存",
-      "reasoningShort": "理由：",
+      "reasoningShort": "推理",
       "firstOutput": "第一个输出",
-      "homarrTiming": "观察到的 Homarr",
-      "endToEnd": "结束到结束",
-      "observedThroughput": "观察通过量",
+      "homarrTiming": "Homarr 侧观测",
+      "endToEnd": "端到端",
+      "observedThroughput": "观测吞吐量",
       "providerTiming": "提供商已报告",
       "loadingProviderDetails": "正在加载生成详细信息…",
       "providerDetailsPending": "OpenRouter 仍在处理一些生成的详细信息。重新打开以重试。",
-      "providerLatency": "供货商延迟",
+      "providerLatency": "提供商延迟",
       "generationTime": "生成时间",
       "moderationLatency": "审核",
-      "providerThroughput": "供货商通过量",
-      "fallbacks": "备注",
-      "fallbackLatency": "备份延迟",
+      "providerThroughput": "提供商吞吐量",
+      "fallbacks": "备用",
+      "fallbackLatency": "备用延迟",
       "cacheDiscount": "缓存折扣",
-      "normalizedTokens": "OpenRouter 正常化的输入/输出",
-      "byok": "黑名单",
-      "cost": "费用",
+      "normalizedTokens": "OpenRouter 归一化输入/输出",
+      "byok": "自带密钥（BYOK）",
+      "cost": "成本",
       "reported": "由提供商报告",
       "estimated": "模型定价估计",
-      "upstreamCost": "上游输入法",
-      "webSearches": "网络搜索",
+      "upstreamCost": "上游推理",
+      "webSearches": "联网搜索",
       "finishReason": "完成原因",
       "notReported": "未报告",
       "agentSteps": "代理步骤",
@@ -8475,13 +8504,13 @@
       "openWidget": "打开小部件"
     },
     "webSearch": {
-      "title": "网络搜索",
-      "completed": "OpenRouter 为此响应搜索了在线网站。",
+      "title": "联网搜索",
+      "completed": "OpenRouter 为此回复进行了联网搜索。",
       "searches": "{count, plural, one {# 搜索} other {# 搜索}}",
-      "sources": "{count, plural, one {# 源} other {# 源}}"
+      "sources": "{count, plural, one {# 个来源} other {# 个来源}}"
     },
     "responseError": {
-      "title": "该助手无法完成",
+      "title": "助手无法完成",
       "description": "请重试。如果问题仍然存在，请管理员验证已配置的模型端点。"
     },
     "toolPreparationError": {
@@ -8489,14 +8518,14 @@
       "description": "模型在提供完整详细信息之前停止。请重试回复或再次描述请求。未做任何更改。"
     },
     "busy": {
-      "title": "此助手已在工作",
+      "title": "助手正在工作",
       "description": "等待当前响应或打开它以停止运行。"
     },
     "pendingAction": {
       "answerTitle": "需要答案",
       "answerFallback": "选择一个答案以继续",
       "formTitle": "审阅应用详情",
-      "boardFormTitle": "审核板更改",
+      "boardFormTitle": "审核看板更改",
       "review": "预览",
       "sendBlocked": "发送前解决待处理请求"
     },
@@ -8506,16 +8535,16 @@
       "ready": "响应已准备好",
       "completed": "打开响应",
       "approval": "需要批准",
-      "failed": "助理需要关注",
+      "failed": "助手需要关注",
       "expand": "打开助手响应",
-      "dismiss": "取消助手活动"
+      "dismiss": "关闭助手动态"
     },
-    "scrollToLatest": "滚动到最新版本",
+    "scrollToLatest": "滚动到最新",
     "refresh": {
       "action": "刷新当前视图",
       "working": "正在刷新当前视图",
-      "completeTitle": "查看已刷新",
-      "completeDescription": "可见的Homarr 数据已重新载入.",
+      "completeTitle": "视图已刷新",
+      "completeDescription": "可见的 Homarr 数据已重新加载。",
       "failedTitle": "无法刷新视图",
       "failedDescription": "更改仍可保存。请再次尝试刷新操作。"
     },
@@ -8539,36 +8568,36 @@
       "description": "在助手请求创建批准之前选择本地图标并进行任何调整。",
       "preparing": "准备应用详情",
       "continue": "使用这些详细信息",
-      "ready": "应用程序详细信息已准备好",
-      "automaticContinue": "自动使用这些应用程序详细信息"
+      "ready": "应用详情已准备好",
+      "automaticContinue": "自动使用这些应用详情"
     },
     "configureBoardSettings": {
-      "title": "审核板更改",
-      "loading": "正在加载当前棋盘设置",
-      "loadErrorTitle": "无法加载棋盘设置",
+      "title": "审核看板更改",
+      "loading": "正在加载当前看板设置",
+      "loadErrorTitle": "无法加载看板设置",
       "loadErrorDescription": "看板可能不再存在，或者您可能没有权限修改它。",
       "proposedCount": "助手提出了 {count} 个字段",
       "changeCount": "{count} 项更改已就绪",
-      "ready": "版面更改已准备好",
-      "cancelled": "保持当前棋盘设置",
-      "noChanges": "没有设置将更改",
+      "ready": "看板更改已准备好",
+      "cancelled": "保持当前看板设置",
+      "noChanges": "不会有任何设置更改",
       "keepCurrent": "保持当前设置",
-      "continue": "继续批准",
-      "automaticContinue": "自动接受拟议的棋盘更改",
+      "continue": "继续审批",
+      "automaticContinue": "自动接受拟议的看板更改",
       "resetAll": "重置所有更改",
       "tabs": {
-        "css": "Custom CSS",
+        "css": "自定义 CSS",
         "appearance": "外观",
         "background": "背景",
         "general": "常规"
       },
       "cssDescription": "编辑完整的样式表。除非删除，否则将保留现有的规则。",
       "cssCharacters": "{count}/16384 个字符",
-      "copyCss": "Copy CSS",
+      "copyCss": "复制 CSS",
       "copied": "已复制",
-      "restoreCss": "Restore current CSS",
+      "restoreCss": "恢复当前 CSS",
       "remoteCssTitle": "此 CSS 加载远程资源",
-      "remoteCssDescription": "导入样式表和远程 URL 当板负载时联系另一个服务器。在继续之前审查它们。"
+      "remoteCssDescription": "看板加载时，导入的样式表和远程 URL 会连接其他服务器。请先检查后再继续。"
     },
     "configureWidget": {
       "title": "审核小部件",
@@ -8576,13 +8605,13 @@
       "review": "审核小部件和集成",
       "ready": "小部件配置已准备好",
       "cancelled": "小部件未添加",
-      "automaticContinue": "自动接受拟议的部件配置",
+      "automaticContinue": "自动接受拟议的小部件配置",
       "definitionLoadErrorTitle": "无法加载小部件设置",
-      "definitionLoadErrorDescription": "Homarr 无法加载此部件的设置。请重试。",
+      "definitionLoadErrorDescription": "Homarr 无法加载此小部件的设置。请重试。",
       "loadErrorTitle": "无法加载集成",
-      "loadErrorDescription": "Homarr 无法加载此部件可用的集成。",
+      "loadErrorDescription": "Homarr 无法加载此小部件可用的集成。",
       "noIntegrationTitle": "需要兼容的集成",
-      "noIntegrationDescription": "在将其添加到仪表盘之前，配置此部件支持的集成。",
+      "noIntegrationDescription": "在将其添加到仪表盘之前，请先配置此小部件支持的集成。",
       "connectIntegration": "连接服务",
       "manageIntegrations": "管理集成",
       "skip": "不添加",
@@ -8590,11 +8619,11 @@
       "errorDescription": "模型没有提供完整的小部件配置。没有添加小部件。"
     },
     "approvalRequired": "需要批准",
-    "complete": "Complete",
+    "complete": "完成",
     "denied": "被拒绝",
     "failed": "失败",
-    "working": "工作",
-    "approvalDescription": "在开始之前审查此更改。",
+    "working": "进行中",
+    "approvalDescription": "在运行前请审阅此更改。",
     "approveAndRun": "批准并运行",
     "deny": "拒绝",
     "autoApproval": {
@@ -8602,7 +8631,7 @@
       "composerLabel": "为我批准",
       "title": "自动批准",
       "description": "自动准备此对话的表单并批准受保护的更改。 问题仍在等待您的回答，您的 Homarr 权限仍然适用。当您切换对话时，此功能将关闭。",
-      "enable": "启用此对话",
+      "enable": "在此对话中启用",
       "disable": "关闭自动批准",
       "enabled": "自动批准已开启",
       "approving": "自动批准"

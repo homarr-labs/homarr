@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": ""
         },
+        "includeArchivedHistory": {
+          "label": "Sisällytä arkistoitu SABnzbd-historia",
+          "description": "Näytä työt siirretty Arkistoon."
+        },
+        "historyWindowDays": {
+          "label": "Arkistoidun historian ikkuna (päivää)",
+          "description": "Rajoita SABnzbd-historiaa tähän päivään. Lisää tuoterajaa näyttääksesi lisää tuloksia."
+        },
         "activeTorrentThreshold": {
           "label": "Piilota tämän kynnysarvon alle jäävät valmistuneet torrentit"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Näytä verkon kaavio"
         },
+        "showGpuUsage": {
+          "label": "Näytä GPU:n käyttökaavio"
+        },
+        "showGpuMemory": {
+          "label": "Näytä näytönohjaimen muistikaavio"
+        },
+        "showGpuPower": {
+          "label": "Näytä GPU virtakaavio"
+        },
         "showDockerCpu": {
           "label": "Näytä Docker-suorittimen kaavio"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Julkisten rajapintojen verkkoliikenne",
           "sent": "Lähetetty",
           "recv": "Vastaanotettu"
+        },
+        "gpuUsage": {
+          "title": "Gpu:N Käyttö",
+          "subtitle": "GPU:n käyttö"
+        },
+        "gpuMemory": {
+          "title": "Gpu- Muisti",
+          "subtitle": "GPU:n käyttämä VRAM"
+        },
+        "gpuPower": {
+          "title": "Gpu:N Virta",
+          "subtitle": "Virtapiirros GPU:n avulla"
         },
         "dockerCpu": {
           "title": "Docker-suorittimen käyttö",

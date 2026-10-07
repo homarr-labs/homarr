@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Vis Diverse poster markeret som færdige"
         },
+        "includeArchivedHistory": {
+          "label": "Inkluder arkiveret SABnzbd historik",
+          "description": "Vis job flyttet til Arkiv."
+        },
+        "historyWindowDays": {
+          "label": "Arkiveret historikvindue (dage)",
+          "description": "Begræns færdig SABnzbd historie til disse mange dage. Øg elementgrænsen for at vise flere resultater."
+        },
         "activeTorrentThreshold": {
           "label": "Skjul afsluttet torrent under denne tærskel"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Vis netværksdiagram"
         },
+        "showGpuUsage": {
+          "label": "Vis GPU brugsdiagram"
+        },
+        "showGpuMemory": {
+          "label": "Vis GPU hukommelsesdiagram"
+        },
+        "showGpuPower": {
+          "label": "Vis GPU strømdiagram"
+        },
         "showDockerCpu": {
           "label": "Vis Docker CPU-diagram"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Netværkstrafik på offentlige grænseflader",
           "sent": "Sendt",
           "recv": "Modtaget"
+        },
+        "gpuUsage": {
+          "title": "Gpu Brug",
+          "subtitle": "Udnyttelse af GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU Hukommelse",
+          "subtitle": "VRAM brugt af GPU"
+        },
+        "gpuPower": {
+          "title": "Gpu Strøm",
+          "subtitle": "Strømtegning af GPU"
         },
         "dockerCpu": {
           "title": "Docker CPU-forbrug",

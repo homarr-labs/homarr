@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Vis diverse oppføringer merket som fullført"
         },
+        "includeArchivedHistory": {
+          "label": "Inkluder arkivert SABnzbd-historikk",
+          "description": "Vis jobber flyttet til arkiv."
+        },
+        "historyWindowDays": {
+          "label": "Arkivert historikkvindu (dager)",
+          "description": "Begrens ferdigstilte SABnzbd historie til dette er mange dager. Øk grensen for å vise flere resultater."
+        },
         "activeTorrentThreshold": {
           "label": "Skjul fullført torrent under denne terskelen"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Vis nettverksdiagram"
         },
+        "showGpuUsage": {
+          "label": "Vis graf for GPU-bruk"
+        },
+        "showGpuMemory": {
+          "label": "Vis GPU minnediagram"
+        },
+        "showGpuPower": {
+          "label": "Vis GPU strømdiagram"
+        },
         "showDockerCpu": {
           "label": "Vis dokumentasjonsdiagram for Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Nettverkstrafikk for offentlig grensesnitt",
           "sent": "Sendt",
           "recv": "Mottatt"
+        },
+        "gpuUsage": {
+          "title": "GPU bruk",
+          "subtitle": "Utnyttelse fra GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU minne",
+          "subtitle": "VRAM brukt av GPU"
+        },
+        "gpuPower": {
+          "title": "GPU makt",
+          "subtitle": "Strømforbruk med GPU"
         },
         "dockerCpu": {
           "title": "Prosessorbruk for dokker",
