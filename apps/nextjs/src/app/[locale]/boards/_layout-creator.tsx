@@ -34,6 +34,7 @@ interface CreateBoardLayoutProps<TParams extends Params> {
   headerBoardSettingsAction?: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
   withTour?: boolean;
+  withCustomCss?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
@@ -42,6 +43,7 @@ export const createBoardLayout = <TParams extends Params>({
   headerBoardSettingsAction,
   getInitialBoardAsync: getInitialBoard,
   withTour = false,
+  withCustomCss = true,
 }: CreateBoardLayoutProps<TParams>) => {
   const Layout = async ({
     params,
@@ -107,7 +109,7 @@ export const createBoardLayout = <TParams extends Params>({
         <BoardReadyProvider>
           <BoardMantineProvider defaultColorScheme={colorScheme}>
             <ModalProvider>
-              <CustomCss />
+              {withCustomCss && <CustomCss />}
               <BoardTourGate enabled={shouldRunBoardTour}>
                 <ClientShell hasNavigation={false}>
                   <MainHeader
