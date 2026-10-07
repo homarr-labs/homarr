@@ -115,8 +115,8 @@ interface IntegrationSecretsProps {
 export const IntegrationSecrets = ({ secrets }: IntegrationSecretsProps) => {
   return (
     <div className="flex flex-col gap-4 mt-6 w-full">
-      <div className="flex gap-6 rounded-xl border border-solid dark:border-[#333] border-[#e5e7eb] shadow-sm w-full items-center justify-between [&>*]:w-full">
-        <Tabs className="[&>li]:w-full [&>li]:justify-center">
+      <div className="w-full">
+        <Tabs className="w-full rounded-none border-0 bg-transparent [&>[role=tablist]]:px-0">
           {secrets.map((secret, index) => {
             const key = secret.credentials.join("-") || `no-authentication-${index}`;
             const Icon =
@@ -137,10 +137,10 @@ export const IntegrationSecrets = ({ secrets }: IntegrationSecretsProps) => {
                     <span>{tabLabel}</span>
                   </div>
                 }
-                className="w-100"
+                className="w-full rounded-none bg-transparent px-0"
                 value={key}
               >
-                <div className="px-4 w-full gap-4 flex flex-col">
+                <div className="w-full gap-4 flex flex-col">
                   {secret.header}
                   {secret.credentials.length >= 1 && (
                     <table className="mb-0 w-full">
