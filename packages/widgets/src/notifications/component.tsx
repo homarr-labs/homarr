@@ -169,7 +169,7 @@ export default function NotificationsWidget({
                           aria-label={t("openService")}
                           title={t("openService")}
                         >
-                          <IconExternalLink size={16} />
+                          <IconExternalLink style={iconSizes.md} />
                         </ActionIcon>
                       )}
                       {notification.integrationKind === "gotify" &&
@@ -187,7 +187,7 @@ export default function NotificationsWidget({
                               })
                             }
                           >
-                            <IconTrash size={16} />
+                            <IconTrash style={iconSizes.md} />
                           </ActionIcon>
                         )}
                     </Stack>
