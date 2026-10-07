@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Tamamlanmış olarak işaretlenmiş çeşitli girişleri göster"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Tamamlanan torrent'i bu eşik değerinin altına gizle"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Ağ grafiğini göster"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Docker CPU grafiğini göster"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Genel ağ arayüzlerinin trafiği",
           "sent": "Gönderilen",
           "recv": "Alınan"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU Kullanımı",

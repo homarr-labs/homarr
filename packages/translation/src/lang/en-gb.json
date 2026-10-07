@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Show Miscellaneous entries marked as completed"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Hide completed torrent under this threshold"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Show network chart"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Show Docker CPU chart"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Network traffic of public interfaces",
           "sent": "Sent",
           "recv": "Received"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU Usage",

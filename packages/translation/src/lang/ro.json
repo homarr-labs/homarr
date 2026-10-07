@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Arată diverse intrări marcate ca completate"
         },
+        "includeArchivedHistory": {
+          "label": "Include istoricul SABnzbd arhivat",
+          "description": "Arată joburile mutate în Arhivă."
+        },
+        "historyWindowDays": {
+          "label": "Fereastra de istorie arhivată (zile)",
+          "description": "Limita istoricului SABnzbd terminat la atâtea zile. Crește limita de articole pentru a arăta mai multe rezultate."
+        },
         "activeTorrentThreshold": {
           "label": "Ascunde torentul completat sub acest prag (în kiB/s)"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Arată graficul rețelei"
         },
+        "showGpuUsage": {
+          "label": "Arată graficul de utilizare GPU"
+        },
+        "showGpuMemory": {
+          "label": "Arată graficul de memorie GPU"
+        },
+        "showGpuPower": {
+          "label": "Arată graficul puterii GPU"
+        },
         "showDockerCpu": {
           "label": "Arată graficul CPU Docker"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Trafic de rețea al interfețelor publice",
           "sent": "Trimis",
           "recv": "Primit"
+        },
+        "gpuUsage": {
+          "title": "Utilizare GPU",
+          "subtitle": "Utilizare de GPU"
+        },
+        "gpuMemory": {
+          "title": "Memorie GPU",
+          "subtitle": "VRAM folosit de GPU"
+        },
+        "gpuPower": {
+          "title": "Puterea GPU",
+          "subtitle": "Redare prin GPU"
         },
         "dockerCpu": {
           "title": "Utilizare CPU Docker",

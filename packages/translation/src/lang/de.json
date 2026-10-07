@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Andere Einträge als abgeschlossen anzeigen"
         },
+        "includeArchivedHistory": {
+          "label": "Archivierte SABnzbd-Chronik einbeziehen",
+          "description": "Jobs in Archiv verschoben."
+        },
+        "historyWindowDays": {
+          "label": "Archivierte Verlaufsfenster (Tage)",
+          "description": "Beende SABnzbd-Historie auf diese Tage beschränken. Erhöhe das Artikellimit um mehr Ergebnisse anzuzeigen."
+        },
         "activeTorrentThreshold": {
           "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden"
         },
@@ -5086,7 +5094,7 @@
     },
     "beszelSystemStats": {
       "name": "",
-      "description": "",
+      "description": "Zeit-Diagramme für CPU, Speicher, Festplatte, Netzwerk, GPU und Docker Container-Metriken",
       "option": {
         "systemId": {
           "label": "System",
@@ -5109,6 +5117,15 @@
         },
         "showNetwork": {
           "label": "Netzwerk-Diagramm anzeigen"
+        },
+        "showGpuUsage": {
+          "label": "GPU-Nutzungsdiagramm anzeigen"
+        },
+        "showGpuMemory": {
+          "label": "GPU-Speicherdiagramm anzeigen"
+        },
+        "showGpuPower": {
+          "label": "Zeige GPU-Power-Diagramm"
         },
         "showDockerCpu": {
           "label": "Docker-CPU-Diagramm anzeigen"
@@ -5163,6 +5180,18 @@
           "subtitle": "Netzwerkverkehr öffentlicher Schnittstellen",
           "sent": "Gesendet",
           "recv": "Empfangen"
+        },
+        "gpuUsage": {
+          "title": "GPU-Nutzung",
+          "subtitle": "Nutzung durch GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU-Speicher",
+          "subtitle": "VRAM wird von GPU verwendet"
+        },
+        "gpuPower": {
+          "title": "GPU-Leistung",
+          "subtitle": "Power-Remis von GPU"
         },
         "dockerCpu": {
           "title": "Docker-CPU-Nutzung",

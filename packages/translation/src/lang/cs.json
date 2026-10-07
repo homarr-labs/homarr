@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Zobrazit dokončené ostatní položky"
         },
+        "includeArchivedHistory": {
+          "label": "Zahrnout archivovanou historii SABnzbd",
+          "description": "Zobrazit úlohy přesunuté do archivu."
+        },
+        "historyWindowDays": {
+          "label": "Okno archivované historie (dny)",
+          "description": "Limit dokončených SABnzbd historie na mnoho dní. Zvyšte limit položek pro zobrazení více výsledků."
+        },
         "activeTorrentThreshold": {
           "label": "Skrýt dokončené torrenty pod touto hranicí (v kiB/s)"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Zobrazit graf sítě"
         },
+        "showGpuUsage": {
+          "label": "Zobrazit graf využití GPU"
+        },
+        "showGpuMemory": {
+          "label": "Zobrazit graf paměti GPU"
+        },
+        "showGpuPower": {
+          "label": "Zobrazit graf napájení GPU"
+        },
         "showDockerCpu": {
           "label": "Zobrazit graf CPU Dockeru"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Síťový provoz veřejných rozhraní",
           "sent": "Odesláno",
           "recv": "Přijato"
+        },
+        "gpuUsage": {
+          "title": "Využití grafiky",
+          "subtitle": "Využití podle GPU"
+        },
+        "gpuMemory": {
+          "title": "Paměť GPU",
+          "subtitle": "VRAM používá GPU"
+        },
+        "gpuPower": {
+          "title": "Energie GPU",
+          "subtitle": "Vysílání pomocí GPU"
         },
         "dockerCpu": {
           "title": "Využití CPU Dockeru",

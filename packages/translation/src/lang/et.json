@@ -4137,6 +4137,14 @@
         "showCompletedHttp": {
           "label": "Kuva lõpetatuks märgitud mitmesugused kirjed"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Peida lõpetatud torrent alla selle läve"
         },
@@ -5110,6 +5118,15 @@
         "showNetwork": {
           "label": "Kuva võrgu diagramm"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Kuva Dockeri protsessori diagramm"
         },
@@ -5163,6 +5180,18 @@
           "subtitle": "Avalike liideste võrguliiklus",
           "sent": "Saadetud",
           "recv": "Vastuvõetud"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Dockeri protsessorikasutus",
