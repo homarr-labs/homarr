@@ -1,4 +1,3 @@
-import type { DayOfWeek } from "@mantine/dates";
 import { z } from "zod/v4";
 
 import { colorSchemes } from "@homarr/definitions";
@@ -7,6 +6,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 import { nullableEmailSchema, optionalEmailSchema } from "./email";
+import { headerPreferencesSchema, headerPreferencesPatchSchema } from "./header-preferences";
 
 export {
   createBoardHeaderItem,
@@ -159,11 +159,7 @@ export const userByteUnitSystemSchema = z.object({
 });
 
 export const userFirstDayOfWeekSchema = z.object({
-  firstDayOfWeek: z
-    .number()
-    .min(0)
-    .max(6)
-    .transform((value) => value as DayOfWeek),
+  firstDayOfWeek: z.literal([0, 1, 2, 3, 4, 5, 6]),
 });
 
 export const userPingIconsEnabledSchema = z.object({
@@ -177,3 +173,21 @@ export const userEnableRightClickOnWidgetsSchema = z.object({
 export const userDdgBangsSchema = z.object({
   ddgBangs: z.boolean(),
 });
+
+export const userPreferencesSchema = z.strictObject({
+  ...userChangeColorSchemeSchema.shape,
+  ...userByteUnitSystemSchema.shape,
+  ...userFirstDayOfWeekSchema.shape,
+  ...userPingIconsEnabledSchema.shape,
+  ...userEnableRightClickOnWidgetsSchema.shape,
+  ...userChangeHomeBoardsSchema.shape,
+  defaultSearchEngineId: userChangeSearchPreferencesSchema.shape.defaultSearchEngineId,
+  openSearchInNewTab: z.boolean(),
+  ddgBangs: z.boolean(),
+  headerPreferences: headerPreferencesSchema,
+});
+
+export const userPreferencesPatchSchema = userPreferencesSchema
+  .partial()
+  .extend({ headerPreferences: headerPreferencesPatchSchema.optional() })
+  .refine((patch) => Object.keys(patch).length > 0, "Supply at least one preference");

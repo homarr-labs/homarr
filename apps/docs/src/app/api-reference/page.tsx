@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
 });
 
 export default function ApiReferenceIndexPage() {
-  const pages = apiSource.getPages();
+  const groups = apiSource.pageTree.children.filter((node) => node.type === "folder");
 
   return (
     <DocsPage full breadcrumb={{ enabled: false }} footer={{ enabled: false }}>
@@ -25,12 +25,26 @@ export default function ApiReferenceIndexPage() {
           review examples or send a test request from your browser.
         </p>
       </header>
-      <div className="mt-10 divide-y border-y">
-        {pages.map((page) => (
-          <Link key={page.url} href={page.url} className="group flex items-center gap-3 py-4 hover:bg-fd-accent/50">
-            <span className="min-w-0 flex-1 truncate font-medium">{page.data.title}</span>
-            <IconArrowRight className="text-fd-muted-foreground" aria-hidden size={17} />
-          </Link>
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+        {groups.map((group) => (
+          <section key={String(group.name)} className="min-w-0 rounded-xl border bg-fd-card p-5">
+            <h2 className="text-lg font-semibold">{group.name}</h2>
+            <div className="mt-3 divide-y border-t">
+              {group.children.map((page) => {
+                if (page.type !== "page") return null;
+                return (
+                  <Link
+                    key={page.url}
+                    href={page.url}
+                    className="group flex items-center gap-3 py-3 hover:bg-fd-accent/50"
+                  >
+                    <span className="min-w-0 flex-1 font-medium">{page.name}</span>
+                    <IconArrowRight className="shrink-0 text-fd-muted-foreground" aria-hidden size={17} />
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
         ))}
       </div>
       <Carbon />
