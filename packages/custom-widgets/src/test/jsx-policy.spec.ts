@@ -42,6 +42,25 @@ describe("shared Custom JSX policy", () => {
     expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
   });
 
+  test("exposes the session user context as a template root", () => {
+    const diagnostics = validateCustomJsxTemplate(
+      '<Text>{user.name} {user.groups.includes("ops")} {user.permissions.includes("admin")}</Text>',
+    );
+    expect(diagnostics.filter(({ severity }) => severity === "error")).toEqual([]);
+  });
+
+  test("rejects callback parameters that shadow the user root", () => {
+    const diagnostics = validateCustomJsxTemplate("<Text>{[1].map(user => user)}</Text>");
+    expect(diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          severity: "error",
+          message: expect.stringContaining("RESERVED_LOCAL_BINDING"),
+        }),
+      ]),
+    );
+  });
+
   test.each([
     ["status.list.isLoading", "status.list.isLoading"],
     ["status.list?.isError", "status.list.isError"],
