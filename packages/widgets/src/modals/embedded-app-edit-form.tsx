@@ -48,7 +48,8 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
     handleRef,
     () => ({
       submitIfDirty: async () => {
-        if (!appFormRef.current?.isDirty()) {
+        if (!appFormRef.current) return false;
+        if (!appFormRef.current.isDirty()) {
           return true;
         }
 

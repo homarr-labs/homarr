@@ -3,12 +3,14 @@
 import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 import {
+  Accordion,
   Avatar,
   Box,
   Card,
   Center,
   Grid,
   Group,
+  rem,
   ScrollArea,
   SimpleGrid,
   Stack,
@@ -16,7 +18,7 @@ import {
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { useReducedMotion } from "@mantine/hooks";
+import { useLocalStorage, useReducedMotion } from "@mantine/hooks";
 import { IconArrowUpRight, IconBookmark, IconLink } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -33,6 +35,7 @@ import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } fro
 import type { BookmarkItem } from "./bookmark-item";
 import { getBookmarkCardDisplay, getBookmarkDisplayPlan } from "./layout";
 import type { BookmarkOrientation } from "./layout";
+import { getBookmarkGroups } from "./groups-data";
 
 type BookmarkVariant = WidgetComponentProps<"bookmarks">["options"]["variant"];
 
@@ -67,6 +70,19 @@ export default function BookmarksWidget({
     return [item];
   });
   const data = [...configuredItems, ...legacyItems];
+  const groups = getBookmarkGroups(options.groups);
+  const groupedIds = new Set<string>();
+  const sections = groups.flatMap((group) => {
+    const items = data.filter((item) => group.itemIds.includes(item.id) && !groupedIds.has(item.id));
+    for (const item of items) groupedIds.add(item.id);
+    if (items.length === 0) return [];
+    return [{ ...group, items }];
+  });
+  const ungroupedItems = data.filter((item) => !groupedIds.has(item.id));
+  const [collapsedGroups, setCollapsedGroups] = useLocalStorage<string[]>({
+    key: `homarr-bookmarks-collapsed-${itemId ?? "preview"}`,
+    defaultValue: [],
+  });
 
   let responsiveWidth = width;
   let responsiveHeight = height;
@@ -130,23 +146,49 @@ export default function BookmarksWidget({
     plan,
   });
 
-  const cards = data.map((bookmark) => (
-    <BookmarkCard
-      key={bookmark.id}
-      bookmark={bookmark}
-      advanced={advanced}
-      orientation={cardDisplay.orientation}
-      showHostname={cardDisplay.showHostname}
-      showIcon={cardDisplay.showIcon}
-      showTitle={cardDisplay.showTitle}
-      openNewTab={options.openNewTab}
-      variant={options.variant}
-      withBorder={options.withBorder}
-      radius={board.itemRadius}
-      height={plan.itemHeight}
-      width={plan.horizontalScroll ? plan.itemWidth : undefined}
-    />
-  ));
+  const renderCards = (items: BookmarkItem[]) =>
+    items.map((bookmark) => (
+      <BookmarkCard
+        key={bookmark.id}
+        bookmark={bookmark}
+        advanced={advanced}
+        orientation={cardDisplay.orientation}
+        showHostname={cardDisplay.showHostname}
+        showIcon={cardDisplay.showIcon}
+        showTitle={cardDisplay.showTitle}
+        openNewTab={options.openNewTab}
+        variant={options.variant}
+        withBorder={options.withBorder}
+        radius={board.itemRadius}
+        height={plan.itemHeight}
+        width={plan.horizontalScroll ? plan.itemWidth : undefined}
+      />
+    ));
+
+  const renderItems = (items: BookmarkItem[]) => {
+    const cards = renderCards(items);
+    if (plan.horizontalScroll)
+      return (
+        <Group gap={plan.itemGap} wrap="nowrap" align="center" h="100%">
+          {cards}
+        </Group>
+      );
+    if (options.grow)
+      return (
+        <Grid grow columns={plan.columns} gap={plan.itemGap}>
+          {cards.map((card) => (
+            <Grid.Col key={card.key} span={1}>
+              {card}
+            </Grid.Col>
+          ))}
+        </Grid>
+      );
+    return (
+      <SimpleGrid cols={plan.columns} spacing={plan.itemGap} verticalSpacing={plan.itemGap}>
+        {cards}
+      </SimpleGrid>
+    );
+  };
 
   if (appIds.length > 0 && isInitialWidgetQueryPending(appsQuery)) return <WidgetQueryLoadingState />;
 
@@ -185,27 +227,59 @@ export default function BookmarksWidget({
         </Center>
       ) : (
         <ScrollArea
-          scrollbars={plan.horizontalScroll ? "x" : "y"}
+          scrollbars={sections.length > 0 ? "xy" : plan.horizontalScroll ? "x" : "y"}
           style={{ flex: 1, minHeight: 0 }}
           styles={{ content: { height: "100%" } }}
         >
           <Box miw="100%" h="100%" pb={2}>
-            {plan.horizontalScroll ? (
-              <Group gap={plan.itemGap} wrap="nowrap" h="100%" align="center">
-                {cards}
-              </Group>
-            ) : options.grow ? (
-              <Grid grow columns={plan.columns} gap={plan.itemGap}>
-                {cards.map((card) => (
-                  <Grid.Col key={card.key} span={1}>
-                    {card}
-                  </Grid.Col>
-                ))}
-              </Grid>
+            {sections.length > 0 ? (
+              <Stack gap={4}>
+                <Accordion
+                  multiple
+                  value={sections
+                    .filter((section) => !collapsedGroups.includes(section.id))
+                    .map((section) => section.id)}
+                  onChange={(opened) =>
+                    setCollapsedGroups(
+                      sections.filter((section) => !opened.includes(section.id)).map((section) => section.id),
+                    )
+                  }
+                  transitionDuration={0}
+                  styles={{
+                    control: { padding: rem(4), minHeight: rem(28) },
+                    label: { padding: 0, fontSize: "var(--mantine-font-size-xxs)", fontWeight: 600 },
+                    content: { padding: `0 0 ${rem(4)}` },
+                    item: { border: 0 },
+                    chevron: zoomCompensatedSize(14),
+                  }}
+                >
+                  {sections.map((section) => (
+                    <Accordion.Item key={section.id} value={section.id}>
+                      <Accordion.Control>
+                        <Group justify="space-between" gap={4} wrap="nowrap">
+                          <Text inherit truncate>
+                            {section.name}
+                          </Text>
+                          <Text inherit c="dimmed">
+                            {section.items.length}
+                          </Text>
+                        </Group>
+                      </Accordion.Control>
+                      <Accordion.Panel>{renderItems(section.items)}</Accordion.Panel>
+                    </Accordion.Item>
+                  ))}
+                </Accordion>
+                {ungroupedItems.length > 0 && (
+                  <Stack gap={4}>
+                    <Text size="xxs" fw={600} px={4}>
+                      {t("groups.ungrouped")}
+                    </Text>
+                    {renderItems(ungroupedItems)}
+                  </Stack>
+                )}
+              </Stack>
             ) : (
-              <SimpleGrid cols={plan.columns} spacing={plan.itemGap} verticalSpacing={plan.itemGap}>
-                {cards}
-              </SimpleGrid>
+              renderItems(data)
             )}
           </Box>
         </ScrollArea>
