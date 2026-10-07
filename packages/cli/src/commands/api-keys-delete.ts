@@ -17,6 +17,7 @@ export const apiKeysDelete = command({
 
     if (!apiKey) {
       console.error("API key not found");
+      process.exitCode = 1;
       return;
     }
 

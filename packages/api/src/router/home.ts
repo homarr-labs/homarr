@@ -1,7 +1,7 @@
 import { isProviderEnabled } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import type { Database } from "@homarr/db";
-import { db, eq, inArray, or } from "@homarr/db";
+import { eq, inArray, or } from "@homarr/db";
 import {
   apps,
   boards,
@@ -91,7 +91,7 @@ export const homeRouter = createTRPCRouter({
     statistics.push({
       titleKey: "board",
       subtitleKey: "boards",
-      count: await db.$count(
+      count: await ctx.db.$count(
         boards,
         ctx.session?.user.permissions.includes("board-view-all")
           ? undefined
@@ -108,7 +108,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "user",
         subtitleKey: "authentication",
-        count: await db.$count(users),
+        count: await ctx.db.$count(users),
         path: "/manage/users",
       });
     }
@@ -117,7 +117,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "invite",
         subtitleKey: "authentication",
-        count: await db.$count(invites),
+        count: await ctx.db.$count(invites),
         path: "/manage/users/invites",
       });
     }
@@ -135,7 +135,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "integration",
         subtitleKey: "resources",
-        count: integrationAccess.canManageAll ? await db.$count(integrations) : fullAccessIntegrationIds.length,
+        count: integrationAccess.canManageAll ? await ctx.db.$count(integrations) : fullAccessIntegrationIds.length,
         path: "/manage/integrations",
       });
     }
@@ -145,7 +145,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "app",
         subtitleKey: "resources",
-        count: appAccess.canManageAll ? await db.$count(apps) : 0,
+        count: appAccess.canManageAll ? await ctx.db.$count(apps) : 0,
         path: "/manage/apps",
       });
     }
@@ -154,7 +154,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "group",
         subtitleKey: "authorization",
-        count: await db.$count(groups),
+        count: await ctx.db.$count(groups),
         path: "/manage/users/groups",
       });
     }
@@ -163,7 +163,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "searchEngine",
         subtitleKey: "resources",
-        count: await db.$count(searchEngines),
+        count: await ctx.db.$count(searchEngines),
         path: "/manage/search-engines",
       });
     }
@@ -172,7 +172,7 @@ export const homeRouter = createTRPCRouter({
       statistics.push({
         titleKey: "media",
         subtitleKey: "resources",
-        count: await db.$count(
+        count: await ctx.db.$count(
           medias,
           ctx.session.user.permissions.includes("media-view-all")
             ? undefined

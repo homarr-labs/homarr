@@ -14,17 +14,19 @@ export const apiKeysCreate = command({
     username: string("username").alias("u").desc("Name of the user the key belongs to"),
   },
   handler: async (options) => {
-    if (!options.id && !options.username) {
-      console.error("Either --id or --username must be provided");
+    if (Boolean(options.id) === Boolean(options.username)) {
+      console.error("Provide exactly one of --id or --username");
+      process.exitCode = 1;
       return;
     }
 
-    const user = options.id
-      ? await db.query.users.findFirst({ where: eq(users.id, options.id) })
-      : await db.query.users.findFirst({ where: eq(users.name, options.username ?? "") });
+    let where = eq(users.name, options.username ?? "");
+    if (options.id) where = eq(users.id, options.id);
+    const user = await db.query.users.findFirst({ where });
 
     if (!user) {
       console.error("User not found");
+      process.exitCode = 1;
       return;
     }
 

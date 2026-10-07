@@ -73,6 +73,13 @@ export const customWidgetRouter = createTRPCRouter({
 
   toggleEnabled: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Enable or disable one Custom JSX widget definition (admin only). REQUIRED: id from customWidget_list and enabled boolean.",
+      },
+    })
     .input(z.object({ id: z.string(), enabled: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       if (input.enabled) {
@@ -105,6 +112,13 @@ export const customWidgetRouter = createTRPCRouter({
 
   duplicate: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Duplicate one Custom JSX widget definition (admin only). REQUIRED: id from customWidget_list. Returns the new definition id and name; secrets are not copied.",
+      },
+    })
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({

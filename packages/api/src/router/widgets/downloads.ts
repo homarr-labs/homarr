@@ -111,6 +111,13 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   pauseItem: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Pause one download item. Discover the item with downloads_getJobsAndStatuses; supply its complete item and the originating integrationIds. Requires interact access.",
+      },
+    })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
@@ -141,6 +148,13 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   resumeItem: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Resume one download item. Discover the item with downloads_getJobsAndStatuses; supply its complete item and the originating integrationIds. Requires interact access.",
+      },
+    })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
@@ -153,6 +167,13 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   deleteItem: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Delete one download item. Supply the complete item and originating integrationIds from downloads_getJobsAndStatuses. fromDisk controls deletion of downloaded files; requires interact access.",
+      },
+    })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {

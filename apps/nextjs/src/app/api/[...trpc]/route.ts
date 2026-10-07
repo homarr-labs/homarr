@@ -3,7 +3,7 @@ import { userAgent } from "next/server";
 import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 import { createTRPCContext } from "@homarr/api";
-import { openApiRouter } from "@homarr/api/open-api";
+import { createMediaUploadResponseAsync, openApiRouter } from "@homarr/api/open-api";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -34,6 +34,10 @@ const handlerAsync = async (req: NextRequest) => {
   );
 
   const session = await getSessionFromApiKeyAsync(db, apiKeyHeaderValue, ipAddress, ua);
+
+  if (req.method === "POST" && req.nextUrl.pathname === "/api/media/upload") {
+    return withCors(await createMediaUploadResponseAsync(req, createTRPCContext({ session, headers: req.headers })));
+  }
 
   // Fallback to JSON if no content type is set
   if (!req.headers.has("Content-Type")) {

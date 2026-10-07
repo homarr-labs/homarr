@@ -56,9 +56,18 @@ export const cronJobsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await new JobManager(ctx.db, jobGroup).enableAsync(input);
     }),
-  getJobs: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    return await new JobManager(ctx.db, jobGroup).getAllAsync();
-  }),
+  getJobs: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List scheduled jobs, intervals, enabled states and execution status (admin only). Use returned job names for targeted REST job commands.",
+      },
+    })
+    .query(async ({ ctx }) => {
+      return await new JobManager(ctx.db, jobGroup).getAllAsync();
+    }),
   subscribeToStatusUpdates: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
     return observable<TaskStatus>((emit) => {
       const unsubscribes: (() => void)[] = [];

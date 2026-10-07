@@ -2850,6 +2850,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/server-settings':
+        specifier: workspace:^0.1.0
+        version: link:../server-settings
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation

@@ -53,10 +53,6 @@ export const apiKeysRouter = createTRPCRouter({
     .requiresPermission("admin")
     .meta({
       openapi: { method: "POST", path: "/api/apikeys", tags: ["apikeys"], protect: true },
-      mcp: {
-        enabled: true,
-        description: "Create a new API key for the current user (admin only)",
-      },
     })
     .input(z.void())
     .output(z.object({ apiKey: z.string() }))

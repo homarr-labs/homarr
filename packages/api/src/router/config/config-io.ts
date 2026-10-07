@@ -17,11 +17,10 @@ import {
   serverSettings,
 } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
-import { defaultServerSettingsKeys } from "@homarr/server-settings";
+import { defaultServerSettingsKeys, serverSettingsPatchSchema, mergeServerSettings } from "@homarr/server-settings";
 import type { configExportSchema, configImportSchema } from "@homarr/validation/config";
 
 import { collectBoardDocumentOperations, createBoardExportDocument } from "../board/board-io";
-import { serverSettingsPatchSchema } from "../serverSettings";
 import type { DbOperation } from "../db-operations";
 import { runDbOperationsAsync } from "../db-operations";
 
@@ -117,11 +116,23 @@ interface EntityMatch {
 const matchEntities = <TDocument extends { id: string }, TExisting extends { id: string }>(
   documentEntities: TDocument[],
   existingEntities: TExisting[],
-  isSameNaturalKey?: (documentEntity: TDocument, existingEntity: TExisting) => boolean,
+  isSameNaturalKey?: (documentEntity: TDocument, existingEntity: TExisting | TDocument) => boolean,
 ): Map<string, EntityMatch> => {
+  const ids = documentEntities.map((entity) => entity.id);
+  if (new Set(ids).size !== ids.length) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Document entity IDs must be unique" });
+  }
+  if (
+    isSameNaturalKey &&
+    documentEntities.some((entity, index) =>
+      documentEntities.slice(0, index).some((other) => isSameNaturalKey(entity, other)),
+    )
+  ) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Document natural keys must be unique" });
+  }
   const existingIds = new Set(existingEntities.map(({ id }) => id));
 
-  return new Map(
+  const matches = new Map(
     documentEntities.map((documentEntity) => {
       if (existingIds.has(documentEntity.id)) {
         return [documentEntity.id, { documentId: documentEntity.id, effectiveId: documentEntity.id, exists: true }];
@@ -141,6 +152,13 @@ const matchEntities = <TDocument extends { id: string }, TExisting extends { id:
       ];
     }),
   );
+  if (new Set([...matches.values()].map((entry) => entry.effectiveId)).size !== matches.size) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Multiple document entities resolve to the same existing entity",
+    });
+  }
+  return matches;
 };
 
 const throwOnConflicts = (conflicts: string[]) => {
@@ -174,8 +192,13 @@ export const importConfigDocumentAsync = async (
   document: ConfigImportDocument,
   creatorId: string,
 ): Promise<{ created: Record<string, number>; updated: Record<string, number> }> => {
-  // Settings travel as opaque records, so they are checked here before anything is written
-  if (document.settings) serverSettingsPatchSchema.parse(document.settings);
+  // Validate before planning writes, including callers outside the transport parser.
+  if (document.settings) {
+    const parsed = serverSettingsPatchSchema.safeParse(document.settings);
+    if (!parsed.success)
+      throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
+    document = { ...document, settings: parsed.data };
+  }
 
   const [existingApps, existingIntegrations, existingSearchEngines, existingGroups, existingBoards, currentSettings] =
     await Promise.all([
@@ -258,7 +281,7 @@ export const importConfigDocumentAsync = async (
     else publicBoardIds.delete(match.effectiveId);
   }
 
-  // Settings travel as opaque records, the board group is the only one read back here
+  // Resolve board references before merging instance-wide defaults.
   const finalBoardSettings = {
     ...currentSettings.board,
     ...(document.settings?.board as Partial<ServerSettings["board"]> | undefined),
@@ -272,6 +295,20 @@ export const importConfigDocumentAsync = async (
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: `Board settings home board IDs must reference public boards: ${invalidHomeBoardIds.join(", ")}`,
+    });
+  }
+
+  const defaultSearchEngineId = referencedSearchEngineId(
+    mergeServerSettings(currentSettings, document.settings ?? {}).search.defaultSearchEngineId,
+  );
+  if (
+    defaultSearchEngineId &&
+    !existingSearchEngines.some((engine) => engine.id === defaultSearchEngineId) &&
+    ![...searchEngineMatches.values()].some((match) => match.effectiveId === defaultSearchEngineId)
+  ) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Default search engine must exist or be included in the document",
     });
   }
 
@@ -534,7 +571,8 @@ export const importConfigDocumentAsync = async (
         remapped.defaultSearchEngineId = referencedSearchEngineId(remapped.defaultSearchEngineId as string | null);
       }
 
-      const merged = superjson.stringify({ ...currentSettings[settingKey], ...remapped });
+      const validated = serverSettingsPatchSchema.parse({ [settingKey]: remapped });
+      const merged = superjson.stringify(mergeServerSettings(currentSettings, validated)[settingKey]);
 
       if (existingKeys.has(settingKey)) {
         operations.push({
@@ -551,7 +589,34 @@ export const importConfigDocumentAsync = async (
     count(updated, "settings", Object.keys(document.settings).length);
   }
 
+  await validatePreservedBoardIdsAsync(db, operations);
   await runDbOperationsAsync(db, operations);
 
   return { created, updated };
+};
+
+// Configuration imports preserve IDs, so a document cannot adopt content owned by another
+// board or reuse one content ID across multiple boards. Detect this before the transaction.
+const validatePreservedBoardIdsAsync = async (db: Database, operations: DbOperation[]) => {
+  for (const table of ["layouts", "sections", "items"] as const) {
+    const ownership = new Map<string, string>();
+    for (const operation of operations) {
+      if (operation.type !== "insert" || operation.table !== table) continue;
+      for (const row of operation.values) {
+        if (!row.id || !row.boardId) throw new TRPCError({ code: "BAD_REQUEST", message: `Missing ${table} identity` });
+        if (ownership.has(row.id))
+          throw new TRPCError({ code: "BAD_REQUEST", message: `Duplicate ${table} ID in document` });
+        ownership.set(row.id, row.boardId);
+      }
+    }
+    if (ownership.size === 0) continue;
+    let existing: { id: string; boardId: string }[];
+    if (table === "layouts") existing = await db.query.layouts.findMany({ columns: { id: true, boardId: true } });
+    else if (table === "sections")
+      existing = await db.query.sections.findMany({ columns: { id: true, boardId: true } });
+    else existing = await db.query.items.findMany({ columns: { id: true, boardId: true } });
+    if (existing.some((row) => ownership.has(row.id) && ownership.get(row.id) !== row.boardId)) {
+      throw new TRPCError({ code: "CONFLICT", message: `${table} ID belongs to another board` });
+    }
+  }
 };

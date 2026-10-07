@@ -533,78 +533,87 @@ export const integrationRouter = createTRPCRouter({
       // Clean up any cached data left behind by the deleted integration.
       await invalidateIntegrationCacheAsync(input.id);
     }),
-  getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
-
-    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
-      where: inArray(
-        groupPermissions.permission,
-        getPermissionsWithParents(["integration-use-all", "integration-interact-all", "integration-full-all"]),
-      ),
-      columns: {
-        groupId: false,
+  getIntegrationPermissions: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Inspect inherited, user and group permissions for one integration. REQUIRED: id from integration_all. Requires full access to that integration.",
       },
-      with: {
-        group: {
-          columns: {
-            id: true,
-            name: true,
-          },
+    })
+    .input(byIdSchema)
+    .query(async ({ input, ctx }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+
+      const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+        where: inArray(
+          groupPermissions.permission,
+          getPermissionsWithParents(["integration-use-all", "integration-interact-all", "integration-full-all"]),
+        ),
+        columns: {
+          groupId: false,
         },
-      },
-    });
-
-    const userPermissions = await ctx.db.query.integrationUserPermissions.findMany({
-      where: eq(integrationUserPermissions.integrationId, input.id),
-      with: {
-        user: {
-          columns: {
-            id: true,
-            name: true,
-            image: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    const dbGroupIntegrationPermission = await ctx.db.query.integrationGroupPermissions.findMany({
-      where: eq(integrationGroupPermissions.integrationId, input.id),
-      with: {
-        group: {
-          columns: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-
-    return {
-      inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
-        return permissionA.group.name.localeCompare(permissionB.group.name);
-      }),
-      users: userPermissions
-        .map(({ user, permission }) => ({
-          user,
-          permission,
-        }))
-        .toSorted((permissionA, permissionB) => {
-          return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
-        }),
-      groups: dbGroupIntegrationPermission
-        .map(({ group, permission }) => ({
+        with: {
           group: {
-            id: group.id,
-            name: group.name,
+            columns: {
+              id: true,
+              name: true,
+            },
           },
-          permission,
-        }))
-        .toSorted((permissionA, permissionB) => {
+        },
+      });
+
+      const userPermissions = await ctx.db.query.integrationUserPermissions.findMany({
+        where: eq(integrationUserPermissions.integrationId, input.id),
+        with: {
+          user: {
+            columns: {
+              id: true,
+              name: true,
+              image: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      const dbGroupIntegrationPermission = await ctx.db.query.integrationGroupPermissions.findMany({
+        where: eq(integrationGroupPermissions.integrationId, input.id),
+        with: {
+          group: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return {
+        inherited: dbGroupPermissions.toSorted((permissionA, permissionB) => {
           return permissionA.group.name.localeCompare(permissionB.group.name);
         }),
-    };
-  }),
+        users: userPermissions
+          .map(({ user, permission }) => ({
+            user,
+            permission,
+          }))
+          .toSorted((permissionA, permissionB) => {
+            return (permissionA.user.name ?? "").localeCompare(permissionB.user.name ?? "");
+          }),
+        groups: dbGroupIntegrationPermission
+          .map(({ group, permission }) => ({
+            group: {
+              id: group.id,
+              name: group.name,
+            },
+            permission,
+          }))
+          .toSorted((permissionA, permissionB) => {
+            return permissionA.group.name.localeCompare(permissionB.group.name);
+          }),
+      };
+    }),
   saveUserIntegrationPermissions: protectedProcedure
     .input(integrationSavePermissionsSchema)
     .mutation(async ({ input, ctx }) => {

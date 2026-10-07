@@ -8,6 +8,8 @@ import {
   searchEngineTypes,
 } from "@homarr/definitions";
 
+import { serverSettingsSchema, serverSettingsPatchSchema } from "@homarr/server-settings";
+
 import { boardExportSchema, boardImportSchema, importConflictStrategySchema } from "./board";
 import { zodEnumFromArray } from "./enums";
 
@@ -18,15 +20,6 @@ import { zodEnumFromArray } from "./enums";
  * entities by id (for example the app widget stores an appId) and those references live inside
  * an opaque options record, so remapping ids would silently break them.
  */
-
-/**
- * Server settings as they travel over the API.
- *
- * Every group is stored as one opaque record and the set of groups grows with the application,
- * so the shape is kept generic here. The groups that have a schema of their own (branding,
- * analytics) are validated by `serverSettings.saveSettings` when a value is written.
- */
-export const serverSettingsRecordSchema = z.record(z.string(), z.record(z.string(), z.unknown()));
 
 const configAppSchema = z.object({
   id: z.string(),
@@ -64,7 +57,9 @@ const configGroupSchema = z.object({
   position: z.number(),
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
-  permissions: z.array(zodEnumFromArray(groupPermissionKeys)),
+  permissions: z
+    .array(zodEnumFromArray(groupPermissionKeys))
+    .refine((values) => new Set(values).size === values.length, "Permissions must be unique"),
 });
 
 const configBoardGroupPermissionSchema = z.object({
@@ -74,7 +69,7 @@ const configBoardGroupPermissionSchema = z.object({
 
 export const configExportSchema = z.object({
   version: z.literal(1),
-  settings: serverSettingsRecordSchema,
+  settings: serverSettingsSchema,
   apps: z.array(configAppSchema),
   integrations: z.array(configIntegrationSchema),
   searchEngines: z.array(configSearchEngineSchema),
@@ -89,7 +84,7 @@ export const configExportSchema = z.object({
 
 export const configImportSchema = z.object({
   version: z.literal(1),
-  settings: serverSettingsRecordSchema.optional(),
+  settings: serverSettingsPatchSchema.optional(),
   apps: z.array(configAppSchema).default([]),
   integrations: z
     .array(
@@ -98,6 +93,10 @@ export const configImportSchema = z.object({
         /** Secret values are not part of an export, they can be supplied here to restore a working integration */
         secrets: z
           .array(z.object({ kind: zodEnumFromArray(integrationSecretKinds), value: z.string().nonempty() }))
+          .refine(
+            (values) => new Set(values.map((secret) => secret.kind)).size === values.length,
+            "Secret kinds must be unique",
+          )
           .optional(),
       }),
     )
@@ -111,7 +110,13 @@ export const configImportSchema = z.object({
         // Deliberately looser than boardNameSchema so a document exported from an instance with
         // boards created by older versions or the oldmarr importer can be applied again
         name: z.string().min(1).max(255),
-        groupPermissions: z.array(configBoardGroupPermissionSchema).default([]),
+        groupPermissions: z
+          .array(configBoardGroupPermissionSchema)
+          .refine(
+            (values) => new Set(values.map((permission) => permission.groupId)).size === values.length,
+            "Group permissions must be unique",
+          )
+          .default([]),
       }),
     )
     .default([]),

@@ -26,7 +26,6 @@ import {
   groupPermissions,
   groups,
   integrationItems,
-  integrations,
   apps,
   itemLayouts,
   items,
@@ -36,15 +35,13 @@ import {
   sections,
   users,
 } from "@homarr/db/schema";
-import type { BoardLane, IntegrationKind, WidgetKind } from "@homarr/definitions";
+import type { BoardLane, WidgetKind } from "@homarr/definitions";
 import {
   boardLanes,
   emptySuperJSON,
   everyoneGroup,
   getBoardLaneColumnCount,
   getRootSectionLane,
-  getWidgetIntegrationIssue,
-  getWidgetIntegrationIssueMessage,
   getPermissionsWithChildren,
   getPermissionsWithParents,
   normalizeBoardLayoutRoles,
@@ -91,6 +88,7 @@ import {
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
+import { validateWidgetConfigurationsAsync } from "./board/widget-configuration";
 import { createBoardExportDocument, insertBoardDocumentAsync, replaceBoardDocumentAsync } from "./board/board-io";
 import {
   collectOccupiedAreas,
@@ -100,7 +98,6 @@ import {
 } from "./board/item-placement";
 import type { DbOperation } from "./db-operations";
 import { runDbOperationsAsync } from "./db-operations";
-import { throwIfIntegrationActionsForbiddenAsync } from "./integration/integration-access";
 import {
   throwIfCustomWidgetBoardDuplicationForbidden,
   throwIfCustomWidgetPlacementChangeForbidden,
@@ -145,75 +142,6 @@ const doBoardItemPlacementsOverlap = (left: BoardItemPlacementRectangle, right: 
   left.yOffset + left.height > right.yOffset &&
   left.xOffset < right.xOffset + right.width &&
   left.xOffset + left.width > right.xOffset;
-
-interface WidgetConfiguration {
-  id: string;
-  kind: WidgetKind;
-  integrationIds: readonly string[];
-}
-
-const haveSameIntegrationIds = (left: readonly string[], right: readonly string[]) => {
-  if (left.length !== right.length) return false;
-  const sortedRight = right.toSorted();
-  return left.toSorted().every((integrationId, index) => integrationId === sortedRight[index]);
-};
-
-const validateWidgetConfigurationsAsync = async (
-  ctx: Parameters<typeof throwIfIntegrationActionsForbiddenAsync>[0],
-  submittedItems: readonly WidgetConfiguration[],
-  storedItems: readonly WidgetConfiguration[] = [],
-) => {
-  const storedItemsById = new Map(storedItems.map((item) => [item.id, item]));
-  const changedItems = submittedItems.filter((item) => {
-    const storedItem = storedItemsById.get(item.id);
-    if (!storedItem || storedItem.kind !== item.kind) return true;
-    return !haveSameIntegrationIds(item.integrationIds, storedItem.integrationIds);
-  });
-  if (changedItems.length === 0) return;
-
-  const selectedIntegrationIds = [...new Set(changedItems.flatMap(({ integrationIds }) => integrationIds))];
-  let integrationRecords: { id: string; kind: IntegrationKind }[] = [];
-  if (selectedIntegrationIds.length > 0) {
-    integrationRecords = await ctx.db.query.integrations.findMany({
-      columns: { id: true, kind: true },
-      where: inArray(integrations.id, selectedIntegrationIds),
-    });
-  }
-  const integrationRecordsById = new Map(integrationRecords.map((integration) => [integration.id, integration]));
-  const invalidIntegrationIds = selectedIntegrationIds.filter(
-    (integrationId) => !integrationRecordsById.has(integrationId),
-  );
-  if (invalidIntegrationIds.length > 0) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Integration not found",
-    });
-  }
-
-  const addedOrReconfiguredIntegrationIds = [
-    ...new Set(
-      changedItems.flatMap((item) => {
-        const storedItem = storedItemsById.get(item.id);
-        if (!storedItem || storedItem.kind !== item.kind) return item.integrationIds;
-        return item.integrationIds.filter((integrationId) => !storedItem.integrationIds.includes(integrationId));
-      }),
-    ),
-  ];
-  await throwIfIntegrationActionsForbiddenAsync(ctx, addedOrReconfiguredIntegrationIds, "use");
-
-  for (const item of changedItems) {
-    const selectedIntegrationKinds = item.integrationIds.flatMap(
-      (integrationId) => integrationRecordsById.get(integrationId)?.kind ?? [],
-    );
-    const integrationIssue = getWidgetIntegrationIssue(item.kind, selectedIntegrationKinds);
-    if (!integrationIssue) continue;
-
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: getWidgetIntegrationIssueMessage(item.kind, integrationIssue),
-    });
-  }
-};
 
 const searchAccessibleBoardsAsync = async (
   ctx: { db: Database; session: Session | null },
@@ -2859,6 +2787,16 @@ export const boardRouter = createTRPCRouter({
         if (section.kind !== "container") {
           if (input.lane !== undefined && input.lane !== getRootSectionLane(section.xOffset)) {
             throwIfRootSectionLaneUnavailable(board, input.lane);
+            const mainCanvases = board.sections.filter(
+              (entry) => entry.kind !== "container" && getRootSectionLane(entry.xOffset) === "main",
+            );
+            if (getRootSectionLane(section.xOffset) === "main" && mainCanvases.length === 1) {
+              throw new TRPCError({ code: "BAD_REQUEST", message: "The last main canvas cannot change lanes" });
+            }
+            for (const layout of board.layouts) {
+              const columns = getBoardLaneColumnCount(layout, input.lane);
+              throwIfSectionChildrenOverflow(board, input.sectionId, layout.id, columns);
+            }
           }
 
           // An update without any value is rejected by the query builder
@@ -2930,6 +2868,10 @@ export const boardRouter = createTRPCRouter({
           defaultSize: { width: 1, height: 1 },
           context: "the section",
         });
+
+        for (const placement of placements) {
+          throwIfSectionChildrenOverflow(board, input.sectionId, placement.layoutId, placement.width);
+        }
 
         // Updated in place instead of delete + insert so relations keep their identity.
         for (const placement of placements) {
@@ -3166,6 +3108,7 @@ export const boardRouter = createTRPCRouter({
       const existing = await findBoardByNameAsync(ctx.db, input.name);
 
       if (!existing) {
+        await validateBoardImportAsync(ctx, input);
         const { boardId } = await insertBoardDocumentAsync(ctx.db, input, ctx.session.user.id);
         return { boardId, created: true };
       }
@@ -3180,6 +3123,8 @@ export const boardRouter = createTRPCRouter({
       }
 
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, existing.id), "full");
+
+      await validateBoardImportAsync(ctx, input);
 
       // The board keeps its id so that home board settings and per user permissions survive,
       // and the whole exchange happens in one transaction after the document was validated.
@@ -4030,3 +3975,36 @@ const filterRemovedItems = <TInput extends { id: string }>(inputArray: TInput[],
 
 const filterUpdatedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
   inputArray.filter((inputItem) => dbArray.some((dbItem) => dbItem.id === inputItem.id));
+
+const validateBoardImportAsync = async (
+  ctx: Parameters<typeof validateWidgetConfigurationsAsync>[0] & { session: Session },
+  document: z.infer<typeof boardImportSchema>,
+) => {
+  const submittedItems = document.items.map((item) => ({ ...item, id: item.id ?? createId() }));
+  throwIfCustomWidgetPlacementChangeForbidden({
+    isAdmin: ctx.session.user.permissions.includes("admin"),
+    submittedItems,
+    storedItems: [],
+  });
+  await validateWidgetConfigurationsAsync(ctx, submittedItems);
+  for (const item of submittedItems) {
+    if (item.kind === "timetable") await validateTimetableOptionsChangeAsync(item.options);
+  }
+};
+
+const throwIfSectionChildrenOverflow = (
+  board: BoardForPlacement,
+  sectionId: string,
+  layoutId: string,
+  columns: number,
+) => {
+  const childAreas = collectOccupiedAreas(board).filter(
+    (area) => area.layoutId === layoutId && area.sectionId === sectionId,
+  );
+  if (childAreas.some((area) => area.xOffset + area.width > columns)) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Section contains elements outside the requested width; move or resize them first",
+    });
+  }
+};

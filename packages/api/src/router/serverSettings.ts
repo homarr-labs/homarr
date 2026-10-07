@@ -10,74 +10,24 @@ import {
   updateAnalyticsServerSettingAsync,
   updateServerSettingByKeyAsync,
 } from "@homarr/db/queries";
-import { boards, serverSettings } from "@homarr/db/schema";
-import { colorSchemes } from "@homarr/definitions";
-import type { ServerSettings } from "@homarr/server-settings";
+import { boards, serverSettings, searchEngines } from "@homarr/db/schema";
 import {
   authBrandingSchema,
+  boardServerSettingsSchema,
+  serverSettingsSchema,
+  serverSettingsPatchSchema,
+  mergeServerSettings,
   brandingServerSettingsSchema,
-  defaultServerSettingsKeys,
   parseBrandingSettings,
 } from "@homarr/server-settings";
 
-import { supportedLanguages } from "@homarr/translation";
-
 import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
-
-const boardServerSettingsSchema = z.object({
-  homeBoardId: z.string().nullable(),
-  mobileHomeBoardId: z.string().nullable(),
-  enableStatusByDefault: z.boolean(),
-  forceDisableStatus: z.boolean(),
-}) satisfies z.ZodType<ServerSettings["board"]>;
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
 
-/**
- * Every setting group at once, as `getAll` returns it.
- *
- * The groups are described here rather than derived from the defaults so the documented REST
- * response stays an exact shape; `satisfies` keeps it in step with the stored settings.
- */
-const serverSettingsOutputSchema = z.object({
-  analytics: z.object({
-    enableGeneral: z.boolean(),
-    instanceId: z.string().nullable(),
-    lastSuccessfulSnapshotAt: z.string().nullable(),
-  }),
-  crawlingAndIndexing: z.object({
-    noIndex: z.boolean(),
-    noFollow: z.boolean(),
-    noTranslate: z.boolean(),
-    noSiteLinksSearchBox: z.boolean(),
-  }),
-  board: boardServerSettingsSchema,
-  user: z.object({ enableGravatar: z.boolean() }),
-  appearance: z.object({ defaultColorScheme: z.enum(colorSchemes) }),
-  branding: brandingServerSettingsSchema,
-  culture: z.object({ defaultLocale: z.enum(supportedLanguages) }),
-  search: z.object({ defaultSearchEngineId: z.string().nullable() }),
-}) satisfies z.ZodType<ServerSettings>;
-
-/**
- * The same groups as a patch, used by the configuration import.
- *
- * It is strict so that a document written for another version is rejected with the offending
- * key instead of being merged into the stored settings unnoticed.
- */
-export const serverSettingsPatchSchema = z.strictObject({
-  analytics: serverSettingsOutputSchema.shape.analytics.partial().optional(),
-  crawlingAndIndexing: serverSettingsOutputSchema.shape.crawlingAndIndexing.partial().optional(),
-  board: serverSettingsOutputSchema.shape.board.partial().optional(),
-  user: serverSettingsOutputSchema.shape.user.partial().optional(),
-  appearance: serverSettingsOutputSchema.shape.appearance.partial().optional(),
-  branding: serverSettingsOutputSchema.shape.branding.partial().optional(),
-  culture: serverSettingsOutputSchema.shape.culture.partial().optional(),
-  search: serverSettingsOutputSchema.shape.search.partial().optional(),
-});
 const analyticsServerSettingsUpdateSchema = z.object({ enableGeneral: z.boolean().optional() }).strict();
 const brandingServerSettingsUpdateSchema = brandingServerSettingsSchema.partial().extend({
-  authBranding: authBrandingSchema.partial().optional(),
+  authBranding: authBrandingSchema.partial().strict().optional(),
 });
 const legacyAuthBrandingUpdateSchema = z.object({
   showCustomAppNameOnLogin: z.boolean().optional(),
@@ -123,7 +73,7 @@ export const serverSettingsRouter = createTRPCRouter({
       },
     })
     .input(z.void())
-    .output(serverSettingsOutputSchema)
+    .output(serverSettingsSchema)
     .query(async ({ ctx }) => {
       return await getServerSettingsAsync(ctx.db);
     }),
@@ -206,10 +156,22 @@ export const serverSettingsRouter = createTRPCRouter({
       },
     })
     .input(
-      z.object({
-        settingsKey: z.enum(defaultServerSettingsKeys),
-        value: z.record(z.string(), z.unknown()),
-      }),
+      z.discriminatedUnion("settingsKey", [
+        z.object({ settingsKey: z.literal("analytics"), value: analyticsServerSettingsUpdateSchema }),
+        z.object({
+          settingsKey: z.literal("crawlingAndIndexing"),
+          value: serverSettingsPatchSchema.shape.crawlingAndIndexing.unwrap(),
+        }),
+        z.object({ settingsKey: z.literal("board"), value: serverSettingsPatchSchema.shape.board.unwrap() }),
+        z.object({ settingsKey: z.literal("user"), value: serverSettingsPatchSchema.shape.user.unwrap() }),
+        z.object({ settingsKey: z.literal("appearance"), value: serverSettingsPatchSchema.shape.appearance.unwrap() }),
+        z.object({
+          settingsKey: z.literal("branding"),
+          value: brandingServerSettingsUpdateSchema.extend(legacyAuthBrandingUpdateSchema.shape).strict(),
+        }),
+        z.object({ settingsKey: z.literal("culture"), value: serverSettingsPatchSchema.shape.culture.unwrap() }),
+        z.object({ settingsKey: z.literal("search"), value: serverSettingsPatchSchema.shape.search.unwrap() }),
+      ]),
     )
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
@@ -227,7 +189,11 @@ export const serverSettingsRouter = createTRPCRouter({
           ...parsedInput,
           authBranding,
         });
-        await updateServerSettingByKeyAsync(ctx.db, "branding", value);
+        const existing = await ctx.db.query.serverSettings.findFirst({
+          where: eq(serverSettings.settingKey, "branding"),
+        });
+        if (existing) await updateServerSettingByKeyAsync(ctx.db, "branding", value);
+        else await insertServerSettingByKeyAsync(ctx.db, "branding", value);
         return;
       }
       if (input.settingsKey === "analytics") {
@@ -235,16 +201,31 @@ export const serverSettingsRouter = createTRPCRouter({
         await updateAnalyticsServerSettingAsync(ctx.db, (current) => ({ ...current, ...parsedInput }));
         return;
       }
-      // The remaining groups have no schema of their own, so the home board references of the
-      // board group are the only part that still has to be checked before it is written
+      // Board defaults must point to public boards before any settings are persisted.
       if (input.settingsKey === "board") {
         await validateBoardHomeIdsAsync(ctx.db, boardServerSettingsUpdateSchema.parse(input.value));
       }
 
-      const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
-      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
-        ...current,
-        ...input.value,
-      } as ServerSettings[typeof input.settingsKey]);
+      const parsed = serverSettingsPatchSchema.safeParse({ [input.settingsKey]: input.value });
+      if (!parsed.success) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
+      }
+      if (parsed.data.search?.defaultSearchEngineId) {
+        const engine = await ctx.db.query.searchEngines.findFirst({
+          columns: { id: true },
+          where: eq(searchEngines.id, parsed.data.search.defaultSearchEngineId),
+        });
+        if (!engine) throw new TRPCError({ code: "BAD_REQUEST", message: "Search engine not found" });
+      }
+      const current = await getServerSettingsAsync(ctx.db);
+      const merged = mergeServerSettings(current, parsed.data);
+      const existing = await ctx.db.query.serverSettings.findFirst({
+        where: eq(serverSettings.settingKey, input.settingsKey),
+      });
+      if (!existing) {
+        await insertServerSettingByKeyAsync(ctx.db, input.settingsKey, merged[input.settingsKey]);
+        return;
+      }
+      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, merged[input.settingsKey]);
     }),
 });

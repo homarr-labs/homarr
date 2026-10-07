@@ -95,41 +95,23 @@ export const createBoardExportDocument = (board: BoardForPlacement): BoardExport
 
 type DocumentSection = Omit<BoardImportDocument, "onConflict">["sections"][number];
 
-/**
- * Orders the sections so that a container comes after the section it is nested in.
- *
- * A container is a sub grid, so the placement of everything inside of it is bound by its
- * width. That width only exists once the section itself was placed, which means a document that
- * lists a child before its parent would otherwise be validated against the width of the board.
- *
- * Nesting is stored per layout, so two sections can legitimately be nested into each other on
- * different breakpoints and no order satisfies both. The remaining sections then keep their
- * document order instead of the request being rejected, and an id that simply does not exist is
- * reported by the placement itself, which knows whether it is a typo or a nesting cycle.
- */
-const sortContainerSectionsByNesting = (sections: DocumentSection[]) => {
-  const parentIdsOf = (section: DocumentSection) =>
-    (section.layouts ?? []).map((layout) => layout.parentSectionId).filter((id) => id !== null && id !== undefined);
-
-  const remaining = [...sections];
-  const ordered: DocumentSection[] = [];
-  const placedIds = new Set<string>();
-
+const sortContainerSectionsByNesting = (sections: DocumentSection[], layoutId: string) => {
+  const ordered = sections.filter((section) => section.kind !== "container");
+  const remaining = sections.filter((section) => section.kind === "container");
+  const placedIds = new Set(ordered.map((section) => section.id));
   while (remaining.length > 0) {
-    const index = remaining.findIndex(
-      (section) => section.kind !== "container" || parentIdsOf(section).every((id) => placedIds.has(id)),
-    );
-
+    const index = remaining.findIndex((section) => {
+      const parentId = section.layouts?.find((entry) => entry.layoutId === layoutId)?.parentSectionId;
+      return !parentId || placedIds.has(parentId);
+    });
     if (index === -1) {
-      ordered.push(...remaining);
-      break;
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Unknown section reference or nesting cycle" });
     }
-
-    const [section] = remaining.splice(index, 1) as [DocumentSection];
+    const section = remaining.splice(index, 1)[0];
+    if (!section) continue;
     ordered.push(section);
     placedIds.add(section.id);
   }
-
   return ordered;
 };
 
@@ -216,6 +198,24 @@ export const collectBoardDocumentRows = (
   }
 
   throwIfSectionNestingCycles(document);
+  if (
+    !document.sections.some(
+      (section) =>
+        section.kind !== "container" && (section.xOffset ?? rootSectionOffsets.main) === rootSectionOffsets.main,
+    )
+  ) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "A board must retain at least one main canvas" });
+  }
+  const itemIds = document.items.flatMap((item) => (item.id ? [item.id] : []));
+  if (new Set(itemIds).size !== itemIds.length) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Item references must be unique" });
+  }
+  for (const section of document.sections) {
+    for (const entry of section.layouts ?? []) {
+      requireReference(layoutIdMap, entry.layoutId, "layout");
+      if (entry.parentSectionId) requireReference(sectionIdMap, entry.parentSectionId, "section");
+    }
+  }
 
   collection.boards.push({
     ...document.settings,
@@ -286,49 +286,56 @@ export const collectBoardDocumentRows = (
 
   const occupiedAreas: OccupiedArea[] = [];
 
-  for (const section of sortContainerSectionsByNesting(document.sections)) {
-    if (section.kind !== "container") continue;
+  for (const layout of document.layouts) {
+    for (const section of sortContainerSectionsByNesting(document.sections, layout.id)) {
+      if (section.kind !== "container") continue;
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const sectionId = sectionIdMap.get(section.id)!;
-    const placements = resolvePlacementForAllLayouts({
-      board: virtualBoard,
-      placement: {
-        layouts: section.layouts?.map((sectionLayout) => ({
-          layoutId: requireReference(layoutIdMap, sectionLayout.layoutId, "layout"),
-          sectionId: resolveReference(sectionIdMap, sectionLayout.parentSectionId, "section"),
-          xOffset: sectionLayout.xOffset,
-          yOffset: sectionLayout.yOffset,
-          width: sectionLayout.width,
-          height: sectionLayout.height,
-        })),
-      },
-      occupiedAreas,
-      defaultSize: { width: 1, height: 1 },
-      context: "the section",
-    });
-
-    const virtualSection = virtualBoard.sections.find((entry) => entry.id === sectionId);
-
-    for (const placement of placements) {
-      collection.sectionLayouts.push({
-        sectionId,
-        layoutId: placement.layoutId,
-        parentSectionId: placement.sectionId,
-        xOffset: placement.xOffset,
-        yOffset: placement.yOffset,
-        width: placement.width,
-        height: placement.height,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const sectionId = sectionIdMap.get(section.id)!;
+      const placements = resolvePlacementForAllLayouts({
+        board: {
+          ...virtualBoard,
+          layouts: virtualBoard.layouts.filter((entry) => entry.id === layoutIdMap.get(layout.id)),
+        },
+        placement: {
+          layouts: section.layouts
+            ?.filter((entry) => entry.layoutId === layout.id)
+            .map((sectionLayout) => ({
+              layoutId: requireReference(layoutIdMap, sectionLayout.layoutId, "layout"),
+              sectionId: resolveReference(sectionIdMap, sectionLayout.parentSectionId, "section"),
+              xOffset: sectionLayout.xOffset,
+              yOffset: sectionLayout.yOffset,
+              width: sectionLayout.width,
+              height: sectionLayout.height,
+            })),
+        },
+        occupiedAreas,
+        defaultSize: { width: 1, height: 1 },
+        context: "the section",
       });
-      occupiedAreas.push({ elementId: sectionId, ...placement });
-      virtualSection?.layouts.push({
-        layoutId: placement.layoutId,
-        parentSectionId: placement.sectionId,
-        xOffset: placement.xOffset,
-        yOffset: placement.yOffset,
-        width: placement.width,
-        height: placement.height,
-      });
+
+      const virtualSection = virtualBoard.sections.find((entry) => entry.id === sectionId);
+
+      for (const placement of placements) {
+        collection.sectionLayouts.push({
+          sectionId,
+          layoutId: placement.layoutId,
+          parentSectionId: placement.sectionId,
+          xOffset: placement.xOffset,
+          yOffset: placement.yOffset,
+          width: placement.width,
+          height: placement.height,
+        });
+        occupiedAreas.push({ elementId: sectionId, ...placement });
+        virtualSection?.layouts.push({
+          layoutId: placement.layoutId,
+          parentSectionId: placement.sectionId,
+          xOffset: placement.xOffset,
+          yOffset: placement.yOffset,
+          width: placement.width,
+          height: placement.height,
+        });
+      }
     }
   }
 
@@ -422,14 +429,15 @@ export const collectBoardDocumentOperations = (
     operations.push({ type: "insert", table: "boards", values: [boardRow] });
   }
 
-  for (const table of boardDocumentTables) {
-    if (table === "boards") continue;
-
-    const values = collection[table];
-    if (values.length > 0) {
-      operations.push({ type: "insert", table, values });
-    }
-  }
+  const inserts = [
+    { type: "insert", table: "layouts", values: collection.layouts },
+    { type: "insert", table: "sections", values: collection.sections },
+    { type: "insert", table: "sectionLayouts", values: collection.sectionLayouts },
+    { type: "insert", table: "items", values: collection.items },
+    { type: "insert", table: "itemLayouts", values: collection.itemLayouts },
+    { type: "insert", table: "integrationItems", values: collection.integrationItems },
+  ] satisfies DbOperation[];
+  operations.push(...inserts.filter((operation) => operation.values.length > 0));
 
   return operations;
 };

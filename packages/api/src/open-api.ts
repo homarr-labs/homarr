@@ -2,39 +2,17 @@ import { generateOpenApiDocument } from "trpc-to-openapi";
 
 import { API_KEY_HEADER_NAME } from "@homarr/auth/api-key";
 
-import { apiKeysRouter } from "./router/apiKeys";
-import { appRouter } from "./router/app";
-import { boardRouter } from "./router/board";
-import { configRouter } from "./router/config/config-router";
-import { groupRouter } from "./router/group";
-import { ensureRootCertificateProcedure, getCertificateProcedure } from "./router/certificates/certificate-router";
-import { infoRouter } from "./router/info";
-import { integrationRouter } from "./router/integration/integration-router";
-import { inviteRouter } from "./router/invite";
-import { searchEngineRouter } from "./router/search-engine/search-engine-router";
-import { serverSettingsRouter } from "./router/serverSettings";
-import { userRouter } from "./router/user";
 import { createTRPCRouter } from "./trpc";
+import { restResponseDefinitions } from "./rest/responses";
+import { restInputDefinitions } from "./rest/procedure";
+import { mediaUploadPaths } from "./rest/media-upload";
+export { createMediaUploadResponseAsync } from "./rest/media-upload";
+import { widgetCatalogRouter } from "./rest/widget-catalog";
+import { restRouter } from "./rest/router";
 
 export { normalizeRecursiveJsonSchemasForScalar } from "./open-api-scalar";
 
-export const openApiRouter = createTRPCRouter({
-  apiKeysRouter,
-  appRouter,
-  boardRouter,
-  configRouter,
-  groupRouter,
-  infoRouter,
-  integrationRouter,
-  inviteRouter,
-  searchEngineRouter,
-  serverSettingsRouter,
-  userRouter,
-  certificates: createTRPCRouter({
-    getCertificate: getCertificateProcedure,
-    ensureRootCertificate: ensureRootCertificateProcedure,
-  }),
-});
+export const openApiRouter = createTRPCRouter({ widgetCatalog: widgetCatalogRouter, rest: restRouter });
 
 export const openApiDocument = (base: string) => {
   const document = generateOpenApiDocument(openApiRouter, {
@@ -42,6 +20,10 @@ export const openApiDocument = (base: string) => {
     version: "1.2.0",
     baseUrl: base,
     docsUrl: "https://homarr.dev",
+    paths: mediaUploadPaths,
+    defs: { ...restResponseDefinitions, ...restInputDefinitions } as Parameters<
+      typeof generateOpenApiDocument
+    >[1]["defs"],
     securitySchemes: {
       apikey: {
         type: "apiKey",

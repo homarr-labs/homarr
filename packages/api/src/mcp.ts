@@ -3,6 +3,9 @@ export { createTRPCContext } from "./trpc";
 export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
 export type { McpTool } from "./mcp-tools";
 
+import { widgetCatalogRouter } from "./rest/widget-catalog";
+import { cronJobsRouter } from "./router/cron-jobs";
+
 import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
@@ -36,6 +39,8 @@ import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
 import { wudRouter } from "./router/widgets/wud";
 
 export const mcpRouter = createTRPCRouter({
+  cronJobs: cronJobsRouter,
+  widgetCatalog: widgetCatalogRouter,
   stats: statsRouter,
   app: appRouterForApps,
   apiKeys: apiKeysRouter,

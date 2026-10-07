@@ -116,6 +116,7 @@ describe("saveSettings", () => {
     await expect(
       caller.saveSettings({
         settingsKey: "analytics",
+        // @ts-expect-error -- deliberately submit an installation field to verify rejection
         value: { enableGeneral: false, lastSuccessfulSnapshotAt: null },
       }),
     ).rejects.toThrow();

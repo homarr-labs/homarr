@@ -3,6 +3,8 @@ import { addFormats, AjvJsonSchemaValidator } from "@modelcontextprotocol/server
 import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
 import { z } from "zod/v4";
 
+import { normalizeInputSchema } from "./input-schema";
+
 export interface McpMeta {
   mcp?: {
     enabled: boolean;
@@ -43,9 +45,10 @@ addFormats(schemaEngine);
 const schemaValidator = new AjvJsonSchemaValidator(schemaEngine);
 const isProcedure = (value: AnyProcedure | RouterRecord): value is AnyProcedure => typeof value === "function";
 
-const getObjectInput = (input: unknown): z.ZodObject | null => {
+const getObjectInput = (input: unknown): z.ZodType | null => {
   if (input instanceof z.ZodObject) return input;
   if (input instanceof z.ZodOptional) return getObjectInput(input.unwrap());
+  if (input instanceof z.ZodUnion && input.options.every((option) => getObjectInput(option) !== null)) return input;
   return null;
 };
 
@@ -99,27 +102,13 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
     try {
       let input: z.ZodType = emptyInput;
       if (inputMode === "object") {
-        const objects = objectInputs.filter((schema): schema is z.ZodObject => schema !== null);
+        const objects = objectInputs.filter((schema): schema is z.ZodType => schema !== null);
         input = objects[0] ?? emptyInput;
         for (const object of objects.slice(1)) input = z.intersection(input, object);
       }
       const inputSchema = z.toJSONSchema(input, {
         io: "input",
-        override: ({ zodSchema, jsonSchema }) => {
-          if (zodSchema["_zod"].def.type !== "string") return;
-          if (zodSchema["_zod"].def.checks?.some((check) => check["_zod"].def.check === "overwrite")) {
-            // trim/case normalization runs before these checks in tRPC. They cannot constrain raw JSON.
-            delete jsonSchema.minLength;
-            delete jsonSchema.maxLength;
-            delete jsonSchema.pattern;
-            delete jsonSchema.allOf;
-            delete jsonSchema.format;
-          }
-          // Zod's ISO regex permits minute precision; JSON Schema date-time requires seconds.
-          if (jsonSchema.format === "date-time" && typeof jsonSchema.pattern === "string") {
-            delete jsonSchema.format;
-          }
-        },
+        override: normalizeInputSchema,
       });
       // Chained tRPC object inputs produce allOf; MCP requires an explicit object root.
       if (inputSchema.type !== undefined && inputSchema.type !== "object") throw new Error("Invalid root");

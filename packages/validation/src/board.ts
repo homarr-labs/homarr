@@ -208,16 +208,13 @@ export const boardSummarySchema = z.object({
 });
 
 /**
- * Upper bound for every grid coordinate and size.
- *
- * Placement work is proportional to the area that is actually used, so an unbounded coordinate
- * would let a single request describe a grid that takes a very long time to lay out.
+ * Bound document column counts while preserving the UI's 32767 coordinate/size range.
  */
 export const boardDocumentGridLimit = 256;
 
 const gridLimitError = `Grid values must not exceed ${boardDocumentGridLimit}`;
-const gridCoordinateSchema = z.number().int().min(0).max(boardDocumentGridLimit, { error: gridLimitError });
-const gridSizeSchema = z.number().int().min(1).max(boardDocumentGridLimit, { error: gridLimitError });
+const gridCoordinateSchema = z.number().int().min(0).max(32767);
+const gridSizeSchema = z.number().int().min(1).max(32767);
 
 /**
  * Explicit placement of an item within one specific layout.
@@ -266,7 +263,7 @@ export const updateBoardItemSchema = z.object({
   boardId: z.string(),
   itemId: z.string(),
   options: z.record(z.string(), z.unknown()).optional(),
-  integrationIds: z.array(z.string()).optional(),
+  integrationIds: addItemToBoardSchema.shape.integrationIds.removeDefault().optional(),
   advancedOptions: itemAdvancedOptionsSchema.optional(),
   ...boardItemPlacementSchema.shape,
 });
@@ -411,19 +408,29 @@ export const boardDocumentSettingsSchema = z
   })
   .partial();
 
-const boardDocumentLayoutSchema = z.object({
-  /** Local reference, remapped to a freshly generated id on import */
-  id: z.string(),
-  name: z.string().trim().nonempty().max(32),
-  // More permissive than the 24 columns the board settings offer so that a board created by an
-  // older version or the oldmarr importer survives a round trip, but still small enough that a
-  // grid of this width stays cheap to work with
-  columnCount: z.number().int().min(1).max(boardDocumentGridLimit, { error: gridLimitError }),
-  leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
-  rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
-  breakpoint: z.number().min(0).max(32767),
-  role: z.enum(layoutRoles.values).default(layoutRoles.defaultValue),
-});
+const boardDocumentLayoutSchema = z
+  .object({
+    /** Local reference, remapped to a freshly generated id on import */
+    id: z.string(),
+    name: z.string().trim().nonempty().max(32),
+    // More permissive than the 24 columns the board settings offer so that a board created by an
+    // older version or the oldmarr importer survives a round trip, but still small enough that a
+    // grid of this width stays cheap to work with
+    columnCount: z.number().int().min(1).max(boardDocumentGridLimit, { error: gridLimitError }),
+    leftGutterColumnCount: boardGutterColumnCountSchema.default(0),
+    rightGutterColumnCount: boardGutterColumnCountSchema.default(0),
+    breakpoint: z.number().int().min(0).max(32767),
+    role: z.enum(layoutRoles.values).default(layoutRoles.defaultValue),
+  })
+  .refine((layout) => layout.leftGutterColumnCount + layout.rightGutterColumnCount < layout.columnCount, {
+    message: "Gutters must leave at least one dashboard column",
+  })
+  .refine(
+    (layout) => layout.role !== "mobile" || (layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
+    {
+      message: "Mobile layouts cannot have sidebars",
+    },
+  );
 
 const boardDocumentSectionSchema = z.object({
   /** Local reference, remapped to a freshly generated id on import */
@@ -454,7 +461,7 @@ const boardDocumentItemSchema = z.object({
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()).default({}),
   advancedOptions: itemAdvancedOptionsSchema.optional(),
-  integrationIds: z.array(z.string()).default([]),
+  integrationIds: addItemToBoardSchema.shape.integrationIds,
   ...boardItemPlacementSchema.shape,
 });
 
@@ -473,9 +480,15 @@ export const boardImportSchema = z.object({
   name: boardNameSchema,
   isPublic: z.boolean().default(false),
   settings: boardDocumentSettingsSchema.optional(),
-  layouts: z.array(boardDocumentLayoutSchema).min(1),
-  sections: z.array(boardDocumentSectionSchema).min(1),
-  items: z.array(boardDocumentItemSchema).default([]),
+  layouts: z
+    .array(boardDocumentLayoutSchema)
+    .min(1)
+    .max(64)
+    .refine((entries) => new Set(entries.map((entry) => entry.breakpoint)).size === entries.length, {
+      message: "Layout breakpoints must be unique",
+    }),
+  sections: z.array(boardDocumentSectionSchema).min(1).max(1000),
+  items: z.array(boardDocumentItemSchema).max(10000).default([]),
   onConflict: importConflictStrategySchema,
 });
 

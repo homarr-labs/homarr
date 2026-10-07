@@ -1,4 +1,4 @@
-import type { Database, SQL } from "@homarr/db";
+import type { Database, SQL, InferInsertModel } from "@homarr/db";
 import { handleTransactionsAsync } from "@homarr/db";
 import * as dbSchema from "@homarr/db/schema";
 
@@ -13,10 +13,12 @@ type TableName = {
  * together, so they are collected first and then replayed inside one transaction. Collecting
  * them also means every validation runs before the first row is touched.
  */
-export type DbOperation =
-  | { type: "insert"; table: TableName; values: object[] }
-  | { type: "update"; table: TableName; set: object; where: SQL }
-  | { type: "delete"; table: TableName; where: SQL };
+export type DbOperation = {
+  [TTable in TableName]:
+    | { type: "insert"; table: TTable; values: InferInsertModel<(typeof dbSchema)[TTable]>[] }
+    | { type: "update"; table: TTable; set: Partial<InferInsertModel<(typeof dbSchema)[TTable]>>; where: SQL }
+    | { type: "delete"; table: TTable; where: SQL };
+}[TableName];
 
 /**
  * Runs the given operations in order inside a single transaction.

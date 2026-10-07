@@ -13,7 +13,7 @@
     "clean:workspaces": "turbo clean",
     "check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
     "check:custom-widget-bundle": "node ./scripts/check-custom-widget-bundle.mjs",
-    "check:openapi": "tsx ./scripts/check-openapi-schema.mts",
+    "check:openapi": "pnpm check:rest-contracts && pnpm check:widget-catalog && node --import tsx scripts/check-openapi-schema.mts",
     "ci:act:all": "bash scripts/ci/act.sh all",
     "ci:act:cleanup": "bash scripts/ci/act.sh cleanup",
     "ci:act:docker": "bash scripts/ci/act.sh docker",
@@ -44,7 +44,7 @@
     "qa:browser-agent:ux": "bash scripts/browser-agent/ux-coherence-happy-paths.sh",
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
-    "scripts:update-openapi": "tsx ./scripts/check-openapi-schema.mts --write",
+    "scripts:update-openapi": "pnpm scripts:update-rest-contracts && pnpm scripts:update-widget-catalog && node --import tsx scripts/check-openapi-schema.mts --write",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "pnpm -F nextjs start",
     "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\"",
@@ -57,7 +57,11 @@
     "test:workshop-image": "sh apps/workshop/test-image.sh",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\" --ui",
     "typecheck": "turbo typecheck",
-    "with-env": "dotenv -e .env --"
+    "with-env": "dotenv -e .env --",
+    "scripts:update-rest-contracts": "node --import tsx scripts/update-rest-contracts.mts --write",
+    "check:rest-contracts": "node --import tsx scripts/update-rest-contracts.mts",
+    "scripts:update-widget-catalog": "node --import tsx scripts/update-widget-catalog.mts --write",
+    "check:widget-catalog": "node --import tsx scripts/update-widget-catalog.mts"
   },
   "dependencies": {
     "jsonpath-plus": "catalog:"

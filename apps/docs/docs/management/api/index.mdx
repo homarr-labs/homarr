@@ -43,16 +43,19 @@ Multi-integration queries can return partial data with endpoint-specific failure
 
 ## Board automation
 
-Each board has one Base and one Mobile layout; Mobile uses breakpoint `0`. Other breakpoints must be unique, and Homarr
-uses the highest breakpoint that fits. Reuse canonical layouts and generated IDs returned by save operations.
+Boards have Base and Mobile layouts; Mobile uses breakpoint `0`. Additional breakpoints must be unique.
+A layout can reserve sidebar columns, leaving the remaining columns for the main canvas. Container sections form
+nested grids whose contents must fit their width.
 
-Integration-backed widgets require use access to each newly selected integration.
+Item placement shorthand applies to every layout, clamping width to the available columns. Use `layouts` to set
+individual placements. Omit coordinates for automatic placement; specify coordinates to require a free position.
+Partial item and section updates retain omitted fields. Integration-backed widgets require use access to newly selected
+integrations; configuring Custom Widget placements requires administrator access.
 
-`board.addItem` accepts `size: { width, height }` in grid cells (1–24 each), places the item in the first free position
-on every layout, and caps width to the available columns.
-
-`board.updateItemLayout` (`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}`) moves or resizes one item in
-one layout without replacing the board. It cannot move the item outside its section or overlap another item/container.
+Board import generates fresh content IDs. `onConflict: "skip"` keeps an existing board; `"replace"` exchanges its content
+in one transaction while retaining its ID, home-board references and permissions. The default `"fail"` returns `409`.
+Board creation/import names allow letters, digits, hyphens and underscores; full configuration import also accepts
+legacy names. Permission updates replace the corresponding user or group access list.
 
 ## Root CA automation
 
@@ -106,220 +109,38 @@ The iCalendar feed integration stores a calendar URL rather than arbitrary HTTP 
 API. Neither works with `integration_request` or Custom Widget integration sources. qBittorrent generic requests require
 a saved API key and qBittorrent 5.2.0 or newer. UniFi generic requests require the controller's HTTPS URL and actual port.
 
-## Board automation
+## Widget options and transport
 
-Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
+`GET /api/widgets` lists every widget kind, its default size and supported integrations.
+`GET /api/widgets/{kind}/options` provides every stored option, including defaults, fixed choices, validation bounds,
+units and endpoints for dynamic choices. Use these fields in board-item `options`; merge a partial update with existing
+options when retaining values. The catalog includes hidden options and runtime defaults such as the global app-ping setting.
 
-### Composing a board
+Queries with nested inputs use `POST .../query` with JSON rather than encoding objects into URL parameters.
+Complex removals likewise use a JSON body at `POST .../remove`. The generated reference gives each action's method.
+Dates are ISO 8601 strings, large integers are decimal strings, maps are objects and sets are arrays.
 
-A board is made up of three things, each of which can be managed on its own:
-
-| Concept      | Endpoints                                                                               | Description                                                                     |
-| ------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| **Layouts**  | `GET`/`PUT /api/boards/{id}/layouts`                                                    | Responsive breakpoints. Each layout defines the number of grid columns (1 - 24) |
-| **Sections** | `GET`/`POST /api/boards/{id}/sections`, `PATCH`/`DELETE .../sections/{id}`              | The canvases of the board and the containers nested inside them                 |
-| **Items**    | `GET /api/boards/{id}/items`, `POST /api/boards/items`, `PATCH`/`DELETE .../items/{id}` | The widgets themselves, including their position and size                       |
-
-`GET /api/boards/{id}` returns all three at once.
-
-A board has exactly one `mobile` and one `base` layout; every layout added on top uses the `custom`
-role. A layout can reserve up to three columns on either side for a sidebar, which splits it into
-the lanes `left`, `main` and `right`. A section of kind `empty` is the canvas of one lane, carried
-in its `xOffset` as `-1`, `0` or `1`, and a section of kind `container` is a sub grid placed inside
-another section.
-
-#### Position and size
-
-`POST /api/boards/items` accepts an optional placement. Without it the item keeps the previous
-behaviour and is placed automatically with the default size of its widget kind:
-
-```json
-{ "boardId": "<board id>", "kind": "clock" }
-```
-
-Adding `width` and `height` sets the size, `xOffset` and `yOffset` set the exact position, and
-`sectionId` picks the target section:
-
-```json
-{
-  "boardId": "<board id>",
-  "kind": "clock",
-  "sectionId": "<section id>",
-  "xOffset": 4,
-  "yOffset": 2,
-  "width": 6,
-  "height": 5
-}
-```
-
-A few rules apply:
-
-- The width of an item is limited by the column count of the layout. Use
-  `PUT /api/boards/{id}/layouts` with a higher `columnCount` if an item needs to be wider.
-- The height is not limited.
-- The values above are applied to every layout of the board and the width is clamped to the column
-  count of narrow breakpoints. Pass a `layouts` array instead to control every breakpoint yourself:
-
-  ```json
-  {
-    "boardId": "<board id>",
-    "kind": "clock",
-    "layouts": [
-      { "layoutId": "<layout id>", "sectionId": "<section id>", "xOffset": 0, "yOffset": 0, "width": 6, "height": 4 }
-    ]
-  }
-  ```
-
-- Overlapping items are rejected with `400`. Omit `xOffset` and `yOffset` to let Homarr pick the
-  next free position for the requested size.
-- A container cannot be nested inside itself or one of its descendants in the same layout.
-
-`PATCH /api/boards/{boardId}/items/{itemId}` accepts the same placement properties. Anything that is
-not part of the request keeps its current value, so an item can be resized, moved into another
-section and reconfigured in a single call.
-
-#### Import and export
-
-`GET /api/boards/{id}/export` returns a board as a single document and
-`POST /api/boards/import` creates a board from one, which makes boards reproducible from version control:
-
-```json
-{
-  "name": "homelab",
-  "isPublic": false,
-  "settings": { "opacity": 80 },
-  "layouts": [
-    { "id": "mobile", "name": "Mobile", "columnCount": 3, "breakpoint": 0, "role": "mobile" },
-    { "id": "base", "name": "Base", "columnCount": 12, "breakpoint": 768, "role": "base" }
-  ],
-  "sections": [{ "id": "main", "kind": "empty", "xOffset": 0, "yOffset": 0 }],
-  "items": [
-    {
-      "kind": "clock",
-      "options": { "is24HourFormat": true },
-      "layouts": [{ "layoutId": "base", "sectionId": "main", "xOffset": 0, "yOffset": 0, "width": 6, "height": 4 }]
-    }
-  ]
-}
-```
-
-The ids inside the document only reference layouts and sections within that same document. Homarr
-generates fresh ids on import, so the same document can be imported repeatedly and into other
-instances without conflicts.
-
-Board names are unique. Pass `onConflict` to decide what happens when a board with that name already
-exists, which is what makes a pipeline re-runnable:
-
-| `onConflict` | Behaviour                                                         |
-| ------------ | ----------------------------------------------------------------- |
-| `fail`       | Default. Responds with `409` and changes nothing                  |
-| `skip`       | Keeps the existing board and returns its id with `created: false` |
-| `replace`    | Exchanges the content, the board itself keeps its id              |
-
-The document is validated completely before anything is written and `replace` runs as a single
-transaction, so a document with a broken reference never leaves a board half imported. Because the
-board row survives a `replace`, the home board settings and per user permissions pointing at it are
-kept as well.
-
-:::note
-
-This endpoint creates a board the same way the interface does, so `name` follows the same rule and
-may only contain letters, digits, `-` and `_`. A board created by an older version or the oldmarr
-importer can carry a name outside of that, and such a board can only be moved with
-`POST /api/config/import`, which accepts any name because it restores rather than creates.
-
-:::
-
-#### Board access
-
-Boards created through the API are only visible to their creator until access is granted:
-
-- `GET /api/boards/{id}/permissions` lists the users and groups that can access the board, plus the
-  groups that already have access through a global permission
-- `PUT /api/boards/{entityId}/permissions/users` and `PUT /api/boards/{entityId}/permissions/groups`
-  replace the respective list. Principals missing from the request lose their access.
+`POST /api/media/upload` accepts multipart `files` fields: 1–32 PNG, JPEG, WebP, GIF or SVG files, with a combined
+multipart-body limit of 32 MiB. It requires `media-upload` permission and returns media IDs.
 
 ## Full configuration
 
-`GET /api/config/export` returns the configuration of an instance and `POST /api/config/import`
-applies such a document. It covers **server settings, apps, integrations, search engines, groups
-with their permissions, and every board including its group access**.
+Configuration export/import covers server settings, apps, integrations, search engines, groups and their permissions,
+and boards with group access. IDs are preserved because widget options can reference them. Entities match by ID first,
+then by group name, board name or search-engine trigger. `onConflict` accepts `fail`, `skip` or `replace`; settings always
+merge. Replacement retains board IDs and their user permissions. Analytics installation identifiers stay local to the
+receiving instance. Unknown setting groups/fields and invalid references are rejected before writes.
 
-Unlike a single board import, the ids in this document are kept as they are. Widget options can
-reference other entities by id and those references live inside an opaque options object, so
-remapping them would silently break the boards. Applying the same document twice therefore needs a
-strategy:
-
-| `onConflict` | Behaviour                                                                      |
-| ------------ | ------------------------------------------------------------------------------ |
-| `fail`       | Default. Responds with `409` listing what already exists                       |
-| `skip`       | Only creates what is missing, existing entities are left untouched             |
-| `replace`    | Additionally updates existing entities and exchanges the content of the boards |
-
-Entities are matched by id first. When an id is unknown but the natural key is taken — the group
-name, the board name or the search engine trigger — the existing entity is adopted instead. Every
-instance seeds its own `everyone` group with a random id, so without this a document could never be
-applied to a separately installed instance.
-
-`replace` never deletes a board row, it only exchanges layouts, sections and items. That way the
-board keeps its id and everything pointing at it, such as the home board of a user or the per user
-permissions, stays intact. Server settings have no identity of their own and are always merged.
-
-:::caution
-
-The export is a **configuration** document, not a backup. It does not contain:
-
-- **Users, group memberships and per user board permissions** — they belong to your authentication provider
-- **Integration secret values** — secrets must not leave the instance in plain text
-- **Custom widget definitions and uploaded media** — boards using a `customApi` widget or a media
-  reference need those to be transferred separately
-- **Widget secrets** — they are attached to the items and are lost when a board is replaced
-
-Supply integration secrets on import instead:
-
-```json
-{
-  "id": "<integration id>",
-  "name": "Sonarr",
-  "url": "https://sonarr.local",
-  "kind": "sonarr",
-  "appId": null,
-  "secrets": [{ "kind": "apiKey", "value": "..." }]
-}
-```
-
-For a complete copy including users, custom widgets, media and secrets, use the backup endpoints below.
-
-:::
+This document excludes users, memberships, per-user board permissions, integration secret values, Custom Widget
+definitions, uploaded media and widget secrets. Transfer definitions and media separately. Integration secrets can be
+supplied on import as `secrets: [{ kind: "apiKey", value: "..." }]`. Replacing board content removes its widget secrets.
 
 ## Backup and restore
 
-`GET /api/backup/export` downloads a zip with the SQLite database and
-`POST /api/backup/import` restores one. Both accept the `ApiKey` header, so a disaster recovery job
-does not need a browser session:
+`GET /api/backup/export` downloads the SQLite database as a zip; `POST /api/backup/import` restores one.
+Both accept the `ApiKey` header. These binary endpoints are available only with SQLite and are separate from the JSON
+OpenAPI interface. Use them for a complete database copy including users, definitions, media and secrets.
 
 ```bash
 curl -H 'ApiKey: <id>.<token>' -o homarr-backup.zip http://localhost:7575/api/backup/export
 ```
-
-These two endpoints are only available when Homarr runs on SQLite and are not part of the OpenAPI
-document, because they exchange binary files rather than JSON.
-
-## Managing the remaining services
-
-Besides boards, apps, users and invites, the following are available over the OpenAPI interface:
-
-| Tag              | Endpoints                                                                                                   |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| `search-engines` | `GET`/`POST /api/search-engines`, `GET`/`PATCH`/`DELETE /api/search-engines/{id}`                           |
-| `integrations`   | `GET`/`POST /api/integrations`, `GET`/`PATCH`/`DELETE /api/integrations/{id}`, `GET /api/integration-kinds` |
-| `groups`         | `GET`/`POST /api/groups`, `GET`/`PATCH`/`DELETE /api/groups/{id}`, members and permissions sub resources    |
-| `apikeys`        | `GET`/`POST /api/apikeys`, `DELETE /api/apikeys/{apiKeyId}`                                                 |
-| `settings`       | `GET`/`PATCH /api/settings`, `GET`/`PATCH /api/settings/board`                                              |
-| `config`         | `GET /api/config/export`, `POST /api/config/import`                                                         |
-
-Creating or updating an integration tests the connection first. If the test fails the response
-contains an `error` object describing the problem and nothing is saved.
-
-Server-setting imports and updates reject unknown setting groups, unknown fields, and values of the
-wrong type instead of storing configuration that the management interface cannot read back.
