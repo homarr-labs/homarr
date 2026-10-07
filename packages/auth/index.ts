@@ -12,6 +12,7 @@ declare module "next-auth" {
     user: {
       id: string;
       permissions: GroupPermissionKey[];
+      groups: string[];
       colorScheme: ColorScheme;
     } & DefaultSession["user"];
   }
