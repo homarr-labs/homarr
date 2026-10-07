@@ -23,7 +23,6 @@ export type HomarrDocumentationPath =
   | "/docs/workshop/homarr-provider"
   | "/docs/workshop"
   | "/docs/widgets"
-  | "/docs/advanced/command-line/api-keys"
   | "/docs/advanced/command-line"
   | "/docs/advanced/environment-variables"
   | "/docs/advanced/development/getting-started"
