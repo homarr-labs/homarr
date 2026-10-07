@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef } from "react";
 import { ActionIcon, Box, Button, Center, Group, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 import { IconAdjustments, IconCheck, IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
@@ -37,6 +38,7 @@ export default function BeszelSystemStatsWidget({
   setOptions,
   widgetRuntimeRef,
 }: WidgetComponentProps<"beszelSystemStats">) {
+  const { ref: viewportRef, height: viewportHeight } = useElementSize<HTMLDivElement>();
   const t = useI18n("widget.beszelSystemStats");
   const tBeszel = useI18n("widget.beszel");
   const board = useOptionalBoard();
@@ -298,6 +300,8 @@ export default function BeszelSystemStatsWidget({
       )}
       <ScrollArea
         h="100%"
+        scrollbars="y"
+        viewportRef={viewportRef}
         className={classes.beszelStatsContainer}
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
@@ -308,7 +312,7 @@ export default function BeszelSystemStatsWidget({
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod as BeszelTimePeriod}
             columns={responsiveWidth > 600 ? 2 : 1}
-            availableHeight={height}
+            availableHeight={Math.floor(viewportHeight || height)}
             visibility={{
               cpu: options.showCpu,
               memory: options.showMemory,
