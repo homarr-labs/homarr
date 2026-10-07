@@ -84,14 +84,10 @@ export default function BazarrWidget({
 
   const visibleStatKeys = getVisibleBazarrStatKeys(options, displayMode);
 
+  const gridCols = getGridCols(width, height, visibleStatKeys.length);
   const iconSize = Math.max(20, getIconSize(Math.min(width, height)));
-  let responsiveWidth = width;
   let responsiveHeight = height;
-  if (displayMode !== "advanced") {
-    responsiveWidth *= displayScale;
-    responsiveHeight *= displayScale;
-  }
-  const gridCols = getGridCols(responsiveWidth, responsiveHeight, visibleStatKeys.length);
+  if (displayMode !== "advanced") responsiveHeight *= displayScale;
 
   if (visibleStatKeys.length === 0) {
     return (
