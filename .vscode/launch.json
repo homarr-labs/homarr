@@ -5,7 +5,7 @@
       "name": "dev",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm dev",
+      "command": "bun run dev",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -13,7 +13,7 @@
       "name": "docker dev",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm docker:dev",
+      "command": "bun run docker:dev",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -21,7 +21,7 @@
       "name": "lint fix",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm lint:fix",
+      "command": "bun run lint:fix",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -29,7 +29,7 @@
       "name": "format fix",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm format:fix",
+      "command": "bun run format:fix",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -37,7 +37,7 @@
       "name": "db push",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm db:push",
+      "command": "bun run db:push",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -45,7 +45,7 @@
       "name": "db studio",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm db:studio",
+      "command": "bun run db:studio",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -61,7 +61,7 @@
       "name": "test",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm test",
+      "command": "bun run test",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     },
@@ -69,7 +69,7 @@
       "name": "test ui",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm test:ui",
+      "command": "bun run test:ui",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**"]
     }

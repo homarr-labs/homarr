@@ -73,6 +73,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0

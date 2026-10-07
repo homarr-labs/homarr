@@ -43,6 +43,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
+        with:
+          persist-credentials: false
       - name: Setup
         uses: ./tooling/github/setup
         with:
