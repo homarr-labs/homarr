@@ -62,16 +62,6 @@
     },
     "//#clean": {
       "cache": false
-    },
-    "build:standalone": {
-      "dependsOn": ["build"],
-      "env": ["TURBO_PLATFORM"],
-      "outputs": [".next/standalone/**", "!.next/standalone/apps/nextjs/.next/**"],
-      "inputs": ["package.json"]
-    },
-    "assemble:standalone": {
-      "dependsOn": ["build:standalone"],
-      "cache": false
     }
   },
   "agentGuidance": false

@@ -1,4 +1,5 @@
 import { generateOpenApiDocument } from "trpc-to-openapi";
+import { z } from "zod/v4";
 
 import { API_KEY_HEADER_NAME } from "@homarr/auth/api-key";
 
@@ -59,5 +60,30 @@ export const openApiDocument = (base: string) => {
     const json = integrationBody.content["application/json"];
     if (json) json.example = { integrationKind: "sonarr", method: "GET", path: "/api/v3/system/status" };
   }
+  // The adapter omits root refinements when generating request bodies.
+  const preferenceBody = document.paths?.["/api/users/preferences"]?.patch?.requestBody;
+  if (preferenceBody && "content" in preferenceBody) {
+    const json = preferenceBody.content["application/json"];
+    if (json) {
+      const schema = z.toJSONSchema(userRouter["_def"].record.updatePreferences["_def"].inputs[0] as z.ZodType, {
+        io: "input",
+      });
+      delete schema.$schema;
+      json.schema = schema as typeof json.schema;
+      json.example = { colorScheme: "light" };
+    }
+  }
+  document.tags = (
+    [
+      ["boards", "Build dashboards"],
+      ["apps", "Manage apps"],
+      ["users", "Manage users and preferences"],
+      ["settings", "Configure the instance"],
+      ["integrations", "Connect integrations"],
+      ["invites", "Manage invitations"],
+      ["certificates", "Manage trusted certificates"],
+      ["info", "Inspect Homarr"],
+    ] as const
+  ).map(([name, title]) => ({ name, "x-displayName": title }));
   return document;
 };

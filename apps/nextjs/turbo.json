@@ -4,7 +4,14 @@
     "build": {
       "dependsOn": ["build:dependencies"],
       "cache": false,
-      "outputs": [".output/standalone/**"]
+      "outputs": [".output/standalone/**"],
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/static-data/**",
+        ".env*",
+        "$TURBO_ROOT$/.env*"
+      ]
     },
     "typecheck": {
       "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/static-data/**"]
