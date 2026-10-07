@@ -175,7 +175,19 @@ export const SectionGrid = ({
     allocatedViewportHeight *= parentRowScale;
   }
   const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
-  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset);
+  let nestedHeaderInset = 0;
+  if (
+    section.kind === "container" &&
+    (section.options.collapsible || (section.options.showLabel && section.options.title)) &&
+    innerSections.some(
+      (child) => child.yOffset === 0 && (child.options.collapsible || (child.options.showLabel && child.options.title)),
+    )
+  ) {
+    // Separate floating parent/child headers while retaining the persisted cell footprint.
+    nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveCanvasScale;
+  }
+  nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedViewportHeight - outerCardInset - 1));
+  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset);
   // Fit columns to the card width. Rows fit the available height independently
   // without creating horizontal gutters or distorting text and icons.
   let containerContentScale = 1;
@@ -288,6 +300,7 @@ export const SectionGrid = ({
         style={
           {
             width: logicalWidth,
+            marginTop: nestedHeaderInset,
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
             "--board-grid-content-scale": containerContentScale,
