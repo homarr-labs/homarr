@@ -12,6 +12,8 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 
+import classes from "./stocks.module.css";
+
 function round(value: number) {
   return Math.round(value * 100) / 100;
 }
@@ -162,7 +164,14 @@ export default function StockPriceWidget({
       <Box
         h="100%"
         w="100%"
-        style={{ display: "grid", gridTemplateRows: "auto auto minmax(0, 1fr)", gap: fontSize(2), overflow: "hidden" }}
+        className={classes.compact}
+        style={{
+          "--stock-title-inset": fontSize(16 * Math.max(1, scale)),
+          display: "grid",
+          gridTemplateRows: "auto auto minmax(0, 1fr)",
+          gap: `var(--stock-row-gap, ${fontSize(2)})`,
+          overflow: "hidden",
+        }}
       >
         <Flex align="center" justify="space-between" style={{ minWidth: 0, gap: fontSize(4) }}>
           <Flex align="center" style={{ minWidth: 0, gap: fontSize(3) }}>

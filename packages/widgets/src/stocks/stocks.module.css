@@ -1,0 +1,6 @@
+/* Titles sit above the content on the board and inside the card in the editor preview. */
+:global([data-item-id]):has(+ :global(.mantine-Badge-root)) .compact,
+:global(.stockPrice-wrapper):has(> :global(.mantine-Badge-root)) .compact {
+  padding-top: var(--stock-title-inset);
+  --stock-row-gap: 0;
+}
