@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { Response } from "undici";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 vi.hoisted(() => {
   process.env.SKIP_ENV_VALIDATION = "true";
@@ -12,6 +12,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationSecret } from "../../../base/types";
 import { SabnzbdIntegration } from "../sabnzbd-integration";
+import type { SabnzbdHistorySlot } from "../sabnzbd-schema";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
@@ -19,6 +20,17 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
 
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 const secrets: IntegrationSecret[] = [{ kind: "apiKey", value: "test-api-key" }];
+const NOW = Date.UTC(2026, 9, 4);
+const createHistorySlot = (id: string, daysAgo: number): SabnzbdHistorySlot => ({
+  category: "test",
+  download_time: 60,
+  status: "Completed",
+  completed: Math.floor(NOW / 1000) - daysAgo * 24 * 60 * 60,
+  nzo_id: id,
+  postproc_time: 30,
+  name: id,
+  bytes: 1000,
+});
 
 const createIntegration = () =>
   new SabnzbdIntegration({
@@ -32,6 +44,10 @@ const createIntegration = () =>
 describe("SabnzbdIntegration.getClientJobsAndStatusAsync", () => {
   beforeEach(() => {
     mockFetch.mockReset();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test("starts queue and history requests together", async () => {
@@ -67,5 +83,102 @@ describe("SabnzbdIntegration.getClientJobsAndStatusAsync", () => {
       status: { paused: false, rates: { down: 0 }, types: ["usenet"] },
       items: [],
     });
+  });
+
+  test.each([undefined, false])(
+    "keeps normal history when archive is disabled (%s)",
+    async (includeArchivedHistory) => {
+      mockFetch.mockImplementation(async (url) => {
+        const params = new URL(String(url)).searchParams;
+        expect(params.has("archive")).toBe(false);
+        const result =
+          params.get("mode") === "queue"
+            ? { queue: { paused: false, kbpersec: "0", slots: [] } }
+            : { history: { slots: [createHistorySlot("old-normal", 30)] } };
+        return new Response(JSON.stringify(result));
+      });
+
+      const result = await createIntegration().getClientJobsAndStatusAsync({
+        limit: 10,
+        includeArchivedHistory,
+        historyWindowDays: 1,
+      });
+
+      expect(result.items.map((item) => item.id)).toEqual(["old-normal"]);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    },
+  );
+
+  test("merges archived history without displacing active jobs and applies the row limit", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(NOW);
+    mockFetch.mockImplementation(async (url) => {
+      const params = new URL(String(url)).searchParams;
+      let result;
+      if (params.get("mode") === "queue") {
+        result = {
+          queue: {
+            paused: false,
+            kbpersec: "1",
+            slots: [
+              {
+                status: "Downloading",
+                index: 0,
+                mb: "1",
+                filename: "queue",
+                cat: "test",
+                timeleft: "0:00:10",
+                percentage: "50",
+                nzo_id: "queue",
+              },
+            ],
+          },
+        };
+      } else if (params.get("archive") === "1") {
+        expect(params.get("start")).toBe("0");
+        expect(params.get("limit")).toBe("100");
+        result = { history: { slots: [createHistorySlot("archived", 3), createHistorySlot("duplicate", 2)] } };
+      } else {
+        result = {
+          history: {
+            slots: [
+              { ...createHistorySlot("processing", 0), status: "Extracting", completed: 0 },
+              createHistorySlot("normal", 1),
+              createHistorySlot("duplicate", 2),
+              createHistorySlot("expired", 8),
+            ],
+          },
+        };
+      }
+      return new Response(JSON.stringify(result));
+    });
+
+    const integration = createIntegration();
+    const input = { limit: 10, includeArchivedHistory: true, historyWindowDays: 7 };
+    const result = await integration.getClientJobsAndStatusAsync(input);
+    expect(result.items.map((item) => item.id)).toEqual(["queue", "processing", "normal", "duplicate", "archived"]);
+    expect(result.status.rates.down).toBe(1024);
+
+    const limited = await integration.getClientJobsAndStatusAsync({ ...input, limit: 3 });
+    expect(limited.items.map((item) => item.id)).toEqual(["queue", "processing", "normal"]);
+  });
+
+  test("rejects malformed archive timestamps through the existing history schema", async () => {
+    mockFetch.mockImplementation(async (url) => {
+      const params = new URL(String(url)).searchParams;
+      const result =
+        params.get("mode") === "queue"
+          ? { queue: { paused: false, kbpersec: "0", slots: [] } }
+          : {
+              history: {
+                slots: params.has("archive") ? [{ ...createHistorySlot("invalid", 0), completed: "bad" }] : [],
+              },
+            };
+      return new Response(JSON.stringify(result));
+    });
+
+    await expect(
+      createIntegration().getClientJobsAndStatusAsync({ limit: 10, includeArchivedHistory: true }),
+    ).rejects.toThrow();
   });
 });

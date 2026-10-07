@@ -322,6 +322,30 @@ describe("createRequestHandler", () => {
 });
 
 describe("createIntegrationRequestHandler", () => {
+  it("keeps SABnzbd history windows and archive modes in separate cache entries", async () => {
+    let calls = 0;
+    const handler = createIntegrationRequestHandler<
+      number,
+      "sabNzbd",
+      { limit: number; includeArchivedHistory: boolean; historyWindowDays: number }
+    >({ requestAsync: async () => ++calls });
+    const integration = { ...createIntegration("test-secret"), kind: "sabNzbd" as const };
+    const input = { limit: 50, includeArchivedHistory: true, historyWindowDays: 7 };
+
+    await expect(handler.handler(integration, input).getDataAsync()).resolves.toMatchObject({ data: 1 });
+    await expect(handler.handler(integration, input).getDataAsync()).resolves.toMatchObject({ data: 1 });
+    await expect(
+      handler.handler(integration, { ...input, historyWindowDays: 14 }).getDataAsync(),
+    ).resolves.toMatchObject({ data: 2 });
+    await expect(
+      handler.handler(integration, { ...input, includeArchivedHistory: false }).getDataAsync(),
+    ).resolves.toMatchObject({ data: 3 });
+    await expect(
+      handler.handler(integration, { ...input, historyWindowDays: 14 }).getDataAsync(),
+    ).resolves.toMatchObject({ data: 2 });
+    expect(calls).toBe(3);
+  });
+
   it("does not deduplicate requests across rotated integration secrets", async () => {
     let calls = 0;
     const request = deferred<string>();

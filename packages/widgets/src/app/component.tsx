@@ -48,11 +48,13 @@ export default function AppWidget({
   let padding = 12;
   let fontSize = rem(14);
   let gap = 12;
-  let titleLineClamp = 2;
+  let titleLineClamp: number | undefined = 2;
+  let titleTruncate: "end" | undefined;
   if (isTiny) {
     padding = 4;
-    fontSize = rem(8);
-    titleLineClamp = 1;
+    fontSize = rem(12);
+    titleLineClamp = undefined;
+    titleTruncate = "end";
   }
   if (isColumnLayout) gap = 0;
 
@@ -74,16 +76,17 @@ export default function AppWidget({
             gap={gap}
             onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
           >
-            <Stack gap={0} className={classes.appText}>
+            <Stack gap={0} className={classes.appText} data-column={isColumnLayout || undefined}>
               {options.showTitle && (
                 <Text
-                  className="app-title"
+                  className={combineClasses("app-title", classes.appTitle)}
+                  data-compact={isTiny || undefined}
                   title={app.name}
                   fw={700}
                   size={fontSize}
                   lh="sm"
                   lineClamp={titleLineClamp}
-                  ta={isColumnLayout ? "center" : undefined}
+                  truncate={titleTruncate}
                 >
                   {app.name}
                 </Text>

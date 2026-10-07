@@ -1,5 +1,21 @@
 import z from "zod";
 
+const filesystemSizeSchema = z
+  .union([z.number(), z.string().regex(/^\d+$/).transform(Number)])
+  .pipe(z.number().int().min(0).max(Number.MAX_SAFE_INTEGER))
+  .nullable();
+
+const unraidDiskSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  device: z.string().nullable(),
+  fsSize: filesystemSizeSchema,
+  fsFree: filesystemSizeSchema,
+  fsUsed: filesystemSizeSchema,
+  status: z.string().nullable(),
+  temp: z.number().nullish(),
+});
+
 export const unraidSystemInfoSchema = z.object({
   metrics: z.object({
     cpu: z.object({
@@ -27,16 +43,8 @@ export const unraidSystemInfoSchema = z.object({
         used: z.coerce.number(),
       }),
     }),
-    disks: z.array(
-      z.object({
-        name: z.string(),
-        size: z.number(),
-        fsFree: z.number(),
-        fsUsed: z.number(),
-        status: z.string(),
-        temp: z.number().nullish(),
-      }),
-    ),
+    disks: z.array(unraidDiskSchema),
+    caches: z.array(unraidDiskSchema),
   }),
   info: z.object({
     devices: z.object({

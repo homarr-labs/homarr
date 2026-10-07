@@ -29,9 +29,11 @@ export class StatsIntegration extends Integration {
       const signal = AbortSignal.timeout(15_000);
       return await this.provider.getHttpAuthenticationAsync({
         signal,
+        url: new URL(this.integration.url),
         secret: (kind) => this.getSecretValue(kind),
         hasSecret: (kind) => this.hasSecretValue(kind),
         requestAsync: this.createRequestAsync(signal, undefined, undefined, true),
+        requestResponseAsync: this.createResponseRequestAsync(signal),
       });
     }
     if (!this.provider.getHttpAuthentication) return await super.getHttpAuthenticationAsync();
@@ -49,10 +51,35 @@ export class StatsIntegration extends Integration {
     }
     return await this.provider.fetchAsync({
       signal,
+      url: new URL(this.integration.url),
       secret: (kind) => this.getSecretValue(kind),
       hasSecret: (kind) => this.hasSecretValue(kind),
       requestAsync: this.createRequestAsync(signal, testing, authentication),
+      requestResponseAsync: this.createResponseRequestAsync(signal, testing),
     });
+  }
+
+  private createResponseRequestAsync(
+    signal: AbortSignal,
+    testing?: IntegrationTestingInput,
+  ): StatsFetchContext["requestResponseAsync"] {
+    return async (path, init) => {
+      try {
+        const fetchAsync = testing?.fetchAsync ?? fetchWithTrustedCertificatesAsync;
+        const response = await fetchAsync(this.url(path), { ...init, signal, redirect: "error" });
+        // Login bodies can be empty or contain sensitive error details. Do not read them.
+        await response.body?.cancel();
+        let headerBytes = 0;
+        for (const [name, value] of response.headers) {
+          headerBytes += Buffer.byteLength(name) + Buffer.byteLength(value);
+          if (headerBytes > 16_384) throw new Error("Response headers are too large");
+        }
+        return { status: response.status, headers: response.headers };
+      } catch {
+        // Fetch errors may retain the password body or session cookies in their cause.
+        throw new Error("Stats authentication request failed");
+      }
+    };
   }
 
   private createRequestAsync(

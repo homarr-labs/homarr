@@ -143,18 +143,12 @@ export const SectionGrid = ({
   const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
-  const railBaselineRef = useRef({ key: "", rowCount: 1 });
-  const railBaselineKey = `${section.id}:${currentLayoutId}`;
-  if (railBaselineRef.current.key !== railBaselineKey) {
-    railBaselineRef.current = { key: railBaselineKey, rowCount: Math.max(1, getLayoutRowCount(placements)) };
-  }
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   if (isRail) {
-    // Existing taller rails remain scrollable, but collision pushes cannot grow this cap.
-    rowCount = Math.max(railViewportRowCount, railBaselineRef.current.rowCount);
+    rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
-  const maxRowCount = section.kind === "container" || isRail ? rowCount : null;
+  const maxRowCount = section.kind === "container" ? rowCount : null;
   const placementMaxRowCount = maxRowCount;
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.

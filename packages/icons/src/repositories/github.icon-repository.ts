@@ -2,6 +2,7 @@ import { parse } from "path";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
@@ -26,7 +27,26 @@ export class GitHubIconRepository extends IconRepository {
     }
 
     const response = await withTimeoutAsync(async (signal) => fetchWithTrustedCertificatesAsync(url, { signal }));
-    const listOfFiles = (await response.json()) as GitHubApiResponse;
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new ErrorWithMetadata("GitHub icon index request failed", {
+        status: response.status,
+        rateLimitRemaining: response.headers.get("x-ratelimit-remaining"),
+        rateLimitReset: response.headers.get("x-ratelimit-reset"),
+        retryAfter: response.headers.get("retry-after"),
+      });
+    }
+
+    const listOfFiles = (await response.json()) as GitHubApiResponse | null;
+    if (!listOfFiles || !Array.isArray(listOfFiles.tree)) {
+      throw new Error("GitHub icon index response does not contain a file tree");
+    }
+    if (typeof listOfFiles.truncated !== "boolean") {
+      throw new Error("GitHub icon index response does not contain a boolean truncated flag");
+    }
+    if (listOfFiles.truncated) {
+      throw new Error("GitHub icon index response contains a truncated file tree");
+    }
 
     return {
       success: true,

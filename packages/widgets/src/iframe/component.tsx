@@ -19,7 +19,7 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
 
   return (
     <Stack h="100%" w="100%" gap={0}>
-      <Box style={{ flex: 1, minHeight: 0 }}>
+      <Box className={classes.frame} style={{ flex: 1, minHeight: 0 }}>
         <iframe
           loading="lazy"
           style={isEditMode ? { userSelect: "none", pointerEvents: "none" } : undefined}

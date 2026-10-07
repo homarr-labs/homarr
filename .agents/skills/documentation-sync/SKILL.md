@@ -1,11 +1,11 @@
 ---
 name: documentation-sync
-description: Write concise Homarr docs only when changed behavior is not clear to a smart, advanced user from the UI or generated schema. Skip routine, obvious, or self-explanatory changes.
+description: Write Homarr docs only when users need information to set up, use, or troubleshoot the app. Skip routine, obvious, or self-explanatory changes.
 ---
 
 # Documentation Sync
 
-Apply the audience and scope rules in `AGENTS.md` first. A code, UI, or API change alone does not warrant documentation. Add a passage only when a smart, advanced user cannot infer the behavior from the interface or generated schema.
+Apply the audience and scope rules in `AGENTS.md` first. Documentation exists only for information users need to set up, use, or troubleshoot Homarr. A code, UI, or API change alone does not warrant documentation; if a user does not need to know it, do not add it.
 
 For hidden capabilities such as the advanced widget feature, explain discovery, activation, and non-obvious behavior. For visible standard controls such as Delete, omit narration of what the label already conveys. Use the shortest explanation that preserves necessary technical detail; remove redundant prose in the passage being edited.
 
@@ -50,7 +50,7 @@ For a widget:
 
 ## Completion criteria
 
-1. Every passage adds information an advanced user cannot reasonably infer from the interface. Remove obvious, repetitive, or unnecessary prose.
+1. Every passage adds information a user needs and cannot reasonably infer from the interface. Remove obvious, repetitive, or unnecessary prose.
 2. Keep names, defaults, paths, screenshots, links, and prerequisites consistent with code.
 3. Update every affected page and remove superseded guidance.
 4. Run the narrowest useful docs validation. Use `bun run turbo build --filter=@homarr/docs` when links, MDX, generated definitions, or navigation can fail; otherwise run the docs package formatter on touched files.

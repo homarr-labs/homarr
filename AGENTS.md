@@ -57,11 +57,11 @@ homarr/
 
 ## Documentation
 
-Add or update docs only when a smart, advanced user cannot infer the changed behavior from the UI or generated API schema. Document hidden capabilities, surprising behavior, non-obvious prerequisites or constraints, configuration contracts, and migrations. A code or API change alone is not a reason to add docs.
+Add documentation only when users need the information to set up, use, or troubleshoot Homarr and cannot reasonably discover it from the UI or generated API schema. If a user does not need to know it, do not document it. A code, UI, or API change alone is never a reason to add docs.
 
-Keep warranted documentation concise. Omit UI walkthroughs, visible control descriptions, and details already clear from the interface or schema.
+Keep warranted documentation concise. Omit UI walkthroughs, visible control descriptions, internal implementation details, and anything already clear from the interface or schema.
 
-Only after this reader-value test passes, use these locations:
+Only after this user-need test passes, use these locations:
 
 - New integration → `apps/docs/docs/integrations/<slug>/index.mdx` + `index.ts`
 - New widget → `apps/docs/docs/widgets/<slug>/index.mdx` + `index.ts`
@@ -97,7 +97,7 @@ Only after this reader-value test passes, use these locations:
 
 ## Testing
 
-Add tests only when requested. Favor assertions that would fail for a plausible regression in user-visible behavior or a security boundary; avoid checks that repeat implementation details or duplicate stronger coverage. For focused changes, run only the relevant existing or newly requested checks when validation is needed. Do not run broad test, Docker, or E2E suites by default.
+Add tests only when requested, and only when the test is extremely relevant and will plausibly prevent a future regression in user-visible behavior or a security boundary. Do not add tests that restate implementation details or duplicate stronger coverage. For focused changes, run only the relevant existing or newly requested checks when validation is needed. Do not run broad test, Docker, or E2E suites by default.
 
 ## MCP servers
 
@@ -108,7 +108,7 @@ Add tests only when requested. Favor assertions that would fail for a plausible 
 Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before working in that domain; detailed references are loaded only when needed. Claude-compatible discovery is provided through `.claude/skills`.
 
 - `codebase-context` — architecture, package boundaries, and shared utilities
-- `documentation-sync` — documentation for changes users need explained
+- `documentation-sync` — user-critical documentation only
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
 

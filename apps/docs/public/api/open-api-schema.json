@@ -5545,6 +5545,273 @@
         }
       }
     },
+    "/api/certificates/{fileName}": {
+      "get": {
+        "operationId": "certificates-getCertificate",
+        "summary": "Inspect a named custom root CA certificate",
+        "description": "Return public metadata or null when absent. Requires admin permission. Does not return PEM contents.",
+        "tags": [
+          "certificates"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileName",
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*\\.(crt|pem)$"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "fileName": {
+                          "type": "string",
+                          "maxLength": 128,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*\\.(crt|pem)$"
+                        },
+                        "sha256": {
+                          "type": "string"
+                        },
+                        "fingerprint256": {
+                          "type": "string"
+                        },
+                        "ca": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "validFrom": {
+                          "type": "string"
+                        },
+                        "validTo": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fileName",
+                        "sha256",
+                        "fingerprint256",
+                        "ca",
+                        "validFrom",
+                        "validTo"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/certificates/root": {
+      "post": {
+        "operationId": "certificates-ensureRootCertificate",
+        "summary": "Ensure a named custom root CA certificate without overwriting",
+        "description": "Accept one currently valid self-signed PEM root CA (64 KiB maximum). Identical bytes are idempotent; different existing bytes return CONFLICT. Requires admin permission.",
+        "tags": [
+          "certificates"
+        ],
+        "security": [
+          {
+            "apikey": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileName": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*\\.(crt|pem)$"
+                  },
+                  "certificate": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 65536
+                  }
+                },
+                "required": [
+                  "fileName",
+                  "certificate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "created": {
+                      "type": "boolean"
+                    },
+                    "certificate": {
+                      "type": "object",
+                      "properties": {
+                        "fileName": {
+                          "type": "string",
+                          "maxLength": 128,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*\\.(crt|pem)$"
+                        },
+                        "sha256": {
+                          "type": "string"
+                        },
+                        "fingerprint256": {
+                          "type": "string"
+                        },
+                        "ca": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "validFrom": {
+                          "type": "string"
+                        },
+                        "validTo": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fileName",
+                        "sha256",
+                        "fingerprint256",
+                        "ca",
+                        "validFrom",
+                        "validTo"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "created",
+                    "certificate"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/integrations/request": {
       "post": {
         "operationId": "integration-request",

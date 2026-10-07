@@ -7,7 +7,7 @@ import type { UmamiMetricItem } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import classes from "./component.module.css";
 
-import { umamiQueryOptions } from "./umami-utils";
+import { useUmamiQueryOptions } from "./umami-utils";
 import { getUsableWidgetQueryData } from "../common/query-state";
 
 interface UmamiTopListProps {
@@ -19,6 +19,7 @@ interface UmamiTopListProps {
 
 export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useI18n("widget.umami");
+  const umamiQueryOptions = useUmamiQueryOptions();
   const data =
     getUsableWidgetQueryData(
       clientApi.widget.umami.getTopPages.useQuery(
@@ -31,6 +32,7 @@ export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, lim
 
 export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useI18n("widget.umami");
+  const umamiQueryOptions = useUmamiQueryOptions();
   const data =
     getUsableWidgetQueryData(
       clientApi.widget.umami.getTopReferrers.useQuery(

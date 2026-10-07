@@ -98,6 +98,20 @@ export const downloadsWidget: WidgetDefinition = {
         values: "Any whole number from 1 upward",
         defaultValue: "50",
       },
+      {
+        name: "Include archived SABnzbd history",
+        description:
+          "When enabled, the selected day window applies to finished normal and archived SABnzbd history. Queue and processing jobs remain visible.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
+        name: "Archived history window (days)",
+        description:
+          "At most 10,000 archived records are scanned. The item limit still controls how many rows are shown.",
+        values: "Any positive whole number of days",
+        defaultValue: "7",
+      },
     ],
   },
 };

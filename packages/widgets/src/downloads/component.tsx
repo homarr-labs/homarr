@@ -319,6 +319,8 @@ export default function DownloadClientsWidget({
   const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
+    includeArchivedHistory: options.includeArchivedHistory,
+    historyWindowDays: options.historyWindowDays,
   });
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
@@ -781,6 +783,7 @@ export default function DownloadClientsWidget({
           {queryIndicators}
         </Box>
         <HomarrDataTable
+          preserveColumnWidths
           isEditMode={isEditMode}
           cellPadding={`${size.cellPadding}px 8px`}
           fetching={isFetching && (currentItems?.length ?? 0) === 0}
