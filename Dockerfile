@@ -13,7 +13,6 @@ RUN apk add --no-cache libstdc++ python3 make g++
 COPY bun.lock bunfig.toml package.json ./
 COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
-COPY --parents ./packages/definitions/src ./
 RUN --mount=type=cache,id=homarr-bun-cache,target=/root/.bun/install/cache,sharing=locked \
     npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
 

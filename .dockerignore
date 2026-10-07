@@ -7,6 +7,14 @@ README.md
 .next
 **/.output
 .turbo
+**/.turbo
+**/next-env.d.ts
+packages/db/migrations/*/migrate.cjs
+packages/cli/cli.cjs
+apps/tasks/tasks.cjs
+apps/tasks/tasks.css
+apps/websocket/wssServer.cjs
+apps/websocket/wssServer.css
 .bun-cache
 **/.bun-cache
 coverage

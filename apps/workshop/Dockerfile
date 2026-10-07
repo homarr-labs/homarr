@@ -34,7 +34,6 @@ COPY packages/ui/package.json ./packages/ui/package.json
 COPY packages/validation/package.json ./packages/validation/package.json
 COPY packages/workshop/package.json ./packages/workshop/package.json
 COPY tooling/typescript/package.json ./tooling/typescript/package.json
-COPY packages/definitions/src ./packages/definitions/src
 RUN --mount=type=cache,id=workshop-bun-cache,target=/root/.bun/install/cache \
     npm_config_nodedir=/usr/local bun install --filter @homarr/docs --filter homarr --frozen-lockfile --concurrent-scripts=1
 
