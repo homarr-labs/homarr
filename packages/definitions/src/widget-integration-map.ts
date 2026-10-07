@@ -202,6 +202,8 @@ export interface DefaultWidgetConfig {
 }
 
 export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
+  // Statistics needs an explicit metric selection before it can display anything.
+  { kind: "stats", width: 2, height: 2, skip: true },
   { kind: "clock", width: 2, height: 1 },
   { kind: "weather", width: 2, height: 1, options: { showHumidity: false, showCity: false, hasForecast: false } },
   { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },

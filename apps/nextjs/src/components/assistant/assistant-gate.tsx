@@ -4,6 +4,7 @@ import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
+import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
 
@@ -72,10 +73,17 @@ const unavailableMessageKeys = {
 
 export const AssistantGate = ({ availability, children }: AssistantGateProps) => {
   const t = useI18n("assistant");
+  const { data } = clientApi.assistant.getAvailability.useQuery(undefined, {
+    enabled: availability !== "unauthenticated",
+    initialData: { enabled: availability === "enabled" },
+    staleTime: Infinity,
+  });
 
-  if (availability === "enabled") {
+  if (availability !== "unauthenticated" && data.enabled) {
     return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;
   }
 
-  return <DisabledAssistant description={t(unavailableMessageKeys[availability])}>{children}</DisabledAssistant>;
+  let unavailableReason = availability;
+  if (unavailableReason === "enabled") unavailableReason = "unconfigured";
+  return <DisabledAssistant description={t(unavailableMessageKeys[unavailableReason])}>{children}</DisabledAssistant>;
 };

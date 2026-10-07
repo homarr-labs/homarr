@@ -4,6 +4,7 @@ import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common"
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,
+  assistantProviderPresets,
   credentialsAdminGroup,
   defaultBookmarkApps,
   everyoneGroup,
@@ -27,6 +28,7 @@ import {
 
 import {
   apps,
+  assistantConfigurations,
   boards,
   customWidgetDefinitions,
   groupMembers,
@@ -57,6 +59,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);
   await seedOnboardingAsync(db);
   await seedServerSettingsAsync(db);
+  await seedAssistantConfigurationAsync(db);
   await seedDefaultSearchEnginesAsync(db);
   await seedDefaultIntegrationsAsync(db);
   await seedDefaultAppsAsync(db);
@@ -69,6 +72,24 @@ export const seedDataAsync = async (db: Database) => {
   }
 
   await seedProtectedBoardLayoutsAsync(db);
+};
+
+const seedAssistantConfigurationAsync = async (db: Database) => {
+  const baseUrl = process.env.WORKSHOP_API_URL || process.env.HOMARR_WEBSITE_URL;
+  let providerUrl: string = assistantProviderPresets.homarr.baseUrl;
+  if (baseUrl) providerUrl = `${baseUrl.replace(/\/+$/u, "")}/api/ai/v1`;
+
+  await db
+    .insert(assistantConfigurations)
+    .values({
+      id: "default",
+      enabled: true,
+      provider: "homarr",
+      baseUrl: providerUrl,
+      modelDiscoveryPath: assistantProviderPresets.homarr.modelDiscoveryPath,
+      modelId: "homarr/model",
+    })
+    .onConflictDoNothing();
 };
 
 export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: string) => {
