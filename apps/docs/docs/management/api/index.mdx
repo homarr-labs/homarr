@@ -10,6 +10,16 @@ Use the generated specification under **Management → Tools → API** or the [i
 This page covers contracts that are not obvious from those schemas.
 The in-app reference loads its schema from `/api/openapi?format=scalar` on your Homarr instance. `/api/openapi` provides the raw JSON specification.
 
+REST exposes selected existing Homarr controls. Use tRPC for advanced operations; both accept the `ApiKey` header.
+`PUT /api/boards/{id}/content` uses the dashboard editor's complete `sections` and `items` arrays. Omitted entries are
+removed, so read the current content through tRPC `board.getBoardByName` before editing it. Widget movement and
+resizing can instead use the existing item-layout endpoint.
+
+Use `GET /api/users/preferences` and `PATCH /api/users/preferences` to read or change preferences. Send only changed
+values: `{ "colorScheme": "light" }` or `{ "headerPreferences": { "visible": false } }`. Omitted values stay unchanged;
+`null` clears nullable board/search references. Header fields merge; supplied zone arrays replace their zone.
+Omit `userId` for yourself; another user requires admin permission. Older preference routes remain available.
+
 ![Homarr's API documentation page](../img/api.png)
 
 ## Authentication and browser access
@@ -43,19 +53,16 @@ Multi-integration queries can return partial data with endpoint-specific failure
 
 ## Board automation
 
-Boards have Base and Mobile layouts; Mobile uses breakpoint `0`. Additional breakpoints must be unique.
-A layout can reserve sidebar columns, leaving the remaining columns for the main canvas. Container sections form
-nested grids whose contents must fit their width.
+Each board has one Base and one Mobile layout; Mobile uses breakpoint `0`. Other breakpoints must be unique, and Homarr
+uses the highest breakpoint that fits. Reuse canonical layouts and generated IDs returned by save operations.
 
-Item placement shorthand applies to every layout, clamping width to the available columns. Use `layouts` to set
-individual placements. Omit coordinates for automatic placement; specify coordinates to require a free position.
-Partial item and section updates retain omitted fields. Integration-backed widgets require use access to newly selected
-integrations; configuring Custom Widget placements requires administrator access.
+Integration-backed widgets require use access to each newly selected integration.
 
-Board import generates fresh content IDs. `onConflict: "skip"` keeps an existing board; `"replace"` exchanges its content
-in one transaction while retaining its ID, home-board references and permissions. The default `"fail"` returns `409`.
-Board creation/import names allow letters, digits, hyphens and underscores; full configuration import also accepts
-legacy names. Permission updates replace the corresponding user or group access list.
+`board.addItem` accepts `size: { width, height }` in grid cells (1–24 each), places the item in the first free position
+on every layout, and caps width to the available columns.
+
+`board.updateItemLayout` (`PATCH /api/boards/{boardId}/items/{itemId}/layouts/{layoutId}`) moves or resizes one item in
+one layout without replacing the board. It cannot move the item outside its section or overlap another item/container.
 
 ## Root CA automation
 
@@ -76,21 +83,6 @@ subsequent integration requests without a restart; it does not bypass hostname v
 Docker actions require `{ endpointId, id }` targets from `docker.getContainers`; `endpointId` distinguishes hosts.
 Omit `endpointIds` or pass an empty array to query every configured endpoint.
 
-### Obtaining the first API key without the web interface
-
-Creating an API key normally requires signing in once. For fully automated setups the
-[command line interface](../../advanced/command-line/) can do both steps instead:
-
-```bash
-# Only needed when no credentials admin exists yet
-docker exec -it <container-id> homarr recreate-admin -u admin
-
-# Prints "<id>.<token>" once, store it somewhere safe
-docker exec -it <container-id> homarr api-keys create -u admin
-```
-
-See [API keys](../../advanced/command-line/api-keys/) for the other available commands.
-
 ## Custom Widget resources
 
 Administrators can retrieve the Custom Widget authoring prompt, schema, component catalog, skill, and references under
@@ -108,49 +100,3 @@ Requests are not retried, so check upstream state after a timeout before retryin
 The iCalendar feed integration stores a calendar URL rather than arbitrary HTTP API credentials. TrueNAS uses a WebSocket
 API. Neither works with `integration_request` or Custom Widget integration sources. qBittorrent generic requests require
 a saved API key and qBittorrent 5.2.0 or newer. UniFi generic requests require the controller's HTTPS URL and actual port.
-
-## REST and tRPC scope
-
-REST covers dashboard composition, access, configuration transfer, resource provisioning and preferences.
-Use tRPC for integration-specific widget queries/actions, Docker and Kubernetes controls, uploads, and other
-advanced operations. Both transports accept the same `ApiKey` header and enforce the same user permissions.
-
-The generated reference documents the supported REST surface. For tRPC, use Homarr's exported `AppRouter` type
-and the procedure names used by the application; these remain coupled to your Homarr version.
-
-## Partial preference updates
-
-Read preferences with `GET /api/users/preferences`, then update only the values you want to change with
-`PATCH /api/users/preferences`. For example, `{ "colorScheme": "light" }` changes only the color scheme;
-`{ "headerPreferences": { "visible": false } }` changes only header visibility. Omit `userId` to target yourself;
-another user requires administrator permission.
-
-Omitted fields stay unchanged. `null` clears home-board and search-engine references. Header fields and zones merge;
-each supplied zone array replaces that zone and must retain unique items and account access. All validation completes
-before one write. Older preference routes remain available in the reference's compatibility section.
-
-Server settings follow the same partial-update pattern: `PATCH /api/settings` with
-`{ "settingsKey": "board", "value": { "enableStatusByDefault": false } }` changes only that setting.
-Nested branding flags merge with their existing values.
-
-## Full configuration
-
-Configuration export/import covers server settings, apps, integrations, search engines, groups and their permissions,
-and boards with group access. IDs are preserved because widget options can reference them. Entities match by ID first,
-then by group name, board name or search-engine trigger. `onConflict` accepts `fail`, `skip` or `replace`; settings always
-merge. Replacement retains board IDs and their user permissions. Analytics installation identifiers stay local to the
-receiving instance. Unknown setting groups/fields and invalid references are rejected before writes.
-
-This document excludes users, memberships, per-user board permissions, integration secret values, Custom Widget
-definitions, uploaded media and widget secrets. Transfer definitions and media separately. Integration secrets can be
-supplied on import as `secrets: [{ kind: "apiKey", value: "..." }]`. Replacing board content removes its widget secrets.
-
-## Backup and restore
-
-`GET /api/backup/export` downloads the SQLite database as a zip; `POST /api/backup/import` restores one.
-Both accept the `ApiKey` header. These binary endpoints are available only with SQLite and are separate from the JSON
-OpenAPI interface. Use them for a complete database copy including users, definitions, media and secrets.
-
-```bash
-curl -H 'ApiKey: <id>.<token>' -o homarr-backup.zip http://localhost:7575/api/backup/export
-```

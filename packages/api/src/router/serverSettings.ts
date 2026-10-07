@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import {
   getServerSettingByKeyAsync,
@@ -10,91 +9,41 @@ import {
   updateAnalyticsServerSettingAsync,
   updateServerSettingByKeyAsync,
 } from "@homarr/db/queries";
-import { boards, serverSettings, searchEngines } from "@homarr/db/schema";
+import { boards, serverSettings } from "@homarr/db/schema";
+import type { ServerSettings } from "@homarr/server-settings";
 import {
   authBrandingSchema,
-  defaultServerSettingsKeys,
-  boardServerSettingsSchema,
-  serverSettingsSchema,
-  serverSettingsPatchSchema,
-  mergeServerSettings,
   brandingServerSettingsSchema,
+  defaultServerSettingsKeys,
   parseBrandingSettings,
 } from "@homarr/server-settings";
 
 import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
 
-const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
+const boardServerSettingsSchema = z.object({
+  homeBoardId: z.string().nullable(),
+  mobileHomeBoardId: z.string().nullable(),
+  enableStatusByDefault: z.boolean(),
+  forceDisableStatus: z.boolean(),
+}) satisfies z.ZodType<ServerSettings["board"]>;
 
+const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
 const analyticsServerSettingsUpdateSchema = z.object({ enableGeneral: z.boolean().optional() }).strict();
 const brandingServerSettingsUpdateSchema = brandingServerSettingsSchema.partial().extend({
-  authBranding: authBrandingSchema.partial().strict().optional(),
+  authBranding: authBrandingSchema.partial().optional(),
 });
 const legacyAuthBrandingUpdateSchema = z.object({
   showCustomAppNameOnLogin: z.boolean().optional(),
   showCustomLogoOnLogin: z.boolean().optional(),
   showCustomGreetingOnLogin: z.boolean().optional(),
 });
-
-const validateBoardHomeIdsAsync = async (
-  db: Database,
-  input: { homeBoardId?: string | null; mobileHomeBoardId?: string | null },
-) => {
-  const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter((id) => id !== undefined && id !== null);
-
-  if (inputBoardIds.length === 0) return;
-
-  const publicBoards = await db.query.boards.findMany({
-    columns: { id: true },
-    where: and(inArray(boards.id, inputBoardIds), eq(boards.isPublic, true)),
-  });
-  const publicBoardIds = new Set(publicBoards.map((board) => board.id));
-  const invalidBoardIds = inputBoardIds.filter((id) => !publicBoardIds.has(id));
-
-  if (invalidBoardIds.length > 0) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
-    });
-  }
-};
-
-export const serverSettingsUpdateSchema = z.discriminatedUnion("settingsKey", [
-  z.object({ settingsKey: z.literal("analytics"), value: analyticsServerSettingsUpdateSchema }),
-  z.object({
-    settingsKey: z.literal("crawlingAndIndexing"),
-    value: serverSettingsPatchSchema.shape.crawlingAndIndexing.unwrap(),
-  }),
-  z.object({ settingsKey: z.literal("board"), value: serverSettingsPatchSchema.shape.board.unwrap() }),
-  z.object({ settingsKey: z.literal("user"), value: serverSettingsPatchSchema.shape.user.unwrap() }),
-  z.object({ settingsKey: z.literal("appearance"), value: serverSettingsPatchSchema.shape.appearance.unwrap() }),
-  z.object({
-    settingsKey: z.literal("branding"),
-    value: brandingServerSettingsUpdateSchema.extend(legacyAuthBrandingUpdateSchema.shape).strict(),
-  }),
-  z.object({ settingsKey: z.literal("culture"), value: serverSettingsPatchSchema.shape.culture.unwrap() }),
-  z.object({ settingsKey: z.literal("search"), value: serverSettingsPatchSchema.shape.search.unwrap() }),
-]);
-
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
     return await getServerSettingByKeyAsync(ctx.db, "culture");
   }),
-  getAll: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .meta({
-      openapi: { method: "GET", path: "/api/settings", tags: ["settings"], protect: true },
-      mcp: {
-        enabled: true,
-        description:
-          "Get every server setting group at once (analytics, appearance, board, branding, crawlingAndIndexing, culture, search, ...). Requires admin permission",
-      },
-    })
-    .input(z.void())
-    .output(serverSettingsSchema)
-    .query(async ({ ctx }) => {
-      return await getServerSettingsAsync(ctx.db);
-    }),
+  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
+    return await getServerSettingsAsync(ctx.db);
+  }),
   getBranding: publicProcedure
     .meta({
       mcp: { enabled: true, description: "Returns the public instance branding configuration." },
@@ -138,89 +87,83 @@ export const serverSettingsRouter = createTRPCRouter({
         description:
           "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
       },
+      mcp: {
+        enabled: true,
+        description:
+          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
+      },
     })
     .input(boardServerSettingsUpdateSchema)
     .output(boardServerSettingsSchema)
     .mutation(async ({ ctx, input }) => {
-      await updateServerSettingsGroupAsync(ctx.db, { settingsKey: "board", value: input });
-      return getServerSettingByKeyAsync(ctx.db, "board");
+      const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter(
+        (id) => id !== undefined && id !== null,
+      );
+
+      if (inputBoardIds.length > 0) {
+        const publicBoards = await ctx.db.query.boards.findMany({
+          columns: { id: true },
+          where: and(inArray(boards.id, inputBoardIds), eq(boards.isPublic, true)),
+        });
+        const publicBoardIds = new Set(publicBoards.map((board) => board.id));
+        const invalidBoardIds = inputBoardIds.filter((id) => !publicBoardIds.has(id));
+        if (invalidBoardIds.length > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
+          });
+        }
+      }
+
+      const current = await getServerSettingByKeyAsync(ctx.db, "board");
+      const next = { ...current, ...input };
+      const existing = await ctx.db.query.serverSettings.findFirst({
+        where: eq(serverSettings.settingKey, "board"),
+      });
+
+      if (existing) {
+        await updateServerSettingByKeyAsync(ctx.db, "board", next);
+      } else {
+        await insertServerSettingByKeyAsync(ctx.db, "board", next);
+      }
+
+      return next;
     }),
   saveSettings: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({
-      openapi: { method: "PATCH", path: "/api/settings", tags: ["settings"], protect: true },
-      mcp: {
-        enabled: true,
-        description:
-          "Update one server setting group. REQUIRED: settingsKey (for example 'appearance', 'culture', 'search' or 'board'), value (object which is merged into the current settings of that group). Requires admin permission",
-      },
-    })
     .input(
       z.object({
         settingsKey: z.enum(defaultServerSettingsKeys),
         value: z.record(z.string(), z.unknown()),
       }),
     )
-    .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      const parsed = serverSettingsUpdateSchema.safeParse(input);
-      if (!parsed.success)
-        throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
-      await updateServerSettingsGroupAsync(ctx.db, parsed.data);
+      if (input.settingsKey === "branding") {
+        const current = await getServerSettingByKeyAsync(ctx.db, "branding");
+        const parsedInput = brandingServerSettingsUpdateSchema.parse(input.value);
+        const legacyInput = legacyAuthBrandingUpdateSchema.parse(input.value);
+        const authBranding = { ...current.authBranding };
+        authBranding.showAppName = legacyInput.showCustomAppNameOnLogin ?? authBranding.showAppName;
+        authBranding.showLogo = legacyInput.showCustomLogoOnLogin ?? authBranding.showLogo;
+        authBranding.showGreeting = legacyInput.showCustomGreetingOnLogin ?? authBranding.showGreeting;
+        Object.assign(authBranding, parsedInput.authBranding);
+        const value = brandingServerSettingsSchema.parse({
+          ...parseBrandingSettings(current),
+          ...parsedInput,
+          authBranding,
+        });
+        await updateServerSettingByKeyAsync(ctx.db, "branding", value);
+        return;
+      }
+      if (input.settingsKey === "analytics") {
+        const parsedInput = analyticsServerSettingsUpdateSchema.parse(input.value);
+        await updateAnalyticsServerSettingAsync(ctx.db, (current) => ({ ...current, ...parsedInput }));
+        return;
+      }
+      const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
+      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
+        ...current,
+        ...input.value,
+      } as ServerSettings[typeof input.settingsKey]);
     }),
 });
-
-const updateServerSettingsGroupAsync = async (db: Database, input: z.infer<typeof serverSettingsUpdateSchema>) => {
-  if (input.settingsKey === "branding") {
-    const current = await getServerSettingByKeyAsync(db, "branding");
-    const parsedInput = brandingServerSettingsUpdateSchema.parse(input.value);
-    const legacyInput = legacyAuthBrandingUpdateSchema.parse(input.value);
-    const authBranding = { ...current.authBranding };
-    authBranding.showAppName = legacyInput.showCustomAppNameOnLogin ?? authBranding.showAppName;
-    authBranding.showLogo = legacyInput.showCustomLogoOnLogin ?? authBranding.showLogo;
-    authBranding.showGreeting = legacyInput.showCustomGreetingOnLogin ?? authBranding.showGreeting;
-    Object.assign(authBranding, parsedInput.authBranding);
-    const value = brandingServerSettingsSchema.parse({
-      ...parseBrandingSettings(current),
-      ...parsedInput,
-      authBranding,
-    });
-    const existing = await db.query.serverSettings.findFirst({
-      where: eq(serverSettings.settingKey, "branding"),
-    });
-    if (existing) await updateServerSettingByKeyAsync(db, "branding", value);
-    else await insertServerSettingByKeyAsync(db, "branding", value);
-    return;
-  }
-  if (input.settingsKey === "analytics") {
-    const parsedInput = analyticsServerSettingsUpdateSchema.parse(input.value);
-    await updateAnalyticsServerSettingAsync(db, (current) => ({ ...current, ...parsedInput }));
-    return;
-  }
-  // Board defaults must point to public boards before any settings are persisted.
-  if (input.settingsKey === "board") {
-    await validateBoardHomeIdsAsync(db, boardServerSettingsUpdateSchema.parse(input.value));
-  }
-
-  const parsed = serverSettingsPatchSchema.safeParse({ [input.settingsKey]: input.value });
-  if (!parsed.success) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
-  }
-  if (parsed.data.search?.defaultSearchEngineId) {
-    const engine = await db.query.searchEngines.findFirst({
-      columns: { id: true },
-      where: eq(searchEngines.id, parsed.data.search.defaultSearchEngineId),
-    });
-    if (!engine) throw new TRPCError({ code: "BAD_REQUEST", message: "Search engine not found" });
-  }
-  const current = await getServerSettingsAsync(db);
-  const merged = mergeServerSettings(current, parsed.data);
-  const existing = await db.query.serverSettings.findFirst({
-    where: eq(serverSettings.settingKey, input.settingsKey),
-  });
-  if (!existing) {
-    await insertServerSettingByKeyAsync(db, input.settingsKey, merged[input.settingsKey]);
-    return;
-  }
-  await updateServerSettingByKeyAsync(db, input.settingsKey, merged[input.settingsKey]);
-};

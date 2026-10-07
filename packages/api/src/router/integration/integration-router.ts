@@ -26,14 +26,12 @@ import {
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
-  integrationSecretKinds,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { byIdSchema } from "@homarr/validation/common";
-import { zodEnumFromArray } from "@homarr/validation/enums";
 import {
   integrationCreateSchema,
   integrationSavePermissionsSchema,
@@ -47,103 +45,38 @@ import { throwIfActionForbiddenAsync } from "./integration-access";
 import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 import { integrationTestStoredConnectionProcedure } from "./integration-test-stored-connection";
-import type { AnyMappedTestConnectionError } from "./map-test-connection-error";
 import { mapTestConnectionError } from "./map-test-connection-error";
 
 const logger = createLogger({ module: "integrationRouter" });
 const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
-
-const integrationKindSchema = zodEnumFromArray(integrationKinds);
-
-const integrationSummarySchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  kind: integrationKindSchema,
-  url: z.string(),
-  permissions: z.object({
-    hasUseAccess: z.boolean(),
-    hasInteractAccess: z.boolean(),
-    hasFullAccess: z.boolean(),
-  }),
-});
-
-const integrationDetailSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  kind: integrationKindSchema,
-  url: z.string(),
-  secrets: z.array(
-    z.object({
-      kind: zodEnumFromArray(integrationSecretKinds),
-      value: z.string().nullable(),
-      updatedAt: z.date(),
-    }),
-  ),
-  app: z
-    .object({
-      id: z.string(),
-      name: z.string(),
-      iconUrl: z.string(),
-      href: z.string().nullable(),
-    })
-    .nullable(),
-});
-
-/**
- * The mapped connection error is a wide discriminated union that cannot be described in
- * detail here without duplicating it. The loose shape keeps the documentation and the
- * runtime check simple, the cast preserves the precise type for the management UI.
- */
-const mappedTestConnectionErrorSchema = z.looseObject({
-  type: z.string(),
-  name: z.string(),
-  message: z.string(),
-}) as unknown as z.ZodType<AnyMappedTestConnectionError>;
 
 export const integrationRouter = createTRPCRouter({
   request: integrationRequestProcedure,
   testConnection: integrationTestStoredConnectionProcedure,
   getKinds: publicProcedure
     .meta({
-      // Kept on a dedicated path so it can never be shadowed by /api/integrations/{id}
-      openapi: { method: "GET", path: "/api/integration-kinds", tags: ["integrations"], protect: true },
       mcp: {
         enabled: true,
         description:
           "List integration kinds and required secret fields. Saved integrations can be used with integration_request and Custom Widget sources when permissions.hasFullAccess is true, except iCalendar feeds (iCal) and the TrueNAS WebSocket API, which are not generic HTTP APIs. qBittorrent generic HTTP requires an API key and qBittorrent 5.2.0 or newer. Reuse saved credentials instead of asking for secrets again.",
       },
     })
-    .input(z.void())
-    .output(
-      z.array(
-        z.object({
-          kind: integrationKindSchema,
-          name: z.string(),
-          category: z.array(z.string()),
-          requiredSecrets: z.array(z.array(z.string())),
-        }),
-      ),
-    )
     .query(() => {
-      // The definitions are readonly tuples, the documented output is a plain array
       return objectEntries(integrationDefs).map(([kind, def]) => ({
         kind,
         name: def.name,
-        category: [...def.category],
-        requiredSecrets: def.secretKinds.map((secretKinds) => [...secretKinds]),
+        category: def.category,
+        requiredSecrets: def.secretKinds,
       }));
     }),
   all: protectedProcedure
     .meta({
-      openapi: { method: "GET", path: "/api/integrations", tags: ["integrations"], protect: true },
       mcp: {
         enabled: true,
         description:
           "List accessible configured integrations with id, name, kind, url, and permissions. Use id as integrationId. Native read tools require permissions.hasUseAccess; native action tools require permissions.hasInteractAccess. Custom Widget integration sources and arbitrary HTTP requests require permissions.hasFullAccess, including GET. False means the API key owner lacks that permission level; never bypass it.",
       },
     })
-    .input(z.void())
-    .output(z.array(integrationSummarySchema))
     .query(async ({ ctx }) => {
       return await getAccessibleIntegrationsAsync(ctx);
     }),
@@ -221,7 +154,6 @@ export const integrationRouter = createTRPCRouter({
   }),
   byId: protectedProcedure
     .meta({
-      openapi: { method: "GET", path: "/api/integrations/{id}", tags: ["integrations"], protect: true },
       mcp: {
         enabled: true,
         description:
@@ -229,7 +161,6 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(byIdSchema)
-    .output(integrationDetailSchema)
     .query(async ({ ctx, input }) => {
       const integrationWhere = eq(integrations.id, input.id);
 
@@ -294,7 +225,6 @@ export const integrationRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("integration-create")
     .meta({
-      openapi: { method: "POST", path: "/api/integrations", tags: ["integrations"], protect: true },
       mcp: {
         enabled: true,
         description:
@@ -302,20 +232,6 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(integrationCreateSchema)
-    .output(
-      z.union([
-        z.object({
-          integration: z.object({
-            id: z.string(),
-            name: z.string(),
-            kind: zodEnumFromArray(integrationKinds),
-            url: z.string(),
-          }),
-          appId: z.string().nullable(),
-        }),
-        z.object({ error: mappedTestConnectionErrorSchema }),
-      ]),
-    )
     .mutation(async ({ ctx, input }) => {
       logger.info("Creating integration", {
         name: input.name,
@@ -390,130 +306,117 @@ export const integrationRouter = createTRPCRouter({
         appId,
       };
     }),
-  update: protectedProcedure
-    .meta({
-      openapi: { method: "PATCH", path: "/api/integrations/{id}", tags: ["integrations"], protect: true },
-      mcp: {
-        enabled: true,
-        description:
-          "Update an integration. REQUIRED: id, name, url, secrets (array of { kind, value }, pass value null to keep the stored secret), appId (or null). Requires full permission on the integration",
+  update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+
+    logger.info("Updating integration", {
+      id: input.id,
+    });
+
+    const integration = await ctx.db.query.integrations.findFirst({
+      where: eq(integrations.id, input.id),
+      with: {
+        secrets: true,
       },
-    })
-    .input(integrationUpdateSchema)
-    .output(z.object({ error: mappedTestConnectionErrorSchema }).optional())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+    });
 
-      logger.info("Updating integration", {
-        id: input.id,
+    if (!integration) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Integration not found",
       });
+    }
 
-      const integration = await ctx.db.query.integrations.findFirst({
-        where: eq(integrations.id, input.id),
-        with: {
-          secrets: true,
-        },
-      });
-
-      if (!integration) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Integration not found",
-        });
-      }
-
-      const testResult = await testConnectionAsync(
-        {
-          id: input.id,
-          name: input.name,
-          url: input.url,
-          kind: integration.kind,
-          secrets: input.secrets,
-        },
-        integration.secrets,
-      ).catch((error) => {
-        if (!(error instanceof MissingSecretError)) throw error;
-
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: error.message,
-        });
-      });
-
-      if (!testResult.success) {
-        logger.error(testResult.error);
-        return {
-          error: mapTestConnectionError(testResult.error),
-        };
-      }
-
-      await ctx.db
-        .update(integrations)
-        .set({
-          name: input.name,
-          url: input.url,
-          appId: input.appId,
-        })
-        .where(eq(integrations.id, input.id));
-
-      const changedSecrets = input.secrets.filter(
-        (secret): secret is { kind: IntegrationSecretKind; value: string } =>
-          secret.value !== null && // only update secrets that have a value
-          !integration.secrets.find(
-            // Checked above
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            (dbSecret) => dbSecret.kind === secret.kind && dbSecret.value === encryptSecret(secret.value!),
-          ),
-      );
-
-      if (changedSecrets.length > 0) {
-        for (const changedSecret of changedSecrets) {
-          const secretInput = {
-            integrationId: input.id,
-            value: changedSecret.value,
-            kind: changedSecret.kind,
-          };
-          if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
-            await addSecretAsync(ctx.db, secretInput);
-          } else {
-            await updateSecretAsync(ctx.db, secretInput);
-          }
-        }
-      }
-
-      const removedSecrets = integration.secrets.filter(
-        (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
-      );
-      if (removedSecrets.length >= 1) {
-        await ctx.db
-          .delete(integrationSecrets)
-          .where(
-            or(
-              ...removedSecrets.map((secret) =>
-                and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
-              ),
-            ),
-          );
-      }
-
-      logger.info("Updated integration", {
+    const testResult = await testConnectionAsync(
+      {
         id: input.id,
         name: input.name,
-        kind: integration.kind,
         url: input.url,
-      });
+        kind: integration.kind,
+        secrets: input.secrets,
+      },
+      integration.secrets,
+    ).catch((error) => {
+      if (!(error instanceof MissingSecretError)) throw error;
 
-      // Invalidate all cached data for this integration so that widgets pick up the
-      // new configuration immediately instead of serving stale (or errored) data.
-      await invalidateIntegrationCacheAsync(input.id);
-    }),
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: error.message,
+      });
+    });
+
+    if (!testResult.success) {
+      logger.error(testResult.error);
+      return {
+        error: mapTestConnectionError(testResult.error),
+      };
+    }
+
+    await ctx.db
+      .update(integrations)
+      .set({
+        name: input.name,
+        url: input.url,
+        appId: input.appId,
+      })
+      .where(eq(integrations.id, input.id));
+
+    const changedSecrets = input.secrets.filter(
+      (secret): secret is { kind: IntegrationSecretKind; value: string } =>
+        secret.value !== null && // only update secrets that have a value
+        !integration.secrets.find(
+          // Checked above
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          (dbSecret) => dbSecret.kind === secret.kind && dbSecret.value === encryptSecret(secret.value!),
+        ),
+    );
+
+    if (changedSecrets.length > 0) {
+      for (const changedSecret of changedSecrets) {
+        const secretInput = {
+          integrationId: input.id,
+          value: changedSecret.value,
+          kind: changedSecret.kind,
+        };
+        if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
+          await addSecretAsync(ctx.db, secretInput);
+        } else {
+          await updateSecretAsync(ctx.db, secretInput);
+        }
+      }
+    }
+
+    const removedSecrets = integration.secrets.filter(
+      (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
+    );
+    if (removedSecrets.length >= 1) {
+      await ctx.db
+        .delete(integrationSecrets)
+        .where(
+          or(
+            ...removedSecrets.map((secret) =>
+              and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
+            ),
+          ),
+        );
+    }
+
+    logger.info("Updated integration", {
+      id: input.id,
+      name: input.name,
+      kind: integration.kind,
+      url: input.url,
+    });
+
+    // Invalidate all cached data for this integration so that widgets pick up the
+    // new configuration immediately instead of serving stale (or errored) data.
+    await invalidateIntegrationCacheAsync(input.id);
+  }),
   delete: protectedProcedure
     .meta({
-      openapi: { method: "DELETE", path: "/api/integrations/{id}", tags: ["integrations"], protect: true },
       mcp: { enabled: true, description: "Delete an integration by ID. REQUIRED: id (integration ID string)" },
     })
     .input(byIdSchema)
-    .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
 

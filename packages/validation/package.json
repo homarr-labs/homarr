@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "acorn": "catalog:",
     "acorn-jsx": "catalog:",

@@ -3,11 +3,9 @@ import superjson from "superjson";
 import { z } from "zod/v4";
 
 import { and, eq } from "@homarr/db";
-import { boards, sectionCollapseStates, sections } from "@homarr/db/schema";
+import { sectionCollapseStates, sections } from "@homarr/db/schema";
 import { emptySuperJSON } from "@homarr/definitions";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
-
-import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
@@ -35,8 +33,6 @@ export const sectionRouter = createTRPCRouter({
           message: `Section not found id=${input.sectionId}`,
         });
       }
-
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, section.boardId), "view");
 
       if (section.kind !== "container") {
         throw new TRPCError({

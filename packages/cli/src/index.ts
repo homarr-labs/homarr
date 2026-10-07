@@ -17,22 +17,15 @@ async function main(): Promise<void> {
   if (harnessInvocation) {
     commands = [harnessRoot];
   } else {
-    const [
-      { apiKeysRoot },
-      { fixUsernames },
-      { integrationsRoot },
-      { recreateAdmin },
-      { resetPassword },
-      { usersRoot },
-    ] = await Promise.all([
-      import("./commands/api-keys"),
-      import("./commands/fix-usernames"),
-      import("./commands/integrations"),
-      import("./commands/recreate-admin"),
-      import("./commands/reset-password"),
-      import("./commands/users"),
-    ]);
-    commands = [usersRoot, integrationsRoot, apiKeysRoot, resetPassword, fixUsernames, recreateAdmin, harnessRoot];
+    const [{ fixUsernames }, { integrationsRoot }, { recreateAdmin }, { resetPassword }, { usersRoot }] =
+      await Promise.all([
+        import("./commands/fix-usernames"),
+        import("./commands/integrations"),
+        import("./commands/recreate-admin"),
+        import("./commands/reset-password"),
+        import("./commands/users"),
+      ]);
+    commands = [usersRoot, integrationsRoot, resetPassword, fixUsernames, recreateAdmin, harnessRoot];
   }
 
   let argSource = process.argv;

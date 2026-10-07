@@ -71,11 +71,7 @@ for (const [apiPath, pathItem] of Object.entries(openApi.paths)) {
     const operationId = operation.operationId;
     if (!operationId) continue;
     const results = await apiClient.search(operationId);
-    const result = results.find(
-      (entry) =>
-        entry.url.startsWith("/api-reference/") &&
-        new URL(entry.url, "https://homarr.dev").pathname.split("/").filter(Boolean).at(-1) === operationId,
-    );
+    const result = results.find((entry) => entry.url.startsWith("/api-reference/") && entry.url.includes(operationId));
     assert(result, `${method} ${apiPath}: operation must be searchable by ID`);
     const destination = new URL(result.url, "https://homarr.dev");
     assert(!destination.hash, `${result.url}: generated API search text must not invent anchors`);

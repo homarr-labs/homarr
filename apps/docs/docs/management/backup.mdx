@@ -40,19 +40,3 @@ A backup can be restored on another Homarr instance. When its `SECRET_ENCRYPTION
 integration secrets for the target instance. Version metadata is used to apply compatible migrations.
 
 The same restore flow is available during first-run onboarding, before the target database contains user data.
-
-## Automating backups
-
-Both endpoints also accept an [API key](/docs/management/api/) in the `ApiKey` header, so a scheduled job can create and
-restore backups without a browser session:
-
-```bash
-curl -H 'ApiKey: <id>.<token>' -o homarr-backup.zip http://localhost:7575/api/backup/export
-```
-
-```bash
-curl -H 'ApiKey: <id>.<token>' -F 'file=@homarr-backup.zip' http://localhost:7575/api/backup/import
-```
-
-The key has to belong to a user with admin permissions. Use
-[`homarr api-keys create`](/docs/advanced/command-line/api-keys/) to obtain one without the web interface.

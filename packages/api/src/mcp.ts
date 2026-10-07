@@ -7,10 +7,8 @@ import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
 import { boardRouter } from "./router/board";
-import { configRouter } from "./router/config/config-router";
 import { customWidgetRouter } from "./router/custom-widget/custom-widget-router";
 import { dockerRouter } from "./router/docker/docker-router";
-import { groupRouter } from "./router/group";
 import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
@@ -40,10 +38,8 @@ export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,
   apiKeys: apiKeysRouter,
   board: boardRouter,
-  config: configRouter,
   customWidget: customWidgetRouter,
   docker: dockerRouter,
-  group: groupRouter,
   icon: iconsRouter,
   info: infoRouter,
   integration: integrationRouter,

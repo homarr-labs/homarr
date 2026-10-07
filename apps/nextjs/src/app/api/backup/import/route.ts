@@ -13,6 +13,7 @@ import {
   isClaimOnlyOnboardingAccessAllowedAsync,
 } from "@homarr/api/onboarding-claim";
 import { normalizeOnboardingStep } from "@homarr/api/onboarding-step";
+import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
@@ -23,7 +24,6 @@ import type { Database } from "@homarr/db";
 import { applyCustomMigrationsAsync } from "@homarr/db/migrations/custom";
 import { schema } from "@homarr/db/schema";
 
-import { getBackupSessionAsync } from "../auth";
 import { findMigrationsFolder } from "../shared";
 
 const logger = createLogger({ module: "backupImportRoute" });
@@ -209,7 +209,7 @@ const isOnboardingActiveAsync = async (): Promise<boolean> => {
 };
 
 export async function POST(req: Request) {
-  const session = await getBackupSessionAsync(req);
+  const session = await auth();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const hasOnboardingClaim = await isClaimOnlyOnboardingAccessAllowedAsync(
     db,

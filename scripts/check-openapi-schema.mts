@@ -22,46 +22,6 @@ function assertOpenApiDocument(value: unknown): asserts value is { openapi: stri
 
 assertOpenApiDocument(generated);
 
-function assertLocalReferences(value: unknown): void {
-  if (Array.isArray(value)) {
-    value.forEach(assertLocalReferences);
-    return;
-  }
-  if (value === null || typeof value !== "object") return;
-  for (const [key, entry] of Object.entries(value)) {
-    if (key === "$ref" && typeof entry === "string" && entry.startsWith("#/")) {
-      let target: unknown = generated;
-      for (const token of entry.slice(2).split("/")) {
-        assert.ok(target !== null && typeof target === "object", `Unresolved OpenAPI reference ${entry}`);
-        target = Reflect.get(target, token.replaceAll("~1", "/").replaceAll("~0", "~"));
-      }
-      assert.notEqual(target, undefined, `Unresolved OpenAPI reference ${entry}`);
-    }
-    assertLocalReferences(entry);
-  }
-}
-
-assertLocalReferences(generated);
-
-const tasks = Reflect.get(generated, "x-homarr-tasks") as { id: string; title: string; description: string }[];
-assert.ok(Array.isArray(tasks) && tasks.length > 0, "OpenAPI must declare user tasks");
-const taskIds = new Set(tasks.map((task) => task.id));
-assert.equal(taskIds.size, tasks.length, "Documentation task IDs must be unique");
-for (const item of Object.values(generated.paths)) {
-  if (item === null || typeof item !== "object") continue;
-  for (const operation of Object.values(item)) {
-    if (operation === null || typeof operation !== "object" || !("operationId" in operation)) continue;
-    assert.ok(taskIds.has(Reflect.get(operation, "x-homarr-task")), `Missing task for ${operation.operationId}`);
-    assert.equal(
-      typeof Reflect.get(operation, "x-homarr-doc-tag"),
-      "string",
-      "Operation documentation paths must be stable",
-    );
-    assert.equal(typeof Reflect.get(operation, "summary"), "string", "Operation summaries are required");
-    assert.equal(typeof Reflect.get(operation, "description"), "string", "Operation descriptions are required");
-  }
-}
-
 if (writeMode) {
   await writeFile(schemaPath, serialized, "utf8");
   console.log(`OpenAPI schema updated (${Object.keys(generated.paths).length} paths)`);

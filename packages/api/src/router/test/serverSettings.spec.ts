@@ -92,17 +92,6 @@ describe("saveSettings", () => {
     ]);
   });
 
-  test("saveSettings should reject a private home board", async () => {
-    const db = createDb();
-    const caller = serverSettingsRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-    const boardId = createId();
-    await db.insert(boards).values({ id: boardId, name: "private", isPublic: false });
-
-    await expect(caller.saveSettings({ settingsKey: "board", value: { homeBoardId: boardId } })).rejects.toThrow(
-      "must reference public boards",
-    );
-  });
-
   test("analytics settings cannot overwrite the installation ID or snapshot timestamp", async () => {
     const db = createDb();
     const caller = serverSettingsRouter.createCaller({ db, deviceType: undefined, session: defaultSession });

@@ -5,13 +5,12 @@ import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
 import Database from "better-sqlite3";
 
+import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
-import { getBackupSessionAsync } from "../auth";
-
-export async function GET(request: Request) {
-  const session = await getBackupSessionAsync(request);
+export async function GET() {
+  const session = await auth();
   if (!session?.user.permissions.includes("admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }

@@ -15,6 +15,7 @@ import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitio
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
+  defaultHeaderPreferences,
   headerPreferencesMutationSchema,
   userByteUnitSystemSchema,
   userChangeColorSchemeSchema,
@@ -46,6 +47,24 @@ import { throwIfCredentialsDisabled } from "./invite/checks";
 import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
 
 const logger = createLogger({ module: "userRouter" });
+
+const userPreferencesResponseSchema = userPreferencesSchema.extend({ userId: z.string() }).meta({
+  id: "UserPreferences",
+  example: {
+    userId: "example-user",
+    colorScheme: "light",
+    byteUnitSystem: "binary",
+    firstDayOfWeek: 0,
+    pingIconsEnabled: true,
+    enableRightClickOnWidgets: true,
+    homeBoardId: null,
+    mobileHomeBoardId: null,
+    defaultSearchEngineId: null,
+    openSearchInNewTab: true,
+    ddgBangs: true,
+    headerPreferences: defaultHeaderPreferences,
+  },
+});
 
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
@@ -380,7 +399,7 @@ export const userRouter = createTRPCRouter({
       },
     })
     .input(z.object({ userId: z.string().min(1).optional() }))
-    .output(userPreferencesSchema.extend({ userId: z.string() }))
+    .output(userPreferencesResponseSchema)
     .query(({ ctx, input }) => getUserPreferencesAsync(ctx, input.userId ?? ctx.session.user.id)),
   getById: protectedProcedure
     .input(z.object({ userId: z.string() }))
@@ -663,7 +682,7 @@ export const userRouter = createTRPCRouter({
           not: { required: ["userId"], maxProperties: 1 },
         }),
     )
-    .output(userPreferencesSchema.extend({ userId: z.string() }))
+    .output(userPreferencesResponseSchema)
     .mutation(({ ctx, input }) => {
       const { userId, ...patch } = input;
       return updateUserPreferencesAsync(ctx, userId ?? ctx.session.user.id, patch);
