@@ -29,7 +29,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
     --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
-    bun run turbo run build assemble:standalone --filter=@homarr/nextjs... --filter=@homarr/cli
+    bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM alpine:3.24.1 AS runner
 WORKDIR /app
@@ -47,9 +47,7 @@ RUN printf '#!/bin/sh\ncd /app/apps/cli && exec node ./cli.cjs "$@"\n' > /usr/bi
     chmod +x /usr/bin/homarr
 COPY --from=builder /app/packages/db/migrations ./db/migrations
 # Ship only Next's traced production dependencies and application assets.
-COPY --from=builder /app/apps/nextjs/.next/standalone ./
-COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
-COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+COPY --from=builder /app/apps/nextjs/.output/standalone ./
 COPY scripts/run.sh ./run.sh
 COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf

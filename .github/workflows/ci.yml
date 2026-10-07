@@ -92,7 +92,8 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
         with:
-          next-cache: "true"
+          next-cache: "all"
+          turbo-cache: "true"
 
       - name: Copy environment defaults
         run: cp .env.example .env
@@ -103,7 +104,7 @@ jobs:
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             scope=()
           fi
-          bun run turbo run lint typecheck build assemble:standalone "${scope[@]}" --continue=dependencies-successful --concurrency=2
+          bun run turbo run lint typecheck build "${scope[@]}" --continue=dependencies-successful --concurrency=2
 
       - name: Validate workspace configuration
         run: bun run lint:ws
@@ -116,7 +117,7 @@ jobs:
 
       - name: Validate Custom Widget bundle budget
         run: |
-          bun run turbo run build assemble:standalone --filter=@homarr/nextjs
+          bun run turbo run build --filter=@homarr/nextjs
           bun run check:custom-widget-bundle
 
   container:
@@ -186,14 +187,8 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: |
-          secret_args=()
-          for secret in TURBO_API TURBO_TEAM TURBO_TOKEN TURBO_REMOTE_CACHE_SIGNATURE_KEY; do
-            if [ -n "${!secret:-}" ]; then
-              secret_args+=(--secret "id=${secret},env=${secret}")
-            fi
-          done
-          DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
-            --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
+          bash tooling/github/docker-build.sh --platform linux/amd64 \
+            --tag homarr-ci --tag homarr-e2e .
 
       - name: Cache Playwright browsers
         if: "!env.ACT"

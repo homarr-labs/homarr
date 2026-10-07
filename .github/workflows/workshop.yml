@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/workshop.yml"
+      - "tooling/github/**"
       - "apps/workshop/**"
       - "apps/docs/**"
       - "packages/common/**"
@@ -27,6 +28,7 @@ on:
     branches: [dev, v2, release/v2, main]
     paths:
       - ".github/workflows/workshop.yml"
+      - "tooling/github/**"
       - "apps/workshop/**"
       - "apps/docs/**"
       - "packages/common/**"
@@ -74,10 +76,38 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
-      - uses: oven-sh/setup-bun@v2
+      - name: Set up Docker Buildx
+        if: "!env.ACT"
+        uses: docker/setup-buildx-action@v4
+      - name: Build the production image
+        if: "!env.ACT"
+        uses: docker/build-push-action@v7
         with:
-          bun-version: 1.4.2
-      - name: Build and exercise the combined production image
+          context: .
+          file: apps/workshop/Dockerfile
+          target: production
+          platforms: linux/${{ matrix.arch }}
+          load: true
+          tags: homarr-workshop:smoke
+          cache-from: type=gha,scope=workshop-linux-${{ matrix.arch }}
+          cache-to: type=gha,scope=workshop-linux-${{ matrix.arch }},mode=max
+          secrets: |
+            TURBO_API=${{ secrets.TURBO_API }}
+            TURBO_TEAM=${{ secrets.TURBO_TEAM }}
+            TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
+            TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+      - name: Exercise the production image
+        if: "!env.ACT"
+        env:
+          WORKSHOP_IMAGE_TEST_IMAGE: homarr-workshop:smoke
+        run: sh apps/workshop/test-image.sh
+      - name: Build and exercise the production image with Act
+        if: env.ACT
+        env:
+          TURBO_API: ${{ secrets.TURBO_API }}
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: sh apps/workshop/test-image.sh
 
   validate:

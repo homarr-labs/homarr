@@ -40,7 +40,8 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
         with:
-          next-cache: "true"
+          next-cache: "docs"
+          turbo-cache: "true"
       - name: Build docs
         run: bun run turbo run build --filter=@homarr/docs
         env:

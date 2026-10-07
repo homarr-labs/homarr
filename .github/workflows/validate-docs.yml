@@ -46,7 +46,8 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
         with:
-          next-cache: "true"
+          next-cache: "docs"
+          turbo-cache: "true"
       - name: Validate the published API schema against the application
         run: bun run check:openapi
       - name: Validate browser access and API schema rendering

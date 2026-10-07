@@ -19,8 +19,9 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
+    "docs:generate": "node --import tsx ./src/docs/codegen.ts",
+    "docs:refresh": "node --import tsx ./src/docs/codegen.ts --refresh",
     "format": "oxfmt .",
-    "postinstall": "tsx ./src/docs/codegen.ts",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },

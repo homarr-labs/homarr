@@ -60,7 +60,7 @@ docker volume create "$WORKSHOP_IMAGE_TEST_VOLUME" >/dev/null
 docker volume create "$WORKSHOP_IMAGE_TEST_RESTORE_VOLUME" >/dev/null
 
 if [ -z "${WORKSHOP_IMAGE_TEST_IMAGE:-}" ]; then
-  docker build --target production -f apps/workshop/Dockerfile -t "$WORKSHOP_IMAGE_TEST_TAG" .
+  bash tooling/github/docker-build.sh --target production -f apps/workshop/Dockerfile -t "$WORKSHOP_IMAGE_TEST_TAG" .
 fi
 docker run --detach --name "$WORKSHOP_IMAGE_TEST_NAME" \
   --publish "127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT:8090" \

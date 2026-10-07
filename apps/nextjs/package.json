@@ -4,16 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") bun run with-env node ../../node_modules/next/dist/bin/next build",
-    "clean": "git clean -xdf .next .turbo node_modules",
+    "build": "node scripts/assemble-standalone.mjs",
+    "clean": "git clean -xdf .next .output .turbo node_modules",
     "dev": "bun run with-env node ../../node_modules/next/dist/bin/next dev",
     "format": "oxfmt .",
     "lint": "oxlint",
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "build:standalone": "node scripts/cache-standalone.mjs",
-    "assemble:standalone": "node scripts/assemble-standalone.mjs"
+    "build:compiled": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") bun run with-env node ../../node_modules/next/dist/bin/next build && node scripts/compile-standalone.mjs",
+    "build:dependencies": "node scripts/cache-standalone.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "catalog:",

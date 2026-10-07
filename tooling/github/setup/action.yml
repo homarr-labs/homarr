@@ -3,7 +3,10 @@ description: "Common setup steps for Actions"
 
 inputs:
   next-cache:
-    description: Restore Next.js compiler caches for build jobs
+    description: Next.js compiler caches to restore (none, nextjs, docs, all)
+    default: "none"
+  turbo-cache:
+    description: Restore local Turbo artifacts when signed remote caching is not configured
     default: "false"
 
 runs:
@@ -41,21 +44,28 @@ runs:
       run: bun install --frozen-lockfile --concurrent-scripts=1
 
     - name: Restore local Turbo artifacts
-      if: "!env.ACT"
+      if: inputs.turbo-cache == 'true' && !env.ACT && !(env.TURBO_API != '' && env.TURBO_TEAM != '' && env.TURBO_TOKEN != '' && env.TURBO_REMOTE_CACHE_SIGNATURE_KEY != '')
       uses: actions/cache@v5
       with:
         path: .turbo/cache
-        key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        key: ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-
+          ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-
 
-    - name: Restore Next.js compiler caches
-      if: inputs.next-cache == 'true' && !env.ACT
+    - name: Restore application compiler cache
+      if: (inputs.next-cache == 'nextjs' || inputs.next-cache == 'all') && !env.ACT
       uses: actions/cache@v5
       with:
-        path: |
-          apps/nextjs/.next/cache
-          apps/docs/.next/cache
-        key: ${{ env.TURBO_PLATFORM }}-next-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        path: apps/nextjs/.next/cache
+        key: ${{ env.TURBO_PLATFORM }}-nextjs-${{ hashFiles('bun.lock') }}-${{ github.sha }}
         restore-keys: |
-          ${{ env.TURBO_PLATFORM }}-next-${{ hashFiles('bun.lock') }}-
+          ${{ env.TURBO_PLATFORM }}-nextjs-${{ hashFiles('bun.lock') }}-
+
+    - name: Restore documentation compiler cache
+      if: (inputs.next-cache == 'docs' || inputs.next-cache == 'all') && !env.ACT
+      uses: actions/cache@v5
+      with:
+        path: apps/docs/.next/cache
+        key: ${{ env.TURBO_PLATFORM }}-docs-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ env.TURBO_PLATFORM }}-docs-${{ hashFiles('bun.lock') }}-

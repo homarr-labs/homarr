@@ -1,81 +1,39 @@
+import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { join } from "node:path";
 import {
-  constants,
-  copyFileSync,
-  cpSync,
-  existsSync,
-  lstatSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-} from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+  appDirectory,
+  collectFiles,
+  compiled,
+  copyFiles,
+  dependencies,
+  isCompiledFile,
+  standalone,
+} from "./standalone-artifact.mjs";
 
-// Independent uploads for identical inputs can have different build IDs and
-// server action keys. Recreate Next's compiled file set from one restored build;
-// the separately cached standalone directory supplies its traced dependencies.
-const compiled = resolve(".next");
-const standalone = join(compiled, "standalone/apps/nextjs/.next");
-const files = new Set(["BUILD_ID", "required-server-files.json"]);
-const manifest = JSON.parse(readFileSync(join(compiled, "required-server-files.json"), "utf8"));
-for (const file of manifest.files) {
-  if (file.startsWith(".next/")) files.add(file.slice(".next/".length));
+// Final output is disposable. Never rewrite either restored cache artifact.
+if (!existsSync(join(dependencies, appDirectory, "package.json"))) {
+  throw new Error("Standalone dependencies are missing; run the production build through Turbo");
 }
-
-function collectTraces(directory) {
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    if (directory === compiled && ["cache", "dev", "standalone"].includes(entry.name)) continue;
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) {
-      collectTraces(path);
-      continue;
-    }
-    if (!entry.name.endsWith(".nft.json")) continue;
-    // NFT lists dependencies, excluding the entrypoint itself (including proxy).
-    const entrypoint = path.slice(0, -".nft.json".length);
-    if (existsSync(entrypoint)) files.add(relative(compiled, entrypoint));
-    const trace = JSON.parse(readFileSync(path, "utf8"));
-    for (const file of trace.files) {
-      const target = relative(compiled, resolve(dirname(path), file));
-      if (target.startsWith("../") || target.startsWith("standalone/")) continue;
-      // Native aliases link to dependencies owned by the other cache artifact.
-      // Recreate the link, without rewriting files through it during archiving.
-      if (target.startsWith("node_modules/") && !lstatSync(join(compiled, target)).isSymbolicLink()) continue;
-      files.add(target);
-    }
-  }
-}
-collectTraces(compiled);
 rmSync(standalone, { recursive: true, force: true });
-// Install directory links before copying files reached through those links.
-const orderedFiles = [...files].map((file) => ({
-  file,
-  symbolicLink: lstatSync(join(compiled, file)).isSymbolicLink(),
-}));
-orderedFiles.sort((left, right) => {
-  if (left.symbolicLink !== right.symbolicLink) {
-    if (left.symbolicLink) return -1;
-    return 1;
-  }
-  return left.file.localeCompare(right.file);
-});
-for (const { file } of orderedFiles) {
-  const source = join(compiled, file);
-  const destination = join(standalone, file);
-  mkdirSync(dirname(destination), { recursive: true });
-  if (lstatSync(source).isSymbolicLink()) {
-    cpSync(source, destination, { recursive: true, verbatimSymlinks: true });
-  } else {
-    copyFileSync(source, destination, constants.COPYFILE_FICLONE);
-  }
-}
+cpSync(dependencies, standalone, { recursive: true, verbatimSymlinks: true });
+copyFiles(collectFiles().filter(isCompiledFile), standalone);
+const application = join(standalone, appDirectory);
+mkdirSync(application, { recursive: true });
+copyFileSync(join(compiled, "standalone-server.js"), join(application, "server.js"));
+
 // Next also copies these directories for prerendered HTML/RSC and route files.
 for (const directory of ["app", "pages"]) {
   const source = join(compiled, "server", directory);
   if (existsSync(source)) {
-    cpSync(source, join(standalone, "server", directory), { recursive: true, force: true, verbatimSymlinks: true });
+    cpSync(source, join(application, ".next/server", directory), {
+      recursive: true,
+      force: true,
+      verbatimSymlinks: true,
+    });
   }
 }
-if (readFileSync(join(compiled, "BUILD_ID"), "utf8") !== readFileSync(join(standalone, "BUILD_ID"), "utf8")) {
+cpSync(join(compiled, "static"), join(application, ".next/static"), { recursive: true, verbatimSymlinks: true });
+cpSync("public", join(application, "public"), { recursive: true, verbatimSymlinks: true });
+if (readFileSync(join(compiled, "BUILD_ID"), "utf8") !== readFileSync(join(application, ".next/BUILD_ID"), "utf8")) {
   throw new Error("Standalone build ID differs from the compiled build");
 }
