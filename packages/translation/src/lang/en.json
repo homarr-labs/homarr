@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Description line clamp"
         },
+        "descriptionMaxLength": {
+          "label": "Description max length",
+          "description": "Maximum number of characters to keep from the feed description"
+        },
         "maximumAmountPosts": {
           "label": "Amount posts limit"
         },
