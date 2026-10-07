@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useMemo, useRef } from "react";
-import { Box, Button, Center, Group, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
-import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
+import { ActionIcon, Box, Button, Center, Group, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
+import { IconAdjustments, IconCheck, IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
@@ -193,6 +193,50 @@ export default function BeszelSystemStatsWidget({
           <IntegrationErrorIndicator results={systemsResult} />
         </Group>
       </Box>
+      {!isEditMode && (
+        <Box className={classes.beszelStatsTouchControls}>
+          <Menu position="bottom-end" shadow="md" withinPortal>
+            <Menu.Target>
+              <ActionIcon
+                variant="default"
+                size="lg"
+                aria-label={`${t("option.systemId.label")}, ${t("option.timePeriod.label")}`}
+              >
+                <IconAdjustments style={iconSizes.sm} />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {systems.length > 1 && (
+                <>
+                  <Menu.Label>{t("option.systemId.label")}</Menu.Label>
+                  {systems.map((system) => (
+                    <Menu.Item
+                      key={system.value}
+                      leftSection={system.value === selectedValue && <IconCheck style={iconSizes.sm} />}
+                      disabled={isSelectionSavePending}
+                      onClick={() => handleSelectSystem(system.value)}
+                    >
+                      {system.label}
+                    </Menu.Item>
+                  ))}
+                  <Menu.Divider />
+                </>
+              )}
+              <Menu.Label>{t("option.timePeriod.label")}</Menu.Label>
+              {periodOptions.map((period) => (
+                <Menu.Item
+                  key={period.value}
+                  leftSection={period.value === options.timePeriod && <IconCheck style={iconSizes.sm} />}
+                  disabled={isSelectionSavePending}
+                  onClick={() => handleTimePeriod(period.value)}
+                >
+                  {period.label}
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        </Box>
+      )}
       {!isEditMode && (
         <Group gap="xs" wrap="nowrap" className={classes.beszelStatsControls}>
           {systems.length > 1 && (
