@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Giới hạn dòng mô tả"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Giới hạn số lượng bài đăng"
         },

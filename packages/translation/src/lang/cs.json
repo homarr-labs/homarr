@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Omezení řádků popisu"
         },
+        "descriptionMaxLength": {
+          "label": "Maximální délka popisu",
+          "description": "Maximální počet znaků uchovaných z popisu kanálu"
+        },
         "maximumAmountPosts": {
           "label": "Limit počtu příspěvků"
         },

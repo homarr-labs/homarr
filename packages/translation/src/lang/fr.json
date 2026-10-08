@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Raccourci de ligne de description"
         },
+        "descriptionMaxLength": {
+          "label": "Longueur max de la description",
+          "description": "Nombre maximum de caractères à conserver dans la description du flux"
+        },
         "maximumAmountPosts": {
           "label": "Nombre maximum de publications"
         },

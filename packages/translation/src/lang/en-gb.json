@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": ""
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": ""
         },

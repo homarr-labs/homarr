@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Línea de descripción limpia"
         },
+        "descriptionMaxLength": {
+          "label": "Longitud máxima de descripción",
+          "description": "Número máximo de caracteres a guardar en la descripción del feed"
+        },
         "maximumAmountPosts": {
           "label": "Cantidad límite de publicaciones"
         },

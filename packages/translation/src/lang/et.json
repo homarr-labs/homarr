@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Kirjelduse ridade piiramine"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Postituste arvu limiit"
         },

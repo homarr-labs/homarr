@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Beskrivelse linjeklemme"
         },
+        "descriptionMaxLength": {
+          "label": "Maks. beskrivelse længde",
+          "description": "Maksimalt antal tegn, der skal holdes fra feed-beskrivelsen"
+        },
         "maximumAmountPosts": {
           "label": "Grænse for antal indlæg"
         },

@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Leírás sorlimit"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Bejegyzések számának korlátja"
         },

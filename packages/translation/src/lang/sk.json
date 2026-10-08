@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Svorka popisnej línie"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Limit počtu príspevkov"
         },

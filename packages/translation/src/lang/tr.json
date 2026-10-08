@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Açıklamalarda satır sınırı"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Gönderi sayısı sınırı"
         },
