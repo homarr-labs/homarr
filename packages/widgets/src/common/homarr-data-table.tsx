@@ -26,6 +26,7 @@ type HomarrDataTableProps<T> = DataTableProps<T> & {
   cellPadding: string;
   rowCursor?: "auto" | "default";
   preserveColumnWidths?: boolean;
+  fillColumnAccessor?: string;
 };
 
 export function HomarrDataTable<T>({
@@ -33,6 +34,7 @@ export function HomarrDataTable<T>({
   cellPadding,
   rowCursor = "auto",
   preserveColumnWidths = false,
+  fillColumnAccessor,
   className,
   columns,
   defaultColumnProps,
@@ -123,7 +125,20 @@ export function HomarrDataTable<T>({
     return columns.map((column) => {
       if (column.hidden) return column;
 
-      const width = `${(getRenderedWidth(column) / totalWidth) * 100}%`;
+      let width = `${(getRenderedWidth(column) / totalWidth) * 100}%`;
+      if (
+        preserveColumnWidths &&
+        fillColumnAccessor &&
+        visibleColumns.some(({ accessor }) => String(accessor) === fillColumnAccessor)
+      ) {
+        const renderedWidth = getRenderedWidth(column);
+        let inverseScale = "var(--board-canvas-inverse-scale, 1)";
+        if (resizePreviewWidths) inverseScale = "1";
+        width = `calc(${renderedWidth}px * ${inverseScale})`;
+        if (String(column.accessor) === fillColumnAccessor) {
+          width = `calc(100% - ${totalWidth - renderedWidth}px * ${inverseScale})`;
+        }
+      }
       const fittedWidth = { width, minWidth: width, maxWidth: width };
       const cellsStyle = column.cellsStyle ?? defaultColumnProps?.cellsStyle;
       return {
@@ -132,7 +147,14 @@ export function HomarrDataTable<T>({
         cellsStyle: (record: T, index: number) => [cellsStyle?.(record, index), fittedWidth, { padding: cellPadding }],
       };
     });
-  }, [cellPadding, columns, defaultColumnProps?.cellsStyle, resizePreviewWidths]);
+  }, [
+    cellPadding,
+    columns,
+    defaultColumnProps?.cellsStyle,
+    fillColumnAccessor,
+    preserveColumnWidths,
+    resizePreviewWidths,
+  ]);
 
   const minimumTableWidth = useMemo(() => {
     if (!preserveColumnWidths) return undefined;

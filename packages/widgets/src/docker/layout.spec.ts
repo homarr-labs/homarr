@@ -5,27 +5,19 @@ import { getDockerColumnVisibility, getDockerFooterVisibility } from "./layout";
 const columns = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
 
 describe("getDockerColumnVisibility", () => {
-  test("prioritizes identity and state in a narrow compact widget", () => {
-    expect(getDockerColumnVisibility(columns, 240, false)).toEqual({
+  test("keeps every configured column in a compact widget", () => {
+    expect(getDockerColumnVisibility(columns, false)).toEqual({
       name: true,
       state: true,
-      host: false,
-      cpuUsage: false,
-      memoryUsage: false,
-      actions: false,
+      host: true,
+      cpuUsage: true,
+      memoryUsage: true,
+      actions: true,
     });
   });
 
-  test("honors the configured compact column set at every width", () => {
-    expect(getDockerColumnVisibility(["name", "memoryUsage"], 200, false)).toEqual({
-      name: true,
-      state: false,
-      host: false,
-      cpuUsage: false,
-      memoryUsage: true,
-      actions: false,
-    });
-    expect(getDockerColumnVisibility(["name", "memoryUsage"], 800, false)).toEqual({
+  test("honors the configured compact column set", () => {
+    expect(getDockerColumnVisibility(["name", "memoryUsage"], false)).toEqual({
       name: true,
       state: false,
       host: false,
@@ -36,7 +28,7 @@ describe("getDockerColumnVisibility", () => {
   });
 
   test("uses every expert column in advanced mode", () => {
-    expect(getDockerColumnVisibility([], 240, true)).toEqual({
+    expect(getDockerColumnVisibility([], true)).toEqual({
       name: true,
       state: true,
       host: true,
