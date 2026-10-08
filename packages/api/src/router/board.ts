@@ -567,6 +567,12 @@ export const boardRouter = createTRPCRouter({
         : [];
     const appIconUrlById = new Map(previewApps.map((app) => [app.id, app.iconUrl]));
 
+    const { boardOrder } = await getServerSettingByKeyAsync(ctx.db, "board");
+    const positions = new Map(boardOrder.map((id, index) => [id, index]));
+    dbBoards.sort(
+      (left, right) => (positions.get(left.id) ?? boardOrder.length) - (positions.get(right.id) ?? boardOrder.length),
+    );
+
     return dbBoards.map(({ layouts: boardLayouts, sections: boardSections, ...board }) => {
       const previewLayout = boardLayouts.at(0);
 

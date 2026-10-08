@@ -21,6 +21,10 @@ import {
 import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
 
 const boardServerSettingsSchema = z.object({
+  boardOrder: z
+    .array(z.string().min(1).max(255))
+    .max(1000)
+    .refine((ids) => new Set(ids).size === ids.length, "Board IDs must be unique"),
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
   enableStatusByDefault: z.boolean(),
@@ -62,12 +66,12 @@ export const serverSettingsRouter = createTRPCRouter({
         protect: true,
         summary: "Get global board settings",
         description:
-          "Return instance desktop and mobile home board IDs and default status behavior. Requires admin permission.",
+          "Return instance desktop and mobile home board IDs, ordered board IDs and default status behavior. Requires admin permission.",
       },
       mcp: {
         enabled: true,
         description:
-          "Get global board defaults, including desktop/mobile home board IDs and status behavior. Requires admin permission",
+          "Get global board defaults, including desktop/mobile home board IDs, board order and status behavior. Requires admin permission",
       },
     })
     .input(z.void())
@@ -85,12 +89,12 @@ export const serverSettingsRouter = createTRPCRouter({
         protect: true,
         summary: "Update global board settings",
         description:
-          "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
+          "Update supplied instance board defaults and return the resulting settings. Board order is a unique list of existing board IDs; omitted boards appear afterward. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
       },
       mcp: {
         enabled: true,
         description:
-          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
+          "Update global board defaults. Requires admin permission. Optional fields: boardOrder, homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Board order contains unique existing board IDs; omitted boards appear afterward. Home board IDs must reference public boards or be null",
       },
     })
     .input(boardServerSettingsUpdateSchema)
@@ -112,6 +116,14 @@ export const serverSettingsRouter = createTRPCRouter({
             code: "BAD_REQUEST",
             message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
           });
+        }
+      }
+
+      if (input.boardOrder) {
+        const existingBoards = await ctx.db.query.boards.findMany({ columns: { id: true } });
+        const existingIds = new Set(existingBoards.map((board) => board.id));
+        if (input.boardOrder.some((id) => !existingIds.has(id))) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "One or more ordered boards no longer exist" });
         }
       }
 

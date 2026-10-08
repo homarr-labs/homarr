@@ -25,7 +25,6 @@ import { IconDeviceMobile, IconHomeFilled, IconLayoutBoard, IconSearch } from "@
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useOptionalBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
@@ -51,7 +50,6 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const t = useI18n("board.action.switcher");
   const tBoard = useI18n("board");
   const manageBoardsT = useI18n("management.page.board");
-  const currentBoard = useOptionalBoard();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -67,12 +65,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     enabled: isOpen,
   });
 
-  const switcherBoards = useMemo(() => {
-    const activeBoard = boards.find((board) => board.id === currentBoard?.id);
-    if (!activeBoard) return boards;
-
-    return [...boards.filter((board) => board.id !== activeBoard.id), activeBoard];
-  }, [boards, currentBoard?.id]);
+  const switcherBoards = boards;
   const filteredBoards = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase();
     if (normalizedSearch.length === 0) return switcherBoards;
