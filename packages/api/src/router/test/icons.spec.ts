@@ -2,6 +2,7 @@
 
 import { describe, expect, test } from "vitest";
 
+import { compactImageName } from "@homarr/common";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
@@ -86,6 +87,7 @@ describe("findIcons", () => {
         {
           id: "irrelevant",
           name: "000-unrelated.svg",
+          searchName: compactImageName("000-unrelated.svg"),
           url: "https://example.com/000-unrelated.svg",
           checksum: "irrelevant",
           iconRepositoryId: "repository",
@@ -93,6 +95,7 @@ describe("findIcons", () => {
         {
           id: "home-assistant",
           name: "home-assistant.svg",
+          searchName: compactImageName("home-assistant.svg"),
           url: "https://example.com/home-assistant.svg",
           checksum: "home-assistant",
           iconRepositoryId: "repository",
@@ -110,4 +113,70 @@ describe("findIcons", () => {
       ]);
     },
   );
+
+  test("preserves multi-token ranking while excluding rows missing a search token", async () => {
+    const db = createDb();
+    await db.insert(iconRepositories).values({ id: "repository", slug: "dashboard-icons" });
+    await db.insert(icons).values([
+      {
+        id: "home-assistant",
+        name: "home-assistant.svg",
+        searchName: compactImageName("home-assistant.svg"),
+        url: "https://example.com/home-assistant.svg",
+        checksum: "home-assistant",
+        iconRepositoryId: "repository",
+      },
+      {
+        id: "home-only",
+        name: "home.svg",
+        searchName: compactImageName("home.svg"),
+        url: "https://example.com/home.svg",
+        checksum: "home",
+        iconRepositoryId: "repository",
+      },
+      {
+        id: "legacy-home-assistant",
+        name: "homeassistant.svg",
+        url: "https://example.com/homeassistant.svg",
+        checksum: "legacy-home-assistant",
+        iconRepositoryId: "repository",
+      },
+    ]);
+    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+
+    const result = await caller.findIcons({ searchText: "home assistant", limitPerGroup: 6 });
+
+    expect(result.countIcons).toBe(3);
+    expect(result.icons[0]?.icons.map((icon) => icon.id)).toEqual(["home-assistant", "legacy-home-assistant"]);
+  });
+
+  test("keeps normalized punctuation, diacritics, URL names, and fuzzy tokens searchable", async () => {
+    const db = createDb();
+    await db.insert(iconRepositories).values({ id: "repository", slug: "dashboard-icons" });
+    await db.insert(icons).values([
+      {
+        id: "cafe-url",
+        name: "",
+        searchName: compactImageName("https://example.com/Café-Icons.svg?size=small"),
+        url: "https://example.com/Café-Icons.svg?size=small",
+        checksum: "cafe-url",
+        iconRepositoryId: "repository",
+      },
+      {
+        id: "home-assistant",
+        name: "home-assistant.svg",
+        searchName: compactImageName("home-assistant.svg"),
+        url: "https://example.com/home-assistant.svg",
+        checksum: "home-assistant",
+        iconRepositoryId: "repository",
+      },
+    ]);
+    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+
+    const punctuationMatch = await caller.findIcons({ searchText: "café% icons" });
+    const fuzzyMatch = await caller.findIcons({ searchText: "hom ass" });
+
+    expect(punctuationMatch.icons[0]?.icons.map((icon) => icon.id)).toEqual(["cafe-url"]);
+    expect(fuzzyMatch.icons[0]?.icons.map((icon) => icon.id)).toEqual(["home-assistant"]);
+  });
 });

@@ -344,6 +344,13 @@
       "when": 1790988595595,
       "tag": "0048_add_layout_resize_source",
       "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "6",
+      "when": 1791480934077,
+      "tag": "0049_add_icon_search_name",
+      "breakpoints": true
     }
   ]
 }

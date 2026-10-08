@@ -1,4 +1,5 @@
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
+import { and, isNull, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { iconsFindSchema } from "@homarr/validation/icons";
 
@@ -16,6 +17,11 @@ export const iconsRouter = createTRPCRouter({
     .input(iconsFindSchema)
     .query(async ({ ctx, input }) => {
       const term = normalizeImageName(input.searchText ?? "");
+      // `getImageMatchRank` only accepts an icon when every token of the normalized
+      // search is part of its compacted name, so this pre-filter is a superset of
+      // the icons the ranking below can accept. See packages/common/src/string.ts.
+      const candidateFilter = createCandidateFilter(term);
+
       const [repositories, countIcons] = await Promise.all([
         ctx.db.query.iconRepositories.findMany({
           orderBy: (table, { asc, sql }) => [sql`CASE WHEN ${table.slug} = 'local' THEN 0 ELSE 1 END`, asc(table.slug)],
@@ -26,6 +32,7 @@ export const iconsRouter = createTRPCRouter({
                 sql`CASE WHEN ${table.name} LIKE '%.svg' THEN 0 ELSE 1 END`,
                 asc(table.name),
               ],
+              where: candidateFilter,
               limit: term.length === 0 ? input.limitPerGroup : undefined,
             },
           },
@@ -57,3 +64,18 @@ export const iconsRouter = createTRPCRouter({
       };
     }),
 });
+
+/**
+ * Narrows the icons a search has to look at, without ever dropping an icon the
+ * ranking would have accepted.
+ */
+const createCandidateFilter = (term: string) => {
+  if (term.length === 0) return undefined;
+
+  // Tokens are normalized, so they can only contain letters, marks and digits.
+  // Rows written before `searchName` existed are always candidates.
+  const tokens = term.split(" ").filter((token) => token.length > 0);
+  if (tokens.length === 0) return undefined;
+
+  return or(isNull(icons.searchName), and(...tokens.map((token) => like(icons.searchName, `%${token}%`))));
+};

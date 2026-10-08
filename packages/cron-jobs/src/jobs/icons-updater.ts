@@ -1,4 +1,4 @@
-import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
+import { compactImageName, createId, splitToNChunks, Stopwatch } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
@@ -76,6 +76,7 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
         checksum: icon.checksum,
         name: icon.fileNameWithExtension,
         url: icon.imageUrl,
+        searchName: compactImageName(icon.fileNameWithExtension || icon.imageUrl),
         iconRepositoryId,
       });
       countInserted++;

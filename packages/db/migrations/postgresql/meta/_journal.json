@@ -120,6 +120,13 @@
       "when": 1790988597957,
       "tag": "0016_add_layout_resize_source",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1791480947524,
+      "tag": "0017_add_icon_search_name",
+      "breakpoints": true
     }
   ]
 }
