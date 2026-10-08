@@ -52,13 +52,39 @@ export const downloadsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays is a positive whole number of days and defaults to 7. Archived history is scanned in pages of 100, up to 100 pages.",
+          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For qBittorrent, optional selection applies completed/category filters and provider-compatible sorting before the display limit, scanning at most 100 pages of at most 100 torrents. Unsupported sort fields and other providers still sort the returned window locally. For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays is a positive whole number of days and defaults to 7. Archived history is scanned in pages of 100, up to 100 pages.",
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "downloads"))
     .input(
       z.object({
         limitPerIntegration: z.number().default(50),
+        selection: z
+          .object({
+            sort: z.enum([
+              "name",
+              "progress",
+              "size",
+              "downSpeed",
+              "upSpeed",
+              "time",
+              "added",
+              "ratio",
+              "received",
+              "sent",
+              "index",
+              "type",
+              "state",
+              "category",
+              "integration",
+            ]),
+            descending: z.boolean(),
+            categoryFilter: z.array(z.string().max(1000)).max(100),
+            filterIsWhitelist: z.boolean(),
+            showCompletedTorrent: z.boolean(),
+            activeTorrentThreshold: z.number().min(0),
+          })
+          .optional(),
         includeArchivedHistory: z.boolean().default(false),
         historyWindowDays: z.number().int().min(1).default(7),
       }),
@@ -69,6 +95,7 @@ export const downloadsRouter = createTRPCRouter({
         async (integration) => {
           const innerHandler = downloadClientRequestHandler.handler(integration, {
             limit: input.limitPerIntegration,
+            selection: input.selection,
             includeArchivedHistory: input.includeArchivedHistory,
             historyWindowDays: input.historyWindowDays,
           });

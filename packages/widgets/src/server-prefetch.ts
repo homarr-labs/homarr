@@ -159,6 +159,18 @@ export const prefetchInitialWidgetData = (
             trpc.widget.downloads.getJobsAndStatuses.queryOptions({
               integrationIds,
               limitPerIntegration: Number(options.limitPerIntegration ?? 50),
+              selection: {
+                sort: (options.defaultSort ?? "progress") as NonNullable<
+                  RouterInputs["widget"]["downloads"]["getJobsAndStatuses"]["selection"]
+                >["sort"],
+                descending: Boolean(options.descendingDefaultSort),
+                categoryFilter: (options.categoryFilter ?? []) as string[],
+                filterIsWhitelist: Boolean(options.filterIsWhitelist),
+                showCompletedTorrent: options.showCompletedTorrent !== false,
+                activeTorrentThreshold: Number(options.activeTorrentThreshold ?? 0),
+              },
+              includeArchivedHistory: Boolean(options.includeArchivedHistory),
+              historyWindowDays: Number(options.historyWindowDays ?? 7),
             }),
           );
         break;

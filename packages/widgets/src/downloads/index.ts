@@ -26,13 +26,29 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
   icon: IconDownload,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
-  queryMatcher: ({ input }, scope) =>
-    widgetQueryInputMatches(input, {
-      integrationIds: scope.integrationIds,
-      limitPerIntegration: scope.options.limitPerIntegration,
-      includeArchivedHistory: scope.options.includeArchivedHistory,
-      historyWindowDays: scope.options.historyWindowDays,
-    }),
+  queryMatcher: ({ input }, scope) => {
+    if (
+      !widgetQueryInputMatches(input, {
+        integrationIds: scope.integrationIds,
+        limitPerIntegration: scope.options.limitPerIntegration,
+        includeArchivedHistory: scope.options.includeArchivedHistory,
+        historyWindowDays: scope.options.historyWindowDays,
+      })
+    )
+      return false;
+    // Existing board snapshots can contain the query shape from before provider selection.
+    if (typeof input !== "object" || input === null || !("selection" in input)) return true;
+    return widgetQueryInputMatches(input, {
+      selection: {
+        sort: scope.options.defaultSort,
+        descending: scope.options.descendingDefaultSort,
+        categoryFilter: scope.options.categoryFilter,
+        filterIsWhitelist: scope.options.filterIsWhitelist,
+        showCompletedTorrent: scope.options.showCompletedTorrent,
+        activeTorrentThreshold: Number(scope.options.activeTorrentThreshold),
+      },
+    });
+  },
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
