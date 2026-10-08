@@ -17,11 +17,55 @@ interface CollapsedLayoutOptions {
   collapsedRowCount?: number;
 }
 
+interface ExpandedLayoutOptions {
+  columnCount: number;
+  minimumHeights: ReadonlyMap<string, number>;
+}
+
 export const doGridPlacementsOverlap = (first: GridPlacement, second: GridPlacement) =>
   first.x < second.x + second.w &&
   first.x + first.w > second.x &&
   first.y < second.y + second.h &&
   first.y + first.h > second.y;
+
+/** Grows undersized containers and carries their neighbours down, retaining saved gaps. */
+export const getExpandedDisplayLayout = <TPlacement extends GridPlacement>(
+  placements: readonly TPlacement[],
+  { columnCount, minimumHeights }: ExpandedLayoutOptions,
+): TPlacement[] => {
+  assertUniqueIds(placements);
+  const normalized = placements.map((placement) => normalizeGridPlacement(placement, columnCount));
+  if (!normalized.some((placement) => (minimumHeights.get(placement.id) ?? placement.h) > placement.h)) {
+    return normalized;
+  }
+  const placed: { original: TPlacement; display: TPlacement }[] = [];
+
+  for (const original of normalized.toSorted(comparePlacements)) {
+    const candidate = { ...original, h: Math.max(original.h, minimumHeights.get(original.id) ?? original.h) };
+    let minimumRow = original.y;
+    for (const previous of placed) {
+      if (
+        previous.original.y + previous.original.h <= original.y &&
+        doGridPlacementsOverlapHorizontally(previous.original, original)
+      ) {
+        const gap = original.y - previous.original.y - previous.original.h;
+        minimumRow = Math.max(minimumRow, previous.display.y + previous.display.h + gap);
+      }
+    }
+    const display = {
+      ...candidate,
+      y: findFirstAvailableRowAtOrAfter(
+        candidate,
+        placed.map((previous) => previous.display),
+        minimumRow,
+      ),
+    };
+    placed.push({ original, display });
+  }
+
+  const byId = new Map(placed.map(({ display }) => [display.id, display]));
+  return normalized.map((placement) => getRequiredPlacement(byId, placement.id));
+};
 
 /**
  * Resolves overlaps and vertically compacts items. Ordering is based on the
