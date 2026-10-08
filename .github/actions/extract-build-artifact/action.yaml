@@ -16,9 +16,17 @@ inputs:
   token:
     description: GitHub token with permissions to upload release assets
     required: true
+  upload:
+    description: Upload validated archives to the release
+    default: "true"
 runs:
   using: "composite"
   steps:
+    - name: Prebuilt debian dependencies
+      uses: ./.github/actions/prebuilt-debian
+      id: prebuilt-debian
+      with:
+        architecture: ${{ inputs.architecture }}
     - name: Start docker container for ${{ inputs.architecture }}
       run: |
         docker run --name homarr \
@@ -38,19 +46,39 @@ runs:
       shell: bash
     - name: Extract source from ${{ inputs.architecture }} container (debian)
       run: |
+        docker cp ${{ steps.prebuilt-debian.outputs.path }}/better_sqlite3.node homarr:/app/build/better_sqlite3.node && \
+        docker cp ${{ steps.prebuilt-debian.outputs.path }}/better_sqlite3.node homarr:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node && \
         docker exec homarr tar -czf extraction-debian.tar.gz -C /app . && \
         docker cp homarr:/app/extraction-debian.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz
+      shell: bash
+    - name: Validate SQLite binaries from the Debian archive
+      run: |
+        docker run --rm -i prebuilt-debian sh -c '
+          mkdir -p /extraction &&
+          tar -xzf - -C /extraction ./build/better_sqlite3.node ./node_modules/better-sqlite3/build/Release/better_sqlite3.node &&
+          node -e "$1"
+        ' sh '
+          const Database = require("better-sqlite3");
+          for (const path of ["build/better_sqlite3.node", "node_modules/better-sqlite3/build/Release/better_sqlite3.node"]) {
+            const db = new Database(":memory:", { nativeBinding: `/extraction/${path}` });
+            if (db.prepare("SELECT 1 AS value").get().value !== 1) throw new Error(`SQLite check failed: ${path}`);
+            db.close();
+            console.log(`Debian SQLite binary validated: ${path}`);
+          }
+        ' < "${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz"
       shell: bash
     - name: Stop ${{ inputs.architecture }} container
       if: always()
       run: docker container remove --force --volumes homarr
       shell: bash
     - name: Add build archive to release (alpine)
+      if: inputs.upload == 'true'
       env:
         GH_TOKEN: ${{ inputs.token }}
       run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-alpine-${{ inputs.architecture }}.tar.gz --clobber
       shell: bash
     - name: Add build archive to release (debian)
+      if: inputs.upload == 'true'
       env:
         GH_TOKEN: ${{ inputs.token }}
       run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz --clobber
