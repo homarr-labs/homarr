@@ -531,9 +531,11 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           return;
         }
 
-        for (const integrationEditHandle of integrationEditHandles.current.values()) {
+        for (const [integrationId, integrationEditHandle] of integrationEditHandles.current.entries()) {
           const integrationSaved = await integrationEditHandle.submitIfDirty();
           if (!integrationSaved) {
+            beginEditingIntegration(integrationId);
+            setActiveTab("integration");
             return;
           }
         }

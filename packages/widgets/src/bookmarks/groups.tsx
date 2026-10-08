@@ -72,6 +72,7 @@ export const BookmarkGroupsEditor = () => {
                 event.currentTarget.value = group.name;
                 return;
               }
+              event.currentTarget.value = nextName;
               form.setFieldValue(
                 "options.groups",
                 groups.map((candidate) => {

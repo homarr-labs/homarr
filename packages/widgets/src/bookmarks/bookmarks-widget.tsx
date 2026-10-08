@@ -239,11 +239,13 @@ export default function BookmarksWidget({
                   value={sections
                     .filter((section) => !collapsedGroups.includes(section.id))
                     .map((section) => section.id)}
-                  onChange={(opened) =>
-                    setCollapsedGroups(
-                      sections.filter((section) => !opened.includes(section.id)).map((section) => section.id),
-                    )
-                  }
+                  onChange={(opened) => {
+                    const visibleIds = new Set(sections.map((section) => section.id));
+                    setCollapsedGroups((current) => [
+                      ...current.filter((id) => !visibleIds.has(id)),
+                      ...sections.filter((section) => !opened.includes(section.id)).map((section) => section.id),
+                    ]);
+                  }}
                   transitionDuration={0}
                   styles={{
                     control: { padding: rem(4), minHeight: rem(28) },
