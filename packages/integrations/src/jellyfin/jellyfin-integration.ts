@@ -1,5 +1,6 @@
 import { BlockList, isIP } from "node:net";
 import { Jellyfin } from "@jellyfin/sdk";
+import type { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
 import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
@@ -239,7 +240,34 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       // Root-level grouping uses the first library's type and can omit items from other libraries.
       groupItems: false,
     });
-    return result.data.map((item) => ({
+    // Match Jellyfin's latest-media grouping without losing mixed-library results.
+    // A single recent episode stays visible; batches use the series artwork and metadata.
+    const episodeCounts = new Map<string, number>();
+    for (const item of result.data) {
+      if (item.Type !== "Episode" || !item.SeriesId) continue;
+      episodeCounts.set(item.SeriesId, (episodeCounts.get(item.SeriesId) ?? 0) + 1);
+    }
+    const seriesIds = [...episodeCounts].filter(([, count]) => count > 1).map(([id]) => id);
+    const seriesResults = await Promise.allSettled(
+      seriesIds.map((itemId) => userLibraryApi.getItem({ userId, itemId })),
+    );
+    const series = new Map<string, BaseItemDto>();
+    for (const seriesResult of seriesResults) {
+      if (seriesResult.status !== "fulfilled") continue;
+      const item = seriesResult.value.data;
+      if (item.Type === "Series" && item.Id) series.set(item.Id, item);
+    }
+    const displayedSeries = new Set<string>();
+    const items = result.data.flatMap((item) => {
+      if (item.Type !== "Episode" || !item.SeriesId) return [item];
+      const parent = series.get(item.SeriesId);
+      // Keep playable episodes if the parent is missing or inaccessible.
+      if (!parent) return [item];
+      if (displayedSeries.has(item.SeriesId)) return [];
+      displayedSeries.add(item.SeriesId);
+      return [parent];
+    });
+    return items.map((item) => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       id: item.Id!,
       type: this.mapMediaReleaseType(item.Type),
