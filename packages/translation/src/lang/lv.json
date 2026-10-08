@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Apraksta rindu ierobežojums"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Ziņu skaita ierobežojums"
         },

@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Beschreibung line clamp"
         },
+        "descriptionMaxLength": {
+          "label": "Beschreibung max. Länge",
+          "description": "Maximale Anzahl an Zeichen, die von der Feed-Beschreibung entfernt werden sollen"
+        },
         "maximumAmountPosts": {
           "label": "Limit für Beiträge"
         },

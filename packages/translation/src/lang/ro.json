@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Cimbru linie descriere"
         },
+        "descriptionMaxLength": {
+          "label": "Lungime max descriere",
+          "description": "Numărul maxim de caractere pentru a fi păstrat din descrierea fluxului"
+        },
         "maximumAmountPosts": {
           "label": "Limită sumă postări"
         },

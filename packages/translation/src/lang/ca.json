@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Límit de línies de la descripció"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Límit de quantitat de publicacions"
         },

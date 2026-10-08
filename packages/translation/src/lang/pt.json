@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Limite de linhas da descrição"
         },
+        "descriptionMaxLength": {
+          "label": "Comprimento máximo da descrição",
+          "description": "Número máximo de caracteres para manter da descrição do feed"
+        },
         "maximumAmountPosts": {
           "label": "Limite de quantidade de postagens"
         },

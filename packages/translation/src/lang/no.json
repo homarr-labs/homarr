@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Beskrivelse linje klemme"
         },
+        "descriptionMaxLength": {
+          "label": "Beskrivelse maks lengde",
+          "description": "Maksimalt antall tegn for å beholde fra beskrivelsen"
+        },
         "maximumAmountPosts": {
           "label": "Antall poster grense"
         },

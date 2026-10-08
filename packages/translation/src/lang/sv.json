@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Beskrivningens radbegränsning"
         },
+        "descriptionMaxLength": {
+          "label": "Maximal längd för beskrivning",
+          "description": "Maximalt antal tecken att hålla från flödesbeskrivningen"
+        },
         "maximumAmountPosts": {
           "label": "Gräns för antal inlägg"
         },

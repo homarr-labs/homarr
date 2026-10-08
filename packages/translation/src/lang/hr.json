@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Ograničavanje redaka opisa"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Ograničenje broja objava"
         },

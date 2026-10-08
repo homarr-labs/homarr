@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Maksymalna liczba linii opisu"
         },
+        "descriptionMaxLength": {
+          "label": "Maksymalna długość opisu",
+          "description": "Maksymalna liczba znaków zachowanych z opisu kanału"
+        },
         "maximumAmountPosts": {
           "label": "Limit liczby postów"
         },

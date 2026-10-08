@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Aprašymo eilučių apkarpymas"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Įrašų skaičiaus riba"
         },
