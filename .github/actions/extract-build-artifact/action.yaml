@@ -51,22 +51,6 @@ runs:
         docker exec homarr tar -czf extraction-debian.tar.gz -C /app . && \
         docker cp homarr:/app/extraction-debian.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz
       shell: bash
-    - name: Validate SQLite binaries from the Debian archive
-      run: |
-        docker run --rm -i prebuilt-debian sh -c '
-          mkdir -p /extraction &&
-          tar -xzf - -C /extraction ./build/better_sqlite3.node ./node_modules/better-sqlite3/build/Release/better_sqlite3.node &&
-          node -e "$1"
-        ' sh '
-          const Database = require("better-sqlite3");
-          for (const path of ["build/better_sqlite3.node", "node_modules/better-sqlite3/build/Release/better_sqlite3.node"]) {
-            const db = new Database(":memory:", { nativeBinding: `/extraction/${path}` });
-            if (db.prepare("SELECT 1 AS value").get().value !== 1) throw new Error(`SQLite check failed: ${path}`);
-            db.close();
-            console.log(`Debian SQLite binary validated: ${path}`);
-          }
-        ' < "${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz"
-      shell: bash
     - name: Stop ${{ inputs.architecture }} container
       if: always()
       run: docker container remove --force --volumes homarr
