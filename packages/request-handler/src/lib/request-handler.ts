@@ -224,9 +224,11 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
     // A loop rather than Math.min(...values.map(...)): the spread built an intermediate
     // array of every cached entry's deadline and then pushed it back through the arguments.
-    let nextExpiryAt = Number.POSITIVE_INFINITY;
-    for (const entry of cache.values()) {
-      if (entry.staleUntil < nextExpiryAt) nextExpiryAt = entry.staleUntil;
+    let nextExpiryAt = candidateExpiryAt ?? Number.POSITIVE_INFINITY;
+    if (candidateExpiryAt === undefined) {
+      for (const entry of cache.values()) {
+        if (entry.staleUntil < nextExpiryAt) nextExpiryAt = entry.staleUntil;
+      }
     }
     expiryTimerAt = nextExpiryAt;
     expiryTimer = setTimeout(
