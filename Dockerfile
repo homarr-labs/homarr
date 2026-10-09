@@ -30,7 +30,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
-FROM alpine:3.24.1 AS runner
+FROM alpine:3.24.2 AS runner
 WORKDIR /app
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 # envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
