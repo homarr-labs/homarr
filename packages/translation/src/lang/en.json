@@ -3381,6 +3381,13 @@
         "containerFilter": {
           "label": "Containers to filter"
         },
+        "filterCaseSensitive": {
+          "label": "Case sensitive"
+        },
+        "filterAllowWildcards": {
+          "label": "Allow wildcards",
+          "description": "Use * for zero or more characters."
+        },
         "filterIsWhitelist": {
           "label": "Filter as a whitelist"
         },

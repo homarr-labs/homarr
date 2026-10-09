@@ -26,6 +26,15 @@ import dockerTable from "./img/table.png";
 
 <img src={dockerTable.src} alt="docker-stats table docker-containers" width={128 * 3} height={128 * 2} />
 
+### Container filters
+
+Filters match complete container names and are case sensitive by default. Matching containers are excluded
+unless **Filter as a whitelist** is enabled. An empty filter shows all containers in either mode.
+
+Enable **Allow wildcards** to use `*` for zero or more characters: `qbit*` matches `qbittorrent`, and
+`*arr` matches names ending in `arr`. The entire name must still match. All other characters, including
+`%` and regex symbols, are literal. Disable **Case sensitive** to match `Qbittorrent` with `qbittorrent`.
+
 ### Interactions
 
 Column order and width are saved per widget. These controls are unavailable while the board is in edit mode.
