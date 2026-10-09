@@ -13,13 +13,13 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconClock, IconPin } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import { isNullOrWhitespace } from "@homarr/common";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { groupEventsByDate } from "./calendar-events";
+import { isCalendarAllDayEvent } from "./calendar-schedule-events";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { formatLocalizedTime } from "../common/locale";
 import classes from "./calendar-event-list.module.css";
@@ -151,7 +151,7 @@ const CalendarEventRows = ({
 
               <Group gap={3} wrap="nowrap" align={"center"} ml="auto">
                 <IconClock opacity={0.7} size={"1rem"} />
-                {isAllDay(event) ? (
+                {isCalendarAllDayEvent(event) ? (
                   <Text c={"dimmed"} size={"sm"}>
                     {t("duration.allDay")}
                   </Text>
@@ -229,13 +229,4 @@ const CalendarEventRows = ({
       ))}
     </>
   );
-};
-
-const isAllDay = (event: Pick<CalendarEvent, "startDate" | "endDate">) => {
-  if (!event.endDate) return false;
-
-  const start = dayjs(event.startDate);
-  const end = dayjs(event.endDate);
-
-  return start.startOf("day").isSame(start) && end.endOf("day").isSame(end);
 };
