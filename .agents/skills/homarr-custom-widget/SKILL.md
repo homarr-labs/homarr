@@ -17,8 +17,7 @@ Author requested widgets with release context; validate, test, persist, and retu
 Return one fenced `json` block with the complete definition; keep evidence prose outside it. The definition has keyed
 `sources`, `requests`, `template`, and optional `options`; actions are requests with `kind: "action"`.
 
-- `sources.default` is required. HTTP has `baseUrl`, `networkScope`, and credential-free `auth`; localhost/loopback requires
-  `networkScope: "loopback"`; never widen an explicit scope. Saved sources use `type: "integration"`/`integrationKind`;
+- `sources.default` is required. HTTP has `baseUrl` and credential-free `auth`. Saved sources use `type: "integration"`/`integrationKind`;
   Homarr holds credentials.
 - Saved integrations: discover kinds/full-access entries with `integration_getKinds`/`integration_all`, bind `integrationId`
   before preview, omit URL/auth, and keep non-GET requests as actions.

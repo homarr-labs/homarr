@@ -5,11 +5,11 @@ const configurationRequestBodySchema = z
   .strictObject({
     baseUrl: z.string().optional(),
     integrationId: z.string().min(1).max(100).optional(),
-    networkScope: z.enum(["public", "private", "loopback"]).optional(),
+    networkScope: z.unknown().optional(),
     secrets: z.record(z.string(), z.string()),
   })
   .refine(
-    (value) => Boolean(value.integrationId) || (value.baseUrl !== undefined && value.networkScope !== undefined),
+    (value) => Boolean(value.integrationId) || value.baseUrl !== undefined,
     "Provide an integration or HTTP connection",
   );
 

@@ -1,5 +1,5 @@
 interface PublishableWorkshopDefinition {
-  sources: Record<string, { name?: string; networkScope?: string }>;
+  sources: Record<string, { name?: string; networkScope?: unknown }>;
 }
 
 export const serializeWorkshopDefinition = (definition: unknown): string => {

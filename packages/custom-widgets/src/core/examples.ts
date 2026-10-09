@@ -16,7 +16,7 @@ export const CUSTOM_WIDGET_STARTER: HomarrCustomWidgetV2Input = {
   $schema: "homarr-custom-widget-v2",
   name: "New custom widget",
   description: "",
-  sources: { default: { name: "API", baseUrl: "https://example.com", networkScope: "public", auth: "none" } },
+  sources: { default: { name: "API", baseUrl: "https://example.com", auth: "none" } },
   requests: { status: { path: "/api/status" } },
   options: {},
   template: CUSTOM_JSX_STARTER,
@@ -31,7 +31,7 @@ export const customJsxExamples: readonly CustomJsxExample[] = [
       $schema: "homarr-custom-widget-v2",
       name: "Service dashboard",
       sources: {
-        default: { name: "Service API", baseUrl: "https://example.com", networkScope: "public", auth: "none" },
+        default: { name: "Service API", baseUrl: "https://example.com", auth: "none" },
       },
       requests: { overview: { path: "/api/overview", cacheSeconds: 30 } },
       options: {},
@@ -52,7 +52,6 @@ export const customJsxExamples: readonly CustomJsxExample[] = [
         default: {
           name: "Media API",
           baseUrl: "https://example.com",
-          networkScope: "private",
           auth: { type: "apiKeyHeader", name: "X-Api-Key" },
         },
       },
