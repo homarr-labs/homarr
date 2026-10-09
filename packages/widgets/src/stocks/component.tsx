@@ -12,6 +12,8 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 
+import classes from "./stocks.module.css";
+
 function round(value: number) {
   return Math.round(value * 100) / 100;
 }
@@ -74,6 +76,7 @@ export default function StockPriceWidget({
   width,
   height,
   displayMode = "compact",
+  displayScale = 1,
 }: WidgetComponentProps<"stockPrice">) {
   const t = useI18n("widget.stockPrice");
   const tCommon = useI18n("common");
@@ -94,8 +97,25 @@ export default function StockPriceWidget({
   const stockGraphValues = summary.graphValues;
   const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
   const layout = getStockLayout(width, height, options.showDetails);
+  let scale = displayScale;
+  if (!Number.isFinite(scale) || scale <= 0 || displayMode === "advanced") scale = 1;
+  const visibleWidth = width * scale;
+  const visibleHeight = height * scale;
+  // Explicit CSS pixels avoid applying the board's Mantine font compensation a second time.
+  const fontSize = (size: number) => `${size / scale}px`;
+  const compactPriceSize = Math.max(12, Math.min(34, visibleHeight * 0.28, visibleWidth * 0.085));
+  const compactLabelSize = Math.min(16, Math.max(10, visibleHeight * 0.2));
+  const showChange = layout.showChange && visibleWidth >= 180 && visibleHeight >= 48;
+  const showRange = layout.showRange && visibleWidth >= 180 && visibleHeight >= 48;
+  const showName = layout.showName && visibleWidth >= 240 && visibleHeight >= 130;
   const formatValue = (value: number) => numberFormatter.format(round(value));
   const formatSignedValue = (value: number) => `${value > 0 ? "+" : ""}${formatValue(value)}`;
+
+  let changeLabel = numberFormatter.format(stockValuesChange);
+  if (stockValuesChangePercentage !== null) {
+    changeLabel += ` (${stockValuesChange > 0 ? "+" : ""}${numberFormatter.format(stockValuesChangePercentage)}%)`;
+  }
+  const rangeLabel = t(`option.timeRange.option.${options.timeRange}.label`);
 
   const content =
     displayMode === "advanced" ? (
@@ -141,56 +161,93 @@ export default function StockPriceWidget({
         </Box>
       </Stack>
     ) : (
-      <Flex h="100%" w="100%">
-        <Sparkline
-          pos="absolute"
-          bottom={10}
-          w="100%"
-          h={layout.graphHeight}
-          data={stockGraphValues}
-          curveType="linear"
-          color={trendColor}
-          fillOpacity={0.6}
-          strokeWidth={2.5}
-        />
-
-        <Stack pos="absolute" top={10} left={10}>
-          <Text size="xl" fw={700} lh="0.715">
+      <Box
+        h="100%"
+        w="100%"
+        className={classes.compact}
+        style={{
+          "--stock-title-inset": fontSize(16 * Math.max(1, scale)),
+          display: "grid",
+          gridTemplateRows: "auto auto minmax(0, 1fr)",
+          gap: `var(--stock-row-gap, ${fontSize(2)})`,
+          overflow: "hidden",
+        }}
+      >
+        <Flex align="center" justify="space-between" style={{ minWidth: 0, gap: fontSize(4) }}>
+          <Flex align="center" style={{ minWidth: 0, gap: fontSize(3) }}>
             {stockValuesChange > 0 ? (
-              <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
+              <IconTrendingUp
+                size={fontSize(compactLabelSize)}
+                color={theme.colors.green[7]}
+                style={{ flexShrink: 0 }}
+              />
             ) : stockValuesChange < 0 ? (
-              <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
+              <IconTrendingDown
+                size={fontSize(compactLabelSize)}
+                color={theme.colors.red[7]}
+                style={{ flexShrink: 0 }}
+              />
             ) : (
-              <IconMinus size="1.5rem" color={theme.colors.gray[6]} />
+              <IconMinus size={fontSize(compactLabelSize)} color={theme.colors.gray[6]} style={{ flexShrink: 0 }} />
             )}
-            {data.symbol}
-          </Text>
-          {layout.showName && (
-            <Text size="md" lh="1">
-              {data.shortName}
+            <Text style={{ fontSize: fontSize(compactLabelSize) }} fw={700} lh={1.15} truncate title={data.symbol}>
+              {data.symbol}
+            </Text>
+          </Flex>
+          {showChange && (
+            <Text
+              fw={600}
+              lh={1.15}
+              style={{ maxWidth: "65%", fontSize: fontSize(Math.min(12, compactLabelSize)) }}
+              truncate
+              title={changeLabel}
+            >
+              {changeLabel}
             </Text>
           )}
-        </Stack>
+        </Flex>
 
-        <Title pos="absolute" bottom={10} right={10} order={layout.priceOrder} fw={700}>
-          {formatValue(summary.currentPrice)}
-        </Title>
+        <Flex align="flex-end" justify="space-between" style={{ minWidth: 0, gap: fontSize(4) }}>
+          <Stack style={{ minWidth: 0, gap: fontSize(2) }}>
+            {showName && (
+              <Text style={{ fontSize: fontSize(14) }} lh={1.15} truncate title={data.shortName}>
+                {data.shortName}
+              </Text>
+            )}
+            <Text
+              style={{ fontSize: fontSize(compactPriceSize) }}
+              fw={700}
+              lh={1.1}
+              truncate
+              title={formatValue(summary.currentPrice)}
+            >
+              {formatValue(summary.currentPrice)}
+            </Text>
+          </Stack>
+          {showRange && (
+            <Text
+              lh={1.15}
+              style={{ maxWidth: "40%", fontSize: fontSize(Math.min(12, compactLabelSize)) }}
+              truncate
+              title={rangeLabel}
+            >
+              {rangeLabel}
+            </Text>
+          )}
+        </Flex>
 
-        {layout.showChange && (
-          <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-            {numberFormatter.format(stockValuesChange)}
-            {stockValuesChangePercentage === null
-              ? null
-              : ` (${stockValuesChange > 0 ? "+" : ""}${numberFormatter.format(stockValuesChangePercentage)}%)`}
-          </Text>
-        )}
-
-        {layout.showRange && (
-          <Text pos="absolute" bottom={10} left={10} fw={700}>
-            {t(`option.timeRange.option.${options.timeRange}.label`)}
-          </Text>
-        )}
-      </Flex>
+        <Box style={{ minHeight: 0, minWidth: 0 }}>
+          <Sparkline
+            w="100%"
+            h="100%"
+            data={stockGraphValues}
+            curveType="linear"
+            color={trendColor}
+            fillOpacity={0.6}
+            strokeWidth={2.5}
+          />
+        </Box>
+      </Box>
     );
 
   return (
