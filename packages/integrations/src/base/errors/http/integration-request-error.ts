@@ -8,9 +8,17 @@ export type IntegrationRequestErrorOfType<TType extends RequestErrorType> = Inte
 };
 
 export class IntegrationRequestError extends IntegrationError {
-  constructor(integration: IntegrationErrorData, { cause }: { cause: AnyRequestError }) {
+  /**
+   * URL of the endpoint the failed request was sent to. Defaults to the integration URL. Integrations that also talk
+   * to a secondary endpoint (for example a separate indexer URL) set it, so that test connection inspects and offers
+   * to trust the certificate of the endpoint that actually failed.
+   */
+  public readonly requestUrl: string;
+
+  constructor(integration: IntegrationErrorData, { cause, url }: { cause: AnyRequestError; url?: string }) {
     super(integration, "Request to integration failed", { cause });
     this.name = IntegrationRequestError.name;
+    this.requestUrl = url ?? integration.url;
   }
 
   get cause(): AnyRequestError {

@@ -987,7 +987,7 @@ export const integrationDefs = {
     // Used for deep links from the widgets into the Wazuh dashboard.
     optionalSecretKinds: ["wazuhDashboardUrl"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/wazuh.svg",
-    category: ["security"],
+    category: ["security", "notifications"],
     documentationSlug: "wazuh",
     defaultPort: 55000,
     features: { docker: { aliases: ["wazuh", "wazuh-manager", "wazuh.manager"] } },

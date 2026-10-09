@@ -1,4 +1,5 @@
 import type { X509Certificate } from "node:crypto";
+import net from "node:net";
 import tls from "node:tls";
 
 import { getPortFromUrl } from "@homarr/common";
@@ -88,27 +89,46 @@ export class TestConnectionService {
       return testingResult.error.toResult();
     }
 
-    const certificate = await this.fetchCertificateAsync();
+    // The failing request may target a secondary endpoint (for example a separate indexer URL), so the
+    // certificate has to be read from the URL of that request and not from the integration URL.
+    const certificateUrl = this.getCertificateUrl(testingResult.error);
+    const certificate = await this.fetchCertificateAsync(certificateUrl).catch((error: unknown) => {
+      logger.debug("Fetching certificate failed", {
+        url: certificateUrl.toString(),
+        error: error instanceof Error ? `${error.name}: ${error.message}` : String(error),
+      });
+      return undefined;
+    });
     if (!certificate) {
       return TestConnectionError.UnknownResult(new Error("Unable to fetch certificate"));
     }
 
-    return TestConnectionError.CertificateResult(testingResult.error.cause, certificate);
+    return TestConnectionError.CertificateResult(testingResult.error.cause, certificate, certificateUrl.toString());
   }
 
-  private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {
+  private getCertificateUrl(error: IntegrationRequestErrorOfType<"certificate">): URL {
+    try {
+      return new URL(error.requestUrl);
+    } catch {
+      return this.url;
+    }
+  }
+
+  private async fetchCertificateAsync(url: URL): Promise<X509Certificate | undefined> {
     logger.debug("Fetching certificate", {
-      url: this.url.toString(),
+      url: url.toString(),
     });
 
-    const url = this.url;
+    // URL.hostname keeps the brackets of IPv6 literals, tls.connect expects the bare address.
+    const host = url.hostname.replace(/^\[(.*)\]$/, "$1");
     const port = getPortFromUrl(url);
     const socket = await new Promise<tls.TLSSocket>((resolve, reject) => {
       try {
         const innerSocket = tls.connect(
           {
-            host: url.hostname,
-            servername: url.hostname,
+            host,
+            // SNI must not be an IP address (RFC 6066)
+            ...(net.isIP(host) === 0 ? { servername: host } : {}),
             port,
             rejectUnauthorized: false,
           },
@@ -116,6 +136,9 @@ export class TestConnectionService {
             resolve(innerSocket);
           },
         );
+        innerSocket.once("error", (error) => {
+          reject(new Error("Unable to fetch certificate", { cause: error }));
+        });
       } catch (error) {
         reject(new Error("Unable to fetch certificate", { cause: error }));
       }
@@ -125,7 +148,7 @@ export class TestConnectionService {
     socket.destroy();
 
     logger.debug("Fetched certificate", {
-      url: this.url.toString(),
+      url: url.toString(),
       subject: x509?.subject,
       issuer: x509?.issuer,
     });
