@@ -5458,92 +5458,123 @@
         "7d": "7天",
         "30d": "30 天"
       },
-      "levelTooltip": "规则级别 {level}（{severity}）"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh 代理",
-      "description": "具有状态、OS、版本和最后存活状态的 Wazuh 代理人可排序列表",
-      "option": {
-        "statusFilter": {
-          "label": "显示代理"
+      "levelTooltip": "规则级别 {level}（{severity}）",
+      "summary": {
+        "title": "警报严重性 · {range}",
+        "alerts": "提醒",
+        "none": "没有提醒",
+        "trend": {
+          "new": "新建",
+          "tooltip": "上一时段：{previous}"
         },
-        "sortBy": {
-          "label": "排序方式"
-        },
-        "showVersion": {
-          "label": "显示 Wazuh 版本列"
-        },
-        "showGroups": {
-          "label": "显示组列"
-        }
+        "previous": "上一{range}：{count}",
+        "maxLevel": "最高级别 {level}",
+        "health": "索引器健康状态：{status}",
+        "manager": "管理器 {version}"
       },
-      "title": "代理",
-      "total": "{count} 个代理",
-      "status": {
-        "active": "活动",
-        "disconnected": "网络连线中断",
-        "neverConnected": "从未连接",
-        "pending": "待处理"
+      "alerts": {
+        "title": "警报 · 级别 {level}+ · {hours} 小时",
+        "empty": "这个级别没有警报。所有静音。",
+        "rule": "规则 {id}",
+        "openInDashboard": "在 Wazuh 仪表盘中打开此提醒"
       },
-      "statusLabel": {
-        "active": "活动",
-        "disconnected": "网络连线中断",
-        "never_connected": "从未连接",
-        "pending": "待处理",
-        "unknown": "未知"
+      "timeline": {
+        "title": "警报时间线 · {range}",
+        "total": "{count} 个警报",
+        "interval": "每 {interval}"
       },
-      "live": "实时模式",
-      "snapshot": "快照已存在 {age}",
-      "snapshotHint": "读取于 {time} 获取的 Wazuh 仪表板代理快照（wazuh-monitoring）。添加服务器 API 凭据以获取实时数据。",
-      "staleSnapshot": "{time} 的代理快照已过时。请检查 Wazuh 仪表板监控任务是否正在运行，或添加服务器 API 凭据。",
-      "noDisconnected": "所有代理已连接",
-      "empty": "没有代理匹配此过滤器",
-      "column": {
-        "status": "状态",
-        "name": "作业名称",
-        "ip": "IP",
-        "os": "系统",
-        "version": "版本",
-        "lastKeepAlive": "保持活动状态",
-        "groups": "群组"
+      "top": {
+        "title": {
+          "rules": "热门规则 · {range}",
+          "agents": "热门代理 · {range}",
+          "sourceIps": "热门源 IP · {range}",
+          "mitreTactics": "MITRE 战术 · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "这段时间里没有提醒",
+          "agents": "这段时间里没有提醒",
+          "sourceIps": "在此期间没有带有源 IP 的提醒",
+          "mitreTactics": "在此期间没有映射到MITRE ATT&CK 的提醒",
+          "mitreTechniques": "在此期间没有映射到MITRE ATT&CK 的提醒"
+        },
+        "totalTooltip": "{count} 个匹配的警报",
+        "private": "LAN",
+        "public": "公开",
+        "agents": "在 {count} 个代理上发现",
+        "others": "其他条目中还有 {count} 个警报"
       },
-      "outdated": "比最新代理版本（{version}）更旧"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh 警报源",
-      "description": "最近的 Wazuh 警报级别，MITRE ATT&CK 技术、代理和源 IP",
-      "option": {
-        "minLevel": {
-          "label": "最小规则级别",
-          "description": "Wazuh 级别：0-6低, 7-11 medium, 12-14高, 15+ 临界值"
+      "agents": {
+        "title": "代理",
+        "total": "{count} 个代理",
+        "status": {
+          "active": "活动",
+          "disconnected": "网络连线中断",
+          "neverConnected": "从未连接",
+          "pending": "待处理"
         },
-        "hours": {
-          "label": "时间窗口(小时)"
+        "statusLabel": {
+          "active": "活动",
+          "disconnected": "网络连线中断",
+          "never_connected": "从未连接",
+          "pending": "待处理",
+          "unknown": "未知"
         },
-        "limit": {
-          "label": "警报数量"
+        "live": "实时模式",
+        "snapshot": "快照已存在 {age}",
+        "snapshotHint": "读取于 {time} 获取的 Wazuh 仪表板代理快照（wazuh-monitoring）。添加服务器 API 凭据以获取实时数据。",
+        "staleSnapshot": "{time} 的代理快照已过时。请检查 Wazuh 仪表板监控任务是否正在运行，或添加服务器 API 凭据。",
+        "noDisconnected": "所有代理已连接",
+        "empty": "没有代理匹配此过滤器",
+        "column": {
+          "status": "状态",
+          "name": "作业名称",
+          "ip": "IP",
+          "os": "系统",
+          "version": "版本",
+          "lastKeepAlive": "保持活动状态",
+          "groups": "群组"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "显示代理"
-        },
-        "showSourceIp": {
-          "label": "显示源IP"
-        },
-        "showRuleId": {
-          "label": "显示规则 ID"
-        }
+        "outdated": "比最新代理版本（{version}）更旧"
       },
-      "title": "警报 · 级别 {level}+ · {hours} 小时",
-      "empty": "这个级别没有警报。所有静音。",
-      "rule": "规则 {id}",
-      "openInDashboard": "在 Wazuh 仪表盘中打开此提醒"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh 警报严重程度",
-      "description": "按前期趋势分列的警报严重程度",
+      "vulnerabilities": {
+        "title": "脆弱性",
+        "topCves": "顶级CVES",
+        "score": "得分",
+        "agentsShort": "代理",
+        "topAgents": "最易受伤害的代理",
+        "criticalHigh": "箱子/高",
+        "totalTooltip": "{count} 个发现项，涉及 {agents} 个代理",
+        "affected": "{count} 个代理",
+        "empty": "未检测到脆弱性",
+        "distribution": "严重性分布。未显示没有评分的 {unscored} 个发现项。",
+        "worst": "最严重：{id}（{score}），涉及 {agents} 个代理"
+      },
+      "fim": {
+        "title": "文件完整性 · {range}",
+        "event": {
+          "added": "添加日期",
+          "modified": "已修改",
+          "deleted": "已删除",
+          "unknown": "已更改"
+        },
+        "empty": "在此期间没有文件完整性事件",
+        "user": "由 {user} 执行",
+        "registry": "书记官处"
+      },
+      "authFailures": {
+        "title": "身份验证失败 · {hours} 小时",
+        "seriesTooltip": "过去 {hours} 小时内的所有代理",
+        "peak": "峰值 {count}/时间段",
+        "empty": "在此期间没有失败的登录",
+        "failed": "登录失败",
+        "failedHint": "单个身份验证失败 (sshd, PAM, Windows logon, invalider users)",
+        "bruteForce": "坚韧不拔的",
+        "bruteForceHint": "与此相关的暴力规则(短期内多次失败，MITRE T1110)",
+        "sourceIps": "源 IP",
+        "ipTooltip": "{ip}：{count} 次失败",
+        "bruteForceCount": "{count} 次暴力破解"
+      },
       "option": {
         "range": {
           "label": "时间范围"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "显示页脚"
-        }
-      },
-      "title": "警报严重性 · {range}",
-      "alerts": "提醒",
-      "none": "没有提醒",
-      "trend": {
-        "new": "新建",
-        "tooltip": "上一时段：{previous}"
-      },
-      "previous": "上一{range}：{count}",
-      "maxLevel": "最高级别 {level}",
-      "health": "索引器健康状态：{status}",
-      "manager": "管理器 {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Wazuh警报的堆叠图表，按严重程度分列",
-      "option": {
-        "range": {
-          "label": "时间范围"
         },
         "interval": {
           "label": "间隔"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "显示图例与合计数"
-        }
-      },
-      "title": "警报时间线 · {range}",
-      "total": "{count} 个警报",
-      "interval": "每 {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh 顶部列表",
-      "description": "顶级规则、代理人、源IP或MITRE ATT&CK 战术和技术通过报警计数",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "等级"
         },
-        "range": {
-          "label": "时间范围"
-        },
-        "limit": {
+        "topLimit": {
           "label": "条目数"
-        },
-        "minLevel": {
-          "label": "最小规则级别"
         },
         "showBars": {
           "label": "显示栏"
-        }
-      },
-      "title": {
-        "rules": "热门规则 · {range}",
-        "agents": "热门代理 · {range}",
-        "sourceIps": "热门源 IP · {range}",
-        "mitreTactics": "MITRE 战术 · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "这段时间里没有提醒",
-        "agents": "这段时间里没有提醒",
-        "sourceIps": "在此期间没有带有源 IP 的提醒",
-        "mitreTactics": "在此期间没有映射到MITRE ATT&CK 的提醒",
-        "mitreTechniques": "在此期间没有映射到MITRE ATT&CK 的提醒"
-      },
-      "totalTooltip": "{count} 个匹配的警报",
-      "private": "LAN",
-      "public": "公开",
-      "agents": "在 {count} 个代理上发现",
-      "others": "其他条目中还有 {count} 个警报"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh 脆弱性",
-      "description": "脆弱性计量、最大的CVEs和最易受伤害的代理",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "显示代理"
+        },
+        "agentSortBy": {
+          "label": "排序方式"
+        },
+        "showVersion": {
+          "label": "显示 Wazuh 版本列"
+        },
+        "showGroups": {
+          "label": "显示组列"
+        },
         "cveOrder": {
           "label": "CVES排名由"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "显示最易受伤害的代理"
-        }
-      },
-      "title": "脆弱性",
-      "topCves": "顶级CVES",
-      "score": "得分",
-      "agentsShort": "代理",
-      "topAgents": "最易受伤害的代理",
-      "criticalHigh": "箱子/高",
-      "totalTooltip": "{count} 个发现项，涉及 {agents} 个代理",
-      "affected": "{count} 个代理",
-      "empty": "未检测到脆弱性",
-      "distribution": "严重性分布。未显示没有评分的 {unscored} 个发现项。",
-      "worst": "最严重：{id}（{score}），涉及 {agents} 个代理"
-    },
-    "wazuhFim": {
-      "name": "Wazuh 文件的完整性",
-      "description": "最近文件完整性监测 (Syscheck) 事件",
-      "option": {
-        "range": {
-          "label": "时间范围"
         },
-        "event": {
+        "fimEvent": {
           "label": "事件"
         },
-        "limit": {
+        "fimLimit": {
           "label": "事件数"
         },
         "includeRegistry": {
           "label": "包括Windows 注册表事件"
-        }
-      },
-      "title": "文件完整性 · {range}",
-      "event": {
-        "added": "添加日期",
-        "modified": "已修改",
-        "deleted": "已删除",
-        "unknown": "已更改"
-      },
-      "empty": "在此期间没有文件完整性事件",
-      "user": "由 {user} 执行",
-      "registry": "书记官处"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh 身份验证失败",
-      "description": "登录失败，每个代理使用每小时闪烁的暴力提醒",
-      "option": {
-        "hours": {
-          "label": "时间窗口(小时)"
         },
-        "limit": {
+        "authLimit": {
           "label": "代理数量"
         },
         "showSourceIps": {
           "label": "显示顶部源IP"
+        },
+        "alertsMinLevel": {
+          "label": "最小规则级别",
+          "description": "Wazuh 级别：0-6低, 7-11 medium, 12-14高, 15+ 临界值"
+        },
+        "alertsLimit": {
+          "label": "警报数量"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "显示代理"
+        },
+        "showSourceIp": {
+          "label": "显示源IP"
+        },
+        "showRuleId": {
+          "label": "显示规则 ID"
         }
-      },
-      "title": "身份验证失败 · {hours} 小时",
-      "seriesTooltip": "过去 {hours} 小时内的所有代理",
-      "peak": "峰值 {count}/时间段",
-      "empty": "在此期间没有失败的登录",
-      "failed": "登录失败",
-      "failedHint": "单个身份验证失败 (sshd, PAM, Windows logon, invalider users)",
-      "bruteForce": "坚韧不拔的",
-      "bruteForceHint": "与此相关的暴力规则(短期内多次失败，MITRE T1110)",
-      "sourceIps": "源 IP",
-      "ipTooltip": "{ip}：{count} 次失败",
-      "bruteForceCount": "{count} 次暴力破解"
+      }
     }
   },
   "widgetPreview": {

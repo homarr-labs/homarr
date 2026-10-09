@@ -5458,92 +5458,123 @@
         "7d": "7D",
         "30d": "30D"
       },
-      "levelTooltip": "Regel niveau {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agents",
-      "description": "Sorteerbare lijst van Wazuh agents met status, OS, versie en laatste keepalive",
-      "option": {
-        "statusFilter": {
-          "label": "Toon medewerkers"
+      "levelTooltip": "Regel niveau {level} ({severity})",
+      "summary": {
+        "title": "Ernstigheid · {range}",
+        "alerts": "waarschuwingen",
+        "none": "Geen meldingen",
+        "trend": {
+          "new": "nieuw",
+          "tooltip": "Vorige periode: {previous}"
         },
-        "sortBy": {
-          "label": "Sorteren op"
-        },
-        "showVersion": {
-          "label": "Toon Wazuh versiekolom"
-        },
-        "showGroups": {
-          "label": "Groepskolom tonen"
-        }
+        "previous": "Vorige {range}: {count}",
+        "maxLevel": "Max. niveau {level}",
+        "health": "Indexeren gezondheid: {status}",
+        "manager": "Manager {version}"
       },
-      "title": "Agenten",
-      "total": "{count} agents",
-      "status": {
-        "active": "Actief",
-        "disconnected": "Verbinding verbroken",
-        "neverConnected": "Nooit verbonden",
-        "pending": "In afwachting"
+      "alerts": {
+        "title": "Waarschuwingen · niveau {level}+ · {hours}h",
+        "empty": "Geen meldingen op dit niveau. Alles stil.",
+        "rule": "Regel {id}",
+        "openInDashboard": "Open deze waarschuwing in het Wazuh dashboard"
       },
-      "statusLabel": {
-        "active": "Actief",
-        "disconnected": "Verbinding verbroken",
-        "never_connected": "Nooit verbonden",
-        "pending": "In afwachting",
-        "unknown": "Onbekend"
+      "timeline": {
+        "title": "Tijdlijn waarschuwingen · {range}",
+        "total": "{count} waarschuwingen",
+        "interval": "per {interval}"
       },
-      "live": "Zichtbaar",
-      "snapshot": "Momentopname {age} oud",
-      "snapshotHint": "Lees van de Wazuh dashboard snapshot (wazuh-monitoring) genomen bij {time}. Voeg de server API gegevens toe voor live data.",
-      "staleSnapshot": "De agent snapshot van {time} is verouderd. Controleer of de Wazuh dashboard monitoring job actief is, of voeg de server API referenties toe.",
-      "noDisconnected": "Alle agenten zijn verbonden",
-      "empty": "Er komen geen agenten overeen met deze filter",
-      "column": {
-        "status": "Status",
-        "name": "Taaknaam",
-        "ip": "IP-adres",
-        "os": "OS",
-        "version": "Versie",
-        "lastKeepAlive": "Blijven",
-        "groups": "Groepen"
+      "top": {
+        "title": {
+          "rules": "Top regels · {range}",
+          "agents": "Top agenten · {range}",
+          "sourceIps": "Top bron IPs · {range}",
+          "mitreTactics": "MITRE tactieken · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "Geen meldingen in deze periode",
+          "agents": "Geen meldingen in deze periode",
+          "sourceIps": "Geen meldingen met een bron IP in deze periode",
+          "mitreTactics": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode",
+          "mitreTechniques": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode"
+        },
+        "totalTooltip": "{count} passende waarschuwingen",
+        "private": "LAN",
+        "public": "Openbaar",
+        "agents": "Gezien op {count} agents",
+        "others": "{count} meer meldingen in andere items"
       },
-      "outdated": "Ouder dan de nieuwste versie van de agent ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh waarschuwingen",
-      "description": "Recente Wazuh waarschuwingen met level, MITRE ATT&CK technieken, agent en bron IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimum regelniveau",
-          "description": "Wazuh levels: 0-6 laag, 7-11 medium, 12-14 hoog, 15+ kritisch"
+      "agents": {
+        "title": "Agenten",
+        "total": "{count} agents",
+        "status": {
+          "active": "Actief",
+          "disconnected": "Verbinding verbroken",
+          "neverConnected": "Nooit verbonden",
+          "pending": "In afwachting"
         },
-        "hours": {
-          "label": "Tijdvenster (uren)"
+        "statusLabel": {
+          "active": "Actief",
+          "disconnected": "Verbinding verbroken",
+          "never_connected": "Nooit verbonden",
+          "pending": "In afwachting",
+          "unknown": "Onbekend"
         },
-        "limit": {
-          "label": "Aantal waarschuwingen"
+        "live": "Zichtbaar",
+        "snapshot": "Momentopname {age} oud",
+        "snapshotHint": "Lees van de Wazuh dashboard snapshot (wazuh-monitoring) genomen bij {time}. Voeg de server API gegevens toe voor live data.",
+        "staleSnapshot": "De agent snapshot van {time} is verouderd. Controleer of de Wazuh dashboard monitoring job actief is, of voeg de server API referenties toe.",
+        "noDisconnected": "Alle agenten zijn verbonden",
+        "empty": "Er komen geen agenten overeen met deze filter",
+        "column": {
+          "status": "Status",
+          "name": "Taaknaam",
+          "ip": "IP-adres",
+          "os": "OS",
+          "version": "Versie",
+          "lastKeepAlive": "Blijven",
+          "groups": "Groepen"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Toon medewerker"
-        },
-        "showSourceIp": {
-          "label": "Toon bron IP"
-        },
-        "showRuleId": {
-          "label": "Toon regel-ID"
-        }
+        "outdated": "Ouder dan de nieuwste versie van de agent ({version})"
       },
-      "title": "Waarschuwingen · niveau {level}+ · {hours}h",
-      "empty": "Geen meldingen op dit niveau. Alles stil.",
-      "rule": "Regel {id}",
-      "openInDashboard": "Open deze waarschuwing in het Wazuh dashboard"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh alarm ernst",
-      "description": "Melding is mislukt met een trend ten opzichte van de vorige periode",
+      "vulnerabilities": {
+        "title": "Kwetsbaarheden",
+        "topCves": "Top CVE's",
+        "score": "Beoordeling",
+        "agentsShort": "Agenten",
+        "topAgents": "Meest kwetsbare agenten",
+        "criticalHigh": "Krit / hoog",
+        "totalTooltip": "{count} bevindingen van {agents} agents",
+        "affected": "{count} agents",
+        "empty": "Geen kwetsbaarheden gevonden",
+        "distribution": "Ernstige verdeling. {unscored} bevindingen zonder een score worden niet getoond.",
+        "worst": "Het belangrijkste: {id} ({score}) op {agents} agenten"
+      },
+      "fim": {
+        "title": "Bestandsintegriteit · {range}",
+        "event": {
+          "added": "Datum toegevoegd",
+          "modified": "Gewijzigd",
+          "deleted": "Verwijderd",
+          "unknown": "Veranderd"
+        },
+        "empty": "Geen gebeurtenissen van integriteit bestand in deze periode",
+        "user": "door {user}",
+        "registry": "Register"
+      },
+      "authFailures": {
+        "title": "Authenticatie mislukt · {hours}u",
+        "seriesTooltip": "Alle agents van de laatste {hours}h",
+        "peak": "Piek {count}/emmer",
+        "empty": "Geen mislukte aanmeldingen in deze periode",
+        "failed": "Mislukte aanmeldingen",
+        "failedHint": "Enkelvoudige authenticatie fouten (logboek, pAM, Windows login, ongeldige gebruikers)",
+        "bruteForce": "Brute kracht",
+        "bruteForceHint": "Corgerelateerde brute-kracht regels (meerdere fouten in een korte periode, MITRE T1110)",
+        "sourceIps": "Bron IPs",
+        "ipTooltip": "{ip}: {count} fouten",
+        "bruteForceCount": "{count} brute kracht"
+      },
       "option": {
         "range": {
           "label": "Tijdsbereik"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Toon voettekst"
-        }
-      },
-      "title": "Ernstigheid · {range}",
-      "alerts": "waarschuwingen",
-      "none": "Geen meldingen",
-      "trend": {
-        "new": "nieuw",
-        "tooltip": "Vorige periode: {previous}"
-      },
-      "previous": "Vorige {range}: {count}",
-      "maxLevel": "Max. niveau {level}",
-      "health": "Indexeren gezondheid: {status}",
-      "manager": "Manager {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Gestapelde grafiek met Wazuh waarschuwingen na verloop van tijd door ernst",
-      "option": {
-        "range": {
-          "label": "Tijdsbereik"
         },
         "interval": {
           "label": "Interval"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Toon legende met totalen"
-        }
-      },
-      "title": "Tijdlijn waarschuwingen · {range}",
-      "total": "{count} waarschuwingen",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh toplijst",
-      "description": "Top regels, agenten, bron IP's of MITRE ATT&CK en technieken bij aantal meldingen",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Positie"
         },
-        "range": {
-          "label": "Tijdsbereik"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Aantal items"
-        },
-        "minLevel": {
-          "label": "Minimum regelniveau"
         },
         "showBars": {
           "label": "Toon balken"
-        }
-      },
-      "title": {
-        "rules": "Top regels · {range}",
-        "agents": "Top agenten · {range}",
-        "sourceIps": "Top bron IPs · {range}",
-        "mitreTactics": "MITRE tactieken · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Geen meldingen in deze periode",
-        "agents": "Geen meldingen in deze periode",
-        "sourceIps": "Geen meldingen met een bron IP in deze periode",
-        "mitreTactics": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode",
-        "mitreTechniques": "Geen waarschuwingen toegewezen aan MITRE ATT&CK in deze periode"
-      },
-      "totalTooltip": "{count} passende waarschuwingen",
-      "private": "LAN",
-      "public": "Openbaar",
-      "agents": "Gezien op {count} agents",
-      "others": "{count} meer meldingen in andere items"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh kwetsbaarheden",
-      "description": "Kwetsbaarheid telt, top CVE's en de meest kwetsbare agenten",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Toon medewerkers"
+        },
+        "agentSortBy": {
+          "label": "Sorteren op"
+        },
+        "showVersion": {
+          "label": "Toon Wazuh versiekolom"
+        },
+        "showGroups": {
+          "label": "Groepskolom tonen"
+        },
         "cveOrder": {
           "label": "Rank CVEs op"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Toon de meest kwetsbare agenten"
-        }
-      },
-      "title": "Kwetsbaarheden",
-      "topCves": "Top CVE's",
-      "score": "Beoordeling",
-      "agentsShort": "Agenten",
-      "topAgents": "Meest kwetsbare agenten",
-      "criticalHigh": "Krit / hoog",
-      "totalTooltip": "{count} bevindingen van {agents} agents",
-      "affected": "{count} agents",
-      "empty": "Geen kwetsbaarheden gevonden",
-      "distribution": "Ernstige verdeling. {unscored} bevindingen zonder een score worden niet getoond.",
-      "worst": "Het belangrijkste: {id} ({score}) op {agents} agenten"
-    },
-    "wazuhFim": {
-      "name": "Wazuh bestand integriteit",
-      "description": "Recente integriteitsbewaking van bestand (syscheck) gebeurtenissen",
-      "option": {
-        "range": {
-          "label": "Tijdsbereik"
         },
-        "event": {
+        "fimEvent": {
           "label": "Evenementen"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Aantal gebeurtenissen"
         },
         "includeRegistry": {
           "label": "Inclusief Windows register gebeurtenissen"
-        }
-      },
-      "title": "Bestandsintegriteit · {range}",
-      "event": {
-        "added": "Datum toegevoegd",
-        "modified": "Gewijzigd",
-        "deleted": "Verwijderd",
-        "unknown": "Veranderd"
-      },
-      "empty": "Geen gebeurtenissen van integriteit bestand in deze periode",
-      "user": "door {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh authenticatie mislukt",
-      "description": "Mislukte logins en brute-force waarschuwingen per agent met uurlijkse sparklines",
-      "option": {
-        "hours": {
-          "label": "Tijdvenster (uren)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Aantal agenten"
         },
         "showSourceIps": {
           "label": "Toon top source IP's"
+        },
+        "alertsMinLevel": {
+          "label": "Minimum regelniveau",
+          "description": "Wazuh levels: 0-6 laag, 7-11 medium, 12-14 hoog, 15+ kritisch"
+        },
+        "alertsLimit": {
+          "label": "Aantal waarschuwingen"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Toon medewerker"
+        },
+        "showSourceIp": {
+          "label": "Toon bron IP"
+        },
+        "showRuleId": {
+          "label": "Toon regel-ID"
         }
-      },
-      "title": "Authenticatie mislukt · {hours}u",
-      "seriesTooltip": "Alle agents van de laatste {hours}h",
-      "peak": "Piek {count}/emmer",
-      "empty": "Geen mislukte aanmeldingen in deze periode",
-      "failed": "Mislukte aanmeldingen",
-      "failedHint": "Enkelvoudige authenticatie fouten (logboek, pAM, Windows login, ongeldige gebruikers)",
-      "bruteForce": "Brute kracht",
-      "bruteForceHint": "Corgerelateerde brute-kracht regels (meerdere fouten in een korte periode, MITRE T1110)",
-      "sourceIps": "Bron IPs",
-      "ipTooltip": "{ip}: {count} fouten",
-      "bruteForceCount": "{count} brute kracht"
+      }
     }
   },
   "widgetPreview": {

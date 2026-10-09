@@ -5458,92 +5458,123 @@
         "7d": "7 gün",
         "30d": "30 gün"
       },
-      "levelTooltip": "Kural düzeyi {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh ajanları",
-      "description": "Durum, işletim sistemi, sürüm ve son canlılık bilgisine sahip sıralanabilir Wazuh ajanları listesi",
-      "option": {
-        "statusFilter": {
-          "label": "Ajanları göster"
+      "levelTooltip": "Kural düzeyi {level} ({severity})",
+      "summary": {
+        "title": "Uyarı önem derecesi · {range}",
+        "alerts": "uyarılar",
+        "none": "Uyarı yok",
+        "trend": {
+          "new": "yeni",
+          "tooltip": "Önceki dönem: {previous}"
         },
-        "sortBy": {
-          "label": "Sıralama ölçütü"
-        },
-        "showVersion": {
-          "label": "Wazuh sürümü sütununu göster"
-        },
-        "showGroups": {
-          "label": "Gruplar sütununu göster"
-        }
+        "previous": "Önceki {range}: {count}",
+        "maxLevel": "Maks. düzey {level}",
+        "health": "Dizinleyici sağlığı: {status}",
+        "manager": "Yönetici {version}"
       },
-      "title": "Ajanlar",
-      "total": "{count} ajan",
-      "status": {
-        "active": "Aktif",
-        "disconnected": "Bağlantısı kesildi",
-        "neverConnected": "Hiç bağlanmadı",
-        "pending": "Bekleyen"
+      "alerts": {
+        "title": "Uyarılar · düzey {level}+ · {hours} sa",
+        "empty": "Bu düzeyde uyarı yok. Her şey sakin.",
+        "rule": "Kural {id}",
+        "openInDashboard": "Bu uyarıyı Wazuh panosunda aç"
       },
-      "statusLabel": {
-        "active": "Aktif",
-        "disconnected": "Bağlantısı kesildi",
-        "never_connected": "Hiç bağlanmadı",
-        "pending": "Bekleyen",
-        "unknown": "Bilinmeyen"
+      "timeline": {
+        "title": "Uyarı zaman çizelgesi · {range}",
+        "total": "{count} uyarı",
+        "interval": "{interval} başına"
       },
-      "live": "Canlı",
-      "snapshot": "{age} eski anlık görüntü",
-      "snapshotHint": "Wazuh panosunun {time} tarihinde alınan ajan anlık görüntüsünden (wazuh-monitoring) okunur. Canlı veriler için sunucu API kimlik bilgilerini ekleyin.",
-      "staleSnapshot": "{time} tarihli ajan anlık görüntüsü güncel değil. Wazuh panosu izleme işinin çalıştığını kontrol edin veya sunucu API kimlik bilgilerini ekleyin.",
-      "noDisconnected": "Tüm ajanlar bağlı",
-      "empty": "Bu filtreyle eşleşen ajan yok",
-      "column": {
-        "status": "Durum",
-        "name": "İş adı",
-        "ip": "IP",
-        "os": "İşletim Sistemi",
-        "version": "Sürüm",
-        "lastKeepAlive": "Canlılık",
-        "groups": "Gruplar"
+      "top": {
+        "title": {
+          "rules": "En üst kurallar · {range}",
+          "agents": "En üst ajanlar · {range}",
+          "sourceIps": "En üst kaynak IP'leri · {range}",
+          "mitreTactics": "MITRE taktikleri · {range}",
+          "mitreTechniques": "MITRE teknikleri · {range}"
+        },
+        "empty": {
+          "rules": "Bu dönemde uyarı yok",
+          "agents": "Bu dönemde uyarı yok",
+          "sourceIps": "Bu dönemde kaynak IP'si olan uyarı yok",
+          "mitreTactics": "Bu dönemde MITRE ATT&CK ile eşleştirilmiş uyarı yok",
+          "mitreTechniques": "Bu dönemde MITRE ATT&CK ile eşleştirilmiş uyarı yok"
+        },
+        "totalTooltip": "{count} eşleşen uyarı",
+        "private": "Yerel ağ",
+        "public": "Herkese açık",
+        "agents": "{count} ajan üzerinde görüldü",
+        "others": "Diğer girdilerde {count} uyarı daha var"
       },
-      "outdated": "En yeni ajan sürümünden daha eski ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh uyarı akışı",
-      "description": "Düzey, MITRE ATT&CK teknikleri, ajan ve kaynak IP ile son Wazuh uyarıları",
-      "option": {
-        "minLevel": {
-          "label": "Minimum kural düzeyi",
-          "description": "Wazuh düzeyleri: 0-6 düşük, 7-11 orta, 12-14 yüksek, 15+ kritik"
+      "agents": {
+        "title": "Ajanlar",
+        "total": "{count} ajan",
+        "status": {
+          "active": "Aktif",
+          "disconnected": "Bağlantısı kesildi",
+          "neverConnected": "Hiç bağlanmadı",
+          "pending": "Bekleyen"
         },
-        "hours": {
-          "label": "Zaman aralığı (saat)"
+        "statusLabel": {
+          "active": "Aktif",
+          "disconnected": "Bağlantısı kesildi",
+          "never_connected": "Hiç bağlanmadı",
+          "pending": "Bekleyen",
+          "unknown": "Bilinmeyen"
         },
-        "limit": {
-          "label": "Uyarı sayısı"
+        "live": "Canlı",
+        "snapshot": "{age} eski anlık görüntü",
+        "snapshotHint": "Wazuh panosunun {time} tarihinde alınan ajan anlık görüntüsünden (wazuh-monitoring) okunur. Canlı veriler için sunucu API kimlik bilgilerini ekleyin.",
+        "staleSnapshot": "{time} tarihli ajan anlık görüntüsü güncel değil. Wazuh panosu izleme işinin çalıştığını kontrol edin veya sunucu API kimlik bilgilerini ekleyin.",
+        "noDisconnected": "Tüm ajanlar bağlı",
+        "empty": "Bu filtreyle eşleşen ajan yok",
+        "column": {
+          "status": "Durum",
+          "name": "İş adı",
+          "ip": "IP",
+          "os": "İşletim Sistemi",
+          "version": "Sürüm",
+          "lastKeepAlive": "Canlılık",
+          "groups": "Gruplar"
         },
-        "showMitre": {
-          "label": "MITRE ATT&CK tekniklerini göster"
-        },
-        "showAgent": {
-          "label": "Ajanı göster"
-        },
-        "showSourceIp": {
-          "label": "Kaynak IP'yi göster"
-        },
-        "showRuleId": {
-          "label": "Kural kimliğini göster"
-        }
+        "outdated": "En yeni ajan sürümünden daha eski ({version})"
       },
-      "title": "Uyarılar · düzey {level}+ · {hours} sa",
-      "empty": "Bu düzeyde uyarı yok. Her şey sakin.",
-      "rule": "Kural {id}",
-      "openInDashboard": "Bu uyarıyı Wazuh panosunda aç"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh uyarı önem derecesi",
-      "description": "Önceki döneme göre eğilim içeren uyarı önem derecesi dökümü",
+      "vulnerabilities": {
+        "title": "Güvenlik açıkları",
+        "topCves": "En üst CVE'ler",
+        "score": "Puan",
+        "agentsShort": "Ajanlar",
+        "topAgents": "En savunmasız ajanlar",
+        "criticalHigh": "Kritik / Yüksek",
+        "totalTooltip": "{agents} ajan üzerinde {count} bulgu",
+        "affected": "{count} ajan",
+        "empty": "Güvenlik açığı algılanmadı",
+        "distribution": "Önem derecesi dağılımı. Puanı olmayan {unscored} bulgu gösterilmez.",
+        "worst": "En kötü: {agents} ajan üzerinde {id} ({score})"
+      },
+      "fim": {
+        "title": "Dosya bütünlüğü · {range}",
+        "event": {
+          "added": "Eklenme Tarihi",
+          "modified": "Değiştirildi",
+          "deleted": "Silinen",
+          "unknown": "Değişti"
+        },
+        "empty": "Bu dönemde dosya bütünlüğü olayı yok",
+        "user": "{user} tarafından",
+        "registry": "Kayıt defteri"
+      },
+      "authFailures": {
+        "title": "Kimlik doğrulama başarısızlıkları · {hours}s",
+        "seriesTooltip": "Son {hours} saat içinde tüm ajanlar",
+        "peak": "Tepe {count}/paket",
+        "empty": "Bu dönemde başarısız oturum açma yok",
+        "failed": "Başarısız oturum açmalar",
+        "failedHint": "Tekil kimlik doğrulama başarısızlıkları (sshd, PAM, Windows oturumu, geçersiz kullanıcılar)",
+        "bruteForce": "Kaba kuvvet",
+        "bruteForceHint": "İlişkilendirilmiş kaba kuvvet kuralları (kısa sürede birden çok başarısızlık, MITRE T1110)",
+        "sourceIps": "Kaynak IP'leri",
+        "ipTooltip": "{ip}: {count} başarısızlık",
+        "bruteForceCount": "{count} kaba kuvvet olayı"
+      },
       "option": {
         "range": {
           "label": "Zaman aralığı"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Alt bilgiyi göster"
-        }
-      },
-      "title": "Uyarı önem derecesi · {range}",
-      "alerts": "uyarılar",
-      "none": "Uyarı yok",
-      "trend": {
-        "new": "yeni",
-        "tooltip": "Önceki dönem: {previous}"
-      },
-      "previous": "Önceki {range}: {count}",
-      "maxLevel": "Maks. düzey {level}",
-      "health": "Dizinleyici sağlığı: {status}",
-      "manager": "Yönetici {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh uyarıları zaman çizelgesi",
-      "description": "Önem derecesine göre zaman içindeki Wazuh uyarılarının yığılmış grafiği",
-      "option": {
-        "range": {
-          "label": "Zaman aralığı"
         },
         "interval": {
           "label": "Aralık"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Toplamlarla birlikte göstergeyi göster"
-        }
-      },
-      "title": "Uyarı zaman çizelgesi · {range}",
-      "total": "{count} uyarı",
-      "interval": "{interval} başına"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh en iyi listesi",
-      "description": "Uyarı sayısına göre en popüler kurallar, ajanlar, kaynak IP'leri veya MITRE ATT&CK taktikleri ve teknikleri",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Sıralama"
         },
-        "range": {
-          "label": "Zaman Aralığı"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Girdi sayısı"
-        },
-        "minLevel": {
-          "label": "Minimum kural düzeyi"
         },
         "showBars": {
           "label": "Çubukları göster"
-        }
-      },
-      "title": {
-        "rules": "En üst kurallar · {range}",
-        "agents": "En üst ajanlar · {range}",
-        "sourceIps": "En üst kaynak IP'leri · {range}",
-        "mitreTactics": "MITRE taktikleri · {range}",
-        "mitreTechniques": "MITRE teknikleri · {range}"
-      },
-      "empty": {
-        "rules": "Bu dönemde uyarı yok",
-        "agents": "Bu dönemde uyarı yok",
-        "sourceIps": "Bu dönemde kaynak IP'si olan uyarı yok",
-        "mitreTactics": "Bu dönemde MITRE ATT&CK ile eşleştirilmiş uyarı yok",
-        "mitreTechniques": "Bu dönemde MITRE ATT&CK ile eşleştirilmiş uyarı yok"
-      },
-      "totalTooltip": "{count} eşleşen uyarı",
-      "private": "Yerel ağ",
-      "public": "Herkese açık",
-      "agents": "{count} ajan üzerinde görüldü",
-      "others": "Diğer girdilerde {count} uyarı daha var"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh güvenlik açıkları",
-      "description": "Güvenlik açığı sayıları, en üst CVE'ler ve en savunmasız ajanlar",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Ajanları göster"
+        },
+        "agentSortBy": {
+          "label": "Sıralama ölçütü"
+        },
+        "showVersion": {
+          "label": "Wazuh sürümü sütununu göster"
+        },
+        "showGroups": {
+          "label": "Gruplar sütununu göster"
+        },
         "cveOrder": {
           "label": "CVE'leri şuna göre sırala"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "En savunmasız ajanları göster"
-        }
-      },
-      "title": "Güvenlik açıkları",
-      "topCves": "En üst CVE'ler",
-      "score": "Puan",
-      "agentsShort": "Ajanlar",
-      "topAgents": "En savunmasız ajanlar",
-      "criticalHigh": "Kritik / Yüksek",
-      "totalTooltip": "{agents} ajan üzerinde {count} bulgu",
-      "affected": "{count} ajan",
-      "empty": "Güvenlik açığı algılanmadı",
-      "distribution": "Önem derecesi dağılımı. Puanı olmayan {unscored} bulgu gösterilmez.",
-      "worst": "En kötü: {agents} ajan üzerinde {id} ({score})"
-    },
-    "wazuhFim": {
-      "name": "Wazuh dosya bütünlüğü",
-      "description": "Son dosya bütünlüğü izleme (syscheck) olayları",
-      "option": {
-        "range": {
-          "label": "Zaman Aralığı"
         },
-        "event": {
+        "fimEvent": {
           "label": "Etkinlikler"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Olay sayısı"
         },
         "includeRegistry": {
           "label": "Windows kayıt defteri olaylarını dahil et"
-        }
-      },
-      "title": "Dosya bütünlüğü · {range}",
-      "event": {
-        "added": "Eklenme Tarihi",
-        "modified": "Değiştirildi",
-        "deleted": "Silinen",
-        "unknown": "Değişti"
-      },
-      "empty": "Bu dönemde dosya bütünlüğü olayı yok",
-      "user": "{user} tarafından",
-      "registry": "Kayıt defteri"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh kimlik doğrulama başarısızlıkları",
-      "description": "Ajan başına başarısız oturum açmalar ve saatlik mini grafiklerle kaba kuvvet uyarıları",
-      "option": {
-        "hours": {
-          "label": "Zaman aralığı (saat)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Ajan sayısı"
         },
         "showSourceIps": {
           "label": "En üst kaynak IP'lerini göster"
+        },
+        "alertsMinLevel": {
+          "label": "Minimum kural düzeyi",
+          "description": "Wazuh düzeyleri: 0-6 düşük, 7-11 orta, 12-14 yüksek, 15+ kritik"
+        },
+        "alertsLimit": {
+          "label": "Uyarı sayısı"
+        },
+        "showMitre": {
+          "label": "MITRE ATT&CK tekniklerini göster"
+        },
+        "showAgent": {
+          "label": "Ajanı göster"
+        },
+        "showSourceIp": {
+          "label": "Kaynak IP'yi göster"
+        },
+        "showRuleId": {
+          "label": "Kural kimliğini göster"
         }
-      },
-      "title": "Kimlik doğrulama başarısızlıkları · {hours}s",
-      "seriesTooltip": "Son {hours} saat içinde tüm ajanlar",
-      "peak": "Tepe {count}/paket",
-      "empty": "Bu dönemde başarısız oturum açma yok",
-      "failed": "Başarısız oturum açmalar",
-      "failedHint": "Tekil kimlik doğrulama başarısızlıkları (sshd, PAM, Windows oturumu, geçersiz kullanıcılar)",
-      "bruteForce": "Kaba kuvvet",
-      "bruteForceHint": "İlişkilendirilmiş kaba kuvvet kuralları (kısa sürede birden çok başarısızlık, MITRE T1110)",
-      "sourceIps": "Kaynak IP'leri",
-      "ipTooltip": "{ip}: {count} başarısızlık",
-      "bruteForceCount": "{count} kaba kuvvet olayı"
+      }
     }
   },
   "widgetPreview": {

@@ -8,20 +8,20 @@ import { IconArrowDownRight, IconArrowUpRight, IconMinus, IconShieldHalfFilled }
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import type { WazuhViewProps } from "../view-props";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhPendingState, WazuhWidgetFrame } from "../_shared/frame";
 import {
   formatWazuhCount,
   formatWazuhTrend,
   getWazuhTrend,
   wazuhSeverities,
   wazuhSeverityChartColors,
-} from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
-import classes from "../wazuh/_shared/wazuh.module.css";
+} from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
+import classes from "../_shared/wazuh.module.css";
 
 const healthColors = { green: "green", yellow: "yellow", red: "red" } as const;
 
@@ -34,7 +34,7 @@ const TrendIndicator = ({
   previous: number;
   size?: "xs" | "sm";
 }) => {
-  const t = useI18n("widget.wazuhSummary");
+  const t = useI18n("widget.wazuh.summary");
   const locale = useCurrentIntlLocale();
   if (current === 0 && previous === 0) {
     // Nothing now and nothing before: a percentage would only be noise.
@@ -67,13 +67,8 @@ const TrendIndicator = ({
   );
 };
 
-export default function WazuhSummaryWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-}: WidgetComponentProps<"wazuhSummary">) {
-  const t = useI18n("widget.wazuhSummary");
+export function WazuhOverviewView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.summary");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
   const integrationId = integrationIds[0] ?? "";

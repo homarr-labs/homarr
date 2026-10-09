@@ -5458,92 +5458,123 @@
         "7d": "7 dies",
         "30d": "30 dies"
       },
-      "levelTooltip": "Nivell de regla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agents de Wazuh",
-      "description": "Llista ordenable d'agents de Wazuh amb l'estat, el sistema operatiu, la versió i l'últim manteniment de connexió",
-      "option": {
-        "statusFilter": {
-          "label": "Mostra els agents"
+      "levelTooltip": "Nivell de regla {level} ({severity})",
+      "summary": {
+        "title": "Gravetat de les alertes · {range}",
+        "alerts": "alertes",
+        "none": "No hi ha alertes",
+        "trend": {
+          "new": "noves",
+          "tooltip": "Període anterior: {previous}"
         },
-        "sortBy": {
-          "label": "Ordena per"
-        },
-        "showVersion": {
-          "label": "Mostra la columna de versió de Wazuh"
-        },
-        "showGroups": {
-          "label": "Mostra la columna de grups"
-        }
+        "previous": "Els {range} anteriors: {count}",
+        "maxLevel": "Nivell màxim {level}",
+        "health": "Estat de l'indexador: {status}",
+        "manager": "Gestor {version}"
       },
-      "title": "Agents",
-      "total": "{count} agents",
-      "status": {
-        "active": "Actiu",
-        "disconnected": "Desconnectat",
-        "neverConnected": "Mai connectat",
-        "pending": "Pendent"
+      "alerts": {
+        "title": "Alertes · nivell {level}+ · {hours} h",
+        "empty": "No hi ha alertes en aquest nivell. Tot està tranquil.",
+        "rule": "Regla {id}",
+        "openInDashboard": "Obre aquesta alerta al tauler de Wazuh"
       },
-      "statusLabel": {
-        "active": "Actiu",
-        "disconnected": "Desconnectat",
-        "never_connected": "No s'ha connectat mai",
-        "pending": "Pendent",
-        "unknown": "Desconegut"
+      "timeline": {
+        "title": "Línia temporal de les alertes · {range}",
+        "total": "{count} alertes",
+        "interval": "cada {interval}"
       },
-      "live": "En directe",
-      "snapshot": "Instantània de fa {age}",
-      "snapshotHint": "Llegeix les dades de la instantània de l'agent del tauler de Wazuh (wazuh-monitoring), presa a les {time}. Afegeix les credencials de l'API del servidor per obtenir dades en temps real.",
-      "staleSnapshot": "La instantània de l'agent de les {time} està obsoleta. Comprova que la tasca de supervisió del tauler de Wazuh s'estigui executant o afegeix les credencials de l'API del servidor.",
-      "noDisconnected": "Tots els agents estan connectats",
-      "empty": "Cap agent coincideix amb aquest filtre",
-      "column": {
-        "status": "Estat",
-        "name": "Nom de la feina",
-        "ip": "IP",
-        "os": "SO",
-        "version": "Versió",
-        "lastKeepAlive": "Manteniment de connexió",
-        "groups": "Grups"
+      "top": {
+        "title": {
+          "rules": "Regles principals · {range}",
+          "agents": "Agents principals · {range}",
+          "sourceIps": "IP d'origen principals · {range}",
+          "mitreTactics": "Tàctiques MITRE · {range}",
+          "mitreTechniques": "Tècniques MITRE · {range}"
+        },
+        "empty": {
+          "rules": "No hi ha alertes en aquest període",
+          "agents": "No hi ha alertes en aquest període",
+          "sourceIps": "No hi ha alertes amb una IP d'origen en aquest període",
+          "mitreTactics": "No hi ha alertes assignades a MITRE ATT&CK en aquest període",
+          "mitreTechniques": "No hi ha alertes assignades a MITRE ATT&CK en aquest període"
+        },
+        "totalTooltip": "{count} alertes coincidents",
+        "private": "LAN",
+        "public": "Pública",
+        "agents": "Vist en {count} agents",
+        "others": "{count} alertes més en altres entrades"
       },
-      "outdated": "Més antiga que la versió més recent de l'agent ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Canal d'alertes de Wazuh",
-      "description": "Alertes recents de Wazuh amb el nivell, les tècniques MITRE ATT&CK, l'agent i l'adreça IP d'origen",
-      "option": {
-        "minLevel": {
-          "label": "Nivell mínim de regla",
-          "description": "Nivells de Wazuh: 0-6 baix, 7-11 mitjà, 12-14 alt, 15 o més crític"
+      "agents": {
+        "title": "Agents",
+        "total": "{count} agents",
+        "status": {
+          "active": "Actiu",
+          "disconnected": "Desconnectat",
+          "neverConnected": "Mai connectat",
+          "pending": "Pendent"
         },
-        "hours": {
-          "label": "Finestra temporal (hores)"
+        "statusLabel": {
+          "active": "Actiu",
+          "disconnected": "Desconnectat",
+          "never_connected": "No s'ha connectat mai",
+          "pending": "Pendent",
+          "unknown": "Desconegut"
         },
-        "limit": {
-          "label": "Nombre d'alertes"
+        "live": "En directe",
+        "snapshot": "Instantània de fa {age}",
+        "snapshotHint": "Llegeix les dades de la instantània de l'agent del tauler de Wazuh (wazuh-monitoring), presa a les {time}. Afegeix les credencials de l'API del servidor per obtenir dades en temps real.",
+        "staleSnapshot": "La instantània de l'agent de les {time} està obsoleta. Comprova que la tasca de supervisió del tauler de Wazuh s'estigui executant o afegeix les credencials de l'API del servidor.",
+        "noDisconnected": "Tots els agents estan connectats",
+        "empty": "Cap agent coincideix amb aquest filtre",
+        "column": {
+          "status": "Estat",
+          "name": "Nom de la feina",
+          "ip": "IP",
+          "os": "SO",
+          "version": "Versió",
+          "lastKeepAlive": "Manteniment de connexió",
+          "groups": "Grups"
         },
-        "showMitre": {
-          "label": "Mostra les tècniques MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Mostra l'agent"
-        },
-        "showSourceIp": {
-          "label": "Mostra la IP d'origen"
-        },
-        "showRuleId": {
-          "label": "Mostra l'identificador de la regla"
-        }
+        "outdated": "Més antiga que la versió més recent de l'agent ({version})"
       },
-      "title": "Alertes · nivell {level}+ · {hours} h",
-      "empty": "No hi ha alertes en aquest nivell. Tot està tranquil.",
-      "rule": "Regla {id}",
-      "openInDashboard": "Obre aquesta alerta al tauler de Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Gravetat de les alertes de Wazuh",
-      "description": "Desglossament de la gravetat de les alertes amb una tendència respecte del període anterior",
+      "vulnerabilities": {
+        "title": "Vulnerabilitats",
+        "topCves": "CVE principals",
+        "score": "Puntuació",
+        "agentsShort": "Agents",
+        "topAgents": "Agents més vulnerables",
+        "criticalHigh": "Crític / alt",
+        "totalTooltip": "{count} troballes en {agents} agents",
+        "affected": "{count} agents",
+        "empty": "No s'han detectat vulnerabilitats",
+        "distribution": "Distribució de la gravetat. No es mostren {unscored} troballes sense puntuació.",
+        "worst": "Pitjor: {id} ({score}) en {agents} agents"
+      },
+      "fim": {
+        "title": "Integritat dels fitxers · {range}",
+        "event": {
+          "added": "Data d'addició",
+          "modified": "Modificat",
+          "deleted": "Eliminat",
+          "unknown": "Canviat"
+        },
+        "empty": "No hi ha esdeveniments d'integritat dels fitxers en aquest període",
+        "user": "per {user}",
+        "registry": "Registre"
+      },
+      "authFailures": {
+        "title": "Errors d'autenticació · {hours} h",
+        "seriesTooltip": "Tots els agents durant les darreres {hours} h",
+        "peak": "Màxim: {count}/interval",
+        "empty": "No hi ha inicis de sessió fallits en aquest període",
+        "failed": "Inicis de sessió fallits",
+        "failedHint": "Errors d'autenticació individuals (sshd, PAM, inici de sessió de Windows, usuaris no vàlids)",
+        "bruteForce": "Força bruta",
+        "bruteForceHint": "Regles de força bruta correlacionades (diversos errors en un període curt, MITRE T1110)",
+        "sourceIps": "Adreces IP d'origen",
+        "ipTooltip": "{ip}: {count} errors",
+        "bruteForceCount": "{count} de força bruta"
+      },
       "option": {
         "range": {
           "label": "Interval de temps"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Mostra el peu de pàgina"
-        }
-      },
-      "title": "Gravetat de les alertes · {range}",
-      "alerts": "alertes",
-      "none": "No hi ha alertes",
-      "trend": {
-        "new": "noves",
-        "tooltip": "Període anterior: {previous}"
-      },
-      "previous": "Els {range} anteriors: {count}",
-      "maxLevel": "Nivell màxim {level}",
-      "health": "Estat de l'indexador: {status}",
-      "manager": "Gestor {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Línia temporal de les alertes de Wazuh",
-      "description": "Gràfic apilat de les alertes de Wazuh al llarg del temps per gravetat",
-      "option": {
-        "range": {
-          "label": "Interval de temps"
         },
         "interval": {
           "label": "Interval"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Mostra la llegenda amb els totals"
-        }
-      },
-      "title": "Línia temporal de les alertes · {range}",
-      "total": "{count} alertes",
-      "interval": "cada {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Llista principal de Wazuh",
-      "description": "Regles, agents, adreces IP d'origen o tàctiques i tècniques MITRE ATT&CK principals per nombre d'alertes",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Classificació"
         },
-        "range": {
-          "label": "Interval de temps"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Nombre d'entrades"
-        },
-        "minLevel": {
-          "label": "Nivell mínim de la regla"
         },
         "showBars": {
           "label": "Mostra les barres"
-        }
-      },
-      "title": {
-        "rules": "Regles principals · {range}",
-        "agents": "Agents principals · {range}",
-        "sourceIps": "IP d'origen principals · {range}",
-        "mitreTactics": "Tàctiques MITRE · {range}",
-        "mitreTechniques": "Tècniques MITRE · {range}"
-      },
-      "empty": {
-        "rules": "No hi ha alertes en aquest període",
-        "agents": "No hi ha alertes en aquest període",
-        "sourceIps": "No hi ha alertes amb una IP d'origen en aquest període",
-        "mitreTactics": "No hi ha alertes assignades a MITRE ATT&CK en aquest període",
-        "mitreTechniques": "No hi ha alertes assignades a MITRE ATT&CK en aquest període"
-      },
-      "totalTooltip": "{count} alertes coincidents",
-      "private": "LAN",
-      "public": "Pública",
-      "agents": "Vist en {count} agents",
-      "others": "{count} alertes més en altres entrades"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Vulnerabilitats de Wazuh",
-      "description": "Nombre de vulnerabilitats, CVE principals i agents més vulnerables",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Mostra els agents"
+        },
+        "agentSortBy": {
+          "label": "Ordena per"
+        },
+        "showVersion": {
+          "label": "Mostra la columna de versió de Wazuh"
+        },
+        "showGroups": {
+          "label": "Mostra la columna de grups"
+        },
         "cveOrder": {
           "label": "Classifica els CVE per"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Mostra els agents més vulnerables"
-        }
-      },
-      "title": "Vulnerabilitats",
-      "topCves": "CVE principals",
-      "score": "Puntuació",
-      "agentsShort": "Agents",
-      "topAgents": "Agents més vulnerables",
-      "criticalHigh": "Crític / alt",
-      "totalTooltip": "{count} troballes en {agents} agents",
-      "affected": "{count} agents",
-      "empty": "No s'han detectat vulnerabilitats",
-      "distribution": "Distribució de la gravetat. No es mostren {unscored} troballes sense puntuació.",
-      "worst": "Pitjor: {id} ({score}) en {agents} agents"
-    },
-    "wazuhFim": {
-      "name": "Integritat dels fitxers de Wazuh",
-      "description": "Esdeveniments recents de supervisió de la integritat dels fitxers (syscheck)",
-      "option": {
-        "range": {
-          "label": "Interval de temps"
         },
-        "event": {
+        "fimEvent": {
           "label": "Esdeveniments"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Nombre d'esdeveniments"
         },
         "includeRegistry": {
           "label": "Inclou els esdeveniments del registre de Windows"
-        }
-      },
-      "title": "Integritat dels fitxers · {range}",
-      "event": {
-        "added": "Data d'addició",
-        "modified": "Modificat",
-        "deleted": "Eliminat",
-        "unknown": "Canviat"
-      },
-      "empty": "No hi ha esdeveniments d'integritat dels fitxers en aquest període",
-      "user": "per {user}",
-      "registry": "Registre"
-    },
-    "wazuhAuthFailures": {
-      "name": "Errors d'autenticació de Wazuh",
-      "description": "Inicis de sessió fallits i alertes de força bruta per agent amb gràfics horaris",
-      "option": {
-        "hours": {
-          "label": "Finestra temporal (hores)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Nombre d'agents"
         },
         "showSourceIps": {
           "label": "Mostra les IP d'origen principals"
+        },
+        "alertsMinLevel": {
+          "label": "Nivell mínim de regla",
+          "description": "Nivells de Wazuh: 0-6 baix, 7-11 mitjà, 12-14 alt, 15 o més crític"
+        },
+        "alertsLimit": {
+          "label": "Nombre d'alertes"
+        },
+        "showMitre": {
+          "label": "Mostra les tècniques MITRE ATT&CK"
+        },
+        "showAgent": {
+          "label": "Mostra l'agent"
+        },
+        "showSourceIp": {
+          "label": "Mostra la IP d'origen"
+        },
+        "showRuleId": {
+          "label": "Mostra l'identificador de la regla"
         }
-      },
-      "title": "Errors d'autenticació · {hours} h",
-      "seriesTooltip": "Tots els agents durant les darreres {hours} h",
-      "peak": "Màxim: {count}/interval",
-      "empty": "No hi ha inicis de sessió fallits en aquest període",
-      "failed": "Inicis de sessió fallits",
-      "failedHint": "Errors d'autenticació individuals (sshd, PAM, inici de sessió de Windows, usuaris no vàlids)",
-      "bruteForce": "Força bruta",
-      "bruteForceHint": "Regles de força bruta correlacionades (diversos errors en un període curt, MITRE T1110)",
-      "sourceIps": "Adreces IP d'origen",
-      "ipTooltip": "{ip}: {count} errors",
-      "bruteForceCount": "{count} de força bruta"
+      }
     }
   },
   "widgetPreview": {

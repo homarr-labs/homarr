@@ -89,14 +89,7 @@ export const widgetIntegrationConfigs = {
   traefik: { supportedIntegrations: ["traefik", "mock"] },
   wud: { supportedIntegrations: ["wud", "mock"], maxIntegrations: 1 },
   llamacpp: { supportedIntegrations: ["llamacpp", "mock"], maxIntegrations: 1 },
-  wazuhAgents: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhAlerts: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhSummary: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhTimeline: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhTopList: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhVulnerabilities: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhFim: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
-  wazuhAuthFailures: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
+  wazuh: { supportedIntegrations: ["wazuh", "mock"], maxIntegrations: 1 },
 } satisfies Partial<Record<WidgetKind, WidgetIntegrationConfig>>;
 
 export type WidgetKindWithIntegration = keyof typeof widgetIntegrationConfigs;

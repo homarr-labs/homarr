@@ -5458,92 +5458,123 @@
         "7d": "7 ngày",
         "30d": "30 ngày"
       },
-      "levelTooltip": "Cấp độ quy tắc {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agent Wazuh",
-      "description": "Danh sách agent Wazuh có thể sắp xếp, cùng trạng thái, hệ điều hành, phiên bản và lần duy trì kết nối gần nhất",
-      "option": {
-        "statusFilter": {
-          "label": "Hiển thị agent"
+      "levelTooltip": "Cấp độ quy tắc {level} ({severity})",
+      "summary": {
+        "title": "Mức độ nghiêm trọng của cảnh báo · {range}",
+        "alerts": "cảnh báo",
+        "none": "Không có cảnh báo",
+        "trend": {
+          "new": "mới",
+          "tooltip": "Kỳ trước: {previous}"
         },
-        "sortBy": {
-          "label": "Sắp xếp theo"
-        },
-        "showVersion": {
-          "label": "Hiển thị cột phiên bản Wazuh"
-        },
-        "showGroups": {
-          "label": "Hiển thị cột nhóm"
-        }
+        "previous": "{range} trước: {count}",
+        "maxLevel": "Cấp độ tối đa {level}",
+        "health": "Tình trạng Indexer: {status}",
+        "manager": "Trình quản lý {version}"
       },
-      "title": "Tác nhân",
-      "total": "{count} tác nhân",
-      "status": {
-        "active": "Đang hoạt động",
-        "disconnected": "Đã ngắt kết nối",
-        "neverConnected": "Chưa từng kết nối",
-        "pending": "Đang chờ"
+      "alerts": {
+        "title": "Cảnh báo · cấp độ {level}+ · {hours} giờ",
+        "empty": "Không có cảnh báo ở mức này. Mọi thứ đều yên ắng.",
+        "rule": "Quy tắc {id}",
+        "openInDashboard": "Mở cảnh báo này trong bảng điều khiển Wazuh"
       },
-      "statusLabel": {
-        "active": "Đang hoạt động",
-        "disconnected": "Đã ngắt kết nối",
-        "never_connected": "Chưa từng kết nối",
-        "pending": "Đang chờ",
-        "unknown": "Không rõ"
+      "timeline": {
+        "title": "Dòng thời gian cảnh báo · {range}",
+        "total": "{count} cảnh báo",
+        "interval": "mỗi {interval}"
       },
-      "live": "Trực tiếp",
-      "snapshot": "Ảnh chụp {age} đã cũ",
-      "snapshotHint": "Đọc từ ảnh chụp tác nhân của bảng điều khiển Wazuh (wazuh-monitoring) được tạo lúc {time}. Thêm thông tin xác thực API máy chủ để nhận dữ liệu trực tiếp.",
-      "staleSnapshot": "Ảnh chụp tác nhân từ {time} đã lỗi thời. Kiểm tra xem tác vụ giám sát bảng điều khiển Wazuh có đang chạy không hoặc thêm thông tin xác thực API máy chủ.",
-      "noDisconnected": "Tất cả tác nhân đều đã kết nối",
-      "empty": "Không có tác nhân nào khớp với bộ lọc này",
-      "column": {
-        "status": "Trạng thái",
-        "name": "Tên công việc",
-        "ip": "Địa chỉ IP",
-        "os": "Hệ điều hành",
-        "version": "Phiên bản",
-        "lastKeepAlive": "Duy trì kết nối",
-        "groups": "Các nhóm"
+      "top": {
+        "title": {
+          "rules": "Quy tắc hàng đầu · {range}",
+          "agents": "Tác nhân hàng đầu · {range}",
+          "sourceIps": "IP nguồn hàng đầu · {range}",
+          "mitreTactics": "Chiến thuật MITRE · {range}",
+          "mitreTechniques": "Kỹ thuật MITRE · {range}"
+        },
+        "empty": {
+          "rules": "Không có cảnh báo trong khoảng thời gian này",
+          "agents": "Không có cảnh báo trong khoảng thời gian này",
+          "sourceIps": "Không có cảnh báo nào có IP nguồn trong khoảng thời gian này",
+          "mitreTactics": "Không có cảnh báo nào được ánh xạ tới MITRE ATT&CK trong khoảng thời gian này",
+          "mitreTechniques": "Không có cảnh báo nào được ánh xạ tới MITRE ATT&CK trong khoảng thời gian này"
+        },
+        "totalTooltip": "{count} cảnh báo phù hợp",
+        "private": "Mạng LAN",
+        "public": "Công khai",
+        "agents": "Được ghi nhận trên {count} tác nhân",
+        "others": "Còn {count} cảnh báo trong các mục khác"
       },
-      "outdated": "Cũ hơn phiên bản tác nhân mới nhất ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Nguồn cấp cảnh báo Wazuh",
-      "description": "Các cảnh báo Wazuh gần đây cùng mức độ, kỹ thuật MITRE ATT&CK, tác nhân và IP nguồn",
-      "option": {
-        "minLevel": {
-          "label": "Mức quy tắc tối thiểu",
-          "description": "Mức Wazuh: 0–6 thấp, 7–11 trung bình, 12–14 cao, từ 15 nghiêm trọng"
+      "agents": {
+        "title": "Tác nhân",
+        "total": "{count} tác nhân",
+        "status": {
+          "active": "Đang hoạt động",
+          "disconnected": "Đã ngắt kết nối",
+          "neverConnected": "Chưa từng kết nối",
+          "pending": "Đang chờ"
         },
-        "hours": {
-          "label": "Khoảng thời gian (giờ)"
+        "statusLabel": {
+          "active": "Đang hoạt động",
+          "disconnected": "Đã ngắt kết nối",
+          "never_connected": "Chưa từng kết nối",
+          "pending": "Đang chờ",
+          "unknown": "Không rõ"
         },
-        "limit": {
-          "label": "Số lượng cảnh báo"
+        "live": "Trực tiếp",
+        "snapshot": "Ảnh chụp {age} đã cũ",
+        "snapshotHint": "Đọc từ ảnh chụp tác nhân của bảng điều khiển Wazuh (wazuh-monitoring) được tạo lúc {time}. Thêm thông tin xác thực API máy chủ để nhận dữ liệu trực tiếp.",
+        "staleSnapshot": "Ảnh chụp tác nhân từ {time} đã lỗi thời. Kiểm tra xem tác vụ giám sát bảng điều khiển Wazuh có đang chạy không hoặc thêm thông tin xác thực API máy chủ.",
+        "noDisconnected": "Tất cả tác nhân đều đã kết nối",
+        "empty": "Không có tác nhân nào khớp với bộ lọc này",
+        "column": {
+          "status": "Trạng thái",
+          "name": "Tên công việc",
+          "ip": "Địa chỉ IP",
+          "os": "Hệ điều hành",
+          "version": "Phiên bản",
+          "lastKeepAlive": "Duy trì kết nối",
+          "groups": "Các nhóm"
         },
-        "showMitre": {
-          "label": "Hiển thị kỹ thuật MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Hiển thị tác nhân"
-        },
-        "showSourceIp": {
-          "label": "Hiển thị IP nguồn"
-        },
-        "showRuleId": {
-          "label": "Hiển thị ID quy tắc"
-        }
+        "outdated": "Cũ hơn phiên bản tác nhân mới nhất ({version})"
       },
-      "title": "Cảnh báo · cấp độ {level}+ · {hours} giờ",
-      "empty": "Không có cảnh báo ở mức này. Mọi thứ đều yên ắng.",
-      "rule": "Quy tắc {id}",
-      "openInDashboard": "Mở cảnh báo này trong bảng điều khiển Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Mức độ nghiêm trọng của cảnh báo Wazuh",
-      "description": "Phân tích mức độ nghiêm trọng của cảnh báo cùng xu hướng so với kỳ trước",
+      "vulnerabilities": {
+        "title": "Lỗ hổng",
+        "topCves": "CVE hàng đầu",
+        "score": "Điểm số",
+        "agentsShort": "Tác nhân",
+        "topAgents": "Các tác nhân dễ bị tấn công nhất",
+        "criticalHigh": "Nghiêm trọng / Cao",
+        "totalTooltip": "{count} phát hiện trên {agents} tác nhân",
+        "affected": "{count} tác nhân",
+        "empty": "Không phát hiện lỗ hổng",
+        "distribution": "Phân bổ mức độ nghiêm trọng. Không hiển thị {unscored} phát hiện không có điểm số.",
+        "worst": "Tệ nhất: {id} ({score}) trên {agents} tác nhân"
+      },
+      "fim": {
+        "title": "Tính toàn vẹn tệp · {range}",
+        "event": {
+          "added": "Ngày thêm",
+          "modified": "Đã sửa đổi",
+          "deleted": "Đã xóa",
+          "unknown": "Đã thay đổi"
+        },
+        "empty": "Không có sự kiện toàn vẹn tệp trong khoảng thời gian này",
+        "user": "bởi {user}",
+        "registry": "Sổ đăng ký"
+      },
+      "authFailures": {
+        "title": "Lỗi xác thực · {hours} giờ",
+        "seriesTooltip": "Tất cả tác nhân trong {hours} giờ qua",
+        "peak": "Đỉnh {count}/khoảng",
+        "empty": "Không có lần đăng nhập thất bại trong khoảng thời gian này",
+        "failed": "Đăng nhập thất bại",
+        "failedHint": "Các lỗi xác thực đơn lẻ (sshd, PAM, đăng nhập Windows, người dùng không hợp lệ)",
+        "bruteForce": "Brute-force",
+        "bruteForceHint": "Các quy tắc brute-force tương quan (nhiều lần thất bại trong thời gian ngắn, MITRE T1110)",
+        "sourceIps": "IP nguồn",
+        "ipTooltip": "{ip}: {count} lần thất bại",
+        "bruteForceCount": "{count} lần brute-force"
+      },
       "option": {
         "range": {
           "label": "Khoảng thời gian"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Hiển thị chân trang"
-        }
-      },
-      "title": "Mức độ nghiêm trọng của cảnh báo · {range}",
-      "alerts": "cảnh báo",
-      "none": "Không có cảnh báo",
-      "trend": {
-        "new": "mới",
-        "tooltip": "Kỳ trước: {previous}"
-      },
-      "previous": "{range} trước: {count}",
-      "maxLevel": "Cấp độ tối đa {level}",
-      "health": "Tình trạng Indexer: {status}",
-      "manager": "Trình quản lý {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Dòng thời gian cảnh báo Wazuh",
-      "description": "Biểu đồ xếp chồng các cảnh báo Wazuh theo thời gian và mức độ nghiêm trọng",
-      "option": {
-        "range": {
-          "label": "Khoảng thời gian"
         },
         "interval": {
           "label": "Khoảng thời gian"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Hiển thị chú giải kèm tổng số"
-        }
-      },
-      "title": "Dòng thời gian cảnh báo · {range}",
-      "total": "{count} cảnh báo",
-      "interval": "mỗi {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Danh sách Wazuh hàng đầu",
-      "description": "Các quy tắc, tác nhân, IP nguồn hoặc chiến thuật và kỹ thuật MITRE ATT&CK hàng đầu theo số lượng cảnh báo",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Xếp hạng"
         },
-        "range": {
-          "label": "Khoảng thời gian"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Số mục"
-        },
-        "minLevel": {
-          "label": "Mức quy tắc tối thiểu"
         },
         "showBars": {
           "label": "Hiển thị thanh"
-        }
-      },
-      "title": {
-        "rules": "Quy tắc hàng đầu · {range}",
-        "agents": "Tác nhân hàng đầu · {range}",
-        "sourceIps": "IP nguồn hàng đầu · {range}",
-        "mitreTactics": "Chiến thuật MITRE · {range}",
-        "mitreTechniques": "Kỹ thuật MITRE · {range}"
-      },
-      "empty": {
-        "rules": "Không có cảnh báo trong khoảng thời gian này",
-        "agents": "Không có cảnh báo trong khoảng thời gian này",
-        "sourceIps": "Không có cảnh báo nào có IP nguồn trong khoảng thời gian này",
-        "mitreTactics": "Không có cảnh báo nào được ánh xạ tới MITRE ATT&CK trong khoảng thời gian này",
-        "mitreTechniques": "Không có cảnh báo nào được ánh xạ tới MITRE ATT&CK trong khoảng thời gian này"
-      },
-      "totalTooltip": "{count} cảnh báo phù hợp",
-      "private": "Mạng LAN",
-      "public": "Công khai",
-      "agents": "Được ghi nhận trên {count} tác nhân",
-      "others": "Còn {count} cảnh báo trong các mục khác"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Lỗ hổng Wazuh",
-      "description": "Số lượng lỗ hổng, CVE hàng đầu và các tác nhân dễ bị tấn công nhất",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Hiển thị agent"
+        },
+        "agentSortBy": {
+          "label": "Sắp xếp theo"
+        },
+        "showVersion": {
+          "label": "Hiển thị cột phiên bản Wazuh"
+        },
+        "showGroups": {
+          "label": "Hiển thị cột nhóm"
+        },
         "cveOrder": {
           "label": "Xếp hạng CVE theo"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Hiển thị các tác nhân dễ bị tấn công nhất"
-        }
-      },
-      "title": "Lỗ hổng",
-      "topCves": "CVE hàng đầu",
-      "score": "Điểm số",
-      "agentsShort": "Tác nhân",
-      "topAgents": "Các tác nhân dễ bị tấn công nhất",
-      "criticalHigh": "Nghiêm trọng / Cao",
-      "totalTooltip": "{count} phát hiện trên {agents} tác nhân",
-      "affected": "{count} tác nhân",
-      "empty": "Không phát hiện lỗ hổng",
-      "distribution": "Phân bổ mức độ nghiêm trọng. Không hiển thị {unscored} phát hiện không có điểm số.",
-      "worst": "Tệ nhất: {id} ({score}) trên {agents} tác nhân"
-    },
-    "wazuhFim": {
-      "name": "Tính toàn vẹn tệp Wazuh",
-      "description": "Các sự kiện giám sát tính toàn vẹn tệp gần đây (syscheck)",
-      "option": {
-        "range": {
-          "label": "Khoảng thời gian"
         },
-        "event": {
+        "fimEvent": {
           "label": "Sự kiện"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Số sự kiện"
         },
         "includeRegistry": {
           "label": "Bao gồm sự kiện sổ đăng ký Windows"
-        }
-      },
-      "title": "Tính toàn vẹn tệp · {range}",
-      "event": {
-        "added": "Ngày thêm",
-        "modified": "Đã sửa đổi",
-        "deleted": "Đã xóa",
-        "unknown": "Đã thay đổi"
-      },
-      "empty": "Không có sự kiện toàn vẹn tệp trong khoảng thời gian này",
-      "user": "bởi {user}",
-      "registry": "Sổ đăng ký"
-    },
-    "wazuhAuthFailures": {
-      "name": "Lỗi xác thực Wazuh",
-      "description": "Đăng nhập thất bại và cảnh báo brute-force theo tác nhân, kèm biểu đồ theo giờ",
-      "option": {
-        "hours": {
-          "label": "Khoảng thời gian (giờ)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Số tác nhân"
         },
         "showSourceIps": {
           "label": "Hiển thị IP nguồn hàng đầu"
+        },
+        "alertsMinLevel": {
+          "label": "Mức quy tắc tối thiểu",
+          "description": "Mức Wazuh: 0–6 thấp, 7–11 trung bình, 12–14 cao, từ 15 nghiêm trọng"
+        },
+        "alertsLimit": {
+          "label": "Số lượng cảnh báo"
+        },
+        "showMitre": {
+          "label": "Hiển thị kỹ thuật MITRE ATT&CK"
+        },
+        "showAgent": {
+          "label": "Hiển thị tác nhân"
+        },
+        "showSourceIp": {
+          "label": "Hiển thị IP nguồn"
+        },
+        "showRuleId": {
+          "label": "Hiển thị ID quy tắc"
         }
-      },
-      "title": "Lỗi xác thực · {hours} giờ",
-      "seriesTooltip": "Tất cả tác nhân trong {hours} giờ qua",
-      "peak": "Đỉnh {count}/khoảng",
-      "empty": "Không có lần đăng nhập thất bại trong khoảng thời gian này",
-      "failed": "Đăng nhập thất bại",
-      "failedHint": "Các lỗi xác thực đơn lẻ (sshd, PAM, đăng nhập Windows, người dùng không hợp lệ)",
-      "bruteForce": "Brute-force",
-      "bruteForceHint": "Các quy tắc brute-force tương quan (nhiều lần thất bại trong thời gian ngắn, MITRE T1110)",
-      "sourceIps": "IP nguồn",
-      "ipTooltip": "{ip}: {count} lần thất bại",
-      "bruteForceCount": "{count} lần brute-force"
+      }
     }
   },
   "widgetPreview": {

@@ -431,4 +431,5 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/custom-api"
   | "/docs/widgets/assistant"
   | "/docs/widgets/whats-up-docker"
-  | "/docs/widgets/llama-cpp";
+  | "/docs/widgets/llama-cpp"
+  | "/docs/widgets/wazuh";

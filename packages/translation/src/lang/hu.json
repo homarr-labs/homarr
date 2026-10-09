@@ -5458,92 +5458,123 @@
         "7d": "7 nap",
         "30d": "30 nap"
       },
-      "levelTooltip": "{level}. szabályszint ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh-ügynökök",
-      "description": "Rendezhető Wazuh-ügynöklista állapottal, operációs rendszerrel, verzióval és utolsó életjelzéssel",
-      "option": {
-        "statusFilter": {
-          "label": "Ügynökök megjelenítése"
+      "levelTooltip": "{level}. szabályszint ({severity})",
+      "summary": {
+        "title": "Riasztások súlyossága · {range}",
+        "alerts": "riasztás",
+        "none": "Nincsenek riasztások",
+        "trend": {
+          "new": "új",
+          "tooltip": "Előző időszak: {previous}"
         },
-        "sortBy": {
-          "label": "Rendezés szempontja"
-        },
-        "showVersion": {
-          "label": "Wazuh-verzió oszlopának megjelenítése"
-        },
-        "showGroups": {
-          "label": "Csoportok oszlopának megjelenítése"
-        }
+        "previous": "Előző {range}: {count}",
+        "maxLevel": "Legmagasabb szint: {level}",
+        "health": "Indexelő állapota: {status}",
+        "manager": "Kezelő: {version}"
       },
-      "title": "Ügynökök",
-      "total": "{count} ügynök",
-      "status": {
-        "active": "Aktív",
-        "disconnected": "Szétkapcsolt",
-        "neverConnected": "Soha nem csatlakozott",
-        "pending": "Függőben"
+      "alerts": {
+        "title": "Riasztások · {level}+ szint · {hours} óra",
+        "empty": "Ezen a szinten nincsenek riasztások. Minden rendben.",
+        "rule": "{id}. szabály",
+        "openInDashboard": "Riasztás megnyitása a Wazuh-műszerfalon"
       },
-      "statusLabel": {
-        "active": "Aktív",
-        "disconnected": "Szétkapcsolt",
-        "never_connected": "Soha nem csatlakozott",
-        "pending": "Függőben",
-        "unknown": "Ismeretlen"
+      "timeline": {
+        "title": "Riasztások idővonala · {range}",
+        "total": "{count} riasztás",
+        "interval": "{interval} időnként"
       },
-      "live": "Élő",
-      "snapshot": "{age} régi pillanatkép",
-      "snapshotHint": "A Wazuh-műszerfal {time} időpontban készült ügynökpillanatképéből (wazuh-monitoring) olvasva. Élő adatokhoz adj meg szerver-API-hitelesítő adatokat.",
-      "staleSnapshot": "A {time} időpontban készült ügynökpillanatkép elavult. Ellenőrizd, hogy fut-e a Wazuh-műszerfal figyelési feladata, vagy adj meg szerver-API-hitelesítő adatokat.",
-      "noDisconnected": "Minden ügynök csatlakoztatva van",
-      "empty": "Egyetlen ügynök sem felel meg ennek a szűrőnek",
-      "column": {
-        "status": "Állapot",
-        "name": "Folyamat neve",
-        "ip": "IP-cím",
-        "os": "Operációs rendszer",
-        "version": "Verzió",
-        "lastKeepAlive": "Életjelzés",
-        "groups": "Csoportok"
+      "top": {
+        "title": {
+          "rules": "Top szabályok · {range}",
+          "agents": "Top ügynökök · {range}",
+          "sourceIps": "Top forrás-IP-k · {range}",
+          "mitreTactics": "MITRE-taktikák · {range}",
+          "mitreTechniques": "MITRE-technikák · {range}"
+        },
+        "empty": {
+          "rules": "Ebben az időszakban nincsenek riasztások",
+          "agents": "Ebben az időszakban nincsenek riasztások",
+          "sourceIps": "Ebben az időszakban nincsenek forrás-IP-vel rendelkező riasztások",
+          "mitreTactics": "Ebben az időszakban nincsenek MITRE ATT&CK-hoz rendelt riasztások",
+          "mitreTechniques": "Ebben az időszakban nincsenek MITRE ATT&CK-hoz rendelt riasztások"
+        },
+        "totalTooltip": "{count} egyező riasztás",
+        "private": "LAN",
+        "public": "Nyilvános",
+        "agents": "{count} ügynökön észlelve",
+        "others": "{count} további riasztás más bejegyzésekben"
       },
-      "outdated": "Régebbi, mint a legújabb ügynökverzió ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh-riasztások hírcsatornája",
-      "description": "Legutóbbi Wazuh-riasztások szinttel, MITRE ATT&CK-technikákkal, ügynökkel és forrás-IP-címmel",
-      "option": {
-        "minLevel": {
-          "label": "Minimális szabályszint",
-          "description": "Wazuh-szintek: 0–6 alacsony, 7–11 közepes, 12–14 magas, 15+ kritikus"
+      "agents": {
+        "title": "Ügynökök",
+        "total": "{count} ügynök",
+        "status": {
+          "active": "Aktív",
+          "disconnected": "Szétkapcsolt",
+          "neverConnected": "Soha nem csatlakozott",
+          "pending": "Függőben"
         },
-        "hours": {
-          "label": "Időablak (óra)"
+        "statusLabel": {
+          "active": "Aktív",
+          "disconnected": "Szétkapcsolt",
+          "never_connected": "Soha nem csatlakozott",
+          "pending": "Függőben",
+          "unknown": "Ismeretlen"
         },
-        "limit": {
-          "label": "Riasztások száma"
+        "live": "Élő",
+        "snapshot": "{age} régi pillanatkép",
+        "snapshotHint": "A Wazuh-műszerfal {time} időpontban készült ügynökpillanatképéből (wazuh-monitoring) olvasva. Élő adatokhoz adj meg szerver-API-hitelesítő adatokat.",
+        "staleSnapshot": "A {time} időpontban készült ügynökpillanatkép elavult. Ellenőrizd, hogy fut-e a Wazuh-műszerfal figyelési feladata, vagy adj meg szerver-API-hitelesítő adatokat.",
+        "noDisconnected": "Minden ügynök csatlakoztatva van",
+        "empty": "Egyetlen ügynök sem felel meg ennek a szűrőnek",
+        "column": {
+          "status": "Állapot",
+          "name": "Folyamat neve",
+          "ip": "IP-cím",
+          "os": "Operációs rendszer",
+          "version": "Verzió",
+          "lastKeepAlive": "Életjelzés",
+          "groups": "Csoportok"
         },
-        "showMitre": {
-          "label": "MITRE ATT&CK-technikák megjelenítése"
-        },
-        "showAgent": {
-          "label": "Ügynök megjelenítése"
-        },
-        "showSourceIp": {
-          "label": "Riasztások · {level}+ szint · {hours} óra"
-        },
-        "showRuleId": {
-          "label": "Szabályazonosító megjelenítése"
-        }
+        "outdated": "Régebbi, mint a legújabb ügynökverzió ({version})"
       },
-      "title": "Riasztások · {level}+ szint · {hours} óra",
-      "empty": "Ezen a szinten nincsenek riasztások. Minden rendben.",
-      "rule": "{id}. szabály",
-      "openInDashboard": "Riasztás megnyitása a Wazuh-műszerfalon"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh-riasztások súlyossága",
-      "description": "Riasztások súlyosság szerinti bontása az előző időszakhoz viszonyított trenddel",
+      "vulnerabilities": {
+        "title": "Biztonsági rések",
+        "topCves": "Legfontosabb CVE-k",
+        "score": "Pontszám",
+        "agentsShort": "Ügynökök",
+        "topAgents": "Leginkább sérülékeny ügynökök",
+        "criticalHigh": "Kritikus / magas",
+        "totalTooltip": "{count} találat {agents} ügynökön",
+        "affected": "{count} ügynök",
+        "empty": "Nem találhatók biztonsági rések",
+        "distribution": "Súlyossági eloszlás. A pontszám nélküli {unscored} találat nem jelenik meg.",
+        "worst": "Legrosszabb: {id} ({score}) {agents} ügynökön"
+      },
+      "fim": {
+        "title": "Fájlintegritás · {range}",
+        "event": {
+          "added": "Hozzáadás dátuma",
+          "modified": "Módosítva",
+          "deleted": "Törölve",
+          "unknown": "Módosult"
+        },
+        "empty": "Ebben az időszakban nincsenek fájlintegritási események",
+        "user": "{user} által",
+        "registry": "Rendszerleíró adatbázis"
+      },
+      "authFailures": {
+        "title": "Hitelesítési hibák · {hours} óra",
+        "seriesTooltip": "Minden ügynök az elmúlt {hours} órában",
+        "peak": "Csúcs: {count}/csoport",
+        "empty": "Ebben az időszakban nincsenek sikertelen bejelentkezések",
+        "failed": "Sikertelen bejelentkezések",
+        "failedHint": "Egyedi hitelesítési hibák (sshd, PAM, Windows-bejelentkezés, érvénytelen felhasználók)",
+        "bruteForce": "Brute force támadás",
+        "bruteForceHint": "Összefüggő brute force szabályok (rövid időn belüli többszörös hibák, MITRE T1110)",
+        "sourceIps": "Forrás-IP-k",
+        "ipTooltip": "{ip}: {count} sikertelen kísérlet",
+        "bruteForceCount": "{count} brute force kísérlet"
+      },
       "option": {
         "range": {
           "label": "Időtartomány"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Lábléc megjelenítése"
-        }
-      },
-      "title": "Riasztások súlyossága · {range}",
-      "alerts": "riasztás",
-      "none": "Nincsenek riasztások",
-      "trend": {
-        "new": "új",
-        "tooltip": "Előző időszak: {previous}"
-      },
-      "previous": "Előző {range}: {count}",
-      "maxLevel": "Legmagasabb szint: {level}",
-      "health": "Indexelő állapota: {status}",
-      "manager": "Kezelő: {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh-riasztások idővonala",
-      "description": "Wazuh-riasztások időbeli halmozott diagramja súlyosság szerint",
-      "option": {
-        "range": {
-          "label": "Időtartomány"
         },
         "interval": {
           "label": "Időköz"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Jelmagyarázat megjelenítése összesítésekkel"
-        }
-      },
-      "title": "Riasztások idővonala · {range}",
-      "total": "{count} riasztás",
-      "interval": "{interval} időnként"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh toplistája",
-      "description": "Top szabályok, ügynökök, forrás-IP-k vagy MITRE ATT&CK-taktikák és -technikák a riasztások száma szerint",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rangsorolás"
         },
-        "range": {
-          "label": "Időtartomány"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Bejegyzések száma"
-        },
-        "minLevel": {
-          "label": "Minimális szabályszint"
         },
         "showBars": {
           "label": "Sávok megjelenítése"
-        }
-      },
-      "title": {
-        "rules": "Top szabályok · {range}",
-        "agents": "Top ügynökök · {range}",
-        "sourceIps": "Top forrás-IP-k · {range}",
-        "mitreTactics": "MITRE-taktikák · {range}",
-        "mitreTechniques": "MITRE-technikák · {range}"
-      },
-      "empty": {
-        "rules": "Ebben az időszakban nincsenek riasztások",
-        "agents": "Ebben az időszakban nincsenek riasztások",
-        "sourceIps": "Ebben az időszakban nincsenek forrás-IP-vel rendelkező riasztások",
-        "mitreTactics": "Ebben az időszakban nincsenek MITRE ATT&CK-hoz rendelt riasztások",
-        "mitreTechniques": "Ebben az időszakban nincsenek MITRE ATT&CK-hoz rendelt riasztások"
-      },
-      "totalTooltip": "{count} egyező riasztás",
-      "private": "LAN",
-      "public": "Nyilvános",
-      "agents": "{count} ügynökön észlelve",
-      "others": "{count} további riasztás más bejegyzésekben"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh-biztonsági rések",
-      "description": "Biztonsági rések száma, legfontosabb CVE-k és leginkább sérülékeny ügynökök",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Ügynökök megjelenítése"
+        },
+        "agentSortBy": {
+          "label": "Rendezés szempontja"
+        },
+        "showVersion": {
+          "label": "Wazuh-verzió oszlopának megjelenítése"
+        },
+        "showGroups": {
+          "label": "Csoportok oszlopának megjelenítése"
+        },
         "cveOrder": {
           "label": "CVE-k rangsorolása szempont szerint"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Leginkább sérülékeny ügynökök megjelenítése"
-        }
-      },
-      "title": "Biztonsági rések",
-      "topCves": "Legfontosabb CVE-k",
-      "score": "Pontszám",
-      "agentsShort": "Ügynökök",
-      "topAgents": "Leginkább sérülékeny ügynökök",
-      "criticalHigh": "Kritikus / magas",
-      "totalTooltip": "{count} találat {agents} ügynökön",
-      "affected": "{count} ügynök",
-      "empty": "Nem találhatók biztonsági rések",
-      "distribution": "Súlyossági eloszlás. A pontszám nélküli {unscored} találat nem jelenik meg.",
-      "worst": "Legrosszabb: {id} ({score}) {agents} ügynökön"
-    },
-    "wazuhFim": {
-      "name": "Wazuh-fájlintegritás",
-      "description": "Legutóbbi fájlintegritás-figyelési (syscheck) események",
-      "option": {
-        "range": {
-          "label": "Időtartomány"
         },
-        "event": {
+        "fimEvent": {
           "label": "Események"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Események száma"
         },
         "includeRegistry": {
           "label": "Windows rendszerleíró adatbázis-eseményeinek felvétele"
-        }
-      },
-      "title": "Fájlintegritás · {range}",
-      "event": {
-        "added": "Hozzáadás dátuma",
-        "modified": "Módosítva",
-        "deleted": "Törölve",
-        "unknown": "Módosult"
-      },
-      "empty": "Ebben az időszakban nincsenek fájlintegritási események",
-      "user": "{user} által",
-      "registry": "Rendszerleíró adatbázis"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh-hitelesítési hibák",
-      "description": "Sikertelen bejelentkezések és brute force riasztások ügynökönként, óránkénti grafikonokkal",
-      "option": {
-        "hours": {
-          "label": "Időablak (óra)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Ügynökök száma"
         },
         "showSourceIps": {
           "label": "Top forrás-IP-k megjelenítése"
+        },
+        "alertsMinLevel": {
+          "label": "Minimális szabályszint",
+          "description": "Wazuh-szintek: 0–6 alacsony, 7–11 közepes, 12–14 magas, 15+ kritikus"
+        },
+        "alertsLimit": {
+          "label": "Riasztások száma"
+        },
+        "showMitre": {
+          "label": "MITRE ATT&CK-technikák megjelenítése"
+        },
+        "showAgent": {
+          "label": "Ügynök megjelenítése"
+        },
+        "showSourceIp": {
+          "label": "Riasztások · {level}+ szint · {hours} óra"
+        },
+        "showRuleId": {
+          "label": "Szabályazonosító megjelenítése"
         }
-      },
-      "title": "Hitelesítési hibák · {hours} óra",
-      "seriesTooltip": "Minden ügynök az elmúlt {hours} órában",
-      "peak": "Csúcs: {count}/csoport",
-      "empty": "Ebben az időszakban nincsenek sikertelen bejelentkezések",
-      "failed": "Sikertelen bejelentkezések",
-      "failedHint": "Egyedi hitelesítési hibák (sshd, PAM, Windows-bejelentkezés, érvénytelen felhasználók)",
-      "bruteForce": "Brute force támadás",
-      "bruteForceHint": "Összefüggő brute force szabályok (rövid időn belüli többszörös hibák, MITRE T1110)",
-      "sourceIps": "Forrás-IP-k",
-      "ipTooltip": "{ip}: {count} sikertelen kísérlet",
-      "bruteForceCount": "{count} brute force kísérlet"
+      }
     }
   },
   "widgetPreview": {

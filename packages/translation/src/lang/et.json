@@ -5458,92 +5458,123 @@
         "7d": "7 päeva",
         "30d": "30 päeva"
       },
-      "levelTooltip": "Reegli tase {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuhi agendid",
-      "description": "Sorteeritav Wazuhi agentide loend oleku, operatsioonisüsteemi, versiooni ja viimase ühenduse hoidmise ajaga",
-      "option": {
-        "statusFilter": {
-          "label": "Kuva agendid"
+      "levelTooltip": "Reegli tase {level} ({severity})",
+      "summary": {
+        "title": "Hoiatuste raskusaste · {range}",
+        "alerts": "hoiatused",
+        "none": "Hoiatusi pole",
+        "trend": {
+          "new": "uued",
+          "tooltip": "Eelmine periood: {previous}"
         },
-        "sortBy": {
-          "label": "Sordi alusel"
-        },
-        "showVersion": {
-          "label": "Kuva Wazuhi versiooni veerg"
-        },
-        "showGroups": {
-          "label": "Kuva rühmade veerg"
-        }
+        "previous": "Eelmine {range}: {count}",
+        "maxLevel": "Maksimaalne tase {level}",
+        "health": "Indekseerija seisund: {status}",
+        "manager": "Haldur {version}"
       },
-      "title": "Agendid",
-      "total": "{count} agenti",
-      "status": {
-        "active": "Aktiivne",
-        "disconnected": "Ühenduseta",
-        "neverConnected": "Pole kunagi ühendunud",
-        "pending": "Ootel"
+      "alerts": {
+        "title": "Hoiatused · tase {level}+ · {hours} h",
+        "empty": "Sellel tasemel hoiatusi pole. Kõik on vaikne.",
+        "rule": "Reegel {id}",
+        "openInDashboard": "Ava see hoiatus Wazuhi töölaual"
       },
-      "statusLabel": {
-        "active": "Aktiivne",
-        "disconnected": "Ühenduseta",
-        "never_connected": "Pole kunagi ühendunud",
-        "pending": "Ootel",
-        "unknown": "Teadmata"
+      "timeline": {
+        "title": "Hoiatuste ajajoon · {range}",
+        "total": "{count} hoiatust",
+        "interval": "intervalli kohta {interval}"
       },
-      "live": "Reaalajas",
-      "snapshot": "Hetktõmmis on {age} vana",
-      "snapshotHint": "Loetud Wazuhi töölaua agendi hetktõmmisest (wazuh-monitoring), mis tehti kell {time}. Reaalajas andmete jaoks lisage serveri API mandaadid.",
-      "staleSnapshot": "Agendi hetktõmmis kellaajast {time} on aegunud. Kontrollige, kas Wazuhi töölaua jälgimistöö töötab, või lisage serveri API mandaadid.",
-      "noDisconnected": "Kõik agendid on ühendatud",
-      "empty": "Ükski agent ei vasta sellele filtrile",
-      "column": {
-        "status": "Olek",
-        "name": "Töö nimetus",
-        "ip": "IP",
-        "os": "Operatsioonisüsteem",
-        "version": "Versioon",
-        "lastKeepAlive": "Ühenduse elushoidmine",
-        "groups": "Rühmad"
+      "top": {
+        "title": {
+          "rules": "Peamised reeglid · {range}",
+          "agents": "Peamised agendid · {range}",
+          "sourceIps": "Peamised lähte-IP-d · {range}",
+          "mitreTactics": "MITRE taktikad · {range}",
+          "mitreTechniques": "MITRE tehnikad · {range}"
+        },
+        "empty": {
+          "rules": "Sellel perioodil hoiatusi pole",
+          "agents": "Sellel perioodil hoiatusi pole",
+          "sourceIps": "Sellel perioodil pole lähte-IP-ga hoiatusi",
+          "mitreTactics": "Sellel perioodil pole MITRE ATT&CK-iga seotud hoiatusi",
+          "mitreTechniques": "Sellel perioodil pole MITRE ATT&CK-iga seotud hoiatusi"
+        },
+        "totalTooltip": "{count} sobivat hoiatust",
+        "private": "LAN",
+        "public": "Avalik",
+        "agents": "Nähtud {count} agendil",
+        "others": "Veel {count} hoiatust teistes kirjete rühmades"
       },
-      "outdated": "Uusimast agendi versioonist vanem ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuhi hoiatuste voog",
-      "description": "Hiljutised Wazuhi hoiatused taseme, MITRE ATT&CK tehnikate, agendi ja lähte-IP-ga",
-      "option": {
-        "minLevel": {
-          "label": "Minimaalne reegli tase",
-          "description": "Wazuhi tasemed: 0–6 madal, 7–11 keskmine, 12–14 kõrge, 15+ kriitiline"
+      "agents": {
+        "title": "Agendid",
+        "total": "{count} agenti",
+        "status": {
+          "active": "Aktiivne",
+          "disconnected": "Ühenduseta",
+          "neverConnected": "Pole kunagi ühendunud",
+          "pending": "Ootel"
         },
-        "hours": {
-          "label": "Ajavahemik (tundides)"
+        "statusLabel": {
+          "active": "Aktiivne",
+          "disconnected": "Ühenduseta",
+          "never_connected": "Pole kunagi ühendunud",
+          "pending": "Ootel",
+          "unknown": "Teadmata"
         },
-        "limit": {
-          "label": "Hoiatuste arv"
+        "live": "Reaalajas",
+        "snapshot": "Hetktõmmis on {age} vana",
+        "snapshotHint": "Loetud Wazuhi töölaua agendi hetktõmmisest (wazuh-monitoring), mis tehti kell {time}. Reaalajas andmete jaoks lisage serveri API mandaadid.",
+        "staleSnapshot": "Agendi hetktõmmis kellaajast {time} on aegunud. Kontrollige, kas Wazuhi töölaua jälgimistöö töötab, või lisage serveri API mandaadid.",
+        "noDisconnected": "Kõik agendid on ühendatud",
+        "empty": "Ükski agent ei vasta sellele filtrile",
+        "column": {
+          "status": "Olek",
+          "name": "Töö nimetus",
+          "ip": "IP",
+          "os": "Operatsioonisüsteem",
+          "version": "Versioon",
+          "lastKeepAlive": "Ühenduse elushoidmine",
+          "groups": "Rühmad"
         },
-        "showMitre": {
-          "label": "Kuva MITRE ATT&CK tehnikad"
-        },
-        "showAgent": {
-          "label": "Kuva agent"
-        },
-        "showSourceIp": {
-          "label": "Kuva lähte-IP"
-        },
-        "showRuleId": {
-          "label": "Kuva reegli ID"
-        }
+        "outdated": "Uusimast agendi versioonist vanem ({version})"
       },
-      "title": "Hoiatused · tase {level}+ · {hours} h",
-      "empty": "Sellel tasemel hoiatusi pole. Kõik on vaikne.",
-      "rule": "Reegel {id}",
-      "openInDashboard": "Ava see hoiatus Wazuhi töölaual"
-    },
-    "wazuhSummary": {
-      "name": "Wazuhi hoiatuste raskusaste",
-      "description": "Hoiatuste raskusastme jaotus koos eelmise perioodi trendiga",
+      "vulnerabilities": {
+        "title": "Turvanõrkused",
+        "topCves": "Peamised CVE-d",
+        "score": "Skoor",
+        "agentsShort": "Agendid",
+        "topAgents": "Kõige haavatavamad agendid",
+        "criticalHigh": "Kriitiline / kõrge",
+        "totalTooltip": "{count} leidu {agents} agendil",
+        "affected": "{count} agenti",
+        "empty": "Turvanõrkusi ei tuvastatud",
+        "distribution": "Tõsiduse jaotus. Ilma skoorita {unscored} leidu ei kuvata.",
+        "worst": "Halvim: {id} ({score}) {agents} agendil"
+      },
+      "fim": {
+        "title": "Failide terviklus · {range}",
+        "event": {
+          "added": "Lisamise kuupäev",
+          "modified": "Muudetud",
+          "deleted": "Kustutatud",
+          "unknown": "Muud"
+        },
+        "empty": "Sellel perioodil pole failide tervikluse sündmusi",
+        "user": "kasutaja {user}",
+        "registry": "Register"
+      },
+      "authFailures": {
+        "title": "Autentimise nurjumised · {hours} h",
+        "seriesTooltip": "Kõik agendid viimase {hours} tunni jooksul",
+        "peak": "Tipp {count}/ämber",
+        "empty": "Sellel perioodil nurjunud sisselogimisi pole",
+        "failed": "Nurjunud sisselogimised",
+        "failedHint": "Üksikud autentimise nurjumised (sshd, PAM, Windowsi sisselogimine, sobimatud kasutajad)",
+        "bruteForce": "Jõurünne",
+        "bruteForceHint": "Seotud jõuründereeglid (lühikese aja jooksul mitu nurjumist, MITRE T1110)",
+        "sourceIps": "Lähte-IP-d",
+        "ipTooltip": "{ip}: {count} nurjumist",
+        "bruteForceCount": "{count} jõurünnakut"
+      },
       "option": {
         "range": {
           "label": "Ajavahemik"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Kuva jalus"
-        }
-      },
-      "title": "Hoiatuste raskusaste · {range}",
-      "alerts": "hoiatused",
-      "none": "Hoiatusi pole",
-      "trend": {
-        "new": "uued",
-        "tooltip": "Eelmine periood: {previous}"
-      },
-      "previous": "Eelmine {range}: {count}",
-      "maxLevel": "Maksimaalne tase {level}",
-      "health": "Indekseerija seisund: {status}",
-      "manager": "Haldur {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuhi hoiatuste ajajoon",
-      "description": "Wazuhi hoiatuste raskusastmepõhine virnastatud ajagraafik",
-      "option": {
-        "range": {
-          "label": "Ajavahemik"
         },
         "interval": {
           "label": "Intervall"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Kuva legend koos kogusummadega"
-        }
-      },
-      "title": "Hoiatuste ajajoon · {range}",
-      "total": "{count} hoiatust",
-      "interval": "intervalli kohta {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuhi edetabel",
-      "description": "Peamised reeglid, agendid, lähte-IP-aadressid või MITRE ATT&CK taktikad ja tehnikad hoiatuste arvu järgi",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Järjestus"
         },
-        "range": {
-          "label": "Ajavahemik"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Kirjete arv"
-        },
-        "minLevel": {
-          "label": "Reegli minimaalne tase"
         },
         "showBars": {
           "label": "Kuva ribad"
-        }
-      },
-      "title": {
-        "rules": "Peamised reeglid · {range}",
-        "agents": "Peamised agendid · {range}",
-        "sourceIps": "Peamised lähte-IP-d · {range}",
-        "mitreTactics": "MITRE taktikad · {range}",
-        "mitreTechniques": "MITRE tehnikad · {range}"
-      },
-      "empty": {
-        "rules": "Sellel perioodil hoiatusi pole",
-        "agents": "Sellel perioodil hoiatusi pole",
-        "sourceIps": "Sellel perioodil pole lähte-IP-ga hoiatusi",
-        "mitreTactics": "Sellel perioodil pole MITRE ATT&CK-iga seotud hoiatusi",
-        "mitreTechniques": "Sellel perioodil pole MITRE ATT&CK-iga seotud hoiatusi"
-      },
-      "totalTooltip": "{count} sobivat hoiatust",
-      "private": "LAN",
-      "public": "Avalik",
-      "agents": "Nähtud {count} agendil",
-      "others": "Veel {count} hoiatust teistes kirjete rühmades"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuhi turvanõrkused",
-      "description": "Turvanõrkuste arv, peamised CVE-d ja kõige haavatavamad agendid",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Kuva agendid"
+        },
+        "agentSortBy": {
+          "label": "Sordi alusel"
+        },
+        "showVersion": {
+          "label": "Kuva Wazuhi versiooni veerg"
+        },
+        "showGroups": {
+          "label": "Kuva rühmade veerg"
+        },
         "cveOrder": {
           "label": "Järjesta CVE-d järgmise järgi"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Kuva kõige haavatavamad agendid"
-        }
-      },
-      "title": "Turvanõrkused",
-      "topCves": "Peamised CVE-d",
-      "score": "Skoor",
-      "agentsShort": "Agendid",
-      "topAgents": "Kõige haavatavamad agendid",
-      "criticalHigh": "Kriitiline / kõrge",
-      "totalTooltip": "{count} leidu {agents} agendil",
-      "affected": "{count} agenti",
-      "empty": "Turvanõrkusi ei tuvastatud",
-      "distribution": "Tõsiduse jaotus. Ilma skoorita {unscored} leidu ei kuvata.",
-      "worst": "Halvim: {id} ({score}) {agents} agendil"
-    },
-    "wazuhFim": {
-      "name": "Wazuhi failide terviklus",
-      "description": "Hiljutised failide tervikluse jälgimise (syscheck) sündmused",
-      "option": {
-        "range": {
-          "label": "Ajavahemik"
         },
-        "event": {
+        "fimEvent": {
           "label": "Sündmused"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Sündmuste arv"
         },
         "includeRegistry": {
           "label": "Kaasa Windowsi registri sündmused"
-        }
-      },
-      "title": "Failide terviklus · {range}",
-      "event": {
-        "added": "Lisamise kuupäev",
-        "modified": "Muudetud",
-        "deleted": "Kustutatud",
-        "unknown": "Muud"
-      },
-      "empty": "Sellel perioodil pole failide tervikluse sündmusi",
-      "user": "kasutaja {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuhi autentimise nurjumised",
-      "description": "Nurjunud sisselogimised ja jõuründeh hoiatused agentide kaupa koos tunniste minigraafikutega",
-      "option": {
-        "hours": {
-          "label": "Ajavahemik (tundides)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Agentide arv"
         },
         "showSourceIps": {
           "label": "Kuva peamised lähte-IP-d"
+        },
+        "alertsMinLevel": {
+          "label": "Minimaalne reegli tase",
+          "description": "Wazuhi tasemed: 0–6 madal, 7–11 keskmine, 12–14 kõrge, 15+ kriitiline"
+        },
+        "alertsLimit": {
+          "label": "Hoiatuste arv"
+        },
+        "showMitre": {
+          "label": "Kuva MITRE ATT&CK tehnikad"
+        },
+        "showAgent": {
+          "label": "Kuva agent"
+        },
+        "showSourceIp": {
+          "label": "Kuva lähte-IP"
+        },
+        "showRuleId": {
+          "label": "Kuva reegli ID"
         }
-      },
-      "title": "Autentimise nurjumised · {hours} h",
-      "seriesTooltip": "Kõik agendid viimase {hours} tunni jooksul",
-      "peak": "Tipp {count}/ämber",
-      "empty": "Sellel perioodil nurjunud sisselogimisi pole",
-      "failed": "Nurjunud sisselogimised",
-      "failedHint": "Üksikud autentimise nurjumised (sshd, PAM, Windowsi sisselogimine, sobimatud kasutajad)",
-      "bruteForce": "Jõurünne",
-      "bruteForceHint": "Seotud jõuründereeglid (lühikese aja jooksul mitu nurjumist, MITRE T1110)",
-      "sourceIps": "Lähte-IP-d",
-      "ipTooltip": "{ip}: {count} nurjumist",
-      "bruteForceCount": "{count} jõurünnakut"
+      }
     }
   },
   "widgetPreview": {

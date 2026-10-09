@@ -5458,92 +5458,123 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Úroveň pravidla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agenti",
-      "description": "Seřadit seznam Wazuh agentů se stavem, OS, verzí a posledním udržovacím systémem",
-      "option": {
-        "statusFilter": {
-          "label": "Zobrazit agenty"
+      "levelTooltip": "Úroveň pravidla {level} ({severity})",
+      "summary": {
+        "title": "Upozornění na závažnost · {range}",
+        "alerts": "Výstrahy",
+        "none": "Žádná upozornění",
+        "trend": {
+          "new": "nový",
+          "tooltip": "Předchozí období: {previous}"
         },
-        "sortBy": {
-          "label": "Seřadit podle"
-        },
-        "showVersion": {
-          "label": "Zobrazit sloupec Wazuh"
-        },
-        "showGroups": {
-          "label": "Zobrazit sloupec skupin"
-        }
+        "previous": "Předchozí {range}: {count}",
+        "maxLevel": "Maximální úroveň {level}",
+        "health": "Indexovat zdraví: {status}",
+        "manager": "Správce {version}"
       },
-      "title": "Agenti",
-      "total": "{count} agenti",
-      "status": {
-        "active": "Aktivní",
-        "disconnected": "Odpojeno",
-        "neverConnected": "Nikdy nepřipojeno",
-        "pending": "Nevyřízeno"
+      "alerts": {
+        "title": "Upozornění · úroveň {level}+ · {hours}h",
+        "empty": "Na této úrovni nejsou žádná upozornění. Všechny tichy.",
+        "rule": "Pravidlo {id}",
+        "openInDashboard": "Otevřít toto upozornění na Wazuh dashboardu"
       },
-      "statusLabel": {
-        "active": "Aktivní",
-        "disconnected": "Odpojeno",
-        "never_connected": "Nikdy nepřipojeno",
-        "pending": "Nevyřízeno",
-        "unknown": "Neznámý"
+      "timeline": {
+        "title": "Časová osa upozornění · {range}",
+        "total": "{count} upozornění",
+        "interval": "za {interval}"
       },
-      "live": "Živé",
-      "snapshot": "Snímek {age} starý",
-      "snapshotHint": "Přečtěte si z Wazuh dashboardu agenta (sledování wazuh-monitoringu) na {time}. Přidejte API přihlašovací údaje pro živá data.",
-      "staleSnapshot": "Agent snapshot z {time} je zastaralý. Zkontrolujte, zda běží funkce monitorování Wazuh, nebo přidejte API přihlašovací údaje.",
-      "noDisconnected": "Všichni agenti jsou připojeni",
-      "empty": "Tomuto filtru neodpovídají žádní agenti",
-      "column": {
-        "status": "Stav",
-        "name": "Název úlohy",
-        "ip": "IP adresa",
-        "os": "OS",
-        "version": "Verze",
-        "lastKeepAlive": "Uchovávejte",
-        "groups": "Skupiny"
+      "top": {
+        "title": {
+          "rules": "Nejlepší pravidla · {range}",
+          "agents": "Nejlepší agenti · {range}",
+          "sourceIps": "Nejvíce zdrojové IP · {range}",
+          "mitreTactics": "MITRE taktika · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "Žádná upozornění v tomto období",
+          "agents": "Žádná upozornění v tomto období",
+          "sourceIps": "Žádná upozornění se zdrojovou IP v tomto období",
+          "mitreTactics": "Žádná upozornění mapovaná na MITRE ATT&CK v tomto období",
+          "mitreTechniques": "Žádná upozornění mapovaná na MITRE ATT&CK v tomto období"
+        },
+        "totalTooltip": "{count} odpovídající upozornění",
+        "private": "LAN",
+        "public": "Veřejné",
+        "agents": "Viděno na {count} agentech",
+        "others": "{count} další upozornění v ostatních záznamech"
       },
-      "outdated": "Starší než nejnovější verze agenta ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh feed upozornění",
-      "description": "Nedávné výstrahy Wazuh s úrovní, technikami MITRE ATT&CK a zdrojovou IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimální úroveň pravidla",
-          "description": "Wazuh úrovně: 0–6 nízký, 7–11 střední, 12–14 vysoký, 15+ kritický"
+      "agents": {
+        "title": "Agenti",
+        "total": "{count} agenti",
+        "status": {
+          "active": "Aktivní",
+          "disconnected": "Odpojeno",
+          "neverConnected": "Nikdy nepřipojeno",
+          "pending": "Nevyřízeno"
         },
-        "hours": {
-          "label": "Časové okno (v hodinách)"
+        "statusLabel": {
+          "active": "Aktivní",
+          "disconnected": "Odpojeno",
+          "never_connected": "Nikdy nepřipojeno",
+          "pending": "Nevyřízeno",
+          "unknown": "Neznámý"
         },
-        "limit": {
-          "label": "Počet záznamů"
+        "live": "Živé",
+        "snapshot": "Snímek {age} starý",
+        "snapshotHint": "Přečtěte si z Wazuh dashboardu agenta (sledování wazuh-monitoringu) na {time}. Přidejte API přihlašovací údaje pro živá data.",
+        "staleSnapshot": "Agent snapshot z {time} je zastaralý. Zkontrolujte, zda běží funkce monitorování Wazuh, nebo přidejte API přihlašovací údaje.",
+        "noDisconnected": "Všichni agenti jsou připojeni",
+        "empty": "Tomuto filtru neodpovídají žádní agenti",
+        "column": {
+          "status": "Stav",
+          "name": "Název úlohy",
+          "ip": "IP adresa",
+          "os": "OS",
+          "version": "Verze",
+          "lastKeepAlive": "Uchovávejte",
+          "groups": "Skupiny"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Zobrazit agenta"
-        },
-        "showSourceIp": {
-          "label": "Zobrazit zdrojovou IP"
-        },
-        "showRuleId": {
-          "label": "Zobrazit ID pravidla"
-        }
+        "outdated": "Starší než nejnovější verze agenta ({version})"
       },
-      "title": "Upozornění · úroveň {level}+ · {hours}h",
-      "empty": "Na této úrovni nejsou žádná upozornění. Všechny tichy.",
-      "rule": "Pravidlo {id}",
-      "openInDashboard": "Otevřít toto upozornění na Wazuh dashboardu"
-    },
-    "wazuhSummary": {
-      "name": "Upozornění na závažnost Wazuh",
-      "description": "Členění podle důležitosti výstrahy s trendem oproti předchozímu období",
+      "vulnerabilities": {
+        "title": "Zranitelné",
+        "topCves": "Nejlepší CVEs",
+        "score": "Skóre",
+        "agentsShort": "Agenti",
+        "topAgents": "Nejzranitelnější agenti",
+        "criticalHigh": "Království / vysoké",
+        "totalTooltip": "{count} nálezy na {agents} agentech",
+        "affected": "{count} agenti",
+        "empty": "Nenalezeny žádné chyby zabezpečení",
+        "distribution": "Rozložení závažnosti. {unscored} nálezy bez skóre nejsou zobrazeny.",
+        "worst": "Nejhorší: {id} ({score}) na {agents} agentech"
+      },
+      "fim": {
+        "title": "Integrita souboru · {range}",
+        "event": {
+          "added": "Datum přidání",
+          "modified": "Upraveno",
+          "deleted": "Odstraněno",
+          "unknown": "Změněno"
+        },
+        "empty": "Žádné události s integritou souboru v tomto období",
+        "user": "od {user}",
+        "registry": "Soudní kancelář"
+      },
+      "authFailures": {
+        "title": "Selhání ověření · {hours}h",
+        "seriesTooltip": "Všichni agenti za poslední {hours}h",
+        "peak": "Špička {count}/bucket",
+        "empty": "Žádná neúspěšná přihlášení v tomto období",
+        "failed": "Neúspěšná přihlášení",
+        "failedHint": "Selhání jediné autentizace (sshd, PAM, Windows logon, neplatné uživatele)",
+        "bruteForce": "Brzdná síla",
+        "bruteForceHint": "Související pravidla pro vyvažování kartografických sil (několik selhání v krátkém čase, MITRE T1110)",
+        "sourceIps": "Zdrojové IP",
+        "ipTooltip": "{ip}: {count} selhání",
+        "bruteForceCount": "{count} hrubá síla"
+      },
       "option": {
         "range": {
           "label": "Časový rozsah"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Zobrazit zápatí"
-        }
-      },
-      "title": "Upozornění na závažnost · {range}",
-      "alerts": "Výstrahy",
-      "none": "Žádná upozornění",
-      "trend": {
-        "new": "nový",
-        "tooltip": "Předchozí období: {previous}"
-      },
-      "previous": "Předchozí {range}: {count}",
-      "maxLevel": "Maximální úroveň {level}",
-      "health": "Indexovat zdraví: {status}",
-      "manager": "Správce {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Skrytá mapa upozornění Wazuh v průběhu času podle závažnosti",
-      "option": {
-        "range": {
-          "label": "Časový rozsah"
         },
         "interval": {
           "label": "Interval"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Zobrazit legendu s celkovými údaji"
-        }
-      },
-      "title": "Časová osa upozornění · {range}",
-      "total": "{count} upozornění",
-      "interval": "za {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Seznam nejlepších Wazuh",
-      "description": "Nejlepší pravidla, agenti, zdrojové IP nebo MITRE ATT&CK taktika a techniky podle počtu výstrah",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Hodnost"
         },
-        "range": {
-          "label": "Časový rozsah"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Počet vstupů"
-        },
-        "minLevel": {
-          "label": "Minimální úroveň pravidla"
         },
         "showBars": {
           "label": "Zobrazit pruhy"
-        }
-      },
-      "title": {
-        "rules": "Nejlepší pravidla · {range}",
-        "agents": "Nejlepší agenti · {range}",
-        "sourceIps": "Nejvíce zdrojové IP · {range}",
-        "mitreTactics": "MITRE taktika · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Žádná upozornění v tomto období",
-        "agents": "Žádná upozornění v tomto období",
-        "sourceIps": "Žádná upozornění se zdrojovou IP v tomto období",
-        "mitreTactics": "Žádná upozornění mapovaná na MITRE ATT&CK v tomto období",
-        "mitreTechniques": "Žádná upozornění mapovaná na MITRE ATT&CK v tomto období"
-      },
-      "totalTooltip": "{count} odpovídající upozornění",
-      "private": "LAN",
-      "public": "Veřejné",
-      "agents": "Viděno na {count} agentech",
-      "others": "{count} další upozornění v ostatních záznamech"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh zranitelnost",
-      "description": "Počet zranitelnosti, špičkové CVEs a nejzranitelnější činitelé",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Zobrazit agenty"
+        },
+        "agentSortBy": {
+          "label": "Seřadit podle"
+        },
+        "showVersion": {
+          "label": "Zobrazit sloupec Wazuh"
+        },
+        "showGroups": {
+          "label": "Zobrazit sloupec skupin"
+        },
         "cveOrder": {
           "label": "Hodnocení CVEs od"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Zobrazit nejzranitelnější agenty"
-        }
-      },
-      "title": "Zranitelné",
-      "topCves": "Nejlepší CVEs",
-      "score": "Skóre",
-      "agentsShort": "Agenti",
-      "topAgents": "Nejzranitelnější agenti",
-      "criticalHigh": "Království / vysoké",
-      "totalTooltip": "{count} nálezy na {agents} agentech",
-      "affected": "{count} agenti",
-      "empty": "Nenalezeny žádné chyby zabezpečení",
-      "distribution": "Rozložení závažnosti. {unscored} nálezy bez skóre nejsou zobrazeny.",
-      "worst": "Nejhorší: {id} ({score}) na {agents} agentech"
-    },
-    "wazuhFim": {
-      "name": "Integrita souboru Wazuh",
-      "description": "Nedávné události monitorování integrity souboru (syscheck)",
-      "option": {
-        "range": {
-          "label": "Časový rozsah"
         },
-        "event": {
+        "fimEvent": {
           "label": "Události"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Počet událostí"
         },
         "includeRegistry": {
           "label": "Zahrnout události registru Windows"
-        }
-      },
-      "title": "Integrita souboru · {range}",
-      "event": {
-        "added": "Datum přidání",
-        "modified": "Upraveno",
-        "deleted": "Odstraněno",
-        "unknown": "Změněno"
-      },
-      "empty": "Žádné události s integritou souboru v tomto období",
-      "user": "od {user}",
-      "registry": "Soudní kancelář"
-    },
-    "wazuhAuthFailures": {
-      "name": "Selhání ověřování Wazuh",
-      "description": "Nezdařilo se přihlásit a vynucená upozornění na agenta s hodinovou špinavou",
-      "option": {
-        "hours": {
-          "label": "Časové okno (v hodinách)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Počet agentů"
         },
         "showSourceIps": {
           "label": "Zobrazit nejlepší zdrojové IP adresy"
+        },
+        "alertsMinLevel": {
+          "label": "Minimální úroveň pravidla",
+          "description": "Wazuh úrovně: 0–6 nízký, 7–11 střední, 12–14 vysoký, 15+ kritický"
+        },
+        "alertsLimit": {
+          "label": "Počet záznamů"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Zobrazit agenta"
+        },
+        "showSourceIp": {
+          "label": "Zobrazit zdrojovou IP"
+        },
+        "showRuleId": {
+          "label": "Zobrazit ID pravidla"
         }
-      },
-      "title": "Selhání ověření · {hours}h",
-      "seriesTooltip": "Všichni agenti za poslední {hours}h",
-      "peak": "Špička {count}/bucket",
-      "empty": "Žádná neúspěšná přihlášení v tomto období",
-      "failed": "Neúspěšná přihlášení",
-      "failedHint": "Selhání jediné autentizace (sshd, PAM, Windows logon, neplatné uživatele)",
-      "bruteForce": "Brzdná síla",
-      "bruteForceHint": "Související pravidla pro vyvažování kartografických sil (několik selhání v krátkém čase, MITRE T1110)",
-      "sourceIps": "Zdrojové IP",
-      "ipTooltip": "{ip}: {count} selhání",
-      "bruteForceCount": "{count} hrubá síla"
+      }
     }
   },
   "widgetPreview": {

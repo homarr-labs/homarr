@@ -419,6 +419,33 @@ for (const kind of ["lidarr", "readarr"] as const) {
     (data) => data,
   );
 }
+existingStatsProviders.wazuh = adapter(
+  "wazuh",
+  [
+    metric("agents", "Agents"),
+    metric("activeAgents", "Active agents"),
+    metric("disconnectedAgents", "Disconnected agents"),
+    metric("alerts24h", "Alerts (24h)"),
+    metric("highAlerts24h", "High alerts (24h)"),
+    metric("criticalAlerts24h", "Critical alerts (24h)"),
+  ],
+  async (client) => {
+    const [agents, summary] = await Promise.all([
+      client.getAgentsOverviewAsync(),
+      // Alert counts need the indexer; agent counts still work with server API credentials only.
+      client.getSecuritySummaryAsync({ range: "24h" }).catch(() => null),
+    ]);
+    return { agents: agents.counts, alerts: summary?.alerts ?? null };
+  },
+  ({ agents, alerts }) => ({
+    agents: agents.total,
+    activeAgents: agents.active,
+    disconnectedAgents: agents.disconnected,
+    alerts24h: alerts?.total ?? null,
+    highAlerts24h: alerts?.high ?? null,
+    criticalAlerts24h: alerts?.critical ?? null,
+  }),
+);
 existingStatsProviders.mock = {
   metrics: [metric("documents", "Documents"), metric("songs", "Songs"), metric("storage", "Storage", "bytes")],
   async fetchAsync() {

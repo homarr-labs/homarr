@@ -5458,92 +5458,123 @@
         "7d": "7 dní",
         "30d": "30 dní"
       },
-      "levelTooltip": "Úroveň pravidla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agenti Wazuh",
-      "description": "Zoraditeľný zoznam agentov Wazuh so stavom, operačným systémom, verziou a posledným signálom keepalive",
-      "option": {
-        "statusFilter": {
-          "label": "Zobraziť agentov"
+      "levelTooltip": "Úroveň pravidla {level} ({severity})",
+      "summary": {
+        "title": "Závažnosť upozornení · {range}",
+        "alerts": "upozornení",
+        "none": "Žiadne upozornenia",
+        "trend": {
+          "new": "nový",
+          "tooltip": "Predchádzajúce obdobie: {previous}"
         },
-        "sortBy": {
-          "label": "Zoradiť podľa"
-        },
-        "showVersion": {
-          "label": "Zobraziť stĺpec verzie Wazuh"
-        },
-        "showGroups": {
-          "label": "Zobraziť stĺpec skupín"
-        }
+        "previous": "Predchádzajúce {range}: {count}",
+        "maxLevel": "Max. úroveň {level}",
+        "health": "Stav indexovača: {status}",
+        "manager": "Správca {version}"
       },
-      "title": "Agenti",
-      "total": "{count} agentov",
-      "status": {
-        "active": "Aktívny",
-        "disconnected": "Odpojené",
-        "neverConnected": "Nikdy nepripojené",
-        "pending": "Čakajúce"
+      "alerts": {
+        "title": "Upozornenia · úroveň {level}+ · {hours} h",
+        "empty": "Na tejto úrovni nie sú žiadne upozornenia. Všetko je pokojné.",
+        "rule": "Pravidlo {id}",
+        "openInDashboard": "Otvoriť toto upozornenie na nástenke Wazuh"
       },
-      "statusLabel": {
-        "active": "Aktívny",
-        "disconnected": "Odpojené",
-        "never_connected": "Nikdy nepripojené",
-        "pending": "Čakajúce",
-        "unknown": "Neznámy"
+      "timeline": {
+        "title": "Časová os upozornení · {range}",
+        "total": "{count} upozornení",
+        "interval": "za {interval}"
       },
-      "live": "Naživo",
-      "snapshot": "Snímka stará {age}",
-      "snapshotHint": "Načítané zo snímky agentov nástenky Wazuh (wazuh-monitoring) vytvorenej o {time}. Ak chcete živé údaje, pridajte poverenia API servera.",
-      "staleSnapshot": "Snímka agentov z {time} je zastaraná. Skontrolujte, či je spustená úloha monitorovania nástenky Wazuh, alebo pridajte poverenia API servera.",
-      "noDisconnected": "Všetci agenti sú pripojení",
-      "empty": "Tomuto filtru nevyhovujú žiadni agenti",
-      "column": {
-        "status": "Stav",
-        "name": "Názov úlohy",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Verzia",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Skupiny"
+      "top": {
+        "title": {
+          "rules": "Najčastejšie pravidlá · {range}",
+          "agents": "Najčastejší agenti · {range}",
+          "sourceIps": "Najčastejšie zdrojové IP adresy · {range}",
+          "mitreTactics": "Taktiky MITRE · {range}",
+          "mitreTechniques": "Techniky MITRE · {range}"
+        },
+        "empty": {
+          "rules": "V tomto období neboli zaznamenané žiadne upozornenia",
+          "agents": "V tomto období neboli zaznamenané žiadne upozornenia",
+          "sourceIps": "V tomto období neboli zaznamenané žiadne upozornenia so zdrojovou IP adresou",
+          "mitreTactics": "V tomto období neboli zaznamenané žiadne upozornenia priradené k MITRE ATT&CK",
+          "mitreTechniques": "V tomto období neboli zaznamenané žiadne upozornenia priradené k MITRE ATT&CK"
+        },
+        "totalTooltip": "{count} zodpovedajúcich upozornení",
+        "private": "Lokálna sieť",
+        "public": "Verejné",
+        "agents": "Zaznamenané na {count} agentoch",
+        "others": "{count} ďalších upozornení v ostatných položkách"
       },
-      "outdated": "Staršia než najnovšia verzia agenta ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Kanál upozornení Wazuh",
-      "description": "Nedávne upozornenia Wazuh s úrovňou, technikami MITRE ATT&CK, agentom a zdrojovou IP adresou",
-      "option": {
-        "minLevel": {
-          "label": "Minimálna úroveň pravidla",
-          "description": "Úrovne Wazuh: 0 – 6 nízka, 7 – 11 stredná, 12 – 14 vysoká, 15+ kritická"
+      "agents": {
+        "title": "Agenti",
+        "total": "{count} agentov",
+        "status": {
+          "active": "Aktívny",
+          "disconnected": "Odpojené",
+          "neverConnected": "Nikdy nepripojené",
+          "pending": "Čakajúce"
         },
-        "hours": {
-          "label": "Časové okno (hodiny)"
+        "statusLabel": {
+          "active": "Aktívny",
+          "disconnected": "Odpojené",
+          "never_connected": "Nikdy nepripojené",
+          "pending": "Čakajúce",
+          "unknown": "Neznámy"
         },
-        "limit": {
-          "label": "Počet upozornení"
+        "live": "Naživo",
+        "snapshot": "Snímka stará {age}",
+        "snapshotHint": "Načítané zo snímky agentov nástenky Wazuh (wazuh-monitoring) vytvorenej o {time}. Ak chcete živé údaje, pridajte poverenia API servera.",
+        "staleSnapshot": "Snímka agentov z {time} je zastaraná. Skontrolujte, či je spustená úloha monitorovania nástenky Wazuh, alebo pridajte poverenia API servera.",
+        "noDisconnected": "Všetci agenti sú pripojení",
+        "empty": "Tomuto filtru nevyhovujú žiadni agenti",
+        "column": {
+          "status": "Stav",
+          "name": "Názov úlohy",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Verzia",
+          "lastKeepAlive": "Keepalive",
+          "groups": "Skupiny"
         },
-        "showMitre": {
-          "label": "Zobraziť techniky MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Zobraziť agenta"
-        },
-        "showSourceIp": {
-          "label": "Zobraziť zdrojovú IP"
-        },
-        "showRuleId": {
-          "label": "Zobraziť ID pravidla"
-        }
+        "outdated": "Staršia než najnovšia verzia agenta ({version})"
       },
-      "title": "Upozornenia · úroveň {level}+ · {hours} h",
-      "empty": "Na tejto úrovni nie sú žiadne upozornenia. Všetko je pokojné.",
-      "rule": "Pravidlo {id}",
-      "openInDashboard": "Otvoriť toto upozornenie na nástenke Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Závažnosť upozornení Wazuh",
-      "description": "Rozdelenie závažnosti upozornení s trendom v porovnaní s predchádzajúcim obdobím",
+      "vulnerabilities": {
+        "title": "Zraniteľnosti",
+        "topCves": "Najčastejšie CVE",
+        "score": "Skóre",
+        "agentsShort": "Agenti",
+        "topAgents": "Najzraniteľnejší agenti",
+        "criticalHigh": "Kritické / vysoké",
+        "totalTooltip": "{count} nálezov na {agents} agentoch",
+        "affected": "{count} agentov",
+        "empty": "Neboli zistené žiadne zraniteľnosti",
+        "distribution": "Rozdelenie podľa závažnosti. {unscored} nálezov bez skóre sa nezobrazuje.",
+        "worst": "Najhoršie: {id} ({score}) na {agents} agentoch"
+      },
+      "fim": {
+        "title": "Integrita súborov · {range}",
+        "event": {
+          "added": "Dátum pridania",
+          "modified": "Upravené",
+          "deleted": "Odstránené",
+          "unknown": "Zmenené"
+        },
+        "empty": "V tomto období neboli zaznamenané žiadne udalosti integrity súborov",
+        "user": "používateľom {user}",
+        "registry": "Register"
+      },
+      "authFailures": {
+        "title": "Zlyhania overenia · {hours} h",
+        "seriesTooltip": "Všetci agenti za posledných {hours} h",
+        "peak": "Maximum {count}/interval",
+        "empty": "V tomto období neboli zaznamenané žiadne neúspešné prihlásenia",
+        "failed": "Neúspešné prihlásenia",
+        "failedHint": "Jednotlivé zlyhania overenia (sshd, PAM, prihlásenie do Windows, neplatní používatelia)",
+        "bruteForce": "Útok hrubou silou",
+        "bruteForceHint": "Korelované pravidlá útokov hrubou silou (viacero zlyhaní v krátkom období, MITRE T1110)",
+        "sourceIps": "Zdrojové IP adresy",
+        "ipTooltip": "{ip}: {count} zlyhaní",
+        "bruteForceCount": "{count} útokov hrubou silou"
+      },
       "option": {
         "range": {
           "label": "Časový rozsah"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Zobraziť pätu"
-        }
-      },
-      "title": "Závažnosť upozornení · {range}",
-      "alerts": "upozornení",
-      "none": "Žiadne upozornenia",
-      "trend": {
-        "new": "nový",
-        "tooltip": "Predchádzajúce obdobie: {previous}"
-      },
-      "previous": "Predchádzajúce {range}: {count}",
-      "maxLevel": "Max. úroveň {level}",
-      "health": "Stav indexovača: {status}",
-      "manager": "Správca {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Časová os upozornení Wazuh",
-      "description": "Skladaný graf upozornení Wazuh v čase podľa závažnosti",
-      "option": {
-        "range": {
-          "label": "Časový rozsah"
         },
         "interval": {
           "label": "Časový interval"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Zobraziť legendu so súčtami"
-        }
-      },
-      "title": "Časová os upozornení · {range}",
-      "total": "{count} upozornení",
-      "interval": "za {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Najčastejšie položky Wazuh",
-      "description": "Najčastejšie pravidlá, agenti, zdrojové IP adresy alebo taktiky a techniky MITRE ATT&CK podľa počtu upozornení",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Poradie"
         },
-        "range": {
-          "label": "Časový rozsah"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Počet položiek"
-        },
-        "minLevel": {
-          "label": "Minimálna úroveň pravidla"
         },
         "showBars": {
           "label": "Zobraziť stĺpce"
-        }
-      },
-      "title": {
-        "rules": "Najčastejšie pravidlá · {range}",
-        "agents": "Najčastejší agenti · {range}",
-        "sourceIps": "Najčastejšie zdrojové IP adresy · {range}",
-        "mitreTactics": "Taktiky MITRE · {range}",
-        "mitreTechniques": "Techniky MITRE · {range}"
-      },
-      "empty": {
-        "rules": "V tomto období neboli zaznamenané žiadne upozornenia",
-        "agents": "V tomto období neboli zaznamenané žiadne upozornenia",
-        "sourceIps": "V tomto období neboli zaznamenané žiadne upozornenia so zdrojovou IP adresou",
-        "mitreTactics": "V tomto období neboli zaznamenané žiadne upozornenia priradené k MITRE ATT&CK",
-        "mitreTechniques": "V tomto období neboli zaznamenané žiadne upozornenia priradené k MITRE ATT&CK"
-      },
-      "totalTooltip": "{count} zodpovedajúcich upozornení",
-      "private": "Lokálna sieť",
-      "public": "Verejné",
-      "agents": "Zaznamenané na {count} agentoch",
-      "others": "{count} ďalších upozornení v ostatných položkách"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Zraniteľnosti Wazuh",
-      "description": "Počty zraniteľností, najčastejšie CVE a najzraniteľnejší agenti",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Zobraziť agentov"
+        },
+        "agentSortBy": {
+          "label": "Zoradiť podľa"
+        },
+        "showVersion": {
+          "label": "Zobraziť stĺpec verzie Wazuh"
+        },
+        "showGroups": {
+          "label": "Zobraziť stĺpec skupín"
+        },
         "cveOrder": {
           "label": "Zoradiť CVE podľa"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Zobraziť najzraniteľnejších agentov"
-        }
-      },
-      "title": "Zraniteľnosti",
-      "topCves": "Najčastejšie CVE",
-      "score": "Skóre",
-      "agentsShort": "Agenti",
-      "topAgents": "Najzraniteľnejší agenti",
-      "criticalHigh": "Kritické / vysoké",
-      "totalTooltip": "{count} nálezov na {agents} agentoch",
-      "affected": "{count} agentov",
-      "empty": "Neboli zistené žiadne zraniteľnosti",
-      "distribution": "Rozdelenie podľa závažnosti. {unscored} nálezov bez skóre sa nezobrazuje.",
-      "worst": "Najhoršie: {id} ({score}) na {agents} agentoch"
-    },
-    "wazuhFim": {
-      "name": "Integrita súborov Wazuh",
-      "description": "Nedávne udalosti monitorovania integrity súborov (syscheck)",
-      "option": {
-        "range": {
-          "label": "Časový rozsah"
         },
-        "event": {
+        "fimEvent": {
           "label": "Udalosti"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Počet udalostí"
         },
         "includeRegistry": {
           "label": "Zahrnúť udalosti registra Windows"
-        }
-      },
-      "title": "Integrita súborov · {range}",
-      "event": {
-        "added": "Dátum pridania",
-        "modified": "Upravené",
-        "deleted": "Odstránené",
-        "unknown": "Zmenené"
-      },
-      "empty": "V tomto období neboli zaznamenané žiadne udalosti integrity súborov",
-      "user": "používateľom {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Zlyhania overenia Wazuh",
-      "description": "Neúspešné prihlásenia a upozornenia na útoky hrubou silou podľa agenta s hodinovými grafmi",
-      "option": {
-        "hours": {
-          "label": "Časové okno (hodiny)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Počet agentov"
         },
         "showSourceIps": {
           "label": "Zobraziť najčastejšie zdrojové IP adresy"
+        },
+        "alertsMinLevel": {
+          "label": "Minimálna úroveň pravidla",
+          "description": "Úrovne Wazuh: 0 – 6 nízka, 7 – 11 stredná, 12 – 14 vysoká, 15+ kritická"
+        },
+        "alertsLimit": {
+          "label": "Počet upozornení"
+        },
+        "showMitre": {
+          "label": "Zobraziť techniky MITRE ATT&CK"
+        },
+        "showAgent": {
+          "label": "Zobraziť agenta"
+        },
+        "showSourceIp": {
+          "label": "Zobraziť zdrojovú IP"
+        },
+        "showRuleId": {
+          "label": "Zobraziť ID pravidla"
         }
-      },
-      "title": "Zlyhania overenia · {hours} h",
-      "seriesTooltip": "Všetci agenti za posledných {hours} h",
-      "peak": "Maximum {count}/interval",
-      "empty": "V tomto období neboli zaznamenané žiadne neúspešné prihlásenia",
-      "failed": "Neúspešné prihlásenia",
-      "failedHint": "Jednotlivé zlyhania overenia (sshd, PAM, prihlásenie do Windows, neplatní používatelia)",
-      "bruteForce": "Útok hrubou silou",
-      "bruteForceHint": "Korelované pravidlá útokov hrubou silou (viacero zlyhaní v krátkom období, MITRE T1110)",
-      "sourceIps": "Zdrojové IP adresy",
-      "ipTooltip": "{ip}: {count} zlyhaní",
-      "bruteForceCount": "{count} útokov hrubou silou"
+      }
     }
   },
   "widgetPreview": {

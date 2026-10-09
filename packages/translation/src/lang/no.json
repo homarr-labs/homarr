@@ -5458,92 +5458,123 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Regelnivå {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Vasukiske midler",
-      "description": "Sorterbar liste over Wazuh agenter med status, OS, versjon og siste holdbarhet",
-      "option": {
-        "statusFilter": {
-          "label": "Vis agenter"
+      "levelTooltip": "Regelnivå {level} ({severity})",
+      "summary": {
+        "title": "Alvorlighetsgrad av alarm · {range}",
+        "alerts": "varsler",
+        "none": "Ingen varsler",
+        "trend": {
+          "new": "ny",
+          "tooltip": "Forrige periode: {previous}"
         },
-        "sortBy": {
-          "label": "Sorter etter"
-        },
-        "showVersion": {
-          "label": "Vis kolonne for Wazuh versjon"
-        },
-        "showGroups": {
-          "label": "Vis gruppe-kolonne"
-        }
+        "previous": "Forrige {range}: {count}",
+        "maxLevel": "Maks nivå {level}",
+        "health": "Indekserer health: {status}",
+        "manager": "Behandler {version}"
       },
-      "title": "Agenter",
-      "total": "{count} agenter",
-      "status": {
-        "active": "Aktiv",
-        "disconnected": "Frakoblet",
-        "neverConnected": "Aldri tilkoblet",
-        "pending": "Venter"
+      "alerts": {
+        "title": "Varsler · Nivå {level}+ · {hours}h",
+        "empty": "Ingen varsler på dette nivået. Alle rolige.",
+        "rule": "Regel {id}",
+        "openInDashboard": "Åpne dette varselet i Wazuh dashbordet"
       },
-      "statusLabel": {
-        "active": "Aktiv",
-        "disconnected": "Frakoblet",
-        "never_connected": "Aldri tilkoblet",
-        "pending": "Venter",
-        "unknown": "Ukjent"
+      "timeline": {
+        "title": "Varsler tidslinje · {range}",
+        "total": "{count} varsler",
+        "interval": "per {interval}"
       },
-      "live": "Direkte",
-      "snapshot": "Øyeblikksbilde fra {age} siden",
-      "snapshotHint": "Les fra Wazuh dashbord sitt bilde (wazuh-monitoring) tatt på {time}. Legg til API-opplysninger for live data.",
-      "staleSnapshot": "Agenten snapshot fra {time} er utdatert. Sjekk at Wazuh dashboard overvåkingsjobben er i gang, eller legg til server API legitimasjon.",
-      "noDisconnected": "Alle agenter er tilkoblet",
-      "empty": "Ingen agenter samsvarer med dette filteret",
-      "column": {
-        "status": "Status",
-        "name": "Jobb navn",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Versjon",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Grupper"
+      "top": {
+        "title": {
+          "rules": "Toppregler · {range}",
+          "agents": "Flest agenter · {range}",
+          "sourceIps": "Topp kilde IPs · {range}",
+          "mitreTactics": "MITRE taktikk · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "Ingen varsler i denne perioden",
+          "agents": "Ingen varsler i denne perioden",
+          "sourceIps": "Ingen varsler med kilde-IP i denne perioden",
+          "mitreTactics": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden",
+          "mitreTechniques": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden"
+        },
+        "totalTooltip": "{count} matchende varsler",
+        "private": "LAN",
+        "public": "Offentlig",
+        "agents": "Sett på {count} agenter",
+        "others": "{count} ytterligere varsler i andre enheter"
       },
-      "outdated": "Eldre enn nyeste agent versjon ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh varsler feed",
-      "description": "Siste Wazuh varsler med nivået, MITRE ATT&CK teknikker, agent og kilde IP",
-      "option": {
-        "minLevel": {
-          "label": "Minste regelnivå",
-          "description": "Wazuh-nivåer: 0-6 lav, 7-11 medium, 12-14 høy, 15 + kritisk"
+      "agents": {
+        "title": "Agenter",
+        "total": "{count} agenter",
+        "status": {
+          "active": "Aktiv",
+          "disconnected": "Frakoblet",
+          "neverConnected": "Aldri tilkoblet",
+          "pending": "Venter"
         },
-        "hours": {
-          "label": "Tidsvindu (timer)"
+        "statusLabel": {
+          "active": "Aktiv",
+          "disconnected": "Frakoblet",
+          "never_connected": "Aldri tilkoblet",
+          "pending": "Venter",
+          "unknown": "Ukjent"
         },
-        "limit": {
-          "label": "Antall varsler"
+        "live": "Direkte",
+        "snapshot": "Øyeblikksbilde fra {age} siden",
+        "snapshotHint": "Les fra Wazuh dashbord sitt bilde (wazuh-monitoring) tatt på {time}. Legg til API-opplysninger for live data.",
+        "staleSnapshot": "Agenten snapshot fra {time} er utdatert. Sjekk at Wazuh dashboard overvåkingsjobben er i gang, eller legg til server API legitimasjon.",
+        "noDisconnected": "Alle agenter er tilkoblet",
+        "empty": "Ingen agenter samsvarer med dette filteret",
+        "column": {
+          "status": "Status",
+          "name": "Jobb navn",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Versjon",
+          "lastKeepAlive": "Keepalive",
+          "groups": "Grupper"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Vis agent"
-        },
-        "showSourceIp": {
-          "label": "Vis kilde IP"
-        },
-        "showRuleId": {
-          "label": "Vis regel ID"
-        }
+        "outdated": "Eldre enn nyeste agent versjon ({version})"
       },
-      "title": "Varsler · Nivå {level}+ · {hours}h",
-      "empty": "Ingen varsler på dette nivået. Alle rolige.",
-      "rule": "Regel {id}",
-      "openInDashboard": "Åpne dette varselet i Wazuh dashbordet"
-    },
-    "wazuhSummary": {
-      "name": "Wazukh varslings alvorlighetsgrad",
-      "description": "Gjør alvorlighetsgraden oppmerksom med en trend mot forrige periode",
+      "vulnerabilities": {
+        "title": "Sårbarhet",
+        "topCves": "Øverste gjenstand",
+        "score": "Poeng",
+        "agentsShort": "Agenter",
+        "topAgents": "Mest sårbare agenter",
+        "criticalHigh": "Mal / Høy",
+        "totalTooltip": "{count} funn på {agents} agenter",
+        "affected": "{count} agenter",
+        "empty": "Ingen sårbarheter påvist",
+        "distribution": "Alvorlighetsfordeling. {unscored} funn uten en skår er ikke vist.",
+        "worst": "Vert: {id} ({score}) på {agents} agenter"
+      },
+      "fim": {
+        "title": "Filintegritet · {range}",
+        "event": {
+          "added": "Dato lagt til",
+          "modified": "Endret",
+          "deleted": "Slettet",
+          "unknown": "Endret"
+        },
+        "empty": "Ingen filintegritetshendelser i denne perioden",
+        "user": "av {user}",
+        "registry": "Register"
+      },
+      "authFailures": {
+        "title": "Autentiseringsfeil · {hours}t",
+        "seriesTooltip": "Alle agenter i løpet av den siste {hours}t",
+        "peak": "Topp {count}/bucket",
+        "empty": "Ingen mislykkede innlogginger i denne perioden",
+        "failed": "Mislykkede innlogginger",
+        "failedHint": "Enkelt-godkjenningsfeil ((sshd, PAM, Windows logon, ugyldige brukere)",
+        "bruteForce": "Brute kraft",
+        "bruteForceHint": "Korrigerte brute-kraftregler (flere feil i løpet av kort tid, MITRE T1110)",
+        "sourceIps": "Kilde IP-adresser",
+        "ipTooltip": "{ip}: {count} feil",
+        "bruteForceCount": "{count} renser kraft"
+      },
       "option": {
         "range": {
           "label": "Tidsintervall"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Vis bunntekst"
-        }
-      },
-      "title": "Alvorlighetsgrad av alarm · {range}",
-      "alerts": "varsler",
-      "none": "Ingen varsler",
-      "trend": {
-        "new": "ny",
-        "tooltip": "Forrige periode: {previous}"
-      },
-      "previous": "Forrige {range}: {count}",
-      "maxLevel": "Maks nivå {level}",
-      "health": "Indekserer health: {status}",
-      "manager": "Behandler {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Stablet diagram over Hviterusslåtte varsler over tid av alvorlighetsgrad",
-      "option": {
-        "range": {
-          "label": "Tidsintervall"
         },
         "interval": {
           "label": "Intervall"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Vis forklaring med totaler"
-        }
-      },
-      "title": "Varsler tidslinje · {range}",
-      "total": "{count} varsler",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Hvete toppliste",
-      "description": "Topp regler, agenter, kilde-IP-adresser eller MITRE ATT&CK taktikk og teknikker ved å varsle",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rangering"
         },
-        "range": {
-          "label": "Tidsintervall"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Antall oppføringer"
-        },
-        "minLevel": {
-          "label": "Minste regelnivå"
         },
         "showBars": {
           "label": "Vis streker"
-        }
-      },
-      "title": {
-        "rules": "Toppregler · {range}",
-        "agents": "Flest agenter · {range}",
-        "sourceIps": "Topp kilde IPs · {range}",
-        "mitreTactics": "MITRE taktikk · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Ingen varsler i denne perioden",
-        "agents": "Ingen varsler i denne perioden",
-        "sourceIps": "Ingen varsler med kilde-IP i denne perioden",
-        "mitreTactics": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden",
-        "mitreTechniques": "Ingen varsler tilordnet til MITRE ATT&CK i denne perioden"
-      },
-      "totalTooltip": "{count} matchende varsler",
-      "private": "LAN",
-      "public": "Offentlig",
-      "agents": "Sett på {count} agenter",
-      "others": "{count} ytterligere varsler i andre enheter"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Vasuske sårbarheter",
-      "description": "Teller for sårbarhet, øverste kVEer og mest sårbare stoffer",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Vis agenter"
+        },
+        "agentSortBy": {
+          "label": "Sorter etter"
+        },
+        "showVersion": {
+          "label": "Vis kolonne for Wazuh versjon"
+        },
+        "showGroups": {
+          "label": "Vis gruppe-kolonne"
+        },
         "cveOrder": {
           "label": "Ranger kven av"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Vis mest sårbare agenter"
-        }
-      },
-      "title": "Sårbarhet",
-      "topCves": "Øverste gjenstand",
-      "score": "Poeng",
-      "agentsShort": "Agenter",
-      "topAgents": "Mest sårbare agenter",
-      "criticalHigh": "Mal / Høy",
-      "totalTooltip": "{count} funn på {agents} agenter",
-      "affected": "{count} agenter",
-      "empty": "Ingen sårbarheter påvist",
-      "distribution": "Alvorlighetsfordeling. {unscored} funn uten en skår er ikke vist.",
-      "worst": "Vert: {id} ({score}) på {agents} agenter"
-    },
-    "wazuhFim": {
-      "name": "Wazuh fil integritet",
-      "description": "Nylig gjennomgått filintegritetsovervåking (syscheck) hendelser",
-      "option": {
-        "range": {
-          "label": "Tidsintervall"
         },
-        "event": {
+        "fimEvent": {
           "label": "Hendelser"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Antall hendelser"
         },
         "includeRegistry": {
           "label": "Inkluder Windows-registerhendelser"
-        }
-      },
-      "title": "Filintegritet · {range}",
-      "event": {
-        "added": "Dato lagt til",
-        "modified": "Endret",
-        "deleted": "Slettet",
-        "unknown": "Endret"
-      },
-      "empty": "Ingen filintegritetshendelser i denne perioden",
-      "user": "av {user}",
-      "registry": "Register"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh godkjenningsfeil",
-      "description": "Mislyktes å logge inn og brute-force varsler per agent med timelister",
-      "option": {
-        "hours": {
-          "label": "Tidsvindu (timer)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Antall agenter"
         },
         "showSourceIps": {
           "label": "Vis topp kilde IP-er"
+        },
+        "alertsMinLevel": {
+          "label": "Minste regelnivå",
+          "description": "Wazuh-nivåer: 0-6 lav, 7-11 medium, 12-14 høy, 15 + kritisk"
+        },
+        "alertsLimit": {
+          "label": "Antall varsler"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Vis agent"
+        },
+        "showSourceIp": {
+          "label": "Vis kilde IP"
+        },
+        "showRuleId": {
+          "label": "Vis regel ID"
         }
-      },
-      "title": "Autentiseringsfeil · {hours}t",
-      "seriesTooltip": "Alle agenter i løpet av den siste {hours}t",
-      "peak": "Topp {count}/bucket",
-      "empty": "Ingen mislykkede innlogginger i denne perioden",
-      "failed": "Mislykkede innlogginger",
-      "failedHint": "Enkelt-godkjenningsfeil ((sshd, PAM, Windows logon, ugyldige brukere)",
-      "bruteForce": "Brute kraft",
-      "bruteForceHint": "Korrigerte brute-kraftregler (flere feil i løpet av kort tid, MITRE T1110)",
-      "sourceIps": "Kilde IP-adresser",
-      "ipTooltip": "{ip}: {count} feil",
-      "bruteForceCount": "{count} renser kraft"
+      }
     }
   },
   "widgetPreview": {

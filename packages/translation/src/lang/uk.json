@@ -5458,92 +5458,123 @@
         "7d": "7 днів",
         "30d": "30д"
       },
-      "levelTooltip": "Рівень правила {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Вазухові агенти",
-      "description": "Список Wazuh агентів зі статусом, ОС, версія і остання підтримка",
-      "option": {
-        "statusFilter": {
-          "label": "Показати агентів"
+      "levelTooltip": "Рівень правила {level} ({severity})",
+      "summary": {
+        "title": "Рівень тривоги · {range}",
+        "alerts": "Сповіщення",
+        "none": "Немає сповіщень",
+        "trend": {
+          "new": "новий",
+          "tooltip": "Попередній період: {previous}"
         },
-        "sortBy": {
-          "label": "Сортувати за"
-        },
-        "showVersion": {
-          "label": "Показати колонку версій Wazuh"
-        },
-        "showGroups": {
-          "label": "Показувати стовпчик груп"
-        }
+        "previous": "Попередній {range}: {count}",
+        "maxLevel": "Максимальний рівень {level}",
+        "health": "Стан індексатора: {status}",
+        "manager": "Менеджер {version}"
       },
-      "title": "Агенти",
-      "total": "Агенти {count}",
-      "status": {
-        "active": "Активно",
-        "disconnected": "Відключено",
-        "neverConnected": "Ніколи не підключено",
-        "pending": "Очікує підтвердження"
+      "alerts": {
+        "title": "Оповіщення · Рівень {level}+ · {hours}год",
+        "empty": "Немає сповіщень на цьому рівні. Усе тихо.",
+        "rule": "Правило {id}",
+        "openInDashboard": "Відкрити це повідомлення у меню налаштувань Wazuh"
       },
-      "statusLabel": {
-        "active": "Активно",
-        "disconnected": "Відключено",
-        "never_connected": "Ніколи не підключено",
-        "pending": "Очікує підтвердження",
-        "unknown": "Невідомо"
+      "timeline": {
+        "title": "Часова шкала попереджень · {range}",
+        "total": "Сповіщення {count}",
+        "interval": "на {interval}"
       },
-      "live": "Наживо",
-      "snapshot": "Знімок {age} старий",
-      "snapshotHint": "Читайте з Wazuh dashshot (wazuh-monitoring) в системі {time}. Додайте облікові дані сервера для живих даних.",
-      "staleSnapshot": "Agent: snapshot з {time} є застарілим. Перевірте, чи працює робота з моніторингом Wazuh або додайте серверні облікові дані API.",
-      "noDisconnected": "Всі агенти підключені",
-      "empty": "Немає агентів, які відповідають цьому фільтру",
-      "column": {
-        "status": "Статус",
-        "name": "Назва",
-        "ip": "Адреса IP",
-        "os": "ОС",
-        "version": "Версія",
-        "lastKeepAlive": "Не потребує підтримки",
-        "groups": "Групи"
+      "top": {
+        "title": {
+          "rules": "Кращі правила · {range}",
+          "agents": "Найкращі агенти · {range}",
+          "sourceIps": "IP з найвищого джерела · {range}",
+          "mitreTactics": "MITRE тактика · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "У цьому періоді немає сповіщень",
+          "agents": "У цьому періоді немає сповіщень",
+          "sourceIps": "Немає сповіщень з вихідним IP в цьому періоді",
+          "mitreTactics": "За цей період немає сповіщень, змінених для MITRE ATT&CK",
+          "mitreTechniques": "За цей період немає сповіщень, змінених для MITRE ATT&CK"
+        },
+        "totalTooltip": "Сповіщення {count}",
+        "private": "LAN",
+        "public": "Публічний",
+        "agents": "На агентах з {count}",
+        "others": "{count} більше попереджень у інших записах"
       },
-      "outdated": "Старіші за найновішу версію агента ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Журнал сповіщень Wazu",
-      "description": "Останні повідомлення про Wazuh з рівнем використання, техніки MITRE ATT&CK, агент і хост IP джерела",
-      "option": {
-        "minLevel": {
-          "label": "Мінімальний рівень правила",
-          "description": "Рівень Wazu: 0-6 низький, 7-11 середній, 12-14 високий, 15 + критичний"
+      "agents": {
+        "title": "Агенти",
+        "total": "Агенти {count}",
+        "status": {
+          "active": "Активно",
+          "disconnected": "Відключено",
+          "neverConnected": "Ніколи не підключено",
+          "pending": "Очікує підтвердження"
         },
-        "hours": {
-          "label": "Вікно часу (години)"
+        "statusLabel": {
+          "active": "Активно",
+          "disconnected": "Відключено",
+          "never_connected": "Ніколи не підключено",
+          "pending": "Очікує підтвердження",
+          "unknown": "Невідомо"
         },
-        "limit": {
-          "label": "Кількість оповіщень"
+        "live": "Наживо",
+        "snapshot": "Знімок {age} старий",
+        "snapshotHint": "Читайте з Wazuh dashshot (wazuh-monitoring) в системі {time}. Додайте облікові дані сервера для живих даних.",
+        "staleSnapshot": "Agent: snapshot з {time} є застарілим. Перевірте, чи працює робота з моніторингом Wazuh або додайте серверні облікові дані API.",
+        "noDisconnected": "Всі агенти підключені",
+        "empty": "Немає агентів, які відповідають цьому фільтру",
+        "column": {
+          "status": "Статус",
+          "name": "Назва",
+          "ip": "Адреса IP",
+          "os": "ОС",
+          "version": "Версія",
+          "lastKeepAlive": "Не потребує підтримки",
+          "groups": "Групи"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Показати агента"
-        },
-        "showSourceIp": {
-          "label": "Показати IP джерела"
-        },
-        "showRuleId": {
-          "label": "Показати ідентифікатор правила"
-        }
+        "outdated": "Старіші за найновішу версію агента ({version})"
       },
-      "title": "Оповіщення · Рівень {level}+ · {hours}год",
-      "empty": "Немає сповіщень на цьому рівні. Усе тихо.",
-      "rule": "Правило {id}",
-      "openInDashboard": "Відкрити це повідомлення у меню налаштувань Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Вазуховий рівень",
-      "description": "Попередження про серйозність розриву з тенденцією проти попереднього періоду",
+      "vulnerabilities": {
+        "title": "Вразливості",
+        "topCves": "Кращі опубліковані",
+        "score": "Рахунок",
+        "agentsShort": "Агенти",
+        "topAgents": "Найвразливіші агенти",
+        "criticalHigh": "Тістечко / Високе",
+        "totalTooltip": "{count} виявлених проблем у {agents} агентів",
+        "affected": "Агенти {count}",
+        "empty": "вразливостей не виявлено",
+        "distribution": "Розподіл серйозності. знахідки {unscored} без рахунку не відображаються.",
+        "worst": "Гірше: {id} ({score}) на агентах {agents}"
+      },
+      "fim": {
+        "title": "Цілісність файлу · {range}",
+        "event": {
+          "added": "Дата додавання",
+          "modified": "Змінено",
+          "deleted": "Видалити",
+          "unknown": "Змінено"
+        },
+        "empty": "Немає події цілісності файлу у цьому періоді",
+        "user": "від {user}",
+        "registry": "Реєстр"
+      },
+      "authFailures": {
+        "title": "Невдачі автентифікації · {hours}год",
+        "seriesTooltip": "Усі агенти за останні {hours} год",
+        "peak": "Пік {count}/bucket",
+        "empty": "За цей період немає помилок",
+        "failed": "Помилка входу",
+        "failedHint": "Помилка самоперевірки автентичності (shd, PAM, Windows logon, невірні користувачі)",
+        "bruteForce": "Груба сила",
+        "bruteForceHint": "Правило жорстокої сили (кілька невдач в короткий період, MITRE T1110)",
+        "sourceIps": "IP джерела",
+        "ipTooltip": "{ip}: {count} невдачі",
+        "bruteForceCount": "{count} груба сила"
+      },
       "option": {
         "range": {
           "label": "Проміжок часу"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Показати футер"
-        }
-      },
-      "title": "Рівень тривоги · {range}",
-      "alerts": "Сповіщення",
-      "none": "Немає сповіщень",
-      "trend": {
-        "new": "новий",
-        "tooltip": "Попередній період: {previous}"
-      },
-      "previous": "Попередній {range}: {count}",
-      "maxLevel": "Максимальний рівень {level}",
-      "health": "Стан індексатора: {status}",
-      "manager": "Менеджер {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Необроблені графіки Wazu сповіщень з часом за допомогою тяжкості",
-      "option": {
-        "range": {
-          "label": "Проміжок часу"
         },
         "interval": {
           "label": "Проміжок"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Показати легенду з загальним підсумком"
-        }
-      },
-      "title": "Часова шкала попереджень · {range}",
-      "total": "Сповіщення {count}",
-      "interval": "на {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Список верхніх елементів Wazu",
-      "description": "Найкращі правила, агенти, вихідні адреси або MITRE ATT&CK тактики та методи, за допомогою лічильника попереджень",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Ранг"
         },
-        "range": {
-          "label": "Проміжок часу"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Кількість матеріалів"
-        },
-        "minLevel": {
-          "label": "Мінімальний рівень правила"
         },
         "showBars": {
           "label": "Показувати панелі"
-        }
-      },
-      "title": {
-        "rules": "Кращі правила · {range}",
-        "agents": "Найкращі агенти · {range}",
-        "sourceIps": "IP з найвищого джерела · {range}",
-        "mitreTactics": "MITRE тактика · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "У цьому періоді немає сповіщень",
-        "agents": "У цьому періоді немає сповіщень",
-        "sourceIps": "Немає сповіщень з вихідним IP в цьому періоді",
-        "mitreTactics": "За цей період немає сповіщень, змінених для MITRE ATT&CK",
-        "mitreTechniques": "За цей період немає сповіщень, змінених для MITRE ATT&CK"
-      },
-      "totalTooltip": "Сповіщення {count}",
-      "private": "LAN",
-      "public": "Публічний",
-      "agents": "На агентах з {count}",
-      "others": "{count} більше попереджень у інших записах"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Уразливості в Wazuh",
-      "description": "Кількість вразливих верств населення, провідних веж та найбільш вразливих агентів",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Показати агентів"
+        },
+        "agentSortBy": {
+          "label": "Сортувати за"
+        },
+        "showVersion": {
+          "label": "Показати колонку версій Wazuh"
+        },
+        "showGroups": {
+          "label": "Показувати стовпчик груп"
+        },
         "cveOrder": {
           "label": "Рейтинги CVEs по"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Показувати найбільш уразливих агентів"
-        }
-      },
-      "title": "Вразливості",
-      "topCves": "Кращі опубліковані",
-      "score": "Рахунок",
-      "agentsShort": "Агенти",
-      "topAgents": "Найвразливіші агенти",
-      "criticalHigh": "Тістечко / Високе",
-      "totalTooltip": "{count} виявлених проблем у {agents} агентів",
-      "affected": "Агенти {count}",
-      "empty": "вразливостей не виявлено",
-      "distribution": "Розподіл серйозності. знахідки {unscored} без рахунку не відображаються.",
-      "worst": "Гірше: {id} ({score}) на агентах {agents}"
-    },
-    "wazuhFim": {
-      "name": "Wazuh цілісність файлу",
-      "description": "Останні події моніторингу цілісності файлів (syscheck)",
-      "option": {
-        "range": {
-          "label": "Проміжок часу"
         },
-        "event": {
+        "fimEvent": {
           "label": "Події"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Кількість подій"
         },
         "includeRegistry": {
           "label": "Включати події в реєстрі Windows"
-        }
-      },
-      "title": "Цілісність файлу · {range}",
-      "event": {
-        "added": "Дата додавання",
-        "modified": "Змінено",
-        "deleted": "Видалити",
-        "unknown": "Змінено"
-      },
-      "empty": "Немає події цілісності файлу у цьому періоді",
-      "user": "від {user}",
-      "registry": "Реєстр"
-    },
-    "wazuhAuthFailures": {
-      "name": "Помилка автентифікації Wazuh",
-      "description": "Помилка входів і жорстоких оповіщень 1 агента з погодинними іскрколініями",
-      "option": {
-        "hours": {
-          "label": "Вікно часу (години)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Кількість агентів"
         },
         "showSourceIps": {
           "label": "Показати IP з найточніших джерел"
+        },
+        "alertsMinLevel": {
+          "label": "Мінімальний рівень правила",
+          "description": "Рівень Wazu: 0-6 низький, 7-11 середній, 12-14 високий, 15 + критичний"
+        },
+        "alertsLimit": {
+          "label": "Кількість оповіщень"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Показати агента"
+        },
+        "showSourceIp": {
+          "label": "Показати IP джерела"
+        },
+        "showRuleId": {
+          "label": "Показати ідентифікатор правила"
         }
-      },
-      "title": "Невдачі автентифікації · {hours}год",
-      "seriesTooltip": "Усі агенти за останні {hours} год",
-      "peak": "Пік {count}/bucket",
-      "empty": "За цей період немає помилок",
-      "failed": "Помилка входу",
-      "failedHint": "Помилка самоперевірки автентичності (shd, PAM, Windows logon, невірні користувачі)",
-      "bruteForce": "Груба сила",
-      "bruteForceHint": "Правило жорстокої сили (кілька невдач в короткий період, MITRE T1110)",
-      "sourceIps": "IP джерела",
-      "ipTooltip": "{ip}: {count} невдачі",
-      "bruteForceCount": "{count} груба сила"
+      }
     }
   },
   "widgetPreview": {

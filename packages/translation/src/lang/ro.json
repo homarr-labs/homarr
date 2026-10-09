@@ -5458,92 +5458,123 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Nivelul Regulii {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Medicamente Wazuh",
-      "description": "Lista de agenți Wazuh cu stare, OS, versiune și ultima menținere în viață",
-      "option": {
-        "statusFilter": {
-          "label": "Afișare agenți"
+      "levelTooltip": "Nivelul Regulii {level} ({severity})",
+      "summary": {
+        "title": "Severitatea alertei · {range}",
+        "alerts": "alerte",
+        "none": "Fără alerte",
+        "trend": {
+          "new": "nou",
+          "tooltip": "Perioada anterioară: {previous}"
         },
-        "sortBy": {
-          "label": "Sortează după"
-        },
-        "showVersion": {
-          "label": "Arată coloana cu versiuni Wazuh"
-        },
-        "showGroups": {
-          "label": "Afișare coloană grupuri"
-        }
+        "previous": "{range} {count}",
+        "maxLevel": "Nivel maxim {level}",
+        "health": "Indexer health: {status}",
+        "manager": "Manager {version}"
       },
-      "title": "Agenți",
-      "total": "{count} agenți",
-      "status": {
-        "active": "Activ",
-        "disconnected": "Deconectat",
-        "neverConnected": "Niciodată conectat",
-        "pending": "In asteptare"
+      "alerts": {
+        "title": "Alerte · nivel {level}+ · {hours}h",
+        "empty": "Fără alerte la acest nivel. Toată liniștea.",
+        "rule": "Norma {id}",
+        "openInDashboard": "Deschide această alertă în tabloul de bord Wazuh"
       },
-      "statusLabel": {
-        "active": "Activ",
-        "disconnected": "Deconectat",
-        "never_connected": "Niciodată conectat",
-        "pending": "In asteptare",
-        "unknown": "Necunoscut"
+      "timeline": {
+        "title": "Alerte cronologie · {range}",
+        "total": "{count} alerte",
+        "interval": "la fiecare {interval}"
       },
-      "live": "Live",
-      "snapshot": "Instantaneu {age} vechi",
-      "snapshotHint": "Citiți de la agentul de instantaneu Wazuh al tabloului de bord (wazuh-monitor) luat la {time}. Adăugați acreditările API ale serverului pentru date live.",
-      "staleSnapshot": "Agentul instantaneu din {time} este învechit. Verificați dacă este activată monitorizarea tabloului de bord Wazuh sau adăugați acreditările API ale serverului.",
-      "noDisconnected": "Toți agenții sunt conectați",
-      "empty": "Niciun agent nu se potrivește cu acest filtru",
-      "column": {
-        "status": "Status",
-        "name": "Numele postului",
-        "ip": "IP",
-        "os": "SG",
-        "version": "Versiune",
-        "lastKeepAlive": "Păstraţi",
-        "groups": "Grupuri"
+      "top": {
+        "title": {
+          "rules": "Reguli de top · {range}",
+          "agents": "Top agenți · {range}",
+          "sourceIps": "IP sursă de top · {range}",
+          "mitreTactics": "Tactici MITRE · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "Nu există alerte în această perioadă",
+          "agents": "Nu există alerte în această perioadă",
+          "sourceIps": "Nu există alerte cu un IP sursă în această perioadă",
+          "mitreTactics": "Nu există alerte mapate pe ATTCK MITRE în această perioadă",
+          "mitreTechniques": "Nu există alerte mapate pe ATTCK MITRE în această perioadă"
+        },
+        "totalTooltip": "{count} alerte care se potrivesc",
+        "private": "LAN",
+        "public": "Publice",
+        "agents": "Văzut pe {count} agenți",
+        "others": "{count} mai multe alerte în alte intrări"
       },
-      "outdated": "Mai vechi decât cea mai nouă versiune de agent ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Feed alerte Wazuh",
-      "description": "Alerte Wazuh recente cu tehnicile de nivel ATT&CK MITRE, agent și sursă IP",
-      "option": {
-        "minLevel": {
-          "label": "Nivelul minim al regulii",
-          "description": "Valori Wazuh: 0-6 scăzute, 7-11 medii, 12-14 ridicate, 15+ critice"
+      "agents": {
+        "title": "Agenți",
+        "total": "{count} agenți",
+        "status": {
+          "active": "Activ",
+          "disconnected": "Deconectat",
+          "neverConnected": "Niciodată conectat",
+          "pending": "In asteptare"
         },
-        "hours": {
-          "label": "Fereastra de timp (ore)"
+        "statusLabel": {
+          "active": "Activ",
+          "disconnected": "Deconectat",
+          "never_connected": "Niciodată conectat",
+          "pending": "In asteptare",
+          "unknown": "Necunoscut"
         },
-        "limit": {
-          "label": "Numărul de alerte"
+        "live": "Live",
+        "snapshot": "Instantaneu {age} vechi",
+        "snapshotHint": "Citiți de la agentul de instantaneu Wazuh al tabloului de bord (wazuh-monitor) luat la {time}. Adăugați acreditările API ale serverului pentru date live.",
+        "staleSnapshot": "Agentul instantaneu din {time} este învechit. Verificați dacă este activată monitorizarea tabloului de bord Wazuh sau adăugați acreditările API ale serverului.",
+        "noDisconnected": "Toți agenții sunt conectați",
+        "empty": "Niciun agent nu se potrivește cu acest filtru",
+        "column": {
+          "status": "Status",
+          "name": "Numele postului",
+          "ip": "IP",
+          "os": "SG",
+          "version": "Versiune",
+          "lastKeepAlive": "Păstraţi",
+          "groups": "Grupuri"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Afișare agent"
-        },
-        "showSourceIp": {
-          "label": "Arată adresa IP sursă"
-        },
-        "showRuleId": {
-          "label": "Arată ID-ul regulii"
-        }
+        "outdated": "Mai vechi decât cea mai nouă versiune de agent ({version})"
       },
-      "title": "Alerte · nivel {level}+ · {hours}h",
-      "empty": "Fără alerte la acest nivel. Toată liniștea.",
-      "rule": "Norma {id}",
-      "openInDashboard": "Deschide această alertă în tabloul de bord Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Gradul de alertă Wazuh",
-      "description": "Alertă defalcare gravitate în raport cu perioada anterioară",
+      "vulnerabilities": {
+        "title": "Vulnerabilități",
+        "topCves": "Top vehicule",
+        "score": "Scor",
+        "agentsShort": "Agenți",
+        "topAgents": "Cei mai vulnerabili agenți",
+        "criticalHigh": "Crimă / Mare",
+        "totalTooltip": "{count} rezultate pentru {agents} medicamente",
+        "affected": "{count} agenți",
+        "empty": "Nicio vulnerabilitate detectată",
+        "distribution": "Distribuția nivelurilor de severitate. Nu sunt afișate {unscored} constatări fără scor.",
+        "worst": "Cel mai grav: {id} ({score}) despre {agents} agenți"
+      },
+      "fim": {
+        "title": "Integritatea fișierului · {range}",
+        "event": {
+          "added": "Data adăugării",
+          "modified": "Modificat",
+          "deleted": "Șters",
+          "unknown": "Schimbat"
+        },
+        "empty": "Nu sunt evenimente de integritate fișier în această perioadă",
+        "user": "de {user}",
+        "registry": "Registrul"
+      },
+      "authFailures": {
+        "title": "Eșecuri de autentificare · {hours}h",
+        "seriesTooltip": "Toți agenții din ultimul {hours}h",
+        "peak": "Vârf: {count}/interval",
+        "empty": "Nu există autentificări nereușite în această perioadă",
+        "failed": "Autentificări eșuate",
+        "failedHint": "Autentificare eșuată unică (sshd, PAM, Windows logon, utilizatori nevalide)",
+        "bruteForce": "Forță brută",
+        "bruteForceHint": "Norme brut-forţă corelate (eşecuri multiple într-o perioadă scurtă de timp, MITRE T1110)",
+        "sourceIps": "IP-uri sursă",
+        "ipTooltip": "{ip}: {count} eșec",
+        "bruteForceCount": "{count} forță brută"
+      },
       "option": {
         "range": {
           "label": "Interval de timp"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Arată subsol"
-        }
-      },
-      "title": "Severitatea alertei · {range}",
-      "alerts": "alerte",
-      "none": "Fără alerte",
-      "trend": {
-        "new": "nou",
-        "tooltip": "Perioada anterioară: {previous}"
-      },
-      "previous": "{range} {count}",
-      "maxLevel": "Nivel maxim {level}",
-      "health": "Indexer health: {status}",
-      "manager": "Manager {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Graficul alertelor Wazuh în timp de severitate",
-      "option": {
-        "range": {
-          "label": "Interval de timp"
         },
         "interval": {
           "label": "Interval"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Arată legenda cu totaluri"
-        }
-      },
-      "title": "Alerte cronologie · {range}",
-      "total": "{count} alerte",
-      "interval": "la fiecare {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Lista de sus Wazuh",
-      "description": "Reguli de vârf, agenți, IP-uri sursă sau tactici și tehnici MITRE ATT&CK prin numărarea alertelor",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Clasament"
         },
-        "range": {
-          "label": "Interval de timp"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Număr de intrări"
-        },
-        "minLevel": {
-          "label": "Nivelul minim al regulii"
         },
         "showBars": {
           "label": "Arată bare"
-        }
-      },
-      "title": {
-        "rules": "Reguli de top · {range}",
-        "agents": "Top agenți · {range}",
-        "sourceIps": "IP sursă de top · {range}",
-        "mitreTactics": "Tactici MITRE · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Nu există alerte în această perioadă",
-        "agents": "Nu există alerte în această perioadă",
-        "sourceIps": "Nu există alerte cu un IP sursă în această perioadă",
-        "mitreTactics": "Nu există alerte mapate pe ATTCK MITRE în această perioadă",
-        "mitreTechniques": "Nu există alerte mapate pe ATTCK MITRE în această perioadă"
-      },
-      "totalTooltip": "{count} alerte care se potrivesc",
-      "private": "LAN",
-      "public": "Publice",
-      "agents": "Văzut pe {count} agenți",
-      "others": "{count} mai multe alerte în alte intrări"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Vulnerabilități Wazuh",
-      "description": "Vulnerabilitatea contează, CVE-urile de top și cei mai vulnerabili agenți",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Afișare agenți"
+        },
+        "agentSortBy": {
+          "label": "Sortează după"
+        },
+        "showVersion": {
+          "label": "Arată coloana cu versiuni Wazuh"
+        },
+        "showGroups": {
+          "label": "Afișare coloană grupuri"
+        },
         "cveOrder": {
           "label": "Clasează CVE-urile după"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Arată cei mai vulnerabili agenți"
-        }
-      },
-      "title": "Vulnerabilități",
-      "topCves": "Top vehicule",
-      "score": "Scor",
-      "agentsShort": "Agenți",
-      "topAgents": "Cei mai vulnerabili agenți",
-      "criticalHigh": "Crimă / Mare",
-      "totalTooltip": "{count} rezultate pentru {agents} medicamente",
-      "affected": "{count} agenți",
-      "empty": "Nicio vulnerabilitate detectată",
-      "distribution": "Distribuția nivelurilor de severitate. Nu sunt afișate {unscored} constatări fără scor.",
-      "worst": "Cel mai grav: {id} ({score}) despre {agents} agenți"
-    },
-    "wazuhFim": {
-      "name": "Integritatea fişierului Wazuh",
-      "description": "Evenimente recente de monitorizare a integrității fișierului (syscheck)",
-      "option": {
-        "range": {
-          "label": "Interval de timp"
         },
-        "event": {
+        "fimEvent": {
           "label": "Evenimente"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Număr de evenimente"
         },
         "includeRegistry": {
           "label": "Include evenimentele de înregistrare Windows"
-        }
-      },
-      "title": "Integritatea fișierului · {range}",
-      "event": {
-        "added": "Data adăugării",
-        "modified": "Modificat",
-        "deleted": "Șters",
-        "unknown": "Schimbat"
-      },
-      "empty": "Nu sunt evenimente de integritate fișier în această perioadă",
-      "user": "de {user}",
-      "registry": "Registrul"
-    },
-    "wazuhAuthFailures": {
-      "name": "Eșec de autentificare Wazuh",
-      "description": "Autentificări eșuate și alerte brut-forte per agent cu intervale orare de timp",
-      "option": {
-        "hours": {
-          "label": "Fereastra de timp (ore)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Număr de agenți"
         },
         "showSourceIps": {
           "label": "Afișare IP-uri sursă de top"
+        },
+        "alertsMinLevel": {
+          "label": "Nivelul minim al regulii",
+          "description": "Valori Wazuh: 0-6 scăzute, 7-11 medii, 12-14 ridicate, 15+ critice"
+        },
+        "alertsLimit": {
+          "label": "Numărul de alerte"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Afișare agent"
+        },
+        "showSourceIp": {
+          "label": "Arată adresa IP sursă"
+        },
+        "showRuleId": {
+          "label": "Arată ID-ul regulii"
         }
-      },
-      "title": "Eșecuri de autentificare · {hours}h",
-      "seriesTooltip": "Toți agenții din ultimul {hours}h",
-      "peak": "Vârf: {count}/interval",
-      "empty": "Nu există autentificări nereușite în această perioadă",
-      "failed": "Autentificări eșuate",
-      "failedHint": "Autentificare eșuată unică (sshd, PAM, Windows logon, utilizatori nevalide)",
-      "bruteForce": "Forță brută",
-      "bruteForceHint": "Norme brut-forţă corelate (eşecuri multiple într-o perioadă scurtă de timp, MITRE T1110)",
-      "sourceIps": "IP-uri sursă",
-      "ipTooltip": "{ip}: {count} eșec",
-      "bruteForceCount": "{count} forță brută"
+      }
     }
   },
   "widgetPreview": {

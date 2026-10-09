@@ -5458,92 +5458,123 @@
         "7d": "7pv",
         "30d": "30pv"
       },
-      "levelTooltip": "Säännön taso {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh aineet",
-      "description": "Sortable list of Wazuh agents with status, OS, version and last keepalive",
-      "option": {
-        "statusFilter": {
-          "label": "Näytä agentit"
+      "levelTooltip": "Säännön taso {level} ({severity})",
+      "summary": {
+        "title": "Hälytyksen vakavuus · {range}",
+        "alerts": "hälytykset",
+        "none": "Ei hälytyksiä",
+        "trend": {
+          "new": "uusi",
+          "tooltip": "Edellinen jakso: {previous}"
         },
-        "sortBy": {
-          "label": "Järjestä"
-        },
-        "showVersion": {
-          "label": "Näytä Wazuh versio sarake"
-        },
-        "showGroups": {
-          "label": "Näytä ryhmien sarake"
-        }
+        "previous": "Edellinen {range}: {count}",
+        "maxLevel": "Maksimi taso {level}",
+        "health": "Indeksoijan terveys: {status}",
+        "manager": "Hallitse {version}"
       },
-      "title": "Agentit",
-      "total": "{count} agenttia",
-      "status": {
-        "active": "Aktiivinen",
-        "disconnected": "Yhteys Katkaistu",
-        "neverConnected": "Ei yhdistetty",
-        "pending": "Odottaa"
+      "alerts": {
+        "title": "Hälytykset · taso {level}+ · {hours} h",
+        "empty": "Ei hälytyksiä tällä tasolla. Kaikki hiljainen.",
+        "rule": "Sääntö {id}",
+        "openInDashboard": "Avaa tämä hälytys Wazuhin hallintapaneelissa"
       },
-      "statusLabel": {
-        "active": "Aktiivinen",
-        "disconnected": "Yhteys Katkaistu",
-        "never_connected": "Ei yhdistetty",
-        "pending": "Odottaa",
-        "unknown": "Tuntematon"
+      "timeline": {
+        "title": "Hälytysten aikajana · {range}",
+        "total": "{count} hälytystä",
+        "interval": "per {interval}"
       },
-      "live": "Suora",
-      "snapshot": "Tilannevedos {age} vanha",
-      "snapshotHint": "Lue Wazuh kojelaudan agentin tilannevedosta (wazuh-monitoring) joka on otettu {time}-palvelimen kautta. Lisää palvelimen API-tunnukset live datalle.",
-      "staleSnapshot": "Asiakkaan {time} tilannekatsaus on vanhentunut. Tarkista, että Wazuh kojelaudan seurantatyö on käynnissä, tai lisää palvelimen API-tunnisteet.",
-      "noDisconnected": "Kaikki agentit ovat yhteydessä",
-      "empty": "Suodatinta ei vastaa agentteja",
-      "column": {
-        "status": "Tila",
-        "name": "Työn nimi",
-        "ip": "IP",
-        "os": "Käyttöjärjestelmä",
-        "version": "Versio",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Ryhmät"
+      "top": {
+        "title": {
+          "rules": "Parhaat säännöt · {range}",
+          "agents": "Parhaat agentit · {range}",
+          "sourceIps": "Parhaat lähteet · {range}",
+          "mitreTactics": "MITRE taktiikka · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "Ei hälytyksiä tänä aikana",
+          "agents": "Ei hälytyksiä tänä aikana",
+          "sourceIps": "Ei hälytyksiä lähteen IP-osoitteella tällä ajanjaksolla",
+          "mitreTactics": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla",
+          "mitreTechniques": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla"
+        },
+        "totalTooltip": "{count} vastaavaa hälytystä",
+        "private": "LAN",
+        "public": "Julkinen",
+        "agents": "Nähty {count} agenttia",
+        "others": "{count} lisää hälytyksiä muissa merkinnöissä"
       },
-      "outdated": "Vanhempi kuin uusin agenttiversio ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh hälytykset syöte",
-      "description": "Viimeaikaiset Wazuh hälytykset tasolla, MITRE ATT&CK tekniikoita, agentti ja lähde IP",
-      "option": {
-        "minLevel": {
-          "label": "Pienin sääntötaso",
-          "description": "Wazuh tasot: 0–6 matala, 7–11 keskitaso, 12–14 korkea, 15+ kriittinen"
+      "agents": {
+        "title": "Agentit",
+        "total": "{count} agenttia",
+        "status": {
+          "active": "Aktiivinen",
+          "disconnected": "Yhteys Katkaistu",
+          "neverConnected": "Ei yhdistetty",
+          "pending": "Odottaa"
         },
-        "hours": {
-          "label": "Aika-ikkuna (tuntia)"
+        "statusLabel": {
+          "active": "Aktiivinen",
+          "disconnected": "Yhteys Katkaistu",
+          "never_connected": "Ei yhdistetty",
+          "pending": "Odottaa",
+          "unknown": "Tuntematon"
         },
-        "limit": {
-          "label": "Kuulutusten määrä"
+        "live": "Suora",
+        "snapshot": "Tilannevedos {age} vanha",
+        "snapshotHint": "Lue Wazuh kojelaudan agentin tilannevedosta (wazuh-monitoring) joka on otettu {time}-palvelimen kautta. Lisää palvelimen API-tunnukset live datalle.",
+        "staleSnapshot": "Asiakkaan {time} tilannekatsaus on vanhentunut. Tarkista, että Wazuh kojelaudan seurantatyö on käynnissä, tai lisää palvelimen API-tunnisteet.",
+        "noDisconnected": "Kaikki agentit ovat yhteydessä",
+        "empty": "Suodatinta ei vastaa agentteja",
+        "column": {
+          "status": "Tila",
+          "name": "Työn nimi",
+          "ip": "IP",
+          "os": "Käyttöjärjestelmä",
+          "version": "Versio",
+          "lastKeepAlive": "Keepalive",
+          "groups": "Ryhmät"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Näytä agentti"
-        },
-        "showSourceIp": {
-          "label": "Näytä lähde IP"
-        },
-        "showRuleId": {
-          "label": "Näytä säännön tunnus"
-        }
+        "outdated": "Vanhempi kuin uusin agenttiversio ({version})"
       },
-      "title": "Hälytykset · taso {level}+ · {hours} h",
-      "empty": "Ei hälytyksiä tällä tasolla. Kaikki hiljainen.",
-      "rule": "Sääntö {id}",
-      "openInDashboard": "Avaa tämä hälytys Wazuhin hallintapaneelissa"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh hälytyksen vakavuus",
-      "description": "Hälytyksen vakavuusjakauma ja suuntaus edelliseen kauteen verrattuna",
+      "vulnerabilities": {
+        "title": "Haavoittuvuus",
+        "topCves": "Parhaat CVE:t",
+        "score": "Pisteet",
+        "agentsShort": "Agentit",
+        "topAgents": "Eniten haavoittuvia tekijöitä",
+        "criticalHigh": "Crit / Korkea",
+        "totalTooltip": "{count} havaintoa {agents} agentissa",
+        "affected": "{count} agenttia",
+        "empty": "Ei havaittuja haavoittuvuuksia",
+        "distribution": "Vakavuuden jakauma. {unscored} havaintoa ilman pisteytystä ei näytetä.",
+        "worst": "Huonoin: {id} ({score}) {agents} agentissa"
+      },
+      "fim": {
+        "title": "Tiedoston eheys · {range}",
+        "event": {
+          "added": "Lisätty",
+          "modified": "Muokattu",
+          "deleted": "Poistettu",
+          "unknown": "Muutettu"
+        },
+        "empty": "Ei tiedostojen eheystapahtumia tänä aikana",
+        "user": "esittäjä: {user}",
+        "registry": "Rekisteriin"
+      },
+      "authFailures": {
+        "title": "Auth epäonnistumiset · {hours}h",
+        "seriesTooltip": "Kaikki agentit viimeisen {hours}tunnin aikana",
+        "peak": "Huippu {count}/jakso",
+        "empty": "Tällä ajanjaksolla ei ole kirjautumisia",
+        "failed": "Epäonnistuneet kirjautuminen",
+        "failedHint": "Yksittäinen todennus epäonnistumiset (sshd, PAM, Windows-loki, virheellinen käyttäjä)",
+        "bruteForce": "Brute voima",
+        "bruteForceHint": "Korreloivat brute-force -säännöt (useita epäonnistumisia lyhyellä aikavälillä, MITRE T1110)",
+        "sourceIps": "Lähteen IP-osoitteet",
+        "ipTooltip": "{ip}: {count} epäonnistumista",
+        "bruteForceCount": "{count} brute force"
+      },
       "option": {
         "range": {
           "label": "Aikaväli"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Näytä alatunniste"
-        }
-      },
-      "title": "Hälytyksen vakavuus · {range}",
-      "alerts": "hälytykset",
-      "none": "Ei hälytyksiä",
-      "trend": {
-        "new": "uusi",
-        "tooltip": "Edellinen jakso: {previous}"
-      },
-      "previous": "Edellinen {range}: {count}",
-      "maxLevel": "Maksimi taso {level}",
-      "health": "Indeksoijan terveys: {status}",
-      "manager": "Hallitse {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Pinottu kaavio Wazuh hälytyksiä ajan mittaan vakavuuden mukaan",
-      "option": {
-        "range": {
-          "label": "Aikaväli"
         },
         "interval": {
           "label": "Aikaväli"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Näytä selitteet yhteenlaskettuina"
-        }
-      },
-      "title": "Hälytysten aikajana · {range}",
-      "total": "{count} hälytystä",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh top list",
-      "description": "Eniten sääntöjä, agentteja, lähdeIP-osoitteita tai MITRE ATT&CK taktiikoita ja tekniikoita hälytysten mukaan",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Sija"
         },
-        "range": {
-          "label": "Aikaväli"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Tietueiden määrä"
-        },
-        "minLevel": {
-          "label": "Pienin sääntötaso"
         },
         "showBars": {
           "label": "Näytä palkit"
-        }
-      },
-      "title": {
-        "rules": "Parhaat säännöt · {range}",
-        "agents": "Parhaat agentit · {range}",
-        "sourceIps": "Parhaat lähteet · {range}",
-        "mitreTactics": "MITRE taktiikka · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Ei hälytyksiä tänä aikana",
-        "agents": "Ei hälytyksiä tänä aikana",
-        "sourceIps": "Ei hälytyksiä lähteen IP-osoitteella tällä ajanjaksolla",
-        "mitreTactics": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla",
-        "mitreTechniques": "MITRE ATT&CK:iin ei ole liitetty hälytyksiä tällä ajanjaksolla"
-      },
-      "totalTooltip": "{count} vastaavaa hälytystä",
-      "private": "LAN",
-      "public": "Julkinen",
-      "agents": "Nähty {count} agenttia",
-      "others": "{count} lisää hälytyksiä muissa merkinnöissä"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh haavoittuvuudet",
-      "description": "Haavoittuvuusluku, parhaat CVE:t ja haavoittuvimmat tekijät",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Näytä agentit"
+        },
+        "agentSortBy": {
+          "label": "Järjestä"
+        },
+        "showVersion": {
+          "label": "Näytä Wazuh versio sarake"
+        },
+        "showGroups": {
+          "label": "Näytä ryhmien sarake"
+        },
         "cveOrder": {
           "label": "Sijoitus CVE:t by"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Näytä haavoittuvimmat tekijät"
-        }
-      },
-      "title": "Haavoittuvuus",
-      "topCves": "Parhaat CVE:t",
-      "score": "Pisteet",
-      "agentsShort": "Agentit",
-      "topAgents": "Eniten haavoittuvia tekijöitä",
-      "criticalHigh": "Crit / Korkea",
-      "totalTooltip": "{count} havaintoa {agents} agentissa",
-      "affected": "{count} agenttia",
-      "empty": "Ei havaittuja haavoittuvuuksia",
-      "distribution": "Vakavuuden jakauma. {unscored} havaintoa ilman pisteytystä ei näytetä.",
-      "worst": "Huonoin: {id} ({score}) {agents} agentissa"
-    },
-    "wazuhFim": {
-      "name": "Wazuh tiedoston eheys",
-      "description": "Viimeaikaiset tiedostojen eheyden seuranta (syscheck)",
-      "option": {
-        "range": {
-          "label": "Aikaväli"
         },
-        "event": {
+        "fimEvent": {
           "label": "Tapahtumat"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Tapahtumien lukumäärä"
         },
         "includeRegistry": {
           "label": "Sisällytä Windows-rekisterin tapahtumat"
-        }
-      },
-      "title": "Tiedoston eheys · {range}",
-      "event": {
-        "added": "Lisätty",
-        "modified": "Muokattu",
-        "deleted": "Poistettu",
-        "unknown": "Muutettu"
-      },
-      "empty": "Ei tiedostojen eheystapahtumia tänä aikana",
-      "user": "esittäjä: {user}",
-      "registry": "Rekisteriin"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentikointi epäonnistuu",
-      "description": "Epäonnistuneet kirjautumiset ja brute-force hälytykset per agentti tuntikohtaisesti sparklines",
-      "option": {
-        "hours": {
-          "label": "Aika-ikkuna (tuntia)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Apuaineiden lukumäärä"
         },
         "showSourceIps": {
           "label": "Näytä ylimmän lähdekoodin IP-osoitteet"
+        },
+        "alertsMinLevel": {
+          "label": "Pienin sääntötaso",
+          "description": "Wazuh tasot: 0–6 matala, 7–11 keskitaso, 12–14 korkea, 15+ kriittinen"
+        },
+        "alertsLimit": {
+          "label": "Kuulutusten määrä"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Näytä agentti"
+        },
+        "showSourceIp": {
+          "label": "Näytä lähde IP"
+        },
+        "showRuleId": {
+          "label": "Näytä säännön tunnus"
         }
-      },
-      "title": "Auth epäonnistumiset · {hours}h",
-      "seriesTooltip": "Kaikki agentit viimeisen {hours}tunnin aikana",
-      "peak": "Huippu {count}/jakso",
-      "empty": "Tällä ajanjaksolla ei ole kirjautumisia",
-      "failed": "Epäonnistuneet kirjautuminen",
-      "failedHint": "Yksittäinen todennus epäonnistumiset (sshd, PAM, Windows-loki, virheellinen käyttäjä)",
-      "bruteForce": "Brute voima",
-      "bruteForceHint": "Korreloivat brute-force -säännöt (useita epäonnistumisia lyhyellä aikavälillä, MITRE T1110)",
-      "sourceIps": "Lähteen IP-osoitteet",
-      "ipTooltip": "{ip}: {count} epäonnistumista",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {

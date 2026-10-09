@@ -49,14 +49,7 @@ describe("widget integration config", () => {
       anchorNote: 1,
       wud: 1,
       llamacpp: 1,
-      wazuhAgents: 1,
-      wazuhAlerts: 1,
-      wazuhSummary: 1,
-      wazuhTimeline: 1,
-      wazuhTopList: 1,
-      wazuhVulnerabilities: 1,
-      wazuhFim: 1,
-      wazuhAuthFailures: 1,
+      wazuh: 1,
     });
   });
 });

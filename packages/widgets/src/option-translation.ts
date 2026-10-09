@@ -62,7 +62,10 @@ const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | 
     return "widget.beszel.options";
   }
 
-  if (["dockerContainers", "downloads", "beszelSystemTable"].includes(kind) && TABLE_OPTION_PROPERTIES.has(property)) {
+  if (
+    ["dockerContainers", "downloads", "beszelSystemTable", "wazuh"].includes(kind) &&
+    TABLE_OPTION_PROPERTIES.has(property)
+  ) {
     return "widget.common.tableOptions";
   }
 

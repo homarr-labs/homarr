@@ -5458,92 +5458,123 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Nivel de regla {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Agentes Wazuh",
-      "description": "Lista ordenable de agentes de Wazuh con estado, sistema operativo, versión y último keepalive",
-      "option": {
-        "statusFilter": {
-          "label": "Mostrar agentes"
+      "levelTooltip": "Nivel de regla {level} ({severity})",
+      "summary": {
+        "title": "Gravedad de alerta · {range}",
+        "alerts": "alertas",
+        "none": "Sin alertas",
+        "trend": {
+          "new": "nueva",
+          "tooltip": "Período anterior: {previous}"
         },
-        "sortBy": {
-          "label": "Ordenar por"
-        },
-        "showVersion": {
-          "label": "Mostrar columna de versión Wazuh"
-        },
-        "showGroups": {
-          "label": "Mostrar columna de grupos"
-        }
+        "previous": "{range}anterior : {count}",
+        "maxLevel": "Nivel máximo {level}",
+        "health": "Salud del indexador: {status}",
+        "manager": "Gestor {version}"
       },
-      "title": "Agentes",
-      "total": "{count} agentes",
-      "status": {
-        "active": "Activo",
-        "disconnected": "Desconectado",
-        "neverConnected": "Nunca conectado",
-        "pending": "Pendiente"
+      "alerts": {
+        "title": "Alertas · nivel {level}+ · {hours}h",
+        "empty": "No hay alertas a este nivel. Todo en silencio.",
+        "rule": "Regla {id}",
+        "openInDashboard": "Abrir esta alerta en el panel de control de Wazuh"
       },
-      "statusLabel": {
-        "active": "Activo",
-        "disconnected": "Desconectado",
-        "never_connected": "Nunca conectado",
-        "pending": "Pendiente",
-        "unknown": "Desconocido"
+      "timeline": {
+        "title": "Alertas timeline · {range}",
+        "total": "Alertas {count}",
+        "interval": "por {interval}"
       },
-      "live": "Vivo",
-      "snapshot": "Instantánea de hace {age}",
-      "snapshotHint": "Lea desde el panel de control de Wazuh snapshot (monitoreo de wazuh) tomado en {time}. Añada credenciales API del servidor para datos en vivo.",
-      "staleSnapshot": "La instantánea del agente de {time} está desactualizada. Compruebe que el trabajo de monitoreo del panel de control de Wazuh se esté ejecutando, o añada credenciales de API del servidor.",
-      "noDisconnected": "Todos los agentes están conectados",
-      "empty": "Ningún agente coincide con este filtro",
-      "column": {
-        "status": "Estado",
-        "name": "Nombre de la tarea",
-        "ip": "IP",
-        "os": "Sistema Operativo",
-        "version": "Versión",
-        "lastKeepAlive": "Mantener",
-        "groups": "Grupos"
+      "top": {
+        "title": {
+          "rules": "Mejores reglas · {range}",
+          "agents": "Top agentes · {range}",
+          "sourceIps": "Ids principales de origen · {range}",
+          "mitreTactics": "Tácticas MITRE · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "No hay alertas en este período",
+          "agents": "No hay alertas en este período",
+          "sourceIps": "No hay alertas con IP fuente en este período",
+          "mitreTactics": "No hay alertas asignadas a MITRE ATT&CK en este período",
+          "mitreTechniques": "No hay alertas asignadas a MITRE ATT&CK en este período"
+        },
+        "totalTooltip": "{count} alertas coincidentes",
+        "private": "LAN",
+        "public": "Pública",
+        "agents": "Visto en agentes {count}",
+        "others": "{count} alertas más en otras entradas"
       },
-      "outdated": "Anterior a la versión más reciente del agente ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Feed de alertas de Wazuh",
-      "description": "Alertas recientes de Wazuh con nivel, técnicas MITRE ATT&CK, agente y fuente IP",
-      "option": {
-        "minLevel": {
-          "label": "Nivel mínimo de regla",
-          "description": "Niveles de Wazuh: 0-6 bajo, 7-11, mediano, 12-14 alto, 15+ crítico"
+      "agents": {
+        "title": "Agentes",
+        "total": "{count} agentes",
+        "status": {
+          "active": "Activo",
+          "disconnected": "Desconectado",
+          "neverConnected": "Nunca conectado",
+          "pending": "Pendiente"
         },
-        "hours": {
-          "label": "Ventana de tiempo (horas)"
+        "statusLabel": {
+          "active": "Activo",
+          "disconnected": "Desconectado",
+          "never_connected": "Nunca conectado",
+          "pending": "Pendiente",
+          "unknown": "Desconocido"
         },
-        "limit": {
-          "label": "Número de alertas"
+        "live": "Vivo",
+        "snapshot": "Instantánea de hace {age}",
+        "snapshotHint": "Lea desde el panel de control de Wazuh snapshot (monitoreo de wazuh) tomado en {time}. Añada credenciales API del servidor para datos en vivo.",
+        "staleSnapshot": "La instantánea del agente de {time} está desactualizada. Compruebe que el trabajo de monitoreo del panel de control de Wazuh se esté ejecutando, o añada credenciales de API del servidor.",
+        "noDisconnected": "Todos los agentes están conectados",
+        "empty": "Ningún agente coincide con este filtro",
+        "column": {
+          "status": "Estado",
+          "name": "Nombre de la tarea",
+          "ip": "IP",
+          "os": "Sistema Operativo",
+          "version": "Versión",
+          "lastKeepAlive": "Mantener",
+          "groups": "Grupos"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Mostrar agente"
-        },
-        "showSourceIp": {
-          "label": "Mostrar IP origen"
-        },
-        "showRuleId": {
-          "label": "Mostrar ID de regla"
-        }
+        "outdated": "Anterior a la versión más reciente del agente ({version})"
       },
-      "title": "Alertas · nivel {level}+ · {hours}h",
-      "empty": "No hay alertas a este nivel. Todo en silencio.",
-      "rule": "Regla {id}",
-      "openInDashboard": "Abrir esta alerta en el panel de control de Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "severidad de alerta de Wazuh",
-      "description": "Desglose de gravedad de alerta con una tendencia respecto al período anterior",
+      "vulnerabilities": {
+        "title": "Vulnerabilidades",
+        "topCves": "Top CVEs",
+        "score": "Puntaje",
+        "agentsShort": "Agentes",
+        "topAgents": "Agentes más vulnerables",
+        "criticalHigh": "Crítico / alto",
+        "totalTooltip": "{count} hallazgos sobre agentes de {agents}",
+        "affected": "{count} agentes",
+        "empty": "No hay vulnerabilidades detectadas",
+        "distribution": "Distribución de la gravedad. No se muestran los hallazgos de {unscored} sin puntuación.",
+        "worst": "Peor: {id} ({score}) en agentes {agents}"
+      },
+      "fim": {
+        "title": "Integridad del archivo · {range}",
+        "event": {
+          "added": "Fecha Agregada",
+          "modified": "Modificado",
+          "deleted": "Eliminado",
+          "unknown": "Cambiado"
+        },
+        "empty": "No hay eventos de integridad del archivo en este período",
+        "user": "por {user}",
+        "registry": "Registro"
+      },
+      "authFailures": {
+        "title": "Fallos de autenticación · {hours}h",
+        "seriesTooltip": "Todos los agentes de los últimos {hours}h",
+        "peak": "Pico {count}/cubo",
+        "empty": "No hay entradas fallidas en este período",
+        "failed": "Inicio de sesión fallido",
+        "failedHint": "Fallos de autenticación única (sshd, PAM, inicio de sesión de Windows, usuarios no válidos)",
+        "bruteForce": "Fuerza bruta",
+        "bruteForceHint": "Reglas correlacionadas de fuerza bruta (múltiples fallos en un corto período, MITRE T1110)",
+        "sourceIps": "Ids. de origen",
+        "ipTooltip": "{ip}: {count} fallos",
+        "bruteForceCount": "Fuerza bruta {count}"
+      },
       "option": {
         "range": {
           "label": "Rango de tiempo"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Mostrar pie de página"
-        }
-      },
-      "title": "Gravedad de alerta · {range}",
-      "alerts": "alertas",
-      "none": "Sin alertas",
-      "trend": {
-        "new": "nueva",
-        "tooltip": "Período anterior: {previous}"
-      },
-      "previous": "{range}anterior : {count}",
-      "maxLevel": "Nivel máximo {level}",
-      "health": "Salud del indexador: {status}",
-      "manager": "Gestor {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Gráfico acumulado de alertas de Wazuh a lo largo del tiempo por gravedad",
-      "option": {
-        "range": {
-          "label": "Rango de tiempo"
         },
         "interval": {
           "label": "Intervalo"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Mostrar leyenda con totales"
-        }
-      },
-      "title": "Alertas timeline · {range}",
-      "total": "Alertas {count}",
-      "interval": "por {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Lista superior de Wazuh",
-      "description": "Principales reglas, agentes, fuentes IP o MITRE ATT&CK y técnicas por conteo de alertas",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rango"
         },
-        "range": {
-          "label": "Rango de tiempo"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Número de entradas"
-        },
-        "minLevel": {
-          "label": "Nivel mínimo de regla"
         },
         "showBars": {
           "label": "Mostrar barras"
-        }
-      },
-      "title": {
-        "rules": "Mejores reglas · {range}",
-        "agents": "Top agentes · {range}",
-        "sourceIps": "Ids principales de origen · {range}",
-        "mitreTactics": "Tácticas MITRE · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "No hay alertas en este período",
-        "agents": "No hay alertas en este período",
-        "sourceIps": "No hay alertas con IP fuente en este período",
-        "mitreTactics": "No hay alertas asignadas a MITRE ATT&CK en este período",
-        "mitreTechniques": "No hay alertas asignadas a MITRE ATT&CK en este período"
-      },
-      "totalTooltip": "{count} alertas coincidentes",
-      "private": "LAN",
-      "public": "Pública",
-      "agents": "Visto en agentes {count}",
-      "others": "{count} alertas más en otras entradas"
-    },
-    "wazuhVulnerabilities": {
-      "name": "vulnerabilidades Wazuh",
-      "description": "Contadores de vulnerabilidad, mejores currículos y los agentes más vulnerables",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Mostrar agentes"
+        },
+        "agentSortBy": {
+          "label": "Ordenar por"
+        },
+        "showVersion": {
+          "label": "Mostrar columna de versión Wazuh"
+        },
+        "showGroups": {
+          "label": "Mostrar columna de grupos"
+        },
         "cveOrder": {
           "label": "Clasificar CVEs por"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Mostrar los agentes más vulnerables"
-        }
-      },
-      "title": "Vulnerabilidades",
-      "topCves": "Top CVEs",
-      "score": "Puntaje",
-      "agentsShort": "Agentes",
-      "topAgents": "Agentes más vulnerables",
-      "criticalHigh": "Crítico / alto",
-      "totalTooltip": "{count} hallazgos sobre agentes de {agents}",
-      "affected": "{count} agentes",
-      "empty": "No hay vulnerabilidades detectadas",
-      "distribution": "Distribución de la gravedad. No se muestran los hallazgos de {unscored} sin puntuación.",
-      "worst": "Peor: {id} ({score}) en agentes {agents}"
-    },
-    "wazuhFim": {
-      "name": "Integridad del archivo Wazuh",
-      "description": "Eventos recientes de monitorización de integridad del archivo (syscheck)",
-      "option": {
-        "range": {
-          "label": "Rango de tiempo"
         },
-        "event": {
+        "fimEvent": {
           "label": "Eventos"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Número de eventos"
         },
         "includeRegistry": {
           "label": "Incluye eventos de registro de Windows"
-        }
-      },
-      "title": "Integridad del archivo · {range}",
-      "event": {
-        "added": "Fecha Agregada",
-        "modified": "Modificado",
-        "deleted": "Eliminado",
-        "unknown": "Cambiado"
-      },
-      "empty": "No hay eventos de integridad del archivo en este período",
-      "user": "por {user}",
-      "registry": "Registro"
-    },
-    "wazuhAuthFailures": {
-      "name": "Fallos de autenticación Wazuh",
-      "description": "Fallo de inicio de sesión y alertas de fuerza bruta por agente con líneas de chispas por hora",
-      "option": {
-        "hours": {
-          "label": "Ventana de tiempo (horas)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Número de agentes"
         },
         "showSourceIps": {
           "label": "Mostrar la fuente principal"
+        },
+        "alertsMinLevel": {
+          "label": "Nivel mínimo de regla",
+          "description": "Niveles de Wazuh: 0-6 bajo, 7-11, mediano, 12-14 alto, 15+ crítico"
+        },
+        "alertsLimit": {
+          "label": "Número de alertas"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Mostrar agente"
+        },
+        "showSourceIp": {
+          "label": "Mostrar IP origen"
+        },
+        "showRuleId": {
+          "label": "Mostrar ID de regla"
         }
-      },
-      "title": "Fallos de autenticación · {hours}h",
-      "seriesTooltip": "Todos los agentes de los últimos {hours}h",
-      "peak": "Pico {count}/cubo",
-      "empty": "No hay entradas fallidas en este período",
-      "failed": "Inicio de sesión fallido",
-      "failedHint": "Fallos de autenticación única (sshd, PAM, inicio de sesión de Windows, usuarios no válidos)",
-      "bruteForce": "Fuerza bruta",
-      "bruteForceHint": "Reglas correlacionadas de fuerza bruta (múltiples fallos en un corto período, MITRE T1110)",
-      "sourceIps": "Ids. de origen",
-      "ipTooltip": "{ip}: {count} fallos",
-      "bruteForceCount": "Fuerza bruta {count}"
+      }
     }
   },
   "widgetPreview": {

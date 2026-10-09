@@ -5458,92 +5458,123 @@
         "7d": "7d",
         "30d": "30日"
       },
-      "levelTooltip": "ルールレベル {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuhエージェント",
-      "description": "ステータス、OS、バージョン、最後のキープアライブを持つWazuhエージェントのソート可能なリスト",
-      "option": {
-        "statusFilter": {
-          "label": "エージェントを表示"
+      "levelTooltip": "ルールレベル {level} ({severity})",
+      "summary": {
+        "title": "アラートの重要度・ {range}",
+        "alerts": "アラート",
+        "none": "アラートはありません",
+        "trend": {
+          "new": "新規作成",
+          "tooltip": "前の期間: {previous}"
         },
-        "sortBy": {
-          "label": "並び替え"
-        },
-        "showVersion": {
-          "label": "Wazuh バージョンの列を表示"
-        },
-        "showGroups": {
-          "label": "グループの列を表示"
-        }
+        "previous": "前の {range}: {count}",
+        "maxLevel": "最大レベル {level}",
+        "health": "インデクサの状態: {status}",
+        "manager": "マネージャー {version}"
       },
-      "title": "エージェント",
-      "total": "{count} エージェント",
-      "status": {
-        "active": "活動中",
-        "disconnected": "切断されました",
-        "neverConnected": "接続していません",
-        "pending": "保留中"
+      "alerts": {
+        "title": "アラート・レベル {level}+ {hours}時間",
+        "empty": "このレベルでは警告はありません。静かに。",
+        "rule": "ルール {id}",
+        "openInDashboard": "Wazuhダッシュボードでこのアラートを開く"
       },
-      "statusLabel": {
-        "active": "活動中",
-        "disconnected": "切断されました",
-        "never_connected": "接続していません",
-        "pending": "保留中",
-        "unknown": "不明"
+      "timeline": {
+        "title": "アラートタイムライン・ {range}",
+        "total": "{count} アラート",
+        "interval": "{interval} ごと"
       },
-      "live": "ライブ",
-      "snapshot": "スナップショット {age} 古い",
-      "snapshotHint": "{time}で取得されたWazuh ダッシュボードのエージェントスナップショット(wazuh-monitoring)を参照してください。",
-      "staleSnapshot": "エージェントの {time} スナップショットが古くなっています。Wazuh ダッシュボードのモニタリングジョブが実行されていることを確認するか、サーバーの API 資格情報を追加してください。",
-      "noDisconnected": "すべてのエージェントが接続されています",
-      "empty": "このフィルターに一致するエージェントはありません",
-      "column": {
-        "status": "ステータス",
-        "name": "ジョブ名",
-        "ip": "IP",
-        "os": "OS",
-        "version": "バージョン",
-        "lastKeepAlive": "Keepliving",
-        "groups": "グループ"
+      "top": {
+        "title": {
+          "rules": "トップルール · {range}",
+          "agents": "トップエージェント · {range}",
+          "sourceIps": "トップソース IP · {range}",
+          "mitreTactics": "MITRE戦術・ {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "この期間にアラートはありません",
+          "agents": "この期間にアラートはありません",
+          "sourceIps": "この期間中に送信元IPのアラートはありません",
+          "mitreTactics": "この期間にMITRE ATT&CKにマップされたアラートはありません",
+          "mitreTechniques": "この期間にMITRE ATT&CKにマップされたアラートはありません"
+        },
+        "totalTooltip": "{count} マッチングアラート",
+        "private": "LAN",
+        "public": "公開",
+        "agents": "{count} エージェントを見る",
+        "others": "{count} 件以上の他のエントリのアラート"
       },
-      "outdated": "最新のエージェントバージョンより古い ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh アラートのフィード",
-      "description": "最近の Wazuh アラートレベル、MITRE ATT&CK テクニック、エージェント、IP ソース",
-      "option": {
-        "minLevel": {
-          "label": "最小ルールレベル",
-          "description": "Wazuh レベル: 0-6 low, 7-11 medium, 12-14 high, 15 + critical"
+      "agents": {
+        "title": "エージェント",
+        "total": "{count} エージェント",
+        "status": {
+          "active": "活動中",
+          "disconnected": "切断されました",
+          "neverConnected": "接続していません",
+          "pending": "保留中"
         },
-        "hours": {
-          "label": "時間ウィンドウ (時間)"
+        "statusLabel": {
+          "active": "活動中",
+          "disconnected": "切断されました",
+          "never_connected": "接続していません",
+          "pending": "保留中",
+          "unknown": "不明"
         },
-        "limit": {
-          "label": "アラートの数"
+        "live": "ライブ",
+        "snapshot": "スナップショット {age} 古い",
+        "snapshotHint": "{time}で取得されたWazuh ダッシュボードのエージェントスナップショット(wazuh-monitoring)を参照してください。",
+        "staleSnapshot": "エージェントの {time} スナップショットが古くなっています。Wazuh ダッシュボードのモニタリングジョブが実行されていることを確認するか、サーバーの API 資格情報を追加してください。",
+        "noDisconnected": "すべてのエージェントが接続されています",
+        "empty": "このフィルターに一致するエージェントはありません",
+        "column": {
+          "status": "ステータス",
+          "name": "ジョブ名",
+          "ip": "IP",
+          "os": "OS",
+          "version": "バージョン",
+          "lastKeepAlive": "Keepliving",
+          "groups": "グループ"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "エージェントの表示"
-        },
-        "showSourceIp": {
-          "label": "送信元IPを表示"
-        },
-        "showRuleId": {
-          "label": "ルールIDを表示"
-        }
+        "outdated": "最新のエージェントバージョンより古い ({version})"
       },
-      "title": "アラート・レベル {level}+ {hours}時間",
-      "empty": "このレベルでは警告はありません。静かに。",
-      "rule": "ルール {id}",
-      "openInDashboard": "Wazuhダッシュボードでこのアラートを開く"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh アラートの重要度",
-      "description": "前回の傾向を伴う深刻度の内訳を警告する",
+      "vulnerabilities": {
+        "title": "脆弱性",
+        "topCves": "上位CVEs",
+        "score": "スコア",
+        "agentsShort": "エージェント",
+        "topAgents": "最も脆弱なエージェント",
+        "criticalHigh": "クリティカル/高",
+        "totalTooltip": "{count} エージェントの {agents} に関する調査結果。",
+        "affected": "{count} エージェント",
+        "empty": "脆弱性は検出されませんでした",
+        "distribution": "重度分布。スコアがない場合、 {unscored} の結果は表示されません。",
+        "worst": "最悪: {id}（{score}）、{agents}台のエージェント"
+      },
+      "fim": {
+        "title": "ファイルの整合性・ {range}",
+        "event": {
+          "added": "追加された日",
+          "modified": "修正されました",
+          "deleted": "削除済",
+          "unknown": "変更済み"
+        },
+        "empty": "この期間内にファイルの整合性イベントはありません",
+        "user": "作成者： {user}",
+        "registry": "Registry"
+      },
+      "authFailures": {
+        "title": "認証失敗 · {hours}時間",
+        "seriesTooltip": "{hours}h以上のすべてのエージェント",
+        "peak": "ピーク {count}/bucket",
+        "empty": "この期間に失敗したログインはありません",
+        "failed": "ログイン失敗",
+        "failedHint": "シングル認証に失敗しました（sshd、PAM、Windowsログオン、無効なユーザー）",
+        "bruteForce": "ブルート力",
+        "bruteForceHint": "相関するブルートフォースルール (短期間で複数の失敗、MITRE T1110)",
+        "sourceIps": "送信元IP",
+        "ipTooltip": "{ip}: {count} 失敗",
+        "bruteForceCount": "{count} ブルート力"
+      },
       "option": {
         "range": {
           "label": "時間範囲"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "フッターを表示"
-        }
-      },
-      "title": "アラートの重要度・ {range}",
-      "alerts": "アラート",
-      "none": "アラートはありません",
-      "trend": {
-        "new": "新規作成",
-        "tooltip": "前の期間: {previous}"
-      },
-      "previous": "前の {range}: {count}",
-      "maxLevel": "最大レベル {level}",
-      "health": "インデクサの状態: {status}",
-      "manager": "マネージャー {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Wazuhアラートの重大度ごとの積み上げチャート",
-      "option": {
-        "range": {
-          "label": "時間範囲"
         },
         "interval": {
           "label": "間隔"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "合計で凡例を表示"
-        }
-      },
-      "title": "アラートタイムライン・ {range}",
-      "total": "{count} アラート",
-      "interval": "{interval} ごと"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh Top list",
-      "description": "トップルール、エージェント、ソースIPまたはMITRE ATT&CK戦術とアラート カウント",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "ランク"
         },
-        "range": {
-          "label": "時間範囲"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Number of entries"
-        },
-        "minLevel": {
-          "label": "最小ルールレベル"
         },
         "showBars": {
           "label": "バーを表示"
-        }
-      },
-      "title": {
-        "rules": "トップルール · {range}",
-        "agents": "トップエージェント · {range}",
-        "sourceIps": "トップソース IP · {range}",
-        "mitreTactics": "MITRE戦術・ {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "この期間にアラートはありません",
-        "agents": "この期間にアラートはありません",
-        "sourceIps": "この期間中に送信元IPのアラートはありません",
-        "mitreTactics": "この期間にMITRE ATT&CKにマップされたアラートはありません",
-        "mitreTechniques": "この期間にMITRE ATT&CKにマップされたアラートはありません"
-      },
-      "totalTooltip": "{count} マッチングアラート",
-      "private": "LAN",
-      "public": "公開",
-      "agents": "{count} エージェントを見る",
-      "others": "{count} 件以上の他のエントリのアラート"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh の脆弱性",
-      "description": "脆弱性は、CVEと最も脆弱なエージェントに数えられます",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "エージェントを表示"
+        },
+        "agentSortBy": {
+          "label": "並び替え"
+        },
+        "showVersion": {
+          "label": "Wazuh バージョンの列を表示"
+        },
+        "showGroups": {
+          "label": "グループの列を表示"
+        },
         "cveOrder": {
           "label": "CVEs をランク付けする"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "脆弱なエージェントを表示する"
-        }
-      },
-      "title": "脆弱性",
-      "topCves": "上位CVEs",
-      "score": "スコア",
-      "agentsShort": "エージェント",
-      "topAgents": "最も脆弱なエージェント",
-      "criticalHigh": "クリティカル/高",
-      "totalTooltip": "{count} エージェントの {agents} に関する調査結果。",
-      "affected": "{count} エージェント",
-      "empty": "脆弱性は検出されませんでした",
-      "distribution": "重度分布。スコアがない場合、 {unscored} の結果は表示されません。",
-      "worst": "最悪: {id}（{score}）、{agents}台のエージェント"
-    },
-    "wazuhFim": {
-      "name": "Wazuh ファイルの整合性",
-      "description": "最近のファイルの整合性監視 (syscheck) イベント",
-      "option": {
-        "range": {
-          "label": "時間範囲"
         },
-        "event": {
+        "fimEvent": {
           "label": "イベント"
         },
-        "limit": {
+        "fimLimit": {
           "label": "イベント数"
         },
         "includeRegistry": {
           "label": "Windowsレジストリイベントを含める"
-        }
-      },
-      "title": "ファイルの整合性・ {range}",
-      "event": {
-        "added": "追加された日",
-        "modified": "修正されました",
-        "deleted": "削除済",
-        "unknown": "変更済み"
-      },
-      "empty": "この期間内にファイルの整合性イベントはありません",
-      "user": "作成者： {user}",
-      "registry": "Registry"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh 認証失敗",
-      "description": "失敗したログインとエージェントごとのブルートフォースアラート（時間ごとの輝線）。",
-      "option": {
-        "hours": {
-          "label": "時間ウィンドウ (時間)"
         },
-        "limit": {
+        "authLimit": {
           "label": "エージェントの数"
         },
         "showSourceIps": {
           "label": "トップのソースIPを表示"
+        },
+        "alertsMinLevel": {
+          "label": "最小ルールレベル",
+          "description": "Wazuh レベル: 0-6 low, 7-11 medium, 12-14 high, 15 + critical"
+        },
+        "alertsLimit": {
+          "label": "アラートの数"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "エージェントの表示"
+        },
+        "showSourceIp": {
+          "label": "送信元IPを表示"
+        },
+        "showRuleId": {
+          "label": "ルールIDを表示"
         }
-      },
-      "title": "認証失敗 · {hours}時間",
-      "seriesTooltip": "{hours}h以上のすべてのエージェント",
-      "peak": "ピーク {count}/bucket",
-      "empty": "この期間に失敗したログインはありません",
-      "failed": "ログイン失敗",
-      "failedHint": "シングル認証に失敗しました（sshd、PAM、Windowsログオン、無効なユーザー）",
-      "bruteForce": "ブルート力",
-      "bruteForceHint": "相関するブルートフォースルール (短期間で複数の失敗、MITRE T1110)",
-      "sourceIps": "送信元IP",
-      "ipTooltip": "{ip}: {count} 失敗",
-      "bruteForceCount": "{count} ブルート力"
+      }
     }
   },
   "widgetPreview": {

@@ -5458,92 +5458,123 @@
         "7d": "7 d",
         "30d": "30 d"
       },
-      "levelTooltip": "Taisyklės lygis {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agentai",
-      "description": "Rikiuojamas Wazuh agentų sąrašas su būsena, OS, versija ir paskutiniu ryšiu",
-      "option": {
-        "statusFilter": {
-          "label": "Rodyti agentus"
+      "levelTooltip": "Taisyklės lygis {level} ({severity})",
+      "summary": {
+        "title": "Įspėjimų svarba · {range}",
+        "alerts": "įspėjimai",
+        "none": "Įspėjimų nėra",
+        "trend": {
+          "new": "nauji",
+          "tooltip": "Ankstesnis laikotarpis: {previous}"
         },
-        "sortBy": {
-          "label": "Rikiuoti pagal"
-        },
-        "showVersion": {
-          "label": "Rodyti Wazuh versijos stulpelį"
-        },
-        "showGroups": {
-          "label": "Rodyti grupių stulpelį"
-        }
+        "previous": "Ankstesni {range}: {count}",
+        "maxLevel": "Didžiausias lygis {level}",
+        "health": "Indeksatoriaus būklė: {status}",
+        "manager": "Tvarkytuvė {version}"
       },
-      "title": "Agentai",
-      "total": "{count} agentai",
-      "status": {
-        "active": "Aktyvus",
-        "disconnected": "Atsijungęs",
-        "neverConnected": "Niekada neprisijungęs",
-        "pending": "Laukiama"
+      "alerts": {
+        "title": "Įspėjimai · lygis {level}+ · {hours} val",
+        "empty": "Šiame lygyje įspėjimų nėra. Viskas ramu.",
+        "rule": "Taisyklė {id}",
+        "openInDashboard": "Atidaryti šį įspėjimą Wazuh valdymo skydelyje"
       },
-      "statusLabel": {
-        "active": "Aktyvus",
-        "disconnected": "Atsijungęs",
-        "never_connected": "Niekada neprisijungęs",
-        "pending": "Laukiama",
-        "unknown": "Nežinoma"
+      "timeline": {
+        "title": "Įspėjimų laiko juosta · {range}",
+        "total": "{count} įspėjimai",
+        "interval": "kas {interval}"
       },
-      "live": "Tiesiogiai",
-      "snapshot": "Momentinė kopija, sena {age}",
-      "snapshotHint": "Nuskaitoma iš Wazuh valdymo skydo agentų momentinės kopijos („wazuh-monitoring“), sukurtos {time}. Norėdami gauti tiesioginius duomenis, pridėkite serverio API kredencialus.",
-      "staleSnapshot": "Agentų momentinė kopija iš {time} yra pasenusi. Patikrinkite, ar veikia Wazuh valdymo skydo stebėjimo užduotis, arba pridėkite serverio API kredencialus.",
-      "noDisconnected": "Visi agentai prisijungę",
-      "empty": "Šio filtro neatitinka nė vienas agentas",
-      "column": {
-        "status": "Būsena",
-        "name": "Užduoties pavadinimas",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Versija",
-        "lastKeepAlive": "Ryšys",
-        "groups": "Grupės"
+      "top": {
+        "title": {
+          "rules": "Populiariausios taisyklės · {range}",
+          "agents": "Populiariausi agentai · {range}",
+          "sourceIps": "Populiariausi šaltinio IP adresai · {range}",
+          "mitreTactics": "MITRE taktikos · {range}",
+          "mitreTechniques": "MITRE metodai · {range}"
+        },
+        "empty": {
+          "rules": "Šiuo laikotarpiu įspėjimų nėra",
+          "agents": "Šiuo laikotarpiu įspėjimų nėra",
+          "sourceIps": "Šiuo laikotarpiu nėra įspėjimų su šaltinio IP adresu",
+          "mitreTactics": "Šiuo laikotarpiu nėra įspėjimų, susietų su MITRE ATT&CK",
+          "mitreTechniques": "Šiuo laikotarpiu nėra įspėjimų, susietų su MITRE ATT&CK"
+        },
+        "totalTooltip": "Atitinkančių įspėjimų: {count}",
+        "private": "LAN",
+        "public": "Vieša",
+        "agents": "Aptikta {count} agentuose",
+        "others": "Dar {count} įspėjimų kituose įrašuose"
       },
-      "outdated": "Senesnė nei naujausia agento versija ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh įspėjimų sklaidos kanalas",
-      "description": "Naujausi Wazuh įspėjimai su lygiu, MITRE ATT&CK metodais, agentu ir šaltinio IP",
-      "option": {
-        "minLevel": {
-          "label": "Mažiausias taisyklės lygis",
-          "description": "Wazuh lygiai: 0–6 – žemas, 7–11 – vidutinis, 12–14 – aukštas, 15+ – kritinis"
+      "agents": {
+        "title": "Agentai",
+        "total": "{count} agentai",
+        "status": {
+          "active": "Aktyvus",
+          "disconnected": "Atsijungęs",
+          "neverConnected": "Niekada neprisijungęs",
+          "pending": "Laukiama"
         },
-        "hours": {
-          "label": "Laiko intervalas (valandomis)"
+        "statusLabel": {
+          "active": "Aktyvus",
+          "disconnected": "Atsijungęs",
+          "never_connected": "Niekada neprisijungęs",
+          "pending": "Laukiama",
+          "unknown": "Nežinoma"
         },
-        "limit": {
-          "label": "Įspėjimų skaičius"
+        "live": "Tiesiogiai",
+        "snapshot": "Momentinė kopija, sena {age}",
+        "snapshotHint": "Nuskaitoma iš Wazuh valdymo skydo agentų momentinės kopijos („wazuh-monitoring“), sukurtos {time}. Norėdami gauti tiesioginius duomenis, pridėkite serverio API kredencialus.",
+        "staleSnapshot": "Agentų momentinė kopija iš {time} yra pasenusi. Patikrinkite, ar veikia Wazuh valdymo skydo stebėjimo užduotis, arba pridėkite serverio API kredencialus.",
+        "noDisconnected": "Visi agentai prisijungę",
+        "empty": "Šio filtro neatitinka nė vienas agentas",
+        "column": {
+          "status": "Būsena",
+          "name": "Užduoties pavadinimas",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Versija",
+          "lastKeepAlive": "Ryšys",
+          "groups": "Grupės"
         },
-        "showMitre": {
-          "label": "Rodyti MITRE ATT&CK metodus"
-        },
-        "showAgent": {
-          "label": "Rodyti agentą"
-        },
-        "showSourceIp": {
-          "label": "Rodyti šaltinio IP"
-        },
-        "showRuleId": {
-          "label": "Rodyti taisyklės ID"
-        }
+        "outdated": "Senesnė nei naujausia agento versija ({version})"
       },
-      "title": "Įspėjimai · lygis {level}+ · {hours} val",
-      "empty": "Šiame lygyje įspėjimų nėra. Viskas ramu.",
-      "rule": "Taisyklė {id}",
-      "openInDashboard": "Atidaryti šį įspėjimą Wazuh valdymo skydelyje"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh įspėjimo svarba",
-      "description": "Įspėjimų svarbos suskirstymas su tendencija, palyginta su ankstesniu laikotarpiu",
+      "vulnerabilities": {
+        "title": "Pažeidžiamumai",
+        "topCves": "Populiariausi CVE",
+        "score": "Balas",
+        "agentsShort": "Agentai",
+        "topAgents": "Pažeidžiamiausi agentai",
+        "criticalHigh": "Kritiniai / aukšti",
+        "totalTooltip": "Radinių: {count}, agentų: {agents}",
+        "affected": "{count} agentų",
+        "empty": "Pažeidžiamumų neaptikta",
+        "distribution": "Pavojingumo pasiskirstymas. Nerodomi {unscored} radiniai be balo.",
+        "worst": "Blogiausias: {id} ({score}), agentų: {agents}"
+      },
+      "fim": {
+        "title": "Failų vientisumas · {range}",
+        "event": {
+          "added": "Pridėjimo data",
+          "modified": "Pakeistas",
+          "deleted": "Ištrintas",
+          "unknown": "Pakeistas"
+        },
+        "empty": "Šiuo laikotarpiu failų vientisumo įvykių nėra",
+        "user": "naudotojas: {user}",
+        "registry": "Registras"
+      },
+      "authFailures": {
+        "title": "Autentifikavimo klaidos · {hours} val.",
+        "seriesTooltip": "Visi agentai per pastarąsias {hours} val.",
+        "peak": "Pikas: {count} / intervalą",
+        "empty": "Šiuo laikotarpiu nesėkmingų prisijungimų nėra",
+        "failed": "Nesėkmingi prisijungimai",
+        "failedHint": "Pavienės autentifikavimo klaidos (sshd, PAM, „Windows“ prisijungimas, negaliojantys naudotojai)",
+        "bruteForce": "Grubios jėgos ataka",
+        "bruteForceHint": "Susietos grubios jėgos atakų taisyklės (daug nesėkmingų bandymų per trumpą laiką, MITRE T1110)",
+        "sourceIps": "Šaltinio IP adresai",
+        "ipTooltip": "{ip}: {count} klaidų",
+        "bruteForceCount": "Grubios jėgos atakų: {count}"
+      },
       "option": {
         "range": {
           "label": "Laikotarpis"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Rodyti poraštę"
-        }
-      },
-      "title": "Įspėjimų svarba · {range}",
-      "alerts": "įspėjimai",
-      "none": "Įspėjimų nėra",
-      "trend": {
-        "new": "nauji",
-        "tooltip": "Ankstesnis laikotarpis: {previous}"
-      },
-      "previous": "Ankstesni {range}: {count}",
-      "maxLevel": "Didžiausias lygis {level}",
-      "health": "Indeksatoriaus būklė: {status}",
-      "manager": "Tvarkytuvė {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh įspėjimų laiko juosta",
-      "description": "Sluoksninė Wazuh įspėjimų diagrama pagal svarbą laikui bėgant",
-      "option": {
-        "range": {
-          "label": "Laikotarpis"
         },
         "interval": {
           "label": "Intervalas"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Rodyti legendą su bendromis reikšmėmis"
-        }
-      },
-      "title": "Įspėjimų laiko juosta · {range}",
-      "total": "{count} įspėjimai",
-      "interval": "kas {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Populiariausių Wazuh sąrašas",
-      "description": "Populiariausios taisyklės, agentai, šaltinio IP adresai arba MITRE ATT&CK taktikos ir metodai pagal įspėjimų skaičių",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Reitinguoti"
         },
-        "range": {
-          "label": "Laikotarpis"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Įrašų skaičius"
-        },
-        "minLevel": {
-          "label": "Minimalus taisyklės lygis"
         },
         "showBars": {
           "label": "Rodyti juostas"
-        }
-      },
-      "title": {
-        "rules": "Populiariausios taisyklės · {range}",
-        "agents": "Populiariausi agentai · {range}",
-        "sourceIps": "Populiariausi šaltinio IP adresai · {range}",
-        "mitreTactics": "MITRE taktikos · {range}",
-        "mitreTechniques": "MITRE metodai · {range}"
-      },
-      "empty": {
-        "rules": "Šiuo laikotarpiu įspėjimų nėra",
-        "agents": "Šiuo laikotarpiu įspėjimų nėra",
-        "sourceIps": "Šiuo laikotarpiu nėra įspėjimų su šaltinio IP adresu",
-        "mitreTactics": "Šiuo laikotarpiu nėra įspėjimų, susietų su MITRE ATT&CK",
-        "mitreTechniques": "Šiuo laikotarpiu nėra įspėjimų, susietų su MITRE ATT&CK"
-      },
-      "totalTooltip": "Atitinkančių įspėjimų: {count}",
-      "private": "LAN",
-      "public": "Vieša",
-      "agents": "Aptikta {count} agentuose",
-      "others": "Dar {count} įspėjimų kituose įrašuose"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh pažeidžiamumai",
-      "description": "Pažeidžiamumų skaičius, populiariausi CVE ir pažeidžiamiausi agentai",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Rodyti agentus"
+        },
+        "agentSortBy": {
+          "label": "Rikiuoti pagal"
+        },
+        "showVersion": {
+          "label": "Rodyti Wazuh versijos stulpelį"
+        },
+        "showGroups": {
+          "label": "Rodyti grupių stulpelį"
+        },
         "cveOrder": {
           "label": "Reitinguoti CVE pagal"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Rodyti pažeidžiamiausius agentus"
-        }
-      },
-      "title": "Pažeidžiamumai",
-      "topCves": "Populiariausi CVE",
-      "score": "Balas",
-      "agentsShort": "Agentai",
-      "topAgents": "Pažeidžiamiausi agentai",
-      "criticalHigh": "Kritiniai / aukšti",
-      "totalTooltip": "Radinių: {count}, agentų: {agents}",
-      "affected": "{count} agentų",
-      "empty": "Pažeidžiamumų neaptikta",
-      "distribution": "Pavojingumo pasiskirstymas. Nerodomi {unscored} radiniai be balo.",
-      "worst": "Blogiausias: {id} ({score}), agentų: {agents}"
-    },
-    "wazuhFim": {
-      "name": "Wazuh failų vientisumas",
-      "description": "Naujausi failų vientisumo stebėjimo („syscheck“) įvykiai",
-      "option": {
-        "range": {
-          "label": "Laikotarpis"
         },
-        "event": {
+        "fimEvent": {
           "label": "Įvykiai"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Įvykių skaičius"
         },
         "includeRegistry": {
           "label": "Įtraukti „Windows“ registro įvykius"
-        }
-      },
-      "title": "Failų vientisumas · {range}",
-      "event": {
-        "added": "Pridėjimo data",
-        "modified": "Pakeistas",
-        "deleted": "Ištrintas",
-        "unknown": "Pakeistas"
-      },
-      "empty": "Šiuo laikotarpiu failų vientisumo įvykių nėra",
-      "user": "naudotojas: {user}",
-      "registry": "Registras"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentifikavimo klaidos",
-      "description": "Nesėkmingi prisijungimai ir grubios jėgos atakų įspėjimai pagal agentą su valandinėmis diagramomis",
-      "option": {
-        "hours": {
-          "label": "Laikotarpis (val.)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Agentų skaičius"
         },
         "showSourceIps": {
           "label": "Rodyti populiariausius šaltinio IP adresus"
+        },
+        "alertsMinLevel": {
+          "label": "Mažiausias taisyklės lygis",
+          "description": "Wazuh lygiai: 0–6 – žemas, 7–11 – vidutinis, 12–14 – aukštas, 15+ – kritinis"
+        },
+        "alertsLimit": {
+          "label": "Įspėjimų skaičius"
+        },
+        "showMitre": {
+          "label": "Rodyti MITRE ATT&CK metodus"
+        },
+        "showAgent": {
+          "label": "Rodyti agentą"
+        },
+        "showSourceIp": {
+          "label": "Rodyti šaltinio IP"
+        },
+        "showRuleId": {
+          "label": "Rodyti taisyklės ID"
         }
-      },
-      "title": "Autentifikavimo klaidos · {hours} val.",
-      "seriesTooltip": "Visi agentai per pastarąsias {hours} val.",
-      "peak": "Pikas: {count} / intervalą",
-      "empty": "Šiuo laikotarpiu nesėkmingų prisijungimų nėra",
-      "failed": "Nesėkmingi prisijungimai",
-      "failedHint": "Pavienės autentifikavimo klaidos (sshd, PAM, „Windows“ prisijungimas, negaliojantys naudotojai)",
-      "bruteForce": "Grubios jėgos ataka",
-      "bruteForceHint": "Susietos grubios jėgos atakų taisyklės (daug nesėkmingų bandymų per trumpą laiką, MITRE T1110)",
-      "sourceIps": "Šaltinio IP adresai",
-      "ipTooltip": "{ip}: {count} klaidų",
-      "bruteForceCount": "Grubios jėgos atakų: {count}"
+      }
     }
   },
   "widgetPreview": {

@@ -1,0 +1,39 @@
+.root {
+  position: relative;
+  height: 100%;
+}
+
+.tabs {
+  position: absolute;
+  z-index: 2;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 8px);
+  padding: 2px;
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-sm);
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+  pointer-events: none;
+}
+
+.root:hover .tabs,
+.root:focus-within .tabs {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (any-pointer: coarse) {
+  .tabs {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs {
+    transition: none;
+  }
+}

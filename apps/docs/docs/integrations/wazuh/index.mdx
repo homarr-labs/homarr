@@ -11,7 +11,7 @@ import { wazuhIntegration } from ".";
 
 <IntegrationHeader integration={wazuhIntegration} categories={["Security"]} />
 
-The Wazuh integration powers the **Wazuh agents**, **Wazuh alerts** and **Wazuh security summary** widgets.
+The Wazuh integration powers the [Wazuh widget](/docs/widgets/wazuh), shows high and critical alerts in the [Notifications widget](/docs/widgets/notifications) and provides agent and alert counts to the [Stats widget](/docs/widgets/stats).
 
 Wazuh stores data in two places, and each uses its own users:
 
@@ -26,7 +26,7 @@ Alerts and severity counts need the indexer. Without server API credentials, age
 
 Pick the credential option that matches what you can reach:
 
-| Option                              | URL field                              | Widgets                     |
+| Option                              | URL field                              | Wazuh widget tabs           |
 | ----------------------------------- | -------------------------------------- | --------------------------- |
 | Username & Password                 | Server API, e.g. `https://wazuh:55000` | Agents, manager version     |
 | Username & Password & Indexer …     | Server API, indexer URL as a secret    | All                         |

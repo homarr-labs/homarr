@@ -7,15 +7,15 @@ import { clientApi } from "@homarr/api/client";
 import type { WazuhVulnerabilityOverview } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
-import type { WazuhDashboardLinks } from "../wazuh/_shared/links";
-import { formatWazuhCount, getVulnerabilitySeverityColor } from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
-import classes from "../wazuh/_shared/wazuh.module.css";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import type { WazuhViewProps } from "../view-props";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../_shared/frame";
+import type { WazuhDashboardLinks } from "../_shared/links";
+import { formatWazuhCount, getVulnerabilitySeverityColor } from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
+import classes from "../_shared/wazuh.module.css";
 
 const severityKeys = ["critical", "high", "medium", "low"] as const;
 const severityColors = { critical: "red", high: "orange", medium: "yellow", low: "blue" } as const;
@@ -32,7 +32,7 @@ const CveList = ({
   links: WazuhDashboardLinks | null;
   width: number;
 }) => {
-  const t = useI18n("widget.wazuhVulnerabilities");
+  const t = useI18n("widget.wazuh.vulnerabilities");
   const showPackages = width >= 300;
   return (
     <Stack gap={1}>
@@ -99,7 +99,7 @@ const AgentList = ({
   links: WazuhDashboardLinks | null;
   locale: string;
 }) => {
-  const t = useI18n("widget.wazuhVulnerabilities");
+  const t = useI18n("widget.wazuh.vulnerabilities");
   const max = Math.max(1, ...data.topAgents.map((agent) => agent.total));
   return (
     <Stack gap={1}>
@@ -152,13 +152,8 @@ const AgentList = ({
   );
 };
 
-export default function WazuhVulnerabilitiesWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-}: WidgetComponentProps<"wazuhVulnerabilities">) {
-  const t = useI18n("widget.wazuhVulnerabilities");
+export function WazuhVulnerabilitiesView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.vulnerabilities");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
   const integrationId = integrationIds[0] ?? "";

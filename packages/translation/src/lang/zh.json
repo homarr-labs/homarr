@@ -5458,92 +5458,123 @@
         "7d": "7 天",
         "30d": "30 天"
       },
-      "levelTooltip": "規則層級 {level}（{severity}）"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh 代理程式",
-      "description": "可排序的 Wazuh 代理程式清單，包含狀態、作業系統、版本和最後保持連線時間",
-      "option": {
-        "statusFilter": {
-          "label": "顯示代理程式"
+      "levelTooltip": "規則層級 {level}（{severity}）",
+      "summary": {
+        "title": "警示嚴重性 · {range}",
+        "alerts": "警示",
+        "none": "沒有警示",
+        "trend": {
+          "new": "創建",
+          "tooltip": "上一期間：{previous}"
         },
-        "sortBy": {
-          "label": "排序依據"
-        },
-        "showVersion": {
-          "label": "顯示 Wazuh 版本欄"
-        },
-        "showGroups": {
-          "label": "顯示群組欄"
-        }
+        "previous": "上一個 {range}：{count}",
+        "maxLevel": "最高層級 {level}",
+        "health": "索引器健康狀態：{status}",
+        "manager": "管理器 {version}"
       },
-      "title": "代理程式",
-      "total": "{count} 個代理程式",
-      "status": {
-        "active": "活動中",
-        "disconnected": "斷線",
-        "neverConnected": "從未連線",
-        "pending": "待處理"
+      "alerts": {
+        "title": "警示 · 層級 {level}+ · {hours} 小時",
+        "empty": "此等級沒有警示。一切平靜。",
+        "rule": "規則 {id}",
+        "openInDashboard": "在 Wazuh 儀表板中開啟此警示"
       },
-      "statusLabel": {
-        "active": "活動中",
-        "disconnected": "斷線",
-        "never_connected": "從未連線",
-        "pending": "待處理",
-        "unknown": "未知"
+      "timeline": {
+        "title": "警示時間軸 · {range}",
+        "total": "{count} 個警示",
+        "interval": "每 {interval}"
       },
-      "live": "即時",
-      "snapshot": "快照已存在 {age}",
-      "snapshotHint": "從 Wazuh 儀表板的代理程式快照（wazuh-monitoring）讀取，快照建立於 {time}。新增伺服器 API 認證資料以取得即時資料。",
-      "staleSnapshot": "{time} 的代理程式快照已過時。請確認 Wazuh 儀表板監控工作正在執行，或新增伺服器 API 認證資料。",
-      "noDisconnected": "所有代理程式都已連線",
-      "empty": "沒有代理程式符合此篩選條件",
-      "column": {
-        "status": "狀態",
-        "name": "工作名稱",
-        "ip": "IP 位址",
-        "os": "系統",
-        "version": "版本",
-        "lastKeepAlive": "保持連線",
-        "groups": "群組"
+      "top": {
+        "title": {
+          "rules": "熱門規則 · {range}",
+          "agents": "熱門代理程式 · {range}",
+          "sourceIps": "熱門來源 IP · {range}",
+          "mitreTactics": "MITRE 戰術 · {range}",
+          "mitreTechniques": "MITRE 技術 · {range}"
+        },
+        "empty": {
+          "rules": "此期間沒有警示",
+          "agents": "此期間沒有警示",
+          "sourceIps": "此期間沒有帶來源 IP 的警示",
+          "mitreTactics": "此期間沒有對應至 MITRE ATT&CK 的警示",
+          "mitreTechniques": "此期間沒有對應至 MITRE ATT&CK 的警示"
+        },
+        "totalTooltip": "符合條件的警示數：{count}",
+        "private": "區域網路",
+        "public": "公開",
+        "agents": "在 {count} 個代理程式上看見",
+        "others": "其他項目中還有 {count} 個警示"
       },
-      "outdated": "比最新代理程式版本（{version}）舊"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh 警示摘要",
-      "description": "包含等級、MITRE ATT&CK 技術、代理程式和來源 IP 的近期 Wazuh 警示",
-      "option": {
-        "minLevel": {
-          "label": "最低規則等級",
-          "description": "Wazuh 等級：0–6 低，7–11 中，12–14 高，15 以上嚴重"
+      "agents": {
+        "title": "代理程式",
+        "total": "{count} 個代理程式",
+        "status": {
+          "active": "活動中",
+          "disconnected": "斷線",
+          "neverConnected": "從未連線",
+          "pending": "待處理"
         },
-        "hours": {
-          "label": "時間範圍（小時）"
+        "statusLabel": {
+          "active": "活動中",
+          "disconnected": "斷線",
+          "never_connected": "從未連線",
+          "pending": "待處理",
+          "unknown": "未知"
         },
-        "limit": {
-          "label": "警示數量"
+        "live": "即時",
+        "snapshot": "快照已存在 {age}",
+        "snapshotHint": "從 Wazuh 儀表板的代理程式快照（wazuh-monitoring）讀取，快照建立於 {time}。新增伺服器 API 認證資料以取得即時資料。",
+        "staleSnapshot": "{time} 的代理程式快照已過時。請確認 Wazuh 儀表板監控工作正在執行，或新增伺服器 API 認證資料。",
+        "noDisconnected": "所有代理程式都已連線",
+        "empty": "沒有代理程式符合此篩選條件",
+        "column": {
+          "status": "狀態",
+          "name": "工作名稱",
+          "ip": "IP 位址",
+          "os": "系統",
+          "version": "版本",
+          "lastKeepAlive": "保持連線",
+          "groups": "群組"
         },
-        "showMitre": {
-          "label": "顯示 MITRE ATT&CK 技術"
-        },
-        "showAgent": {
-          "label": "顯示代理程式"
-        },
-        "showSourceIp": {
-          "label": "顯示來源 IP"
-        },
-        "showRuleId": {
-          "label": "顯示規則 ID"
-        }
+        "outdated": "比最新代理程式版本（{version}）舊"
       },
-      "title": "警示 · 層級 {level}+ · {hours} 小時",
-      "empty": "此等級沒有警示。一切平靜。",
-      "rule": "規則 {id}",
-      "openInDashboard": "在 Wazuh 儀表板中開啟此警示"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh 警示嚴重性",
-      "description": "警示嚴重性明細，並與上一個期間的趨勢比較",
+      "vulnerabilities": {
+        "title": "弱點",
+        "topCves": "熱門 CVE",
+        "score": "分數",
+        "agentsShort": "代理程式",
+        "topAgents": "最易受攻擊的代理程式",
+        "criticalHigh": "嚴重／高",
+        "totalTooltip": "{agents} 個代理程式上有 {count} 個發現項目",
+        "affected": "{count} 個代理程式",
+        "empty": "未偵測到弱點",
+        "distribution": "嚴重性分佈。沒有分數的 {unscored} 個發現項目不會顯示。",
+        "worst": "最嚴重：{id}（{score}），位於 {agents} 個代理程式上"
+      },
+      "fim": {
+        "title": "檔案完整性 · {range}",
+        "event": {
+          "added": "日期已新增",
+          "modified": "已修改",
+          "deleted": "已刪除",
+          "unknown": "已變更"
+        },
+        "empty": "此期間沒有檔案完整性事件",
+        "user": "由 {user}",
+        "registry": "登錄檔"
+      },
+      "authFailures": {
+        "title": "驗證失敗 · {hours} 小時",
+        "seriesTooltip": "過去 {hours} 小時內的所有代理程式",
+        "peak": "峰值 {count}/區段",
+        "empty": "此期間沒有失敗登入",
+        "failed": "失敗登入",
+        "failedHint": "單次驗證失敗（sshd、PAM、Windows 登入、無效使用者）",
+        "bruteForce": "暴力破解",
+        "bruteForceHint": "相關聯的暴力破解規則（短時間內多次失敗，MITRE T1110）",
+        "sourceIps": "來源 IP",
+        "ipTooltip": "{ip}：{count} 次失敗",
+        "bruteForceCount": "{count} 次暴力破解"
+      },
       "option": {
         "range": {
           "label": "時間範圍"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "顯示頁尾"
-        }
-      },
-      "title": "警示嚴重性 · {range}",
-      "alerts": "警示",
-      "none": "沒有警示",
-      "trend": {
-        "new": "創建",
-        "tooltip": "上一期間：{previous}"
-      },
-      "previous": "上一個 {range}：{count}",
-      "maxLevel": "最高層級 {level}",
-      "health": "索引器健康狀態：{status}",
-      "manager": "管理器 {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh 警示時間軸",
-      "description": "依嚴重性顯示一段時間內 Wazuh 警示的堆疊圖表",
-      "option": {
-        "range": {
-          "label": "時間範圍"
         },
         "interval": {
           "label": "時間間隔"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "顯示包含總數的圖例"
-        }
-      },
-      "title": "警示時間軸 · {range}",
-      "total": "{count} 個警示",
-      "interval": "每 {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh 排行清單",
-      "description": "依警示數量排列的熱門規則、代理程式、來源 IP，或 MITRE ATT&CK 戰術與技術",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "排名"
         },
-        "range": {
-          "label": "時間範圍"
-        },
-        "limit": {
+        "topLimit": {
           "label": "項目數量"
-        },
-        "minLevel": {
-          "label": "最低規則等級"
         },
         "showBars": {
           "label": "顯示長條"
-        }
-      },
-      "title": {
-        "rules": "熱門規則 · {range}",
-        "agents": "熱門代理程式 · {range}",
-        "sourceIps": "熱門來源 IP · {range}",
-        "mitreTactics": "MITRE 戰術 · {range}",
-        "mitreTechniques": "MITRE 技術 · {range}"
-      },
-      "empty": {
-        "rules": "此期間沒有警示",
-        "agents": "此期間沒有警示",
-        "sourceIps": "此期間沒有帶來源 IP 的警示",
-        "mitreTactics": "此期間沒有對應至 MITRE ATT&CK 的警示",
-        "mitreTechniques": "此期間沒有對應至 MITRE ATT&CK 的警示"
-      },
-      "totalTooltip": "符合條件的警示數：{count}",
-      "private": "區域網路",
-      "public": "公開",
-      "agents": "在 {count} 個代理程式上看見",
-      "others": "其他項目中還有 {count} 個警示"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh 弱點",
-      "description": "弱點數量、熱門 CVE 與最易受攻擊的代理程式",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "顯示代理程式"
+        },
+        "agentSortBy": {
+          "label": "排序依據"
+        },
+        "showVersion": {
+          "label": "顯示 Wazuh 版本欄"
+        },
+        "showGroups": {
+          "label": "顯示群組欄"
+        },
         "cveOrder": {
           "label": "CVE 排序依據"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "顯示最易受攻擊的代理程式"
-        }
-      },
-      "title": "弱點",
-      "topCves": "熱門 CVE",
-      "score": "分數",
-      "agentsShort": "代理程式",
-      "topAgents": "最易受攻擊的代理程式",
-      "criticalHigh": "嚴重／高",
-      "totalTooltip": "{agents} 個代理程式上有 {count} 個發現項目",
-      "affected": "{count} 個代理程式",
-      "empty": "未偵測到弱點",
-      "distribution": "嚴重性分佈。沒有分數的 {unscored} 個發現項目不會顯示。",
-      "worst": "最嚴重：{id}（{score}），位於 {agents} 個代理程式上"
-    },
-    "wazuhFim": {
-      "name": "Wazuh 檔案完整性",
-      "description": "最近的檔案完整性監控（syscheck）事件",
-      "option": {
-        "range": {
-          "label": "時間範圍"
         },
-        "event": {
+        "fimEvent": {
           "label": "事件"
         },
-        "limit": {
+        "fimLimit": {
           "label": "事件數量"
         },
         "includeRegistry": {
           "label": "包含 Windows 登錄檔事件"
-        }
-      },
-      "title": "檔案完整性 · {range}",
-      "event": {
-        "added": "日期已新增",
-        "modified": "已修改",
-        "deleted": "已刪除",
-        "unknown": "已變更"
-      },
-      "empty": "此期間沒有檔案完整性事件",
-      "user": "由 {user}",
-      "registry": "登錄檔"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh 驗證失敗",
-      "description": "依代理程式顯示失敗登入與暴力破解警示，並附上每小時迷你圖",
-      "option": {
-        "hours": {
-          "label": "時間視窗（小時）"
         },
-        "limit": {
+        "authLimit": {
           "label": "代理程式數量"
         },
         "showSourceIps": {
           "label": "顯示熱門來源 IP"
+        },
+        "alertsMinLevel": {
+          "label": "最低規則等級",
+          "description": "Wazuh 等級：0–6 低，7–11 中，12–14 高，15 以上嚴重"
+        },
+        "alertsLimit": {
+          "label": "警示數量"
+        },
+        "showMitre": {
+          "label": "顯示 MITRE ATT&CK 技術"
+        },
+        "showAgent": {
+          "label": "顯示代理程式"
+        },
+        "showSourceIp": {
+          "label": "顯示來源 IP"
+        },
+        "showRuleId": {
+          "label": "顯示規則 ID"
         }
-      },
-      "title": "驗證失敗 · {hours} 小時",
-      "seriesTooltip": "過去 {hours} 小時內的所有代理程式",
-      "peak": "峰值 {count}/區段",
-      "empty": "此期間沒有失敗登入",
-      "failed": "失敗登入",
-      "failedHint": "單次驗證失敗（sshd、PAM、Windows 登入、無效使用者）",
-      "bruteForce": "暴力破解",
-      "bruteForceHint": "相關聯的暴力破解規則（短時間內多次失敗，MITRE T1110）",
-      "sourceIps": "來源 IP",
-      "ipTooltip": "{ip}：{count} 次失敗",
-      "bruteForceCount": "{count} 次暴力破解"
+      }
     }
   },
   "widgetPreview": {

@@ -5458,92 +5458,123 @@
         "7d": "7 d",
         "30d": "30 d"
       },
-      "levelTooltip": "Noteikuma līmenis {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh aģenti",
-      "description": "Kārtojams Wazuh aģentu saraksts ar statusu, operētājsistēmu, versiju un pēdējo uzturēšanas signālu",
-      "option": {
-        "statusFilter": {
-          "label": "Rādīt aģentus"
+      "levelTooltip": "Noteikuma līmenis {level} ({severity})",
+      "summary": {
+        "title": "Brīdinājumu nopietnība · {range}",
+        "alerts": "brīdinājumi",
+        "none": "Brīdinājumu nav",
+        "trend": {
+          "new": "jauni",
+          "tooltip": "Iepriekšējais periods: {previous}"
         },
-        "sortBy": {
-          "label": "Kārtot pēc"
-        },
-        "showVersion": {
-          "label": "Rādīt Wazuh versijas kolonnu"
-        },
-        "showGroups": {
-          "label": "Rādīt grupu kolonnu"
-        }
+        "previous": "Iepriekšējais {range}: {count}",
+        "maxLevel": "Maksimālais līmenis {level}",
+        "health": "Indeksētāja stāvoklis: {status}",
+        "manager": "Pārvaldnieks {version}"
       },
-      "title": "Aģenti",
-      "total": "{count} aģenti",
-      "status": {
-        "active": "Aktīvs",
-        "disconnected": "Atvienots",
-        "neverConnected": "Nekad nav bijis savienots",
-        "pending": "Gaida"
+      "alerts": {
+        "title": "Brīdinājumi · līmenis {level}+ · {hours} st.",
+        "empty": "Šajā līmenī brīdinājumu nav. Viss mierīgi.",
+        "rule": "Noteikums {id}",
+        "openInDashboard": "Atvērt šo brīdinājumu Wazuh informācijas panelī"
       },
-      "statusLabel": {
-        "active": "Aktīvs",
-        "disconnected": "Atvienots",
-        "never_connected": "Nekad nav bijis savienots",
-        "pending": "Gaida",
-        "unknown": "Nezināms"
+      "timeline": {
+        "title": "Brīdinājumu laika skala · {range}",
+        "total": "{count} brīdinājumi",
+        "interval": "uz {interval}"
       },
-      "live": "Tiešraidē",
-      "snapshot": "Momentuzņēmums ir {age} vecs",
-      "snapshotHint": "Dati nolasīti no Wazuh informācijas paneļa aģentu momentuzņēmuma (wazuh-monitoring), kas uzņemts plkst. {time}. Lai iegūtu datus reāllaikā, pievienojiet servera API akreditācijas datus.",
-      "staleSnapshot": "Aģentu momentuzņēmums no {time} ir novecojis. Pārbaudiet, vai darbojas Wazuh informācijas paneļa pārraudzības uzdevums, vai pievienojiet servera API akreditācijas datus.",
-      "noDisconnected": "Visi aģenti ir savienoti",
-      "empty": "Neviens aģents neatbilst šim filtram",
-      "column": {
-        "status": "Statuss",
-        "name": "Darba vārds",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Versija",
-        "lastKeepAlive": "Uzturēt savienojumu",
-        "groups": "Grupas"
+      "top": {
+        "title": {
+          "rules": "Biežākie noteikumi · {range}",
+          "agents": "Biežākie aģenti · {range}",
+          "sourceIps": "Biežākās avota IP adreses · {range}",
+          "mitreTactics": "MITRE taktikas · {range}",
+          "mitreTechniques": "MITRE paņēmieni · {range}"
+        },
+        "empty": {
+          "rules": "Šajā periodā nav brīdinājumu",
+          "agents": "Šajā periodā nav brīdinājumu",
+          "sourceIps": "Šajā periodā nav brīdinājumu ar avota IP adresi",
+          "mitreTactics": "Šajā periodā nav brīdinājumu, kas saistīti ar MITRE ATT&CK",
+          "mitreTechniques": "Šajā periodā nav brīdinājumu, kas saistīti ar MITRE ATT&CK"
+        },
+        "totalTooltip": "{count} atbilstoši brīdinājumi",
+        "private": "LAN",
+        "public": "Publisks",
+        "agents": "Redzams {count} aģentiem",
+        "others": "{count} citu ierakstu brīdinājumi"
       },
-      "outdated": "Vecāks par jaunāko aģenta versiju ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh brīdinājumu plūsma",
-      "description": "Jaunākie Wazuh brīdinājumi ar līmeni, MITRE ATT&CK paņēmieniem, aģentu un avota IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimālais noteikuma līmenis",
-          "description": "Wazuh līmeņi: 0–6 zems, 7–11 vidējs, 12–14 augsts, 15+ kritisks"
+      "agents": {
+        "title": "Aģenti",
+        "total": "{count} aģenti",
+        "status": {
+          "active": "Aktīvs",
+          "disconnected": "Atvienots",
+          "neverConnected": "Nekad nav bijis savienots",
+          "pending": "Gaida"
         },
-        "hours": {
-          "label": "Laika periods (stundas)"
+        "statusLabel": {
+          "active": "Aktīvs",
+          "disconnected": "Atvienots",
+          "never_connected": "Nekad nav bijis savienots",
+          "pending": "Gaida",
+          "unknown": "Nezināms"
         },
-        "limit": {
-          "label": "Brīdinājumu skaits"
+        "live": "Tiešraidē",
+        "snapshot": "Momentuzņēmums ir {age} vecs",
+        "snapshotHint": "Dati nolasīti no Wazuh informācijas paneļa aģentu momentuzņēmuma (wazuh-monitoring), kas uzņemts plkst. {time}. Lai iegūtu datus reāllaikā, pievienojiet servera API akreditācijas datus.",
+        "staleSnapshot": "Aģentu momentuzņēmums no {time} ir novecojis. Pārbaudiet, vai darbojas Wazuh informācijas paneļa pārraudzības uzdevums, vai pievienojiet servera API akreditācijas datus.",
+        "noDisconnected": "Visi aģenti ir savienoti",
+        "empty": "Neviens aģents neatbilst šim filtram",
+        "column": {
+          "status": "Statuss",
+          "name": "Darba vārds",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Versija",
+          "lastKeepAlive": "Uzturēt savienojumu",
+          "groups": "Grupas"
         },
-        "showMitre": {
-          "label": "Rādīt MITRE ATT&CK paņēmienus"
-        },
-        "showAgent": {
-          "label": "Rādīt aģentu"
-        },
-        "showSourceIp": {
-          "label": "Rādīt avota IP"
-        },
-        "showRuleId": {
-          "label": "Rādīt noteikuma ID"
-        }
+        "outdated": "Vecāks par jaunāko aģenta versiju ({version})"
       },
-      "title": "Brīdinājumi · līmenis {level}+ · {hours} st.",
-      "empty": "Šajā līmenī brīdinājumu nav. Viss mierīgi.",
-      "rule": "Noteikums {id}",
-      "openInDashboard": "Atvērt šo brīdinājumu Wazuh informācijas panelī"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh brīdinājumu nopietnība",
-      "description": "Brīdinājumu nopietnības sadalījums ar tendenci salīdzinājumā ar iepriekšējo periodu",
+      "vulnerabilities": {
+        "title": "Ievainojamības",
+        "topCves": "Biežākie CVE",
+        "score": "Vērtējums",
+        "agentsShort": "Aģenti",
+        "topAgents": "Visneaizsargātākie aģenti",
+        "criticalHigh": "Krit. / augsta",
+        "totalTooltip": "{count} atradnes {agents} aģentiem",
+        "affected": "{count} aģenti",
+        "empty": "Ievainojamības nav konstatētas",
+        "distribution": "Nopietnības sadalījums. {unscored} atradnes bez vērtējuma netiek rādītas.",
+        "worst": "Sliktākais: {id} ({score}) uz {agents} aģentiem"
+      },
+      "fim": {
+        "title": "Failu integritāte · {range}",
+        "event": {
+          "added": "Pievienošanas datums",
+          "modified": "Modificēts",
+          "deleted": "Dzēsts",
+          "unknown": "Mainīts"
+        },
+        "empty": "Šajā periodā nav failu integritātes notikumu",
+        "user": "pēc {user}",
+        "registry": "Reģistrs"
+      },
+      "authFailures": {
+        "title": "Autentifikācijas kļūmes · {hours} h",
+        "seriesTooltip": "Visi aģenti pēdējo {hours} stundu laikā",
+        "peak": "Maksimums {count}/grupā",
+        "empty": "Šajā periodā nav neveiksmīgu pieteikšanos",
+        "failed": "Neveiksmīgas pieteikšanās",
+        "failedHint": "Atsevišķas autentifikācijas kļūmes (sshd, PAM, Windows pieteikšanās, nederīgi lietotāji)",
+        "bruteForce": "Brutāls spēks",
+        "bruteForceHint": "Saistītie brutāla spēka noteikumi (vairākas kļūmes īsā periodā, MITRE T1110)",
+        "sourceIps": "Avota IP adreses",
+        "ipTooltip": "{ip}: {count} kļūmes",
+        "bruteForceCount": "{count} brutāla spēka uzbrukumi"
+      },
       "option": {
         "range": {
           "label": "Laika diapazons"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Rādīt kājeni"
-        }
-      },
-      "title": "Brīdinājumu nopietnība · {range}",
-      "alerts": "brīdinājumi",
-      "none": "Brīdinājumu nav",
-      "trend": {
-        "new": "jauni",
-        "tooltip": "Iepriekšējais periods: {previous}"
-      },
-      "previous": "Iepriekšējais {range}: {count}",
-      "maxLevel": "Maksimālais līmenis {level}",
-      "health": "Indeksētāja stāvoklis: {status}",
-      "manager": "Pārvaldnieks {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh brīdinājumu laika skala",
-      "description": "Wazuh brīdinājumu laikā sakrauts grafiks pēc nopietnības",
-      "option": {
-        "range": {
-          "label": "Laika diapazons"
         },
         "interval": {
           "label": "Intervāls"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Rādīt leģendu ar kopsummām"
-        }
-      },
-      "title": "Brīdinājumu laika skala · {range}",
-      "total": "{count} brīdinājumi",
-      "interval": "uz {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh populārāko vienumu saraksts",
-      "description": "Biežākie noteikumi, aģenti, avota IP adreses vai MITRE ATT&CK taktikas un paņēmieni pēc brīdinājumu skaita",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rangs"
         },
-        "range": {
-          "label": "Laika diapazons"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Ierakstu skaits"
-        },
-        "minLevel": {
-          "label": "Minimālais noteikuma līmenis"
         },
         "showBars": {
           "label": "Rādīt joslas"
-        }
-      },
-      "title": {
-        "rules": "Biežākie noteikumi · {range}",
-        "agents": "Biežākie aģenti · {range}",
-        "sourceIps": "Biežākās avota IP adreses · {range}",
-        "mitreTactics": "MITRE taktikas · {range}",
-        "mitreTechniques": "MITRE paņēmieni · {range}"
-      },
-      "empty": {
-        "rules": "Šajā periodā nav brīdinājumu",
-        "agents": "Šajā periodā nav brīdinājumu",
-        "sourceIps": "Šajā periodā nav brīdinājumu ar avota IP adresi",
-        "mitreTactics": "Šajā periodā nav brīdinājumu, kas saistīti ar MITRE ATT&CK",
-        "mitreTechniques": "Šajā periodā nav brīdinājumu, kas saistīti ar MITRE ATT&CK"
-      },
-      "totalTooltip": "{count} atbilstoši brīdinājumi",
-      "private": "LAN",
-      "public": "Publisks",
-      "agents": "Redzams {count} aģentiem",
-      "others": "{count} citu ierakstu brīdinājumi"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh ievainojamības",
-      "description": "Ievainojamību skaits, biežākie CVE un visneaizsargātākie aģenti",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Rādīt aģentus"
+        },
+        "agentSortBy": {
+          "label": "Kārtot pēc"
+        },
+        "showVersion": {
+          "label": "Rādīt Wazuh versijas kolonnu"
+        },
+        "showGroups": {
+          "label": "Rādīt grupu kolonnu"
+        },
         "cveOrder": {
           "label": "Kārtot CVE pēc"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Rādīt visneaizsargātākos aģentus"
-        }
-      },
-      "title": "Ievainojamības",
-      "topCves": "Biežākie CVE",
-      "score": "Vērtējums",
-      "agentsShort": "Aģenti",
-      "topAgents": "Visneaizsargātākie aģenti",
-      "criticalHigh": "Krit. / augsta",
-      "totalTooltip": "{count} atradnes {agents} aģentiem",
-      "affected": "{count} aģenti",
-      "empty": "Ievainojamības nav konstatētas",
-      "distribution": "Nopietnības sadalījums. {unscored} atradnes bez vērtējuma netiek rādītas.",
-      "worst": "Sliktākais: {id} ({score}) uz {agents} aģentiem"
-    },
-    "wazuhFim": {
-      "name": "Wazuh failu integritāte",
-      "description": "Nesenie failu integritātes uzraudzības (syscheck) notikumi",
-      "option": {
-        "range": {
-          "label": "Laika diapazons"
         },
-        "event": {
+        "fimEvent": {
           "label": "Notikumi"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Notikumu skaits"
         },
         "includeRegistry": {
           "label": "Iekļaut Windows reģistra notikumus"
-        }
-      },
-      "title": "Failu integritāte · {range}",
-      "event": {
-        "added": "Pievienošanas datums",
-        "modified": "Modificēts",
-        "deleted": "Dzēsts",
-        "unknown": "Mainīts"
-      },
-      "empty": "Šajā periodā nav failu integritātes notikumu",
-      "user": "pēc {user}",
-      "registry": "Reģistrs"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh autentifikācijas kļūmes",
-      "description": "Neveiksmīgas pieteikšanās un brutāla spēka uzbrukumu brīdinājumi katram aģentam ar stundu diagrammām",
-      "option": {
-        "hours": {
-          "label": "Laika logs (stundās)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Aģentu skaits"
         },
         "showSourceIps": {
           "label": "Rādīt biežākās avota IP adreses"
+        },
+        "alertsMinLevel": {
+          "label": "Minimālais noteikuma līmenis",
+          "description": "Wazuh līmeņi: 0–6 zems, 7–11 vidējs, 12–14 augsts, 15+ kritisks"
+        },
+        "alertsLimit": {
+          "label": "Brīdinājumu skaits"
+        },
+        "showMitre": {
+          "label": "Rādīt MITRE ATT&CK paņēmienus"
+        },
+        "showAgent": {
+          "label": "Rādīt aģentu"
+        },
+        "showSourceIp": {
+          "label": "Rādīt avota IP"
+        },
+        "showRuleId": {
+          "label": "Rādīt noteikuma ID"
         }
-      },
-      "title": "Autentifikācijas kļūmes · {hours} h",
-      "seriesTooltip": "Visi aģenti pēdējo {hours} stundu laikā",
-      "peak": "Maksimums {count}/grupā",
-      "empty": "Šajā periodā nav neveiksmīgu pieteikšanos",
-      "failed": "Neveiksmīgas pieteikšanās",
-      "failedHint": "Atsevišķas autentifikācijas kļūmes (sshd, PAM, Windows pieteikšanās, nederīgi lietotāji)",
-      "bruteForce": "Brutāls spēks",
-      "bruteForceHint": "Saistītie brutāla spēka noteikumi (vairākas kļūmes īsā periodā, MITRE T1110)",
-      "sourceIps": "Avota IP adreses",
-      "ipTooltip": "{ip}: {count} kļūmes",
-      "bruteForceCount": "{count} brutāla spēka uzbrukumi"
+      }
     }
   },
   "widgetPreview": {

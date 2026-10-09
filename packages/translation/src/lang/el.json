@@ -5458,92 +5458,123 @@
         "7d": "7δ",
         "30d": "30δ"
       },
-      "levelTooltip": "Rule level {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Παράγοντες του Wazuh",
-      "description": "Ταξινόμηση λίστα των παραγόντων Wazuh με κατάσταση, λειτουργικό σύστημα και τελευταία φύλαξη",
-      "option": {
-        "statusFilter": {
-          "label": "Εμφάνιση πράκτορων"
+      "levelTooltip": "Rule level {level} ({severity})",
+      "summary": {
+        "title": "Σοβαρότητα ειδοποιήσεων · {range}",
+        "alerts": "ειδοποιήσεις",
+        "none": "Δεν υπάρχουν ειδοποιήσεις",
+        "trend": {
+          "new": "νέο",
+          "tooltip": "Προηγούμενη περίοδος: {previous}"
         },
-        "sortBy": {
-          "label": "Ταξινόμηση κατά"
-        },
-        "showVersion": {
-          "label": "Εμφάνιση στήλης έκδοσης Wazuh"
-        },
-        "showGroups": {
-          "label": "Εμφάνιση στήλης ομάδων"
-        }
+        "previous": "Προηγούμενο {range}: {count}",
+        "maxLevel": "Μέγιστο επίπεδο {level}",
+        "health": "Κατάσταση indexer: {status}",
+        "manager": "Διαχειριστής {version}"
       },
-      "title": "Πράκτορες",
-      "total": "{count} πράκτορες",
-      "status": {
-        "active": "Ενεργό",
-        "disconnected": "Αποσυνδέθηκε",
-        "neverConnected": "Ποτέ μη συνδεδεμένο",
-        "pending": "Εκκρεμεί"
+      "alerts": {
+        "title": "Ειδοποιήσεις · επίπεδο {level}+ · {hours}h",
+        "empty": "Δεν υπάρχουν ειδοποιήσεις σε αυτό το επίπεδο. Όλα ήσυχα.",
+        "rule": "Κανόνας {id}",
+        "openInDashboard": "Άνοιγμα αυτής της ειδοποίησης στον πίνακα εργαλείων Wazuh"
       },
-      "statusLabel": {
-        "active": "Ενεργό",
-        "disconnected": "Αποσυνδέθηκε",
-        "never_connected": "Ποτέ μη συνδεδεμένο",
-        "pending": "Εκκρεμεί",
-        "unknown": "Άγνωστο"
+      "timeline": {
+        "title": "Χρονολόγιο ειδοποιήσεων · {range}",
+        "total": "{count} ειδοποιήσεις",
+        "interval": "ανά {interval}"
       },
-      "live": "Ζωντανά",
-      "snapshot": "Το στιγμιότυπο είναι παλιό κατά {age}",
-      "snapshotHint": "Διαβάστε από το στιγμιότυπο πράκτορα του Wazuh (wazuh-monitoring) που λήφθηκε στο {time}. Προσθέστε τα διαπιστευτήρια API διακομιστή για ζωντανά δεδομένα.",
-      "staleSnapshot": "Το στιγμιότυπο του πράκτορα από το {time} είναι ξεπερασμένο. Ελέγξτε ότι η εργασία παρακολούθησης του ταμπλό Wazuh εκτελείται ή προσθέστε διαπιστευτήρια του διακομιστή API.",
-      "noDisconnected": "Όλοι οι πράκτορες είναι συνδεδεμένοι",
-      "empty": "Κανένας πράκτορας δεν ταιριάζει με αυτό το φίλτρο",
-      "column": {
-        "status": "Κατάσταση",
-        "name": "Όνομα εργασίας",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Έκδοση",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Ομάδες"
+      "top": {
+        "title": {
+          "rules": "Κορυφαίοι κανόνες · {range}",
+          "agents": "Κορυφαίοι πράκτορες · {range}",
+          "sourceIps": "Κορυφαίες IP πηγές · {range}",
+          "mitreTactics": "MITRE tactics · {range}",
+          "mitreTechniques": "MITRE techniques · {range}"
+        },
+        "empty": {
+          "rules": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
+          "agents": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
+          "sourceIps": "Δεν υπάρχουν ειδοποιήσεις με πηγαίο IP σε αυτή την περίοδο",
+          "mitreTactics": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο",
+          "mitreTechniques": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο"
+        },
+        "totalTooltip": "{count} αντίστοιχες ειδοποιήσεις",
+        "private": "LAN",
+        "public": "Δημόσιο",
+        "agents": "Εμφανίζεται σε {count} πράκτορες",
+        "others": "{count} ακόμη ειδοποιήσεις σε άλλες καταχωρίσεις"
       },
-      "outdated": "Παλαιότερα από τη νεότερη έκδοση πράκτορα ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Τροφοδοσία ειδοποιήσεων Wazuh",
-      "description": "Πρόσφατες ειδοποιήσεις Wazuh με το επίπεδο, MITRE ATT&CK τεχνικές, πράκτορας και πηγή IP",
-      "option": {
-        "minLevel": {
-          "label": "Ελάχιστο επίπεδο κανόνα",
-          "description": "Επίπεδα Wazuh: 0-6 χαμηλό, 7-11 μέσο, 12-14 υψηλό, 15+ κρίσιμο"
+      "agents": {
+        "title": "Πράκτορες",
+        "total": "{count} πράκτορες",
+        "status": {
+          "active": "Ενεργό",
+          "disconnected": "Αποσυνδέθηκε",
+          "neverConnected": "Ποτέ μη συνδεδεμένο",
+          "pending": "Εκκρεμεί"
         },
-        "hours": {
-          "label": "Παράθυρο ώρας (ώρες)"
+        "statusLabel": {
+          "active": "Ενεργό",
+          "disconnected": "Αποσυνδέθηκε",
+          "never_connected": "Ποτέ μη συνδεδεμένο",
+          "pending": "Εκκρεμεί",
+          "unknown": "Άγνωστο"
         },
-        "limit": {
-          "label": "Αριθμός καταχωρίσεων"
+        "live": "Ζωντανά",
+        "snapshot": "Το στιγμιότυπο είναι παλιό κατά {age}",
+        "snapshotHint": "Διαβάστε από το στιγμιότυπο πράκτορα του Wazuh (wazuh-monitoring) που λήφθηκε στο {time}. Προσθέστε τα διαπιστευτήρια API διακομιστή για ζωντανά δεδομένα.",
+        "staleSnapshot": "Το στιγμιότυπο του πράκτορα από το {time} είναι ξεπερασμένο. Ελέγξτε ότι η εργασία παρακολούθησης του ταμπλό Wazuh εκτελείται ή προσθέστε διαπιστευτήρια του διακομιστή API.",
+        "noDisconnected": "Όλοι οι πράκτορες είναι συνδεδεμένοι",
+        "empty": "Κανένας πράκτορας δεν ταιριάζει με αυτό το φίλτρο",
+        "column": {
+          "status": "Κατάσταση",
+          "name": "Όνομα εργασίας",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Έκδοση",
+          "lastKeepAlive": "Keepalive",
+          "groups": "Ομάδες"
         },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Εμφάνιση πράκτορα"
-        },
-        "showSourceIp": {
-          "label": "Εμφάνιση πηγαίου IP"
-        },
-        "showRuleId": {
-          "label": "Εμφάνιση αναγνωριστικού κανόνα"
-        }
+        "outdated": "Παλαιότερα από τη νεότερη έκδοση πράκτορα ({version})"
       },
-      "title": "Ειδοποιήσεις · επίπεδο {level}+ · {hours}h",
-      "empty": "Δεν υπάρχουν ειδοποιήσεις σε αυτό το επίπεδο. Όλα ήσυχα.",
-      "rule": "Κανόνας {id}",
-      "openInDashboard": "Άνοιγμα αυτής της ειδοποίησης στον πίνακα εργαλείων Wazuh"
-    },
-    "wazuhSummary": {
-      "name": "Βαρύτητα συναγερμού Wazuh",
-      "description": "Κατανομή της σοβαρότητας με τάση έναντι της προηγούμενης περιόδου",
+      "vulnerabilities": {
+        "title": "Ευπάθειες",
+        "topCves": "Κορυφαία CVE",
+        "score": "Βαθμολογία",
+        "agentsShort": "Πράκτορες",
+        "topAgents": "Οι πιο ευάλωτοι παράγοντες",
+        "criticalHigh": "Crit / Υψηλή",
+        "totalTooltip": "{count} ευρήματα σε {agents} πράκτορες",
+        "affected": "{count} πράκτορες",
+        "empty": "Δεν εντοπίστηκαν τρωτά σημεία",
+        "distribution": "Κατανομή σοβαρότητας. Τα {unscored} ευρήματα χωρίς βαθμολογία δεν εμφανίζονται.",
+        "worst": "Χειρότερο: {id} ({score}) σε {agents} πράκτορες"
+      },
+      "fim": {
+        "title": "Ακεραιότητα αρχείων · {range}",
+        "event": {
+          "added": "Ημερομηνία Προσθήκης",
+          "modified": "Τροποποιήθηκε",
+          "deleted": "Διαγράφηκε",
+          "unknown": "Άλλαξε"
+        },
+        "empty": "Δεν υπάρχουν συμβάντα ακεραιότητας αρχείων σε αυτήν την περίοδο",
+        "user": "από τον χρήστη {user}",
+        "registry": "Μητρώο"
+      },
+      "authFailures": {
+        "title": "Αποτυχίες ελέγχου ταυτότητας · {hours} ώρες",
+        "seriesTooltip": "Όλοι οι πράκτορες των τελευταίων {hours} ωρών",
+        "peak": "Μέγιστο {count}/ομάδα",
+        "empty": "Δεν υπάρχουν αποτυχημένες συνδέσεις σε αυτήν την περίοδο",
+        "failed": "Αποτυχημένες συνδέσεις",
+        "failedHint": "Αποτυχία ενός ελέγχου ταυτότητας (shd, PAM, σύνδεση με Windows, μη έγκυροι χρήστες)",
+        "bruteForce": "Brute force",
+        "bruteForceHint": "Κανόνες συσχετιζόμενοι με ωμάρια (πολλαπλές αποτυχίες σε σύντομο χρονικό διάστημα, MITRE T1110)",
+        "sourceIps": "Πηγαία IP",
+        "ipTooltip": "{ip}: {count} αποτυχίες",
+        "bruteForceCount": "{count} brute force"
+      },
       "option": {
         "range": {
           "label": "Χρονικό εύρος"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Εμφάνιση υποσέλιδου"
-        }
-      },
-      "title": "Σοβαρότητα ειδοποιήσεων · {range}",
-      "alerts": "ειδοποιήσεις",
-      "none": "Δεν υπάρχουν ειδοποιήσεις",
-      "trend": {
-        "new": "νέο",
-        "tooltip": "Προηγούμενη περίοδος: {previous}"
-      },
-      "previous": "Προηγούμενο {range}: {count}",
-      "maxLevel": "Μέγιστο επίπεδο {level}",
-      "health": "Κατάσταση indexer: {status}",
-      "manager": "Διαχειριστής {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Συσσωρευμένο γράφημα Wazuh ειδοποιεί με την πάροδο του χρόνου από τη σοβαρότητα",
-      "option": {
-        "range": {
-          "label": "Χρονικό εύρος"
         },
         "interval": {
           "label": "Διάστημα"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Εμφάνιση υπομνήματος με σύνολα"
-        }
-      },
-      "title": "Χρονολόγιο ειδοποιήσεων · {range}",
-      "total": "{count} ειδοποιήσεις",
-      "interval": "ανά {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Κορυφαία λίστα Wazuh",
-      "description": "Κορυφαίοι κανόνες, πράκτορες, IPs πηγής ή τακτικές και τεχνικές MITRE ATT&CK μέσω συναγερμού",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Κατάταξη"
         },
-        "range": {
-          "label": "Χρονικό εύρος"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Αριθμός καταχωρήσεων"
-        },
-        "minLevel": {
-          "label": "Ελάχιστο επίπεδο κανόνα"
         },
         "showBars": {
           "label": "Εμφάνιση μπαρών"
-        }
-      },
-      "title": {
-        "rules": "Κορυφαίοι κανόνες · {range}",
-        "agents": "Κορυφαίοι πράκτορες · {range}",
-        "sourceIps": "Κορυφαίες IP πηγές · {range}",
-        "mitreTactics": "MITRE tactics · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
-        "agents": "Δεν υπάρχουν ειδοποιήσεις σε αυτήν την περίοδο",
-        "sourceIps": "Δεν υπάρχουν ειδοποιήσεις με πηγαίο IP σε αυτή την περίοδο",
-        "mitreTactics": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο",
-        "mitreTechniques": "Δεν έχουν αντιστοιχιστεί ειδοποιήσεις για το MITRE ATT&CK σε αυτή την περίοδο"
-      },
-      "totalTooltip": "{count} αντίστοιχες ειδοποιήσεις",
-      "private": "LAN",
-      "public": "Δημόσιο",
-      "agents": "Εμφανίζεται σε {count} πράκτορες",
-      "others": "{count} ακόμη ειδοποιήσεις σε άλλες καταχωρίσεις"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Αδυναμίες στο Wazuh",
-      "description": "Αριθμός ευπάθειας, κορυφαίοι CVE και οι πιο ευάλωτοι παράγοντες",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Εμφάνιση πράκτορων"
+        },
+        "agentSortBy": {
+          "label": "Ταξινόμηση κατά"
+        },
+        "showVersion": {
+          "label": "Εμφάνιση στήλης έκδοσης Wazuh"
+        },
+        "showGroups": {
+          "label": "Εμφάνιση στήλης ομάδων"
+        },
         "cveOrder": {
           "label": "Κατάταξη CVE κατά"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Εμφάνιση πιο ευάλωτων παραγόντων"
-        }
-      },
-      "title": "Ευπάθειες",
-      "topCves": "Κορυφαία CVE",
-      "score": "Βαθμολογία",
-      "agentsShort": "Πράκτορες",
-      "topAgents": "Οι πιο ευάλωτοι παράγοντες",
-      "criticalHigh": "Crit / Υψηλή",
-      "totalTooltip": "{count} ευρήματα σε {agents} πράκτορες",
-      "affected": "{count} πράκτορες",
-      "empty": "Δεν εντοπίστηκαν τρωτά σημεία",
-      "distribution": "Κατανομή σοβαρότητας. Τα {unscored} ευρήματα χωρίς βαθμολογία δεν εμφανίζονται.",
-      "worst": "Χειρότερο: {id} ({score}) σε {agents} πράκτορες"
-    },
-    "wazuhFim": {
-      "name": "Ακεραιότητα αρχείου Wazuh",
-      "description": "Πρόσφατα συμβάντα παρακολούθησης ακεραιότητας του αρχείου (syscheck)",
-      "option": {
-        "range": {
-          "label": "Χρονικό εύρος"
         },
-        "event": {
+        "fimEvent": {
           "label": "Συμβάντα"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Αριθμός συμβάντων"
         },
         "includeRegistry": {
           "label": "Συμπερίληψη συμβάντων μητρώου των Windows"
-        }
-      },
-      "title": "Ακεραιότητα αρχείων · {range}",
-      "event": {
-        "added": "Ημερομηνία Προσθήκης",
-        "modified": "Τροποποιήθηκε",
-        "deleted": "Διαγράφηκε",
-        "unknown": "Άλλαξε"
-      },
-      "empty": "Δεν υπάρχουν συμβάντα ακεραιότητας αρχείων σε αυτήν την περίοδο",
-      "user": "από τον χρήστη {user}",
-      "registry": "Μητρώο"
-    },
-    "wazuhAuthFailures": {
-      "name": "Αποτυχίες ελέγχου ταυτότητας Wazuh",
-      "description": "Αποτυχία σύνδεσης και ειδοποιήσεις brute-force ανά πράκτορα με ωριαίες sparklines",
-      "option": {
-        "hours": {
-          "label": "Παράθυρο ώρας (ώρες)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Αριθμός πρακτόρων"
         },
         "showSourceIps": {
           "label": "Εμφάνιση IP κορυφαίας πηγής"
+        },
+        "alertsMinLevel": {
+          "label": "Ελάχιστο επίπεδο κανόνα",
+          "description": "Επίπεδα Wazuh: 0-6 χαμηλό, 7-11 μέσο, 12-14 υψηλό, 15+ κρίσιμο"
+        },
+        "alertsLimit": {
+          "label": "Αριθμός καταχωρίσεων"
+        },
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
+        },
+        "showAgent": {
+          "label": "Εμφάνιση πράκτορα"
+        },
+        "showSourceIp": {
+          "label": "Εμφάνιση πηγαίου IP"
+        },
+        "showRuleId": {
+          "label": "Εμφάνιση αναγνωριστικού κανόνα"
         }
-      },
-      "title": "Αποτυχίες ελέγχου ταυτότητας · {hours} ώρες",
-      "seriesTooltip": "Όλοι οι πράκτορες των τελευταίων {hours} ωρών",
-      "peak": "Μέγιστο {count}/ομάδα",
-      "empty": "Δεν υπάρχουν αποτυχημένες συνδέσεις σε αυτήν την περίοδο",
-      "failed": "Αποτυχημένες συνδέσεις",
-      "failedHint": "Αποτυχία ενός ελέγχου ταυτότητας (shd, PAM, σύνδεση με Windows, μη έγκυροι χρήστες)",
-      "bruteForce": "Brute force",
-      "bruteForceHint": "Κανόνες συσχετιζόμενοι με ωμάρια (πολλαπλές αποτυχίες σε σύντομο χρονικό διάστημα, MITRE T1110)",
-      "sourceIps": "Πηγαία IP",
-      "ipTooltip": "{ip}: {count} αποτυχίες",
-      "bruteForceCount": "{count} brute force"
+      }
     }
   },
   "widgetPreview": {

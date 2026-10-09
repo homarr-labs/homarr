@@ -7,36 +7,33 @@ import { IconLockExclamation, IconShieldCheck } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { isPrivateIp, WazuhChip } from "../wazuh/_shared/badges";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhRelativeTime, WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
-import { formatWazuhCount } from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
-import classes from "../wazuh/_shared/wazuh.module.css";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { getWazuhRangeHours } from "../views";
+import type { WazuhViewProps } from "../view-props";
+import { isPrivateIp, WazuhChip } from "../_shared/badges";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhRelativeTime, WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../_shared/frame";
+import { formatWazuhCount } from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
+import classes from "../_shared/wazuh.module.css";
 
 const authQuery =
   'rule.groups:"authentication_failed" or rule.groups:"authentication_failures" or rule.groups:"invalid_login" or rule.mitre.id:"T1110"';
 
-export default function WazuhAuthFailuresWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-}: WidgetComponentProps<"wazuhAuthFailures">) {
-  const t = useI18n("widget.wazuhAuthFailures");
+export function WazuhAuthFailuresView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.authFailures");
   const locale = useCurrentIntlLocale();
   const integrationId = integrationIds[0] ?? "";
+  const hours = getWazuhRangeHours(options.range);
   const query = clientApi.widget.wazuh.getAuthFailures.useQuery(
-    { integrationId, hours: options.hours, limit: options.limit },
+    { integrationId, hours, limit: options.authLimit },
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);
   const compact = height < 170 || width < 260;
-  const title = t("title", { hours: String(options.hours) });
+  const title = t("title", { hours: String(hours) });
 
   if (isInitialWidgetQueryPending(query)) {
     return (
@@ -54,7 +51,7 @@ export default function WazuhAuthFailuresWidget({
   const showTrend = height >= 330 && data.series.length > 1;
   // Let the overall trend grow into whatever the agent rows leave free (roughly 58px per row).
   const trendHeight = Math.min(72, Math.max(40, height - 210 - data.agents.length * 58));
-  const eventsHref = links?.events({ query: authQuery, from: `now-${options.hours}h` });
+  const eventsHref = links?.events({ query: authQuery, from: `now-${hours}h` });
 
   return (
     <WazuhWidgetFrame
@@ -151,7 +148,7 @@ export default function WazuhAuthFailuresWidget({
                             href={links.events({
                               agentId: agent.agentId,
                               query: authQuery,
-                              from: `now-${options.hours}h`,
+                              from: `now-${hours}h`,
                             })}
                             target="_blank"
                             rel="noopener noreferrer"

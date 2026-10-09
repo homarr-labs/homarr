@@ -5458,92 +5458,123 @@
         "7d": "7 dana",
         "30d": "30 dana"
       },
-      "levelTooltip": "Razina pravila {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agenti",
-      "description": "Sortirajući popis Wazuh agenata sa statusom, operacijskim sustavom, verzijom i vremenom posljednjeg održavanja veze",
-      "option": {
-        "statusFilter": {
-          "label": "Prikaži agente"
+      "levelTooltip": "Razina pravila {level} ({severity})",
+      "summary": {
+        "title": "Ozbiljnost upozorenja · {range}",
+        "alerts": "upozorenja",
+        "none": "Nema upozorenja",
+        "trend": {
+          "new": "novo",
+          "tooltip": "Prethodno razdoblje: {previous}"
         },
-        "sortBy": {
-          "label": "Sortiraj prema"
-        },
-        "showVersion": {
-          "label": "Prikaži stupac verzije Wazuha"
-        },
-        "showGroups": {
-          "label": "Prikaži stupac grupa"
-        }
+        "previous": "Prethodno {range}: {count}",
+        "maxLevel": "Maks. razina {level}",
+        "health": "Stanje indeksatora: {status}",
+        "manager": "Upravitelj {version}"
       },
-      "title": "Agenti",
-      "total": "{count} agenata",
-      "status": {
-        "active": "Aktivno",
-        "disconnected": "Odspojeno",
-        "neverConnected": "Nikad povezano",
-        "pending": "Na čekanju"
+      "alerts": {
+        "title": "Upozorenja · razina {level}+ · {hours} h",
+        "empty": "Nema upozorenja na ovoj razini. Sve je mirno.",
+        "rule": "Pravilo {id}",
+        "openInDashboard": "Otvori ovo upozorenje na Wazuhovoj nadzornoj ploči"
       },
-      "statusLabel": {
-        "active": "Aktivno",
-        "disconnected": "Odspojeno",
-        "never_connected": "Nikad povezano",
-        "pending": "Na čekanju",
-        "unknown": "Nepoznato"
+      "timeline": {
+        "title": "Vremenska crta upozorenja · {range}",
+        "total": "{count} upozorenja",
+        "interval": "po {interval}"
       },
-      "live": "Uživo",
-      "snapshot": "Snimka je stara {age}",
-      "snapshotHint": "Pročitano iz snimke agenata nadzorne ploče Wazuh (wazuh-monitoring), snimljene u {time}. Dodajte vjerodajnice API-ja poslužitelja za podatke uživo.",
-      "staleSnapshot": "Snimka agenata iz {time} zastarjela je. Provjerite radi li posao nadzora nadzorne ploče Wazuh ili dodajte vjerodajnice API-ja poslužitelja.",
-      "noDisconnected": "Svi su agenti povezani",
-      "empty": "Nijedan agent ne odgovara ovom filtru",
-      "column": {
-        "status": "Stanje",
-        "name": "Naziv posla",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Verzija",
-        "lastKeepAlive": "Održavanje veze",
-        "groups": "Grupe"
+      "top": {
+        "title": {
+          "rules": "Najčešća pravila · {range}",
+          "agents": "Najčešći agenti · {range}",
+          "sourceIps": "Najčešće izvorne IP adrese · {range}",
+          "mitreTactics": "MITRE taktike · {range}",
+          "mitreTechniques": "MITRE tehnike · {range}"
+        },
+        "empty": {
+          "rules": "Nema upozorenja u ovom razdoblju",
+          "agents": "Nema upozorenja u ovom razdoblju",
+          "sourceIps": "Nema upozorenja s izvornom IP adresom u ovom razdoblju",
+          "mitreTactics": "Nema upozorenja mapiranih na MITRE ATT&CK u ovom razdoblju",
+          "mitreTechniques": "Nema upozorenja mapiranih na MITRE ATT&CK u ovom razdoblju"
+        },
+        "totalTooltip": "{count} podudarajućih upozorenja",
+        "private": "LAN",
+        "public": "Javno",
+        "agents": "Viđeno na {count} agenata",
+        "others": "Još {count} upozorenja u drugim unosima"
       },
-      "outdated": "Starije od najnovije verzije agenta ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Izvor Wazuhovih upozorenja",
-      "description": "Nedavna Wazuhova upozorenja s razinom, tehnikama MITRE ATT&CK, agentom i izvornom IP adresom",
-      "option": {
-        "minLevel": {
-          "label": "Minimalna razina pravila",
-          "description": "Razine Wazuha: 0–6 niska, 7–11 srednja, 12–14 visoka, 15+ kritična"
+      "agents": {
+        "title": "Agenti",
+        "total": "{count} agenata",
+        "status": {
+          "active": "Aktivno",
+          "disconnected": "Odspojeno",
+          "neverConnected": "Nikad povezano",
+          "pending": "Na čekanju"
         },
-        "hours": {
-          "label": "Vremenski prozor (sati)"
+        "statusLabel": {
+          "active": "Aktivno",
+          "disconnected": "Odspojeno",
+          "never_connected": "Nikad povezano",
+          "pending": "Na čekanju",
+          "unknown": "Nepoznato"
         },
-        "limit": {
-          "label": "Broj upozorenja"
+        "live": "Uživo",
+        "snapshot": "Snimka je stara {age}",
+        "snapshotHint": "Pročitano iz snimke agenata nadzorne ploče Wazuh (wazuh-monitoring), snimljene u {time}. Dodajte vjerodajnice API-ja poslužitelja za podatke uživo.",
+        "staleSnapshot": "Snimka agenata iz {time} zastarjela je. Provjerite radi li posao nadzora nadzorne ploče Wazuh ili dodajte vjerodajnice API-ja poslužitelja.",
+        "noDisconnected": "Svi su agenti povezani",
+        "empty": "Nijedan agent ne odgovara ovom filtru",
+        "column": {
+          "status": "Stanje",
+          "name": "Naziv posla",
+          "ip": "IP",
+          "os": "OS",
+          "version": "Verzija",
+          "lastKeepAlive": "Održavanje veze",
+          "groups": "Grupe"
         },
-        "showMitre": {
-          "label": "Prikaži tehnike MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "Prikaži agenta"
-        },
-        "showSourceIp": {
-          "label": "Prikaži izvornu IP adresu"
-        },
-        "showRuleId": {
-          "label": "Prikaži ID pravila"
-        }
+        "outdated": "Starije od najnovije verzije agenta ({version})"
       },
-      "title": "Upozorenja · razina {level}+ · {hours} h",
-      "empty": "Nema upozorenja na ovoj razini. Sve je mirno.",
-      "rule": "Pravilo {id}",
-      "openInDashboard": "Otvori ovo upozorenje na Wazuhovoj nadzornoj ploči"
-    },
-    "wazuhSummary": {
-      "name": "Ozbiljnost Wazuhovih upozorenja",
-      "description": "Pregled ozbiljnosti upozorenja s trendom u odnosu na prethodno razdoblje",
+      "vulnerabilities": {
+        "title": "Ranjivosti",
+        "topCves": "Najčešći CVE-ovi",
+        "score": "Bodovi",
+        "agentsShort": "Agenti",
+        "topAgents": "Najranjiviji agenti",
+        "criticalHigh": "Kritično / Visoko",
+        "totalTooltip": "{count} nalaza na {agents} agenata",
+        "affected": "{count} agenata",
+        "empty": "Nisu otkrivene ranjivosti",
+        "distribution": "Raspodjela ozbiljnosti. {unscored} nalaza bez bodova nije prikazano.",
+        "worst": "Najgore: {id} ({score}) na {agents} agenata"
+      },
+      "fim": {
+        "title": "Cjelovitost datoteka · {range}",
+        "event": {
+          "added": "Datum dodavanja",
+          "modified": "Izmijenjeno",
+          "deleted": "Izbrisano",
+          "unknown": "Promijenjeno"
+        },
+        "empty": "Nema događaja cjelovitosti datoteka u ovom razdoblju",
+        "user": "od korisnika {user}",
+        "registry": "Registar"
+      },
+      "authFailures": {
+        "title": "Neuspjele provjere autentičnosti · {hours} h",
+        "seriesTooltip": "Svi agenti tijekom posljednjih {hours} h",
+        "peak": "Vrh: {count}/skupini",
+        "empty": "Nema neuspjelih prijava u ovom razdoblju",
+        "failed": "Neuspjele prijave",
+        "failedHint": "Pojedinačne neuspjele provjere autentičnosti (sshd, PAM, prijava u sustav Windows, nevažeći korisnici)",
+        "bruteForce": "Gruba sila",
+        "bruteForceHint": "Korelirana pravila grube sile (više neuspjeha u kratkom razdoblju, MITRE T1110)",
+        "sourceIps": "Izvorne IP adrese",
+        "ipTooltip": "{ip}: {count} neuspjeha",
+        "bruteForceCount": "{count} napada grubom silom"
+      },
       "option": {
         "range": {
           "label": "Vremenski raspon"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "Prikaži podnožje"
-        }
-      },
-      "title": "Ozbiljnost upozorenja · {range}",
-      "alerts": "upozorenja",
-      "none": "Nema upozorenja",
-      "trend": {
-        "new": "novo",
-        "tooltip": "Prethodno razdoblje: {previous}"
-      },
-      "previous": "Prethodno {range}: {count}",
-      "maxLevel": "Maks. razina {level}",
-      "health": "Stanje indeksatora: {status}",
-      "manager": "Upravitelj {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Vremenska crta Wazuhovih upozorenja",
-      "description": "Složeni grafikon Wazuhovih upozorenja tijekom vremena prema ozbiljnosti",
-      "option": {
-        "range": {
-          "label": "Vremenski raspon"
         },
         "interval": {
           "label": "Interval"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "Prikaži legendu s ukupnim vrijednostima"
-        }
-      },
-      "title": "Vremenska crta upozorenja · {range}",
-      "total": "{count} upozorenja",
-      "interval": "po {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuhov popis najčešćih",
-      "description": "Najčešća pravila, agenti, izvorne IP adrese ili MITRE ATT&CK taktike i tehnike prema broju upozorenja",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "Rang"
         },
-        "range": {
-          "label": "Vremenski raspon"
-        },
-        "limit": {
+        "topLimit": {
           "label": "Broj unosa"
-        },
-        "minLevel": {
-          "label": "Minimalna razina pravila"
         },
         "showBars": {
           "label": "Prikaži trake"
-        }
-      },
-      "title": {
-        "rules": "Najčešća pravila · {range}",
-        "agents": "Najčešći agenti · {range}",
-        "sourceIps": "Najčešće izvorne IP adrese · {range}",
-        "mitreTactics": "MITRE taktike · {range}",
-        "mitreTechniques": "MITRE tehnike · {range}"
-      },
-      "empty": {
-        "rules": "Nema upozorenja u ovom razdoblju",
-        "agents": "Nema upozorenja u ovom razdoblju",
-        "sourceIps": "Nema upozorenja s izvornom IP adresom u ovom razdoblju",
-        "mitreTactics": "Nema upozorenja mapiranih na MITRE ATT&CK u ovom razdoblju",
-        "mitreTechniques": "Nema upozorenja mapiranih na MITRE ATT&CK u ovom razdoblju"
-      },
-      "totalTooltip": "{count} podudarajućih upozorenja",
-      "private": "LAN",
-      "public": "Javno",
-      "agents": "Viđeno na {count} agenata",
-      "others": "Još {count} upozorenja u drugim unosima"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh ranjivosti",
-      "description": "Broj ranjivosti, najčešći CVE-ovi i najranjiviji agenti",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "Prikaži agente"
+        },
+        "agentSortBy": {
+          "label": "Sortiraj prema"
+        },
+        "showVersion": {
+          "label": "Prikaži stupac verzije Wazuha"
+        },
+        "showGroups": {
+          "label": "Prikaži stupac grupa"
+        },
         "cveOrder": {
           "label": "Rangiraj CVE-ove prema"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "Prikaži najranjivije agente"
-        }
-      },
-      "title": "Ranjivosti",
-      "topCves": "Najčešći CVE-ovi",
-      "score": "Bodovi",
-      "agentsShort": "Agenti",
-      "topAgents": "Najranjiviji agenti",
-      "criticalHigh": "Kritično / Visoko",
-      "totalTooltip": "{count} nalaza na {agents} agenata",
-      "affected": "{count} agenata",
-      "empty": "Nisu otkrivene ranjivosti",
-      "distribution": "Raspodjela ozbiljnosti. {unscored} nalaza bez bodova nije prikazano.",
-      "worst": "Najgore: {id} ({score}) na {agents} agenata"
-    },
-    "wazuhFim": {
-      "name": "Wazuh cjelovitost datoteka",
-      "description": "Nedavni događaji nadzora cjelovitosti datoteka (syscheck)",
-      "option": {
-        "range": {
-          "label": "Vremenski raspon"
         },
-        "event": {
+        "fimEvent": {
           "label": "Događaji"
         },
-        "limit": {
+        "fimLimit": {
           "label": "Broj događaja"
         },
         "includeRegistry": {
           "label": "Uključi događaje registra sustava Windows"
-        }
-      },
-      "title": "Cjelovitost datoteka · {range}",
-      "event": {
-        "added": "Datum dodavanja",
-        "modified": "Izmijenjeno",
-        "deleted": "Izbrisano",
-        "unknown": "Promijenjeno"
-      },
-      "empty": "Nema događaja cjelovitosti datoteka u ovom razdoblju",
-      "user": "od korisnika {user}",
-      "registry": "Registar"
-    },
-    "wazuhAuthFailures": {
-      "name": "Neuspjele Wazuh provjere autentičnosti",
-      "description": "Neuspjele prijave i upozorenja na pokušaje grubom silom po agentu s grafikonima po satima",
-      "option": {
-        "hours": {
-          "label": "Vremenski prozor (sati)"
         },
-        "limit": {
+        "authLimit": {
           "label": "Broj agenata"
         },
         "showSourceIps": {
           "label": "Prikaži najčešće izvorne IP adrese"
+        },
+        "alertsMinLevel": {
+          "label": "Minimalna razina pravila",
+          "description": "Razine Wazuha: 0–6 niska, 7–11 srednja, 12–14 visoka, 15+ kritična"
+        },
+        "alertsLimit": {
+          "label": "Broj upozorenja"
+        },
+        "showMitre": {
+          "label": "Prikaži tehnike MITRE ATT&CK"
+        },
+        "showAgent": {
+          "label": "Prikaži agenta"
+        },
+        "showSourceIp": {
+          "label": "Prikaži izvornu IP adresu"
+        },
+        "showRuleId": {
+          "label": "Prikaži ID pravila"
         }
-      },
-      "title": "Neuspjele provjere autentičnosti · {hours} h",
-      "seriesTooltip": "Svi agenti tijekom posljednjih {hours} h",
-      "peak": "Vrh: {count}/skupini",
-      "empty": "Nema neuspjelih prijava u ovom razdoblju",
-      "failed": "Neuspjele prijave",
-      "failedHint": "Pojedinačne neuspjele provjere autentičnosti (sshd, PAM, prijava u sustav Windows, nevažeći korisnici)",
-      "bruteForce": "Gruba sila",
-      "bruteForceHint": "Korelirana pravila grube sile (više neuspjeha u kratkom razdoblju, MITRE T1110)",
-      "sourceIps": "Izvorne IP adrese",
-      "ipTooltip": "{ip}: {count} neuspjeha",
-      "bruteForceCount": "{count} napada grubom silom"
+      }
     }
   },
   "widgetPreview": {

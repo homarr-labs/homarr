@@ -5458,92 +5458,123 @@
         "7d": "7일",
         "30d": "30일"
       },
-      "levelTooltip": "규칙 수준 {level}({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh 에이전트",
-      "description": "상태, OS, 버전 및 마지막 연결 유지 시간이 포함된 정렬 가능한 Wazuh 에이전트 목록",
-      "option": {
-        "statusFilter": {
-          "label": "에이전트 표시"
+      "levelTooltip": "규칙 수준 {level}({severity})",
+      "summary": {
+        "title": "알림 심각도 · {range}",
+        "alerts": "알림",
+        "none": "알림 없음",
+        "trend": {
+          "new": "신규",
+          "tooltip": "이전 기간: {previous}"
         },
-        "sortBy": {
-          "label": "정렬 기준"
-        },
-        "showVersion": {
-          "label": "Wazuh 버전 열 표시"
-        },
-        "showGroups": {
-          "label": "그룹 열 표시"
-        }
+        "previous": "이전 {range}: {count}",
+        "maxLevel": "최대 수준 {level}",
+        "health": "인덱서 상태: {status}",
+        "manager": "관리자 {version}"
       },
-      "title": "에이전트",
-      "total": "에이전트 {count}개",
-      "status": {
-        "active": "활성",
-        "disconnected": "연결 해제됨",
-        "neverConnected": "연결된 적 없음",
-        "pending": "대기 중"
+      "alerts": {
+        "title": "알림 · 수준 {level}+ · {hours}시간",
+        "empty": "이 수준의 알림이 없습니다. 모두 정상입니다.",
+        "rule": "규칙 {id}",
+        "openInDashboard": "Wazuh 대시보드에서 이 알림 열기"
       },
-      "statusLabel": {
-        "active": "활성",
-        "disconnected": "연결 해제됨",
-        "never_connected": "연결된 적 없음",
-        "pending": "대기 중",
-        "unknown": "알 수 없음"
+      "timeline": {
+        "title": "알림 타임라인 · {range}",
+        "total": "알림 {count}개",
+        "interval": "{interval}당"
       },
-      "live": "실시간",
-      "snapshot": "{age} 오래된 스냅샷",
-      "snapshotHint": "{time}에 생성된 Wazuh 대시보드의 에이전트 스냅샷(wazuh-monitoring)에서 읽습니다. 실시간 데이터를 사용하려면 서버 API 자격 증명을 추가하십시오.",
-      "staleSnapshot": "{time}의 에이전트 스냅샷이 오래되었습니다. Wazuh 대시보드 모니터링 작업이 실행 중인지 확인하거나 서버 API 자격 증명을 추가하십시오.",
-      "noDisconnected": "모든 에이전트가 연결됨",
-      "empty": "이 필터와 일치하는 에이전트 없음",
-      "column": {
-        "status": "상태",
-        "name": "작업 이름",
-        "ip": "IP",
-        "os": "OS",
-        "version": "버전",
-        "lastKeepAlive": "연결 유지",
-        "groups": "그룹"
+      "top": {
+        "title": {
+          "rules": "상위 규칙 · {range}",
+          "agents": "상위 에이전트 · {range}",
+          "sourceIps": "상위 소스 IP · {range}",
+          "mitreTactics": "MITRE 전술 · {range}",
+          "mitreTechniques": "MITRE 기술 · {range}"
+        },
+        "empty": {
+          "rules": "이 기간에 알림 없음",
+          "agents": "이 기간에 알림 없음",
+          "sourceIps": "이 기간에 소스 IP가 있는 알림 없음",
+          "mitreTactics": "이 기간에 MITRE ATT&CK에 매핑된 알림 없음",
+          "mitreTechniques": "이 기간에 MITRE ATT&CK에 매핑된 알림 없음"
+        },
+        "totalTooltip": "일치하는 알림 {count}개",
+        "private": "LAN",
+        "public": "공개",
+        "agents": "에이전트 {count}개에서 확인됨",
+        "others": "다른 항목에 알림 {count}개 더 있음"
       },
-      "outdated": "최신 에이전트 버전({version})보다 오래됨"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh 알림 피드",
-      "description": "수준, MITRE ATT&CK 기술, 에이전트 및 소스 IP가 포함된 최근 Wazuh 알림",
-      "option": {
-        "minLevel": {
-          "label": "최소 규칙 수준",
-          "description": "Wazuh 수준: 0~6 낮음, 7~11 중간, 12~14 높음, 15 이상 심각"
+      "agents": {
+        "title": "에이전트",
+        "total": "에이전트 {count}개",
+        "status": {
+          "active": "활성",
+          "disconnected": "연결 해제됨",
+          "neverConnected": "연결된 적 없음",
+          "pending": "대기 중"
         },
-        "hours": {
-          "label": "시간 범위(시간)"
+        "statusLabel": {
+          "active": "활성",
+          "disconnected": "연결 해제됨",
+          "never_connected": "연결된 적 없음",
+          "pending": "대기 중",
+          "unknown": "알 수 없음"
         },
-        "limit": {
-          "label": "알림 수"
+        "live": "실시간",
+        "snapshot": "{age} 오래된 스냅샷",
+        "snapshotHint": "{time}에 생성된 Wazuh 대시보드의 에이전트 스냅샷(wazuh-monitoring)에서 읽습니다. 실시간 데이터를 사용하려면 서버 API 자격 증명을 추가하십시오.",
+        "staleSnapshot": "{time}의 에이전트 스냅샷이 오래되었습니다. Wazuh 대시보드 모니터링 작업이 실행 중인지 확인하거나 서버 API 자격 증명을 추가하십시오.",
+        "noDisconnected": "모든 에이전트가 연결됨",
+        "empty": "이 필터와 일치하는 에이전트 없음",
+        "column": {
+          "status": "상태",
+          "name": "작업 이름",
+          "ip": "IP",
+          "os": "OS",
+          "version": "버전",
+          "lastKeepAlive": "연결 유지",
+          "groups": "그룹"
         },
-        "showMitre": {
-          "label": "MITRE ATT&CK 기술 표시"
-        },
-        "showAgent": {
-          "label": "에이전트 표시"
-        },
-        "showSourceIp": {
-          "label": "소스 IP 표시"
-        },
-        "showRuleId": {
-          "label": "규칙 ID 표시"
-        }
+        "outdated": "최신 에이전트 버전({version})보다 오래됨"
       },
-      "title": "알림 · 수준 {level}+ · {hours}시간",
-      "empty": "이 수준의 알림이 없습니다. 모두 정상입니다.",
-      "rule": "규칙 {id}",
-      "openInDashboard": "Wazuh 대시보드에서 이 알림 열기"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh 알림 심각도",
-      "description": "이전 기간과 비교한 추이가 포함된 알림 심각도 분석",
+      "vulnerabilities": {
+        "title": "취약점",
+        "topCves": "상위 CVE",
+        "score": "점수",
+        "agentsShort": "에이전트",
+        "topAgents": "가장 취약한 에이전트",
+        "criticalHigh": "심각 / 높음",
+        "totalTooltip": "에이전트 {agents}개에서 발견 {count}개",
+        "affected": "에이전트 {count}개",
+        "empty": "감지된 취약점 없음",
+        "distribution": "심각도 분포입니다. 점수가 없는 {unscored}개의 발견 항목은 표시되지 않습니다.",
+        "worst": "최악: {agents}개 에이전트의 {id}({score})"
+      },
+      "fim": {
+        "title": "파일 무결성 · {range}",
+        "event": {
+          "added": "추가된 날짜",
+          "modified": "수정됨",
+          "deleted": "삭제됨",
+          "unknown": "변경됨"
+        },
+        "empty": "이 기간에 파일 무결성 이벤트 없음",
+        "user": "{user}에 의해",
+        "registry": "레지스트리"
+      },
+      "authFailures": {
+        "title": "인증 실패 · {hours}시간",
+        "seriesTooltip": "지난 {hours}시간 동안의 모든 에이전트",
+        "peak": "최대 {count}/구간",
+        "empty": "이 기간에 로그인 실패 없음",
+        "failed": "로그인 실패",
+        "failedHint": "개별 인증 실패(sshd, PAM, Windows 로그온, 잘못된 사용자)",
+        "bruteForce": "무차별 대입",
+        "bruteForceHint": "연관된 무차별 대입 규칙(짧은 시간 내 여러 실패, MITRE T1110)",
+        "sourceIps": "소스 IP",
+        "ipTooltip": "{ip}: 실패 {count}회",
+        "bruteForceCount": "무차별 대입 {count}회"
+      },
       "option": {
         "range": {
           "label": "시간 범위"
@@ -5553,26 +5584,6 @@
         },
         "showFooter": {
           "label": "바닥글 표시"
-        }
-      },
-      "title": "알림 심각도 · {range}",
-      "alerts": "알림",
-      "none": "알림 없음",
-      "trend": {
-        "new": "신규",
-        "tooltip": "이전 기간: {previous}"
-      },
-      "previous": "이전 {range}: {count}",
-      "maxLevel": "최대 수준 {level}",
-      "health": "인덱서 상태: {status}",
-      "manager": "관리자 {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh 알림 타임라인",
-      "description": "심각도별 시간 경과에 따른 Wazuh 알림 누적 차트",
-      "option": {
-        "range": {
-          "label": "시간 범위"
         },
         "interval": {
           "label": "간격"
@@ -5589,56 +5600,28 @@
         },
         "showLegend": {
           "label": "합계와 범례 표시"
-        }
-      },
-      "title": "알림 타임라인 · {range}",
-      "total": "알림 {count}개",
-      "interval": "{interval}당"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh 상위 목록",
-      "description": "알림 수 기준 상위 규칙, 에이전트, 소스 IP 또는 MITRE ATT&CK 전술 및 기술",
-      "option": {
-        "kind": {
+        },
+        "topKind": {
           "label": "순위"
         },
-        "range": {
-          "label": "시간 범위"
-        },
-        "limit": {
+        "topLimit": {
           "label": "항목 수"
-        },
-        "minLevel": {
-          "label": "최소 규칙 수준"
         },
         "showBars": {
           "label": "막대 표시"
-        }
-      },
-      "title": {
-        "rules": "상위 규칙 · {range}",
-        "agents": "상위 에이전트 · {range}",
-        "sourceIps": "상위 소스 IP · {range}",
-        "mitreTactics": "MITRE 전술 · {range}",
-        "mitreTechniques": "MITRE 기술 · {range}"
-      },
-      "empty": {
-        "rules": "이 기간에 알림 없음",
-        "agents": "이 기간에 알림 없음",
-        "sourceIps": "이 기간에 소스 IP가 있는 알림 없음",
-        "mitreTactics": "이 기간에 MITRE ATT&CK에 매핑된 알림 없음",
-        "mitreTechniques": "이 기간에 MITRE ATT&CK에 매핑된 알림 없음"
-      },
-      "totalTooltip": "일치하는 알림 {count}개",
-      "private": "LAN",
-      "public": "공개",
-      "agents": "에이전트 {count}개에서 확인됨",
-      "others": "다른 항목에 알림 {count}개 더 있음"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh 취약점",
-      "description": "취약점 수, 상위 CVE 및 가장 취약한 에이전트",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "에이전트 표시"
+        },
+        "agentSortBy": {
+          "label": "정렬 기준"
+        },
+        "showVersion": {
+          "label": "Wazuh 버전 열 표시"
+        },
+        "showGroups": {
+          "label": "그룹 열 표시"
+        },
         "cveOrder": {
           "label": "CVE 순위 기준"
         },
@@ -5653,73 +5636,42 @@
         },
         "showAgents": {
           "label": "가장 취약한 에이전트 표시"
-        }
-      },
-      "title": "취약점",
-      "topCves": "상위 CVE",
-      "score": "점수",
-      "agentsShort": "에이전트",
-      "topAgents": "가장 취약한 에이전트",
-      "criticalHigh": "심각 / 높음",
-      "totalTooltip": "에이전트 {agents}개에서 발견 {count}개",
-      "affected": "에이전트 {count}개",
-      "empty": "감지된 취약점 없음",
-      "distribution": "심각도 분포입니다. 점수가 없는 {unscored}개의 발견 항목은 표시되지 않습니다.",
-      "worst": "최악: {agents}개 에이전트의 {id}({score})"
-    },
-    "wazuhFim": {
-      "name": "Wazuh 파일 무결성",
-      "description": "최근 파일 무결성 모니터링(syscheck) 이벤트",
-      "option": {
-        "range": {
-          "label": "시간 범위"
         },
-        "event": {
+        "fimEvent": {
           "label": "이벤트"
         },
-        "limit": {
+        "fimLimit": {
           "label": "이벤트 수"
         },
         "includeRegistry": {
           "label": "Windows 레지스트리 이벤트 포함"
-        }
-      },
-      "title": "파일 무결성 · {range}",
-      "event": {
-        "added": "추가된 날짜",
-        "modified": "수정됨",
-        "deleted": "삭제됨",
-        "unknown": "변경됨"
-      },
-      "empty": "이 기간에 파일 무결성 이벤트 없음",
-      "user": "{user}에 의해",
-      "registry": "레지스트리"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh 인증 실패",
-      "description": "시간별 스파크라인으로 에이전트별 로그인 실패 및 무차별 대입 알림 표시",
-      "option": {
-        "hours": {
-          "label": "시간 범위(시간)"
         },
-        "limit": {
+        "authLimit": {
           "label": "에이전트 수"
         },
         "showSourceIps": {
           "label": "상위 소스 IP 표시"
+        },
+        "alertsMinLevel": {
+          "label": "최소 규칙 수준",
+          "description": "Wazuh 수준: 0~6 낮음, 7~11 중간, 12~14 높음, 15 이상 심각"
+        },
+        "alertsLimit": {
+          "label": "알림 수"
+        },
+        "showMitre": {
+          "label": "MITRE ATT&CK 기술 표시"
+        },
+        "showAgent": {
+          "label": "에이전트 표시"
+        },
+        "showSourceIp": {
+          "label": "소스 IP 표시"
+        },
+        "showRuleId": {
+          "label": "규칙 ID 표시"
         }
-      },
-      "title": "인증 실패 · {hours}시간",
-      "seriesTooltip": "지난 {hours}시간 동안의 모든 에이전트",
-      "peak": "최대 {count}/구간",
-      "empty": "이 기간에 로그인 실패 없음",
-      "failed": "로그인 실패",
-      "failedHint": "개별 인증 실패(sshd, PAM, Windows 로그온, 잘못된 사용자)",
-      "bruteForce": "무차별 대입",
-      "bruteForceHint": "연관된 무차별 대입 규칙(짧은 시간 내 여러 실패, MITRE T1110)",
-      "sourceIps": "소스 IP",
-      "ipTooltip": "{ip}: 실패 {count}회",
-      "bruteForceCount": "무차별 대입 {count}회"
+      }
     }
   },
   "widgetPreview": {
