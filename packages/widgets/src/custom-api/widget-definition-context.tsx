@@ -14,7 +14,7 @@ import { CustomWidgetRuntimeProvider } from "@homarr/custom-widgets/runtime";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { useQueryClient } from "@tanstack/react-query";
+import { hashKey, useQueryClient } from "@tanstack/react-query";
 
 interface WidgetDefinitionProviderProps {
   itemId?: string;
@@ -94,8 +94,8 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
           JSON.stringify(input.params),
           props.queryCacheKey,
         ];
-        const captured = queryClient.getQueryCache().find({ queryKey: key });
-        if (captured?.meta?.boardSnapshotCaptured && captured.state.status === "pending") return new Promise(() => {});
+        const pending = queryClient.getDefaultOptions().queries?.meta?.boardSnapshotPendingQueryHashes;
+        if (pending instanceof Set && pending.has(hashKey(key))) return new Promise(() => {});
         return (
           queryClient.getQueryData<Awaited<ReturnType<typeof fetchApi.widget.customApi.queryRequest.query>>>(key) ?? {
             ok: false,

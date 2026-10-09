@@ -253,19 +253,33 @@ const createBoardRedactor = async (
   settings: BoardSnapshotPayload["settings"],
 ) => {
   const redactor = createSnapshotRedactor();
-  const preserveSchemaFields = (schema: z.ZodType) => {
+  const preserveSchemaFields = (schema: z.ZodType, key = "") => {
     if (schema instanceof z.ZodObject) {
       for (const [name, child] of Object.entries(schema.shape)) {
         redactor.preserveField(name);
-        preserveSchemaFields(child as z.ZodType);
+        preserveSchemaFields(child as z.ZodType, name);
       }
-    } else if (schema instanceof z.ZodArray) preserveSchemaFields(schema.element as z.ZodType);
-    else if (schema instanceof z.ZodUnion) schema.options.forEach((child) => preserveSchemaFields(child as z.ZodType));
+    } else if (schema instanceof z.ZodEnum) {
+      for (const value of schema.options) if (typeof value === "string") redactor.preserve(key, value);
+    } else if (schema instanceof z.ZodLiteral) {
+      for (const value of schema.values) if (typeof value === "string") redactor.preserve(key, value);
+    } else if (schema instanceof z.ZodArray) preserveSchemaFields(schema.element as z.ZodType, key);
+    else if (schema instanceof z.ZodTuple) {
+      for (const child of schema.def.items) preserveSchemaFields(child as z.ZodType, key);
+      if (schema.def.rest) preserveSchemaFields(schema.def.rest as z.ZodType, key);
+    } else if (schema instanceof z.ZodUnion)
+      schema.options.forEach((child) => preserveSchemaFields(child as z.ZodType, key));
     else if (schema instanceof z.ZodIntersection) {
-      preserveSchemaFields(schema.def.left as z.ZodType);
-      preserveSchemaFields(schema.def.right as z.ZodType);
-    } else if (schema instanceof z.ZodOptional || schema instanceof z.ZodNullable || schema instanceof z.ZodDefault)
-      preserveSchemaFields(schema.unwrap() as z.ZodType);
+      preserveSchemaFields(schema.def.left as z.ZodType, key);
+      preserveSchemaFields(schema.def.right as z.ZodType, key);
+    } else if (
+      schema instanceof z.ZodOptional ||
+      schema instanceof z.ZodNonOptional ||
+      schema instanceof z.ZodNullable ||
+      schema instanceof z.ZodDefault
+    )
+      preserveSchemaFields(schema.unwrap() as z.ZodType, key);
+    else if (schema instanceof z.ZodPipe) preserveSchemaFields(schema.in as z.ZodType, key);
   };
   preserveSchemaFields(payloadSchema);
   const kinds = [...new Set(board.items.map((item) => item.kind))];
@@ -277,7 +291,7 @@ const createBoardRedactor = async (
       for (const value of option.options) {
         let publicValue = value;
         if (typeof value !== "string") publicValue = value.value;
-        if (typeof publicValue === "string") redactor.preserve(publicValue);
+        if (typeof publicValue === "string") redactor.preserve(name, publicValue);
       }
     }
   }

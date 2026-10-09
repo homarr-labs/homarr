@@ -1,5 +1,5 @@
 import { parseExpression } from "@babel/parser";
-import { snapshotPublicAttributeValues, snapshotPublicFields } from "./public-fields";
+import { snapshotPublicAttributeValues, snapshotPublicEnumValues, snapshotPublicFields } from "./public-fields";
 import { customJsxTablerIconNames } from "@homarr/custom-widgets/core";
 import { redactSnapshotCss } from "./css";
 
@@ -18,215 +18,41 @@ const imageKey = /(?:image|avatar|thumbnail|poster|cover|icon|logo|favicon)(?:ur
 export const snapshotPlaceholder = "/images/board-snapshot-placeholder.svg";
 const iconNames = new Set<string>(customJsxTablerIconNames);
 
-// Only known presentation/protocol values survive. Private strings are replaced,
-// even when their field name gives no indication that they contain a secret.
-const publicValues = new Set<string>([
-  ...widgetKinds,
-  ...integrationKinds,
-  "empty",
-  "container",
-  "main",
-  "left",
-  "right",
-  "mobile",
-  "base",
-  "custom",
-  ...headerBuiltinItemIds,
-  ...headerLogoDisplayValues,
-  ...headerSearchDisplayValues,
-  "builtin",
-  "board",
-  "xs",
-  "sm",
-  "md",
-  "lg",
-  "xl",
-  "auto",
-  "dark",
-  "light",
-  "public",
-  "private",
-  "view",
-  "modify",
-  "admin",
-  "use",
-  "interact",
-  "full",
-  "query",
-  "infinite",
-  "mutation",
-  "subscription",
-  "load",
-  "manual",
-  "action",
-  "item",
-  "preview",
-  "customJsx",
-  "GET",
-  "POST",
-  "PUT",
-  "PATCH",
-  "DELETE",
-  "HEAD",
-  "OPTIONS",
-  "success",
-  "error",
-  "pending",
-  "row",
-  "column",
-  "center",
-  "start",
-  "end",
-  "flex-start",
-  "flex-end",
-  "space-between",
-  "wrap",
-  "nowrap",
-  "solid",
-  "outline",
-  "light",
-  "subtle",
-  "transparent",
-  "filled",
-  "default",
-  "primaryColor",
-  "secondaryColor",
-  "red",
-  "blue",
-  "green",
-  "yellow",
-  "orange",
-  "cyan",
-  "teal",
-  "pink",
-  "grape",
-  "violet",
-  "gray",
-  "white",
-  "black",
-  "cover",
-  "contain",
-  "repeat",
-  "no-repeat",
-  "repeat-x",
-  "repeat-y",
-  "fixed",
-  "scroll",
-  "local",
-  "celsius",
-  "fahrenheit",
-  "metric",
-  "imperial",
-  "decimal",
-  "binary",
-  "bytes",
-  "bits",
-  "en",
-  "UTC",
-  "on",
-  "off",
-  "unavailable",
-  "stopped",
-  "starting",
-  "pomodoro",
-  "focus",
-  "shortBreak",
-  "longBreak",
-  "idle",
-  // Normalized runtime discriminants used for widget branches and labels.
-  "unknown",
-  "downloading",
-  "queued",
-  "paused",
-  "completed",
-  "failed",
-  "processing",
-  "leeching",
-  "stalled",
-  "seeding",
-  "importing",
-  "torrent",
-  "usenet",
-  "miscellaneous",
-  "created",
-  "running",
-  "restarting",
-  "exited",
-  "removing",
-  "dead",
-  "canceled",
-  "up",
-  "down",
-  "grace",
-  "new",
-  "enabled",
-  "disabled",
-  "warning",
-  "active",
-  "disconnected",
-  "never_connected",
-  "online",
-  "offline",
-  "charging",
-  "onBattery",
-  "lowBattery",
-  "available",
-  "partiallyAvailable",
-  "requested",
-  "deleted",
-  "blacklisted",
-  "approved",
-  "declined",
-  "movie",
-  "tv",
-  "episode",
-  "book",
-  "podcast",
-  "music",
-  "audio",
-  "video",
-  "playing",
-  "buffering",
-  "Ready",
-  "NotReady",
-  "Active",
-  "Terminating",
-  "Reserved",
-  "Used",
-  "Pods",
-  "CPU",
-  "Memory",
-  "configmaps",
-  "pods",
-  "ingresses",
-  "namespaces",
-  "nodes",
-  "services",
-  "volumes",
-  "node",
-  "qemu",
-  "lxc",
-  "storage",
-  "digitalRelease",
-  "physicalRelease",
-  "cinemaRelease",
-  "http",
-  "https",
-  "tcp",
-  "udp",
-  "ok",
-  "healthy",
-  "unhealthy",
+// Values are preserved only for the field whose native contract declares them.
+// Display text is always anonymized, even when it equals an enum value.
+const displayTextKey = /(?:name|title|label|text|message|description|summary)$/i;
+const nativeAttributeFields = new Map([
+  ["data-variant", "variant"],
+  ["data-orientation", "orientation"],
+  ["data-size", "size"],
 ]);
+const memberKey = (node: unknown) => {
+  if (!node || typeof node !== "object") return "";
+  const member = node as Record<string, unknown>;
+  if (member.type !== "MemberExpression" && member.type !== "OptionalMemberExpression") return "";
+  const property = member.property as { type: string; name?: string; value?: string };
+  if (property.type === "StringLiteral") return property.value ?? "";
+  if (!member.computed) return property.name ?? "";
+  return "";
+};
 
 export const createSnapshotRedactor = () => {
   const replacements = new Map<string, string>();
-  const structuralValues = new Set<string>();
+  const structuralValues = new Map<string, Set<string>>(
+    [...snapshotPublicEnumValues].map(([key, values]) => [key, new Set(values)]),
+  );
   const structuralFields = new Set(snapshotPublicFields);
+  for (const name of nativeAttributeFields.keys()) structuralFields.add(name);
   const locations = new Map<string, number>();
-  const preserve = (value: string) => {
-    if (/^[\w$-]{1,64}$/.test(value) && !sensitiveKey.test(value)) structuralValues.add(value);
+  const preserve = (key: string, value: string) => {
+    if (!structuralValues.has(key)) structuralValues.set(key, new Set());
+    structuralValues.get(key)?.add(value);
   };
+  for (const kind of [...widgetKinds, ...integrationKinds, "empty", "container"]) preserve("kind", kind);
+  for (const id of headerBuiltinItemIds) preserve("id", id);
+  for (const value of headerLogoDisplayValues) preserve("logoDisplay", value);
+  for (const value of headerSearchDisplayValues) preserve("searchDisplay", value);
+  for (const value of ["on", "off", "unavailable", "unknown"]) preserve("state", value);
   const replace = (value: string) => {
     if (!replacements.has(value)) replacements.set(value, `redacted_${replacements.size + 1}`);
     return replacements.get(value) ?? "redacted";
@@ -243,10 +69,11 @@ export const createSnapshotRedactor = () => {
   const string = (value: string, key = ""): string => {
     if (value === "") return value;
     if (sensitiveKey.test(key)) return "";
+    if (displayTextKey.test(key) && !/^redacted[_-]\d+$/.test(value)) return replace(value);
     if (key === "systemId" && value.split(":").length === 2 && !value.includes("/"))
       return value
         .split(":")
-        .map((part) => string(part))
+        .map((part) => string(part, "type"))
         .join(":");
     if (/timezone/i.test(key)) {
       try {
@@ -258,9 +85,13 @@ export const createSnapshotRedactor = () => {
     }
     if (imageKey.test(key)) return snapshotPlaceholder;
     if (urlKey.test(key) || /(?:[a-z]+:\/\/|www\.|@|\b\d{1,3}(?:\.\d{1,3}){3}\b)/i.test(value)) return "";
-    if (/state|status/i.test(key) && value.includes(":") && value.split(":").every((part) => publicValues.has(part)))
+    if (
+      /state|status/i.test(key) &&
+      value.includes(":") &&
+      value.split(":").every((part) => structuralValues.get(key)?.has(part))
+    )
       return value;
-    if (publicValues.has(value) || structuralValues.has(value)) return value;
+    if (structuralValues.get(key)?.has(value)) return value;
     if (/format/i.test(key) && /^[YMDHhmsSaAd:.,/ -]{1,40}$/.test(value)) return value;
     if (
       /color|colour/i.test(key) &&
@@ -276,6 +107,8 @@ export const createSnapshotRedactor = () => {
   const redactAttributeValue = (value: string, name: string) => {
     if (sensitiveKey.test(name)) return "";
     if (snapshotPublicAttributeValues.has(`${name}:${value}`)) return value;
+    const nativeField = nativeAttributeFields.get(name);
+    if (nativeField && structuralValues.get(nativeField)?.has(value)) return value;
     if (
       [
         "aria-expanded",
@@ -319,10 +152,15 @@ export const createSnapshotRedactor = () => {
     try {
       const ast = parseExpression(source, { plugins: ["jsx"] });
       const edits: { start: number; end: number; text: string }[] = [];
-      const visit = (node: unknown, parent?: Record<string, unknown>, grandparent?: Record<string, unknown>) => {
+      const visit = (
+        node: unknown,
+        parent?: Record<string, unknown>,
+        grandparent?: Record<string, unknown>,
+        valueKey = "",
+      ) => {
         if (!node || typeof node !== "object") return;
         if (Array.isArray(node)) {
-          for (const child of node) visit(child, parent, grandparent);
+          for (const child of node) visit(child, parent, grandparent, valueKey);
           return;
         }
         const record = node as Record<string, unknown>;
@@ -334,12 +172,17 @@ export const createSnapshotRedactor = () => {
               parent?.key === node ||
               ((parent?.type === "MemberExpression" || parent?.type === "OptionalMemberExpression") &&
                 parent.property === node);
-            let propertyName = "";
+            let propertyName = valueKey;
             if (parent?.type === "ObjectProperty") {
               const property = parent.key as { name?: string; value?: string };
               propertyName = property.name ?? property.value ?? "";
             }
             if (parent?.type === "JSXAttribute") propertyName = (parent.name as { name?: string }).name ?? "";
+            if (parent?.type === "BinaryExpression" && ["===", "!==", "==", "!="].includes(String(parent.operator))) {
+              let compared = parent.left as Record<string, unknown>;
+              if (compared === node) compared = parent.right as Record<string, unknown>;
+              propertyName = memberKey(compared) || propertyName;
+            }
             let replacement = string(value, propertyName);
             if (isProperty) replacement = field(value);
             if (parent?.type === "JSXAttribute") {
@@ -407,7 +250,27 @@ export const createSnapshotRedactor = () => {
         }
         for (const [property, child] of Object.entries(record)) {
           if (["loc", "extra", "tokens", "comments"].includes(property)) continue;
-          if (child && typeof child === "object") visit(child, record, parent);
+          if (child && typeof child === "object") {
+            let childValueKey = valueKey;
+            if (record.type === "JSXElement" || record.type === "JSXFragment") childValueKey = "";
+            if (record.type === "JSXAttribute" && property === "value")
+              childValueKey = (record.name as { name?: string }).name ?? "";
+            if (record.type === "ObjectProperty" && property === "value") {
+              const key = record.key as { name?: string; value?: string };
+              childValueKey = key.name ?? key.value ?? "";
+            }
+            if (record.type === "CallExpression" || record.type === "OptionalCallExpression") {
+              const callee = record.callee as Record<string, unknown>;
+              if (["includes", "indexOf", "lastIndexOf"].includes(memberKey(callee))) {
+                if (property === "callee") {
+                  const input = (record.arguments as unknown[])[0];
+                  childValueKey = memberKey(input) || childValueKey;
+                }
+                if (property === "arguments") childValueKey = memberKey(callee.object) || childValueKey;
+              }
+            }
+            visit(child, record, parent, childValueKey);
+          }
         }
       };
       visit(ast);

@@ -24,13 +24,17 @@ export const createReplayQueryClient = (payload: BoardSnapshotPayload) => {
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
         refetchInterval: false,
+        meta: {
+          boardSnapshotPendingQueryHashes: new Set(
+            payload.queries.filter((query) => query.status === "pending").map((query) => hashKey(query.key)),
+          ),
+        },
       },
       mutations: { retry: false },
     },
   });
   for (const query of payload.queries) {
-    client.setQueryDefaults(query.key, { meta: { boardSnapshotCaptured: true } });
-    const cached = client.getQueryCache().build(client, { queryKey: query.key, meta: { boardSnapshotCaptured: true } });
+    const cached = client.getQueryCache().build(client, { queryKey: query.key });
     cached.setState({
       data: query.data,
       status: query.status,
@@ -42,31 +46,35 @@ export const createReplayQueryClient = (payload: BoardSnapshotPayload) => {
   return client;
 };
 
-export const snapshotReplayLink =
-  (payload: BoardSnapshotPayload): TRPCLink<AppRouter> =>
-  () =>
-  ({ op }) =>
-    observable((observer) => {
-      if (op.type === "mutation") {
-        observer.error(replayError("Actions are disabled in the board playground", "FORBIDDEN"));
-        return;
-      }
-      if (op.type === "subscription") return;
-      const match = payload.queries.find((query) => {
-        const [path, options] = query.key;
-        if (!Array.isArray(path) || path.join(".") !== op.path) return false;
-        if (!options || typeof options !== "object") return op.input === undefined;
-        return hashKey([(options as { input?: unknown }).input]) === hashKey([op.input]);
+export const snapshotReplayLink = (payload: BoardSnapshotPayload): TRPCLink<AppRouter> => {
+  const captured = new Map<string, BoardSnapshotPayload["queries"][number]>();
+  for (const query of payload.queries) {
+    const [path, options] = query.key;
+    if (!Array.isArray(path)) continue;
+    let input: unknown;
+    if (options && typeof options === "object") input = (options as { input?: unknown }).input;
+    const key = hashKey([path.join("."), input]);
+    if (!captured.has(key)) captured.set(key, query);
+  }
+  return () =>
+    ({ op }) =>
+      observable((observer) => {
+        if (op.type === "mutation") {
+          observer.error(replayError("Actions are disabled in the board playground", "FORBIDDEN"));
+          return;
+        }
+        if (op.type === "subscription") return;
+        const match = captured.get(hashKey([op.path, op.input]));
+        if (!match) {
+          observer.error(replayError("This query was not captured in the snapshot", "NOT_FOUND"));
+          return;
+        }
+        if (match.status === "pending") return;
+        if (match.status === "error") {
+          observer.error(replayError("Captured widget error", match.errorCode));
+          return;
+        }
+        observer.next({ result: { type: "data", data: match.data } });
+        observer.complete();
       });
-      if (!match) {
-        observer.error(replayError("This query was not captured in the snapshot", "NOT_FOUND"));
-        return;
-      }
-      if (match.status === "pending") return;
-      if (match.status === "error") {
-        observer.error(replayError("Captured widget error", match.errorCode));
-        return;
-      }
-      observer.next({ result: { type: "data", data: match.data } });
-      observer.complete();
-    });
+};

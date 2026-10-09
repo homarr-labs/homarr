@@ -65,10 +65,14 @@ export const BoardDebugPreview = () => {
       const sequence = ++loadSequence.current;
       void parseBoardSnapshot(event.data.text)
         .then(async ({ payload: parsed, snapshot }) => {
-          const translated = (await createLanguageMapping()[parsed.locale]()).default;
+          const [translated, dayJsLocale] = await Promise.all([
+            createLanguageMapping()[parsed.locale](),
+            localeConfigurations[parsed.locale].importDayJsLocale(),
+          ]);
           if (sequence !== loadSequence.current) return;
+          dayjs.locale(dayJsLocale);
           installReplayStorage(parsed, snapshot.capturedAt);
-          setLoaded({ payload: parsed, messages: mergeMessages(fallbackMessages, translated) });
+          setLoaded({ payload: parsed, messages: mergeMessages(fallbackMessages, translated.default) });
           setError(false);
         })
         .catch(() => {
@@ -109,7 +113,6 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
   const [client] = useState(() => clientApi.createClient({ links: [snapshotReplayLink(payload)] }));
   useEffect(() => () => queryClient.clear(), [queryClient]);
   useEffect(() => {
-    void localeConfigurations[payload.locale].importDayJsLocale().then((locale) => dayjs.locale(locale));
     document.documentElement.lang = payload.locale;
     let direction = "ltr";
     if (isLocaleRTL(payload.locale)) direction = "rtl";
@@ -132,12 +135,13 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
     observer.observe(document.body);
     const stop = () => observer.disconnect();
     const timeout = window.setTimeout(stop, 5000);
-    for (const event of ["wheel", "pointerdown", "keydown"]) window.addEventListener(event, stop, { once: true });
+    const userInteractions = ["wheel", "pointerdown", "touchstart", "keydown"];
+    for (const event of userInteractions) window.addEventListener(event, stop, { once: true });
     restore();
     return () => {
       stop();
       window.clearTimeout(timeout);
-      for (const event of ["wheel", "pointerdown", "keydown"]) window.removeEventListener(event, stop);
+      for (const event of userInteractions) window.removeEventListener(event, stop);
     };
   }, [payload.viewport, viewportWidth]);
   return (
@@ -165,7 +169,10 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
                                 <NextIntlClientProvider locale={payload.locale} messages={messages}>
                                   <div
                                     onClickCapture={(event) => {
-                                      if ((event.target as HTMLElement).closest("a,form,[data-app-shell-header]")) {
+                                      if (
+                                        event.target instanceof Element &&
+                                        event.target.closest("a,form,[data-app-shell-header]")
+                                      ) {
                                         event.preventDefault();
                                         event.stopPropagation();
                                       }
