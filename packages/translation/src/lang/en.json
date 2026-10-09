@@ -749,7 +749,10 @@
         "selectMultiple": "Select multiple",
         "cancelMultiple": "Exit multi-select",
         "customApplication": "Custom application",
-        "application": "Application"
+        "application": "Application",
+        "backToApps": "Back to apps",
+        "createAndAdd": "Create and add",
+        "createAnother": "Create and continue"
       },
       "create": {
         "title": "Create new app",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Add a URL or App in the widget settings"
+      "empty": "Add a URL or App in the widget settings",
+      "groups": {
+        "label": "Categories",
+        "placeholder": "New category",
+        "add": "Add category",
+        "remove": "Remove {name} category",
+        "rename": "Category name for {name}",
+        "assign": "Category for {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3695,7 +3707,8 @@
       "app": {
         "noData": "No app found",
         "description": "Click <here></here> to create a new app",
-        "quickCreate": "Create app on the fly"
+        "quickCreate": "Create app on the fly",
+        "create": "Create app"
       },
       "error": {
         "noIntegration": "No integration selected",

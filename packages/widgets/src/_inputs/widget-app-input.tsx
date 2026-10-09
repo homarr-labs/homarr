@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
-import { IconCheck, IconRocket } from "@tabler/icons-react";
+import { IconCheck, IconPlus } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -68,7 +68,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
       {canCreateApps && (
         <Button
           mt={3}
-          rightSection={<IconRocket size="1.5rem" />}
+          leftSection={<IconPlus size={18} />}
           variant="default"
           onClick={() =>
             openModal({
@@ -80,7 +80,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
             })
           }
         >
-          {tApp("quickCreate")}
+          {tApp("create")}
         </Button>
       )}
     </SimpleGrid>
