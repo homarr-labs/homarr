@@ -7,6 +7,7 @@ import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSu
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
@@ -57,6 +58,7 @@ export const ConfigurableHeader = ({
   isAdmin,
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
+  const replay = useBoardReplay();
   const { headerPreferences } = useSettings();
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
@@ -155,7 +157,7 @@ export const ConfigurableHeader = ({
                 />
               </FloatingHeaderControls>
             ) : null}
-            <LazySpotlight />
+            {!replay && <LazySpotlight />}
           </>
         );
       }}

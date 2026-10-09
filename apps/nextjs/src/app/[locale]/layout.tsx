@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { fontSans } from "~/theme/font";
 
 import "@gfazioli/mantine-onboarding-tour/styles.css";
 import "@homarr/notifications/styles.css";
@@ -45,11 +45,6 @@ import { CustomMantineProvider } from "./_client-providers/mantine";
 import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { composeWrappers } from "./compose";
-
-const fontSans = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 const logger = createLogger({ module: "rootLayout" });
 

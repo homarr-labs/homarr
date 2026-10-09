@@ -41,8 +41,13 @@ const subscribeToViewport = (onStoreChange: () => void) => {
   };
 };
 
-export const BoardPreviewProvider = ({ children, board }: PropsWithChildren<{ board: Board }>) => {
-  const currentLayout = board.layouts[0]?.id ?? "";
+export const BoardPreviewProvider = ({
+  children,
+  board,
+  layoutId,
+  initialViewportWidth = 0,
+}: PropsWithChildren<{ board: Board; layoutId?: string; initialViewportWidth?: number }>) => {
+  const currentLayout = layoutId ?? board.layouts[0]?.id ?? "";
 
   return (
     <BoardContext.Provider
@@ -50,7 +55,7 @@ export const BoardPreviewProvider = ({ children, board }: PropsWithChildren<{ bo
         board,
         layoutOverrideId: null,
         currentLayout,
-        initialViewportWidth: 0,
+        initialViewportWidth,
       }}
     >
       {children}

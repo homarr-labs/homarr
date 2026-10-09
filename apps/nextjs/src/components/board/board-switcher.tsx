@@ -25,6 +25,7 @@ import { IconDeviceMobile, IconHomeFilled, IconLayoutBoard, IconSearch } from "@
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
@@ -48,6 +49,7 @@ interface BoardSwitcherProps {
 }
 
 export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
+  const replay = useBoardReplay();
   const t = useI18n("board.action.switcher");
   const tBoard = useI18n("board");
   const manageBoardsT = useI18n("management.page.board");
@@ -64,7 +66,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     isPending,
     isError,
   } = clientApi.board.getManageOverview.useQuery(boardSwitcherPreview, {
-    enabled: isOpen,
+    enabled: isOpen && !replay,
   });
 
   const switcherBoards = useMemo(() => {
@@ -82,14 +84,17 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const modalColumnCount = Math.max(1, Math.min(switcherBoards.length, responsiveColumnCount));
 
   const openSwitcher = useCallback(() => {
+    if (replay) return;
     setIsOpen(true);
-  }, []);
+  }, [replay]);
   const closeSwitcher = useCallback(() => {
     setIsOpen(false);
     setSearch("");
     setActiveIndex(0);
   }, []);
-  const preloadBoards = () => void utils.board.getManageOverview.prefetch(boardSwitcherPreview);
+  const preloadBoards = () => {
+    if (!replay) void utils.board.getManageOverview.prefetch(boardSwitcherPreview);
+  };
 
   const spotlightAction = useMemo(
     () => ({

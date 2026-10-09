@@ -6,6 +6,7 @@ import { localeCookieKey } from "@homarr/definitions/cookie";
 import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
+import { env } from "~/env";
 
 let isOnboardingFinished = false;
 let onboardingStepPromise: Promise<string> | null = null;
@@ -44,6 +45,20 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split("/").filter(Boolean);
   const routeSegments = supportedLanguages.includes(segments[0] as SupportedLanguage) ? segments.slice(1) : segments;
+  if (routeSegments[0] === "debug" && routeSegments[1] === "board" && !env.ENABLE_BOARD_DEBUG)
+    return new NextResponse("Not found", { status: 404 });
+  if (routeSegments.join("/") === "debug/board/preview") {
+    const response = NextResponse.next();
+    const origin = request.nextUrl.origin;
+    const websocketOrigin = origin.replace(/^http/, "ws");
+    // Next.js loads its own chunks and development transport here. Widget API
+    // calls, remote images, media and nested frames remain blocked by the CSP.
+    response.headers.set(
+      "Content-Security-Policy",
+      `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src ${origin}/_next/ ${websocketOrigin}/_next/; frame-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'`,
+    );
+    return response;
+  }
   const isOnboardingAccessRoute =
     (routeSegments.length === 1 && routeSegments[0] === "init") ||
     (routeSegments.length === 2 && routeSegments[0] === "auth" && routeSegments[1] === "login");
