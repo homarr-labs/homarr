@@ -100,6 +100,7 @@
         "@assistant-ui/react-ai-sdk": "catalog:",
         "@assistant-ui/react-lexical": "catalog:",
         "@assistant-ui/react-markdown": "catalog:",
+        "@babel/parser": "catalog:",
         "@dnd-kit/abstract": "catalog:",
         "@dnd-kit/collision": "catalog:",
         "@dnd-kit/core": "catalog:",

@@ -6146,6 +6146,13 @@
           "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
         }
       }
+    },
+    "snapshot": {
+      "take": "Take snapshot of board state",
+      "description": "Download anonymized layout, widget options and loaded data as JSON",
+      "playground": "Open board playground",
+      "failed": "Unable to capture board snapshot",
+      "failedDescription": "The board data could not be safely exported, or the snapshot exceeds 10 MB."
     }
   },
   "layout": {

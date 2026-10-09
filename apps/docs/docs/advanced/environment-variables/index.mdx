@@ -49,6 +49,12 @@ Workshop service operators can find its server-only configuration in the
 
 `DEMO_MODE=true` seeds demo data and makes Assistant return a fixed response without calling a model provider. `DEMO_READ_ONLY` defaults to `true`, blocking dashboard and configuration changes. Authenticated users can still save and manage their own Assistant conversations so canned chats work. Set `DEMO_READ_ONLY=false` for editable preview deployments.
 
+### Board debugging
+
+Set `ENABLE_BOARD_DEBUG=true` and restart Homarr to enable `/debug/board`. Load a JSON snapshot downloaded through **Take snapshot of board state** in CMD+K to replay its loaded widget data with the current UI. Replay runs locally, disables actions and live connections, and never writes to the board database. The flag defaults to `false`.
+
+Snapshots anonymize text and IDs and remove credentials, URLs, rich text and custom CSS. External media is replaced with placeholders; data that was not loaded at capture time is unavailable. Files are limited to 10 MB.
+
 ### Workshop service
 
 These variables configure the separate Workshop service, not the Homarr application container.
