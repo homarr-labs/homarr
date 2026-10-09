@@ -3142,8 +3142,8 @@
         "showUnmonitored": {
           "label": "Show unmonitored"
         },
-        "defaultView": {
-          "label": "Default view"
+        "viewMode": {
+          "label": "View"
         }
       },
       "advanced": {
@@ -3171,7 +3171,9 @@
         "eventDetails": "Event details",
         "close": "Close event details",
         "timeSlot": "Time slot",
-        "weekday": "Weekday"
+        "weekday": "Weekday",
+        "saveErrorTitle": "Could not save calendar view",
+        "saveErrorMessage": "The previous view has been restored. Try again."
       }
     },
     "weather": {

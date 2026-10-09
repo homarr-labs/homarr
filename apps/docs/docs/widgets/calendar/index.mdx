@@ -18,21 +18,35 @@ import { radarrIntegration } from "@site/docs/integrations/radarr";
 import { readarrIntegration } from "@site/docs/integrations/readarr";
 import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 import { icalIntegration } from "@site/docs/integrations/ical";
-import currentView from "./img/current-view.png";
-import advancedView from "./img/advanced-view.png";
 
 <WidgetHeader widget={calendarWidget} categories={["Media manager", "Servarr"]} />
 
-The Calendar widget combines events and upcoming releases in a month view. Advanced view shows a grouped event list with
-source, title, location, and description. Healthy integrations remain visible when another source fails.
+The Calendar widget combines events and upcoming media releases. Healthy integrations remain visible when another
+source fails.
 
-### Month view
+Changing the view saves it for the widget across browsers and devices. This requires Change access to the board.
+Advanced view enlarges the selected mode. Timed events without an end time occupy a 30-minute slot in Day and Week;
+their details keep the original event time.
 
-<img src={currentView.src} alt="Calendar month view with marked events" />
+### Compact month
 
-### Advanced view
+<img src="/img/widgets/calendar/current-view.png" width={800} height={560} alt="Compact month with colored event indicators" />
 
-<img src={advancedView.src} alt="Calendar advanced view with grouped events" />
+### Month
+
+<img src="/img/widgets/calendar/month-view.png" width={800} height={560} alt="Month grid with event titles and overflow counts" />
+
+### Week
+
+<img src="/img/widgets/calendar/week-view.png" width={800} height={560} alt="Week time grid with overlapping calendar events" />
+
+### Day
+
+<img src="/img/widgets/calendar/day-view.png" width={800} height={560} alt="Day time grid with overlapping calendar events" />
+
+### Agenda
+
+<img src="/img/widgets/calendar/advanced-view.png" width={800} height={560} alt="Agenda with grouped events, source labels, and event details" />
 
 ### Supported integrations
 
@@ -51,7 +65,7 @@ source, title, location, and description. Healthy integrations remain visible wh
 ### Interactions
 
 - Hover or select a marked date to inspect its events.
-- Use advanced view to browse grouped events by month.
+- Month overflow counts open the complete list of events for that date.
 
 <WidgetInteractionGuide />
 

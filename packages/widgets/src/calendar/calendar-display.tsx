@@ -48,6 +48,8 @@ interface CalendarDisplayProps {
   setMonth: (date: Date) => void;
   view: CalendarView;
   setView: (view: CalendarView) => void;
+  isViewChangeDisabled: boolean;
+  isSavingView: boolean;
   releaseType: readonly string[];
   locale: string;
   firstDayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -63,6 +65,8 @@ export const CalendarDisplay = ({
   setMonth: setDate,
   view,
   setView,
+  isViewChangeDisabled,
+  isSavingView,
   releaseType,
   locale,
   firstDayOfWeek,
@@ -189,7 +193,8 @@ export const CalendarDisplay = ({
                 className={actionTargetClasses.root}
                 variant="subtle"
                 size="compact-xs"
-                disabled={isEditMode}
+                disabled={isEditMode || isViewChangeDisabled}
+                loading={isSavingView}
                 aria-label={`${t("controls.view")}: ${t(`view.${view}`)}`}
                 rightSection={<IconChevronDown size={12} />}
               >
@@ -331,7 +336,7 @@ export const CalendarDisplay = ({
               if (!isEditMode) setDate(dayjs(value).toDate());
             }}
             onViewChange={(value) => {
-              if (!isEditMode && value === "day") setView("day");
+              if (!isEditMode && !isViewChangeDisabled && value === "day") setView("day");
             }}
           />
         )}

@@ -15,7 +15,7 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
   queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      defaultView: factory.select({
+      viewMode: factory.select({
         defaultValue: "compact",
         options: calendarViews.map((value) => ({
           value,
