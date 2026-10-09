@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Beschreibung line clamp"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Limit für Beiträge"
         },

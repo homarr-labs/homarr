@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "説明行のクランプ"
         },
+        "descriptionMaxLength": {
+          "label": "説明の最大長さ",
+          "description": "フィードの説明から保持する最大文字数"
+        },
         "maximumAmountPosts": {
           "label": "投稿数の上限"
         },

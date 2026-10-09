@@ -80,8 +80,9 @@ fees can still apply to BYOK requests. Streaming responses include upstream toke
 
 ## Deployment
 
-The v2 image is `ghcr.io/homarr-labs/workshop:v2`; immutable `sha-<commit>` tags are preferable for promotion. The
-service listens on port 8090.
+The Workshop image includes the documentation site. Use `ghcr.io/homarr-labs/workshop:latest` for stable builds from
+`main`, or `:dev` for development builds from `dev`. The `:v2` tag is a compatibility alias for stable builds.
+Immutable `sha-<commit>` tags are preferable for promotion. The service listens on port 8090.
 
 When using a reverse proxy, forward the complete hostname, including `/api`, `/_/`, and
 `/workshop-runtime-config.js`. Use a dedicated hostname when Homarr already occupies the intended origin.

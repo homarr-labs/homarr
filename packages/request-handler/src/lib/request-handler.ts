@@ -112,9 +112,11 @@ const startRefreshLockRenewal = <TData>(sharedCache: SharedCacheAdapter<TData>, 
 
 const evictExpired = <TData>(cache: Map<string, CacheEntry<TData>>) => {
   const now = Date.now();
-  for (const [key, entry] of cache) {
+  // forEach rather than a destructuring for..of: the destructuring allocates a [key, entry]
+  // pair per cached entry, and this runs over up to MAX_CACHE_SIZE entries.
+  cache.forEach((entry, key) => {
     if (now >= entry.staleUntil) cache.delete(key);
-  }
+  });
 };
 
 export const createRequestHandler = <TData, TInput extends Record<string, unknown>>(
@@ -135,7 +137,12 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
   const storeInMemory = (key: string, entry: CacheEntry<TData>, requestGeneration: number) => {
     if (generation !== requestGeneration || Date.now() >= entry.staleUntil) return;
-    evictExpired(cache);
+    // The expiry timer is armed no later than the earliest staleUntil in the cache (see
+    // scheduleExpiry), so while it has not come due nothing in the cache can be expired
+    // and evictExpired would only walk 1000 entries to prove it. The scan is kept for when
+    // the timer is overdue: a busy event loop, or a shared entry whose deadline passed
+    // between timer slots.
+    if (expiryTimerAt !== undefined && Date.now() >= expiryTimerAt) evictExpired(cache);
     cache.delete(key);
     if (cache.size >= MAX_CACHE_SIZE) {
       const oldest = cache.keys().next().value;
@@ -215,7 +222,14 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
     expiryTimerAt = undefined;
     if (cache.size === 0) return;
 
-    const nextExpiryAt = candidateExpiryAt ?? Math.min(...[...cache.values()].map(({ staleUntil }) => staleUntil));
+    // A loop rather than Math.min(...values.map(...)): the spread built an intermediate
+    // array of every cached entry's deadline and then pushed it back through the arguments.
+    let nextExpiryAt = candidateExpiryAt ?? Number.POSITIVE_INFINITY;
+    if (candidateExpiryAt === undefined) {
+      for (const entry of cache.values()) {
+        if (entry.staleUntil < nextExpiryAt) nextExpiryAt = entry.staleUntil;
+      }
+    }
     expiryTimerAt = nextExpiryAt;
     expiryTimer = setTimeout(
       () => {

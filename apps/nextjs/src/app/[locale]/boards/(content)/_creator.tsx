@@ -38,7 +38,7 @@ const BoardWithIntegrations = async ({
   integrationsPromise: ReturnType<typeof getIntegrationsWithPermissionsAsync>;
 }) => (
   <IntegrationProvider integrations={await integrationsPromise}>
-    <ClientBoard />
+    <ClientBoard debugActions={{ playgroundEnabled: env.ENABLE_BOARD_DEBUG }} />
   </IntegrationProvider>
 );
 

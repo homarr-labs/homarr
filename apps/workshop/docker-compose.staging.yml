@@ -2,7 +2,7 @@ name: homarr-workshop-staging
 
 services:
   workshop:
-    image: ${WORKSHOP_IMAGE:-ghcr.io/homarr-labs/workshop:v2}
+    image: ${WORKSHOP_IMAGE:-ghcr.io/homarr-labs/workshop:latest}
     restart: unless-stopped
     environment:
       HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:?Set HOMARR_WEBSITE_URL in the Workshop environment file}

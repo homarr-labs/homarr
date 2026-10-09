@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "描述线条"
         },
+        "descriptionMaxLength": {
+          "label": "描述最大长度",
+          "description": "源描述中保留的最大字符数"
+        },
         "maximumAmountPosts": {
           "label": "帖子数量限制"
         },

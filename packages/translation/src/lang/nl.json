@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "Beschrijving regel-clamp"
         },
+        "descriptionMaxLength": {
+          "label": "Max. lengte beschrijving",
+          "description": "Maximaal aantal tekens dat moet worden gebruikt voor de feedbeschrijving"
+        },
         "maximumAmountPosts": {
           "label": "Aantal berichtenlimiet"
         },

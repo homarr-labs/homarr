@@ -9,6 +9,8 @@ import { optionsBuilder } from "../options";
 import { BookmarkAddButton } from "./add-button";
 import type { BookmarkSelectionItem } from "./add-button";
 import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } from "./bookmark-item";
+import type { BookmarkGroup } from "./groups-data";
+import { BookmarkGroupSelect } from "./groups";
 
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
   icon: IconBookmark,
@@ -58,6 +60,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       withBorder: factory.switch({ defaultValue: false }),
       grow: factory.switch({ defaultValue: false }),
       customUrls: factory.internal({ defaultValue: [] as string[] }),
+      groups: factory.internal({ defaultValue: [] as BookmarkGroup[] }),
       items: factory.sortableItemList<BookmarkSelectionItem, string>({
         ItemComponent: ({ item, handle, removeItem, removeLabel, rootAttributes }) => {
           const iconUrl = item.iconUrl ?? getBookmarkFaviconUrl(item.href);
@@ -74,6 +77,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
                     <Text fw={600} truncate>
                       {item.name}
                     </Text>
+                    <BookmarkGroupSelect itemId={item.id} name={item.name} />
                     <Text size="xs" c="dimmed" truncate>
                       {item.href}
                     </Text>

@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": ""
         },
+        "descriptionMaxLength": {
+          "label": "Kuvaus max pituus",
+          "description": "Enimmäismäärä merkkejä, jotka on säilytettävä syötteen kuvauksesta"
+        },
         "maximumAmountPosts": {
           "label": ""
         },

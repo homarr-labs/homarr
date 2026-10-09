@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "חיתוך שורות טקסט"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "הגבלת כמות הודעות"
         },

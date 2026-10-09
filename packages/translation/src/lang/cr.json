@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "crwdns1360:0crwdne1360:0"
         },
+        "descriptionMaxLength": {
+          "label": "crwdns10889:0crwdne10889:0",
+          "description": "crwdns10891:0crwdne10891:0"
+        },
         "maximumAmountPosts": {
           "label": "crwdns1362:0crwdne1362:0"
         },

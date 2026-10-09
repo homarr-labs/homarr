@@ -30,6 +30,7 @@ import { BoardSectionCollapseProvider } from "~/components/board/sections/sectio
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { BoardSelectionProvider } from "~/components/board/selection/board-selection-context";
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
+import { BoardSnapshotRegistrar } from "~/components/board/debug/snapshot-registrar";
 import classes from "./_client.module.css";
 
 const APP_SHELL_SIDE_PADDING = 32;
@@ -40,7 +41,7 @@ const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   </GridEditorRegistryProvider>
 );
 
-export const ClientBoard = () => {
+export const ClientBoard = ({ debugActions }: { debugActions?: { playgroundEnabled: boolean } }) => {
   const board = useRequiredBoard();
   const t = useI18n("board.landmark");
   const tPreview = useI18n("board.setting.section.layout.preview");
@@ -97,6 +98,7 @@ export const ClientBoard = () => {
           <BoardEmptyState />
           <BoardSetupChecklist />
           <BoardSectionCollapseProvider>
+            {debugActions && <BoardSnapshotRegistrar playgroundEnabled={debugActions.playgroundEnabled} />}
             <BoardGridPortalHost>
               <ScaledBoardCanvas
                 logicalWidth={logicalWidth}

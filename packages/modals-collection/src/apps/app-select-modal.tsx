@@ -12,15 +12,17 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { IconBulb, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { FloatingTip, selectGridCols, SelectableCard } from "@homarr/ui";
+import { selectGridCols, SelectableCard } from "@homarr/ui";
 
-import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
+import { AppForm } from "@homarr/forms-collection";
+import { useSession } from "@homarr/auth/client";
+import { showErrorNotification } from "@homarr/notifications";
 
 type SelectableApp = RouterOutputs["app"]["selectable"][number];
 
@@ -34,10 +36,19 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   const [search, setSearch] = useState("");
   const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
   const [createdApps, setCreatedApps] = useState<SelectableApp[]>([]);
-  const [multiSelectActive, setMultiSelectActive] = useState(false);
+  const [creating, setCreating] = useState(false);
   const t = useI18n();
   const { data: apps = [], isPending } = clientApi.app.selectable.useQuery();
-  const { openModal: openQuickAddAppModal } = useModalAction(QuickAddAppModal);
+  const { data: session } = useSession();
+  const utils = clientApi.useUtils();
+  const canCreate = innerProps.withCreate && Boolean(session?.user.permissions.includes("app-create"));
+  const { mutateAsync: createApp, isPending: isCreating } = clientApi.app.create.useMutation({
+    onError: () =>
+      showErrorNotification({
+        title: t("common.notification.create.error"),
+        message: t("app.page.create.notification.error.message"),
+      }),
+  });
   const multiSelectAvailable = Boolean(innerProps.onSelectMany);
 
   const selectableApps = useMemo(
@@ -48,7 +59,10 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   const filteredApps = useMemo(
     () =>
       selectableApps
-        .filter((app) => app.name.toLowerCase().includes(search.toLowerCase()))
+        .filter((app) => {
+          const query = search.trim().toLowerCase();
+          return app.name.toLowerCase().includes(query) || Boolean(app.href?.toLowerCase().includes(query));
+        })
         .sort((appA, appB) => appA.name.localeCompare(appB.name)),
     [search, selectableApps],
   );
@@ -58,39 +72,17 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     [selectableApps, selectedAppIds],
   );
 
-  const handleSelect = (app: SelectableApp, event?: React.MouseEvent) => {
-    const isModifierPressed = multiSelectAvailable && Boolean(event?.shiftKey || event?.ctrlKey || event?.metaKey);
-
-    if (!multiSelectActive && !isModifierPressed) {
-      if (innerProps.onSelect) innerProps.onSelect(app);
-      else innerProps.onSelectMany?.([app]);
+  const handleSelect = (app: SelectableApp) => {
+    if (!multiSelectAvailable) {
+      innerProps.onSelect?.(app);
       actions.closeModal();
       return;
     }
-
-    if (multiSelectAvailable) {
-      setMultiSelectActive(true);
-      setSelectedAppIds((current) => {
-        const next = new Set(current);
-        if (next.has(app.id)) next.delete(app.id);
-        else next.add(app.id);
-        return next;
-      });
-    }
-  };
-
-  const handleAddNewApp = () => {
-    openQuickAddAppModal({
-      onClose(app) {
-        if (multiSelectActive) {
-          setCreatedApps((current) => [...current, app]);
-          setSelectedAppIds((current) => new Set(current).add(app.id));
-          return;
-        }
-        if (innerProps.onSelect) innerProps.onSelect(app);
-        else innerProps.onSelectMany?.([app]);
-        actions.closeModal();
-      },
+    setSelectedAppIds((current) => {
+      const next = new Set(current);
+      if (next.has(app.id)) next.delete(app.id);
+      else next.add(app.id);
+      return next;
     });
   };
 
@@ -101,78 +93,104 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   return (
     <Stack gap="md">
-      <FloatingTip
-        opened={multiSelectAvailable}
-        showDelay={2_000}
-        dismissAfter={3_000}
-        transitionDuration={200}
-        closable={false}
-        alertProps={{ color: "primaryColor", icon: <IconBulb size={18} />, variant: "light" }}
-      >
-        {t("tips.multiSelectApps")}
-      </FloatingTip>
-
-      {/* Top Search Input */}
-      <Stack gap={6}>
-        <Input
-          value={search}
-          onChange={(event) => setSearch(event.currentTarget.value)}
-          leftSection={<IconSearch size={16} />}
-          placeholder={`${t("app.action.select.search")}...`}
-          aria-label={t("app.action.select.search")}
-          data-autofocus
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
-              handleSelect(filteredApps[0]);
-            }
-          }}
-        />
-      </Stack>
-
-      {/* Scrollable Container with App Cards */}
-      <ScrollArea.Autosize mah="70vh" offsetScrollbars>
-        <Stack gap="md" pt="xs" pr="xs" px={4}>
-          <SimpleGrid cols={selectGridCols} spacing="sm">
-            {innerProps.withCreate && (
-              <SelectableCard
-                onClick={handleAddNewApp}
-                style={{ borderStyle: "dashed" }}
-                icon={
-                  <ThemeIcon variant="light" color="primaryColor" size={34} radius="md">
-                    <IconPlus size={20} />
-                  </ThemeIcon>
-                }
-                title={t("app.action.create.title")}
-                description={t("app.action.create.description")}
-                footerLeft={
-                  <Text size="xs" c="dimmed">
-                    {t("app.action.select.customApplication")}
-                  </Text>
-                }
-              />
-            )}
-
-            {filteredApps.map((app) => (
-              <AppCard
-                key={app.id}
-                app={app}
-                isSelected={selectedAppIds.has(app.id)}
-                multiSelectActive={multiSelectActive}
-                onSelect={handleSelect}
-              />
-            ))}
-          </SimpleGrid>
-
-          {filteredApps.length === 0 && !isPending && (
-            <Center p="xl">
-              <Text c="dimmed">{t("app.action.select.noResults")}</Text>
-            </Center>
-          )}
+      {creating ? (
+        <Stack>
+          <Button
+            variant="subtle"
+            leftSection={<IconArrowLeft size={16} />}
+            onClick={() => setCreating(false)}
+            disabled={isCreating}
+            style={{ alignSelf: "flex-start" }}
+          >
+            {t("app.action.select.backToApps")}
+          </Button>
+          <AppForm
+            showBackToOverview={false}
+            buttonLabels={{
+              submit: t("app.action.select.createAndAdd"),
+              submitAndCreateAnother: multiSelectAvailable ? t("app.action.select.createAnother") : undefined,
+            }}
+            isPending={isCreating}
+            handleSubmit={async (values, finish, afterSuccess) => {
+              const app = await createApp(values);
+              setCreatedApps((current) => [...current, app]);
+              setSelectedAppIds((current) => new Set(current).add(app.id));
+              void utils.app.invalidate();
+              if (!finish) {
+                afterSuccess?.();
+                return;
+              }
+              if (multiSelectAvailable) innerProps.onSelectMany?.([...selectedApps, app]);
+              else innerProps.onSelect?.(app);
+              actions.closeModal();
+            }}
+          />
         </Stack>
-      </ScrollArea.Autosize>
+      ) : (
+        <>
+          {/* Top Search Input */}
+          <Stack gap={6}>
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              leftSection={<IconSearch size={16} />}
+              placeholder={`${t("app.action.select.search")}...`}
+              aria-label={t("app.action.select.search")}
+              data-autofocus
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
+                  handleSelect(filteredApps[0]);
+                }
+              }}
+            />
+          </Stack>
+
+          {/* Scrollable Container with App Cards */}
+          <ScrollArea.Autosize mah="70vh" offsetScrollbars>
+            <Stack gap="md" pt="xs" pr="xs" px={4}>
+              <SimpleGrid cols={selectGridCols} spacing="sm">
+                {canCreate && (
+                  <SelectableCard
+                    onClick={() => setCreating(true)}
+                    style={{ borderStyle: "dashed" }}
+                    icon={
+                      <ThemeIcon variant="light" color="primaryColor" size={34} radius="md">
+                        <IconPlus size={20} />
+                      </ThemeIcon>
+                    }
+                    title={t("app.action.create.title")}
+                    description={t("app.action.create.description")}
+                    footerLeft={
+                      <Text size="xs" c="dimmed">
+                        {t("app.action.select.customApplication")}
+                      </Text>
+                    }
+                  />
+                )}
+
+                {filteredApps.map((app) => (
+                  <AppCard
+                    key={app.id}
+                    app={app}
+                    isSelected={selectedAppIds.has(app.id)}
+                    multiSelectActive={multiSelectAvailable}
+                    onSelect={handleSelect}
+                  />
+                ))}
+              </SimpleGrid>
+
+              {filteredApps.length === 0 && !isPending && (
+                <Center p="xl">
+                  <Text c="dimmed">{t("app.action.select.noResults")}</Text>
+                </Center>
+              )}
+            </Stack>
+          </ScrollArea.Autosize>
+        </>
+      )}
 
       {/* Multi-Select Action Footer */}
-      {multiSelectActive && (
+      {multiSelectAvailable && (
         <Paper withBorder p="xs" radius="md" bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))">
           <Group justify="space-between" align="center">
             <Text size="sm" fw={600}>
@@ -182,12 +200,17 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
               <Button
                 variant="default"
                 size="xs"
-                disabled={selectedApps.length === 0}
+                disabled={selectedApps.length === 0 || isCreating}
                 onClick={() => setSelectedAppIds(new Set())}
               >
                 {t("common.action.discard")}
               </Button>
-              <Button color="primaryColor" size="xs" disabled={selectedApps.length === 0} onClick={handleMultiSubmit}>
+              <Button
+                color="primaryColor"
+                size="xs"
+                disabled={selectedApps.length === 0 || creating}
+                onClick={handleMultiSubmit}
+              >
                 {t("common.action.add")} ({selectedApps.length})
               </Button>
             </Group>

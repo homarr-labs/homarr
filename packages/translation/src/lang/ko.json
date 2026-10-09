@@ -4480,6 +4480,10 @@
         "textLinesClamp": {
           "label": "설명 줄 제한"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "게시물 수 제한"
         },

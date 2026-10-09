@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 
 import { fetchApi, clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
 import type {
   CustomWidgetPublishedQueryState,
   CustomJsxRequestCapability,
@@ -13,7 +14,7 @@ import { CustomWidgetRuntimeProvider } from "@homarr/custom-widgets/runtime";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { useQueryClient } from "@tanstack/react-query";
+import { hashKey, useQueryClient } from "@tanstack/react-query";
 
 interface WidgetDefinitionProviderProps {
   itemId?: string;
@@ -81,8 +82,29 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
   const queryClient = useQueryClient();
   const { openConfirmModal } = useConfirmModal();
   const messages = useRuntimeMessages();
+  const isReplay = useBoardReplay();
   const port: CustomWidgetRuntimePort = {
     query: async (input, signal) => {
+      if (isReplay) {
+        const key = [
+          "custom-widget",
+          "item",
+          input.itemId,
+          input.requestId,
+          JSON.stringify(input.params),
+          props.queryCacheKey,
+        ];
+        const pending = queryClient.getDefaultOptions().queries?.meta?.boardSnapshotPendingQueryHashes;
+        if (pending instanceof Set && pending.has(hashKey(key))) return new Promise(() => {});
+        return (
+          queryClient.getQueryData<Awaited<ReturnType<typeof fetchApi.widget.customApi.queryRequest.query>>>(key) ?? {
+            ok: false,
+            status: 0,
+            data: null,
+            error: "Query not captured in snapshot",
+          }
+        );
+      }
       if (input.itemId) {
         return fetchApi.widget.customApi.queryRequest.query(
           { itemId: input.itemId, requestId: input.requestId, params: input.params },
@@ -94,8 +116,10 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
         { signal },
       );
     },
-    executeAction: (input) =>
-      input.itemId
+    executeAction: (input) => {
+      if (isReplay)
+        return Promise.resolve({ ok: false, status: 0, data: null, error: "Actions disabled in playground" });
+      return input.itemId
         ? fetchApi.widget.customApi.executeAction.mutate({
             itemId: input.itemId,
             requestId: input.requestId,
@@ -107,8 +131,10 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
             requestId: input.requestId,
             params: input.params,
             confirmed: input.confirmed,
-          }),
+          });
+    },
     invalidate: async ({ itemId, previewSessionId, targets }) => {
+      if (isReplay) return;
       if (targets.length === 0) return;
       const invalidateAll = targets.includes("*");
       if (previewSessionId) {
