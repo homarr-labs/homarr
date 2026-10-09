@@ -22,6 +22,14 @@ body:
     validations:
       required: true
   - type: textarea
+    id: boardSnapshot
+    attributes:
+      label: Board snapshot and screenshot
+      description: |
+        For layout or widget UI bugs, open the affected board at the window size where the problem appears, take a screenshot, then open CMD+K (Ctrl+K) and select "Take snapshot of board state". Attach the downloaded JSON and screenshot here by dragging them into this field. The snapshot includes columns, widget placement/options, settings, sanitized custom CSS and loaded widget data so we can reproduce your layout. Private text, URLs and credentials are redacted; review both files before sharing. Leave blank for unrelated bugs.
+    validations:
+      required: false
+  - type: textarea
     attributes:
       label: Additional information
       description: Add any other information related to the bug here, screenshots if applicable.

@@ -53,7 +53,7 @@ Workshop service operators can find its server-only configuration in the
 
 Set `ENABLE_BOARD_DEBUG=true` and restart Homarr to enable `/debug/board`. Load a JSON snapshot downloaded through **Take snapshot of board state** in CMD+K to replay its loaded widget data with the current UI. Replay runs locally, disables actions and live connections, and never writes to the board database. The flag defaults to `false`.
 
-Snapshots anonymize text and IDs and remove credentials, URLs, rich text and custom CSS. External media is replaced with placeholders; data that was not loaded at capture time is unavailable. Files are limited to 10 MB.
+Snapshots preserve board/settings, columns, widget options, sanitized board/global CSS and notebook structure. Text and IDs are anonymized, credentials and private URLs are redacted, and external media uses placeholders. Attach the JSON and a screenshot at the same window size to layout/widget bug reports. The playground restores the captured viewport, active layout and scroll position; data not loaded at capture is unavailable. Files are limited to 10 MB.
 
 ### Workshop service
 

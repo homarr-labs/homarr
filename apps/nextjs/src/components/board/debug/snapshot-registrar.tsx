@@ -7,7 +7,7 @@ import { useLocale } from "next-intl";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useIntegrations } from "@homarr/auth/client";
-import { showErrorNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import type { ContextSpecificItem } from "@homarr/spotlight";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
@@ -41,9 +41,16 @@ export const BoardSnapshotRegistrar = ({ playgroundEnabled }: { playgroundEnable
           integrations,
           colorScheme,
           locale,
-          viewport: { width: window.innerWidth, height: window.innerHeight, layoutId },
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            layoutId,
+            scrollX: window.scrollX,
+            scrollY: window.scrollY,
+          },
         }),
       );
+      showSuccessNotification({ title: t("downloaded"), message: t("downloadedDescription"), autoClose: 10_000 });
     } catch {
       showErrorNotification({ title: t("failed"), message: t("failedDescription") });
     }
@@ -54,7 +61,7 @@ export const BoardSnapshotRegistrar = ({ playgroundEnabled }: { playgroundEnable
       name: t("take"),
       icon: IconCamera,
       description: t("description"),
-      aliases: ["debug", "snapshot", "export"],
+      aliases: ["debug", "snapshot", "export", "issue", "bug", "reproduce"],
       interaction: () => ({ type: "javaScript", onSelect: capture }),
     },
   ];

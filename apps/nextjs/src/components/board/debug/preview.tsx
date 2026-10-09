@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { PropsWithChildren } from "react";
-import { Alert, MantineProvider } from "@mantine/core";
+import { Alert, AppShellMain, Avatar, DirectionProvider, MantineProvider, v8CssVariablesResolver } from "@mantine/core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import type { AbstractIntlMessages } from "next-intl";
@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { BoardReplayProvider } from "@homarr/api/board-replay";
-import { IntegrationProvider, SessionProvider } from "@homarr/auth/client";
+import { IntegrationProvider, SessionContext } from "@homarr/auth/client";
 import { BoardPreviewProvider } from "@homarr/boards/context";
 import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
@@ -30,6 +30,12 @@ import { parseBoardSnapshot } from "./snapshot";
 import type { BoardSnapshotPayload } from "./snapshot";
 import { createReplayQueryClient, snapshotReplayLink } from "./replay-client";
 import { installReplayStorage } from "./storage";
+import { CustomCss } from "~/app/[locale]/boards/(content)/_custom-css";
+import { ClientShell } from "~/components/layout/shell";
+import { ConfigurableHeader } from "~/components/layout/header/configurable-header";
+import { BoardLogo, BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
+import { appShellLogoHeight } from "~/components/layout/constants";
+import { createBrandTheme } from "~/theme/branding";
 
 export const DebugPreviewProviders = ({ children }: PropsWithChildren) => (
   <JotaiProvider>
@@ -117,8 +123,25 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
   let layoutId = payload.viewport.layoutId;
   if (viewportWidth !== payload.viewport.width)
     layoutId = getLayoutIdForViewportWidth(payload.board.layouts, viewportWidth);
+  useEffect(() => {
+    if (viewportWidth !== payload.viewport.width) return;
+    // Widgets load lazily, so restore the captured scroll after their canvas
+    // settles. User interaction immediately ends restoration.
+    const restore = () => window.scrollTo(payload.viewport.scrollX, payload.viewport.scrollY);
+    const observer = new ResizeObserver(restore);
+    observer.observe(document.body);
+    const stop = () => observer.disconnect();
+    const timeout = window.setTimeout(stop, 5000);
+    for (const event of ["wheel", "pointerdown", "keydown"]) window.addEventListener(event, stop, { once: true });
+    restore();
+    return () => {
+      stop();
+      window.clearTimeout(timeout);
+      for (const event of ["wheel", "pointerdown", "keydown"]) window.removeEventListener(event, stop);
+    };
+  }, [payload.viewport, viewportWidth]);
   return (
-    <SessionProvider session={null} refetchInterval={0} refetchOnWindowFocus={false}>
+    <SessionContext.Provider value={{ data: null, status: "unauthenticated", update: async () => null }}>
       <SettingsSnapshotProvider value={payload.settings}>
         <clientApi.Provider client={client} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
@@ -128,27 +151,48 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
                   <BoardPreviewProvider board={payload.board} layoutId={layoutId} initialViewportWidth={viewportWidth}>
                     <EditModeProvider>
                       <BoardReadyProvider>
-                        <MantineProvider forceColorScheme={payload.colorScheme}>
-                          <BoardMantineProvider
-                            defaultColorScheme={payload.colorScheme}
+                        <DirectionProvider initialDirection={isLocaleRTL(payload.locale) ? "rtl" : "ltr"}>
+                          <MantineProvider
                             forceColorScheme={payload.colorScheme}
+                            theme={createBrandTheme(payload.settings.branding)}
+                            cssVariablesResolver={v8CssVariablesResolver}
                           >
-                            <ModalProvider>
-                              <NextIntlClientProvider locale={payload.locale} messages={messages}>
-                                <div
-                                  onClickCapture={(event) => {
-                                    if ((event.target as HTMLElement).closest("a,form")) {
-                                      event.preventDefault();
-                                      event.stopPropagation();
-                                    }
-                                  }}
-                                >
-                                  <ClientBoard />
-                                </div>
-                              </NextIntlClientProvider>
-                            </ModalProvider>
-                          </BoardMantineProvider>
-                        </MantineProvider>
+                            <BoardMantineProvider
+                              defaultColorScheme={payload.colorScheme}
+                              forceColorScheme={payload.colorScheme}
+                            >
+                              <ModalProvider>
+                                <NextIntlClientProvider locale={payload.locale} messages={messages}>
+                                  <div
+                                    onClickCapture={(event) => {
+                                      if ((event.target as HTMLElement).closest("a,form,[data-app-shell-header]")) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                      }
+                                    }}
+                                  >
+                                    <style data-homarr-global-custom-css>{payload.settings.branding.customCss}</style>
+                                    <CustomCss />
+                                    <ClientShell hasNavigation={false}>
+                                      <ConfigurableHeader
+                                        logo={<BoardLogo size={appShellLogoHeight} />}
+                                        logoWithTitle={<BoardLogoWithTitle size="md" />}
+                                        hasNavigation={false}
+                                        avatar={<Avatar size="md" />}
+                                        userId={null}
+                                        isAdmin={false}
+                                        isDockerEnabled={false}
+                                      />
+                                      <AppShellMain data-advanced-focus-background>
+                                        <ClientBoard />
+                                      </AppShellMain>
+                                    </ClientShell>
+                                  </div>
+                                </NextIntlClientProvider>
+                              </ModalProvider>
+                            </BoardMantineProvider>
+                          </MantineProvider>
+                        </DirectionProvider>
                       </BoardReadyProvider>
                     </EditModeProvider>
                   </BoardPreviewProvider>
@@ -158,6 +202,6 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
           </QueryClientProvider>
         </clientApi.Provider>
       </SettingsSnapshotProvider>
-    </SessionProvider>
+    </SessionContext.Provider>
   );
 };

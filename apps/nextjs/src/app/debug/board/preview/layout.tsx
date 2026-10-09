@@ -13,13 +13,14 @@ import "~/styles/scroll-area.scss";
 
 import { getI18nMessages } from "@homarr/translation/server";
 import { DebugPreviewProviders } from "~/components/board/debug/preview";
+import { fontSans } from "~/theme/font";
 
 // A separate root avoids the authenticated app's session guard, Assistant and
 // service worker. Only the snapshot's providers are mounted in the preview.
 export default async function DebugPreviewLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={[fontSans.className, fontSans.variable].join(" ")}>
         <NextIntlClientProvider locale="en" messages={await getI18nMessages({ locale: "en" })}>
           <DebugPreviewProviders>{children}</DebugPreviewProviders>
         </NextIntlClientProvider>

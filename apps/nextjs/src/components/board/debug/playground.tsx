@@ -26,6 +26,7 @@ export const BoardDebugPlayground = () => {
     const result = await parseBoardSnapshot(text);
     if (sequence !== loadSequence.current) return;
     setLoaded(result);
+    setWidth("captured");
     setError(null);
     try {
       sessionStorage.setItem(storageKey, JSON.stringify(result.snapshot));
@@ -100,7 +101,8 @@ export const BoardDebugPlayground = () => {
             <Badge color="orange">Debug</Badge>
           </Group>
           <Text c="dimmed" mt="xs">
-            Replay a snapshot with the current widget UI. Actions and live connections are disabled.
+            Reproduce a reported board layout from its snapshot and screenshot. Actions and live connections are
+            disabled.
           </Text>
         </div>
         <Group>
@@ -136,7 +138,7 @@ export const BoardDebugPlayground = () => {
             <Text c="dimmed" ta="center">
               On a dashboard, open CMD+K and select “Take snapshot of board state”.
               <br />
-              Load the downloaded JSON here to start replaying it.
+              Attach the JSON and a screenshot at the same window size to your bug report, or load the JSON here.
             </Text>
           </Stack>
         </Paper>
@@ -156,7 +158,10 @@ export const BoardDebugPlayground = () => {
               value={width}
               onChange={(event) => setWidth(event.currentTarget.value)}
               data={[
-                { value: "captured", label: `Captured · ${loaded.payload.viewport.width}px` },
+                {
+                  value: "captured",
+                  label: `Captured · ${loaded.payload.viewport.width} × ${loaded.payload.viewport.height}px`,
+                },
                 { value: "1440", label: "Desktop · 1440px" },
                 { value: "768", label: "Tablet · 768px" },
                 { value: "390", label: "Mobile · 390px" },
@@ -164,8 +169,8 @@ export const BoardDebugPlayground = () => {
             />
           </Group>
           <Text size="xs" c="dimmed">
-            Text and identifiers are anonymized. URLs, credentials, rich text and custom CSS are removed. Only data
-            loaded when the snapshot was taken is available.
+            Layout, settings, sanitized custom CSS and widget options are preserved. Private text and identifiers are
+            anonymized; URLs and credentials are redacted. Only data loaded at capture is available.
           </Text>
           <div style={{ overflow: "auto", width: "100%" }}>
             {/* The frame runs our application code. Uploaded JSX is interpreted by the existing Custom Widget sandbox. */}
@@ -178,7 +183,7 @@ export const BoardDebugPlayground = () => {
                 display: "block",
                 boxSizing: "content-box",
                 width: viewportWidth,
-                height: Math.max(600, loaded.payload.viewport.height),
+                height: loaded.payload.viewport.height,
                 border: "1px solid var(--mantine-color-default-border)",
                 borderRadius: 8,
               }}

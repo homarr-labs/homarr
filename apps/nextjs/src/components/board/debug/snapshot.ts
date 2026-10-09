@@ -88,6 +88,8 @@ const payloadSchema = z.object({
     width: z.number().int().min(200).max(10000),
     height: z.number().int().min(200).max(10000),
     layoutId: z.string(),
+    scrollX: z.number().finite().min(0).max(1_000_000).default(0),
+    scrollY: z.number().finite().min(0).max(1_000_000).default(0),
   }),
   locale: z.enum(supportedLanguages),
   colorScheme: z.enum(["dark", "light"]),
@@ -137,7 +139,7 @@ export const createBoardSnapshot = async ({
   board: RouterOutputs["board"]["getBoardByName"];
   settings: ReturnType<typeof useSettings>;
   integrations: ReturnType<typeof useIntegrations>;
-  viewport: BoardSnapshotPayload["viewport"];
+  viewport: z.input<typeof payloadSchema>["viewport"];
   locale: string;
   colorScheme: "dark" | "light";
   queryClient: QueryClient;
