@@ -1,0 +1,34 @@
+packages/common/package.json
+  h_d6e478ca18e517 18-19
+packages/translation/package.json
+  h_d6e478ca18e517 20
+packages/translation/src/runtime/bunfig.check.toml
+  h_d6e478ca18e517 1-2
+packages/translation/src/runtime/culture.ts
+  h_d6e478ca18e517 1-82
+packages/translation/src/runtime/date.ts
+  h_d6e478ca18e517 1-55
+packages/translation/src/runtime/index.ts
+  h_d6e478ca18e517 1-31
+packages/translation/src/runtime/locale.ts
+  h_d6e478ca18e517 1-84
+packages/translation/src/runtime/relative-refresh.ts
+  h_d6e478ca18e517 1-33
+packages/translation/src/runtime/resources.ts
+  h_d6e478ca18e517 1-76
+packages/translation/src/runtime/runtime.test.ts
+  h_d6e478ca18e517 1-197
+packages/translation/src/runtime/tsconfig.check.json
+  h_d6e478ca18e517 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "32fa336ce5ab27d7cb3f5590d1a84acf6e43c796",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
