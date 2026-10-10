@@ -255,7 +255,7 @@
     }
   },
   "scripts": {
-    "build": "cross-env CI=true turbo run build",
+    "build": "bun --no-env-file run --filter @homarr/nitro build",
     "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
     "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",
     "benchmark:board-graph": "node --experimental-strip-types scripts/benchmarks/board-static-graph.mts",
@@ -278,7 +278,7 @@
     "db:seed": "bun run --filter @homarr/db seed",
     "db:push": "bun run --filter @homarr/db push:sqlite",
     "db:studio": "bun run --filter @homarr/db studio",
-    "dev": "bun run --filter @homarr/nextjs dev",
+    "dev": "bun --no-env-file run --filter @homarr/nitro dev",
     "dev:benchmark": "node --experimental-strip-types scripts/benchmarks/dev-board.mts",
     "dev:cli": "go -C tools/homarr-dev run -buildvcs=false .",
     "dev:cli:build": "go -C tools/homarr-dev build -buildvcs=false .",
@@ -298,7 +298,7 @@
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-openapi": "tsx ./scripts/check-openapi-schema.mts --write",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
-    "start": "bun run --filter @homarr/nextjs start",
+    "start": "bun --no-env-file run --filter @homarr/nitro start",
     "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\"",
     "test:coverage": "bun run test --coverage.enabled",
     "test:integration": "cross-env NODE_ENV=development CI=true vitest run --project integration --maxWorkers 2",

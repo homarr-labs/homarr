@@ -1,0 +1,14 @@
+{
+  "extends": ["../../.oxlintrc.json"],
+  "ignorePatterns": ["src/route-tree.gen.ts"],
+  "overrides": [
+    {
+      "files": ["src/entry-server.tsx"],
+      "rules": { "import/default": "off", "import/no-self-import": "off" }
+    },
+    {
+      "files": ["src/entry-server.tsx", "src/entry-client.tsx"],
+      "rules": { "import/no-unassigned-import": "off" }
+    }
+  ]
+}

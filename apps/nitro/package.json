@@ -1,0 +1,41 @@
+{
+  "name": "@homarr/nitro",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --no-env-file --bun vite --host 127.0.0.1 --port 3200 --strictPort",
+    "build": "bun --no-env-file --bun vite build",
+    "start": "NITRO_HOST=127.0.0.1 NITRO_PORT=3200 bun --no-env-file .output/server/index.mjs",
+    "lint": "oxlint src server tests vite.config.ts nitro.config.ts",
+    "format": "oxfmt .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:fetch": "bun --no-env-file test tests/public-fetch.test.ts",
+    "test:browser": "bun --no-env-file tests/public-browser.ts"
+  },
+  "dependencies": {
+    "@mantine/core": "9.6.0",
+    "@mantine/hooks": "9.6.0",
+    "@orpc/client": "2.0.0-beta.43",
+    "@orpc/server": "2.0.0-beta.43",
+    "@tanstack/react-query": "5.101.2",
+    "@tanstack/react-router": "1.168.8",
+    "nitro": "3.0.260903-beta",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@tanstack/router-plugin": "1.167.7",
+    "@types/bun": "1.3.10",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.3",
+    "oxfmt": "0.58.0",
+    "oxlint": "1.73.0",
+    "typescript": "7.0.2",
+    "vite": "8.1.4"
+  }
+}

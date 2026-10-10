@@ -1,9 +1,10 @@
-import { schemaResolver, useForm } from "@mantine/form";
+import { useForm } from "@mantine/form";
 import type { ZodDiscriminatedUnion, ZodIntersection, ZodObject, ZodPipe } from "zod/v4";
-import { z } from "zod/v4";
+import type { z } from "zod/v4";
 
 import { useI18n } from "@homarr/translation/client";
-import { zodErrorMap } from "@homarr/validation/form/i18n";
+
+import { createZodFormResolver } from "./resolver";
 
 type inferPossibleSchema<
   TSchema extends
@@ -26,13 +27,10 @@ export const useZodForm = <
 ) => {
   const t = useI18n();
 
-  z.config({
-    customError: zodErrorMap(t),
-  });
   return useForm<inferPossibleSchema<TSchema>>({
     ...options,
     validateInputOnBlur: true,
     validateInputOnChange: options.validateInputOnChange ?? true,
-    validate: schemaResolver(schema, { sync: true }),
+    validate: createZodFormResolver(schema, t),
   });
 };

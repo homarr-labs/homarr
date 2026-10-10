@@ -17,6 +17,7 @@
     "./widget-icons": "./src/widget-icons.ts",
     "./styles.css": "./src/styles.css",
     "./hooks": "./src/hooks/index.ts",
+    "./navigation": "./src/navigation/index.tsx",
     "./icons": "./src/icons/index.ts"
   },
   "scripts": {
@@ -35,6 +36,7 @@
     "@mantine/dates": "catalog:",
     "@mantine/hooks": "catalog:",
     "@tabler/icons-react": "catalog:",
+    "@tanstack/react-query": "catalog:",
     "crypto-js": "catalog:",
     "mantine-react-table": "catalog:",
     "next": "catalog:",

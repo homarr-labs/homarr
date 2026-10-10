@@ -1,5 +1,9 @@
 "use client";
 
-import NextLink from "next/link";
+import type { NavigationLinkProps } from "../navigation";
+import { useNavigation } from "../navigation";
 
-export const Link = NextLink;
+export const Link = (props: NavigationLinkProps) => {
+  const { Link: RoutedLink } = useNavigation();
+  return <RoutedLink {...props} />;
+};

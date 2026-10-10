@@ -1,28 +1,26 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
 import { Box, Group, Pagination } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+
+import { useNavigation } from "../navigation";
+import { Link } from "./link";
 
 interface TablePaginationProps {
   total: number;
 }
 
 export const TablePagination = ({ total }: TablePaginationProps) => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { replace } = useRouter();
-  const pathName = usePathname();
-  const searchParams = useSearchParams();
+  const { pathname, search, replace } = useNavigation();
   const t = useI18n("common.pagination");
-  const current = parsePage(searchParams.getAll("page"));
+  const current = parsePage(new URLSearchParams(search).getAll("page"));
 
   const getItemProps = useCallback(
     (page: number) => {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(search);
       params.set("page", page.toString());
 
       return {
@@ -30,7 +28,7 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
         href: `?${params.toString()}`,
       };
     },
-    [searchParams],
+    [search],
   );
 
   const getControlProps = useCallback(
@@ -42,11 +40,11 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
 
   const handleChange = useCallback(
     (page: number) => {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(search);
       params.set("page", page.toString());
-      replace(`${pathName}?${params.toString()}`);
+      replace(`${pathname}?${params.toString()}`);
     },
-    [pathName, replace, searchParams],
+    [pathname, replace, search],
   );
 
   if (total <= 0) return null;
