@@ -302,7 +302,7 @@ jobs:
         env:
           IMAGE_TAGS: ${{ needs.plan.outputs.tags }}
         run: |
-          expected_digest=""
+          expected_manifest=""
           for tag in $IMAGE_TAGS; do
             image="${WORKSHOP_IMAGE}:$tag"
             manifest="$(docker buildx imagetools inspect "$image" --raw)"
@@ -311,7 +311,6 @@ jobs:
                 'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
                 <<<"$manifest" >/dev/null
             done
-            digest="$(docker buildx imagetools inspect "$image" --format '{{.Manifest.Digest}}')"
-            if [[ -n "$expected_digest" ]]; then test "$digest" = "$expected_digest"; fi
-            expected_digest="$digest"
+            if [[ -n "$expected_manifest" ]]; then test "$manifest" = "$expected_manifest"; fi
+            expected_manifest="$manifest"
           done
