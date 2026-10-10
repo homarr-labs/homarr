@@ -4,6 +4,7 @@ import { customJsxTablerIconNames } from "@homarr/custom-widgets/core";
 import { redactSnapshotCss } from "./css";
 
 import { integrationKinds, widgetKinds } from "@homarr/definitions";
+import { normalizeBookmarkUrl } from "@homarr/widgets/bookmarks/bookmark-item";
 import {
   headerBuiltinItemIds,
   headerLogoDisplayValues,
@@ -66,9 +67,43 @@ export const createSnapshotRedactor = () => {
     if (value.startsWith("--")) return `--${cssIdentifier(value.slice(2))}`;
     return replace(value);
   };
+  const bookmarkUrl = (value: string): string => {
+    const normalized = normalizeBookmarkUrl(value);
+    if (!normalized) return "";
+    if (/^https:\/\/redacted_\d+\.invalid\/$/.test(normalized)) return normalized;
+    return `https://${replace(normalized)}.invalid/`;
+  };
+  const tableLayout = (value: string, key: string): string => {
+    try {
+      const parsed: unknown = JSON.parse(value);
+      if (key === "columnOrder" && Array.isArray(parsed))
+        return JSON.stringify(parsed.filter((column): column is string => typeof column === "string").map(field));
+      if (key === "columnWidths" && parsed && typeof parsed === "object" && !Array.isArray(parsed))
+        return JSON.stringify(
+          Object.fromEntries(
+            Object.entries(parsed)
+              .filter(([, width]) => typeof width === "number" && Number.isFinite(width) && width > 0)
+              .map(([column, width]) => [field(column), width]),
+          ),
+        );
+    } catch {
+      /* Invalid stored table layouts use the widget defaults. */
+    }
+    return "";
+  };
   const string = (value: string, key = ""): string => {
     if (value === "") return value;
     if (sensitiveKey.test(key)) return "";
+    // Direct bookmark IDs encode their URL. Retain an inert, consistent identity
+    // so cards, legacy entries and group membership survive anonymization.
+    if (["items", "itemIds", "id"].includes(key) && value.startsWith("url:")) {
+      const url = bookmarkUrl(value.slice(4));
+      if (!url) return "";
+      return `url:${url}`;
+    }
+    if (key === "customUrls") return bookmarkUrl(value);
+    if (key === "requestId" || key === "invalidates") return field(value);
+    if (key === "columnOrder" || key === "columnWidths") return tableLayout(value, key);
     if (displayTextKey.test(key) && !/^redacted[_-]\d+$/.test(value)) return replace(value);
     if (key === "systemId" && value.split(":").length === 2 && !value.includes("/"))
       return value
@@ -157,16 +192,24 @@ export const createSnapshotRedactor = () => {
         parent?: Record<string, unknown>,
         grandparent?: Record<string, unknown>,
         valueKey = "",
+        greatGrandparent?: Record<string, unknown>,
       ) => {
         if (!node || typeof node !== "object") return;
         if (Array.isArray(node)) {
-          for (const child of node) visit(child, parent, grandparent, valueKey);
+          for (const child of node) visit(child, parent, grandparent, valueKey, greatGrandparent);
           return;
         }
         const record = node as Record<string, unknown>;
         const { type, start, end, value } = record;
         if (typeof start === "number" && typeof end === "number") {
           if (type === "StringLiteral" && typeof value === "string") {
+            let jsxAttribute = parent;
+            let jsxElement = grandparent;
+            if (parent?.type === "JSXExpressionContainer") {
+              jsxAttribute = grandparent;
+              jsxElement = greatGrandparent;
+            }
+            if (jsxAttribute?.type !== "JSXAttribute") jsxAttribute = undefined;
             // Object keys and data selectors are structural, not display text.
             const isProperty =
               parent?.key === node ||
@@ -177,7 +220,7 @@ export const createSnapshotRedactor = () => {
               const property = parent.key as { name?: string; value?: string };
               propertyName = property.name ?? property.value ?? "";
             }
-            if (parent?.type === "JSXAttribute") propertyName = (parent.name as { name?: string }).name ?? "";
+            if (jsxAttribute) propertyName = (jsxAttribute.name as { name?: string }).name ?? "";
             if (parent?.type === "BinaryExpression" && ["===", "!==", "==", "!="].includes(String(parent.operator))) {
               let compared = parent.left as Record<string, unknown>;
               if (compared === node) compared = parent.right as Record<string, unknown>;
@@ -185,9 +228,9 @@ export const createSnapshotRedactor = () => {
             }
             let replacement = string(value, propertyName);
             if (isProperty) replacement = field(value);
-            if (parent?.type === "JSXAttribute") {
-              const attribute = (parent.name as { name?: string }).name;
-              const component = (grandparent?.name as { name?: string } | undefined)?.name;
+            if (jsxAttribute) {
+              const attribute = (jsxAttribute.name as { name?: string }).name;
+              const component = (jsxElement?.name as { name?: string } | undefined)?.name;
               if (
                 component === "SubData" &&
                 attribute === "as" &&
@@ -203,15 +246,17 @@ export const createSnapshotRedactor = () => {
               if (attribute === "href") replacement = "https://example.invalid/";
               if (attribute?.startsWith("data-") || attribute?.startsWith("aria-"))
                 replacement = redactAttributeValue(value, attribute);
-              if (attribute === "path")
-                replacement = value
-                  .split(".")
-                  .map((part) => {
-                    if (/^\d+$/.test(part)) return part;
-                    return field(part);
-                  })
-                  .join(".");
             }
+            // The inherited property name also covers conditional expressions
+            // such as path={data.useGpu ? "gpu.usage" : "cpu.usage"}.
+            if (propertyName === "path")
+              replacement = value
+                .split(".")
+                .map((part) => {
+                  if (/^\d+$/.test(part)) return part;
+                  return field(part);
+                })
+                .join(".");
             edits.push({ start, end, text: JSON.stringify(replacement) });
           } else if (
             type === "NumericLiteral" &&
@@ -269,7 +314,7 @@ export const createSnapshotRedactor = () => {
                 if (property === "arguments") childValueKey = memberKey(callee.object) || childValueKey;
               }
             }
-            visit(child, record, parent, childValueKey);
+            visit(child, record, parent, childValueKey, grandparent);
           }
         }
       };
@@ -378,6 +423,13 @@ export const createSnapshotRedactor = () => {
     if (key === "customCssClasses" && Array.isArray(value))
       return value.filter((name): name is string => typeof name === "string").map(cssIdentifier);
     if (key === "content" && typeof value === "string") return richText(value);
+    if (key === "requestCapabilities" && Array.isArray(value))
+      return value.map((capability: unknown) => {
+        const result = redact(capability, "", depth + 1);
+        if (!capability || typeof capability !== "object" || !("id" in capability)) return result;
+        if (!result || typeof result !== "object" || typeof capability.id !== "string") return result;
+        return { ...result, id: field(capability.id) };
+      });
     if (sourceKey.test(key)) {
       if (Array.isArray(value)) return [];
       if (typeof value === "string") return "";
