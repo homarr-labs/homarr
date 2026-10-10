@@ -31,6 +31,7 @@ import { BoardSectionCollapseProvider } from "~/components/board/sections/sectio
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { BoardSelectionProvider } from "~/components/board/selection/board-selection-context";
 import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
+import { BoardSnapshotRegistrar } from "~/components/board/debug/snapshot-registrar";
 import classes from "./_client.module.css";
 
 const APP_SHELL_SIDE_PADDING = 32;
@@ -99,6 +100,7 @@ export const ClientBoard = () => {
           <BoardSetupChecklist />
           <BoardAppUrlDrop />
           <BoardSectionCollapseProvider>
+            <BoardSnapshotRegistrar />
             <BoardGridPortalHost>
               <ScaledBoardCanvas
                 logicalWidth={logicalWidth}

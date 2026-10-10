@@ -4,13 +4,15 @@ import { useReducedMotion } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 
 import { useOptionalBoard } from "@homarr/boards/context";
+import { useBoardReplay } from "@homarr/api/board-replay";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
 const isVideoUrl = (url: string) =>
   supportedVideoFormats.some((format) => url.split(/[?#]/)[0]?.toLowerCase().endsWith(`.${format}`));
 
 export const useIsVideo = (url: string | null | undefined) => {
-  const canDetectContentType = Boolean(url && /^(\/|https?:\/\/)/.test(url));
+  const replay = useBoardReplay();
+  const canDetectContentType = Boolean(!replay && url && /^(\/|https?:\/\/)/.test(url));
   const { data, isError } = useQuery({
     queryKey: ["background-content-type", url],
     enabled: canDetectContentType,
@@ -35,12 +37,13 @@ export const useIsVideo = (url: string | null | undefined) => {
 export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   const board = useOptionalBoard();
   const pathname = usePathname();
+  const replay = useBoardReplay();
   const isVideo = useIsVideo(board?.backgroundImageUrl);
 
   if (!board?.backgroundImageUrl) return {};
 
   // Check if we are on a client board page
-  if (pathname.split("/").length > 3) return {};
+  if (!replay && pathname.split("/").length > 3) return {};
 
   if (isVideo !== false) {
     return {};
