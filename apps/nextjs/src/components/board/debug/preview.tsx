@@ -104,14 +104,14 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
   }, [payload.locale]);
   const viewportWidth = useSyncExternalStore(
     subscribeWidth,
-    () => window.innerWidth,
+    () => document.documentElement.clientWidth || window.innerWidth,
     () => payload.viewport.width,
   );
   let layoutId = payload.viewport.layoutId;
-  if (viewportWidth !== payload.viewport.width)
-    layoutId = getLayoutIdForViewportWidth(payload.board.layouts, viewportWidth);
+  const isCapturedViewport = window.innerWidth === payload.viewport.width;
+  if (!isCapturedViewport) layoutId = getLayoutIdForViewportWidth(payload.board.layouts, viewportWidth);
   useEffect(() => {
-    if (viewportWidth !== payload.viewport.width) return;
+    if (!isCapturedViewport) return;
     // Widgets load lazily, so restore the captured scroll after their canvas
     // settles. User interaction immediately ends restoration.
     const restore = () => window.scrollTo(payload.viewport.scrollX, payload.viewport.scrollY);
@@ -127,7 +127,7 @@ const ReplayBoard = ({ payload, messages }: { payload: BoardSnapshotPayload; mes
       window.clearTimeout(timeout);
       for (const event of userInteractions) window.removeEventListener(event, stop);
     };
-  }, [payload.viewport, viewportWidth]);
+  }, [payload.viewport, viewportWidth, isCapturedViewport]);
   return (
     <SessionContext.Provider value={{ data: null, status: "unauthenticated", update: async () => null }}>
       <SettingsSnapshotProvider value={payload.settings}>

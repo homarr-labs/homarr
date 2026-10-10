@@ -17,6 +17,7 @@ import { commonItemSchema, sectionSchema } from "@homarr/validation/shared";
 import { headerPreferencesSchema } from "@homarr/validation/user";
 
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { matchesContainerFilter } from "@homarr/widgets/docker/filter";
 
 import { createSnapshotRedactor } from "./redact";
 import { snapshotPublicFields } from "./public-fields";
@@ -145,12 +146,16 @@ export const createBoardSnapshot = async ({
   colorScheme: "dark" | "light";
   queryClient: QueryClient;
 }): Promise<BoardSnapshot> => {
-  const redactor = await createBoardRedactor(context.board, context.settings);
-  const { redact } = redactor;
   const queries = queryClient
     .getQueryCache()
     .getAll()
     .filter((query) => isSnapshotQueryKey(query.queryKey) && query.getObserversCount() > 0);
+  const redactor = await createBoardRedactor(
+    context.board,
+    context.settings,
+    queries.map((query) => ({ key: query.queryKey, data: query.state.data })),
+  );
+  const { redact } = redactor;
   const widgetStates = collectBoardSnapshotState();
   const payload = {
     ...(redact({ ...context, board: redactor.board }) as Omit<BoardSnapshotPayload, "queries">),
@@ -244,7 +249,7 @@ export const parseBoardSnapshot = async (
     if (!isSnapshotQueryKey(query.key)) throw new Error("Snapshot contains a non-widget query");
   }
   // Imported files are untrusted, including files marked as redacted.
-  const redactor = await createBoardRedactor(parsed.board, parsed.settings);
+  const redactor = await createBoardRedactor(parsed.board, parsed.settings, parsed.queries);
   const { redact } = redactor;
   const payload = payloadSchema.parse({
     ...(redact({ ...parsed, board: redactor.board }) as BoardSnapshotPayload),
@@ -261,6 +266,7 @@ export const parseBoardSnapshot = async (
 const createBoardRedactor = async (
   board: BoardSnapshotPayload["board"],
   settings: BoardSnapshotPayload["settings"],
+  queries: { key: QueryKey; data?: unknown }[],
 ) => {
   const redactor = createSnapshotRedactor();
   const preserveSchemaFields = (schema: z.ZodType, key = "") => {
@@ -310,7 +316,37 @@ const createBoardRedactor = async (
     items: board.items.map((item) => {
       const definition = definitions[kinds.indexOf(item.kind)];
       if (!definition) throw new Error("Unknown widget definition");
-      return { ...item, options: reduceWidgetOptionsWithDefinition(definition, settings, item.options) };
+      const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
+      if (item.kind !== "dockerContainers") return { ...item, options };
+      const filter = z
+        .object({
+          containerFilter: z.array(z.string()),
+          filterIsWhitelist: z.boolean(),
+          filterCaseSensitive: z.boolean(),
+          filterAllowWildcards: z.boolean(),
+        })
+        .parse(options);
+      // Resolve private patterns before changing names. An exact blacklist also
+      // represents both an empty result and an unfiltered result without sentinels.
+      const excluded = new Set<string>();
+      for (const query of queries) {
+        if (!Array.isArray(query.key[0]) || query.key[0].join(".") !== "docker.getContainers") continue;
+        const result = z.object({ containers: z.array(z.object({ name: z.string() })) }).safeParse(query.data);
+        if (!result.success) continue;
+        for (const container of result.data.containers) {
+          if (!matchesContainerFilter(container.name, filter)) excluded.add(redactor.string(container.name, "name"));
+        }
+      }
+      return {
+        ...item,
+        options: {
+          ...options,
+          containerFilter: [...excluded],
+          filterIsWhitelist: false,
+          filterCaseSensitive: true,
+          filterAllowWildcards: false,
+        },
+      };
     }),
   };
   return { ...redactor, board: resolvedBoard };
