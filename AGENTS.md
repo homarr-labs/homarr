@@ -112,6 +112,20 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
 
+### Issue tracker
+
+Linear is the tracker our agents read and write, through the `linear` MCP server. A Linear
+GitHub integration mirrors user reports in automatically, so read them here rather than on GitHub.
+See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical roles, one label each, all live in Linear. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` + `docs/adr/`. See `docs/agents/domain.md`.
+
 <!-- BEGIN:turborepo-agent-rules -->
 
 # This is NOT the Turborepo you know
