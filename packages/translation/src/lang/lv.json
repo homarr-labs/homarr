@@ -749,7 +749,10 @@
         "selectMultiple": "Atlasīt vairākas",
         "cancelMultiple": "Iziet no vairākkārtējas atlases",
         "customApplication": "Pielāgota lietotne",
-        "application": "Lietotne"
+        "application": "Lietotne",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Izveidot jaunu lietotni",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Logrīka iestatījumos pievienojiet URL vai lietotni"
+      "empty": "Logrīka iestatījumos pievienojiet URL vai lietotni",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Filtrējamie konteineri"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtrēt kā atļauto sarakstu"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Lietotne nav atrasta",
         "description": "Noklikšķiniet <here></here>, lai izveidotu jaunu lietotni",
-        "quickCreate": "Izveidot lietotni uzreiz"
+        "quickCreate": "Izveidot lietotni uzreiz",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nav atlasīta integrācija",
@@ -6151,6 +6171,15 @@
           "notice": "Lai šī lapa pazustu, lūdziet servera administratoram iestatīt servera sākumlapas tāfeli"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

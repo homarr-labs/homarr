@@ -749,7 +749,10 @@
         "selectMultiple": "Mehrere auswählen",
         "cancelMultiple": "Mehrfachauswahl beenden",
         "customApplication": "Benutzerdefinierte Anwendung",
-        "application": "Anwendung"
+        "application": "Anwendung",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Neue App erstellen",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Füge eine URL oder App in den Widget-Einstellungen hinzu"
+      "empty": "Füge eine URL oder App in den Widget-Einstellungen hinzu",
+      "groups": {
+        "label": "",
+        "placeholder": "Neue Kategorie",
+        "add": "Kategorie hinzufügen",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Zu filternde Container"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Als Whitelist filtern"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Keine App gefunden",
         "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
-        "quickCreate": "Jetzt eine App erstellen"
+        "quickCreate": "Jetzt eine App erstellen",
+        "create": "App ersteue"
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
@@ -6151,6 +6171,15 @@
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {
