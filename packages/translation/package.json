@@ -14,6 +14,9 @@
   "exports": {
     ".": "./index.ts",
     "./client": "./src/client/index.ts",
+    "./standalone": "./src/standalone/index.ts",
+    "./standalone/client": "./src/standalone/client.tsx",
+    "./standalone/server": "./src/standalone/server.ts",
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",
     "./languages": "./src/languages.ts",
@@ -35,7 +38,8 @@
     "next": "catalog:",
     "next-intl": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "use-intl": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

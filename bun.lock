@@ -927,6 +927,7 @@
         "next-intl": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
+        "use-intl": "catalog:",
       },
       "devDependencies": {
         "@homarr/tsconfig": "workspace:^0.1.0",
@@ -1360,6 +1361,7 @@
     "adm-zip": "0.6.1",
     "ai": "7.0.56",
     "ajv": "8.18.0",
+    "axios": "1.20.0",
     "assistant-stream": "0.3.34",
     "babel-plugin-react-compiler": "1.0.0",
     "bcrypt": "6.0.0",
@@ -1463,6 +1465,7 @@
     "turbo": "2.11.7",
     "typescript": "7.0.2",
     "undici": "7.29.1",
+    "use-intl": "4.13.1",
     "use-deep-compare-effect": "1.8.1",
     "video.js": "8.23.9",
     "vite": "8.1.4",

@@ -14,6 +14,7 @@
   "exports": {
     ".": "./index.ts",
     "./types": "./src/types.ts",
+    "./object": "./src/object.ts",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
     "./env": "./env.ts"
