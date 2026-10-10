@@ -3141,6 +3141,9 @@
         },
         "showUnmonitored": {
           "label": "Show unmonitored"
+        },
+        "viewMode": {
+          "label": "View"
         }
       },
       "advanced": {
@@ -3149,6 +3152,26 @@
         "eventCount": "{count, plural, one {# event} other {# events}}",
         "loading": "Loading calendar events...",
         "noEvents": "No events in this month"
+      },
+      "view": {
+        "compact": "Compact month",
+        "month": "Month",
+        "week": "Week",
+        "day": "Day",
+        "agenda": "Agenda"
+      },
+      "controls": {
+        "view": "Calendar view",
+        "today": "Today",
+        "previous": "Previous period",
+        "next": "Next period",
+        "noEvents": "No events in this period",
+        "more": "{count} more",
+        "moreLabel": "Show {count} more events",
+        "eventDetails": "Event details",
+        "close": "Close event details",
+        "timeSlot": "Time slot",
+        "weekday": "Weekday"
       }
     },
     "weather": {

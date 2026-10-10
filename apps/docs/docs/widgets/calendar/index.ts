@@ -9,6 +9,12 @@ export const calendarWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
+        name: "View",
+        description: "Shared default view. View menu selections are remembered only in the current browser.",
+        values: "Compact month, Month, Week, Day, Agenda",
+        defaultValue: "Compact month",
+      },
+      {
         name: "Radarr release type",
         description: "Select what type of release date to see.",
         values: "List of: 'In cinemas', 'Digital release', 'Physical release'",

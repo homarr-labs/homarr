@@ -6,6 +6,7 @@ import { radarrReleaseTypes } from "@homarr/integrations/types";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
+import { calendarViews } from "./calendar-view";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
@@ -14,6 +15,13 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
   queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      viewMode: factory.select({
+        defaultValue: "compact",
+        options: calendarViews.map((value) => ({
+          value,
+          label: (t) => t(`widget.calendar.view.${value}`),
+        })),
+      }),
       releaseType: factory.multiSelect({
         defaultValue: ["inCinemas", "digitalRelease"],
         options: radarrReleaseTypes.map((value) => ({

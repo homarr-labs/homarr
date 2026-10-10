@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Box, Container, Flex, HoverCard, Text, useMantineTheme } from "@mantine/core";
+import { Box, Container, HoverCard, Text, useMantineTheme } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
@@ -95,33 +95,27 @@ const NotificationIndicator = ({ events, size, marginTop, visible }: Notificatio
     (color): color is string => Boolean(color),
   );
 
-  if (!visible) return null;
+  if (!visible || notificationEvents.length === 0) return null;
 
   return (
-    <Flex
+    <Box
       mt={marginTop}
       w="fit-content"
       maw="75%"
-      h={size}
-      align={"center"}
-      gap={2}
       p={0}
-      direction={"row"}
-      justify={"center"}
+      style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${Math.min(notificationEvents.length, 3)}, ${size}px)`,
+        gap: 2,
+        justifyContent: "center",
+      }}
       aria-hidden
     >
       {notificationEvents.map((notificationEvent) => {
         return (
-          <Box
-            key={notificationEvent}
-            bg={notificationEvent}
-            h={size}
-            w={size * 2}
-            p={0}
-            style={{ borderRadius: 999 }}
-          />
+          <Box key={notificationEvent} bg={notificationEvent} h={size} w={size} p={0} style={{ borderRadius: 999 }} />
         );
       })}
-    </Flex>
+    </Box>
   );
 };
