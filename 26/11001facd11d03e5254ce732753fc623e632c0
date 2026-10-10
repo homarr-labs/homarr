@@ -1,0 +1,27 @@
+apps/docs/docs/widgets/calendar/index.mdx
+  s_8b1d5a69f175a9::t_9dff7876dedb67 27-30
+packages/translation/src/lang/en.json
+  s_8b1d5a69f175a9::t_76a987a2ba1eb8 3174
+packages/widgets/src/calendar/calendar-display.tsx
+  s_8b1d5a69f175a9::t_c76275a90aca6d 192,334
+packages/widgets/src/calendar/calendar-view.ts
+  s_8b1d5a69f175a9::t_504474723f7157 3-4
+packages/widgets/src/calendar/calender-day.tsx
+  s_8b1d5a69f175a9::t_e67989b5ea8d08 2,98,101,106-111,116,119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2611001facd11d03e5254ce732753fc623e632c0",
+  "prompts": {},
+  "sessions": {
+    "s_8b1d5a69f175a9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ff0d-51af-74b0-a648-dd404bc11429",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
