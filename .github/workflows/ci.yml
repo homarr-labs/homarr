@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      workspace-tasks: ${{ steps.plan.outputs.workspace-tasks }}
+      build-tasks: ${{ steps.plan.outputs.build-tasks }}
       builds-app: ${{ steps.plan.outputs.builds-app }}
       typecheck-matrix: ${{ steps.plan.outputs.typecheck-matrix }}
       has-typechecks: ${{ steps.plan.outputs.has-typechecks }}
@@ -92,15 +92,15 @@ jobs:
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
             scope=()
           fi
-          bun run turbo run lint typecheck build "${scope[@]}" --dry=json > "$RUNNER_TEMP/turbo-plan.json"
+          bun run turbo run typecheck build "${scope[@]}" --dry=json > "$RUNNER_TEMP/turbo-plan.json"
           jq -r '
             [.tasks[] | select(.command != null and .command != "" and .command != "<NONEXISTENT>")] as $tasks |
-            [$tasks[] | select(.task == "lint" or .task == "build") | .taskId] as $workspace |
+            [$tasks[] | select(.task == "build") | .taskId] as $workspace |
             [$tasks[] | select(.task == "typecheck") | .taskId] | sort |
             {include: (to_entries | group_by(.key % 4) | map({
               shard: (.[0].key % 4 + 1 | tostring), tasks: map(.value)
             }))} as $matrix |
-            "workspace-tasks=\($workspace | tojson)",
+            "build-tasks=\($workspace | tojson)",
             "builds-app=\($workspace | index("@homarr/nextjs#build") != null)",
             "typecheck-matrix=\($matrix | tojson)",
             "has-typechecks=\(length > 0)"
@@ -120,6 +120,7 @@ jobs:
       - uses: actions/checkout@v7
         if: "!env.ACT"
         with:
+          fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
       - name: Setup
@@ -127,9 +128,22 @@ jobs:
         with:
           next-cache: "all"
           turbo-cache: "true"
-      - name: Lint and build selected workspaces
+      - name: Lint changed files
         env:
-          TASKS: ${{ needs.validation-plan.outputs.workspace-tasks }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          if [[ -n "$BASE_SHA" ]] && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null &&
+             git diff --quiet "$BASE_SHA...HEAD" -- '.oxlintrc*' '**/.oxlintrc*' '**/oxlint.config.*' \
+               package.json '**/package.json' bun.lock bunfig.toml patches tooling/typescript '**/tsconfig*.json'; then
+            git diff --name-only --diff-filter=ACMR -z "$BASE_SHA...HEAD" -- \
+              '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.mts' '*.cts' \
+              | xargs -0 -r bun x oxlint --no-error-on-unmatched-pattern --
+          else
+            bun run turbo run lint --continue=dependencies-successful --concurrency=2
+          fi
+      - name: Build selected workspaces
+        env:
+          TASKS: ${{ needs.validation-plan.outputs.build-tasks }}
         run: |
           cp .env.example .env
           mapfile -t tasks < <(node -e 'for (const task of JSON.parse(process.env.TASKS)) console.log(task)')
