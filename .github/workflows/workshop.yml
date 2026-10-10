@@ -4,9 +4,10 @@ on:
   pull_request:
     paths:
       - ".github/workflows/workshop.yml"
-      - "tooling/github/**"
+      - "tooling/github/docker-build.sh"
       - "apps/workshop/**"
       - "apps/docs/**"
+      - "tools/motion-reel/three/**"
       - "packages/common/**"
       - "packages/core/**"
       - "packages/custom-widgets/**"
@@ -24,13 +25,21 @@ on:
       - "bun.lock"
       - "bunfig.toml"
       - "turbo.json"
+      - "!packages/**/*.spec.ts"
+      - "!packages/**/*.spec.tsx"
+      - "!packages/**/*.test.ts"
+      - "!packages/**/*.test.tsx"
+      - "!packages/**/__tests__/**"
+      - "!packages/**/*.md"
+      - "!packages/db/migrations/seed.ts"
   push:
     branches: [dev, main]
     paths:
       - ".github/workflows/workshop.yml"
-      - "tooling/github/**"
+      - "tooling/github/docker-build.sh"
       - "apps/workshop/**"
       - "apps/docs/**"
+      - "tools/motion-reel/three/**"
       - "packages/common/**"
       - "packages/core/**"
       - "packages/custom-widgets/**"
@@ -48,6 +57,13 @@ on:
       - "bun.lock"
       - "bunfig.toml"
       - "turbo.json"
+      - "!packages/**/*.spec.ts"
+      - "!packages/**/*.spec.tsx"
+      - "!packages/**/*.test.ts"
+      - "!packages/**/*.test.tsx"
+      - "!packages/**/__tests__/**"
+      - "!packages/**/*.md"
+      - "!packages/db/migrations/seed.ts"
 
   workflow_dispatch:
 

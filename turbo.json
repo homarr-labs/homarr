@@ -49,7 +49,6 @@
       "outputLogs": "new-only"
     },
     "lint": {
-      "dependsOn": ["^topo"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"]
     },
     "typecheck": {

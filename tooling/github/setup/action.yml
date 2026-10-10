@@ -8,6 +8,12 @@ inputs:
   turbo-cache:
     description: Restore local Turbo artifacts when signed remote caching is not configured
     default: "false"
+  typecheck-cache:
+    description: Reuse TypeScript incremental state when a Turbo task misses cache
+    default: "false"
+  typecheck-cache-scope:
+    description: Isolate incremental snapshots for parallel typecheck shards
+    default: "default"
 
 runs:
   using: composite
@@ -48,9 +54,20 @@ runs:
       uses: actions/cache@v5
       with:
         path: .turbo/cache
-        key: ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        key: ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ inputs.typecheck-cache-scope }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
         restore-keys: |
-          ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-
+          ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ inputs.typecheck-cache-scope }}-${{ hashFiles('bun.lock') }}-
+
+    - name: Restore TypeScript incremental state
+      if: inputs.typecheck-cache == 'true' && !env.ACT
+      uses: actions/cache@v5
+      with:
+        path: |
+          apps/*/node_modules/.cache/tsbuildinfo.json
+          packages/*/node_modules/.cache/tsbuildinfo.json
+        key: ${{ env.TURBO_PLATFORM }}-typecheck-${{ inputs.typecheck-cache-scope }}-${{ hashFiles('bun.lock', 'tooling/typescript/**', 'apps/*/tsconfig*.json', 'packages/*/tsconfig*.json') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ env.TURBO_PLATFORM }}-typecheck-${{ inputs.typecheck-cache-scope }}-${{ hashFiles('bun.lock', 'tooling/typescript/**', 'apps/*/tsconfig*.json', 'packages/*/tsconfig*.json') }}-
 
     - name: Restore application compiler cache
       if: (inputs.next-cache == 'nextjs' || inputs.next-cache == 'all') && !env.ACT
