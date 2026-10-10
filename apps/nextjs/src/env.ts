@@ -28,6 +28,7 @@ export const env = createEnv({
     UNSAFE_ENABLE_MOCK_INTEGRATION: createBooleanSchema(false),
     DEMO_MODE: createBooleanSchema(false),
     DEMO_READ_ONLY: createBooleanSchema(true),
+    ENABLE_BOARD_DEBUG: createBooleanSchema(false),
     HOMARR_WEBSITE_URL: publicHttpUrl("HOMARR_WEBSITE_URL").default("https://homarr.dev"),
     WORKSHOP_API_URL: publicHttpUrl("WORKSHOP_API_URL").optional(),
     WORKSHOP_WEB_URL: publicHttpUrl("WORKSHOP_WEB_URL").optional(),

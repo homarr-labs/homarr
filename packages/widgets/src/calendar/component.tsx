@@ -9,6 +9,9 @@ import { getQueryKey } from "@trpc/react-query";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
+import { useBoardSnapshotState } from "@homarr/api/board-snapshot";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
@@ -32,7 +35,19 @@ import { CalendarEventList } from "./calendar-event-list";
 import classes from "./component.module.css";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
-  const [month, setMonth] = useState(() => new Date());
+  const queryClient = useQueryClient();
+  const isReplay = useBoardReplay();
+  const [month, setMonth] = useState(() => {
+    if (isReplay) {
+      const captured = queryClient.getQueryData<{ month: number; year: number }>([
+        "board-debug-calendar",
+        props.itemId,
+      ]);
+      if (captured) return new Date(captured.year, captured.month, 1);
+    }
+    return new Date();
+  });
+  useBoardSnapshotState(["board-debug-calendar", props.itemId], { month: month.getMonth(), year: month.getFullYear() });
   const runtimeInput = {
     integrationIds: props.integrationIds,
     month: month.getMonth(),

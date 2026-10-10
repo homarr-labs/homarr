@@ -6,6 +6,7 @@ import { localeCookieKey } from "@homarr/definitions/cookie";
 import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
+import { env } from "~/env";
 
 let isOnboardingFinished = false;
 let onboardingStepPromise: Promise<string> | null = null;
@@ -44,6 +45,13 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split("/").filter(Boolean);
   const routeSegments = supportedLanguages.includes(segments[0] as SupportedLanguage) ? segments.slice(1) : segments;
+  // Never accept a caller-supplied preview-provider override on normal boards.
+  request.headers.delete("x-homarr-board-debug-preview");
+  const isBoardDebugPreview = routeSegments.join("/") === "debug/board/preview";
+  if (routeSegments[0] === "debug" && routeSegments[1] === "board" && !env.ENABLE_BOARD_DEBUG)
+    return new NextResponse("Not found", { status: 404 });
+  if (isBoardDebugPreview) request.headers.set("x-homarr-board-debug-preview", "1");
+
   const isOnboardingAccessRoute =
     (routeSegments.length === 1 && routeSegments[0] === "init") ||
     (routeSegments.length === 2 && routeSegments[0] === "auth" && routeSegments[1] === "login");
@@ -71,7 +79,16 @@ export async function proxy(request: NextRequest) {
   request.headers.set("accept-language", "");
 
   const next = createI18nMiddleware(defaultLocale);
-  return next(request);
+  const response = next(request);
+  if (isBoardDebugPreview) {
+    // Replay can load application chunks, but cannot call APIs, subscribe,
+    // submit forms, load external resources or register a service worker.
+    response.headers.set(
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'none'; frame-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'",
+    );
+  }
+  return response;
 }
 
 export const config = {
