@@ -1,6 +1,21 @@
 import type { BoardSnapshotPayload } from "./snapshot";
 
-export const installReplayStorage = (payload: BoardSnapshotPayload, capturedAt: string) => {
+const createMemoryStorage = (values = new Map<string, string>()): Storage => ({
+  get length() {
+    return values.size;
+  },
+  clear: () => values.clear(),
+  getItem: (key) => values.get(String(key)) ?? null,
+  setItem: (key, value) => {
+    values.set(String(key), String(value));
+  },
+  removeItem: (key) => {
+    values.delete(String(key));
+  },
+  key: (index) => [...values.keys()][index] ?? null,
+});
+
+export const installReplayStorage = (payload: Pick<BoardSnapshotPayload, "localStates">, capturedAt: string) => {
   const values = new Map<string, string>();
   for (const state of payload.localStates) {
     const stored = structuredClone(state.value) as { value?: { deadline?: number; alerts?: unknown } };
@@ -12,19 +27,6 @@ export const installReplayStorage = (payload: BoardSnapshotPayload, capturedAt: 
   }
   // The preview has its own Window. Widget hooks can use their usual storage
   // API, while every imported snapshot starts with isolated in-memory state.
-  const storage: Storage = {
-    get length() {
-      return values.size;
-    },
-    clear: () => values.clear(),
-    getItem: (key) => values.get(key) ?? null,
-    setItem: (key, value) => {
-      values.set(key, value);
-    },
-    removeItem: (key) => {
-      values.delete(key);
-    },
-    key: (index) => [...values.keys()][index] ?? null,
-  };
-  Object.defineProperty(window, "localStorage", { configurable: true, value: storage });
+  Object.defineProperty(window, "localStorage", { configurable: true, value: createMemoryStorage(values) });
+  Object.defineProperty(window, "sessionStorage", { configurable: true, value: createMemoryStorage() });
 };
