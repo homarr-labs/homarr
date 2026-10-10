@@ -145,7 +145,7 @@ const BeszelAreaChart = memo(
     const mergedYAxis = useMemo(() => {
       const base = {
         ...yAxisBase,
-        width: 56,
+        width: "auto" as const,
         tickMargin: 2,
         tickFormatter: yAxisFormatter,
         ...yAxisPropsOverride,
