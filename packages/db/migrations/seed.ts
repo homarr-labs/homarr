@@ -803,7 +803,7 @@ const buildDemoWidgets = (
   },
   // Everyday tools
   { kind: "stockPrice", xOffset: 0, yOffset: 19, width: 2, height: 2, needsIntegration: false },
-  { kind: "releases", xOffset: 2, yOffset: 19, width: 2, height: 2, needsIntegration: false },
+  { kind: "releases", xOffset: 2, yOffset: 19, width: 2, height: 2, needsIntegration: true },
   {
     kind: "timetable",
     xOffset: 4,

@@ -283,6 +283,26 @@ describe("onboard.completeSetup", () => {
     ).toMatchObject({ width: 2, height: 2 });
   });
 
+  it("does not automatically place integration widgets whose default config is skipped", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    await seedBoardAsync(db, { boardId: "target" });
+    await db.insert(integrations).values({
+      id: "sonarr",
+      name: "Sonarr",
+      url: "http://sonarr:8989",
+      kind: "sonarr",
+    });
+    const input = completionInput("target");
+    input.selectedIntegrationIds = ["sonarr"];
+
+    await createCaller(db, claimToken).completeSetup(input);
+
+    // Releases supports Sonarr, but its default config is skipped, so only the other Sonarr widgets are placed.
+    expect(await db.query.items.findFirst({ where: eq(items.kind, "mediaMissing") })).toBeDefined();
+    expect(await db.query.items.findFirst({ where: eq(items.kind, "releases") })).toBeUndefined();
+  });
+
   it("requires an exact board id when more than one board exists", async () => {
     const db = createDb();
     const claimToken = await seedOnboardingAsync(db);

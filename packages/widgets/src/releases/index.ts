@@ -2,7 +2,7 @@ import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
-import { releaseProviderKinds } from "@homarr/definitions";
+import { getWidgetIntegrationConfig, releaseProviderKinds } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
@@ -18,6 +18,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
   queryKey: [["widget", "releases", "getLatest"]],
   queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { itemId: scope.itemId }),
   refetchInterval: null,
+  ...getWidgetIntegrationConfig("releases"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       newReleaseWithin: factory.text({

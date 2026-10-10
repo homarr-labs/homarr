@@ -1918,18 +1918,19 @@ const Review = (props: StudioSectionProps) => {
   );
 };
 
-const getPreviewWidgetKinds = (props: StudioSectionProps) => [
-  ...new Set([
-    ...generalWidgets,
-    ...props.drafts.filter(isIntegrationDraftComplete).flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
-    ...props.discoveredApps
-      .filter((app) => props.selectedAppIds.includes(app.sourceId))
-      .flatMap((app) => {
-        if (!app.widgetKind) return [];
-        return [app.widgetKind];
-      }),
-  ]),
-];
+const getPreviewWidgetKinds = (props: StudioSectionProps) =>
+  [
+    ...new Set([
+      ...generalWidgets,
+      ...props.drafts.filter(isIntegrationDraftComplete).flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
+      ...props.discoveredApps
+        .filter((app) => props.selectedAppIds.includes(app.sourceId))
+        .flatMap((app) => {
+          if (!app.widgetKind) return [];
+          return [app.widgetKind];
+        }),
+    ]),
+  ].filter((kind) => !getDefaultWidgetConfig(kind).skip);
 
 const getPreviewAppCount = (props: StudioSectionProps) =>
   props.drafts.filter(isIntegrationDraftComplete).length +
