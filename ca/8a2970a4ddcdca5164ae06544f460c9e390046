@@ -1,0 +1,33 @@
+apps/docs/docs/widgets/calendar/index.ts
+  s_59ffa5bfdcd3ba::t_4c767a994bcbff 13
+packages/widgets/src/calendar/calendar-display.tsx
+  s_59ffa5bfdcd3ba::t_f3a32400aec582 83-86,141,302,312
+packages/widgets/src/calendar/calendar-schedule-events.ts
+  s_59ffa5bfdcd3ba::t_0fa0f89ea7a0c3 14-21,30-34,46
+packages/widgets/src/calendar/component.module.css
+  s_8b1d5a69f175a9::t_38574282073a71 91-97,99-100,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ca8a2970a4ddcdca5164ae06544f460c9e390046",
+  "prompts": {},
+  "sessions": {
+    "s_59ffa5bfdcd3ba": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fbb8-1651-7d42-8527-b8ebdc368014",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8b1d5a69f175a9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ff0d-51af-74b0-a648-dd404bc11429",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
