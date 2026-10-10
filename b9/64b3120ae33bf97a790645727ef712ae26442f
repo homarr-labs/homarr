@@ -1,0 +1,112 @@
+bun.lock
+  h_d6e478ca18e517 360-364,465,589
+packages/api/package.json
+  h_d6e478ca18e517 11,74-78
+packages/api/src/backup-runtime/archive.ts
+  h_d6e478ca18e517 1-254
+packages/api/src/backup-runtime/contracts.ts
+  h_d6e478ca18e517 1-71
+packages/api/src/backup-runtime/create-legacy-fixture.mjs
+  h_d6e478ca18e517 1-89
+packages/api/src/backup-runtime/crypto.ts
+  h_d6e478ca18e517 1-60
+packages/api/src/backup-runtime/index.ts
+  h_d6e478ca18e517 1-162
+packages/api/src/backup-runtime/inspection.ts
+  h_d6e478ca18e517 1-92
+packages/api/src/backup-runtime/inventory.ts
+  h_d6e478ca18e517 1-61
+packages/api/src/backup-runtime/restore.test.ts
+  h_d6e478ca18e517 1-703
+packages/api/src/backup-runtime/sqlite.ts
+  h_d6e478ca18e517 1-18
+packages/api/src/backup-runtime/tsconfig.json
+  h_d6e478ca18e517 1-15
+packages/core/package.json
+  h_d6e478ca18e517 51
+packages/core/src/infrastructure/certificates/hostnames/db/schema.ts
+  h_d6e478ca18e517 9-11
+packages/core/src/infrastructure/db/drivers/index.ts
+  h_d6e478ca18e517 1-3,8,11-13,17-18,20-23,25
+packages/core/src/infrastructure/db/drivers/postgresql.ts
+  h_d6e478ca18e517 1-3,7-12,14-15
+packages/core/src/infrastructure/db/drivers/shared.ts
+  h_d6e478ca18e517 8-9,11
+packages/core/src/infrastructure/db/drivers/sqlite.ts
+  h_d6e478ca18e517 1-4,6,9-54
+packages/core/src/infrastructure/db/index.ts
+  h_d6e478ca18e517 4-6,10
+packages/core/src/infrastructure/db/mapping.ts
+  h_d6e478ca18e517 1,3-6
+packages/core/src/infrastructure/db/scope.ts
+  h_d6e478ca18e517 1-282
+packages/db/collection.ts
+  h_d6e478ca18e517 2,4,9-11,17-18,35,50,71-72
+packages/db/copied-sqlite.ts
+  h_d6e478ca18e517 1-290
+packages/db/driver.ts
+  h_d6e478ca18e517 1-2,8
+packages/db/index.ts
+  h_d6e478ca18e517 1-3,5-7,11-16,18,20-22,24-87
+packages/db/migrations/compatibility.ts
+  h_d6e478ca18e517 1-24
+packages/db/migrations/custom/0000_release_widget_provider_to_options.ts
+  h_d6e478ca18e517 8,11
+packages/db/migrations/custom/0001_opnsense_credentials.ts
+  h_d6e478ca18e517 3,12
+packages/db/migrations/custom/0002_app_widget_show_description_tooltip_to_display_mode.ts
+  h_d6e478ca18e517 5,12
+packages/db/migrations/custom/0003_remove_widget_only_integrations.ts
+  h_d6e478ca18e517 5,36
+packages/db/migrations/custom/0004_unify_sections_and_gutters.ts
+  h_d6e478ca18e517 12-13,385,389,400,404,424,431,442,449,464,471,481,485,492,499,512,516,523,527
+packages/db/migrations/custom/run-custom.ts
+  h_d6e478ca18e517 1
+packages/db/migrations/postgresql/migrate.ts
+  h_d6e478ca18e517 1-11
+packages/db/migrations/run-seed.ts
+  h_d6e478ca18e517 1
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 21-22,29-38,54,62,179,235-243,252-260,267,286,302,383,436,455,891-900,904-919,1118,1149
+packages/db/migrations/sqlite/migrate.ts
+  h_d6e478ca18e517 1-2,4,6-18
+packages/db/package.json
+  h_d6e478ca18e517 65
+packages/db/proxy-reader.ts
+  h_d6e478ca18e517 2,4,6,8-12,14-18,20-22,24-29,32-50,52-53,58,60-62,65-68,70-71,73-75
+packages/db/queries/group.ts
+  h_d6e478ca18e517 4,7
+packages/db/queries/item.ts
+  h_d6e478ca18e517 6,12
+packages/db/queries/server-setting.ts
+  h_d6e478ca18e517 8,35,59,72,100
+packages/db/queries/widget-placement.ts
+  h_d6e478ca18e517 13,39
+packages/db/runtime.spec.ts
+  h_d6e478ca18e517 1-671
+packages/db/runtime.ts
+  h_d6e478ca18e517 1-337
+packages/db/schema/index.ts
+  h_d6e478ca18e517 1,3,11-15
+packages/db/test/create-legacy-copy-fixture.mjs
+  h_d6e478ca18e517 1-99
+packages/db/transactions.ts
+  h_d6e478ca18e517 4,17-21
+packages/db/trusted-hostnames.ts
+  h_d6e478ca18e517 1-29
+packages/db/tsconfig.persistence.json
+  h_d6e478ca18e517 1-9
+packages/db/tsconfig.resources.json
+  h_d6e478ca18e517 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b964b3120ae33bf97a790645727ef712ae26442f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
