@@ -10,7 +10,6 @@
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./board-server": "./src/board-server.ts",
-    "./board-replay": "./src/board-replay.tsx",
     "./query-cache": "./src/query-cache.ts",
     "./server-settings-server": "./src/server-settings-server.ts",
     "./user-server": "./src/user-server.ts",
