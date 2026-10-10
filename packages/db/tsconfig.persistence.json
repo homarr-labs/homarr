@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "types": ["node", "bun"]
+  },
+  "include": ["runtime.ts", "runtime.spec.ts", "driver.ts", "collection.ts", "transactions.ts", "index.ts", "proxy-reader.ts", "queries/*.ts", "migrations/seed.ts", "migrations/run-seed.ts", "migrations/sqlite/migrate.ts", "migrations/postgresql/migrate.ts", "migrations/custom/run-custom.ts"],
+  "exclude": ["node_modules", "queries/*.spec.ts"]
+}

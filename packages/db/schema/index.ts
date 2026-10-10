@@ -1,4 +1,6 @@
+import { is } from "drizzle-orm";
 import type { InferSelectModel } from "drizzle-orm";
+import { PgDatabase } from "drizzle-orm/pg-core";
 
 import { createSchema } from "@homarr/core/infrastructure/db";
 
@@ -6,6 +8,11 @@ import * as pgSchema from "./postgresql";
 import * as sqliteSchema from "./sqlite";
 
 export type PostgreSqlSchema = typeof pgSchema;
+export type SqliteSchema = typeof sqliteSchema;
+export { pgSchema as postgresqlSchema, sqliteSchema };
+
+export const getSchemaForDatabase = (database: object): SqliteSchema =>
+  is(database, PgDatabase) ? (pgSchema as unknown as SqliteSchema) : sqliteSchema;
 
 export const schema = createSchema({
   "better-sqlite3": () => sqliteSchema,

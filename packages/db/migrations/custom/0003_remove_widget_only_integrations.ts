@@ -2,7 +2,7 @@ import SuperJSON from "superjson";
 
 import { eq, inArray } from "../..";
 import type { Database } from "../..";
-import { integrationItems, integrations, items } from "../../schema";
+import { getSchemaForDatabase } from "../../schema";
 
 const removedIntegrationKinds = [
   "github",
@@ -33,6 +33,7 @@ const isReleaseProviderKind = (kind: RemovedIntegrationKind): kind is (typeof re
   releaseProviderKinds.some((provider) => provider === kind);
 
 export async function migrateWidgetOnlyIntegrationsToOptionsAsync(db: Database) {
+  const { integrationItems, integrations, items } = getSchemaForDatabase(db);
   const oldIntegrations = await db.query.integrations.findMany({
     columns: { id: true, kind: true, url: true },
   });

@@ -1,9 +1,6 @@
-import { dbEnv } from "./env";
+type DbMappingInput = { "better-sqlite3": () => unknown; "node-postgres": () => unknown };
 
-type DbMappingInput = Record<typeof dbEnv.DRIVER, () => unknown>;
-
-export const createDbMapping = <TInput extends DbMappingInput>(input: TInput) => {
-  // The DRIVER can be undefined when validation of env vars is skipped
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  return input[dbEnv.DRIVER ?? "better-sqlite3"]() as ReturnType<TInput["better-sqlite3"]>;
-};
+export const createDbMapping = <TInput extends DbMappingInput>(
+  input: TInput,
+  engine: "sqlite" | "postgresql" = "sqlite",
+) => input[engine === "sqlite" ? "better-sqlite3" : "node-postgres"]() as ReturnType<TInput["better-sqlite3"]>;

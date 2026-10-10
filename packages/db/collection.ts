@@ -1,18 +1,21 @@
 /* eslint-disable import/namespace -- Schema tables are intentionally selected by typed runtime keys. */
+import { is } from "drizzle-orm";
 import type { InferInsertModel } from "drizzle-orm";
+import { PgDatabase } from "drizzle-orm/pg-core";
 
 import { objectEntries } from "@homarr/common";
-import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 import type { HomarrDatabase, HomarrDatabasePostgresql } from "./driver";
-import * as schema from "./schema";
+import { db as configuredDatabase } from "./index";
+import type * as schema from "./schema";
+import { getSchemaForDatabase } from "./schema";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;
 }[keyof typeof schema];
 
-export function isPostgresql(): boolean {
-  return dbEnv.DRIVER === "node-postgres";
+export function isPostgresql(database: object = configuredDatabase): boolean {
+  return is(database, PgDatabase);
 }
 
 export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
@@ -29,6 +32,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
   return {
     ...context,
     insertAll: (db: HomarrDatabase) => {
+      const schema = getSchemaForDatabase(db);
       db.transaction((transaction) => {
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
@@ -43,6 +47,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
       });
     },
     insertAllAsync: async (db: HomarrDatabasePostgresql) => {
+      const schema = getSchemaForDatabase(db);
       await db.transaction(async (transaction) => {
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
@@ -63,16 +68,8 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
   return {
     ...collection,
     insertAllAsync: async (db: HomarrDatabase) => {
-      switch (dbEnv.DRIVER) {
-        case "node-postgres":
-          await insertAllAsync(db as unknown as HomarrDatabasePostgresql);
-          return;
-        default:
-          // For better-sqlite3, we need to use the synchronous insertAll method
-          // default assumes better-sqlite3. It's original implementation.
-          insertAll(db);
-          break;
-      }
+      if (isPostgresql(db)) await insertAllAsync(db as unknown as HomarrDatabasePostgresql);
+      else insertAll(db);
     },
   };
 };

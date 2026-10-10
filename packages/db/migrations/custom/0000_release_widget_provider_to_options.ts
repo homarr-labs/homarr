@@ -5,9 +5,10 @@ import { releaseProviderKinds } from "@homarr/definitions";
 
 import { eq } from "../..";
 import type { Database } from "../..";
-import { items } from "../../schema";
+import { getSchemaForDatabase } from "../../schema";
 
 export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
+  const { items } = getSchemaForDatabase(db);
   const existingItems = await db.query.items.findMany({
     where: (items, { eq }) => eq(items.kind, "releases"),
   });

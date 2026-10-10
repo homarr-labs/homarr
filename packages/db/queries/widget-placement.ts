@@ -10,7 +10,7 @@ import {
 import type { WidgetKind } from "@homarr/definitions";
 
 import type { Database } from "..";
-import { integrationItems, itemLayouts, items } from "../schema";
+import { getSchemaForDatabase } from "../schema";
 import type { Integration } from "../schema";
 
 const widgetConfigMap = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
@@ -36,6 +36,7 @@ const placeWidgetAsync = async (
   options?: string,
   size?: { width: number; height: number },
 ) => {
+  const { integrationItems, itemLayouts, items } = getSchemaForDatabase(db);
   const boardId = contexts.at(0)?.boardId;
   if (!boardId) return;
 

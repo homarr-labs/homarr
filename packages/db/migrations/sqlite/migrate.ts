@@ -1,29 +1,19 @@
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-
-import { createSharedDbConfig, createSqliteDb } from "@homarr/core/infrastructure/db";
-
-import * as sqliteSchema from "../../schema/sqlite";
-import { applyCustomMigrationsAsync } from "../custom";
+import { createPersistenceRuntime } from "../../runtime";
+import type { PersistenceConfig } from "../../runtime";
 import { seedDataAsync } from "../seed";
+import type { SeedOptions } from "../seed";
 
-const migrationsFolder = process.argv[2] ?? ".";
-
-const migrateAsync = async () => {
-  const config = createSharedDbConfig(sqliteSchema);
-  const db = createSqliteDb(config);
-
-  migrate(db, { migrationsFolder });
-
-  await seedDataAsync(db);
-  await applyCustomMigrationsAsync(db);
+export const migrateSqliteAsync = async (
+  config: Extract<PersistenceConfig, { engine: "sqlite" }>,
+  freshSeedOptions?: SeedOptions,
+) => {
+  const runtime = createPersistenceRuntime(config);
+  try {
+    await runtime.openAsync();
+    await runtime.migrateAsync({
+      initializeFreshAsync: freshSeedOptions ? (database) => seedDataAsync(database, freshSeedOptions) : undefined,
+    });
+  } finally {
+    await runtime.closeAsync();
+  }
 };
-
-migrateAsync()
-  .then(() => {
-    console.log("Migration complete");
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.log("Migration failed", err);
-    process.exit(1);
-  });

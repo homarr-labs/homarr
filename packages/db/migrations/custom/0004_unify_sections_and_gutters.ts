@@ -9,7 +9,8 @@ import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 import { and, eq, handleTransactionsAsync, inArray } from "../..";
 import type { Database } from "../..";
 import type { HomarrDatabase } from "../../driver";
-import { itemLayouts, layouts, sectionCollapseStates, sectionLayouts, sections } from "../../schema";
+import { getSchemaForDatabase } from "../../schema";
+import type { sectionLayouts, sections } from "../../schema";
 
 interface MigrationPlacement {
   id: string;
@@ -381,9 +382,11 @@ const executeBoardMigrationOperationsAsync = async (db: Database, operations: re
 
 const insertSectionsOperation = (values: (typeof sections.$inferInsert)[]): MigrationOperation => ({
   async applyAsync(db) {
+    const { sections } = getSchemaForDatabase(db);
     await db.insert(sections).values(values);
   },
   applySync(db) {
+    const { sections } = getSchemaForDatabase(db);
     db.insert(sections).values(values).run();
   },
 });
@@ -394,9 +397,11 @@ const updateLayoutGuttersOperation = (
   rightGutterColumnCount: number,
 ): MigrationOperation => ({
   async applyAsync(db) {
+    const { layouts } = getSchemaForDatabase(db);
     await db.update(layouts).set({ leftGutterColumnCount, rightGutterColumnCount }).where(eq(layouts.id, layoutId));
   },
   applySync(db) {
+    const { layouts } = getSchemaForDatabase(db);
     db.update(layouts).set({ leftGutterColumnCount, rightGutterColumnCount }).where(eq(layouts.id, layoutId)).run();
   },
 });
@@ -416,12 +421,14 @@ const persistPlacementOperations = (
     if (placement.type === "item") {
       return {
         async applyAsync(db) {
+          const { itemLayouts } = getSchemaForDatabase(db);
           await db
             .update(itemLayouts)
             .set({ ...values, sectionId })
             .where(and(eq(itemLayouts.itemId, placement.id), eq(itemLayouts.layoutId, layoutId)));
         },
         applySync(db) {
+          const { itemLayouts } = getSchemaForDatabase(db);
           db.update(itemLayouts)
             .set({ ...values, sectionId })
             .where(and(eq(itemLayouts.itemId, placement.id), eq(itemLayouts.layoutId, layoutId)))
@@ -432,12 +439,14 @@ const persistPlacementOperations = (
 
     return {
       async applyAsync(db) {
+        const { sectionLayouts } = getSchemaForDatabase(db);
         await db
           .update(sectionLayouts)
           .set({ ...values, parentSectionId: sectionId })
           .where(and(eq(sectionLayouts.sectionId, placement.id), eq(sectionLayouts.layoutId, layoutId)));
       },
       applySync(db) {
+        const { sectionLayouts } = getSchemaForDatabase(db);
         db.update(sectionLayouts)
           .set({ ...values, parentSectionId: sectionId })
           .where(and(eq(sectionLayouts.sectionId, placement.id), eq(sectionLayouts.layoutId, layoutId)))
@@ -452,12 +461,14 @@ const updateSectionLayoutOperation = (
   values: typeof sectionLayouts.$inferInsert,
 ): MigrationOperation => ({
   async applyAsync(db) {
+    const { sectionLayouts } = getSchemaForDatabase(db);
     await db
       .update(sectionLayouts)
       .set(values)
       .where(and(eq(sectionLayouts.sectionId, sectionId), eq(sectionLayouts.layoutId, layoutId)));
   },
   applySync(db) {
+    const { sectionLayouts } = getSchemaForDatabase(db);
     db.update(sectionLayouts)
       .set(values)
       .where(and(eq(sectionLayouts.sectionId, sectionId), eq(sectionLayouts.layoutId, layoutId)))
@@ -467,21 +478,25 @@ const updateSectionLayoutOperation = (
 
 const insertSectionLayoutOperation = (values: typeof sectionLayouts.$inferInsert): MigrationOperation => ({
   async applyAsync(db) {
+    const { sectionLayouts } = getSchemaForDatabase(db);
     await db.insert(sectionLayouts).values(values);
   },
   applySync(db) {
+    const { sectionLayouts } = getSchemaForDatabase(db);
     db.insert(sectionLayouts).values(values).run();
   },
 });
 
 const updateCollapseStateOperation = (sectionId: string, userId: string, collapsed: boolean): MigrationOperation => ({
   async applyAsync(db) {
+    const { sectionCollapseStates } = getSchemaForDatabase(db);
     await db
       .update(sectionCollapseStates)
       .set({ collapsed })
       .where(and(eq(sectionCollapseStates.sectionId, sectionId), eq(sectionCollapseStates.userId, userId)));
   },
   applySync(db) {
+    const { sectionCollapseStates } = getSchemaForDatabase(db);
     db.update(sectionCollapseStates)
       .set({ collapsed })
       .where(and(eq(sectionCollapseStates.sectionId, sectionId), eq(sectionCollapseStates.userId, userId)))
@@ -494,18 +509,22 @@ const updateSectionOperation = (
   values: Partial<typeof sections.$inferInsert>,
 ): MigrationOperation => ({
   async applyAsync(db) {
+    const { sections } = getSchemaForDatabase(db);
     await db.update(sections).set(values).where(eq(sections.id, sectionId));
   },
   applySync(db) {
+    const { sections } = getSchemaForDatabase(db);
     db.update(sections).set(values).where(eq(sections.id, sectionId)).run();
   },
 });
 
 const deleteSectionsOperation = (sectionIds: string[]): MigrationOperation => ({
   async applyAsync(db) {
+    const { sections } = getSchemaForDatabase(db);
     await db.delete(sections).where(inArray(sections.id, sectionIds));
   },
   applySync(db) {
+    const { sections } = getSchemaForDatabase(db);
     db.delete(sections).where(inArray(sections.id, sectionIds)).run();
   },
 });

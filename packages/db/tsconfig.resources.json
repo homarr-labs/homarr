@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.persistence.json",
+  "include": ["runtime.ts", "runtime.spec.ts", "driver.ts", "collection.ts", "transactions.ts", "index.ts", "proxy-reader.ts", "queries/group.ts", "queries/server-setting.ts", "queries/widget-placement.ts", "migrations/seed.ts", "migrations/run-seed.ts", "migrations/sqlite/migrate.ts", "migrations/postgresql/migrate.ts", "migrations/custom/run-custom.ts"],
+  "exclude": ["node_modules"]
+}

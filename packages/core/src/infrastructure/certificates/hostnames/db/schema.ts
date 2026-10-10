@@ -6,3 +6,6 @@ export const schema = createSchema({
   "better-sqlite3": () => sqlite,
   "node-postgres": () => postgresql,
 });
+
+export const getTrustedHostnameSchema = (engine: "sqlite" | "postgresql") =>
+  engine === "sqlite" ? sqlite : postgresql;

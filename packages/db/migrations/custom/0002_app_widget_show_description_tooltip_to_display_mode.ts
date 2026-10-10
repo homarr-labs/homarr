@@ -2,13 +2,14 @@ import SuperJSON from "superjson";
 
 import { eq } from "../..";
 import type { Database } from "../..";
-import { items } from "../../schema";
+import { getSchemaForDatabase } from "../../schema";
 
 /**
  * To support showing the description in the widget itself we replaced
  * the tooltip show option with display mode.
  */
 export async function migrateAppWidgetShowDescriptionTooltipToDisplayModeAsync(db: Database) {
+  const { items } = getSchemaForDatabase(db);
   const existingAppItems = await db.query.items.findMany({
     where: (table, { eq }) => eq(table.kind, "app"),
   });

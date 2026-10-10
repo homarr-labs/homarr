@@ -18,37 +18,24 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database, InferInsertModel } from "..";
 import { eq, inArray } from "..";
-import { getMaxGroupPositionAsync, placeAllWidgetsAsync } from "../queries";
+import { getMaxGroupPositionAsync } from "../queries/group";
+import { placeAllWidgetsAsync } from "../queries/widget-placement";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,
   updateServerSettingByKeyAsync,
 } from "../queries/server-setting";
 
-import {
-  apps,
-  boards,
-  customWidgetDefinitions,
-  groupMembers,
-  groupPermissions,
-  groups,
-  integrationItems,
-  integrations,
-  itemLayouts,
-  items,
-  layouts,
-  onboarding,
-  searchEngines,
-  sections,
-  sectionLayouts,
-  users,
-} from "../schema";
-import type { Integration } from "../schema";
+import { getSchemaForDatabase } from "../schema";
+import type { Integration, layouts } from "../schema";
 
-const isTruthyEnv = (value: string | undefined) => ["1", "yes", "t", "true"].includes((value ?? "").toLowerCase());
+export interface SeedOptions {
+  allowMockIntegration?: boolean;
+  demoMode?: boolean;
+}
 
-export const seedDataAsync = async (db: Database) => {
-  if (isTruthyEnv(process.env.UNSAFE_ENABLE_MOCK_INTEGRATION)) {
+export const seedDataAsync = async (db: Database, options: SeedOptions = {}) => {
+  if (options.allowMockIntegration) {
     console.warn(
       "UNSAFE_ENABLE_MOCK_INTEGRATION is enabled: mock integration is available in the UI. Disable by setting UNSAFE_ENABLE_MOCK_INTEGRATION=false.",
     );
@@ -64,7 +51,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedDefaultCustomWidgetsAsync(db);
   await seedBoardWidgetsAsync(db);
 
-  if (isTruthyEnv(process.env.DEMO_MODE)) {
+  if (options.demoMode) {
     await seedDemoUserAsync(db);
   }
 
@@ -72,6 +59,7 @@ export const seedDataAsync = async (db: Database) => {
 };
 
 export const seedProtectedBoardLayoutsAsync = async (db: Database, boardId?: string) => {
+  const { boards, layouts } = getSchemaForDatabase(db);
   const dbBoards = await db.query.boards.findMany({
     where: boardId ? eq(boards.id, boardId) : undefined,
     with: {
@@ -188,6 +176,7 @@ const insertMissingProjectedPositionsAsync = async (
   sourceLayout: InferInsertModel<typeof layouts>,
   targetLayout: InferInsertModel<typeof layouts>,
 ) => {
+  const { itemLayouts, sectionLayouts } = getSchemaForDatabase(db);
   const elements = [
     ...board.items.flatMap((item) => {
       const layout = item.layouts.find((itemLayout) => itemLayout.layoutId === sourceLayout.id);
@@ -243,17 +232,15 @@ const insertMissingProjectedPositionsAsync = async (
   );
   const itemPositions = projectedElements
     .filter((element) => element.type === "item" && !existingItemIds.has(element.id))
-    .map(
-      (element): InferInsertModel<typeof itemLayouts> => ({
-        itemId: element.id,
-        layoutId: targetLayout.id,
-        sectionId: element.sectionId,
-        width: element.width,
-        height: element.height,
-        xOffset: element.xOffset,
-        yOffset: element.yOffset,
-      }),
-    );
+    .map((element): InferInsertModel<typeof itemLayouts> => ({
+      itemId: element.id,
+      layoutId: targetLayout.id,
+      sectionId: element.sectionId,
+      width: element.width,
+      height: element.height,
+      xOffset: element.xOffset,
+      yOffset: element.yOffset,
+    }));
 
   const existingSectionIds = new Set(
     board.sections
@@ -262,23 +249,22 @@ const insertMissingProjectedPositionsAsync = async (
   );
   const sectionPositions = projectedElements
     .filter((element) => element.type === "section" && !existingSectionIds.has(element.id))
-    .map(
-      (element): InferInsertModel<typeof sectionLayouts> => ({
-        sectionId: element.id,
-        layoutId: targetLayout.id,
-        parentSectionId: element.sectionId,
-        width: element.width,
-        height: element.height,
-        xOffset: element.xOffset,
-        yOffset: element.yOffset,
-      }),
-    );
+    .map((element): InferInsertModel<typeof sectionLayouts> => ({
+      sectionId: element.id,
+      layoutId: targetLayout.id,
+      parentSectionId: element.sectionId,
+      width: element.width,
+      height: element.height,
+      xOffset: element.xOffset,
+      yOffset: element.yOffset,
+    }));
 
   if (itemPositions.length > 0) await db.insert(itemLayouts).values(itemPositions);
   if (sectionPositions.length > 0) await db.insert(sectionLayouts).values(sectionPositions);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
+  const { groups } = getSchemaForDatabase(db);
   const group = await db.query.groups.findFirst({
     where: eq(groups.name, everyoneGroup),
   });
@@ -297,6 +283,7 @@ const seedEveryoneGroupAsync = async (db: Database) => {
 };
 
 const seedOnboardingAsync = async (db: Database) => {
+  const { onboarding } = getSchemaForDatabase(db);
   const existing = await db.query.onboarding.findFirst();
 
   if (existing) {
@@ -312,6 +299,7 @@ const seedOnboardingAsync = async (db: Database) => {
 };
 
 const seedDefaultSearchEnginesAsync = async (db: Database) => {
+  const { searchEngines } = getSchemaForDatabase(db);
   const existingSearchEngines = await db.$count(searchEngines);
 
   if (existingSearchEngines > 0) {
@@ -392,6 +380,7 @@ const seedServerSettingsAsync = async (db: Database) => {
 };
 
 const seedDefaultIntegrationsAsync = async (db: Database) => {
+  const { integrations } = getSchemaForDatabase(db);
   const defaultIntegrations = integrationKinds.reduce<Integration[]>((acc, kind) => {
     const name = getIntegrationName(kind);
     const defaultUrl = getIntegrationDefaultUrl(kind);
@@ -444,6 +433,7 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
 };
 
 const seedDefaultAppsAsync = async (db: Database) => {
+  const { apps } = getSchemaForDatabase(db);
   const existingApps = await db.$count(apps);
   if (existingApps > 0) {
     console.log("Skipping seeding of default apps as some already exist");
@@ -462,6 +452,7 @@ const seedDefaultAppsAsync = async (db: Database) => {
 };
 
 const seedDefaultBoardAsync = async (db: Database) => {
+  const { boards, sections, layouts, groups } = getSchemaForDatabase(db);
   const existingBoard = await db.query.boards.findFirst();
 
   if (existingBoard) {
@@ -897,21 +888,35 @@ const buildDemoWidgets = (
   },
 
   // Right app rail
-  ...appIds.map(
-    (appId, index): DemoWidget => ({
-      kind: "app",
-      section: "right",
-      xOffset: 0,
-      yOffset: index,
-      width: 1,
-      height: 1,
-      needsIntegration: false,
-      options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
-    }),
-  ),
+  ...appIds.map((appId, index): DemoWidget => ({
+    kind: "app",
+    section: "right",
+    xOffset: 0,
+    yOffset: index,
+    width: 1,
+    height: 1,
+    needsIntegration: false,
+    options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
+  })),
 ];
 
 const seedDemoUserAsync = async (db: Database) => {
+  const {
+    users,
+    groups,
+    groupMembers,
+    groupPermissions,
+    integrations,
+    apps,
+    boards,
+    sections,
+    layouts,
+    items,
+    itemLayouts,
+    integrationItems,
+    onboarding,
+    customWidgetDefinitions,
+  } = getSchemaForDatabase(db);
   const existingUser = await db.query.users.findFirst({
     where: eq(users.name, "demo"),
   });
@@ -1110,6 +1115,7 @@ const seedDemoUserAsync = async (db: Database) => {
 };
 
 const seedDefaultCustomWidgetsAsync = async (db: Database) => {
+  const { customWidgetDefinitions } = getSchemaForDatabase(db);
   const seedIds = BUNDLED_CUSTOM_WIDGETS.map(({ id }) => id);
   const existing = await db.query.customWidgetDefinitions.findMany({
     columns: { id: true },
@@ -1140,6 +1146,7 @@ const seedDefaultCustomWidgetsAsync = async (db: Database) => {
 };
 
 const seedBoardWidgetsAsync = async (db: Database) => {
+  const { items } = getSchemaForDatabase(db);
   const existingItems = await db.$count(items);
   if (existingItems > 0) {
     console.log("Skipping seeding of board widgets as some already exist");

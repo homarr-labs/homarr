@@ -5,7 +5,7 @@ import { defaultServerSettings, defaultServerSettingsKeys, parseBrandingSettings
 
 import type { Database } from "..";
 import { and, eq } from "..";
-import { serverSettings } from "../schema";
+import { getSchemaForDatabase } from "../schema";
 
 export const getServerSettingsAsync = async (db: Database) => {
   const settings = await db.query.serverSettings.findMany();
@@ -32,6 +32,7 @@ export const getServerSettingsAsync = async (db: Database) => {
 };
 
 export const getServerSettingByKeyAsync = async <TKey extends keyof ServerSettings>(db: Database, key: TKey) => {
+  const { serverSettings } = getSchemaForDatabase(db);
   const dbSettings = await db.query.serverSettings.findFirst({
     where: eq(serverSettings.settingKey, key),
   });
@@ -55,6 +56,7 @@ export const updateServerSettingByKeyAsync = async <TKey extends keyof ServerSet
   key: TKey,
   value: ServerSettings[TKey],
 ) => {
+  const { serverSettings } = getSchemaForDatabase(db);
   await db
     .update(serverSettings)
     .set({
@@ -67,6 +69,7 @@ export const updateAnalyticsServerSettingAsync = async (
   db: Database,
   update: (current: ServerSettings["analytics"]) => ServerSettings["analytics"],
 ) => {
+  const { serverSettings } = getSchemaForDatabase(db);
   for (let attempt = 0; attempt < 5; attempt++) {
     const row = await db.query.serverSettings.findFirst({
       where: eq(serverSettings.settingKey, "analytics"),
@@ -94,6 +97,7 @@ export const insertServerSettingByKeyAsync = async <TKey extends keyof ServerSet
   key: TKey,
   value: ServerSettings[TKey],
 ) => {
+  const { serverSettings } = getSchemaForDatabase(db);
   await db.insert(serverSettings).values({
     settingKey: key,
     value: stringify(value),

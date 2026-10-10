@@ -1,6 +1,6 @@
 import type { Database } from "../..";
 import { and, eq } from "../..";
-import { integrationSecrets } from "../../schema";
+import { getSchemaForDatabase } from "../../schema";
 
 /**
  * Previously the credentials for OPNsense were stored as username and password.
@@ -9,6 +9,7 @@ import { integrationSecrets } from "../../schema";
  * https://docs.opnsense.org/development/how-tos/api.html#creating-keys
  */
 export async function migrateOpnsenseCredentialsAsync(db: Database) {
+  const { integrationSecrets } = getSchemaForDatabase(db);
   const existingIntegrations = await db.query.integrations.findMany({
     where: (table, { eq }) => eq(table.kind, "opnsense"),
     with: {
