@@ -85,7 +85,7 @@ fees can still apply to BYOK requests. Streaming responses include upstream toke
 ## Deployment
 
 The Workshop image includes the documentation site. Use `ghcr.io/homarr-labs/workshop:latest` for stable builds from
-`main`, or `:dev` for development builds from `dev`. The `:v2` tag is a compatibility alias for stable builds.
+`main`, or `:dev` for development builds from `dev`. Pin `:v<major>` to stay on one stable major version.
 Immutable `sha-<commit>` tags are preferable for promotion. The service listens on port 8090.
 
 When using a reverse proxy, forward the complete hostname, including `/api`, `/_/`, and

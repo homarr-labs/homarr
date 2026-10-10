@@ -96,14 +96,14 @@ jobs:
           jq -r '
             [.tasks[] | select(.command != null and .command != "" and .command != "<NONEXISTENT>")] as $tasks |
             [$tasks[] | select(.task == "build") | .taskId] as $workspace |
-            [$tasks[] | select(.task == "typecheck") | .taskId] | sort |
-            {include: (to_entries | group_by(.key % 4) | map({
+            ([$tasks[] | select(.task == "typecheck") | .taskId] | sort) as $typechecks |
+            {include: ($typechecks | to_entries | group_by(.key % 4) | map({
               shard: (.[0].key % 4 + 1 | tostring), tasks: map(.value)
             }))} as $matrix |
             "build-tasks=\($workspace | tojson)",
             "builds-app=\($workspace | index("@homarr/nextjs#build") != null)",
             "typecheck-matrix=\($matrix | tojson)",
-            "has-typechecks=\(length > 0)"
+            "has-typechecks=\($typechecks | length > 0)"
           ' "$RUNNER_TEMP/turbo-plan.json" >> "$GITHUB_OUTPUT"
 
   workspace-checks:
