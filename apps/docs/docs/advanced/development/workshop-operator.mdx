@@ -14,6 +14,10 @@ tags:
 Workshop uses PocketBase. The production image serves the Workshop website and API from one origin and stores state in
 `/pb_data`.
 
+Use `ghcr.io/homarr-labs/workshop:latest` for stable deployments or `:dev` for development builds.
+Workshop pull requests from the main repository publish `:pr-<number>` after validation; docs-only pull requests do not.
+Stable images also have `:v<major>` and `:v<version>` tags, such as `:v2` and `:v2.4.1`.
+
 ## Environment variables
 
 | Variable                               | Purpose                                      | Default                        |

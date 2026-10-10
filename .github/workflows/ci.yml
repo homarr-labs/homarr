@@ -51,12 +51,12 @@ env:
 jobs:
   database-validation:
     name: Database validation
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     uses: ./.github/workflows/database.yml
 
   validation-plan:
     name: Plan affected checks
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -172,7 +172,7 @@ jobs:
   fast-gate:
     name: Fast gate
     needs: [database-validation, validation-plan, workspace-checks, typecheck]
-    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
+    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
