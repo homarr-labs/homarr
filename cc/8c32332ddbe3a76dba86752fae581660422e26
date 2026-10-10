@@ -1,0 +1,36 @@
+bun.lock
+  h_d6e478ca18e517 349,358,952
+packages/api/package.json
+  h_d6e478ca18e517 63,71-72
+packages/core/package.json
+  h_d6e478ca18e517 25
+packages/core/src/infrastructure/certificates/files/index.ts
+  h_d6e478ca18e517 6-8,14-20,24-34,36-52,54-56,58-64,66-76,78-91
+packages/core/src/infrastructure/certificates/files/root-certificate.ts
+  h_d6e478ca18e517 8,21,27,73,106-109,111-114,117-130,132-136,141-147,149-175,177-179,181-186
+packages/core/src/infrastructure/certificates/hostnames/index.ts
+  h_d6e478ca18e517 1-12
+packages/core/src/infrastructure/certificates/hostnames/types.ts
+  h_d6e478ca18e517 1-12
+packages/core/src/infrastructure/certificates/resources.ts
+  h_d6e478ca18e517 1-13
+packages/core/src/infrastructure/certificates/runtime.ts
+  h_d6e478ca18e517 1-191
+packages/db/package.json
+  h_d6e478ca18e517 11-14
+packages/settings/package.json
+  h_d6e478ca18e517 16
+packages/ui/package.json
+  h_d6e478ca18e517 21-22,34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cc8c32332ddbe3a76dba86752fae581660422e26",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
