@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { skipToken } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useBoardReplay } from "@homarr/api/board-replay";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 // Beszel emits roughly one record per second. Keep a sliding one-minute window
@@ -22,20 +21,11 @@ const getPageVisibility = () => typeof document === "undefined" || document.visi
 const usePageVisible = () => useSyncExternalStore(subscribeToVisibility, getPageVisibility, () => true);
 
 export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {
-  const queryClient = useQueryClient();
-  const isReplay = useBoardReplay();
-  const snapshotKey = ["board-debug-beszel", integrationIds, systemId];
-  // An observer scopes capture to mounted widgets, including subscription data.
-  const captured = useQuery<{ systemStats: BeszelSystemStatsRecord[]; containerStats: BeszelContainerStatsRecord[] }>({
-    queryKey: snapshotKey,
-    queryFn: skipToken,
-    enabled: false,
-  });
   const [systemStats, setSystemStats] = useState<BeszelSystemStatsRecord[]>([]);
   const [containerStats, setContainerStats] = useState<BeszelContainerStatsRecord[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const pageVisible = usePageVisible();
-  const subscriptionEnabled = !isReplay && enabled && pageVisible && systemId !== "";
+  const subscriptionEnabled = enabled && pageVisible && systemId !== "";
 
   // Append to buffer, trimming to MAX_BUFFER
   const appendSystemStats = useCallback((record: BeszelSystemStatsRecord) => {
@@ -81,21 +71,7 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
     }
   }, [currentKey]);
 
-  const data = useMemo(() => {
-    if (systemStats.length === 0 && containerStats.length === 0) return null;
-    return { systemStats, containerStats };
-  }, [systemStats, containerStats]);
-
-  useEffect(() => {
-    if (!isReplay && data) queryClient.setQueryData(["board-debug-beszel", integrationIds, systemId], data);
-  }, [isReplay, data, queryClient, integrationIds, systemId]);
-
-  if (isReplay) {
-    return {
-      data: captured.data ?? null,
-      error: null,
-    };
-  }
+  const data = systemStats.length > 0 || containerStats.length > 0 ? { systemStats, containerStats } : null;
 
   return { data, error };
 };

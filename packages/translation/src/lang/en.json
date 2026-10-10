@@ -6166,15 +6166,6 @@
           "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
         }
       }
-    },
-    "snapshot": {
-      "take": "Take snapshot of board state",
-      "description": "Download a redacted snapshot to attach to a bug report and help us reproduce your layout",
-      "downloaded": "Board snapshot downloaded",
-      "downloadedDescription": "Attach the JSON and a screenshot taken at the same window size to your bug report. The snapshot includes layout, settings, custom CSS, widget options and loaded data, with private text, URLs and credentials redacted.",
-      "playground": "Open board playground",
-      "failed": "Unable to capture board snapshot",
-      "failedDescription": "The board data could not be safely exported, or the snapshot exceeds 10 MB."
     }
   },
   "layout": {
