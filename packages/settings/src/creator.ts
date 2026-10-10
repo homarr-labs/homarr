@@ -1,5 +1,5 @@
 import type { User } from "@homarr/db/schema";
-import { defaultByteUnitSystem } from "@homarr/common";
+import { defaultByteUnitSystem } from "@homarr/common/number";
 import type { ServerSettings } from "@homarr/server-settings";
 import { parseBrandingSettings } from "@homarr/server-settings";
 import type { HeaderPreferences } from "@homarr/validation/user";

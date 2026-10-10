@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { formatByteRate, formatBytes, formatBytesPair } from "@homarr/common";
+import { formatByteRate, formatBytes, formatBytesPair } from "@homarr/common/number";
 
 import { useSettings } from "./context";
 
