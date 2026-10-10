@@ -1,0 +1,114 @@
+apps/nitro/.gitignore
+  h_d6e478ca18e517 1-4
+apps/nitro/.oxlintrc.json
+  h_d6e478ca18e517 1-14
+apps/nitro/nitro.config.ts
+  h_d6e478ca18e517 1-7
+apps/nitro/package.json
+  h_d6e478ca18e517 1-41
+apps/nitro/server/lifecycle.ts
+  h_d6e478ca18e517 1-22
+apps/nitro/server/plugins/lifecycle.ts
+  h_d6e478ca18e517 1-4
+apps/nitro/src/app/bootstrap.tsx
+  h_d6e478ca18e517 1-11
+apps/nitro/src/app/effects.ts
+  h_d6e478ca18e517 1-32
+apps/nitro/src/app/providers.tsx
+  h_d6e478ca18e517 1-23
+apps/nitro/src/app/router.tsx
+  h_d6e478ca18e517 1-51
+apps/nitro/src/app/session-transition.ts
+  h_d6e478ca18e517 1-93
+apps/nitro/src/contracts/contribution.ts
+  h_d6e478ca18e517 1-35
+apps/nitro/src/contracts/providers.ts
+  h_d6e478ca18e517 1-30
+apps/nitro/src/contracts/refresh.ts
+  h_d6e478ca18e517 1-16
+apps/nitro/src/contracts/render.ts
+  h_d6e478ca18e517 1-40
+apps/nitro/src/contracts/request.ts
+  h_d6e478ca18e517 1-37
+apps/nitro/src/entry-client.tsx
+  h_d6e478ca18e517 1-31
+apps/nitro/src/entry-server.tsx
+  h_d6e478ca18e517 1-7
+apps/nitro/src/route-tree.gen.ts
+  h_d6e478ca18e517 1-220
+apps/nitro/src/routes/(public)/_public.route.tsx
+  h_d6e478ca18e517 1-31
+apps/nitro/src/routes/(public)/_public/about.index.tsx
+  h_d6e478ca18e517 1-15
+apps/nitro/src/routes/(public)/_public/about.route.tsx
+  h_d6e478ca18e517 1-20
+apps/nitro/src/routes/(public)/_public/about/runtime.$section.tsx
+  h_d6e478ca18e517 1-40
+apps/nitro/src/routes/(public)/_public/about_.status.tsx
+  h_d6e478ca18e517 1-13
+apps/nitro/src/routes/(public)/_public/index.tsx
+  h_d6e478ca18e517 1-16
+apps/nitro/src/routes/(public)/_public/manage.route.tsx
+  h_d6e478ca18e517 1-11
+apps/nitro/src/routes/(public)/_public/management.route.tsx
+  h_d6e478ca18e517 1-7
+apps/nitro/src/routes/-components/recovery.tsx
+  h_d6e478ca18e517 1-45
+apps/nitro/src/routes/__root.tsx
+  h_d6e478ca18e517 1-45
+apps/nitro/src/server/application.ts
+  h_d6e478ca18e517 1-269
+apps/nitro/src/server/compose.ts
+  h_d6e478ca18e517 1-46
+apps/nitro/src/server/host.ts
+  h_d6e478ca18e517 1-17
+apps/nitro/src/server/render.tsx
+  h_d6e478ca18e517 1-50
+apps/nitro/tests/fixtures/shutdown/entry.ts
+  h_d6e478ca18e517 1-3
+apps/nitro/tests/fixtures/shutdown/host.ts
+  h_d6e478ca18e517 1-51
+apps/nitro/tests/fixtures/shutdown/plugin.ts
+  h_d6e478ca18e517 1-23
+apps/nitro/tests/public-browser.ts
+  h_d6e478ca18e517 1-58
+apps/nitro/tests/public-fetch.test.ts
+  h_d6e478ca18e517 1-350
+apps/nitro/tests/public-shutdown.ts
+  h_d6e478ca18e517 1-112
+apps/nitro/tsconfig.json
+  h_d6e478ca18e517 1-17
+apps/nitro/vite.config.ts
+  h_d6e478ca18e517 1-48
+bun.lock
+  h_d6e478ca18e517 216-244,949,1548-1549,1560-1563,1844-1847,2238-2245,2534-2535,2684-2697,2774-2775,2796-2799,2804-2839,2844-2845,2972-2973,3348-3349,3352-3355,3380-3381,3400-3405,3440-3441,3466-3467,3580-3581,3724-3725,3762-3763,3836-3839,3870-3871,3908-3909,4028-4029,4130-4131,4186-4187,4226-4227,4602-4645,4686-4687,4848-4849,4916-4917,4974-4977,5190-5191,5400-5401,5436-5441,5520-5521
+package.json
+  h_d6e478ca18e517 258,281,301
+packages/form/src/index.ts
+  h_d6e478ca18e517 1,3,6-7,34
+packages/form/src/resolver.ts
+  h_d6e478ca18e517 1-19
+packages/ui/package.json
+  h_d6e478ca18e517 20,39
+packages/ui/src/components/link.tsx
+  h_d6e478ca18e517 3-4,6-9
+packages/ui/src/components/search-input.tsx
+  h_d6e478ca18e517 11-12,21,30,37,39
+packages/ui/src/components/table-pagination.tsx
+  h_d6e478ca18e517 8-10,17,19,23,31,43,45,47
+packages/ui/src/hooks/use-translated-mantine-react-table.ts
+  h_d6e478ca18e517 6,11
+packages/ui/src/navigation/index.tsx
+  h_d6e478ca18e517 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "46091f602139f7a3797d3357462fb75effdd5dbe",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
