@@ -1,5 +1,6 @@
 name: Workshop
 
+# GitHub skips PR/push runs unless a listed path changed.
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -16,6 +17,7 @@ on:
       - "!**/*.mdx"
   push:
     branches: [dev]
+    # The deployed image serves both Workshop and the docs site.
     paths:
       - ".github/workflows/workshop.yml"
       - ".dockerignore"
@@ -47,83 +49,56 @@ on:
       - "!packages/**/__tests__/**"
       - "!packages/**/*.md"
       - "!packages/db/migrations/seed.ts"
-  # Semantic Release advances main with its version commit. Publish afterwards.
-  workflow_run:
-    workflows: ["[Deployment] Release"]
-    types: [completed]
-    branches: [main]
+  # Stable releases already include Semantic Release's version commit.
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.workflow_run.head_branch || github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'release' && 'main' || github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
-  plan:
-    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
+  validate:
+    if: |
+      (github.event_name != 'release' || !github.event.release.prerelease) &&
+      (github.event_name != 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'dev')
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     outputs:
-      sha: ${{ steps.plan.outputs.sha }}
-      build: ${{ steps.plan.outputs.build }}
-      publish: ${{ steps.plan.outputs.publish }}
-      tags: ${{ steps.plan.outputs.tags }}
+      sha: ${{ steps.image.outputs.sha }}
+      tags: ${{ steps.image.outputs.tags }}
+      publish: ${{ !env.ACT && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft)) }}
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
         with:
-          fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
-      - name: Select build and publication
-        id: plan
+      - run: docker compose --env-file apps/workshop/.env.staging.example -f apps/workshop/docker-compose.staging.yml config --quiet
+      - name: Image tags
+        id: image
         env:
-          BRANCH: ${{ github.event_name == 'workflow_run' && 'main' || github.ref_name }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          RELEASE_HEAD: ${{ github.event.workflow_run.head_sha }}
-          CAN_PUBLISH: ${{ !env.ACT && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft)) }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           sha=$(git rev-parse HEAD)
-          build=true
-          tags=""
-          if [[ "$GITHUB_EVENT_NAME" == workflow_run ]]; then
-            git merge-base --is-ancestor "$RELEASE_HEAD" "$sha"
-            # Include the version commit made by Semantic Release after the push.
-            if git diff --quiet "$RELEASE_HEAD^" "$sha" -- \
-              .github/workflows/workshop.yml .dockerignore tooling/github/docker-build.sh \
-              apps/workshop apps/docs tools/motion-reel/three tooling/typescript patches \
-              packages/{common,core,custom-widgets,definitions,db,server-settings,settings,translation,ui,validation,workshop} \
-              package.json bun.lock bunfig.toml turbo.json \
-              ':(glob,exclude)packages/**/*.spec.*' ':(glob,exclude)packages/**/*.test.*' \
-              ':(glob,exclude)packages/**/__tests__/**' ':(glob,exclude)packages/**/*.md' \
-              ':(exclude)packages/db/migrations/seed.ts'; then
-              build=false
-            fi
-          fi
+          tags=dev
           if [[ "$GITHUB_EVENT_NAME" == pull_request ]]; then
             tags="pr-$PR_NUMBER"
-          elif [[ "$BRANCH" == main ]]; then
+          elif [[ "$GITHUB_EVENT_NAME" == release || "$GITHUB_REF_NAME" == main ]]; then
             version=$(jq -r .version package.json)
             [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+            if [[ "$GITHUB_EVENT_NAME" == release ]]; then test "$RELEASE_TAG" = "v$version"; fi
             tags="latest v$version v${version%%.*}"
-          elif [[ "$BRANCH" == dev ]]; then
-            tags=dev
-          else
-            build=false
           fi
-          publish=false
-          if [[ "$build" == true && "$CAN_PUBLISH" == true ]]; then
-            publish=true
-            tags="$tags sha-$sha"
-          else
-            tags=""
-          fi
-          printf 'sha=%s\nbuild=%s\npublish=%s\ntags=%s\n' "$sha" "$build" "$publish" "$tags" >> "$GITHUB_OUTPUT"
+          printf 'sha=%s\ntags=%s sha-%s\n' "$sha" "$tags" "$sha" >> "$GITHUB_OUTPUT"
 
   production-smoke:
-    needs: plan
-    if: github.event_name == 'pull_request' && needs.plan.outputs.publish != 'true'
+    needs: validate
+    if: github.event_name == 'pull_request' && needs.validate.outputs.publish != 'true'
     name: Production image smoke (${{ matrix.arch }})
     strategy:
       fail-fast: false
@@ -140,7 +115,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ needs.plan.outputs.sha }}
+          ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
@@ -178,22 +153,9 @@ jobs:
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: sh apps/workshop/test-image.sh
 
-  validate:
-    needs: plan
-    if: needs.plan.outputs.build == 'true'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-        if: "!env.ACT"
-        with:
-          persist-credentials: false
-          ref: ${{ needs.plan.outputs.sha }}
-      - run: docker compose --env-file apps/workshop/.env.staging.example -f apps/workshop/docker-compose.staging.yml config --quiet
-
   publish-amd64:
-    if: needs.plan.outputs.publish == 'true'
-    needs: [plan, validate]
+    if: needs.validate.outputs.publish == 'true'
+    needs: validate
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -206,7 +168,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ needs.plan.outputs.sha }}
+          ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
@@ -223,7 +185,7 @@ jobs:
           file: apps/workshop/Dockerfile
           target: production
           platforms: linux/amd64
-          labels: org.opencontainers.image.revision=${{ needs.plan.outputs.sha }}
+          labels: org.opencontainers.image.revision=${{ needs.validate.outputs.sha }}
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=workshop-linux-amd64
           cache-to: type=gha,scope=workshop-linux-amd64,mode=max
@@ -238,8 +200,8 @@ jobs:
         run: sh apps/workshop/test-image.sh
 
   publish-arm64:
-    if: needs.plan.outputs.publish == 'true'
-    needs: [plan, validate]
+    if: needs.validate.outputs.publish == 'true'
+    needs: validate
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
     permissions:
@@ -252,7 +214,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
-          ref: ${{ needs.plan.outputs.sha }}
+          ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
@@ -269,7 +231,7 @@ jobs:
           file: apps/workshop/Dockerfile
           target: production
           platforms: linux/arm64
-          labels: org.opencontainers.image.revision=${{ needs.plan.outputs.sha }}
+          labels: org.opencontainers.image.revision=${{ needs.validate.outputs.sha }}
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=workshop-linux-arm64
           cache-to: type=gha,scope=workshop-linux-arm64,mode=max
@@ -284,8 +246,8 @@ jobs:
         run: sh apps/workshop/test-image.sh
 
   publish:
-    if: needs.plan.outputs.publish == 'true'
-    needs: [plan, publish-amd64, publish-arm64]
+    if: needs.validate.outputs.publish == 'true'
+    needs: [validate, publish-amd64, publish-arm64]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -304,7 +266,7 @@ jobs:
       - name: Verify source before publication
         uses: actions/github-script@v8
         env:
-          EXPECTED_SHA: ${{ needs.plan.outputs.sha }}
+          EXPECTED_SHA: ${{ needs.validate.outputs.sha }}
           EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
         with:
           script: |
@@ -318,7 +280,7 @@ jobs:
               return;
             }
             let branchName = context.ref.replace("refs/heads/", "");
-            if (context.eventName === "workflow_run") branchName = "main";
+            if (context.eventName === "release") branchName = "main";
             const { data: branch } = await github.rest.repos.getBranch({ ...context.repo, branch: branchName });
             if (branch.commit.sha !== process.env.EXPECTED_SHA) {
               core.setFailed("Branch changed while building; refusing stale publication.");
@@ -327,7 +289,7 @@ jobs:
         env:
           AMD64_DIGEST: ${{ needs.publish-amd64.outputs.digest }}
           ARM64_DIGEST: ${{ needs.publish-arm64.outputs.digest }}
-          IMAGE_TAGS: ${{ needs.plan.outputs.tags }}
+          IMAGE_TAGS: ${{ needs.validate.outputs.tags }}
         run: |
           tags=()
           for tag in $IMAGE_TAGS; do tags+=(-t "${WORKSHOP_IMAGE}:$tag"); done
@@ -336,7 +298,7 @@ jobs:
             "${WORKSHOP_IMAGE}@${ARM64_DIGEST}"
       - name: Verify every published tag
         env:
-          IMAGE_TAGS: ${{ needs.plan.outputs.tags }}
+          IMAGE_TAGS: ${{ needs.validate.outputs.tags }}
         run: |
           expected_manifest=""
           for tag in $IMAGE_TAGS; do
