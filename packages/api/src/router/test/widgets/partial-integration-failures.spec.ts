@@ -11,6 +11,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import type {
   MediaRequest,
   MediaRequestStats,
+  ServiceVersion,
   SpeedtestTrackerDashboardData,
   TracearrDashboardData,
   TraefikDashboardData,
@@ -31,6 +32,7 @@ import { mediaRequestsRouter } from "../../widgets/media-requests";
 import { mediaServerRouter } from "../../widgets/media-server";
 import { networkControllerRouter } from "../../widgets/network-controller";
 import { notificationsRouter } from "../../widgets/notifications";
+import { releasesRouter } from "../../widgets/releases";
 import { speedtestTrackerRouter } from "../../widgets/speedtest-tracker";
 import { tracearrRouter } from "../../widgets/tracearr";
 import { traefikRouter } from "../../widgets/traefik";
@@ -204,6 +206,13 @@ vi.mock("@homarr/request-handler/ups", () => ({
   },
 }));
 
+vi.mock("@homarr/request-handler/service-version", () => ({
+  serviceVersionRequestHandler: {
+    handler: (integration: { name: string }) =>
+      createHandler(integration, { version: "4.0.20.3014" } satisfies ServiceVersion),
+  },
+}));
+
 vi.mock("@homarr/request-handler/traefik", () => {
   const emptySummary = { total: 0, enabled: 0, warnings: 0, errors: 0 };
   return {
@@ -334,6 +343,15 @@ const dashboardPartialFailureCases = [
       await upsRouter
         .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
         .getSummaries({ integrationIds: setup.integrationIds }),
+  },
+  {
+    kind: "sonarr" as const,
+    payloadKey: "version",
+    fallbackValue: null,
+    run: async (setup: IntegrationSetup) =>
+      await releasesRouter
+        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
+        .getServiceVersions({ integrationIds: setup.integrationIds }),
   },
   {
     kind: "traefik" as const,
