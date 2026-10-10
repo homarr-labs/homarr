@@ -15,6 +15,8 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./object": "./src/object.ts",
+    "./number": "./src/number.ts",
+    "./date": "./src/date.ts",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
     "./env": "./env.ts"

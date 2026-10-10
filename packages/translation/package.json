@@ -17,6 +17,7 @@
     "./standalone": "./src/standalone/index.ts",
     "./standalone/client": "./src/standalone/client.tsx",
     "./standalone/server": "./src/standalone/server.ts",
+    "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",
     "./languages": "./src/languages.ts",
