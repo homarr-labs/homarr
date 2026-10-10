@@ -1436,7 +1436,8 @@
       "uptimeMonitoring": "Uptime Monitoring",
       "beszel": "Beszel",
       "systemMonitoring": "System Monitoring",
-      "security": "Security"
+      "security": "Security",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
