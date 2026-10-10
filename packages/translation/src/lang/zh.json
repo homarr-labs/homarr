@@ -749,7 +749,10 @@
         "selectMultiple": "選取多個",
         "cancelMultiple": "退出多重選取",
         "customApplication": "自訂應用程式",
-        "application": "應用程式"
+        "application": "應用程式",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "建立新應用程式",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "在小工具設定中新增 URL 或應用程式"
+      "empty": "在小工具設定中新增 URL 或應用程式",
+      "groups": {
+        "label": "",
+        "placeholder": "創建分類",
+        "add": "創建分類",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "要篩選的容器"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "以白名單篩選"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "未找到應用程式",
         "description": "點擊 <here></here> 創建新的應用程式",
-        "quickCreate": "快速建立應用程式"
+        "quickCreate": "快速建立應用程式",
+        "create": "創建應用程式"
       },
       "error": {
         "noIntegration": "未選擇集成",
@@ -6151,6 +6171,15 @@
           "notice": "要讓這個頁面消失，請伺服器管理員為伺服器設定一個主面板"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

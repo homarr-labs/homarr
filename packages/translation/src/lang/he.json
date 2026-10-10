@@ -749,7 +749,10 @@
         "selectMultiple": "בחירה מרובה",
         "cancelMultiple": "יציאה מבחירה מרובה",
         "customApplication": "יישום מותאם אישית",
-        "application": "יישום"
+        "application": "יישום",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "צור אפליקציה חדשה",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "הוסף כתובת URL או אפליקציה בהגדרות הווידג'ט"
+      "empty": "הוסף כתובת URL או אפליקציה בהגדרות הווידג'ט",
+      "groups": {
+        "label": "",
+        "placeholder": "קטגוריה חדשה",
+        "add": "הוסף קטגוריה",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "קונטיינרים לסינון"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "סנן כרשימת היתרים"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "לא נמצאה אפליקציה",
         "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה",
-        "quickCreate": "צור אפליקציה תוך כדי תנועה"
+        "quickCreate": "צור אפליקציה תוך כדי תנועה",
+        "create": "יצירת אפליקציה"
       },
       "error": {
         "noIntegration": "לא נבחרה אינטגרציה",
@@ -6151,6 +6171,15 @@
           "notice": "על מנת לגרום לדף זה להיעלם, בקש ממנהל השרת להגדיר לוח בית עבור השרת"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

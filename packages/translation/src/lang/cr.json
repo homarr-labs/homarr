@@ -749,7 +749,10 @@
         "selectMultiple": "crwdns6733:0crwdne6733:0",
         "cancelMultiple": "crwdns6735:0crwdne6735:0",
         "customApplication": "crwdns6737:0crwdne6737:0",
-        "application": "crwdns6739:0crwdne6739:0"
+        "application": "crwdns6739:0crwdne6739:0",
+        "backToApps": "crwdns10899:0crwdne10899:0",
+        "createAndAdd": "crwdns10901:0crwdne10901:0",
+        "createAnother": "crwdns10903:0crwdne10903:0"
       },
       "create": {
         "title": "crwdns3164:0crwdne3164:0",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "crwdns7899:0crwdne7899:0"
+      "empty": "crwdns7899:0crwdne7899:0",
+      "groups": {
+        "label": "crwdns10905:0crwdne10905:0",
+        "placeholder": "crwdns10907:0crwdne10907:0",
+        "add": "crwdns10909:0crwdne10909:0",
+        "remove": "crwdns10911:0{name}crwdne10911:0",
+        "rename": "crwdns10913:0{name}crwdne10913:0",
+        "assign": "crwdns10915:0{name}crwdne10915:0",
+        "ungrouped": "crwdns10917:0crwdne10917:0"
+      }
     },
     "archiveTeamWarrior": {
       "name": "crwdns5635:0crwdne5635:0",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "crwdns8531:0crwdne8531:0"
         },
+        "filterCaseSensitive": {
+          "label": "crwdns10893:0crwdne10893:0"
+        },
+        "filterAllowWildcards": {
+          "label": "crwdns10895:0crwdne10895:0",
+          "description": "crwdns10897:0crwdne10897:0"
+        },
         "filterIsWhitelist": {
           "label": "crwdns8533:0crwdne8533:0"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "crwdns1138:0crwdne1138:0",
         "description": "crwdns1140:0crwdne1140:0",
-        "quickCreate": "crwdns2808:0crwdne2808:0"
+        "quickCreate": "crwdns2808:0crwdne2808:0",
+        "create": "crwdns10919:0crwdne10919:0"
       },
       "error": {
         "noIntegration": "crwdns1144:0crwdne1144:0",
@@ -6151,6 +6171,15 @@
           "notice": "crwdns2472:0crwdne2472:0"
         }
       }
+    },
+    "snapshot": {
+      "take": "crwdns10921:0crwdne10921:0",
+      "description": "crwdns10923:0crwdne10923:0",
+      "downloaded": "crwdns10925:0crwdne10925:0",
+      "downloadedDescription": "crwdns10927:0crwdne10927:0",
+      "playground": "crwdns10929:0crwdne10929:0",
+      "failed": "crwdns10931:0crwdne10931:0",
+      "failedDescription": "crwdns10933:0crwdne10933:0"
     }
   },
   "layout": {

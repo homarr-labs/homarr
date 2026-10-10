@@ -749,7 +749,10 @@
         "selectMultiple": "Selecteer meerdere",
         "cancelMultiple": "Meervoudige selectie afsluiten",
         "customApplication": "Aangepaste toepassing",
-        "application": "Applicatie"
+        "application": "Applicatie",
+        "backToApps": "Terug naar apps",
+        "createAndAdd": "Maken en toevoegen",
+        "createAnother": "Maken en doorgaan"
       },
       "create": {
         "title": "Nieuwe app aanmaken",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Een URL of app toevoegen in de widget-instellingen"
+      "empty": "Een URL of app toevoegen in de widget-instellingen",
+      "groups": {
+        "label": "Categoriechar@@0n",
+        "placeholder": "Nieuwe categorie",
+        "add": "Categorie toevoegen",
+        "remove": "Verwijder {name} categorie",
+        "rename": "Categorienaam voor {name}",
+        "assign": "Categorie voor {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Bevat om te filteren"
         },
+        "filterCaseSensitive": {
+          "label": "Hoofdletter gevoelig"
+        },
+        "filterAllowWildcards": {
+          "label": "Jokertekens toestaan",
+          "description": "Gebruik * voor nul of meer tekens."
+        },
         "filterIsWhitelist": {
           "label": "Filteren als witte lijst"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Geen app gevonden",
         "description": "Klik <here></here> om een nieuwe app aan te maken",
-        "quickCreate": "App onmiddellijk maken"
+        "quickCreate": "App onmiddellijk maken",
+        "create": "App aanmaken"
       },
       "error": {
         "noIntegration": "Geen integratie geselecteerd",
@@ -6151,6 +6171,15 @@
           "notice": "Om deze pagina te laten verdwijnen, vraag je de serverbeheerder om een home-bord in te stellen voor de server"
         }
       }
+    },
+    "snapshot": {
+      "take": "Neem momentopname van de status van het bord",
+      "description": "Download een aangepaste snapshot om aan een bugrapport toe te voegen en ons te helpen uw lay-out te reproduceren",
+      "downloaded": "Board snapshot gedownload",
+      "downloadedDescription": "Voeg de JSON en een schermafbeelding op dezelfde grootte van het scherm toe aan je bugrapport. De momentopname omvat lay-out, instellingen, aangepaste CSS-instellingen, widgetopties en geladen gegevens, met privétekst, URLs en aanmeldgegevens.",
+      "playground": "Open board playground",
+      "failed": "Kan momentopname van kaart niet maken",
+      "failedDescription": "De gegevens van het bord konden niet veilig worden geëxporteerd of de momentopname overschrijdt 10 MB."
     }
   },
   "layout": {

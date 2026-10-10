@@ -749,7 +749,10 @@
         "selectMultiple": "Wybierz wiele",
         "cancelMultiple": "Wyjdź z wielokrotnego wyboru",
         "customApplication": "Własna aplikacja",
-        "application": "Aplikacja"
+        "application": "Aplikacja",
+        "backToApps": "Powrót do aplikacji",
+        "createAndAdd": "Utwórz i dodaj",
+        "createAnother": "Utwórz i kontynuuj"
       },
       "create": {
         "title": "Stwórz nową aplikację",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Dodaj adres URL lub aplikację w ustawieniach widżetu"
+      "empty": "Dodaj adres URL lub aplikację w ustawieniach widżetu",
+      "groups": {
+        "label": "Kategorie",
+        "placeholder": "Nowa kategoria",
+        "add": "Dodaj kategorię",
+        "remove": "Usuń kategorię {name}",
+        "rename": "Nazwa kategorii dla {name}",
+        "assign": "Kategoria dla {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Pojemniki do filtrowania"
         },
+        "filterCaseSensitive": {
+          "label": "Rozróżniana przez litery"
+        },
+        "filterAllowWildcards": {
+          "label": "Zezwalaj na karty wieloznaczne",
+          "description": "Użyj * dla zera lub więcej znaków."
+        },
         "filterIsWhitelist": {
           "label": "Filtruj jako białą listę"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nie znaleziono aplikacji",
         "description": "Kliknij <here></here> aby utworzyć nową aplikację",
-        "quickCreate": "Utwórz aplikację w locie"
+        "quickCreate": "Utwórz aplikację w locie",
+        "create": "Stwórz aplikację"
       },
       "error": {
         "noIntegration": "Nie wybrano integracji",
@@ -6151,6 +6171,15 @@
           "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera"
         }
       }
+    },
+    "snapshot": {
+      "take": "Zrób zrzut stanu płytki",
+      "description": "Pobierz poprawiony zrzut, aby dołączyć do raportu o błędzie i pomóc nam odtworzyć Twój układ",
+      "downloaded": "Pobrano zrzut tablicy",
+      "downloadedDescription": "Dołącz JSON i zrzut ekranu wykonany w tym samym rozmiarze okna do raportu o błędzie. Zrzut ekranu zawiera układ, ustawienia, niestandardowy CSS, opcje widżetu i wczytywane dane, z prywatnym tekstem, adresami URL i poświadczeniami.",
+      "playground": "Otwarty plac zabaw",
+      "failed": "Nie można przechwycić migawki tablicy",
+      "failedDescription": "Nie można bezpiecznie wyeksportować danych tablicy lub zrzut ekranu przekracza 10 MB."
     }
   },
   "layout": {

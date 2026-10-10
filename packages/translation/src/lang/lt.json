@@ -749,7 +749,10 @@
         "selectMultiple": "Pasirinkti kelias",
         "cancelMultiple": "Išeiti iš kelių pasirinkimo režimo",
         "customApplication": "Pasirinktinė programa",
-        "application": "Programa"
+        "application": "Programa",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Sukurti naują programėlę",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose"
+      "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Filtruotini konteineriai"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtruoti kaip leidžiamąjį sąrašą"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Programėlė nerasta",
         "description": "Spustelėkite <here></here>, kad sukurtumėte naują programėlę",
-        "quickCreate": "Sukurti programėlę skrydžio metu"
+        "quickCreate": "Sukurti programėlę skrydžio metu",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nepasirinkta integracija",
@@ -6151,6 +6171,15 @@
           "notice": "Kad šis puslapis išnyktų, paprašykite serverio administratoriaus nustatyti serverio pagrindinę suvestinę"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

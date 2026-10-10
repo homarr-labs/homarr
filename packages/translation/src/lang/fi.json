@@ -749,7 +749,10 @@
         "selectMultiple": "Valitse useita",
         "cancelMultiple": "Poistu monivalinnasta",
         "customApplication": "Mukautettu sovellus",
-        "application": "Sovellus"
+        "application": "Sovellus",
+        "backToApps": "Takaisin sovelluksiin",
+        "createAndAdd": "Luo ja lisää",
+        "createAnother": "Luo ja jatka"
       },
       "create": {
         "title": "Luo uusi sovellus",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Lisää URL tai sovellus widgetin asetuksiin"
+      "empty": "Lisää URL tai sovellus widgetin asetuksiin",
+      "groups": {
+        "label": "Kategoriat",
+        "placeholder": "Uusi kategoria",
+        "add": "Lisää kategoria",
+        "remove": "",
+        "rename": "Kategorian nimi {name}",
+        "assign": "Kategoria char@@0 {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Suodatettavat säiliöt"
         },
+        "filterCaseSensitive": {
+          "label": "Huomioi kirjainkoko"
+        },
+        "filterAllowWildcards": {
+          "label": "Salli jokerimerkit",
+          "description": "Käytä * nollaa tai useampia merkkejä."
+        },
         "filterIsWhitelist": {
           "label": "Suodata valkolistana"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "",
         "description": "Luo uusi sovellus painamalla <here></here>",
-        "quickCreate": "Luo sovellus lennossa"
+        "quickCreate": "Luo sovellus lennossa",
+        "create": "Luo sovellus"
       },
       "error": {
         "noIntegration": "Integraatiota ei ole valittu",
@@ -6151,6 +6171,15 @@
           "notice": "Pyydä ylläpitoa määrittämään palvelimelle kotipaneeli piilottaaksesi tämän sivun"
         }
       }
+    },
+    "snapshot": {
+      "take": "Ota tilannekuva hallituksen tilasta",
+      "description": "Lataa punnitettu tilannekuva liittääksesi vikailmoitukseen ja auttaaksesi meitä jäljentämään ulkoasuasi",
+      "downloaded": "Laudan tilannekuva ladattu",
+      "downloadedDescription": "Kiinnitä vikailmoitukseen JSON ja samaan ikkunan kokoon otettu kuvakaappaus. Tilannevedos sisältää asettelut, asetukset, mukautetun CSS, widgettien asetukset ja ladatut tiedot, yksityisellä tekstillä, URL-osoitteilla ja käyttäjätunnuksilla suojatut tiedot.",
+      "playground": "Avaa lautaleikkipaikka",
+      "failed": "Lautakuvan kaappaus ei onnistunut",
+      "failedDescription": "Lautatietoja ei voitu turvallisesti viedä tai tilannekuva ylittää 10 Mt."
     }
   },
   "layout": {
