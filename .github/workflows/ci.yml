@@ -56,7 +56,6 @@ jobs:
 
   validation-plan:
     name: Plan affected checks
-    needs: database-validation
     if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     runs-on: ubuntu-latest
     timeout-minutes: 5
