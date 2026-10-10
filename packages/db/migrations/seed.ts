@@ -77,7 +77,7 @@ export const seedDataAsync = async (db: Database) => {
 const seedAssistantConfigurationAsync = async (db: Database) => {
   const provider = assistantProviderPresets.homarr;
   const workshopBaseUrl = process.env.WORKSHOP_API_URL ?? process.env.HOMARR_WEBSITE_URL;
-  let baseUrl = provider.baseUrl;
+  let baseUrl: string = provider.baseUrl;
   if (workshopBaseUrl) {
     baseUrl = `${workshopBaseUrl.replace(/\/+$/u, "")}/api/ai/v1`;
   }
