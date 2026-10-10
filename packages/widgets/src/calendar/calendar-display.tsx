@@ -80,7 +80,10 @@ export const CalendarDisplay = ({
   );
   const eventsByDate = useMemo(() => groupEventsByDate(splitEvents(filteredEvents)), [filteredEvents]);
   const agendaEvents = useMemo(() => getCalendarAgendaEvents(events, date, releaseType), [events, date, releaseType]);
-  const scheduleEvents = useMemo(() => getCalendarScheduleEvents(filteredEvents), [filteredEvents]);
+  const scheduleEvents = useMemo(
+    () => getCalendarScheduleEvents(filteredEvents, view === "day" ? date : undefined),
+    [filteredEvents, view, date],
+  );
   const labels = {
     allDay: t("duration.allDay"),
     today: t("controls.today"),
@@ -135,7 +138,7 @@ export const CalendarDisplay = ({
       startScrollPosition: { y: 8 * Math.max(40, bodyHeight / 12) },
     },
     slotHeight: Math.max(40, bodyHeight / 12),
-    allDaySlotHeight: 32,
+    allDaySlotHeight: 48,
     h: "100%",
     w: "100%",
     slotLabelFormat: (value: string) => formatLocalizedTime(dayjs(value).toDate(), locale),
@@ -296,7 +299,7 @@ export const CalendarDisplay = ({
         {!isPending && view === "day" && bodyHeight > 0 && (
           <DayView
             {...scheduleProps}
-            className={classes.dayView}
+            classNames={{ dayViewAllDay: classes.dayAllDay, dayViewSlotLabel: classes.daySlotLabel }}
             style={{ "--day-view-slot-labels-width": "3.5rem" } as CSSProperties}
             styles={{ dayViewScrollArea: { height: "100%" }, dayViewSlotLabel: { fontSize: 10, whiteSpace: "nowrap" } }}
           />
@@ -306,7 +309,7 @@ export const CalendarDisplay = ({
             {...scheduleProps}
             firstDayOfWeek={firstDayOfWeek}
             withWeekNumber={false}
-            className={classes.weekView}
+            classNames={{ weekViewAllDaySlots: classes.weekAllDay }}
             style={
               {
                 "--week-view-min-slot-width": "0px",

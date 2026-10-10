@@ -88,23 +88,24 @@
   line-height: 12px;
   margin: 0;
 }
-.dayView {
-  --day-view-slot-labels-width: 3.25rem;
+.dayAllDay,
+.weekAllDay,
+.daySlotLabel[data-all-day] {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background-color: var(--mantine-color-body);
 }
-.weekView {
-  --week-view-slots-label-width: 3.25rem;
-  --week-view-min-slot-width: 0px;
+.weekAllDay {
+  top: var(--week-view-week-day-height);
 }
 @container (max-width: 340px) {
   .navigation {
     flex-basis: 100%;
   }
-  .weekView {
-    --week-view-slots-label-width: 2.25rem;
-  }
 }
 
-@container (max-width: 700px) {
+@container (max-width: 350px) {
   .eventTime {
     display: none;
   }

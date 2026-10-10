@@ -11,9 +11,14 @@ export const isCalendarAllDayEvent = (event: CalendarEventWithSource) => {
   return end.isSame(end.startOf("day")) || end.isSame(end.endOf("day"));
 };
 
-export const getCalendarScheduleEvents = (events: CalendarEventWithSource[]): ScheduleEventData[] =>
-  events.flatMap((event, index) => {
-    const start = dayjs(event.startDate);
+export const getCalendarScheduleEvents = (
+  events: CalendarEventWithSource[],
+  displayedDay?: Date,
+): ScheduleEventData[] => {
+  const dayStart = displayedDay ? dayjs(displayedDay).startOf("day") : undefined;
+  const dayEnd = dayStart?.add(1, "day").startOf("day");
+  return events.flatMap((event, index) => {
+    let start = dayjs(event.startDate);
     if (!start.isValid()) return [];
     let end = start.add(30, "minute");
     if (event.endDate) end = dayjs(event.endDate);
@@ -22,6 +27,11 @@ export const getCalendarScheduleEvents = (events: CalendarEventWithSource[]): Sc
     if (end.isSame(start)) end = start.add(30, "minute");
     // The schedule uses half-open intervals and second precision.
     if (isCalendarAllDayEvent(event) && end.isSame(end.endOf("day"))) end = end.add(1, "millisecond");
+    if (dayStart && dayEnd) {
+      if (!start.isBefore(dayEnd) || !end.isAfter(dayStart)) return [];
+      if (start.isBefore(dayStart)) start = dayStart;
+      if (!end.isBefore(dayEnd)) end = dayEnd.subtract(1, "second");
+    }
     return [
       {
         id: `${event.source?.integrationId ?? "calendar"}:${index}`,
@@ -33,3 +43,4 @@ export const getCalendarScheduleEvents = (events: CalendarEventWithSource[]): Sc
       },
     ];
   });
+};
