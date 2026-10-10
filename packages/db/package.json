@@ -8,6 +8,10 @@
   "types": "./index.ts",
   "exports": {
     ".": "./index.ts",
+    "./runtime": "./runtime.ts",
+    "./driver": "./driver.ts",
+    "./copied-sqlite": "./copied-sqlite.ts",
+    "./trusted-hostnames": "./trusted-hostnames.ts",
     "./collection": "./collection.ts",
     "./migrations/custom": "./migrations/custom/index.ts",
     "./migrations/seed": "./migrations/seed.ts",

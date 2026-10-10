@@ -346,6 +346,7 @@
         "@trpc/server": "catalog:",
         "@trpc/tanstack-react-query": "catalog:",
         "ajv": "catalog:",
+        "isomorphic-dompurify": "catalog:",
         "lodash.clonedeep": "catalog:",
         "next": "catalog:",
         "react": "catalog:",
@@ -354,6 +355,7 @@
         "trpc-to-openapi": "catalog:",
         "undici": "catalog:",
         "zod": "catalog:",
+        "zod-form-data": "catalog:",
       },
       "devDependencies": {
         "@homarr/tsconfig": "workspace:^0.1.0",
@@ -947,6 +949,7 @@
       "dependencies": {
         "@homarr/common": "workspace:^0.1.0",
         "@homarr/definitions": "workspace:^0.1.0",
+        "@homarr/server-settings": "workspace:^0.1.0",
         "@homarr/settings": "workspace:^0.1.0",
         "@homarr/translation": "workspace:^0.1.0",
         "@homarr/validation": "workspace:^0.1.0",

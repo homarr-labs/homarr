@@ -1,12 +1,13 @@
-import type { InferSelectModel } from "drizzle-orm";
+export type { TrustedCertificateHostname, TrustedCertificateHostnameStore } from "./types";
+import type { TrustedCertificateHostnameStore } from "./types";
 
-import { createDb } from "../../db";
-import { schema } from "./db/schema";
+export const createTrustedCertificateHostnameReader = (store: Pick<TrustedCertificateHostnameStore, "listAsync">) => ({
+  getTrustedCertificateHostnamesAsync: () => store.listAsync(),
+});
 
-const db = createDb(schema);
-
-export const getTrustedCertificateHostnamesAsync = async () => {
-  return await db.query.trustedCertificateHostnames.findMany();
+export const getTrustedCertificateHostnamesAsync = async (
+  store?: Pick<TrustedCertificateHostnameStore, "listAsync">,
+) => {
+  if (!store) throw new Error("An explicit trusted certificate hostname store is required");
+  return store.listAsync();
 };
-
-export type TrustedCertificateHostname = InferSelectModel<typeof schema.trustedCertificateHostnames>;

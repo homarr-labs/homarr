@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./context": "./src/context.tsx",
     "./creator": "./src/creator.ts"
   },
   "scripts": {

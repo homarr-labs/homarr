@@ -3,11 +3,9 @@ import { constants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { createLogger } from "../../logs";
 import { getCertificateFolder } from "./index";
 
-const logger = createLogger({ module: "rootCertificate" });
-const maxCertificateBytes = 64 * 1024;
+export const maxCertificateBytes = 64 * 1024;
 const fileNamePattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*\.(crt|pem)$/;
 const pemPattern = /^\s*-----BEGIN CERTIFICATE-----\s+([A-Za-z0-9+/=][A-Za-z0-9+/=\s]*)-----END CERTIFICATE-----\s*$/;
 
@@ -20,13 +18,13 @@ export class RootCertificateError extends Error {
   }
 }
 
-const validateFileName = (fileName: string) => {
+export const validateCertificateFileName = (fileName: string) => {
   if (fileName.length > 128 || !fileNamePattern.test(fileName)) {
     throw new RootCertificateError("BAD_REQUEST", "Invalid certificate file name");
   }
 };
 
-const describeCertificate = (fileName: string, content: Buffer, requireCurrent: boolean) => {
+export const describeRootCertificate = (fileName: string, content: Buffer, requireCurrent: boolean) => {
   if (content.length > maxCertificateBytes) {
     throw new RootCertificateError("BAD_REQUEST", "Expected one PEM root CA certificate, at most 64 KiB");
   }
@@ -38,7 +36,6 @@ const describeCertificate = (fileName: string, content: Buffer, requireCurrent: 
   let certificate: X509Certificate;
   try {
     certificate = new X509Certificate(content);
-    // Reject extra DER data as well as PEM chains, keys, leaf certificates and non-root CAs.
     const der = Buffer.from(pem[1].replace(/\s/g, ""), "base64");
     if (
       !certificate.raw.equals(der) ||
@@ -73,10 +70,9 @@ const hasCode = (error: unknown, code: string) => {
   return error instanceof Error && "code" in error && error.code === code;
 };
 
-const readCertificateAsync = async (fullPath: string) => {
+export const readCertificateAsync = async (fullPath: string) => {
   let file;
   try {
-    // NONBLOCK prevents opening a FIFO from hanging before the regular-file check.
     file = await fs.open(fullPath, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
   } catch (error) {
     if (hasCode(error, "ENOENT")) return null;
@@ -107,64 +103,84 @@ const readCertificateAsync = async (fullPath: string) => {
   }
 };
 
-export const getCustomRootCertificateAsync = async (fileName: string) => {
-  validateFileName(fileName);
-  const folder = getCertificateFolder();
-  if (!folder) return null;
-  const content = await readCertificateAsync(path.join(folder, fileName));
-  if (!content) return null;
-  return describeCertificate(fileName, content, false);
-};
+export interface RootCertificateResources {
+  folder: string | undefined;
+  onTemporaryFileCleanupError?: (error: unknown) => void;
+}
 
-export const ensureCustomRootCertificateAsync = async (fileName: string, pem: string) => {
-  validateFileName(fileName);
-  const content = Buffer.from(pem, "utf8");
-  const certificate = describeCertificate(fileName, content, true);
-  const folder = getCertificateFolder();
-  if (!folder) {
-    throw new Error("Set LOCAL_CERTIFICATE_PATH to an absolute path to manage local certificates");
-  }
-  await fs.mkdir(folder, { recursive: true });
-  const fullPath = path.join(folder, fileName);
-  const existing = await readCertificateAsync(fullPath);
-  if (existing) {
-    if (!existing.equals(content)) {
-      throw new RootCertificateError("CONFLICT", "A different certificate already exists at this file name");
-    }
-    return { created: false, certificate };
+export const createRootCertificateStore = (resources: RootCertificateResources) => {
+  const folder = resources.folder;
+  if (folder !== undefined && !path.isAbsolute(folder)) {
+    throw new Error("Certificate folder must be an absolute path");
   }
 
-  // Publish a complete file atomically without replacing an existing directory entry.
-  const temporaryPath = path.join(folder, `.root-certificate-${randomUUID()}.tmp`);
-  const temporaryFile = await fs.open(
-    temporaryPath,
-    constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
-    0o644,
-  );
-  try {
-    try {
-      await temporaryFile.writeFile(content);
-      await temporaryFile.sync();
-    } finally {
-      await temporaryFile.close();
+  const getCustomRootCertificateAsync = async (fileName: string) => {
+    validateCertificateFileName(fileName);
+    if (!folder) return null;
+    const content = await readCertificateAsync(path.join(folder, fileName));
+    if (!content) return null;
+    return describeRootCertificate(fileName, content, false);
+  };
+
+  const ensureCustomRootCertificateAsync = async (fileName: string, pem: string) => {
+    validateCertificateFileName(fileName);
+    const content = Buffer.from(pem, "utf8");
+    const certificate = describeRootCertificate(fileName, content, true);
+    if (!folder) {
+      throw new Error("An explicit certificate folder is required to manage local certificates");
     }
-    try {
-      await fs.link(temporaryPath, fullPath);
-    } catch (error) {
-      if (!hasCode(error, "EEXIST")) throw error;
-      const concurrent = await readCertificateAsync(fullPath);
-      if (!concurrent?.equals(content)) {
+    await fs.mkdir(folder, { recursive: true });
+    const fullPath = path.join(folder, fileName);
+    const existing = await readCertificateAsync(fullPath);
+    if (existing) {
+      if (!existing.equals(content)) {
         throw new RootCertificateError("CONFLICT", "A different certificate already exists at this file name");
       }
       return { created: false, certificate };
     }
-    return { created: true, certificate };
-  } finally {
-    // Cleanup must not turn a published certificate into a failed operation.
+
+    const temporaryPath = path.join(folder, `.root-certificate-${randomUUID()}.tmp`);
+    const temporaryFile = await fs.open(
+      temporaryPath,
+      constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
+      0o644,
+    );
     try {
-      await fs.unlink(temporaryPath);
-    } catch (error) {
-      logger.warn("Failed to remove temporary root certificate file", { error });
+      try {
+        await temporaryFile.writeFile(content);
+        await temporaryFile.sync();
+      } finally {
+        await temporaryFile.close();
+      }
+      try {
+        await fs.link(temporaryPath, fullPath);
+      } catch (error) {
+        if (!hasCode(error, "EEXIST")) throw error;
+        const concurrent = await readCertificateAsync(fullPath);
+        if (!concurrent?.equals(content)) {
+          throw new RootCertificateError("CONFLICT", "A different certificate already exists at this file name");
+        }
+        return { created: false, certificate };
+      }
+      return { created: true, certificate };
+    } finally {
+      try {
+        await fs.unlink(temporaryPath);
+      } catch (error) {
+        try {
+          resources.onTemporaryFileCleanupError?.(error);
+        } catch (reporterError) {
+          void reporterError;
+        }
+      }
     }
-  }
+  };
+
+  return { getCustomRootCertificateAsync, ensureCustomRootCertificateAsync };
 };
+
+export const getCustomRootCertificateAsync = (fileName: string) =>
+  createRootCertificateStore({ folder: getCertificateFolder() }).getCustomRootCertificateAsync(fileName);
+
+export const ensureCustomRootCertificateAsync = (fileName: string, pem: string) =>
+  createRootCertificateStore({ folder: getCertificateFolder() }).ensureCustomRootCertificateAsync(fileName, pem);

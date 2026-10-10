@@ -22,6 +22,7 @@
     "./infrastructure/db/env": "./src/infrastructure/db/env.ts",
     "./infrastructure/db/constants": "./src/infrastructure/db/constants.ts",
     "./infrastructure/certificates": "./src/infrastructure/certificates/index.ts",
+    "./infrastructure/certificates/resources": "./src/infrastructure/certificates/resources.ts",
     "./infrastructure/certificates/hostnames/db/sqlite": "./src/infrastructure/certificates/hostnames/db/sqlite.ts",
     "./infrastructure/certificates/hostnames/db/postgresql": "./src/infrastructure/certificates/hostnames/db/postgresql.ts",
     "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts",
