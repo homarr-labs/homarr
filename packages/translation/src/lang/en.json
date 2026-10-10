@@ -3171,9 +3171,7 @@
         "eventDetails": "Event details",
         "close": "Close event details",
         "timeSlot": "Time slot",
-        "weekday": "Weekday",
-        "saveErrorTitle": "Could not save calendar view",
-        "saveErrorMessage": "The previous view has been restored. Try again."
+        "weekday": "Weekday"
       }
     },
     "weather": {

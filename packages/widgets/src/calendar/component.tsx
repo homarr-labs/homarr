@@ -1,25 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMantineTheme } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useBoardReplay } from "@homarr/api/board-replay";
-import { useSession } from "@homarr/auth/client";
-import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
-import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { useLocalWidgetState } from "../common/use-local-widget-state";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { CalendarEventWithSource } from "./calendar-event-list";
 import { CalendarDisplay } from "./calendar-display";
 import type { CalendarView } from "./calendar-view";
+import { isCalendarView } from "./calendar-view";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const queryClient = useQueryClient();
@@ -150,44 +149,28 @@ interface CalendarBaseProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const CalendarBase = ({ options, setOptions, boardId, itemId, ...props }: CalendarBaseProps) => {
-  const t = useI18n("widget.calendar.controls");
+const CalendarBase = ({ options, boardId, itemId, displayMode, ...props }: CalendarBaseProps) => {
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
   const theme = useMantineTheme();
-  const { data: session } = useSession();
-  const { hasChangeAccess } = constructBoardPermissions(board, session);
-  const canChangeView = !boardId || !itemId || hasChangeAccess;
-  const viewSavePending = useRef(false);
-  const { mutate: saveItemOptions, isPending: isSavingView } = clientApi.widget.options.saveItemOptions.useMutation({
-    onError: () => showErrorNotification({ title: t("saveErrorTitle"), message: t("saveErrorMessage") }),
+  const defaultView = displayMode === "advanced" ? "agenda" : options.viewMode;
+  const [selectedView, setSelectedView] = useLocalWidgetState<CalendarView | null>({
+    key: boardId && itemId ? `homarr:calendar:${boardId}:${itemId}:view:${displayMode ?? "compact"}` : undefined,
+    version: 1,
+    defaultValue: null,
+    validate: (value): value is CalendarView | null => value === null || isCalendarView(value),
   });
   const setView = (view: CalendarView) => {
-    if (viewSavePending.current || !canChangeView || props.isEditMode || view === options.viewMode) return;
-    const previousView = options.viewMode;
-    setOptions({ newOptions: { viewMode: view } });
-    if (!boardId || !itemId) return;
-    viewSavePending.current = true;
-    saveItemOptions(
-      { boardId, itemId, newOptions: { viewMode: view } },
-      {
-        onError: () => setOptions({ newOptions: { viewMode: previousView } }),
-        onSettled: () => {
-          viewSavePending.current = false;
-        },
-      },
-    );
+    if (!props.isEditMode) setSelectedView(view);
   };
 
   return (
     <CalendarDisplay
       {...props}
       releaseType={options.releaseType}
-      view={options.viewMode}
+      view={props.isEditMode ? defaultView : (selectedView ?? defaultView)}
       setView={setView}
-      isViewChangeDisabled={!canChangeView || isSavingView}
-      isSavingView={isSavingView}
       locale={locale}
       firstDayOfWeek={firstDayOfWeek}
       radius={theme.radius[board.itemRadius]}
