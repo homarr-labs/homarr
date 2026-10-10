@@ -139,7 +139,12 @@ const ConfigurationSkeleton = ({ label }: { label: string }) => (
   </Stack>
 );
 
-export const AssistantConfiguration = () => {
+interface AssistantConfigurationProps {
+  // Onboarding defers the root provider refresh until completion to preserve setup drafts.
+  refreshAfterSave?: boolean;
+}
+
+export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantConfigurationProps) => {
   const t = useI18n("management.page.settings.section.assistant");
   const tCommon = useI18n("common");
   const router = useRouter();
@@ -271,7 +276,9 @@ export const AssistantConfiguration = () => {
         utils.assistant.getAvailability.invalidate(),
         utils.assistant.getRuntimeOptions.invalidate(),
       ]);
-      router.refresh();
+      if (refreshAfterSave) {
+        router.refresh();
+      }
       showSuccessNotification({
         title: t("notification.saved.title"),
         message: t("notification.saved.message"),
