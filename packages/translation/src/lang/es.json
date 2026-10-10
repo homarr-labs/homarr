@@ -749,7 +749,10 @@
         "selectMultiple": "Seleccionar múltiples",
         "cancelMultiple": "Salir de selección múltiple",
         "customApplication": "Aplicación personalizada",
-        "application": "Aplicación"
+        "application": "Aplicación",
+        "backToApps": "Volver a apps",
+        "createAndAdd": "Crear y añadir",
+        "createAnother": "Crear y continuar"
       },
       "create": {
         "title": "Crear nueva aplicación",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Añadir una URL o aplicación en la configuración del widget"
+      "empty": "Añadir una URL o aplicación en la configuración del widget",
+      "groups": {
+        "label": "Categorías",
+        "placeholder": "Nueva Categoría",
+        "add": "Añadir categoría",
+        "remove": "Eliminar categoría {name}",
+        "rename": "Nombre de la categoría para {name}",
+        "assign": "Categoría para {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Contenedores a filtrar"
         },
+        "filterCaseSensitive": {
+          "label": "Distingue mayúsculas"
+        },
+        "filterAllowWildcards": {
+          "label": "Permitir comodines",
+          "description": "Use * para cero o más caracteres."
+        },
         "filterIsWhitelist": {
           "label": "Filtrar como lista blanca"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "No se encontraron aplicaciones",
         "description": "Haz clic <here></here> para crear una nueva aplicación",
-        "quickCreate": "Crear aplicación en el momento"
+        "quickCreate": "Crear aplicación en el momento",
+        "create": "Crear aplicación"
       },
       "error": {
         "noIntegration": "No se ha seleccionado ninguna integración",
@@ -6151,6 +6171,15 @@
           "notice": "Para hacer que esta página desaparezca, pide al administrador del servidor que establezca un tablero de inicio para el servidor"
         }
       }
+    },
+    "snapshot": {
+      "take": "Tomar instantánea del estado del tablero",
+      "description": "Descarga una instantánea redactada para adjuntar un informe de error y ayudarnos a reproducir tu diseño",
+      "downloaded": "Snapshot descargado",
+      "downloadedDescription": "Adjunte el JSON y una captura de pantalla tomada en el mismo tamaño de la ventana a su informe de error. La instantánea incluye diseño, configuración, CSS personalizado, opciones de widget y datos cargados, con texto privado, URLs y credenciales redactadas.",
+      "playground": "Zona de juego abierta",
+      "failed": "No se puede capturar la instantánea del tablero",
+      "failedDescription": "Los datos del tablero no pudieron ser exportados de forma segura, o la instantánea excede los 10 MB."
     }
   },
   "layout": {

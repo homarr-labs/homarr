@@ -30,8 +30,6 @@ const nextConfig: NextConfig = {
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
-  // Keep next-intl's internal locale rewrite intact.
-  skipProxyUrlNormalize: true,
   env: {
     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
   },

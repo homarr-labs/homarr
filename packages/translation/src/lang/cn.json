@@ -749,7 +749,10 @@
         "selectMultiple": "选择多个",
         "cancelMultiple": "退出多选",
         "customApplication": "自定义应用",
-        "application": "应用"
+        "application": "应用",
+        "backToApps": "返回应用",
+        "createAndAdd": "创建并添加",
+        "createAnother": "创建并继续"
       },
       "create": {
         "title": "创建应用",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "在小部件设置中添加 URL 或应用程序"
+      "empty": "在小部件设置中添加 URL 或应用程序",
+      "groups": {
+        "label": "类别管理",
+        "placeholder": "新建分类",
+        "add": "添加分类",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "要过滤的容器"
         },
+        "filterCaseSensitive": {
+          "label": "区分大小写"
+        },
+        "filterAllowWildcards": {
+          "label": "允许通配符",
+          "description": "使用 * 为零或更多字符。"
+        },
         "filterIsWhitelist": {
           "label": "以白名单过滤"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "未找到应用",
         "description": "点击 <here></here> 创建一个新的应用",
-        "quickCreate": "在运行时创建应用"
+        "quickCreate": "在运行时创建应用",
+        "create": "创建应用"
       },
       "error": {
         "noIntegration": "未选择集成",
@@ -6151,6 +6171,15 @@
           "notice": "要使这个页面消失，请服务器管理员为服务器设置一个主面板"
         }
       }
+    },
+    "snapshot": {
+      "take": "拍摄板状态的快照",
+      "description": "下载经过编辑的快照以附加到错误报告并帮助我们复制您的布局",
+      "downloaded": "Board 快照已下载",
+      "downloadedDescription": "将 JSON 附加到您的 bug 报告中以相同窗口大小拍摄的屏幕。 快照包括布局、设置、自定义 CSS 、小部件选项和加载数据，已编辑私密文本、URL和凭据。",
+      "playground": "打开棋盘播放列表",
+      "failed": "无法抓取板快照",
+      "failedDescription": "棋盘数据无法安全导出或快照超过 10 MB。"
     }
   },
   "layout": {

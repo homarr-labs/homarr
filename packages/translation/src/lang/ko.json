@@ -749,7 +749,10 @@
         "selectMultiple": "여러 항목 선택",
         "cancelMultiple": "다중 선택 종료",
         "customApplication": "사용자 지정 애플리케이션",
-        "application": "애플리케이션"
+        "application": "애플리케이션",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "새 앱 생성",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "위젯 설정에서 URL 또는 앱을 추가하세요"
+      "empty": "위젯 설정에서 URL 또는 앱을 추가하세요",
+      "groups": {
+        "label": "",
+        "placeholder": "새 카테고리",
+        "add": "카테고리 추가",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "필터링할 컨테이너"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "화이트리스트로 필터링"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "앱 없음",
         "description": "새 앱을 생성하려면 <here></here> 클릭",
-        "quickCreate": "즉석 앱 생성"
+        "quickCreate": "즉석 앱 생성",
+        "create": "앱 생성"
       },
       "error": {
         "noIntegration": "선택한 통합 없음",
@@ -6151,6 +6171,15 @@
           "notice": "이 페이지를 사라지게 하려면 관리자에게 서버 홈 보드를 설정을 문의하십시오"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

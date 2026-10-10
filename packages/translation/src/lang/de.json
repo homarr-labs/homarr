@@ -749,7 +749,10 @@
         "selectMultiple": "Wählen Sie mehrere",
         "cancelMultiple": "Mehrfachauswahl beenden",
         "customApplication": "Benutzerdefinierte Anwendung",
-        "application": "Anwendung"
+        "application": "Anwendung",
+        "backToApps": "Zurück zu Apps",
+        "createAndAdd": "Erstellen und hinzufügen",
+        "createAnother": "Erstellen und fortsetzen"
       },
       "create": {
         "title": "Neue App erstellen",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "URL oder App in den Widget-Einstellungen hinzufügen"
+      "empty": "URL oder App in den Widget-Einstellungen hinzufügen",
+      "groups": {
+        "label": "Kategorien",
+        "placeholder": "Neue Kategorie",
+        "add": "Kategorie hinzufügen",
+        "remove": "{name} Kategorie entfernen",
+        "rename": "Kategoriename für {name}",
+        "assign": "Kategorie für {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Zu filternde Container"
         },
+        "filterCaseSensitive": {
+          "label": "Groß-/Kleinschreibung"
+        },
+        "filterAllowWildcards": {
+          "label": "Platzhalter erlauben",
+          "description": "* für Null oder mehr Zeichen verwenden."
+        },
         "filterIsWhitelist": {
           "label": "Als Whitelist filtern"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Keine App gefunden",
         "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
-        "quickCreate": "Jetzt eine App erstellen"
+        "quickCreate": "Jetzt eine App erstellen",
+        "create": "App erstellen"
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
@@ -6151,6 +6171,15 @@
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
       }
+    },
+    "snapshot": {
+      "take": "Schnappschuss des Brettstatus machen",
+      "description": "Laden Sie einen geretteten Schnappschuss herunter, um einen Fehlerbericht anzuhängen und helfen Sie uns, Ihr Layout zu reproduzieren",
+      "downloaded": "Brett-Snapshot heruntergeladen",
+      "downloadedDescription": "Fügen Sie den JSON und einen Screenshot mit der gleichen Fenstergröße an Ihren Fehlerbericht an. Der Schnappschuss enthält Layout, Einstellungen, benutzerdefinierte CSS, Widget-Optionen und geladene Daten, mit privatem Text, URLs und Anmeldeinformationen.",
+      "playground": "Spielplatz öffnen",
+      "failed": "Brett-Snapshot konnte nicht aufgenommen werden",
+      "failedDescription": "Die Boarddaten konnten nicht sicher exportiert werden oder der Snapshot überschreitet 10 MB."
     }
   },
   "layout": {
