@@ -1,0 +1,20 @@
+apps/nextjs/src/theme/branding.ts
+  h_d6e478ca18e517 1
+packages/settings/src/byte-format.ts
+  h_d6e478ca18e517 5
+packages/settings/src/creator.ts
+  h_d6e478ca18e517 2
+packages/ui/src/theme.ts
+  h_d6e478ca18e517 1-4,124-161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "27f35202d22af256bf58f8b33e39b84e0030f45b",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
