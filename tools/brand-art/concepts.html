@@ -711,22 +711,43 @@
         add(at(term, 64, 270));
       }
 
-      const CONCEPTS = new Map([
-        ["0", c0],
-        ["1", c1],
-        ["2", c2],
-        ["3", c3],
-        ["4", c4],
-        ["5", c5],
-        ["6", c6],
-        ["7", c7],
-        ["8", c8],
-        ["9", c9],
-        ["10", c10],
-      ]);
-      const concept = CONCEPTS.get(C);
-      if (!concept) throw new Error(`unknown concept: ${C}`);
-      concept();
+      switch (C) {
+        case "0":
+          c0();
+          break;
+        case "1":
+          c1();
+          break;
+        case "2":
+          c2();
+          break;
+        case "3":
+          c3();
+          break;
+        case "4":
+          c4();
+          break;
+        case "5":
+          c5();
+          break;
+        case "6":
+          c6();
+          break;
+        case "7":
+          c7();
+          break;
+        case "8":
+          c8();
+          break;
+        case "9":
+          c9();
+          break;
+        case "10":
+          c10();
+          break;
+        default:
+          throw new Error(`unknown concept: ${C}`);
+      }
       const fonts = [
         '830 100px "Inter Tight"',
         '800 100px "Inter Tight"',
