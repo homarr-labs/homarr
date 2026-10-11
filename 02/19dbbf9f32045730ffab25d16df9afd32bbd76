@@ -1,0 +1,20 @@
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 70,320-322
+packages/widgets/src/downloads/index.ts
+  h_d6e478ca18e517 4,10,32-36
+packages/widgets/src/downloads/query-input.ts
+  h_d6e478ca18e517 1-9
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 15,161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0219dbbf9f32045730ffab25d16df9afd32bbd76",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
