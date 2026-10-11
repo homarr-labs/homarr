@@ -36,7 +36,7 @@ export const getCalendarScheduleEvents = (
       if (!end.isBefore(dayEnd)) end = dayEnd.subtract(1, "second");
     }
     // Keep short visual intervals inside their day, including the final second.
-    if (end.diff(start, "second") < minimumDurationSeconds) {
+    if (end.isSame(start, "day") && end.diff(start, "second") < minimumDurationSeconds) {
       const latestEnd = start.endOf("day").startOf("second");
       end = start.add(minimumDurationSeconds, "second");
       if (end.isAfter(latestEnd)) {
