@@ -1,0 +1,18 @@
+docs/adr/0001-bounded-board-permission-writes.md
+  h_d6e478ca18e517 1-17
+packages/db/index.ts
+  h_d6e478ca18e517 13
+packages/db/write-plan.ts
+  h_d6e478ca18e517 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c16258998882049780144740d465937cb841810f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
