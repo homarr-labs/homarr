@@ -116,6 +116,10 @@
   color: var(--mantine-color-dimmed);
 }
 
+.labeledContainerCard:has(> .containerAction) > .containerHeader .containerHeaderIcon {
+  padding-inline-start: calc(36px * var(--board-canvas-ui-scale, 1));
+}
+
 .containerHeaderIcon > svg {
   width: calc(18px * var(--board-canvas-ui-scale, 1));
   height: calc(18px * var(--board-canvas-ui-scale, 1));
@@ -131,6 +135,8 @@
 }
 
 .labeledContainerCard > .containerAction {
+  right: auto !important;
+  inset-inline-end: calc(46px * var(--board-canvas-ui-scale, 1)) !important;
   top: calc(var(--container-header-height) / 2) !important;
   transform: translateY(-50%) !important;
 }

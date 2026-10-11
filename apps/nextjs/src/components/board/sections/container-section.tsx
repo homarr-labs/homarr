@@ -117,8 +117,6 @@ export const BoardContainerSection = ({ section }: Props) => {
   let headerActionInset = "0px";
   if (isEditMode) {
     headerActionInset = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
-  } else if (options.showOpenAll) {
-    headerActionInset = "calc(40px * var(--mantine-scale))";
   }
 
   return (
