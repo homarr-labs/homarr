@@ -21,9 +21,8 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     clearMocks: true,
     coverage: {
-      provider: "v8",
+      provider: "istanbul",
       reporter: ["html", "json-summary", "json"],
-      all: true,
       exclude: (configDefaults.coverage.exclude ?? []).concat("apps/nextjs/.next/"),
       reportOnFailure: true,
     },
