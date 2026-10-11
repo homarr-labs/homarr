@@ -1,0 +1,20 @@
+packages/core/src/infrastructure/db/scope.ts
+  h_d6e478ca18e517 1,61-66,72-79,88-91,195-216,219-257
+packages/db/runtime.spec.ts
+  h_d6e478ca18e517 17-512,516-712,810,1032,1169,1254
+packages/db/runtime.ts
+  h_d6e478ca18e517 28-32,85-91,97,270-306,328,330,336-339,380
+packages/db/transaction-gate.ts
+  h_d6e478ca18e517 1-395
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c009cba62d8ffab1d19186e4df62674b616979fd",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
