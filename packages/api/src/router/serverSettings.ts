@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import {
   getServerSettingByKeyAsync,
@@ -119,12 +120,8 @@ export const serverSettingsRouter = createTRPCRouter({
         }
       }
 
-      if (input.boardOrder) {
-        const existingBoards = await ctx.db.query.boards.findMany({ columns: { id: true } });
-        const existingIds = new Set(existingBoards.map((board) => board.id));
-        if (input.boardOrder.some((id) => !existingIds.has(id))) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "One or more ordered boards no longer exist" });
-        }
+      if (input.boardOrder !== undefined) {
+        await validateBoardOrderAsync(ctx.db, input.boardOrder);
       }
 
       const current = await getServerSettingByKeyAsync(ctx.db, "board");
@@ -172,6 +169,9 @@ export const serverSettingsRouter = createTRPCRouter({
         await updateAnalyticsServerSettingAsync(ctx.db, (current) => ({ ...current, ...parsedInput }));
         return;
       }
+      if (input.settingsKey === "board" && "boardOrder" in input.value) {
+        await validateBoardOrderAsync(ctx.db, input.value.boardOrder);
+      }
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
       await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
         ...current,
@@ -179,3 +179,16 @@ export const serverSettingsRouter = createTRPCRouter({
       } as ServerSettings[typeof input.settingsKey]);
     }),
 });
+
+const validateBoardOrderAsync = async (db: Database, boardOrder: unknown) => {
+  const parsed = boardServerSettingsSchema.shape.boardOrder.safeParse(boardOrder);
+  if (!parsed.success) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
+  }
+
+  const existingBoards = await db.query.boards.findMany({ columns: { id: true } });
+  const existingIds = new Set(existingBoards.map((board) => board.id));
+  if (parsed.data.some((id) => !existingIds.has(id))) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "One or more ordered boards no longer exist" });
+  }
+};
