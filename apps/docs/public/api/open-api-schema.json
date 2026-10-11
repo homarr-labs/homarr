@@ -4105,7 +4105,7 @@
       "get": {
         "operationId": "serverSettingsRouter-getBoardSettings",
         "summary": "Get global board settings",
-        "description": "Return instance desktop and mobile home board IDs and default status behavior. Requires admin permission.",
+        "description": "Return instance desktop and mobile home board IDs, ordered board IDs and default status behavior. Requires admin permission.",
         "tags": [
           "settings"
         ],
@@ -4122,6 +4122,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "boardOrder": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      }
+                    },
                     "homeBoardId": {
                       "anyOf": [
                         {
@@ -4150,6 +4159,7 @@
                     }
                   },
                   "required": [
+                    "boardOrder",
                     "homeBoardId",
                     "mobileHomeBoardId",
                     "enableStatusByDefault",
@@ -4195,7 +4205,7 @@
       "patch": {
         "operationId": "serverSettingsRouter-updateBoardSettings",
         "summary": "Update global board settings",
-        "description": "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
+        "description": "Update supplied instance board defaults and return the resulting settings. Board order is a unique list of existing board IDs; omitted boards appear afterward. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
         "tags": [
           "settings"
         ],
@@ -4212,6 +4222,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "boardOrder": {
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255
+                    }
+                  },
                   "homeBoardId": {
                     "anyOf": [
                       {
@@ -4251,6 +4270,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "boardOrder": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      }
+                    },
                     "homeBoardId": {
                       "anyOf": [
                         {
@@ -4279,6 +4307,7 @@
                     }
                   },
                   "required": [
+                    "boardOrder",
                     "homeBoardId",
                     "mobileHomeBoardId",
                     "enableStatusByDefault",

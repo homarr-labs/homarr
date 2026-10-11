@@ -6298,6 +6298,12 @@
         "noResults": {
           "title": "No boards yet",
           "description": "Create a board to arrange your apps and widgets in one place."
+        },
+        "order": {
+          "description": "Board order is shared by all users. New boards appear last. Changes are saved immediately.",
+          "up": "Move {name} up",
+          "down": "Move {name} down",
+          "error": "Unable to save board order"
         }
       },
       "media": {

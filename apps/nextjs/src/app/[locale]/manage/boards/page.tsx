@@ -10,6 +10,7 @@ import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
 import { BoardCard } from "./_components/board-card";
+import { BoardOrderControls } from "./_components/board-order-controls";
 import { CreateBoardButton } from "./_components/create-board-button";
 
 export default async function ManageBoardsPage() {
@@ -28,6 +29,7 @@ export default async function ManageBoardsPage() {
       {boards.length === 0 && (
         <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} description={t("noResults.description")} />
       )}
+      {boards.length > 1 && session?.user.permissions.includes("admin") && <BoardOrderControls boards={boards} />}
       {boards.length > 0 && (
         <TourTarget id="manage-boards-list">
           <Grid>

@@ -137,6 +137,7 @@ export const defaultServerSettings = {
     noSiteLinksSearchBox: false,
   },
   board: {
+    boardOrder: [] as string[],
     homeBoardId: null as string | null,
     mobileHomeBoardId: null as string | null,
     enableStatusByDefault: true,
