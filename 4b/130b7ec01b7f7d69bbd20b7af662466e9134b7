@@ -1,0 +1,21 @@
+packages/db/schema/postgresql.ts
+  s_8b1d5a69f175a9::t_def9d4934892ae 59-62
+packages/db/schema/sqlite.ts
+  s_8b1d5a69f175a9::t_0cab05def9a461 41-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4b130b7ec01b7f7d69bbd20b7af662466e9134b7",
+  "prompts": {},
+  "sessions": {
+    "s_8b1d5a69f175a9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ff0d-51af-74b0-a648-dd404bc11429",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
