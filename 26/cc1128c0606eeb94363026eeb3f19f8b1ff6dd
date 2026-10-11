@@ -1,0 +1,36 @@
+Dockerfile
+  h_d6e478ca18e517 51
+apps/docs/docs/advanced/environment-variables/index.mdx
+  h_d6e478ca18e517 32-45
+apps/docs/docs/advanced/proxy/index.mdx
+  h_d6e478ca18e517 29-51
+apps/nextjs/src/app/api/mcp/oauth/_rate-limit.ts
+  h_d6e478ca18e517 1-2,6,14-19,24,33-35,38-40,45-48,53-62,66
+apps/nextjs/src/app/api/mcp/oauth/flow.integration.spec.ts
+  h_d6e478ca18e517 15,67-68,238-240,1012,1017,1032
+apps/nextjs/src/app/api/mcp/oauth/token/route.ts
+  h_d6e478ca18e517 12-13,18,20
+nginx.conf
+  h_d6e478ca18e517 6,25-26
+packages/common/env.ts
+  h_d6e478ca18e517 27-30,36
+packages/common/src/request-identity.ts
+  h_d6e478ca18e517 1-44
+packages/common/src/server.ts
+  h_d6e478ca18e517 4
+scripts/run.sh
+  h_d6e478ca18e517 67-71,84-85
+scripts/trusted-proxies.mjs
+  h_d6e478ca18e517 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "26cc1128c0606eeb94363026eeb3f19f8b1ff6dd",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
