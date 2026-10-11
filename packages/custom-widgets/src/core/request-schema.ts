@@ -228,7 +228,7 @@ export const customWidgetRequestsSchema = z
   .record(customWidgetIdentifierSchema, customJsxRequestSchema)
   .refine((requests) => Object.keys(requests).length <= 64, "A widget can define at most 64 requests")
   .describe(
-    "Up to 64 named load queries, manual queries and actions in total. Loads share limits of 4 active requests per viewer/Item and 8 per definition, wait at most 60 seconds for capacity, and consume query budgets of 60 per viewer/Item and 240 per definition per minute. Manual requests do not wait for capacity. The total manifest allowance is not an initial-load entitlement.",
+    "At most 64 load/manual queries and actions total, not a simultaneous-load entitlement. Identified viewer/Item: 4 active requests and 60 queries/minute; definition: 8 active requests and 240 queries/minute. Unattributed callers share the 4-active/60-query-per-minute budget across Items and definitions. Loads wait up to 60 seconds for capacity; manual requests fail fast.",
   );
 
 const pathReferencePattern = /\{(option|param):([A-Za-z][A-Za-z0-9_-]*)\}/gu;

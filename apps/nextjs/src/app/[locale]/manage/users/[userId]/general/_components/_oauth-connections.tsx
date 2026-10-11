@@ -96,6 +96,10 @@ export const OAuthConnections = () => {
           </Stack>
         )}
 
+        {canShowConnections && (connections.data?.length ?? 0) > 0 && (
+          <Text size="sm">{tProvenance("clientNameHint")}</Text>
+        )}
+
         {canShowConnections &&
           connections.data?.map((connection) => (
             <Stack key={connection.id} gap="sm">
@@ -109,7 +113,6 @@ export const OAuthConnections = () => {
                   >
                     <bdi>{formatOAuthDisplayText(connection.oauthClientName ?? tProvenance("unnamedClient"))}</bdi>
                   </Text>
-                  <Text size="sm">{tProvenance("clientNameHint")}</Text>
                   <OAuthConnectionDetails connection={connection} />
                 </Stack>
                 <InlineConfirmButton
