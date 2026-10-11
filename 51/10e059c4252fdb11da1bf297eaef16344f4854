@@ -1,0 +1,16 @@
+apps/nextjs/src/components/access/user-access-form.tsx
+  h_d6e478ca18e517 113
+apps/nextjs/src/components/board/debug/snapshot.ts
+  h_d6e478ca18e517 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5110e059c4252fdb11da1bf297eaef16344f4854",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
