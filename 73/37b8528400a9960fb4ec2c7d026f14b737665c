@@ -1,0 +1,26 @@
+apps/docs/public/api/open-api-schema.json
+  h_d6e478ca18e517 1255
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/_oauth-connections.tsx
+  h_d6e478ca18e517 99-102
+docs/agents/domain.md
+  h_d6e478ca18e517 3-4,6-8,10-11
+docs/agents/issue-tracker.md
+  h_d6e478ca18e517 30-41,80-83
+docs/agents/triage-labels.md
+  h_d6e478ca18e517 7-13
+packages/custom-widgets/src/core/request-schema.ts
+  h_d6e478ca18e517 231
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 246-256,265-275,900-911
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7337b8528400a9960fb4ec2c7d026f14b737665c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
