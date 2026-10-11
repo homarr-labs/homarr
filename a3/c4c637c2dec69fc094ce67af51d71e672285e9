@@ -1,0 +1,14 @@
+packages/api/src/router/user.ts
+  h_d6e478ca18e517 98-105,114-121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a3c4c637c2dec69fc094ce67af51d71e672285e9",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
