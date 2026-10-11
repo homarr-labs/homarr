@@ -1,0 +1,18 @@
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  h_d6e478ca18e517 352
+apps/nextjs/src/components/layout/header/burger.tsx
+  h_d6e478ca18e517 7-8,12,17-26
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  h_d6e478ca18e517 239-244,396-405
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "caa4b148b7908853bea955129191979d0cb5a454",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
