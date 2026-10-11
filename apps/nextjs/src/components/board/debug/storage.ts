@@ -18,6 +18,10 @@ const createMemoryStorage = (values = new Map<string, string>()): Storage => ({
 export const installReplayStorage = (payload: Pick<BoardSnapshotPayload, "localStates">, capturedAt: string) => {
   const values = new Map<string, string>();
   for (const state of payload.localStates) {
+    if (state.key[0] === "bookmarks") {
+      values.set(`homarr-bookmarks-collapsed-${state.key[2]}`, JSON.stringify(state.value));
+      continue;
+    }
     const stored = structuredClone(state.value) as { value?: { deadline?: number; alerts?: unknown } };
     if (stored?.value) {
       if (typeof stored.value.deadline === "number") stored.value.deadline += Date.now() - Date.parse(capturedAt);
