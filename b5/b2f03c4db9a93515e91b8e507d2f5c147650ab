@@ -1,0 +1,16 @@
+apps/workshop/pb_hooks/workshop-utils.js
+  h_d6e478ca18e517 5-62,126
+apps/workshop/pb_hooks/workshop.pb.js
+  h_d6e478ca18e517 82-83,110-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b5b2f03c4db9a93515e91b8e507d2f5c147650ab",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
