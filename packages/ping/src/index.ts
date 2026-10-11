@@ -9,13 +9,14 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 const logger = createLogger({ module: "ping" });
 
 export const sendPingRequestAsync = async (url: string) => {
-  const dispatcher = new UndiciHttpAgent({
-    connect: {
-      rejectUnauthorized: false, // Ping should always work, even with untrusted certificates
-    },
-  });
+  let dispatcher: UndiciHttpAgent | undefined;
 
   try {
+    dispatcher = new UndiciHttpAgent({
+      connect: {
+        rejectUnauthorized: false, // Ping should always work, even with untrusted certificates
+      },
+    });
     const start = performance.now();
     return await withTimeoutAsync(async (signal) => {
       return await fetch(url, {
@@ -36,6 +37,6 @@ export const sendPingRequestAsync = async (url: string) => {
       error: extractErrorMessage(error),
     };
   } finally {
-    await dispatcher.destroy();
+    await dispatcher?.destroy();
   }
 };
