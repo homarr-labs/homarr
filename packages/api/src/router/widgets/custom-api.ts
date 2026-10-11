@@ -182,9 +182,22 @@ const executeRequest = async (
 export const customApiRouter = createTRPCRouter({
   refresh: publicProcedure.input(itemInputSchema).mutation(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
-    invalidateCustomWidgetResponseCache([
-      `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:`,
-    ]);
+    try {
+      await withRequestLimit(ctx, resolved, "refresh", async () => {
+        invalidateCustomWidgetResponseCache([
+          `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:`,
+        ]);
+      });
+    } catch (error) {
+      if (error instanceof TRPCError && error.code === "TOO_MANY_REQUESTS") {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Custom widget refresh limit exceeded. Please wait before refreshing again.",
+          cause: error.cause,
+        });
+      }
+      throw error;
+    }
   }),
 
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {

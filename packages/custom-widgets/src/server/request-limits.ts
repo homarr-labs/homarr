@@ -9,8 +9,8 @@ const WINDOW_MS = 60_000;
 export const CUSTOM_WIDGET_REQUEST_CONCURRENCY_TTL_MS = 60_000;
 export const CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT = 4;
 export const CUSTOM_WIDGET_DEFINITION_CONCURRENCY_LIMIT = 8;
-const CATEGORY_LIMITS = { query: 60, action: 10, delete: 3, metadata: 60 } as const;
-const DEFINITION_CATEGORY_LIMITS = { query: 240, action: 40, delete: 12, metadata: 240 } as const;
+const CATEGORY_LIMITS = { query: 60, action: 10, delete: 3, metadata: 60, refresh: 6 } as const;
+const DEFINITION_CATEGORY_LIMITS = { query: 240, action: 40, delete: 12, metadata: 240, refresh: 24 } as const;
 type RequestCategory = keyof typeof CATEGORY_LIMITS;
 
 export interface RequestLimitInput {
@@ -40,7 +40,10 @@ export class CustomWidgetRequestLimiter {
 
   public async acquire(input: RequestLimitInput): Promise<() => Promise<void>> {
     const identity = input.userId ? `user:${input.userId}` : `anonymous:${input.anonymousId ?? "unknown"}`;
-    const rateKey = `custom-widget:rate:${input.category}:${hashKey(identity, input.itemId)}`;
+    const rateKey =
+      input.category === "refresh"
+        ? `custom-widget:rate:v2:item:refresh:${hashKey(input.itemId)}`
+        : `custom-widget:rate:${input.category}:${hashKey(identity, input.itemId)}`;
     const definitionRateKey = `custom-widget:rate:v2:definition:${input.category}:${hashKey(input.definitionId)}`;
     const userKey = `custom-widget:concurrency:v2:user-item:${hashKey(identity, input.itemId)}`;
     const definitionKey = `custom-widget:concurrency:v2:definition:${hashKey(input.definitionId)}`;
