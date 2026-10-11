@@ -1,0 +1,16 @@
+.github/workflows/validate-docs.yml
+  h_d6e478ca18e517 57-58
+apps/docs/package.json
+  h_d6e478ca18e517 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "89075e550407e9d926a1b067f4b08b2e7844c94c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
