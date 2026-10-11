@@ -132,8 +132,7 @@ export function HomarrDataTable<T>({
         visibleColumns.some(({ accessor }) => String(accessor) === fillColumnAccessor)
       ) {
         const renderedWidth = getRenderedWidth(column);
-        let inverseScale = "var(--board-canvas-inverse-scale, 1)";
-        if (resizePreviewWidths) inverseScale = "1";
+        const inverseScale = "var(--board-canvas-inverse-scale, 1)";
         width = `calc(${renderedWidth}px * ${inverseScale})`;
         if (String(column.accessor) === fillColumnAccessor) {
           width = `calc(100% - ${totalWidth - renderedWidth}px * ${inverseScale})`;
