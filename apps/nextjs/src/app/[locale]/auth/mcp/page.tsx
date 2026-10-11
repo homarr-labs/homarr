@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Alert, Anchor, Button, Divider, Group, Stack, Text, Title } from "@mantine/core";
-import { IconShieldExclamation } from "@tabler/icons-react";
+import { Anchor, Button, Code, Divider, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
 import { sessionTokenCookieName } from "@homarr/auth/server";
@@ -50,9 +49,7 @@ export default async function McpConsentPage({ params, searchParams }: McpConsen
   const { consent } = result;
   const fields = [
     { label: t("account.name"), value: session.user.name ?? t("account.nameNotRecorded"), technical: false },
-    { label: t("account.id"), value: session.user.id, technical: true },
     { label: t("client.name"), value: consent.clientName || t("client.nameNotSupplied"), technical: false },
-    { label: t("client.id"), value: consent.clientId, technical: true },
     {
       label: t("client.callbackHost"),
       value: getOAuthCallbackHost(consent.redirectUri) ?? t("client.hostUnavailable"),
@@ -63,84 +60,73 @@ export default async function McpConsentPage({ params, searchParams }: McpConsen
   const expiresAt = new Date(consent.expiresAt);
 
   return (
-    <Stack gap="lg" style={{ minWidth: 0 }}>
-      {session.user.permissions.includes("admin") && (
-        <Alert
-          color="red"
-          variant="light"
-          icon={<IconShieldExclamation size={20} />}
-          title={t("admin.title")}
-          role="alert"
-        >
-          <Text size="sm">{t("admin.description")}</Text>
-        </Alert>
-      )}
+    <Stack gap="md" style={{ minWidth: 0 }}>
+      <Stack gap="xs">
+        <SimpleGrid component="dl" cols={{ base: 1, sm: 2 }} spacing="sm" m={0}>
+          {fields.map(({ label, value, technical }) => (
+            <div key={label} style={{ minWidth: 0 }}>
+              <Text component="dt" size="sm" fw={500}>
+                {label}
+              </Text>
+              <Code
+                component="dd"
+                fz="sm"
+                m={0}
+                display="block"
+                px="xs"
+                py={4}
+                style={{ overflowWrap: "anywhere", whiteSpace: "normal", unicodeBidi: "isolate" }}
+              >
+                <bdi dir={technical ? "ltr" : undefined}>{formatOAuthDisplayText(value)}</bdi>
+              </Code>
+            </div>
+          ))}
+        </SimpleGrid>
+        <Text size="sm">{t("client.unverifiedHint")}</Text>
+      </Stack>
 
-      <section aria-labelledby="mcp-identity-heading">
-        <Stack gap="sm">
-          <Title order={2} size="h4" id="mcp-identity-heading">
-            {t("identityTitle")}
-          </Title>
-          <dl
-            style={{
-              margin: 0,
-              minWidth: 0,
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--mantine-spacing-sm)",
-            }}
-          >
-            {fields.map(({ label, value, technical }) => (
-              <div key={label}>
-                <Text component="dt" size="sm" fw={500}>
-                  {label}
-                </Text>
-                <Text
-                  component="dd"
-                  size="sm"
-                  m={0}
-                  dir={technical ? "ltr" : undefined}
-                  style={{ overflowWrap: "anywhere", unicodeBidi: "isolate" }}
-                >
-                  <bdi>{formatOAuthDisplayText(value)}</bdi>
-                </Text>
-              </div>
-            ))}
-          </dl>
-          <Text size="sm">{t("client.unverifiedHint")}</Text>
-          <Text size="sm">{t("client.destinationHint")}</Text>
-        </Stack>
-      </section>
-
-      <Divider />
       <ConsentPermissions permissions={session.user.permissions} />
 
-      <section aria-labelledby="mcp-credential-heading">
-        <Stack gap="sm">
-          <Title order={2} size="h4" id="mcp-credential-heading">
-            {t("credential.title")}
-          </Title>
-          <Text size="sm">{t("credential.breadth")}</Text>
-          <Text size="sm" fw={500}>
-            {t("credential.lifetime")}
-          </Text>
+      <Stack gap={4}>
+        <Text size="sm">{t("credential.breadth")}</Text>
+        <Text size="sm">
+          {t("credential.lifetime")}{" "}
           <Anchor href={`/manage/users/${encodeURIComponent(session.user.id)}/general`} size="sm">
             {t("credential.manageConnections")}
           </Anchor>
+        </Text>
+      </Stack>
+
+      <details>
+        <Text component="summary" size="sm" style={{ cursor: "pointer" }}>
+          {t("details")}
+        </Text>
+        <Stack gap="xs" mt="xs">
+          {[
+            { label: t("account.id"), value: session.user.id },
+            { label: t("client.id"), value: consent.clientId },
+          ].map(({ label, value }) => (
+            <Text key={label} size="sm" style={{ overflowWrap: "anywhere" }}>
+              {label}:{" "}
+              <Code fz="sm" style={{ overflowWrap: "anywhere", whiteSpace: "normal" }}>
+                <bdi dir="ltr">{formatOAuthDisplayText(value)}</bdi>
+              </Code>
+            </Text>
+          ))}
+          <Text size="sm">
+            {t("requestExpires")}{" "}
+            <time dateTime={expiresAt.toISOString()}>
+              {new Intl.DateTimeFormat(getIntlLocale(locale), {
+                dateStyle: "medium",
+                timeStyle: "short",
+                timeZone: "UTC",
+              }).format(expiresAt)}
+            </time>
+          </Text>
         </Stack>
-      </section>
+      </details>
 
       <Divider />
-      <Text size="sm">
-        {t("requestExpires")}{" "}
-        <time dateTime={expiresAt.toISOString()}>
-          {new Intl.DateTimeFormat(getIntlLocale(locale), {
-            dateStyle: "medium",
-            timeStyle: "short",
-            timeZone: "UTC",
-          }).format(expiresAt)}
-        </time>
-      </Text>
 
       <form method="post" action="/api/mcp/oauth/authorize" aria-describedby="mcp-decision-hint">
         <input type="hidden" name="pending" value={consent.pendingId} />

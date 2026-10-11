@@ -249,45 +249,47 @@
       },
       "mcpConsent": {
         "title": "Review client access",
-        "description": "Check the account, client and callback destination before allowing access.",
+        "description": "Review this client's access before connecting.",
         "viewingHint": "Viewing this page does not grant access.",
         "identityTitle": "Account and client",
         "loading": "Loading the access request",
         "allow": "Allow access",
         "deny": "Deny access",
-        "decisionHint": "Only allow access if you trust this client and recognize the callback destination.",
-        "requestExpires": "Authorization request expires (UTC):",
+        "decisionHint": "Only allow access if you trust this client and callback.",
+        "requestExpires": "Request expires (UTC):",
+        "details": "Technical details",
         "returnHome": "Return to Homarr",
         "reload": "Reload consent page",
         "account": {
-          "name": "Signed-in user",
+          "name": "Signed in as",
           "id": "User ID",
           "nameNotRecorded": "User name not recorded"
         },
         "client": {
-          "name": "Client name (self-reported)",
+          "name": "Client",
           "nameNotSupplied": "Client name not supplied",
           "id": "Client ID",
           "callbackHost": "Callback host",
           "callbackUrl": "Full callback URL",
           "hostUnavailable": "Callback host unavailable",
-          "unverifiedHint": "Client names are self-reported and are not verified by Homarr. A familiar name does not establish who operates the client.",
+          "unverifiedHint": "Client names are self-reported, not verified by Homarr.",
           "destinationHint": "Your decision will return to this callback. If you allow access, the client can exchange the authorization code for an API credential."
         },
         "access": {
-          "title": "Effective account access",
-          "description": "The credential uses your account's current permissions, including access to resources shared with you. Permissions are checked for every API request and may change when your account permissions change.",
-          "noGlobalPermissions": "No additional global permissions are currently assigned. Your existing account and shared-resource access still applies."
+          "title": "Account access",
+          "description": "Uses your current permissions, including shared resources.",
+          "details": "View permissions ({count})",
+          "noGlobalPermissions": "Uses your account and shared-resource access, with no global permissions."
         },
         "admin": {
           "title": "Full administrator access",
-          "description": "You are an administrator. Allowing access creates a credential with full administrator access to Homarr and connected services, including destructive actions. Only continue if you trust this client."
+          "description": "Can manage Homarr and connected services, including destructive actions."
         },
         "credential": {
           "title": "Credential scope and lifetime",
-          "breadth": "This creates a user API credential. It can be used with Homarr's HTTP API as well as MCP, including outside this client.",
-          "lifetime": "The credential does not expire automatically. Signing out does not revoke it. Revoke the connection in your General settings to remove its saved credential.",
-          "manageConnections": "Manage OAuth connections"
+          "breadth": "Works with Homarr's HTTP API and MCP, including outside this client.",
+          "lifetime": "No automatic expiry. Signing out does not revoke access.",
+          "manageConnections": "Revoke in General settings"
         },
         "error": {
           "freshStart": "Start a fresh authorization request from the client. Homarr will ask you to review access again.",

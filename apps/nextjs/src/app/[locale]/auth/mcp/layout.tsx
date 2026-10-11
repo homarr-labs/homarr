@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import type { Metadata } from "next";
+import { Text } from "@mantine/core";
 import { IconShieldLock } from "@tabler/icons-react";
 
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
@@ -20,9 +21,13 @@ export default async function McpConsentLayout({ children }: PropsWithChildren) 
   return (
     <OnboardingAuthShell
       title={t("title")}
-      description={t("description")}
+      description={
+        <Text component="span" inherit c="var(--mantine-color-text)">
+          {t("description")}
+        </Text>
+      }
       icon={<IconShieldLock size={24} />}
-      footer={t("viewingHint")}
+      width="min(100%, 48rem)"
       appName={branding.appName}
       showAppName={branding.authBranding.showAppName}
       showAppLogo={branding.authBranding.showLogo}

@@ -22,6 +22,7 @@ interface OnboardingAuthShellProps {
   backgroundImageUrl?: string;
   backgroundOverlay?: number;
   radius?: "xs" | "sm" | "md" | "lg" | "xl";
+  width?: CSSProperties["width"];
 }
 
 export const OnboardingAuthShell = ({
@@ -41,6 +42,7 @@ export const OnboardingAuthShell = ({
   backgroundImageUrl,
   backgroundOverlay = 0.55,
   radius = "lg",
+  width,
 }: OnboardingAuthShellProps) => (
   <main
     className={classes.page}
@@ -62,7 +64,7 @@ export const OnboardingAuthShell = ({
     ) : null}
     <OnboardingBackdrop />
     <div className={`${classes.shell} ${classes.authShell}`}>
-      <Stack className={classes.authLayout} gap="xl" align="center" justify="center">
+      <Stack className={classes.authLayout} gap="xl" align="center" justify="center" style={{ width }}>
         {showAppName || showAppLogo ? (
           <div className={classes.authBrand}>
             <OnboardingWordmark

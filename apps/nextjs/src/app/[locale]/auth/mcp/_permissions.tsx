@@ -1,4 +1,5 @@
-import { List, ListItem, Stack, Text, Title } from "@mantine/core";
+import { Alert, List, ListItem, Stack, Text, Title } from "@mantine/core";
+import { IconShieldExclamation } from "@tabler/icons-react";
 
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { getPermissionsWithChildren, groupPermissionKeys } from "@homarr/definitions";
@@ -32,22 +33,42 @@ export const ConsentPermissions = async ({ permissions }: { permissions: GroupPe
   const effectivePermissions = new Set(getPermissionsWithChildren(permissions));
   const displayedPermissions = groupPermissionKeys.filter((permission) => effectivePermissions.has(permission));
 
+  if (effectivePermissions.has("admin")) {
+    return (
+      <Alert
+        color="red"
+        variant="light"
+        icon={<IconShieldExclamation size={20} />}
+        title={t("admin.title")}
+        role="alert"
+      >
+        <Text size="sm">{t("admin.description")}</Text>
+      </Alert>
+    );
+  }
+
   return (
     <section aria-labelledby="mcp-access-heading">
-      <Stack gap="sm">
+      <Stack gap="xs">
         <Title order={2} size="h4" id="mcp-access-heading">
           {t("access.title")}
         </Title>
-        <Text size="sm">{t("access.description")}</Text>
-        {displayedPermissions.length > 0 ? (
-          <List size="sm" spacing="xs" withPadding>
-            {displayedPermissions.map((permission) => (
-              <ListItem key={permission}>{tPermissions(permissionLabels[permission])}</ListItem>
-            ))}
-          </List>
-        ) : (
-          <Text size="sm">{t("access.noGlobalPermissions")}</Text>
+        {displayedPermissions.length > 0 && (
+          <>
+            <Text size="sm">{t("access.description")}</Text>
+            <details>
+              <Text component="summary" size="sm" style={{ cursor: "pointer" }}>
+                {t("access.details", { count: displayedPermissions.length })}
+              </Text>
+              <List size="sm" spacing="xs" withPadding mt="xs">
+                {displayedPermissions.map((permission) => (
+                  <ListItem key={permission}>{tPermissions(permissionLabels[permission])}</ListItem>
+                ))}
+              </List>
+            </details>
+          </>
         )}
+        {displayedPermissions.length === 0 && <Text size="sm">{t("access.noGlobalPermissions")}</Text>}
       </Stack>
     </section>
   );
