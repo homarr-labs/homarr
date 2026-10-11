@@ -1,0 +1,42 @@
+apps/nextjs/src/app/api/mcp/_protocol.ts
+  h_d6e478ca18e517 48
+packages/api/src/mcp-tools.ts
+  h_d6e478ca18e517 2,12,23,67-69,139-142
+packages/api/src/router/app.ts
+  h_d6e478ca18e517 204,302
+packages/api/src/router/board.ts
+  h_d6e478ca18e517 681,760,1129,1581,2311
+packages/api/src/router/custom-widget/creation-procedures.ts
+  h_d6e478ca18e517 38,59,104
+packages/api/src/router/custom-widget/preview-action-procedures.ts
+  h_d6e478ca18e517 22
+packages/api/src/router/custom-widget/preview-base-procedures.ts
+  h_d6e478ca18e517 116,238
+packages/api/src/router/custom-widget/secret-procedures.ts
+  h_d6e478ca18e517 62-68,86,148
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  h_d6e478ca18e517 146-148
+packages/api/src/router/docker/docker-router.ts
+  h_d6e478ca18e517 59,107,121,135,149
+packages/api/src/router/integration/integration-request.ts
+  h_d6e478ca18e517 137
+packages/api/src/router/integration/integration-router.ts
+  h_d6e478ca18e517 230,418-422,718
+packages/api/src/router/invite.ts
+  h_d6e478ca18e517 78,118-122
+packages/api/src/router/user.ts
+  h_d6e478ca18e517 208,572
+packages/api/src/router/widgets/stats.ts
+  h_d6e478ca18e517 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7703ac9a1e440b2dbceedce3809cd297d9800874",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
