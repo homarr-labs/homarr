@@ -43,7 +43,6 @@ export const ClientShell = ({
         />
       )}
       <AppShell
-        {...backgroundProps}
         mih={backgroundProps.bg ? "100dvh" : undefined}
         header={hasHeader ? { height: headerHeight } : undefined}
         navbar={
