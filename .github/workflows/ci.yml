@@ -120,6 +120,31 @@ jobs:
           bun run turbo run build --filter=@homarr/nextjs
           bun run check:custom-widget-bundle
 
+  security-router-checks:
+    name: Security and router checks
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NODE_ENV: development
+      CI: "true"
+      DISABLE_REDIS_LOGS: "true"
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Setup
+        uses: ./tooling/github/setup
+
+      - name: List selected security and router specs
+        run: bun x --no-install vitest list --config vitest.security.config.mts --filesOnly
+
+      - name: Run security and router checks
+        run: bun x --no-install vitest run --config vitest.security.config.mts
+
   container:
     name: Container and migration smoke
     # Legacy converter verification is opt-in, not a release publication gate.
