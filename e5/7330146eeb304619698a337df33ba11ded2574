@@ -1,0 +1,18 @@
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  h_d6e478ca18e517 3,7,14
+packages/common/src/bounded-response.ts
+  h_d6e478ca18e517 7,12,16-26,28-45,47-51,53-59,61,63-69
+packages/image-proxy/src/index.ts
+  h_d6e478ca18e517 6,15-16,88,95-100,102-103,105,107-132,136,147-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e57330146eeb304619698a337df33ba11ded2574",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
