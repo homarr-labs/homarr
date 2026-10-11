@@ -23,14 +23,6 @@ body:
     validations:
       required: true
   - type: textarea
-    id: boardSnapshot
-    attributes:
-      label: Board snapshot and screenshot
-      description: |
-        If the problem appears on your dashboard, keep the affected window size, take a screenshot, then open CMD+K (Ctrl+K) and select "Take snapshot of board state". Drag the downloaded JSON and screenshot into this field so we can reproduce the layout, settings, sanitized custom CSS, widget options and loaded data. Private text, URLs and credentials are redacted; review both files before sharing. Leave blank for editor-only issues.
-    validations:
-      required: false
-  - type: textarea
     id: definition
     attributes:
       label: Sanitized widget definition
