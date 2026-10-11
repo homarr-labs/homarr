@@ -6171,15 +6171,6 @@
           "notice": "Chcete-li tuto stránku skrýt, požádejte správce serveru o nastavení domovské plochy pro server"
         }
       }
-    },
-    "snapshot": {
-      "take": "Pořídit snímek stavu šachu",
-      "description": "Stáhněte si opravený snímek pro připojení k hlášení o chybě a pomozte nám reprodukovat vaše rozložení",
-      "downloaded": "Bojový snímek byl stažen",
-      "downloadedDescription": "Připojte JSON a snímek obrazovky ve stejné velikosti okna k hlášení o chybě. Snapshot zahrnuje rozvržení, nastavení, vlastní CSS, možnosti widgetů a načtená data s opraveným privátním textem, URL a přihlašovacími údaji.",
-      "playground": "Otevírací deska",
-      "failed": "Nelze zachytit snímek desky",
-      "failedDescription": "Nelze bezpečně exportovat data z tabule, nebo snímek přesahuje 10 MB."
     }
   },
   "layout": {

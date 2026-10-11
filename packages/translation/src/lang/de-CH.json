@@ -6171,15 +6171,6 @@
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

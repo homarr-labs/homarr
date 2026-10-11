@@ -6171,15 +6171,6 @@
           "notice": "Để ẩn trang này, hãy yêu cầu quản trị viên máy chủ đặt bảng chính cho máy chủ"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

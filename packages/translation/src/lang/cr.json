@@ -6171,15 +6171,6 @@
           "notice": "crwdns2472:0crwdne2472:0"
         }
       }
-    },
-    "snapshot": {
-      "take": "crwdns10921:0crwdne10921:0",
-      "description": "crwdns10923:0crwdne10923:0",
-      "downloaded": "crwdns10925:0crwdne10925:0",
-      "downloadedDescription": "crwdns10927:0crwdne10927:0",
-      "playground": "crwdns10929:0crwdne10929:0",
-      "failed": "crwdns10931:0crwdne10931:0",
-      "failedDescription": "crwdns10933:0crwdne10933:0"
     }
   },
   "layout": {

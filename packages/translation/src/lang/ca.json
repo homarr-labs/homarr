@@ -6171,15 +6171,6 @@
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

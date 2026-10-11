@@ -6171,15 +6171,6 @@
           "notice": "Da biste uklonili ovu stranicu, zamolite administratora poslužitelja da postavi početnu ploču za poslužitelj"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

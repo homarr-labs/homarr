@@ -6171,15 +6171,6 @@
           "notice": "要使这个页面消失，请服务器管理员为服务器设置一个主面板"
         }
       }
-    },
-    "snapshot": {
-      "take": "拍摄板状态的快照",
-      "description": "下载经过编辑的快照以附加到错误报告并帮助我们复制您的布局",
-      "downloaded": "Board 快照已下载",
-      "downloadedDescription": "将 JSON 附加到您的 bug 报告中以相同窗口大小拍摄的屏幕。 快照包括布局、设置、自定义 CSS 、小部件选项和加载数据，已编辑私密文本、URL和凭据。",
-      "playground": "打开棋盘播放列表",
-      "failed": "无法抓取板快照",
-      "failedDescription": "棋盘数据无法安全导出或快照超过 10 MB。"
     }
   },
   "layout": {

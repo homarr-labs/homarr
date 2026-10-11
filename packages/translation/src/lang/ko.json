@@ -6171,15 +6171,6 @@
           "notice": "이 페이지를 사라지게 하려면 관리자에게 서버 홈 보드를 설정을 문의하십시오"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

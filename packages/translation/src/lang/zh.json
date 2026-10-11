@@ -6171,15 +6171,6 @@
           "notice": "要讓這個頁面消失，請伺服器管理員為伺服器設定一個主面板"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

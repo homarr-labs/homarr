@@ -6171,15 +6171,6 @@
           "notice": "Om deze pagina te laten verdwijnen, vraag je de serverbeheerder om een home-bord in te stellen voor de server"
         }
       }
-    },
-    "snapshot": {
-      "take": "Neem momentopname van de status van het bord",
-      "description": "Download een aangepaste snapshot om aan een bugrapport toe te voegen en ons te helpen uw lay-out te reproduceren",
-      "downloaded": "Board snapshot gedownload",
-      "downloadedDescription": "Voeg de JSON en een schermafbeelding op dezelfde grootte van het scherm toe aan je bugrapport. De momentopname omvat lay-out, instellingen, aangepaste CSS-instellingen, widgetopties en geladen gegevens, met privétekst, URLs en aanmeldgegevens.",
-      "playground": "Open board playground",
-      "failed": "Kan momentopname van kaart niet maken",
-      "failedDescription": "De gegevens van het bord konden niet veilig worden geëxporteerd of de momentopname overschrijdt 10 MB."
     }
   },
   "layout": {

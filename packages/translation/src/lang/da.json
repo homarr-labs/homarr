@@ -6171,15 +6171,6 @@
           "notice": "For at få denne side til at forsvinde, skal du bede serveradministratoren om at indstille en hjemmetavle til serveren"
         }
       }
-    },
-    "snapshot": {
-      "take": "Tag snapshot af brættilstand",
-      "description": "Download et redigeret øjebliksbillede for at vedhæfte en fejlrapport og hjælp os med at gengive dit layout",
-      "downloaded": "Brætsnapshot hentet",
-      "downloadedDescription": "Vedhæft JSON og et skærmbillede taget i samme vinduesstørrelse til din fejlrapport. Snapshot indeholder layout, indstillinger, brugerdefinerede CSS, widget muligheder og indlæste data, med privat tekst, URL'er og legitimationsoplysninger reddet.",
-      "playground": "Åbent brætlegeplads",
-      "failed": "Kan ikke optage snapshot på tavlen",
-      "failedDescription": "Brætdata kunne ikke eksporteres sikkert, eller snapshot overstiger 10 MB."
     }
   },
   "layout": {

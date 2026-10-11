@@ -6171,15 +6171,6 @@
           "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera"
         }
       }
-    },
-    "snapshot": {
-      "take": "Zrób zrzut stanu płytki",
-      "description": "Pobierz poprawiony zrzut, aby dołączyć do raportu o błędzie i pomóc nam odtworzyć Twój układ",
-      "downloaded": "Pobrano zrzut tablicy",
-      "downloadedDescription": "Dołącz JSON i zrzut ekranu wykonany w tym samym rozmiarze okna do raportu o błędzie. Zrzut ekranu zawiera układ, ustawienia, niestandardowy CSS, opcje widżetu i wczytywane dane, z prywatnym tekstem, adresami URL i poświadczeniami.",
-      "playground": "Otwarty plac zabaw",
-      "failed": "Nie można przechwycić migawki tablicy",
-      "failedDescription": "Nie można bezpiecznie wyeksportować danych tablicy lub zrzut ekranu przekracza 10 MB."
     }
   },
   "layout": {

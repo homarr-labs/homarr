@@ -6171,15 +6171,6 @@
           "notice": "Pyydä ylläpitoa määrittämään palvelimelle kotipaneeli piilottaaksesi tämän sivun"
         }
       }
-    },
-    "snapshot": {
-      "take": "Ota tilannekuva hallituksen tilasta",
-      "description": "Lataa punnitettu tilannekuva liittääksesi vikailmoitukseen ja auttaaksesi meitä jäljentämään ulkoasuasi",
-      "downloaded": "Laudan tilannekuva ladattu",
-      "downloadedDescription": "Kiinnitä vikailmoitukseen JSON ja samaan ikkunan kokoon otettu kuvakaappaus. Tilannevedos sisältää asettelut, asetukset, mukautetun CSS, widgettien asetukset ja ladatut tiedot, yksityisellä tekstillä, URL-osoitteilla ja käyttäjätunnuksilla suojatut tiedot.",
-      "playground": "Avaa lautaleikkipaikka",
-      "failed": "Lautakuvan kaappaus ei onnistunut",
-      "failedDescription": "Lautatietoja ei voitu turvallisesti viedä tai tilannekuva ylittää 10 Mt."
     }
   },
   "layout": {

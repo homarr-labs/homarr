@@ -6171,15 +6171,6 @@
           "notice": "על מנת לגרום לדף זה להיעלם, בקש ממנהל השרת להגדיר לוח בית עבור השרת"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

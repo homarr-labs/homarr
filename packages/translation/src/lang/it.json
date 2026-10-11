@@ -6171,15 +6171,6 @@
           "notice": "Per far scomparire questa pagina, chiedi all'amministratore del server di impostare una home board per il server"
         }
       }
-    },
-    "snapshot": {
-      "take": "Scatta l'istantanea dello stato del tabellone",
-      "description": "Scarica un'istantanea redatta per allegare una segnalazione di bug e aiutaci a riprodurre il tuo layout",
-      "downloaded": "Foto scheda scaricata",
-      "downloadedDescription": "Allega JSON e uno screenshot alla stessa dimensione della finestra alla segnalazione di bug. Lo snapshot include layout, impostazioni, CSS personalizzati, opzioni widget e dati caricati, con testo privato, URL e credenziali redatte.",
-      "playground": "Campo da gioco aperto",
-      "failed": "Impossibile catturare lo snapshot della scheda",
-      "failedDescription": "I dati della scheda non possono essere esportati in modo sicuro o lo snapshot supera i 10 MB."
     }
   },
   "layout": {

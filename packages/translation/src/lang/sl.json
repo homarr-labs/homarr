@@ -6171,15 +6171,6 @@
           "notice": "Če želite skriti to stran, prosite skrbnika strežnika, naj za strežnik nastavi domačo tablo"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

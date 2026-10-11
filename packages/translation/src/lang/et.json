@@ -6171,15 +6171,6 @@
           "notice": "Selle lehe eemaldamiseks palu administraatoril määrata serveriülene kodupaneel"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

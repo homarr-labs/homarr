@@ -6171,15 +6171,6 @@
           "notice": "För att dölja den här sidan ber du serveradministratören ange en startsida för servern"
         }
       }
-    },
-    "snapshot": {
-      "take": "Ta ögonblicksbild av tavlans tillstånd",
-      "description": "Ladda ner en redigerad ögonblicksbild för att bifoga en felrapport och hjälpa oss att återskapa din layout",
-      "downloaded": "Tavlan ögonblicksbild hämtad",
-      "downloadedDescription": "Bifoga JSON och en skärmdump tagen i samma fönsterstorlek till din felrapport. Ögonblicksbilden inkluderar layout, inställningar, anpassade CSS, widgetalternativ och inlästa data, med privat text, webbadresser och uppgifter redacted.",
-      "playground": "Öppen spelplats",
-      "failed": "Det går inte att fånga snapshot på tavlan",
-      "failedDescription": "Tavlans data kunde inte exporteras på ett säkert sätt, eller så överskrider ögonblicksbilden 10 MB."
     }
   },
   "layout": {

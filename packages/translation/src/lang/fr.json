@@ -6171,15 +6171,6 @@
           "notice": "Pour faire disparaître cette page, demandez à l'administrateur du serveur de définir un tableau d'accueil pour le serveur"
         }
       }
-    },
-    "snapshot": {
-      "take": "Prendre une capture instantanée de l'état du circuit imprimé",
-      "description": "Téléchargez un instantané reproduit pour attacher à un rapport de bug et aidez-nous à reproduire votre mise en page",
-      "downloaded": "Instantané de carte téléchargé",
-      "downloadedDescription": "Attachez le JSON et une capture d'écran prise à la même taille de fenêtre à votre rapport de bug. Le snapshot inclut la mise en page, les paramètres, le CSS personnalisé, les options de widget et les données chargées, avec texte privé, URL et identifiants supprimés.",
-      "playground": "Ouvrir l'aire de jeu de la carte",
-      "failed": "Impossible de capturer le snapshot du circuit imprimé",
-      "failedDescription": "Les données de la carte n'ont pas pu être exportées en toute sécurité, ou la capture dépasse 10 Mo."
     }
   },
   "layout": {

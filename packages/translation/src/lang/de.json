@@ -6171,15 +6171,6 @@
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
       }
-    },
-    "snapshot": {
-      "take": "Schnappschuss des Brettstatus machen",
-      "description": "Laden Sie einen geretteten Schnappschuss herunter, um einen Fehlerbericht anzuhängen und helfen Sie uns, Ihr Layout zu reproduzieren",
-      "downloaded": "Brett-Snapshot heruntergeladen",
-      "downloadedDescription": "Fügen Sie den JSON und einen Screenshot mit der gleichen Fenstergröße an Ihren Fehlerbericht an. Der Schnappschuss enthält Layout, Einstellungen, benutzerdefinierte CSS, Widget-Optionen und geladene Daten, mit privatem Text, URLs und Anmeldeinformationen.",
-      "playground": "Spielplatz öffnen",
-      "failed": "Brett-Snapshot konnte nicht aufgenommen werden",
-      "failedDescription": "Die Boarddaten konnten nicht sicher exportiert werden oder der Snapshot überschreitet 10 MB."
     }
   },
   "layout": {

@@ -6171,15 +6171,6 @@
           "notice": "Para hacer que esta página desaparezca, pide al administrador del servidor que establezca un tablero de inicio para el servidor"
         }
       }
-    },
-    "snapshot": {
-      "take": "Tomar instantánea del estado del tablero",
-      "description": "Descarga una instantánea redactada para adjuntar un informe de error y ayudarnos a reproducir tu diseño",
-      "downloaded": "Snapshot descargado",
-      "downloadedDescription": "Adjunte el JSON y una captura de pantalla tomada en el mismo tamaño de la ventana a su informe de error. La instantánea incluye diseño, configuración, CSS personalizado, opciones de widget y datos cargados, con texto privado, URLs y credenciales redactadas.",
-      "playground": "Zona de juego abierta",
-      "failed": "No se puede capturar la instantánea del tablero",
-      "failedDescription": "Los datos del tablero no pudieron ser exportados de forma segura, o la instantánea excede los 10 MB."
     }
   },
   "layout": {

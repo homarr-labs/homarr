@@ -6171,15 +6171,6 @@
           "notice": "Az oldal eltüntetéséhez kérd meg a szerver adminisztrátorát, hogy állítson be egy kezdőlap táblát a szervernek"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {

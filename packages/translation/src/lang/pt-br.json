@@ -6171,15 +6171,6 @@
           "notice": "Para fazer essa página desaparecer, peça ao administrador do servidor para definir um quadro inicial para o servidor"
         }
       }
-    },
-    "snapshot": {
-      "take": "Pegar snapshot do estado do board",
-      "description": "Faça o download de uma captura instantânea editada para anexar a um relatório de erros e nos ajude a reproduzir seu layout",
-      "downloaded": "Instantâneo do fórum baixado",
-      "downloadedDescription": "Anexe o JSON e uma captura de tela no tamanho da mesma janela ao relatório de bug. O instantâneo inclui layout, configurações, CSS personalizados, opções de widget e dados carregados, com texto privado, URLs e credenciais redacted.",
-      "playground": "Abrir playground do tabuleiro",
-      "failed": "Não é possível capturar instantâneo do quadro",
-      "failedDescription": "Os dados do board não puderam ser exportados com segurança, ou o snapshot excede 10 MB."
     }
   },
   "layout": {

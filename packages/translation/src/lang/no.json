@@ -6171,15 +6171,6 @@
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
         }
       }
-    },
-    "snapshot": {
-      "take": "Ta øyeblikksbilde av bord status",
-      "description": "Last ned et forklart øyeblikksbilde for å legge ved en feilrapport og hjelp oss å reprodusere oppsettet ditt",
-      "downloaded": "Brettbilde lastet ned",
-      "downloadedDescription": "Legg ved JSON og et skjermbilde tatt i samme vindusstørrelse til feilrapporten. Øyeblikksbildet inkluderer layout, innstillinger, egendefinerte CSS, widget alternativer og lastet data, med privat tekst, URL-er og legitimasjoner som blir handlet.",
-      "playground": "Åpne lekeplass på brett",
-      "failed": "Kan ikke fange tavlen øyeblikksbilde",
-      "failedDescription": "Styrets data kunne ikke trygt eksporteres, eller snapshot overstiger 10 MB."
     }
   },
   "layout": {

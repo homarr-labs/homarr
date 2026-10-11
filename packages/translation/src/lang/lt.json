@@ -6171,15 +6171,6 @@
           "notice": "Kad šis puslapis išnyktų, paprašykite serverio administratoriaus nustatyti serverio pagrindinę suvestinę"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
