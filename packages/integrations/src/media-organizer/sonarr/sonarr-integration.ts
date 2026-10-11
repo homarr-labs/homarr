@@ -71,14 +71,14 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
         "X-Api-Key": super.getSecretValue("apiKey"),
       },
     });
-    const sonarrCalendarEvents = await z.array(sonarrCalendarEventSchema).parseAsync(await response.json());
+    const sonarrCalendarEvents = await z.array(this.calendarEventSchema).parseAsync(await response.json());
 
     return sonarrCalendarEvents.map((event): CalendarEvent => {
       const imageSrc = this.chooseBestImageAsURL(event);
       return {
         title: event.title,
-        subTitle: event.series.title,
-        description: event.series.overview ?? null,
+        subTitle: event.series?.title ?? null,
+        description: event.series?.overview ?? null,
         startDate: event.airDateUtc,
         endDate: null,
         image: imageSrc
@@ -96,6 +96,14 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
         links: this.getLinksForSonarrCalendarEvent(event),
       };
     });
+  }
+
+  protected get calendarEventSchema(): z.ZodType<SonarrCalendarEvent> {
+    return sonarrCalendarEventSchema;
+  }
+
+  protected get missingEpisodeSchema(): z.ZodType<SonarrMissingEpisode> {
+    return sonarrMissingEpisodeSchema;
   }
 
   /**
@@ -131,10 +139,11 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     return "/activity/queue";
   }
 
-  private getLinksForSonarrCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
+  private getLinksForSonarrCalendarEvent = (event: SonarrCalendarEvent) => {
+    const path = event.series && this.getSeriesPath(event.series);
     const links: CalendarLink[] = [
       {
-        href: this.externalUrl(this.getSeriesPath(event.series)).toString(),
+        href: this.externalUrl(path ?? "/calendar").toString(),
         name: this.calendarLinkName,
         logo: this.calendarLinkLogo,
         color: undefined,
@@ -142,7 +151,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
       },
     ];
 
-    if (event.series.imdbId) {
+    if (event.series?.imdbId) {
       links.push({
         href: `https://www.imdb.com/title/${event.series.imdbId}/`,
         name: "IMDb",
@@ -155,10 +164,8 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     return links;
   };
 
-  private chooseBestImage = (
-    event: z.infer<typeof sonarrCalendarEventSchema>,
-  ): z.infer<typeof sonarrCalendarEventSchema>["images"][number] | undefined => {
-    const flatImages = [...event.images, ...event.series.images];
+  private chooseBestImage = (event: SonarrCalendarEvent): SonarrCalendarEvent["images"][number] | undefined => {
+    const flatImages = [...event.images, ...(event.series?.images ?? [])];
 
     const sortedImages = flatImages.sort(
       (imageA, imageB) =>
@@ -168,7 +175,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     return sortedImages[0];
   };
 
-  private chooseBestImageAsURL = (event: z.infer<typeof sonarrCalendarEventSchema>): string | undefined => {
+  private chooseBestImageAsURL = (event: SonarrCalendarEvent): string | undefined => {
     const bestImage = this.chooseBestImage(event);
     if (!bestImage) {
       return undefined;
@@ -191,7 +198,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
     const data = await z
       .object({
         totalRecords: z.number(),
-        records: z.array(sonarrMissingEpisodeSchema),
+        records: z.array(this.missingEpisodeSchema),
       })
       .parseAsync(await response.json());
 
@@ -270,7 +277,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
   }
 }
 
-const sonarrMissingEpisodeSchema = z.object({
+export const sonarrMissingEpisodeSchema = z.object({
   id: z.number(),
   title: z.string(),
   seasonNumber: z.number(),
@@ -327,7 +334,7 @@ const sonarrCalendarEventImageSchema = z.array(
   }),
 );
 
-const sonarrCalendarEventSchema = z.object({
+export const sonarrCalendarEventSchema = z.object({
   title: z.string(),
   airDateUtc: z.string().transform((value) => new Date(value)),
   seasonNumber: z.number().min(0),
@@ -342,3 +349,11 @@ const sonarrCalendarEventSchema = z.object({
   }),
   images: sonarrCalendarEventImageSchema,
 });
+
+type SonarrCalendarEvent = Omit<z.infer<typeof sonarrCalendarEventSchema>, "series"> & {
+  series: z.infer<typeof sonarrCalendarEventSchema>["series"] | null;
+};
+
+type SonarrMissingEpisode = Omit<z.infer<typeof sonarrMissingEpisodeSchema>, "series"> & {
+  series?: z.infer<typeof sonarrMissingEpisodeSchema>["series"] | null;
+};

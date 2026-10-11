@@ -1,13 +1,21 @@
-import { SonarrIntegration } from "../sonarr/sonarr-integration";
+import { sonarrCalendarEventSchema, sonarrMissingEpisodeSchema, SonarrIntegration } from "../sonarr/sonarr-integration";
 
 /**
  * Sportarr (https://github.com/Sportarr/Sportarr) is a sports event manager
  * exposing a Sonarr-v3-compatible API: calendar, queue and wanted/missing
  * behave like Sonarr's with leagues surfacing as series and events as
- * episodes. The Sonarr integration therefore drives it as-is; only the
- * link branding, web UI paths and calendar badge differ.
+ * episodes. Standalone events have no series. Validation, link branding,
+ * web UI paths and the calendar badge differ from Sonarr.
  */
 export class SportarrIntegration extends SonarrIntegration {
+  protected override get calendarEventSchema() {
+    return sonarrCalendarEventSchema.extend({ series: sonarrCalendarEventSchema.shape.series.nullable() });
+  }
+
+  protected override get missingEpisodeSchema() {
+    return sonarrMissingEpisodeSchema.extend({ series: sonarrMissingEpisodeSchema.shape.series.nullable() });
+  }
+
   protected override get calendarLinkName(): string {
     return "Sportarr";
   }
