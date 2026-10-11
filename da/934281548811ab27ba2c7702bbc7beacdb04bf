@@ -1,0 +1,18 @@
+packages/api/src/router/custom-widget/preview-procedure-helpers.ts
+  h_d6e478ca18e517 3,5,59-62
+packages/custom-widgets/src/server/auth.ts
+  h_d6e478ca18e517 1,31-48,56,109
+packages/custom-widgets/src/server/index.ts
+  h_d6e478ca18e517 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "da934281548811ab27ba2c7702bbc7beacdb04bf",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
