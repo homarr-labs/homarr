@@ -3301,6 +3301,11 @@
         "defaultTab": {
           "label": "Default tab"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "System then Cluster",
+          "clusterFirst": "Cluster then System"
+        },
         "visibleClusterSections": {
           "label": "Visible cluster sections"
         },
