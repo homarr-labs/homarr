@@ -28,6 +28,7 @@ import {
   IconStar,
   IconTriangleFilled,
 } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -47,6 +48,7 @@ import { isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import classes from "./component.module.scss";
 import { selectReleaseRepositoriesForDisplay } from "./display";
 import { getRowIntegrationVersions, truncateVersion } from "./integration-version";
@@ -76,6 +78,7 @@ export default function ReleasesWidget({
   integrationIds,
   width,
   displayMode,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"releases">) {
   const t = useI18n("widget.releases");
   const now = useNow();
@@ -158,10 +161,26 @@ export default function ReleasesWidget({
   );
   const isInitialLoading = queryResults.some(isInitialWidgetQueryPending);
 
-  const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(
-    { integrationIds },
-    { enabled: integrationIds.length > 0 },
+  // Only integrations linked by a repository are queried; attaching alone shows nothing.
+  const linkedIntegrationIds = useMemo(
+    () =>
+      integrationIds.filter((integrationId) =>
+        normalizedRepositories.some((repository) => repository.integrationIds.includes(integrationId)),
+      ),
+    [integrationIds, normalizedRepositories],
   );
+  const serviceVersionsInput = useMemo(() => ({ integrationIds: linkedIntegrationIds }), [linkedIntegrationIds]);
+  const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(serviceVersionsInput, {
+    enabled: linkedIntegrationIds.length > 0,
+  });
+  const runtimeQueries = useMemo(
+    () =>
+      linkedIntegrationIds.length > 0
+        ? [getQueryKey(clientApi.widget.releases.getServiceVersions, serviceVersionsInput, "query")]
+        : [],
+    [linkedIntegrationIds.length, serviceVersionsInput],
+  );
+  useWidgetRuntimeQueries(widgetRuntimeRef, runtimeQueries);
   const serviceVersions = useMemo(() => serviceVersionsQuery.data ?? [], [serviceVersionsQuery.data]);
   // The query rejects when every attached integration fails, so that case has no names to list.
   const hasServiceVersionsFailed =
