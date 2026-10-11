@@ -11,6 +11,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
   getCollapsedDisplayLayout,
+  getExpandedDisplayLayout,
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
   getLayoutRowCount,
@@ -73,28 +74,29 @@ export const SectionGrid = ({
     return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
   }, [board, currentLayoutId, innerSections]);
 
-  const placements = useMemo(
-    () =>
-      [...items, ...innerSections].map((item): SectionGridPlacement => {
-        const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
-        const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
-        const height = isNonScrollableContainer && minimum ? Math.max(item.height, minimum.height) : item.height;
-        return normalizeGridPlacement(
-          {
-            id: item.id,
-            type: item.type,
-            x: item.xOffset,
-            y: item.yOffset,
-            w: item.width,
-            h: height,
-            minW: minimum?.width,
-            minH: minimum?.height,
-          },
-          columnCount,
-        );
-      }),
-    [columnCount, innerSections, items, minimumBySectionId],
-  );
+  const placements = useMemo(() => {
+    const minimumHeights = new Map<string, number>();
+    const savedPlacements = [...items, ...innerSections].map((item): SectionGridPlacement => {
+      const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
+      const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
+      if (isNonScrollableContainer && minimum) minimumHeights.set(item.id, minimum.height);
+      return normalizeGridPlacement(
+        {
+          id: item.id,
+          type: item.type,
+          x: item.xOffset,
+          y: item.yOffset,
+          w: item.width,
+          h: item.height,
+          minW: minimum?.width,
+          minH: minimum?.height,
+        },
+        columnCount,
+      );
+    });
+    // Resolve growth before collapse so both transformations use the same expanded footprint.
+    return getExpandedDisplayLayout(savedPlacements, { columnCount, minimumHeights });
+  }, [columnCount, innerSections, items, minimumBySectionId]);
   const collapsibleSectionIds = useMemo(
     () =>
       new Set(
@@ -394,12 +396,12 @@ const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, la
   const cached = cachedByLayout?.get(layoutId);
   if (cached) return cached;
 
-  const directItemsBySectionId = new Map<string, PlacementBounds[]>();
+  const directItemsBySectionId = new Map<string, (PlacementBounds & { id: string })[]>();
   for (const item of board.items) {
     const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) continue;
     const entries = directItemsBySectionId.get(layout.sectionId) ?? [];
-    entries.push(layout);
+    entries.push({ ...layout, id: item.id });
     directItemsBySectionId.set(layout.sectionId, entries);
   }
 
@@ -427,18 +429,31 @@ const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, la
     const isScrollable = section?.kind === "container" && section.options.scrollable;
 
     const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
+    const minimumHeights = new Map<string, number>();
     const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
       const minimum = resolve(id);
+      minimumHeights.set(id, minimum.height);
       return {
         ...placement,
+        id,
         width: Math.max(placement.width, minimum.width),
-        height: Math.max(placement.height, minimum.height),
       };
     });
     const children = [...itemBounds, ...sectionBounds];
+    const width = Math.max(1, ...children.map((child) => child.xOffset + child.width));
+    const expandedChildren = getExpandedDisplayLayout(
+      children.map((child) => ({
+        id: child.id,
+        x: child.xOffset,
+        y: child.yOffset,
+        w: child.width,
+        h: child.height,
+      })),
+      { columnCount: width, minimumHeights },
+    );
     const minimum = {
-      width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
-      height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+      width,
+      height: isScrollable ? 1 : Math.max(1, getLayoutRowCount(expandedChildren)),
     };
     visiting.delete(sectionId);
     minimumBySectionId.set(sectionId, minimum);
