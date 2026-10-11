@@ -129,12 +129,14 @@ const withRequestLimit = async <T>(
   resolved: ResolvedDefinition,
   category: RequestLimitInput["category"],
   callback: () => Promise<T>,
+  load?: RequestLimitInput["load"],
 ) => {
   const release = await acquireCustomWidgetRequestLimit({
     category,
     userId: ctx.session?.user.id,
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
+    load,
   });
   try {
     return await callback();
@@ -151,32 +153,41 @@ const executeRequest = async (
   resolved: ResolvedDefinition,
   request: IdentifiedRequest,
   params: Record<string, string | number | boolean>,
+  load?: RequestLimitInput["load"],
 ) => {
   await throwIfActionForbiddenAsync(ctx, eq(boards.id, resolved.item.boardId), request.permission as BoardPermission);
   const source = findSource(resolved, request.source);
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
   let category: RequestLimitInput["category"] = "query";
   if (request.kind === "action") category = request.method === "DELETE" ? "delete" : "action";
-  return withRequestLimit(ctx, resolved, category, async () => {
-    const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
-      resolved.stored.secrets
-        .filter((secret) => secret.sourceId === source.id)
-        .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
-    );
-    const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
-    const response = await executeCustomWidgetRequest({
-      ...connection,
-      targetUrl,
-      method: request.method,
-      body: renderRequestBody(request, values),
-      staticHeaders: request.headers,
-      kind: request.kind,
-      cacheKey:
-        request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
-      cacheTtlSeconds: request.cacheSeconds,
-    });
-    return { ...response, sourceCacheVersion: connection.cacheVersion };
-  });
+  return withRequestLimit(
+    ctx,
+    resolved,
+    category,
+    async () => {
+      const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+        resolved.stored.secrets
+          .filter((secret) => secret.sourceId === source.id)
+          .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
+      );
+      if (load?.signal?.aborted)
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Custom widget load was cancelled" });
+      const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
+      const response = await executeCustomWidgetRequest({
+        ...connection,
+        targetUrl,
+        method: request.method,
+        body: renderRequestBody(request, values),
+        staticHeaders: request.headers,
+        kind: request.kind,
+        cacheKey:
+          request.kind === "query" ? `${getCacheKey(resolved, request, values)}:${connection.cacheVersion}` : undefined,
+        cacheTtlSeconds: request.cacheSeconds,
+      });
+      return { ...response, sourceCacheVersion: connection.cacheVersion };
+    },
+    load,
+  );
 };
 
 export const customApiRouter = createTRPCRouter({
@@ -200,7 +211,7 @@ export const customApiRouter = createTRPCRouter({
     }
   }),
 
-  getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
+  getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input, signal }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
@@ -208,7 +219,7 @@ export const customApiRouter = createTRPCRouter({
     const entries = await Promise.all(
       loadRequests.map(async ([requestId, request]) => {
         try {
-          const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
+          const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {}, { signal });
           return [
             requestId,
             {
