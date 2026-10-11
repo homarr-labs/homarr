@@ -51,35 +51,29 @@ env:
 jobs:
   database-validation:
     name: Database validation
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     uses: ./.github/workflows/database.yml
 
-  fast-gate:
-    name: Fast gate
-    needs: database-validation
-    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v2.')) && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
+  validation-plan:
+    name: Plan affected checks
+    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
+    outputs:
+      build-tasks: ${{ steps.plan.outputs.build-tasks }}
+      builds-app: ${{ steps.plan.outputs.builds-app }}
+      typecheck-matrix: ${{ steps.plan.outputs.typecheck-matrix }}
+      has-typechecks: ${{ steps.plan.outputs.has-typechecks }}
     env:
-      TURBO_API: ${{ secrets.TURBO_API }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
-      - name: Require database validation
-        env:
-          DATABASE_RESULT: ${{ needs.database-validation.result }}
-        run: test "$DATABASE_RESULT" = success
-
       - uses: actions/checkout@v7
         if: "!env.ACT"
         with:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
-
       - name: Validate manual inputs
         if: github.event_name == 'workflow_dispatch' && inputs.operation == 'publish'
         env:
@@ -88,37 +82,141 @@ jobs:
         run: |
           test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
           test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+      - name: Setup
+        uses: ./tooling/github/setup
+      - name: Plan validation
+        id: plan
+        run: |
+          cp .env.example .env
+          scope=(--affected)
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            scope=()
+          fi
+          bun run turbo run typecheck build "${scope[@]}" --dry=json > "$RUNNER_TEMP/turbo-plan.json"
+          jq -r '
+            [.tasks[] | select(.command != null and .command != "" and .command != "<NONEXISTENT>")] as $tasks |
+            [$tasks[] | select(.task == "build") | .taskId] as $workspace |
+            ([$tasks[] | select(.task == "typecheck") | .taskId] | sort) as $typechecks |
+            {include: ($typechecks | to_entries | group_by(.key % 4) | map({
+              shard: (.[0].key % 4 + 1 | tostring), tasks: map(.value)
+            }))} as $matrix |
+            "build-tasks=\($workspace | tojson)",
+            "builds-app=\($workspace | index("@homarr/nextjs#build") != null)",
+            "typecheck-matrix=\($matrix | tojson)",
+            "has-typechecks=\($typechecks | length > 0)"
+          ' "$RUNNER_TEMP/turbo-plan.json" >> "$GITHUB_OUTPUT"
 
+  workspace-checks:
+    name: Lint and build
+    needs: validation-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TURBO_API: ${{ secrets.TURBO_API }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
       - name: Setup
         uses: ./tooling/github/setup
         with:
           next-cache: "all"
           turbo-cache: "true"
-
-      - name: Copy environment defaults
-        run: cp .env.example .env
-
-      - name: Lint, typecheck, and build workspaces
+      - name: Lint changed files
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
         run: |
-          scope=(--affected)
-          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
-            scope=()
+          if [[ -n "$BASE_SHA" ]] && git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null &&
+             git diff --quiet "$BASE_SHA...HEAD" -- '.oxlintrc*' '**/.oxlintrc*' '**/oxlint.config.*' \
+               package.json '**/package.json' bun.lock bunfig.toml patches tooling/typescript '**/tsconfig*.json'; then
+            git diff --name-only --diff-filter=ACMR -z "$BASE_SHA...HEAD" -- \
+              '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.mts' '*.cts' \
+              | xargs -0 -r bun x oxlint --no-error-on-unmatched-pattern --
+          else
+            bun run turbo run lint --continue=dependencies-successful --concurrency=2
           fi
-          bun run turbo run lint typecheck build "${scope[@]}" --continue=dependencies-successful --concurrency=2
-
+      - name: Build selected workspaces
+        env:
+          TASKS: ${{ needs.validation-plan.outputs.build-tasks }}
+        run: |
+          cp .env.example .env
+          mapfile -t tasks < <(node -e 'for (const task of JSON.parse(process.env.TASKS)) console.log(task)')
+          if [[ ${#tasks[@]} -gt 0 ]]; then
+            bun run turbo run "${tasks[@]}" --continue=dependencies-successful --concurrency=2
+          fi
       - name: Validate workspace configuration
         run: bun run lint:ws
-
       - name: Validate Custom Widget architecture
         run: bun run check:custom-widgets
-
       - name: Validate checked-in OpenAPI schema
         run: bun run check:openapi
-
       - name: Validate Custom Widget bundle budget
+        if: needs.validation-plan.outputs.builds-app == 'true'
+        run: bun run check:custom-widget-bundle
+
+  typecheck:
+    name: Typecheck (${{ matrix.shard }})
+    needs: validation-plan
+    if: needs.validation-plan.outputs.has-typechecks == 'true'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.validation-plan.outputs.typecheck-matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TURBO_API: ${{ secrets.TURBO_API }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+      - name: Setup
+        uses: ./tooling/github/setup
+        with:
+          turbo-cache: "true"
+          typecheck-cache: "true"
+          typecheck-cache-scope: ${{ matrix.shard }}
+      - name: Typecheck selected workspaces
+        env:
+          TASKS: ${{ toJSON(matrix.tasks) }}
         run: |
-          bun run turbo run build --filter=@homarr/nextjs
-          bun run check:custom-widget-bundle
+          cp .env.example .env
+          mapfile -t tasks < <(node -e 'for (const task of JSON.parse(process.env.TASKS)) console.log(task)')
+          bun run turbo run "${tasks[@]}" --continue=dependencies-successful --concurrency=1
+
+  fast-gate:
+    name: Fast gate
+    needs: [database-validation, validation-plan, workspace-checks, typecheck]
+    if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require all validation jobs
+        env:
+          DATABASE_RESULT: ${{ needs.database-validation.result }}
+          PLAN_RESULT: ${{ needs.validation-plan.result }}
+          WORKSPACE_RESULT: ${{ needs.workspace-checks.result }}
+          TYPECHECK_RESULT: ${{ needs.typecheck.result }}
+          HAS_TYPECHECKS: ${{ needs.validation-plan.outputs.has-typechecks }}
+        run: |
+          test "$DATABASE_RESULT" = success
+          test "$PLAN_RESULT" = success
+          test "$WORKSPACE_RESULT" = success
+          if [[ "$HAS_TYPECHECKS" == true ]]; then
+            test "$TYPECHECK_RESULT" = success
+          else
+            test "$TYPECHECK_RESULT" = skipped
+          fi
 
   container:
     name: Container and migration smoke

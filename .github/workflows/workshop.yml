@@ -1,36 +1,30 @@
 name: Workshop
 
+# GitHub skips PR/push runs unless a listed path changed.
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - ".github/workflows/workshop.yml"
-      - "tooling/github/**"
+      - "tooling/github/docker-build.sh"
       - "apps/workshop/**"
-      - "apps/docs/**"
-      - "packages/common/**"
-      - "packages/core/**"
-      - "packages/custom-widgets/**"
-      - "packages/definitions/**"
-      - "packages/db/**"
-      - "packages/server-settings/**"
-      - "packages/settings/**"
-      - "packages/translation/**"
-      - "packages/ui/**"
-      - "packages/validation/**"
       - "packages/workshop/**"
-      - "tooling/typescript/**"
-      - "patches/**"
-      - "package.json"
-      - "bun.lock"
-      - "bunfig.toml"
-      - "turbo.json"
+      - "apps/docs/src/components/workshop/**"
+      - "apps/docs/src/app/(home)/workshop/**"
+      - "apps/docs/src/lib/workshop*"
+      - "apps/docs/public/workshop-runtime-config.js"
+      - "!**/*.md"
+      - "!**/*.mdx"
   push:
-    branches: [dev, main]
+    branches: [dev]
+    # The deployed image serves both Workshop and the docs site.
     paths:
       - ".github/workflows/workshop.yml"
-      - "tooling/github/**"
+      - ".dockerignore"
+      - "tooling/github/docker-build.sh"
       - "apps/workshop/**"
       - "apps/docs/**"
+      - "tools/motion-reel/three/**"
       - "packages/common/**"
       - "packages/core/**"
       - "packages/custom-widgets/**"
@@ -48,19 +42,63 @@ on:
       - "bun.lock"
       - "bunfig.toml"
       - "turbo.json"
-
+      - "!packages/**/*.spec.ts"
+      - "!packages/**/*.spec.tsx"
+      - "!packages/**/*.test.ts"
+      - "!packages/**/*.test.tsx"
+      - "!packages/**/__tests__/**"
+      - "!packages/**/*.md"
+      - "!packages/db/migrations/seed.ts"
+  # Stable releases already include Semantic Release's version commit.
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'release' && 'main' || github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
+  validate:
+    if: |
+      (github.event_name != 'release' || !github.event.release.prerelease) &&
+      (github.event_name != 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == 'dev')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      sha: ${{ steps.image.outputs.sha }}
+      tags: ${{ steps.image.outputs.tags }}
+      publish: ${{ !env.ACT && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft)) }}
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+      - run: docker compose --env-file apps/workshop/.env.staging.example -f apps/workshop/docker-compose.staging.yml config --quiet
+      - name: Image tags
+        id: image
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          sha=$(git rev-parse HEAD)
+          tags=dev
+          if [[ "$GITHUB_EVENT_NAME" == pull_request ]]; then
+            tags="pr-$PR_NUMBER"
+          elif [[ "$GITHUB_EVENT_NAME" == release || "$GITHUB_REF_NAME" == main ]]; then
+            version=$(jq -r .version package.json)
+            [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+            if [[ "$GITHUB_EVENT_NAME" == release ]]; then test "$RELEASE_TAG" = "v$version"; fi
+            tags="latest v$version v${version%%.*}"
+          fi
+          printf 'sha=%s\ntags=%s sha-%s\n' "$sha" "$tags" "$sha" >> "$GITHUB_OUTPUT"
+
   production-smoke:
-    if: github.event_name == 'pull_request'
+    needs: validate
+    if: github.event_name == 'pull_request' && needs.validate.outputs.publish != 'true'
     name: Production image smoke (${{ matrix.arch }})
     strategy:
       fail-fast: false
@@ -77,6 +115,7 @@ jobs:
         if: "!env.ACT"
         with:
           persist-credentials: false
+          ref: ${{ needs.validate.outputs.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
@@ -114,16 +153,8 @@ jobs:
           TURBO_REMOTE_CACHE_SIGNATURE_KEY: ${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
         run: sh apps/workshop/test-image.sh
 
-  validate:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-        if: "!env.ACT"
-      - run: docker compose --env-file apps/workshop/.env.staging.example -f apps/workshop/docker-compose.staging.yml config --quiet
-
   publish-amd64:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref_name == 'dev' || github.ref_name == 'main')
+    if: needs.validate.outputs.publish == 'true'
     needs: validate
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -135,6 +166,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ needs.validate.outputs.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
@@ -148,6 +185,7 @@ jobs:
           file: apps/workshop/Dockerfile
           target: production
           platforms: linux/amd64
+          labels: org.opencontainers.image.revision=${{ needs.validate.outputs.sha }}
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=workshop-linux-amd64
           cache-to: type=gha,scope=workshop-linux-amd64,mode=max
@@ -156,9 +194,13 @@ jobs:
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+      - name: Exercise the candidate image
+        env:
+          WORKSHOP_IMAGE_TEST_IMAGE: ghcr.io/homarr-labs/workshop@${{ steps.build.outputs.digest }}
+        run: sh apps/workshop/test-image.sh
 
   publish-arm64:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref_name == 'dev' || github.ref_name == 'main')
+    if: needs.validate.outputs.publish == 'true'
     needs: validate
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
@@ -170,6 +212,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ needs.validate.outputs.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
@@ -183,6 +231,7 @@ jobs:
           file: apps/workshop/Dockerfile
           target: production
           platforms: linux/arm64
+          labels: org.opencontainers.image.revision=${{ needs.validate.outputs.sha }}
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=workshop-linux-arm64
           cache-to: type=gha,scope=workshop-linux-arm64,mode=max
@@ -191,15 +240,20 @@ jobs:
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
+      - name: Exercise the candidate image
+        env:
+          WORKSHOP_IMAGE_TEST_IMAGE: ghcr.io/homarr-labs/workshop@${{ steps.build.outputs.digest }}
+        run: sh apps/workshop/test-image.sh
 
   publish:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref_name == 'dev' || github.ref_name == 'main')
-    needs: [publish-amd64, publish-arm64]
+    if: needs.validate.outputs.publish == 'true'
+    needs: [validate, publish-amd64, publish-arm64]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
       packages: write
+      pull-requests: read
     env:
       WORKSHOP_IMAGE: ghcr.io/homarr-labs/workshop
     steps:
@@ -209,41 +263,52 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Verify branch head before publication
+      - name: Verify source before publication
         uses: actions/github-script@v8
+        env:
+          EXPECTED_SHA: ${{ needs.validate.outputs.sha }}
+          EXPECTED_PR_HEAD: ${{ github.event.pull_request.head.sha }}
         with:
           script: |
-            const branchName = context.ref.replace("refs/heads/", "");
-            const { data: branch } = await github.rest.repos.getBranch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              branch: branchName,
-            });
-            if (branch.commit.sha !== context.sha) {
-              core.setFailed(`Branch ${branchName} moved from ${context.sha} to ${branch.commit.sha}.`);
+            if (context.eventName === "pull_request") {
+              const { data: pull } = await github.rest.pulls.get({
+                ...context.repo, pull_number: context.payload.pull_request.number,
+              });
+              if (pull.state !== "open" || pull.draft || pull.head.sha !== process.env.EXPECTED_PR_HEAD) {
+                core.setFailed("PR closed, became a draft, or changed while building; refusing stale publication.");
+              }
+              return;
+            }
+            let branchName = context.ref.replace("refs/heads/", "");
+            if (context.eventName === "release") branchName = "main";
+            const { data: branch } = await github.rest.repos.getBranch({ ...context.repo, branch: branchName });
+            if (branch.commit.sha !== process.env.EXPECTED_SHA) {
+              core.setFailed("Branch changed while building; refusing stale publication.");
             }
       - name: Publish multi-platform image
         env:
           AMD64_DIGEST: ${{ needs.publish-amd64.outputs.digest }}
           ARM64_DIGEST: ${{ needs.publish-arm64.outputs.digest }}
+          IMAGE_TAGS: ${{ needs.validate.outputs.tags }}
         run: |
-          tags=(-t "${WORKSHOP_IMAGE}:sha-${GITHUB_SHA}")
-          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-            tags+=(-t "${WORKSHOP_IMAGE}:dev")
-          fi
-          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            tags+=(-t "${WORKSHOP_IMAGE}:latest" -t "${WORKSHOP_IMAGE}:v2")
-          fi
+          tags=()
+          for tag in $IMAGE_TAGS; do tags+=(-t "${WORKSHOP_IMAGE}:$tag"); done
           docker buildx imagetools create "${tags[@]}" \
             "${WORKSHOP_IMAGE}@${AMD64_DIGEST}" \
             "${WORKSHOP_IMAGE}@${ARM64_DIGEST}"
-      - name: Verify multi-platform image
+      - name: Verify every published tag
+        env:
+          IMAGE_TAGS: ${{ needs.validate.outputs.tags }}
         run: |
-          image="${WORKSHOP_IMAGE}:sha-${GITHUB_SHA}"
-          manifest="$(docker buildx imagetools inspect "$image" --raw)"
-          for architecture in amd64 arm64; do
-            jq --exit-status --arg architecture "$architecture" \
-              'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
-              <<<"$manifest" >/dev/null
+          expected_manifest=""
+          for tag in $IMAGE_TAGS; do
+            image="${WORKSHOP_IMAGE}:$tag"
+            manifest="$(docker buildx imagetools inspect "$image" --raw)"
+            for architecture in amd64 arm64; do
+              jq --exit-status --arg architecture "$architecture" \
+                'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
+                <<<"$manifest" >/dev/null
+            done
+            if [[ -n "$expected_manifest" ]]; then test "$manifest" = "$expected_manifest"; fi
+            expected_manifest="$manifest"
           done
-          docker buildx imagetools inspect "$image"
