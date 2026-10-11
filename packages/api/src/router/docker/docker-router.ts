@@ -56,7 +56,7 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
-        effect: "destructive",
+        effect: "additive",
         description:
           "Invalidate the cached Docker inventory so the next Docker query performs a fresh user-requested discovery. Requires admin permission.",
       },
