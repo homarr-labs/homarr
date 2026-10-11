@@ -42,6 +42,16 @@ export const normalizeImageName = (value: string) => {
     .toLowerCase();
 };
 
+/**
+ * Space-free form of {@link normalizeImageName}, stored on icons so the icon
+ * search can narrow candidates in SQL instead of loading every row.
+ *
+ * `getImageMatchRank` only accepts an icon when every token of the normalized
+ * search is contained in this compact form, so `LIKE '%token%'` over the stored
+ * value is a superset of every icon the ranker can accept.
+ */
+export const compactImageName = (value: string) => normalizeImageName(value).replaceAll(" ", "");
+
 export const getImageMatchRank = (normalizedSearch: string, candidateValue: string): number | null => {
   const candidate = normalizeImageName(candidateValue);
   if (!candidate) return null;

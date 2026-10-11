@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { createId } from "@homarr/common";
+import { compactImageName, createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { and, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
@@ -91,6 +91,7 @@ export const mediaRouter = createTRPCRouter({
             checksum: icon.checksum,
             name: icon.fileNameWithExtension,
             url: icon.imageUrl,
+            searchName: compactImageName(icon.fileNameWithExtension || icon.imageUrl),
             iconRepositoryId: localIconRepository.id,
           };
         }),
