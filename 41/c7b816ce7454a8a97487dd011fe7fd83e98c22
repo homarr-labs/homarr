@@ -1,0 +1,42 @@
+packages/api/src/router/widgets/beszel.ts
+  h_d6e478ca18e517 5,153
+packages/definitions/package.json
+  h_d6e478ca18e517 16
+packages/definitions/src/beszel.ts
+  h_d6e478ca18e517 1-23
+packages/request-handler/src/beszel.ts
+  h_d6e478ca18e517 2-3,112,129,137
+packages/widgets/src/beszel-system-grid/component.tsx
+  h_d6e478ca18e517 23,178
+packages/widgets/src/beszel-system-grid/index.ts
+  h_d6e478ca18e517 6,19
+packages/widgets/src/beszel-system-stats/component.tsx
+  h_d6e478ca18e517 13,23,68,86,123-125,309,325
+packages/widgets/src/beszel-system-stats/index.ts
+  h_d6e478ca18e517 5,7,54-55
+packages/widgets/src/beszel-system-table/display.ts
+  h_d6e478ca18e517 1-2,4,6
+packages/widgets/src/beszel-system-table/index.ts
+  h_d6e478ca18e517 7,49
+packages/widgets/src/beszel/_shared/chart.tsx
+  h_d6e478ca18e517 9-10,15,187,244,256,283,311,368,380
+packages/widgets/src/beszel/_shared/options.ts
+  h_d6e478ca18e517 1-31
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  h_d6e478ca18e517 6-7,10,33,40-44,52
+packages/widgets/src/option-translation.ts
+  h_d6e478ca18e517 2,4
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 7,68-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "41c7b816ce7454a8a97487dd011fe7fd83e98c22",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
