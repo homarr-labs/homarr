@@ -13,6 +13,7 @@
     "./nitro/policy": "./nitro/policy/index.ts",
     "./nitro/verifiers": "./nitro/verifiers/index.ts",
     "./nitro/session-primitives": "./nitro/session-primitives/index.ts",
+    "./nitro/context-types": "./nitro/context-types.ts",
     "./api-key": "./api-key/index.ts",
     "./client": "./client.ts",
     "./server": "./server.ts",

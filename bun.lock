@@ -432,6 +432,7 @@
       "dependencies": {
         "@homarr/core": "workspace:^0.1.0",
         "@paralleldrive/cuid2": "catalog:",
+        "@tanstack/query-core": "5.101.2",
         "cookie": "catalog:",
         "dayjs": "catalog:",
         "next": "catalog:",

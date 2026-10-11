@@ -1,4 +1,4 @@
-import { objectEntries, objectKeys } from "@homarr/common";
+import { objectEntries, objectKeys } from "@homarr/common/object";
 
 /**
  * Permissions for boards.

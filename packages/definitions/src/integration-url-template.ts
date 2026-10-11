@@ -1,4 +1,4 @@
-import { removeTrailingSlash } from "@homarr/common";
+import { removeTrailingSlash } from "@homarr/common/url";
 
 import { integrationIconSlugs } from "./docker-integration-match";
 import type { IntegrationKind } from "./integration";

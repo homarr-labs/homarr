@@ -1,4 +1,4 @@
-import { objectEntries } from "@homarr/common";
+import { objectEntries } from "@homarr/common/object";
 
 import { createDocumentationLink } from "./docs";
 import type { IntegrationKind } from "./integration";

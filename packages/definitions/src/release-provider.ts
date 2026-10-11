@@ -1,4 +1,4 @@
-import { objectKeys } from "@homarr/common";
+import { objectKeys } from "@homarr/common/object";
 
 export const releaseProviderDefs = {
   github: {

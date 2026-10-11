@@ -1,4 +1,4 @@
-import { objectKeys } from "@homarr/common";
+import { objectKeys } from "@homarr/common/object";
 
 import { getIntegrationDockerMetadata, integrationDefs } from "./integration";
 import type { IntegrationKind } from "./integration";

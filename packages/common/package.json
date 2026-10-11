@@ -15,6 +15,7 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./object": "./src/object.ts",
+    "./url": "./src/url.ts",
     "./number": "./src/number.ts",
     "./date": "./src/date.ts",
     "./server": "./src/server.ts",
@@ -30,6 +31,7 @@
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "catalog:",
+    "@tanstack/query-core": "5.101.2",
     "cookie": "catalog:",
     "dayjs": "catalog:",
     "next": "catalog:",
