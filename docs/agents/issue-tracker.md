@@ -1,8 +1,7 @@
 # Issue tracker: Linear (agents) + GitHub (inbound)
 
-Work is tracked in Linear. GitHub is where users report problems, and a Linear
-GitHub integration already mirrors those reports into Linear automatically, so
-copying them across is nobody's job.
+Work is tracked in Linear. GitHub is the public reporting trail. Look for an
+existing Linear issue before creating one for a GitHub report.
 
 ## Platform
 
@@ -14,16 +13,17 @@ authenticated by OAuth as the signed-in user. Tools are namespaced `linear.*`.
 
 Identifiers look like `AJN-123`.
 
-## The GitHub mirror
+## Imported GitHub reports
 
-A GitHub report already has a Linear issue by the time you see it. AJN-440 carries
+AJN-440 is an observed import example: it carries
 an attachment titled `#7128 bug: Widgets overlap` pointing at
-`github.com/homarr-labs/homarr/issues/7128`, with the issue body and user-attached
-images imported. Read GitHub only for what the mirror did not carry: later comments,
-edits, and the surrounding discussion.
+https://github.com/homarr-labs/homarr/issues/7128, with the report body and an
+image in its description. This example does not establish integration configuration,
+coverage of other reports, sync latency, or synchronization of later edits/comments.
 
-So: a report from a user is read in Linear, and its GitHub attachment is the trail
-back to the original thread.
+Read the existing Linear issue when available; follow its GitHub attachment for
+missing context and later discussion. If no import is found, preserve the original
+GitHub link when creating the Linear issue rather than assuming a mirror exists.
 
 ## Tools
 
@@ -53,18 +53,27 @@ not. Comment before cancelling — a silent cancel leaves the reporter guessing.
 
 ## Labels
 
-Exactly five exist: the triage roles in `docs/agents/triage-labels.md`. On
-2026-10-10 the pre-existing taxonomy was retired wholesale, because it used labels
-for things Linear already models as fields — `XS`–`XL` for estimates, `DONE` and
-`WON'T DO` for status.
+The five canonical triage roles are defined in [Triage Labels](./triage-labels.md).
+They are not the complete label inventory. That document also records the bounded
+retirement scope; retirement preserves existing issue assignments rather than
+deleting labels.
 
-### `list_issue_labels` cannot be trusted
+### Discover labels in the team's scope
 
-It returns a fixed partial set and omits labels that are actively applied to issues.
-It hid `needs triage` while 141 issues carried it, which is how a duplicate
-`needs-triage` got created. Never use it to decide whether a label exists.
+Use `list_issue_labels` with `team: "00ec7bbd-aea8-4587-a61b-a37911124f25"`
+(or the team name `Ajnart`). The `team` field accepts a name or ID. `limit` defaults
+to 50, with a maximum of 250. While `hasNextPage` is true, pass the returned
+`cursor` to the next call and preserve the same scope and filters.
 
-Ground truth for labels is the `labels` array on issues returned by `list_issues`.
+`includeArchived` defaults to false; use true when investigating historical labels.
+`includeGroups` defaults to false; use true to include groups, marked `isGroup`,
+which cannot be applied directly. A label with `retiredAt` cannot be applied to new
+issues. Check retirement separately from `archivedAt`.
+
+Before concluding that a label is absent or creating a similarly named label,
+check the scope, filters and all pages. An issue's `labels` array shows its existing
+assignments, including retired labels, not the full inventory. A partial result
+does not establish a fixed cache or a broken label-discovery tool.
 
 ## Conventions
 

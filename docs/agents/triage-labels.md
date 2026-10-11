@@ -2,6 +2,7 @@
 
 The skills speak in terms of five canonical triage roles. All five exist in Linear,
 one label per role, with the label string equal to the role name.
+These roles are a convention, not an exhaustive inventory of workspace/team labels.
 
 | Role                       | Label in Linear      | Meaning                                  |
 | -------------------------- | -------------------- | ---------------------------------------- |
@@ -24,16 +25,22 @@ Team `AJN` (Ajnart) in the `ajnart` Linear workspace.
 - `ready-for-human` — `0f42cebd-b81e-493a-8d7f-0a8de2302b53`
 - `wontfix` — `695af732-1a4c-4a21-811b-b65ae21a7b2b`
 
+For current scope, pagination and retirement checks, use the
+[label discovery guidance](./issue-tracker.md#discover-labels-in-the-teams-scope).
+
 ## What was retired
 
-On 2026-10-10 the pre-existing taxonomy was retired to make room: 31 issue labels
-including `needs triage` (141 issues), `Migrated` (93), `enhancement` (43), `Bug`
-(36), the size set `XS`–`XL`, the terminal states `DONE` and `WON'T DO`, and the
+The recorded 2026-10-10 retirement covered 31 issue labels, including
+`needs triage`, `Migrated`, `enhancement`, `Bug`, the size set `XS`–`XL`,
+the terminal-state labels `DONE` and `WON'T DO`, and the
 pipeline labels `confirmed`, `fix-merged`, `exploration-done`, `decision` and
-`waiting-for-reporter`. Five matching project labels were retired too.
+`waiting-for-reporter`. Five project size labels (`XS`–`XL`) were retired too.
+This was not deletion or removal of every pre-existing label: the scoped inventory
+also contains labels without `retiredAt`, such as `invalid` and `in-progress`.
 
-They had encoded as labels what Linear models as fields: sizes belong in the
-estimate field, and `Done`, `Canceled` and `Duplicate` are statuses. Issues still
-carry the retired labels; retired labels simply no longer appear in the picker.
+Some encoded what Linear models as fields: sizes belong in the estimate field,
+and `Done`, `Canceled` and `Duplicate` are statuses. Retirement keeps labels visible
+on issues that already carry them, while preventing application to new issues.
+For example, AJN-440 still carries the retired `needs triage` label.
 
 If one of these is ever needed again, `restore_issue_label` un-retires it by id.

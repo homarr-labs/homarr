@@ -114,13 +114,14 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 
 ### Issue tracker
 
-Linear is the tracker our agents read and write, through the `linear` MCP server. A Linear
-GitHub integration mirrors user reports in automatically, so read them here rather than on GitHub.
-See `docs/agents/issue-tracker.md`.
+Linear is the agent tracker, through the `linear` MCP server; GitHub is the public reporting trail.
+For user reports, look for an existing Linear issue and consult the GitHub thread for missing context.
+See `docs/agents/issue-tracker.md` for imported-report evidence and label discovery.
 
 ### Triage labels
 
-Five canonical roles, one label each, all live in Linear. See `docs/agents/triage-labels.md`.
+Five canonical roles map to Linear labels, not the entire label inventory. For role mapping and
+recorded retirement scope, see `docs/agents/triage-labels.md`.
 
 ### Domain docs
 

@@ -16,15 +16,15 @@ A board's arrangement of sections and items for one breakpoint, such as Base or 
 _Avoid_: Grid, viewport
 
 **Lane**:
-One of the three vertical bands — left, main, right — that a board's root sections occupy.
+One of a board layout's vertical bands — left, main, right — anchored by a root section. The side lanes, also called gutters, can contain items and nested container sections when allocated columns.
 _Avoid_: Column, gutter
 
 **Section**:
-A grouping of items inside a layout; a container section nests others, an empty one does not.
+A grouping of items inside a layout; a root section anchors a lane, while a container section can be nested inside another section.
 _Avoid_: Group (that means people), category
 
 **Column**:
-The horizontal grid unit that sizes and positions items; a gutter is the empty column band at a lane's edge.
+The horizontal grid unit used to size and position items and container sections within a lane or section; it is not a lane or an empty gutter.
 _Avoid_: Slot
 
 ### What appears on a board
