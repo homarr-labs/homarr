@@ -1,0 +1,19 @@
+tools/brand-art/concepts.html
+  s_b268122f3e7372::t_68203b0285ee38 714-750
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8c665d28b6eccc38f9366086ce35bfb2b4687f9d",
+  "prompts": {},
+  "sessions": {
+    "s_b268122f3e7372": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b1bee00-2fbf-4fd4-bb2c-5e6728fdec81",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
