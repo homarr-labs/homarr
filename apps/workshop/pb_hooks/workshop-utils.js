@@ -9,6 +9,19 @@ const isManifestMap = (value, max) =>
   Object.keys(value).length <= max &&
   Object.entries(value).every(([key, entry]) => /^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(key) && isManifestObject(entry));
 
+const isManifestHttpUrl = (value) => {
+  if (!isManifestString(value, 2048) || !/^https?:\/\//i.test(value)) return false;
+  const field = new URLField({ name: "baseUrl", required: true });
+  const record = new Record(new Collection());
+  record.set("baseUrl", value);
+  try {
+    field.validateValue(new Context(), $app, record);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const validateSubmissionManifest = (record) => {
   const type = record.getString("type");
   const schema = record.getString("widgetSchema");
@@ -54,7 +67,7 @@ const validateSubmissionManifest = (record) => {
       source.type === "integration"
         ? isManifestString(source.integrationKind, 128)
         : (source.type === undefined || source.type === "http") &&
-          isManifestString(source.baseUrl, 2048) &&
+          isManifestHttpUrl(source.baseUrl) &&
           ["public", "private", "loopback"].includes(source.networkScope);
     if (!validSource) rejectRequest("Widget manifest has an invalid source declaration");
   }

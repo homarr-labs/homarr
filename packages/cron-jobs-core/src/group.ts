@@ -81,7 +81,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
     return {
       initializeAsync: async () => {
         const configurations = await db.query.cronJobConfigurations.findMany();
-        for (const name of jobRegistry.keys()) {
+        for (const name of Object.keys(jobs)) {
           const configuration = configurations.find((savedConfiguration) => savedConfiguration.name === name);
           if (configuration?.isEnabled === false) {
             continue;
@@ -92,7 +92,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
       },
       startAsync: async (name: keyof TJobs) => await startAsync(name as string),
       startAllAsync: async () => {
-        for (const name of jobRegistry.keys()) {
+        for (const name of Object.keys(jobs)) {
           if (!tasks.has(name)) {
             continue;
           }
@@ -122,7 +122,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
         tasks.get(name as string)?.pause();
       },
       stopAll: () => {
-        for (const name of jobRegistry.keys()) {
+        for (const name of Object.keys(jobs)) {
           options.logger.logInfo("Stopping schedule of cron job.", {
             name,
           });

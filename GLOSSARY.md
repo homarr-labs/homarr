@@ -16,7 +16,7 @@ A board's arrangement of sections and items for one breakpoint, such as Base or 
 _Avoid_: Grid, viewport
 
 **Lane**:
-One of a board layout's vertical bands — left, main, right — anchored by a root section. The side lanes, also called gutters, can contain items and nested container sections when allocated columns.
+One of a board layout's vertical bands — left, main, right — anchored by a root section; "gutter" is a legacy/API alias for a side lane, with "lane" preferred. Side lanes can contain items and nested container sections when allocated columns.
 _Avoid_: Column, gutter
 
 **Section**:
@@ -24,7 +24,7 @@ A grouping of items inside a layout; a root section anchors a lane, while a cont
 _Avoid_: Group (that means people), category
 
 **Column**:
-The horizontal grid unit used to size and position items and container sections within a lane or section; it is not a lane or an empty gutter.
+The horizontal grid unit used to size and position items and container sections within a lane or section; unallocated empty spacing is a gap, not a column or lane.
 _Avoid_: Slot
 
 ### What appears on a board
