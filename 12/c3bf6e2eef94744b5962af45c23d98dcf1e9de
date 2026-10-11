@@ -1,0 +1,55 @@
+tools/brand-art/.gitignore
+  s_8b1d5a69f175a9::t_e510c5b9ae971d 1-2
+tools/brand-art/assets/blog
+  s_8b1d5a69f175a9::t_0aa67168f61b2c 1
+tools/brand-art/assets/homarr.svg
+  s_8b1d5a69f175a9::t_2869187305d7fb 1
+tools/brand-art/assets/icons
+  s_8b1d5a69f175a9::t_7fd1b0a892dee7 1
+tools/brand-art/assets/integrations-all.json
+  s_8b1d5a69f175a9::t_4439b4cc99d942 1
+tools/brand-art/assets/sizes.json
+  s_8b1d5a69f175a9::t_434bf69d10316d 1-101
+tools/brand-art/bun.lock
+  s_8b1d5a69f175a9::t_6115760e7e71f7 1-26
+tools/brand-art/gen-sizes.sh
+  s_8b1d5a69f175a9::t_c00c9c37e82cad 1-14
+tools/brand-art/package.json
+  s_8b1d5a69f175a9::t_af9af7ad8f4cc7 1-16
+tools/brand-art/render.mjs
+  s_01e8d17f7740df::t_22d68997aa68d8 1-59
+tools/brand-art/assets/board-rects.json
+  s_b268122f3e7372::t_c442feb023fdfb 1-122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "12c3bf6e2eef94744b5962af45c23d98dcf1e9de",
+  "prompts": {},
+  "sessions": {
+    "s_01e8d17f7740df": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1268b-f643-7c41-b14c-a49ad65a4fdf",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8b1d5a69f175a9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ff0d-51af-74b0-a648-dd404bc11429",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b268122f3e7372": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b1bee00-2fbf-4fd4-bb2c-5e6728fdec81",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
