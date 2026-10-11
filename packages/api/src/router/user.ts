@@ -205,6 +205,7 @@ export const userRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Create a new user account (admin only). REQUIRED: username (string), password (string), confirmPassword (must match password). OPTIONAL: email (string or null)",
       },
@@ -568,7 +569,7 @@ export const userRouter = createTRPCRouter({
         description:
           "Delete a user account. Users can delete themselves; deleting another user requires admin permission. Disabled in demo mode.",
       },
-      mcp: { enabled: true, description: "Delete a user by ID. REQUIRED: userId (string)" },
+      mcp: { enabled: true, effect: "destructive", description: "Delete a user by ID. REQUIRED: userId (string)" },
     })
     .mutation(async ({ input, ctx }) => {
       if (isDemoMode) {
