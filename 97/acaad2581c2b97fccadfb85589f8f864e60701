@@ -1,0 +1,48 @@
+.github/workflows/deployment-weekly-release.yml
+  h_d6e478ca18e517 41
+.releaserc.json
+  h_d6e478ca18e517 14-18
+CHANGELOG.md
+  h_d6e478ca18e517 1-2
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 43
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 41
+apps/nextjs/src/app/[locale]/boards/(content)/_theme.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/app/[locale]/layout.tsx
+  h_d6e478ca18e517 2,49-53
+apps/nextjs/src/components/board/board-switcher.tsx
+  h_d6e478ca18e517 67,86,92
+apps/nextjs/src/components/layout/background.tsx
+  h_d6e478ca18e517 16
+apps/nextjs/src/components/layout/header/configurable-header.tsx
+  h_d6e478ca18e517 158
+package.json
+  h_d6e478ca18e517 3,254
+packages/auth/client.ts
+  h_d6e478ca18e517 1
+packages/boards/src/context.tsx
+  h_d6e478ca18e517 44-45,53
+packages/widgets/src/beszel/_shared/chart.tsx
+  h_d6e478ca18e517 150
+packages/widgets/src/beszel/_shared/use-live-stats.ts
+  h_d6e478ca18e517 3-4,28,74
+packages/widgets/src/calendar/component.tsx
+  h_d6e478ca18e517 3,35
+packages/widgets/src/custom-api/widget-definition-context.tsx
+  h_d6e478ca18e517 16,97-98,110
+packages/widgets/src/notebook/notebook.tsx
+  h_d6e478ca18e517 169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "97acaad2581c2b97fccadfb85589f8f864e60701",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
