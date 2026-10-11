@@ -1,6 +1,10 @@
 import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 
-import { getWidgetIntegrationConfig } from "@homarr/definitions";
+import {
+  getWidgetIntegrationConfig,
+  healthMonitoringClusterIntegrationKinds,
+  healthMonitoringSystemIntegrationKinds,
+} from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
@@ -62,6 +66,13 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
             { value: "cluster", label: "Cluster" },
           ] as const,
         }),
+        tabOrder: factory.select({
+          defaultValue: "system-first",
+          options: [
+            { value: "system-first", label: (t) => t("widget.healthMonitoring.option.tabOrder.systemFirst") },
+            { value: "cluster-first", label: (t) => t("widget.healthMonitoring.option.tabOrder.clusterFirst") },
+          ] as const,
+        }),
         sectionIndicatorRequirement: factory.select({
           defaultValue: "all",
           options: [
@@ -104,6 +115,13 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
           shouldHide(_, integrationKinds) {
             // Cluster sections are only shown on cluster health tab
             return !integrationKinds.includes("proxmox");
+          },
+        },
+        tabOrder: {
+          shouldHide(_, integrationKinds) {
+            const hasSystem = healthMonitoringSystemIntegrationKinds.some((kind) => integrationKinds.includes(kind));
+            const hasCluster = healthMonitoringClusterIntegrationKinds.some((kind) => integrationKinds.includes(kind));
+            return !hasSystem || !hasCluster;
           },
         },
         defaultTab: {
