@@ -1,0 +1,14 @@
+packages/auth/session.ts
+  h_d6e478ca18e517 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "60fcd88de57ad27b7d93e999a5cc3083112650e1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
