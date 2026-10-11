@@ -84,7 +84,7 @@ export const users = pgTable("user", {
   defaultSearchEngineId: varchar({ length: 64 }).references(() => searchEngines.id, {
     onDelete: "set null",
   }),
-  openSearchInNewTab: boolean().default(false).notNull(),
+  openSearchInNewTab: boolean().default(true).notNull(),
   ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   byteUnitSystem: varchar({ length: 7 }).$type<ByteUnitSystem>().default(defaultByteUnitSystem).notNull(),

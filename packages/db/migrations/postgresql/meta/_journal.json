@@ -127,6 +127,13 @@
       "when": 1791637584387,
       "tag": "0017_add_api_key_oauth_provenance",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1791711764604,
+      "tag": "0018_align_user_search_default",
+      "breakpoints": true
     }
   ]
 }
