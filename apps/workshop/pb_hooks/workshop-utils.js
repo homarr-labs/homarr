@@ -11,6 +11,8 @@ const isManifestMap = (value, max) =>
 
 const isManifestHttpUrl = (value) => {
   if (!isManifestString(value, 2048) || !/^https?:\/\//i.test(value)) return false;
+  const authority = /^https?:\/\/([^/?#]+)/i.exec(value)?.[1];
+  if (!authority || authority.includes("@") || /\?[^#]+|#[\s\S]+/.test(value)) return false;
   const field = new URLField({ name: "baseUrl", required: true });
   const record = new Record(new Collection());
   record.set("baseUrl", value);

@@ -1,46 +1,38 @@
-# Triage Labels
+# Triage labels
 
-The skills speak in terms of five canonical triage roles. All five exist in Linear,
-one label per role, with the label string equal to the role name.
-These roles are a convention, not an exhaustive inventory of workspace/team labels.
+Map canonical skill roles to these exact GitHub label strings.
 
-| Role              | Label in Linear   | Meaning                                  |
-| ----------------- | ----------------- | ---------------------------------------- |
-| `needs-triage`    | `needs-triage`    | Maintainer needs to evaluate this issue  |
-| `needs-info`      | `needs-info`      | Waiting on reporter for more information |
-| `ready-for-agent` | `ready-for-agent` | Fully specified, ready for an AFK agent  |
-| `ready-for-human` | `ready-for-human` | Requires human implementation            |
-| `wontfix`         | `wontfix`         | Will not be actioned                     |
+| Label in mattpocock/skills | Label in our tracker             | Meaning                                                                                    |
+| -------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
+| `needs-triage`             | `needs triage`                   | Maintainer needs to evaluate the report                                                    |
+| `needs-info`               | `needs info from the maintainer` | Implementation waits for maintainer clarification or a decision                            |
+| `ready-for-agent`          | `specced-out`                    | Scope, expected behavior, and acceptance criteria are clear enough to implement            |
+| `ready-for-human`          | `waiting-for-reporter`           | The implemented change has a published demo image and awaits reporter testing and feedback |
+| `wontfix`                  | `wontfix`                        | The report will not be actioned                                                            |
 
-When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the
-corresponding label string from this table.
+Use `specced-out` when the specification is ready for implementation. The canonical `ready-for-human` role means reporter validation after implementation in this repo; map it to `waiting-for-reporter`, not a human implementation label.
 
-## Where they live
+## Sizes and weights
 
-Team `AJN` (Ajnart) in the `ajnart` Linear workspace.
+Assign exactly one size label once scope is understood. Estimate implementation effort, affected scope, and uncertainty together. Weights are relative planning units, not priority or promises of elapsed time.
 
-- `needs-triage` — `1c3e264c-e3d4-476e-8207-030fd283ef1c`
-- `needs-info` — `ff309bc1-bc0a-4457-9ede-c1bf23b97c7f`
-- `ready-for-agent` — `76f18bd7-325b-4c32-9788-a076a114925b`
-- `ready-for-human` — `0f42cebd-b81e-493a-8d7f-0a8de2302b53`
-- `wontfix` — `695af732-1a4c-4a21-811b-b65ae21a7b2b`
+| Label     | Weight | Typical scope                                                                      |
+| --------- | ------ | ---------------------------------------------------------------------------------- |
+| `size:XS` | 1      | A tiny, well-understood change in one place                                        |
+| `size:S`  | 2      | A small change in one feature with few moving parts                                |
+| `size:M`  | 3      | A moderate change across several related modules                                   |
+| `size:L`  | 5      | A substantial change across package boundaries or with significant uncertainty     |
+| `size:XL` | 8      | A large or poorly bounded change; split into smaller tickets before implementation |
 
-For current scope, pagination and retirement checks, use the
-[label discovery guidance](./issue-tracker.md#discover-labels-in-the-teams-scope).
+Apply the existing `good first issue` label to XS and S implementation issues with a complete specification and a self-contained scope. Remove it when the issue becomes M, L, or XL, or needs substantial prerequisite knowledge. Re-estimate the size when scope changes and replace the previous size label.
 
-## What was retired
+## Test readiness and reporter feedback
 
-The recorded 2026-10-10 retirement covered 31 issue labels, including
-`needs triage`, `Migrated`, `enhancement`, `Bug`, the size set `XS`–`XL`,
-the terminal-state labels `DONE` and `WON'T DO`, and the
-pipeline labels `confirmed`, `fix-merged`, `exploration-done`, `decision` and
-`waiting-for-reporter`. Five project size labels (`XS`–`XL`) were retired too.
-This was not deletion or removal of every pre-existing label: the scoped inventory
-also contains labels without `retiredAt`, such as `invalid` and `in-progress`.
+- `ready for test`: the implementation PR has passing required checks and a published test image for its current head. Apply to the PR when these conditions hold.
+- `waiting-for-reporter`: the implemented change has a published demo image and the linked report awaits reporter testing and feedback. Apply to the issue after providing the reporter with the image and reproduction steps.
 
-Some encoded what Linear models as fields: sizes belong in the estimate field,
-and `Done`, `Canceled` and `Duplicate` are statuses. Retirement keeps labels visible
-on issues that already carry them, while preventing application to new issues.
-For example, AJN-440 still carries the retired `needs triage` label.
+These states describe testing and feedback; they do not establish acceptance. Remove `ready for test` when a new commit needs fresh checks or publication.
 
-If one of these is ever needed again, `restore_issue_label` un-retires it by id.
+After the reporter accepts the fix and it is merged, close the issue as completed and remove the pending state label. `wontfix` is for rejected or unactioned reports, not accepted fixes.
+
+Reuse existing labels by exact name. Create a missing configured label only when an authorized triage operation needs it; do not create synonymous labels.
