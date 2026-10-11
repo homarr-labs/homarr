@@ -1,4 +1,4 @@
-import { Column, is, Name, Param, Placeholder, SQL, StringChunk, Subquery, Table } from "drizzle-orm";
+import { Column, is, Name, Param, Placeholder, QueryPromise, SQL, StringChunk, Subquery, Table } from "drizzle-orm";
 
 export interface DatabaseScope<T extends object> {
   database: T;
@@ -58,12 +58,25 @@ const isSqlMetadata = (value: object) => {
 
 export const createDatabaseScope = <T extends object>(
   database: T,
-  options: { synchronousTransactions: boolean; assertParent?: () => void },
+  options: {
+    synchronousTransactions: boolean;
+    synchronousExecutions?: boolean;
+    assertParent?: () => void;
+    onFailure?: (error: unknown) => void;
+  },
 ): DatabaseScope<T> => {
   let active = true;
   const pending = new Set<Promise<unknown>>();
   const wrapped = new WeakMap<object, object>();
   const argumentsByHandle = new WeakMap<object, object>();
+  const observe = <TResult>(operation: () => TResult): TResult => {
+    try {
+      return operation();
+    } catch (error) {
+      options.onFailure?.(error);
+      throw error;
+    }
+  };
   const assertActive = () => {
     options.assertParent?.();
     if (!active) throw new Error("The database scope is no longer active");
@@ -72,7 +85,10 @@ export const createDatabaseScope = <T extends object>(
     pending.add(promise);
     void promise.then(
       () => pending.delete(promise),
-      () => pending.delete(promise),
+      (error: unknown) => {
+        options.onFailure?.(error);
+        pending.delete(promise);
+      },
     );
   };
   const resolveArgument = (argument: unknown, resolved = new WeakMap<object, object>()): unknown => {
@@ -176,54 +192,69 @@ export const createDatabaseScope = <T extends object>(
       if (property === "constructor") return member;
       if (typeof member !== "function") return wrap(member);
       if (property === "transaction")
-        return (operation: (transaction: object) => unknown, ...args: unknown[]) => {
-          assertActive();
-          if (options.synchronousTransactions && operation.constructor.name === "AsyncFunction")
-            throw new TypeError("SQLite transactions require a synchronous callback");
-          const result: unknown = Reflect.apply(member, value, [
-            (transaction: object) => {
-              const nested = createDatabaseScope(transaction, { ...options, assertParent: assertActive });
-              if (options.synchronousTransactions) {
-                try {
-                  const outcome = operation(nested.database);
-                  if (
-                    ((typeof outcome === "object" && outcome !== null) || typeof outcome === "function") &&
-                    "then" in outcome &&
-                    typeof outcome.then === "function"
-                  ) {
-                    void Promise.resolve(outcome).catch(() => undefined);
-                    throw new TypeError("SQLite transaction callbacks cannot return a promise");
+        return (operation: (transaction: object) => unknown, ...args: unknown[]) =>
+          observe(() => {
+            assertActive();
+            if (options.synchronousTransactions && operation.constructor.name === "AsyncFunction")
+              throw new TypeError("SQLite transactions require a synchronous callback");
+            const result: unknown = Reflect.apply(member, value, [
+              (transaction: object) => {
+                const nested = createDatabaseScope(transaction, { ...options, assertParent: assertActive });
+                if (options.synchronousTransactions) {
+                  try {
+                    const outcome = observe(() => operation(nested.database));
+                    if (
+                      ((typeof outcome === "object" && outcome !== null) || typeof outcome === "function") &&
+                      "then" in outcome &&
+                      typeof outcome.then === "function"
+                    ) {
+                      void Promise.resolve(outcome).catch(() => undefined);
+                      throw new TypeError("SQLite transaction callbacks cannot return a promise");
+                    }
+                    return outcome;
+                  } finally {
+                    nested.revoke();
                   }
-                  return outcome;
-                } finally {
-                  nested.revoke();
                 }
-              }
-              return (async () => {
-                try {
-                  return await operation(nested.database);
-                } finally {
-                  nested.revoke();
-                  await nested.settleAsync();
-                }
-              })();
-            },
-            ...args,
-          ]);
-          return wrap(result);
-        };
-      return (...args: unknown[]) => {
-        assertActive();
-        const callbacks = args.map((argument) =>
-          typeof argument === "function"
-            ? (...parameters: unknown[]) => {
-                assertActive();
-                return resolveArgument(Reflect.apply(argument, undefined, parameters.map(wrap)));
-              }
-            : resolveArgument(argument),
-        );
-        return wrap(Reflect.apply(member, value, callbacks));
-      };
+                return (async () => {
+                  try {
+                    return await operation(nested.database);
+                  } finally {
+                    nested.revoke();
+                    await nested.settleAsync();
+                  }
+                })();
+              },
+              ...args,
+            ]);
+            return wrap(result);
+          });
+      return (...args: unknown[]) =>
+        observe(() => {
+          assertActive();
+          const callbacks = args.map((argument) =>
+            typeof argument === "function"
+              ? (...parameters: unknown[]) =>
+                  observe(() => {
+                    assertActive();
+                    return resolveArgument(Reflect.apply(argument, undefined, parameters.map(wrap)));
+                  })
+              : resolveArgument(argument),
+          );
+          const receiver =
+            options.onFailure &&
+            (member === QueryPromise.prototype.then ||
+              member === QueryPromise.prototype.catch ||
+              member === QueryPromise.prototype.finally)
+              ? result
+              : value;
+          const outcome: unknown = Reflect.apply(member, receiver, callbacks);
+          if (options.synchronousExecutions && outcome instanceof Promise) {
+            void outcome.catch((error: unknown) => options.onFailure?.(error));
+            throw new TypeError("Bounded SQLite library execution must be synchronous");
+          }
+          return wrap(outcome);
+        });
     };
     const result = new Proxy(Object.create(prototype) as object, {
       get(_target, property) {

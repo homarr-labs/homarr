@@ -25,6 +25,11 @@ import {
 } from "./migrations/compatibility";
 import * as postgresqlSchema from "./schema/postgresql";
 import * as sqliteSchema from "./schema/sqlite";
+import { boundedPostgresTransactionAsync, boundedSqliteTransaction } from "./transaction-gate";
+import type { BoundedTransactionOperation } from "./transaction-gate";
+
+export { TransactionCommitAmbiguousError } from "./transaction-gate";
+export type { BoundedTransactionOperation } from "./transaction-gate";
 
 export type PersistenceConfig = { logger?: Logger } & (
   | { engine: "sqlite"; path: string; mode: "fresh" | "existing"; migrationsFolder?: string }
@@ -77,11 +82,19 @@ export const createPersistenceRuntime = (config: PersistenceConfig) => {
   const drains = new Set<() => void>();
   let maintenance: Promise<unknown> | undefined;
   let closing: Promise<void> | undefined;
+  let boundedLifetime = new AbortController();
+  let quarantine: { reason: unknown } | undefined;
+  const quarantineResource = (reason: unknown) => {
+    quarantine ??= { reason };
+    if (phase !== "closing" && phase !== "closed") phase = "failed";
+    boundedLifetime.abort(reason);
+  };
   const requireConnection = () => {
     if (!connection) throw new Error("Persistence is not open");
     return connection;
   };
   const requireReady = () => {
+    if (quarantine) throw new Error("Persistence resource is quarantined", { cause: quarantine.reason });
     if (phase !== "ready") throw new Error(`Persistence is not ready (${phase})`);
     return requireConnection();
   };
@@ -254,6 +267,43 @@ export const createPersistenceRuntime = (config: PersistenceConfig) => {
         leave();
       }
     },
+    boundedTransactionSync<T>(operation: BoundedTransactionOperation, callback: (database: HomarrDatabase) => T): T {
+      const current = requireReady();
+      if (current.engine !== "sqlite") throw new TypeError("Use boundedTransactionAsync for PostgreSQL");
+      active += 1;
+      try {
+        return boundedSqliteTransaction(
+          current.database.$client,
+          createSharedDbConfig(sqliteSchema, config.logger),
+          operation,
+          boundedLifetime.signal,
+          callback,
+          quarantineResource,
+        );
+      } finally {
+        leave();
+      }
+    },
+    async boundedTransactionAsync<T>(
+      operation: BoundedTransactionOperation,
+      callback: (database: HomarrDatabasePostgresql) => Promise<T>,
+    ): Promise<T> {
+      const current = requireReady();
+      if (current.engine !== "postgresql") throw new TypeError("SQLite transactions must be synchronous");
+      active += 1;
+      try {
+        return await boundedPostgresTransactionAsync(
+          current.database.$client,
+          createSharedDbConfig(postgresqlSchema, config.logger),
+          operation,
+          boundedLifetime.signal,
+          callback,
+          quarantineResource,
+        );
+      } finally {
+        leave();
+      }
+    },
     async transactionAsync<T>(operation: (database: HomarrDatabasePostgresql) => Promise<T>): Promise<T> {
       const current = requireReady();
       if (current.engine !== "postgresql") throw new TypeError("SQLite transactions must be synchronous");
@@ -275,13 +325,18 @@ export const createPersistenceRuntime = (config: PersistenceConfig) => {
     async maintenanceAsync<T>(operation: (resource: PersistenceDatabaseHandle) => T | Promise<T>): Promise<T> {
       const current = requireReady();
       phase = "maintenance";
+      boundedLifetime.abort(new Error("Persistence entered maintenance"));
       const pending = waitForIdle().then(async () => {
+        if (quarantine) throw new Error("Persistence resource is quarantined", { cause: quarantine.reason });
         active += 1;
         try {
           return await withScopedConnectionAsync(current, operation);
         } finally {
           leave();
-          if (phase === "maintenance") phase = "ready";
+          if (phase === "maintenance") {
+            boundedLifetime = new AbortController();
+            phase = "ready";
+          }
         }
       });
       maintenance = pending;
@@ -322,6 +377,7 @@ export const createPersistenceRuntime = (config: PersistenceConfig) => {
       if (phase === "opening" || phase === "migrating")
         return Promise.reject(new Error(`Persistence cannot close during ${phase}`));
       phase = "closing";
+      boundedLifetime.abort(new Error("Persistence is closing"));
       closing = (maintenance ?? Promise.resolve())
         .catch(() => undefined)
         .then(waitForIdle)
