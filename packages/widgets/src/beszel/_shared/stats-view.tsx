@@ -252,6 +252,15 @@ export function BeszelStatsView({
       containerNames.map((name, index) => ({ name, color: containerColors[index % containerColors.length] as string })),
     [containerNames],
   );
+  const memoryContainerSeries = useMemo(() => {
+    const memoryTotals = new Map<string, number>();
+    for (const record of containerStats ?? []) {
+      for (const container of record.stats) {
+        memoryTotals.set(container.n, (memoryTotals.get(container.n) ?? 0) + container.m);
+      }
+    }
+    return containerSeries.toSorted((a, b) => (memoryTotals.get(b.name) ?? 0) - (memoryTotals.get(a.name) ?? 0));
+  }, [containerStats, containerSeries]);
   const dockerCpuData = useDockerChartData(
     whenVisible(visibility.dockerCpu, containerStats),
     containerNames,
@@ -468,6 +477,7 @@ export function BeszelStatsView({
           )}
           {visibility.dockerMemory && dockerMemoryData.length > 0 && (
             <BeszelChartPanel
+              key={JSON.stringify(memoryContainerSeries.map(({ name }) => name))}
               title={t("chart.dockerMemory.title")}
               subtitle={t("chart.dockerMemory.subtitle")}
               chartProps={{
@@ -475,7 +485,8 @@ export function BeszelStatsView({
                 withXAxis: showXAxis,
                 data: dockerMemoryData,
                 type: "stacked",
-                series: containerSeries,
+                series: memoryContainerSeries,
+                areaChartProps: { reverseStackOrder: true },
                 yAxisFormatter: byteAxisFormatters.bytes,
                 tooltipProps: tooltips.bytesTotal,
               }}
