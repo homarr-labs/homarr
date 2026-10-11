@@ -1,0 +1,16 @@
+.github/workflows/ci.yml
+  h_d6e478ca18e517 123-147
+vitest.security.config.mts
+  h_d6e478ca18e517 1-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "746927a948ad0b6fbdf5f1ba7331a6d76d30fe10",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
