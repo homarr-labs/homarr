@@ -85,7 +85,12 @@
       function img(src, css = "") {
         const e = h("img", css);
         e.src = src;
-        loads.push(e.decode().catch(() => console.error("missing", src)));
+        loads.push(
+          e.decode().catch((err) => {
+            console.error("missing", src);
+            throw err;
+          }),
+        );
         return e;
       }
       const size = (src) => SIZES[src] ?? [1, 1];
@@ -706,7 +711,22 @@
         add(at(term, 64, 270));
       }
 
-      ({ 0: c0, 1: c1, 2: c2, 3: c3, 4: c4, 5: c5, 6: c6, 7: c7, 8: c8, 9: c9, 10: c10 })[C]();
+      const CONCEPTS = new Map([
+        ["0", c0],
+        ["1", c1],
+        ["2", c2],
+        ["3", c3],
+        ["4", c4],
+        ["5", c5],
+        ["6", c6],
+        ["7", c7],
+        ["8", c8],
+        ["9", c9],
+        ["10", c10],
+      ]);
+      const concept = CONCEPTS.get(C);
+      if (!concept) throw new Error(`unknown concept: ${C}`);
+      concept();
       const fonts = [
         '830 100px "Inter Tight"',
         '800 100px "Inter Tight"',

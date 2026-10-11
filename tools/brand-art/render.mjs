@@ -29,6 +29,9 @@ const port = server.address().port;
 const W = Number(process.env.W ?? 1280);
 const H = Number(process.env.H ?? 640);
 const ids = process.argv.slice(2);
+const CONCEPTS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+const unknown = ids.find((id) => id !== "sheet" && !CONCEPTS.includes(id));
+if (unknown) throw new Error(`unknown concept: ${unknown}`);
 const browser = await chromium.launch({
   executablePath: process.env.CHROME ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
   headless: true,
@@ -42,14 +45,16 @@ if (ids[0] === "sheet") {
   await page.screenshot({ path: join(root, "out/concepts-overview.png"), fullPage: true });
   ids.length = 0;
 }
-for (const c of ids.length || process.argv[2] === "sheet" ? ids : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]) {
+for (const c of ids.length || process.argv[2] === "sheet" ? ids : CONCEPTS.slice(1)) {
   const page = await browser.newPage({
     viewport: { width: W, height: H },
     deviceScaleFactor: Number(process.env.SCALE ?? 2),
   });
-  page.on("pageerror", (e) => console.error(`[${c}]`, e.message));
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e));
   await page.goto(`http://127.0.0.1:${port}/concepts.html?c=${c}&w=${W}&h=${H}`);
   await page.evaluate(() => window.__ready);
+  if (errors.length) throw new Error(`concept ${c} failed: ${errors.map((e) => e.message).join("; ")}`);
   const f = join(root, `out/concept-${c}.png`);
   await page.screenshot({ path: f });
   console.log(f);
