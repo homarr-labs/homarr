@@ -2,7 +2,7 @@
 
 Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
 that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
-query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
+query string, or fragment. Authentication is `none`, `bearer`,
 `basic`, an API-key header, or an API-key query parameter. HTTP source credentials belong to the widget but remain outside its manifest.
 Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
 request to a different origin.
