@@ -44,8 +44,6 @@ export const ClientShell = ({
       )}
       <AppShell
         {...backgroundProps}
-        // Keep the shell spanning the viewport, but render the background itself on a fixed layer
-        // so short content never reveals the plain page background below it.
         mih={backgroundProps.bg ? "100dvh" : undefined}
         header={hasHeader ? { height: headerHeight } : undefined}
         navbar={
