@@ -18,12 +18,7 @@
         ]
       }
     ],
-    [
-      "@semantic-release/release-notes-generator",
-      {
-        "preset": "conventionalcommits"
-      }
-    ],
+    "./scripts/release-notes.mjs",
     [
       "@semantic-release/changelog",
       {
