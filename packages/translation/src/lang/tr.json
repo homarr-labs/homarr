@@ -749,7 +749,10 @@
         "selectMultiple": "Birden fazla seç",
         "cancelMultiple": "Çoklu seçimden çık",
         "customApplication": "Özel uygulama",
-        "application": "Uygulama"
+        "application": "Uygulama",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Yeni uygulama oluştur",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Widget ayarlarından bir URL veya uygulama ekleyin"
+      "empty": "Widget ayarlarından bir URL veya uygulama ekleyin",
+      "groups": {
+        "label": "",
+        "placeholder": "Yeni Kategori",
+        "add": "Kategori ekle",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Filtrelenecek konteynerler"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Beyaz liste olarak filtrele"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Uygulama bulunamadı",
         "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın",
-        "quickCreate": "Anında uygulama oluştur"
+        "quickCreate": "Anında uygulama oluştur",
+        "create": "Uygulama oluştur"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -6151,6 +6171,15 @@
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

@@ -749,7 +749,10 @@
         "selectMultiple": "複数を選択",
         "cancelMultiple": "複数選択を終了",
         "customApplication": "カスタム アプリケーション",
-        "application": "アプリケーション"
+        "application": "アプリケーション",
+        "backToApps": "アプリに戻る",
+        "createAndAdd": "作成して追加",
+        "createAnother": "作成して続ける"
       },
       "create": {
         "title": "新しいアプリを作成",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "ウィジェットの設定で URL または App を追加する"
+      "empty": "ウィジェットの設定で URL または App を追加する",
+      "groups": {
+        "label": "カテゴリ",
+        "placeholder": "新しいカテゴリー",
+        "add": "カテゴリーを追加",
+        "remove": "{name} カテゴリを削除",
+        "rename": "カテゴリ名 {name}",
+        "assign": "{name} のカテゴリ",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "フィルタするコンテナ"
         },
+        "filterCaseSensitive": {
+          "label": "大文字と小文字を区別する"
+        },
+        "filterAllowWildcards": {
+          "label": "ワイルドカードを許可",
+          "description": "0文字以上には*を使用します。"
+        },
         "filterIsWhitelist": {
           "label": "ホワイトリストとしてフィルター"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "アプリが見つかりません",
         "description": "<here></here> をクリックして新しいアプリを作成する",
-        "quickCreate": "即座にアプリを作成"
+        "quickCreate": "即座にアプリを作成",
+        "create": "アプリの作成"
       },
       "error": {
         "noIntegration": "連携機能が選択されていません",
@@ -6151,6 +6171,15 @@
           "notice": "このページを見えなくするためには、サーバーの管理者にサーバーのホームボードを設定するよう問い合わせてください"
         }
       }
+    },
+    "snapshot": {
+      "take": "ボードの状態のスナップショットを作成",
+      "description": "バグレポートに添付し、レイアウトの再現に役立つ編集されたスナップショットをダウンロードしてください",
+      "downloaded": "ボードのスナップショットをダウンロードしました",
+      "downloadedDescription": "バグレポートに JSON と同じウィンドウサイズで撮影されたスクリーンショットを添付します。 スナップショットには、レイアウト、設定、カスタム CSS、ウィジェットのオプション、読み込まれたデータ、プライベートテキスト、URL、資格情報を編集したものが含まれます。",
+      "playground": "盤面を開く",
+      "failed": "ボードのスナップショットをキャプチャできません",
+      "failedDescription": "ボードデータを安全にエクスポートできないか、スナップショットが10MBを超えています。"
     }
   },
   "layout": {

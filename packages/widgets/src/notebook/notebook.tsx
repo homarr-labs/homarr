@@ -53,7 +53,6 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
 
 import { clientApi } from "@homarr/api/client";
-import { useBoardReplay } from "@homarr/api/board-replay";
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -94,7 +93,6 @@ export function Notebook({
   displayScale = 1,
   displayMode = "compact",
 }: WidgetComponentProps<"notebook">) {
-  const replay = useBoardReplay();
   const [content, setContent] = useState(options.content);
   const previousContentRef = useRef(options.content);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -168,23 +166,9 @@ export function Notebook({
         Highlight.configure({ multicolor: true }),
         Image.extend({
           addAttributes() {
-            const attributes = {
+            return {
               ...this.parent?.(),
               width: { default: null },
-            };
-            if (!replay) return attributes;
-            return {
-              ...attributes,
-              snapshotAspectRatio: {
-                default: null,
-                parseHTML: (element) => element.style.aspectRatio || null,
-                renderHTML: (attrs) => {
-                  const ratio: unknown = attrs.snapshotAspectRatio;
-                  if (typeof ratio !== "string" || !/^\d{1,7}(?:\.\d+)?\s*\/\s*\d{1,7}(?:\.\d+)?$/.test(ratio))
-                    return {};
-                  return { style: `aspect-ratio: ${ratio}` };
-                },
-              },
             };
           },
         }).configure({ inline: true }),

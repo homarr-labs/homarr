@@ -749,7 +749,10 @@
         "selectMultiple": "Selectează mai multe",
         "cancelMultiple": "Ieșiți din multi-selectare",
         "customApplication": "Aplicație personalizată",
-        "application": "Cerere"
+        "application": "Cerere",
+        "backToApps": "Înapoi la aplicații",
+        "createAndAdd": "Creează și adaugă",
+        "createAnother": "Creează și continuă"
       },
       "create": {
         "title": "Creează o aplicație nouă",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Adăugați un URL sau o aplicație în setările widget-ului"
+      "empty": "Adăugați un URL sau o aplicație în setările widget-ului",
+      "groups": {
+        "label": "Categorii",
+        "placeholder": "Categorie nouă",
+        "add": "Adaugă categorie",
+        "remove": "Elimină categoria {name}",
+        "rename": "Numele categoriei pentru {name}",
+        "assign": "Categorie pentru {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "Războinic de arhivă",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Containere de filtrat"
         },
+        "filterCaseSensitive": {
+          "label": "Sensibil la caz"
+        },
+        "filterAllowWildcards": {
+          "label": "Permite metacaractere",
+          "description": "Folosește * pentru zero sau mai multe caractere."
+        },
         "filterIsWhitelist": {
           "label": "Filtrare ca whitelist"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nicio aplicație găsită",
         "description": "Apăsați <here></here> pentru a crea o aplicație nouă",
-        "quickCreate": "Creează o aplicație pe zbor"
+        "quickCreate": "Creează o aplicație pe zbor",
+        "create": "Creare aplicație"
       },
       "error": {
         "noIntegration": "Nicio integrare selectată",
@@ -6151,6 +6171,15 @@
           "notice": "Pentru a face această pagină să dispară, cereți administratorului serverului să seteze o tabelă de pornire pentru server"
         }
       }
+    },
+    "snapshot": {
+      "take": "Fă instantaneu stării de bord",
+      "description": "Descarcă un instantaneu redactat pentru a atașa un raport de eroare și ajută-ne să reproducem aspectul tău",
+      "downloaded": "Instantaneul forumului descărcat",
+      "downloadedDescription": "Atașează JSON și o captură de ecran la aceeași dimensiune a ferestrei la raportul de erori. Imaginea include layout, settings, custom CSS, options widget-uri și date încărcate, cu text privat, URL-uri și acreditări redactate.",
+      "playground": "Deschide locul de joacă",
+      "failed": "Imposibil de captat instantaneul forumului",
+      "failedDescription": "Datele secţiunii nu au putut fi exportate în condiţii de siguranţă, sau imaginea depăşeşte 10 MB."
     }
   },
   "layout": {

@@ -749,7 +749,10 @@
         "selectMultiple": "Chọn nhiều mục",
         "cancelMultiple": "Thoát chế độ chọn nhiều",
         "customApplication": "Ứng dụng tùy chỉnh",
-        "application": "Ứng dụng"
+        "application": "Ứng dụng",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Tạo ứng dụng mới",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích"
+      "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Các container cần lọc"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Lọc dưới dạng danh sách cho phép"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Không tìm thấy ứng dụng",
         "description": "Nhấp <here></here> để tạo ứng dụng mới",
-        "quickCreate": "Tạo ứng dụng nhanh"
+        "quickCreate": "Tạo ứng dụng nhanh",
+        "create": "Tạo ứng dụng"
       },
       "error": {
         "noIntegration": "Chưa chọn tích hợp",
@@ -6151,6 +6171,15 @@
           "notice": "Để ẩn trang này, hãy yêu cầu quản trị viên máy chủ đặt bảng chính cho máy chủ"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

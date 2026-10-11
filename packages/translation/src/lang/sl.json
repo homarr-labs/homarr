@@ -749,7 +749,10 @@
         "selectMultiple": "Izberi več",
         "cancelMultiple": "Izhod iz večkratne izbire",
         "customApplication": "Prilagojena aplikacija",
-        "application": "Aplikacija"
+        "application": "Aplikacija",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Ustvari novo aplikacijo",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Dodaj URL ali aplikacijo v nastavitvah gradnika"
+      "empty": "Dodaj URL ali aplikacijo v nastavitvah gradnika",
+      "groups": {
+        "label": "",
+        "placeholder": "Nova kategorija",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Vsebniki za filtriranje"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtriraj kot seznam dovoljenih"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Ni najdene aplikacije",
         "description": "Kliknite <here></here>, da ustvarite novo aplikacijo",
-        "quickCreate": "Ustvari aplikacijo sproti"
+        "quickCreate": "Ustvari aplikacijo sproti",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nobena integracija ni izbrana",
@@ -6151,6 +6171,15 @@
           "notice": "Če želite skriti to stran, prosite skrbnika strežnika, naj za strežnik nastavi domačo tablo"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

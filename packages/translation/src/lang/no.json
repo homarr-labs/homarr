@@ -749,7 +749,10 @@
         "selectMultiple": "Velg flere",
         "cancelMultiple": "Avslutt multivalg",
         "customApplication": "Egendefinert applikasjon",
-        "application": "Applikasjon"
+        "application": "Applikasjon",
+        "backToApps": "Tilbake til apper",
+        "createAndAdd": "Opprett og legg til",
+        "createAnother": "Opprett og fortsett"
       },
       "create": {
         "title": "Lag ny app",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Legg til en URL eller app i widget-innstillingene"
+      "empty": "Legg til en URL eller app i widget-innstillingene",
+      "groups": {
+        "label": "Kategorier",
+        "placeholder": "Ny kategori",
+        "add": "Legg til kategori",
+        "remove": "Fjern {name} kategori",
+        "rename": "Kategorinavn for {name}",
+        "assign": "Kategori for {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArkivLag Kriger",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Beholdere som skal filtreres"
         },
+        "filterCaseSensitive": {
+          "label": "Kassen er følsom"
+        },
+        "filterAllowWildcards": {
+          "label": "Tillat jokertegn",
+          "description": "Bruk * for null eller flere tegn."
+        },
         "filterIsWhitelist": {
           "label": "Filtrer som hvitliste"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Ingen app funnet",
         "description": "Klikk <here></here> for å opprette en ny app",
-        "quickCreate": "Opprett app direkte"
+        "quickCreate": "Opprett app direkte",
+        "create": "Opprett app"
       },
       "error": {
         "noIntegration": "Ingen integrasjon valgt",
@@ -6151,6 +6171,15 @@
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
         }
       }
+    },
+    "snapshot": {
+      "take": "Ta øyeblikksbilde av bord status",
+      "description": "Last ned et forklart øyeblikksbilde for å legge ved en feilrapport og hjelp oss å reprodusere oppsettet ditt",
+      "downloaded": "Brettbilde lastet ned",
+      "downloadedDescription": "Legg ved JSON og et skjermbilde tatt i samme vindusstørrelse til feilrapporten. Øyeblikksbildet inkluderer layout, innstillinger, egendefinerte CSS, widget alternativer og lastet data, med privat tekst, URL-er og legitimasjoner som blir handlet.",
+      "playground": "Åpne lekeplass på brett",
+      "failed": "Kan ikke fange tavlen øyeblikksbilde",
+      "failedDescription": "Styrets data kunne ikke trygt eksporteres, eller snapshot overstiger 10 MB."
     }
   },
   "layout": {

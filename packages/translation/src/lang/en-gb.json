@@ -750,9 +750,9 @@
         "cancelMultiple": "Exit multiple selection",
         "customApplication": "Custom application",
         "application": "Application",
-        "backToApps": "Back to apps",
-        "createAndAdd": "Create and add",
-        "createAnother": "Create and continue"
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Create new app",
@@ -2351,13 +2351,13 @@
       },
       "empty": "Add a URL or app in the widget settings",
       "groups": {
-        "label": "Categories",
+        "label": "",
         "placeholder": "New category",
         "add": "Add category",
-        "remove": "Remove {name} category",
-        "rename": "Category name for {name}",
-        "assign": "Category for {name}",
-        "ungrouped": "Ungrouped"
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
       }
     },
     "archiveTeamWarrior": {
@@ -3393,6 +3393,13 @@
         "containerFilter": {
           "label": "Containers to filter"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filter as a whitelist"
         },
@@ -3701,7 +3708,7 @@
         "noData": "No app found",
         "description": "Click <here></here> to create a new app",
         "quickCreate": "Create app on the fly",
-        "create": "Create app"
+        "create": "Create application"
       },
       "error": {
         "noIntegration": "No integration selected",
@@ -6164,6 +6171,15 @@
           "notice": ""
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

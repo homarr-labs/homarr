@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMantineTheme } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
-import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useBoardReplay } from "@homarr/api/board-replay";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useCurrentIntlLocale } from "@homarr/translation/client";
@@ -21,47 +19,7 @@ import type { CalendarView } from "./calendar-view";
 import { isCalendarView } from "./calendar-view";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
-  const queryClient = useQueryClient();
-  const isReplay = useBoardReplay();
-  useQuery({ queryKey: ["board-debug-calendar", props.itemId], queryFn: skipToken });
-  const [month, setMonth] = useState(() => {
-    if (isReplay) {
-      const local = queryClient.getQueryData<{ month: number; year: number }>(["board-debug-calendar", props.itemId]);
-      if (local) return new Date(local.year, local.month, 1);
-      const captured = queryClient
-        .getQueryCache()
-        .findAll({ queryKey: [["widget", "calendar", "findAllEvents"]] })
-        .map(
-          (query) =>
-            (
-              query.queryKey[1] as {
-                input?: {
-                  integrationIds: string[];
-                  month: number;
-                  year: number;
-                  releaseType: string[];
-                  showUnmonitored: boolean;
-                };
-              }
-            )?.input,
-        )
-        .find(
-          (input) =>
-            input?.integrationIds.join() === props.integrationIds.join() &&
-            input.releaseType.join() === props.options.releaseType.join() &&
-            input.showUnmonitored === props.options.showUnmonitored,
-        );
-      if (captured) return new Date(captured.year, captured.month - 1, 1);
-    }
-    return new Date();
-  });
-  useEffect(() => {
-    if (!isReplay && props.itemId)
-      queryClient.setQueryData(["board-debug-calendar", props.itemId], {
-        month: month.getMonth(),
-        year: month.getFullYear(),
-      });
-  }, [isReplay, month, props.itemId, queryClient]);
+  const [month, setMonth] = useState(() => new Date());
   const runtimeInput = {
     integrationIds: props.integrationIds,
     month: month.getMonth() + 1,

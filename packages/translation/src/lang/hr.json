@@ -749,7 +749,10 @@
         "selectMultiple": "Odaberi više",
         "cancelMultiple": "Izađi iz višestrukog odabira",
         "customApplication": "Prilagođena aplikacija",
-        "application": "Aplikacija"
+        "application": "Aplikacija",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Stvori novu aplikaciju",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Dodajte URL ili aplikaciju u postavkama widgeta"
+      "empty": "Dodajte URL ili aplikaciju u postavkama widgeta",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Spremnici za filtriranje"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtriraj kao popis dopuštenih"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nijedna aplikacija nije pronađena",
         "description": "Kliknite <here></here> za stvaranje nove aplikacije",
-        "quickCreate": "Stvori aplikaciju u hodu"
+        "quickCreate": "Stvori aplikaciju u hodu",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nijedna integracija nije odabrana",
@@ -6151,6 +6171,15 @@
           "notice": "Da biste uklonili ovu stranicu, zamolite administratora poslužitelja da postavi početnu ploču za poslužitelj"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

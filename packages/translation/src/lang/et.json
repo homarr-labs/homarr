@@ -749,7 +749,10 @@
         "selectMultiple": "Vali mitu",
         "cancelMultiple": "Välju mitmikvalikust",
         "customApplication": "Kohandatud rakendus",
-        "application": "Rakendus"
+        "application": "Rakendus",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Loo uus rakendus",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Lisa vidina seadetes URL või rakendus"
+      "empty": "Lisa vidina seadetes URL või rakendus",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Filtreeritavad konteinerid"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtreeri lubatud loendina"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Rakendust ei leitud",
         "description": "Klõpsa <here></here> uue rakenduse loomiseks",
-        "quickCreate": "Loo rakendus käigu pealt"
+        "quickCreate": "Loo rakendus käigu pealt",
+        "create": ""
       },
       "error": {
         "noIntegration": "Integratsiooni pole valitud",
@@ -6151,6 +6171,15 @@
           "notice": "Selle lehe eemaldamiseks palu administraatoril määrata serveriülene kodupaneel"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

@@ -749,7 +749,10 @@
         "selectMultiple": "Selecciona'n diverses",
         "cancelMultiple": "Surt de la selecció múltiple",
         "customApplication": "Aplicació personalitzada",
-        "application": "Aplicació"
+        "application": "Aplicació",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Crea una aplicació nova",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Afegeix una URL o una aplicació a la configuració del giny"
+      "empty": "Afegeix una URL o una aplicació a la configuració del giny",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Contenidors a filtrar"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtra com a llista blanca"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "No s'ha trobat cap aplicació",
         "description": "Feu clic a <here></here> per crear una nova aplicació",
-        "quickCreate": "Crear aplicació al vol"
+        "quickCreate": "Crear aplicació al vol",
+        "create": ""
       },
       "error": {
         "noIntegration": "No s'ha seleccionat cap integració",
@@ -6151,6 +6171,15 @@
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

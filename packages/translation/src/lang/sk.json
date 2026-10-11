@@ -749,7 +749,10 @@
         "selectMultiple": "Vybrať viacero",
         "cancelMultiple": "Ukončiť výber viacerých položiek",
         "customApplication": "Vlastná aplikácia",
-        "application": "Aplikácia"
+        "application": "Aplikácia",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Vytvoriť novú aplikáciu",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Pridajte adresu URL alebo aplikáciu v nastaveniach widgetu"
+      "empty": "Pridajte adresu URL alebo aplikáciu v nastaveniach widgetu",
+      "groups": {
+        "label": "",
+        "placeholder": "Nová kategória",
+        "add": "Pridať kategóriu",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Kontajnery na filtrovanie"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filter ako biely zoznam"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nenašla sa žiadna aplikácia",
         "description": "Kliknutím na <here></here> vytvorte novú aplikáciu",
-        "quickCreate": "Vytvorte aplikáciu za chodu"
+        "quickCreate": "Vytvorte aplikáciu za chodu",
+        "create": "Vytvoriť aplikáciu"
       },
       "error": {
         "noIntegration": "Nie je vybraná žiadna integrácia",
@@ -6151,6 +6171,15 @@
           "notice": "Ak chcete, aby táto stránka zmizla, požiadajte správcu servera o nastavenie domovskej dosky pre server"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

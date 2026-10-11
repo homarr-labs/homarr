@@ -27,11 +27,15 @@ export const getCalendarScheduleEvents = (
     if (end.isSame(start)) end = start.add(30, "minute");
     // The schedule uses half-open intervals and second precision.
     if (isCalendarAllDayEvent(event) && end.isSame(end.endOf("day"))) end = end.add(1, "millisecond");
+    // Timed midnight ends must stay in the preceding day's visible time range.
+    if (!isCalendarAllDayEvent(event) && end.isSame(end.startOf("day"))) end = end.subtract(1, "second");
     if (dayStart && dayEnd) {
       if (!start.isBefore(dayEnd) || !end.isAfter(dayStart)) return [];
       if (start.isBefore(dayStart)) start = dayStart;
       if (!end.isBefore(dayEnd)) end = dayEnd.subtract(1, "second");
     }
+    // Keep the clipped visual interval positive at the final second.
+    if (!start.isBefore(end, "second")) start = end.subtract(1, "second");
     return [
       {
         id: `${event.source?.integrationId ?? "calendar"}:${index}`,

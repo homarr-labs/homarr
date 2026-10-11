@@ -749,7 +749,10 @@
         "selectMultiple": "Selecionar múltiplos",
         "cancelMultiple": "Sair multi-seleção",
         "customApplication": "Aplicativo personalizado",
-        "application": "Solicitação"
+        "application": "Solicitação",
+        "backToApps": "Voltar para apps",
+        "createAndAdd": "Criar e adicionar",
+        "createAnother": "Criar e continuar"
       },
       "create": {
         "title": "Criar aplicativo",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Adicione uma URL ou um aplicativo nas configurações do widget"
+      "empty": "Adicione uma URL ou um aplicativo nas configurações do widget",
+      "groups": {
+        "label": "categorias",
+        "placeholder": "Nova categoria",
+        "add": "Adicionar categoria",
+        "remove": "Remover categoria {name}",
+        "rename": "Nome da categoria {name}",
+        "assign": "Categoria para {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Contêineres para filtrar"
         },
+        "filterCaseSensitive": {
+          "label": "Sensível ao caso"
+        },
+        "filterAllowWildcards": {
+          "label": "Permitir caracteres curinga",
+          "description": "Use * para zero ou mais caracteres."
+        },
         "filterIsWhitelist": {
           "label": "Filtrar como lista de permissões"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nenhum aplicativo encontrado",
         "description": "Clique <here></here> para criar um aplicativo",
-        "quickCreate": "Criar aplicativo em tempo real"
+        "quickCreate": "Criar aplicativo em tempo real",
+        "create": "Criar aplicativo"
       },
       "error": {
         "noIntegration": "Nenhuma integração selecionada",
@@ -6151,6 +6171,15 @@
           "notice": "Para fazer essa página desaparecer, peça ao administrador do servidor para definir um quadro inicial para o servidor"
         }
       }
+    },
+    "snapshot": {
+      "take": "Pegar snapshot do estado do board",
+      "description": "Faça o download de uma captura instantânea editada para anexar a um relatório de erros e nos ajude a reproduzir seu layout",
+      "downloaded": "Instantâneo do fórum baixado",
+      "downloadedDescription": "Anexe o JSON e uma captura de tela no tamanho da mesma janela ao relatório de bug. O instantâneo inclui layout, configurações, CSS personalizados, opções de widget e dados carregados, com texto privado, URLs e credenciais redacted.",
+      "playground": "Abrir playground do tabuleiro",
+      "failed": "Não é possível capturar instantâneo do quadro",
+      "failedDescription": "Os dados do board não puderam ser exportados com segurança, ou o snapshot excede 10 MB."
     }
   },
   "layout": {

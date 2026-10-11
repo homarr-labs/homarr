@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -252,9 +252,7 @@
       "zod-form-data": "3.0.2",
       "zod-validation-error": "5.0.0",
       "better-sqlite3": "12.11.1",
-      "@types/better-sqlite3": "7.6.13",
-      "@types/css-tree": "^2.3.11",
-      "css-tree": "3.2.1"
+      "@types/better-sqlite3": "7.6.13"
     }
   },
   "scripts": {

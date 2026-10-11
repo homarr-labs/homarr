@@ -749,7 +749,10 @@
         "selectMultiple": "Seleziona più",
         "cancelMultiple": "Esci dalla selezione multipla",
         "customApplication": "Applicazione personalizzata",
-        "application": "Applicazione"
+        "application": "Applicazione",
+        "backToApps": "Torna alle app",
+        "createAndAdd": "Crea e aggiungi",
+        "createAnother": "Crea e continua"
       },
       "create": {
         "title": "Crea una nuova app",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Aggiungi un URL o un'app nelle impostazioni del widget"
+      "empty": "Aggiungi un URL o un'app nelle impostazioni del widget",
+      "groups": {
+        "label": "Categorie",
+        "placeholder": "Nuova categoria",
+        "add": "Aggiungi categoria",
+        "remove": "Rimuovi categoria {name}",
+        "rename": "Nome categoria per {name}",
+        "assign": "Categoria per {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Contenitori da filtrare"
         },
+        "filterCaseSensitive": {
+          "label": "Distingui maiuscole"
+        },
+        "filterAllowWildcards": {
+          "label": "Consenti caratteri jolly",
+          "description": "Usa * per zero o più caratteri."
+        },
         "filterIsWhitelist": {
           "label": "Filtra come whitelist"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nessuna app trovata",
         "description": "Clicca <here></here> per creare una nuova app",
-        "quickCreate": "Crea app al volo"
+        "quickCreate": "Crea app al volo",
+        "create": "Crea app"
       },
       "error": {
         "noIntegration": "Nessuna integrazione selezionata",
@@ -6151,6 +6171,15 @@
           "notice": "Per far scomparire questa pagina, chiedi all'amministratore del server di impostare una home board per il server"
         }
       }
+    },
+    "snapshot": {
+      "take": "Scatta l'istantanea dello stato del tabellone",
+      "description": "Scarica un'istantanea redatta per allegare una segnalazione di bug e aiutaci a riprodurre il tuo layout",
+      "downloaded": "Foto scheda scaricata",
+      "downloadedDescription": "Allega JSON e uno screenshot alla stessa dimensione della finestra alla segnalazione di bug. Lo snapshot include layout, impostazioni, CSS personalizzati, opzioni widget e dati caricati, con testo privato, URL e credenziali redatte.",
+      "playground": "Campo da gioco aperto",
+      "failed": "Impossibile catturare lo snapshot della scheda",
+      "failedDescription": "I dati della scheda non possono essere esportati in modo sicuro o lo snapshot supera i 10 MB."
     }
   },
   "layout": {

@@ -749,7 +749,10 @@
         "selectMultiple": "Vælg flere",
         "cancelMultiple": "Afslut multi-valg",
         "customApplication": "Brugerdefineret applikation",
-        "application": "Anvendelse"
+        "application": "Anvendelse",
+        "backToApps": "Tilbage til apps",
+        "createAndAdd": "Opret og tilføj",
+        "createAnother": "Opret og fortsæt"
       },
       "create": {
         "title": "Opret ny app",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Tilføj en URL eller app i widget-indstillingerne"
+      "empty": "Tilføj en URL eller app i widget-indstillingerne",
+      "groups": {
+        "label": "Kategorier",
+        "placeholder": "Ny kategori",
+        "add": "Tilføj kategori",
+        "remove": "Fjern {name} kategori",
+        "rename": "Kategorinavn for {name}",
+        "assign": "Kategori for {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Containere til filtrering"
         },
+        "filterCaseSensitive": {
+          "label": "Versalfølsom sag"
+        },
+        "filterAllowWildcards": {
+          "label": "Tillad jokertegn",
+          "description": "Brug * til nul eller flere tegn."
+        },
         "filterIsWhitelist": {
           "label": "Filtrer som en hvidliste"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Ingen app fundet",
         "description": "Klik på <here></here> for at oprette en ny app",
-        "quickCreate": "Opret app i farten"
+        "quickCreate": "Opret app i farten",
+        "create": "Opret app"
       },
       "error": {
         "noIntegration": "Ingen integration valgt",
@@ -6151,6 +6171,15 @@
           "notice": "For at få denne side til at forsvinde, skal du bede serveradministratoren om at indstille en hjemmetavle til serveren"
         }
       }
+    },
+    "snapshot": {
+      "take": "Tag snapshot af brættilstand",
+      "description": "Download et redigeret øjebliksbillede for at vedhæfte en fejlrapport og hjælp os med at gengive dit layout",
+      "downloaded": "Brætsnapshot hentet",
+      "downloadedDescription": "Vedhæft JSON og et skærmbillede taget i samme vinduesstørrelse til din fejlrapport. Snapshot indeholder layout, indstillinger, brugerdefinerede CSS, widget muligheder og indlæste data, med privat tekst, URL'er og legitimationsoplysninger reddet.",
+      "playground": "Åbent brætlegeplads",
+      "failed": "Kan ikke optage snapshot på tavlen",
+      "failedDescription": "Brætdata kunne ikke eksporteres sikkert, eller snapshot overstiger 10 MB."
     }
   },
   "layout": {

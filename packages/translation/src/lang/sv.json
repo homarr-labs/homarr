@@ -749,7 +749,10 @@
         "selectMultiple": "Välj flera",
         "cancelMultiple": "Avsluta multi-select",
         "customApplication": "Anpassad applikation",
-        "application": "Applikation"
+        "application": "Applikation",
+        "backToApps": "Tillbaka till appar",
+        "createAndAdd": "Skapa och lägg till",
+        "createAnother": "Skapa och fortsätt"
       },
       "create": {
         "title": "Addera en ny applikation",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Lägg till en URL eller app i widgetinställningarna"
+      "empty": "Lägg till en URL eller app i widgetinställningarna",
+      "groups": {
+        "label": "Kategorier",
+        "placeholder": "Ny kategori",
+        "add": "Lägg till kategori",
+        "remove": "Ta bort {name} kategori",
+        "rename": "Kategori namn för {name}",
+        "assign": "Kategori för {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Behållare att filtrera"
         },
+        "filterCaseSensitive": {
+          "label": "Ärende känslig"
+        },
+        "filterAllowWildcards": {
+          "label": "Tillåt jokertecken",
+          "description": "Använd * för noll eller fler tecken."
+        },
         "filterIsWhitelist": {
           "label": "Filtrera som vitlista"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Ingen app hittades",
         "description": "Klicka på <here></here> för att addera en ny applikation",
-        "quickCreate": "Skapa applikation direkt"
+        "quickCreate": "Skapa applikation direkt",
+        "create": "Skapa app"
       },
       "error": {
         "noIntegration": "Ingen integration har valts",
@@ -6151,6 +6171,15 @@
           "notice": "För att dölja den här sidan ber du serveradministratören ange en startsida för servern"
         }
       }
+    },
+    "snapshot": {
+      "take": "Ta ögonblicksbild av tavlans tillstånd",
+      "description": "Ladda ner en redigerad ögonblicksbild för att bifoga en felrapport och hjälpa oss att återskapa din layout",
+      "downloaded": "Tavlan ögonblicksbild hämtad",
+      "downloadedDescription": "Bifoga JSON och en skärmdump tagen i samma fönsterstorlek till din felrapport. Ögonblicksbilden inkluderar layout, inställningar, anpassade CSS, widgetalternativ och inlästa data, med privat text, webbadresser och uppgifter redacted.",
+      "playground": "Öppen spelplats",
+      "failed": "Det går inte att fånga snapshot på tavlan",
+      "failedDescription": "Tavlans data kunde inte exporteras på ett säkert sätt, eller så överskrider ögonblicksbilden 10 MB."
     }
   },
   "layout": {

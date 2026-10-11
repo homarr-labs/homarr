@@ -15,11 +15,13 @@ import {
   Tooltip,
   UnstyledButton,
   getThemeColor,
+  rem,
   useMantineTheme,
 } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import { DayView, WeekView } from "@mantine/schedule";
+import type { DayViewProps } from "@mantine/schedule";
 import { IconCheck, IconChevronDown, IconChevronLeft, IconChevronRight, IconCalendarEvent } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -125,11 +127,18 @@ export const CalendarDisplay = ({
   const scheduleProps = {
     date,
     events: scheduleEvents,
+    endTime: "24:00:00",
     locale,
     labels,
     withHeader: false,
     mode: scheduleMode,
     onEventClick: openEvent,
+    // Keep short events visible and clickable in both schedule views.
+    renderEvent: ((_event, eventProps) => {
+      const style = { ...eventProps.style };
+      if (style.position === "absolute") style.minHeight = rem(24);
+      return <UnstyledButton {...eventProps} style={style} />;
+    }) satisfies NonNullable<DayViewProps["renderEvent"]>,
     scrollAreaProps: {
       h: bodyHeight,
       mah: bodyHeight,

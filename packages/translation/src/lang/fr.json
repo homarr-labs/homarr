@@ -749,7 +749,10 @@
         "selectMultiple": "Sélectionner plusieurs",
         "cancelMultiple": "Quitter la sélection multiple",
         "customApplication": "Application personnalisée",
-        "application": "Application"
+        "application": "Application",
+        "backToApps": "Retour aux applications",
+        "createAndAdd": "Créer et ajouter",
+        "createAnother": "Créer et continuer"
       },
       "create": {
         "title": "Créer une nouvelle application",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Ajouter une URL ou une application dans les paramètres du widget"
+      "empty": "Ajouter une URL ou une application dans les paramètres du widget",
+      "groups": {
+        "label": "Catégories",
+        "placeholder": "Nouvelle catégorie",
+        "add": "Ajouter une catégorie",
+        "remove": "Supprimer la catégorie {name}",
+        "rename": "Nom de la catégorie pour {name}",
+        "assign": "Catégorie pour {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Conteneurs à filtrer"
         },
+        "filterCaseSensitive": {
+          "label": "Sensible à la casse"
+        },
+        "filterAllowWildcards": {
+          "label": "Autoriser les caractères génériques",
+          "description": "Utilisez * pour zéro ou plus de caractères."
+        },
         "filterIsWhitelist": {
           "label": "Filtrer en tant que liste blanche"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Aucune application trouvée",
         "description": "Cliquez sur <here></here> pour créer une nouvelle application",
-        "quickCreate": "Créer une application à la volée"
+        "quickCreate": "Créer une application à la volée",
+        "create": "Créer une application"
       },
       "error": {
         "noIntegration": "Aucune intégration sélectionnée",
@@ -6151,6 +6171,15 @@
           "notice": "Pour faire disparaître cette page, demandez à l'administrateur du serveur de définir un tableau d'accueil pour le serveur"
         }
       }
+    },
+    "snapshot": {
+      "take": "Prendre une capture instantanée de l'état du circuit imprimé",
+      "description": "Téléchargez un instantané reproduit pour attacher à un rapport de bug et aidez-nous à reproduire votre mise en page",
+      "downloaded": "Instantané de carte téléchargé",
+      "downloadedDescription": "Attachez le JSON et une capture d'écran prise à la même taille de fenêtre à votre rapport de bug. Le snapshot inclut la mise en page, les paramètres, le CSS personnalisé, les options de widget et les données chargées, avec texte privé, URL et identifiants supprimés.",
+      "playground": "Ouvrir l'aire de jeu de la carte",
+      "failed": "Impossible de capturer le snapshot du circuit imprimé",
+      "failedDescription": "Les données de la carte n'ont pas pu être exportées en toute sécurité, ou la capture dépasse 10 Mo."
     }
   },
   "layout": {
