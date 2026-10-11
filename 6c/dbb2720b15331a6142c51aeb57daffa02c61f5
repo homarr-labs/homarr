@@ -1,0 +1,14 @@
+packages/cron-jobs-core/src/group.ts
+  h_d6e478ca18e517 38-79,84-85,90,93,95-96,100,125,127,129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6cdbb2720b15331a6142c51aeb57daffa02c61f5",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
