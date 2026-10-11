@@ -1,0 +1,21 @@
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_5749b2ccfeffb1::t_1992bdf64959a9 63,131-132,136-140,148,242-244
+apps/nextjs/src/components/board/sections/item.module.css
+  s_5749b2ccfeffb1::t_1992bdf64959a9 56,77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "34f82e26d3b6dd88928dd85bfb92398732a0b9e8",
+  "prompts": {},
+  "sessions": {
+    "s_5749b2ccfeffb1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-5d31-7090-8035-0e501d3f763d",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
