@@ -1,0 +1,30 @@
+bun.lock
+  h_d6e478ca18e517 435
+packages/auth/nitro/context-types.ts
+  h_d6e478ca18e517 1-8
+packages/auth/package.json
+  h_d6e478ca18e517 16
+packages/common/package.json
+  h_d6e478ca18e517 18,34
+packages/definitions/src/docker-integration-match.ts
+  h_d6e478ca18e517 1
+packages/definitions/src/integration-url-template.ts
+  h_d6e478ca18e517 1
+packages/definitions/src/permissions.ts
+  h_d6e478ca18e517 1
+packages/definitions/src/release-provider.ts
+  h_d6e478ca18e517 1
+packages/definitions/src/widget-integration-map.ts
+  h_d6e478ca18e517 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c6e0d4eb0b3a7853673ff2fb852e03e3a7900f10",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
