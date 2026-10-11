@@ -1,0 +1,16 @@
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 185-200
+packages/custom-widgets/src/server/request-limits.ts
+  h_d6e478ca18e517 12-13,43-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c1c655633f8ad904ac69cae9ae4641a6a031c90d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
