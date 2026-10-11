@@ -1,0 +1,4776 @@
+{
+  "configuration": {
+    "before": "/tmp/homarr-performance-before-bab37f7",
+    "after": "/home/habs/.codex/worktrees/4395/homarr",
+    "cases": [],
+    "lanes": [
+      "widget_render"
+    ],
+    "warmup": 3,
+    "trials": 9,
+    "out": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/results/widget_render.json",
+    "verifyOnly": false,
+    "list": false
+  },
+  "methodology": {
+    "execution": "Serial cases; alternating before/after order per paired trial; process-wide CPU includes operation loop overhead",
+    "compilation": "Extracted source transpiled with recorded TypeScript compiler to ES2022/CommonJS and classic React JSX; no Next.js production build or React Compiler transform",
+    "summaries": "Median batch wall/CPU divided by batch iterations; raw paired samples retained",
+    "metrics": "Case-supplied measured numeric outputs from actual-source fixture operations",
+    "memory": "Heap/RSS process snapshots per batch, not allocation counts or peak/production memory; deltas can be negative and shared process state affects RSS",
+    "io": "No production latency claim. Case fixture descriptions must identify simulated I/O, clocks, dependency stubs and data scales"
+  },
+  "runtime": {
+    "engine": "Node.js/V8",
+    "node": "v24.18.0",
+    "versions": {
+      "node": "24.18.0",
+      "acorn": "8.16.0",
+      "ada": "3.4.4",
+      "amaro": "1.1.9",
+      "ares": "1.34.6",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.2",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.69.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.7",
+      "simdjson": "4.6.4",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.1",
+      "tz": "2026b",
+      "undici": "7.28.0",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.50",
+      "zlib": "1.3.1-e00f703",
+      "zstd": "1.5.7"
+    },
+    "executable": "/home/habs/.local/share/mise/installs/node/24.18.0/bin/node",
+    "execArgv": [
+      "--expose-gc"
+    ],
+    "explicitGc": true,
+    "platform": "linux",
+    "arch": "x64",
+    "osRelease": "6.8.0-90-generic",
+    "hostname": "brainzilla",
+    "cpuModel": "13th Gen Intel(R) Core(TM) i5-13500",
+    "logicalCpus": 20,
+    "totalMemoryBytes": 67194388480,
+    "freeMemoryBytesAtStart": 49179688960
+  },
+  "results": [
+    {
+      "id": "WIDGETS_B_006",
+      "title": "Coolify single local state, 20 resources",
+      "fixture": "Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; 20 apps/services on 1 servers. Mantine/sections are presentation stubs.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 10,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "countBuilds": 9,
+          "memoCalls": 0,
+          "renders": 9,
+          "profilerActualDurationMs": 6.224324000046181
+        },
+        "after": {
+          "countBuilds": 1,
+          "memoCalls": 9,
+          "renders": 9,
+          "profilerActualDurationMs": 4.2406320000191045
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 2.777337499999703,
+          "cpuMsPerOperation": 6.2149,
+          "heapUsedDeltaBytesPerBatch": 7144632,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 2.7517812999998568,
+          "cpuMsPerOperation": 6.3058,
+          "heapUsedDeltaBytesPerBatch": 6643136,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 13.024374000000535,
+          "cpuUserMs": 34.737,
+          "cpuSystemMs": 0.013,
+          "heapUsedBeforeBytes": 134009112,
+          "heapUsedAfterBytes": 141117584,
+          "heapUsedDeltaBytes": 7108472,
+          "rssBeforeBytes": 383467520,
+          "rssAfterBytes": 383467520,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 134807488,
+          "heapRetainedDeltaBytes": 798376
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 29.14567299999908,
+          "cpuUserMs": 80.826,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 134798200,
+          "heapUsedAfterBytes": 141480064,
+          "heapUsedDeltaBytes": 6681864,
+          "rssBeforeBytes": 383959040,
+          "rssAfterBytes": 383959040,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 135689432,
+          "heapRetainedDeltaBytes": 891232
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.51781299999857,
+          "cpuUserMs": 58.398,
+          "cpuSystemMs": 0.018,
+          "heapUsedBeforeBytes": 135681320,
+          "heapUsedAfterBytes": 142310424,
+          "heapUsedDeltaBytes": 6629104,
+          "rssBeforeBytes": 384614400,
+          "rssAfterBytes": 384614400,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 136548424,
+          "heapRetainedDeltaBytes": 867104
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 28.295568999998068,
+          "cpuUserMs": 62.126,
+          "cpuSystemMs": 0.023,
+          "heapUsedBeforeBytes": 136543792,
+          "heapUsedAfterBytes": 143688424,
+          "heapUsedDeltaBytes": 7144632,
+          "rssBeforeBytes": 385105920,
+          "rssAfterBytes": 385269760,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 137445792,
+          "heapRetainedDeltaBytes": 902000
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.77337499999703,
+          "cpuUserMs": 61.89,
+          "cpuSystemMs": 0.022,
+          "heapUsedBeforeBytes": 137439144,
+          "heapUsedAfterBytes": 144605672,
+          "heapUsedDeltaBytes": 7166528,
+          "rssBeforeBytes": 386088960,
+          "rssAfterBytes": 386088960,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 138380000,
+          "heapRetainedDeltaBytes": 940856
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 27.252207999998063,
+          "cpuUserMs": 63.057,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 138372000,
+          "heapUsedAfterBytes": 145015136,
+          "heapUsedDeltaBytes": 6643136,
+          "rssBeforeBytes": 386908160,
+          "rssAfterBytes": 386908160,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 139280568,
+          "heapRetainedDeltaBytes": 908568
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 25.589450999999826,
+          "cpuUserMs": 59.42,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 139272456,
+          "heapUsedAfterBytes": 145856112,
+          "heapUsedDeltaBytes": 6583656,
+          "rssBeforeBytes": 387399680,
+          "rssAfterBytes": 387399680,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 140134432,
+          "heapRetainedDeltaBytes": 861976
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 26.851039000001037,
+          "cpuUserMs": 57.565,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 140150000,
+          "heapUsedAfterBytes": 147241368,
+          "heapUsedDeltaBytes": 7091368,
+          "rssBeforeBytes": 388382720,
+          "rssAfterBytes": 388546560,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 141018416,
+          "heapRetainedDeltaBytes": 868416
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 31.921470000001136,
+          "cpuUserMs": 65.411,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 141013984,
+          "heapUsedAfterBytes": 148472808,
+          "heapUsedDeltaBytes": 7458824,
+          "rssBeforeBytes": 389201920,
+          "rssAfterBytes": 389201920,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 141943992,
+          "heapRetainedDeltaBytes": 930008
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 70.3626320000003,
+          "cpuUserMs": 112.616,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 141939560,
+          "heapUsedAfterBytes": 152092392,
+          "heapUsedDeltaBytes": 10152832,
+          "rssBeforeBytes": 390184960,
+          "rssAfterBytes": 391168000,
+          "rssDeltaBytes": 983040,
+          "heapUsedAfterGcBytes": 143151896,
+          "heapRetainedDeltaBytes": 1212336
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 69.4890579999992,
+          "cpuUserMs": 102.607,
+          "cpuSystemMs": 0.009,
+          "heapUsedBeforeBytes": 143158296,
+          "heapUsedAfterBytes": 152035632,
+          "heapUsedDeltaBytes": 8877336,
+          "rssBeforeBytes": 391483392,
+          "rssAfterBytes": 391483392,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 144016560,
+          "heapRetainedDeltaBytes": 858264
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 71.58443900000202,
+          "cpuUserMs": 105.537,
+          "cpuSystemMs": 0.019,
+          "heapUsedBeforeBytes": 143998544,
+          "heapUsedAfterBytes": 153596984,
+          "heapUsedDeltaBytes": 9598440,
+          "rssBeforeBytes": 392138752,
+          "rssAfterBytes": 392138752,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 144890528,
+          "heapRetainedDeltaBytes": 891984
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 29.093833999999333,
+          "cpuUserMs": 65.442,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 144861752,
+          "heapUsedAfterBytes": 152015952,
+          "heapUsedDeltaBytes": 7154200,
+          "rssBeforeBytes": 393121792,
+          "rssAfterBytes": 393121792,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 145727656,
+          "heapRetainedDeltaBytes": 865904
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 26.229680999997072,
+          "cpuUserMs": 61.301,
+          "cpuSystemMs": 0.01,
+          "heapUsedBeforeBytes": 145723224,
+          "heapUsedAfterBytes": 152323840,
+          "heapUsedDeltaBytes": 6600616,
+          "rssBeforeBytes": 394104832,
+          "rssAfterBytes": 394104832,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 146575784,
+          "heapRetainedDeltaBytes": 852560
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 24.750433000001067,
+          "cpuUserMs": 57.034,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 146569136,
+          "heapUsedAfterBytes": 153136312,
+          "heapUsedDeltaBytes": 6567176,
+          "rssBeforeBytes": 394760192,
+          "rssAfterBytes": 394760192,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 147433968,
+          "heapRetainedDeltaBytes": 864832
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 27.149955999997474,
+          "cpuUserMs": 70.443,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 147426728,
+          "heapUsedAfterBytes": 154539000,
+          "heapUsedDeltaBytes": 7112272,
+          "rssBeforeBytes": 395579392,
+          "rssAfterBytes": 395579392,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 148331184,
+          "heapRetainedDeltaBytes": 904456
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 15.708394000001135,
+          "cpuUserMs": 50.431,
+          "cpuSystemMs": 0.01,
+          "heapUsedBeforeBytes": 148324208,
+          "heapUsedAfterBytes": 155419144,
+          "heapUsedDeltaBytes": 7094936,
+          "rssBeforeBytes": 396398592,
+          "rssAfterBytes": 396398592,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 149217736,
+          "heapRetainedDeltaBytes": 893528
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 38.7983000000022,
+          "cpuUserMs": 74.2,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 149212280,
+          "heapUsedAfterBytes": 158420600,
+          "heapUsedDeltaBytes": 9208320,
+          "rssBeforeBytes": 397545472,
+          "rssAfterBytes": 397545472,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 150100984,
+          "heapRetainedDeltaBytes": 888704
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4823,
+              "startLine": 1,
+              "endLine": 132,
+              "sha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4983,
+              "startLine": 1,
+              "endLine": 136,
+              "sha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209",
+          "selector": [
+            "SingleInstanceLayout",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 934,
+              "end": 4244,
+              "startLine": 27,
+              "endLine": 114,
+              "sha256": "e10d5caea11f5eb2db4e8b53e1c1c0766420527ed50dcca7d70f504036be6a91"
+            },
+            {
+              "start": 4246,
+              "end": 4822,
+              "startLine": 116,
+              "endLine": 132,
+              "sha256": "1093b605739b71fca04e9176c19a4f9e07344f63278d1696fb86a143fb263dba"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27",
+          "selector": [
+            "SingleInstanceLayout",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 943,
+              "end": 4404,
+              "startLine": 27,
+              "endLine": 118,
+              "sha256": "85bc62f32068975b97145528c28fe267c24d958835a1e94ededd058d579444ed"
+            },
+            {
+              "start": 4406,
+              "end": 4982,
+              "startLine": 120,
+              "endLine": 136,
+              "sha256": "1093b605739b71fca04e9176c19a4f9e07344f63278d1696fb86a143fb263dba"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_006",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_006:single-1",
+      "title": "Coolify single local state, 1 resources",
+      "fixture": "Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; 1 apps/services on 1 servers. Mantine/sections are presentation stubs.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 10,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "countBuilds": 9,
+          "memoCalls": 0,
+          "renders": 9,
+          "profilerActualDurationMs": 7.174943999994866
+        },
+        "after": {
+          "countBuilds": 1,
+          "memoCalls": 9,
+          "renders": 9,
+          "profilerActualDurationMs": 6.513552000036725
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 2.788130799999999,
+          "cpuMsPerOperation": 7.0203999999999995,
+          "heapUsedDeltaBytesPerBatch": 6782008,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 2.2251398000000338,
+          "cpuMsPerOperation": 6.481999999999999,
+          "heapUsedDeltaBytesPerBatch": 6641184,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.404703000000154,
+          "cpuUserMs": 46.363,
+          "cpuSystemMs": 0.017,
+          "heapUsedBeforeBytes": 155165896,
+          "heapUsedAfterBytes": 161840216,
+          "heapUsedDeltaBytes": 6674320,
+          "rssBeforeBytes": 405159936,
+          "rssAfterBytes": 405159936,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 155949856,
+          "heapRetainedDeltaBytes": 783960
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 22.251398000000336,
+          "cpuUserMs": 67.214,
+          "cpuSystemMs": 0.009,
+          "heapUsedBeforeBytes": 155941088,
+          "heapUsedAfterBytes": 162588128,
+          "heapUsedDeltaBytes": 6647040,
+          "rssBeforeBytes": 406142976,
+          "rssAfterBytes": 406142976,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 156807576,
+          "heapRetainedDeltaBytes": 866488
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 12.766578000002482,
+          "cpuUserMs": 47.243,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 156815264,
+          "heapUsedAfterBytes": 163428472,
+          "heapUsedDeltaBytes": 6613208,
+          "rssBeforeBytes": 407126016,
+          "rssAfterBytes": 407126016,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 157671560,
+          "heapRetainedDeltaBytes": 856296
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 26.260653000001184,
+          "cpuUserMs": 63.834,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 157657872,
+          "heapUsedAfterBytes": 164434984,
+          "heapUsedDeltaBytes": 6777112,
+          "rssBeforeBytes": 407945216,
+          "rssAfterBytes": 407945216,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 158553488,
+          "heapRetainedDeltaBytes": 895616
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.88130799999999,
+          "cpuUserMs": 70.204,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 158570912,
+          "heapUsedAfterBytes": 165352920,
+          "heapUsedDeltaBytes": 6782008,
+          "rssBeforeBytes": 408928256,
+          "rssAfterBytes": 409092096,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 159495160,
+          "heapRetainedDeltaBytes": 924248
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 19.1303599999992,
+          "cpuUserMs": 57.951,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 159487920,
+          "heapUsedAfterBytes": 166129104,
+          "heapUsedDeltaBytes": 6641184,
+          "rssBeforeBytes": 409911296,
+          "rssAfterBytes": 409911296,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 160392376,
+          "heapRetainedDeltaBytes": 904456
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 73.61947200000213,
+          "cpuUserMs": 116.079,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 160360720,
+          "heapUsedAfterBytes": 169588104,
+          "heapUsedDeltaBytes": 9227384,
+          "rssBeforeBytes": 410566656,
+          "rssAfterBytes": 410566656,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 161250592,
+          "heapRetainedDeltaBytes": 889872
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 62.92950000000201,
+          "cpuUserMs": 99.949,
+          "cpuSystemMs": 0.014,
+          "heapUsedBeforeBytes": 161246160,
+          "heapUsedAfterBytes": 170618784,
+          "heapUsedDeltaBytes": 9372624,
+          "rssBeforeBytes": 411385856,
+          "rssAfterBytes": 411385856,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 162175904,
+          "heapRetainedDeltaBytes": 929744
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 40.403942999997525,
+          "cpuUserMs": 81.281,
+          "cpuSystemMs": 0.003,
+          "heapUsedBeforeBytes": 162169616,
+          "heapUsedAfterBytes": 171535384,
+          "heapUsedDeltaBytes": 9365768,
+          "rssBeforeBytes": 412205056,
+          "rssAfterBytes": 412205056,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 163058336,
+          "heapRetainedDeltaBytes": 888720
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 16.288450999996712,
+          "cpuUserMs": 54.809,
+          "cpuSystemMs": 0.012,
+          "heapUsedBeforeBytes": 163060416,
+          "heapUsedAfterBytes": 170021856,
+          "heapUsedDeltaBytes": 6961440,
+          "rssBeforeBytes": 413024256,
+          "rssAfterBytes": 413024256,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 163896680,
+          "heapRetainedDeltaBytes": 836264
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 26.20957500000077,
+          "cpuUserMs": 64.82,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 163900272,
+          "heapUsedAfterBytes": 170208144,
+          "heapUsedDeltaBytes": 6307872,
+          "rssBeforeBytes": 413843456,
+          "rssAfterBytes": 413843456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 164756688,
+          "heapRetainedDeltaBytes": 856416
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 27.17269000000306,
+          "cpuUserMs": 66.424,
+          "cpuSystemMs": 1.008,
+          "heapUsedBeforeBytes": 164741480,
+          "heapUsedAfterBytes": 171379456,
+          "heapUsedDeltaBytes": 6637976,
+          "rssBeforeBytes": 414990336,
+          "rssAfterBytes": 414990336,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 165617048,
+          "heapRetainedDeltaBytes": 875568
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 26.82197399999859,
+          "cpuUserMs": 65.412,
+          "cpuSystemMs": 0.004,
+          "heapUsedBeforeBytes": 165612616,
+          "heapUsedAfterBytes": 172329112,
+          "heapUsedDeltaBytes": 6716496,
+          "rssBeforeBytes": 415645696,
+          "rssAfterBytes": 415645696,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 166498256,
+          "heapRetainedDeltaBytes": 885640
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 12.529156000000512,
+          "cpuUserMs": 55.435,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 166489464,
+          "heapUsedAfterBytes": 173085008,
+          "heapUsedDeltaBytes": 6595544,
+          "rssBeforeBytes": 416301056,
+          "rssAfterBytes": 416301056,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 167364168,
+          "heapRetainedDeltaBytes": 874704
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 28.311765000002197,
+          "cpuUserMs": 67.626,
+          "cpuSystemMs": 0.012,
+          "heapUsedBeforeBytes": 167352168,
+          "heapUsedAfterBytes": 173935480,
+          "heapUsedDeltaBytes": 6583312,
+          "rssBeforeBytes": 417447936,
+          "rssAfterBytes": 417447936,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 168214144,
+          "heapRetainedDeltaBytes": 861976
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 71.17671599999812,
+          "cpuUserMs": 119.988,
+          "cpuSystemMs": 0.021,
+          "heapUsedBeforeBytes": 168209712,
+          "heapUsedAfterBytes": 177587048,
+          "heapUsedDeltaBytes": 9377336,
+          "rssBeforeBytes": 418103296,
+          "rssAfterBytes": 418430976,
+          "rssDeltaBytes": 327680,
+          "heapUsedAfterGcBytes": 169138536,
+          "heapRetainedDeltaBytes": 928824
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 66.05903100000069,
+          "cpuUserMs": 105.687,
+          "cpuSystemMs": 0.012,
+          "heapUsedBeforeBytes": 169134104,
+          "heapUsedAfterBytes": 178494456,
+          "heapUsedDeltaBytes": 9360352,
+          "rssBeforeBytes": 419250176,
+          "rssAfterBytes": 419250176,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 170023744,
+          "heapRetainedDeltaBytes": 889640
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 37.24119100000098,
+          "cpuUserMs": 77.437,
+          "cpuSystemMs": 0.01,
+          "heapUsedBeforeBytes": 170018288,
+          "heapUsedAfterBytes": 179228288,
+          "heapUsedDeltaBytes": 9210000,
+          "rssBeforeBytes": 420069376,
+          "rssAfterBytes": 420069376,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 170906992,
+          "heapRetainedDeltaBytes": 888704
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4823,
+              "startLine": 1,
+              "endLine": 132,
+              "sha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4983,
+              "startLine": 1,
+              "endLine": 136,
+              "sha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209",
+          "selector": [
+            "SingleInstanceLayout",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 934,
+              "end": 4244,
+              "startLine": 27,
+              "endLine": 114,
+              "sha256": "e10d5caea11f5eb2db4e8b53e1c1c0766420527ed50dcca7d70f504036be6a91"
+            },
+            {
+              "start": 4246,
+              "end": 4822,
+              "startLine": 116,
+              "endLine": 132,
+              "sha256": "1093b605739b71fca04e9176c19a4f9e07344f63278d1696fb86a143fb263dba"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27",
+          "selector": [
+            "SingleInstanceLayout",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 943,
+              "end": 4404,
+              "startLine": 27,
+              "endLine": 118,
+              "sha256": "85bc62f32068975b97145528c28fe267c24d958835a1e94ededd058d579444ed"
+            },
+            {
+              "start": 4406,
+              "end": 4982,
+              "startLine": 120,
+              "endLine": 136,
+              "sha256": "1093b605739b71fca04e9176c19a4f9e07344f63278d1696fb86a143fb263dba"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_006",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_006:single-1000",
+      "title": "Coolify single local state, 1000 resources",
+      "fixture": "Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; 1000 apps/services on 50 servers. Mantine/sections are presentation stubs.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 10,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "countBuilds": 9,
+          "memoCalls": 0,
+          "renders": 9,
+          "profilerActualDurationMs": 4.833165999989433
+        },
+        "after": {
+          "countBuilds": 1,
+          "memoCalls": 9,
+          "renders": 9,
+          "profilerActualDurationMs": 2.5705130000169447
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 3.0477072000001497,
+          "cpuMsPerOperation": 7.640600000000001,
+          "heapUsedDeltaBytesPerBatch": 13192432,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 2.2031064999999215,
+          "cpuMsPerOperation": 7.335500000000001,
+          "heapUsedDeltaBytesPerBatch": 7361840,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 21.49316099999851,
+          "cpuUserMs": 62.159,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 176998128,
+          "heapUsedAfterBytes": 190151688,
+          "heapUsedDeltaBytes": 13153560,
+          "rssBeforeBytes": 423170048,
+          "rssAfterBytes": 423170048,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 177808896,
+          "heapRetainedDeltaBytes": 810768
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 13.359230000001844,
+          "cpuUserMs": 57.703,
+          "cpuSystemMs": 0.011,
+          "heapUsedBeforeBytes": 177800128,
+          "heapUsedAfterBytes": 185161384,
+          "heapUsedDeltaBytes": 7361256,
+          "rssBeforeBytes": 423825408,
+          "rssAfterBytes": 423825408,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 178643376,
+          "heapRetainedDeltaBytes": 843248
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 15.488428000000567,
+          "cpuUserMs": 58.641,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 178659112,
+          "heapUsedAfterBytes": 186020952,
+          "heapUsedDeltaBytes": 7361840,
+          "rssBeforeBytes": 424644608,
+          "rssAfterBytes": 424644608,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 179526816,
+          "heapRetainedDeltaBytes": 867704
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 33.815145000000484,
+          "cpuUserMs": 76.406,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 179520168,
+          "heapUsedAfterBytes": 192696112,
+          "heapUsedDeltaBytes": 13175944,
+          "rssBeforeBytes": 425627648,
+          "rssAfterBytes": 425627648,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 180415320,
+          "heapRetainedDeltaBytes": 895152
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 73.28719700000147,
+          "cpuUserMs": 119.761,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 180410888,
+          "heapUsedAfterBytes": 195952112,
+          "heapUsedDeltaBytes": 15541224,
+          "rssBeforeBytes": 426446848,
+          "rssAfterBytes": 426610688,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 181380312,
+          "heapRetainedDeltaBytes": 969424
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 73.80966699999772,
+          "cpuUserMs": 129.622,
+          "cpuSystemMs": 0.005,
+          "heapUsedBeforeBytes": 181373072,
+          "heapUsedAfterBytes": 191399176,
+          "heapUsedDeltaBytes": 10026104,
+          "rssBeforeBytes": 427757568,
+          "rssAfterBytes": 427757568,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 182313864,
+          "heapRetainedDeltaBytes": 940792
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 44.21564699999726,
+          "cpuUserMs": 88.717,
+          "cpuSystemMs": 0.005,
+          "heapUsedBeforeBytes": 182308408,
+          "heapUsedAfterBytes": 192258992,
+          "heapUsedDeltaBytes": 9950584,
+          "rssBeforeBytes": 428412928,
+          "rssAfterBytes": 428576768,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 183171576,
+          "heapRetainedDeltaBytes": 863168
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 24.146138999996765,
+          "cpuUserMs": 67.749,
+          "cpuSystemMs": 0.006,
+          "heapUsedBeforeBytes": 183167144,
+          "heapUsedAfterBytes": 197004320,
+          "heapUsedDeltaBytes": 13837176,
+          "rssBeforeBytes": 429395968,
+          "rssAfterBytes": 429395968,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 184029080,
+          "heapRetainedDeltaBytes": 861936
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 20.7834299999995,
+          "cpuUserMs": 68.514,
+          "cpuSystemMs": 0.009,
+          "heapUsedBeforeBytes": 184024648,
+          "heapUsedAfterBytes": 197208472,
+          "heapUsedDeltaBytes": 13183824,
+          "rssBeforeBytes": 430215168,
+          "rssAfterBytes": 430215168,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 184929160,
+          "heapRetainedDeltaBytes": 904512
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 22.031064999999217,
+          "cpuUserMs": 73.355,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 184924728,
+          "heapUsedAfterBytes": 192211032,
+          "heapUsedDeltaBytes": 7286304,
+          "rssBeforeBytes": 431198208,
+          "rssAfterBytes": 431198208,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 185767216,
+          "heapRetainedDeltaBytes": 842488
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 13.377416999999696,
+          "cpuUserMs": 60.501,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 185749200,
+          "heapUsedAfterBytes": 192953176,
+          "heapUsedDeltaBytes": 7203976,
+          "rssBeforeBytes": 431853568,
+          "rssAfterBytes": 431853568,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 186618168,
+          "heapRetainedDeltaBytes": 868968
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 16.080948000002536,
+          "cpuUserMs": 62.792,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 186613736,
+          "heapUsedAfterBytes": 199784368,
+          "heapUsedDeltaBytes": 13170632,
+          "rssBeforeBytes": 432345088,
+          "rssAfterBytes": 432345088,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 187504896,
+          "heapRetainedDeltaBytes": 891160
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 41.93034500000067,
+          "cpuUserMs": 87.576,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 187497920,
+          "heapUsedAfterBytes": 202466520,
+          "heapUsedDeltaBytes": 14968600,
+          "rssBeforeBytes": 433328128,
+          "rssAfterBytes": 433491968,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 188415480,
+          "heapRetainedDeltaBytes": 917560
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 40.861705000002985,
+          "cpuUserMs": 90.957,
+          "cpuSystemMs": 0.026,
+          "heapUsedBeforeBytes": 188408832,
+          "heapUsedAfterBytes": 198353968,
+          "heapUsedDeltaBytes": 9945136,
+          "rssBeforeBytes": 434311168,
+          "rssAfterBytes": 434311168,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 189306144,
+          "heapRetainedDeltaBytes": 897312
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 71.96308000000136,
+          "cpuUserMs": 117.724,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 189292216,
+          "heapUsedAfterBytes": 199238000,
+          "heapUsedDeltaBytes": 9945784,
+          "rssBeforeBytes": 435130368,
+          "rssAfterBytes": 435130368,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 190154192,
+          "heapRetainedDeltaBytes": 861976
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 53.769054999997024,
+          "cpuUserMs": 103.555,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 190149760,
+          "heapUsedAfterBytes": 204562648,
+          "heapUsedDeltaBytes": 14412888,
+          "rssBeforeBytes": 435621888,
+          "rssAfterBytes": 435621888,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 191029872,
+          "heapRetainedDeltaBytes": 880112
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 30.4770720000015,
+          "cpuUserMs": 86.048,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 191019288,
+          "heapUsedAfterBytes": 204211720,
+          "heapUsedDeltaBytes": 13192432,
+          "rssBeforeBytes": 436768768,
+          "rssAfterBytes": 436768768,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 191925144,
+          "heapRetainedDeltaBytes": 905856
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 15.245480999998108,
+          "cpuUserMs": 61.6,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 191920712,
+          "heapUsedAfterBytes": 199206312,
+          "heapUsedDeltaBytes": 7285600,
+          "rssBeforeBytes": 437587968,
+          "rssAfterBytes": 437751808,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 192754840,
+          "heapRetainedDeltaBytes": 834128
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4823,
+              "startLine": 1,
+              "endLine": 132,
+              "sha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4983,
+              "startLine": 1,
+              "endLine": 136,
+              "sha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "e5edb20389fb0c0355f0efc4dec6f7b29290a8ac29404ece819166a28c9ca209",
+          "selector": [
+            "SingleInstanceLayout",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 934,
+              "end": 4244,
+              "startLine": 27,
+              "endLine": 114,
+              "sha256": "e10d5caea11f5eb2db4e8b53e1c1c0766420527ed50dcca7d70f504036be6a91"
+            },
+            {
+              "start": 4246,
+              "end": 4822,
+              "startLine": 116,
+              "endLine": 132,
+              "sha256": "1093b605739b71fca04e9176c19a4f9e07344f63278d1696fb86a143fb263dba"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/single-instance-layout.tsx",
+          "fileSha256": "7730c4aecd54e530762c8d2886210e1456924c4ab8e1d32c004448c08597ae27",
+          "selector": [
+            "SingleInstanceLayout",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 943,
+              "end": 4404,
+              "startLine": 27,
+              "endLine": 118,
+              "sha256": "85bc62f32068975b97145528c28fe267c24d958835a1e94ededd058d579444ed"
+            },
+            {
+              "start": 4406,
+              "end": 4982,
+              "startLine": 120,
+              "endLine": 136,
+              "sha256": "1093b605739b71fca04e9176c19a4f9e07344f63278d1696fb86a143fb263dba"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_006",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_006:card-20",
+      "title": "Coolify card local state, 20 resources",
+      "fixture": "Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; 20 apps/services on 1 servers. Mantine/sections are presentation stubs.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 10,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "countBuilds": 9,
+          "memoCalls": 0,
+          "renders": 9,
+          "profilerActualDurationMs": 2.2117520000829245
+        },
+        "after": {
+          "countBuilds": 1,
+          "memoCalls": 9,
+          "renders": 9,
+          "profilerActualDurationMs": 1.4504410000590724
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 2.7693311000002723,
+          "cpuMsPerOperation": 8.3931,
+          "heapUsedDeltaBytesPerBatch": 7610312,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 3.090875999999844,
+          "cpuMsPerOperation": 8.5259,
+          "heapUsedDeltaBytesPerBatch": 8264400,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 18.3085030000002,
+          "cpuUserMs": 60.731,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 197938848,
+          "heapUsedAfterBytes": 205522096,
+          "heapUsedDeltaBytes": 7583248,
+          "rssBeforeBytes": 444497920,
+          "rssAfterBytes": 444497920,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 198787456,
+          "heapRetainedDeltaBytes": 848608
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 22.849719999998342,
+          "cpuUserMs": 76.015,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 198779768,
+          "heapUsedAfterBytes": 207044168,
+          "heapUsedDeltaBytes": 8264400,
+          "rssBeforeBytes": 445480960,
+          "rssAfterBytes": 445480960,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 199741856,
+          "heapRetainedDeltaBytes": 962088
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 41.11675000000105,
+          "cpuUserMs": 89.72,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 199735208,
+          "heapUsedAfterBytes": 209706016,
+          "heapUsedDeltaBytes": 9970808,
+          "rssBeforeBytes": 446300160,
+          "rssAfterBytes": 446300160,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 200653592,
+          "heapRetainedDeltaBytes": 918384
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 40.629157999996096,
+          "cpuUserMs": 99.183,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 200641344,
+          "heapUsedAfterBytes": 210859416,
+          "heapUsedDeltaBytes": 10218072,
+          "rssBeforeBytes": 447447040,
+          "rssAfterBytes": 447447040,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 201624920,
+          "heapRetainedDeltaBytes": 983576
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 36.106094000002486,
+          "cpuUserMs": 90.342,
+          "cpuSystemMs": 0.007,
+          "heapUsedBeforeBytes": 201617680,
+          "heapUsedAfterBytes": 211411240,
+          "heapUsedDeltaBytes": 9793560,
+          "rssBeforeBytes": 448430080,
+          "rssAfterBytes": 448430080,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 202582096,
+          "heapRetainedDeltaBytes": 964416
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 30.908759999998438,
+          "cpuUserMs": 83.278,
+          "cpuSystemMs": 1.981,
+          "heapUsedBeforeBytes": 202571384,
+          "heapUsedAfterBytes": 209976848,
+          "heapUsedDeltaBytes": 7405464,
+          "rssBeforeBytes": 449085440,
+          "rssAfterBytes": 449085440,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 203511000,
+          "heapRetainedDeltaBytes": 939616
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 29.700841000005312,
+          "cpuUserMs": 82.268,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 203505544,
+          "heapUsedAfterBytes": 210816504,
+          "heapUsedDeltaBytes": 7310960,
+          "rssBeforeBytes": 450068480,
+          "rssAfterBytes": 450068480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 204429056,
+          "heapRetainedDeltaBytes": 923512
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 21.16603000000032,
+          "cpuUserMs": 69.386,
+          "cpuSystemMs": 0.015,
+          "heapUsedBeforeBytes": 204421816,
+          "heapUsedAfterBytes": 212001320,
+          "heapUsedDeltaBytes": 7579504,
+          "rssBeforeBytes": 450887680,
+          "rssAfterBytes": 450887680,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 205368112,
+          "heapRetainedDeltaBytes": 946296
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.693311000002723,
+          "cpuUserMs": 81.394,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 205363680,
+          "heapUsedAfterBytes": 212968216,
+          "heapUsedDeltaBytes": 7604536,
+          "rssBeforeBytes": 451706880,
+          "rssAfterBytes": 451870720,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 206329592,
+          "heapRetainedDeltaBytes": 965912
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 52.433977000000596,
+          "cpuUserMs": 106.571,
+          "cpuSystemMs": 0.01,
+          "heapUsedBeforeBytes": 206322616,
+          "heapUsedAfterBytes": 216021816,
+          "heapUsedDeltaBytes": 9699200,
+          "rssBeforeBytes": 452689920,
+          "rssAfterBytes": 452689920,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 207276056,
+          "heapRetainedDeltaBytes": 953440
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 65.3656289999999,
+          "cpuUserMs": 119.025,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 207234584,
+          "heapUsedAfterBytes": 217074456,
+          "heapUsedDeltaBytes": 9839872,
+          "rssBeforeBytes": 453672960,
+          "rssAfterBytes": 454000640,
+          "rssDeltaBytes": 327680,
+          "heapUsedAfterGcBytes": 208200112,
+          "heapRetainedDeltaBytes": 965528
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 39.591623000000254,
+          "cpuUserMs": 91.37,
+          "cpuSystemMs": 0.003,
+          "heapUsedBeforeBytes": 208192872,
+          "heapUsedAfterBytes": 218423656,
+          "heapUsedDeltaBytes": 10230784,
+          "rssBeforeBytes": 454819840,
+          "rssAfterBytes": 454819840,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 209173360,
+          "heapRetainedDeltaBytes": 980488
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 30.6314710000006,
+          "cpuUserMs": 83.931,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 209161584,
+          "heapUsedAfterBytes": 217171112,
+          "heapUsedDeltaBytes": 8009528,
+          "rssBeforeBytes": 455639040,
+          "rssAfterBytes": 455639040,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 210086424,
+          "heapRetainedDeltaBytes": 924840
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 21.729656999996223,
+          "cpuUserMs": 71.134,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 210076960,
+          "heapUsedAfterBytes": 217389232,
+          "heapUsedDeltaBytes": 7312272,
+          "rssBeforeBytes": 456622080,
+          "rssAfterBytes": 456622080,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 210977440,
+          "heapRetainedDeltaBytes": 900480
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 19.712782000002335,
+          "cpuUserMs": 73.134,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 210970200,
+          "heapUsedAfterBytes": 218311584,
+          "heapUsedDeltaBytes": 7341384,
+          "rssBeforeBytes": 457277440,
+          "rssAfterBytes": 457441280,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 211889928,
+          "heapRetainedDeltaBytes": 919728
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 13.399125999996613,
+          "cpuUserMs": 65.395,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 211885496,
+          "heapUsedAfterBytes": 219480288,
+          "heapUsedDeltaBytes": 7594792,
+          "rssBeforeBytes": 458260480,
+          "rssAfterBytes": 458260480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 212833592,
+          "heapRetainedDeltaBytes": 948096
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 26.98807699999452,
+          "cpuUserMs": 87.169,
+          "cpuSystemMs": 1.006,
+          "heapUsedBeforeBytes": 212840128,
+          "heapUsedAfterBytes": 220450440,
+          "heapUsedDeltaBytes": 7610312,
+          "rssBeforeBytes": 459243520,
+          "rssAfterBytes": 459243520,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 213792104,
+          "heapRetainedDeltaBytes": 951976
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 73.32383200000186,
+          "cpuUserMs": 128.093,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 213780616,
+          "heapUsedAfterBytes": 223692096,
+          "heapUsedDeltaBytes": 9911480,
+          "rssBeforeBytes": 460062720,
+          "rssAfterBytes": 460062720,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 214729808,
+          "heapRetainedDeltaBytes": 949192
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 5821,
+              "startLine": 1,
+              "endLine": 158,
+              "sha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 5981,
+              "startLine": 1,
+              "endLine": 162,
+              "sha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde",
+          "selector": [
+            "InstanceCard",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 957,
+              "end": 5350,
+              "startLine": 27,
+              "endLine": 143,
+              "sha256": "f8729225e66171c4b30286c7014fb04d532cb9003f789ea71a1a5256e593bd8a"
+            },
+            {
+              "start": 5352,
+              "end": 5820,
+              "startLine": 145,
+              "endLine": 158,
+              "sha256": "7100afc38874065f1e2282e5986c72420b17df22a895692ecf947618ed568606"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221",
+          "selector": [
+            "InstanceCard",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 966,
+              "end": 5510,
+              "startLine": 27,
+              "endLine": 147,
+              "sha256": "6098a2d96c19e8de130ee66ba8c15198f98a82481f67285003a44523694f9379"
+            },
+            {
+              "start": 5512,
+              "end": 5980,
+              "startLine": 149,
+              "endLine": 162,
+              "sha256": "7100afc38874065f1e2282e5986c72420b17df22a895692ecf947618ed568606"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_006",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_006:card-1",
+      "title": "Coolify card local state, 1 resources",
+      "fixture": "Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; 1 apps/services on 1 servers. Mantine/sections are presentation stubs.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 10,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "countBuilds": 9,
+          "memoCalls": 0,
+          "renders": 9,
+          "profilerActualDurationMs": 7.032279999926686
+        },
+        "after": {
+          "countBuilds": 1,
+          "memoCalls": 9,
+          "renders": 9,
+          "profilerActualDurationMs": 6.472226000027149
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 2.8525650000003226,
+          "cpuMsPerOperation": 8.386199999999999,
+          "heapUsedDeltaBytesPerBatch": 7219472,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 2.9388184000003092,
+          "cpuMsPerOperation": 9.233099999999999,
+          "heapUsedDeltaBytesPerBatch": 7153928,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 30.641178999998374,
+          "cpuUserMs": 89.105,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 220786112,
+          "heapUsedAfterBytes": 227991256,
+          "heapUsedDeltaBytes": 7205144,
+          "rssBeforeBytes": 467275776,
+          "rssAfterBytes": 467275776,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 221666344,
+          "heapRetainedDeltaBytes": 880232
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 30.016348000004655,
+          "cpuUserMs": 91.329,
+          "cpuSystemMs": 1.002,
+          "heapUsedBeforeBytes": 221647208,
+          "heapUsedAfterBytes": 228798480,
+          "heapUsedDeltaBytes": 7151272,
+          "rssBeforeBytes": 468422656,
+          "rssAfterBytes": 468586496,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 222572304,
+          "heapRetainedDeltaBytes": 925096
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 29.388184000003093,
+          "cpuUserMs": 84.231,
+          "cpuSystemMs": 0.008,
+          "heapUsedBeforeBytes": 222541312,
+          "heapUsedAfterBytes": 229695240,
+          "heapUsedDeltaBytes": 7153928,
+          "rssBeforeBytes": 469405696,
+          "rssAfterBytes": 469405696,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 223472904,
+          "heapRetainedDeltaBytes": 931592
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 28.525650000003225,
+          "cpuUserMs": 82.425,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 223468472,
+          "heapUsedAfterBytes": 230669032,
+          "heapUsedDeltaBytes": 7200560,
+          "rssBeforeBytes": 470388736,
+          "rssAfterBytes": 470388736,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 224417576,
+          "heapRetainedDeltaBytes": 949104
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 56.3844190000018,
+          "cpuUserMs": 114.583,
+          "cpuSystemMs": 0.974,
+          "heapUsedBeforeBytes": 224410336,
+          "heapUsedAfterBytes": 234326248,
+          "heapUsedDeltaBytes": 9915912,
+          "rssBeforeBytes": 471207936,
+          "rssAfterBytes": 471371776,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 225443992,
+          "heapRetainedDeltaBytes": 1033656
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 41.083920999997645,
+          "cpuUserMs": 101.356,
+          "cpuSystemMs": 0.005,
+          "heapUsedBeforeBytes": 225434528,
+          "heapUsedAfterBytes": 235222480,
+          "heapUsedDeltaBytes": 9787952,
+          "rssBeforeBytes": 472354816,
+          "rssAfterBytes": 472354816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 226427440,
+          "heapRetainedDeltaBytes": 992912
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 77.78027299999667,
+          "cpuUserMs": 141.749,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 226407952,
+          "heapUsedAfterBytes": 236141632,
+          "heapUsedDeltaBytes": 9733680,
+          "rssBeforeBytes": 473337856,
+          "rssAfterBytes": 473337856,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 227343056,
+          "heapRetainedDeltaBytes": 935104
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 25.212142999997013,
+          "cpuUserMs": 80.748,
+          "cpuSystemMs": 0.005,
+          "heapUsedBeforeBytes": 227328104,
+          "heapUsedAfterBytes": 234952120,
+          "heapUsedDeltaBytes": 7624016,
+          "rssBeforeBytes": 474157056,
+          "rssAfterBytes": 474320896,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 228255344,
+          "heapRetainedDeltaBytes": 927240
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 28.362515000000712,
+          "cpuUserMs": 83.862,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 228243240,
+          "heapUsedAfterBytes": 235462712,
+          "heapUsedDeltaBytes": 7219472,
+          "rssBeforeBytes": 474812416,
+          "rssAfterBytes": 474976256,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 229200592,
+          "heapRetainedDeltaBytes": 957352
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 28.69199800000206,
+          "cpuUserMs": 92.547,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 229196160,
+          "heapUsedAfterBytes": 236155896,
+          "heapUsedDeltaBytes": 6959736,
+          "rssBeforeBytes": 475959296,
+          "rssAfterBytes": 475959296,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 230092280,
+          "heapRetainedDeltaBytes": 896120
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 28.616877000000386,
+          "cpuUserMs": 88.283,
+          "cpuSystemMs": 0.008,
+          "heapUsedBeforeBytes": 230078552,
+          "heapUsedAfterBytes": 237064936,
+          "heapUsedDeltaBytes": 6986384,
+          "rssBeforeBytes": 476778496,
+          "rssAfterBytes": 476778496,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 231026288,
+          "heapRetainedDeltaBytes": 947736
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 47.518713999998,
+          "cpuUserMs": 105.418,
+          "cpuSystemMs": 0.015,
+          "heapUsedBeforeBytes": 231017600,
+          "heapUsedAfterBytes": 240868032,
+          "heapUsedDeltaBytes": 9850432,
+          "rssBeforeBytes": 477597696,
+          "rssAfterBytes": 477597696,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 231995088,
+          "heapRetainedDeltaBytes": 977488
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 41.50937499999418,
+          "cpuUserMs": 102.178,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 231989888,
+          "heapUsedAfterBytes": 241841000,
+          "heapUsedDeltaBytes": 9851112,
+          "rssBeforeBytes": 478580736,
+          "rssAfterBytes": 478580736,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 232936184,
+          "heapRetainedDeltaBytes": 946296
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 38.37741599999572,
+          "cpuUserMs": 105.511,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 232931752,
+          "heapUsedAfterBytes": 242691656,
+          "heapUsedDeltaBytes": 9759904,
+          "rssBeforeBytes": 479727616,
+          "rssAfterBytes": 479727616,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 233889000,
+          "heapRetainedDeltaBytes": 957248
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 17.898026999995636,
+          "cpuUserMs": 77.515,
+          "cpuSystemMs": 0.009,
+          "heapUsedBeforeBytes": 233881760,
+          "heapUsedAfterBytes": 241409728,
+          "heapUsedDeltaBytes": 7527968,
+          "rssBeforeBytes": 480382976,
+          "rssAfterBytes": 480546816,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 234774688,
+          "heapRetainedDeltaBytes": 892928
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 14.256358000006003,
+          "cpuUserMs": 70.788,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 234770256,
+          "heapUsedAfterBytes": 241972296,
+          "heapUsedDeltaBytes": 7202040,
+          "rssBeforeBytes": 481366016,
+          "rssAfterBytes": 481366016,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 235675376,
+          "heapRetainedDeltaBytes": 905120
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 12.664974999999686,
+          "cpuUserMs": 60.67,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 235699656,
+          "heapUsedAfterBytes": 242888272,
+          "heapUsedDeltaBytes": 7188616,
+          "rssBeforeBytes": 482185216,
+          "rssAfterBytes": 482185216,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 236641400,
+          "heapRetainedDeltaBytes": 941744
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 12.97142399999575,
+          "cpuUserMs": 64.97,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 236682608,
+          "heapUsedAfterBytes": 243781744,
+          "heapUsedDeltaBytes": 7099136,
+          "rssBeforeBytes": 483168256,
+          "rssAfterBytes": 483168256,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 237536600,
+          "heapRetainedDeltaBytes": 853992
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 5821,
+              "startLine": 1,
+              "endLine": 158,
+              "sha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 5981,
+              "startLine": 1,
+              "endLine": 162,
+              "sha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde",
+          "selector": [
+            "InstanceCard",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 957,
+              "end": 5350,
+              "startLine": 27,
+              "endLine": 143,
+              "sha256": "f8729225e66171c4b30286c7014fb04d532cb9003f789ea71a1a5256e593bd8a"
+            },
+            {
+              "start": 5352,
+              "end": 5820,
+              "startLine": 145,
+              "endLine": 158,
+              "sha256": "7100afc38874065f1e2282e5986c72420b17df22a895692ecf947618ed568606"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221",
+          "selector": [
+            "InstanceCard",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 966,
+              "end": 5510,
+              "startLine": 27,
+              "endLine": 147,
+              "sha256": "6098a2d96c19e8de130ee66ba8c15198f98a82481f67285003a44523694f9379"
+            },
+            {
+              "start": 5512,
+              "end": 5980,
+              "startLine": 149,
+              "endLine": 162,
+              "sha256": "7100afc38874065f1e2282e5986c72420b17df22a895692ecf947618ed568606"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_006",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_006:card-1000",
+      "title": "Coolify card local state, 1000 resources",
+      "fixture": "Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; 1000 apps/services on 50 servers. Mantine/sections are presentation stubs.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 10,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "countBuilds": 9,
+          "memoCalls": 0,
+          "renders": 9,
+          "profilerActualDurationMs": 6.7395360001173685
+        },
+        "after": {
+          "countBuilds": 1,
+          "memoCalls": 9,
+          "renders": 9,
+          "profilerActualDurationMs": 4.962257000071986
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 5.342490199999884,
+          "cpuMsPerOperation": 11.813,
+          "heapUsedDeltaBytesPerBatch": 27465416,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 4.661354399999982,
+          "cpuMsPerOperation": 11.883999999999999,
+          "heapUsedDeltaBytesPerBatch": 21679752,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.939524000001256,
+          "cpuUserMs": 94.209,
+          "cpuSystemMs": 0.995,
+          "heapUsedBeforeBytes": 244031912,
+          "heapUsedAfterBytes": 271034776,
+          "heapUsedDeltaBytes": 27002864,
+          "rssBeforeBytes": 494534656,
+          "rssAfterBytes": 494534656,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 244888104,
+          "heapRetainedDeltaBytes": 856192
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 46.61354399999982,
+          "cpuUserMs": 118.823,
+          "cpuSystemMs": 0.017,
+          "heapUsedBeforeBytes": 243902872,
+          "heapUsedAfterBytes": 265189136,
+          "heapUsedDeltaBytes": 21286264,
+          "rssBeforeBytes": 494456832,
+          "rssAfterBytes": 494456832,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 244819336,
+          "heapRetainedDeltaBytes": 916464
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 45.09353000000556,
+          "cpuUserMs": 105.46,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 244814904,
+          "heapUsedAfterBytes": 266083472,
+          "heapUsedDeltaBytes": 21268568,
+          "rssBeforeBytes": 494620672,
+          "rssAfterBytes": 494620672,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 245734560,
+          "heapRetainedDeltaBytes": 919656
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 53.42490199999884,
+          "cpuUserMs": 118.117,
+          "cpuSystemMs": 0.013,
+          "heapUsedBeforeBytes": 245730128,
+          "heapUsedAfterBytes": 272957016,
+          "heapUsedDeltaBytes": 27226888,
+          "rssBeforeBytes": 494948352,
+          "rssAfterBytes": 494948352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 246689168,
+          "heapRetainedDeltaBytes": 959040
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 65.36210399999982,
+          "cpuUserMs": 132.665,
+          "cpuSystemMs": 0.989,
+          "heapUsedBeforeBytes": 246676800,
+          "heapUsedAfterBytes": 276543760,
+          "heapUsedDeltaBytes": 29866960,
+          "rssBeforeBytes": 495603712,
+          "rssAfterBytes": 495603712,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 247689048,
+          "heapRetainedDeltaBytes": 1012248
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 73.53758099999686,
+          "cpuUserMs": 157.677,
+          "cpuSystemMs": 2.002,
+          "heapUsedBeforeBytes": 247684616,
+          "heapUsedAfterBytes": 271657056,
+          "heapUsedDeltaBytes": 23972440,
+          "rssBeforeBytes": 496750592,
+          "rssAfterBytes": 496750592,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 248704048,
+          "heapRetainedDeltaBytes": 1019432
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 54.593714000002365,
+          "cpuUserMs": 121.624,
+          "cpuSystemMs": 1.003,
+          "heapUsedBeforeBytes": 248699616,
+          "heapUsedAfterBytes": 272571688,
+          "heapUsedDeltaBytes": 23872072,
+          "rssBeforeBytes": 497733632,
+          "rssAfterBytes": 497733632,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 249622864,
+          "heapRetainedDeltaBytes": 923248
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 33.841787999997905,
+          "cpuUserMs": 104.437,
+          "cpuSystemMs": 1.002,
+          "heapUsedBeforeBytes": 249615888,
+          "heapUsedAfterBytes": 277081304,
+          "heapUsedDeltaBytes": 27465416,
+          "rssBeforeBytes": 498716672,
+          "rssAfterBytes": 498716672,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 250556360,
+          "heapRetainedDeltaBytes": 940472
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 39.49152999999933,
+          "cpuUserMs": 102.492,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 250548096,
+          "heapUsedAfterBytes": 277574160,
+          "heapUsedDeltaBytes": 27026064,
+          "rssBeforeBytes": 499535872,
+          "rssAfterBytes": 499535872,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 251499168,
+          "heapRetainedDeltaBytes": 951072
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 33.41090599999734,
+          "cpuUserMs": 105.128,
+          "cpuSystemMs": 0.013,
+          "heapUsedBeforeBytes": 251462576,
+          "heapUsedAfterBytes": 272524856,
+          "heapUsedDeltaBytes": 21062280,
+          "rssBeforeBytes": 500355072,
+          "rssAfterBytes": 500355072,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 252369128,
+          "heapRetainedDeltaBytes": 906552
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 85.880842999999,
+          "cpuUserMs": 155.729,
+          "cpuSystemMs": 0.016,
+          "heapUsedBeforeBytes": 252355400,
+          "heapUsedAfterBytes": 276069952,
+          "heapUsedDeltaBytes": 23714552,
+          "rssBeforeBytes": 501174272,
+          "rssAfterBytes": 501174272,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 253329192,
+          "heapRetainedDeltaBytes": 973792
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 63.56268199999613,
+          "cpuUserMs": 125.603,
+          "cpuSystemMs": 0.969,
+          "heapUsedBeforeBytes": 253318280,
+          "heapUsedAfterBytes": 283114944,
+          "heapUsedDeltaBytes": 29796664,
+          "rssBeforeBytes": 502157312,
+          "rssAfterBytes": 502321152,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 254290472,
+          "heapRetainedDeltaBytes": 972192
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 83.12997600000381,
+          "cpuUserMs": 156.964,
+          "cpuSystemMs": 0.006,
+          "heapUsedBeforeBytes": 254286040,
+          "heapUsedAfterBytes": 284086168,
+          "heapUsedDeltaBytes": 29800128,
+          "rssBeforeBytes": 502976512,
+          "rssAfterBytes": 502976512,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 255237416,
+          "heapRetainedDeltaBytes": 951376
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 42.349160999998276,
+          "cpuUserMs": 112.613,
+          "cpuSystemMs": 1.658,
+          "heapUsedBeforeBytes": 255227952,
+          "heapUsedAfterBytes": 276907704,
+          "heapUsedDeltaBytes": 21679752,
+          "rssBeforeBytes": 504287232,
+          "rssAfterBytes": 504287232,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 256130048,
+          "heapRetainedDeltaBytes": 902096
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 27.193402000004426,
+          "cpuUserMs": 90.409,
+          "cpuSystemMs": 1.005,
+          "heapUsedBeforeBytes": 256122808,
+          "heapUsedAfterBytes": 277381512,
+          "heapUsedDeltaBytes": 21258704,
+          "rssBeforeBytes": 505434112,
+          "rssAfterBytes": 505434112,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257042464,
+          "heapRetainedDeltaBytes": 919656
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 36.48586100000102,
+          "cpuUserMs": 108.003,
+          "cpuSystemMs": 0.011,
+          "heapUsedBeforeBytes": 257038032,
+          "heapUsedAfterBytes": 284162192,
+          "heapUsedDeltaBytes": 27124160,
+          "rssBeforeBytes": 506089472,
+          "rssAfterBytes": 506089472,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257960216,
+          "heapRetainedDeltaBytes": 922184
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 10,
+          "wallMs": 100.89836800000194,
+          "cpuUserMs": 180.784,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257953240,
+          "heapUsedAfterBytes": 287766120,
+          "heapUsedDeltaBytes": 29812880,
+          "rssBeforeBytes": 506744832,
+          "rssAfterBytes": 506744832,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 258938208,
+          "heapRetainedDeltaBytes": 984968
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 10,
+          "wallMs": 67.20810199999687,
+          "cpuUserMs": 138.497,
+          "cpuSystemMs": 0.005,
+          "heapUsedBeforeBytes": 258933776,
+          "heapUsedAfterBytes": 282760376,
+          "heapUsedDeltaBytes": 23826600,
+          "rssBeforeBytes": 507564032,
+          "rssAfterBytes": 507727872,
+          "rssDeltaBytes": 163840,
+          "heapUsedAfterGcBytes": 259883992,
+          "heapRetainedDeltaBytes": 950216
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 5821,
+              "startLine": 1,
+              "endLine": 158,
+              "sha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 5981,
+              "startLine": 1,
+              "endLine": 162,
+              "sha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 4242,
+              "startLine": 1,
+              "endLine": 135,
+              "sha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "5ae6f65824272ce94da8ad61f1cf3291dc490721dbbe1eb1f4ea9d87415e2bde",
+          "selector": [
+            "InstanceCard",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 957,
+              "end": 5350,
+              "startLine": 27,
+              "endLine": 143,
+              "sha256": "f8729225e66171c4b30286c7014fb04d532cb9003f789ea71a1a5256e593bd8a"
+            },
+            {
+              "start": 5352,
+              "end": 5820,
+              "startLine": 145,
+              "endLine": 158,
+              "sha256": "7100afc38874065f1e2282e5986c72420b17df22a895692ecf947618ed568606"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/coolify-utils.ts",
+          "fileSha256": "b4d4d8d0a0a04e0146e21afd976245099156283e5de65fdf625d02090f7ecaa1",
+          "selector": [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline"
+          ],
+          "spans": [
+            {
+              "start": 242,
+              "end": 410,
+              "startLine": 12,
+              "endLine": 16,
+              "sha256": "f9a4cb47971e12521566d0a85268a16bf181bfb7405b50c9bff42651652cd8cd"
+            },
+            {
+              "start": 1020,
+              "end": 1220,
+              "startLine": 41,
+              "endLine": 46,
+              "sha256": "91c53db1d145e0ce59b52cc7a8526f88397602ad5e125ae75b1d23760a98325a"
+            },
+            {
+              "start": 1931,
+              "end": 3157,
+              "startLine": 67,
+              "endLine": 103,
+              "sha256": "3541f84f1274ee2223ddc43a5229b596a8568b908f7540286390e9d4e82a1941"
+            },
+            {
+              "start": 3922,
+              "end": 4109,
+              "startLine": 130,
+              "endLine": 132,
+              "sha256": "37c74cbae34ca0dcdf74d8b457984f982e52b21a33411e9bd7d3e0f7670cae4f"
+            },
+            {
+              "start": 4111,
+              "end": 4241,
+              "startLine": 134,
+              "endLine": 135,
+              "sha256": "38775d638cd7c089c73b890382a7e0968bbb81ff6d71be90f7f30ade954b2a54"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/coolify/instance-card.tsx",
+          "fileSha256": "4fb40274c958a3965a3fa90663835ed31012e52951854cedd54e2d585086e221",
+          "selector": [
+            "InstanceCard",
+            "InstanceFooter"
+          ],
+          "spans": [
+            {
+              "start": 966,
+              "end": 5510,
+              "startLine": 27,
+              "endLine": 147,
+              "sha256": "6098a2d96c19e8de130ee66ba8c15198f98a82481f67285003a44523694f9379"
+            },
+            {
+              "start": 5512,
+              "end": 5980,
+              "startLine": 149,
+              "endLine": 162,
+              "sha256": "7100afc38874065f1e2282e5986c72420b17df22a895692ecf947618ed568606"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_006",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_008",
+      "title": "Cluster node aggregates, 3 nodes",
+      "fixture": "3 mixed running/stopped nodes; highest uptime on a stopped node; VM/LXC/storage counts stay visible. Includes empty/nonfinite numeric edge assertions. Derivation only.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 2000,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "nodeVisits": 30
+        },
+        "after": {
+          "nodeVisits": 5
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 0.0002343010000004142,
+          "cpuMsPerOperation": 0.0002515,
+          "heapUsedDeltaBytesPerBatch": 1264928,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 0.00014472999999998138,
+          "cpuMsPerOperation": 0.000149,
+          "heapUsedDeltaBytesPerBatch": 1264928,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 1.601569999998901,
+          "cpuUserMs": 5.601,
+          "cpuSystemMs": 0.003,
+          "heapUsedBeforeBytes": 257806224,
+          "heapUsedAfterBytes": 261203088,
+          "heapUsedDeltaBytes": 3396864,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257210424,
+          "heapRetainedDeltaBytes": -595800
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.14824999999837019,
+          "cpuUserMs": 0.154,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257204136,
+          "heapUsedAfterBytes": 258469064,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257204360,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.29538899999897694,
+          "cpuUserMs": 0.97,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257204480,
+          "heapUsedAfterBytes": 258469408,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257204704,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.4936549999983981,
+          "cpuUserMs": 0.501,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257204824,
+          "heapUsedAfterBytes": 258469752,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257205048,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.23526999999739928,
+          "cpuUserMs": 0.24,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257205168,
+          "heapUsedAfterBytes": 258470096,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257205392,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.28705600000103004,
+          "cpuUserMs": 0.296,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257205512,
+          "heapUsedAfterBytes": 258470440,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257205736,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.29554699999425793,
+          "cpuUserMs": 0.303,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257205856,
+          "heapUsedAfterBytes": 258470784,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257206080,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.2378930000049877,
+          "cpuUserMs": 0.242,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257206200,
+          "heapUsedAfterBytes": 258471128,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257206424,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.2437869999994291,
+          "cpuUserMs": 0.626,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257206544,
+          "heapUsedAfterBytes": 258471472,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257206768,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.26726700000290293,
+          "cpuUserMs": 0.274,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257206888,
+          "heapUsedAfterBytes": 258471816,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257207112,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.1536190000042552,
+          "cpuUserMs": 0.157,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257207232,
+          "heapUsedAfterBytes": 258472160,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257207456,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.2376829999993788,
+          "cpuUserMs": 0.245,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257207576,
+          "heapUsedAfterBytes": 258472504,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257207800,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.4904519999981858,
+          "cpuUserMs": 2.24,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257207920,
+          "heapUsedAfterBytes": 258472848,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257208144,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.29251300000032643,
+          "cpuUserMs": 0.301,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257208264,
+          "heapUsedAfterBytes": 258473192,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257208488,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.30079700000351295,
+          "cpuUserMs": 0.31,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257208608,
+          "heapUsedAfterBytes": 258473536,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257208832,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.4686020000008284,
+          "cpuUserMs": 1.261,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257208952,
+          "heapUsedAfterBytes": 258473880,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257209176,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.4713229999979376,
+          "cpuUserMs": 0.478,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257209296,
+          "heapUsedAfterBytes": 258474224,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257209520,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.28945999999996275,
+          "cpuUserMs": 0.297,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257209640,
+          "heapUsedAfterBytes": 258474568,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508563456,
+          "rssAfterBytes": 508563456,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257209864,
+          "heapRetainedDeltaBytes": 224
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 9204,
+              "startLine": 1,
+              "endLine": 241,
+              "sha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 8978,
+              "startLine": 1,
+              "endLine": 246,
+              "sha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": "running",
+          "spans": [
+            {
+              "start": 1445,
+              "end": 1551,
+              "startLine": 34,
+              "endLine": 36,
+              "sha256": "618f4690d707e4b36fc0801f2679422f30b86b01845ad5502159a9d5ac1a11c9"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": {
+            "kind": "span",
+            "start": "  const activeNodes =",
+            "end": "  const isAdvanced ="
+          },
+          "spans": [
+            {
+              "start": 2792,
+              "end": 3737,
+              "startLine": 65,
+              "endLine": 80,
+              "sha256": "72826b4f58e14ada15cc7a00f64c297a1314aa466e47e1373762c740b5a88b92"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": "running",
+          "spans": [
+            {
+              "start": 1445,
+              "end": 1551,
+              "startLine": 34,
+              "endLine": 36,
+              "sha256": "618f4690d707e4b36fc0801f2679422f30b86b01845ad5502159a9d5ac1a11c9"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": {
+            "kind": "span",
+            "start": "  let activeNodes =",
+            "end": "  const isAdvanced ="
+          },
+          "spans": [
+            {
+              "start": 2792,
+              "end": 3511,
+              "startLine": 65,
+              "endLine": 85,
+              "sha256": "423a49b5d64781774d5ad90d70966aa3d976975d480ae148b306b9a1d4de83cd"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_008",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_008:1",
+      "title": "Cluster node aggregates, 1 nodes",
+      "fixture": "1 mixed running/stopped nodes; highest uptime on a stopped node; VM/LXC/storage counts stay visible. Includes empty/nonfinite numeric edge assertions. Derivation only.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 2000,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "nodeVisits": 18
+        },
+        "after": {
+          "nodeVisits": 3
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 0.0001558565000013914,
+          "cpuMsPerOperation": 0.00019600000000000002,
+          "heapUsedDeltaBytesPerBatch": 1264928,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 8.515099999931408e-05,
+          "cpuMsPerOperation": 0.00028349999999999995,
+          "heapUsedDeltaBytesPerBatch": 1264928,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 1.1766929999939748,
+          "cpuUserMs": 5.817,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257242016,
+          "heapUsedAfterBytes": 260390536,
+          "heapUsedDeltaBytes": 3148520,
+          "rssBeforeBytes": 508665856,
+          "rssAfterBytes": 508665856,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257240160,
+          "heapRetainedDeltaBytes": -1856
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.16536700000142446,
+          "cpuUserMs": 1.023,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257232328,
+          "heapUsedAfterBytes": 258497256,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257232552,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.2867279999991297,
+          "cpuUserMs": 0.294,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257232400,
+          "heapUsedAfterBytes": 258497328,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257232608,
+          "heapRetainedDeltaBytes": 208
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.3020150000011199,
+          "cpuUserMs": 0.307,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257232728,
+          "heapUsedAfterBytes": 258497656,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257232952,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.3835560000006808,
+          "cpuUserMs": 0.391,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257233072,
+          "heapUsedAfterBytes": 258498000,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257233296,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.15939800000342075,
+          "cpuUserMs": 0.165,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257233416,
+          "heapUsedAfterBytes": 258498344,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257233640,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.28910600000381237,
+          "cpuUserMs": 0.944,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257233760,
+          "heapUsedAfterBytes": 258498688,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257233984,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.41348099999595433,
+          "cpuUserMs": 1.328,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257234104,
+          "heapUsedAfterBytes": 258499032,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257234328,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.21392000000196276,
+          "cpuUserMs": 0.219,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257234448,
+          "heapUsedAfterBytes": 258499376,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257234672,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.17030199999862816,
+          "cpuUserMs": 0.962,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257234792,
+          "heapUsedAfterBytes": 258499720,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257235016,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.16738099999929545,
+          "cpuUserMs": 0.567,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257235136,
+          "heapUsedAfterBytes": 258500064,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257235360,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.21599399999831803,
+          "cpuUserMs": 1.363,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257235480,
+          "heapUsedAfterBytes": 258500408,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257235704,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.22652699999889592,
+          "cpuUserMs": 0.231,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257235824,
+          "heapUsedAfterBytes": 258500752,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257236048,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.2681899999952293,
+          "cpuUserMs": 0.275,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 257236168,
+          "heapUsedAfterBytes": 258501096,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257236392,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.26745200000004843,
+          "cpuUserMs": 0.781,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257236512,
+          "heapUsedAfterBytes": 258501440,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257236736,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.40409299999737414,
+          "cpuUserMs": 1.831,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257236856,
+          "heapUsedAfterBytes": 258501784,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257237080,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 0.3117130000027828,
+          "cpuUserMs": 0.319,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257237200,
+          "heapUsedAfterBytes": 258502128,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257237424,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 0.16260899999906542,
+          "cpuUserMs": 0.168,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257237544,
+          "heapUsedAfterBytes": 258502472,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 508436480,
+          "rssAfterBytes": 508436480,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257237768,
+          "heapRetainedDeltaBytes": 224
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 9204,
+              "startLine": 1,
+              "endLine": 241,
+              "sha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 8978,
+              "startLine": 1,
+              "endLine": 246,
+              "sha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": "running",
+          "spans": [
+            {
+              "start": 1445,
+              "end": 1551,
+              "startLine": 34,
+              "endLine": 36,
+              "sha256": "618f4690d707e4b36fc0801f2679422f30b86b01845ad5502159a9d5ac1a11c9"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": {
+            "kind": "span",
+            "start": "  const activeNodes =",
+            "end": "  const isAdvanced ="
+          },
+          "spans": [
+            {
+              "start": 2792,
+              "end": 3737,
+              "startLine": 65,
+              "endLine": 80,
+              "sha256": "72826b4f58e14ada15cc7a00f64c297a1314aa466e47e1373762c740b5a88b92"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": "running",
+          "spans": [
+            {
+              "start": 1445,
+              "end": 1551,
+              "startLine": 34,
+              "endLine": 36,
+              "sha256": "618f4690d707e4b36fc0801f2679422f30b86b01845ad5502159a9d5ac1a11c9"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": {
+            "kind": "span",
+            "start": "  let activeNodes =",
+            "end": "  const isAdvanced ="
+          },
+          "spans": [
+            {
+              "start": 2792,
+              "end": 3511,
+              "startLine": 65,
+              "endLine": 85,
+              "sha256": "423a49b5d64781774d5ad90d70966aa3d976975d480ae148b306b9a1d4de83cd"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_008",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    },
+    {
+      "id": "WIDGETS_B_008:100",
+      "title": "Cluster node aggregates, 100 nodes",
+      "fixture": "100 mixed running/stopped nodes; highest uptime on a stopped node; VM/LXC/storage counts stay visible. Includes empty/nonfinite numeric edge assertions. Derivation only.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 2000,
+      "metricUnits": {},
+      "metrics": {
+        "before": {
+          "nodeVisits": 612
+        },
+        "after": {
+          "nodeVisits": 102
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 0.001497779500001343,
+          "cpuMsPerOperation": 0.0068905,
+          "heapUsedDeltaBytesPerBatch": 1264928,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 0.0019576054999997723,
+          "cpuMsPerOperation": 0.0085095,
+          "heapUsedDeltaBytesPerBatch": 9954688,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 1.6660479999991367,
+          "cpuUserMs": 8.591,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257301192,
+          "heapUsedAfterBytes": 258566120,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257285184,
+          "heapRetainedDeltaBytes": -16008
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 16.113971999999194,
+          "cpuUserMs": 78.433,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257285184,
+          "heapUsedAfterBytes": 278015856,
+          "heapUsedDeltaBytes": 20730672,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257293496,
+          "heapRetainedDeltaBytes": 8312
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 2.4011429999955,
+          "cpuUserMs": 11.619,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257293616,
+          "heapUsedAfterBytes": 267246848,
+          "heapUsedDeltaBytes": 9953232,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257293840,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 1.6060280000019702,
+          "cpuUserMs": 5.611,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257306288,
+          "heapUsedAfterBytes": 258571216,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257297120,
+          "heapRetainedDeltaBytes": -9168
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 1.596371999999974,
+          "cpuUserMs": 5.52,
+          "cpuSystemMs": 0.002,
+          "heapUsedBeforeBytes": 257297240,
+          "heapUsedAfterBytes": 258562168,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257297464,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 3.9152109999995446,
+          "cpuUserMs": 18.113,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257297584,
+          "heapUsedAfterBytes": 267252272,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257297808,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 1.915779000002658,
+          "cpuUserMs": 7.344,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257297928,
+          "heapUsedAfterBytes": 267252616,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257298152,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 3.2161059999998542,
+          "cpuUserMs": 13.781,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257298272,
+          "heapUsedAfterBytes": 258563200,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257298496,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 2.995559000002686,
+          "cpuUserMs": 14.963,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257298616,
+          "heapUsedAfterBytes": 258563544,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257298840,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 2.0480620000016643,
+          "cpuUserMs": 7.114,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257298960,
+          "heapUsedAfterBytes": 267253648,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257299184,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 3.9997849999999744,
+          "cpuUserMs": 18.6,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257299304,
+          "heapUsedAfterBytes": 267253992,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257299528,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 1.773817000001145,
+          "cpuUserMs": 8.94,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257299648,
+          "heapUsedAfterBytes": 258564576,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257299872,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 3.6634780000022147,
+          "cpuUserMs": 15.048,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257303288,
+          "heapUsedAfterBytes": 258568216,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257300712,
+          "heapRetainedDeltaBytes": -2576
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 3.9124400000000605,
+          "cpuUserMs": 16.511,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257300832,
+          "heapUsedAfterBytes": 267255520,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257301056,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 4.0158379999993485,
+          "cpuUserMs": 17.019,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257301176,
+          "heapUsedAfterBytes": 267255864,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257301400,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 3.6764989999937825,
+          "cpuUserMs": 16.758,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257301520,
+          "heapUsedAfterBytes": 258566448,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257301744,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 2000,
+          "wallMs": 3.76580699999613,
+          "cpuUserMs": 18.105,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257301864,
+          "heapUsedAfterBytes": 258566792,
+          "heapUsedDeltaBytes": 1264928,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257302088,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 2000,
+          "wallMs": 4.036674000002677,
+          "cpuUserMs": 18.715,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 257302208,
+          "heapUsedAfterBytes": 267256896,
+          "heapUsedDeltaBytes": 9954688,
+          "rssBeforeBytes": 509722624,
+          "rssAfterBytes": 509722624,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 257302432,
+          "heapRetainedDeltaBytes": 224
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 9204,
+              "startLine": 1,
+              "endLine": 241,
+              "sha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 8978,
+              "startLine": 1,
+              "endLine": 246,
+              "sha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": "running",
+          "spans": [
+            {
+              "start": 1445,
+              "end": 1551,
+              "startLine": 34,
+              "endLine": 36,
+              "sha256": "618f4690d707e4b36fc0801f2679422f30b86b01845ad5502159a9d5ac1a11c9"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "43a46966682117f7fa910f3d99d45b40aa71e8b079aa0dd162f1ce8c1099894f",
+          "selector": {
+            "kind": "span",
+            "start": "  const activeNodes =",
+            "end": "  const isAdvanced ="
+          },
+          "spans": [
+            {
+              "start": 2792,
+              "end": 3737,
+              "startLine": 65,
+              "endLine": 80,
+              "sha256": "72826b4f58e14ada15cc7a00f64c297a1314aa466e47e1373762c740b5a88b92"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": "running",
+          "spans": [
+            {
+              "start": 1445,
+              "end": 1551,
+              "startLine": 34,
+              "endLine": 36,
+              "sha256": "618f4690d707e4b36fc0801f2679422f30b86b01845ad5502159a9d5ac1a11c9"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+          "fileSha256": "94a910123c42424e42ebf2e7370e7e2cd8c336aaed54dbf0469969cba3243f7e",
+          "selector": {
+            "kind": "span",
+            "start": "  let activeNodes =",
+            "end": "  const isAdvanced ="
+          },
+          "spans": [
+            {
+              "start": 2792,
+              "end": 3511,
+              "startLine": 65,
+              "endLine": 85,
+              "sha256": "423a49b5d64781774d5ad90d70966aa3d976975d480ae148b306b9a1d4de83cd"
+            }
+          ]
+        }
+      ],
+      "findingId": "WIDGETS_B_008",
+      "lane": "widget_render",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/widget_render.mts",
+      "caseSha256": "b08b63fe1eb3dcf4de63c2022ffc748fc2f8d623c0b2508540e2f0cdf63448de"
+    }
+  ],
+  "status": "rejected_candidate_evidence",
+  "finalDisposition": "retain baseline production source for WIDGETS_B_006 and WIDGETS_B_008"
+}

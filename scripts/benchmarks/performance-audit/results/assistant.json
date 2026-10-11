@@ -1,0 +1,1232 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-11T14:57:29.935Z",
+  "completedAt": "2026-10-11T14:58:09.889Z",
+  "status": "passed",
+  "invocation": [
+    "/home/habs/.local/share/mise/installs/node/24.18.0/bin/node",
+    "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/run.mts",
+    "--lane",
+    "assistant",
+    "--warmup",
+    "3",
+    "--trials",
+    "9",
+    "--out",
+    "scripts/benchmarks/performance-audit/results/assistant.json"
+  ],
+  "configuration": {
+    "before": "/tmp/homarr-performance-before-bab37f7",
+    "after": "/home/habs/.codex/worktrees/4395/homarr",
+    "cases": [],
+    "lanes": [
+      "assistant"
+    ],
+    "warmup": 3,
+    "trials": 9,
+    "out": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/results/assistant.json",
+    "verifyOnly": false,
+    "list": false
+  },
+  "provenance": {
+    "baselineCommit": "bab37f76c607e70d871fb7bdde259fa527051b58",
+    "baselineArchive": "Before source file hashes checked against git show baselineCommit:path before each case's operations",
+    "currentCommit": "bab37f76c607e70d871fb7bdde259fa527051b58",
+    "currentBranch": "feat/performance-audit-improvements",
+    "currentChanges": "M apps/nextjs/src/app/[locale]/manage/_access.ts\n M apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx\n M apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-requests-editor.tsx\n M apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/test-connection-certificate.tsx\n M apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx\n M apps/nextjs/src/app/[locale]/manage/integrations/page.tsx\n M apps/nextjs/src/app/[locale]/manage/layout.tsx\n M apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation.tsx\n M apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/page.tsx\n M apps/nextjs/src/app/[locale]/manage/users/[userId]/general/page.tsx\n M apps/nextjs/src/app/[locale]/manage/users/[userId]/layout.tsx\n M apps/nextjs/src/app/[locale]/manage/users/[userId]/security/page.tsx\n M apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/page.tsx\n M apps/nextjs/src/app/[locale]/manage/users/groups/_groups-table.tsx\n M apps/nextjs/src/app/api/assistant/chat/route.ts\n M apps/nextjs/src/app/api/image-proxy/[id]/route.ts\n M apps/nextjs/src/components/assistant/assistant-conversation-context.tsx\n M apps/nextjs/src/components/assistant/assistant-message-metadata.ts\n M apps/nextjs/src/components/board/items/item-content.module.css\n M apps/nextjs/src/components/board/selection/board-selection-context.tsx\n M packages/api/src/router/app/app-access-control.ts\n M packages/api/src/router/board.ts\n M packages/api/src/router/custom-widget/source-resolver.ts\n M packages/api/src/router/docker/docker-reconciliation.ts\n M packages/api/src/router/integration/integration-router.ts\n M packages/api/src/router/kubernetes/router/pods.ts\n M packages/api/src/router/widgets/rssFeed.ts\n M packages/auth/permissions/integration-query-permissions.ts\n M packages/cli/src/commands/fix-usernames.ts\n M packages/cli/src/commands/integrations-list.ts\n M packages/cli/src/commands/users-list.ts\n M packages/cron-jobs-core/src/creator.ts\n M packages/cron-jobs-core/src/group.ts\n M packages/cron-jobs/src/jobs/icons-updater.ts\n M packages/custom-widgets/src/core/custom-jsx-schema.ts\n M packages/custom-widgets/src/jsx/analyzer-diagnostics.ts\n M packages/custom-widgets/src/jsx/analyzer-jsx.ts\n M packages/custom-widgets/src/jsx/analyzer.ts\n M packages/custom-widgets/src/workbench/analyzer.ts\n M packages/custom-widgets/src/workbench/response-tree.tsx\n M packages/image-proxy/src/index.ts\n M packages/integrations/src/gotify/gotify-integration.ts\n M packages/integrations/src/umami/test/umami-integration.spec.ts\n M packages/integrations/src/umami/umami-integration.ts\n M packages/modals-collection/src/apps/app-select-modal.tsx\n M packages/modals/src/index.tsx\n M packages/translation/src/request.ts\n M packages/ui/src/components/password-input/password-requirements-popover.tsx\n M packages/ui/src/integration-select-grid/integration-select-grid.tsx\n M packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx\n M packages/widgets/src/app/prefetch.ts\n M packages/widgets/src/beszel-system-table/component.tsx\n M packages/widgets/src/bookmarks/prefetch.ts\n M packages/widgets/src/clock/use-current-time.ts\n M packages/widgets/src/docker/component.tsx\n M packages/widgets/src/media-releases/component.tsx\n M packages/widgets/src/media-server/component.tsx\n M packages/widgets/src/notebook/notebook.tsx\n M packages/widgets/src/speedtest-tracker/helpers.ts\n M packages/widgets/src/tracearr/component.tsx\n M packages/widgets/src/tracearr/stats-section.tsx\n M packages/widgets/src/traefik/component.tsx\n M packages/widgets/src/uptime-kuma/aggregate.ts\n M packages/widgets/src/wazuh-agents/component.tsx\n M packages/widgets/src/widget-integration-select.tsx",
+    "harness": [
+      {
+        "file": "lib.mts",
+        "sha256": "da43ab6b004a7130cb76446a1098fdebe21ce9b0c731581e694611d09c2d101e"
+      },
+      {
+        "file": "run.mts",
+        "sha256": "20a89fc9e3f35959f7572cd4e876aee648e1475a574b4b089eb25b8470e33e0e"
+      }
+    ],
+    "compilerRoot": "/tmp/homarr-performance-compiler"
+  },
+  "runtime": {
+    "engine": "Node.js/V8",
+    "node": "v24.18.0",
+    "versions": {
+      "node": "24.18.0",
+      "acorn": "8.16.0",
+      "ada": "3.4.4",
+      "amaro": "1.1.9",
+      "ares": "1.34.6",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.2",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.69.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.7",
+      "simdjson": "4.6.4",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.1",
+      "tz": "2026b",
+      "undici": "7.28.0",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.50",
+      "zlib": "1.3.1-e00f703",
+      "zstd": "1.5.7"
+    },
+    "executable": "/home/habs/.local/share/mise/installs/node/24.18.0/bin/node",
+    "execArgv": [
+      "--expose-gc"
+    ],
+    "explicitGc": true,
+    "platform": "linux",
+    "arch": "x64",
+    "osRelease": "6.8.0-90-generic",
+    "hostname": "brainzilla",
+    "cpuModel": "13th Gen Intel(R) Core(TM) i5-13500",
+    "logicalCpus": 20,
+    "totalMemoryBytes": 67194388480,
+    "freeMemoryBytesAtStart": 43639795712
+  },
+  "methodology": {
+    "execution": "Serial cases; alternating before/after order per paired trial; process-wide CPU includes operation loop overhead",
+    "compilation": "Extracted source transpiled with recorded TypeScript compiler to ES2022/CommonJS and classic React JSX; no Next.js production build or React Compiler transform",
+    "summaries": "Median batch wall/CPU divided by batch iterations; raw paired samples retained",
+    "metrics": "Case-supplied measured numeric outputs from actual-source fixture operations",
+    "memory": "Heap/RSS process snapshots per batch, not allocation counts or peak/production memory; deltas can be negative and shared process state affects RSS",
+    "io": "No production latency claim. Case fixture descriptions must identify simulated I/O, clocks, dependency stubs and data scales"
+  },
+  "results": [
+    {
+      "id": "NA-001",
+      "title": "Normalize conversation metadata once for usage and request IDs",
+      "description": "Times actual extracted ConversationContext memo bodies and metadata declarations with immediate useMemo callbacks. No React commit, network, browser, or perceived-latency claim. Counts run separately from timing.",
+      "fixture": "Five message arrays: 6/20/120 messages with 1/4/8 steps and 0/3/12 sources per step, 9 messages with nonconsecutive duplicate request IDs, plus null/missing/malformed metadata. Duplicate IDs preserve first insertion order and last message overwrite; usage includes zero/invalid/absent token fields.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 50,
+      "metricUnits": {
+        "telemetryNormalizations": "calls",
+        "normalizedStepArrays": "arrays",
+        "normalizedStepObjects": "objects",
+        "sourceArraysAllocated": "arrays"
+      },
+      "metrics": {
+        "before": {
+          "telemetryNormalizations": 316,
+          "normalizedStepArrays": 280,
+          "normalizedStepObjects": 1930,
+          "sourceArraysAllocated": 4400
+        },
+        "after": {
+          "telemetryNormalizations": 158,
+          "normalizedStepArrays": 140,
+          "normalizedStepObjects": 965,
+          "sourceArraysAllocated": 2200
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 36.38800795999996,
+          "cpuMsPerOperation": 37.77712,
+          "heapUsedDeltaBytesPerBatch": 84868752,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 21.895685719999964,
+          "cpuMsPerOperation": 22.420180000000002,
+          "heapUsedDeltaBytesPerBatch": 42068456,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1883.2767259999982,
+          "cpuUserMs": 1919.784,
+          "cpuSystemMs": 1.938,
+          "heapUsedBeforeBytes": 35381808,
+          "heapUsedAfterBytes": 120208984,
+          "heapUsedDeltaBytes": 84827176,
+          "rssBeforeBytes": 329678848,
+          "rssAfterBytes": 330170368,
+          "rssDeltaBytes": 491520,
+          "heapUsedAfterGcBytes": 35058648,
+          "heapRetainedDeltaBytes": -323160
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1452.990339,
+          "cpuUserMs": 1451.886,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 35058304,
+          "heapUsedAfterBytes": 78860352,
+          "heapUsedDeltaBytes": 43802048,
+          "rssBeforeBytes": 329953280,
+          "rssAfterBytes": 329953280,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35050576,
+          "heapRetainedDeltaBytes": -7728
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1226.7285659999998,
+          "cpuUserMs": 1254.832,
+          "cpuSystemMs": 1.981,
+          "heapUsedBeforeBytes": 35050696,
+          "heapUsedAfterBytes": 77119152,
+          "heapUsedDeltaBytes": 42068456,
+          "rssBeforeBytes": 329953280,
+          "rssAfterBytes": 329953280,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35050920,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1947.630463999998,
+          "cpuUserMs": 2014.785,
+          "cpuSystemMs": 2.068,
+          "heapUsedBeforeBytes": 35051272,
+          "heapUsedAfterBytes": 119878720,
+          "heapUsedDeltaBytes": 84827448,
+          "rssBeforeBytes": 329953280,
+          "rssAfterBytes": 329953280,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35051848,
+          "heapRetainedDeltaBytes": 576
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1615.2840270000015,
+          "cpuUserMs": 1672.904,
+          "cpuSystemMs": 9.044,
+          "heapUsedBeforeBytes": 35051968,
+          "heapUsedAfterBytes": 119920720,
+          "heapUsedDeltaBytes": 84868752,
+          "rssBeforeBytes": 329953280,
+          "rssAfterBytes": 329953280,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35060040,
+          "heapRetainedDeltaBytes": 8072
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 895.3571549999979,
+          "cpuUserMs": 919.626,
+          "cpuSystemMs": 0.991,
+          "heapUsedBeforeBytes": 35060160,
+          "heapUsedAfterBytes": 77136384,
+          "heapUsedDeltaBytes": 42076224,
+          "rssBeforeBytes": 329953280,
+          "rssAfterBytes": 329953280,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35061512,
+          "heapRetainedDeltaBytes": 1352
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 769.1555320000007,
+          "cpuUserMs": 796.071,
+          "cpuSystemMs": 1.992,
+          "heapUsedBeforeBytes": 35061632,
+          "heapUsedAfterBytes": 77005568,
+          "heapUsedDeltaBytes": 41943936,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35061976,
+          "heapRetainedDeltaBytes": 344
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1490.4979850000018,
+          "cpuUserMs": 1557.839,
+          "cpuSystemMs": 3.1,
+          "heapUsedBeforeBytes": 35062096,
+          "heapUsedAfterBytes": 119846640,
+          "heapUsedDeltaBytes": 84784544,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35062800,
+          "heapRetainedDeltaBytes": 704
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 2606.302891000003,
+          "cpuUserMs": 2677.148,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 35062920,
+          "heapUsedAfterBytes": 120054488,
+          "heapUsedDeltaBytes": 84991568,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35063144,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1094.7842859999982,
+          "cpuUserMs": 1118.95,
+          "cpuSystemMs": 2.059,
+          "heapUsedBeforeBytes": 35063264,
+          "heapUsedAfterBytes": 77027624,
+          "heapUsedDeltaBytes": 41964360,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35063488,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1343.244419999999,
+          "cpuUserMs": 1368.078,
+          "cpuSystemMs": 2.015,
+          "heapUsedBeforeBytes": 35063608,
+          "heapUsedAfterBytes": 77624984,
+          "heapUsedDeltaBytes": 42561376,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35063832,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1856.8780579999984,
+          "cpuUserMs": 1924.245,
+          "cpuSystemMs": 1.993,
+          "heapUsedBeforeBytes": 35063952,
+          "heapUsedAfterBytes": 119975808,
+          "heapUsedDeltaBytes": 84911856,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35064176,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1610.274053000001,
+          "cpuUserMs": 1668.328,
+          "cpuSystemMs": 6.11,
+          "heapUsedBeforeBytes": 35064296,
+          "heapUsedAfterBytes": 119921688,
+          "heapUsedDeltaBytes": 84857392,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35064520,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 823.3686180000004,
+          "cpuUserMs": 850.958,
+          "cpuSystemMs": 0.964,
+          "heapUsedBeforeBytes": 35064640,
+          "heapUsedAfterBytes": 77654408,
+          "heapUsedDeltaBytes": 42589768,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35064864,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1051.3668249999973,
+          "cpuUserMs": 1080.462,
+          "cpuSystemMs": 1.012,
+          "heapUsedBeforeBytes": 35064984,
+          "heapUsedAfterBytes": 77073208,
+          "heapUsedDeltaBytes": 42008224,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35066064,
+          "heapRetainedDeltaBytes": 1080
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1632.1373160000003,
+          "cpuUserMs": 1694.251,
+          "cpuSystemMs": 2.025,
+          "heapUsedBeforeBytes": 35066184,
+          "heapUsedAfterBytes": 122236592,
+          "heapUsedDeltaBytes": 87170408,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35067264,
+          "heapRetainedDeltaBytes": 1080
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 50,
+          "wallMs": 1819.400397999998,
+          "cpuUserMs": 1888.856,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 35071864,
+          "heapUsedAfterBytes": 120007560,
+          "heapUsedDeltaBytes": 84935696,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35096176,
+          "heapRetainedDeltaBytes": 24312
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 50,
+          "wallMs": 1695.3425260000004,
+          "cpuUserMs": 1676.879,
+          "cpuSystemMs": 1.943,
+          "heapUsedBeforeBytes": 35096424,
+          "heapUsedAfterBytes": 76922552,
+          "heapUsedDeltaBytes": 41826128,
+          "rssBeforeBytes": 329572352,
+          "rssAfterBytes": 329572352,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 35097000,
+          "heapRetainedDeltaBytes": 576
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "e9354c8973f02464465304abef1fa2efa69a01e03d3bad10ee0f17c329aa32d0",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 27144,
+              "startLine": 1,
+              "endLine": 664,
+              "sha256": "e9354c8973f02464465304abef1fa2efa69a01e03d3bad10ee0f17c329aa32d0"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "70e89c153c98290a0d274ec99d9e38ba3a8d060e488f4e62c885a84cd54ef3d4",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 26356,
+              "startLine": 1,
+              "endLine": 654,
+              "sha256": "70e89c153c98290a0d274ec99d9e38ba3a8d060e488f4e62c885a84cd54ef3d4"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 20561,
+              "startLine": 1,
+              "endLine": 477,
+              "sha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 20843,
+              "startLine": 1,
+              "endLine": 483,
+              "sha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/common/src/object.ts",
+          "fileSha256": "99b969a659f7a959f257883b22f7d1e95f5fcd53aef32dea4eb6731c24f91921",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 583,
+              "startLine": 1,
+              "endLine": 18,
+              "sha256": "99b969a659f7a959f257883b22f7d1e95f5fcd53aef32dea4eb6731c24f91921"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/common/src/object.ts",
+          "fileSha256": "99b969a659f7a959f257883b22f7d1e95f5fcd53aef32dea4eb6731c24f91921",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 583,
+              "startLine": 1,
+              "endLine": 18,
+              "sha256": "99b969a659f7a959f257883b22f7d1e95f5fcd53aef32dea4eb6731c24f91921"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "packages/common/src/object.ts",
+          "fileSha256": "99b969a659f7a959f257883b22f7d1e95f5fcd53aef32dea4eb6731c24f91921",
+          "selector": "isRecord",
+          "spans": [
+            {
+              "start": 49,
+              "end": 198,
+              "startLine": 3,
+              "endLine": 4,
+              "sha256": "29794aad0fa9f0cfbf9300f1489beaf23710575725c095b66da5a0b6e0bdb37e"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "getFiniteNonNegativeNumber",
+          "spans": [
+            {
+              "start": 3339,
+              "end": 3482,
+              "startLine": 138,
+              "endLine": 139,
+              "sha256": "a3516011d252b6e4429b0db843a1a488b17a1d685ec22f30ef42eb5ac4274bdb"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "getWebSearchSources",
+          "spans": [
+            {
+              "start": 3484,
+              "end": 4212,
+              "startLine": 141,
+              "endLine": 154,
+              "sha256": "f239cfbf6a7be1048a65b0b9c65577adb9857420d5131944c3ce521056173ca8"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "getAssistantTelemetry",
+          "spans": [
+            {
+              "start": 5433,
+              "end": 14913,
+              "startLine": 183,
+              "endLine": 349,
+              "sha256": "9c7de4774959cca652c4d82dcbc17504e12ea7dc0b928a68c3c22de941b54a04"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "getAssistantUsage",
+          "spans": [
+            {
+              "start": 4214,
+              "end": 5431,
+              "startLine": 156,
+              "endLine": 181,
+              "sha256": "2039a0410fa4874cbdc88b99093016f822ded3c1b47db3c58458cc5071c159bf"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "sumReportedStepMetric",
+          "spans": [
+            {
+              "start": 14915,
+              "end": 15271,
+              "startLine": 351,
+              "endLine": 360,
+              "sha256": "5b282cbb540b6b6e7462a04a516dc477190d3c309fd0b65ceee914ff98706595"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "314dfc4069fda2a9d0435da9bdb25025968b8f8125f7d4d3a1ec46338228b61e",
+          "selector": "getAssistantConversationUsage",
+          "spans": [
+            {
+              "start": 15632,
+              "end": 18574,
+              "startLine": 369,
+              "endLine": 425,
+              "sha256": "254326cf8178cce86b2bcadbbd9cef462d256cabb25db4e4b935153f90fe0b61"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "e9354c8973f02464465304abef1fa2efa69a01e03d3bad10ee0f17c329aa32d0",
+          "selector": {
+            "kind": "span",
+            "start": "  const metadata = useMemo(",
+            "end": "  const breakdown = useMemo("
+          },
+          "spans": [
+            {
+              "start": 20421,
+              "end": 20892,
+              "startLine": 486,
+              "endLine": 497,
+              "sha256": "2bcd8e79254f758cc6c5da4676fb7a952841d19d5d82e7b07ce39f7923908d4b"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "packages/common/src/object.ts",
+          "fileSha256": "99b969a659f7a959f257883b22f7d1e95f5fcd53aef32dea4eb6731c24f91921",
+          "selector": "isRecord",
+          "spans": [
+            {
+              "start": 49,
+              "end": 198,
+              "startLine": 3,
+              "endLine": 4,
+              "sha256": "29794aad0fa9f0cfbf9300f1489beaf23710575725c095b66da5a0b6e0bdb37e"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "getFiniteNonNegativeNumber",
+          "spans": [
+            {
+              "start": 3339,
+              "end": 3482,
+              "startLine": 138,
+              "endLine": 139,
+              "sha256": "a3516011d252b6e4429b0db843a1a488b17a1d685ec22f30ef42eb5ac4274bdb"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "getWebSearchSources",
+          "spans": [
+            {
+              "start": 3484,
+              "end": 4212,
+              "startLine": 141,
+              "endLine": 154,
+              "sha256": "f239cfbf6a7be1048a65b0b9c65577adb9857420d5131944c3ce521056173ca8"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "getAssistantTelemetry",
+          "spans": [
+            {
+              "start": 5433,
+              "end": 14913,
+              "startLine": 183,
+              "endLine": 349,
+              "sha256": "9c7de4774959cca652c4d82dcbc17504e12ea7dc0b928a68c3c22de941b54a04"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "getAssistantUsage",
+          "spans": [
+            {
+              "start": 4214,
+              "end": 5431,
+              "startLine": 156,
+              "endLine": 181,
+              "sha256": "2039a0410fa4874cbdc88b99093016f822ded3c1b47db3c58458cc5071c159bf"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "sumReportedStepMetric",
+          "spans": [
+            {
+              "start": 14915,
+              "end": 15271,
+              "startLine": 351,
+              "endLine": 360,
+              "sha256": "5b282cbb540b6b6e7462a04a516dc477190d3c309fd0b65ceee914ff98706595"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-message-metadata.ts",
+          "fileSha256": "72410d58eb1e77ffa88c07b7b61364e87016bd5af7836e3e780e6b99c2daedc7",
+          "selector": "getAssistantConversationUsage",
+          "spans": [
+            {
+              "start": 15727,
+              "end": 18856,
+              "startLine": 370,
+              "endLine": 431,
+              "sha256": "787699463c6cd3a1acc1bd5ee5571161b96d9222fb610d0949de221d679de333"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "70e89c153c98290a0d274ec99d9e38ba3a8d060e488f4e62c885a84cd54ef3d4",
+          "selector": {
+            "kind": "span",
+            "start": "  const { usage, messageIdByRequestId } = useMemo(",
+            "end": "  const breakdown = useMemo("
+          },
+          "spans": [
+            {
+              "start": 19613,
+              "end": 20104,
+              "startLine": 477,
+              "endLine": 487,
+              "sha256": "533b19b30c54c4b2fd197d2291025fe3f9bd758470476ddcba77f54ebd2d6dd4"
+            }
+          ]
+        }
+      ],
+      "findingId": "NA-001",
+      "lane": "assistant",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/assistant.mts",
+      "caseSha256": "dd78f9815703996fa34530c009bbee09dd6600f3fbec97bd131da1c0596f2477"
+    },
+    {
+      "id": "MEGA-mega_contexts-01",
+      "title": "Compute each complete provider metric once per turn",
+      "description": "Times the actual ConversationTurn span from generationById through usage/telemetry construction. Collapsed cached data remains supplied because it contributes to the summary; no JSX/browser commit is measured. Array traversal/allocation instrumentation runs separately.",
+      "fixture": "Nine turn states with 0/1/4/8/32 steps: complete, missing per-step metrics, complete zero totals, pending/no query data, and cached complete provider generations after collapse. Actual step merge and all-step metric reducers are executed.",
+      "verification": "passed",
+      "semanticAssertions": true,
+      "compilerVersion": "5.9.3",
+      "timing": true,
+      "iterations": 300,
+      "metricUnits": {
+        "mapArraysAllocated": "arrays",
+        "mapVisits": "step visits",
+        "someVisits": "step visits",
+        "reduceVisits": "step visits"
+      },
+      "metrics": {
+        "before": {
+          "mapArraysAllocated": 115,
+          "mapVisits": 948,
+          "someVisits": 882,
+          "reduceVisits": 866
+        },
+        "after": {
+          "mapArraysAllocated": 75,
+          "mapVisits": 614,
+          "someVisits": 548,
+          "reduceVisits": 532
+        }
+      },
+      "summaries": {
+        "before": {
+          "wallMsPerOperation": 0.07853828000001764,
+          "cpuMsPerOperation": 0.13010333333333332,
+          "heapUsedDeltaBytesPerBatch": 25129744,
+          "rssDeltaBytesPerBatch": 0
+        },
+        "after": {
+          "wallMsPerOperation": 0.06210745999999441,
+          "cpuMsPerOperation": 0.12585333333333334,
+          "heapUsedDeltaBytesPerBatch": 19749480,
+          "rssDeltaBytesPerBatch": 0
+        }
+      },
+      "samples": [
+        {
+          "trial": 0,
+          "side": "before",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 31.231423000004725,
+          "cpuUserMs": 68.021,
+          "cpuSystemMs": 1.017,
+          "heapUsedBeforeBytes": 33318736,
+          "heapUsedAfterBytes": 58570696,
+          "heapUsedDeltaBytes": 25251960,
+          "rssBeforeBytes": 329900032,
+          "rssAfterBytes": 329900032,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33296744,
+          "heapRetainedDeltaBytes": -21992
+        },
+        {
+          "trial": 0,
+          "side": "after",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 33.96741999999358,
+          "cpuUserMs": 55.595,
+          "cpuSystemMs": 2.01,
+          "heapUsedBeforeBytes": 33297096,
+          "heapUsedAfterBytes": 53145896,
+          "heapUsedDeltaBytes": 19848800,
+          "rssBeforeBytes": 329900032,
+          "rssAfterBytes": 331374592,
+          "rssDeltaBytes": 1474560,
+          "heapUsedAfterGcBytes": 33300448,
+          "heapRetainedDeltaBytes": 3352
+        },
+        {
+          "trial": 1,
+          "side": "after",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 26.14861799999926,
+          "cpuUserMs": 31.525,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33367536,
+          "heapUsedAfterBytes": 53117016,
+          "heapUsedDeltaBytes": 19749480,
+          "rssBeforeBytes": 331538432,
+          "rssAfterBytes": 331538432,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33337400,
+          "heapRetainedDeltaBytes": -30136
+        },
+        {
+          "trial": 1,
+          "side": "before",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 20.784132999993744,
+          "cpuUserMs": 36.663,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33337520,
+          "heapUsedAfterBytes": 58600424,
+          "heapUsedDeltaBytes": 25262904,
+          "rssBeforeBytes": 331538432,
+          "rssAfterBytes": 331538432,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33305368,
+          "heapRetainedDeltaBytes": -32152
+        },
+        {
+          "trial": 2,
+          "side": "before",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 14.970425999999861,
+          "cpuUserMs": 27.467,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33304208,
+          "heapUsedAfterBytes": 58428656,
+          "heapUsedDeltaBytes": 25124448,
+          "rssBeforeBytes": 331288576,
+          "rssAfterBytes": 331288576,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33304960,
+          "heapRetainedDeltaBytes": 752
+        },
+        {
+          "trial": 2,
+          "side": "after",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 12.536452000000281,
+          "cpuUserMs": 19.241,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33305080,
+          "heapUsedAfterBytes": 53052168,
+          "heapUsedDeltaBytes": 19747088,
+          "rssBeforeBytes": 331288576,
+          "rssAfterBytes": 331288576,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33305304,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 3,
+          "side": "after",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 17.12840000000142,
+          "cpuUserMs": 37.756,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33305424,
+          "heapUsedAfterBytes": 53209144,
+          "heapUsedDeltaBytes": 19903720,
+          "rssBeforeBytes": 331288576,
+          "rssAfterBytes": 331288576,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33307328,
+          "heapRetainedDeltaBytes": 1904
+        },
+        {
+          "trial": 3,
+          "side": "before",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 26.127658000004885,
+          "cpuUserMs": 38.019,
+          "cpuSystemMs": 1.012,
+          "heapUsedBeforeBytes": 33307448,
+          "heapUsedAfterBytes": 58422768,
+          "heapUsedDeltaBytes": 25115320,
+          "rssBeforeBytes": 331288576,
+          "rssAfterBytes": 331288576,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33307672,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "before",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 23.561484000005294,
+          "cpuUserMs": 41.221,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33307792,
+          "heapUsedAfterBytes": 58437536,
+          "heapUsedDeltaBytes": 25129744,
+          "rssBeforeBytes": 331288576,
+          "rssAfterBytes": 331288576,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33308016,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 4,
+          "side": "after",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 19.77622899999551,
+          "cpuUserMs": 44.714,
+          "cpuSystemMs": 2.988,
+          "heapUsedBeforeBytes": 33308136,
+          "heapUsedAfterBytes": 53055464,
+          "heapUsedDeltaBytes": 19747328,
+          "rssBeforeBytes": 331288576,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 1802240,
+          "heapUsedAfterGcBytes": 33308408,
+          "heapRetainedDeltaBytes": 272
+        },
+        {
+          "trial": 5,
+          "side": "after",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 18.632237999998324,
+          "cpuUserMs": 26.742,
+          "cpuSystemMs": 0.01,
+          "heapUsedBeforeBytes": 33374200,
+          "heapUsedAfterBytes": 53112968,
+          "heapUsedDeltaBytes": 19738768,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33344608,
+          "heapRetainedDeltaBytes": -29592
+        },
+        {
+          "trial": 5,
+          "side": "before",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 41.81355199999962,
+          "cpuUserMs": 53.587,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33344728,
+          "heapUsedAfterBytes": 58591056,
+          "heapUsedDeltaBytes": 25246328,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33313680,
+          "heapRetainedDeltaBytes": -31048
+        },
+        {
+          "trial": 6,
+          "side": "before",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 23.925901999995403,
+          "cpuUserMs": 39.154,
+          "cpuSystemMs": 0.024,
+          "heapUsedBeforeBytes": 33313800,
+          "heapUsedAfterBytes": 58435976,
+          "heapUsedDeltaBytes": 25122176,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33314024,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 6,
+          "side": "after",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 23.517675999995845,
+          "cpuUserMs": 40.235,
+          "cpuSystemMs": 0.001,
+          "heapUsedBeforeBytes": 33314144,
+          "heapUsedAfterBytes": 53060616,
+          "heapUsedDeltaBytes": 19746472,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33314368,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 7,
+          "side": "after",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 15.92580199999793,
+          "cpuUserMs": 26.485,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33314488,
+          "heapUsedAfterBytes": 53183096,
+          "heapUsedDeltaBytes": 19868608,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33315528,
+          "heapRetainedDeltaBytes": 1040
+        },
+        {
+          "trial": 7,
+          "side": "before",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 15.730185000000347,
+          "cpuUserMs": 30.554,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33315648,
+          "heapUsedAfterBytes": 58444512,
+          "heapUsedDeltaBytes": 25128864,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33315872,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "before",
+          "order": 0,
+          "iterations": 300,
+          "wallMs": 17.965156999998726,
+          "cpuUserMs": 33.816,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33315992,
+          "heapUsedAfterBytes": 58446904,
+          "heapUsedDeltaBytes": 25130912,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33316216,
+          "heapRetainedDeltaBytes": 224
+        },
+        {
+          "trial": 8,
+          "side": "after",
+          "order": 1,
+          "iterations": 300,
+          "wallMs": 17.012761999998474,
+          "cpuUserMs": 41.705,
+          "cpuSystemMs": 0,
+          "heapUsedBeforeBytes": 33316336,
+          "heapUsedAfterBytes": 53069472,
+          "heapUsedDeltaBytes": 19753136,
+          "rssBeforeBytes": 333090816,
+          "rssAfterBytes": 333090816,
+          "rssDeltaBytes": 0,
+          "heapUsedAfterGcBytes": 33317184,
+          "heapRetainedDeltaBytes": 848
+        }
+      ],
+      "source": [
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "e9354c8973f02464465304abef1fa2efa69a01e03d3bad10ee0f17c329aa32d0",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 27144,
+              "startLine": 1,
+              "endLine": 664,
+              "sha256": "e9354c8973f02464465304abef1fa2efa69a01e03d3bad10ee0f17c329aa32d0"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "70e89c153c98290a0d274ec99d9e38ba3a8d060e488f4e62c885a84cd54ef3d4",
+          "selector": "file",
+          "spans": [
+            {
+              "start": 0,
+              "end": 26356,
+              "startLine": 1,
+              "endLine": 654,
+              "sha256": "70e89c153c98290a0d274ec99d9e38ba3a8d060e488f4e62c885a84cd54ef3d4"
+            }
+          ]
+        },
+        {
+          "side": "before",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "e9354c8973f02464465304abef1fa2efa69a01e03d3bad10ee0f17c329aa32d0",
+          "selector": {
+            "kind": "span",
+            "start": "  const generationById = new Map(",
+            "end": "  const displayedThroughput = telemetry.providerOutputTokensPerSecond"
+          },
+          "spans": [
+            {
+              "start": 4583,
+              "end": 8524,
+              "startLine": 145,
+              "endLine": 223,
+              "sha256": "c292aba94e89cbf99cc06ede0a848fd4bcaad3241f4fd2465d592f0fdf1c0092"
+            }
+          ]
+        },
+        {
+          "side": "after",
+          "file": "apps/nextjs/src/components/assistant/assistant-conversation-context.tsx",
+          "fileSha256": "70e89c153c98290a0d274ec99d9e38ba3a8d060e488f4e62c885a84cd54ef3d4",
+          "selector": {
+            "kind": "span",
+            "start": "  const generationById = new Map(",
+            "end": "  const displayedThroughput = telemetry.providerOutputTokensPerSecond"
+          },
+          "spans": [
+            {
+              "start": 4583,
+              "end": 7716,
+              "startLine": 145,
+              "endLine": 214,
+              "sha256": "8f42afe388bd70931e101d61546cf3ea46b588a521a50633401e74d2ebfd4e9e"
+            }
+          ]
+        }
+      ],
+      "findingId": "MEGA-mega_contexts-01",
+      "lane": "assistant",
+      "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/assistant.mts",
+      "caseSha256": "dd78f9815703996fa34530c009bbee09dd6600f3fbec97bd131da1c0596f2477"
+    }
+  ],
+  "failures": []
+}

@@ -56,7 +56,14 @@ function ResponseTreeNode({
       <Text size="xs" c="dimmed" truncate style={{ flex: 1 }}>
         {responseNode.displayValue}
       </Text>
-      <Group gap={2} wrap="nowrap" className="response-tree-actions">
+      <Group
+        gap={2}
+        wrap="nowrap"
+        className="response-tree-actions"
+        onKeyDown={(event) => {
+          if (event.key === " ") event.stopPropagation();
+        }}
+      >
         <CopyButton value={responseNode.path}>
           {({ copied, copy }) => (
             <ActionIcon
@@ -64,7 +71,7 @@ function ResponseTreeNode({
               variant="subtle"
               color={copied ? "green" : "gray"}
               size={24}
-              aria-label={copied ? labels.pathCopied : labels.copyPath}
+              aria-label={`${copied ? labels.pathCopied : labels.copyPath}: ${responseNode.path}`}
               onClick={(event) => {
                 event.stopPropagation();
                 copy();
@@ -79,7 +86,7 @@ function ResponseTreeNode({
             type="button"
             variant="subtle"
             size={24}
-            aria-label={labels.insertPath}
+            aria-label={`${labels.insertPath}: ${responseNode.path}`}
             onClick={(event) => {
               event.stopPropagation();
               onInsertDataPath(responseNode.path);

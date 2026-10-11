@@ -34,24 +34,19 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 
 const removeEmptyTranslations = (translations: Record<string, unknown>): Record<string, unknown> => {
-  return Object.entries(translations).reduce(
-    (acc, [key, value]) => {
-      if (typeof value !== "string") {
-        return {
-          ...acc,
-          [key]: removeEmptyTranslations(value as Record<string, unknown>),
-        };
-      }
-
-      if (value.trim() === "") {
-        return acc;
-      }
-
-      return {
-        ...acc,
-        [key]: value,
-      };
-    },
-    {} as Record<string, unknown>,
-  );
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(translations)) {
+    let translation = value;
+    if (typeof value !== "string") {
+      translation = removeEmptyTranslations(value as Record<string, unknown>);
+    } else if (value.trim() === "") {
+      continue;
+    }
+    if (key === "__proto__") {
+      Object.defineProperty(result, key, { value: translation, enumerable: true, writable: true, configurable: true });
+    } else {
+      result[key] = translation;
+    }
+  }
+  return result;
 };

@@ -36,11 +36,9 @@ const emptyProtocol: TraefikProtocolSummary = {
   middlewares: emptySummary,
 };
 
-const emptyDashboard: TraefikDashboardData = {
-  version: null,
+const emptyDashboard = {
   entryPoints: [],
-  resources: [],
-  failedEndpoints: [],
+  failedEndpointCount: 0,
   http: emptyProtocol,
   tcp: emptyProtocol,
   udp: {
@@ -116,12 +114,12 @@ function TraefikWidgetContent({
     item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],
   );
 
-  const combined = successfulData.reduce<TraefikDashboardData>(
+  const combined = successfulData.reduce<
+    Pick<TraefikDashboardData, "entryPoints" | "http" | "tcp" | "udp"> & { failedEndpointCount: number }
+  >(
     (acc, item) => ({
-      version: acc.version ?? item.dashboard.version,
       entryPoints: [...acc.entryPoints, ...item.dashboard.entryPoints],
-      resources: [...acc.resources, ...item.dashboard.resources],
-      failedEndpoints: [...acc.failedEndpoints, ...item.dashboard.failedEndpoints],
+      failedEndpointCount: acc.failedEndpointCount + item.dashboard.failedEndpoints.length,
       http: combineProtocol(acc.http, item.dashboard.http),
       tcp: combineProtocol(acc.tcp, item.dashboard.tcp),
       udp: {
@@ -138,7 +136,7 @@ function TraefikWidgetContent({
     getProtocolErrors(combined.http) +
     getProtocolErrors(combined.tcp) +
     getUdpErrors(combined.udp) +
-    combined.failedEndpoints.length;
+    combined.failedEndpointCount;
   const totalWarnings =
     getProtocolWarnings(combined.http) + getProtocolWarnings(combined.tcp) + getUdpWarnings(combined.udp);
   const protocolKeys = getTraefikProtocolKeys(options, isAdvanced);

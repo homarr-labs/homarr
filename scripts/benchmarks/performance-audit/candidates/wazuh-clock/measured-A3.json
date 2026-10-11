@@ -1,0 +1,633 @@
+{
+  "id": "A3",
+  "title": "Mounted Wazuh relative-time rows",
+  "fixture": "Actual WazuhRelativeTime + real ReactDOM hooks in jsdom, 1/10/100 rows in two widget containers across two 30-second steps and visibility resume, SSR hydration, timestamp replacement and partial/full unmount. Mantine display primitives use host stubs; timers use a deterministic fake clock.",
+  "verification": "passed",
+  "semanticAssertions": true,
+  "compilerVersion": "5.9.3",
+  "timing": true,
+  "iterations": 2,
+  "metricUnits": {},
+  "metrics": {
+    "before": {
+      "tickRenders_1Rows": 2,
+      "labelCalculations_1Rows": 2,
+      "peakTimers_1Rows": 1,
+      "callbacks_1Rows": 1,
+      "visibilityListeners_1Rows": 1,
+      "parentRenders_1Rows": 1,
+      "tickRenders_10Rows": 20,
+      "labelCalculations_10Rows": 20,
+      "peakTimers_10Rows": 10,
+      "callbacks_10Rows": 10,
+      "visibilityListeners_10Rows": 10,
+      "parentRenders_10Rows": 1,
+      "tickRenders_100Rows": 200,
+      "labelCalculations_100Rows": 200,
+      "peakTimers_100Rows": 100,
+      "callbacks_100Rows": 100,
+      "visibilityListeners_100Rows": 100,
+      "parentRenders_100Rows": 1
+    },
+    "after": {
+      "tickRenders_1Rows": 2,
+      "labelCalculations_1Rows": 8,
+      "peakTimers_1Rows": 1,
+      "callbacks_1Rows": 1,
+      "visibilityListeners_1Rows": 1,
+      "parentRenders_1Rows": 1,
+      "tickRenders_10Rows": 11,
+      "labelCalculations_10Rows": 53,
+      "peakTimers_10Rows": 1,
+      "callbacks_10Rows": 1,
+      "visibilityListeners_10Rows": 1,
+      "parentRenders_10Rows": 1,
+      "tickRenders_100Rows": 25,
+      "labelCalculations_100Rows": 275,
+      "peakTimers_100Rows": 1,
+      "callbacks_100Rows": 1,
+      "visibilityListeners_100Rows": 1,
+      "parentRenders_100Rows": 1
+    }
+  },
+  "summaries": {
+    "before": {
+      "wallMsPerOperation": 128.84567500000412,
+      "cpuMsPerOperation": 193.028,
+      "heapUsedDeltaBytesPerBatch": 53258784,
+      "rssDeltaBytesPerBatch": 2457600
+    },
+    "after": {
+      "wallMsPerOperation": 134.88384100000258,
+      "cpuMsPerOperation": 205.05249999999998,
+      "heapUsedDeltaBytesPerBatch": 50030352,
+      "rssDeltaBytesPerBatch": 2621440
+    }
+  },
+  "samples": [
+    {
+      "trial": 0,
+      "side": "before",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 184.63381199998548,
+      "cpuUserMs": 306.7,
+      "cpuSystemMs": 1.098,
+      "heapUsedBeforeBytes": 350960680,
+      "heapUsedAfterBytes": 404366872,
+      "heapUsedDeltaBytes": 53406192,
+      "rssBeforeBytes": 684175360,
+      "rssAfterBytes": 685322240,
+      "rssDeltaBytes": 1146880,
+      "heapUsedAfterGcBytes": 359450696,
+      "heapRetainedDeltaBytes": 8490016
+    },
+    {
+      "trial": 0,
+      "side": "after",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 99.0097029999888,
+      "cpuUserMs": 211.412,
+      "cpuSystemMs": 0,
+      "heapUsedBeforeBytes": 359294184,
+      "heapUsedAfterBytes": 406188728,
+      "heapUsedDeltaBytes": 46894544,
+      "rssBeforeBytes": 686948352,
+      "rssAfterBytes": 688586752,
+      "rssDeltaBytes": 1638400,
+      "heapUsedAfterGcBytes": 367798784,
+      "heapRetainedDeltaBytes": 8504600
+    },
+    {
+      "trial": 1,
+      "side": "after",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 180.02138099999866,
+      "cpuUserMs": 305.048,
+      "cpuSystemMs": 2.037,
+      "heapUsedBeforeBytes": 367647872,
+      "heapUsedAfterBytes": 418141984,
+      "heapUsedDeltaBytes": 50494112,
+      "rssBeforeBytes": 691044352,
+      "rssAfterBytes": 692682752,
+      "rssDeltaBytes": 1638400,
+      "heapUsedAfterGcBytes": 376240032,
+      "heapRetainedDeltaBytes": 8592160
+    },
+    {
+      "trial": 1,
+      "side": "before",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 257.69135000000824,
+      "cpuUserMs": 360.879,
+      "cpuSystemMs": 2.009,
+      "heapUsedBeforeBytes": 376098984,
+      "heapUsedAfterBytes": 429357768,
+      "heapUsedDeltaBytes": 53258784,
+      "rssBeforeBytes": 698089472,
+      "rssAfterBytes": 699727872,
+      "rssDeltaBytes": 1638400,
+      "heapUsedAfterGcBytes": 385015864,
+      "heapRetainedDeltaBytes": 8916880
+    },
+    {
+      "trial": 2,
+      "side": "before",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 250.04867000001832,
+      "cpuUserMs": 375.347,
+      "cpuSystemMs": 4.037,
+      "heapUsedBeforeBytes": 384901352,
+      "heapUsedAfterBytes": 436757624,
+      "heapUsedDeltaBytes": 51856272,
+      "rssBeforeBytes": 705298432,
+      "rssAfterBytes": 707592192,
+      "rssDeltaBytes": 2293760,
+      "heapUsedAfterGcBytes": 393880832,
+      "heapRetainedDeltaBytes": 8979480
+    },
+    {
+      "trial": 2,
+      "side": "after",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 340.5600459999987,
+      "cpuUserMs": 437.747,
+      "cpuSystemMs": 10.932,
+      "heapUsedBeforeBytes": 393752000,
+      "heapUsedAfterBytes": 443782352,
+      "heapUsedDeltaBytes": 50030352,
+      "rssBeforeBytes": 713490432,
+      "rssAfterBytes": 715948032,
+      "rssDeltaBytes": 2457600,
+      "heapUsedAfterGcBytes": 402307896,
+      "heapRetainedDeltaBytes": 8555896
+    },
+    {
+      "trial": 3,
+      "side": "after",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 265.6546180000005,
+      "cpuUserMs": 396.68,
+      "cpuSystemMs": 1.991,
+      "heapUsedBeforeBytes": 402130152,
+      "heapUsedAfterBytes": 452193912,
+      "heapUsedDeltaBytes": 50063760,
+      "rssBeforeBytes": 721190912,
+      "rssAfterBytes": 723812352,
+      "rssDeltaBytes": 2621440,
+      "heapUsedAfterGcBytes": 410687816,
+      "heapRetainedDeltaBytes": 8557664
+    },
+    {
+      "trial": 3,
+      "side": "before",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 344.96671599999536,
+      "cpuUserMs": 454.951,
+      "cpuSystemMs": 5.002,
+      "heapUsedBeforeBytes": 410580600,
+      "heapUsedAfterBytes": 463737392,
+      "heapUsedDeltaBytes": 53156792,
+      "rssBeforeBytes": 729055232,
+      "rssAfterBytes": 731512832,
+      "rssDeltaBytes": 2457600,
+      "heapUsedAfterGcBytes": 419606024,
+      "heapRetainedDeltaBytes": 9025424
+    },
+    {
+      "trial": 4,
+      "side": "before",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 369.9855739999912,
+      "cpuUserMs": 510.732,
+      "cpuSystemMs": 4.98,
+      "heapUsedBeforeBytes": 419511720,
+      "heapUsedAfterBytes": 473464056,
+      "heapUsedDeltaBytes": 53952336,
+      "rssBeforeBytes": 737247232,
+      "rssAfterBytes": 740032512,
+      "rssDeltaBytes": 2785280,
+      "heapUsedAfterGcBytes": 428546624,
+      "heapRetainedDeltaBytes": 9034904
+    },
+    {
+      "trial": 4,
+      "side": "after",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 269.76768200000515,
+      "cpuUserMs": 390.338,
+      "cpuSystemMs": 1.996,
+      "heapUsedBeforeBytes": 428459144,
+      "heapUsedAfterBytes": 477431864,
+      "heapUsedDeltaBytes": 48972720,
+      "rssBeforeBytes": 745766912,
+      "rssAfterBytes": 748552192,
+      "rssDeltaBytes": 2785280,
+      "heapUsedAfterGcBytes": 436948856,
+      "heapRetainedDeltaBytes": 8489712
+    },
+    {
+      "trial": 5,
+      "side": "after",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 324.21974000000046,
+      "cpuUserMs": 439.292,
+      "cpuSystemMs": 2.973,
+      "heapUsedBeforeBytes": 436838136,
+      "heapUsedAfterBytes": 487309792,
+      "heapUsedDeltaBytes": 50471656,
+      "rssBeforeBytes": 753958912,
+      "rssAfterBytes": 756416512,
+      "rssDeltaBytes": 2457600,
+      "heapUsedAfterGcBytes": 445405864,
+      "heapRetainedDeltaBytes": 8567728
+    },
+    {
+      "trial": 5,
+      "side": "before",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 233.10076500001014,
+      "cpuUserMs": 385.998,
+      "cpuSystemMs": 0.058,
+      "heapUsedBeforeBytes": 445228264,
+      "heapUsedAfterBytes": 498550176,
+      "heapUsedDeltaBytes": 53321912,
+      "rssBeforeBytes": 761495552,
+      "rssAfterBytes": 764116992,
+      "rssDeltaBytes": 2621440,
+      "heapUsedAfterGcBytes": 454203840,
+      "heapRetainedDeltaBytes": 8975576
+    },
+    {
+      "trial": 6,
+      "side": "before",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 209.43981000001077,
+      "cpuUserMs": 341.374,
+      "cpuSystemMs": 1.988,
+      "heapUsedBeforeBytes": 454085152,
+      "heapUsedAfterBytes": 507024872,
+      "heapUsedDeltaBytes": 52939720,
+      "rssBeforeBytes": 769523712,
+      "rssAfterBytes": 771981312,
+      "rssDeltaBytes": 2457600,
+      "heapUsedAfterGcBytes": 463060856,
+      "heapRetainedDeltaBytes": 8975704
+    },
+    {
+      "trial": 6,
+      "side": "after",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 277.08154700000887,
+      "cpuUserMs": 408.102,
+      "cpuSystemMs": 2.003,
+      "heapUsedBeforeBytes": 462917704,
+      "heapUsedAfterBytes": 512978880,
+      "heapUsedDeltaBytes": 50061176,
+      "rssBeforeBytes": 777715712,
+      "rssAfterBytes": 780664832,
+      "rssDeltaBytes": 2949120,
+      "heapUsedAfterGcBytes": 471440744,
+      "heapRetainedDeltaBytes": 8523040
+    },
+    {
+      "trial": 7,
+      "side": "after",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 284.33529499999713,
+      "cpuUserMs": 446.054,
+      "cpuSystemMs": 3.965,
+      "heapUsedBeforeBytes": 471322776,
+      "heapUsedAfterBytes": 520919464,
+      "heapUsedDeltaBytes": 49596688,
+      "rssBeforeBytes": 785416192,
+      "rssAfterBytes": 788037632,
+      "rssDeltaBytes": 2621440,
+      "heapUsedAfterGcBytes": 479837176,
+      "heapRetainedDeltaBytes": 8514400
+    },
+    {
+      "trial": 7,
+      "side": "before",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 346.79244600000675,
+      "cpuUserMs": 478.614,
+      "cpuSystemMs": 4.031,
+      "heapUsedBeforeBytes": 479770648,
+      "heapUsedAfterBytes": 533013880,
+      "heapUsedDeltaBytes": 53243232,
+      "rssBeforeBytes": 793280512,
+      "rssAfterBytes": 795738112,
+      "rssDeltaBytes": 2457600,
+      "heapUsedAfterGcBytes": 488768736,
+      "heapRetainedDeltaBytes": 8998088
+    },
+    {
+      "trial": 8,
+      "side": "before",
+      "order": 0,
+      "iterations": 2,
+      "wallMs": 346.1978560000134,
+      "cpuUserMs": 524.144,
+      "cpuSystemMs": 3.985,
+      "heapUsedBeforeBytes": 488596800,
+      "heapUsedAfterBytes": 541993800,
+      "heapUsedDeltaBytes": 53397000,
+      "rssBeforeBytes": 801472512,
+      "rssAfterBytes": 804257792,
+      "rssDeltaBytes": 2785280,
+      "heapUsedAfterGcBytes": 497563120,
+      "heapRetainedDeltaBytes": 8966320
+    },
+    {
+      "trial": 8,
+      "side": "after",
+      "order": 1,
+      "iterations": 2,
+      "wallMs": 263.22495800000615,
+      "cpuUserMs": 419.565,
+      "cpuSystemMs": 3.978,
+      "heapUsedBeforeBytes": 497416536,
+      "heapUsedAfterBytes": 547099840,
+      "heapUsedDeltaBytes": 49683304,
+      "rssBeforeBytes": 810319872,
+      "rssAfterBytes": 812941312,
+      "rssDeltaBytes": 2621440,
+      "heapUsedAfterGcBytes": 505946640,
+      "heapRetainedDeltaBytes": 8530104
+    }
+  ],
+  "source": [
+    {
+      "side": "before",
+      "file": "packages/widgets/src/wazuh/_shared/frame.tsx",
+      "fileSha256": "6260357b99b4ef4df8214b6f846eb5c91c8f08d0530843fc82f95671fb8fa462",
+      "selector": "file",
+      "spans": [
+        {
+          "start": 0,
+          "end": 5089,
+          "startLine": 1,
+          "endLine": 183,
+          "sha256": "6260357b99b4ef4df8214b6f846eb5c91c8f08d0530843fc82f95671fb8fa462"
+        }
+      ]
+    },
+    {
+      "side": "after",
+      "file": "packages/widgets/src/wazuh/_shared/frame.tsx",
+      "fileSha256": "75791224a695bb6dd610ceb72b5ede1c4e2aa4f3d7f2c336c4b67b08eb06829d",
+      "selector": "file",
+      "spans": [
+        {
+          "start": 0,
+          "end": 5020,
+          "startLine": 1,
+          "endLine": 180,
+          "sha256": "75791224a695bb6dd610ceb72b5ede1c4e2aa4f3d7f2c336c4b67b08eb06829d"
+        }
+      ]
+    },
+    {
+      "side": "before",
+      "file": "packages/widgets/src/common/use-widget-now.ts",
+      "fileSha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db",
+      "selector": "file",
+      "spans": [
+        {
+          "start": 0,
+          "end": 1712,
+          "startLine": 1,
+          "endLine": 54,
+          "sha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db"
+        }
+      ]
+    },
+    {
+      "side": "after",
+      "file": "packages/widgets/src/common/use-widget-now.ts",
+      "fileSha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db",
+      "selector": "file",
+      "spans": [
+        {
+          "start": 0,
+          "end": 1712,
+          "startLine": 1,
+          "endLine": 54,
+          "sha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db"
+        }
+      ]
+    },
+    {
+      "side": "after",
+      "file": "packages/widgets/src/common/use-row-time.ts",
+      "fileSha256": "92a0efd7e7ea0fe4df5e0d986981c5de5417ddcee4cb42c4e752620a1c9ca3f4",
+      "selector": "file",
+      "spans": [
+        {
+          "start": 0,
+          "end": 1331,
+          "startLine": 1,
+          "endLine": 45,
+          "sha256": "92a0efd7e7ea0fe4df5e0d986981c5de5417ddcee4cb42c4e752620a1c9ca3f4"
+        }
+      ]
+    },
+    {
+      "side": "before",
+      "file": "packages/widgets/src/common/use-widget-now.ts",
+      "fileSha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db",
+      "selector": [
+        "minimumDelayMs",
+        "getNextWidgetTickDelay"
+      ],
+      "spans": [
+        {
+          "start": 147,
+          "end": 173,
+          "startLine": 7,
+          "endLine": 7,
+          "sha256": "d2f64d5b566d172214d1bd86f008d31bc56829cde6933bb8c569f47e6be31cd1"
+        },
+        {
+          "start": 175,
+          "end": 666,
+          "startLine": 9,
+          "endLine": 20,
+          "sha256": "044a0b61096742c692308f5bd140966e7357cb9e2cc5e655ded11d5591c37548"
+        }
+      ]
+    },
+    {
+      "side": "before",
+      "file": "packages/widgets/src/common/use-widget-now.ts",
+      "fileSha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db",
+      "selector": "useWidgetNow",
+      "spans": [
+        {
+          "start": 668,
+          "end": 1711,
+          "startLine": 22,
+          "endLine": 54,
+          "sha256": "0190a006fa489611b27b8397acc60158cd479ed2ff03cf2adb4b15f12883488e"
+        }
+      ]
+    },
+    {
+      "side": "before",
+      "file": "packages/common/src/hooks.ts",
+      "fileSha256": "4565e6833f3046eae09f09033f41429045c5f0055e05fd8c2807908f318ad2b3",
+      "selector": [
+        "calculateTimeAgo",
+        "useTimeAgo"
+      ],
+      "spans": [
+        {
+          "start": 171,
+          "end": 253,
+          "startLine": 9,
+          "endLine": 11,
+          "sha256": "661feacfd1a79885ec6cdc44d96f7580a8e6780b9d662e20d9ba8ff2ee560683"
+        },
+        {
+          "start": 255,
+          "end": 747,
+          "startLine": 13,
+          "endLine": 27,
+          "sha256": "44ae9329de8086f3228dddd630edae7504e132d11acbf12862f902dd6b49fa77"
+        }
+      ]
+    },
+    {
+      "side": "before",
+      "file": "packages/widgets/src/wazuh/_shared/frame.tsx",
+      "fileSha256": "6260357b99b4ef4df8214b6f846eb5c91c8f08d0530843fc82f95671fb8fa462",
+      "selector": "WazuhRelativeTime",
+      "spans": [
+        {
+          "start": 2533,
+          "end": 3120,
+          "startLine": 82,
+          "endLine": 107,
+          "sha256": "51da6ac25ca001fd419cf3e02985fac07d62aadc80811897fcb61ee0eea08e9d"
+        }
+      ]
+    },
+    {
+      "side": "after",
+      "file": "packages/widgets/src/common/use-widget-now.ts",
+      "fileSha256": "72e59a22822e141f798dac7cb29be6705aadf7078cc9bedfaf3603e5ad5828db",
+      "selector": [
+        "minimumDelayMs",
+        "getNextWidgetTickDelay"
+      ],
+      "spans": [
+        {
+          "start": 147,
+          "end": 173,
+          "startLine": 7,
+          "endLine": 7,
+          "sha256": "d2f64d5b566d172214d1bd86f008d31bc56829cde6933bb8c569f47e6be31cd1"
+        },
+        {
+          "start": 175,
+          "end": 666,
+          "startLine": 9,
+          "endLine": 20,
+          "sha256": "044a0b61096742c692308f5bd140966e7357cb9e2cc5e655ded11d5591c37548"
+        }
+      ]
+    },
+    {
+      "side": "after",
+      "file": "packages/widgets/src/common/use-row-time.ts",
+      "fileSha256": "92a0efd7e7ea0fe4df5e0d986981c5de5417ddcee4cb42c4e752620a1c9ca3f4",
+      "selector": [
+        "listeners",
+        "timeout",
+        "tick",
+        "handleVisibilityChange",
+        "subscribeToMinute",
+        "useRowMinuteTime"
+      ],
+      "spans": [
+        {
+          "start": 245,
+          "end": 285,
+          "startLine": 11,
+          "endLine": 11,
+          "sha256": "63aca32c5e69976ce7a18b476679139f6164addbca856d6b871ce5be0dbb9751"
+        },
+        {
+          "start": 286,
+          "end": 341,
+          "startLine": 12,
+          "endLine": 12,
+          "sha256": "c058d21515cce31b3a86066049bc77905a322494b89002794abe4a6519339dd8"
+        },
+        {
+          "start": 343,
+          "end": 490,
+          "startLine": 14,
+          "endLine": 17,
+          "sha256": "9b37fbd6fa3a41ea7203adf48ea679fb59aaa539730d2a7d228582d35bfd38ae"
+        },
+        {
+          "start": 492,
+          "end": 622,
+          "startLine": 19,
+          "endLine": 23,
+          "sha256": "448fbdc5f978db76c8a8c46e07e992b6064a18dc856ab1ea8fcf1f2735fe98e9"
+        },
+        {
+          "start": 624,
+          "end": 1025,
+          "startLine": 25,
+          "endLine": 37,
+          "sha256": "1a0cec592577c37666c6de506461f20a5f2ee5642716aa4f4ec2bff95e298526"
+        },
+        {
+          "start": 1027,
+          "end": 1330,
+          "startLine": 39,
+          "endLine": 45,
+          "sha256": "fc14264883b6b6e2775352c92ea77990dda990b003cac0afdf688b5c15a55db4"
+        }
+      ]
+    },
+    {
+      "side": "after",
+      "file": "packages/widgets/src/wazuh/_shared/frame.tsx",
+      "fileSha256": "75791224a695bb6dd610ceb72b5ede1c4e2aa4f3d7f2c336c4b67b08eb06829d",
+      "selector": "WazuhRelativeTime",
+      "spans": [
+        {
+          "start": 2452,
+          "end": 3051,
+          "startLine": 79,
+          "endLine": 104,
+          "sha256": "263bf30b8fd6ac0006a2c0f501f077c7a769cd8102a310d58a8294ca3a033be2"
+        }
+      ]
+    }
+  ],
+  "findingId": "A3",
+  "lane": "notebook_timers",
+  "caseFile": "/home/habs/.codex/worktrees/4395/homarr/scripts/benchmarks/performance-audit/cases/notebook_timers.mts",
+  "caseSha256": "8fffe91140f0247b7f69e6ce0a663c3d758bca1598bf5b07660e3ffc0a77b219"
+}

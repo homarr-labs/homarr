@@ -116,7 +116,6 @@ const checkEveryIntegrationContainsSomeBoardIdIncludedInBoardsWithAccess = (
   integration: { id: string; anyOfBoardIds: string[] }[],
   boardIdsWithAccess: string[],
 ) => {
-  return integration.every(({ anyOfBoardIds }) =>
-    anyOfBoardIds.some((boardId) => boardIdsWithAccess.includes(boardId)),
-  );
+  const accessibleBoardIds = new Set(boardIdsWithAccess);
+  return integration.every(({ anyOfBoardIds }) => anyOfBoardIds.some((boardId) => accessibleBoardIds.has(boardId)));
 };

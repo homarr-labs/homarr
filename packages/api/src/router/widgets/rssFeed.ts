@@ -138,8 +138,8 @@ export async function restrictUrlsAsync(db: Database, urls: string[]) {
     where: eq(items.kind, "rssFeed"),
   });
 
-  const configuredUrls = rssFeedItems
-    .map((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options))
-    .flatMap((options) => options.feedUrls);
-  return urls.filter((url) => configuredUrls.includes(url));
+  const configuredUrls = new Set(
+    rssFeedItems.flatMap((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls),
+  );
+  return urls.filter((url) => configuredUrls.has(url));
 }

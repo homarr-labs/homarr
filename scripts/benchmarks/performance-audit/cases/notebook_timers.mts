@@ -1,0 +1,566 @@
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+import { join } from "node:path";
+import type { BenchmarkContext, Side } from "../lib.mts";
+import { benchmarkPair } from "../lib.mts";
+
+const notebookFile = "packages/widgets/src/notebook/notebook.tsx";
+const frameFile = "packages/widgets/src/wazuh/_shared/frame.tsx";
+const notificationFile = "packages/widgets/src/notifications/component.tsx";
+const widgetNowFile = "packages/widgets/src/common/use-widget-now.ts";
+const commonHooksFile = "packages/common/src/hooks.ts";
+
+async function dependencies(ctx: BenchmarkContext) {
+  const require = createRequire(join(ctx.roots.after, "package.json"));
+  const React = require("react");
+  const { createRoot, hydrateRoot } = require("react-dom/client");
+  const { renderToString } = require("react-dom/server");
+  const { JSDOM } = require("jsdom");
+  const dayjs = require("dayjs");
+  dayjs.extend(require("dayjs/plugin/relativeTime"));
+  return { React, createRoot, hydrateRoot, renderToString, JSDOM, dayjs };
+}
+
+function domEnvironment(deps: Awaited<ReturnType<typeof dependencies>>) {
+  const dom = new deps.JSDOM("<!doctype html><div id='root'></div>", { url: "http://localhost" });
+  const keys = ["window", "document", "navigator", "HTMLElement", "IS_REACT_ACT_ENVIRONMENT"];
+  const saved = new Map(keys.map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  for (const key of keys) {
+    let value = dom.window[key];
+    if (key === "IS_REACT_ACT_ENVIRONMENT") value = true;
+    Object.defineProperty(globalThis, key, { configurable: true, writable: true, value });
+  }
+  const container = dom.window.document.getElementById("root");
+  let root: any;
+  return {
+    get root() {
+      root ??= deps.createRoot(container);
+      return root;
+    },
+    hydrate(markup: string, element: any) {
+      container.innerHTML = markup;
+      root = deps.hydrateRoot(container, element, {
+        onRecoverableError(error: Error) {
+          throw error;
+        },
+      });
+    },
+    document: dom.window.document,
+    restore() {
+      if (root) deps.React.act(() => root.unmount());
+      dom.window.close();
+      for (const [key, descriptor] of saved) {
+        if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+        else Reflect.deleteProperty(globalThis, key);
+      }
+    },
+  };
+}
+
+function fakeClock(document: Document) {
+  const OriginalDate = globalThis.Date;
+  const originals = {
+    setTimeout: globalThis.setTimeout,
+    clearTimeout: globalThis.clearTimeout,
+    setInterval: globalThis.setInterval,
+    clearInterval: globalThis.clearInterval,
+  };
+  let now = OriginalDate.UTC(2026, 9, 11, 12, 0, 10);
+  let nextId = 0;
+  let timerCallbacks = 0;
+  let peakTimers = 0;
+  const timers = new Map<number, { callback: () => void; at: number; frequency?: number }>();
+  const add = (callback: () => void, delay: number, interval: boolean) => {
+    const id = ++nextId;
+    const entry: { callback: () => void; at: number; frequency?: number } = { callback, at: now + delay };
+    if (interval) entry.frequency = delay;
+    timers.set(id, entry);
+    peakTimers = Math.max(peakTimers, timers.size);
+    return id;
+  };
+  class ClockDate extends OriginalDate {
+    constructor(...args: any[]) {
+      if (args.length === 0) super(now);
+      else super(...args);
+    }
+    static now() {
+      return now;
+    }
+  }
+  globalThis.Date = ClockDate as DateConstructor;
+  globalThis.setTimeout = ((fn: () => void, delay: number) => add(fn, delay, false)) as typeof setTimeout;
+  globalThis.setInterval = ((fn: () => void, delay: number) => add(fn, delay, true)) as typeof setInterval;
+  globalThis.clearTimeout = ((id: number) => timers.delete(id)) as typeof clearTimeout;
+  globalThis.clearInterval = ((id: number) => timers.delete(id)) as typeof clearInterval;
+  const activeVisibility = new Set<EventListenerOrEventListenerObject>();
+  const addEventListener = document.addEventListener.bind(document);
+  const removeEventListener = document.removeEventListener.bind(document);
+  document.addEventListener = ((type: string, listener: EventListenerOrEventListenerObject, options?: any) => {
+    if (type === "visibilitychange") activeVisibility.add(listener);
+    addEventListener(type, listener, options);
+  }) as typeof document.addEventListener;
+  document.removeEventListener = ((type: string, listener: EventListenerOrEventListenerObject, options?: any) => {
+    if (type === "visibilitychange") activeVisibility.delete(listener);
+    removeEventListener(type, listener, options);
+  }) as typeof document.removeEventListener;
+  return {
+    get now() {
+      return now;
+    },
+    get callbacks() {
+      return timerCallbacks;
+    },
+    get peakTimers() {
+      return peakTimers;
+    },
+    get activeTimers() {
+      return timers.size;
+    },
+    get visibilityListeners() {
+      return activeVisibility.size;
+    },
+    advance(ms: number, flush: (callback: () => void) => void) {
+      const end = now + ms;
+      while (true) {
+        const next = [...timers.values()].reduce((minimum, timer) => Math.min(minimum, timer.at), Infinity);
+        if (next > end) break;
+        now = next;
+        flush(() => {
+          // Snapshot the map because timer callbacks can add and remove timers.
+          // oxlint-disable-next-line unicorn/no-useless-spread
+          for (const [id, timer] of [...timers]) {
+            if (timer.at !== next) continue;
+            if (timer.frequency) timer.at += timer.frequency;
+            else timers.delete(id);
+            timerCallbacks++;
+            timer.callback();
+          }
+        });
+      }
+      now = end;
+    },
+    jump(ms: number) {
+      now += ms;
+    },
+    restore() {
+      assert.equal(timers.size, 0, "Row timers must all be removed after unmount");
+      assert.equal(activeVisibility.size, 0, "Visibility listeners must all be removed after unmount");
+      globalThis.Date = OriginalDate;
+      Object.assign(globalThis, originals);
+    },
+  };
+}
+
+function timePrimitives(React: any) {
+  const Text = ({ children }: any) => React.createElement("span", null, children);
+  const Tooltip = ({ children, label }: any) => React.createElement("span", { title: label }, children);
+  const Group = ({ children }: any) => React.createElement("div", null, children);
+  const IconClock = () => React.createElement("i");
+  return { Text, Tooltip, Group, IconClock };
+}
+
+async function prepareRows(ctx: BenchmarkContext, wazuh: boolean) {
+  const deps = await dependencies(ctx);
+  const hooks = {
+    useCallback: deps.React.useCallback,
+    useEffect: deps.React.useEffect,
+    useRef: deps.React.useRef,
+    useState: deps.React.useState,
+  };
+  const createRun = (side: Side) => {
+    const counts = { rows: 0, calculations: 0 };
+    const countingDayjs = new Proxy(deps.dayjs, {
+      apply(target, receiver, argumentsList) {
+        const date = Reflect.apply(target, receiver, argumentsList);
+        return new Proxy(date, {
+          get(object, property) {
+            const value = Reflect.get(object, property);
+            if (typeof value !== "function") return value;
+            if (property === "fromNow" || property === "to") {
+              return (...args: any[]) => {
+                counts.calculations++;
+                return value.apply(object, args);
+              };
+            }
+            return value.bind(object);
+          },
+        });
+      },
+    });
+    const bindings = { React: deps.React, ...hooks, dayjs: countingDayjs };
+    let useWidgetNow;
+    let useTimeAgo;
+    if (wazuh) {
+      const getNextWidgetTickDelay = ctx.evaluate(side, widgetNowFile, ["minimumDelayMs", "getNextWidgetTickDelay"]);
+      useWidgetNow = ctx.evaluate(side, widgetNowFile, "useWidgetNow", { ...hooks, getNextWidgetTickDelay });
+    } else {
+      useTimeAgo = ctx.evaluate(side, commonHooksFile, ["calculateTimeAgo", "useTimeAgo"], bindings);
+    }
+    const primitives = timePrimitives(deps.React);
+    let Component;
+    if (wazuh) {
+      Component = ctx.evaluate<any>(side, frameFile, "WazuhRelativeTime", {
+        ...bindings,
+        ...primitives,
+        classes: { nowrap: "nowrap" },
+        useWidgetNow,
+        useCurrentIntlLocale: () => {
+          counts.rows++;
+          return "en";
+        },
+      });
+    } else {
+      Component = ctx.evaluate<any>(side, notificationFile, "InfoDisplay", {
+        ...bindings,
+        ...primitives,
+        iconSizes: { xs: {}, md: {} },
+        useTimeAgo: (...args: any[]) => {
+          counts.rows++;
+          return useTimeAgo(...args);
+        },
+      });
+    }
+    return () => {
+      const output: {
+        labels: string[][];
+        rowCount: number;
+        tickRenders: number;
+        labelCalculations: number;
+        peakTimers: number;
+        visibilityListeners: number;
+        callbacks: number;
+        parentRenders: number;
+      }[] = [];
+      for (const rowCount of [1, 10, 100]) {
+        counts.rows = 0;
+        counts.calculations = 0;
+        const env = domEnvironment(deps);
+        const clock = fakeClock(env.document);
+        const dates = Array.from({ length: rowCount }, (_, index) => new Date(clock.now - (index + 1) * 3_600_000));
+        dates[0] = new Date(clock.now - 20_000);
+        if (dates.length > 1) dates[1] = new Date(clock.now - 90_000);
+        let parentRenders = 0;
+        let showSecond = true;
+        const Parent = () => {
+          parentRenders++;
+          return deps.React.createElement(
+            "div",
+            null,
+            [0, 1].map((widget) =>
+              deps.React.createElement(
+                "section",
+                { key: widget },
+                dates.map((date, index) => {
+                  if (index % 2 !== widget || (!showSecond && widget === 1)) return null;
+                  if (wazuh)
+                    return deps.React.createElement(Component, {
+                      key: index,
+                      value: date.toISOString(),
+                      short: index % 2 === 0,
+                    });
+                  return deps.React.createElement(Component, { key: index, date, dense: index % 2 === 0 });
+                }),
+              ),
+            ),
+          );
+        };
+        const readLabels = () =>
+          [...env.document.querySelectorAll("#root > div > section > *")].map((node) => node.textContent ?? "");
+        let unmounted = false;
+        try {
+          const serverMarkup = deps.renderToString(deps.React.createElement(Parent));
+          counts.rows = 0;
+          counts.calculations = 0;
+          parentRenders = 0;
+          deps.React.act(() => env.hydrate(serverMarkup, deps.React.createElement(Parent)));
+          const labels = [readLabels()];
+          const mountedRenders = counts.rows;
+          const mountedCalculations = counts.calculations;
+          const visibilityListeners = clock.visibilityListeners;
+          clock.advance(30_000, (callback) => deps.React.act(callback));
+          labels.push(readLabels());
+          clock.advance(30_000, (callback) => deps.React.act(callback));
+          labels.push(readLabels());
+          if (wazuh) {
+            clock.jump(3_600_000);
+            Object.defineProperty(env.document, "visibilityState", { configurable: true, value: "visible" });
+            const WindowEvent = env.document.defaultView?.Event;
+            assert.ok(WindowEvent);
+            deps.React.act(() => env.document.dispatchEvent(new WindowEvent("visibilitychange")));
+            labels.push(readLabels());
+          }
+          output.push({
+            rowCount,
+            labels,
+            tickRenders: counts.rows - mountedRenders,
+            labelCalculations: counts.calculations - mountedCalculations,
+            peakTimers: clock.peakTimers,
+            callbacks: clock.callbacks,
+            visibilityListeners,
+            parentRenders,
+          });
+          dates[0] = new Date(clock.now - 20_000);
+          deps.React.act(() => env.root.render(deps.React.createElement(Parent)));
+          assert.match(readLabels()[0], /few seconds/);
+          showSecond = false;
+          deps.React.act(() => env.root.render(deps.React.createElement(Parent)));
+          assert.ok(clock.activeTimers > 0, "First widget keeps its clock after the second widget unmounts");
+          env.restore();
+          unmounted = true;
+          clock.restore();
+        } finally {
+          if (!unmounted) env.restore();
+        }
+      }
+      return output;
+    };
+  };
+  return {
+    before: createRun("before"),
+    after: createRun("after"),
+    verify(before: any, after: any) {
+      assert.deepEqual(
+        after.map((entry: any) => entry.labels),
+        before.map((entry: any) => entry.labels),
+      );
+      assert.deepEqual(
+        after.map((entry: any) => entry.parentRenders),
+        before.map((entry: any) => entry.parentRenders),
+      );
+    },
+    metrics(result: any) {
+      const metrics: Record<string, number> = {};
+      for (const entry of result)
+        for (const key of [
+          "tickRenders",
+          "labelCalculations",
+          "peakTimers",
+          "callbacks",
+          "visibilityListeners",
+          "parentRenders",
+        ]) {
+          metrics[`${key}_${entry.rowCount}Rows`] = entry[key];
+        }
+      return metrics;
+    },
+  };
+}
+
+export const cases = [
+  benchmarkPair({
+    id: "RS-001",
+    title: "Notebook color selection listener churn",
+    files: [notebookFile],
+    iterations: 5,
+    timing: true,
+    fixture:
+      "Real React hook lifecycle from actual ColorControl effect; 50 unrelated renders, selection update, callback/editor replacement and unmount. Editor event emitter is a fixture.",
+    async prepare(ctx) {
+      const deps = await dependencies(ctx);
+      const createRun = (side: Side) => {
+        const selectionEffect = ctx.evaluate<any>(
+          side,
+          notebookFile,
+          {
+            kind: "span",
+            start: "  const onSelection = useCallback(() => {",
+            end: "  const handleApplyColor = useCallback(() => {",
+          },
+          { useCallback: deps.React.useCallback, useEffect: deps.React.useEffect },
+          {
+            asFunction: true,
+            parameters: ["editor", "getCurrent", "defaultColor", "setColor"],
+            returnExpression: "undefined",
+          },
+        );
+        return () => {
+          const env = domEnvironment(deps);
+          let attached = 0;
+          let detached = 0;
+          const handlers = new Map<object, Set<() => void>>();
+          const editor = () => {
+            const current = {
+              on(_event: string, handler: () => void) {
+                attached++;
+                handlers.get(current)?.add(handler);
+              },
+              off(_event: string, handler: () => void) {
+                detached++;
+                handlers.get(current)?.delete(handler);
+              },
+            };
+            handlers.set(current, new Set());
+            return current;
+          };
+          const firstEditor = editor();
+          const secondEditor = editor();
+          let selectedColor = "red";
+          const getCurrent = () => selectedColor;
+          const secondGetCurrent = () => selectedColor;
+          const Control = ({ editor: currentEditor, getCurrent: currentGetter }: any) => {
+            const [color, setColor] = deps.React.useState("transparent");
+            selectionEffect(currentEditor, currentGetter, "transparent", setColor);
+            return deps.React.createElement("span", null, color);
+          };
+          try {
+            for (let index = 0; index < 50; index++)
+              deps.React.act(() =>
+                env.root.render(deps.React.createElement(Control, { editor: firstEditor, getCurrent })),
+              );
+            selectedColor = "blue";
+            deps.React.act(() => {
+              for (const handler of handlers.get(firstEditor) ?? new Set()) handler();
+            });
+            const colorAfterSelection = env.document.getElementById("root")?.textContent;
+            assert.equal(colorAfterSelection, "blue");
+            deps.React.act(() =>
+              env.root.render(deps.React.createElement(Control, { editor: firstEditor, getCurrent: secondGetCurrent })),
+            );
+            deps.React.act(() =>
+              env.root.render(
+                deps.React.createElement(Control, { editor: secondEditor, getCurrent: secondGetCurrent }),
+              ),
+            );
+            assert.equal((handlers.get(firstEditor) ?? new Set()).size, 0);
+            assert.equal((handlers.get(secondEditor) ?? new Set()).size, 1);
+            selectedColor = "green";
+            deps.React.act(() => {
+              for (const handler of handlers.get(secondEditor) ?? new Set()) handler();
+            });
+            assert.equal(env.document.getElementById("root")?.textContent, "green");
+            env.restore();
+            assert.equal((handlers.get(secondEditor) ?? new Set()).size, 0);
+            return { attached, detached, colorAfterSelection, finalColor: "green" };
+          } catch (error) {
+            env.restore();
+            throw error;
+          }
+        };
+      };
+      return {
+        before: createRun("before"),
+        after: createRun("after"),
+        verify(before: any, after: any) {
+          assert.equal(after.colorAfterSelection, before.colorAfterSelection);
+          assert.equal(after.finalColor, before.finalColor);
+        },
+        metrics(result: any) {
+          return { listenerAttaches: result.attached, listenerDetaches: result.detached };
+        },
+      };
+    },
+  }),
+  benchmarkPair({
+    id: "WMA1-01",
+    title: "Notebook hidden document statistics",
+    files: [notebookFile, "packages/widgets/src/notebook/display.ts"],
+    iterations: 100,
+    timing: true,
+    fixture:
+      "Actual source display/statistics derivation: hidden compact, scaled compact, visible tall compact and advanced notebook; 150 KB whitespace-delimited text via getText fixture.",
+    prepare(ctx) {
+      const text = "  notebook\ttext\n".repeat(10_000);
+      const createRun = (side: Side) => {
+        const getNotebookDisplay = ctx.evaluate(side, "packages/widgets/src/notebook/display.ts", "getNotebookDisplay");
+        let start = '  const documentText = editor?.getText().trim() ?? "";';
+        if (side === "after") start = "  let layoutScale = 1;";
+        const stats = ctx.evaluate<any>(
+          side,
+          notebookFile,
+          {
+            kind: "span",
+            start,
+            end: '  return (\n    <Box\n      className="homarr-notebook"',
+          },
+          { getNotebookDisplay },
+          {
+            asFunction: true,
+            parameters: [
+              "editor",
+              "displayMode",
+              "displayScale",
+              "width",
+              "height",
+              "isEditing",
+              "isSaving",
+              "options",
+            ],
+            returnExpression: "({ showDocumentStats, documentStats })",
+          },
+        );
+        return () => {
+          let hiddenReads = 0;
+          let visibleReads = 0;
+          const labels = [];
+          for (const [width, height, displayScale, displayMode] of [
+            [250, 150, 1, "compact"],
+            [500, 300, 0.5, "compact"],
+            [400, 300, 1, "compact"],
+            [100, 100, 1, "advanced"],
+          ] as const) {
+            let reads = 0;
+            const result = stats(
+              {
+                getText() {
+                  reads++;
+                  return text;
+                },
+              },
+              displayMode,
+              displayScale,
+              width,
+              height,
+              false,
+              false,
+              { showToolbar: true },
+            );
+            if (result.showDocumentStats) {
+              visibleReads += reads;
+              labels.push(result.documentStats);
+            } else {
+              hiddenReads += reads;
+              labels.push(null);
+            }
+          }
+          return { hiddenReads, visibleReads, labels };
+        };
+      };
+      return {
+        before: createRun("before"),
+        after: createRun("after"),
+        verify(before: any, after: any) {
+          assert.deepEqual(after.labels, before.labels);
+          assert.equal(after.hiddenReads, 0);
+          assert.equal(after.visibleReads, before.visibleReads);
+        },
+        metrics(result: any) {
+          return { hiddenTextExtractions: result.hiddenReads, visibleTextExtractions: result.visibleReads };
+        },
+      };
+    },
+  }),
+  benchmarkPair({
+    id: "A3",
+    title: "Retained Wazuh row clocks after profiling",
+    files: [frameFile, widgetNowFile],
+    iterations: 2,
+    timing: true,
+    fixture:
+      "Actual WazuhRelativeTime + real ReactDOM hooks in jsdom, 1/10/100 rows in two widget containers across two 30-second steps and visibility resume, SSR hydration, timestamp replacement and partial/full unmount. Mantine display primitives use host stubs; timers use a deterministic fake clock.",
+    prepare(ctx) {
+      return prepareRows(ctx, true);
+    },
+  }),
+  benchmarkPair({
+    id: "WMB1-1",
+    title: "Retained notification row clocks after profiling",
+    files: [notificationFile, commonHooksFile],
+    iterations: 2,
+    timing: true,
+    fixture:
+      "Actual InfoDisplay + real ReactDOM hooks in jsdom, 1/10/100 rows in two widget containers across two 30-second steps, SSR hydration, timestamp replacement and partial/full unmount. Mantine display primitives use host stubs; timers use a deterministic fake clock.",
+    prepare(ctx) {
+      return prepareRows(ctx, false);
+    },
+  }),
+];

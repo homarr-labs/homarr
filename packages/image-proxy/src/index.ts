@@ -1,7 +1,7 @@
 import { createHmac, hkdfSync, randomUUID } from "node:crypto";
 import { setImmediate } from "node:timers/promises";
 
-import { createId, formatBytes } from "@homarr/common";
+import { createId } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -21,7 +21,7 @@ const createUrlByIdChannel = (id: string) =>
   }>(`image-proxy:url:${id}`);
 
 export type ForwardImageResult =
-  | { image: ArrayBuffer; contentType: string | null }
+  | { image: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>["body"]; contentType: string | null }
   | { error: "not-found" }
   | { error: "upstream-error"; statusCode: number }
   | { error: "fetch-error" };
@@ -124,16 +124,14 @@ export class ImageProxy {
       return { error: "upstream-error", statusCode: response.status };
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    logger.debug("Forwarding image succeeded", {
+    logger.debug("Forwarding image response", {
       id,
       url: this.redactUrl(urlAndHeaders.url),
       headers: this.redactHeaders(urlAndHeaders.headers),
       proxyUrl,
-      size: formatBytes(arrayBuffer.byteLength),
     });
 
-    return { image: arrayBuffer, contentType: response.headers.get("content-type") };
+    return { image: response.body, contentType: response.headers.get("content-type") };
   }
 
   private createImageUrl(id: string): string {

@@ -16,7 +16,8 @@ export const GET = async (_request: Request, props: { params: Promise<{ id: stri
     });
   }
 
-  return new Response(result.image, {
+  // Undici's node:stream/web type describes the same WHATWG stream accepted by Response.
+  return new Response(result.image as ReadableStream<Uint8Array> | null, {
     headers: {
       "Cache-Control": "public, max-age=3600, immutable", // Cache for 1 hour
       ...(result.contentType ? { "Content-Type": result.contentType } : {}),

@@ -1,0 +1,90 @@
+{
+  "api_core": [
+    "API-001",
+    "API-003",
+    "API-004",
+    "A-1",
+    "NRA-001"
+  ],
+  "api_io": [
+    "API-002",
+    "API-005",
+    "API-006"
+  ],
+  "services": [
+    "F1",
+    "F2",
+    "F3",
+    "DCR-001",
+    "DCR-002",
+    "CLI001",
+    "CLI002",
+    "CLI003",
+    "FW-002"
+  ],
+  "custom_widgets": [
+    "CW-1",
+    "FW-001"
+  ],
+  "management": [
+    "NMG-001",
+    "NMG-002",
+    "NMG-004",
+    "NMG-005",
+    "NSC-1",
+    "MTAIL-001",
+    "MTAIL-002"
+  ],
+  "assistant": [
+    "NA-001",
+    "MEGA-mega_contexts-01"
+  ],
+  "board_forms": [
+    "NBL-001",
+    "MEGA-mega_forms-01",
+    "SUI-001",
+    "SUI-002",
+    "SUI-005",
+    "SUI-006",
+    "WB-004"
+  ],
+  "widget_aggregates": [
+    "WB-001",
+    "WB-002",
+    "WTA-1",
+    "WMB2-1"
+  ],
+  "widget_lookups": [
+    "A4",
+    "WIDGETS_B_002",
+    "WIDGETS_B_003",
+    "WIDGETS_B_004",
+    "WIDGETS_B_007"
+  ],
+  "widget_render": [
+    "A2",
+    "A5",
+    "WIDGETS_B_005",
+    "WIDGETS_B_006",
+    "WIDGETS_B_008",
+    "WIDGETS_B_009"
+  ],
+  "notebook_timers": [
+    "RS-001",
+    "WMA1-01",
+    "A3",
+    "WMB1-1"
+  ],
+  "routes_assets": [
+    "MEGA-assets-01",
+    "MEGA-mega_routes-01",
+    "MEGA-mega_routes-02"
+  ],
+  "accessibility": [
+    "MEGA-mega_design_board-01",
+    "MEGA-mega_design_manage-01",
+    "MEGA-mega_design_manage-02",
+    "MEGA-mega_design_workbench-01",
+    "MEGA-mega_design_workbench-02"
+  ]
+}

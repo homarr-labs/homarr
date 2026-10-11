@@ -1,0 +1,706 @@
+import assert from "node:assert/strict";
+import * as React from "react";
+
+import type { Side } from "../lib.mts";
+import { benchmarkPair } from "../lib.mts";
+
+const mediaFile = "packages/widgets/src/media-server/component.tsx";
+const agentsFile = "packages/widgets/src/wazuh-agents/component.tsx";
+const clockFile = "packages/widgets/src/clock/use-current-time.ts";
+const countsFile = "packages/widgets/src/coolify/coolify-utils.ts";
+const singleFile = "packages/widgets/src/coolify/single-instance-layout.tsx";
+const cardFile = "packages/widgets/src/coolify/instance-card.tsx";
+const clusterFile = "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx";
+const releasesFile = "packages/widgets/src/media-releases/component.tsx";
+const dateFile = "packages/common/src/date.ts";
+const numberFile = "packages/common/src/number.ts";
+
+type Counters = Record<string, number>;
+type RenderResult = { output: unknown[]; counters: Counters };
+const Passthrough = ({ children }: any) => React.createElement(React.Fragment, null, children);
+
+// Real React hooks and Profiler; a minimal DOM keeps shared presentation costs
+// outside these widget-local derivation measurements. No browser/network claims.
+async function renderHarness() {
+  const { JSDOM } = await import("jsdom");
+  const dom = new JSDOM("<!doctype html><html><body></body></html>");
+  const previous = new Map<string, PropertyDescriptor | undefined>();
+  for (const [name, value] of Object.entries({
+    window: dom.window,
+    document: dom.window.document,
+    navigator: dom.window.navigator,
+  })) {
+    previous.set(name, Object.getOwnPropertyDescriptor(globalThis, name));
+    Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
+  }
+  const { createRoot } = await import("react-dom/client");
+  const { flushSync } = await import("react-dom");
+  const roots: ReturnType<typeof createRoot>[] = [];
+  function driver(render: (input: any) => unknown, counters: Counters) {
+    const container = dom.window.document.createElement("div");
+    dom.window.document.body.append(container);
+    const root = createRoot(container);
+    roots.push(root);
+    let output: unknown;
+    function Driver({ input }: { input: any }) {
+      output = render(input);
+      return React.createElement("span", null, JSON.stringify(output));
+    }
+    return (inputs: unknown[]): RenderResult => {
+      for (const key of Object.keys(counters)) counters[key] = 0;
+      const outputs: unknown[] = [];
+      for (const input of inputs) {
+        flushSync(() =>
+          root.render(
+            React.createElement(
+              React.Profiler,
+              {
+                id: "widget-derivation",
+                onRender: (_id: string, _phase: string, duration: number) => {
+                  counters.profilerActualDurationMs += duration;
+                  counters.renders++;
+                },
+              },
+              React.createElement(Driver, { input }),
+            ),
+          ),
+        );
+        outputs.push(output);
+      }
+      return { output: outputs, counters: { ...counters } };
+    };
+  }
+  function componentDriver(
+    Component: React.ComponentType<any>,
+    counters: Counters,
+    getToggle: () => (() => void) | undefined,
+  ) {
+    const container = dom.window.document.createElement("div");
+    dom.window.document.body.append(container);
+    const root = createRoot(container);
+    roots.push(root);
+    return (props: any, changes = 8): RenderResult => {
+      for (const key of Object.keys(counters)) counters[key] = 0;
+      const outputs: unknown[] = [];
+      flushSync(() =>
+        root.render(
+          React.createElement(
+            React.Profiler,
+            {
+              id: "coolify-component",
+              onRender: (_id: string, _phase: string, duration: number) => {
+                counters.profilerActualDurationMs += duration;
+                counters.renders++;
+              },
+            },
+            React.createElement(Component, props),
+          ),
+        ),
+      );
+      outputs.push(container.textContent);
+      for (let change = 0; change < changes; change++) {
+        const toggle = getToggle();
+        assert.ok(toggle, "server section exposes its actual local-state toggle");
+        flushSync(toggle);
+        outputs.push(container.textContent);
+      }
+      return { output: outputs, counters: { ...counters } };
+    };
+  }
+  return {
+    driver,
+    componentDriver,
+    async cleanup() {
+      for (const root of roots) flushSync(() => root.unmount());
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      dom.window.close();
+      for (const [name, descriptor] of previous) {
+        if (descriptor) Object.defineProperty(globalThis, name, descriptor);
+        else Reflect.deleteProperty(globalThis, name);
+      }
+    },
+  };
+}
+
+const hooks = (counters: Counters) => ({
+  useMemo: <T,>(fn: () => T, deps: React.DependencyList) => {
+    counters.memoCalls++;
+    // Forward the actual source dependency array without changing its semantics.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+    return React.useMemo(fn, deps);
+  },
+});
+
+const verifyRenders = (before: unknown, after: unknown) => {
+  assert.deepEqual((after as RenderResult).output, (before as RenderResult).output);
+};
+const renderMetrics = (result: unknown) => (result as RenderResult).counters;
+
+function mediaCase(size: number, mode: "hidden" | "bitrate" | "advanced", primary = false) {
+  return benchmarkPair({
+    id: primary ? "A2" : `A2:${mode}-${size}`,
+    title: `Media summaries, ${mode}, ${size} sessions`,
+    files: [mediaFile, numberFile],
+    iterations: 1000,
+    fixture: `${size} deterministic sessions including paused, playing, missing playback and all transcoding decisions. Derivation only; rows remain visible.`,
+    prepare(ctx) {
+      const sessions = Array.from({ length: size }, (_, index) => ({
+        currentlyPlaying:
+          index % 7 === 0
+            ? null
+            : {
+                playback: index % 5 === 0 ? undefined : { state: index % 3 === 0 ? "paused" : "playing" },
+                metadata: {
+                  bitrateKbps: index % 4 === 0 ? null : index * 32,
+                  transcoding: {
+                    isVideoDirect: index % 2 === 0,
+                    isAudioDirect: index % 3 === 0,
+                    containerChanged: index % 4 === 0,
+                  },
+                },
+              },
+      }));
+      const sides = (side: Side) => {
+        const counters = { scans: 0, statusCalls: 0, bitrateFormats: 0 };
+        const status = ctx.evaluate<any>(side, mediaFile, "getPlaybackStatus");
+        const formatBitRate = ctx.evaluate<any>(side, numberFile, [
+          "pickUnitIndex",
+          "pickRoundedUnitIndex",
+          "BIT_RATE_UNITS",
+          "formatBitRate",
+        ]);
+        const formatBitrate = ctx.evaluate<any>(side, mediaFile, "formatBitrate", { formatBitRate });
+        const flatSessions = new Proxy(sessions, {
+          get(target, key, receiver) {
+            if (key === Symbol.iterator)
+              return function* () {
+                for (const session of target) {
+                  counters.scans++;
+                  yield session;
+                }
+              };
+            if (key === "filter" || key === "reduce")
+              return (callback: (...args: any[]) => any, ...rest: any[]) =>
+                Reflect.get(target, key).call(
+                  target,
+                  (...args: any[]) => {
+                    counters.scans++;
+                    return callback(...args);
+                  },
+                  ...rest,
+                );
+            return Reflect.get(target, key, receiver);
+          },
+        });
+        const compile = (observed: boolean) =>
+          ctx.evaluate<any>(
+            side,
+            mediaFile,
+            {
+              kind: "span",
+              start: side === "before" ? "  const playingCount =" : "  let playingCount =",
+              end: "  const hasFailedIntegrations =",
+            },
+            {
+              flatSessions: observed ? flatSessions : sessions,
+              isAdvanced: mode === "advanced",
+              showBitrate: mode !== "hidden",
+              getPlaybackStatus: observed
+                ? (value: any) => {
+                    counters.statusCalls++;
+                    return status(value);
+                  }
+                : status,
+              formatBitrate: observed
+                ? (value: number) => {
+                    counters.bitrateFormats++;
+                    return formatBitrate(value);
+                  }
+                : formatBitrate,
+            },
+            {
+              asFunction: true,
+              returnExpression: "({ playingCount, transcodingCount, totalBitrateKbps, totalBitrateLabel })",
+            },
+          );
+        const calculate = compile(false);
+        const measure = compile(true);
+        const operation = () => {
+          const result = calculate();
+          return {
+            output: {
+              playing: mode === "advanced" ? result.playingCount : null,
+              transcoding: mode === "advanced" ? result.transcodingCount : null,
+              bitrate: result.totalBitrateLabel,
+            },
+          };
+        };
+        return {
+          operation,
+          metrics() {
+            for (const key of Object.keys(counters)) counters[key as keyof typeof counters] = 0;
+            measure();
+            return { ...counters };
+          },
+        };
+      };
+      const before = sides("before"),
+        after = sides("after");
+      return {
+        before: before.operation,
+        after: after.operation,
+        verify(a: any, b: any) {
+          assert.deepEqual(b.output, a.output);
+        },
+        metrics: (_result: unknown, side: Side) => ({ before, after })[side].metrics(),
+      };
+    },
+  });
+}
+
+function agentsCase(size: number, mode: "hidden" | "no-version" | "visible" | "resize", primary = false) {
+  return benchmarkPair({
+    id: primary ? "A5" : `A5:${mode}-${size}`,
+    title: `Wazuh table derivation, ${mode}, ${size} agents`,
+    files: [agentsFile],
+    iterations: 20,
+    fixture: `8 real React renders with changing status filter, ${size} agents in mixed statuses/versions. Hidden height 189; shown height 190; version width boundary 599/600. No Mantine presentation.`,
+    async prepare(ctx) {
+      const harness = await renderHarness();
+      const agents = Array.from({ length: size }, (_, index) => ({
+        id: String(index),
+        name: `agent-${size - index}`,
+        status: ["active", "disconnected", "pending", "never_connected", "unknown"][index % 5],
+        version: index % 7 === 0 ? null : `v4.${index % 8}.${index % 3}`,
+        ip: `10.0.${index % 256}.${index % 255}`,
+        osName: index % 2 === 0 ? "Ubuntu" : "Windows",
+        lastKeepAlive: "2026-10-11",
+      }));
+      const inputs = Array.from({ length: 8 }, (_, index) => ({
+        filter: ["all", "active", "inactive", "disconnected"][index % 4],
+        sort: { key: "status", descending: index % 2 === 0 },
+        height: mode === "hidden" || (mode === "resize" && index % 3 === 0) ? 189 : 190,
+        width: mode === "no-version" || (mode === "resize" && index % 3 === 1) ? 599 : 600,
+      }));
+      const sides = (side: Side) => {
+        const counters = {
+          agentVisits: 0,
+          versionComparisons: 0,
+          sortComparisons: 0,
+          memoCalls: 0,
+          renders: 0,
+          profilerActualDurationMs: 0,
+        };
+        const helpers = ctx.evaluate<any>(
+          side,
+          agentsFile,
+          ["statusOrder", "parseVersion", "compareVersions", "ipToNumber", "compareIps", "sorters"],
+          {},
+          { returnExpression: "({ compareVersions, sorters })" },
+        );
+        const observedAgents = new Proxy(agents, {
+          get(target, key, receiver) {
+            if (key === "filter" || key === "reduce")
+              return (callback: (...args: any[]) => any, ...rest: any[]) =>
+                Reflect.get(target, key).call(
+                  target,
+                  (...args: any[]) => {
+                    counters.agentVisits++;
+                    return callback(...args);
+                  },
+                  ...rest,
+                );
+            return Reflect.get(target, key, receiver);
+          },
+        });
+        const sorters = Object.fromEntries(
+          Object.entries(helpers.sorters).map(([key, sorter]) => [
+            key,
+            (a: any, b: any) => {
+              counters.sortComparisons++;
+              return (sorter as any)(a, b);
+            },
+          ]),
+        );
+        const derive = ctx.evaluate<any>(
+          side,
+          agentsFile,
+          { kind: "span", start: "  const agents = result?.data?.agents;", end: "  const compact =" },
+          {
+            ...hooks(counters),
+            result: { data: { agents: observedAgents } },
+            options: { showVersion: true },
+            sorters,
+            compareVersions: (a: any, b: any) => {
+              counters.versionComparisons++;
+              return helpers.compareVersions(a, b);
+            },
+          },
+          {
+            asFunction: true,
+            parameters: ["height", "width", "filter", "sort"],
+            returnExpression: "({ newestVersion, visibleAgents })",
+          },
+        );
+        const render = harness.driver((input) => {
+          const output = derive(input.height, input.width, input.filter, input.sort);
+          return {
+            ids: input.height >= 190 ? output.visibleAgents.map((agent: any) => agent.id) : [],
+            newestVersion: input.height >= 190 && input.width >= 600 ? output.newestVersion : null,
+          };
+        }, counters);
+        return () => render(inputs);
+      };
+      const before = sides("before"),
+        after = sides("after");
+      return { before, after, verify: verifyRenders, metrics: renderMetrics, cleanup: harness.cleanup };
+    },
+  });
+}
+
+const clockCase = benchmarkPair({
+  id: "WIDGETS_B_005",
+  title: "Clock primitive multiplier through real React hooks",
+  files: [clockFile],
+  iterations: 20,
+  fixture:
+    "8 renders crossing seconds/minutes settings; actual effect source must remain identical and its primitive dependency values match.",
+  async prepare(ctx) {
+    const effect = { kind: "span" as const, start: "  useEffect(() => {", end: "  return time;" };
+    assert.equal(ctx.extract("after", clockFile, effect), ctx.extract("before", clockFile, effect));
+    const harness = await renderHarness();
+    const sides = (side: Side) => {
+      const counters = { memoCalls: 0, renders: 0, profilerActualDurationMs: 0 };
+      const derive = ctx.evaluate<any>(side, clockFile, "intervalMultiplier", hooks(counters), {
+        asFunction: true,
+        parameters: ["showSeconds"],
+        returnExpression: "intervalMultiplier",
+      });
+      const render = harness.driver(derive, counters);
+      return () => render([true, false, false, true, true, false, false, true]);
+    };
+    return {
+      before: sides("before"),
+      after: sides("after"),
+      verify: verifyRenders,
+      metrics: renderMetrics,
+      cleanup: harness.cleanup,
+    };
+  },
+});
+
+function coolifyCase(size: number, layout: "single" | "card", primary = false) {
+  const file = layout === "single" ? singleFile : cardFile;
+  return benchmarkPair({
+    id: primary ? "WIDGETS_B_006" : `WIDGETS_B_006:${layout}-${size}`,
+    title: `Coolify ${layout} local state, ${size} resources`,
+    files: [file, countsFile],
+    iterations: 10,
+    fixture: `Actual component with real React state/memo/Profiler; 8 IP toggles plus parent render; stable source arrays; ${size} apps/services on ${Math.max(1, Math.ceil(size / 20))} servers. Mantine/sections are presentation stubs.`,
+    async prepare(ctx) {
+      const harness = await renderHarness();
+      const servers = Array.from({ length: Math.max(1, Math.ceil(size / 20)) }, (_, index) => ({
+        id: index + 1,
+        is_reachable: index % 2 === 0,
+      }));
+      const applications = Array.from({ length: size }, (_, index) => ({
+        server_id: (index % servers.length) + 1,
+        status: index % 3 === 0 ? "stopped" : "running:healthy",
+      }));
+      const services = Array.from({ length: size }, (_, index) => ({
+        server_id: (index % servers.length) + 1,
+        destination_id: index,
+        status: index % 4 === 0 ? "stopped" : "running",
+      }));
+      const props = {
+        instance: {
+          instanceInfo: { servers, applications, services, version: "4.0" },
+          integrationId: "fixture",
+          integrationName: "Coolify",
+          integrationUrl: "https://coolify.example",
+          updatedAt: new Date(0),
+        },
+        options: { showServers: true, showApplications: true, showServices: true },
+        isTiny: size === 1,
+        isAdvanced: false,
+        widgetKey: "fixture",
+      };
+      const sides = (side: Side) => {
+        const counters = { countBuilds: 0, memoCalls: 0, renders: 0, profilerActualDurationMs: 0 };
+        const helpers = ctx.evaluate<any>(
+          side,
+          countsFile,
+          [
+            "buildServerResourceCounts",
+            "getBadgeColor",
+            "parseStatus",
+            "getCoolifyServerState",
+            "isCoolifyServerOnline",
+          ],
+          {},
+          { returnExpression: "({ buildServerResourceCounts, getBadgeColor, parseStatus, isCoolifyServerOnline })" },
+        );
+        let toggle: (() => void) | undefined;
+        const bindings = {
+          React,
+          ...hooks(counters),
+          useState: React.useState,
+          useLocalStorage: ({ defaultValue }: any) => React.useState(defaultValue),
+          useI18n: () => (key: string) => key,
+          useTimeAgo: () => "fixture-time",
+          Accordion: Passthrough,
+          Anchor: Passthrough,
+          Badge: Passthrough,
+          Card: Passthrough,
+          Group: Passthrough,
+          Image: Passthrough,
+          ScrollArea: Passthrough,
+          Stack: Passthrough,
+          Text: Passthrough,
+          ApplicationsSection: ({ applications: items }: any) =>
+            React.createElement("span", null, `apps:${items.length}`),
+          ServicesSection: ({ services: items }: any) => React.createElement("span", null, `services:${items.length}`),
+          ServersSection: ({ serverResourceCounts, showIp, onToggleIp }: any) => {
+            toggle = onToggleIp;
+            return React.createElement("span", null, JSON.stringify([...serverResourceCounts]), String(showIp));
+          },
+          buildServerResourceCounts: (...args: any[]) => {
+            counters.countBuilds++;
+            return helpers.buildServerResourceCounts(...args);
+          },
+          getBadgeColor: helpers.getBadgeColor,
+          parseStatus: helpers.parseStatus,
+          isCoolifyServerOnline: helpers.isCoolifyServerOnline,
+          getSafeApplicationUrl: (value: string) => value,
+          SAFE_NEW_TAB_REL: "noopener noreferrer",
+          COOLIFY_BRAND_COLOR: "#8B5CF6",
+          COOLIFY_ICON_URL: "fixture-icon",
+          classes: {},
+        };
+        const Component = ctx.evaluate<any>(
+          side,
+          file,
+          [layout === "single" ? "SingleInstanceLayout" : "InstanceCard", "InstanceFooter"],
+          bindings,
+          { returnExpression: layout === "single" ? "SingleInstanceLayout" : "InstanceCard" },
+        );
+        const render = harness.componentDriver(Component, counters, () => toggle);
+        return () => render(props);
+      };
+      return {
+        before: sides("before"),
+        after: sides("after"),
+        verify: verifyRenders,
+        metrics: renderMetrics,
+        cleanup: harness.cleanup,
+      };
+    },
+  });
+}
+
+function clusterCase(size: number, primary = false) {
+  return benchmarkPair({
+    id: primary ? "WIDGETS_B_008" : `WIDGETS_B_008:${size}`,
+    title: `Cluster node aggregates, ${size} nodes`,
+    files: [clusterFile],
+    iterations: 2000,
+    fixture: `${size} mixed running/stopped nodes; highest uptime on a stopped node; VM/LXC/storage counts stay visible. Includes empty/nonfinite numeric edge assertions. Derivation only.`,
+    prepare(ctx) {
+      const fixtures = [0, size].map((length) => ({
+        nodes: Array.from({ length }, (_, index) => ({
+          isRunning: index % 3 !== 0,
+          uptime: index % 3 === 0 ? 1_000_000 + index : index,
+          memory: { used: index * 1024, total: 4096 + index * 1024 },
+          cpu: { cores: (index % 8) + 1, utilization: index / Math.max(1, length) },
+        })),
+        vms: [{ isRunning: true }, { isRunning: false }],
+        lxcs: [{ isRunning: true }],
+        storages: [{ isRunning: false }],
+      }));
+      fixtures.push({
+        nodes: [
+          { isRunning: true, uptime: NaN, memory: { used: 0, total: 0 }, cpu: { cores: 0, utilization: 0 } },
+          { isRunning: false, uptime: 2, memory: { used: 8, total: 9 }, cpu: { cores: 4, utilization: 0.5 } },
+        ],
+        vms: [],
+        lxcs: [],
+        storages: [],
+      });
+      const sides = (side: Side) => {
+        const counters = { nodeVisits: 0 };
+        const running = ctx.evaluate<any>(side, clusterFile, "running");
+        const calculate = ctx.evaluate<any>(
+          side,
+          clusterFile,
+          {
+            kind: "span",
+            start: side === "before" ? "  const activeNodes =" : "  let activeNodes =",
+            end: "  const isAdvanced =",
+          },
+          { running },
+          {
+            asFunction: true,
+            parameters: ["healthData"],
+            returnExpression:
+              "({ activeNodes, activeVMs, activeLXCs, activeStorage, usedMem, maxMem, maxCpu, usedCpu, uptime, cpuPercent, memPercent })",
+          },
+        );
+        const measure = () => {
+          counters.nodeVisits = 0;
+          const output = fixtures.map((fixture) =>
+            calculate({
+              ...fixture,
+              nodes: new Proxy(fixture.nodes, {
+                get(target, key, receiver) {
+                  if (key === Symbol.iterator)
+                    return function* () {
+                      for (const node of target) {
+                        counters.nodeVisits++;
+                        yield node;
+                      }
+                    };
+                  if (key === "reduce")
+                    return (callback: (...args: any[]) => any, ...rest: any[]) =>
+                      target.reduce(
+                        (...args: any[]) => {
+                          counters.nodeVisits++;
+                          return callback(...args);
+                        },
+                        ...rest,
+                      );
+                  return Reflect.get(target, key, receiver);
+                },
+              }),
+            }),
+          );
+          return { output, counters: { ...counters } };
+        };
+        return { operation: () => ({ output: fixtures.map(calculate) }), metrics: () => measure().counters };
+      };
+      const before = sides("before"),
+        after = sides("after");
+      return {
+        before: before.operation,
+        after: after.operation,
+        verify: verifyRenders,
+        metrics: (_result: unknown, side: Side) => ({ before, after })[side].metrics(),
+      };
+    },
+  });
+}
+
+function releaseCase(
+  size: number,
+  locale: string,
+  dateOnly: boolean | undefined,
+  primary = false,
+  timeZone = "Europe/Berlin",
+) {
+  return benchmarkPair({
+    id: primary ? "WIDGETS_B_009" : `WIDGETS_B_009:${locale}-${dateOnly ?? "mixed"}-${size}-${timeZone}`,
+    title: `Release dates, ${locale}, ${size} rows`,
+    files: [releasesFile, dateFile],
+    iterations: 5,
+    fixture: `${size} rows, 8 real React renders; locale ${locale}, local time zone ${timeZone}, date-only ${dateOnly ?? "mixed UTC/local"}; valid timestamps at date/year boundaries plus invalid/null/boolean dates. List limit 100. Lazy formatters create only requested date forms.`,
+    async prepare(ctx) {
+      const previousTimeZone = process.env.TZ;
+      process.env.TZ = timeZone;
+      const harness = await renderHarness();
+      const values = [
+        "2025-12-31T23:45:00.000Z",
+        "2026-01-01T00:15:00.000Z",
+        "2026-07-01T23:30:00.000Z",
+        "2026-02-28",
+        null,
+        "invalid",
+        true,
+      ];
+      const items = Array.from({ length: size }, (_, index) => ({
+        value: values[index % values.length],
+        dateOnly: dateOnly ?? index % 2 === 0,
+      }));
+      const sides = (side: Side) => {
+        const counters = { formatterConstructions: 0, memoCalls: 0, renders: 0, profilerActualDurationMs: 0 };
+        const toValidDate = ctx.evaluate<any>(side, dateFile, "toValidDate");
+        const intl = {
+          DateTimeFormat: (...args: any[]) => {
+            counters.formatterConstructions++;
+            return (Intl.DateTimeFormat as any)(...args);
+          },
+        };
+        let renderFn: (input: any) => unknown;
+        if (side === "before") {
+          const format = ctx.evaluate<any>(side, releasesFile, "formatReleaseDate", { toValidDate, Intl: intl });
+          renderFn = () => items.map((item) => format(item.value, locale, item.dateOnly));
+        } else {
+          const createReleaseDateFormatter = ctx.evaluate<any>(side, releasesFile, "createReleaseDateFormatter", {
+            toValidDate,
+            Intl: intl,
+          });
+          const derive = ctx.evaluate<any>(
+            side,
+            releasesFile,
+            { kind: "span", start: "  const locale = useCurrentIntlLocale();", end: "  const releasesQuery =" },
+            {
+              ...hooks(counters),
+              useCurrentIntlLocale: () => locale,
+              createReleaseDateFormatter,
+            },
+            { asFunction: true, returnExpression: "formatDate" },
+          );
+          renderFn = () => {
+            const format = derive();
+            return items.map((item) => format(item.value, item.dateOnly));
+          };
+        }
+        const render = harness.driver(renderFn, counters);
+        return () => render(Array.from({ length: 8 }, (_, tick) => tick));
+      };
+      return {
+        before: sides("before"),
+        after: sides("after"),
+        verify: verifyRenders,
+        metrics: renderMetrics,
+        async cleanup() {
+          await harness.cleanup();
+          if (previousTimeZone === undefined) delete process.env.TZ;
+          else process.env.TZ = previousTimeZone;
+        },
+      };
+    },
+  });
+}
+
+export const cases = [
+  mediaCase(10, "hidden", true),
+  mediaCase(1, "hidden"),
+  mediaCase(100, "hidden"),
+  mediaCase(10, "bitrate"),
+  mediaCase(100, "bitrate"),
+  mediaCase(10, "advanced"),
+  mediaCase(100, "advanced"),
+  agentsCase(100, "hidden", true),
+  agentsCase(10, "hidden"),
+  agentsCase(10_000, "hidden"),
+  agentsCase(100, "no-version"),
+  agentsCase(100, "visible"),
+  agentsCase(100, "resize"),
+  agentsCase(10_000, "visible"),
+  clockCase,
+  coolifyCase(20, "single", true),
+  coolifyCase(1, "single"),
+  coolifyCase(1000, "single"),
+  coolifyCase(20, "card"),
+  coolifyCase(1, "card"),
+  coolifyCase(1000, "card"),
+  clusterCase(3, true),
+  clusterCase(1),
+  clusterCase(100),
+  releaseCase(12, "en-US", undefined, true),
+  releaseCase(1, "en-US", true),
+  releaseCase(1, "en-US", false),
+  releaseCase(100, "en-US", undefined),
+  releaseCase(12, "de-DE", undefined),
+  releaseCase(12, "ar-SA", undefined),
+  releaseCase(12, "en-US", undefined, false, "America/New_York"),
+];
