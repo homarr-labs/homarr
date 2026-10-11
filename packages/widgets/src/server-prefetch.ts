@@ -4,6 +4,7 @@ import type { FetchQueryOptions, QueryClient, QueryKey } from "@tanstack/react-q
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { api, trpc } from "@homarr/api/server";
+import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
 import {
@@ -39,7 +40,6 @@ type Board = RouterOutputs["board"]["getHomeBoard"];
 type Item = Board["items"][number];
 type BeszelStatsInput = RouterInputs["widget"]["beszel"]["getSystemStats"];
 const mediaRequestStatuses = ["pending", "approved", "declined", "failed", "completed"] as const;
-const beszelPeriods = ["1m", "1h", "12h", "24h", "1w", "30d"] as const;
 
 const isInitiallyVisible = (board: Board, item: Item, layoutId: string) => {
   const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
@@ -65,8 +65,9 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
   const { integrationIds, options } = item;
   const storedValue = String(options.systemId ?? "");
   const selection = resolveStoredBeszelQuerySelection(storedValue, integrationIds);
-  const timePeriod = beszelPeriods.find((period) => period === (options.timePeriod ?? "1h"));
-  if (!timePeriod || timePeriod === "1m") return;
+  const period = beszelTimePeriodSchema.safeParse(options.timePeriod ?? defaultBeszelTimePeriod);
+  if (!period.success || period.data === "1m") return;
+  const timePeriod = period.data;
   const includeDocker = ["showDockerCpu", "showDockerMemory", "showDockerNetwork"].some(
     (key) => (options[key] ?? true) === true,
   );
