@@ -1,0 +1,110 @@
+{
+  "protocol": "assistant-surface-retained-dom-v2",
+  "sourceMode": "baseline",
+  "sourcePath": "/home/habs/.codex/worktrees/5fcf/homarr/audit-evidence/2026-10-11/baseline-source/apps/nextjs/src/components/assistant/assistant-runtime-provider.tsx",
+  "sourceHash": "daa626be904117a790bdad03c713bdf451496952581fc2f7bfe50ac64c479204",
+  "browserVersion": "149.0.7827.55",
+  "pair": "2",
+  "focusOwnership": {
+    "focusWasRestored": true,
+    "otherBoundaryOwnedReference": true,
+    "referenceSurvivesDifferentBoundaryUnmount": true
+  },
+  "samples": [
+    {
+      "label": "cycle-0",
+      "completedCycles": 0,
+      "elapsedSeconds": 1.404,
+      "domCounters": {
+        "documents": 1,
+        "nodes": 30,
+        "jsEventListeners": 160
+      },
+      "jsHeapUsedSize": 4680984,
+      "weakTargetsStillAlive": 0,
+      "weakTargetsCollected": 0,
+      "weakTargetCount": 0,
+      "narrowReferenceState": {
+        "surfaceIds": [
+          "unfocused-survivor:_r_0_"
+        ],
+        "retainedFocusElementConnected": null,
+        "retainedFocusElementTag": null
+      },
+      "heapSnapshot": null
+    },
+    {
+      "label": "cycle-1",
+      "completedCycles": 1,
+      "elapsedSeconds": 1.459,
+      "domCounters": {
+        "documents": 1,
+        "nodes": 38,
+        "jsEventListeners": 161
+      },
+      "jsHeapUsedSize": 4953436,
+      "weakTargetsStillAlive": 1,
+      "weakTargetsCollected": 0,
+      "weakTargetCount": 1,
+      "narrowReferenceState": {
+        "surfaceIds": [
+          "unfocused-survivor:_r_0_"
+        ],
+        "retainedFocusElementConnected": false,
+        "retainedFocusElementTag": "TEXTAREA"
+      },
+      "heapSnapshot": null
+    },
+    {
+      "label": "cycle-10",
+      "completedCycles": 10,
+      "elapsedSeconds": 2.059,
+      "domCounters": {
+        "documents": 1,
+        "nodes": 38,
+        "jsEventListeners": 161
+      },
+      "jsHeapUsedSize": 5246180,
+      "weakTargetsStillAlive": 1,
+      "weakTargetsCollected": 9,
+      "weakTargetCount": 10,
+      "narrowReferenceState": {
+        "surfaceIds": [
+          "unfocused-survivor:_r_0_"
+        ],
+        "retainedFocusElementConnected": false,
+        "retainedFocusElementTag": "TEXTAREA"
+      },
+      "heapSnapshot": null
+    },
+    {
+      "label": "cycle-50",
+      "completedCycles": 50,
+      "elapsedSeconds": 4.727,
+      "domCounters": {
+        "documents": 1,
+        "nodes": 38,
+        "jsEventListeners": 161
+      },
+      "jsHeapUsedSize": 5437576,
+      "weakTargetsStillAlive": 1,
+      "weakTargetsCollected": 49,
+      "weakTargetCount": 50,
+      "narrowReferenceState": {
+        "surfaceIds": [
+          "unfocused-survivor:_r_0_"
+        ],
+        "retainedFocusElementConnected": false,
+        "retainedFocusElementTag": "TEXTAREA"
+      },
+      "heapSnapshot": null
+    }
+  ],
+  "notes": [
+    "The focused element, module globals, boundary, and focus-preserver component are AST-extracted from the explicitly selected baseline or live source; esbuild/Vite compiles JSX without transforming component logic.",
+    "Only assistant-ui hooks, translations, and notifications unrelated to DOM ownership are stubbed.",
+    "The synthetic element carries a 512 KiB ASCII calibration string. Snapshot measurement of this string is a controlled retention sentinel, not an estimate of production DOM size.",
+    "DOM counters, weak references, a narrow read of the actual module reference, CDP JSHeapUsedSize, and heap snapshots are reported independently. Samples are timestamped by console order; no slow user-agent memory API is called.",
+    "Every worker launches a separate Chromium process. Nine paired runs alternate baseline then live and write raw snapshots only under /tmp."
+  ]
+}

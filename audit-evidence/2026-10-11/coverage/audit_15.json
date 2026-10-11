@@ -1,0 +1,577 @@
+[
+  {
+    "path": "packages/integrations/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; package root re-exports src barrel."
+  },
+  {
+    "path": "packages/integrations/package.json",
+    "status": "no actionable finding",
+    "evidence": "Full read; exports expose root, factory, types, stats, and anchor; imports include numerous external clients but their code-splitting/call sites require barrel review."
+  },
+  {
+    "path": "packages/integrations/src/adguard-home/adguard-home-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; summary fetches three fixed endpoints concurrently and parses three response bodies; no runtime size measurements."
+  },
+  {
+    "path": "packages/integrations/src/adguard-home/adguard-home-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; response schemas include arrays supplied by AdGuard; caller behavior reviewed with integration."
+  },
+  {
+    "path": "packages/integrations/src/anchor/anchor-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; list supports optional bounded limit through its schema, but details and responses are fully JSON parsed."
+  },
+  {
+    "path": "packages/integrations/src/anchor/anchor-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; list limit max 200; note content is unbounded string; no usage measurements."
+  },
+  {
+    "path": "packages/integrations/src/archive-team-warrior/archive-team-warrior-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; WebSocket snapshot retains item map until 2.5s timeout and closes socket; raw message conversion and JSON parse are full-frame operations."
+  },
+  {
+    "path": "packages/integrations/src/archive-team-warrior/archive-team-warrior-schemas.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; schemas validate decoded fields but set no message/item-count bounds."
+  },
+  {
+    "path": "packages/integrations/src/archive-team-warrior/archive-team-warrior-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; response status retains item array and optional labels."
+  },
+  {
+    "path": "packages/integrations/src/beszel/beszel-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Dedicated full-file pass; REST list sizes mostly fixed at 500/60/50; realtime parses each SSE frame and emits snapshot records."
+  },
+  {
+    "path": "packages/integrations/src/beszel/beszel-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; system/container historical records and live events use typed arrays/maps but define no runtime payload size limits; not executable retention."
+  },
+  {
+    "path": "packages/integrations/src/beszel/pocketbase-realtime.ts",
+    "status": "finding identified",
+    "evidence": "Full read; parser appends unterminated line and data lines until newline/blank delimiter with no cap."
+  },
+  {
+    "path": "packages/integrations/src/coolify/coolify-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; getInstanceInfoAsync concurrently fetches five datasets, then listProjectsWithEnvironmentsAsync fans out one detail request per project via Promise.all; returned raw app/service/server records remain in the response. No project-count or response-size limit in this integration."
+  },
+  {
+    "path": "packages/integrations/src/coolify/coolify-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Coolify list/detail schemas validate selected fields and nested environment/service arrays without cardinality bounds."
+  },
+  {
+    "path": "packages/integrations/src/dashdot/dashdot-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; six endpoint requests run concurrently; CPU history channel stores 100 samples and reads a 15-minute slice; current disk/network/gpu arrays are derived for response."
+  },
+  {
+    "path": "packages/integrations/src/factory.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; re-exports base creator."
+  },
+  {
+    "path": "packages/integrations/src/glances/glances-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; `/api/4/all`, sensors, SMART responses are parsed fully; optional sensor/SMART failures degrade; response arrays are mapped to short view-model arrays. No bounds or payload measurements."
+  },
+  {
+    "path": "packages/integrations/src/gluetun/gluetun-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; summary issues four fixed requests concurrently and parses settings/status responses."
+  },
+  {
+    "path": "packages/integrations/src/gluetun/gluetun-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; schemas contain provider settings arrays, including remote selection lists."
+  },
+  {
+    "path": "packages/integrations/src/gotify/gotify-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; notification list requests at most 100, but application metadata and icon processing fan out once per application."
+  },
+  {
+    "path": "packages/integrations/src/gotify/gotify-schema.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; response schema shapes message/application records; no measured sizes."
+  },
+  {
+    "path": "packages/integrations/src/homeassistant/homeassistant-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; stats materialize all entity IDs/states to count; calendar call issues one request per calendar concurrently and flattens all returned events for a requested date range; no calendar/event caps here."
+  },
+  {
+    "path": "packages/integrations/src/homeassistant/homeassistant-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; calendar/event and entity attribute schemas include arrays/records with no cardinality limits."
+  },
+  {
+    "path": "packages/integrations/src/http-auth.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; derives header/query authentication from saved credentials; no relevant payload retention."
+  },
+  {
+    "path": "packages/integrations/src/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; barrel statically exports integration constructors, including integrations with large optional clients; package export/import graph not fully traced."
+  },
+  {
+    "path": "packages/integrations/src/llama-cpp/llamacpp-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; health/models/metrics/slots fetched concurrently with 10s request timeout; response parsers and mappings are delegated to adjacent types file."
+  },
+  {
+    "path": "packages/integrations/src/llama-cpp/llamacpp-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; model/slot summaries iterate retained JSON arrays, metrics parser splits the complete text into lines and retains recognized samples before mapping to a handful of counters. Payload sizes/line counts are unmeasured."
+  },
+  {
+    "path": "packages/integrations/src/ntfy/ntfy-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; GETs `/topic/json?poll=1`, reads the entire response into one string, splits all lines, parses them concurrently with Promise.all, then maps all message events. No page/item/body cap or local timeout in this method."
+  },
+  {
+    "path": "packages/integrations/src/ntfy/ntfy-schema.ts",
+    "status": "reviewed",
+    "evidence": "Full read; notification shape validates per-line fields but has no count or string-size limit."
+  },
+  {
+    "path": "packages/integrations/src/openmediavault/openmediavault-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; system, filesystem, SMART, and CPU data are fetched sequentially and mapped to response arrays; session is stored in Redis and reused, with 401 reacquisition; no historical accumulation in this class."
+  },
+  {
+    "path": "packages/integrations/src/openmediavault/openmediavault-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; OMV file system and SMART responses are arrays mapped into display arrays without count caps."
+  },
+  {
+    "path": "packages/integrations/src/opnsense/opnsense-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; interface results map one entry per remote interface and push to bounded 15-entry history; CPU SSE reads at most ten chunks and cancels reader in finally."
+  },
+  {
+    "path": "packages/integrations/src/opnsense/opnsense-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; interfaces are a record and API version array have no schema count limits."
+  },
+  {
+    "path": "packages/integrations/src/paperless-ngx/paperless-ngx-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; makes four fixed concurrent stats/count requests and extracts scalar counts."
+  },
+  {
+    "path": "packages/integrations/src/paperless-ngx/paperless-ngx-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; count/stat types are scalar only."
+  },
+  {
+    "path": "packages/integrations/src/patchmon/patchmon-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; stats response has ten-second timeout for normal fetch and one mapped distribution array."
+  },
+  {
+    "path": "packages/integrations/src/patchmon/patchmon-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; parses full response then copies/maps/sorts os_distribution; output retains that distribution list. No list cap or size measurements."
+  },
+  {
+    "path": "packages/integrations/src/peanut/peanut-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; one devices endpoint returns array of flat device maps; parses whole array then allocates one summary per device; no explicit maximum count."
+  },
+  {
+    "path": "packages/integrations/src/peanut/peanut-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; device is an arbitrary string-keyed map of string/number values and the device list has no bound."
+  },
+  {
+    "path": "packages/integrations/src/pi-hole/pi-hole-integration-factory.ts",
+    "status": "reviewed",
+    "evidence": "Full read; probes one version endpoint and selects v5 only on 404; fallback on connection errors creates v6 integration."
+  },
+  {
+    "path": "packages/integrations/src/pi-hole/v5/pi-hole-integration-v5.ts",
+    "status": "reviewed",
+    "evidence": "Full read; summary endpoint produces scalar counts; no history retained."
+  },
+  {
+    "path": "packages/integrations/src/pi-hole/v5/pi-hole-schemas-v5.ts",
+    "status": "reviewed",
+    "evidence": "Full read; only summary scalars validated."
+  },
+  {
+    "path": "packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts",
+    "status": "reviewed",
+    "evidence": "Full read; session stored in Redis; summary and blocking requests run sequentially; each parses a bounded-shape scalar response; test path explicitly deletes acquired session."
+  },
+  {
+    "path": "packages/integrations/src/pi-hole/v6/pi-hole-schemas-v6.ts",
+    "status": "reviewed",
+    "evidence": "Full read; auth/status/stats summary schemas contain scalar fields only."
+  },
+  {
+    "path": "packages/integrations/src/proxmox/proxmox-error-handler.ts",
+    "status": "reviewed",
+    "evidence": "Full read; maps error message/status causes into normalized integration errors; no retained payload state."
+  },
+  {
+    "path": "packages/integrations/src/proxmox/proxmox-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; cluster resources fetched as one complete array, mapped to new resource objects then filtered into four category arrays; duplicate short-lived references/copies scale with cluster resource count. No measured cluster sizes or memory."
+  },
+  {
+    "path": "packages/integrations/src/proxmox/proxmox-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; resource result shapes are arrays grouped by resource type; no code or retention."
+  },
+  {
+    "path": "packages/integrations/src/speedtest-tracker/speedtest-tracker-integration.ts",
+    "status": "reviewed",
+    "evidence": "Full read; dashboard fetches three endpoints concurrently; history endpoint explicitly requests 30 rows."
+  },
+  {
+    "path": "packages/integrations/src/speedtest-tracker/speedtest-tracker-types.ts",
+    "status": "reviewed",
+    "evidence": "Full read; result collection is an array with per-page metadata; integration caller caps its dashboard fetch at 30."
+  },
+  {
+    "path": "packages/integrations/src/stats/existing.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; legacy adapters map results after each client call; several summary counts consume full response collections (for example notifications or inventories), with sizes not measured."
+  },
+  {
+    "path": "packages/integrations/src/stats/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; legacy requests limited to 128 concurrent integration IDs and deduplicated by integration ID; provider path has caller deadline."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; statically imports and registers all provider definitions; bundle impact depends on consumers/tree shaking and was not measured."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/autobrr.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Fetches three responses concurrently; arrays for filters/indexers are parsed and counted."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/caddy.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Axios provider parses complete upstream array and performs two linear sums; fresh certificate Axios client created by common stats transport."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/changedetection.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses entire watch record and enumerates/filters all watches; list size depends on configured service."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/fileflows.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One fixed status object parsed; no collection retention."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/frigate.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses stats and counts camera-record keys; authentication profile allowed_cameras list is fetched and discarded after validation."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/gatus.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Response maps endpoint data to arrays and reduces current statuses; entire history returned by API is parsed despite using only last result per endpoint."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/healthchecks.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses entire checks list and makes four filtering passes to compute counts."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/homebox.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Two sequential summary/auth-related requests return scalar statistics; no collection retention."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/jellystat.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One aggregate stats object for fixed 30-day query; scalar results."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/karakeep.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One user stats object with scalar counters."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/komga.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Three calls run concurrently; full libraries array is parsed and filtered, while other responses use totalElements."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/linkwarden.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Collections and first tag page parsed; cursor pagination capped at 1000 pages with visited cursor Set; previous page tags are reduced to count and released."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/maintainerr.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One fixed metrics object with scalars."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/mealie.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One scalar household stats response."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/miniflux.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Full read/unread counter records parsed and values summed; memory/work scales with feeds."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/netalertx.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses one positional tuple of summary totals; no collection retention."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/netdata.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses one info object and returns two counters."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/plantit.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Authentication and stats each parse compact response objects; token is returned as header/redaction metadata only."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/prometheus.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses active target array and filters it for counts; dropped target array is also received by JSON transport but omitted from the returned result."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/romm.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One compact scalar stats object."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/scrutiny.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Two requests concurrently; full device map is converted to values/filter arrays and passed through separate filters; no cardinality bound."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/spoolman.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Parses all spool records, filters archived records into a second array, then sums weights; list size unbounded in provider."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/stash.ts",
+    "status": "reviewed",
+    "evidence": "Full read; GraphQL query selects only nine scalar aggregate fields and schema is strict; response/result small by contract."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/syncthing-relay.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One status object with counters."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/tandoor.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Fetches spaces plus one keyword page concurrently; parses space list but consumes only first entry."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/trilium.ts",
+    "status": "reviewed",
+    "evidence": "Full read; One metric object with three read values."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/tubearchivist.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Four summary endpoints requested concurrently; response schemas only use counts."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/unmanic.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Workers status list is parsed and filtered; pending tasks request uses length 0, but full worker list remains unbounded."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/xteve.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Login and status each parse one response object; token carried only in request payload/header redaction metadata."
+  },
+  {
+    "path": "packages/integrations/src/stats/providers/your-spotify.ts",
+    "status": "reviewed",
+    "evidence": "Full read; Three all-time endpoints fetched concurrently; song/time use first aggregate row; artist count reads length of artist array and then drops it. Transfer and parse still scale with artist cardinality; no measurements or upstream cardinality evidence."
+  },
+  {
+    "path": "packages/integrations/src/stats/stats-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; fetch context parses complete JSON response; Axios path creates a certificate client per call; no response byte cap."
+  },
+  {
+    "path": "packages/integrations/src/stats/types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; provider interface has no response-size metadata/cap."
+  },
+  {
+    "path": "packages/integrations/src/synology/synology-client.ts",
+    "status": "finding identified",
+    "evidence": "Full read; one module-scope `apiDefinitionCache` Map is keyed by integrationId + fixed API name and never evicts. Private lookup is called for auth/info and a fixed set of system/storage APIs. Entries retain only small `{cgiPath,maxVersion}` objects/keys, but grow with every integration ID ever used during process lifetime. No invalidation or cardinality cap."
+  },
+  {
+    "path": "packages/integrations/src/synology/synology-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; request-scoped factory integration owns a per-instance client and fans out up to five optional requests after core calls. Merges load/SMART disk lists by id; output records are bounded by device inventory, no history."
+  },
+  {
+    "path": "packages/integrations/src/synology/synology-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; validators accept remote volume/disk/network arrays and passthrough objects without count caps; per-device inventory sizes were not measured."
+  },
+  {
+    "path": "packages/integrations/src/technitium/technitium-integration-factory.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; factory instantiates one integration; authentication version detection is lazy and delegated to Redis session cache."
+  },
+  {
+    "path": "packages/integrations/src/technitium/technitium-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; stats/settings responses are parsed sequentially; token/session stored in Redis, with explicit logout/clear during credential connection testing; no process-local cache."
+  },
+  {
+    "path": "packages/integrations/src/technitium/technitium-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; request schemas are compact scalar objects; body reader parses complete JSON response."
+  },
+  {
+    "path": "packages/integrations/src/tracearr/tracearr-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; dashboard requests stats/streams plus paged violations(5)/history(10); maps avatar/poster requests concurrently per result item through ImageProxy; raw arrays retained during mapping."
+  },
+  {
+    "path": "packages/integrations/src/tracearr/tracearr-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; health/server and paginated response types; streams response array has no client-side schema/cardinality bound."
+  },
+  {
+    "path": "packages/integrations/src/traefik/traefik-bounds.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; all Traefik JSON readers use shared 2 MiB response-byte maximum."
+  },
+  {
+    "path": "packages/integrations/src/traefik/traefik-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; up to ten endpoints requested concurrently, each body bounded to 2 MiB; resource detail output limited to 200 and entry points to 200, while full bounded arrays are held for totals."
+  },
+  {
+    "path": "packages/integrations/src/traefik/traefik-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; resource array schema allows passthrough remote fields; raw body bound is enforced in integration before parse."
+  },
+  {
+    "path": "packages/integrations/src/truenas/truenas-api.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; declares the two static protocol envelopes and matching logic; no payload retention."
+  },
+  {
+    "path": "packages/integrations/src/truenas/truenas-client.ts",
+    "status": "finding identified",
+    "evidence": "Full read; static connectionMap retains resolved open sockets keyed by integration ID, static apiMap stores protocol choice; socket eviction occurs only on failed connection/server close or explicit test; no idle TTL, max cardinality, or integration-delete cleanup hook."
+  },
+  {
+    "path": "packages/integrations/src/truenas/truenas-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; integration owns client only per integration instance, fetched once per call; data queries cover reporting/pools/network and map outputs; persistent socket state lives in static TrueNasClient maps."
+  },
+  {
+    "path": "packages/integrations/src/types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; barrel-only type re-exports; no runtime state."
+  },
+  {
+    "path": "packages/integrations/src/umami/umami-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; event names capped at 5000; event series pages cap at 5000 records and 20 pages; page data is reduced to buckets; visitor stats concurrently fetch up to four endpoints; chart series are bounded by time range."
+  },
+  {
+    "path": "packages/integrations/src/umami/umami-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; data point and aggregate response types; arrays have no runtime cardinality constraints (limits are enforced at integration call sites for events)."
+  },
+  {
+    "path": "packages/integrations/src/unifi-controller/unifi-controller-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; fetches site stats then fans out one remote-VPN request per site with Promise.all; controller client and cookie agents are per call; site cardinality and peak concurrency are not measured."
+  },
+  {
+    "path": "packages/integrations/src/unifi-controller/unifi-controller-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; type-only alias of node-unifi SiteStats subsystem."
+  },
+  {
+    "path": "packages/integrations/src/unraid/unraid-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; one bounded-field GraphQL query but arrays of CPUs/disks/caches/network devices are returned and copied/mapped into display records; no array caps or measurements."
+  },
+  {
+    "path": "packages/integrations/src/unraid/unraid-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; Zod schema permits variable-length CPU/disk/cache/network arrays."
+  },
+  {
+    "path": "packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; two requests run concurrently and full heartbeat records are parsed; only latest per public monitor is retained in the mapped result."
+  },
+  {
+    "path": "packages/integrations/src/uptime-kuma/uptime-kuma-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; status groups, monitors, heartbeat lists, and uptime records accept unbounded arrays/records."
+  },
+  {
+    "path": "packages/integrations/src/wazuh/wazuh-errors.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; maps error cause/status into compact public enum; no payload retained in public error shape."
+  },
+  {
+    "path": "packages/integrations/src/wazuh/wazuh-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Dedicated full-file pass; agent documents max 1000; search APIs parse complete JSON responses; alert/CVE/list query result limits are caller capped."
+  },
+  {
+    "path": "packages/integrations/src/wazuh/wazuh-mock.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; deterministic fixed-size demo fixture, including bounded 24-point series; module retains no dynamically growing state."
+  },
+  {
+    "path": "packages/integrations/src/wazuh/wazuh-queries.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; timeline helper caps histogram at 400 buckets and maps selected alert fields."
+  },
+  {
+    "path": "packages/integrations/src/wazuh/wazuh-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; typed result/source shapes; no in-memory caches retained here."
+  },
+  {
+    "path": "packages/integrations/src/wud/wud-integration.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; parses complete container response under 10-second timeout; output maps all update-available container entries."
+  },
+  {
+    "path": "packages/integrations/src/wud/wud-types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; containers array has no count cap; mapping filters twice and creates a new updates array for matching records."
+  },
+  {
+    "path": "packages/integrations/tsconfig.json",
+    "status": "no actionable finding",
+    "evidence": "Full read; compiler configuration only."
+  }
+]

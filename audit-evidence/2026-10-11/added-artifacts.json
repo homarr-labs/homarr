@@ -1,0 +1,9 @@
+[
+  {
+    "path": "packages/custom-widgets/src/core/component-catalog.runtime.generated.json",
+    "status": "reviewed generated runtime data",
+    "reason": "New canonical generator projection assessed through full descriptor/alias/binding/required-prop parity, production import graph, byte counts, browser transfer and GC heap; excluded from repetitive line-by-line individual logic review.",
+    "canonical_source": "packages/custom-widgets/scripts/generate-component-metadata.ts",
+    "bytes": 227717
+  }
+]

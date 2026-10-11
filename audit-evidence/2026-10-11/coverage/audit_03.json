@@ -1,0 +1,547 @@
+[
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/[...not-found]/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; catch-all route immediately delegates to Next notFound()."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/_access.ts",
+    "status": "reviewed",
+    "evidence": "Full file read; pure permission projections reuse an already fetched integration list, while async wrapper conditionally queries only for delegated access."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/_components/hero-banner.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/_components/hero-banner.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; server component fetches translation and branding settings in parallel, then renders the logo and marquee."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/about/about.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/about/page.tsx",
+    "status": "finding identified",
+    "evidence": "Finding identified: the route imports all three contributor datasets and renders every contributor Avatar in AccordionPanels, with no lazy image loading; see report finding 1."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/error.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; error boundary logs changed error objects in an effect and exposes retry; no retained buffer."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/layout.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; auth and tour status resolve in parallel; navigation list is request-scoped and passed into ClientShell navigation."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/not-found.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; server not-found page fetches one translation namespace and renders a back link."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; home page fetches aggregate stats and delegates banner settings/translation fetching to HeroBanner."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 108-line file read; exports SearchEngineForm; uses clientApi.integration.allThatSupportSearch.useSuspenseQuery. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/_search-engine-delete-button.tsx",
+    "status": "reviewed",
+    "evidence": "Full 57-line file read; exports SearchEngineDeleteButton; uses clientApi.searchEngine.delete.useMutation, useCallback, useMutation. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/_search-engine-edit-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 65-line file read; exports SearchEngineEditForm; uses clientApi.searchEngine.update.useMutation, useCallback, useMutation. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 36-line file read; exports SearchEngineEditPage; uses api.searchEngine.byId. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/new/_search-engine-new-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 53-line file read; exports SearchEngineNewForm; uses clientApi.searchEngine.create.useMutation, useCallback, useMutation. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/new/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 29-line file read; exports SearchEngineNewPage. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; paginates API results and renders each result with bounded links/actions; page size max is 100."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx",
+    "status": "reviewed",
+    "evidence": "Full 40-line file read; exports AnalyticsSettings. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/appearance-settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 56-line file read; exports AppearanceSettingsForm. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/board-settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 55-line file read; exports BoardSettingsForm. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/branding-settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 272-line file read; exports BrandingSettingsForm. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/crawling-and-indexing.settings.tsx",
+    "status": "reviewed",
+    "evidence": "Full 35-line file read; exports CrawlingAndIndexingSettings. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/culture-settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 29-line file read; exports CultureSettingsForm. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/search-settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 30-line file read; exports SearchSettingsForm. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx",
+    "status": "reviewed",
+    "evidence": "Full 48-line file read; exports SwitchSetting; uses useCallback. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; form retains the settings projection and baseline ref, submits only changed settings groups concurrently, then updates baseline and refreshes."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/_components/user-settings-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 28-line file read; exports UserSettingsForm. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/loading.tsx",
+    "status": "reviewed",
+    "evidence": "Full 9-line file read; exports SettingsLoading. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/settings/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; admin gate precedes parallel settings/board/search-engine reads, whose results are required by SettingsForm."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx",
+    "status": "reviewed",
+    "evidence": "Full 138-line file read; exports ApiKeysManagement; uses clientApi.apiKeys.create.useMutation, clientApi.apiKeys.delete.useMutation, api.tab.apiKey. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/api-page-tabs.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; documentation is initially selected, API key and MCP panels are gated by active tab, but apiKeys/toolGroups remain client props."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-instructions.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; toolGroups are filtered in a memo by user search, and only the active MCP tab renders the grouped tool accordion."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/mcp-tools-accordion.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/new-api-key-alert.tsx",
+    "status": "reviewed",
+    "evidence": "Full 50-line file read; exports NewApiKeyAlert; uses api.modal.createApiToken, useDisclosure. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-api-reference-frame.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-api-reference-frame.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; renders a same-origin iframe to the locale API reference route, isolating Scalar loading from the manage page chunk."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-api-reference.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; Scalar package is imported by the separate reference route and receives memoized static configuration."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-theme.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; admin route groups MCP tool metadata and passes all groups as client props even while the initial documentation tab is selected; see report measurement gap."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-export-card.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; explicit export fetches one ZIP Blob, downloads it through an object URL, then revokes the URL; state contains one error string."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/backup/_components/backup-import-card.tsx",
+    "status": "reviewed",
+    "evidence": "Full 27-line file read; exports BackupImportCard. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/backup/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 43-line file read; exports generateMetadata, BackupPage. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/add-certificate.tsx",
+    "status": "reviewed",
+    "evidence": "Full 35-line file read; exports AddCertificateSection; uses useDisclosure. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/certificate-upload-form.tsx",
+    "status": "reviewed",
+    "evidence": "Full 110-line file read; exports CertificateUploadForm; uses clientApi.certificates.addCertificate.useMutation, useMutation. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/certificates/_components/remove-certificate.tsx",
+    "status": "reviewed",
+    "evidence": "Full 56-line file read; exports RemoveCertificate; uses clientApi.certificates.removeCertificate.useMutation, useMutation. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/certificates/hostnames/_components/remove-hostname.tsx",
+    "status": "reviewed",
+    "evidence": "Full 54-line file read; exports RemoveHostnameActionIcon; uses clientApi.certificates.removeTrustedHostname.useMutation, useMutation. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/certificates/hostnames/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; loads trusted hostnames and maps certificate text to subject strings; client action receives only hostname and thumbprint."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/certificates/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; parses each loaded certificate once into X509 metadata, sorts by expiry, and passes only filenames to client delete actions."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation-inbox.ts",
+    "status": "reviewed",
+    "evidence": "Full file read; dismissed IDs become a Set per filter call; filter returns a new candidate array and URL helper scans port arrays."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; reconciliation query remains available while collapsed, health query is enabled only when expanded; candidate health lookup currently uses per-candidate find."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx",
+    "status": "finding identified",
+    "evidence": "Finding identified: each mounted ContainerRowMenu creates four mutation hooks per container; bulk failure-name resolution scans the container array for every failed result; see report finding 2 and large-file notes."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/error.tsx",
+    "status": "reviewed",
+    "evidence": "Full 28-line file read; exports DockerErrorPage. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/client.tsx",
+    "status": "reviewed",
+    "evidence": "Full 10-line file read; exports ClientSideDockerLogsTerminal. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 58-line file read; exports DockerContainerLogsPage; uses api.docker.logs, api.docker.getEndpoints. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; bounded initial tail subscription feeds terminal; pending log queue is drained on initialization and cleared on unmount, addon/terminal disposed."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/docker/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; server preloads containers/endpoints once and passes that result to DockerTable as initial query data."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; two context-scoped queries feed fixed-size dashboard cards and resource tiles."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/error.tsx",
+    "status": "reviewed",
+    "evidence": "Full 28-line file read; exports KubernetesErrorPage. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card.tsx",
+    "status": "reviewed",
+    "evidence": "Full 43-line file read; exports HeaderTypes, HeaderCard. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-icon.tsx",
+    "status": "reviewed",
+    "evidence": "Full 18-line file read; exports HeaderIcon. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-gauge.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; maps capacity stats into labels and progress bars; bounded by returned resource stats."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-icon.tsx",
+    "status": "reviewed",
+    "evidence": "Full 22-line file read; exports ResourceIcon. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-tile/resource-tile.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-tile/resource-tile.tsx",
+    "status": "reviewed",
+    "evidence": "Full 38-line file read; exports ResourceTile. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; initial server data seeds a client query and all returned configmaps are passed to a non-paginated table."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 39-line file read; exports ConfigMapsPage; uses api.kubernetes.configMaps.getConfigMaps. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx",
+    "status": "finding identified",
+    "evidence": "Finding identified: each rendered ingress path receives a fresh createId key on every render, causing row child replacement on rerenders; see report finding 3."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 39-line file read; exports NamespacesPage; uses api.kubernetes.ingresses.getIngresses. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; context list refreshes every 30 seconds and selection is projected via URL/localStorage; several linear find/some lookups over contexts."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts",
+    "status": "reviewed",
+    "evidence": "Full file read; server chooses requested/default/first context using at most two linear scans."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-query-options.ts",
+    "status": "reviewed",
+    "evidence": "Full file read; shared helper seeds client queries and polls only after query errors."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx",
+    "status": "reviewed",
+    "evidence": "Full 15-line file read; exports KubernetesLayout. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full 96-line file read; exports NamespacesTable; uses clientApi.kubernetes.namespaces.getNamespaces.useQuery, useQuery. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 39-line file read; exports NamespacesPage; uses api.kubernetes.namespaces.getNamespaces. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/nodes-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full 149-line file read; exports NodesTable; uses clientApi.kubernetes.nodes.getNodes.useQuery, useQuery. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 33-line file read; exports NodesPage; uses api.kubernetes.nodes.getNodes. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 21-line file read; exports KubernetesPage. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 33-line file read; exports PodsPage; uses api.kubernetes.pods.getPods. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/pods-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full 87-line file read; exports PodsTable; uses clientApi.kubernetes.pods.getPods.useQuery, useQuery. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 33-line file read; exports SecretsPage; uses api.kubernetes.secrets.getSecrets. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/secrets-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full 82-line file read; exports SecretsTable; uses clientApi.kubernetes.secrets.getSecrets.useQuery, useQuery. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 33-line file read; exports ServicesPage; uses api.kubernetes.services.getServices. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx",
+    "status": "finding identified",
+    "evidence": "Finding identified: each rendered service port and target port receives a fresh createId key on every render, causing child replacement on rerenders; see report finding 3."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full 33-line file read; exports VolumesPage; uses api.kubernetes.volumes.getVolumes. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/volumes-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full 106-line file read; exports VolumesTable; uses clientApi.kubernetes.volumes.getVolumes.useQuery, useQuery. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/client.tsx",
+    "status": "reviewed",
+    "evidence": "Full 14-line file read; exports ClientSideTerminalComponent. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/font-size-slider.tsx",
+    "status": "reviewed",
+    "evidence": "Full 29-line file read; exports LogFontSizeSlider. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/level-selection.tsx",
+    "status": "reviewed",
+    "evidence": "Full 33-line file read; exports LogLevelSelection. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/log-context.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; stores selected level and font size, derives active levels, reads/writes one localStorage value; no global listeners."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; guarded page owns log context and passes only optional timestamp to dynamically loaded terminal."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/terminal.module.css",
+    "status": "reviewed",
+    "evidence": "Static stylesheet fully read; contains presentation rules only, with no runtime state, data transfer, or lifecycle path."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/logs/terminal.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; log history is capped by LOG_HISTORY_MAX_ENTRIES, subscription cleanup is hook-owned, and terminal/addons/timer are disposed on unmount."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/tasks/_components/tasks-table.tsx",
+    "status": "reviewed",
+    "evidence": "Full 517-line file read; job rows and status map are bounded by registered jobs, loading flags keyed by job name, status subscription is hook-owned; see dedicated large-file note."
+  },
+  {
+    "path": "apps/nextjs/src/app/[locale]/manage/tools/tasks/page.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; admin route loads registered jobs once and passes the resulting list as client initial query data."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/danger-zone.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; maps its finite child list to keyed fragments and separators."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/manage-collection.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; common collection wrapper maps already-projected children without holding extra data."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/manage-container.tsx",
+    "status": "reviewed",
+    "evidence": "Full 11-line file read; exports ManageContainer. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/manage-mobile-primary-action.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; renders children in desktop and affixed mobile branches, so the action subtree is duplicated in the DOM."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/manage-page-layout.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; composes optional toolbar/footer/actions and finite children into a layout."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/manage-page.constants.ts",
+    "status": "reviewed",
+    "evidence": "Full 5-line file read; exports MANAGE_AFFIX_POSITION, MANAGE_FLOATING_ACTION_BOTTOM_OFFSET, MANAGE_ACTION_BUTTON_MIN_WIDTH. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/manage-sticky-footer.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; presentational sticky container only."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/mobile-affix-button.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read; renders two Button instances for responsive desktop/mobile visibility, duplicating button children in DOM."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/section-card.tsx",
+    "status": "reviewed",
+    "evidence": "Full 19-line file read; exports SectionCard. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/unsaved-changes-bar.tsx",
+    "status": "reviewed",
+    "evidence": "Full 25-line file read; exports UnsavedChangesBar. Reviewed its props, state/data path, and resource cleanup; no supported actionable issue found."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/unsaved-changes-guard.ts",
+    "status": "reviewed",
+    "evidence": "Full file read; registers document/window listeners and returns cleanup that removes each listener."
+  },
+  {
+    "path": "apps/nextjs/src/components/manage/use-unsaved-changes-guard.ts",
+    "status": "reviewed",
+    "evidence": "Full file read; effect registers one guard and returns its listener cleanup; refs keep current dirty and confirmation callbacks."
+  }
+]

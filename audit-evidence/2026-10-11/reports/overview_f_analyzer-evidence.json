@@ -1,0 +1,1125 @@
+{
+  "nextVersion": "16.3.6",
+  "analyzerModuleCount": 34610,
+  "sourceFiles": {
+    "moduleGraph": "apps/nextjs/.next/diagnostics/analyze/data/modules.data",
+    "instrumentationGraph": "apps/nextjs/.next/diagnostics/analyze/data/instrumentation/analyze.data"
+  },
+  "integrationBarrel": {
+    "context": "instrumentation",
+    "staticDependencyCount": 56,
+    "staticDependencyModules": [
+      "[project]/packages/integrations/src/archive-team-warrior/archive-team-warrior-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/wud/wud-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/llama-cpp/llamacpp-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/adguard-home/adguard-home-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/technitium/technitium-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/anchor/anchor-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/aria2/aria2-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/deluge/deluge-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/nzbget/nzbget-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/qbittorrent/qbittorrent-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/sabnzbd/sabnzbd-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/slskd/slskd-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/transmission/transmission-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/homeassistant/homeassistant-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/jellyfin/jellyfin-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/jellyseerr/jellyseerr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/bindery/bindery-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/radarr/radarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/readarr/readarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/nextcloud/nextcloud.integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/gotify/gotify-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/ntfy/ntfy-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/openmediavault/openmediavault-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/glances/glances-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/overseerr/overseerr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/seerr/seerr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/pi-hole/v5/pi-hole-integration-v5.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/plex/plex-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/prowlarr/prowlarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/jackett/jackett-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/truenas/truenas-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/synology/synology-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/unraid/unraid-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/opnsense/opnsense-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/ical/ical-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/coolify/coolify-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/immich/immich-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/tracearr/tracearr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/speedtest-tracker/speedtest-tracker-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/navidrome/navidrome-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/umami/umami-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/peanut/peanut-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/bazarr/bazarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/traefik/traefik-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/mock/widget-data.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/interfaces/media-requests/media-request-types.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/wazuh/wazuh-errors.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/anchor/anchor-types.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/interfaces/downloads/download-client-items.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/base/creator.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/base/response-contract.ts [instrumentation] (ecmascript)"
+    ],
+    "emittedSourceModules": [
+      {
+        "path": "[project]/packages/integrations/src/jackett/jackett-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2317,
+        "compressedBytes": 897,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1x0x6kp._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/anchor/anchor-integration.ts",
+        "emitted": true,
+        "sourceBytes": 1863,
+        "compressedBytes": 886,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_anchor_1900ual._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/anchor/anchor-types.ts",
+        "emitted": true,
+        "sourceBytes": 921,
+        "compressedBytes": 380,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_anchor_1900ual._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_0x3cu_i._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1g6e7ss._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_07m9zkm._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1ixmep2._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_01u3m22._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1-z48a3._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1ukwq8p._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_058yl_8._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1lj7ivs._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_0ceyzh-._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/pi-hole/v5/pi-hole-integration-v5.ts",
+        "emitted": true,
+        "sourceBytes": 1711,
+        "compressedBytes": 726,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_1hocvxc._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/pi-hole/v6/pi-hole-integration-v6.ts",
+        "emitted": true,
+        "sourceBytes": 3513,
+        "compressedBytes": 1214,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_1hocvxc._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/adguard-home/adguard-home-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3447,
+        "compressedBytes": 1106,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_adguard-home_0tsse64._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/technitium/technitium-integration.ts",
+        "emitted": true,
+        "sourceBytes": 6195,
+        "compressedBytes": 1978,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_1hidkyp._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/homeassistant/homeassistant-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3011,
+        "compressedBytes": 1219,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_1_kdcxe._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/jellyfin/jellyfin-integration.ts",
+        "emitted": true,
+        "sourceBytes": 6655,
+        "compressedBytes": 2692,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_1vhv1fu._.js",
+          "[output]/apps/nextjs/.next/server/chunks/_1tj9g0n._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/plex/plex-integration.ts",
+        "emitted": true,
+        "sourceBytes": 9758,
+        "compressedBytes": 3519,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-n7gk8._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 5566,
+        "compressedBytes": 1840,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_media-organizer_0nmq2nt._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/media-organizer/radarr/radarr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 4862,
+        "compressedBytes": 1776,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_00askhi._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/sabnzbd/sabnzbd-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3140,
+        "compressedBytes": 1328,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_download-client_sabnzbd_12lloxr._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/nzbget/nzbget-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3059,
+        "compressedBytes": 1190,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_download-client_nzbget_nzbget-integration_ts_0v2tqg3._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/qbittorrent/qbittorrent-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2414,
+        "compressedBytes": 1053,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_06nqg1h._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/deluge/deluge-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3011,
+        "compressedBytes": 1300,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_075_3ay._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/transmission/transmission-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2240,
+        "compressedBytes": 950,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__21apnaz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/_16z9guy._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/slskd/slskd-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3095,
+        "compressedBytes": 1402,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_download-client_slskd_slskd-integration_ts_1xu1-jy._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/download-client/aria2/aria2-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3285,
+        "compressedBytes": 1366,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_download-client_aria2_aria2-integration_ts_0jmhlma._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/interfaces/media-requests/media-request-types.ts",
+        "emitted": true,
+        "sourceBytes": 1175,
+        "compressedBytes": 480,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1p71g62._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_0l4p4ae._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_14q7s24._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_0x3cu_i._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1-z48a3._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1ukwq8p._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/jellyseerr/jellyseerr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 395,
+        "compressedBytes": 239,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1p71g62._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/overseerr/overseerr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 8888,
+        "compressedBytes": 2638,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_1p71g62._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_0l4p4ae._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_14q7s24._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/seerr/seerr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 211,
+        "compressedBytes": 122,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_0l4p4ae._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/prowlarr/prowlarr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2011,
+        "compressedBytes": 750,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_prowlarr_0_y_pn2._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/openmediavault/openmediavault-integration.ts",
+        "emitted": true,
+        "sourceBytes": 4439,
+        "compressedBytes": 1656,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_04-_qyu._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2917,
+        "compressedBytes": 1301,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_media-organizer_1aoh074._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/media-organizer/readarr/readarr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2616,
+        "compressedBytes": 1201,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_media-organizer_07szf6w._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/media-organizer/bindery/bindery-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2295,
+        "compressedBytes": 869,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_media-organizer_bindery_bindery-integration_ts_0web49m._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/nextcloud/nextcloud.integration.ts",
+        "emitted": true,
+        "sourceBytes": 3519,
+        "compressedBytes": 1666,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_0bsj6sx._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/opnsense/opnsense-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2913,
+        "compressedBytes": 1182,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_opnsense_1lsuk5i._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/ical/ical-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2658,
+        "compressedBytes": 1197,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_ical_ical-integration_ts_1q4xjgp._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/ntfy/ntfy-integration.ts",
+        "emitted": true,
+        "sourceBytes": 1240,
+        "compressedBytes": 674,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_ntfy_1uh2wtq._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/gotify/gotify-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2282,
+        "compressedBytes": 1000,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0gl4nvc._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/truenas/truenas-integration.ts",
+        "emitted": true,
+        "sourceBytes": 6259,
+        "compressedBytes": 2071,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_0zkb5h1._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/synology/synology-integration.ts",
+        "emitted": true,
+        "sourceBytes": 4586,
+        "compressedBytes": 1929,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_synology_1apytaz._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/unraid/unraid-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2144,
+        "compressedBytes": 1121,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_1r_wy8t._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/coolify/coolify-integration.ts",
+        "emitted": true,
+        "sourceBytes": 5020,
+        "compressedBytes": 1041,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_coolify_0n_b-jo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/tracearr/tracearr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2792,
+        "compressedBytes": 888,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1o5zt10._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/glances/glances-integration.ts",
+        "emitted": true,
+        "sourceBytes": 5117,
+        "compressedBytes": 1999,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_0w0-xml._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/immich/immich-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3099,
+        "compressedBytes": 1319,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_029p17_._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/wazuh/wazuh-errors.ts",
+        "emitted": true,
+        "sourceBytes": 1427,
+        "compressedBytes": 667,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_0gsetzz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/speedtest-tracker/speedtest-tracker-integration.ts",
+        "emitted": true,
+        "sourceBytes": 1635,
+        "compressedBytes": 700,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_speedtest-tracker_1zts5j4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2440,
+        "compressedBytes": 952,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_audiobookshelf_14qp_94._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/navidrome/navidrome-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3222,
+        "compressedBytes": 1406,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_navidrome_0an_ttu._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/umami/umami-integration.ts",
+        "emitted": true,
+        "sourceBytes": 7650,
+        "compressedBytes": 2572,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_umami_07ixqzb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/archive-team-warrior/archive-team-warrior-integration.ts",
+        "emitted": true,
+        "sourceBytes": 5920,
+        "compressedBytes": 2108,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/_0zzbqt_._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2344,
+        "compressedBytes": 973,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_uptime-kuma_0p27tp9._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/peanut/peanut-integration.ts",
+        "emitted": true,
+        "sourceBytes": 2240,
+        "compressedBytes": 951,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_peanut_0ed0uwr._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/bazarr/bazarr-integration.ts",
+        "emitted": true,
+        "sourceBytes": 911,
+        "compressedBytes": 485,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_bazarr_1inl8t3._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/traefik/traefik-integration.ts",
+        "emitted": true,
+        "sourceBytes": 3798,
+        "compressedBytes": 1386,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_0iwl_dn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/wud/wud-integration.ts",
+        "emitted": true,
+        "sourceBytes": 1212,
+        "compressedBytes": 586,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_wud_1w75378._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/llama-cpp/llamacpp-integration.ts",
+        "emitted": true,
+        "sourceBytes": 1525,
+        "compressedBytes": 632,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_src_llama-cpp_1ajemgx._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/base/creator.ts",
+        "emitted": true,
+        "sourceBytes": 8773,
+        "compressedBytes": 2083,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_19ezupx._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_0lnljo6._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0oh4e8v._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18xxygc._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_1e1vr50._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/base/response-contract.ts",
+        "emitted": true,
+        "sourceBytes": 91,
+        "compressedBytes": 56,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_0898qp0._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/mock/widget-data.ts",
+        "emitted": true,
+        "sourceBytes": 7566,
+        "compressedBytes": 3016,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/packages_integrations_0898qp0._.js"
+        ]
+      },
+      {
+        "path": "[project]/packages/integrations/src/interfaces/downloads/download-client-items.ts",
+        "emitted": true,
+        "sourceBytes": 631,
+        "compressedBytes": 304,
+        "outputFiles": [
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1iv6jeb._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1cq37yz._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1zkg3bo._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1ts6nbn._.js",
+          "[output]/apps/nextjs/.next/server/chunks/packages_0bn7s9v._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__11k9273._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__18759w7._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0ysnbk4._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__0-jdd_o._.js",
+          "[output]/apps/nextjs/.next/server/chunks/[root-of-the-server]__1802knt._.js"
+        ]
+      }
+    ],
+    "emittedDependencyCount": 56,
+    "unemittedDependencyCount": 0
+  },
+  "integrationFactory": {
+    "context": "instrumentation",
+    "staticDependencyCount": 2,
+    "asyncDependencyCount": 90,
+    "asyncDependencyModules": [
+      "[project]/packages/integrations/src/stats/stats-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/autobrr.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/jellystat.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/scrutiny.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/tubearchivist.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/frigate.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/komga.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/netalertx.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/jackett/jackett-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/your-spotify.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/romm.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/homebox.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/mealie.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/xteve.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/unmanic.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/syncthing-relay.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/stash.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/prometheus.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/plantit.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/netdata.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/fileflows.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/trilium.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/tandoor.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/spoolman.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/miniflux.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/maintainerr.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/linkwarden.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/karakeep.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/healthchecks.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/gatus.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/changedetection.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/stats/providers/caddy.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/anchor/anchor-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/pi-hole/pi-hole-integration-factory.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/adguard-home/adguard-home-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/technitium/technitium-integration-factory.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/homeassistant/homeassistant-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/jellyfin/jellyfin-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/plex/plex-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/sonarr/sonarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/radarr/radarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/sabnzbd/sabnzbd-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/nzbget/nzbget-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/qbittorrent/qbittorrent-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/deluge/deluge-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/transmission/transmission-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/slskd/slskd-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/download-client/aria2/aria2-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/jellyseerr/jellyseerr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/seerr/seerr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/overseerr/overseerr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/prowlarr/prowlarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/openmediavault/openmediavault-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/lidarr/lidarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/readarr/readarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-organizer/bindery/bindery-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/dashdot/dashdot-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/media-transcoding/tdarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/proxmox/proxmox-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/emby/emby-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/nextcloud/nextcloud.integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/unifi-controller/unifi-controller-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/opnsense/opnsense-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/ical/ical-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/ntfy/ntfy-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/gotify/gotify-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/mock/mock-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/truenas/truenas-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/synology/synology-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/unraid/unraid-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/coolify/coolify-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/tracearr/tracearr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/glances/glances-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/immich/immich-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/paperless-ngx/paperless-ngx-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/wazuh/wazuh-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/patchmon/patchmon-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/speedtest-tracker/speedtest-tracker-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/navidrome/navidrome-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/umami/umami-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/gluetun/gluetun-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/archive-team-warrior/archive-team-warrior-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/peanut/peanut-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/beszel/beszel-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/bazarr/bazarr-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/traefik/traefik-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/wud/wud-integration.ts [instrumentation] (ecmascript)",
+      "[project]/packages/integrations/src/llama-cpp/llamacpp-integration.ts [instrumentation] (ecmascript)"
+    ]
+  },
+  "dbSchema": {
+    "context": "instrumentation",
+    "staticDependencyCount": 5,
+    "staticDependencyModules": [
+      "[project]/packages/core/src/infrastructure/db/index.ts [instrumentation] (ecmascript) <locals>",
+      "[project]/packages/db/schema/postgresql.ts [instrumentation] (ecmascript) <locals>",
+      "[project]/packages/db/schema/postgresql.ts [instrumentation] (ecmascript)",
+      "[project]/packages/db/schema/sqlite.ts [instrumentation] (ecmascript) <locals>",
+      "[project]/packages/db/schema/sqlite.ts [instrumentation] (ecmascript)"
+    ]
+  },
+  "runtimeRootImporters": [
+    "packages/api/src/router/widgets/anchor-notes.ts",
+    "packages/api/src/router/widgets/archive-team-warrior.ts",
+    "packages/api/src/router/widgets/audio-stats.ts",
+    "packages/api/src/router/widgets/bazarr.ts",
+    "packages/api/src/router/widgets/coolify.ts",
+    "packages/api/src/router/widgets/firewall.ts",
+    "packages/api/src/router/widgets/immich.ts",
+    "packages/api/src/router/widgets/llamacpp.ts",
+    "packages/api/src/router/widgets/paperless-ngx.ts",
+    "packages/api/src/router/widgets/patchmon.ts",
+    "packages/api/src/router/widgets/speedtest-tracker.ts",
+    "packages/api/src/router/widgets/tracearr.ts",
+    "packages/api/src/router/widgets/traefik.ts",
+    "packages/api/src/router/widgets/umami.ts",
+    "packages/api/src/router/widgets/uptime-kuma.ts",
+    "packages/api/src/router/widgets/vpn.ts",
+    "packages/api/src/router/widgets/wazuh.ts",
+    "packages/api/src/router/widgets/wud.ts"
+  ]
+}

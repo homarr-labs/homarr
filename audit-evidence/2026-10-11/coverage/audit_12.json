@@ -1,0 +1,379 @@
+[
+  {
+    "path": "packages/api/src/router/analytics.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `sendAnalytics` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/apiKeys.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getAll, create, delete` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/bangs/bangs-router.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `search` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/certificates/certificate-router.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getCertificate, ensureRootCertificate, addCertificate, trustHostnameMismatch, removeTrustedHostname, removeCertificate` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/cron-jobs.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `triggerJob, startJob, stopJob, updateJobInterval, disableJob, enableJob, getJobs, subscribeToStatusUpdates` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/home.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `titleKey, subtitleKey, count, path, getStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/icons.ts",
+    "status": "finding identified",
+    "evidence": "Full-file pass. `findIcons` caps per-repository rows only for an empty term; with search text it fetches all icon id/name/url rows, ranks and sorts them in JS, then slices to limitPerGroup. The IconPicker sends debounced searches (250 ms) with a 24-result cap. The response is bounded, but DB\u2192process data, per-query CPU and temporary ranking structures scale with catalog size; catalog count and latency/heap are unmeasured.",
+    "reason": "Non-empty icon searches materialize and rank all icon rows before slicing the response. Catalog size and runtime impact are not measured; see report for the bounded claim and missing evidence."
+  },
+  {
+    "path": "packages/api/src/router/info.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getInfo, isDemoMode, isDemoReadOnly` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/integration/integration-access.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `throwIfActionForbiddenAsync, throwIfIntegrationActionsForbiddenAsync` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/integration/integration-http.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `IntegrationHttpContext, getIntegrationHttpCacheVersion` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/integration/integration-request.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationRequestSchema, resolveIntegrationRequestUrl, redactIntegrationResponse, integrationRequestProcedure` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/integration/integration-router.ts",
+    "status": "finding identified",
+    "evidence": "Dedicated full-file pass (entire assigned 911-line file) and caller review. `getAccessibleMediaRequestSearchIntegrationsAsync` is called by `mediaRequestSearchTargets` and `searchMediaRequests`; its nested item relation selects the full item row. The auth helper only reads `items[].item.boardId`; search uses integration identity, app href, secrets, and permission relations. Specific trigger: Spotlight media targets/search. DB\u2192process row transfer, materialization RAM and related DB work scale with linked items; serialized widget options are unnecessary. No client transfer claim.",
+    "reason": "The media-search integration loader fetches full linked item rows although permission evaluation consumes only each linked item boardId. See the report finding; retain the association and project boardId for auth."
+  },
+  {
+    "path": "packages/api/src/router/integration/integration-test-connection.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `testConnectionAsync, MissingSecretError` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/integration/integration-test-stored-connection.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationTestStoredConnectionProcedure` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/integration/map-test-connection-error.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `MappedError, MappedCertificate, AnyMappedTestConnectionError, mapTestConnectionError` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/invite.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getAll, createInvite, deleteInvite` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/invite/checks.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `throwIfCredentialsDisabled` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/location.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `id, name, country, country_code, latitude, longitude, population, query, searchCity` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/log.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass. Log subscription subscribes before loading history, buffers only matching live events during history fetch, filters duplicate IDs, drains then clears the buffer, and unsubscribes on close. A burst while history is pending can grow the temporary buffer; no burst rate/history-latency measurement or demonstrated sustained retention supports a finding."
+  },
+  {
+    "path": "packages/api/src/router/onboard/capability-probes.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `RuntimeCapability, RuntimeCapabilities, probeRuntimeCapabilitiesAsync` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/onboard/onboard-queries.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `nextOnboardingStepAsync, getOnboardingOrFallbackAsync, normalizeOnboardingStep` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/onboard/onboard-router.ts",
+    "status": "no actionable finding",
+    "evidence": "Dedicated full-file pass (entire assigned 1203-line file) and onboarding caller review. `discoverDockerServices` builds discovery outputs from Docker records; `completeSetup` reads board state with related layouts/items, tests submitted connections, plans/commits selected records, and returns small completion metadata. The chosen setup flow needs board contents for placement; other board rows are only used for target/name validation and actual loading/impact was not measured. No actionable finding asserted."
+  },
+  {
+    "path": "packages/api/src/router/search-engine/search-engine-router.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getPaginated, getSelectable, byId, getDefaultSearchEngine, catalog, search, create, update, delete` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/section/section-router.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `changeCollapsed` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/update-checker.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getAvailableUpdates` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/air-quality.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `longitude, latitude, atLocation` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/anchor-notes.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `noteId, listNotes, getNote, updateNote` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/app.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `ping` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/archive-team-warrior.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getStatus` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/audio-stats.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/bazarr.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getBadges` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/beszel.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getSystems, getAlerts, getSystemStats, subscribeSystemStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/bounded-async-queue.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass. `BoundedAsyncQueue` caps pending snapshots, drops oldest when full, clears on failure/return, wakes pending readers, and closes from subscription cleanup. No unbounded queue retention found."
+  },
+  {
+    "path": "packages/api/src/router/widgets/calendar.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `findAllEvents` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/coolify.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationId, integrationName, integrationUrl, instanceInfo, updatedAt, getInstancesInfo` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/custom-api-security.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `MAX_CUSTOM_API_RESPONSE_BYTES, CUSTOM_API_FETCH_TIMEOUT_MS, validateCustomApiUrl` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/custom-api.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `requestId, params, definitionId, configuration, configurationVersion, ctx, resolved, category, callback, ctx, resolved, request, params, refresh, getData, queryRequest, executeAction` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/dns-hole.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationId, integrationName, integration, summary, summary, enable, disable` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/downloads.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationId, integrationName, getJobsAndStatuses, pause, pauseItem, resume, resumeItem, deleteItem` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/firewall.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `handler, integration, summary, error, getFirewallCpuStatus, getFirewallInterfacesStatus, getFirewallVersionStatus, getFirewallMemoryStatus` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/health-monitoring.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationId, integrationName, healthInfo, getSystemHealthStatus, listStorageVolumes, getClusterHealthStatus` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/immich.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getServerStats, getAlbum, getAlbumPreview, getAlbums` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `stats, archiveTeamWarrior, beszel, anchorNotes, coolify, immich, paperlessNgx, patchmon, bazarr, notebook, weather, airQuality, app, dnsHole, smartHome, stockPrice, mediaServer, mediaRelease, calendar, downloads, mediaRequests, mediaOrganizer, rssFeed, indexerManager, healthMonitoring, mediaTranscoding, minecraft, options, releases, networkController, firewall, notifications, timetable, tracearr, speedtestTracker, uptimeKuma, audioStats, umami, vpn, ups, traefik, customApi, secrets, wud, llamacpp, wazuh` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/indexer-manager.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getIndexersStatus, testAllIndexers` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/llamacpp.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/media-organizer.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getData` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/media-release-result.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `module-level helpers` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/media-release.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getMediaReleases` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/media-requests.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integration, data, getLatestRequests, getStats, answerRequest` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/media-server.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getCurrentStreams` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/media-transcoding.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getDataAsync` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/minecraft.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `domain, isBedrockServer, getServerStatus` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/network-controller.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integrationId, integrationName, integration, summary, summary` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/notebook.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `updateContent` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/notifications.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `deleteNotification, getNotifications` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/options.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getWidgetOptionSettings, saveItemOptions` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/paperless-ngx.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/patchmon.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/releases.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `prefix, precision, suffix, getLatest` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/rssFeed.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `urls, maximumAmountPosts, descriptionMaxLength, getFeeds` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/smart-home.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `entityState, entityDetails, switchEntity, executeAutomation` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/speedtest-tracker.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getDashboard` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/stats.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `catalog, snapshot, refresh` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/stocks.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `stock, timeRange, timeInterval, getPriceHistory` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/timetable.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `baseUrl, itemId, boardId, nextOptions, baseUrl, ctx, input, getTimetable, searchStations` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/tracearr.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getDashboard` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/traefik.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getDashboard` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/umami.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getWebsites, getVisitorStats, getEventNames, getTopPages, getTopReferrers, getMultiEventTimeSeries, getActiveVisitors` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/ups.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getSummaries` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/uptime-kuma.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getDashboard` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/vpn.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `integration, summary, getSummaries` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/wazuh.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `id, kind, url, externalUrl, decryptedSecrets, operation, integration, getDataAsync, updatedAt, error, dashboardUrl, getAgents, getAlerts, getSummary, getTimeline, getTopList, getVulnerabilities, getFim, getAuthFailures` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/weather.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `longitude, latitude, atLocation` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/widget-secrets.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `setSecret, deleteSecret, getConfiguredKinds` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  },
+  {
+    "path": "packages/api/src/router/widgets/wud.ts",
+    "status": "no actionable finding",
+    "evidence": "Full-file pass; reviewed `getStats` for concrete DB/integration input, returned data shape, bounds, repeated payloads, and lifecycle where applicable. No actionable avoidable allocation or retention path supported by this file alone."
+  }
+]

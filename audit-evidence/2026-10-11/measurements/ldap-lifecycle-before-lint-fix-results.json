@@ -1,0 +1,1228 @@
+{
+  "harness": "ldap-lifecycle",
+  "generatedAt": "2026-10-11T16:09:29.661Z",
+  "runtime": "v24.18.0",
+  "syntheticOnly": true,
+  "server": "local TCP LDAP BindResponse invalidCredentials (49)",
+  "pairCount": 9,
+  "repeatedCycleStages": [
+    1,
+    10,
+    40,
+    100
+  ],
+  "settlingDelayMs": 30,
+  "baselineSource": "audit-evidence/2026-10-11/baseline-source/packages/auth/providers/credentials/authorization/ldap-authorization.ts",
+  "baselineSourceSha256": "367b9598d086d69f725fce4c6ad6b55607bc0fd940932033682e8d008ef3dbf9",
+  "metrics": [
+    "serverOpenSockets",
+    "clientSocketHandles",
+    "rssBytes",
+    "heapUsedBytes",
+    "heapTotalBytes",
+    "externalBytes",
+    "arrayBuffersBytes",
+    "elapsedMs",
+    "latencyP50Ms",
+    "latencyP95Ms"
+  ],
+  "pairs": [
+    {
+      "pair": 1,
+      "order": [
+        "baseline",
+        "after"
+      ],
+      "results": [
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 9.795574999999985,
+              "latencyP50Ms": 9.79055999999997,
+              "latencyP95Ms": 9.79055999999997,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 115445760,
+              "heapUsedBytes": 16514592,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13009269,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 9.007304999999974,
+              "latencyP50Ms": 0.8231959999999958,
+              "latencyP95Ms": 1.4815529999999626,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115773440,
+              "heapUsedBytes": 16917288,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 31.80463300000008,
+              "latencyP50Ms": 0.561896000000047,
+              "latencyP95Ms": 0.7844119999999748,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 116101120,
+              "heapUsedBytes": 17181392,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 49.35295199999996,
+              "latencyP50Ms": 0.24951199999998153,
+              "latencyP95Ms": 0.37677000000007865,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 116920320,
+              "heapUsedBytes": 17776216,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 8.288231999999994,
+              "latencyP50Ms": 8.285066000000029,
+              "latencyP95Ms": 8.285066000000029,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115343360,
+              "heapUsedBytes": 16538016,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 11.836833000000013,
+              "latencyP50Ms": 1.0952889999999798,
+              "latencyP95Ms": 1.804471000000035,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115671040,
+              "heapUsedBytes": 16953200,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 31.11620700000003,
+              "latencyP50Ms": 0.7390330000000631,
+              "latencyP95Ms": 0.9058109999999715,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116654080,
+              "heapUsedBytes": 17060616,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 69.617389,
+              "latencyP50Ms": 0.6811579999999822,
+              "latencyP95Ms": 0.7686449999999923,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116981760,
+              "heapUsedBytes": 17131808,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "order": [
+        "after",
+        "baseline"
+      ],
+      "results": [
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 5.489130999999986,
+              "latencyP50Ms": 5.485373999999979,
+              "latencyP95Ms": 5.485373999999979,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115044352,
+              "heapUsedBytes": 16538392,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 7.662753000000009,
+              "latencyP50Ms": 0.7294039999999882,
+              "latencyP95Ms": 1.2805680000000166,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115208192,
+              "heapUsedBytes": 16954520,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 17.08929599999999,
+              "latencyP50Ms": 0.4105260000000044,
+              "latencyP95Ms": 0.4946319999999673,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116682752,
+              "heapUsedBytes": 17061936,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 38.00807299999997,
+              "latencyP50Ms": 0.3583370000000059,
+              "latencyP95Ms": 0.441332999999986,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 117174272,
+              "heapUsedBytes": 17133128,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 9.04668300000003,
+              "latencyP50Ms": 9.041893000000016,
+              "latencyP95Ms": 9.041893000000016,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 114946048,
+              "heapUsedBytes": 16517888,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 8.731757000000016,
+              "latencyP50Ms": 0.8557890000000725,
+              "latencyP95Ms": 1.4469289999999546,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115437568,
+              "heapUsedBytes": 16916328,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 27.781101000000035,
+              "latencyP50Ms": 0.3074609999999893,
+              "latencyP95Ms": 0.621360999999979,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 115601408,
+              "heapUsedBytes": 17174984,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 64.74984900000004,
+              "latencyP50Ms": 0.43942699999990964,
+              "latencyP95Ms": 0.641114000000016,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 115929088,
+              "heapUsedBytes": 17755432,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 3,
+      "order": [
+        "baseline",
+        "after"
+      ],
+      "results": [
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 8.561511999999993,
+              "latencyP50Ms": 8.557794999999999,
+              "latencyP95Ms": 8.557794999999999,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 115531776,
+              "heapUsedBytes": 16518760,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 5.525061999999991,
+              "latencyP50Ms": 0.43318599999997787,
+              "latencyP95Ms": 1.0608660000000327,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115695616,
+              "heapUsedBytes": 16916376,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 31.10467699999998,
+              "latencyP50Ms": 0.4747040000000311,
+              "latencyP95Ms": 0.6123069999999871,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 115859456,
+              "heapUsedBytes": 17176936,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 61.44385999999997,
+              "latencyP50Ms": 0.429711999999995,
+              "latencyP95Ms": 0.5722929999999451,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 117006336,
+              "heapUsedBytes": 17755480,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 7.7538000000000125,
+              "latencyP50Ms": 7.750744999999995,
+              "latencyP95Ms": 7.750744999999995,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 114749440,
+              "heapUsedBytes": 16539000,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 12.479278000000022,
+              "latencyP50Ms": 1.1172339999999963,
+              "latencyP95Ms": 1.9371150000000057,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115240960,
+              "heapUsedBytes": 16953800,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 27.804431999999963,
+              "latencyP50Ms": 0.7720209999999952,
+              "latencyP95Ms": 1.0720170000000167,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116387840,
+              "heapUsedBytes": 17063248,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 37.16478399999994,
+              "latencyP50Ms": 0.35569599999996626,
+              "latencyP95Ms": 0.4444459999999708,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116715520,
+              "heapUsedBytes": 17133304,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 4,
+      "order": [
+        "after",
+        "baseline"
+      ],
+      "results": [
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 7.977582999999981,
+              "latencyP50Ms": 7.974223999999992,
+              "latencyP95Ms": 7.974223999999992,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 114675712,
+              "heapUsedBytes": 16538728,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 8.840716000000043,
+              "latencyP50Ms": 0.8349910000000023,
+              "latencyP95Ms": 1.4801009999999906,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115167232,
+              "heapUsedBytes": 16953416,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 17.12315600000005,
+              "latencyP50Ms": 0.40023600000006354,
+              "latencyP95Ms": 0.49287799999996196,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116641792,
+              "heapUsedBytes": 17062288,
+              "heapTotalBytes": 36720640,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 54.442995999999994,
+              "latencyP50Ms": 0.4629860000000008,
+              "latencyP95Ms": 0.8037209999999959,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 117460992,
+              "heapUsedBytes": 17135384,
+              "heapTotalBytes": 36720640,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 10.241850999999997,
+              "latencyP50Ms": 10.236747000000037,
+              "latencyP95Ms": 10.236747000000037,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 117538816,
+              "heapUsedBytes": 16520520,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 6.218260999999984,
+              "latencyP50Ms": 0.4493150000000128,
+              "latencyP95Ms": 1.3139390000000049,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 118030336,
+              "heapUsedBytes": 16916112,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 26.279769999999985,
+              "latencyP50Ms": 0.2750050000000783,
+              "latencyP95Ms": 0.6831839999999829,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 118030336,
+              "heapUsedBytes": 17174768,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 53.864269000000036,
+              "latencyP50Ms": 0.3037339999999631,
+              "latencyP95Ms": 0.5684720000000425,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 118194176,
+              "heapUsedBytes": 17755216,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 5,
+      "order": [
+        "baseline",
+        "after"
+      ],
+      "results": [
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 4.454962999999964,
+              "latencyP50Ms": 4.451633000000015,
+              "latencyP95Ms": 4.451633000000015,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 114343936,
+              "heapUsedBytes": 16519800,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 9.547452000000021,
+              "latencyP50Ms": 0.8695619999999735,
+              "latencyP95Ms": 1.6445699999999874,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 114507776,
+              "heapUsedBytes": 16917144,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 24.221771999999987,
+              "latencyP50Ms": 0.2612369999999373,
+              "latencyP95Ms": 0.6988640000000146,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 114507776,
+              "heapUsedBytes": 17175800,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 57.774366999999984,
+              "latencyP50Ms": 0.3217220000000225,
+              "latencyP95Ms": 0.561335999999983,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 114999296,
+              "heapUsedBytes": 17756248,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 10.32688300000001,
+              "latencyP50Ms": 10.322635999999989,
+              "latencyP95Ms": 10.322635999999989,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116666368,
+              "heapUsedBytes": 16533376,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13011534,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 7.406942000000015,
+              "latencyP50Ms": 0.6037249999999403,
+              "latencyP95Ms": 1.466130000000021,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 117157888,
+              "heapUsedBytes": 16953160,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 15.542198999999982,
+              "latencyP50Ms": 0.37419499999998607,
+              "latencyP95Ms": 0.44920200000001387,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 118304768,
+              "heapUsedBytes": 17061920,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 68.65178199999991,
+              "latencyP50Ms": 0.7100759999999582,
+              "latencyP95Ms": 0.8512190000000146,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 118632448,
+              "heapUsedBytes": 17133112,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 6,
+      "order": [
+        "after",
+        "baseline"
+      ],
+      "results": [
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 8.068839000000025,
+              "latencyP50Ms": 8.065545999999983,
+              "latencyP95Ms": 8.065545999999983,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 114761728,
+              "heapUsedBytes": 16538800,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 12.01994400000001,
+              "latencyP50Ms": 1.1603060000000482,
+              "latencyP95Ms": 1.834384,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115089408,
+              "heapUsedBytes": 16953848,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 31.737791000000016,
+              "latencyP50Ms": 0.797095000000013,
+              "latencyP95Ms": 0.9380099999999629,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116236288,
+              "heapUsedBytes": 17061264,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 53.26191200000005,
+              "latencyP50Ms": 0.6147479999999632,
+              "latencyP95Ms": 0.750581000000011,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116563968,
+              "heapUsedBytes": 17132456,
+              "heapTotalBytes": 36720640,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 6.924709000000007,
+              "latencyP50Ms": 6.9211069999999495,
+              "latencyP95Ms": 6.9211069999999495,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 115564544,
+              "heapUsedBytes": 16519752,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 5.08026799999999,
+              "latencyP50Ms": 0.4536449999999945,
+              "latencyP95Ms": 0.8307619999999929,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115728384,
+              "heapUsedBytes": 16916080,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 14.577928999999983,
+              "latencyP50Ms": 0.2299639999999954,
+              "latencyP95Ms": 0.32244600000001356,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 115728384,
+              "heapUsedBytes": 17174736,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 53.107094000000075,
+              "latencyP50Ms": 0.23660199999994802,
+              "latencyP95Ms": 0.333362999999963,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 116711424,
+              "heapUsedBytes": 17755184,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 7,
+      "order": [
+        "baseline",
+        "after"
+      ],
+      "results": [
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 9.104251000000033,
+              "latencyP50Ms": 9.099572999999964,
+              "latencyP95Ms": 9.099572999999964,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 115060736,
+              "heapUsedBytes": 16517456,
+              "heapTotalBytes": 34885632,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 4.862393999999995,
+              "latencyP50Ms": 0.4524910000000091,
+              "latencyP95Ms": 0.9111740000000168,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115224576,
+              "heapUsedBytes": 16915824,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 31.138098000000014,
+              "latencyP50Ms": 0.3127869999999575,
+              "latencyP95Ms": 0.43931099999997514,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 115224576,
+              "heapUsedBytes": 17176384,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 48.98527300000001,
+              "latencyP50Ms": 0.20738300000004983,
+              "latencyP95Ms": 0.3342840000000251,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 115879936,
+              "heapUsedBytes": 17753088,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 10.290679999999952,
+              "latencyP50Ms": 10.286618000000033,
+              "latencyP95Ms": 10.286618000000033,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115384320,
+              "heapUsedBytes": 16540200,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 8.133133999999984,
+              "latencyP50Ms": 0.5967150000000174,
+              "latencyP95Ms": 1.666669000000013,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 115712000,
+              "heapUsedBytes": 16955104,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 19.048557000000017,
+              "latencyP50Ms": 0.3977390000000014,
+              "latencyP95Ms": 0.8893729999999778,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116531200,
+              "heapUsedBytes": 17063864,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 35.19086400000003,
+              "latencyP50Ms": 0.34047099999997954,
+              "latencyP95Ms": 0.39269400000000587,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 117022720,
+              "heapUsedBytes": 17135056,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 8,
+      "order": [
+        "after",
+        "baseline"
+      ],
+      "results": [
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 7.6652259999999615,
+              "latencyP50Ms": 7.6623800000000415,
+              "latencyP95Ms": 7.6623800000000415,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 117706752,
+              "heapUsedBytes": 16537008,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 7.310330000000022,
+              "latencyP50Ms": 0.6590190000000007,
+              "latencyP95Ms": 1.3948800000000006,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 118198272,
+              "heapUsedBytes": 16953456,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 16.366686000000016,
+              "latencyP50Ms": 0.38809499999996433,
+              "latencyP95Ms": 0.4780600000000277,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 119345152,
+              "heapUsedBytes": 17062216,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 44.543112000000065,
+              "latencyP50Ms": 0.417336999999975,
+              "latencyP95Ms": 0.7075999999999567,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 120164352,
+              "heapUsedBytes": 17133408,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 9.48550499999999,
+              "latencyP50Ms": 9.481157999999994,
+              "latencyP95Ms": 9.481157999999994,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 115544064,
+              "heapUsedBytes": 16519496,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 8.614671999999985,
+              "latencyP50Ms": 0.7971019999999953,
+              "latencyP95Ms": 1.4232300000000464,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115707904,
+              "heapUsedBytes": 16916144,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 36.64498800000001,
+              "latencyP50Ms": 0.4850229999999556,
+              "latencyP95Ms": 0.6731609999999932,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 116199424,
+              "heapUsedBytes": 17174800,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 74.48020700000006,
+              "latencyP50Ms": 0.4363570000000436,
+              "latencyP95Ms": 0.645033999999896,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 117182464,
+              "heapUsedBytes": 17755168,
+              "heapTotalBytes": 35934208,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pair": 9,
+      "order": [
+        "baseline",
+        "after"
+      ],
+      "results": [
+        {
+          "mode": "baseline",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 4.751727000000017,
+              "latencyP50Ms": 4.748450999999989,
+              "latencyP95Ms": 4.748450999999989,
+              "serverOpenSockets": 1,
+              "clientSocketHandles": 1,
+              "rssBytes": 115011584,
+              "heapUsedBytes": 16520248,
+              "heapTotalBytes": 35147776,
+              "externalBytes": 13009477,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 8.594317000000046,
+              "latencyP50Ms": 0.8326400000000262,
+              "latencyP95Ms": 1.4094200000000114,
+              "serverOpenSockets": 11,
+              "clientSocketHandles": 11,
+              "rssBytes": 115339264,
+              "heapUsedBytes": 16917920,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13019353,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 21.31798100000003,
+              "latencyP50Ms": 0.2510430000000383,
+              "latencyP95Ms": 0.3734290000000442,
+              "serverOpenSockets": 51,
+              "clientSocketHandles": 51,
+              "rssBytes": 115339264,
+              "heapUsedBytes": 17176576,
+              "heapTotalBytes": 36196352,
+              "externalBytes": 13052833,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 68.149811,
+              "latencyP50Ms": 0.41504699999995864,
+              "latencyP95Ms": 0.5669350000000577,
+              "serverOpenSockets": 151,
+              "clientSocketHandles": 151,
+              "rssBytes": 116322304,
+              "heapUsedBytes": 17755904,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13119793,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        },
+        {
+          "mode": "after",
+          "runtime": "v24.18.0",
+          "stages": [
+            {
+              "addedAttempts": 1,
+              "totalAttempts": 1,
+              "elapsedMs": 5.227749999999958,
+              "latencyP50Ms": 5.22472700000003,
+              "latencyP95Ms": 5.22472700000003,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116051968,
+              "heapUsedBytes": 16537880,
+              "heapTotalBytes": 35409920,
+              "externalBytes": 13011742,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 10,
+              "totalAttempts": 11,
+              "elapsedMs": 12.43307500000003,
+              "latencyP50Ms": 1.164211000000023,
+              "latencyP95Ms": 1.9316880000000083,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116543488,
+              "heapUsedBytes": 16953416,
+              "heapTotalBytes": 35672064,
+              "externalBytes": 13030897,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 40,
+              "totalAttempts": 51,
+              "elapsedMs": 22.78731099999993,
+              "latencyP50Ms": 0.4264460000000554,
+              "latencyP95Ms": 0.9409870000000637,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 116707328,
+              "heapUsedBytes": 17060832,
+              "heapTotalBytes": 36458496,
+              "externalBytes": 13095307,
+              "arrayBuffersBytes": 192963
+            },
+            {
+              "addedAttempts": 100,
+              "totalAttempts": 151,
+              "elapsedMs": 46.10737300000005,
+              "latencyP50Ms": 0.3440699999999879,
+              "latencyP95Ms": 0.7400780000000395,
+              "serverOpenSockets": 0,
+              "clientSocketHandles": 0,
+              "rssBytes": 117526528,
+              "heapUsedBytes": 17132024,
+              "heapTotalBytes": 36720640,
+              "externalBytes": 13224127,
+              "arrayBuffersBytes": 192963
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

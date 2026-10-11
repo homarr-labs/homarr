@@ -1,0 +1,112 @@
+[
+  {
+    "check": "focused-existing-rerun",
+    "args": [
+      "mise",
+      "exec",
+      "--",
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--project",
+      "api-node",
+      "--project",
+      "auth-ldap-node",
+      "--project",
+      "custom-widgets-node",
+      "--maxWorkers",
+      "2",
+      "packages/api/src/router/test/integration/integration-router.spec.ts",
+      "packages/auth/providers/test/ldap-authorization.spec.ts",
+      "packages/auth/providers/test/ldap-client.spec.ts",
+      "packages/custom-widgets/src/test/server-policy.spec.ts"
+    ],
+    "exit_code": 0,
+    "seconds": 3.98
+  },
+  {
+    "check": "owned-redis-cleanup",
+    "exit_code": 0,
+    "pid": 2096059,
+    "port": 53805,
+    "exit": 0,
+    "persistence_disabled": true,
+    "directory_removed_on_exit": true
+  },
+  {
+    "check": "lint-final",
+    "args": [
+      "mise",
+      "exec",
+      "--",
+      "bun",
+      "x",
+      "--no-install",
+      "oxlint",
+      "apps/nextjs/src/app/[locale]/manage/boards/_components/board-card.tsx",
+      "packages/api/src/middlewares/integration.ts",
+      "packages/auth/providers/credentials/authorization/ldap-authorization.ts",
+      "packages/custom-widgets/scripts/check-architecture.mjs",
+      "packages/custom-widgets/scripts/generate-component-metadata.ts",
+      "packages/custom-widgets/src/core/component-registry.ts",
+      "packages/custom-widgets/src/jsx/analyzer-jsx.ts",
+      "packages/custom-widgets/src/server/request-executor.ts"
+    ],
+    "exit_code": 0,
+    "seconds": 0.337
+  },
+  {
+    "check": "format-final",
+    "args": [
+      "mise",
+      "exec",
+      "--",
+      "bun",
+      "x",
+      "--no-install",
+      "oxfmt",
+      "--check",
+      ".oxfmtrc.json",
+      "apps/nextjs/src/app/[locale]/manage/boards/_components/board-card.tsx",
+      "packages/api/src/middlewares/integration.ts",
+      "packages/auth/providers/credentials/authorization/ldap-authorization.ts",
+      "packages/custom-widgets/scripts/check-architecture.mjs",
+      "packages/custom-widgets/scripts/generate-component-metadata.ts",
+      "packages/custom-widgets/src/core/component-catalog.runtime.generated.json",
+      "packages/custom-widgets/src/core/component-registry.ts",
+      "packages/custom-widgets/src/jsx/analyzer-jsx.ts",
+      "packages/custom-widgets/src/server/request-executor.ts"
+    ],
+    "exit_code": 0,
+    "seconds": 0.189
+  },
+  {
+    "check": "catalog-parity-final",
+    "args": [
+      "mise",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "audit-evidence/2026-10-11/compare-runtime-projection.mts"
+    ],
+    "exit_code": 0,
+    "seconds": 0.241
+  },
+  {
+    "check": "typecheck-auth-final",
+    "args": [
+      "mise",
+      "exec",
+      "--",
+      "bun",
+      "run",
+      "--filter",
+      "@homarr/auth",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "seconds": 9.421
+  }
+]

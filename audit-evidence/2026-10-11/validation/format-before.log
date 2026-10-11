@@ -1,0 +1,8 @@
+Checking formatting...
+
+packages/custom-widgets/scripts/check-architecture.mjs (0ms)
+packages/custom-widgets/src/core/component-registry.ts (0ms)
+packages/custom-widgets/src/server/request-executor.ts (1ms)
+
+Format issues found in above 3 files. Run without `--check` to fix.
+Finished in 73ms on 10 files using 20 threads.

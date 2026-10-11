@@ -1,0 +1,352 @@
+[
+  {
+    "path": "packages/api/package.json",
+    "status": "reviewed",
+    "evidence": "Package exports expose browser client, server caller, board/query helpers, MCP and Custom Widget configuration surfaces; dependencies are workspace-scoped."
+  },
+  {
+    "path": "packages/api/src/assistant-availability-server.ts",
+    "status": "reviewed",
+    "evidence": "Availability read projects four required columns and uses React request cache for RSC reuse."
+  },
+  {
+    "path": "packages/api/src/assistant-generation-access.ts",
+    "status": "reviewed",
+    "evidence": "HMAC access token derives from the encryption key and binds user, thread and generation; verification compares fixed-length bytes timing-safely."
+  },
+  {
+    "path": "packages/api/src/assistant-generation-telemetry.ts",
+    "status": "reviewed",
+    "evidence": "Telemetry parse allocates arrays proportional to provider response entries; process cache is capped at 512 entries and five-minute TTL."
+  },
+  {
+    "path": "packages/api/src/assistant-message-order.ts",
+    "status": "reviewed",
+    "evidence": "Parent ordering uses linear maps/sets and explicit stack, preserving input sibling order and handling dangling/cyclic parent references."
+  },
+  {
+    "path": "packages/api/src/assistant.ts",
+    "status": "reviewed",
+    "evidence": "Assistant server entrypoint re-exports context/model helpers and telemetry types/token creation only."
+  },
+  {
+    "path": "packages/api/src/board-server.ts",
+    "status": "reviewed",
+    "evidence": "RSC board callers and board lookups are React-cached per request."
+  },
+  {
+    "path": "packages/api/src/client.ts",
+    "status": "reviewed",
+    "evidence": "Browser tRPC React client and imperative fetch client use HTTP and SuperJSON; app router is type-only."
+  },
+  {
+    "path": "packages/api/src/custom-widget-configuration.ts",
+    "status": "reviewed",
+    "evidence": "Public API surface re-exports configuration request schema/service and source/session configuration functions."
+  },
+  {
+    "path": "packages/api/src/env.ts",
+    "status": "reviewed",
+    "evidence": "Environment parser normalizes public HTTP URLs and defines defaults for demo/workshop settings."
+  },
+  {
+    "path": "packages/api/src/index.ts",
+    "status": "reviewed",
+    "evidence": "Exports app router, caller factory, API context, and inferred input/output types."
+  },
+  {
+    "path": "packages/api/src/mcp-tools.ts",
+    "status": "reviewed",
+    "evidence": "Tool extraction traverses registered procedure metadata, builds/validates schemas and sorts tool output per extraction call."
+  },
+  {
+    "path": "packages/api/src/mcp.ts",
+    "status": "reviewed",
+    "evidence": "MCP eagerly registers selected routers for synchronous tool extraction; main app router remains lazy."
+  },
+  {
+    "path": "packages/api/src/middlewares/docker.ts",
+    "status": "reviewed",
+    "evidence": "Docker feature middleware checks environment/demo mode and passes through without adding retained state."
+  },
+  {
+    "path": "packages/api/src/middlewares/integration.ts",
+    "status": "finding identified",
+    "evidence": "Both one- and many-integration queries retain association rows for auth and now project nested items to boardId only; hasQueryAccessToIntegrationsAsync consumes that field."
+  },
+  {
+    "path": "packages/api/src/middlewares/kubernetes.ts",
+    "status": "reviewed",
+    "evidence": "Kubernetes feature middleware checks environment flag and passes through without adding retained state."
+  },
+  {
+    "path": "packages/api/src/onboarding-claim.ts",
+    "status": "reviewed",
+    "evidence": "Claim token is stored as a hash with expiry; claim reads one setting, handles insert races, and does not retain process cache."
+  },
+  {
+    "path": "packages/api/src/onboarding-step.ts",
+    "status": "reviewed",
+    "evidence": "Re-exports the single onboarding step normalization function."
+  },
+  {
+    "path": "packages/api/src/open-api-scalar.ts",
+    "status": "reviewed",
+    "evidence": "Normalization only copies document/components/schema maps if the exact recursive JSON union is found; otherwise returns original document."
+  },
+  {
+    "path": "packages/api/src/open-api.ts",
+    "status": "reviewed",
+    "evidence": "OpenAPI generator builds document on invocation and customizes a bounded number of path security/schema/example entries."
+  },
+  {
+    "path": "packages/api/src/query-cache.ts",
+    "status": "reviewed",
+    "evidence": "Exports bounded query stale/refetch/GC timings and path classifiers/policies for dashboard data and metadata."
+  },
+  {
+    "path": "packages/api/src/root.ts",
+    "status": "reviewed",
+    "evidence": "Main application router registers feature routers lazily, including assistant, board, app and Custom Widget."
+  },
+  {
+    "path": "packages/api/src/router/app.ts",
+    "status": "reviewed",
+    "evidence": "Pagination is used for app management; anonymous app visibility delegates to AppAccessControl, while get/selectable endpoints project task-specific results."
+  },
+  {
+    "path": "packages/api/src/router/app/app-access-control.ts",
+    "status": "finding identified",
+    "evidence": "Anonymous access scans every app/bookmark item with full rows and board visibility, then parses options after JS filtering; authenticated access skips it."
+  },
+  {
+    "path": "packages/api/src/router/assistant.ts",
+    "status": "reviewed",
+    "evidence": "Dedicated full-file pass: thread history reads/parses all messages; model and context paths have explicit count bounds; persistence accepts full serialized content."
+  },
+  {
+    "path": "packages/api/src/router/board.ts",
+    "status": "reviewed",
+    "evidence": "Dedicated full-file pass: full dashboard query, bounded management previews, layout projections, transaction writes, placement lock lifecycle, and array diff helpers reviewed."
+  },
+  {
+    "path": "packages/api/src/router/board/board-access.ts",
+    "status": "reviewed",
+    "evidence": "Board permission lookup selects board identity/visibility and only the current user/group permission relations before constructing permissions."
+  },
+  {
+    "path": "packages/api/src/router/board/custom-widget-placement-access.ts",
+    "status": "reviewed",
+    "evidence": "Placement guard compares submitted/stored custom-widget options only when type/config changes; map cost is linear in submitted/stored item counts."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/auth.ts",
+    "status": "reviewed",
+    "evidence": "Auth helpers construct a temporary secret map and apply only selected bearer/header/query/basic credentials."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/authoring-validation.ts",
+    "status": "reviewed",
+    "evidence": "Converts deferred Zod authoring errors to safe BAD_REQUEST tRPC errors."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/cache-version.ts",
+    "status": "reviewed",
+    "evidence": "Cache identity hashes serialized source/request definitions and ordered encrypted secret bindings; sorted secret copy is per call."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/configuration-requests.ts",
+    "status": "reviewed",
+    "evidence": "Configuration requests use Redis TTL in production and local maps only in CI/test; reads delete expired local entries and lock release is explicit."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/creation-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Create/update preview paths verify current revision evidence, then persist definition/secrets transactionally through helpers."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/custom-widget-access.ts",
+    "status": "reviewed",
+    "evidence": "Widget binding lookup projects options only, checks board permission when requested, and maps malformed/mismatched bindings to NOT_FOUND."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/custom-widget-router.ts",
+    "status": "reviewed",
+    "evidence": "Router composes feature procedure maps and performs direct CRUD through single-definition queries; feature router is lazy from app root."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/definition-insert.ts",
+    "status": "reviewed",
+    "evidence": "Secret input array is encrypted once into transactional rows; definition plus at most supplied secret rows are inserted atomically."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/definition-update.ts",
+    "status": "reviewed",
+    "evidence": "Update locks one definition, reads its secret rows for state fingerprint/binding reconciliation, then updates definition and per-source secret bindings transactionally."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/domain-error.ts",
+    "status": "reviewed",
+    "evidence": "Maps custom-widget domain errors to tRPC errors while exposing only stable transport metadata."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/legacy-migration.ts",
+    "status": "reviewed",
+    "evidence": "Redacts legacy credential-like URL segments/values before generating migration prompt; parses preserved display config defensively."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/management-queries.ts",
+    "status": "reviewed",
+    "evidence": "Admin list/get/migration and option query paths reviewed; secret relation loads include encrypted values although management mappers consume metadata."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/management-query-mappers.ts",
+    "status": "reviewed",
+    "evidence": "List/get mappers use secret metadata only; available picker maps options/template/request capabilities from validated definition."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/metadata-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Authoring template validation caps joined input at 50k characters; component batches cap at 8 and shared props at 64."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/preview-action-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Action path supports simulated mode, explicit confirmation for configured/DELETE actions, scoped concurrency, invalidation, journal and finally release."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/preview-base-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Preview creation normalizes/validates definition/options, carries compatible encrypted secrets into session and returns per-request evidence checklist; revision resets evidence."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/preview-persistence.ts",
+    "status": "reviewed",
+    "evidence": "Evidence validation requires current session revision and successful statuses (simulated actions qualify) before save."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/preview-procedure-helpers.ts",
+    "status": "reviewed",
+    "evidence": "Preview request input bounds request ID and source resolution returns safe configuration errors; journal failures are logged without failing request."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/preview-query-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Query path scopes request concurrency, caches by session/request/params/source version, journals response and always releases capacity."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/preview-sessions.ts",
+    "status": "reviewed",
+    "evidence": "Thin API adapter delegates session, evidence and journal lifecycle to service; production Redis records receive TTLs."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/request-executor.ts",
+    "status": "reviewed",
+    "evidence": "Thin adapter exports domain request/JSON/body limits and delegates bounded execution/cache invalidation."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/request-limits.ts",
+    "status": "reviewed",
+    "evidence": "Redis limiter scripts expire rate/concurrency state; request callers invoke returned release callbacks in finally blocks."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/request-manifest.ts",
+    "status": "reviewed",
+    "evidence": "Request values, target and body render delegate to server package validation; no retained request state."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/secret-persistence.ts",
+    "status": "reviewed",
+    "evidence": "Set/configure/clear paths encrypt credentials and reconcile rows inside transactions; changed auth bindings delete old source secrets."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/secret-policy.ts",
+    "status": "reviewed",
+    "evidence": "Secret compatibility is constrained by source origin, network scope, and auth boundary; accepted credential kinds are enumerated."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/secret-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Admin-only secret operations return kinds/status, never credential values; configuration requests have request/status modes."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/source-resolver.ts",
+    "status": "reviewed",
+    "evidence": "Integration source binding resolves an integration and verifies kind/access; no source cache is retained in this API file."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/stored-definition.ts",
+    "status": "reviewed",
+    "evidence": "Stored source/request/options strings are SuperJSON parsed and schema validated; failure issue output is capped at ten."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/template-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Read/write return both template string and split line array; patch limits edits to 100 and validates optimistic template revision."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/transfer-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Export/import/migration map v2 definitions and preserve only compatible encrypted legacy credentials; admin checks gate all transfer paths."
+  },
+  {
+    "path": "packages/api/src/router/custom-widget/workshop-procedures.ts",
+    "status": "reviewed",
+    "evidence": "Workshop search caps results at 20; get/install validate remote widget before installation and secret inputs use shared bounded schema."
+  },
+  {
+    "path": "packages/api/src/rsc-context.ts",
+    "status": "reviewed",
+    "evidence": "Request-scoped React cache shares header/auth context for nested server component calls."
+  },
+  {
+    "path": "packages/api/src/schema-merger.ts",
+    "status": "reviewed",
+    "evidence": "Intersection helper merges two Zod object shapes into a new schema object at router declaration time."
+  },
+  {
+    "path": "packages/api/src/server-settings-server.ts",
+    "status": "reviewed",
+    "evidence": "Server settings snapshot is request-cached; underlying query implementation is in DB package."
+  },
+  {
+    "path": "packages/api/src/server.ts",
+    "status": "reviewed",
+    "evidence": "Server entrypoint creates caller/query-client proxy and React-caches the query client per request."
+  },
+  {
+    "path": "packages/api/src/services/duckduckgo-bangs.ts",
+    "status": "reviewed",
+    "evidence": "Bang search reuses request-handler catalog, uses binary search over sorted entries, and returns only matches up to the supplied limit."
+  },
+  {
+    "path": "packages/api/src/settle-integrations.ts",
+    "status": "reviewed",
+    "evidence": "Fanout allocates all-settled results and errors proportional to input integration count; warning metadata avoids logging response bodies."
+  },
+  {
+    "path": "packages/api/src/shared.ts",
+    "status": "reviewed",
+    "evidence": "Cookie/header helper reconstructs cookie string on server; QueryClient sets stale time and dehydrates pending queries."
+  },
+  {
+    "path": "packages/api/src/trpc.ts",
+    "status": "reviewed",
+    "evidence": "API context stores per-request session/device/base URL and shared DB; auth/onboarding gates are middleware, not global caches."
+  },
+  {
+    "path": "packages/api/src/user-server.ts",
+    "status": "reviewed",
+    "evidence": "RSC user settings read explicitly projects preference columns and is request-cached by user ID."
+  },
+  {
+    "path": "packages/api/src/websocket.ts",
+    "status": "reviewed",
+    "evidence": "WebSocket entrypoint only re-exports app router type."
+  },
+  {
+    "path": "packages/api/tsconfig.json",
+    "status": "reviewed",
+    "evidence": "Package typecheck includes package source and excludes node_modules; no build outputs are configured here."
+  }
+]

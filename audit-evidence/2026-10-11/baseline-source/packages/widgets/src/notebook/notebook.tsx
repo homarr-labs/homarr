@@ -1,0 +1,967 @@
+"use client";
+
+import type { MouseEvent as ReactMouseEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  ColorPicker,
+  ColorSwatch,
+  Group,
+  Popover,
+  ScrollArea,
+  Stack,
+  Text,
+  TextInput,
+  Tooltip,
+  useMantineColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
+import { getHotkeyHandler, useDisclosure } from "@mantine/hooks";
+import { Link, RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
+import {
+  IconCheck,
+  IconCircleOff,
+  IconDeviceFloppy,
+  IconEdit,
+  IconHighlight,
+  IconIndentDecrease,
+  IconIndentIncrease,
+  IconLayoutGrid,
+  IconLetterA,
+  IconListCheck,
+  IconPhoto,
+  IconTextDirectionLtr,
+  IconTextDirectionRtl,
+  IconX,
+} from "@tabler/icons-react";
+import { Color } from "@tiptap/extension-color";
+import { Details, DetailsContent, DetailsSummary } from "@tiptap/extension-details";
+import { Highlight } from "@tiptap/extension-highlight";
+import { Image } from "@tiptap/extension-image";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Table } from "@tiptap/extension-table";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TaskList } from "@tiptap/extension-task-list";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { useEditor } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
+import { StarterKit } from "@tiptap/starter-kit";
+
+import { clientApi } from "@homarr/api/client";
+import { useForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
+import { InlineConfirmActionIcon } from "@homarr/ui";
+
+import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
+import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
+import { getNotebookDisplay } from "./display";
+import { NotebookTextDirection, setTextDirection } from "./text-direction";
+
+import "@mantine/tiptap/styles.css";
+import "./notebook.css";
+
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { hotkeys } from "@homarr/definitions";
+
+const iconProps = {
+  size: 30,
+  stroke: 1.5,
+};
+
+const controlIconProps = {
+  size: 20,
+  stroke: 1.5,
+};
+
+export function Notebook({
+  options,
+  setOptions,
+  isEditMode,
+  boardId,
+  itemId,
+  width,
+  height,
+  displayScale = 1,
+  displayMode = "compact",
+}: WidgetComponentProps<"notebook">) {
+  const [content, setContent] = useState(options.content);
+  const previousContentRef = useRef(options.content);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const board = useRequiredBoard();
+  const { data: session } = useSession();
+  const { hasChangeAccess } = constructBoardPermissions(board, session);
+
+  const canChange = !isEditMode && hasChangeAccess;
+  const [isEditing, setIsEditing] = useState(false);
+  const canChangeRef = useRef(canChange);
+  const allowReadOnlyCheckRef = useRef(options.allowReadOnlyCheck);
+  const savingRef = useRef(false);
+  const readOnlyCheckEventName = `homarr:notebook-read-only-check:${useId()}`;
+
+  useEffect(() => {
+    allowReadOnlyCheckRef.current = options.allowReadOnlyCheck;
+  }, [options.allowReadOnlyCheck]);
+
+  const { primaryColor } = useMantineTheme();
+  const { mutateAsync, isPending: isSaving } = clientApi.widget.notebook.updateContent.useMutation({
+    scope: { id: `notebook-content:${boardId ?? "preview"}:${itemId ?? "preview"}` },
+  });
+
+  useEffect(() => {
+    canChangeRef.current = canChange && !isSaving;
+  }, [canChange, isSaving]);
+
+  const tControls = useI18n("widget.notebook.controls");
+  const t = useI18n("widget.notebook");
+  const tCommon = useI18n("common");
+
+  const handleContentUpdate = useCallback(
+    async (contentUpdate: string) => {
+      savingRef.current = true;
+      canChangeRef.current = false;
+      setSaveError(null);
+
+      try {
+        if (boardId && itemId) {
+          await mutateAsync({ boardId, itemId, content: contentUpdate });
+        }
+        previousContentRef.current = contentUpdate;
+        setOptions({ newOptions: { content: contentUpdate } });
+        return true;
+      } catch {
+        setSaveError(t("saveFailed"));
+        return false;
+      } finally {
+        savingRef.current = false;
+        canChangeRef.current = canChange;
+      }
+    },
+    [boardId, canChange, itemId, mutateAsync, setOptions, t],
+  );
+
+  const editor = useEditor(
+    {
+      extensions: [
+        Placeholder.configure({
+          placeholder: `${t("placeholder")}…`,
+        }),
+        Color,
+        Details.configure({
+          renderToggleButton: ({ element, isOpen }) => {
+            element.setAttribute("aria-label", tControls(isOpen ? "collapseDetails" : "expandDetails"));
+          },
+        }),
+        DetailsSummary,
+        DetailsContent,
+        Highlight.configure({ multicolor: true }),
+        Image.extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
+              width: { default: null },
+            };
+          },
+        }).configure({ inline: true }),
+        Link.configure({
+          openOnClick: true,
+          validate(url) {
+            return /^https?:\/\//.test(url);
+          },
+        }).extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
+              target: { default: null },
+            };
+          },
+        }),
+        // we use a custom link implementation from mantine
+        StarterKit.configure({ link: false }),
+        Table.configure({
+          resizable: true,
+          lastColumnResizable: false,
+        }),
+        TableCell.extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
+              backgroundColor: {
+                default: undefined,
+                renderHTML: (attributes) => ({
+                  style: attributes.backgroundColor ? `background-color: ${attributes.backgroundColor}` : undefined,
+                }),
+                parseHTML: (element) => element.style.backgroundColor || undefined,
+              },
+            };
+          },
+        }),
+        TableHeader,
+        TableRow,
+        ReadOnlyTaskItem.configure({
+          nested: true,
+          onReadOnlyChecked: () => {
+            if (!allowReadOnlyCheckRef.current) return false;
+            if (!canChangeRef.current) return false;
+            return true;
+          },
+          onReadOnlyCheckedAtPosition: (position, checked) => {
+            if (!allowReadOnlyCheckRef.current) return;
+            if (!canChangeRef.current) return;
+            const event = new CustomEvent(readOnlyCheckEventName, {
+              detail: { position, checked },
+            });
+            dispatchEvent(event);
+          },
+        }),
+        TaskList.configure({ itemTypeName: "taskItem" }),
+        TextAlign.configure({ types: ["heading", "paragraph"] }),
+        NotebookTextDirection,
+        TextStyle,
+      ],
+      shouldRerenderOnTransaction: true,
+      immediatelyRender: false,
+      content,
+      onUpdate: ({ editor }) => {
+        setContent(editor.getHTML());
+      },
+      onCreate: ({ editor }) => {
+        editor.setEditable(isEditing);
+      },
+    },
+    [],
+  );
+
+  const handleOnReadOnlyCheck = useCallback(
+    (event: Event) => {
+      if (!allowReadOnlyCheckRef.current) return;
+      if (!editor) return;
+      const { detail } = event as CustomEvent<{ position: number; checked: boolean }>;
+      const transaction = createReadOnlyTaskItemTransaction(editor.state, detail.position, detail.checked);
+      if (!transaction) return;
+
+      editor.view.dispatch(transaction);
+      const nextContent = editor.getHTML();
+      setContent(nextContent);
+      void handleContentUpdate(nextContent).then((wasSaved) => {
+        if (wasSaved) return;
+        setContent(previousContentRef.current);
+        editor.commands.setContent(previousContentRef.current);
+      });
+    },
+    [editor, handleContentUpdate],
+  );
+
+  useEffect(() => {
+    addEventListener(readOnlyCheckEventName, handleOnReadOnlyCheck);
+    return () => removeEventListener(readOnlyCheckEventName, handleOnReadOnlyCheck);
+  }, [handleOnReadOnlyCheck, readOnlyCheckEventName]);
+
+  useEffect(() => {
+    if (isEditing || !editor || options.content === previousContentRef.current) return;
+    previousContentRef.current = options.content;
+    setContent(options.content);
+    editor.commands.setContent(options.content);
+  }, [editor, isEditing, options.content]);
+
+  const handleEditCancelCallback = useCallback(() => {
+    if (savingRef.current) return true;
+    if (!editor) return false;
+    editor.setEditable(false);
+
+    setContent(previousContentRef.current);
+    editor.commands.setContent(previousContentRef.current);
+
+    return false;
+  }, [editor]);
+
+  const handleEditCancel = useCallback(() => {
+    if (savingRef.current) return;
+    setIsEditing(handleEditCancelCallback);
+  }, [setIsEditing, handleEditCancelCallback]);
+
+  const handleEditToggle = useCallback(async () => {
+    if (!editor || savingRef.current) return;
+    if (!isEditing) {
+      setSaveError(null);
+      editor.setEditable(true);
+      setIsEditing(true);
+      return;
+    }
+
+    editor.setEditable(false);
+    const wasSaved = await handleContentUpdate(content);
+    if (!wasSaved) {
+      editor.setEditable(true);
+      return;
+    }
+    editor.setEditable(false);
+    setIsEditing(false);
+  }, [content, editor, handleContentUpdate, isEditing]);
+
+  const handleDoubleClick = useCallback(
+    (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (!canChange || isEditing || savingRef.current) return;
+      // Ignore double-clicks bubbling up from interactive controls (e.g. the
+      // edit/save ActionIcon), which would otherwise toggle edit mode twice.
+      if (event.target instanceof Element && event.target.closest("button, a")) {
+        return;
+      }
+      setSaveError(null);
+      editor?.setEditable(true);
+      setIsEditing(true);
+    },
+    [canChange, editor, isEditing],
+  );
+
+  const documentText = editor?.getText().trim() ?? "";
+  const documentStats = {
+    characters: documentText.length,
+    words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
+  };
+  let layoutScale = 1;
+  if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) {
+    layoutScale = displayScale;
+  }
+  const renderedWidth = width * layoutScale;
+  const renderedHeight = height * layoutScale;
+  const compactSurface = renderedWidth < 280 || renderedHeight < 240;
+  const display = getNotebookDisplay({
+    height: renderedHeight,
+    isAdvanced: displayMode === "advanced",
+    isEditing,
+    isSaving,
+    showToolbar: options.showToolbar,
+  });
+
+  const showDocumentStats = display.showDocumentStats && (displayMode === "advanced" || renderedWidth >= 280);
+
+  return (
+    <Box
+      className="homarr-notebook"
+      data-notebook-compact={(displayMode === "compact" && compactSurface) || undefined}
+      h="100%"
+      onDoubleClick={handleDoubleClick}
+      style={{ display: "flex", flexDirection: "column", minHeight: 0, position: "relative" }}
+    >
+      <RichTextEditor
+        p={0}
+        mt={0}
+        h="auto"
+        onKeyDown={
+          isEditing && !isSaving ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined
+        }
+        editor={editor}
+        labels={{
+          detailsControlLabel: tControls("details"),
+          tableInsertControlLabel: tControls("insertTable"),
+          tableInsertLabel: (columns, rows) =>
+            tControls("insertTableSize", { columns: columns.toString(), rows: rows.toString() }),
+          tableDeleteControlLabel: tControls("deleteTable"),
+          tableColumnBeforeControlLabel: tControls("addColumnLeft"),
+          tableColumnAfterControlLabel: tControls("addColumnRight"),
+          tableColumnDeleteControlLabel: tControls("deleteColumn"),
+          tableRowBeforeControlLabel: tControls("addRowTop"),
+          tableRowAfterControlLabel: tControls("addRowBelow"),
+          tableRowDeleteControlLabel: tControls("deleteRow"),
+          tableToggleHeaderRowControlLabel: tControls("toggleHeaderRow"),
+          tableToggleHeaderColumnControlLabel: tControls("toggleHeaderColumn"),
+          tableMergeCellsControlLabel: tControls("mergeCells"),
+          tableSplitCellControlLabel: tControls("splitCell"),
+        }}
+        styles={() => ({
+          root: {
+            backgroundColor: "transparent",
+            border: "none",
+            borderRadius: "0.5rem",
+            display: "flex",
+            flexDirection: "column",
+            flex: "1 1 auto",
+            height: "auto",
+            minHeight: 0,
+          },
+          toolbar: {
+            backgroundColor: "transparent",
+            borderColor: "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))",
+            padding: "0.5rem",
+          },
+          content: {
+            backgroundColor: "transparent",
+            fontSize: "var(--mantine-font-size-md)",
+            padding: renderedHeight < 120 ? "0.25rem" : "0.5rem",
+            height: "100%",
+          },
+          typographyStylesProvider: {
+            height: "100%",
+          },
+        })}
+      >
+        <RichTextEditor.Toolbar
+          style={{
+            display: display.showToolbar ? "flex" : "none",
+            maxHeight: display.toolbarMaxHeight,
+            overflowY: display.toolbarMaxHeight === undefined ? undefined : "auto",
+          }}
+        >
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.Bold title={tControls("bold")} />
+            <RichTextEditor.Italic title={tControls("italic")} />
+            <RichTextEditor.Strikethrough title={tControls("strikethrough")} />
+            <RichTextEditor.Underline title={tControls("underline")} />
+            <TextColorControl />
+            <TextHighlightControl />
+            <RichTextEditor.Code title={tControls("code")} />
+            <RichTextEditor.ClearFormatting title={tControls("clear")} />
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.H1 title={tControls("heading", { level: "1" })} />
+            <RichTextEditor.H2 title={tControls("heading", { level: "2" })} />
+            <RichTextEditor.H3 title={tControls("heading", { level: "3" })} />
+            <RichTextEditor.H4 title={tControls("heading", { level: "4" })} />
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.AlignLeft
+              title={tControls("align", {
+                position: t("align.left"),
+              })}
+            />
+            <RichTextEditor.AlignCenter
+              title={tControls("align", {
+                position: t("align.center"),
+              })}
+            />
+            <RichTextEditor.AlignRight
+              title={tControls("align", {
+                position: t("align.right"),
+              })}
+            />
+            <RichTextEditor.Control
+              title={tControls("directionLtr")}
+              aria-label={tControls("directionLtr")}
+              active={editor?.isActive({ dir: "ltr" })}
+              onClick={() => editor && setTextDirection(editor, "ltr").run()}
+            >
+              <IconTextDirectionLtr {...controlIconProps} />
+            </RichTextEditor.Control>
+            <RichTextEditor.Control
+              title={tControls("directionRtl")}
+              aria-label={tControls("directionRtl")}
+              active={editor?.isActive({ dir: "rtl" })}
+              onClick={() => editor && setTextDirection(editor, "rtl").run()}
+            >
+              <IconTextDirectionRtl {...controlIconProps} />
+            </RichTextEditor.Control>
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.Blockquote title={tControls("blockquote")} />
+            <RichTextEditor.Hr title={tControls("horizontalLine")} />
+            <RichTextEditor.Details title={tControls("details")} />
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.BulletList title={tControls("bulletList")} />
+            <RichTextEditor.OrderedList title={tControls("orderedList")} />
+            <TaskListToggle />
+            {(Boolean(editor?.isActive("taskList")) ||
+              Boolean(editor?.isActive("bulletList")) ||
+              Boolean(editor?.isActive("orderedList"))) && (
+              <>
+                <ListIndentIncrease />
+                <ListIndentDecrease />
+              </>
+            )}
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.Link title={tControls("link")} />
+            <RichTextEditor.Unlink title={tControls("unlink")} />
+            <EmbedImage />
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            {editor?.isActive("table") ? (
+              <>
+                <RichTextEditor.TableDelete title={tControls("deleteTable")} />
+                <ColorCellControl />
+                <RichTextEditor.TableColumnBefore title={tControls("addColumnLeft")} />
+                <RichTextEditor.TableColumnAfter title={tControls("addColumnRight")} />
+                <RichTextEditor.TableColumnDelete title={tControls("deleteColumn")} />
+                <RichTextEditor.TableRowBefore title={tControls("addRowTop")} />
+                <RichTextEditor.TableRowAfter title={tControls("addRowBelow")} />
+                <RichTextEditor.TableRowDelete title={tControls("deleteRow")} />
+                <RichTextEditor.TableToggleHeaderRow title={tControls("toggleHeaderRow")} />
+                <RichTextEditor.TableToggleHeaderColumn title={tControls("toggleHeaderColumn")} />
+                <RichTextEditor.TableMergeCells title={tControls("mergeCells")} />
+                <RichTextEditor.TableSplitCell title={tControls("splitCell")} />
+              </>
+            ) : (
+              <RichTextEditor.TableInsert title={tControls("insertTable")} withHeaderRow={false} />
+            )}
+          </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
+            <RichTextEditor.Undo />
+            <RichTextEditor.Redo />
+          </RichTextEditor.ControlsGroup>
+        </RichTextEditor.Toolbar>
+        {editor && isEditing && !isSaving && (
+          <BubbleMenu editor={editor}>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold title={tControls("bold")} />
+              <RichTextEditor.Italic title={tControls("italic")} />
+              <RichTextEditor.Link title={tControls("link")} />
+            </RichTextEditor.ControlsGroup>
+          </BubbleMenu>
+        )}
+
+        <ScrollArea
+          pl={compactSurface ? 4 : 12}
+          pt={compactSurface ? 4 : 12}
+          styles={{
+            root: {
+              flex: "1 1 auto",
+              height: "100%",
+              minHeight: 0,
+            },
+            content: {
+              height: "100%",
+              minHeight: 0,
+            },
+          }}
+        >
+          <RichTextEditor.Content />
+        </ScrollArea>
+      </RichTextEditor>
+      {(saveError || showDocumentStats) && (
+        <Group
+          w="100%"
+          justify="flex-end"
+          gap="xs"
+          px={8}
+          pb={4}
+          style={{ flex: "0 0 auto", pointerEvents: saveError ? undefined : "none" }}
+        >
+          {saveError && (
+            <Tooltip label={saveError} multiline>
+              <Text
+                size="xs"
+                c="red"
+                lineClamp={1}
+                maw={320}
+                tabIndex={0}
+                aria-label={`${t("saveFailed")}. ${saveError}`}
+              >
+                {t("saveFailed")}
+              </Text>
+            </Tooltip>
+          )}
+          {showDocumentStats && (
+            <Text size="xs" c="dimmed">
+              {t("documentStats", documentStats)}
+            </Text>
+          )}
+        </Group>
+      )}
+      {canChange && (
+        <Stack pos="absolute" top={7} right={7} gap={7} style={{ zIndex: 1 }}>
+          <ActionIcon
+            className={`homarr-notebook-action ${actionTargetClasses.root}`}
+            data-visible={isEditing || undefined}
+            title={isEditing ? tCommon("action.save") : tCommon("action.edit")}
+            aria-label={isEditing ? tCommon("action.save") : tCommon("action.edit")}
+            color={primaryColor}
+            variant="light"
+            size={30}
+            loading={isSaving}
+            disabled={isSaving}
+            onClick={() => void handleEditToggle()}
+          >
+            {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
+          </ActionIcon>
+          {isEditing && (
+            <InlineConfirmActionIcon
+              className={`homarr-notebook-action ${actionTargetClasses.root}`}
+              data-visible
+              title={tCommon("action.cancel")}
+              aria-label={tCommon("action.cancel")}
+              confirmLabel={t("dismiss.message")}
+              confirmationAriaLabel={t("dismiss.action.discard")}
+              confirmationChildren={<IconCheck {...iconProps} />}
+              onConfirm={handleEditCancel}
+              color={primaryColor}
+              variant="light"
+              size={30}
+              disabled={isSaving}
+            >
+              <IconX {...iconProps} />
+            </InlineConfirmActionIcon>
+          )}
+        </Stack>
+      )}
+    </Box>
+  );
+}
+
+function TextHighlightControl() {
+  const tControls = useI18n("widget.notebook.controls");
+  const { editor } = useRichTextEditorContext();
+  const defaultColor = "transparent";
+
+  const getCurrent = useCallback(() => {
+    return editor?.getAttributes("highlight").color as string | undefined;
+  }, [editor]);
+
+  const update = useCallback(
+    (value: string) => {
+      if (value === defaultColor) {
+        editor?.chain().focus().unsetHighlight().run();
+        return;
+      }
+      editor?.chain().focus().setHighlight({ color: value }).run();
+    },
+    [editor, defaultColor],
+  );
+
+  return (
+    <ColorControl
+      defaultColor={defaultColor}
+      getCurrent={getCurrent}
+      update={update}
+      icon={IconHighlight}
+      ariaLabel={tControls("colorHighlight")}
+    />
+  );
+}
+
+function TextColorControl() {
+  const tControls = useI18n("widget.notebook.controls");
+  const { editor } = useRichTextEditorContext();
+  const { black, colors } = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+  const defaultColor = colorScheme === "dark" ? colors.dark[0] : black;
+
+  const getCurrent = useCallback(() => {
+    return editor?.getAttributes("textStyle").color as string | undefined;
+  }, [editor]);
+
+  const update = useCallback(
+    (value: string) => {
+      if (value === defaultColor) {
+        editor?.chain().focus().unsetColor().run();
+        return;
+      }
+      editor?.chain().focus().setColor(value).run();
+    },
+    [editor, defaultColor],
+  );
+
+  return (
+    <ColorControl
+      defaultColor={defaultColor}
+      getCurrent={getCurrent}
+      update={update}
+      icon={IconLetterA}
+      ariaLabel={tControls("colorText")}
+    />
+  );
+}
+
+function ColorCellControl() {
+  const tControls = useI18n("widget.notebook.controls");
+  const { editor } = useRichTextEditorContext();
+
+  const getCurrent = useCallback(() => {
+    return editor?.getAttributes("tableCell").backgroundColor as string | undefined;
+  }, [editor]);
+
+  const update = useCallback(
+    (value: string) => {
+      editor?.chain().focus().setCellAttribute("backgroundColor", value).run();
+    },
+    [editor],
+  );
+
+  return (
+    <ColorControl
+      defaultColor="transparent"
+      getCurrent={getCurrent}
+      update={update}
+      icon={IconLayoutGrid}
+      ariaLabel={tControls("colorCell")}
+    />
+  );
+}
+
+interface ColorControlProps {
+  defaultColor: string;
+  getCurrent: () => string | undefined;
+  update: (value: string) => void;
+  icon: TablerIcon;
+  ariaLabel: string;
+}
+
+const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel }: ColorControlProps) => {
+  const { editor } = useRichTextEditorContext();
+  const [color, setColor] = useState(defaultColor);
+  const { colors, white } = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+  const [opened, { close, toggle }] = useDisclosure(false);
+  const tCommon = useI18n("common");
+  const tNotebook = useI18n("widget.notebook");
+
+  const palette = [
+    "#000000",
+    colors.dark[9],
+    colors.dark[6],
+    colors.dark[3],
+    colors.dark[0],
+    "#FFFFFF",
+    colors.red[9],
+    colors.pink[7],
+    colors.grape[8],
+    colors.violet[9],
+    colors.indigo[9],
+    colors.blue[5],
+    colors.green[6],
+    "#09D630",
+    colors.lime[5],
+    colors.yellow[5],
+    "#EB8415",
+    colors.orange[9],
+  ];
+
+  const onSelection = useCallback(() => {
+    setColor(getCurrent() ?? defaultColor);
+  }, [getCurrent, defaultColor, setColor]);
+
+  useEffect(() => {
+    editor?.on("selectionUpdate", onSelection);
+
+    return () => {
+      editor?.off("selectionUpdate", onSelection);
+    };
+  });
+
+  const handleApplyColor = useCallback(() => {
+    update(color);
+    close();
+  }, [color, update, close]);
+
+  const handleClearColor = useCallback(() => {
+    update(defaultColor);
+    setColor(defaultColor);
+    close();
+  }, [update, setColor, close, defaultColor]);
+
+  return (
+    <Popover
+      opened={opened}
+      onChange={toggle}
+      styles={{
+        dropdown: {
+          backgroundColor: colorScheme === "dark" ? colors.dark[7] : white,
+        },
+      }}
+    >
+      <Popover.Target>
+        <RichTextEditor.Control onClick={toggle} title={ariaLabel}>
+          <Group gap={3} px="0.2rem">
+            <Icon {...controlIconProps} />
+            <ColorSwatch size={14} color={color} />
+          </Group>
+        </RichTextEditor.Control>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Stack gap={8}>
+          <ColorPicker value={color} onChange={setColor} format="hexa" swatches={palette} swatchesPerRow={6} />
+          <Group justify="right" gap={8}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={tCommon("action.cancel")}
+              aria-label={tCommon("action.cancel")}
+              variant="default"
+              onClick={close}
+            >
+              <IconX stroke={1.5} size="1rem" />
+            </ActionIcon>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={tCommon("action.apply")}
+              aria-label={tCommon("action.apply")}
+              variant="default"
+              onClick={handleApplyColor}
+            >
+              <IconCheck stroke={1.5} size="1rem" />
+            </ActionIcon>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={tNotebook("popover.clearColor")}
+              aria-label={tNotebook("popover.clearColor")}
+              variant="default"
+              onClick={handleClearColor}
+            >
+              <IconCircleOff stroke={1.5} size="1rem" />
+            </ActionIcon>
+          </Group>
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
+  );
+};
+
+function EmbedImage() {
+  const tControls = useI18n("widget.notebook.controls");
+  const t = useI18n("widget.notebook");
+  const tCommon = useI18n("common");
+  const { editor } = useRichTextEditorContext();
+  const { colors, white } = useMantineTheme();
+  const { colorScheme } = useMantineColorScheme();
+  const [opened, { open, close, toggle }] = useDisclosure(false);
+  const form = useForm({
+    initialValues: {
+      src: (editor?.getAttributes("image").src as string | undefined) ?? "",
+      width: (editor?.getAttributes("image").width as string | undefined) ?? "",
+    },
+  });
+
+  const handleOpen = useCallback(() => {
+    form.reset();
+    open();
+  }, [form, open]);
+
+  const handleSubmit = useCallback(
+    (values: { src: string; width: string }) => {
+      editor?.commands.insertContent({
+        type: "paragraph",
+        content: [
+          {
+            type: "image",
+            attrs: values,
+          },
+        ],
+      });
+      close();
+    },
+    [editor, close],
+  );
+
+  return (
+    <Popover
+      opened={opened}
+      onClose={close}
+      onOpen={handleOpen}
+      position="left"
+      styles={{
+        dropdown: {
+          backgroundColor: colorScheme === "dark" ? colors.dark[7] : white,
+        },
+      }}
+      trapFocus
+    >
+      <Popover.Target>
+        <RichTextEditor.Control onClick={toggle} title={tControls("image")} active={editor?.isActive("image")}>
+          <IconPhoto stroke={1.5} size="1rem" />
+        </RichTextEditor.Control>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <Stack gap={5}>
+            <TextInput label={t("popover.source")} placeholder="https://example.com/" {...form.getInputProps("src")} />
+            <TextInput
+              label={t("popover.width")}
+              placeholder={t("popover.widthPlaceholder")}
+              {...form.getInputProps("width")}
+            />
+            <Button type="submit" variant="default" mt={10} mb={5}>
+              {tCommon("action.save")}
+            </Button>
+          </Stack>
+        </form>
+      </Popover.Dropdown>
+    </Popover>
+  );
+}
+
+function TaskListToggle() {
+  const { editor } = useRichTextEditorContext();
+  const tControls = useI18n("widget.notebook.controls");
+  const handleToggleTaskList = useCallback(() => {
+    editor?.chain().focus().toggleTaskList().run();
+  }, [editor]);
+
+  return (
+    <RichTextEditor.Control
+      title={tControls("checkList")}
+      onClick={handleToggleTaskList}
+      active={editor?.isActive("taskList")}
+    >
+      <IconListCheck stroke={1.5} size="1rem" />
+    </RichTextEditor.Control>
+  );
+}
+
+function useActiveListItemType() {
+  const { editor } = useRichTextEditorContext();
+  const [itemType, setItemType] = useState("listItem");
+
+  useEffect(() => {
+    if (!editor) return;
+    const updateItemType = () => setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
+    updateItemType();
+    editor.on("selectionUpdate", updateItemType);
+    return () => {
+      editor.off("selectionUpdate", updateItemType);
+    };
+  }, [editor]);
+
+  return { editor, itemType };
+}
+
+function ListIndentIncrease() {
+  const { editor, itemType } = useActiveListItemType();
+  const tControls = useI18n("widget.notebook.controls");
+  const handleIncreaseIndent = useCallback(() => {
+    editor?.chain().focus().sinkListItem(itemType).run();
+  }, [editor, itemType]);
+
+  return (
+    <RichTextEditor.Control
+      title={tControls("increaseIndent")}
+      onClick={handleIncreaseIndent}
+      interactive={editor?.can().sinkListItem(itemType)}
+    >
+      <IconIndentIncrease stroke={1.5} size="1rem" />
+    </RichTextEditor.Control>
+  );
+}
+
+function ListIndentDecrease() {
+  const { editor, itemType } = useActiveListItemType();
+  const tControls = useI18n("widget.notebook.controls");
+
+  const handleDecreaseIndent = useCallback(() => {
+    editor?.chain().focus().liftListItem(itemType).run();
+  }, [editor, itemType]);
+
+  return (
+    <RichTextEditor.Control
+      title={tControls("decreaseIndent")}
+      onClick={handleDecreaseIndent}
+      interactive={editor?.can().liftListItem(itemType)}
+    >
+      <IconIndentDecrease stroke={1.5} size="1rem" />
+    </RichTextEditor.Control>
+  );
+}

@@ -1,0 +1,384 @@
+
+ RUN  v4.1.10 /home/habs/.codex/worktrees/5fcf/homarr
+
+stdout | packages/api/src/router/test/integration/integration-router.spec.ts > update should update an integration > with full access should update an integration
+2023-07-01T00:00:00.000Z [32minfo[39m: Updating integration module="integrationRouter" id="ioj6z09ipaicalvl77l882od"
+
+stdout | packages/api/src/router/test/integration/integration-router.spec.ts > update should update an integration > with full access should update an integration
+2023-07-01T00:00:00.000Z [32minfo[39m: Updated integration module="integrationRouter" id="ioj6z09ipaicalvl77l882od" name="Milky Way Pi Hole" kind="piHole" url="http://milkyway.local"
+
+ ❯ |api-node| packages/api/src/router/test/integration/integration-router.spec.ts (26 tests | 2 failed) 1153ms
+     × with full access should update an integration 55ms
+     × with full access should delete an integration 45ms
+ ❯ |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts (29 tests | 12 failed) 60074ms
+     × executes a DNS-pinned request within the approved scope 5004ms
+     × normalizes response-body failures after headers arrive 5001ms
+     × normalizes failures while draining a redirect body 5006ms
+     × maps Undici's response-size failure to the domain size limit 5004ms
+     × preserves domain errors raised while parsing the response body 5006ms
+     × preserves structured bodies for GET queries 5001ms
+     × follows 301 redirects with fetch-compatible method semantics 5004ms
+     × follows 302 redirects with fetch-compatible method semantics 5005ms
+     × follows 303 redirects with fetch-compatible method semantics 5006ms
+     × follows 307 redirects with fetch-compatible method semantics 5006ms
+     × follows 308 redirects with fetch-compatible method semantics 5005ms
+     × does not follow redirects for actions 5006ms
+
+ Test Files  2 failed | 8 passed (10)
+      Tests  14 failed | 423 passed (437)
+     Errors  12 errors
+   Start at  19:09:38
+   Duration  64.60s (transform 3.08s, setup 247ms, import 8.81s, tests 62.90s, environment 1.03s)
+
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > executes a DNS-pinned request within the approved scope
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:36:3
+     34|   });
+     35|
+     36|   test("executes a DNS-pinned request within the approved scope", asyn…
+       |   ^
+     37|     const server = createServer((_request, response) => {
+     38|       response.writeHead(200, { "content-type": "application/json" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > normalizes response-body failures after headers arrive
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:74:3
+     72|   });
+     73|
+     74|   test("normalizes response-body failures after headers arrive", async…
+       |   ^
+     75|     const events: Array<{ errorName: string; reason?: "timeout" }> = […
+     76|     const server = createServer((_request, response) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > normalizes failures while draining a redirect body
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:102:3
+    100|   });
+    101|
+    102|   test("normalizes failures while draining a redirect body", async () …
+       |   ^
+    103|     const server = createServer((_request, response) => {
+    104|       response.writeHead(302, { location: "/target" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > maps Undici's response-size failure to the domain size limit
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:126:3
+    124|   });
+    125|
+    126|   test("maps Undici's response-size failure to the domain size limit",…
+       |   ^
+    127|     const server = createServer((_request, response) => {
+    128|       response.writeHead(200, { "content-type": "application/json" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > preserves domain errors raised while parsing the response body
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:148:3
+    146|   });
+    147|
+    148|   test("preserves domain errors raised while parsing the response body…
+       |   ^
+    149|     const server = createServer((_request, response) => {
+    150|       response.writeHead(200, { "content-type": "application/json" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > preserves structured bodies for GET queries
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:184:3
+    182|   });
+    183|
+    184|   test("preserves structured bodies for GET queries", async () => {
+       |   ^
+    185|     const server = createServer((request, response) => {
+    186|       let body = "";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > follows 301 redirects with fetch-compatible method semantics
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > follows 302 redirects with fetch-compatible method semantics
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > follows 303 redirects with fetch-compatible method semantics
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > follows 307 redirects with fetch-compatible method semantics
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > follows 308 redirects with fetch-compatible method semantics
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:220:14
+    218|     [307, "POST", '{"query":"status"}'],
+    219|     [308, "POST", '{"query":"status"}'],
+    220|   ] as const)("follows %i redirects with fetch-compatible method seman…
+       |              ^
+    221|     const server = createServer((request, response) => {
+    222|       if (request.url === "/start") {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+ FAIL  |custom-widgets-node| packages/custom-widgets/src/test/server-policy.spec.ts > custom widget network policy > does not follow redirects for actions
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/custom-widgets/src/test/server-policy.spec.ts:271:3
+    269|   });
+    270|
+    271|   test("does not follow redirects for actions", async () => {
+       |   ^
+    272|     const server = createServer((_request, response) => {
+    273|       response.writeHead(303, { location: "/target" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/14]⎯
+
+ FAIL  |api-node| packages/api/src/router/test/integration/integration-router.spec.ts > update should update an integration > with full access should update an integration
+TRPCError: Redis is unavailable in this process
+ ❯ requireRedisConnection packages/redis/src/lib/connection.ts:19:22
+     17|
+     18| export const requireRedisConnection = (client: RedisClient | null): Re…
+     19|   if (!client) throw new Error("Redis is unavailable in this process");
+       |                      ^
+     20|   return client;
+     21| };
+ ❯ requireReadyRedisConnectionAsync packages/redis/src/lib/connection.ts:57:3
+ ❯ Object.removeAsync packages/redis/src/lib/channel.ts:170:14
+ ❯ invalidateIntegrationCacheAsync packages/redis/src/lib/channel.ts:625:3
+ ❯ packages/api/src/router/integration/integration-router.ts:413:5
+ ❯ resolveMiddleware node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:576:21
+ ❯ callRecursive node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:642:19
+ ❯ callRecursive node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:642:19
+ ❯ callRecursive node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:642:19
+
+Caused by: Error: Redis is unavailable in this process
+ ❯ requireRedisConnection packages/redis/src/lib/connection.ts:19:22
+ ❯ requireReadyRedisConnectionAsync packages/redis/src/lib/connection.ts:57:3
+ ❯ Object.removeAsync packages/redis/src/lib/channel.ts:170:14
+ ❯ invalidateIntegrationCacheAsync packages/redis/src/lib/channel.ts:625:3
+ ❯ packages/api/src/router/integration/integration-router.ts:413:5
+ ❯ resolveMiddleware node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:221:17
+ ❯ callRecursive node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:256:18
+ ❯ callRecursive node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:256:18
+ ❯ callRecursive node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:256:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/14]⎯
+
+ FAIL  |api-node| packages/api/src/router/test/integration/integration-router.spec.ts > delete should delete an integration > with full access should delete an integration
+TRPCError: Redis is unavailable in this process
+ ❯ requireRedisConnection packages/redis/src/lib/connection.ts:19:22
+     17|
+     18| export const requireRedisConnection = (client: RedisClient | null): Re…
+     19|   if (!client) throw new Error("Redis is unavailable in this process");
+       |                      ^
+     20|   return client;
+     21| };
+ ❯ requireReadyRedisConnectionAsync packages/redis/src/lib/connection.ts:57:3
+ ❯ Object.removeAsync packages/redis/src/lib/channel.ts:170:14
+ ❯ invalidateIntegrationCacheAsync packages/redis/src/lib/channel.ts:625:3
+ ❯ packages/api/src/router/integration/integration-router.ts:437:7
+ ❯ resolveMiddleware node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:576:21
+ ❯ callRecursive node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:642:19
+ ❯ callRecursive node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:642:19
+ ❯ callRecursive node_modules/@trpc/server/src/unstable-core-do-not-import/procedureBuilder.ts:642:19
+
+Caused by: Error: Redis is unavailable in this process
+ ❯ requireRedisConnection packages/redis/src/lib/connection.ts:19:22
+ ❯ requireReadyRedisConnectionAsync packages/redis/src/lib/connection.ts:57:3
+ ❯ Object.removeAsync packages/redis/src/lib/channel.ts:170:14
+ ❯ invalidateIntegrationCacheAsync packages/redis/src/lib/channel.ts:625:3
+ ❯ packages/api/src/router/integration/integration-router.ts:437:7
+ ❯ resolveMiddleware node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:221:17
+ ❯ callRecursive node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:256:18
+ ❯ callRecursive node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:256:18
+ ❯ callRecursive node_modules/@trpc/server/dist/initTRPC-BRf4imah.mjs:256:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/14]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 12 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "executes a DNS-pinned request within the approved scope". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "normalizes response-body failures after headers arrive". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "normalizes failures while draining a redirect body". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "maps Undici's response-size failure to the domain size limit". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "preserves domain errors raised while parsing the response body". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "preserves structured bodies for GET queries". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "follows 301 redirects with fetch-compatible method semantics". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "follows 302 redirects with fetch-compatible method semantics". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "follows 303 redirects with fetch-compatible method semantics". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "follows 307 redirects with fetch-compatible method semantics". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "follows 308 redirects with fetch-compatible method semantics". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1987:21
+ ❯ listenInCluster node:net:2066:12
+ ❯ node:net:2275:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:90:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "packages/custom-widgets/src/test/server-policy.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not follow redirects for actions". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+

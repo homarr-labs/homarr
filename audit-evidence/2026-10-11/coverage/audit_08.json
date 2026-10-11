@@ -1,0 +1,702 @@
+[
+  {
+    "path": "packages/widgets/src/air-quality/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full component read; query data is consumed directly and chart arrays are bounded to 6/24 upcoming points. No retention/lifecycle issue identified in this file."
+  },
+  {
+    "path": "packages/widgets/src/air-quality/display.ts",
+    "status": "no actionable finding",
+    "evidence": "Full helper read; filtering/slicing and fixed-size pollutant/pollen scans are bounded; no finding."
+  },
+  {
+    "path": "packages/widgets/src/air-quality/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition uses 900 ms refetch interval, query matching on latitude/longitude, and lazy component import; no retained local cache or lifecycle resource."
+  },
+  {
+    "path": "packages/widgets/src/assistant/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full component read; context renderer or small fallback; no finding."
+  },
+  {
+    "path": "packages/widgets/src/assistant/context.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full context read; holds renderer component reference in React context; no finding."
+  },
+  {
+    "path": "packages/widgets/src/assistant/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full definition read; component is loaded dynamically; no finding."
+  },
+  {
+    "path": "packages/widgets/src/beszel-system-stats/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full stylesheet read; declarative controls only; no runtime allocation/lifecycle issue."
+  },
+  {
+    "path": "packages/widgets/src/beszel-system-stats/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full component read; systems choice arrays memoized by query result, runtime query keys scoped to selected system; no retention finding."
+  },
+  {
+    "path": "packages/widgets/src/beszel-system-stats/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full definition read; query matching and option setup inspected; no finding."
+  },
+  {
+    "path": "packages/widgets/src/beszel-system-stats/selection.ts",
+    "status": "no actionable finding",
+    "evidence": "Full helpers read; one linear choice scan and legacy filter; no finding at dashboard system-list scale."
+  },
+  {
+    "path": "packages/widgets/src/calendar/calendar-event-list.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only badge transform styles."
+  },
+  {
+    "path": "packages/widgets/src/calendar/calendar-event-list.tsx",
+    "status": "no actionable finding",
+    "evidence": "Scrolls event rows, groups/sorts only when groupByDate is enabled, bounds the non-agenda viewport to 450 px, and renders image/link details from query events. No subscription or retained copy."
+  },
+  {
+    "path": "packages/widgets/src/calendar/calendar-events.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure date grouping/filter/sort/split helpers; splitEvents output scales with multi-day span, expected calendar event dates; no persisted duplicate."
+  },
+  {
+    "path": "packages/widgets/src/calendar/calender-day.tsx",
+    "status": "no actionable finding",
+    "evidence": "Per-day indicator derives unique colors and renders event list only for active hover cards; monthly grid bounds typical day-cell count."
+  },
+  {
+    "path": "packages/widgets/src/calendar/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only calendar/error-indicator rules."
+  },
+  {
+    "path": "packages/widgets/src/calendar/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Calendar separates month-grid and advanced agenda data paths with useMemo; date/event derivations scale linearly plus sorting in agenda grouping. No timer/listener or persistent duplicate identified."
+  },
+  {
+    "path": "packages/widgets/src/calendar/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition configures event query matching and date/release filters, with dynamically imported component."
+  },
+  {
+    "path": "packages/widgets/src/demo-read-only.tsx",
+    "status": "no actionable finding",
+    "evidence": "Boolean context/provider and consumer only; no subscriptions or retained payload."
+  },
+  {
+    "path": "packages/widgets/src/dns-hole/controls/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation stylesheet only."
+  },
+  {
+    "path": "packages/widgets/src/dns-hole/controls/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full component read; optimistic query update and bulk Promise.allSettled are user-triggered and bounded by selected integration set; no lifecycle issue."
+  },
+  {
+    "path": "packages/widgets/src/dns-hole/controls/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition wires controls options and lazy component loading; no runtime data lifecycle."
+  },
+  {
+    "path": "packages/widgets/src/dns-hole/controls/timer-popover.tsx",
+    "status": "no actionable finding",
+    "evidence": "Timer popover is controlled by props and UI callbacks; no owned interval/subscription requiring cleanup."
+  },
+  {
+    "path": "packages/widgets/src/dns-hole/summary/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Summary consumes query result and renders bounded stat content; no extra retained payload or manual lifecycle resource."
+  },
+  {
+    "path": "packages/widgets/src/dns-hole/summary/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition uses query-backed integration config and dynamic component loader."
+  },
+  {
+    "path": "packages/widgets/src/filter-storage-volumes.ts",
+    "status": "no actionable finding",
+    "evidence": "Full helper read; returns source array with no active filter, otherwise creates selected subset; expected size is disk count, no finding."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/cluster/accordion-state.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure accordion-state normalization helper; no component state or retained external data."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/cluster/cluster-health.tsx",
+    "status": "no actionable finding",
+    "evidence": "Cluster component derives rendered cluster/resource summaries from query data; no unmanaged timer/listener identified."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/cluster/resource-accordion-item.tsx",
+    "status": "no actionable finding",
+    "evidence": "Renders a resource row and child detail from supplied props; no persistent data copy or lifecycle resource."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/cluster/resource-popover.tsx",
+    "status": "no actionable finding",
+    "evidence": "Popover consumes supplied resource details; lifecycle delegated to Mantine; no local retention issue."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/cluster/resource-table.tsx",
+    "status": "no actionable finding",
+    "evidence": "Table maps supplied resources and controlled sort/filter state; temporary row transforms bounded by resource inventory."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full wrapper read; partitions integrations then chooses system/cluster views; no lifecycle issue."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full definition read; polling interval 10 seconds and options inspected; query ownership inspected; no per-widget retained state finding."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/integration-selection.ts",
+    "status": "no actionable finding",
+    "evidence": "Selection helper filters and deduplicates integration identifiers in proportion to configured integrations; no retained cache."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/rings/cpu-ring.tsx",
+    "status": "no actionable finding",
+    "evidence": "Ring renders supplied scalar data with fixed chart geometry; no dynamic resource lifecycle."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/rings/cpu-temp-ring.tsx",
+    "status": "no actionable finding",
+    "evidence": "Ring renders supplied temperature values with fixed chart geometry; no dynamic resource lifecycle."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/rings/gpu-ring.tsx",
+    "status": "no actionable finding",
+    "evidence": "Ring renders supplied scalar data with fixed chart geometry; no dynamic resource lifecycle."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/rings/memory-ring.tsx",
+    "status": "no actionable finding",
+    "evidence": "Ring renders supplied scalar data with fixed chart geometry; no dynamic resource lifecycle."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/system-health.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only layout and responsive styles."
+  },
+  {
+    "path": "packages/widgets/src/health-monitoring/system-health.tsx",
+    "status": "no actionable finding",
+    "evidence": "Dedicated full 514-line read and caller review; health records filtered, filesystem/SMART arrays transformed per integration/render. No timers/listeners or retained duplicate payload found; array work scales with disk and SMART counts."
+  },
+  {
+    "path": "packages/widgets/src/iframe/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only iframe sizing styles."
+  },
+  {
+    "path": "packages/widgets/src/iframe/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Iframe source is derived from options and rendered declaratively; no polling, message listener, or retained response data."
+  },
+  {
+    "path": "packages/widgets/src/iframe/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition has bounded source options and dynamically imports the iframe component."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/health-check-status.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/panels/queue.panel.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/panels/statistics.panel.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/panels/workers.panel.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/media-transcoding/views.ts",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/minecraft/server-status/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/minecraft/server-status/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/network-status/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/network-status/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/network-status/layout.ts",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/network-status/variants/stat-row.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/network-status/variants/wifi-variant.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/network-status/variants/wired-variant.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/summary/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/summary/display.ts",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/network-controller/summary/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/notebook/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full component read; next/dynamic ssr:false boundary delays editor import; no finding."
+  },
+  {
+    "path": "packages/widgets/src/notebook/default-content.ts",
+    "status": "no actionable finding",
+    "evidence": "Full content read; default HTML is a 4,438-byte source string, no external asset/buffer; rendered into editor only for notebook widget."
+  },
+  {
+    "path": "packages/widgets/src/notebook/display.ts",
+    "status": "no actionable finding",
+    "evidence": "Full helper read; static display flags only; no finding."
+  },
+  {
+    "path": "packages/widgets/src/notebook/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full definition read; default content included only through notebook definition and component dynamically imported; no finding."
+  },
+  {
+    "path": "packages/widgets/src/notebook/notebook.css",
+    "status": "no actionable finding",
+    "evidence": "Styles contain presentation rules only; no animations beyond short hover transition, observers, or asset imports."
+  },
+  {
+    "path": "packages/widgets/src/notebook/notebook.tsx",
+    "status": "finding identified",
+    "evidence": "Dedicated full 967-line read and caller review; getHTML() runs in onUpdate and its result is stored in React state. Save-time-only optimization candidate was rejected for this PR: the compatibility-only smoke produced the same normalized HTML in both fixture variants and did not establish a faithful production baseline or any CPU/retained-heap benefit. See report and notebook-compatibility-smoke.json."
+  },
+  {
+    "path": "packages/widgets/src/notebook/read-only-task-item.ts",
+    "status": "no actionable finding",
+    "evidence": "Full extension read; checkbox listener is removed in destroy and parent destroy is forwarded; no listener leak."
+  },
+  {
+    "path": "packages/widgets/src/notebook/text-direction.ts",
+    "status": "no actionable finding",
+    "evidence": "Full extension/helper read; no allocation/retention issue."
+  },
+  {
+    "path": "packages/widgets/src/paperless-ngx/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only component styles."
+  },
+  {
+    "path": "packages/widgets/src/paperless-ngx/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Widget renders query-backed Paperless results using derived display values; no unmanaged lifecycle resources or duplicate retained payload found."
+  },
+  {
+    "path": "packages/widgets/src/paperless-ngx/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition delegates integration/query behavior and loads component dynamically."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only PatchMon styles."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Component derives displayed statistics and thresholds from query data; transforms are limited to returned host/stat records, without an unbounded local cache."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition configures PatchMon integration options and dynamic loading."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/layout-utils.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure responsive layout selection helpers; no retained state or expensive data transforms."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/os-distribution-section.tsx",
+    "status": "no actionable finding",
+    "evidence": "Maps OS distribution data into chart rows proportional to returned categories; no long-lived copy."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/stat-colors.ts",
+    "status": "no actionable finding",
+    "evidence": "Static color mappings only."
+  },
+  {
+    "path": "packages/widgets/src/patchmon/threshold-validation.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure scalar threshold validation; no data retention."
+  },
+  {
+    "path": "packages/widgets/src/prefetch.ts",
+    "status": "no actionable finding",
+    "evidence": "Prefetch helpers operate on widget definitions/query keys; no persistent timer/listener resource identified."
+  },
+  {
+    "path": "packages/widgets/src/releases/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Dedicated full 732-line read and query caller review; requests grouped into chunks of five; records are shallowly mapped from query data for presentation; no unbounded retention or duplicate deep payload identified."
+  },
+  {
+    "path": "packages/widgets/src/releases/display.ts",
+    "status": "no actionable finding",
+    "evidence": "Full helper read; returns references in bounded visible slice/filter arrays; no finding."
+  },
+  {
+    "path": "packages/widgets/src/releases/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full definition read; query and option behavior inspected; component dynamically loaded; no finding."
+  },
+  {
+    "path": "packages/widgets/src/releases/query-options.ts",
+    "status": "no actionable finding",
+    "evidence": "Full helper read; stale time checks existing query response array; no additional retained copy."
+  },
+  {
+    "path": "packages/widgets/src/releases/releases-repository.ts",
+    "status": "no actionable finding",
+    "evidence": "Full type read; declarations only; no finding."
+  },
+  {
+    "path": "packages/widgets/src/smart-home/entity-state/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Entity widget derives visible state from selected entity/query data; no manual timer/listener or duplicate payload."
+  },
+  {
+    "path": "packages/widgets/src/smart-home/entity-state/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition uses integration configuration and lazy component loading."
+  },
+  {
+    "path": "packages/widgets/src/smart-home/entity-state/state.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure entity-state formatting/filter helpers; no retained external data."
+  },
+  {
+    "path": "packages/widgets/src/smart-home/execute-automation/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Automation UI uses mutation callbacks and query-backed options; no manually managed lifecycle resources."
+  },
+  {
+    "path": "packages/widgets/src/smart-home/execute-automation/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition configures integration/query identity and dynamic component loading."
+  },
+  {
+    "path": "packages/widgets/src/smart-home/layout.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure layout choice based on widget dimensions."
+  },
+  {
+    "path": "packages/widgets/src/stats/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Stats component maps selected query records into table/detail presentation; no unbounded state copy identified."
+  },
+  {
+    "path": "packages/widgets/src/stats/config.ts",
+    "status": "no actionable finding",
+    "evidence": "Static typed statistic configuration and presentation metadata."
+  },
+  {
+    "path": "packages/widgets/src/stats/details.tsx",
+    "status": "no actionable finding",
+    "evidence": "Details view renders selected stat data directly; no new retained query copy."
+  },
+  {
+    "path": "packages/widgets/src/stats/format.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure value formatting helpers."
+  },
+  {
+    "path": "packages/widgets/src/stats/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition sets widget options/query behavior and dynamic component import."
+  },
+  {
+    "path": "packages/widgets/src/stats/loading.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only loading styles."
+  },
+  {
+    "path": "packages/widgets/src/stats/loading.tsx",
+    "status": "no actionable finding",
+    "evidence": "Loading placeholder renders fixed UI only."
+  },
+  {
+    "path": "packages/widgets/src/stats/stats.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only stats styles."
+  },
+  {
+    "path": "packages/widgets/src/stats/table.module.css",
+    "status": "no actionable finding",
+    "evidence": "Presentation-only table styles."
+  },
+  {
+    "path": "packages/widgets/src/stats/table.tsx",
+    "status": "no actionable finding",
+    "evidence": "Table maps configured stats and query values into rows; output count is bounded by configuration."
+  },
+  {
+    "path": "packages/widgets/src/stocks/component.tsx",
+    "status": "finding identified",
+    "evidence": "Full component read: every successful query result builds summary.graphValues via an O(N) map; advanced mode instead passes data.priceHistory directly to Sparkline. The duplicate array is render-local/transient. min/max use argument spreads over N points; provider response cap/length and runtime cost were not measured. See report for bounded candidate and compatible fix."
+  },
+  {
+    "path": "packages/widgets/src/stocks/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/stocks/stocks.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full stylesheet read; styles are declarative and contain no runtime allocation, data retention, or lifecycle work."
+  },
+  {
+    "path": "packages/widgets/src/storage-volume-options.ts",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-disks/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-disks/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/chart/combined-network-traffic.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/chart/common-chart.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/chart/cpu-chart.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/chart/gpu-chart.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/chart/memory-chart.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/chart/network-traffic.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/system-resources/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/traefik/component.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full stylesheet read; styles are declarative and contain no runtime allocation, data retention, or lifecycle work."
+  },
+  {
+    "path": "packages/widgets/src/traefik/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/traefik/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/trpc-query-key.ts",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/ups/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/ups/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/vpn/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/vpn/helpers.ts",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/vpn/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/vpn/vpn-card.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-alerts/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-alerts/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-auth-failures/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-auth-failures/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Full widget definition read; query/options/loading configuration inspected; component loading is declarative and no extra retained data path was found."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-summary/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Summary query refetches at 60 s; chart data is fixed to severity buckets. No timers/listeners or growing local state; DonutChart data is a small derived array."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-summary/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition options are bounded range/toggles and the component is dynamically imported; no additional runtime retention."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-timeline/component.tsx",
+    "status": "no actionable finding",
+    "evidence": "Timeline maps query points to localized chart rows in useMemo, O(P) time and O(P) derived memory; dependency keys include the source points/range/locale. No polling resource outside query options."
+  },
+  {
+    "path": "packages/widgets/src/wazuh-timeline/index.ts",
+    "status": "no actionable finding",
+    "evidence": "Definition offers bounded ranges, interval options and chart controls; query component dynamically imported."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/badges.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/error-state.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/frame.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full source read; data flow, derived allocations, React state, and lifecycle cleanup were inspected; no actionable retention or lifecycle issue identified."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/links.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure link builders allocate URL strings only when rendered links are requested; no retained data or side effects."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/options.ts",
+    "status": "no actionable finding",
+    "evidence": "Static four-item range option constant; negligible retained data."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/severity.ts",
+    "status": "no actionable finding",
+    "evidence": "Pure small enum maps and number format helpers; no data retention or lifecycle effects."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/use-wazuh-links.ts",
+    "status": "no actionable finding",
+    "evidence": "useMemo caches derived dashboard-link closures keyed only by dashboardUrl; no external resources."
+  },
+  {
+    "path": "packages/widgets/src/wazuh/_shared/wazuh.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full stylesheet read; styles are declarative and contain no runtime allocation, data retention, or lifecycle work."
+  }
+]

@@ -1,0 +1,12 @@
+{"event":"start","runId":"cache-expiry-1791734636286-sqiuj5yosqa","cycles":5,"ttlSeconds":1,"idleMs":100,"baseUrl":"http://127.0.0.1:39545","mode":"production executor + loopback HTTP","executorSource":"/home/habs/.codex/worktrees/5fcf/homarr/packages/custom-widgets/src/server/request-executor.ts","node":"v25.1.0","execArgv":["--expose-gc","--import","tsx"],"resourceLimits":{"userCPUTime":567107,"systemCPUTime":73970,"maxRSS":107504,"sharedMemorySize":0,"unsharedDataSize":0,"unsharedStackSize":0,"minorPageFault":23515,"majorPageFault":0,"swappedOut":0,"fsRead":0,"fsWrite":64,"ipcSent":0,"ipcReceived":0,"signalsCount":0,"voluntaryContextSwitches":490,"involuntaryContextSwitches":33}}
+{"label":"populated-after-hit-check","cycle":1,"at":"2026-10-11T16:03:56.495Z","rss":154316800,"heapTotal":38756352,"heapUsed":25244856,"external":4645771,"arrayBuffers":140555}
+{"label":"ttl-plus-idle","cycle":1,"at":"2026-10-11T16:03:57.603Z","rss":154316800,"heapTotal":27484160,"heapUsed":25216920,"external":4646868,"arrayBuffers":140555}
+{"label":"populated-after-hit-check","cycle":2,"at":"2026-10-11T16:03:58.690Z","rss":149778432,"heapTotal":29319168,"heapUsed":25352648,"external":11036522,"arrayBuffers":140555}
+{"label":"ttl-plus-idle","cycle":2,"at":"2026-10-11T16:03:59.797Z","rss":149778432,"heapTotal":27746304,"heapUsed":25298872,"external":4646868,"arrayBuffers":140555}
+{"label":"populated-after-hit-check","cycle":3,"at":"2026-10-11T16:04:00.892Z","rss":149643264,"heapTotal":29581312,"heapUsed":23979008,"external":4640098,"arrayBuffers":140555}
+{"label":"ttl-plus-idle","cycle":3,"at":"2026-10-11T16:04:02.000Z","rss":149643264,"heapTotal":27484160,"heapUsed":23955752,"external":4641155,"arrayBuffers":140555}
+{"label":"populated-after-hit-check","cycle":4,"at":"2026-10-11T16:04:03.126Z","rss":156655616,"heapTotal":29057024,"heapUsed":23687968,"external":11028165,"arrayBuffers":140555}
+{"label":"ttl-plus-idle","cycle":4,"at":"2026-10-11T16:04:04.232Z","rss":156655616,"heapTotal":27484160,"heapUsed":23673544,"external":4638511,"arrayBuffers":140555}
+{"label":"populated-after-hit-check","cycle":5,"at":"2026-10-11T16:04:05.353Z","rss":160149504,"heapTotal":29057024,"heapUsed":23743168,"external":12175362,"arrayBuffers":140555}
+{"label":"ttl-plus-idle","cycle":5,"at":"2026-10-11T16:04:06.460Z","rss":160149504,"heapTotal":28008448,"heapUsed":23733680,"external":4638511,"arrayBuffers":140555}
+{"event":"inflight-invalidation","old":"completed","cachedVersion":"new","serverRequests":2}

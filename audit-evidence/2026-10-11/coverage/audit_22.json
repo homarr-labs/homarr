@@ -1,0 +1,117 @@
+[
+  {
+    "path": "apps/workshop/Dockerfile",
+    "status": "no actionable finding",
+    "evidence": "Full read. Go and docs static assets are built/copied into separate image stages; docs output resides in /pb_public and the Go binary/runtime layers are explicit. No runtime RAM measurement is present."
+  },
+  {
+    "path": "apps/workshop/docker-compose.staging.yml",
+    "status": "reviewed",
+    "evidence": "Full read. One Workshop service with persistent /pb_data volume, no explicit memory limit or worker count; runtime request limits are in Go code."
+  },
+  {
+    "path": "apps/workshop/docker-compose.yml",
+    "status": "reviewed",
+    "evidence": "Full read. Development Workshop and optional docs/mock services; persistent data is shared only by the dev profiles. No additional long-lived application buffer identified."
+  },
+  {
+    "path": "apps/workshop/entrypoint.sh",
+    "status": "no actionable finding",
+    "evidence": "Full read. Runtime URL config is encoded into a small generated JS file; process replaces the shell with PocketBase. No growing shell or retained application state."
+  },
+  {
+    "path": "apps/workshop/homarr_provider.go",
+    "status": "finding identified",
+    "evidence": "Dedicated full 759-line pass and route/caller review. chat reads up to 12,000,000 request bytes, unmarshals the raw body into a typed request and then a dynamic map, marshals another upstream body, and keeps all representations in scope through the upstream request. In-flight cap is 100 globally and timeout is five minutes."
+  },
+  {
+    "path": "apps/workshop/homarr_provider_test.go",
+    "status": "reviewed",
+    "evidence": "Full read. Existing tests cover sanitization, image/text bounds, response bounds, in-flight admission and model aliasing; no runtime heap or simultaneous maximum-request measurement. Tests were not run."
+  },
+  {
+    "path": "apps/workshop/main.go",
+    "status": "reviewed",
+    "evidence": "Full read and PocketBase 0.39.9 implementation inspected. Configures a prewarmed pool of 15 JS runtimes and serves static files from os.DirFS; no heap evidence attributes material RAM to either startup path."
+  },
+  {
+    "path": "apps/workshop/pb_hooks/workshop-utils.js",
+    "status": "no actionable finding",
+    "evidence": "Full read. HTML escaping and social metadata rendering allocate per-request strings; email templates are read when events fire. No retained cache or unbounded lifetime state found."
+  },
+  {
+    "path": "apps/workshop/pb_hooks/workshop.pb.js",
+    "status": "reviewed",
+    "evidence": "Full read. Hook handlers use bounded report/admin queries (100), single-record lookup and per-event email/template strings; no retained queues or response-body cache found."
+  },
+  {
+    "path": "apps/workshop/pb_migrations/1784240000_workshop_widgets.js",
+    "status": "reviewed",
+    "evidence": "Full read. Submission content has a 1,000,000-character field maximum and five screenshots; workshop_listings is a SQL summary view that deliberately omits content."
+  },
+  {
+    "path": "apps/workshop/pb_migrations/1786381200_report_summaries.js",
+    "status": "no actionable finding",
+    "evidence": "Full read. Report summary view projects only open report fields for submission author/admin; no full reports or unrelated submission content are selected."
+  },
+  {
+    "path": "apps/workshop/pb_migrations/1786500000_homarr_provider.js",
+    "status": "reviewed",
+    "evidence": "Full read. Quota collections use unique indexes and small fixed records; no unbounded in-memory storage."
+  },
+  {
+    "path": "apps/workshop/pb_migrations/1787670446_daily_assistant_quotas.js",
+    "status": "reviewed",
+    "evidence": "Full read. Migration changes quota uniqueness from per-user to per-user/day; rollback keeps one latest-day row per user. This is persistent DB cardinality, not process RAM."
+  },
+  {
+    "path": "apps/workshop/preview-docs.sh",
+    "status": "reviewed",
+    "evidence": "Full read. Local preview mounts already-built static docs read-only and waits for health; process/container lifecycle is explicit and temporary."
+  },
+  {
+    "path": "apps/workshop/static_test.go",
+    "status": "reviewed",
+    "evidence": "Full read. Static route behavior and redirects are covered; no large-file or static-asset memory benchmark. Tests were not run."
+  },
+  {
+    "path": "apps/workshop/test-image.sh",
+    "status": "reviewed",
+    "evidence": "Full read. Image persistence/restore validation copies a test DB and one tiny fixture image; this is an opt-in test script, not production runtime behavior. Not run."
+  },
+  {
+    "path": "apps/workshop/test.sh",
+    "status": "reviewed",
+    "evidence": "Full read. Integration script builds and exercises Workshop containers; it has no heap profiling or max-concurrency memory fixture. Not run."
+  },
+  {
+    "path": "packages/workshop/package.json",
+    "status": "reviewed",
+    "evidence": "Full read. Public exports separate backend/client/schema entrypoints; PocketBase is a runtime dependency and package scripts expose focused checks."
+  },
+  {
+    "path": "packages/workshop/src/backend.ts",
+    "status": "finding identified",
+    "evidence": "Dedicated full 901-line pass and concrete public/docs/admin/management callers reviewed. The compatibility fallback loads all rows; if the listing view is unavailable it downloads raw submissions including up to 1 MB content per record before parseListings discards content. PocketBase 0.26.9 supports fields projections, but no request/heap measurements were taken."
+  },
+  {
+    "path": "packages/workshop/src/client.ts",
+    "status": "reviewed",
+    "evidence": "Full read. Thin re-export of backend APIs; no additional state or import-time work."
+  },
+  {
+    "path": "packages/workshop/src/index.ts",
+    "status": "reviewed",
+    "evidence": "Full read. Re-exports backend and schema modules; no separate behavior."
+  },
+  {
+    "path": "packages/workshop/src/schema.ts",
+    "status": "reviewed",
+    "evidence": "Full read. Summary and detail schemas are separate; content max is 1 MB and summary parsing omits content. Widget validation parses and reformats one submitted content string at a time."
+  },
+  {
+    "path": "packages/workshop/tsconfig.json",
+    "status": "reviewed",
+    "evidence": "Full read. TypeScript config includes package source only; no runtime effect."
+  }
+]

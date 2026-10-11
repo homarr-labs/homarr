@@ -1,0 +1,278 @@
+[
+  {
+    "path": "packages/auth/adapter.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Builds the Drizzle adapter per provider; email lookup projects id/name/email/verification/image and scopes provider, with opt-in OIDC-to-credentials fallback."
+  },
+  {
+    "path": "packages/auth/api-key/constants.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Defines one fixed API-key header name."
+  },
+  {
+    "path": "packages/auth/api-key/get-api-key-session.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Validates id.token, projects key id/hash and a bounded user subset, bcrypt-compares, then creates a permissions-bearing session."
+  },
+  {
+    "path": "packages/auth/api-key/index.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Two named exports only."
+  },
+  {
+    "path": "packages/auth/callbacks.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Permission query projects distinct keys; session callback concurrently reads only color scheme and permissions, then extends Auth.js session."
+  },
+  {
+    "path": "packages/auth/client.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Client-only re-exports from next-auth/react and integration-provider."
+  },
+  {
+    "path": "packages/auth/configuration.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Constructs Auth.js configuration and provider list; database sessions, custom cookie/token handling, and session callback. Config is created at handler construction."
+  },
+  {
+    "path": "packages/auth/env.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Parses provider list and conditionally validates OIDC/LDAP settings; configuration values are process-scoped."
+  },
+  {
+    "path": "packages/auth/events.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Sign-in handler reads a projected user, syncs external group memberships, updates changed profile fields, and sets a cookie. Group comparison uses per-login arrays; no retained cache."
+  },
+  {
+    "path": "packages/auth/index.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Exports session type, module augmentation, security helpers, request handler factory, and token-session helpers."
+  },
+  {
+    "path": "packages/auth/next.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Creates default Auth.js config at module load and wraps auth() in React request cache for per-request deduplication."
+  },
+  {
+    "path": "packages/auth/package.json",
+    "status": "reviewed",
+    "evidence": "Full file read: Exports auth entrypoints; dependencies are workspace/catalog dependencies, no bundled artifacts or postinstall payload."
+  },
+  {
+    "path": "packages/auth/permissions/board-permissions.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Pure boolean permission derivation over caller-provided permission lists and session."
+  },
+  {
+    "path": "packages/auth/permissions/index.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Re-exports board and integration permission helpers."
+  },
+  {
+    "path": "packages/auth/permissions/integration-permissions.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Pure access derivation; concatenates and maps the two supplied permission lists."
+  },
+  {
+    "path": "packages/auth/permissions/integration-provider.tsx",
+    "status": "reviewed",
+    "evidence": "Full file read: Client context stores supplied integration ids/access booleans; hooks filter current provider array."
+  },
+  {
+    "path": "packages/auth/permissions/integration-query-permissions.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Checks global/integration/board access. Loads relevant board permission rows and group board permissions; builds arrays and performs repeated includes during integration-to-board access checks."
+  },
+  {
+    "path": "packages/auth/permissions/integrations-with-permissions.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Fetches all integration ids with user and current-group permission relations, then maps to derived booleans."
+  },
+  {
+    "path": "packages/auth/providers/check-provider.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Pure functions classify enabled providers from env and static supported-provider list."
+  },
+  {
+    "path": "packages/auth/providers/credentials/authorization/basic-authorization.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Credentials lookup fetches full user row but uses password for comparison and returns only id/name; one row per sign-in."
+  },
+  {
+    "path": "packages/auth/providers/credentials/authorization/ldap-authorization.ts",
+    "status": "finding identified",
+    "evidence": "Full file read: LDAP sign-in owns service and user clients; disconnects user client only on successful bind and service client only after both searches. Earlier exceptions escape to provider catch without cleanup.",
+    "reason": "Service and user LDAP clients leak their connected socket on multiple rejected/exceptional authorization paths because cleanup is not in finally; ldapts unbind destroys the socket."
+  },
+  {
+    "path": "packages/auth/providers/credentials/credentials-provider.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Auth.js authorize functions parse credential input and map LDAP authorization rejection to null."
+  },
+  {
+    "path": "packages/auth/providers/credentials/ldap-client.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Wraps ldapts Client; each instance retains its client/socket until disconnectAsync calls unbind; search materializes and maps all returned entries."
+  },
+  {
+    "path": "packages/auth/providers/empty/empty-provider.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Static placeholder provider configuration; no runtime data retention."
+  },
+  {
+    "path": "packages/auth/providers/filter-providers.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Filters a fixed provider list against configured provider ids."
+  },
+  {
+    "path": "packages/auth/providers/oidc/oidc-provider.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Builds static provider configuration; token conform copies response headers and wraps the same response body; profile maps required identity fields."
+  },
+  {
+    "path": "packages/auth/providers/oidc/profile.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Reads nested claim paths and derives a profile name with small per-call strings."
+  },
+  {
+    "path": "packages/auth/providers/oidc/verified-email.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Pure validation of email_verified/email fields for dangerous credential linking."
+  },
+  {
+    "path": "packages/auth/redirect.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Builds redirect URI from supplied request headers and pathname."
+  },
+  {
+    "path": "packages/auth/security.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Thin bcrypt hash/compare helpers; bcrypt cost fixed at 10."
+  },
+  {
+    "path": "packages/auth/server.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Server-side named exports for permission functions and session helpers."
+  },
+  {
+    "path": "packages/auth/session.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Token session lookup projects expiry and a limited user view, then fetches permissions; no process-level session cache."
+  },
+  {
+    "path": "packages/auth/shared.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Sanitizes redirect string and re-exports permission helpers."
+  },
+  {
+    "path": "packages/auth/tsconfig.json",
+    "status": "reviewed",
+    "evidence": "Full file read: Package typecheck config only."
+  },
+  {
+    "path": "packages/db/collection.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Creates arrays per requested table and inserts collected rows transactionally; collection lifetime is caller-owned."
+  },
+  {
+    "path": "packages/db/configs/postgresql.config.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Drizzle Kit config points at source schema and PostgreSQL migration output; no runtime loading behavior."
+  },
+  {
+    "path": "packages/db/configs/sqlite.config.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Drizzle Kit config points at source schema and SQLite migration output; no runtime loading behavior."
+  },
+  {
+    "path": "packages/db/driver.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Type-only schema imports define per-driver database types; erased at runtime."
+  },
+  {
+    "path": "packages/db/index.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Loads selected schema and constructs one package database instance at module load; re-exports Drizzle API."
+  },
+  {
+    "path": "packages/db/package.json",
+    "status": "reviewed",
+    "evidence": "Full file read: Package scripts expose migration generation/run/build; dependencies include both sqlite and pg drivers, no generated migration is imported here."
+  },
+  {
+    "path": "packages/db/proxy-reader.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Lazily caches one proxy reader/pool per process, resets failed construction and exposes explicit close; PostgreSQL proxy pool capped at one connection."
+  },
+  {
+    "path": "packages/db/proxy/postgresql.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Defines two minimal columns for the long-lived proxy reader."
+  },
+  {
+    "path": "packages/db/proxy/sqlite.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Defines two minimal columns for the long-lived proxy reader."
+  },
+  {
+    "path": "packages/db/queries/group.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Single aggregate query returns max group position, defaulting to one."
+  },
+  {
+    "path": "packages/db/queries/index.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Re-exports four query modules."
+  },
+  {
+    "path": "packages/db/queries/item.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Loads matching items with integration/app/secrets relation data; returns selected widget kinds and secret values to caller."
+  },
+  {
+    "path": "packages/db/queries/server-setting.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Whole-settings path reads all setting rows and repeatedly finds each default key; keyed path projects one key row; settings count is fixed by domain."
+  },
+  {
+    "path": "packages/db/queries/widget-placement.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Seeds widgets one by one, reuses a context per target, computes kinds and app/bookmark placements; invoked during board onboarding/seed setup."
+  },
+  {
+    "path": "packages/db/schema/index.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Statically imports both backend schema modules, then selects one schema factory at runtime and exports selected tables/types."
+  },
+  {
+    "path": "packages/db/schema/postgresql.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Dedicated complete 992-line pass: table and relation declarations for PostgreSQL; includes blob custom type, auth/account/session and application tables. No data loading, query execution, or generated payload allocation."
+  },
+  {
+    "path": "packages/db/schema/sqlite.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Dedicated complete 993-line pass: table and relation declarations for SQLite; includes auth/account/session and application tables. No data loading, query execution, or generated payload allocation."
+  },
+  {
+    "path": "packages/db/transactions.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Routes synchronous SQLite and asynchronous PostgreSQL operation callbacks based on configured driver."
+  },
+  {
+    "path": "packages/db/tsconfig.json",
+    "status": "reviewed",
+    "evidence": "Full file read: Package typecheck config only; excludes generated migration bundles."
+  },
+  {
+    "path": "packages/db/turbo.json",
+    "status": "reviewed",
+    "evidence": "Full file read: Build output declarations include the two bundled migration executables."
+  },
+  {
+    "path": "packages/db/validationSchemas.ts",
+    "status": "reviewed",
+    "evidence": "Full file read: Creates static Drizzle-Zod select schemas for selected entity tables; schemas do not hold row data."
+  }
+]

@@ -1,0 +1,20 @@
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+Error: Transform failed with 1 error:
+/home/habs/.codex/worktrees/5fcf/homarr/audit-evidence/2026-10-11/compare-runtime-projection.ts:18:28: ERROR: Top-level await is currently not supported with the "cjs" output format
+    at failureErrorWithLog (/home/habs/.codex/worktrees/5fcf/homarr/node_modules/tsx/node_modules/esbuild/lib/main.js:1748:15)
+    at /home/habs/.codex/worktrees/5fcf/homarr/node_modules/tsx/node_modules/esbuild/lib/main.js:1017:50
+    at responseCallbacks.<computed> (/home/habs/.codex/worktrees/5fcf/homarr/node_modules/tsx/node_modules/esbuild/lib/main.js:884:9)
+    at handleIncomingPacket (/home/habs/.codex/worktrees/5fcf/homarr/node_modules/tsx/node_modules/esbuild/lib/main.js:939:12)
+    at Socket.readFromStdout (/home/habs/.codex/worktrees/5fcf/homarr/node_modules/tsx/node_modules/esbuild/lib/main.js:862:7)
+    at Socket.emit (node:events:509:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v24.18.0

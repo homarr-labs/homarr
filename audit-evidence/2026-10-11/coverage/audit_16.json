@@ -1,0 +1,807 @@
+[
+  {
+    "path": "apps/docs/next.config.mjs",
+    "status": "no actionable finding",
+    "evidence": "Full read; configuration/definition inspected with owning package and concrete imports; no additional actionable issue established."
+  },
+  {
+    "path": "apps/docs/package.json",
+    "status": "finding identified",
+    "evidence": "Full read; manifest includes Mermaid, Three, Nivo, Scalar, Swiper and Custom Widgets; source imports localize use to build or routes."
+  },
+  {
+    "path": "apps/docs/postcss.config.mjs",
+    "status": "no actionable finding",
+    "evidence": "Full read; configuration/definition inspected with owning package and concrete imports; no additional actionable issue established."
+  },
+  {
+    "path": "apps/docs/public/workshop-runtime-config.js",
+    "status": "no actionable finding",
+    "evidence": "Full read; configuration/definition inspected with owning package and concrete imports; no additional actionable issue established."
+  },
+  {
+    "path": "apps/docs/scripts/dump-contributors.mjs",
+    "status": "no actionable finding",
+    "evidence": "Full read; static validation/build helper scans export or source files; no long-lived application state."
+  },
+  {
+    "path": "apps/docs/scripts/validate-docs-coverage.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; static validation/build helper scans export or source files; no long-lived application state."
+  },
+  {
+    "path": "apps/docs/scripts/validate-links.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; static validation/build helper scans export or source files; no long-lived application state."
+  },
+  {
+    "path": "apps/docs/scripts/verify-search.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; static validation/build helper scans export or source files; no long-lived application state."
+  },
+  {
+    "path": "apps/docs/scripts/verify-seo.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; static validation/build helper scans export or source files; no long-lived application state."
+  },
+  {
+    "path": "apps/docs/source.config.ts",
+    "status": "finding identified",
+    "evidence": "Full read; Mermaid is an MDX remark build plugin; no direct app client import found, build CPU unmeasured."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/about-us/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/blog/[...slug]/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/blog/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/layout.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/search/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/workshop/admin/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/(home)/workshop/page.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; Workshop route mounts listing client and fallback; caller begins unbounded listAll path."
+  },
+  {
+    "path": "apps/docs/src/app/api-reference/[...slug]/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/api-reference/layout.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/api-reference/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/api/search/route.ts",
+    "status": "finding identified",
+    "evidence": "Full read; static search index is assembled at build/export time from all docs/API pages; no build heap or index size measurements."
+  },
+  {
+    "path": "apps/docs/src/app/blog/rss.xml/route.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/docs/[[...slug]]/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/docs/category/[category]/page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/docs/layout.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/global.css",
+    "status": "no actionable finding",
+    "evidence": "Full 360-line stylesheet read. Global tokens/Fumadocs and Scalar selectors, responsive/print rules, reduced-motion override inspected; no runtime JS, per-route work, or asset loading is defined here."
+  },
+  {
+    "path": "apps/docs/src/app/layout.tsx",
+    "status": "finding identified",
+    "evidence": "Root layout mounts DocsMascot whenever default nonempty Kapa ID is used; see mascot finding and scene lifecycle."
+  },
+  {
+    "path": "apps/docs/src/app/llms-full.txt/route.ts",
+    "status": "finding identified",
+    "evidence": "Full read; intentionally materializes all docs/blog/API Markdown for static full-corpus export; output size/build memory unmeasured."
+  },
+  {
+    "path": "apps/docs/src/app/llms.mdx/api-reference/[...slug]/route.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/llms.mdx/blog/[...slug]/route.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/llms.mdx/docs/[[...slug]]/route.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/llms.txt/route.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/not-found.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; static 404 route delegates possible Workshop detail resolution to router."
+  },
+  {
+    "path": "apps/docs/src/app/robots.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/app/sitemap.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; route/control flow inspected; static export or bounded page behavior, with no independent unbounded retained state found."
+  },
+  {
+    "path": "apps/docs/src/components/analytics.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; analytics initializes in effect; listener registrations have cleanup."
+  },
+  {
+    "path": "apps/docs/src/components/blog/blog-toc.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/carbon.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; third-party Carbon script is deferred, responsive placements are mutually exclusive, and cleanup removes script/observer."
+  },
+  {
+    "path": "apps/docs/src/components/custom-jsx-component-reference.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 451-line CSS module read. Scoped catalog layout, filter/table scrolling, and breakpoints only; no image/resource loading or animated loops are defined."
+  },
+  {
+    "path": "apps/docs/src/components/custom-jsx-component-reference.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; catalog fetched on catalog page and visible cards are paged at 40; filtering scans full 495 component catalog."
+  },
+  {
+    "path": "apps/docs/src/components/custom-widget-code-client.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/custom-widget-code.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/docs-mascot/index.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; effect immediately loads dynamic scene chunk and SVG; cleanup aborts fetch and disposes scene."
+  },
+  {
+    "path": "apps/docs/src/components/docs-mascot/scene.ts",
+    "status": "finding identified",
+    "evidence": "Full read; idle scene renders at ~30 fps while visible; observers pause hidden/offscreen and cleanup disposes resources. Scene is intentional feature; no runtime profile."
+  },
+  {
+    "path": "apps/docs/src/components/docs-mascot/styles.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 81-line CSS module read. Fixed 68px canvas/logo styles and mobile sizing inspected; the ongoing renderer cost is captured by the mascot finding, not this stylesheet."
+  },
+  {
+    "path": "apps/docs/src/components/docs/directory-grid.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/docs/docs-directory.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/docs/docs-sidebar-folder.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/integrations/adding.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 8-line source read; renders one fixed paragraph/link. MDX caller usage is per integration page and does no data fetching or iteration."
+  },
+  {
+    "path": "apps/docs/src/components/integrations/header.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/integrations/secrets.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/integrations/widgets.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/mdx.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/mdx/admonition.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 26-line source read; maps seven known types and delegates to Fumadocs Callout. No custom state, loops, side effects, or data loading."
+  },
+  {
+    "path": "apps/docs/src/components/mdx/component-catalog-markdown.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; server-only conversion imports catalog JSON; catalog public asset is 861,611 raw bytes and rendered into processed Markdown."
+  },
+  {
+    "path": "apps/docs/src/components/mdx/legacy-tabs.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 40-line client component read; maps authored TabItem children into Base Fumadocs triggers/panels. Callers are docs MDX and the integration secrets page, with authored small tab counts."
+  },
+  {
+    "path": "apps/docs/src/components/mdx/link.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 12-line source read; thin Next Link adapter with href/to fallback, no side effects or resource loading."
+  },
+  {
+    "path": "apps/docs/src/components/mdx/metadata-markdown.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/openapi-page.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; Scalar wrapper is only called by API operation route; actual route chunk size unmeasured."
+  },
+  {
+    "path": "apps/docs/src/components/pages/about/code-contributors/code-contributor-list.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; fetches static contributor JSON only on About page and renders avatars lazily."
+  },
+  {
+    "path": "apps/docs/src/components/pages/about/translations-contributors/translation-constributor-list.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; fetches static translations JSON only on About page and renders avatars lazily."
+  },
+  {
+    "path": "apps/docs/src/components/pages/core-concepts/technical-diagrams.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 401-line CSS module read. Diagram grids collapse at 900px; no JS/layout measurement loop or unbounded content generation. Caller uses a fixed authored diagram."
+  },
+  {
+    "path": "apps/docs/src/components/pages/core-concepts/technical-diagrams.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/pages/getting-started/concept-flow.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 251-line CSS module read. Static responsive grid/calendar illustration styles; no runtime resource or animation workload."
+  },
+  {
+    "path": "apps/docs/src/components/pages/getting-started/concept-flow.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/pages/getting-started/getting-started-overview.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 243-line CSS module read. Responsive cards and screenshots use bounded dimensions; reduced-motion disables transitions."
+  },
+  {
+    "path": "apps/docs/src/components/pages/getting-started/getting-started-overview.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/container/section-container.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/dataflow/dataflow.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 158-line CSS module read. One six-path SVG dash animation and fixed six service cards; prefers-reduced-motion disables animation. No profile to establish material cost."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/dataflow/dataflow.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/docs-gateway.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/features/features.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/hero-cards.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; homepage client imports static widget children, including Nivo chart; route-specific rather than global."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/hero.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/launch-menu.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 101-line CSS module read. Scoped popup/button layout and fixed 228px menu; no runtime work or external resource behavior."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/launch-menu.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/app-widget.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/card.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/clock-widget.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/downloads-widget.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/entity-state-widget.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/stock-widget.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; Nivo chart processes fixed 100-point series and updates every 15 seconds; bundle/runtime size unmeasured."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/hero/widgets/weather-widget.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/integrations/available-integrations.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/motion-reel-showcase.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/review-list/review-list.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; homepage-only content path inspected; data is fixed/route-specific and no extra retained history found."
+  },
+  {
+    "path": "apps/docs/src/components/pages/home/review-list/styles.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 14-line stylesheet read. Static text alignment/image centering only."
+  },
+  {
+    "path": "apps/docs/src/components/pages/installation/docker/dynamic-docker-install.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/provider.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; search dialog uses React.lazy with Fumadocs preload disabled."
+  },
+  {
+    "path": "apps/docs/src/components/search-page.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/search.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/site-footer.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/static-redirect.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/ui/alert-dialog.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 158-line source read; Base UI alert-dialog wrappers and Button action, no state loops/data loading; consumed by Workshop detail/admin confirmation flows."
+  },
+  {
+    "path": "apps/docs/src/components/ui/alert.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 40-line source read; static alert markup plus three class variants; no state, effects, loops, or data loading."
+  },
+  {
+    "path": "apps/docs/src/components/ui/avatar.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 41-line client source read; direct Base UI avatar wrappers; imported by Workshop account/list/detail/admin surfaces, with no custom resource loading."
+  },
+  {
+    "path": "apps/docs/src/components/ui/badge.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 49-line source read; one Base UI render adapter and finite CVA variants; no custom state or iteration."
+  },
+  {
+    "path": "apps/docs/src/components/ui/button.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 50-line source read; Base UI button plus finite CVA variants; no custom effects, iteration, or heavyweight imports."
+  },
+  {
+    "path": "apps/docs/src/components/ui/card.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 70-line source read; static semantic div wrappers and classes; no runtime side effects or iteration."
+  },
+  {
+    "path": "apps/docs/src/components/ui/dialog.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 134-line client source read; Base UI dialog and optional close control; no custom state/effects or data loading."
+  },
+  {
+    "path": "apps/docs/src/components/ui/dropdown-menu.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 252-line source read; Base UI menu wrappers and two icon imports; no custom state or unbounded work."
+  },
+  {
+    "path": "apps/docs/src/components/ui/empty.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 87-line source read; static empty-state wrappers and finite variant map; used by Workshop empty/error surfaces, no data loading."
+  },
+  {
+    "path": "apps/docs/src/components/ui/field.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 218-line client source read; form layout wrappers; FieldError memoizes deduplicated errors proportional to finite form-error count. No unbounded data source."
+  },
+  {
+    "path": "apps/docs/src/components/ui/flow-connector.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 175-line CSS module read. Horizontal/vertical beam keyframes and responsive transformation inspected; prefers-reduced-motion disables animation. Fixed page-authored connector count."
+  },
+  {
+    "path": "apps/docs/src/components/ui/flow-connector.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 28-line source read; emits a fixed three-span visual connector and accessible text. Caller diagrams use fixed authored instances; animation is CSS and reduced-motion aware."
+  },
+  {
+    "path": "apps/docs/src/components/ui/header.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 29-line source read; maps the authored category list to badges; page metadata bounds list size and no resource loading occurs."
+  },
+  {
+    "path": "apps/docs/src/components/ui/input-group.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 130-line source read; composition wrappers around Button/Input/Textarea and finite variants; no custom state, effects, or data loading."
+  },
+  {
+    "path": "apps/docs/src/components/ui/input.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 20-line source read; Base UI input wrapper and static classes only."
+  },
+  {
+    "path": "apps/docs/src/components/ui/label.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 22-line client source read; native label wrapper and class names only."
+  },
+  {
+    "path": "apps/docs/src/components/ui/progress.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 59-line client source read; Base UI progress wrappers and fixed track/indicator; no timers or polling."
+  },
+  {
+    "path": "apps/docs/src/components/ui/select.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 167-line client source read; Base UI select composition with four Tabler icons; no custom state/data loading; option count is caller-defined."
+  },
+  {
+    "path": "apps/docs/src/components/ui/separator.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 19-line source read; Base UI separator wrapper only."
+  },
+  {
+    "path": "apps/docs/src/components/ui/skeleton.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 7-line source read; static pulse placeholder; caller determines mounted placeholder count."
+  },
+  {
+    "path": "apps/docs/src/components/ui/sonner.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 39-line client source read; one Sonner toaster configured by color mode and fixed icon set; no timer or data fetch in wrapper."
+  },
+  {
+    "path": "apps/docs/src/components/ui/switch.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 30-line source read; Base UI switch and fixed thumb; no custom state or effects."
+  },
+  {
+    "path": "apps/docs/src/components/ui/textarea.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 18-line source read; native textarea wrapper and styles only."
+  },
+  {
+    "path": "apps/docs/src/components/ui/toggle-group.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 87-line client source read; context plus Base UI ToggleGroup items; maps only caller-provided children and has no external data loading."
+  },
+  {
+    "path": "apps/docs/src/components/ui/toggle.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 38-line client source read; Base UI toggle with finite CVA variants; no custom effect or iteration."
+  },
+  {
+    "path": "apps/docs/src/components/ui/tooltip.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 52-line source read; Base UI tooltip/portal wrappers with fixed popup/arrow, no custom timers or data loading."
+  },
+  {
+    "path": "apps/docs/src/components/widgets/adding.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 7-line source read; fixed documentation paragraph only."
+  },
+  {
+    "path": "apps/docs/src/components/widgets/configuration.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/widgets/header.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/widgets/integrations.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component import/lifecycle and callers inspected; no additional actionable finding established."
+  },
+  {
+    "path": "apps/docs/src/components/widgets/interactions.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 10-line source read; returns fixed paragraph or null based on one boolean prop."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/DetailComments.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; loads all comments for one submission; comment count and payload limits not measured."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/DetailPage.tsx",
+    "status": "finding identified",
+    "evidence": "Dedicated 1,079-line pass; detail fetches one record/comments; screenshot object URLs/timers cleaned; see report."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/DetailSections.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/ScreenshotEditor.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; preview items are capped by caller; parent owns object URL cleanup."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/SubmitForm.tsx",
+    "status": "finding identified",
+    "evidence": "Full 487-line pass; dialog-only content and up to five object URL previews; parent revokes on removal/unmount."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopAccountMenu.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopAdmin.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; admin loads listAll plus all open reports and renders all submissions; nested report matching is O(N\u00d7R)."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopApp.tsx",
+    "status": "finding identified",
+    "evidence": "Dedicated 580-line pass; public Workshop renders every row in listAll result; no page window."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopDetailRoutePage.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopErrorBoundary.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopNotFoundRouter.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; resolves one requested Workshop ID from static 404 path into detail component."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopRoutes.tsx",
+    "status": "finding identified",
+    "evidence": "Full read; route wrapper passes runtime Workshop URL to listing/admin clients."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/WorkshopVoteControl.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/format.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/useWorkshop.ts",
+    "status": "finding identified",
+    "evidence": "Full read; refresh calls listAll for every submission then stores all summary rows and votes."
+  },
+  {
+    "path": "apps/docs/src/components/workshop/workshop-utils.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; component lifecycle and caller inspected; no additional actionable issue established beyond Workshop listing finding."
+  },
+  {
+    "path": "apps/docs/src/constants/supported-integrations.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full 33-line data source read: 25 fixed icon/name records. Caller `AppWidget` searches by name; homepage hero renders seven such cards. Home dataflow renders six other fixed remote icons; bytes were not measured."
+  },
+  {
+    "path": "apps/docs/src/hooks/use-color-mode.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; configuration/definition inspected with owning package and concrete imports; no additional actionable issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/analytics.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/blog-authors.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/docs-path.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/layout.shared.tsx",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/metadata.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/openapi-markdown.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/openapi.ts",
+    "status": "finding identified",
+    "evidence": "Full read; server-side generated static source imports 268,402-byte schema asset; no browser bundle evidence."
+  },
+  {
+    "path": "apps/docs/src/lib/page-description.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/pocketbase.ts",
+    "status": "finding identified",
+    "evidence": "Full read; backend instances cached by URL; WorkshopBackend call sites reviewed."
+  },
+  {
+    "path": "apps/docs/src/lib/runtime-config.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/source.ts",
+    "status": "finding identified",
+    "evidence": "Full read; docs and blog collections configure processed Markdown/LLM generation; full export is deliberate and unmeasured."
+  },
+  {
+    "path": "apps/docs/src/lib/utils.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/lib/workshop-schema.ts",
+    "status": "no actionable finding",
+    "evidence": "Full read; helper/source behavior inspected with callers; no additional actionable retention or payload issue established."
+  },
+  {
+    "path": "apps/docs/src/pages/index.module.css",
+    "status": "no actionable finding",
+    "evidence": "Full 383-line CSS module read. Home hero animation and breakpoints inspected; hero preview is hidden at <=1280px and animations/transitions are disabled for reduced-motion."
+  },
+  {
+    "path": "apps/docs/src/tools/array.ts",
+    "status": "no actionable finding",
+    "evidence": "Full 7-line helper read. `splitToNChunks` uses a finite loop over requested chunk count and mutates its supplied array via splice; `rg` found no docs-tree callers, so no active-path performance impact."
+  },
+  {
+    "path": "apps/docs/src/types.ts",
+    "status": "no actionable finding",
+    "evidence": "Full 39-line type-only file read. Exports interfaces and type imports only; no runtime exports, initialization, data, or client bundle work."
+  },
+  {
+    "path": "apps/docs/tsconfig.json",
+    "status": "no actionable finding",
+    "evidence": "Full read; configuration/definition inspected with owning package and concrete imports; no additional actionable issue established."
+  },
+  {
+    "path": "apps/docs/turbo.json",
+    "status": "no actionable finding",
+    "evidence": "Full read; configuration/definition inspected with owning package and concrete imports; no additional actionable issue established."
+  }
+]
