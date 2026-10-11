@@ -11,10 +11,12 @@ interface ReflowOptions {
   pinnedItemId?: string;
 }
 
-interface CollapsedLayoutOptions {
+interface CollapsedLayoutOptions<TPlacement extends GridPlacement> {
   columnCount: number;
   collapsedItemIds: ReadonlySet<string>;
   collapsedRowCount?: number;
+  /** Current footprints after container growth; saved placements still define ordering and gaps. */
+  expandedPlacements?: readonly TPlacement[];
 }
 
 interface ExpandedLayoutOptions {
@@ -105,21 +107,28 @@ export const reflowVerticalLayout = <TPlacement extends GridPlacement>(
  */
 export const getCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
   placements: readonly TPlacement[],
-  { columnCount, collapsedItemIds, collapsedRowCount = COLLAPSED_SECTION_ROW_COUNT }: CollapsedLayoutOptions,
+  {
+    columnCount,
+    collapsedItemIds,
+    collapsedRowCount = COLLAPSED_SECTION_ROW_COUNT,
+    expandedPlacements = placements,
+  }: CollapsedLayoutOptions<TPlacement>,
 ): TPlacement[] => {
   if (!Number.isFinite(collapsedRowCount) || collapsedRowCount <= 0) {
     throw new RangeError("collapsedRowCount must be positive and finite");
   }
 
   const normalized = placements.map((placement) => normalizeGridPlacement(placement, columnCount));
-  const displayPlacements = normalized.map((placement) =>
-    collapsedItemIds.has(placement.id)
-      ? {
-          ...placement,
-          h: collapsedRowCount,
-        }
-      : placement,
-  );
+  const displayPlacements = expandedPlacements
+    .map((placement) => normalizeGridPlacement(placement, columnCount))
+    .map((placement) =>
+      collapsedItemIds.has(placement.id)
+        ? {
+            ...placement,
+            h: collapsedRowCount,
+          }
+        : placement,
+    );
 
   return reflowCollapsedDisplayLayout(normalized, displayPlacements);
 };
@@ -163,27 +172,26 @@ const findFirstAvailableRow = (candidate: GridPlacement, placed: readonly GridPl
 };
 
 const reflowCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
-  expandedPlacements: readonly TPlacement[],
+  savedPlacements: readonly TPlacement[],
   displayPlacements: readonly TPlacement[],
 ): TPlacement[] => {
-  assertUniqueIds(expandedPlacements);
+  assertUniqueIds(savedPlacements);
   const displayById = new Map(displayPlacements.map((placement) => [placement.id, placement]));
-  const placed: { expanded: TPlacement; display: TPlacement }[] = [];
+  const placed: { saved: TPlacement; display: TPlacement }[] = [];
 
-  for (const expanded of expandedPlacements.toSorted(comparePlacements)) {
-    const candidate = getRequiredPlacement(displayById, expanded.id);
+  for (const saved of savedPlacements.toSorted(comparePlacements)) {
+    const candidate = getRequiredPlacement(displayById, saved.id);
     const predecessors = placed.filter(
       (previous) =>
-        previous.expanded.y + previous.expanded.h <= expanded.y &&
-        doGridPlacementsOverlapHorizontally(previous.expanded, expanded),
+        previous.saved.y + previous.saved.h <= saved.y && doGridPlacementsOverlapHorizontally(previous.saved, saved),
     );
-    let minimumRow = expanded.y;
+    let minimumRow = saved.y;
     if (predecessors.length > 0) {
       // Keep the saved gap below the tallest predecessor. A shorter collapsed
       // peer cannot remove space still occupied by an expanded container.
-      const expandedBottom = Math.max(...predecessors.map((previous) => previous.expanded.y + previous.expanded.h));
+      const savedBottom = Math.max(...predecessors.map((previous) => previous.saved.y + previous.saved.h));
       const displayBottom = Math.max(...predecessors.map(({ display }) => display.y + display.h));
-      minimumRow = displayBottom + expanded.y - expandedBottom;
+      minimumRow = displayBottom + saved.y - savedBottom;
     }
     const display = {
       ...candidate,
@@ -193,7 +201,7 @@ const reflowCollapsedDisplayLayout = <TPlacement extends GridPlacement>(
         Math.max(0, minimumRow),
       ),
     };
-    placed.push({ expanded, display });
+    placed.push({ saved, display });
   }
 
   const byId = new Map(placed.map(({ display }) => [display.id, display]));

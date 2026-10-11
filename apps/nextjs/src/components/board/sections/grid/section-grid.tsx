@@ -74,9 +74,9 @@ export const SectionGrid = ({
     return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
   }, [board, currentLayoutId, innerSections]);
 
-  const placements = useMemo(() => {
+  const { savedPlacements, expandedPlacements: placements } = useMemo(() => {
     const minimumHeights = new Map<string, number>();
-    const savedPlacements = [...items, ...innerSections].map((item): SectionGridPlacement => {
+    const saved = [...items, ...innerSections].map((item): SectionGridPlacement => {
       const minimum = item.type === "section" ? minimumBySectionId.get(item.id) : undefined;
       const isNonScrollableContainer = item.type === "section" && !item.options.scrollable;
       if (isNonScrollableContainer && minimum) minimumHeights.set(item.id, minimum.height);
@@ -94,8 +94,10 @@ export const SectionGrid = ({
         columnCount,
       );
     });
-    // Resolve growth before collapse so both transformations use the same expanded footprint.
-    return getExpandedDisplayLayout(savedPlacements, { columnCount, minimumHeights });
+    return {
+      savedPlacements: saved,
+      expandedPlacements: getExpandedDisplayLayout(saved, { columnCount, minimumHeights }),
+    };
   }, [columnCount, innerSections, items, minimumBySectionId]);
   const collapsibleSectionIds = useMemo(
     () =>
@@ -122,11 +124,12 @@ export const SectionGrid = ({
   const displayPlacements = useMemo(() => {
     if (directCollapsedIds.size === 0) return placements;
 
-    return getCollapsedDisplayLayout(placements, {
+    return getCollapsedDisplayLayout(savedPlacements, {
       columnCount,
       collapsedItemIds: directCollapsedIds,
+      expandedPlacements: placements,
     });
-  }, [columnCount, directCollapsedIds, placements]);
+  }, [columnCount, directCollapsedIds, placements, savedPlacements]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
