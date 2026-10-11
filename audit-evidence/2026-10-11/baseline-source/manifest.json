@@ -1,8 +1,0 @@
-{
-  "purpose": "Freeze LDAP authorization source before any production cleanup edit.",
-  "files": {
-    "packages/auth/env.ts": "f90bda8c0a52cfa59523a08607a288c55b6e3d7e6e4cff4e68e1ba5257ca03db",
-    "packages/auth/providers/credentials/ldap-client.ts": "c3dad7d1129164e98a6ad3d314a98696d78bbf3c32e42a8c05d2900b2cc61a9c",
-    "packages/auth/providers/credentials/authorization/ldap-authorization.ts": "367b9598d086d69f725fce4c6ad6b55607bc0fd940932033682e8d008ef3dbf9"
-  }
-}

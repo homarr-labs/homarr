@@ -1,7 +1,0 @@
-{
-  "source": "audit-evidence/2026-10-11/baseline-source/apps/nextjs/src/components/assistant/assistant-runtime-provider.tsx",
-  "sha256": "daa626be904117a790bdad03c713bdf451496952581fc2f7bfe50ac64c479204",
-  "originalSource": "apps/nextjs/src/components/assistant/assistant-runtime-provider.tsx",
-  "originalSha256AtSnapshot": "daa626be904117a790bdad03c713bdf451496952581fc2f7bfe50ac64c479204",
-  "purpose": "Frozen pre-edit source for AssistantComposerSurfaceBoundary lifecycle measurement."
-}

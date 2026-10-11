@@ -1,1 +1,0 @@
-packages/custom-widgets/scripts/generate-component-metadata.ts:331:62: warning eslint(no-shadow): 'literalValues' is already declared in the upper scope. help: Consider renaming 'literalValues' to avoid shadowing the variable from the outer scope.

@@ -1,1 +1,0 @@
-{"mode":"baseline","runtime":"v24.18.0","stages":[{"addedAttempts":25,"totalAttempts":25,"elapsedMs":30.211401999999964,"latencyP50Ms":0.36000699999999597,"latencyP95Ms":7.305470000000014,"serverOpenSockets":25,"clientSocketHandles":25,"rssBytes":115048448,"heapUsedBytes":17011336,"heapTotalBytes":35934208,"externalBytes":13036261,"arrayBuffersBytes":192963}]}
