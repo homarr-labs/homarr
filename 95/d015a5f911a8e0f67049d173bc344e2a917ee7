@@ -1,0 +1,14 @@
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1916-1918,6400,6413,6423
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "95d015a5f911a8e0f67049d173bc344e2a917ee7",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
