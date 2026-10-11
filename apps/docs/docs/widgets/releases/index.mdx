@@ -9,7 +9,14 @@ import { WidgetInteractionGuide } from "@site/src/components/widgets/interaction
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { releasesWidget } from ".";
+import { binderyIntegration } from "@site/docs/integrations/bindery";
+import { lidarrIntegration } from "@site/docs/integrations/lidarr";
+import { prowlarrIntegration } from "@site/docs/integrations/prowlarr";
+import { radarrIntegration } from "@site/docs/integrations/radarr";
+import { readarrIntegration } from "@site/docs/integrations/readarr";
+import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 
 <WidgetHeader widget={releasesWidget} categories={["Releases", "Software"]} />
 
@@ -39,6 +46,30 @@ For GitHub Container Registry, use `owner/package` identifiers such as `homarr-l
 Full image references such as `ghcr.io/homarr-labs/homarr:latest` are also accepted.
 
 Advanced view shows every configured repository in a roomier responsive layout. Repository names and details remain visible, and selecting a repository still expands its description and links.
+
+### Supported integrations
+
+<WidgetIntegrations
+  items={[
+    { integration: sonarrIntegration },
+    { integration: radarrIntegration },
+    { integration: lidarrIntegration },
+    { integration: readarrIntegration },
+    { integration: prowlarrIntegration },
+    { integration: binderyIntegration },
+  ]}
+/>
+
+### Linking integrations
+
+Link an integration to a repository to see the version the service is running next to the latest release.
+
+1. In the widget settings, select the integrations in the integration selector.
+2. Edit a repository and select one or more of these integrations under **Linked Integrations**.
+
+The expanded repository lists each linked integration with its running version and a status: up to date, update available, or unknown when the versions can't be compared.
+The repository header shows an update icon when a linked service is older than the latest release.
+The status compares against the latest release the repository shows, which can be a pre-release.
 
 <WidgetInteractionGuide />
 
