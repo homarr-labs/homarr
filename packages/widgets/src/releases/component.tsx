@@ -297,7 +297,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                         !hasError &&
                         formatter.relativeTime(repository.latestReleaseAt, {
                           now,
-                          style: "long",
+                          style: "narrow",
                         })}
                     </Text>
                     {hasError ? (
