@@ -35,46 +35,69 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
     }
 
     const tasks = new Map<string, Cron>();
+    const creatingTasks = new Map<string, Promise<Cron>>();
+    const startingTasks = new Map<string, Promise<void>>();
+
+    const ensureTaskAsync = async (name: string) => {
+      const task = tasks.get(name);
+      if (task && !task.isStopped()) return task;
+
+      const job = jobRegistry.get(name);
+      if (!job) return;
+
+      const existingCreation = creatingTasks.get(name);
+      if (existingCreation) return await existingCreation;
+
+      const creation = job
+        .createTaskAsync()
+        .then((createdTask) => {
+          tasks.set(name, createdTask);
+          return createdTask;
+        })
+        .finally(() => creatingTasks.delete(name));
+      creatingTasks.set(name, creation);
+      return await creation;
+    };
+
+    const startAsync = async (name: string) => {
+      const existingStart = startingTasks.get(name);
+      if (existingStart) return await existingStart;
+
+      const job = jobRegistry.get(name);
+      if (!job) return;
+
+      const start = (async () => {
+        const task = await ensureTaskAsync(name);
+        if (!task || task.isRunning()) return;
+
+        options.logger.logInfo("Starting schedule of cron job.", { name });
+        await job.onStartAsync();
+        task.resume();
+      })().finally(() => startingTasks.delete(name));
+      startingTasks.set(name, start);
+      await start;
+    };
 
     return {
       initializeAsync: async () => {
         const configurations = await db.query.cronJobConfigurations.findMany();
-        for (const job of jobRegistry.values()) {
-          const configuration = configurations.find(({ name }) => name === job.name);
+        for (const name of jobRegistry.keys()) {
+          const configuration = configurations.find((savedConfiguration) => savedConfiguration.name === name);
           if (configuration?.isEnabled === false) {
             continue;
           }
-          if (tasks.has(job.name)) {
-            continue;
-          }
 
-          const scheduledTask = await job.createTaskAsync();
-
-          tasks.set(job.name, scheduledTask);
+          await ensureTaskAsync(name);
         }
       },
-      startAsync: async (name: keyof TJobs) => {
-        const job = jobRegistry.get(name as string);
-        if (!job) return;
-        if (!tasks.has(job.name)) return;
-
-        options.logger.logInfo("Starting schedule of cron job.", {
-          name: job.name,
-        });
-        await job.onStartAsync();
-        tasks.get(name as string)?.resume();
-      },
+      startAsync: async (name: keyof TJobs) => await startAsync(name as string),
       startAllAsync: async () => {
-        for (const job of jobRegistry.values()) {
-          if (!tasks.has(job.name)) {
+        for (const name of jobRegistry.keys()) {
+          if (!tasks.has(name)) {
             continue;
           }
 
-          options.logger.logInfo("Starting schedule of cron job.", {
-            name: job.name,
-          });
-          await job.onStartAsync();
-          tasks.get(job.name)?.resume();
+          await startAsync(name);
         }
       },
       runManuallyAsync: async (name: keyof TJobs) => {
@@ -99,11 +122,11 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
         tasks.get(name as string)?.pause();
       },
       stopAll: () => {
-        for (const job of jobRegistry.values()) {
+        for (const name of jobRegistry.keys()) {
           options.logger.logInfo("Stopping schedule of cron job.", {
-            name: job.name,
+            name,
           });
-          tasks.get(job.name)?.pause();
+          tasks.get(name)?.pause();
         }
       },
       getJobRegistry() {
