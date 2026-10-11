@@ -1,0 +1,20 @@
+packages/db/migrations/postgresql/0018_align_user_search_default.sql
+  h_d6e478ca18e517 1
+packages/db/migrations/postgresql/meta/0018_snapshot.json
+  h_d6e478ca18e517 1-2714
+packages/db/migrations/postgresql/meta/_journal.json
+  h_d6e478ca18e517 130-136
+packages/db/schema/postgresql.ts
+  h_d6e478ca18e517 87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6f0fbf1c8fc430aa39617558705640544f4c499d",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
