@@ -372,7 +372,6 @@ export const boardRouter = createTRPCRouter({
               id: true,
               name: true,
               image: true,
-              email: true,
             },
           },
           userPermissions: {
@@ -679,6 +678,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId, name, layoutId }. Requires board-create permission",
       },
@@ -757,6 +757,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Every widget-integration configuration must be valid. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
       },
@@ -1125,6 +1126,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Delete a board by its ID. Requires full permission on the board. Use board_getAllBoards to find the board ID",
       },
@@ -1577,6 +1579,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Reset a board's Mobile or custom layout from its Base layout while preserving the target layout settings. Requires modify permission. REQUIRED: boardId (board ID), layoutId (non-Base layout ID)",
       },
@@ -2295,6 +2298,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Optional size {width,height} sets grid dimensions; width is capped by each layout's available columns. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
@@ -2968,7 +2972,6 @@ const getFullBoardWithWhereAsync = async (
           id: true,
           name: true,
           image: true,
-          email: true,
         },
       },
       sections: {

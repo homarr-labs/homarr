@@ -9,3 +9,4 @@ export {
 } from "./providers/check-provider";
 export type { GroupMemberManagementType } from "./providers/check-provider";
 export { createSessionCallback, createSessionAsync } from "./callbacks";
+export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";

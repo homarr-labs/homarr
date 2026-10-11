@@ -20,6 +20,7 @@ import { IconServerOff } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { invariantTechnicalLabels } from "@homarr/definitions";
+import type { BeszelMetricOptionKey } from "@homarr/definitions/beszel";
 import { useModalAction } from "@homarr/modals";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
@@ -174,7 +175,7 @@ interface SystemCardProps {
 }
 
 type BeszelMetricRenderer = {
-  key: string;
+  key: BeszelMetricOptionKey;
   render: (
     system: BeszelSystemRow,
     t: SystemCardProps["t"],

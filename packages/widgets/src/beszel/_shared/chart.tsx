@@ -6,13 +6,15 @@ import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
 
+import type { BeszelTimePeriod } from "@homarr/definitions/beszel";
+import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
 import { containerChartColor } from "./colors";
 import classes from "./chart.module.css";
 
-export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
+export type { BeszelTimePeriod } from "@homarr/definitions/beszel";
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
   "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
@@ -205,7 +207,7 @@ const BeszelAreaChart = memo(
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(() => {
@@ -281,7 +283,7 @@ export const useDiskChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   efsPaths: string[],
   rootSeriesName: string,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(
@@ -293,7 +295,7 @@ export const buildDiskChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   efsPaths: string[],
   rootSeriesName: string,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) => {
   if (!systemStats?.length) return [];
@@ -320,7 +322,7 @@ export const useDiskIOChartData = (
   rootWriteSeriesName: string,
   readLabel: string,
   writeLabel: string,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(() => {
@@ -348,7 +350,7 @@ export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(() => {
@@ -407,7 +409,7 @@ export const useGpuChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   devices: BeszelGpuDevice[],
   metric: BeszelGpuMetric,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(
@@ -419,7 +421,7 @@ export const buildGpuChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   devices: BeszelGpuDevice[],
   metric: BeszelGpuMetric,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) => {
   if (!systemStats?.length) return [];

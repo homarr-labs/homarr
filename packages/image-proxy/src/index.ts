@@ -1,9 +1,9 @@
 import { createHmac, hkdfSync, randomUUID } from "node:crypto";
 import { setImmediate } from "node:timers/promises";
 
-import { createId } from "@homarr/common";
+import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
-import { decryptSecret, encryptSecret } from "@homarr/common/server";
+import { decryptSecret, encryptSecret, readBoundedResponseAsync } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -12,6 +12,8 @@ import { createGetSetChannel } from "@homarr/redis";
 const logger = createLogger({ module: "imageProxy" });
 
 export const IMAGE_PROXY_REDIS_TTL_SECONDS = 86400;
+export const IMAGE_PROXY_MAX_BYTES = 32 * 1024 * 1024;
+export const IMAGE_PROXY_TIMEOUT_MS = 10_000;
 
 const createHmacChannel = (hmac: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hmac:${hmac}`);
 const createUrlByIdChannel = (id: string) =>
@@ -21,7 +23,7 @@ const createUrlByIdChannel = (id: string) =>
   }>(`image-proxy:url:${id}`);
 
 export type ForwardImageResult =
-  | { image: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>["body"]; contentType: string | null }
+  | { image: ArrayBuffer; contentType: string | null }
   | { error: "not-found" }
   | { error: "upstream-error"; statusCode: number }
   | { error: "fetch-error" };
@@ -83,22 +85,55 @@ export class ImageProxy {
     return links;
   }
 
-  public async forwardImageAsync(id: string): Promise<ForwardImageResult> {
+  public async forwardImageAsync(id: string, requestSignal?: AbortSignal): Promise<ForwardImageResult> {
     const urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
     if (!urlAndHeaders) {
       return { error: "not-found" };
     }
 
     const proxyUrl = this.createImageUrl(id);
-    let response: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
+    const controller = new AbortController();
+    const signal = requestSignal ? AbortSignal.any([controller.signal, requestSignal]) : controller.signal;
+    const deadline = setTimeout(
+      () => controller.abort(new DOMException("Image forwarding deadline exceeded", "TimeoutError")),
+      IMAGE_PROXY_TIMEOUT_MS,
+    );
     try {
-      response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
+      signal.throwIfAborted();
+      const response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
         headers: urlAndHeaders.headers ?? {},
+        signal,
       });
+
+      if (!response.ok) {
+        void response.body?.cancel().catch(() => undefined);
+        logger.error(
+          new ErrorWithMetadata("Failed to fetch image", {
+            id,
+            url: this.redactUrl(urlAndHeaders.url),
+            headers: this.redactHeaders(urlAndHeaders.headers),
+            proxyUrl,
+            statusCode: response.status,
+          }),
+        );
+        return { error: "upstream-error", statusCode: response.status };
+      }
+
+      const body = await readBoundedResponseAsync(response, IMAGE_PROXY_MAX_BYTES, "Image", signal);
+      const image = body?.buffer ?? new ArrayBuffer(0);
+      logger.debug("Forwarding image succeeded", {
+        id,
+        url: this.redactUrl(urlAndHeaders.url),
+        headers: this.redactHeaders(urlAndHeaders.headers),
+        proxyUrl,
+        size: formatBytes(image.byteLength),
+      });
+
+      return { image, contentType: response.headers.get("content-type") };
     } catch (error) {
       logger.error(
         new ErrorWithMetadata(
-          "Failed to connect to image source",
+          "Failed to forward image",
           {
             id,
             url: this.redactUrl(urlAndHeaders.url),
@@ -109,29 +144,10 @@ export class ImageProxy {
         ),
       );
       return { error: "fetch-error" };
+    } finally {
+      clearTimeout(deadline);
+      controller.abort();
     }
-
-    if (!response.ok) {
-      logger.error(
-        new ErrorWithMetadata("Failed to fetch image", {
-          id,
-          url: this.redactUrl(urlAndHeaders.url),
-          headers: this.redactHeaders(urlAndHeaders.headers),
-          proxyUrl,
-          statusCode: response.status,
-        }),
-      );
-      return { error: "upstream-error", statusCode: response.status };
-    }
-
-    logger.debug("Forwarding image response", {
-      id,
-      url: this.redactUrl(urlAndHeaders.url),
-      headers: this.redactHeaders(urlAndHeaders.headers),
-      proxyUrl,
-    });
-
-    return { image: response.body, contentType: response.headers.get("content-type") };
   }
 
   private createImageUrl(id: string): string {

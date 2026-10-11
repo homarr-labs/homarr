@@ -37,9 +37,8 @@ export default defineConfig({
       "**/.github/workflows/{ci,database,validate-docs}.yml",
     ].map((pattern) => `${import.meta.dirname}/${pattern}`),
     coverage: {
-      provider: "v8",
+      provider: "istanbul",
       reporter: ["html", "json-summary", "json"],
-      all: true,
       exclude: (configDefaults.coverage.exclude ?? []).concat("apps/nextjs/.next/"),
       reportOnFailure: true,
     },

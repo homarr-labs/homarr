@@ -230,7 +230,7 @@ const insertMissingProjectedPositionsAsync = async (
         : [];
     }),
     ...board.sections.flatMap((section) => {
-      if (section.kind !== "dynamic") return [];
+      if (section.kind !== "container") return [];
       const layout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === sourceLayout.id);
       return layout?.parentSectionId
         ? [
@@ -249,7 +249,7 @@ const insertMissingProjectedPositionsAsync = async (
   ];
 
   const projectedElements = board.sections
-    .filter((section) => section.kind !== "dynamic")
+    .filter((section) => section.kind === "empty")
     .flatMap(
       (section) =>
         generateResponsiveGridFor({

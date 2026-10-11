@@ -236,7 +236,12 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                   {actionT("edit")}
                 </Button>
 
-                <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
+                <ActionIcon
+                  variant="transparent"
+                  color="red"
+                  aria-label={actionT("deleteNamed", { name: repository.name || repository.identifier })}
+                  onClick={() => onRepositoryRemove(index)}
+                >
                   <IconTrash size="var(--mantine-font-size-sm)" />
                 </ActionIcon>
               </Group>
@@ -388,7 +393,16 @@ const ProviderTokenInput = ({
         </Button>
       )}
       {hasToken && !editing && (
-        <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete} loading={saving}>
+        <ActionIcon
+          variant="light"
+          color="red"
+          size="sm"
+          aria-label={actionT("deleteNamed", {
+            name: `${getReleaseProviderName(provider)} ${tRepository("tokens.token")}`,
+          })}
+          onClick={handleDelete}
+          loading={saving}
+        >
           <IconTrash size="var(--mantine-font-size-sm)" />
         </ActionIcon>
       )}
