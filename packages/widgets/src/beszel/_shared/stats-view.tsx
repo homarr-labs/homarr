@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Button, Center, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Button, Center, SimpleGrid, Stack, Text, useComputedColorScheme } from "@mantine/core";
 import { IconPlugConnectedX, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -13,7 +13,7 @@ import { zoomCompensatedSize } from "@homarr/ui";
 
 import { getUsableWidgetQueryData } from "../../common/query-state";
 import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
-import { containerColors } from "./colors";
+import { beszelChartColors } from "./colors";
 import type { BeszelTimePeriod } from "./chart";
 import {
   BeszelChartPanel,
@@ -77,6 +77,7 @@ export function BeszelStatsView({
   const t = useI18n("widget.beszelSystemStats");
   const tBeszel = useI18n("widget.beszel");
   const locale = useCurrentIntlLocale();
+  const colorScheme = useComputedColorScheme("light");
   const { formatByteRate, formatBytes } = useByteFormatter();
   const byteAxisFormatters = useMemo(
     () => createByteChartAxisFormatters(formatBytes, formatByteRate),
@@ -125,14 +126,14 @@ export function BeszelStatsView({
 
   const series = useMemo(
     () => ({
-      cpu: [{ name: invariantTechnicalLabels.cpu, color: "teal.6" }],
+      cpu: [{ name: invariantTechnicalLabels.cpu, color: beszelChartColors.cpu }],
       memory: [
-        { name: t("chart.memory.series"), color: "teal.5" },
-        { name: t("chart.memory.cache"), color: "teal.8" },
+        { name: t("chart.memory.series"), color: beszelChartColors.memory },
+        { name: t("chart.memory.cache"), color: beszelChartColors.memoryCache },
       ],
       network: [
-        { name: t("chart.network.sent"), color: "blue.6" },
-        { name: t("chart.network.recv"), color: "teal.6" },
+        { name: t("chart.network.sent"), color: beszelChartColors.networkSent },
+        { name: t("chart.network.recv"), color: beszelChartColors.memory },
       ],
     }),
     [t],
@@ -157,14 +158,37 @@ export function BeszelStatsView({
   const gpuDevices = useGpuDevices(
     whenVisible(visibility.gpuUsage || visibility.gpuMemory || visibility.gpuPower, systemStats),
   );
-  const gpuSeries = useMemo(
-    () =>
-      gpuDevices.map((device, index) => ({
-        name: device.seriesName,
-        color: containerColors[index % containerColors.length] as string,
-      })),
-    [gpuDevices],
-  );
+  const gpuSeries = useMemo(() => {
+    const gpuNames = new Map<string, string>();
+    const powerTotals = new Map<string, number>();
+    for (const record of whenVisible(visibility.gpuPower, systemStats) ?? []) {
+      for (const [id, gpu] of Object.entries(record.stats.g ?? {})) {
+        if (!gpuNames.has(id)) gpuNames.set(id, gpu.n);
+        powerTotals.set(gpu.n, (powerTotals.get(gpu.n) ?? 0) + (gpu.p ?? 0));
+        if (gpu.pp !== undefined) {
+          const packageName = `${gpu.n} package`;
+          powerTotals.set(packageName, (powerTotals.get(packageName) ?? 0) + gpu.pp);
+        }
+      }
+    }
+    const rankedPower = [...powerTotals].toSorted(([, a], [, b]) => b - a);
+    const powerColors = new Map(
+      rankedPower.map(([name], index) => [
+        name,
+        `hsl(${226 + (((index * 360) / rankedPower.length) % 360)}, 65%, 52%)`,
+      ]),
+    );
+    return {
+      usage: gpuDevices.map(({ seriesName }) => ({ name: seriesName, color: beszelChartColors.cpu })),
+      memory: gpuDevices.map(({ seriesName }) => ({ name: seriesName, color: beszelChartColors.memory })),
+      power: gpuDevices.flatMap(({ id, seriesName }) => {
+        const name = gpuNames.get(id);
+        const color = name && powerColors.get(name);
+        if (!color) return [];
+        return [{ name: seriesName, color }];
+      }),
+    };
+  }, [gpuDevices, systemStats, visibility.gpuPower]);
   const gpuUsageData = useGpuChartData(
     whenVisible(visibility.gpuUsage, systemStats),
     gpuDevices,
@@ -220,26 +244,23 @@ export function BeszelStatsView({
   );
   const diskSeries = useMemo(
     () => [
-      { name: rootSeriesName, color: "grape.6" },
-      ...efsPaths.map((path, index) => ({
-        name: path,
-        color: containerColors[(index + 1) % containerColors.length] as string,
-      })),
+      { name: rootSeriesName, color: beszelChartColors.disk },
+      ...efsPaths.map((path) => ({ name: path, color: beszelChartColors.disk })),
     ],
     [efsPaths, rootSeriesName],
   );
   const diskIOSeries = useMemo(
     () => [
-      { name: rootWriteSeriesName, color: "orange.6" },
-      { name: rootReadSeriesName, color: "blue.6" },
-      ...efsPaths.flatMap((path, index) => [
+      { name: rootWriteSeriesName, color: beszelChartColors.diskWrite },
+      { name: rootReadSeriesName, color: beszelChartColors.cpu },
+      ...efsPaths.flatMap((path) => [
         {
           name: `${path} ${writeLabel}`,
-          color: containerColors[(index * 2 + 2) % containerColors.length] as string,
+          color: beszelChartColors.diskWrite,
         },
         {
           name: `${path} ${readLabel}`,
-          color: containerColors[(index * 2 + 3) % containerColors.length] as string,
+          color: beszelChartColors.cpu,
         },
       ]),
     ],
@@ -247,20 +268,40 @@ export function BeszelStatsView({
   );
 
   const containerNames = useContainerNames(whenVisible(showDocker, containerStats));
-  const containerSeries = useMemo(
-    () =>
-      containerNames.map((name, index) => ({ name, color: containerColors[index % containerColors.length] as string })),
-    [containerNames],
-  );
-  const memoryContainerSeries = useMemo(() => {
-    const memoryTotals = new Map<string, number>();
-    for (const record of containerStats ?? []) {
+  const containerSeries = useMemo(() => {
+    const totals = new Map<string, { cpu: number; memory: number; network: number }>();
+    for (const record of whenVisible(showDocker, containerStats) ?? []) {
       for (const container of record.stats) {
-        memoryTotals.set(container.n, (memoryTotals.get(container.n) ?? 0) + container.m);
+        const usage = totals.get(container.n) ?? { cpu: 0, memory: 0, network: 0 };
+        usage.cpu += container.c;
+        usage.memory += container.m;
+        usage.network += normalizeBeszelByteRate(container.b?.[0], container.ns);
+        usage.network += normalizeBeszelByteRate(container.b?.[1], container.nr);
+        totals.set(container.n, usage);
       }
     }
-    return containerSeries.toSorted((a, b) => (memoryTotals.get(b.name) ?? 0) - (memoryTotals.get(a.name) ?? 0));
-  }, [containerStats, containerSeries]);
+    let saturation = 65;
+    let lightness = 50;
+    if (colorScheme === "dark") {
+      saturation = 60;
+      lightness = 55;
+    }
+    const makeSeries = (metric: "cpu" | "memory" | "network") =>
+      [...totals]
+        .toSorted(([, a], [, b]) => b[metric] - a[metric])
+        .map(([name], index) => ({
+          name,
+          color: `hsl(${((index * 360) / totals.size) % 360}, ${saturation}%, ${lightness}%)`,
+        }))
+        .filter(({ name }) => containerNames.includes(name));
+    const bySelectedOrder = (a: { name: string }, b: { name: string }) =>
+      containerNames.indexOf(a.name) - containerNames.indexOf(b.name);
+    return {
+      cpu: makeSeries("cpu").toSorted(bySelectedOrder),
+      memory: makeSeries("memory"),
+      network: makeSeries("network").toSorted(bySelectedOrder),
+    };
+  }, [colorScheme, containerNames, containerStats, showDocker]);
   const dockerCpuData = useDockerChartData(
     whenVisible(visibility.dockerCpu, containerStats),
     containerNames,
@@ -324,10 +365,10 @@ export function BeszelStatsView({
     (visibility.disk && diskData.length > 0 ? 1 : 0) +
     (visibility.diskIO && diskIOData.length > 0 ? 1 : 0) +
     (visibility.network && networkData.length > 0 ? 1 : 0) +
-    (visibility.gpuUsage && gpuSeries.length > 0 && gpuUsageData.length > 0 ? 1 : 0) +
+    (visibility.gpuUsage && gpuDevices.length > 0 && gpuUsageData.length > 0 ? 1 : 0) +
     (visibility.gpuMemory && hasGpuMemory && gpuMemoryData.length > 0 ? 1 : 0) +
     (visibility.gpuPower && hasGpuPower && gpuPowerData.length > 0 ? 1 : 0) +
-    (showDocker && containerSeries.length > 0
+    (showDocker && containerNames.length > 0
       ? (visibility.dockerCpu && dockerCpuData.length > 0 ? 1 : 0) +
         (visibility.dockerMemory && dockerMemoryData.length > 0 ? 1 : 0) +
         (visibility.dockerNetwork && dockerNetworkData.length > 0 ? 1 : 0)
@@ -411,7 +452,7 @@ export function BeszelStatsView({
           }}
         />
       )}
-      {gpuSeries.length > 0 && (
+      {gpuDevices.length > 0 && (
         <>
           {visibility.gpuUsage && gpuUsageData.length > 0 && (
             <BeszelChartPanel
@@ -421,7 +462,7 @@ export function BeszelStatsView({
                 h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuUsageData,
-                series: gpuSeries,
+                series: gpuSeries.usage,
                 yAxisFormatter: formatPercent,
                 yAxisDomain: CPU_Y_AXIS_DOMAIN,
                 tooltipProps: tooltips.percent,
@@ -436,7 +477,7 @@ export function BeszelStatsView({
                 h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuMemoryData,
-                series: gpuSeries,
+                series: gpuSeries.memory,
                 yAxisFormatter: byteAxisFormatters.bytes,
                 tooltipProps: tooltips.bytesTotal,
               }}
@@ -450,7 +491,7 @@ export function BeszelStatsView({
                 h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuPowerData,
-                series: gpuSeries,
+                series: gpuSeries.power,
                 yAxisFormatter: formatWatts,
                 tooltipProps: tooltips.watts,
               }}
@@ -458,7 +499,7 @@ export function BeszelStatsView({
           )}
         </>
       )}
-      {showDocker && containerSeries.length > 0 && (
+      {showDocker && containerNames.length > 0 && (
         <>
           {visibility.dockerCpu && dockerCpuData.length > 0 && (
             <BeszelChartPanel
@@ -469,7 +510,7 @@ export function BeszelStatsView({
                 withXAxis: showXAxis,
                 data: dockerCpuData,
                 type: "stacked",
-                series: containerSeries,
+                series: containerSeries.cpu,
                 yAxisFormatter: formatPercent,
                 tooltipProps: tooltips.percentTotal,
               }}
@@ -477,7 +518,7 @@ export function BeszelStatsView({
           )}
           {visibility.dockerMemory && dockerMemoryData.length > 0 && (
             <BeszelChartPanel
-              key={JSON.stringify(memoryContainerSeries.map(({ name }) => name))}
+              key={JSON.stringify(containerSeries.memory.map(({ name }) => name))}
               title={t("chart.dockerMemory.title")}
               subtitle={t("chart.dockerMemory.subtitle")}
               chartProps={{
@@ -485,7 +526,7 @@ export function BeszelStatsView({
                 withXAxis: showXAxis,
                 data: dockerMemoryData,
                 type: "stacked",
-                series: memoryContainerSeries,
+                series: containerSeries.memory,
                 areaChartProps: { reverseStackOrder: true },
                 yAxisFormatter: byteAxisFormatters.bytes,
                 tooltipProps: tooltips.bytesTotal,
@@ -500,7 +541,7 @@ export function BeszelStatsView({
                 h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: dockerNetworkData,
-                series: containerSeries,
+                series: containerSeries.network,
                 yAxisFormatter: byteAxisFormatters.rate,
                 tooltipProps: tooltips.rate,
               }}

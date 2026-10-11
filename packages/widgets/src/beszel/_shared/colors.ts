@@ -20,17 +20,11 @@ export const statusColorMap: Record<BeszelSystemStatus, string> = {
   pending: "yellow",
 };
 
-export const containerColors = [
-  "red.6",
-  "orange.6",
-  "yellow.6",
-  "lime.6",
-  "green.6",
-  "teal.6",
-  "cyan.6",
-  "blue.6",
-  "indigo.6",
-  "violet.6",
-  "grape.6",
-  "pink.6",
-];
+export const beszelChartColors = {
+  cpu: "hsl(220 70% 50%)",
+  memory: "hsl(160 60% 45%)",
+  memoryCache: "hsla(160 60% 45% / 0.5)",
+  diskWrite: "hsl(30 80% 55%)",
+  disk: "hsl(280 65% 60%)",
+  networkSent: "hsl(340 75% 55%)",
+};

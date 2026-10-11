@@ -1,14 +1,15 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import { ColorSwatch } from "@mantine/core";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { formatLocalizedDate } from "../../common/locale";
 
 const styles: Record<string, CSSProperties> = {
   wrapper: {
-    background: "var(--mantine-color-dark-7)",
-    border: "1px solid var(--mantine-color-dark-4)",
+    background: "var(--mantine-color-body)",
+    border: "1px solid var(--mantine-color-default-border)",
     borderRadius: 6,
     padding: "6px 10px",
     fontSize: "var(--mantine-font-size-xs)",
@@ -16,12 +17,11 @@ const styles: Record<string, CSSProperties> = {
     pointerEvents: "none",
     overflowX: "hidden",
   },
-  header: { marginBottom: 4, fontWeight: 550, color: "var(--mantine-color-gray-2)" },
+  header: { marginBottom: 4, fontWeight: 550, color: "var(--mantine-color-text)" },
   row: { display: "flex", alignItems: "center", gap: 6, padding: "1px 0" },
-  indicator: { width: 5, height: 14, borderRadius: 5, flexShrink: 0 },
   name: {
     flex: 1,
-    color: "var(--mantine-color-gray-3)",
+    color: "var(--mantine-color-text)",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -29,11 +29,11 @@ const styles: Record<string, CSSProperties> = {
   },
   value: {
     fontWeight: 700,
-    color: "var(--mantine-color-gray-1)",
+    color: "var(--mantine-color-text)",
     whiteSpace: "nowrap",
     fontVariantNumeric: "tabular-nums",
   },
-  separator: { borderTop: "1px solid var(--mantine-color-dark-4)", marginTop: 3, paddingTop: 3 },
+  separator: { borderTop: "1px solid var(--mantine-color-default-border)", marginTop: 3, paddingTop: 3 },
 };
 
 export interface TooltipPayloadItem {
@@ -77,7 +77,7 @@ const BeszelTooltipContent = ({ active, label, payload, formatter, showTotal }: 
       <div style={styles.header}>{tooltipLabel}</div>
       {sorted.map((item) => (
         <div key={item.dataKey} style={styles.row}>
-          <div style={{ ...styles.indicator, background: item.color }} />
+          <ColorSwatch color={item.color} size={10} withShadow={false} style={{ flexShrink: 0 }} />
           <span style={styles.name}>{item.name}</span>
           <span style={styles.value}>{formatter(item.value)}</span>
         </div>
