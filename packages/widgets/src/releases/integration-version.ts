@@ -1,3 +1,4 @@
+import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import type { IntegrationKind } from "@homarr/definitions";
 
 import type { ReleasesRepositoryIntegration } from "./releases-repository";
@@ -7,6 +8,7 @@ interface ServiceVersionResult {
   integrationName: string;
   integrationKind: IntegrationKind;
   version: string | null;
+  error?: string;
 }
 
 const parseVersion = (value: string | undefined) => {
@@ -36,6 +38,23 @@ const VERSION_DISPLAY_LENGTH = 17;
 /** Shortens long versions the same way as What's Up Docker. The full value is shown in a tooltip. */
 export const truncateVersion = (value: string) =>
   value.length > VERSION_MAX_LENGTH ? `${value.slice(0, VERSION_DISPLAY_LENGTH)}…` : value;
+
+/**
+ * Integrations for the error indicator. The query rejects when every integration fails, which leaves no names to
+ * list; that is reported even when an earlier fetch left cached versions on screen. Permission errors are not.
+ */
+export const getFailedServiceVersionIntegrations = (
+  query: { data: readonly ServiceVersionResult[] | undefined; error: unknown },
+  totalFailureName: string,
+) => {
+  if (query.error && !isTrpcForbiddenError(query.error)) {
+    return [{ integrationId: "service-versions", integrationName: totalFailureName, error: "failed" }];
+  }
+
+  return (query.data ?? []).flatMap(({ integrationId, integrationName, error }) =>
+    error ? [{ integrationId, integrationName, error }] : [],
+  );
+};
 
 /** Running versions for a row's links, keeping only integrations still attached to the widget. */
 export const getRowIntegrationVersions = (

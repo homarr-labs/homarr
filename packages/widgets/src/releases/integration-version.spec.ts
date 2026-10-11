@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { getRowIntegrationVersions, isVersionUpToDate, truncateVersion } from "./integration-version";
+import {
+  getFailedServiceVersionIntegrations,
+  getRowIntegrationVersions,
+  isVersionUpToDate,
+  truncateVersion,
+} from "./integration-version";
 
 describe("isVersionUpToDate", () => {
   test.each([
@@ -33,6 +38,54 @@ describe("truncateVersion", () => {
     { value: "2.0.0-develop.20261011", expected: "2.0.0-develop.202…" },
   ])("shows $value as $expected", ({ value, expected }) => {
     expect(truncateVersion(value)).toBe(expected);
+  });
+});
+
+describe("getFailedServiceVersionIntegrations", () => {
+  const healthy = {
+    integrationId: "sonarr",
+    integrationName: "Sonarr",
+    integrationKind: "sonarr" as const,
+    version: "4.0.20.3014",
+  };
+  const failed = {
+    integrationId: "radarr",
+    integrationName: "Radarr",
+    integrationKind: "radarr" as const,
+    version: null,
+    error: "INTEGRATION_REQUEST_FAILED",
+  };
+  const totalFailure = { integrationId: "service-versions", integrationName: "Running Versions", error: "failed" };
+
+  test("returns nothing when every integration responded", () => {
+    expect(getFailedServiceVersionIntegrations({ data: [healthy], error: null }, "Running Versions")).toEqual([]);
+  });
+
+  test("lists the integrations whose request failed", () => {
+    expect(getFailedServiceVersionIntegrations({ data: [healthy, failed], error: null }, "Running Versions")).toEqual([
+      { integrationId: "radarr", integrationName: "Radarr", error: "INTEGRATION_REQUEST_FAILED" },
+    ]);
+  });
+
+  test("reports a total failure before any versions were fetched", () => {
+    expect(
+      getFailedServiceVersionIntegrations({ data: undefined, error: new Error("All failed") }, "Running Versions"),
+    ).toEqual([totalFailure]);
+  });
+
+  test("reports a total failure while cached versions from an earlier fetch remain", () => {
+    expect(
+      getFailedServiceVersionIntegrations({ data: [healthy], error: new Error("All failed") }, "Running Versions"),
+    ).toEqual([totalFailure]);
+  });
+
+  test("ignores permission errors", () => {
+    expect(
+      getFailedServiceVersionIntegrations(
+        { data: undefined, error: { data: { code: "FORBIDDEN" } } },
+        "Running Versions",
+      ),
+    ).toEqual([]);
   });
 });
 

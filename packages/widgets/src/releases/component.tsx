@@ -34,7 +34,6 @@ import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
-import { isTrpcForbiddenError } from "@homarr/api/query-cache";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
@@ -51,7 +50,7 @@ import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import classes from "./component.module.scss";
 import { selectReleaseRepositoriesForDisplay } from "./display";
-import { getRowIntegrationVersions, truncateVersion } from "./integration-version";
+import { getFailedServiceVersionIntegrations, getRowIntegrationVersions, truncateVersion } from "./integration-version";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
 
@@ -182,16 +181,10 @@ export default function ReleasesWidget({
   );
   useWidgetRuntimeQueries(widgetRuntimeRef, runtimeQueries);
   const serviceVersions = useMemo(() => serviceVersionsQuery.data ?? [], [serviceVersionsQuery.data]);
-  // The query rejects when every attached integration fails, so that case has no names to list.
-  const hasServiceVersionsFailed =
-    serviceVersionsQuery.data === undefined &&
-    serviceVersionsQuery.error !== null &&
-    !isTrpcForbiddenError(serviceVersionsQuery.error);
-  const failedServiceVersionIntegrations = hasServiceVersionsFailed
-    ? [{ integrationId: "service-versions", integrationName: t("runningVersions"), error: "failed" }]
-    : serviceVersions.flatMap(({ integrationId, integrationName, error }) =>
-        error ? [{ integrationId, integrationName, error }] : [],
-      );
+  const failedServiceVersionIntegrations = getFailedServiceVersionIntegrations(
+    serviceVersionsQuery,
+    t("runningVersions"),
+  );
 
   const repositories = useMemo(() => {
     const resultById = new Map(results.flat().map((result) => [result.id, result]));
