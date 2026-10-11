@@ -13,7 +13,8 @@ import { generateColorScale } from "~/theme/branding";
 export const BoardMantineProvider = ({
   children,
   defaultColorScheme,
-}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
+  forceColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme; forceColorScheme?: "dark" | "light" }>) => {
   const board = useRequiredBoard();
   const { branding } = useSettings();
   const colorSchemeManager = useColorSchemeManager();
@@ -38,6 +39,7 @@ export const BoardMantineProvider = ({
   return (
     <MantineProvider
       defaultColorScheme={defaultColorScheme}
+      forceColorScheme={forceColorScheme}
       theme={theme}
       colorSchemeManager={colorSchemeManager}
       cssVariablesResolver={v8CssVariablesResolver}

@@ -32,6 +32,7 @@ import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
@@ -251,6 +252,7 @@ export default function DockerWidget({
   setOptions,
 }: WidgetComponentProps<"dockerContainers">) {
   const t = useI18n("docker");
+  const isReplay = useBoardReplay();
   const tCommon = useI18n("common");
   const tWidget = useI18n("widget.dockerContainers");
   const { openModal } = useModalAction(AddDockerAppToHomarr);
@@ -317,16 +319,23 @@ export default function DockerWidget({
     [confirmRemoval, removeContainer, restartContainer, startContainer, stopContainer],
   );
   const handleOpenLogs = useCallback(
-    (container: DockerContainer) => window.location.assign(createContainerLogsPath(container)),
-    [],
+    (container: DockerContainer) => {
+      if (isReplay) return;
+      window.location.assign(createContainerLogsPath(container));
+    },
+    [isReplay],
   );
   const handleAddToHomarr = useCallback(
-    (container: DockerContainer) => openModal({ selectedContainers: [container] }),
-    [openModal],
+    (container: DockerContainer) => {
+      if (isReplay) return;
+      openModal({ selectedContainers: [container] });
+    },
+    [openModal, isReplay],
   );
   const actionHandlers = useMemo<ContainerActionHandlers>(
     () => ({
       canUse: (container, capability) =>
+        !isReplay &&
         endpointHasCapability(
           data?.endpoints.find(({ id }) => id === container.endpointId),
           capability,
@@ -335,7 +344,7 @@ export default function DockerWidget({
       onAddToHomarr: handleAddToHomarr,
       onOpenLogs: handleOpenLogs,
     }),
-    [data?.endpoints, handleAddToHomarr, handleContainerAction, handleOpenLogs],
+    [data?.endpoints, handleAddToHomarr, handleContainerAction, handleOpenLogs, isReplay],
   );
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
@@ -560,6 +569,7 @@ function ContainerActionItems({
   onClose: () => void;
 }) {
   const t = useI18n("docker.action");
+  const isReplay = useBoardReplay();
   const tCommon = useI18n("common");
   const stateAction = container.state === "running" ? "stop" : "start";
   const StateIcon = stateAction === "stop" ? IconPlayerStop : IconPlayerPlay;
@@ -612,6 +622,7 @@ function ContainerActionItems({
       <Menu.Divider />
       <Menu.Item
         leftSection={<IconCategoryPlus size="var(--mantine-font-size-sm)" />}
+        disabled={isReplay}
         onClick={() => {
           handlers.onAddToHomarr(container);
           onClose();
