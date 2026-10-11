@@ -10,3 +10,4 @@ export const db = createDb(schema);
 export type Database = typeof db;
 
 export { handleDiffrentDbDriverOperationsAsync as handleTransactionsAsync } from "./transactions";
+export { executeWritePlanAsync } from "./write-plan";
