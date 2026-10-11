@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/sections/item.module.css
+  s_5749b2ccfeffb1::t_64798e1f15f148 119-122,138-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5acf119c1bb5d5d3d21680cb7176d9dd47b09b6e",
+  "prompts": {},
+  "sessions": {
+    "s_5749b2ccfeffb1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-5d31-7090-8035-0e501d3f763d",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
