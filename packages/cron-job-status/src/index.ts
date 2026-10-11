@@ -1,4 +1,4 @@
-import { createSubPubChannel } from "../../redis/src/lib/channel";
+import { createSubPubChannel } from "@homarr/redis";
 
 export interface TaskStatus {
   name: string;
