@@ -1,0 +1,16 @@
+packages/custom-widgets/src/core/ai-prompt.ts
+  h_d6e478ca18e517 3,43,52,77,86
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 2,115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "edc0325176fb8c304013d90832255cce37b16b1c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
