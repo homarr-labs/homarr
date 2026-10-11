@@ -44,16 +44,28 @@ export class CustomWidgetRequestLimiter {
     if (input.load && input.category !== "query")
       throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: "Only load queries can wait for capacity" });
     assertLoadActive(input.load);
-    const identity = input.userId ? `user:${input.userId}` : `anonymous:${input.anonymousId ?? "unknown"}`;
+    const identity = input.userId ? `user:${input.userId}` : `anonymous:${input.anonymousId ?? "unattributed"}`;
+    const isUnattributed = !input.userId && (!input.anonymousId || input.anonymousId === "unattributed");
+    const unattributedRateKey = isUnattributed ? `custom-widget:rate:v3:unattributed:${input.category}` : undefined;
     const rateKey =
       input.category === "refresh"
         ? `custom-widget:rate:v2:item:refresh:${hashKey(input.itemId)}`
         : `custom-widget:rate:${input.category}:${hashKey(identity, input.itemId)}`;
     const definitionRateKey = `custom-widget:rate:v2:definition:${input.category}:${hashKey(input.definitionId)}`;
-    const userKey = `custom-widget:concurrency:v2:user-item:${hashKey(identity, input.itemId)}`;
+    const userKey = isUnattributed
+      ? "custom-widget:concurrency:v3:unattributed"
+      : `custom-widget:concurrency:v2:user-item:${hashKey(identity, input.itemId)}`;
     const definitionKey = `custom-widget:concurrency:v2:definition:${hashKey(input.definitionId)}`;
     if (!this.options.store)
-      return this.acquireLocal(rateKey, definitionRateKey, userKey, definitionKey, input.category, input.load);
+      return this.acquireLocal(
+        rateKey,
+        definitionRateKey,
+        userKey,
+        definitionKey,
+        input.category,
+        input.load,
+        unattributedRateKey,
+      );
     try {
       return await this.acquireStored(
         rateKey,
@@ -63,6 +75,7 @@ export class CustomWidgetRequestLimiter {
         input.category,
         this.options.store,
         input.load,
+        unattributedRateKey,
       );
     } catch (error) {
       if (error instanceof CustomWidgetDomainError) throw error;
@@ -81,8 +94,11 @@ export class CustomWidgetRequestLimiter {
     definitionKey: string,
     category: RequestCategory,
     load: RequestLimitInput["load"],
+    unattributedRateKey: string | undefined,
   ) {
     const now = Date.now();
+    if (unattributedRateKey)
+      this.acquireLocalRate(unattributedRateKey, CATEGORY_LIMITS[category], now, load, UNATTRIBUTED_LOAD_RATE_MESSAGE);
     this.acquireLocalRate(rateKey, CATEGORY_LIMITS[category], now, load);
     this.acquireLocalRate(definitionRateKey, DEFINITION_CATEGORY_LIMITS[category], now, load);
     return this.waitForCapacity(() => {
@@ -109,7 +125,13 @@ export class CustomWidgetRequestLimiter {
     category: RequestCategory,
     store: RequestLimitStore,
     load: RequestLimitInput["load"],
+    unattributedRateKey: string | undefined,
   ) {
+    if (unattributedRateKey) {
+      const rate = await store.incrementRate(unattributedRateKey, WINDOW_MS);
+      if (rate.count > CATEGORY_LIMITS[category])
+        throwLimit(rate.retryAfterMs, load ? UNATTRIBUTED_LOAD_RATE_MESSAGE : undefined);
+    }
     const rate = await store.incrementRate(rateKey, WINDOW_MS);
     if (rate.count > CATEGORY_LIMITS[category]) throwLimit(rate.retryAfterMs, load ? LOAD_RATE_MESSAGE : undefined);
     const definitionRate = await store.incrementRate(definitionRateKey, WINDOW_MS);
@@ -186,10 +208,15 @@ export class CustomWidgetRequestLimiter {
     }
   }
 
-  private acquireLocalRate(key: string, limit: number, now: number, load: RequestLimitInput["load"]): void {
+  private acquireLocalRate(
+    key: string,
+    limit: number,
+    now: number,
+    load: RequestLimitInput["load"],
+    loadRateMessage = LOAD_RATE_MESSAGE,
+  ): void {
     const recent = (this.rateBuckets.get(key) ?? []).filter((timestamp) => now - timestamp < WINDOW_MS);
-    if (recent.length >= limit)
-      throwLimit(WINDOW_MS - (now - (recent[0] ?? now)), load ? LOAD_RATE_MESSAGE : undefined);
+    if (recent.length >= limit) throwLimit(WINDOW_MS - (now - (recent[0] ?? now)), load ? loadRateMessage : undefined);
     recent.push(now);
     this.rateBuckets.set(key, recent);
   }
@@ -211,6 +238,8 @@ export class CustomWidgetRequestLimiter {
 const hashKey = (...parts: string[]) => createHash("sha256").update(parts.join("\0")).digest("hex");
 const LOAD_RATE_MESSAGE =
   "Custom widget load query rate limit exceeded (60 per viewer/Item and 240 per definition per minute). Reduce load requests or wait before loading again.";
+const UNATTRIBUTED_LOAD_RATE_MESSAGE =
+  "Custom widget unattributed load query rate limit exceeded (60 per minute shared across Items and definitions). Wait before loading again or configure trusted proxy identity.";
 const LOAD_CAPACITY_MESSAGE =
   "Custom widget load could not acquire capacity within 60 seconds. Reduce load requests or try again later.";
 const assertLoadActive = (load: RequestLimitInput["load"]): void => {

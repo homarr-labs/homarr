@@ -18,6 +18,7 @@ import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 import type { RequestLimitInput } from "@homarr/custom-widgets/server";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import type { createTRPCContext } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "../custom-widget/request-executor";
 import {
@@ -43,7 +44,7 @@ interface CustomWidgetItemOptions {
   refreshInterval?: number;
 }
 
-type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0];
+type RouterContext = ReturnType<typeof createTRPCContext>;
 type ResolvedDefinition = Awaited<ReturnType<typeof resolvePlacedDefinitionAsync>>;
 
 const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
@@ -134,6 +135,7 @@ const withRequestLimit = async <T>(
   const release = await acquireCustomWidgetRequestLimit({
     category,
     userId: ctx.session?.user.id,
+    anonymousId: ctx.requestIdentity?.key ?? "unattributed",
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
     load,
