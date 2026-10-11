@@ -27,6 +27,7 @@ type HomarrDataTableProps<T> = DataTableProps<T> & {
   rowCursor?: "auto" | "default";
   preserveColumnWidths?: boolean;
   fillColumnAccessor?: string;
+  onColumnWidthsChange?: (widths: { accessor: string; width: number }[]) => void;
 };
 
 export function HomarrDataTable<T>({
@@ -35,6 +36,7 @@ export function HomarrDataTable<T>({
   rowCursor = "auto",
   preserveColumnWidths = false,
   fillColumnAccessor,
+  onColumnWidthsChange,
   className,
   columns,
   defaultColumnProps,
@@ -81,31 +83,56 @@ export function HomarrDataTable<T>({
       const startX = event.clientX;
 
       removeResizeListeners.current();
+      const usesDisplayedWidths = Boolean(
+        preserveColumnWidths &&
+        fillColumnAccessor &&
+        onColumnWidthsChange &&
+        columns.some(({ accessor, hidden }) => !hidden && String(accessor) === fillColumnAccessor),
+      );
+      const previousCursor = document.body.style.cursor;
+      const previousUserSelect = document.body.style.userSelect;
+      if (usesDisplayedWidths) {
+        // The native resize handler saves logical widths; fill mode stores displayed pixels.
+        event.preventDefault();
+        event.stopPropagation();
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+      }
+      let previewWidths: Record<string, number> | undefined;
       const handleMouseMove = (moveEvent: MouseEvent) => {
         const delta = Math.min(
           nextWidth - minimumWidth,
           Math.max(minimumWidth - currentWidth, moveEvent.clientX - startX),
         );
-        setResizePreviewWidths({
+        previewWidths = {
           ...widths,
           [currentAccessor]: currentWidth + delta,
           [nextAccessor]: nextWidth - delta,
-        });
+        };
+        setResizePreviewWidths(previewWidths);
       };
-      const handleResizeEnd = () => {
+      const handleResizeEnd = (endEvent: Event) => {
         removeResizeListeners.current();
+        if (usesDisplayedWidths && previewWidths && endEvent.type === "mouseup") {
+          onColumnWidthsChange?.(Object.entries(previewWidths).map(([accessor, width]) => ({ accessor, width })));
+        }
         requestAnimationFrame(() => requestAnimationFrame(() => setResizePreviewWidths(undefined)));
       };
       removeResizeListeners.current = () => {
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleResizeEnd);
         window.removeEventListener("blur", handleResizeEnd);
+        if (usesDisplayedWidths) {
+          document.body.style.cursor = previousCursor;
+          document.body.style.userSelect = previousUserSelect;
+        }
+        removeResizeListeners.current = () => undefined;
       };
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleResizeEnd);
       window.addEventListener("blur", handleResizeEnd);
     },
-    [onMouseDownCapture],
+    [columns, fillColumnAccessor, onColumnWidthsChange, onMouseDownCapture, preserveColumnWidths],
   );
 
   const mergedClassName = [

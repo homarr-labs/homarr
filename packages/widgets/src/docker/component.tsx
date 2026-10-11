@@ -386,7 +386,7 @@ export default function DockerWidget({
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
   }, [actionHandlers, columnVisibility, formatBytes, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -427,6 +427,7 @@ export default function DockerWidget({
         <HomarrDataTable
           preserveColumnWidths
           fillColumnAccessor="name"
+          onColumnWidthsChange={setMultipleColumnWidths}
           isEditMode={isEditMode}
           cellPadding={isAdvanced || width < 400 ? "2px 8px" : "4px 8px"}
           className="docker-table"
