@@ -18,6 +18,7 @@ import { headerPreferencesSchema } from "@homarr/validation/user";
 
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import { matchesContainerFilter } from "@homarr/widgets/docker/filter";
+import { getBookmarkGroups } from "@homarr/widgets/bookmarks/groups-data";
 
 import { createSnapshotRedactor } from "./redact";
 import { snapshotPublicFields } from "./public-fields";
@@ -96,7 +97,15 @@ const payloadSchema = z.object({
   locale: z.enum(supportedLanguages),
   colorScheme: z.enum(["dark", "light"]),
   localStates: z
-    .array(z.object({ key: z.tuple([z.literal("timer"), z.string(), z.string()]), value: z.unknown() }))
+    .array(
+      z.union([
+        z.object({ key: z.tuple([z.literal("timer"), z.string(), z.string()]), value: z.unknown() }),
+        z.object({
+          key: z.tuple([z.literal("bookmarks"), z.string(), z.string()]),
+          value: z.array(z.string()).max(2000),
+        }),
+      ]),
+    )
     .max(2000)
     .default([]),
 });
@@ -161,7 +170,7 @@ export const createBoardSnapshot = async ({
     ...(redact({ ...context, board: redactor.board }) as Omit<BoardSnapshotPayload, "queries">),
     // Locale is a code, not user text.
     locale: context.locale,
-    localStates: redact(captureLocalStates(context.board)),
+    localStates: redactLocalStates(captureLocalStates(context.board), redactor),
     queries: [
       ...queries.map((query) => ({
         key: redactQueryKey(query.queryKey, redactor),
@@ -182,19 +191,39 @@ export const createBoardSnapshot = async ({
 };
 
 const captureLocalStates = (board: BoardSnapshotPayload["board"]) => {
-  const states: { key: ["timer", string, string]; value: unknown }[] = [];
+  const states: BoardSnapshotPayload["localStates"] = [];
   if (typeof window === "undefined") return states;
   for (const item of board.items) {
-    if (item.kind !== "timer") continue;
     try {
-      const stored = window.localStorage.getItem(`homarr:timer:${board.id}:${item.id}:state`);
-      if (stored) states.push({ key: ["timer", board.id, item.id], value: JSON.parse(stored) });
+      if (item.kind === "timer") {
+        const stored = window.localStorage.getItem(`homarr:timer:${board.id}:${item.id}:state`);
+        if (stored) states.push({ key: ["timer", board.id, item.id], value: JSON.parse(stored) });
+      }
+      if (item.kind === "bookmarks") {
+        const stored = window.localStorage.getItem(`homarr-bookmarks-collapsed-${item.id}`);
+        if (!stored) continue;
+        const collapsed = z.array(z.string()).max(2000).parse(JSON.parse(stored));
+        const groups = new Set(getBookmarkGroups(item.options.groups).map((group) => group.id));
+        states.push({ key: ["bookmarks", board.id, item.id], value: collapsed.filter((id) => groups.has(id)) });
+      }
     } catch {
       /* Missing or invalid local widget state is optional. */
     }
   }
   return states;
 };
+
+const redactLocalStates = (
+  states: BoardSnapshotPayload["localStates"],
+  redactor: ReturnType<typeof createSnapshotRedactor>,
+): BoardSnapshotPayload["localStates"] =>
+  states.map((state) => {
+    if (state.key[0] !== "bookmarks") return redactor.redact(state) as BoardSnapshotPayload["localStates"][number];
+    return {
+      key: ["bookmarks", redactor.string(state.key[1], "id"), redactor.string(state.key[2], "id")],
+      value: (state.value as string[]).map((id) => redactor.string(id, "id")),
+    };
+  });
 
 const getErrorCode = (error: unknown) => {
   if (!error || typeof error !== "object" || !("data" in error)) return undefined;
@@ -254,6 +283,7 @@ export const parseBoardSnapshot = async (
   const payload = payloadSchema.parse({
     ...(redact({ ...parsed, board: redactor.board }) as BoardSnapshotPayload),
     locale: parsed.locale,
+    localStates: redactLocalStates(parsed.localStates, redactor),
     queries: parsed.queries.map((query) => ({
       ...query,
       key: redactQueryKey(query.key, redactor),
@@ -352,7 +382,7 @@ const createBoardRedactor = async (
   return { ...redactor, board: resolvedBoard };
 };
 
-const validateBoardReferences = ({ board, viewport }: BoardSnapshotPayload) => {
+const validateBoardReferences = ({ board, viewport, localStates }: BoardSnapshotPayload) => {
   const layoutIds = new Set(board.layouts.map((layout) => layout.id));
   const sectionIds = new Set(board.sections.map((section) => section.id));
   const itemIds = new Set(board.items.map((item) => item.id));
@@ -372,6 +402,13 @@ const validateBoardReferences = ({ board, viewport }: BoardSnapshotPayload) => {
       if (!layoutIds.has(layout.layoutId) || !sectionIds.has(layout.sectionId))
         throw new Error("Invalid widget placement");
     }
+  }
+  for (const state of localStates) {
+    if (state.key[0] !== "bookmarks") continue;
+    const item = board.items.find((candidate) => candidate.id === state.key[2] && candidate.kind === "bookmarks");
+    if (state.key[1] !== board.id || !item) throw new Error("Invalid bookmark state reference");
+    const groups = new Set(getBookmarkGroups(item.options.groups).map((group) => group.id));
+    if (!(state.value as string[]).every((id) => groups.has(id))) throw new Error("Invalid collapsed bookmark group");
   }
   const parents = new Map<string, string>();
   const roots = board.sections.filter((section) => section.kind === "empty");

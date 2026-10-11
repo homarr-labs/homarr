@@ -185,7 +185,13 @@ export const createSnapshotRedactor = () => {
   };
   const template = (source: string): string => {
     try {
-      const ast = parseExpression(source, { plugins: ["jsx"] });
+      // Custom JSX parses the authored content inside a fragment, including
+      // templates with several sibling roots. Keep that wrapper while editing.
+      const wrappedSource = `<>${source}</>`;
+      const ast = parseExpression(wrappedSource, { plugins: ["jsx"] });
+      const bindingNames = new Map<string, string>();
+      const reservedBindings = new Set(source.match(/\bredacted[_-]\d+\b/g));
+      let bindingIndex = replacements.size;
       const edits: { start: number; end: number; text: string }[] = [];
       const visit = (
         node: unknown,
@@ -193,14 +199,50 @@ export const createSnapshotRedactor = () => {
         grandparent?: Record<string, unknown>,
         valueKey = "",
         greatGrandparent?: Record<string, unknown>,
+        bindings = new Map<string, string>(),
+        credentialInput = false,
       ) => {
         if (!node || typeof node !== "object") return;
         if (Array.isArray(node)) {
-          for (const child of node) visit(child, parent, grandparent, valueKey, greatGrandparent);
+          for (const child of node)
+            visit(child, parent, grandparent, valueKey, greatGrandparent, bindings, credentialInput);
           return;
         }
         const record = node as Record<string, unknown>;
         const { type, start, end, value } = record;
+        if (type === "ArrowFunctionExpression") {
+          bindings = new Map(bindings);
+          for (const parameter of record.params as { type: string; name?: string }[]) {
+            if (parameter.type !== "Identifier" || !parameter.name) continue;
+            const name = parameter.name;
+            if (!bindingNames.has(name)) {
+              let replacement = name;
+              if (!/^redacted[_-]\d+$/.test(name)) {
+                replacement = replace(name);
+                bindingIndex = Math.max(bindingIndex, replacements.size);
+                while (reservedBindings.has(replacement)) replacement = `redacted_${++bindingIndex}`;
+              }
+              reservedBindings.add(replacement);
+              bindingNames.set(name, replacement);
+            }
+            bindings.set(name, bindingNames.get(name) ?? name);
+          }
+        }
+        if (type === "JSXOpeningElement") {
+          const component = (record.name as { name?: string }).name;
+          credentialInput = component === "PasswordInput";
+          if (["TextInput", "NumberInput", "PasswordInput"].includes(component ?? "")) {
+            for (const attribute of record.attributes as Record<string, unknown>[]) {
+              const name = (attribute.name as { name?: string } | undefined)?.name;
+              let literal = attribute.value as Record<string, unknown> | null;
+              if (literal?.type === "JSXExpressionContainer") literal = literal.expression as Record<string, unknown>;
+              if (typeof literal?.value !== "string") continue;
+              if (name === "type" && literal.value === "password") credentialInput = true;
+              if (name === "bind" && (sensitiveKey.test(literal.value) || /^pin$/i.test(literal.value)))
+                credentialInput = true;
+            }
+          }
+        }
         if (typeof start === "number" && typeof end === "number") {
           if (type === "StringLiteral" && typeof value === "string") {
             let jsxAttribute = parent;
@@ -257,21 +299,17 @@ export const createSnapshotRedactor = () => {
                   return field(part);
                 })
                 .join(".");
+            if (credentialInput && ["value", "defaultValue"].includes(propertyName)) replacement = "";
             edits.push({ start, end, text: JSON.stringify(replacement) });
-          } else if (
-            type === "NumericLiteral" &&
-            parent?.type === "ObjectProperty" &&
-            sensitiveKey.test(
-              String(
-                (parent.key as { name?: string; value?: string }).name ??
-                  (parent.key as { value?: string }).value ??
-                  "",
-              ),
-            )
-          ) {
-            const property = parent.key as { name?: string; value?: string };
-            const redacted = redact(record.value, property.name ?? property.value ?? "");
-            edits.push({ start, end, text: String(redacted) });
+          } else if (type === "NumericLiteral") {
+            let propertyName = valueKey;
+            if (parent?.type === "ObjectProperty") {
+              const property = parent.key as { name?: string; value?: string };
+              propertyName = property.name ?? property.value ?? "";
+            }
+            if (credentialInput && ["value", "defaultValue"].includes(valueKey)) propertyName = "password";
+            if (sensitiveKey.test(propertyName))
+              edits.push({ start, end, text: String(redact(record.value, propertyName)) });
           } else if (type === "Identifier" && typeof record.name === "string") {
             const isProperty =
               (parent?.key === node && !parent.computed) ||
@@ -280,8 +318,12 @@ export const createSnapshotRedactor = () => {
                 !parent.computed);
             if (isProperty) {
               let replacement = field(record.name);
-              if (parent?.shorthand && replacement !== record.name) replacement += `: ${record.name}`;
+              const binding = bindings.get(record.name) ?? record.name;
+              if (parent?.shorthand && (replacement !== record.name || binding !== record.name))
+                replacement += `: ${binding}`;
               edits.push({ start, end, text: replacement });
+            } else if (!parent?.shorthand && bindings.has(record.name)) {
+              edits.push({ start, end, text: bindings.get(record.name) ?? record.name });
             }
           } else if (type === "JSXText" && typeof value === "string" && value.trim()) {
             edits.push({ start, end, text: string(value.trim()) });
@@ -314,21 +356,21 @@ export const createSnapshotRedactor = () => {
                 if (property === "arguments") childValueKey = memberKey(callee.object) || childValueKey;
               }
             }
-            visit(child, record, parent, childValueKey, grandparent);
+            visit(child, record, parent, childValueKey, grandparent, bindings, credentialInput);
           }
         }
       };
       visit(ast);
       for (const comment of ast.comments ?? [])
         edits.push({ start: comment.start ?? 0, end: comment.end ?? 0, text: " " });
-      let result = source;
-      let previousStart = source.length + 1;
+      let result = wrappedSource;
+      let previousStart = wrappedSource.length + 1;
       for (const edit of edits.toSorted((a, b) => b.start - a.start)) {
         if (edit.end > previousStart) continue;
         result = result.slice(0, edit.start) + edit.text + result.slice(edit.end);
         previousStart = edit.start;
       }
-      return result;
+      return result.slice(2, -3);
     } catch {
       // Never fall back to exporting unparsed source.
       return "<Text>Redacted Custom Widget</Text>";

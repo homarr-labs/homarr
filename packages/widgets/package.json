@@ -27,6 +27,7 @@
     "./manifest": "./src/manifest.ts",
     "./docker/filter": "./src/docker/filter.ts",
     "./bookmarks/bookmark-item": "./src/bookmarks/bookmark-item.ts",
+    "./bookmarks/groups-data": "./src/bookmarks/groups-data.ts",
     "./initial-widget-resources": "./src/initial-widget-resources.ts",
     "./options": "./src/options.ts",
     "./option-translation": "./src/option-translation.ts",
