@@ -12,6 +12,7 @@ const transport = vi.hoisted(() => {
   process.env.DB_DRIVER = "better-sqlite3";
   process.env.DB_URL = ":memory:";
   process.env.SECRET_ENCRYPTION_KEY = "0".repeat(64);
+  process.env.HOMARR_REQUEST_IDENTITY_SECRET = "1".repeat(64);
   const env: { BASE_URL?: string } = {};
   return {
     auth: vi.fn(),
@@ -63,7 +64,8 @@ class Browser {
     const requestHeaders = new Headers(headers);
     requestHeaders.set("host", "homarr.test");
     if (!requestHeaders.has("x-forwarded-proto")) requestHeaders.set("x-forwarded-proto", "https");
-    requestHeaders.set("x-forwarded-for", `fixture-${++requestSequence}`);
+    requestHeaders.set("x-homarr-proxy-secret", "1".repeat(64));
+    requestHeaders.set("x-homarr-client-ip", `192.0.${Math.floor(++requestSequence / 256)}.${requestSequence % 256}`);
     requestHeaders.set("cookie", [...this.cookies].map(([name, value]) => `${name}=${value}`).join("; "));
     if (body !== undefined && !requestHeaders.has("content-type"))
       requestHeaders.set("content-type", "application/x-www-form-urlencoded");
@@ -233,6 +235,9 @@ beforeEach(async () => {
     session ? { user: { id: session.userId }, expires: new Date(session.expiresAt).toISOString() } : null,
   );
   transport.env.BASE_URL = undefined;
+  globalThis.mcpOAuthRateLimits?.attempts.clear();
+  globalThis.mcpOAuthRateLimits?.failures.clear();
+  globalThis.mcpOAuthRateLimits?.tokenAttempts.clear();
   await db.delete(apiKeys);
   await db.delete(users);
   await db.insert(users).values({ id: "oauth-user", name: "OAuth User" });
@@ -1004,12 +1009,12 @@ describe("MCP OAuth explicit consent HTTP flow", () => {
 
   it("preserves registration and failed-redemption rate limits with their existing one-minute windows", async () => {
     const browser = new Browser();
-    const ip = `rate-fixture-${++requestSequence}`;
+    const ip = "192.0.2.123";
     for (let index = 0; index < 6; index++) {
       const request = browser.request("/api/mcp/oauth/register", JSON.stringify({ redirect_uris: [callback] }), {
         "content-type": "application/json",
       });
-      request.headers.set("x-forwarded-for", ip);
+      request.headers.set("x-homarr-client-ip", ip);
       const response = await register(request);
       expect(response.status).toBe(index < 5 ? 201 : 429);
       if (index === 5) expect(response.headers.get("retry-after")).toBe("60");
@@ -1024,7 +1029,7 @@ describe("MCP OAuth explicit consent HTTP flow", () => {
           client_id: "b".repeat(32),
         }).toString(),
       );
-      request.headers.set("x-forwarded-for", ip);
+      request.headers.set("x-homarr-client-ip", ip);
       return request;
     };
     for (let index = 0; index < 11; index++) expect((await redeem(attempt())).status).toBe(index < 10 ? 400 : 429);

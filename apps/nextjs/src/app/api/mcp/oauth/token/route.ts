@@ -9,12 +9,14 @@ export async function POST(request: Request) {
     return finishAuthorization(response, request);
   }
   const params = await parameterBody(request);
-  if (!params.ok)
+  if (!params.ok) {
+    recordTokenFailure(request);
     return finishAuthorization(
       oauthError("invalid_request", "Invalid, oversized or duplicate request fields"),
       request,
     );
+  }
   const result = await redeemMcpAuthorization(params.value);
-  if (!result.ok && ["invalid_grant", "invalid_target"].includes(result.error)) recordTokenFailure(request);
+  if (!result.ok) recordTokenFailure(request);
   return finishAuthorization(result.ok ? Response.json(result.token) : grantError(result), request);
 }
