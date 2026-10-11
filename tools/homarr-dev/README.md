@@ -11,19 +11,19 @@ Build and launch local Homarr images and GHCR pull-request builds, then manage t
 ## Setup
 
 ```sh
-pnpm install
+bun install
 ```
 
 Create `.env` from `.env.example` and set `DB_URL` to an absolute path for the SQLite file before running the migration. In a POSIX shell, use `cp .env.example .env`; in PowerShell, use `Copy-Item .env.example .env`.
-Then run `pnpm db:migration:sqlite:run` to create or update the database. The migration command also seeds a new database. Use `pnpm db:seed` explicitly when you need to seed an existing database. Start Redis separately with `pnpm docker:dev:up` when it is needed.
-The examples below use `pnpm dev:cli -- ...`, which works from POSIX shells and PowerShell. If you prefer a global command, install it with `pnpm dev:cli:install` and add your Go bin directory to `PATH`.
+Then run `bun run db:migration:sqlite:run` to create or update the database. The migration command also seeds a new database. Use `bun run db:seed` explicitly when you need to seed an existing database. Start Redis separately with `bun run docker:dev:up` when it is needed.
+The examples below use `bun run dev:cli -- ...`, which works from POSIX shells and PowerShell. If you prefer a global command, install it with `bun run dev:cli:install` and add your Go bin directory to `PATH`.
 
 ## Build
 
 ```sh
-pnpm dev:cli -- build feature
-pnpm dev:cli -- build --pr 6441
-pnpm dev:cli -- rebuild feature
+bun run dev:cli -- build feature
+bun run dev:cli -- build --pr 6441
+bun run dev:cli -- rebuild feature
 ```
 
 Checkout builds are tagged as `homarr:<name>`. The source checkout and revision are recorded on the image so `homarr rebuild` and the development dashboard can rebuild it later. PR builds use a temporary checkout and default to `homarr:pr-<number>`.
@@ -32,11 +32,11 @@ Checkout builds are tagged as `homarr:<name>`. The source checkout and revision 
 
 ```sh
 homarr --pr 6441 --env WORKSHOP_WEB_URL=https://app-v2.preview.homarr.dev/
-pnpm dev:cli -- run dev
-pnpm dev:cli -- run --detach dev
-pnpm dev:cli -- run --pr 6441
-pnpm dev:cli -- run --pr 6441 --demo
-pnpm dev:cli -- run --env FOO=bar --env FEATURE=true dev
+bun run dev:cli -- run dev
+bun run dev:cli -- run --detach dev
+bun run dev:cli -- run --pr 6441
+bun run dev:cli -- run --pr 6441 --demo
+bun run dev:cli -- run --env FOO=bar --env FEATURE=true dev
 ```
 
 PR launches always pull the latest GHCR tag before starting. Local tags remain local.
@@ -44,7 +44,7 @@ The installed binary accepts `--pr`, `--demo`, `--detach`, and repeatable `--env
 `homarr --pr <number> --env KEY=VALUE` is shorthand for `homarr run --pr <number> --env KEY=VALUE`.
 The first launch generates a per-user encryption key in the OS config directory and reuses it for later launches. Set `HOMARR_DEV_SECRET_ENCRYPTION_KEY` to a 64-character hexadecimal key to override it.
 
-The command reference below assumes the optional `homarr` installation. Without it, prefix each command with `pnpm dev:cli --` (for example, `pnpm dev:cli -- dev`).
+The command reference below assumes the optional `homarr` installation. Without it, prefix each command with `bun run dev:cli --` (for example, `bun run dev:cli -- dev`).
 
 ## Commands
 

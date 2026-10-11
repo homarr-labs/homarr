@@ -1,14 +1,71 @@
 name: "Setup and install"
 description: "Common setup steps for Actions"
 
+inputs:
+  next-cache:
+    description: Next.js compiler caches to restore (none, nextjs, docs, all)
+    default: "none"
+  turbo-cache:
+    description: Restore local Turbo artifacts when signed remote caching is not configured
+    default: "false"
+
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v6
     - uses: actions/setup-node@v6
       with:
         node-version: 24.18.0
-        cache: "pnpm"
+
+    - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: 1.4.2
+
+    - name: Identify the build platform
+      shell: bash
+      run: |
+        node --input-type=module -e '
+          import { appendFileSync } from "node:fs";
+          const arch = { x64: "amd64", arm64: "arm64" }[process.arch] ?? process.arch;
+          let libc = "musl";
+          if (process.report.getReport().header.glibcVersionRuntime) libc = "glibc";
+          appendFileSync(process.env.GITHUB_ENV, `TURBO_PLATFORM=${process.platform}/${arch}/${libc}/node-${process.versions.node}\n`);
+        '
+
+    - name: Restore Bun dependency cache
+      if: "!env.ACT"
+      uses: actions/cache@v5
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-${{ hashFiles('bun.lock', 'bunfig.toml', 'package.json', 'patches/**') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-bun-1.4.2-
 
     - shell: bash
-      run: pnpm install --frozen-lockfile
+      run: bun install --frozen-lockfile --concurrent-scripts=1
+
+    - name: Restore local Turbo artifacts
+      if: inputs.turbo-cache == 'true' && !env.ACT && !(env.TURBO_API != '' && env.TURBO_TEAM != '' && env.TURBO_TOKEN != '' && env.TURBO_REMOTE_CACHE_SIGNATURE_KEY != '')
+      uses: actions/cache@v5
+      with:
+        path: .turbo/cache
+        key: ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ env.TURBO_PLATFORM }}-turbo-${{ github.job }}-${{ hashFiles('bun.lock') }}-
+
+    - name: Restore application compiler cache
+      if: (inputs.next-cache == 'nextjs' || inputs.next-cache == 'all') && !env.ACT
+      uses: actions/cache@v5
+      with:
+        path: apps/nextjs/.next/cache
+        key: ${{ env.TURBO_PLATFORM }}-nextjs-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ env.TURBO_PLATFORM }}-nextjs-${{ hashFiles('bun.lock') }}-
+
+    - name: Restore documentation compiler cache
+      if: (inputs.next-cache == 'docs' || inputs.next-cache == 'all') && !env.ACT
+      uses: actions/cache@v5
+      with:
+        path: apps/docs/.next/cache
+        key: ${{ env.TURBO_PLATFORM }}-docs-${{ hashFiles('bun.lock') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ env.TURBO_PLATFORM }}-docs-${{ hashFiles('bun.lock') }}-

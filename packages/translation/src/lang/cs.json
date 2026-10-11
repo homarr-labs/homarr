@@ -749,7 +749,10 @@
         "selectMultiple": "Vybrat více",
         "cancelMultiple": "Opustit vícenásobný výběr",
         "customApplication": "Vlastní aplikace",
-        "application": "Žádost"
+        "application": "Žádost",
+        "backToApps": "Zpět do aplikací",
+        "createAndAdd": "Vytvořit a přidat",
+        "createAnother": "Vytvořit a pokračovat"
       },
       "create": {
         "title": "Vytvořit novou aplikaci",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Přidat URL nebo aplikaci v nastavení widgetu"
+      "empty": "Přidat URL nebo aplikaci v nastavení widgetu",
+      "groups": {
+        "label": "Kategorie",
+        "placeholder": "Nová kategorie",
+        "add": "Přidat kategorii",
+        "remove": "Odstranit kategorii {name}",
+        "rename": "Název kategorie pro {name}",
+        "assign": "Kategorie pro {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Kontejnery k filtrování"
         },
+        "filterCaseSensitive": {
+          "label": "Rozlišovat velikost písmen"
+        },
+        "filterAllowWildcards": {
+          "label": "Povolit zástupné znaky",
+          "description": "Použijte * pro nulu nebo více znaků."
+        },
         "filterIsWhitelist": {
           "label": "Filtrovat jako seznam povolených"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Žádná aplikace",
         "description": "Klikněte na <here></here> pro vytvoření nové aplikace",
-        "quickCreate": "Vytvořit aplikaci za běhu"
+        "quickCreate": "Vytvořit aplikaci za běhu",
+        "create": "Vytvořit aplikaci"
       },
       "error": {
         "noIntegration": "Nebyla vybrána žádná integrace",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Zobrazit dokončené ostatní položky"
         },
+        "includeArchivedHistory": {
+          "label": "Zahrnout archivovanou historii SABnzbd",
+          "description": "Zobrazit úlohy přesunuté do archivu."
+        },
+        "historyWindowDays": {
+          "label": "Okno archivované historie (dny)",
+          "description": "Limit dokončených SABnzbd historie na mnoho dní. Zvyšte limit položek pro zobrazení více výsledků."
+        },
         "activeTorrentThreshold": {
           "label": "Skrýt dokončené torrenty pod touto hranicí (v kiB/s)"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Omezení řádků popisu"
+        },
+        "descriptionMaxLength": {
+          "label": "Maximální délka popisu",
+          "description": "Maximální počet znaků uchovaných z popisu kanálu"
         },
         "maximumAmountPosts": {
           "label": "Limit počtu příspěvků"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Zobrazit graf sítě"
         },
+        "showGpuUsage": {
+          "label": "Zobrazit graf využití GPU"
+        },
+        "showGpuMemory": {
+          "label": "Zobrazit graf paměti GPU"
+        },
+        "showGpuPower": {
+          "label": "Zobrazit graf napájení GPU"
+        },
         "showDockerCpu": {
           "label": "Zobrazit graf CPU Dockeru"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Síťový provoz veřejných rozhraní",
           "sent": "Odesláno",
           "recv": "Přijato"
+        },
+        "gpuUsage": {
+          "title": "Využití grafiky",
+          "subtitle": "Využití podle GPU"
+        },
+        "gpuMemory": {
+          "title": "Paměť GPU",
+          "subtitle": "VRAM používá GPU"
+        },
+        "gpuPower": {
+          "title": "Energie GPU",
+          "subtitle": "Vysílání pomocí GPU"
         },
         "dockerCpu": {
           "title": "Využití CPU Dockeru",
@@ -6118,6 +6171,15 @@
           "notice": "Chcete-li tuto stránku skrýt, požádejte správce serveru o nastavení domovské plochy pro server"
         }
       }
+    },
+    "snapshot": {
+      "take": "Pořídit snímek stavu šachu",
+      "description": "Stáhněte si opravený snímek pro připojení k hlášení o chybě a pomozte nám reprodukovat vaše rozložení",
+      "downloaded": "Bojový snímek byl stažen",
+      "downloadedDescription": "Připojte JSON a snímek obrazovky ve stejné velikosti okna k hlášení o chybě. Snapshot zahrnuje rozvržení, nastavení, vlastní CSS, možnosti widgetů a načtená data s opraveným privátním textem, URL a přihlašovacími údaji.",
+      "playground": "Otevírací deska",
+      "failed": "Nelze zachytit snímek desky",
+      "failedDescription": "Nelze bezpečně exportovat data z tabule, nebo snímek přesahuje 10 MB."
     }
   },
   "layout": {

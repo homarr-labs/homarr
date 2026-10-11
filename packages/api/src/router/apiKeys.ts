@@ -37,7 +37,7 @@ export const apiKeysRouter = createTRPCRouter({
     .requiresPermission("admin")
     .meta({
       mcp: {
-        enabled: true,
+        enabled: false,
         description: "Create a new API key for the current user (admin only)",
       },
     })

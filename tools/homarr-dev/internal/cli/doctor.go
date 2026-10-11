@@ -56,7 +56,7 @@ func (a *App) doctorCommand() *cobra.Command {
 			}
 
 			if _, err := exec.LookPath("homarr"); err != nil {
-				optional("homarr is not on PATH", "use `pnpm dev:cli -- ...` or run `pnpm dev:cli:install`")
+				optional("homarr is not on PATH", "use `bun run dev:cli -- ...` or run `bun run dev:cli:install`")
 			} else {
 				pass("homarr is on PATH", "")
 			}

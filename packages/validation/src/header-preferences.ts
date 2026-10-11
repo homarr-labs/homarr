@@ -111,6 +111,20 @@ export const headerPreferencesSchema = z
 
 export type HeaderPreferences = z.infer<typeof headerPreferencesSchema>;
 
+export const headerPreferencesPatchSchema = z.strictObject({
+  version: z.literal(headerPreferencesVersion).optional(),
+  visible: headerPreferencesSchema.shape.visible.optional(),
+  searchDisplay: headerPreferencesSchema.shape.searchDisplay.optional(),
+  logoDisplay: headerPreferencesSchema.shape.logoDisplay.removeDefault().optional(),
+  zones: z
+    .strictObject({
+      left: headerItemListSchema.optional(),
+      center: headerItemListSchema.optional(),
+      right: headerItemListSchema.optional(),
+    })
+    .optional(),
+});
+
 const legacyHeaderItemIds = ["logo", "search", "boardSwitcher", "assistant", "docker", "user"] as const;
 type LegacyHeaderItemId = (typeof legacyHeaderItemIds)[number];
 

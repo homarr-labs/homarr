@@ -63,13 +63,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: pnpm/action-setup@v6
-        if: env.SKIP_RELEASE == 'false'
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 24.18.0
-          package-manager-cache: false
+          bun-version: 1.4.2
       - name: Verify major release intent
         if: env.SKIP_RELEASE == 'false'
         run: |
@@ -92,7 +89,7 @@ jobs:
           exit 1
       - name: Install dependencies
         if: env.SKIP_RELEASE == 'false'
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
       - name: Run Semantic Release
         if: env.SKIP_RELEASE == 'false'
         env:
@@ -102,7 +99,7 @@ jobs:
           GIT_COMMITTER_NAME: "Releases Homarr"
           GIT_COMMITTER_EMAIL: "175486441+homarr-releases[bot]@users.noreply.github.com"
         run: |
-          pnpm release
+          bun run release
       - name: Read semver output
         # We read the last tag either from the created release or from the current branch, this is to rerun the deployment job for the currently released version when it failed
         if: env.SKIP_RELEASE == 'false' || github.ref_name == 'main' || github.ref_name == 'beta'

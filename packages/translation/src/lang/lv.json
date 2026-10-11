@@ -749,7 +749,10 @@
         "selectMultiple": "Atlasīt vairākas",
         "cancelMultiple": "Iziet no vairākkārtējas atlases",
         "customApplication": "Pielāgota lietotne",
-        "application": "Lietotne"
+        "application": "Lietotne",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Izveidot jaunu lietotni",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Logrīka iestatījumos pievienojiet URL vai lietotni"
+      "empty": "Logrīka iestatījumos pievienojiet URL vai lietotni",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Filtrējamie konteineri"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtrēt kā atļauto sarakstu"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Lietotne nav atrasta",
         "description": "Noklikšķiniet <here></here>, lai izveidotu jaunu lietotni",
-        "quickCreate": "Izveidot lietotni uzreiz"
+        "quickCreate": "Izveidot lietotni uzreiz",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nav atlasīta integrācija",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Rādīt pabeigtus dažādus ierakstus"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Paslēpt pabeigtos torrentus zem šī sliekšņa (KiB/s)"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Apraksta rindu ierobežojums"
+        },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
         },
         "maximumAmountPosts": {
           "label": "Ziņu skaita ierobežojums"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Rādīt tīkla diagrammu"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Rādīt Docker CPU diagrammu"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Publisko interfeisu tīkla trafika",
           "sent": "Nosūtīts",
           "recv": "Saņemts"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU lietojums",
@@ -6118,6 +6171,15 @@
           "notice": "Lai šī lapa pazustu, lūdziet servera administratoram iestatīt servera sākumlapas tāfeli"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

@@ -783,6 +783,7 @@ export default function DownloadClientsWidget({
           {queryIndicators}
         </Box>
         <HomarrDataTable
+          preserveColumnWidths
           isEditMode={isEditMode}
           cellPadding={`${size.cellPadding}px 8px`}
           fetching={isFetching && (currentItems?.length ?? 0) === 0}

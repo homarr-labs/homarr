@@ -62,16 +62,6 @@ interface BeszelStatsViewProps {
   onSwitchToHistorical?: () => void;
 }
 
-const MIN_CHART_HEIGHT = 64;
-const PANEL_ROW_OVERHEAD = 25;
-const GRID_ROW_GAP = 16;
-
-const computeChartHeight = (availableHeight: number | undefined, rowCount: number) => {
-  if (availableHeight === undefined || rowCount <= 0) return CHART_HEIGHT;
-  const perRow = (availableHeight - (rowCount - 1) * GRID_ROW_GAP) / rowCount - PANEL_ROW_OVERHEAD;
-  return Math.max(MIN_CHART_HEIGHT, Math.floor(perRow));
-};
-
 const whenVisible = <T,>(visible: boolean, data: T | undefined) => (visible ? data : undefined);
 
 export function BeszelStatsView({
@@ -334,17 +324,17 @@ export function BeszelStatsView({
         (visibility.dockerNetwork && dockerNetworkData.length > 0 ? 1 : 0)
       : 0);
   const effectiveColumns = Math.min(columns, Math.max(1, renderedPanelCount)) as 1 | 2;
-  const rowCount = Math.ceil(renderedPanelCount / effectiveColumns);
-  const chartHeight = computeChartHeight(availableHeight, rowCount);
 
+  // Keep each chart at its readable height until every row fits; then share the remaining space.
+  // This height is already in layout pixels, so avoid Mantine's rem-based scale compensation.
   return (
-    <SimpleGrid cols={effectiveColumns} spacing="md">
+    <SimpleGrid cols={effectiveColumns} spacing="md" style={{ minHeight: availableHeight, gridAutoRows: "1fr" }}>
       {visibility.cpu && cpuData.length > 0 && (
         <BeszelChartPanel
           title={t("chart.cpu.title")}
           subtitle={t("chart.cpu.subtitle")}
           chartProps={{
-            h: chartHeight,
+            h: CHART_HEIGHT,
             withXAxis: showXAxis,
             data: cpuData,
             series: series.cpu,
@@ -359,7 +349,7 @@ export function BeszelStatsView({
           title={t("chart.memory.title")}
           subtitle={t("chart.memory.subtitle")}
           chartProps={{
-            h: chartHeight,
+            h: CHART_HEIGHT,
             withXAxis: showXAxis,
             data: memoryData,
             type: "stacked",
@@ -374,7 +364,7 @@ export function BeszelStatsView({
           title={t("chart.disk.title")}
           subtitle={t("chart.disk.subtitle")}
           chartProps={{
-            h: chartHeight,
+            h: CHART_HEIGHT,
             withXAxis: showXAxis,
             data: diskData,
             type: "stacked",
@@ -389,7 +379,7 @@ export function BeszelStatsView({
           title={t("chart.diskIO.title")}
           subtitle={t("chart.diskIO.subtitle")}
           chartProps={{
-            h: chartHeight,
+            h: CHART_HEIGHT,
             withXAxis: showXAxis,
             data: diskIOData,
             series: diskIOSeries,
@@ -403,7 +393,7 @@ export function BeszelStatsView({
           title={t("chart.network.title")}
           subtitle={t("chart.network.subtitle")}
           chartProps={{
-            h: chartHeight,
+            h: CHART_HEIGHT,
             withXAxis: showXAxis,
             data: networkData,
             series: series.network,
@@ -419,7 +409,7 @@ export function BeszelStatsView({
               title={t("chart.gpuUsage.title")}
               subtitle={t("chart.gpuUsage.subtitle")}
               chartProps={{
-                h: chartHeight,
+                h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuUsageData,
                 series: gpuSeries,
@@ -434,7 +424,7 @@ export function BeszelStatsView({
               title={t("chart.gpuMemory.title")}
               subtitle={t("chart.gpuMemory.subtitle")}
               chartProps={{
-                h: chartHeight,
+                h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuMemoryData,
                 series: gpuSeries,
@@ -448,7 +438,7 @@ export function BeszelStatsView({
               title={t("chart.gpuPower.title")}
               subtitle={t("chart.gpuPower.subtitle")}
               chartProps={{
-                h: chartHeight,
+                h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuPowerData,
                 series: gpuSeries,
@@ -466,7 +456,7 @@ export function BeszelStatsView({
               title={t("chart.dockerCpu.title")}
               subtitle={t("chart.dockerCpu.subtitle")}
               chartProps={{
-                h: chartHeight,
+                h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: dockerCpuData,
                 type: "stacked",
@@ -481,7 +471,7 @@ export function BeszelStatsView({
               title={t("chart.dockerMemory.title")}
               subtitle={t("chart.dockerMemory.subtitle")}
               chartProps={{
-                h: chartHeight,
+                h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: dockerMemoryData,
                 type: "stacked",
@@ -496,7 +486,7 @@ export function BeszelStatsView({
               title={t("chart.dockerNetwork.title")}
               subtitle={t("chart.dockerNetwork.subtitle")}
               chartProps={{
-                h: chartHeight,
+                h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: dockerNetworkData,
                 series: containerSeries,

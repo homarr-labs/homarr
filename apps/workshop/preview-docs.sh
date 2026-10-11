@@ -17,7 +17,7 @@ remote_api_url=${remote_api_url%/}
 remote_api_url=${remote_api_url%/api}
 
 if [ ! -f apps/docs/out/404.html ]; then
-  echo 'Build the docs first: pnpm --filter @homarr/docs build' >&2
+  echo 'Build the docs first: bun run --filter @homarr/docs build' >&2
   exit 1
 fi
 

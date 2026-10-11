@@ -38,6 +38,7 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: dev
+          patchList: fix, bugfix, perf, refactor, test, tests, revert
           noNewCommitBehavior: silent
           noVersionBumpBehavior: silent
       - name: No release needed

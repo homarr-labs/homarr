@@ -143,18 +143,12 @@ export const SectionGrid = ({
   const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
-  const railBaselineRef = useRef({ key: "", rowCount: 1 });
-  const railBaselineKey = `${section.id}:${currentLayoutId}`;
-  if (railBaselineRef.current.key !== railBaselineKey) {
-    railBaselineRef.current = { key: railBaselineKey, rowCount: Math.max(1, getLayoutRowCount(placements)) };
-  }
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   if (isRail) {
-    // Existing taller rails remain scrollable, but collision pushes cannot grow this cap.
-    rowCount = Math.max(railViewportRowCount, railBaselineRef.current.rowCount);
+    rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
-  const maxRowCount = section.kind === "container" || isRail ? rowCount : null;
+  const maxRowCount = section.kind === "container" ? rowCount : null;
   const placementMaxRowCount = maxRowCount;
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
@@ -181,7 +175,19 @@ export const SectionGrid = ({
     allocatedViewportHeight *= parentRowScale;
   }
   const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
-  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset);
+  let nestedHeaderInset = 0;
+  if (
+    section.kind === "container" &&
+    (section.options.collapsible || (section.options.showLabel && section.options.title)) &&
+    innerSections.some(
+      (child) => child.yOffset === 0 && (child.options.collapsible || (child.options.showLabel && child.options.title)),
+    )
+  ) {
+    // Separate floating parent/child headers while retaining the persisted cell footprint.
+    nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveCanvasScale;
+  }
+  nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedViewportHeight - outerCardInset - 1));
+  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset);
   // Fit columns to the card width. Rows fit the available height independently
   // without creating horizontal gutters or distorting text and icons.
   let containerContentScale = 1;
@@ -294,6 +300,7 @@ export const SectionGrid = ({
         style={
           {
             width: logicalWidth,
+            marginTop: nestedHeaderInset,
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
             "--board-grid-content-scale": containerContentScale,

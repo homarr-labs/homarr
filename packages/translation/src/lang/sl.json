@@ -749,7 +749,10 @@
         "selectMultiple": "Izberi več",
         "cancelMultiple": "Izhod iz večkratne izbire",
         "customApplication": "Prilagojena aplikacija",
-        "application": "Aplikacija"
+        "application": "Aplikacija",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Ustvari novo aplikacijo",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Dodaj URL ali aplikacijo v nastavitvah gradnika"
+      "empty": "Dodaj URL ali aplikacijo v nastavitvah gradnika",
+      "groups": {
+        "label": "",
+        "placeholder": "Nova kategorija",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Vsebniki za filtriranje"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtriraj kot seznam dovoljenih"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Ni najdene aplikacije",
         "description": "Kliknite <here></here>, da ustvarite novo aplikacijo",
-        "quickCreate": "Ustvari aplikacijo sproti"
+        "quickCreate": "Ustvari aplikacijo sproti",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nobena integracija ni izbrana",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Prikaži razne vnose, označene kot dokončane"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Skrij dokončane torrente pod tem pragom"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Omejitev vrstic opisa"
+        },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
         },
         "maximumAmountPosts": {
           "label": "Omejitev števila objav"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Prikaži grafikon omrežja"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Prikaži grafikon CPE Dockerja"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Omrežni promet javnih vmesnikov",
           "sent": "Poslano",
           "recv": "Prejeto"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Poraba CPE Dockerja",
@@ -6118,6 +6171,15 @@
           "notice": "Če želite skriti to stran, prosite skrbnika strežnika, naj za strežnik nastavi domačo tablo"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

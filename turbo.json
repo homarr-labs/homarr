@@ -1,6 +1,8 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "remoteCache": { "signature": true },
+  "remoteCache": {
+    "signature": true
+  },
   "globalEnv": ["CI", "NODE_ENV", "SKIP_ENV_VALIDATION"],
   "ui": "stream",
   "futureFlags": {
@@ -9,7 +11,7 @@
   "tasks": {
     "topo": {
       "dependsOn": ["^topo"],
-      "inputs": ["package.json"]
+      "inputs": ["$TURBO_DEFAULT$"]
     },
     "build": {
       "dependsOn": ["^build"],
@@ -19,6 +21,7 @@
         "!**/*.test.ts",
         "!**/*.test.tsx",
         "!**/*.spec.ts",
+        "!**/*.spec.tsx",
         "!**/__tests__/**",
         "!**/*.md",
         "!**/*.mdx",
@@ -27,30 +30,27 @@
         "!**/LICENSE*",
         "!**/*.stories.{ts,tsx}"
       ],
-      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".output/**", ".vercel/output/**", "build/**"]
-    },
-    "@homarr/cli#build": {
-      "outputs": ["cli.cjs"]
-    },
-    "@homarr/db#build": {
-      "outputs": ["migrations/sqlite/migrate.cjs", "migrations/postgresql/migrate.cjs"]
-    },
-    "@homarr/docs#build": {
-      "env": ["TURBO_PLATFORM", "HOMARR_WEBSITE_URL", "WORKSHOP_API_URL", "WORKSHOP_WEB_URL", "KAPA_WEBSITE_ID"],
-      "inputs": ["$TURBO_DEFAULT$", "../../packages/definitions/src/docs/**"],
-      "outputs": [".next/**", "!.next/cache/**", "out/**", "next-env.d.ts"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "!.next/dev/**",
+        "next-env.d.ts",
+        ".output/**",
+        ".vercel/output/**",
+        "build/**"
+      ]
     },
     "dev": {
       "persistent": true,
       "cache": false
     },
     "format": {
-      "inputs": ["$TURBO_DEFAULT$"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxfmtrc.json"],
       "outputLogs": "new-only"
     },
     "lint": {
       "dependsOn": ["^topo"],
-      "inputs": ["$TURBO_DEFAULT$"]
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"]
     },
     "typecheck": {
       "dependsOn": ["^topo"],
@@ -63,5 +63,6 @@
     "//#clean": {
       "cache": false
     }
-  }
+  },
+  "agentGuidance": false
 }

@@ -77,6 +77,13 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
         filterIsWhitelist: factory.switch({
           defaultValue: false,
         }),
+        filterCaseSensitive: factory.switch({
+          defaultValue: true,
+        }),
+        filterAllowWildcards: factory.switch({
+          defaultValue: false,
+          withDescription: true,
+        }),
         columnOrder: factory.text({ defaultValue: "" }),
         columnWidths: factory.text({ defaultValue: "" }),
       }),

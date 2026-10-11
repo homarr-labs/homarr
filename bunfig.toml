@@ -1,0 +1,7 @@
+[install]
+# Share compatible dependencies across all workspaces at the repository root.
+linker = "hoisted"
+
+[run]
+# Preserve Node runtimes for tools with a Node shebang.
+bun = false

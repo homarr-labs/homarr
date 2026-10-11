@@ -61,6 +61,7 @@ export default function BazarrWidget({
   width,
   height,
   displayMode,
+  displayScale = 1,
 }: WidgetComponentProps<"bazarr">) {
   const t = useI18n("widget.bazarr");
   const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
@@ -84,7 +85,9 @@ export default function BazarrWidget({
   const visibleStatKeys = getVisibleBazarrStatKeys(options, displayMode);
 
   const gridCols = getGridCols(width, height, visibleStatKeys.length);
-  const iconSize = getIconSize(Math.min(width, height));
+  const iconSize = Math.max(20, getIconSize(Math.min(width, height)));
+  let responsiveHeight = height;
+  if (displayMode !== "advanced") responsiveHeight *= displayScale;
 
   if (visibleStatKeys.length === 0) {
     return (
@@ -102,7 +105,7 @@ export default function BazarrWidget({
     <div className={classes.root}>
       <div
         className={classes.grid}
-        data-short={height < 120 || undefined}
+        data-short={(responsiveHeight < 120 && gridCols < visibleStatKeys.length) || undefined}
         style={{ "--stat-cols": gridCols } as CSSProperties}
       >
         {visibleStatKeys.map((statKey) => {

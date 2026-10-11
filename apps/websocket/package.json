@@ -11,7 +11,7 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "dev": "pnpm with-env tsx ./src/main.ts",
+    "dev": "bun run with-env tsx ./src/main.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit",
@@ -27,7 +27,6 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "dotenv": "catalog:",
-    "tsx": "catalog:",
     "ws": "catalog:"
   },
   "devDependencies": {

@@ -50,20 +50,20 @@ The repository's host-side CLI can build the current checkout and run it as a na
 ![Homarr developer CLI showing pull requests, local images, and PR CI status](./img/homarr-dev-cli.png)
 
 ```sh
-pnpm cli harness setup feature-board
+bun run cli harness setup feature-board
 ```
 
 This creates `homarr:feature-board`, starts it with persistent demo data, and prints the assigned URL. Query the port
 again with:
 
 ```sh
-pnpm cli harness port feature-board
+bun run cli harness port feature-board
 ```
 
 Pass environment overrides with repeated `--env` options:
 
 ```sh
-pnpm cli harness setup feature-board \
+bun run cli harness setup feature-board \
   --env WORKSHOP_WEB_URL=https://example.test \
   --env FEATURE_FLAG=true
 ```

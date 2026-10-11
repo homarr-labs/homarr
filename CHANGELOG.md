@@ -1,3 +1,9 @@
+## [2.4.1](https://github.com/homarr-labs/homarr/compare/v2.4.0...v2.4.1) (2026-10-10)
+
+## [2.4.0](https://github.com/homarr-labs/homarr/compare/v2.3.0...v2.4.0) (2026-10-09)
+
+## [2.3.0](https://github.com/homarr-labs/homarr/compare/v2.2.0...v2.3.0) (2026-10-07)
+
 ## [2.2.0](https://github.com/homarr-labs/homarr/compare/v2.1.2...v2.2.0) (2026-10-05)
 
 ## [2.1.2](https://github.com/homarr-labs/homarr/compare/v2.1.1...v2.1.2) (2026-10-04)

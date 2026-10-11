@@ -8,7 +8,10 @@ if (
   /^(mysql|mariadb):/i.test(process.env.DB_URL ?? "")
 ) {
   throw new Error(
-    "MySQL and MariaDB are no longer supported. Migrate your database to SQLite or PostgreSQL before starting Homarr.",
+    "MySQL and MariaDB are no longer supported in Homarr v2. Migrate your database to SQLite or PostgreSQL before starting Homarr. " +
+      "Keep your previous Homarr image and back up your database before upgrading. " +
+      "For SQLite conversion instructions and PostgreSQL guidance for shared deployments, see https://homarr.dev/docs/advanced/mysql-to-sqlite. " +
+      "Changing DB_DRIVER or DB_URL alone does not migrate your data.",
   );
 }
 

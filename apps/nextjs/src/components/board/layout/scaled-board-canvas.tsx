@@ -5,7 +5,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Box } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
+import { calculateBoardUiScale } from "@homarr/boards/scale";
+
 import classes from "./scaled-board-canvas.module.css";
+
+export { calculateBoardUiScale } from "@homarr/boards/scale";
 
 const BoardCanvasScaleContext = createContext(1);
 
@@ -16,12 +20,6 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
   if (availableWidth <= 0 || logicalWidth <= 0) return 1;
 
   return availableWidth / logicalWidth;
-};
-
-export const calculateBoardUiScale = (canvasScale: number) => {
-  if (!Number.isFinite(canvasScale) || canvasScale <= 0) return 1;
-
-  return canvasScale < 1 ? 1 / canvasScale : 1;
 };
 
 interface ScaledBoardCanvasProps {

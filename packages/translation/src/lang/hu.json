@@ -749,7 +749,10 @@
         "selectMultiple": "Több kiválasztása",
         "cancelMultiple": "Többes kijelölés bezárása",
         "customApplication": "Egyéni alkalmazás",
-        "application": "Alkalmazás"
+        "application": "Alkalmazás",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Új alkalmazás készítése",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Adjon hozzá egy URL-t vagy alkalmazást a widget beállításaiban"
+      "empty": "Adjon hozzá egy URL-t vagy alkalmazást a widget beállításaiban",
+      "groups": {
+        "label": "",
+        "placeholder": "Új kategória",
+        "add": "Kategória hozzáadása",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Szűrendő konténerek"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Szűrés fehérlistával"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nem található alkalmazás",
         "description": "Új alkalmazás létrehozásához kattints <here></here>",
-        "quickCreate": "Alkalmazás létrehozása pillanatok alatt"
+        "quickCreate": "Alkalmazás létrehozása pillanatok alatt",
+        "create": "Alkalmazás létrehozása"
       },
       "error": {
         "noIntegration": "Nincs kiválasztva integráció",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Mutassa a befejezettként megjelölt Vegyes bejegyzéseket"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "A küszöbérték alatt lévő befejezett torrenteket elrejtés"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Leírás sorlimit"
+        },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
         },
         "maximumAmountPosts": {
           "label": "Bejegyzések számának korlátja"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Hálózat diagram mutatása"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Docker CPU diagram mutatása"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "A nyilvános interfészek hálózati forgalma",
           "sent": "Küldött",
           "recv": "Fogadott"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU Használat",
@@ -6118,6 +6171,15 @@
           "notice": "Az oldal eltüntetéséhez kérd meg a szerver adminisztrátorát, hogy állítson be egy kezdőlap táblát a szervernek"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

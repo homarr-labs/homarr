@@ -29,16 +29,12 @@ jobs:
         uses: actions/checkout@v7
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
-
-      - uses: pnpm/action-setup@v6
-      - name: Use Node.js
-        uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24.18.0
-          cache: "pnpm"
+          bun-version: 1.4.2
 
       - name: Run update script
-        run: node ./scripts/update-contributors.mjs
+        run: bun ./scripts/update-contributors.mjs
 
       - name: Commit changes
         env:

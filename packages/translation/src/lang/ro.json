@@ -749,7 +749,10 @@
         "selectMultiple": "Selectează mai multe",
         "cancelMultiple": "Ieșiți din multi-selectare",
         "customApplication": "Aplicație personalizată",
-        "application": "Cerere"
+        "application": "Cerere",
+        "backToApps": "Înapoi la aplicații",
+        "createAndAdd": "Creează și adaugă",
+        "createAnother": "Creează și continuă"
       },
       "create": {
         "title": "Creează o aplicație nouă",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Adăugați un URL sau o aplicație în setările widget-ului"
+      "empty": "Adăugați un URL sau o aplicație în setările widget-ului",
+      "groups": {
+        "label": "Categorii",
+        "placeholder": "Categorie nouă",
+        "add": "Adaugă categorie",
+        "remove": "Elimină categoria {name}",
+        "rename": "Numele categoriei pentru {name}",
+        "assign": "Categorie pentru {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "Războinic de arhivă",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Containere de filtrat"
         },
+        "filterCaseSensitive": {
+          "label": "Sensibil la caz"
+        },
+        "filterAllowWildcards": {
+          "label": "Permite metacaractere",
+          "description": "Folosește * pentru zero sau mai multe caractere."
+        },
         "filterIsWhitelist": {
           "label": "Filtrare ca whitelist"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Nicio aplicație găsită",
         "description": "Apăsați <here></here> pentru a crea o aplicație nouă",
-        "quickCreate": "Creează o aplicație pe zbor"
+        "quickCreate": "Creează o aplicație pe zbor",
+        "create": "Creare aplicație"
       },
       "error": {
         "noIntegration": "Nicio integrare selectată",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Arată diverse intrări marcate ca completate"
         },
+        "includeArchivedHistory": {
+          "label": "Include istoricul SABnzbd arhivat",
+          "description": "Arată joburile mutate în Arhivă."
+        },
+        "historyWindowDays": {
+          "label": "Fereastra de istorie arhivată (zile)",
+          "description": "Limita istoricului SABnzbd terminat la atâtea zile. Crește limita de articole pentru a arăta mai multe rezultate."
+        },
         "activeTorrentThreshold": {
           "label": "Ascunde torentul completat sub acest prag (în kiB/s)"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Cimbru linie descriere"
+        },
+        "descriptionMaxLength": {
+          "label": "Lungime max descriere",
+          "description": "Numărul maxim de caractere pentru a fi păstrat din descrierea fluxului"
         },
         "maximumAmountPosts": {
           "label": "Limită sumă postări"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Arată graficul rețelei"
         },
+        "showGpuUsage": {
+          "label": "Arată graficul de utilizare GPU"
+        },
+        "showGpuMemory": {
+          "label": "Arată graficul de memorie GPU"
+        },
+        "showGpuPower": {
+          "label": "Arată graficul puterii GPU"
+        },
         "showDockerCpu": {
           "label": "Arată graficul CPU Docker"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Trafic de rețea al interfețelor publice",
           "sent": "Trimis",
           "recv": "Primit"
+        },
+        "gpuUsage": {
+          "title": "Utilizare GPU",
+          "subtitle": "Utilizare de GPU"
+        },
+        "gpuMemory": {
+          "title": "Memorie GPU",
+          "subtitle": "VRAM folosit de GPU"
+        },
+        "gpuPower": {
+          "title": "Puterea GPU",
+          "subtitle": "Redare prin GPU"
         },
         "dockerCpu": {
           "title": "Utilizare CPU Docker",
@@ -6118,6 +6171,15 @@
           "notice": "Pentru a face această pagină să dispară, cereți administratorului serverului să seteze o tabelă de pornire pentru server"
         }
       }
+    },
+    "snapshot": {
+      "take": "Fă instantaneu stării de bord",
+      "description": "Descarcă un instantaneu redactat pentru a atașa un raport de eroare și ajută-ne să reproducem aspectul tău",
+      "downloaded": "Instantaneul forumului descărcat",
+      "downloadedDescription": "Atașează JSON și o captură de ecran la aceeași dimensiune a ferestrei la raportul de erori. Imaginea include layout, settings, custom CSS, options widget-uri și date încărcate, cu text privat, URL-uri și acreditări redactate.",
+      "playground": "Deschide locul de joacă",
+      "failed": "Imposibil de captat instantaneul forumului",
+      "failedDescription": "Datele secţiunii nu au putut fi exportate în condiţii de siguranţă, sau imaginea depăşeşte 10 MB."
     }
   },
   "layout": {

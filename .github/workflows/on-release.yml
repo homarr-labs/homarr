@@ -25,7 +25,7 @@ jobs:
           ref: dev
       - name: Setup
         uses: ./tooling/github/setup
-      - run: pnpm run scripts:update-bug-report-template
+      - run: bun run scripts:update-bug-report-template
         env:
           NEXT_VERSION: ${{ github.event.release.tag_name }}
 

@@ -265,6 +265,7 @@ async function setupUrlRestrictionAsync(dbUrls: string[]) {
               enableRtl: false,
               hideDescription: false,
               textLinesClamp: 3,
+              descriptionMaxLength: 250,
               maximumAmountPosts: 5,
               showPosterImage: true,
             } satisfies WidgetComponentProps<"rssFeed">["options"]),

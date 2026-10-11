@@ -18,7 +18,8 @@ const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 const hexColorNullableSchema = hexColorSchema
   .or(z.literal(""))
   .nullable()
-  .transform((value) => (value?.trim().length === 0 ? null : value));
+  .transform((value) => (value?.trim().length === 0 ? null : value))
+  .pipe(z.string().nullable());
 
 export const boardNameSchema = z
   .string()
@@ -50,7 +51,8 @@ export const boardChangeVisibilitySchema = z.object({
 const trimmedNullableString = z
   .string()
   .nullable()
-  .transform((value) => (value?.trim().length === 0 ? null : value));
+  .transform((value) => (value?.trim().length === 0 ? null : value))
+  .pipe(z.string().nullable());
 
 export const boardSavePartialSettingsSchema = z
   .object({

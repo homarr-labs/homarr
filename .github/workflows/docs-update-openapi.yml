@@ -27,7 +27,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Generate and validate OpenAPI spec
-        run: pnpm scripts:update-openapi
+        run: bun run scripts:update-openapi
 
       - name: Commit updated spec
         uses: EndBug/add-and-commit@v10

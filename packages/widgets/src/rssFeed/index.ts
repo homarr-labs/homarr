@@ -18,6 +18,7 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
     widgetQueryInputMatches(input, {
       urls: scope.options.feedUrls,
       maximumAmountPosts: scope.options.maximumAmountPosts,
+      descriptionMaxLength: scope.options.descriptionMaxLength,
     }),
   refetchInterval: null,
   errors: {
@@ -38,6 +39,10 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       textLinesClamp: factory.number({
         defaultValue: 5,
         validate: z.number().min(1).max(50),
+      }),
+      descriptionMaxLength: factory.number({
+        defaultValue: 250,
+        validate: z.number().int().min(1).max(5000),
       }),
       maximumAmountPosts: factory.number({
         defaultValue: 100,

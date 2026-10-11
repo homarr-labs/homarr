@@ -25,10 +25,7 @@ describe("Custom Widget bundle budget", () => {
   test("finds the dynamic module from its runtime chunk when server metadata is absent", async () => {
     const nextRoot = await mkdtemp(join(tmpdir(), "homarr-custom-widget-bundle-"));
     const serverChunk = join(nextRoot, "server/chunks/ssr/packages_widgets_src_custom-api_component_test.js");
-    const manifestPath = join(
-      nextRoot,
-      "standalone/apps/nextjs/.next/server/app/[locale]/(home)/(board)/page/react-loadable-manifest.json",
-    );
+    const manifestPath = join(nextRoot, "server/app/[locale]/(home)/(board)/page/react-loadable-manifest.json");
     const runtimeChunk = join(nextRoot, "static/chunks/custom-widget-runtime.js");
     try {
       await Promise.all([

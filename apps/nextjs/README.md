@@ -6,21 +6,21 @@ widget, translation, and UI packages from this monorepo.
 Run commands from the repository root:
 
 ```sh
-pnpm install --frozen-lockfile
+bun install --frozen-lockfile
 cp .env.example .env
 ```
 
 Keep infrastructure running in the first terminal:
 
 ```sh
-pnpm docker:dev
+bun run docker:dev
 ```
 
 Apply migrations and start the application in a second terminal:
 
 ```sh
-pnpm db:migration:sqlite:run
-pnpm dev
+bun run db:migration:sqlite:run
+bun run dev
 ```
 
 The app listens on `http://127.0.0.1:3000`. Configure an absolute writable `DB_URL`, `AUTH_SECRET`, and
@@ -29,8 +29,8 @@ The app listens on `http://127.0.0.1:3000`. Configure an absolute writable `DB_U
 To test Custom Widgets against a local Community Workshop, start PocketBase and the docs in separate terminals:
 
 ```sh
-pnpm docker:workshop
-WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+bun run docker:workshop
+WORKSHOP_API_URL=http://127.0.0.1:8090 bun run dev:docs
 ```
 
 Then set:

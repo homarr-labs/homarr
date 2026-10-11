@@ -749,7 +749,10 @@
         "selectMultiple": "Pasirinkti kelias",
         "cancelMultiple": "Išeiti iš kelių pasirinkimo režimo",
         "customApplication": "Pasirinktinė programa",
-        "application": "Programa"
+        "application": "Programa",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Sukurti naują programėlę",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose"
+      "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Filtruotini konteineriai"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtruoti kaip leidžiamąjį sąrašą"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "Programėlė nerasta",
         "description": "Spustelėkite <here></here>, kad sukurtumėte naują programėlę",
-        "quickCreate": "Sukurti programėlę skrydžio metu"
+        "quickCreate": "Sukurti programėlę skrydžio metu",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nepasirinkta integracija",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Rodyti užbaigtais pažymėtus įvairius įrašus"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Slėpti baigtus torrent žemiau šios ribos"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Aprašymo eilučių apkarpymas"
+        },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
         },
         "maximumAmountPosts": {
           "label": "Įrašų skaičiaus riba"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Rodyti tinklo diagramą"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Rodyti Docker CPU diagramą"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Viešųjų sąsajų tinklo srautas",
           "sent": "Išsiųsta",
           "recv": "Gauta"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU naudojimas",
@@ -6118,6 +6171,15 @@
           "notice": "Kad šis puslapis išnyktų, paprašykite serverio administratoriaus nustatyti serverio pagrindinę suvestinę"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

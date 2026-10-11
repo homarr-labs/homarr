@@ -749,7 +749,10 @@
         "selectMultiple": "crwdns6733:0crwdne6733:0",
         "cancelMultiple": "crwdns6735:0crwdne6735:0",
         "customApplication": "crwdns6737:0crwdne6737:0",
-        "application": "crwdns6739:0crwdne6739:0"
+        "application": "crwdns6739:0crwdne6739:0",
+        "backToApps": "crwdns10899:0crwdne10899:0",
+        "createAndAdd": "crwdns10901:0crwdne10901:0",
+        "createAnother": "crwdns10903:0crwdne10903:0"
       },
       "create": {
         "title": "crwdns3164:0crwdne3164:0",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "crwdns7899:0crwdne7899:0"
+      "empty": "crwdns7899:0crwdne7899:0",
+      "groups": {
+        "label": "crwdns10905:0crwdne10905:0",
+        "placeholder": "crwdns10907:0crwdne10907:0",
+        "add": "crwdns10909:0crwdne10909:0",
+        "remove": "crwdns10911:0{name}crwdne10911:0",
+        "rename": "crwdns10913:0{name}crwdne10913:0",
+        "assign": "crwdns10915:0{name}crwdne10915:0",
+        "ungrouped": "crwdns10917:0crwdne10917:0"
+      }
     },
     "archiveTeamWarrior": {
       "name": "crwdns5635:0crwdne5635:0",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "crwdns8531:0crwdne8531:0"
         },
+        "filterCaseSensitive": {
+          "label": "crwdns10893:0crwdne10893:0"
+        },
+        "filterAllowWildcards": {
+          "label": "crwdns10895:0crwdne10895:0",
+          "description": "crwdns10897:0crwdne10897:0"
+        },
         "filterIsWhitelist": {
           "label": "crwdns8533:0crwdne8533:0"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "crwdns1138:0crwdne1138:0",
         "description": "crwdns1140:0crwdne1140:0",
-        "quickCreate": "crwdns2808:0crwdne2808:0"
+        "quickCreate": "crwdns2808:0crwdne2808:0",
+        "create": "crwdns10919:0crwdne10919:0"
       },
       "error": {
         "noIntegration": "crwdns1144:0crwdne1144:0",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "crwdns3154:0crwdne3154:0"
         },
+        "includeArchivedHistory": {
+          "label": "crwdns10861:0crwdne10861:0",
+          "description": "crwdns10863:0crwdne10863:0"
+        },
+        "historyWindowDays": {
+          "label": "crwdns10865:0crwdne10865:0",
+          "description": "crwdns10867:0crwdne10867:0"
+        },
         "activeTorrentThreshold": {
           "label": "crwdns8689:0crwdne8689:0"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "crwdns1360:0crwdne1360:0"
+        },
+        "descriptionMaxLength": {
+          "label": "crwdns10889:0crwdne10889:0",
+          "description": "crwdns10891:0crwdne10891:0"
         },
         "maximumAmountPosts": {
           "label": "crwdns1362:0crwdne1362:0"
@@ -5086,7 +5118,7 @@
     },
     "beszelSystemStats": {
       "name": "crwdns4905:0crwdne4905:0",
-      "description": "crwdns4907:0crwdne4907:0",
+      "description": "crwdns10869:0crwdne10869:0",
       "option": {
         "systemId": {
           "label": "crwdns5657:0crwdne5657:0",
@@ -5109,6 +5141,15 @@
         },
         "showNetwork": {
           "label": "crwdns4919:0crwdne4919:0"
+        },
+        "showGpuUsage": {
+          "label": "crwdns10871:0crwdne10871:0"
+        },
+        "showGpuMemory": {
+          "label": "crwdns10873:0crwdne10873:0"
+        },
+        "showGpuPower": {
+          "label": "crwdns10875:0crwdne10875:0"
         },
         "showDockerCpu": {
           "label": "crwdns4921:0crwdne4921:0"
@@ -5163,6 +5204,18 @@
           "subtitle": "crwdns4959:0crwdne4959:0",
           "sent": "crwdns4961:0crwdne4961:0",
           "recv": "crwdns4963:0crwdne4963:0"
+        },
+        "gpuUsage": {
+          "title": "crwdns10877:0crwdne10877:0",
+          "subtitle": "crwdns10879:0crwdne10879:0"
+        },
+        "gpuMemory": {
+          "title": "crwdns10881:0crwdne10881:0",
+          "subtitle": "crwdns10883:0crwdne10883:0"
+        },
+        "gpuPower": {
+          "title": "crwdns10885:0crwdne10885:0",
+          "subtitle": "crwdns10887:0crwdne10887:0"
         },
         "dockerCpu": {
           "title": "crwdns4965:0crwdne4965:0",
@@ -6118,6 +6171,15 @@
           "notice": "crwdns2472:0crwdne2472:0"
         }
       }
+    },
+    "snapshot": {
+      "take": "crwdns10921:0crwdne10921:0",
+      "description": "crwdns10923:0crwdne10923:0",
+      "downloaded": "crwdns10925:0crwdne10925:0",
+      "downloadedDescription": "crwdns10927:0crwdne10927:0",
+      "playground": "crwdns10929:0crwdne10929:0",
+      "failed": "crwdns10931:0crwdne10931:0",
+      "failedDescription": "crwdns10933:0crwdne10933:0"
     }
   },
   "layout": {

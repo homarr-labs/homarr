@@ -35,6 +35,7 @@ import { z } from "zod/v4";
 import { objectEntries } from "@homarr/common";
 import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { calculateBoardUiScale } from "@homarr/boards/scale";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -316,7 +317,12 @@ const WidgetEditPreview = ({
         ) : (
           <Box
             className={classes.previewViewport}
-            style={{ ...boardAppearance?.style, width: previewWidth, height: previewHeight }}
+            style={{
+              ...boardAppearance?.style,
+              "--board-canvas-ui-scale": calculateBoardUiScale(previewScale),
+              width: previewWidth,
+              height: previewHeight,
+            }}
           >
             <WidgetCardShell
               innerRef={cardRef}
@@ -356,7 +362,7 @@ const WidgetEditPreview = ({
                               integrationIds={state.integrationIds}
                               width={contentWidth || dimensions.width}
                               height={contentHeight || dimensions.height}
-                              displayScale={displayScale}
+                              displayScale={previewScale}
                               isEditMode={isPendingCustomWidget}
                               displayMode="compact"
                               boardId={boardId}
@@ -513,37 +519,44 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     setActiveIntegrationId(integrationId);
   };
 
-  const handleSubmit = form.onSubmit(async (values) => {
-    setIsSubmitting(true);
-    try {
-      const appSaved = showAppTab ? await (appEditRef.current?.submitIfDirty() ?? true) : true;
+  const handleSubmit = form.onSubmit(
+    async (values) => {
+      setIsSubmitting(true);
+      try {
+        let appSaved = true;
+        if (showAppTab) appSaved = await (appEditRef.current?.submitIfDirty() ?? false);
 
-      if (!appSaved) {
-        return;
-      }
-
-      for (const integrationEditHandle of integrationEditHandles.current.values()) {
-        const integrationSaved = await integrationEditHandle.submitIfDirty();
-        if (!integrationSaved) {
+        if (!appSaved) {
+          setActiveTab("app");
           return;
         }
-      }
 
-      innerProps.onSuccessfulEdit(
-        {
-          ...values,
-          advancedOptions: {
-            ...values.advancedOptions,
-            title: values.advancedOptions.title?.trim() || null,
+        for (const [integrationId, integrationEditHandle] of integrationEditHandles.current.entries()) {
+          const integrationSaved = await integrationEditHandle.submitIfDirty();
+          if (!integrationSaved) {
+            beginEditingIntegration(integrationId);
+            setActiveTab("integration");
+            return;
+          }
+        }
+
+        innerProps.onSuccessfulEdit(
+          {
+            ...values,
+            advancedOptions: {
+              ...values.advancedOptions,
+              title: values.advancedOptions.title?.trim() || null,
+            },
           },
-        },
-        previewSize ?? undefined,
-      );
-      actions.closeModal();
-    } finally {
-      setIsSubmitting(false);
-    }
-  });
+          previewSize ?? undefined,
+        );
+        actions.closeModal();
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    () => setActiveTab("widget"),
+  );
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     handleSubmit(event);
@@ -748,7 +761,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     <FormProvider form={form}>
       <Stack gap="sm">
         {showResourceTabs ? (
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs value={activeTab} onChange={setActiveTab} keepMounted keepMountedMode="display-none">
             <Tabs.List grow>
               <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
               {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}

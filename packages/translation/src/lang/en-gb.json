@@ -749,7 +749,10 @@
         "selectMultiple": "Select several",
         "cancelMultiple": "Exit multiple selection",
         "customApplication": "Custom application",
-        "application": "Application"
+        "application": "Application",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Create new app",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Add a URL or app in the widget settings"
+      "empty": "Add a URL or app in the widget settings",
+      "groups": {
+        "label": "",
+        "placeholder": "New category",
+        "add": "Add category",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Containers to filter"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filter as a whitelist"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "No app found",
         "description": "Click <here></here> to create a new app",
-        "quickCreate": "Create app on the fly"
+        "quickCreate": "Create app on the fly",
+        "create": "Create application"
       },
       "error": {
         "noIntegration": "No integration selected",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Show Miscellaneous entries marked as completed"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Hide completed torrent under this threshold"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": ""
+        },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
         },
         "maximumAmountPosts": {
           "label": ""
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Show network chart"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Show Docker CPU chart"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Network traffic of public interfaces",
           "sent": "Sent",
           "recv": "Received"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU Usage",
@@ -6118,6 +6171,15 @@
           "notice": ""
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {

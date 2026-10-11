@@ -749,7 +749,10 @@
         "selectMultiple": "Selecciona'n diverses",
         "cancelMultiple": "Surt de la selecció múltiple",
         "customApplication": "Aplicació personalitzada",
-        "application": "Aplicació"
+        "application": "Aplicació",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Crea una aplicació nova",
@@ -2346,7 +2349,16 @@
           }
         }
       },
-      "empty": "Afegeix una URL o una aplicació a la configuració del giny"
+      "empty": "Afegeix una URL o una aplicació a la configuració del giny",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3381,6 +3393,13 @@
         "containerFilter": {
           "label": "Contenidors a filtrar"
         },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
+        },
         "filterIsWhitelist": {
           "label": "Filtra com a llista blanca"
         },
@@ -3688,7 +3707,8 @@
       "app": {
         "noData": "No s'ha trobat cap aplicació",
         "description": "Feu clic a <here></here> per crear una nova aplicació",
-        "quickCreate": "Crear aplicació al vol"
+        "quickCreate": "Crear aplicació al vol",
+        "create": ""
       },
       "error": {
         "noIntegration": "No s'ha seleccionat cap integració",
@@ -4137,6 +4157,14 @@
         "showCompletedHttp": {
           "label": "Mostra les entrades diverses marcades com a completades"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Amaga els torrents completats sota aquest llindar"
         },
@@ -4471,6 +4499,10 @@
         },
         "textLinesClamp": {
           "label": "Límit de línies de la descripció"
+        },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
         },
         "maximumAmountPosts": {
           "label": "Límit de quantitat de publicacions"
@@ -5110,6 +5142,15 @@
         "showNetwork": {
           "label": "Mostra el gràfic de la xarxa"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Mostra el gràfic de CPU de Docker"
         },
@@ -5163,6 +5204,18 @@
           "subtitle": "Trànsit de xarxa de les interfícies públiques",
           "sent": "Enviat",
           "recv": "Rebut"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Ús de CPU de Docker",
@@ -6118,6 +6171,15 @@
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
         }
       }
+    },
+    "snapshot": {
+      "take": "",
+      "description": "",
+      "downloaded": "",
+      "downloadedDescription": "",
+      "playground": "",
+      "failed": "",
+      "failedDescription": ""
     }
   },
   "layout": {
