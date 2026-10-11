@@ -1,0 +1,18 @@
+packages/api/src/router/widgets/custom-api.ts
+  h_d6e478ca18e517 132,139,156,163-190,214,222
+packages/custom-widgets/src/core/request-schema.ts
+  h_d6e478ca18e517 229-232
+packages/custom-widgets/src/server/request-limits.ts
+  h_d6e478ca18e517 2,23,44-46,56,65,83,86-101,111,114,116-122,131,142-143,149,151-152,157-189,191-192,197,199,201,212-220,223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d1ff920c4ddc29ebf183598c293c8f9ed88d53d1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
