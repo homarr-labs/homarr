@@ -1,0 +1,20 @@
+AGENTS.md
+  h_d6e478ca18e517 117-119,123-124
+GLOSSARY.md
+  h_d6e478ca18e517 19,23,27
+docs/agents/issue-tracker.md
+  h_d6e478ca18e517 3-4,16,18,20-22,24-26,56-59,61,63-66,68-76
+docs/agents/triage-labels.md
+  h_d6e478ca18e517 5,28-30,33-35,37-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2526b7f42d7649e1d0d1c2110ea62ec897cdd936",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
