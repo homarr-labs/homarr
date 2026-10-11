@@ -1,0 +1,24 @@
+packages/cron-job-status/src/index.ts
+  h_d6e478ca18e517 1
+packages/integrations/src/dashdot/dashdot-integration.ts
+  h_d6e478ca18e517 5
+packages/integrations/src/dashdot/test/dashdot-integration.spec.ts
+  h_d6e478ca18e517 12,16
+packages/integrations/src/opnsense/opnsense-integration.ts
+  h_d6e478ca18e517 3
+packages/redis/src/index.ts
+  h_d6e478ca18e517 19
+packages/redis/src/lib/channel.ts
+  h_d6e478ca18e517 777
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7206ca9608398fb8646e5cb9da72beec040048f0",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
