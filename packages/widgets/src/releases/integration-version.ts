@@ -1,0 +1,61 @@
+import type { IntegrationKind } from "@homarr/definitions";
+
+import type { ReleasesRepositoryIntegration } from "./releases-repository";
+
+interface ServiceVersionResult {
+  integrationId: string;
+  integrationName: string;
+  integrationKind: IntegrationKind;
+  version: string | null;
+}
+
+const parseVersion = (value: string | undefined) => {
+  const numeric = (value ?? "").replace(/^[^\d]+/, "");
+  if (numeric === "") return null;
+  return numeric.split(".").map((part) => Number.parseInt(part, 10) || 0);
+};
+
+/**
+ * Compares every version part, padding the shorter one with zeros. A running version newer than the latest
+ * release counts as up to date. Undefined when either version has no numeric part.
+ */
+export const isVersionUpToDate = (running: string | undefined, latest: string | undefined) => {
+  const [runningParts, latestParts] = [parseVersion(running), parseVersion(latest)];
+  if (!runningParts || !latestParts) return undefined;
+
+  for (let index = 0; index < Math.max(runningParts.length, latestParts.length); index++) {
+    const difference = (runningParts[index] ?? 0) - (latestParts[index] ?? 0);
+    if (difference !== 0) return difference > 0;
+  }
+  return true;
+};
+
+const VERSION_MAX_LENGTH = 20;
+const VERSION_DISPLAY_LENGTH = 17;
+
+/** Shortens long versions the same way as What's Up Docker. The full value is shown in a tooltip. */
+export const truncateVersion = (value: string) =>
+  value.length > VERSION_MAX_LENGTH ? `${value.slice(0, VERSION_DISPLAY_LENGTH)}…` : value;
+
+/** Running versions for a row's links, keeping only integrations still attached to the widget. */
+export const getRowIntegrationVersions = (
+  rowIntegrationIds: readonly string[],
+  attachedIntegrationIds: readonly string[],
+  results: readonly ServiceVersionResult[],
+  latestRelease: string | undefined,
+): ReleasesRepositoryIntegration[] =>
+  rowIntegrationIds.flatMap((integrationId) => {
+    if (!attachedIntegrationIds.includes(integrationId)) return [];
+    const result = results.find((candidate) => candidate.integrationId === integrationId);
+    if (!result?.version) return [];
+
+    return [
+      {
+        id: integrationId,
+        kind: result.integrationKind,
+        name: result.integrationName,
+        version: result.version,
+        isUpToDate: isVersionUpToDate(result.version, latestRelease),
+      },
+    ];
+  });

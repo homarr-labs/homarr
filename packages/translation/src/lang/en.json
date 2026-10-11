@@ -4571,6 +4571,9 @@
           "providerUrl": {
             "label": "Provider URL"
           },
+          "integrations": {
+            "label": "Linked Integrations"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
@@ -4630,6 +4633,10 @@
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
       "projectDescription": "Project Description",
+      "runningVersions": "Running Versions",
+      "upToDate": "Up to date",
+      "updateAvailable": "Update available",
+      "unknownStatus": "Unknown",
       "created": "Created",
       "error": {
         "label": "Error",

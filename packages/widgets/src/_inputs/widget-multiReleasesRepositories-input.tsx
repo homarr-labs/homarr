@@ -11,6 +11,7 @@ import {
   Fieldset,
   Group,
   Image,
+  Input,
   Loader,
   PasswordInput,
   Select,
@@ -52,6 +53,8 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedImage } from "@homarr/ui";
 
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
+import { WidgetIntegrationSelect } from "../widget-integration-select";
+import type { IntegrationSelectOption } from "../widget-integration-select";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -95,6 +98,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
       form.setFieldValue(`options.${property}.${index}.providerUrl`, repository.providerUrl);
+      form.setFieldValue(`options.${property}.${index}.integrationIds`, repository.integrationIds);
 
       const formValidation = form.validate();
       const fieldErrors: FormErrors = Object.entries(formValidation.errors).reduce((acc, [key, value]) => {
@@ -138,6 +142,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       onRepositoryCancel: () => onRepositoryRemove(index),
       versionFilterPrecisionOptions,
       providerOptions,
+      attachedIntegrationIds: [...new Set(form.values.integrationIds)],
     });
   };
 
@@ -227,6 +232,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                       onRepositorySave: (saved) => onRepositorySave(saved, index),
                       versionFilterPrecisionOptions,
                       providerOptions,
+                      attachedIntegrationIds: [...new Set(form.values.integrationIds)],
                     })
                   }
                   variant="light"
@@ -418,12 +424,24 @@ interface RepositoryEditProps {
   onRepositoryCancel?: () => void;
   versionFilterPrecisionOptions: string[];
   providerOptions: { value: ReleaseProviderKind; label: string }[];
+  attachedIntegrationIds: string[];
 }
 
 const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
   const tRepository = useI18n("widget.releases.option.repositories");
+  const tIntegrationSelect = useI18n("widget.integrationSelect");
   const actionT = useI18n("common.action");
   const [loading, setLoading] = useState(false);
+  const { data: serviceVersionIntegrations = [] } = clientApi.integration.allOfGivenCategory.useQuery({
+    category: "serviceVersion",
+  });
+  const integrationOptions = useMemo(
+    () =>
+      serviceVersionIntegrations
+        .filter((integration) => innerProps.attachedIntegrationIds.includes(integration.id))
+        .map(({ id, name, url, kind }): IntegrationSelectOption => ({ id, name, url, kind })),
+    [serviceVersionIntegrations, innerProps.attachedIntegrationIds],
+  );
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const handleConfirm = useCallback(() => {
@@ -582,6 +600,23 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
             tRepository("versionFilter.precision.options.none")}
         </Text>
       </Fieldset>
+
+      {innerProps.attachedIntegrationIds.length === 0 ? (
+        <Input.Wrapper label={tRepository("integrations.label")}>
+          <Text size="sm" c="dimmed">
+            {tIntegrationSelect("configureIntegrationFirst")}
+          </Text>
+        </Input.Wrapper>
+      ) : (
+        <WidgetIntegrationSelect
+          label={tRepository("integrations.label")}
+          data={integrationOptions}
+          value={tempRepository.integrationIds ?? []}
+          onChange={(integrationIds) =>
+            handleChange({ integrationIds: integrationIds.length > 0 ? integrationIds : undefined })
+          }
+        />
+      )}
 
       <Divider my={"sm"} />
       <Group justify="flex-end">

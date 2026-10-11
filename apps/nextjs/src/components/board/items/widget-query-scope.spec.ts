@@ -70,6 +70,14 @@ describe("matchesWidgetItemQuery", () => {
     expect(matches("releases", path, { itemId: "sibling-item", repositories: [{ id: "one" }] }, scope)).toBe(false);
   });
 
+  test("owns the Releases service versions by attached integrations", () => {
+    const scope = createScope({ itemId: "release-item", integrationIds: ["sonarr-1"] });
+    const path = ["widget", "releases", "getServiceVersions"];
+
+    expect(matches("releases", path, { integrationIds: ["sonarr-1"] }, scope)).toBe(true);
+    expect(matches("releases", path, { integrationIds: ["radarr-1"] }, scope)).toBe(false);
+  });
+
   test("normalizes Immich's all-photos sentinel and separates Immich widget kinds", () => {
     const carouselScope = createScope({
       integrationIds: ["immich-1"],

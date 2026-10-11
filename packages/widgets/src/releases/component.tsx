@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 import {
+  Avatar,
+  Badge,
   Button,
   Divider,
   Group,
@@ -22,6 +24,7 @@ import {
   IconExternalLink,
   IconGitFork,
   IconProgressCheck,
+  IconRefreshAlert,
   IconStar,
   IconTriangleFilled,
 } from "@tabler/icons-react";
@@ -33,7 +36,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
-import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
+import { getIconUrl, getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -44,8 +47,20 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import { selectReleaseRepositoriesForDisplay } from "./display";
+import { getRowIntegrationVersions, truncateVersion } from "./integration-version";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
+
+const integrationStatusColors = {
+  upToDate: "green",
+  updateAvailable: "yellow",
+  unknownStatus: "gray",
+} as const;
+
+const getIntegrationStatus = (isUpToDate: boolean | undefined): keyof typeof integrationStatusColors => {
+  if (isUpToDate === undefined) return "unknownStatus";
+  return isUpToDate ? "upToDate" : "updateAvailable";
+};
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -53,7 +68,13 @@ const formatRelativeDate = (value: string): string => {
   return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
-export default function ReleasesWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"releases">) {
+export default function ReleasesWidget({
+  options,
+  itemId,
+  integrationIds,
+  width,
+  displayMode,
+}: WidgetComponentProps<"releases">) {
   const t = useI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -76,7 +97,12 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
   );
 
   const normalizedRepositories = useMemo(
-    () => options.repositories.map((repo) => (repo.id ? repo : { ...repo, id: createId() })),
+    () =>
+      options.repositories.map((repo) => ({
+        ...repo,
+        id: repo.id ? repo.id : createId(),
+        integrationIds: repo.integrationIds ?? [],
+      })),
     [options.repositories],
   );
 
@@ -130,6 +156,12 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
   );
   const isInitialLoading = queryResults.some(isInitialWidgetQueryPending);
 
+  const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(
+    { integrationIds },
+    { enabled: integrationIds.length > 0 },
+  );
+  const serviceVersions = useMemo(() => serviceVersionsQuery.data ?? [], [serviceVersionsQuery.data]);
+
   const repositories = useMemo(() => {
     const resultById = new Map(results.flat().map((result) => [result.id, result]));
     const formattedResults = normalizedRepositories
@@ -152,6 +184,12 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
           isNewRelease: isReleaseWithin(relativeDateOptions.newReleaseWithin),
           isStaleRelease: !isReleaseWithin(relativeDateOptions.staleReleaseWithin),
           viewed: releasesViewedList[repository.id] === release.latestRelease,
+          integrations: getRowIntegrationVersions(
+            repository.integrationIds,
+            integrationIds,
+            serviceVersions,
+            release.latestRelease,
+          ),
         };
       })
       .toSorted((repoA, repoB) => {
@@ -167,6 +205,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
     });
   }, [
     displayMode,
+    integrationIds,
     results,
     normalizedRepositories,
     options.showOnlyHighlighted,
@@ -174,6 +213,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
     relativeDateOptions.newReleaseWithin,
     relativeDateOptions.staleReleaseWithin,
     releasesViewedList,
+    serviceVersions,
   ]);
 
   const toggleExpandedDisplay = useCallback(
@@ -199,6 +239,8 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
         {repositories.map((repository: ReleasesRepositoryResponse) => {
           const isActive = expandedRepositoryId === repository.id;
           const hasError = repository.error !== undefined;
+          const outdatedIntegrations =
+            repository.integrations?.filter((integration) => integration.isUpToDate === false) ?? [];
 
           return (
             <Stack
@@ -324,6 +366,28 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                           }
                         />
                       )
+                    )}
+                    {!hasError && outdatedIntegrations.length > 0 && (
+                      <Tooltip
+                        className="releases-repository-header-integrations-tooltip"
+                        withArrow
+                        arrowSize={5}
+                        label={
+                          <Stack gap={0}>
+                            {outdatedIntegrations.map((integration) => (
+                              <Text key={integration.id} size="xs">
+                                {`${integration.name}: ${integration.version} → ${repository.latestRelease}`}
+                              </Text>
+                            ))}
+                          </Stack>
+                        }
+                      >
+                        <IconRefreshAlert
+                          className="releases-repository-header-releaseDate-icon releases-repository-header-integrations-outdated"
+                          size="var(--mantine-font-size-xs)"
+                          color="var(--mantine-color-yellow-6)"
+                        />
+                      </Tooltip>
                     )}
                   </Group>
                 </Group>
@@ -632,6 +696,75 @@ const ExpandedDisplay = ({
               })}
             </Text>
           </Text>
+        )}
+
+        {repository.integrations && repository.integrations.length > 0 && (
+          <>
+            <Divider className="releases-repository-expanded-integrations-divider" mx="30%" />
+            <Title className="releases-repository-expanded-integrations-title" order={4} ta="center">
+              {t("runningVersions")}
+            </Title>
+            <Stack className="releases-repository-expanded-integrations" gap={5}>
+              {repository.integrations.map((integration) => (
+                <Group
+                  key={integration.id}
+                  className="releases-repository-expanded-integration"
+                  gap="xs"
+                  wrap="nowrap"
+                  justify="space-between"
+                >
+                  <Group
+                    className="releases-repository-expanded-integration-name-wrapper"
+                    gap="xs"
+                    wrap="nowrap"
+                    miw={0}
+                  >
+                    <Avatar
+                      className="releases-repository-expanded-integration-icon"
+                      src={getIconUrl(integration.kind)}
+                      size={18}
+                      radius="sm"
+                    />
+                    <Text className="releases-repository-expanded-integration-name" size="xs" fw={500} lineClamp={1}>
+                      {integration.name}
+                    </Text>
+                  </Group>
+                  <Group
+                    className="releases-repository-expanded-integration-status-wrapper"
+                    gap="xs"
+                    wrap="nowrap"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <Tooltip
+                      className="releases-repository-expanded-integration-version-tooltip"
+                      withArrow
+                      arrowSize={5}
+                      label={integration.version}
+                      disabled={truncateVersion(integration.version) === integration.version}
+                    >
+                      <Badge
+                        className="releases-repository-expanded-integration-version"
+                        size="xs"
+                        variant="subtle"
+                        color="gray"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        {truncateVersion(integration.version)}
+                      </Badge>
+                    </Tooltip>
+                    <Badge
+                      className="releases-repository-expanded-integration-status"
+                      size="xs"
+                      variant="dot"
+                      color={integrationStatusColors[getIntegrationStatus(integration.isUpToDate)]}
+                    >
+                      {t(getIntegrationStatus(integration.isUpToDate))}
+                    </Badge>
+                  </Group>
+                </Group>
+              ))}
+            </Stack>
+          </>
         )}
 
         <Divider className="releases-repository-expanded-actions-divider" mx="30%" />

@@ -15,8 +15,11 @@ const relativeDateSchema = z
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
   supportsAdvancedFocus: true,
   icon: IconRocket,
-  queryKey: [["widget", "releases", "getLatest"]],
-  queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { itemId: scope.itemId }),
+  queryKeys: [[["widget", "releases", "getLatest"]], [["widget", "releases", "getServiceVersions"]]],
+  queryMatcher: (query, scope) =>
+    query.path.at(-1) === "getServiceVersions"
+      ? widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds })
+      : widgetQueryInputMatches(query.input, { itemId: scope.itemId }),
   refetchInterval: null,
   ...getWidgetIntegrationConfig("releases"),
   createOptions() {
@@ -72,6 +75,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
               .optional(),
             iconUrl: z.string().optional(),
             providerUrl: z.string().url().optional(),
+            integrationIds: z.array(z.string()).optional(),
           }),
         ),
       }),
