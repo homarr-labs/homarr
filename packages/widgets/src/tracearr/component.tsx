@@ -3,7 +3,6 @@
 import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -61,75 +60,6 @@ function TracearrContent({ integrationIds, options, width, displayMode }: Tracea
     item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],
   );
 
-  // Merge data from all integrations
-  const combinedData = successfulDashboards.reduce<TracearrDashboardData>(
-    (acc, { dashboard }) => {
-      const { stats, streams, violations, recentActivity } = dashboard;
-      const vData = violations ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
-      const aData = recentActivity ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
-
-      return {
-        stats: {
-          activeStreams: acc.stats.activeStreams + stats.activeStreams,
-          totalUsers: acc.stats.totalUsers + stats.totalUsers,
-          totalSessions: acc.stats.totalSessions + stats.totalSessions,
-          recentViolations: acc.stats.recentViolations + stats.recentViolations,
-          timestamp: stats.timestamp,
-        },
-        streams: {
-          data: [...acc.streams.data, ...streams.data],
-          summary: {
-            total: acc.streams.summary.total + streams.summary.total,
-            transcodes: acc.streams.summary.transcodes + streams.summary.transcodes,
-            directStreams: acc.streams.summary.directStreams + streams.summary.directStreams,
-            directPlays: acc.streams.summary.directPlays + streams.summary.directPlays,
-            totalBitrate: "—",
-            byServer: [...acc.streams.summary.byServer, ...streams.summary.byServer],
-          },
-        },
-        violations: {
-          data: [...(acc.violations?.data ?? []), ...vData.data],
-          meta: {
-            total: (acc.violations?.meta.total ?? 0) + vData.meta.total,
-            page: 1,
-            pageSize: 5,
-          },
-        },
-        recentActivity: {
-          data: [...(acc.recentActivity?.data ?? []), ...aData.data],
-          meta: {
-            total: (acc.recentActivity?.meta.total ?? 0) + aData.meta.total,
-            page: 1,
-            pageSize: 5,
-          },
-        },
-      };
-    },
-    {
-      stats: { activeStreams: 0, totalUsers: 0, totalSessions: 0, recentViolations: 0, timestamp: "" },
-      streams: {
-        data: [],
-        summary: { total: 0, transcodes: 0, directStreams: 0, directPlays: 0, totalBitrate: "0", byServer: [] },
-      },
-      violations: null,
-      recentActivity: null,
-    },
-  );
-  const combined: TracearrDashboardData = {
-    ...combinedData,
-    streams: {
-      ...combinedData.streams,
-      summary: {
-        ...combinedData.streams.summary,
-        totalBitrate: formatTotalTracearrBitrate(combinedData.streams.data),
-      },
-    },
-  };
-
-  const isAdvanced = displayMode === "advanced";
-  const sectionVisibility = getTracearrSectionVisibility(options, isAdvanced);
-  const noSectionsEnabled = Object.values(sectionVisibility).every((isVisible) => !isVisible);
-
   const sourcedStreams = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
     attachTracearrSource(dashboard.streams.data, { integrationId, integrationName }),
   );
@@ -139,6 +69,20 @@ function TracearrContent({ integrationIds, options, width, displayMode }: Tracea
   const sourcedRecentActivity = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
     attachTracearrSource(dashboard.recentActivity?.data ?? [], { integrationId, integrationName }),
   );
+  const combined = {
+    stats: { activeStreams: 0, totalUsers: 0 },
+    summary: { total: 0, transcodes: 0, totalBitrate: formatTotalTracearrBitrate(sourcedStreams) },
+  };
+  for (const { dashboard } of successfulDashboards) {
+    combined.stats.activeStreams += dashboard.stats.activeStreams;
+    combined.stats.totalUsers += dashboard.stats.totalUsers;
+    combined.summary.total += dashboard.streams.summary.total;
+    combined.summary.transcodes += dashboard.streams.summary.transcodes;
+  }
+
+  const isAdvanced = displayMode === "advanced";
+  const sectionVisibility = getTracearrSectionVisibility(options, isAdvanced);
+  const noSectionsEnabled = Object.values(sectionVisibility).every((isVisible) => !isVisible);
   const showSource = isAdvanced || dashboardData.length > 1;
 
   if (isAdvanced) {
@@ -160,7 +104,7 @@ function TracearrContent({ integrationIds, options, width, displayMode }: Tracea
                 {successfulDashboards.map(({ integrationName }) => integrationName).join(" · ")}
               </Text>
               {sectionVisibility.stats && (
-                <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} transparent />
+                <StatsBar stats={combined.stats} summary={combined.summary} width={columnWidth} transparent />
               )}
               {sectionVisibility.streams && (
                 <StreamsList streams={sourcedStreams} width={columnWidth} showSource={showSource} transparent />
@@ -192,9 +136,7 @@ function TracearrContent({ integrationIds, options, width, displayMode }: Tracea
               {successfulDashboards.map(({ integrationName }) => integrationName).join(" · ")}
             </Text>
           )}
-          {sectionVisibility.stats && (
-            <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />
-          )}
+          {sectionVisibility.stats && <StatsBar stats={combined.stats} summary={combined.summary} width={width} />}
           {sectionVisibility.streams && <StreamsList streams={sourcedStreams} width={width} showSource={showSource} />}
           {sectionVisibility.violations && <ViolationsList violations={sourcedViolations} showSource={showSource} />}
           {sectionVisibility.recentActivity && (

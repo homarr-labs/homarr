@@ -707,37 +707,38 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     enabled: innerProps.isAdmin,
   });
 
-  const importRepositories: ReleasesRepositoryImport[] = useMemo(
-    () =>
-      docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, container) => {
-        const [maybeSource, maybeIdentifierAndVersion] = container.image.split(/\/(.*)/);
-        const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
-        const source = hasSource ? maybeSource : "docker.io";
-        const [identifier, version] =
-          hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : container.image.split(":");
+  const importRepositories: ReleasesRepositoryImport[] = useMemo(() => {
+    if (!docker.data) return [];
+    const imported = new Set(innerProps.repositories.map((item) => `${item.provider}:${item.identifier}`));
+    const seen = new Set<string>();
+    return docker.data.containers.reduce<ReleasesRepositoryImport[]>((acc, container) => {
+      const [maybeSource, maybeIdentifierAndVersion] = container.image.split(/\/(.*)/);
+      const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
+      const source = hasSource ? maybeSource : "docker.io";
+      const [identifier, version] =
+        hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : container.image.split(":");
 
-        if (!identifier) return acc;
+      if (!identifier) return acc;
 
-        const provider = containerImageToProviderKind[source] ?? "dockerHub";
-        const normalizedIdentifier = normalizeReleaseProviderIdentifier(provider, identifier);
+      const provider = containerImageToProviderKind[source] ?? "dockerHub";
+      const normalizedIdentifier = normalizeReleaseProviderIdentifier(provider, identifier);
 
-        if (acc.some((item) => item.provider === provider && item.identifier === normalizedIdentifier)) return acc;
+      const key = `${provider}:${normalizedIdentifier}`;
+      if (seen.has(key)) return acc;
+      seen.add(key);
 
-        acc.push({
-          id: createId(),
-          provider,
-          identifier: normalizedIdentifier,
-          iconUrl: container.iconUrl ?? undefined,
-          name: formatIdentifierName(normalizedIdentifier),
-          versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
-          alreadyImported: innerProps.repositories.some(
-            (item) => item.provider === provider && item.identifier === normalizedIdentifier,
-          ),
-        });
-        return acc;
-      }, []) ?? [],
-    [docker.data, innerProps.repositories],
-  );
+      acc.push({
+        id: createId(),
+        provider,
+        identifier: normalizedIdentifier,
+        iconUrl: container.iconUrl ?? undefined,
+        name: formatIdentifierName(normalizedIdentifier),
+        versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
+        alreadyImported: imported.has(key),
+      });
+      return acc;
+    }, []);
+  }, [docker.data, innerProps.repositories]);
 
   const handleConfirm = useCallback(() => {
     setLoading(true);

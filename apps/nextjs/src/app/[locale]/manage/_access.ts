@@ -1,4 +1,5 @@
 import type { Session } from "@homarr/auth";
+import { cache } from "react";
 
 import { api } from "@homarr/api/server";
 import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/definitions";
@@ -10,6 +11,9 @@ import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/
 
 export const getAppsSectionAccess = (session: Session | null) =>
   getAppManagementAccess(session?.user.permissions ?? []);
+
+// Share the authorized list within this render request, keyed by the current user.
+export const getManageIntegrationsAsync = cache((_userId: string) => api.integration.all());
 
 /**
  * Pure variant for callers that already fetched the integrations the user can see, so the list is
@@ -31,5 +35,9 @@ export const getIntegrationsSectionAccessAsync = async (session: Session | null)
   const needsDelegatedLookup =
     session !== null && !permissions.includes("integration-full-all") && !permissions.includes("integration-create");
 
-  return getIntegrationsSectionAccess(session, needsDelegatedLookup ? await api.integration.all() : []);
+  if (needsDelegatedLookup) {
+    return getIntegrationsSectionAccess(session, await getManageIntegrationsAsync(session.user.id));
+  }
+
+  return getIntegrationsSectionAccess(session, []);
 };

@@ -35,7 +35,10 @@ const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, 
 
     void queryClient.prefetchQuery({
       queryKey: createTrpcQueryKey("app.byIds", itemAppIds),
-      queryFn: async () => (await dbAppsPromise).filter((app) => itemAppIds.includes(app.id)),
+      queryFn: async () => {
+        const itemAppIdSet = new Set(itemAppIds);
+        return (await dbAppsPromise).filter((app) => itemAppIdSet.has(app.id));
+      },
     });
   }
 };

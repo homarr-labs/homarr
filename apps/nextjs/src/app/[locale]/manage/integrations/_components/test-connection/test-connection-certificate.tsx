@@ -279,6 +279,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
 
 const PemContentModal = createModal<{ content: string }>(({ actions, innerProps }) => {
   const tCommon = useI18n("common");
+  const tContent = useI18n("integration.testConnection.error.certificate.details.content");
 
   return (
     <Stack>
@@ -293,7 +294,14 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
         </pre>
         <CopyButton value={innerProps.content}>
           {({ copy, copied }) => (
-            <ActionIcon onClick={copy} pos="absolute" top={8} right={8} variant="default">
+            <ActionIcon
+              onClick={copy}
+              pos="absolute"
+              top={8}
+              right={8}
+              variant="default"
+              aria-label={`${tCommon(copied ? "action.copied" : "action.copy")}: ${tContent("title")}`}
+            >
               {copied ? (
                 <IconCheck size={16} stroke={1.5} color={getMantineColor("green", 6)} />
               ) : (

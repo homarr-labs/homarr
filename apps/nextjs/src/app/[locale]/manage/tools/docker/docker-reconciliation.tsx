@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -68,6 +68,10 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
   });
   const reconciliation = clientApi.docker.reconcileServices.useQuery();
   const health = clientApi.docker.getServiceHealth.useQuery(undefined, { enabled: isOpen });
+  const healthByKey = useMemo(
+    () => new Map(health.data?.services.map((service) => [service.key, service])),
+    [health.data?.services],
+  );
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
     async onSuccess() {
       await Promise.all([
@@ -210,7 +214,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
                   <DockerReconciliationCandidate
                     key={candidate.candidateKey}
                     candidate={candidate}
-                    health={health.data?.services.find(({ key }) => key === candidate.candidateKey)}
+                    health={healthByKey.get(candidate.candidateKey)}
                     serverOrigin={serverOrigin}
                     urlMode={urlMode}
                     onDismiss={() =>

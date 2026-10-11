@@ -181,12 +181,6 @@ const ConversationTurn = ({
     ...(generationQuery.data?.complete && providerInputTokens !== undefined && providerOutputTokens !== undefined
       ? { totalTokens: providerInputTokens + providerOutputTokens }
       : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.cachedInputTokens) !== undefined
-      ? { cachedInputTokens: sumCompleteMetric((step) => step.cachedInputTokens) }
-      : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.reasoningTokens) !== undefined
-      ? { reasoningTokens: sumCompleteMetric((step) => step.reasoningTokens) }
-      : {}),
   };
   const telemetry = {
     ...turn.telemetry,
@@ -205,22 +199,19 @@ const ConversationTurn = ({
             : {}),
         }
       : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.cost) !== undefined
-      ? { cost: sumCompleteMetric((step) => step.cost), costType: "reported" as const }
-      : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.upstreamCost) !== undefined
-      ? { upstreamCost: sumCompleteMetric((step) => step.upstreamCost) }
-      : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.cacheDiscount) !== undefined
-      ? { cacheDiscount: sumCompleteMetric((step) => step.cacheDiscount) }
-      : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.fallbackCount) !== undefined
-      ? { fallbackCount: sumCompleteMetric((step) => step.fallbackCount) }
-      : {}),
-    ...(generationQuery.data?.complete && sumCompleteMetric((step) => step.fallbackLatencyMs) !== undefined
-      ? { fallbackLatencyMs: sumCompleteMetric((step) => step.fallbackLatencyMs) }
-      : {}),
   };
+  if (generationQuery.data?.complete) {
+    for (const metric of ["cachedInputTokens", "reasoningTokens"] as const) {
+      const value = sumCompleteMetric((step) => step[metric]);
+      if (value !== undefined) usage[metric] = value;
+    }
+    for (const metric of ["cost", "upstreamCost", "cacheDiscount", "fallbackCount", "fallbackLatencyMs"] as const) {
+      const value = sumCompleteMetric((step) => step[metric]);
+      if (value === undefined) continue;
+      telemetry[metric] = value;
+      if (metric === "cost") telemetry.costType = "reported";
+    }
+  }
   const displayedThroughput = telemetry.providerOutputTokensPerSecond ?? telemetry.outputTokensPerSecond;
   let reportedCost: string | undefined;
   if (telemetry.cost !== undefined) {
@@ -483,18 +474,17 @@ export const ConversationContext = ({ compact = false }: { compact?: boolean }) 
   const [opened, setOpened] = useState(false);
   const messages = useAuiState((state) => state.thread.messages);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
-  const metadata = useMemo(() => messages.map((message) => message.metadata), [messages]);
-  const messageIdByRequestId = useMemo(
-    () =>
-      new Map(
-        messages.flatMap((message) => {
-          const telemetry = getAssistantTelemetry(message.metadata);
-          return telemetry ? [[telemetry.requestId, message.id] as const] : [];
-        }),
-      ),
-    [messages],
-  );
-  const usage = useMemo(() => getAssistantConversationUsage(metadata), [metadata]);
+  const { usage, messageIdByRequestId } = useMemo(() => {
+    const requestMessageIds = new Map<string, string>();
+    const conversationUsage = getAssistantConversationUsage(
+      messages.map((message) => message.metadata),
+      (telemetry, index) => {
+        const message = messages[index];
+        if (message) requestMessageIds.set(telemetry.requestId, message.id);
+      },
+    );
+    return { usage: conversationUsage, messageIdByRequestId: requestMessageIds };
+  }, [messages]);
   const breakdown = useMemo(() => getAssistantContextBreakdown(usage), [usage]);
   const hasTokenUsage = usage.turns.some((turn) => turn.totalTokens !== undefined);
   const hasCost = usage.turns.some((turn) => turn.cost !== undefined);
