@@ -17,6 +17,7 @@ const defaultSessionWithPermissions = (permissions: GroupPermissionKey[] = []) =
     user: {
       id: defaultUserId,
       permissions,
+      groups: [],
       colorScheme: "light",
     },
     expires: new Date().toISOString(),

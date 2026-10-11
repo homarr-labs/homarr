@@ -17,6 +17,7 @@ export const ROOT_BINDINGS = new Set([
   "options",
   "inputs",
   "status",
+  "user",
   "decodeURIComponent",
   "encodeURIComponent",
   "isFinite",
@@ -26,7 +27,7 @@ export const ROOT_BINDINGS = new Set([
   "undefined",
 ]);
 
-export const RESERVED_LOCAL_BINDINGS = new Set(["data", "status", "options", "inputs"]);
+export const RESERVED_LOCAL_BINDINGS = new Set(["data", "status", "options", "inputs", "user"]);
 const callableRootBindings = new Set([
   "Boolean",
   "Number",

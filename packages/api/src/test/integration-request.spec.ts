@@ -143,7 +143,7 @@ async function fixtureContext(
   if (permission)
     await db.insert(integrationUserPermissions).values({ integrationId: "sonarr", userId: "reader", permission });
   const session = {
-    user: { id: "reader", permissions: [], colorScheme: "light" },
+    user: { id: "reader", permissions: [], groups: [], colorScheme: "light" },
     expires: new Date().toISOString(),
   } satisfies Session;
   await setup?.(db);

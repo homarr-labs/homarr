@@ -17,7 +17,7 @@ import {
   SubFetch,
   ToggleSwitch,
 } from "../runtime";
-import { createCustomJsxComponents } from "../jsx";
+import { createCustomJsxBindings, createCustomJsxComponents } from "../jsx";
 import { MAX_REFRESH_INTERVAL_MS, MAX_REFRESH_INTERVAL_SECONDS, normalizeRefreshInterval } from "../runtime/sub-fetch";
 import type {
   CustomJsxRendererMessages,
@@ -211,6 +211,45 @@ describe("Custom Widget runtime ports", () => {
       createPort(),
     );
     expect(host.textContent).toContain("1 · 2 · 3");
+  });
+
+  it("exposes the session user context to templates for conditional rendering", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    await render(
+      <CustomJsxRenderer
+        template={
+          '<Text>{user.name} · {String(user.groups.includes("ops"))} · {String(user.permissions.includes("admin"))} · {String(user.groups.includes("finance"))}</Text>'
+        }
+        data={{}}
+        user={{ name: "ryan", permissions: ["admin"], groups: ["ops"] }}
+        components={components}
+        createBindings={() => createCustomJsxBindings({})}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+    expect(host.textContent).toContain("ryan · true · true · false");
+  });
+
+  it("renders empty user fallbacks when no session is available", async () => {
+    const components = createCustomJsxComponents({
+      TablerIcon: (() => null) as never,
+      copyLabels: { copy: "Copy", copied: "Copied" },
+    });
+    await render(
+      <CustomJsxRenderer
+        template='<Text>{user.name ?? "anonymous"} · {String(user.groups.includes("ops"))}</Text>'
+        data={{}}
+        components={components}
+        createBindings={() => createCustomJsxBindings({})}
+        messages={rendererMessages}
+      />,
+      createPort(),
+    );
+    expect(host.textContent).toContain("anonymous · false");
   });
 
   it("removes unsafe dynamic link targets at runtime", async () => {

@@ -4,7 +4,7 @@ import type { NextAuthConfig } from "next-auth";
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { groupMembers, groupPermissions, users } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
 export const getCurrentUserPermissionsAsync = async (db: Database, userId: string) => {
@@ -20,16 +20,31 @@ export const getCurrentUserPermissionsAsync = async (db: Database, userId: strin
   return getPermissionsWithChildren(permissionKeys);
 };
 
+export const getCurrentUserGroupsAsync = async (db: Database, userId: string) => {
+  const dbUserGroups = await db
+    .select({ name: groups.name })
+    .from(groupMembers)
+    .innerJoin(groups, eq(groupMembers.groupId, groups.id))
+    .where(eq(groupMembers.userId, userId));
+
+  return dbUserGroups.map(({ name }) => name);
+};
+
 export const createSessionAsync = async (
   db: Database,
   user: { id: string; email: string | null },
 ): Promise<Session> => {
+  const [permissions, groupNames] = await Promise.all([
+    getCurrentUserPermissionsAsync(db, user.id),
+    getCurrentUserGroupsAsync(db, user.id),
+  ]);
   return {
     expires: dayjs().add(1, "day").toISOString(),
     user: {
       ...user,
       email: user.email ?? "",
-      permissions: await getCurrentUserPermissionsAsync(db, user.id),
+      permissions,
+      groups: groupNames,
       colorScheme: "auto",
     },
   } as Session;
@@ -37,7 +52,7 @@ export const createSessionAsync = async (
 
 export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session"> => {
   return async ({ session, user }) => {
-    const [additionalProperties, permissions] = await Promise.all([
+    const [additionalProperties, permissions, groupNames] = await Promise.all([
       db.query.users.findFirst({
         where: eq(users.id, user.id),
         columns: {
@@ -45,6 +60,7 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
         },
       }),
       getCurrentUserPermissionsAsync(db, user.id),
+      getCurrentUserGroupsAsync(db, user.id),
     ]);
 
     return {
@@ -55,6 +71,7 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
         id: user.id,
         name: user.name,
         permissions,
+        groups: groupNames,
       },
     };
   };

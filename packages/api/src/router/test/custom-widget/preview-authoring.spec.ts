@@ -35,7 +35,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -58,7 +58,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -106,7 +106,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -136,7 +136,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -164,7 +164,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -196,7 +196,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -248,7 +248,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -308,7 +308,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
@@ -336,7 +336,7 @@ describe("custom widget agent preview workflow", () => {
     const userId = createId();
     await db.insert(users).values({ id: userId });
     const session = {
-      user: { id: userId, permissions: ["admin"], colorScheme: "light" },
+      user: { id: userId, permissions: ["admin"], groups: [], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
     const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });

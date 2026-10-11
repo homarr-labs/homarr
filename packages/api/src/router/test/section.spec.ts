@@ -14,6 +14,7 @@ const session = {
   user: {
     id: userId,
     permissions: [],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),
