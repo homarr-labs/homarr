@@ -1,0 +1,18 @@
+apps/nextjs/src/app/[locale]/_client-providers/dayjs-loader.tsx
+  h_d6e478ca18e517 5,9,11
+packages/common/src/hooks.ts
+  h_d6e478ca18e517 3,9,12-13,16,18-19,21-23
+packages/translation/src/dayjs.ts
+  h_d6e478ca18e517 1,8-14,16-17,19-20,25,27-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "555709b7a8a6f1316f4523f4a918c841db3da0ea",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
