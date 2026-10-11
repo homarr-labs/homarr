@@ -38,7 +38,10 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
     const creatingTasks = new Map<string, Promise<Cron>>();
     const startingTasks = new Map<string, Promise<void>>();
 
-    const ensureTaskAsync = async (name: string) => {
+    const ensureTaskAsync = async (
+      name: string,
+      configurations?: readonly { name: string; cronExpression: string }[],
+    ) => {
       const task = tasks.get(name);
       if (task && !task.isStopped()) return task;
 
@@ -48,13 +51,18 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
       const existingCreation = creatingTasks.get(name);
       if (existingCreation) return await existingCreation;
 
-      const creation = job
-        .createTaskAsync()
-        .then((createdTask) => {
-          tasks.set(name, createdTask);
-          return createdTask;
-        })
-        .finally(() => creatingTasks.delete(name));
+      const creation = (async () => {
+        let configuration = configurations?.find((savedConfiguration) => savedConfiguration.name === name);
+        if (!configurations) {
+          configuration = await db.query.cronJobConfigurations.findFirst({
+            where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
+          });
+        }
+
+        const createdTask = job.createTask(configuration);
+        tasks.set(name, createdTask);
+        return createdTask;
+      })().finally(() => creatingTasks.delete(name));
       creatingTasks.set(name, creation);
       return await creation;
     };
@@ -87,7 +95,7 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
             continue;
           }
 
-          await ensureTaskAsync(name);
+          await ensureTaskAsync(name, configurations);
         }
       },
       startAsync: async (name: keyof TJobs) => await startAsync(name as string),

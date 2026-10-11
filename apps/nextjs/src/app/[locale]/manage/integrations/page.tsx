@@ -4,7 +4,6 @@ import { IconPencil, IconPlugX } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getSafeApplicationUrl } from "@homarr/common";
 import { getIntegrationName } from "@homarr/definitions";
@@ -15,7 +14,7 @@ import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
-import { getIntegrationsSectionAccess } from "../_access";
+import { getIntegrationsSectionAccess, getManageIntegrationsAsync } from "../_access";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 
 const searchParamsSchema = z.object({ search: z.string().optional() });
@@ -29,7 +28,7 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
   if (!session) redirect("/auth/login");
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
-  const integrations = await api.integration.all();
+  const integrations = await getManageIntegrationsAsync(session.user.id);
   const {
     canManageAll: hasGlobalFullAccess,
     canCreate,

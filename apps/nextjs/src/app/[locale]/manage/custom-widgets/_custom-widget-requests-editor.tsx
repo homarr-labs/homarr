@@ -182,7 +182,7 @@ export function CustomWidgetRequestsEditor({
                   <ActionIcon
                     type="button"
                     variant="subtle"
-                    aria-label={t("moveRequestUp")}
+                    aria-label={`${t("moveRequestUp")}: ${t("request", { count: index + 1 })}`}
                     disabled={index === 0}
                     onClick={() => move(index, -1)}
                   >
@@ -191,7 +191,7 @@ export function CustomWidgetRequestsEditor({
                   <ActionIcon
                     type="button"
                     variant="subtle"
-                    aria-label={t("moveRequestDown")}
+                    aria-label={`${t("moveRequestDown")}: ${t("request", { count: index + 1 })}`}
                     disabled={index === entries.length - 1}
                     onClick={() => move(index, 1)}
                   >

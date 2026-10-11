@@ -23,12 +23,19 @@ const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, 
       throw error;
     },
   );
+  const appsByIdPromise = dbAppsPromise.then((rows) => {
+    const appsById = new Map<string, (typeof rows)[number]>();
+    for (const app of rows) {
+      if (!appsById.has(app.id)) appsById.set(app.id, app);
+    }
+    return appsById;
+  });
 
   for (const id of distinctAppIds) {
     void queryClient.prefetchQuery({
       queryKey: createTrpcQueryKey("app.byId", { id }),
       queryFn: async () => {
-        const app = (await dbAppsPromise).find((candidate) => candidate.id === id);
+        const app = (await appsByIdPromise).get(id);
         if (!app) throw new Error("App not found");
         return app;
       },

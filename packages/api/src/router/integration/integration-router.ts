@@ -822,7 +822,9 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
       secrets: true,
       items: {
         with: {
-          item: true,
+          item: {
+            columns: { boardId: true },
+          },
         },
       },
       userPermissions: {

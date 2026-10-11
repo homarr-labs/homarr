@@ -31,6 +31,14 @@ export const getDockerReconciliationAsync = async (db: Database) => {
     normalizedUrl: normalizeDockerServiceUrl(integration.url),
   }));
   const normalizedApps = apps.map((app) => ({ app, normalizedUrl: normalizeDockerServiceUrl(app.href) }));
+  const integrationsByUrl = Map.groupBy(
+    normalizedIntegrations,
+    ({ integration, normalizedUrl }) => `${integration.kind}:${normalizedUrl ?? ""}`,
+  );
+  const integrationsByName = Map.groupBy(integrations, ({ kind, name }) => `${kind}:${normalizeName(name)}`);
+  const appsByUrl = Map.groupBy(normalizedApps, ({ normalizedUrl }) => normalizedUrl);
+  const appsByName = Map.groupBy(apps, ({ name }) => normalizeName(name));
+  const appsById = Map.groupBy(apps, ({ id }) => id);
   const containerNameCounts = new Map<string, number>();
   for (const container of data.containers) {
     const name = normalizeName(container.name);
@@ -45,36 +53,33 @@ export const getDockerReconciliationAsync = async (db: Database) => {
       ports: container.ports,
       preferredPort: match ? getIntegrationDefaultPort(match.kind) : undefined,
     });
-    const candidateUrls = new Set(
-      urlCandidates.map(({ url }) => normalizeDockerServiceUrl(url)).filter((url) => url !== null),
-    );
-    const uniqueName = containerNameCounts.get(normalizeName(container.name)) === 1;
-    const sameKindIntegrations = match
-      ? normalizedIntegrations.filter(({ integration }) => integration.kind === match.kind)
-      : [];
-    const exactIntegrationMatches = sameKindIntegrations
-      .filter(({ normalizedUrl }) => normalizedUrl !== null && candidateUrls.has(normalizedUrl))
-      .map(({ integration }) => integration);
-    const nameIntegrationMatches = uniqueName
-      ? sameKindIntegrations
-          .filter(({ integration }) => normalizeName(integration.name) === normalizeName(container.name))
-          .map(({ integration }) => integration)
-      : [];
+    const candidateUrls = [
+      ...new Set(urlCandidates.map(({ url }) => normalizeDockerServiceUrl(url)).filter((url) => url !== null)),
+    ];
+    const containerName = normalizeName(container.name);
+    const uniqueName = containerNameCounts.get(containerName) === 1;
+    let exactIntegrationMatches: typeof integrations = [];
+    let nameIntegrationMatches: typeof integrations = [];
+    if (match) {
+      exactIntegrationMatches = candidateUrls.flatMap((url) =>
+        (integrationsByUrl.get(`${match.kind}:${url}`) ?? []).map(({ integration }) => integration),
+      );
+      if (uniqueName) {
+        nameIntegrationMatches = integrationsByName.get(`${match.kind}:${containerName}`) ?? [];
+      }
+    }
     const exactIntegration = exactIntegrationMatches.length === 1 ? exactIntegrationMatches[0] : undefined;
     const nameIntegration =
       exactIntegrationMatches.length === 0 && nameIntegrationMatches.length === 1
         ? nameIntegrationMatches[0]
         : undefined;
     const integration = exactIntegration ?? nameIntegration;
-    const exactAppMatches = normalizedApps
-      .filter(({ normalizedUrl }) => normalizedUrl !== null && candidateUrls.has(normalizedUrl))
-      .map(({ app }) => app);
-    const nameAppMatches = uniqueName
-      ? apps.filter(({ name }) => normalizeName(name) === normalizeName(container.name))
-      : [];
+    const exactAppMatches = candidateUrls.flatMap((url) => (appsByUrl.get(url) ?? []).map(({ app }) => app));
+    let nameAppMatches: typeof apps = [];
+    if (uniqueName) nameAppMatches = appsByName.get(containerName) ?? [];
     const exactApp = exactAppMatches.length === 1 ? exactAppMatches[0] : undefined;
     const nameApp = exactAppMatches.length === 0 && nameAppMatches.length === 1 ? nameAppMatches[0] : undefined;
-    const linkedApp = integration?.appId ? apps.find(({ id }) => id === integration.appId) : undefined;
+    const linkedApp = integration?.appId ? appsById.get(integration.appId)?.[0] : undefined;
     const app = linkedApp ?? exactApp ?? nameApp;
     const exactUrl = Boolean(exactIntegration || exactApp);
     const linked = Boolean(integration?.appId && linkedApp);

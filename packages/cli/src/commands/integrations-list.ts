@@ -7,7 +7,9 @@ export const integrationsList = command({
   desc: "List all integrations (id and name)",
   // eslint-disable-next-line no-restricted-syntax
   handler: async () => {
-    const all = await db.query.integrations.findMany();
+    const all = await db.query.integrations.findMany({
+      columns: { id: true, name: true },
+    });
     if (all.length === 0) {
       console.log("No integrations found");
       return;
