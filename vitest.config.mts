@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { configDefaults, defineConfig } from "vitest/config";
 
-// Docker-backed suites are opt-in through pnpm test:integration.
+// Docker-backed suites are opt-in through bun run test:integration.
 const integrationTests = [
   "**/*.integration.spec.ts",
   "packages/db/test/postgresql-migration.spec.ts",
@@ -20,6 +20,22 @@ export default defineConfig({
   test: {
     setupFiles: ["./vitest.setup.ts"],
     clearMocks: true,
+    // --changed follows imports; these runtime inputs also invalidate the selected tests.
+    forceRerunTriggers: [
+      ...configDefaults.forceRerunTriggers,
+      "**/{package.json,bun.lock,bunfig.toml,mise.toml}",
+      "**/{vitest,vite}.config.*",
+      "**/vitest.setup.*",
+      "**/tsconfig*.json",
+      "**/tooling/typescript/**",
+      "**/patches/**",
+      "**/packages/db/migrations/**",
+      "**/Dockerfile",
+      "**/scripts/{run,entrypoint}.sh",
+      "**/deployments/**",
+      "**/tooling/github/setup/**",
+      "**/.github/workflows/{ci,database,validate-docs}.yml",
+    ].map((pattern) => `${import.meta.dirname}/${pattern}`),
     coverage: {
       provider: "v8",
       reporter: ["html", "json-summary", "json"],
