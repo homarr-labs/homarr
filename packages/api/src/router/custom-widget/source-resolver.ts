@@ -57,7 +57,7 @@ export async function resolveCustomWidgetSource(
 ): Promise<
   Pick<
     CustomWidgetHttpRequest,
-    "baseUrl" | "networkScope" | "auth" | "tls" | "pathPrefix" | "redactSecrets" | "resolveConnectionAsync"
+    "baseUrl" | "auth" | "tls" | "pathPrefix" | "redactSecrets" | "resolveConnectionAsync"
   > & {
     cacheVersion: string;
   }
@@ -69,7 +69,7 @@ export async function resolveCustomWidgetSource(
       auth = { type: authType, secrets: getSecrets() };
       if (typeof source.auth === "object") auth.headerName = source.auth.name;
     }
-    return { baseUrl: source.baseUrl, networkScope: source.networkScope, auth, cacheVersion: "" };
+    return { baseUrl: source.baseUrl, auth, cacheVersion: "" };
   }
   const integration = await resolveIntegration(ctx, source);
   return getIntegrationHttpConnection(integration, request.auth !== "none");

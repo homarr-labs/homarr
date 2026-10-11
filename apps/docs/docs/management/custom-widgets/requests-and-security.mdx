@@ -68,7 +68,7 @@ also use structured `json` and `multiSelect` option values, for example `{ "enti
 
 ## Protection
 
-Every request uses Homarr's existing server executor: same-origin source enforcement, network scope, DNS and redirect validation, SSRF protection, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
+HTTP sources can reach any address accessible to the Homarr server. Every request uses Homarr's existing server executor: same-origin source enforcement, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
 
 The executor caps request bodies at 10 KiB and response bodies at 1 MiB. Parsed JSON is limited to depth 32 and 50,000 nodes;
 each network hop has a ten-second timeout, unauthenticated queries follow at most three same-origin redirects, actions and authenticated queries do not follow redirects,

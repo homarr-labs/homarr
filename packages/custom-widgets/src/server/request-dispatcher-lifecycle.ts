@@ -1,8 +1,8 @@
-import type { createPinnedAgent } from "./network-policy";
+import type { createRequestAgent } from "./network-policy";
 
 export const DISPATCHER_CLOSE_GRACE_MS = 1_000;
 
-type CustomWidgetDispatcher = ReturnType<typeof createPinnedAgent>;
+type CustomWidgetDispatcher = ReturnType<typeof createRequestAgent>;
 
 export async function closeDispatcher(
   dispatcher: CustomWidgetDispatcher,

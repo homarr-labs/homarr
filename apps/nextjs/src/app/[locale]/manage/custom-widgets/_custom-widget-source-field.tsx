@@ -86,8 +86,7 @@ export function CustomWidgetSourceField({
           allowDeselect={false}
           onChange={(type) => {
             if (type === "integration") onUpdate(index, { type, integrationKind: "sonarr" });
-            else if (type === "http")
-              onUpdate(index, { type, baseUrl: "https://example.com", networkScope: "public", auth: "none" });
+            else if (type === "http") onUpdate(index, { type, baseUrl: "https://example.com", auth: "none" });
           }}
         />
         {source.type === "integration" && (
@@ -152,13 +151,6 @@ function CustomWidgetHttpSourceFields({
         onChange={(event) => onUpdate(index, { baseUrl: event.currentTarget.value })}
       />
       <Group grow align="start">
-        <Select
-          label={t("networkScope")}
-          data={["public", "private", "loopback"]}
-          value={source.networkScope}
-          onChange={(value) => value && onUpdate(index, { networkScope: value as CustomWidgetSource["networkScope"] })}
-          allowDeselect={false}
-        />
         <Select
           label={t("authentication")}
           data={["none", "bearer", "basic", "apiKeyHeader", "apiKeyQuery"]}

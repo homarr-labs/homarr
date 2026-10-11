@@ -65,19 +65,14 @@ const completeConfigurationRequest = async (
   const body = parsedBody.data;
   let candidate: unknown;
   if (pending.source.type === "integration") {
-    if (
-      !body.integrationId ||
-      body.baseUrl !== undefined ||
-      body.networkScope !== undefined ||
-      Object.keys(body.secrets).length > 0
-    ) {
+    if (!body.integrationId || body.baseUrl !== undefined || Object.keys(body.secrets).length > 0) {
       return NextResponse.json({ error: "Select an existing integration." }, { status: 400 });
     }
     candidate = { ...pending.source, integrationId: body.integrationId };
   } else {
     if (body.integrationId)
       return NextResponse.json({ error: "HTTP sources cannot bind an integration." }, { status: 400 });
-    candidate = { ...pending.source, baseUrl: body.baseUrl, networkScope: body.networkScope };
+    candidate = { ...pending.source, baseUrl: body.baseUrl };
   }
   const sourceResult = customWidgetSourceSchema.safeParse(candidate);
   if (!sourceResult.success) {
@@ -131,7 +126,6 @@ const completeConfigurationRequest = async (
         sourceId: claimed.sourceId,
         integrationId: sourceResult.data.integrationId,
         baseUrl: sourceResult.data.baseUrl,
-        networkScope: sourceResult.data.networkScope,
         secrets,
         expectedSource: claimed.source,
       });

@@ -2,7 +2,6 @@ export interface CustomWidgetAiExpectation {
   sourceType?: "http" | "integration";
   sourceBaseUrl?: string;
   sourceIntegrationKind?: string;
-  sourceNetworkScope?: "public" | "private" | "loopback";
   sourceAuth?: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
   sourceAuthName?: string;
   minimumTemplateCharacters?: number;
@@ -53,7 +52,7 @@ export interface CustomWidgetAiEvaluationCase {
 }
 
 const seerrSourceApiNotes =
-  "Use the suggested self-hosted source http://seerr.local:5055/api/v1 with private network scope and X-Api-Key header authentication.";
+  "Use the suggested self-hosted source http://seerr.local:5055/api/v1 with X-Api-Key header authentication.";
 const seerrRequestOperationsApiNotes =
   "GET /request/count returns total, movie, tv, pending, approved, declined, processing, available, and completed counts. GET /request accepts take, skip, filter, sort, sortDirection, requestedBy, and mediaType; use fixed primitives take=10, skip=0, sort=added, and sortDirection=desc. Its response has pageInfo.pages/pageSize/results/page and a results array whose entries include id, type, numeric status, createdAt, profileName, requestedBy.displayName, and media.tmdbId/mediaType/status/status4k. Request status values are 1 Pending, 2 Approved, 3 Declined, 4 Failed, and 5 Completed. For managers, POST /request/{param:requestId}/approve and POST /request/{param:requestId}/decline change a pending request's status without a body; show them only for status 1, confirm both, and invalidate the count and list queries. This scoped widget intentionally uses text pageInfo context and does not require media-title joins, search requests, or interactive pagination.";
 const seerrMediaResearchApiNotes =
@@ -411,7 +410,6 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
         apiNotes: `${seerrSourceApiNotes} ${seerrRequestOperationsApiNotes} ${seerrMediaStatusApiNotes}`,
         expectations: {
           sourceBaseUrl: "http://seerr.local:5055/api/v1",
-          sourceNetworkScope: "private",
           sourceAuth: "apiKeyHeader",
           sourceAuthName: "X-Api-Key",
           minimumTemplateCharacters: 900,
@@ -485,7 +483,6 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
         apiNotes: `${seerrSourceApiNotes} ${seerrMediaResearchApiNotes} ${seerrMediaStatusApiNotes}`,
         expectations: {
           sourceBaseUrl: "http://seerr.local:5055/api/v1",
-          sourceNetworkScope: "private",
           sourceAuth: "apiKeyHeader",
           sourceAuthName: "X-Api-Key",
           minimumTemplateCharacters: 900,
@@ -615,7 +612,6 @@ export const CUSTOM_WIDGET_AI_EVALUATION_CASES: readonly CustomWidgetAiEvaluatio
     ],
     expectations: {
       sourceBaseUrl: "https://your-service.example.com",
-      sourceNetworkScope: "private",
       sourceAuth: "apiKeyHeader",
       sourceAuthName: "X-API-Key",
       minimumTemplateCharacters: 800,

@@ -13,13 +13,12 @@ export function requiredSecretKinds(authType: string) {
 /**
  * Credentials may only survive edits that preserve their complete security
  * boundary. The path is intentionally excluded: credentials are scoped to an
- * origin, while the network scope and auth destination are part of the binding.
+ * origin, while the auth destination is part of the binding.
  */
 export function hasSameSecretBinding(left: CustomWidgetSource, right: CustomWidgetSource) {
   if (left.type === "integration" || right.type === "integration") return false;
   return (
     new URL(left.baseUrl).origin === new URL(right.baseUrl).origin &&
-    left.networkScope === right.networkScope &&
     hasSameCustomWidgetSourceAuthentication(left, right)
   );
 }

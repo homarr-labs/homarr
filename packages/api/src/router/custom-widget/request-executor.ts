@@ -2,14 +2,12 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import {
   assertJsonBudget as assertDomainJsonBudget,
   assertSafeStaticHeaders as assertDomainSafeStaticHeaders,
-  classifyAddress,
   executeCustomWidgetRequest as executeDomainRequest,
   invalidateCustomWidgetResponseCache as invalidateDomainResponseCache,
   MAX_REQUEST_BODY_BYTES,
   MAX_RESPONSE_BODY_BYTES,
   MAX_RESPONSE_JSON_DEPTH,
   MAX_RESPONSE_JSON_NODES,
-  resolveAndValidateHost as resolveDomainHost,
   resolveSameOriginTarget as resolveDomainTarget,
   validateCustomWidgetUrl as validateDomainUrl,
 } from "@homarr/custom-widgets/server";
@@ -22,13 +20,7 @@ export type {
   CustomWidgetHttpRequest,
   CustomWidgetHttpResponse,
 } from "@homarr/custom-widgets/server";
-export {
-  classifyAddress,
-  MAX_REQUEST_BODY_BYTES,
-  MAX_RESPONSE_BODY_BYTES,
-  MAX_RESPONSE_JSON_DEPTH,
-  MAX_RESPONSE_JSON_NODES,
-};
+export { MAX_REQUEST_BODY_BYTES, MAX_RESPONSE_BODY_BYTES, MAX_RESPONSE_JSON_DEPTH, MAX_RESPONSE_JSON_NODES };
 
 const logger = createLogger({ module: "custom-widget:http" });
 
@@ -59,14 +51,6 @@ export function validateCustomWidgetUrl(value: string | URL): URL {
 export function resolveSameOriginTarget(baseUrl: string, target?: string | URL): URL {
   try {
     return resolveDomainTarget(baseUrl, target);
-  } catch (error) {
-    toTrpcError(error);
-  }
-}
-
-export async function resolveAndValidateHost(hostname: string, scope: CustomWidgetHttpRequest["networkScope"]) {
-  try {
-    return await resolveDomainHost(hostname, scope);
   } catch (error) {
     toTrpcError(error);
   }
