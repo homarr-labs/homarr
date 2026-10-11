@@ -75,8 +75,8 @@ const sourceOverridesSchema = z.record(
   customWidgetIdentifierSchema,
   z.strictObject({
     baseUrl: z.string().optional(),
+    networkScope: z.unknown().optional(),
     integrationId: z.string().min(1).max(100).optional(),
-    networkScope: z.enum(["public", "private", "loopback"]).optional(),
   }),
 );
 
@@ -169,7 +169,6 @@ export const workshopProcedures = {
               {
                 baseUrl: source.baseUrl,
                 integrationId: source.integrationId,
-                networkScope: source.networkScope ?? widget.sources[sourceId]?.networkScope ?? "public",
               },
             ]),
           ),

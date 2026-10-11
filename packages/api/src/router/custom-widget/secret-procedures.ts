@@ -86,8 +86,8 @@ export const secretProcedures = {
         definitionId: z.string(),
         sourceId: z.string(),
         baseUrl: z.string().optional(),
+        networkScope: z.unknown().optional(),
         integrationId: z.string().min(1).max(100).optional(),
-        networkScope: z.enum(["public", "private", "loopback"]).optional(),
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
@@ -101,12 +101,7 @@ export const secretProcedures = {
       if (!current) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
       let configuration: unknown;
       if (current.type === "integration") {
-        if (
-          !input.integrationId ||
-          input.baseUrl !== undefined ||
-          input.networkScope !== undefined ||
-          input.secrets.length > 0
-        ) {
+        if (!input.integrationId || input.baseUrl !== undefined || input.secrets.length > 0) {
           throw new TRPCError({ code: "BAD_REQUEST", message: "Integration sources require only an integrationId" });
         }
         configuration = { ...current, integrationId: input.integrationId };
@@ -116,7 +111,6 @@ export const secretProcedures = {
         configuration = {
           ...current,
           baseUrl: input.baseUrl,
-          networkScope: input.networkScope ?? current.networkScope,
         };
       }
       const source = customWidgetSourceSchema.parse(configuration);
@@ -128,7 +122,6 @@ export const secretProcedures = {
         sourceId: input.sourceId,
         integrationId: configuredSource.integrationId,
         baseUrl: configuredSource.baseUrl,
-        networkScope: configuredSource.networkScope,
         configuredSecrets: input.secrets.map(({ kind }) => kind),
       };
     }),

@@ -9,21 +9,14 @@ import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
   assertCustomWidgetPathScope,
-  createPinnedAgent,
-  resolveAndValidateHost,
+  createRequestAgent,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
 import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./response";
 
-export {
-  assertSafeStaticHeaders,
-  classifyAddress,
-  resolveAndValidateHost,
-  resolveSameOriginTarget,
-  validateCustomWidgetUrl,
-} from "./network-policy";
+export { assertSafeStaticHeaders, resolveSameOriginTarget, validateCustomWidgetUrl } from "./network-policy";
 export {
   assertJsonBudget,
   MAX_RESPONSE_BODY_BYTES,
@@ -104,11 +97,7 @@ async function performRequestWithinDeadline(
         code: "PAYLOAD_TOO_LARGE",
         message: "Request body exceeds the 10 KiB limit",
       });
-    const dispatcher = createPinnedAgent(
-      await resolveAndValidateHost(currentUrl.hostname, input.networkScope, { signal: deadlineSignal }),
-      REQUEST_TIMEOUT_MS,
-      input.tls,
-    );
+    const dispatcher = createRequestAgent(REQUEST_TIMEOUT_MS, input.tls);
     const headers = buildHeaders(input, currentUrl, requestBody);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);

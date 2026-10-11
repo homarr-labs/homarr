@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Box,
   Button,
-  Checkbox,
   FileInput,
   Group,
   Paper,
@@ -16,14 +15,7 @@ import {
   ThemeIcon,
   Title,
 } from "@mantine/core";
-import {
-  IconArrowLeft,
-  IconBuildingStore,
-  IconCheck,
-  IconExternalLink,
-  IconPhoto,
-  IconShieldCheck,
-} from "@tabler/icons-react";
+import { IconArrowLeft, IconBuildingStore, IconCheck, IconExternalLink, IconPhoto } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useByteFormatter } from "@homarr/settings";
@@ -36,11 +28,7 @@ import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { ManageStickyFooter } from "~/components/manage/manage-sticky-footer";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { getWorkshopWebUrl } from "~/components/workshop/workshop-client";
-import {
-  getPrivateWorkshopSourceNames,
-  publishWorkshopDefinition,
-  serializeWorkshopDefinition,
-} from "~/components/workshop/workshop-publish-definition";
+import { publishWorkshopDefinition } from "~/components/workshop/workshop-publish-definition";
 import { WorkshopAccountButton, useWorkshopSession } from "~/components/workshop/workshop-session";
 
 const listHref = "/manage/custom-widgets";
@@ -53,15 +41,11 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
   const [screenshots, setScreenshots] = useState<File[]>([]);
-  const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [publishedSubmissionId, setPublishedSubmissionId] = useState<string | null>(null);
 
   const createSubmission = useWorkshopCreateMutation(session.client);
   const definition = clientApi.customWidget.export.useQuery({ id: widget.id });
-  const privateSourceNames = getPrivateWorkshopSourceNames(definition.data);
-  const definitionFingerprint = definition.data ? serializeWorkshopDefinition(definition.data) : null;
-  useEffect(() => setSourceUrlsReviewed(false), [definitionFingerprint]);
 
   const breadcrumb = <DynamicBreadcrumb dynamicMappings={new Map([[widget.id, widget.name]])} />;
 
@@ -90,7 +74,6 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
       });
       if (result === "unavailable") throw new Error(t("publish.error"));
       if (result === "changed") {
-        setSourceUrlsReviewed(false);
         setError(t("publish.definitionChanged"));
         return;
       }
@@ -136,12 +119,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
   }
 
   const blocked =
-    !session.user ||
-    createSubmission.isPending ||
-    !definition.data ||
-    definition.isError ||
-    title.trim().length < 3 ||
-    (privateSourceNames.length > 0 && !sourceUrlsReviewed);
+    !session.user || createSubmission.isPending || !definition.data || definition.isError || title.trim().length < 3;
 
   return (
     <ManagePageLayout
@@ -210,20 +188,6 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
             />
           </Stack>
         </Paper>
-
-        {privateSourceNames.length > 0 && (
-          <Alert color="yellow" icon={<IconShieldCheck size={18} />} title={t("publish.reviewSourcesTitle")}>
-            {t("publish.privateSourceWarning", {
-              sources: privateSourceNames.join(", "),
-            })}
-            <Checkbox
-              mt="sm"
-              checked={sourceUrlsReviewed}
-              onChange={(event) => setSourceUrlsReviewed(event.currentTarget.checked)}
-              label={t("publish.privateSourceConfirmation")}
-            />
-          </Alert>
-        )}
 
         {definition.isError && <Alert color="red">{t("publish.error")}</Alert>}
         {error && <Alert color="red">{error}</Alert>}
