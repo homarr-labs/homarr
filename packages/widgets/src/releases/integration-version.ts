@@ -11,19 +11,28 @@ interface ServiceVersionResult {
   error?: string;
 }
 
+// An optional "v", dot-separated numbers and an optional LinuxServer.io build suffix ("-ls325"). Anything else, such
+// as architecture prefixes, digests, pre-release suffixes or malformed values, can't be compared.
+const supportedVersionPattern = /^v?(\d+(?:\.\d+)*)(?:-ls\d+)?$/i;
+
 const parseVersion = (value: string | undefined) => {
-  const numeric = (value ?? "").replace(/^[^\d]+/, "");
-  if (numeric === "") return null;
-  return numeric.split(".").map((part) => Number.parseInt(part, 10) || 0);
+  const numeric = supportedVersionPattern.exec((value ?? "").trim())?.[1];
+  if (!numeric) return null;
+  return numeric.split(".").map((part) => Number.parseInt(part, 10));
 };
+
+// Calendar versions ("2026.10.11", "20261011") only compare with other calendar versions.
+const isCalendarVersion = (parts: number[]) => (parts[0] ?? 0) >= 1900;
 
 /**
  * Compares every version part, padding the shorter one with zeros. A running version newer than the latest
- * release counts as up to date. Undefined when either version has no numeric part.
+ * release counts as up to date. Undefined when either version has an unsupported format, or when only one of them
+ * is a calendar version.
  */
 export const isVersionUpToDate = (running: string | undefined, latest: string | undefined) => {
   const [runningParts, latestParts] = [parseVersion(running), parseVersion(latest)];
   if (!runningParts || !latestParts) return undefined;
+  if (isCalendarVersion(runningParts) !== isCalendarVersion(latestParts)) return undefined;
 
   for (let index = 0; index < Math.max(runningParts.length, latestParts.length); index++) {
     const difference = (runningParts[index] ?? 0) - (latestParts[index] ?? 0);

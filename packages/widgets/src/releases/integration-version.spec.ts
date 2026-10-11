@@ -16,7 +16,10 @@ describe("isVersionUpToDate", () => {
     { running: "4.0.20.3015", latest: "v4.0.20.3014", expected: true },
     { running: "4.0", latest: "v4.0.0", expected: true },
     { running: "4.0.0.1", latest: "v4.0", expected: true },
-    { running: "release-2.0", latest: "v1.9.9", expected: true },
+    { running: "4.0.20.3014", latest: "4.0.20.3014-ls325", expected: true },
+    { running: "4.0.20.3014", latest: "4.0.21.3020-ls330", expected: false },
+    { running: "2026.10.1", latest: "2026.10.2", expected: false },
+    { running: "2026.11.0", latest: "2026.10.2", expected: true },
   ])("$running against $latest is $expected", ({ running, latest, expected }) => {
     expect(isVersionUpToDate(running, latest)).toBe(expected);
   });
@@ -24,6 +27,17 @@ describe("isVersionUpToDate", () => {
   test.each([
     { running: "4.0.20.3014", latest: "latest" },
     { running: "develop", latest: "v4.0.20.3014" },
+    { running: "release-2.0", latest: "v1.9.9" },
+    { running: "4.0.20.3014", latest: "amd64-4.0.20.3014" },
+    { running: "4.0.20.3014", latest: "arm64v8-4.0.21" },
+    { running: "4.0.20.3014", latest: "sha256:9f86d081884c7d65" },
+    { running: "4.0.20.3014", latest: "v5.0.0-beta.1" },
+    { running: "4.0.20.3014", latest: "2026.10.11" },
+    { running: "4.0.20.3014", latest: "20261011" },
+    { running: "2026.10.1", latest: "v4.0.20" },
+    { running: "4..20", latest: "v4.0.20" },
+    { running: "4.0.x", latest: "v4.0.20" },
+    { running: "1.2.3abc", latest: "v1.2.3" },
     { running: "4.0.20.3014", latest: undefined },
     { running: undefined, latest: "v4.0.20.3014" },
   ])("is unknown for $running against $latest", ({ running, latest }) => {
