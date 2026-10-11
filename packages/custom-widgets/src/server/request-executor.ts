@@ -35,6 +35,7 @@ export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_QUERY_REDIRECTS = 3;
 const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
+const MAX_TIMER_DELAY_MS = 2_147_483_647;
 export const MAX_REQUEST_DURATION_MS = 45_000;
 const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
 const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
@@ -42,6 +43,8 @@ const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
 let cacheEpoch = 0;
+let cacheExpiryTimer: ReturnType<typeof setTimeout> | undefined;
+let cacheExpiryDeadline: number | undefined;
 
 type RequestHopResult =
   | { kind: "response"; response: CustomWidgetHttpResponse }
@@ -261,7 +264,10 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   if (!key) return performRequest(input);
   const cached = cache.get(key);
   if (cached && cached.expiresAt > Date.now()) return cached.response;
-  if (cached) cache.delete(key);
+  if (cached) {
+    cache.delete(key);
+    clearCacheExpiryTimerIfEmpty();
+  }
   const pending = inFlight.get(key);
   if (pending) return pending;
   const requestEpoch = cacheEpoch;
@@ -270,7 +276,9 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
     .then((response) => {
       if (response.ok && (input.cacheTtlSeconds ?? 0) > 0 && requestEpoch === cacheEpoch) {
         pruneCache();
-        cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response });
+        const expiresAt = Date.now() + (input.cacheTtlSeconds ?? 0) * 1000;
+        cache.set(key, { expiresAt, response });
+        scheduleCacheExpiry(expiresAt);
       }
       return response;
     })
@@ -286,13 +294,49 @@ export function invalidateCustomWidgetResponseCache(prefixes: readonly string[])
   cacheEpoch += 1;
   for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) cache.delete(key);
   for (const key of inFlight.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) inFlight.delete(key);
+  clearCacheExpiryTimerIfEmpty();
 }
 
 function pruneCache(): void {
-  for (const [key, entry] of cache) if (entry.expiresAt <= Date.now()) cache.delete(key);
+  pruneExpiredCache();
   while (cache.size >= MAX_RESPONSE_CACHE_ENTRIES) {
     const key = cache.keys().next().value as string | undefined;
     if (!key) return;
     cache.delete(key);
   }
+}
+
+function pruneExpiredCache(): void {
+  const now = Date.now();
+  for (const [key, entry] of cache) if (entry.expiresAt <= now) cache.delete(key);
+}
+
+function scheduleCacheExpiry(expiresAt: number): void {
+  if (cacheExpiryTimer && cacheExpiryDeadline !== undefined && expiresAt >= cacheExpiryDeadline) return;
+  if (cacheExpiryTimer) clearTimeout(cacheExpiryTimer);
+  cacheExpiryDeadline = expiresAt;
+  cacheExpiryTimer = setTimeout(
+    () => {
+      cacheExpiryTimer = undefined;
+      cacheExpiryDeadline = undefined;
+      pruneExpiredCache();
+      scheduleNextCacheExpiry();
+    },
+    Math.min(Math.max(0, expiresAt - Date.now()), MAX_TIMER_DELAY_MS),
+  );
+  cacheExpiryTimer.unref();
+}
+
+function scheduleNextCacheExpiry(): void {
+  let earliestExpiry = Number.POSITIVE_INFINITY;
+  for (const entry of cache.values()) if (entry.expiresAt < earliestExpiry) earliestExpiry = entry.expiresAt;
+  if (Number.isFinite(earliestExpiry)) scheduleCacheExpiry(earliestExpiry);
+  else clearCacheExpiryTimerIfEmpty();
+}
+
+function clearCacheExpiryTimerIfEmpty(): void {
+  if (cache.size > 0 || !cacheExpiryTimer) return;
+  clearTimeout(cacheExpiryTimer);
+  cacheExpiryTimer = undefined;
+  cacheExpiryDeadline = undefined;
 }

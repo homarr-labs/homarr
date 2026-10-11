@@ -21,92 +21,119 @@ export const authorizeWithLdapCredentialsAsync = async (
 ) => {
   logger.info("User is trying to log in using LDAP. Connecting to LDAP server...", { userName: credentials.name });
   const client = new LdapClient();
-  await client
-    .bindAsync({
-      distinguishedName: env.AUTH_LDAP_BIND_DN,
-      password: env.AUTH_LDAP_BIND_PASSWORD,
-    })
-    .catch((error) => {
-      throw new CredentialsSignin("Failed to connect to LDAP server", { cause: error });
-    });
+  let email: string;
+  let userGroups: string[];
+  let authorizationFailed = false;
 
-  logger.info("Connected to LDAP server. Searching for user...");
+  try {
+    await client
+      .bindAsync({
+        distinguishedName: env.AUTH_LDAP_BIND_DN,
+        password: env.AUTH_LDAP_BIND_PASSWORD,
+      })
+      .catch((error) => {
+        throw new CredentialsSignin("Failed to connect to LDAP server", { cause: error });
+      });
 
-  const ldapUser = await client
-    .searchAsync({
-      base: env.AUTH_LDAP_BASE,
-      options: {
-        filter: createLdapUserFilter(credentials.name),
-        scope: env.AUTH_LDAP_SEARCH_SCOPE,
-        attributes: [
-          ...new Set([
-            env.AUTH_LDAP_USERNAME_ATTRIBUTE,
-            env.AUTH_LDAP_USER_MAIL_ATTRIBUTE,
-            env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE,
-          ]),
-        ],
-      },
-    })
-    .then((entries) => {
-      if (entries.length > 1) {
-        logger.warn(`Multiple LDAP users found for ${credentials.name}, expected only one.`);
-        throw new CredentialsSignin();
+    logger.info("Connected to LDAP server. Searching for user...");
+
+    const ldapUser = await client
+      .searchAsync({
+        base: env.AUTH_LDAP_BASE,
+        options: {
+          filter: createLdapUserFilter(credentials.name),
+          scope: env.AUTH_LDAP_SEARCH_SCOPE,
+          attributes: [
+            ...new Set([
+              env.AUTH_LDAP_USERNAME_ATTRIBUTE,
+              env.AUTH_LDAP_USER_MAIL_ATTRIBUTE,
+              env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE,
+            ]),
+          ],
+        },
+      })
+      .then((entries) => {
+        if (entries.length > 1) {
+          logger.warn(`Multiple LDAP users found for ${credentials.name}, expected only one.`);
+          throw new CredentialsSignin();
+        }
+
+        return entries.at(0);
+      });
+
+    if (!ldapUser) {
+      throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
+    }
+
+    const mailResult = await utf8EmailSchema.safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
+
+    if (!mailResult.success) {
+      logger.error("User found in LDAP but with invalid or non-existing Email", {
+        userName: credentials.name,
+        emailValue: ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE],
+      });
+      throw new CredentialsSignin("User found in LDAP but with invalid or non-existing Email");
+    }
+
+    logger.info("User found in LDAP. Logging in...", { userName: credentials.name });
+
+    // Bind with user credentials to check if the password is correct
+    const userClient = new LdapClient();
+    let userBindFailed = false;
+    try {
+      await userClient
+        .bindAsync({
+          distinguishedName: ldapUser.dn,
+          password: credentials.password,
+        })
+        .catch(() => {
+          logger.warn("Wrong credentials for user", { userName: credentials.name });
+          throw new CredentialsSignin();
+        });
+    } catch (error) {
+      userBindFailed = true;
+      throw error;
+    } finally {
+      try {
+        await userClient.disconnectAsync();
+      } catch (error) {
+        if (!userBindFailed) throw error;
+        logger.warn("Unable to close LDAP user connection after a failed bind.");
       }
+    }
 
-      return entries.at(0);
+    logger.info("User credentials are correct. Retrieving user groups...", { userName: credentials.name });
+
+    const groupClassFilter = new EqualityFilter({ attribute: "objectClass", value: env.AUTH_LDAP_GROUP_CLASS });
+    const groupMemberFilter = new EqualityFilter({
+      attribute: env.AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE,
+      value: ldapUser[env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE],
     });
+    userGroups = await client
+      .searchAsync({
+        base: env.AUTH_LDAP_BASE,
+        options: {
+          // For example, if the user is doejohn, the filter will be (&(objectClass=group)(uid=doejohn)) or (&(objectClass=group)(uid=doejohn)(sAMAccountType=1234))
+          filter: `(&${groupClassFilter.toString()}${groupMemberFilter.toString()}${env.AUTH_LDAP_GROUP_FILTER_EXTRA_ARG ?? ""})`,
+          scope: env.AUTH_LDAP_SEARCH_SCOPE,
+          attributes: ["cn"],
+        },
+      })
+      .then((entries) => entries.map((entry) => entry.cn).filter((group): group is string => group !== undefined));
 
-  if (!ldapUser) {
-    throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
+    email = mailResult.data;
+    logger.info("User groups retrieved", { userName: credentials.name, groups: userGroups.length });
+  } catch (error) {
+    authorizationFailed = true;
+    throw error;
+  } finally {
+    try {
+      await client.disconnectAsync();
+    } catch (error) {
+      if (!authorizationFailed) throw error;
+      logger.warn("Unable to close LDAP service connection after a failed authorization.");
+    }
   }
-
-  const mailResult = await utf8EmailSchema.safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
-
-  if (!mailResult.success) {
-    logger.error("User found in LDAP but with invalid or non-existing Email", {
-      userName: credentials.name,
-      emailValue: ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE],
-    });
-    throw new CredentialsSignin("User found in LDAP but with invalid or non-existing Email");
-  }
-
-  logger.info("User found in LDAP. Logging in...", { userName: credentials.name });
-
-  // Bind with user credentials to check if the password is correct
-  const userClient = new LdapClient();
-  await userClient
-    .bindAsync({
-      distinguishedName: ldapUser.dn,
-      password: credentials.password,
-    })
-    .catch(() => {
-      logger.warn("Wrong credentials for user", { userName: credentials.name });
-      throw new CredentialsSignin();
-    });
-  await userClient.disconnectAsync();
-
-  logger.info("User credentials are correct. Retrieving user groups...", { userName: credentials.name });
-
-  const groupClassFilter = new EqualityFilter({ attribute: "objectClass", value: env.AUTH_LDAP_GROUP_CLASS });
-  const groupMemberFilter = new EqualityFilter({
-    attribute: env.AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE,
-    value: ldapUser[env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE],
-  });
-  const userGroups = await client
-    .searchAsync({
-      base: env.AUTH_LDAP_BASE,
-      options: {
-        // For example, if the user is doejohn, the filter will be (&(objectClass=group)(uid=doejohn)) or (&(objectClass=group)(uid=doejohn)(sAMAccountType=1234))
-        filter: `(&${groupClassFilter.toString()}${groupMemberFilter.toString()}${env.AUTH_LDAP_GROUP_FILTER_EXTRA_ARG ?? ""})`,
-        scope: env.AUTH_LDAP_SEARCH_SCOPE,
-        attributes: ["cn"],
-      },
-    })
-    .then((entries) => entries.map((entry) => entry.cn).filter((group): group is string => group !== undefined));
-
-  logger.info("User groups retrieved", { userName: credentials.name, groups: userGroups.length });
-
-  await client.disconnectAsync();
 
   // Create or update user in the database
   let user = await db.query.users.findFirst({
@@ -118,7 +145,7 @@ export const authorizeWithLdapCredentialsAsync = async (
       emailVerified: true,
       provider: true,
     },
-    where: and(eq(users.email, mailResult.data), eq(users.provider, "ldap")),
+    where: and(eq(users.email, email), eq(users.provider, "ldap")),
   });
 
   if (!user) {
@@ -127,7 +154,7 @@ export const authorizeWithLdapCredentialsAsync = async (
     const insertUser = {
       id: createId(),
       name: credentials.name,
-      email: mailResult.data,
+      email,
       emailVerified: new Date(), // assume email is verified
       image: null,
       provider: "ldap",

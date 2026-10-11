@@ -17,6 +17,7 @@
     "apps/docs/blog/authors.yml",
     "apps/docs/public/api/open-api-schema.json",
     "packages/custom-widgets/src/core/component-catalog.generated.json",
+    "packages/custom-widgets/src/core/component-catalog.runtime.generated.json",
     "apps/docs/public/custom-widgets/component-catalog-v1.json"
   ]
 }
