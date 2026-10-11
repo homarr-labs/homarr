@@ -1913,6 +1913,9 @@
     "pagination": {
       "pageOf": "Page {page} of {totalPages}"
     },
+    "navigation": {
+      "toggle": "Toggle navigation"
+    },
     "here": "here",
     "serviceUrlTemplate": {
       "serverTitle": "Usual server address",
@@ -6394,7 +6397,7 @@
             "header": {
               "title": "Header studio",
               "badge": "Personal",
-              "description": "Drag controls anywhere in the row. Left, Center, and Right stay fixed while controls shift around them.",
+              "description": "Configure controls with their buttons. Use the drag handles to reorder them within Left, Center, or Right.",
               "device": {
                 "desktop": "Desktop",
                 "mobile": "Mobile"
@@ -6407,7 +6410,7 @@
               "action": {
                 "hide": "Hide the header",
                 "show": "Show the header",
-                "configure": "Move or configure {item}",
+                "configure": "Configure {item}",
                 "remove": "Remove {item}",
                 "dropIntoZone": "Move into the {zone} section"
               },
@@ -6417,7 +6420,7 @@
               },
               "available": {
                 "title": "Available controls",
-                "description": "Add a control, then drag its full button into position above.",
+                "description": "Add a control, then use its drag handle to position it above.",
                 "requiredAlways": "This control is required, but you can move it anywhere in the header.",
                 "allAdded": "Every built-in control is already in your header.",
                 "add": "Add {item}",
