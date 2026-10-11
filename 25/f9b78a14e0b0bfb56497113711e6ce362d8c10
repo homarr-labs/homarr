@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.module.css
+  h_d6e478ca18e517 106-107,143,164-165,170-185
+apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
+  h_d6e478ca18e517 29,93-95,107,110,114-122,200-202,262,464,479,501,514-515,531-544
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25f9b78a14e0b0bfb56497113711e6ce362d8c10",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
