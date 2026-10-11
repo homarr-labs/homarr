@@ -11,6 +11,7 @@ import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
+import { OAuthConnections } from "./_components/_oauth-connections";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
 
@@ -82,6 +83,8 @@ export default async function EditUserPage(props: Props) {
         showLanguageSelector={isSelf}
         profileAvatar={<UserProfileAvatarForm user={user} />}
       />
+
+      {isSelf && <OAuthConnections key={user.id} />}
 
       {session?.user.id === user.id && (
         <Stack mb="lg">

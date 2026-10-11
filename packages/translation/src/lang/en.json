@@ -247,6 +247,80 @@
         "title": "Log in to your account",
         "subtitle": "Welcome back! Please enter your credentials"
       },
+      "mcpConsent": {
+        "title": "Review client access",
+        "description": "Check the account, client and callback destination before allowing access.",
+        "viewingHint": "Viewing this page does not grant access.",
+        "identityTitle": "Account and client",
+        "loading": "Loading the access request",
+        "allow": "Allow access",
+        "deny": "Deny access",
+        "decisionHint": "Only allow access if you trust this client and recognize the callback destination.",
+        "requestExpires": "Authorization request expires (UTC):",
+        "returnHome": "Return to Homarr",
+        "reload": "Reload consent page",
+        "account": {
+          "name": "Signed-in user",
+          "id": "User ID",
+          "nameNotRecorded": "User name not recorded"
+        },
+        "client": {
+          "name": "Client name (self-reported)",
+          "nameNotSupplied": "Client name not supplied",
+          "id": "Client ID",
+          "callbackHost": "Callback host",
+          "callbackUrl": "Full callback URL",
+          "hostUnavailable": "Callback host unavailable",
+          "unverifiedHint": "Client names are self-reported and are not verified by Homarr. A familiar name does not establish who operates the client.",
+          "destinationHint": "Your decision will return to this callback. If you allow access, the client can exchange the authorization code for an API credential."
+        },
+        "access": {
+          "title": "Effective account access",
+          "description": "The credential uses your account's current permissions, including access to resources shared with you. Permissions are checked for every API request and may change when your account permissions change.",
+          "noGlobalPermissions": "No additional global permissions are currently assigned. Your existing account and shared-resource access still applies."
+        },
+        "admin": {
+          "title": "Full administrator access",
+          "description": "You are an administrator. Allowing access creates a credential with full administrator access to Homarr and connected services, including destructive actions. Only continue if you trust this client."
+        },
+        "credential": {
+          "title": "Credential scope and lifetime",
+          "breadth": "This creates a user API credential. It can be used with Homarr's HTTP API as well as MCP, including outside this client.",
+          "lifetime": "The credential does not expire automatically. Signing out does not revoke it. Revoke the connection in your General settings to remove its saved credential.",
+          "manageConnections": "Manage OAuth connections"
+        },
+        "error": {
+          "freshStart": "Start a fresh authorization request from the client. Homarr will ask you to review access again.",
+          "unavailable": {
+            "title": "Access request unavailable",
+            "description": "This request has expired, was already handled, or is no longer available. It cannot be approved from this page."
+          },
+          "invalid_browser": {
+            "title": "Access request belongs to a different browser",
+            "description": "This browser cannot verify the original request. Use the browser where you started authorization, or start a fresh request from the client."
+          },
+          "session_changed": {
+            "title": "Your sign-in session has changed",
+            "description": "This request was linked to a different user or sign-in session. It cannot be approved with the current session."
+          },
+          "invalid_request": {
+            "title": "Access request could not be verified",
+            "description": "The request is invalid, expired or no longer verifiable. No access was granted by this attempt."
+          },
+          "access_denied": {
+            "title": "Access was not granted",
+            "description": "The authorization attempt was refused. No access was granted by this attempt."
+          },
+          "server_error": {
+            "title": "Access request could not be completed",
+            "description": "Homarr could not complete this authorization attempt. Check your OAuth connections before starting again."
+          },
+          "unknown": {
+            "title": "Access request unavailable",
+            "description": "This page cannot confirm the authorization result. Check your OAuth connections before starting again."
+          }
+        }
+      },
       "invite": {
         "title": "Join Homarr",
         "titleWithAppName": "Join {appName}",
@@ -6388,6 +6462,31 @@
               "search": "Search",
               "firstDayOfWeek": "First day of the week",
               "accessibility": "Accessibility",
+              "oauthConnections": {
+                "title": "OAuth connections",
+                "description": "These clients obtained API credentials for your account through OAuth. The credentials work with Homarr's HTTP API as well as MCP, do not expire automatically, and remain valid after you sign out.",
+                "revocationHint": "Revoking a connection removes its API credential. To reconnect, start authorization again from the client.",
+                "loading": "Loading OAuth connections",
+                "retry": "Reload connections",
+                "revoke": "Revoke connection",
+                "confirmRevoke": "Confirm revocation",
+                "empty": {
+                  "title": "No recorded OAuth connections",
+                  "description": "New OAuth connections appear here. Older credentials without recorded client details may need an administrator to revoke them in API Keys."
+                },
+                "loadError": {
+                  "title": "OAuth connections could not be loaded",
+                  "description": "Try loading the list again. This does not revoke any credentials."
+                },
+                "success": {
+                  "title": "Connection revoked",
+                  "description": "The saved API credential has been removed. Reconnect from the client to grant access again."
+                },
+                "error": {
+                  "title": "Connection could not be revoked",
+                  "description": "The credential may still be active. Try revoking it again."
+                }
+              },
               "onboardingTours": {
                 "title": "Onboarding Tours",
                 "description": "Reset the onboarding tours to see them again on your next visit to the management area or dashboard.",
@@ -6928,7 +7027,8 @@
               "label": "Authentication",
               "title": "API Keys",
               "button": {
-                "createApiToken": "Create API token"
+                "createApiToken": "Create API token",
+                "confirmDeletion": "Confirm deletion"
               },
               "modal": {
                 "delete": {
@@ -6939,7 +7039,43 @@
               "table": {
                 "header": {
                   "createdBy": "Created by",
+                  "source": "Source",
                   "actions": "Actions"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Manual or legacy API key",
+                "unnamedClient": "Client name not recorded",
+                "clientNameHint": "Client names are self-reported and are not verified.",
+                "details": "Connection details",
+                "credentialId": "Credential ID",
+                "clientId": "Client ID",
+                "callbackHost": "Callback host",
+                "callbackUrl": "Full callback URL",
+                "issuedAt": "Issued (UTC)",
+                "unknown": "Not recorded"
+              },
+              "empty": {
+                "title": "No API keys to show",
+                "description": "Create an API token or adjust the table filters to find existing keys."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API key could not be created",
+                  "description": "No new credential was received. Check the key list before trying again."
+                },
+                "deleteError": {
+                  "title": "API key could not be deleted",
+                  "description": "The credential may still be active. Try deleting it again."
+                },
+                "deleteSuccess": {
+                  "title": "API key deleted",
+                  "description": "The saved API credential has been removed."
+                },
+                "refreshError": {
+                  "title": "API key deleted, but the list could not be refreshed",
+                  "description": "Reload this page to see the current API keys."
                 }
               }
             },
@@ -6961,9 +7097,9 @@
                   "description": "Pass the ApiKey header with your full API key in the MCP client configuration."
                 },
                 "oauth": {
-                  "title": "OAuth (browser login)",
-                  "description": "Clients that support OAuth (such as Claude Code, opencode, or Cursor) can authenticate by opening a browser window. Run the auth command in your client, log in to Homarr in the browser, and you're connected — an API key is created automatically.",
-                  "hint": "OAuth tokens appear as regular API keys in the Authentication tab. You can revoke them at any time."
+                  "title": "OAuth (browser login and consent)",
+                  "description": "Start authorization in your OAuth client and sign in to Homarr if needed. Review the client, callback destination and account access, then choose Allow access only if you trust the client. An API credential is created only after approval and a successful code exchange.",
+                  "hint": "Revoke recorded OAuth connections in your own General settings. Administrators can also revoke credentials in the Authentication tab. These credentials work with Homarr's HTTP API and MCP, do not expire automatically, and remain valid after sign-out."
                 },
                 "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
               },

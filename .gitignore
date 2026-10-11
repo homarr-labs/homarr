@@ -94,3 +94,4 @@ homarr-backup*.zip
 
 # PR description screenshots belong on the pull request, not in the repository
 .screenshots/
+.slim/deepwork/

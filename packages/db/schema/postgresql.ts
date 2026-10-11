@@ -56,6 +56,10 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/postgresql"
 export const apiKeys = pgTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
+  oauthClientId: text(),
+  oauthClientName: text(),
+  oauthRedirectUri: text(),
+  oauthIssuedAt: timestamp({ mode: "date" }),
   userId: varchar({ length: 64 })
     .notNull()
     .references((): AnyPgColumn => users.id, {
