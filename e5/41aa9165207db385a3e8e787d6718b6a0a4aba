@@ -1,0 +1,21 @@
+apps/workshop/pb_hooks/workshop-utils.js
+  s_5749b2ccfeffb1::t_24cfeb70bf814c 12-24,70
+packages/cron-jobs-core/src/group.ts
+  s_5749b2ccfeffb1::t_cc5987f5f6a3f1 84,95,125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e541aa9165207db385a3e8e787d6718b6a0a4aba",
+  "prompts": {},
+  "sessions": {
+    "s_5749b2ccfeffb1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-5d31-7090-8035-0e501d3f763d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
