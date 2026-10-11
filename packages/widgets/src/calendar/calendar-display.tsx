@@ -15,13 +15,11 @@ import {
   Tooltip,
   UnstyledButton,
   getThemeColor,
-  rem,
   useMantineTheme,
 } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import { DayView, WeekView } from "@mantine/schedule";
-import type { DayViewProps } from "@mantine/schedule";
 import { IconCheck, IconChevronDown, IconChevronLeft, IconChevronRight, IconCalendarEvent } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -82,9 +80,12 @@ export const CalendarDisplay = ({
   );
   const eventsByDate = useMemo(() => groupEventsByDate(splitEvents(filteredEvents)), [filteredEvents]);
   const agendaEvents = useMemo(() => getCalendarAgendaEvents(events, date, releaseType), [events, date, releaseType]);
+  const slotHeight = Math.max(40, bodyHeight / 12);
+  // Use the same visible interval for native event sizing and overlap columns.
+  const minimumEventDuration = Math.max(60, Math.ceil((24 / slotHeight) * 3600));
   const scheduleEvents = useMemo(
-    () => getCalendarScheduleEvents(filteredEvents, view === "day" ? date : undefined),
-    [filteredEvents, view, date],
+    () => getCalendarScheduleEvents(filteredEvents, view === "day" ? date : undefined, minimumEventDuration),
+    [filteredEvents, view, date, minimumEventDuration],
   );
   const labels = {
     allDay: t("duration.allDay"),
@@ -133,12 +134,6 @@ export const CalendarDisplay = ({
     withHeader: false,
     mode: scheduleMode,
     onEventClick: openEvent,
-    // Keep short events visible and clickable in both schedule views.
-    renderEvent: ((_event, eventProps) => {
-      const style = { ...eventProps.style };
-      if (style.position === "absolute") style.minHeight = rem(24);
-      return <UnstyledButton {...eventProps} style={style} />;
-    }) satisfies NonNullable<DayViewProps["renderEvent"]>,
     scrollAreaProps: {
       h: bodyHeight,
       mah: bodyHeight,
@@ -146,7 +141,7 @@ export const CalendarDisplay = ({
       styles: { content: { minWidth: 0, width: "100%" } },
       startScrollPosition: { y: 8 * Math.max(40, bodyHeight / 12) },
     },
-    slotHeight: Math.max(40, bodyHeight / 12),
+    slotHeight,
     allDaySlotHeight: 48,
     h: "100%",
     w: "100%",

@@ -14,6 +14,7 @@ export const isCalendarAllDayEvent = (event: CalendarEventWithSource) => {
 export const getCalendarScheduleEvents = (
   events: CalendarEventWithSource[],
   displayedDay?: Date,
+  minimumDurationSeconds = 60,
 ): ScheduleEventData[] => {
   const dayStart = displayedDay ? dayjs(displayedDay).startOf("day") : undefined;
   const dayEnd = dayStart?.add(1, "day").startOf("day");
@@ -34,8 +35,15 @@ export const getCalendarScheduleEvents = (
       if (start.isBefore(dayStart)) start = dayStart;
       if (!end.isBefore(dayEnd)) end = dayEnd.subtract(1, "second");
     }
-    // Keep the clipped visual interval positive at the final second.
-    if (!start.isBefore(end, "second")) start = end.subtract(1, "second");
+    // Keep short visual intervals inside their day, including the final second.
+    if (end.diff(start, "second") < minimumDurationSeconds) {
+      const latestEnd = start.endOf("day").startOf("second");
+      end = start.add(minimumDurationSeconds, "second");
+      if (end.isAfter(latestEnd)) {
+        end = latestEnd;
+        start = end.subtract(minimumDurationSeconds, "second");
+      }
+    }
     return [
       {
         id: `${event.source?.integrationId ?? "calendar"}:${index}`,
