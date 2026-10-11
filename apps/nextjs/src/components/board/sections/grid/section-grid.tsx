@@ -60,7 +60,7 @@ export const SectionGrid = ({
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
   const parentRowScale = useContext(GridRowScaleContext);
-  const [collapsedHeaderRowCount, setCollapsedHeaderRowCount] = useState<number>();
+  const [collapsedRowsPerPixel, setCollapsedRowsPerPixel] = useState<number>();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -128,11 +128,16 @@ export const SectionGrid = ({
     if (directCollapsedIds.size === 0) return placements;
 
     let collapsedRowCountById: ReadonlyMap<string, number> | undefined;
-    if (collapsedHeaderRowCount !== undefined) {
+    if (collapsedRowsPerPixel !== undefined) {
+      const headerHeight = CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale) * canvasScale;
       collapsedRowCountById = new Map(
         innerSections
           .filter((child) => child.options.collapsible && child.options.showLabel)
-          .map((child) => [child.id, collapsedHeaderRowCount]),
+          .map((child) => {
+            let topInset = CONTAINER_CARD_INSET;
+            if (railPlacement !== "main" && child.yOffset === 0) topInset = 0;
+            return [child.id, (headerHeight + topInset + 10) * collapsedRowsPerPixel];
+          }),
       );
     }
     return getCollapsedDisplayLayout(placements, {
@@ -140,7 +145,7 @@ export const SectionGrid = ({
       collapsedItemIds: directCollapsedIds,
       collapsedRowCountById,
     });
-  }, [columnCount, directCollapsedIds, innerSections, placements, collapsedHeaderRowCount]);
+  }, [canvasScale, columnCount, directCollapsedIds, innerSections, placements, collapsedRowsPerPixel, railPlacement]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
@@ -234,11 +239,9 @@ export const SectionGrid = ({
   const combinedUiScale = calculateBoardUiScale(canvasScale) / contentScale;
   useLayoutEffect(() => {
     if (!hasLabeledCollapsibleChildren) return;
-    // Header height plus the container/tile insets leaves the regular 20px tile gap.
-    const height =
-      (CONTAINER_HEADER_HEIGHT * combinedUiScale + 15 / effectiveContentScale) / LOGICAL_GRID_PITCH / rowScale;
-    setCollapsedHeaderRowCount(height);
-  }, [combinedUiScale, effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
+    // Convert the fixed header and visual insets into this grid's row units.
+    setCollapsedRowsPerPixel(1 / (effectiveContentScale * LOGICAL_GRID_PITCH * rowScale));
+  }, [effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);

@@ -45,18 +45,6 @@
   border-color: var(--border-color) !important;
 }
 
-.containerToggle :global(.mantine-Button-inner) {
-  width: 100%;
-  min-width: 0;
-}
-
-.containerToggle :global(.mantine-Button-label) {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .labeledContainerCard[data-board-container-collapsed="true"] {
   height: min(var(--container-header-height), 100%) !important;
 }
@@ -65,7 +53,7 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  inset-inline-end: var(--container-action-inset, 0px);
+  inset-inline-end: 0;
   z-index: 9;
   height: var(--container-header-height);
   min-width: 0;
@@ -86,7 +74,7 @@
   display: flex;
   align-items: center;
   gap: calc(12px * var(--board-canvas-ui-scale, 1));
-  width: 100%;
+  width: calc(100% - var(--container-action-inset, 0px));
   height: 100%;
   min-width: 0;
   padding: 0 calc(16px * var(--board-canvas-ui-scale, 1));
