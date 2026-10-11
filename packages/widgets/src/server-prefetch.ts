@@ -12,6 +12,7 @@ import {
   resolveBeszelSystemChoice,
   resolveStoredBeszelQuerySelection,
 } from "./beszel-system-stats/selection";
+import { resolveDownloadsQueryInput } from "./downloads/query-input";
 import { ALL_PHOTOS_ALBUM_ID } from "./immich/album-carousel/constants";
 
 const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
@@ -157,10 +158,7 @@ export const prefetchInitialWidgetData = (
         if (integrationIds.length)
           prefetchQuery(
             queryClient,
-            trpc.widget.downloads.getJobsAndStatuses.queryOptions({
-              integrationIds,
-              limitPerIntegration: Number(options.limitPerIntegration ?? 50),
-            }),
+            trpc.widget.downloads.getJobsAndStatuses.queryOptions(resolveDownloadsQueryInput(integrationIds, options)),
           );
         break;
       case "indexerManager":

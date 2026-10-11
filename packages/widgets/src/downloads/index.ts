@@ -1,11 +1,13 @@
 import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { isRecord } from "@homarr/common";
 import { getIntegrationKindsByCategory, getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
+import { resolveDownloadsQueryInput } from "./query-input";
 
 const sortColumns = [
   "name",
@@ -27,12 +29,11 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
   supportsAdvancedFocus: true,
   queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
   queryMatcher: ({ input }, scope) =>
-    widgetQueryInputMatches(input, {
-      integrationIds: scope.integrationIds,
-      limitPerIntegration: scope.options.limitPerIntegration,
-      includeArchivedHistory: scope.options.includeArchivedHistory,
-      historyWindowDays: scope.options.historyWindowDays,
-    }),
+    isRecord(input) &&
+    widgetQueryInputMatches(
+      { ...resolveDownloadsQueryInput(scope.integrationIds, input), integrationIds: input.integrationIds },
+      resolveDownloadsQueryInput(scope.integrationIds, scope.options),
+    ),
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
