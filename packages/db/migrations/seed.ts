@@ -206,7 +206,7 @@ const insertMissingProjectedPositionsAsync = async (
         : [];
     }),
     ...board.sections.flatMap((section) => {
-      if (section.kind !== "dynamic") return [];
+      if (section.kind !== "container") return [];
       const layout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === sourceLayout.id);
       return layout?.parentSectionId
         ? [
@@ -225,7 +225,7 @@ const insertMissingProjectedPositionsAsync = async (
   ];
 
   const projectedElements = board.sections
-    .filter((section) => section.kind !== "dynamic")
+    .filter((section) => section.kind === "empty")
     .flatMap(
       (section) =>
         generateResponsiveGridFor({
@@ -243,17 +243,15 @@ const insertMissingProjectedPositionsAsync = async (
   );
   const itemPositions = projectedElements
     .filter((element) => element.type === "item" && !existingItemIds.has(element.id))
-    .map(
-      (element): InferInsertModel<typeof itemLayouts> => ({
-        itemId: element.id,
-        layoutId: targetLayout.id,
-        sectionId: element.sectionId,
-        width: element.width,
-        height: element.height,
-        xOffset: element.xOffset,
-        yOffset: element.yOffset,
-      }),
-    );
+    .map((element): InferInsertModel<typeof itemLayouts> => ({
+      itemId: element.id,
+      layoutId: targetLayout.id,
+      sectionId: element.sectionId,
+      width: element.width,
+      height: element.height,
+      xOffset: element.xOffset,
+      yOffset: element.yOffset,
+    }));
 
   const existingSectionIds = new Set(
     board.sections
@@ -262,17 +260,15 @@ const insertMissingProjectedPositionsAsync = async (
   );
   const sectionPositions = projectedElements
     .filter((element) => element.type === "section" && !existingSectionIds.has(element.id))
-    .map(
-      (element): InferInsertModel<typeof sectionLayouts> => ({
-        sectionId: element.id,
-        layoutId: targetLayout.id,
-        parentSectionId: element.sectionId,
-        width: element.width,
-        height: element.height,
-        xOffset: element.xOffset,
-        yOffset: element.yOffset,
-      }),
-    );
+    .map((element): InferInsertModel<typeof sectionLayouts> => ({
+      sectionId: element.id,
+      layoutId: targetLayout.id,
+      parentSectionId: element.sectionId,
+      width: element.width,
+      height: element.height,
+      xOffset: element.xOffset,
+      yOffset: element.yOffset,
+    }));
 
   if (itemPositions.length > 0) await db.insert(itemLayouts).values(itemPositions);
   if (sectionPositions.length > 0) await db.insert(sectionLayouts).values(sectionPositions);
@@ -897,18 +893,16 @@ const buildDemoWidgets = (
   },
 
   // Right app rail
-  ...appIds.map(
-    (appId, index): DemoWidget => ({
-      kind: "app",
-      section: "right",
-      xOffset: 0,
-      yOffset: index,
-      width: 1,
-      height: 1,
-      needsIntegration: false,
-      options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
-    }),
-  ),
+  ...appIds.map((appId, index): DemoWidget => ({
+    kind: "app",
+    section: "right",
+    xOffset: 0,
+    yOffset: index,
+    width: 1,
+    height: 1,
+    needsIntegration: false,
+    options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
+  })),
 ];
 
 const seedDemoUserAsync = async (db: Database) => {
