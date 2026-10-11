@@ -67,7 +67,42 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
         category: torrent.category,
       };
     });
-    return { status, items };
+    if (!input.selection) return { status, items };
+
+    const [transferInfo, runningTorrents, ratioItems] = await Promise.all([
+      client.request<{ dl_info_speed: number; up_info_speed: number }>("/transfer/info", "GET"),
+      client.listTorrents({ filter: "running", limit: 1 }),
+      this.getRatioItemsAsync(client, input.limit),
+    ]);
+    return {
+      items,
+      ratioItems,
+      status: {
+        paused: runningTorrents.length === 0,
+        rates: { down: transferInfo.dl_info_speed, up: transferInfo.up_info_speed },
+        types: [type],
+      },
+    };
+  }
+
+  private async getRatioItemsAsync(client: QBittorrent, limit: number) {
+    // Preserve the original unfiltered limited population without retaining full provider objects.
+    const ratioItems: NonNullable<DownloadClientJobsAndStatus["ratioItems"]> = [];
+    for (let page = 0; page < 100 && ratioItems.length < limit; page++) {
+      const pageSize = Math.min(limit - ratioItems.length, 100);
+      const batch = await client.listTorrents({ limit: pageSize, offset: page * 100 });
+      for (const torrent of batch) {
+        ratioItems.push({
+          sent: torrent.uploaded,
+          size: torrent.size,
+          progress: torrent.progress,
+          category: torrent.category,
+        });
+        if (ratioItems.length >= limit) break;
+      }
+      if (batch.length < pageSize) break;
+    }
+    return ratioItems;
   }
 
   private async getSelectedTorrentsAsync(
