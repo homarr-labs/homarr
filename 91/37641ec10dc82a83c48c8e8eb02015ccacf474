@@ -1,0 +1,14 @@
+apps/nextjs/src/app/[locale]/manage/settings/_components/setting-switch.tsx
+  h_d6e478ca18e517 4,27-29,38-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9137641ec10dc82a83c48c8e8eb02015ccacf474",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
