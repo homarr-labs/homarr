@@ -1,16 +1,17 @@
 import { ImageProxy } from "@homarr/image-proxy";
 
-export const GET = async (_request: Request, props: { params: Promise<{ id: string }> }) => {
+export const GET = async (request: Request, props: { params: Promise<{ id: string }> }) => {
   const { id } = await props.params;
 
   const imageProxy = new ImageProxy();
-  const result = await imageProxy.forwardImageAsync(id);
+  const result = await imageProxy.forwardImageAsync(id, request.signal);
 
   if ("error" in result) {
     const status = result.error === "upstream-error" ? result.statusCode : result.error === "fetch-error" ? 502 : 404;
     return new Response(null, {
       status,
       headers: {
+        "Cache-Control": "no-store",
         "X-Homarr-Image-Proxy-Error": result.error,
       },
     });
