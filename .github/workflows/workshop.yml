@@ -286,7 +286,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      pull-requests: read
+      pull-requests: write
     env:
       WORKSHOP_IMAGE: ghcr.io/homarr-labs/workshop
     steps:
@@ -345,3 +345,36 @@ jobs:
             if [[ -n "$expected_manifest" ]]; then test "$manifest" = "$expected_manifest"; fi
             expected_manifest="$manifest"
           done
+
+      - name: Comment with preview image
+        if: github.event_name == 'pull_request' && !env.ACT
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const marker = "<!-- workshop-preview-image -->";
+            const image = `${process.env.WORKSHOP_IMAGE}:pr-${context.issue.number}`;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              marker,
+              "**Workshop preview image published**",
+              "",
+              `\`${image}\` — available for Linux amd64 and arm64.`,
+              "",
+              "```sh",
+              `docker pull ${image}`,
+              "```",
+              "",
+              `[Build details](${runUrl}) · Commit \`${context.sha.slice(0, 7)}\``,
+              "This comment updates when a new preview is published.",
+            ].join("\n");
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo, issue_number: context.issue.number, per_page: 100,
+            });
+            const existing = comments.find((comment) =>
+              comment.user?.login === "github-actions[bot]" && comment.body?.includes(marker),
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+            }
