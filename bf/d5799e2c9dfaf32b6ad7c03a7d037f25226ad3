@@ -1,0 +1,32 @@
+apps/nextjs/src/components/board/sections/item.module.css
+  s_5749b2ccfeffb1::t_4f7bed2f0c75d8 60-149,186
+apps/nextjs/src/components/board/layout/reflow.ts
+  s_5749b2ccfeffb1::t_f99e04368c4534 18,65-70,77-86,139,153,162-165
+apps/nextjs/src/components/board/layout/constants.ts
+  s_5749b2ccfeffb1::t_d22dc1369ea212 10
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_5749b2ccfeffb1::t_f99e04368c4534 20,130,132-134,136-137,141,235
+  s_5749b2ccfeffb1::t_8f1d88c7455d00 71-73,214
+  s_5749b2ccfeffb1::t_4f7bed2f0c75d8 126,222-223
+  s_5749b2ccfeffb1::t_d22dc1369ea212 14,63,131,135,143,194-198,204-207,210,236-241
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_5749b2ccfeffb1::t_e1c1a983950d5b 1,98-116,118,120,122,159-160,162-169,172-174,186
+  s_5749b2ccfeffb1::t_f99e04368c4534 249
+  s_5749b2ccfeffb1::t_d22dc1369ea212 14,52,63-67,117,119,121,139-140,150-151,157-158,161,170-171,175,185,193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bfd5799e2c9dfaf32b6ad7c03a7d037f25226ad3",
+  "prompts": {},
+  "sessions": {
+    "s_5749b2ccfeffb1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-5d31-7090-8035-0e501d3f763d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
