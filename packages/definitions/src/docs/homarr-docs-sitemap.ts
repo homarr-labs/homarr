@@ -176,6 +176,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/sonarr"
   | "/docs/integrations/speedtest-tracker"
   | "/docs/integrations/spoolman"
+  | "/docs/integrations/sportarr"
   | "/docs/integrations/stash"
   | "/docs/integrations/syncthing-relay"
   | "/docs/integrations/synology"

@@ -4459,7 +4459,7 @@
     },
     "mediaMissing": {
       "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies, episodes and books from {radarr}, {sonarr} and {bindery}",
+      "description": "Shows missing and queued movies, episodes, events and books from {radarr}, {sonarr}, {sportarr} and {bindery}",
       "option": {
         "showMissing": {
           "label": "Show missing items"

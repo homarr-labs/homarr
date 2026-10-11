@@ -258,6 +258,8 @@ const integrationCreators = {
   plex: async (input: IntegrationInput) => new (await import("../plex/plex-integration")).PlexIntegration(input),
   sonarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/sonarr/sonarr-integration")).SonarrIntegration(input),
+  sportarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/sportarr/sportarr-integration")).SportarrIntegration(input),
   radarr: async (input: IntegrationInput) =>
     new (await import("../media-organizer/radarr/radarr-integration")).RadarrIntegration(input),
   sabNzbd: async (input: IntegrationInput) =>
