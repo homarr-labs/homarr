@@ -11,11 +11,13 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
   getCollapsedDisplayLayout,
+  CONTAINER_HEADER_HEIGHT,
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
   getLayoutRowCount,
   getLogicalGridSize,
   getReadonlyCanvasAttributes,
+  LOGICAL_GRID_PITCH,
   normalizeGridPlacement,
 } from "~/components/board/layout";
 import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
@@ -58,6 +60,7 @@ export const SectionGrid = ({
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
   const parentRowScale = useContext(GridRowScaleContext);
+  const [collapsedHeaderRowCount, setCollapsedHeaderRowCount] = useState<number>();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -65,6 +68,9 @@ export const SectionGrid = ({
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
+  const hasLabeledCollapsibleChildren = innerSections.some(
+    (child) => child.options.collapsible && child.options.showLabel,
+  );
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
   const expandSectionsForEditing = useExpandSectionsForEditing();
@@ -117,14 +123,24 @@ export const SectionGrid = ({
       ),
     [collapsedSectionIds, collapsibleSectionIds, placements],
   );
+  const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
   const displayPlacements = useMemo(() => {
     if (directCollapsedIds.size === 0) return placements;
 
+    let collapsedRowCountById: ReadonlyMap<string, number> | undefined;
+    if (collapsedHeaderRowCount !== undefined) {
+      collapsedRowCountById = new Map(
+        innerSections
+          .filter((child) => child.options.collapsible && child.options.showLabel)
+          .map((child) => [child.id, collapsedHeaderRowCount]),
+      );
+    }
     return getCollapsedDisplayLayout(placements, {
       columnCount,
       collapsedItemIds: directCollapsedIds,
+      collapsedRowCountById,
     });
-  }, [columnCount, directCollapsedIds, placements]);
+  }, [columnCount, directCollapsedIds, innerSections, placements, collapsedHeaderRowCount]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
@@ -175,19 +191,27 @@ export const SectionGrid = ({
     allocatedViewportHeight *= parentRowScale;
   }
   const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
+  const hasContainerHeader = section.kind === "container" && section.options.collapsible && section.options.showLabel;
+  let headerInset = 0;
+  if (hasContainerHeader && !collapsedSectionIds.has(section.id)) {
+    headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
+  }
   let nestedHeaderInset = 0;
   if (
     section.kind === "container" &&
     (section.options.collapsible || (section.options.showLabel && section.options.title)) &&
     innerSections.some(
-      (child) => child.yOffset === 0 && (child.options.collapsible || (child.options.showLabel && child.options.title)),
+      (child) =>
+        child.yOffset === 0 &&
+        (child.options.collapsible || (child.options.showLabel && child.options.title)) &&
+        (!hasContainerHeader || !child.options.collapsible || !child.options.showLabel),
     )
   ) {
-    // Separate floating parent/child headers while retaining the persisted cell footprint.
+    // Keep the extra gap whenever either adjacent header still floats over its border.
     nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveCanvasScale;
   }
   nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedViewportHeight - outerCardInset - 1));
-  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset);
+  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset - headerInset);
   // Fit columns to the card width. Rows fit the available height independently
   // without creating horizontal gutters or distorting text and icons.
   let containerContentScale = 1;
@@ -195,7 +219,8 @@ export const SectionGrid = ({
   if (section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0) {
     containerContentScale = Math.max(0.01, Math.min(logicalWidth / fullGridWidth, 1));
     rowScale = Math.max(0.01, viewportHeight / (fullViewportHeight * containerContentScale));
-  } else if (isRail && railLogicalHeight > 0 && rowCount <= railViewportRowCount) {
+  } else if (isRail && railLogicalHeight > 0 && rowCount <= railViewportRowCount && !hasCollapsedHeader) {
+    // Keep fixed-height collapsed headers out of the rail's fill compression.
     rowScale = viewportHeight / fullViewportHeight;
   }
   const contentScale = parentContentScale * containerContentScale;
@@ -207,6 +232,13 @@ export const SectionGrid = ({
   // is a circular reference - CSS invalidates the whole group rather than using "the old value",
   // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
   const combinedUiScale = calculateBoardUiScale(canvasScale) / contentScale;
+  useLayoutEffect(() => {
+    if (!hasLabeledCollapsibleChildren) return;
+    // Header height plus the container/tile insets leaves the regular 20px tile gap.
+    const height =
+      (CONTAINER_HEADER_HEIGHT * combinedUiScale + 15 / effectiveContentScale) / LOGICAL_GRID_PITCH / rowScale;
+    setCollapsedHeaderRowCount(height);
+  }, [combinedUiScale, effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
