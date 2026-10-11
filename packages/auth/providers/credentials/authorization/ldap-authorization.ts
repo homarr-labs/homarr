@@ -94,12 +94,11 @@ export const authorizeWithLdapCredentialsAsync = async (
       userBindFailed = true;
       throw error;
     } finally {
-      try {
-        await userClient.disconnectAsync();
-      } catch (error) {
-        if (!userBindFailed) throw error;
-        logger.warn("Unable to close LDAP user connection after a failed bind.");
-      }
+      await disconnectLdapClientAsync(
+        userClient,
+        userBindFailed,
+        "Unable to close LDAP user connection after a failed bind.",
+      );
     }
 
     logger.info("User credentials are correct. Retrieving user groups...", { userName: credentials.name });
@@ -127,12 +126,11 @@ export const authorizeWithLdapCredentialsAsync = async (
     authorizationFailed = true;
     throw error;
   } finally {
-    try {
-      await client.disconnectAsync();
-    } catch (error) {
-      if (!authorizationFailed) throw error;
-      logger.warn("Unable to close LDAP service connection after a failed authorization.");
-    }
+    await disconnectLdapClientAsync(
+      client,
+      authorizationFailed,
+      "Unable to close LDAP service connection after a failed authorization.",
+    );
   }
 
   // Create or update user in the database
@@ -174,6 +172,15 @@ export const authorizeWithLdapCredentialsAsync = async (
     groups: userGroups,
   };
 };
+
+async function disconnectLdapClientAsync(client: LdapClient, authorizationFailed: boolean, failureMessage: string) {
+  try {
+    await client.disconnectAsync();
+  } catch (error) {
+    if (!authorizationFailed) throw error;
+    logger.warn(failureMessage);
+  }
+}
 
 const createLdapUserFilter = (username: string) => {
   const userFilter = new EqualityFilter({ attribute: env.AUTH_LDAP_USERNAME_ATTRIBUTE, value: username }).toString();
