@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { AppShell } from "@mantine/core";
+import { AppShell, Box } from "@mantine/core";
 import { useAtomValue } from "jotai";
 import { useSettings } from "@homarr/settings";
 
@@ -25,27 +25,40 @@ export const ClientShell = ({
   const headerHeight = headerPreferences.visible ? appShellHeaderHeight : 0;
 
   return (
-    <AppShell
-      {...backgroundProps}
-      // The board canvas sizes itself to its content (AppShell runs in "static" mode so
-      // <main> doesn't force a 100dvh minimum - see AppShell.css). Without this, a board
-      // background image only covers as much height as the content needs, so collapsing a
-      // container short enough leaves flat page background showing below it instead of the
-      // background continuing to the bottom of the viewport.
-      mih={backgroundProps.bg ? "100dvh" : undefined}
-      header={hasHeader ? { height: headerHeight } : undefined}
-      navbar={
-        hasNavigation
-          ? {
-              width: 300,
-              breakpoint: "sm",
-              collapsed: { mobile: collapsed },
-            }
-          : undefined
-      }
-      padding="xs"
-    >
-      {children}
-    </AppShell>
+    <>
+      {backgroundProps.bg && (
+        <Box
+          aria-hidden
+          pos="fixed"
+          inset={0}
+          style={{
+            backgroundImage: backgroundProps.bg,
+            backgroundPosition: backgroundProps.bgp,
+            backgroundSize: backgroundProps.bgsz,
+            backgroundRepeat: backgroundProps.bgr,
+            backgroundAttachment: backgroundProps.bga,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
+      )}
+      <AppShell
+        mih={backgroundProps.bg ? "100dvh" : undefined}
+        header={hasHeader ? { height: headerHeight } : undefined}
+        navbar={
+          hasNavigation
+            ? {
+                width: 300,
+                breakpoint: "sm",
+                collapsed: { mobile: collapsed },
+              }
+            : undefined
+        }
+        padding="xs"
+        style={{ position: "relative", zIndex: 1 }}
+      >
+        {children}
+      </AppShell>
+    </>
   );
 };
