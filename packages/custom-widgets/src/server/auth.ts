@@ -1,3 +1,4 @@
+import { getCustomWidgetRequiredSecretKinds } from "../core/secret-requirements";
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 import { CustomWidgetDomainError } from "./errors";
 import { assertCustomWidgetPathScope, resolveSameOriginTarget } from "./network-policy";
@@ -27,6 +28,24 @@ export function buildSecretMap(secrets: Array<{ kind: string; value: string }>):
   return map;
 }
 
+export function getCustomWidgetAuthConfigurationError(auth: CustomWidgetHttpRequest["auth"]): string | null {
+  if (
+    !auth ||
+    (auth.type !== "basic" && auth.type !== "bearer" && auth.type !== "apiKeyHeader" && auth.type !== "apiKeyQuery")
+  )
+    return null;
+  const secretMap = buildSecretMap(auth.secrets);
+  if (getCustomWidgetRequiredSecretKinds(auth.type).some((kind) => !secretMap[kind]?.trim())) {
+    return "Custom widget source credentials are missing; complete secure source configuration before running requests";
+  }
+  return null;
+}
+
+function assertAuthCredentials(auth: CustomWidgetHttpRequest["auth"]): void {
+  const message = getCustomWidgetAuthConfigurationError(auth);
+  if (message) throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message });
+}
+
 export function applyAuth(
   headers: HeaderSetter,
   url: URL,
@@ -34,6 +53,7 @@ export function applyAuth(
   secrets: Array<{ kind: string; value: string }>,
   headerName?: string | null,
 ): void {
+  assertAuthCredentials({ type: authType, secrets });
   const secretMap = buildSecretMap(secrets);
 
   if (authType === "basic" && secretMap.username && secretMap.password) {
@@ -86,6 +106,7 @@ export async function performAuthenticatedRequest(
     resolveSameOriginTarget(connection.baseUrl, target);
     input = { ...input, ...connection, targetUrl: target };
   }
+  assertAuthCredentials(input.auth);
   return perform(input, signal);
 }
 

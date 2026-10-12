@@ -59,7 +59,13 @@ const secretRequestInputSchema = z
 export const secretProcedures = {
   secretSet: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Set one encrypted secret for a custom widget source." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        effect: "destructive",
+        description: "Set one encrypted secret for a custom widget source.",
+      },
+    })
     .input(z.object({ definitionId: z.string(), secret: customWidgetSecretInputSchema }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -77,6 +83,7 @@ export const secretProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Configure one custom widget source. For an integration source, provide integrationId from integration_all (matching integrationKind); omit URL and secrets. Requires administrator permission.",
       },
@@ -138,6 +145,7 @@ export const secretProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Create or check a short-lived source-configuration request for the current administrator. Create with {previewSessionId,sourceId} or {definitionId,sourceId}; check status with {requestId} only. Never combine these modes or include secret values. Share the returned URL for the user to configure credentials.",
       },

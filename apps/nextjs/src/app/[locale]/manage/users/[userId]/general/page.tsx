@@ -9,8 +9,10 @@ import { getI18n } from "@homarr/translation/server";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { canAccessUserEditPage } from "../access";
+import { getUserEditDataAsync } from "../_data";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
+import { OAuthConnections } from "./_components/_oauth-connections";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
 import { ResetTours } from "./_components/_reset-tours";
 
@@ -23,11 +25,7 @@ interface Props {
 export async function generateMetadata(props: Props) {
   const params = await props.params;
   const session = await auth();
-  const user = await api.user
-    .getById({
-      userId: params.userId,
-    })
-    .catch(() => null);
+  const user = await getUserEditDataAsync(params.userId).catch(() => null);
 
   if (!user || !canAccessUserEditPage(session, user.id)) {
     return {};
@@ -47,11 +45,7 @@ export default async function EditUserPage(props: Props) {
   const tUser = await getI18n("user");
   const tGeneral = await getI18n("management.page.user.setting.general");
   const session = await auth();
-  const user = await api.user
-    .getById({
-      userId: params.userId,
-    })
-    .catch(catchTrpcNotFound);
+  const user = await getUserEditDataAsync(params.userId).catch(catchTrpcNotFound);
 
   if (!canAccessUserEditPage(session, user.id)) {
     notFound();
@@ -82,6 +76,8 @@ export default async function EditUserPage(props: Props) {
         showLanguageSelector={isSelf}
         profileAvatar={<UserProfileAvatarForm user={user} />}
       />
+
+      {isSelf && <OAuthConnections key={user.id} />}
 
       {session?.user.id === user.id && (
         <Stack mb="lg">

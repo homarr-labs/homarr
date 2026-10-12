@@ -29,7 +29,24 @@ export interface AnalyzeJsxTemplateOptions {
 }
 const networkComponentPattern = /<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/giu;
 const inputBindingPattern = /<([A-Z][A-Za-z0-9.]*)(?:\s[^<>]*?)?\bbind\s*=\s*(?:"([^"]+)"|'([^']+)'|\{)/gu;
-const lineAt = (source: string, index: number) => source.slice(0, index).split("\n").length;
+// Matches advance within each pattern; restart when the next pattern moves backward.
+function createLineAt(source: string) {
+  let line = 1;
+  let previousIndex = 0;
+  let newline = source.indexOf("\n");
+  return (index: number) => {
+    if (index < previousIndex) {
+      line = 1;
+      newline = source.indexOf("\n");
+    }
+    while (newline !== -1 && newline < index) {
+      line += 1;
+      newline = source.indexOf("\n", newline + 1);
+    }
+    previousIndex = index;
+    return line;
+  };
+}
 export const CUSTOM_JSX_TEMPLATE_LIMIT = CUSTOM_JSX_LIMITS.templateLength;
 
 export function analyzeJsxTemplate(
@@ -51,9 +68,10 @@ export function analyzeJsxTemplate(
     })),
   );
   const knownIds = new Set(requestIds);
+  const lineAt = createLineAt(template);
   for (const match of template.matchAll(networkComponentPattern)) {
     const props = match[2] ?? "";
-    const line = lineAt(template, match.index);
+    const line = lineAt(match.index);
     if (/\b(?:url|method|headers|body|onBody|offBody)\s*=/iu.test(props)) {
       diagnostics.push({ code: "inlineRequestProps", severity: "error", line, index: match.index });
     }
@@ -80,7 +98,7 @@ export function analyzeJsxTemplate(
       diagnostics.push({
         code: "dynamicInputBinding",
         severity: "error",
-        line: lineAt(template, match.index),
+        line: lineAt(match.index),
         index: match.index,
       });
       continue;
@@ -91,7 +109,7 @@ export function analyzeJsxTemplate(
       diagnostics.push({
         code: "bindingTypeConflict",
         severity: "error",
-        line: lineAt(template, match.index),
+        line: lineAt(match.index),
         index: match.index,
         value: inputName,
       });

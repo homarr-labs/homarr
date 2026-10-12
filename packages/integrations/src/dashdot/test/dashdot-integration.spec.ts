@@ -9,13 +9,12 @@ vi.hoisted(() => {
 });
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createChannelEventHistoryOld } from "@homarr/redis";
 
-import { createChannelEventHistoryOld } from "../../../../redis/src/lib/channel";
 import { DashDotIntegration } from "../dashdot-integration";
 
-vi.mock("@homarr/redis", () => ({}));
+vi.mock("@homarr/redis", () => ({ createChannelEventHistoryOld: vi.fn() }));
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
-vi.mock("../../../../redis/src/lib/channel", () => ({ createChannelEventHistoryOld: vi.fn() }));
 
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 const mockCreateHistory = vi.mocked(createChannelEventHistoryOld);

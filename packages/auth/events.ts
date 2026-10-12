@@ -31,7 +31,8 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     if (!dbUser) throw new Error("User not found");
 
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
-    const profileGroups = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
+    const profileGroupsClaim = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
+    const profileGroups = typeof profileGroupsClaim === "string" ? [profileGroupsClaim] : profileGroupsClaim;
     // Groups from oidc provider are provided from the profile, it's not typed.
     if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc" && Array.isArray(profileGroups)) {
       logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);

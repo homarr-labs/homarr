@@ -142,15 +142,17 @@ export default function WazuhAgentsWidget({
     setSort((current) => ({ key: column, descending: current.key === column ? !current.descending : false }));
 
   const agents = result?.data?.agents;
-  const newestVersion = useMemo(
-    () =>
-      (agents ?? []).reduce<string | null>(
-        (newest, agent) => (compareVersions(agent.version, newest) > 0 ? agent.version : newest),
-        null,
-      ),
-    [agents],
-  );
+  const showTable = height >= 190;
+  const showVersion = showTable && options.showVersion && width >= 600;
+  const newestVersion = useMemo(() => {
+    if (!showVersion) return null;
+    return (agents ?? []).reduce<string | null>(
+      (newest, agent) => (compareVersions(agent.version, newest) > 0 ? agent.version : newest),
+      null,
+    );
+  }, [agents, showVersion]);
   const visibleAgents = useMemo(() => {
+    if (!showTable) return [];
     const filtered = (agents ?? []).filter((agent) => {
       if (filter === "all") return true;
       if (filter === "inactive") return agent.status !== "active";
@@ -158,7 +160,7 @@ export default function WazuhAgentsWidget({
     });
     const sorted = filtered.toSorted(sorters[sort.key]);
     return sort.descending ? sorted.toReversed() : sorted;
-  }, [agents, filter, sort]);
+  }, [agents, filter, sort, showTable]);
 
   const compact = height < 170 || width < 260;
 
@@ -175,10 +177,8 @@ export default function WazuhAgentsWidget({
   const overview = result.data;
   const counts = overview.counts;
   const snapshotAgeMs = (now ?? new Date()).getTime() - new Date(overview.asOf).getTime();
-  const showTable = height >= 190;
   const showIp = width >= 380;
   const showOs = width >= 460;
-  const showVersion = options.showVersion && width >= 600;
   const showGroups = options.showGroups && width >= 720;
   const toggleFilter = (value: StatusFilter) => setFilter((current) => (current === value ? "all" : value));
 
@@ -317,6 +317,7 @@ export default function WazuhAgentsWidget({
                   {visibleAgents.map((agent) => {
                     const OsIcon = getOsIcon(agent.osPlatform, agent.osName);
                     const outdated =
+                      showVersion &&
                       agent.version !== null &&
                       newestVersion !== null &&
                       compareVersions(agent.version, newestVersion) < 0;

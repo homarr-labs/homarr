@@ -6,11 +6,15 @@ import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
 
+import type { BeszelTimePeriod } from "@homarr/definitions/beszel";
+import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
+import { containerChartColor } from "./colors";
+import classes from "./chart.module.css";
 
-export type BeszelTimePeriod = "1m" | "1h" | "12h" | "24h" | "1w" | "30d";
+export type { BeszelTimePeriod } from "@homarr/definitions/beszel";
 
 const timeFormatOptions: Record<BeszelTimePeriod, Intl.DateTimeFormatOptions> = {
   "1m": { hour: "numeric", minute: "2-digit", second: "2-digit" },
@@ -90,11 +94,18 @@ export function padLiveTimeGrid(data: Record<string, unknown>[], pointCount = 60
 
 const yAxisBase = {
   tickMargin: 0,
-  tick: { fontSize: "var(--mantine-font-size-xs)" },
+  tick: { fontSize: 12, fill: "var(--beszel-chart-muted)" },
 } as const;
-const chartStyle = { minWidth: 0, minHeight: 1, flexGrow: 1, flexShrink: 0 } as const;
+const chartStyle = {
+  minWidth: 0,
+  minHeight: 1,
+  flexGrow: 1,
+  flexShrink: 0,
+  // Recharts measures pixels; keep points, axes and tooltips readable on a scaled board.
+  zoom: "var(--board-canvas-inverse-scale, 1)",
+} as const;
 const panelStyle = { minWidth: 0 } as const;
-const chartMargin = { top: 0, right: 0, bottom: 0, left: 0 } as const;
+const chartMargin = { top: 12, right: 5, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
 interface BeszelChartPanelProps {
@@ -133,11 +144,14 @@ const BeszelAreaChart = memo(
     xAxisProps: xAxisPropsOverride,
     areaChartProps: areaChartPropsOverride,
     type = "default",
+    fillOpacity = 0.4,
     ...props
   }: BeszelAreaChartProps) => {
     const mergedXAxis = useMemo(
       () => ({
         interval: "preserveEnd" as const,
+        minTickGap: 50,
+        tick: { fontSize: 12, fill: "var(--beszel-chart-muted)" },
         ...xAxisPropsOverride,
       }),
       [xAxisPropsOverride],
@@ -158,14 +172,25 @@ const BeszelAreaChart = memo(
 
     return (
       <AreaChart
+        // Recharts keeps registration order when keyed areas move; reset it when ranks change.
+        key={JSON.stringify(props.series.map(({ name }) => name))}
+        className={classes.chart}
         dataKey="time"
         curveType="monotone"
         withGradient={false}
         connectNulls={false}
         withDots={false}
+        areaProps={({ color }) => ({
+          fill: color,
+          fillOpacity,
+          activeDot: { r: 4, fill: color, stroke: "transparent", strokeWidth: 2 },
+        })}
         type={type}
         strokeWidth={1}
-        fillOpacity={0.2}
+        fillOpacity={fillOpacity}
+        strokeDasharray="0"
+        gridColor="color-mix(in srgb, var(--beszel-chart-border) 50%, transparent)"
+        textColor="var(--beszel-chart-muted)"
         withXAxis={withXAxis}
         withYAxis
         w="100%"
@@ -182,7 +207,7 @@ const BeszelAreaChart = memo(
 export const useSystemChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(() => {
@@ -196,7 +221,7 @@ export const useSystemChartData = (
     return padTimeGrid(mapped, timePeriod, locale);
   }, [systemStats, mapFn, timePeriod, locale]);
 
-export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined, max = 15) => {
+export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined) => {
   const prevRef = useRef<string[]>([]);
   return useMemo(() => {
     if (!containerStats?.length) {
@@ -205,17 +230,18 @@ export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] |
       return prevRef.current;
     }
     const names = new Set<string>();
-    for (const record of containerStats) {
+    // Native processes history chronologically; first appearance breaks equal-usage ties.
+    for (const record of containerStats.toSorted((a, b) => a.created.localeCompare(b.created))) {
       for (const c of record.stats) {
         names.add(c.n);
       }
     }
-    const next = [...names].slice(0, max);
+    const next = [...names];
     const prev = prevRef.current;
     if (prev.length === next.length && prev.every((n, i) => n === next[i])) return prev;
     prevRef.current = next;
     return next;
-  }, [containerStats, max]);
+  }, [containerStats]);
 };
 
 type ContainerExtractor = (container: BeszelContainerStatsRecord["stats"][number] | undefined) => number;
@@ -229,17 +255,35 @@ export const normalizeBeszelByteRate = (
   legacyMebibytesPerSecond: number | undefined,
 ): number => bytesPerSecond ?? (legacyMebibytesPerSecond ?? 0) * MEBIBYTE;
 
-const defaultContainerExtractors: Record<string, ContainerExtractor> = {
+const defaultContainerExtractors: Record<"cpu" | "memory" | "network", ContainerExtractor> = {
   cpu: (c) => c?.c ?? 0,
-  memory: (c) => (c?.m ?? 0) * MEBIBYTE,
+  memory: (c) => c?.m ?? 0,
   network: (c) => normalizeBeszelByteRate(c?.b?.[0], c?.ns) + normalizeBeszelByteRate(c?.b?.[1], c?.nr),
 };
+
+export const useContainerSeries = (
+  records: BeszelContainerStatsRecord[] | undefined,
+  names: string[],
+  metric: "cpu" | "memory" | "network",
+) =>
+  useMemo(() => {
+    const totals = new Map(names.map((name) => [name, 0]));
+    const extract = defaultContainerExtractors[metric];
+    for (const record of records ?? []) {
+      for (const container of record.stats) {
+        totals.set(container.n, (totals.get(container.n) ?? 0) + extract(container));
+      }
+    }
+    return [...totals]
+      .toSorted(([, a], [, b]) => b - a)
+      .map(([name], rank) => ({ name, color: containerChartColor(rank, totals.size) }));
+  }, [records, names, metric]);
 
 export const useDiskChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   efsPaths: string[],
   rootSeriesName: string,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(
@@ -251,7 +295,7 @@ export const buildDiskChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   efsPaths: string[],
   rootSeriesName: string,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) => {
   if (!systemStats?.length) return [];
@@ -278,7 +322,7 @@ export const useDiskIOChartData = (
   rootWriteSeriesName: string,
   readLabel: string,
   writeLabel: string,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(() => {
@@ -306,7 +350,7 @@ export const useDockerChartData = (
   containerStats: BeszelContainerStatsRecord[] | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(() => {
@@ -318,7 +362,9 @@ export const useDockerChartData = (
       const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
       const byName = new Map(record.stats.map((c) => [c.n, c]));
       for (const name of containerNames) {
-        point[name] = extract(byName.get(name));
+        const container = byName.get(name);
+        point[name] = null;
+        if (container) point[name] = extract(container);
       }
       return point;
     });
@@ -363,7 +409,7 @@ export const useGpuChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   devices: BeszelGpuDevice[],
   metric: BeszelGpuMetric,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) =>
   useMemo(
@@ -375,7 +421,7 @@ export const buildGpuChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
   devices: BeszelGpuDevice[],
   metric: BeszelGpuMetric,
-  timePeriod: BeszelTimePeriod = "1h",
+  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
 ) => {
   if (!systemStats?.length) return [];

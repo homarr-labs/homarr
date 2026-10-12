@@ -247,6 +247,82 @@
         "title": "Prisijunkite prie savo paskyros",
         "subtitle": "Sveiki sugrįžę! Prašome įvesti savo prisijungimo duomenis"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Prisijungti prie Homarr",
         "titleWithAppName": "Prisijungti prie {appName}",
@@ -1839,6 +1915,9 @@
     "pagination": {
       "pageOf": "{page} puslapis iš {totalPages}"
     },
+    "navigation": {
+      "toggle": ""
+    },
     "here": "čia",
     "serviceUrlTemplate": {
       "serverTitle": "Įprastas serverio adresas",
@@ -3300,6 +3379,11 @@
         },
         "defaultTab": {
           "label": ""
+        },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
         },
         "visibleClusterSections": {
           "label": "Matomos klasterio sekcijos"
@@ -6171,15 +6255,6 @@
           "notice": "Kad šis puslapis išnyktų, paprašykite serverio administratoriaus nustatyti serverio pagrindinę suvestinę"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
@@ -6393,6 +6468,31 @@
               "search": "Paieška",
               "firstDayOfWeek": "Pirmoji savaitės diena",
               "accessibility": "Pritaikymas neįgaliesiems",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Įvedimo mokymai",
                 "description": "Iš naujo nustatykite vedlio mokymus, kad pamatytumėte juos dar kartą kitą kartą apsilankę valdymo srityje arba valdymo skydelyje.",
@@ -6933,7 +7033,8 @@
               "label": "Autentifikavimas",
               "title": "API raktai",
               "button": {
-                "createApiToken": "Sukurti API prieigos raktą"
+                "createApiToken": "Sukurti API prieigos raktą",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7045,43 @@
               "table": {
                 "header": {
                   "createdBy": "Sukūrė",
+                  "source": "Integracija",
                   "actions": "Veiksmai"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

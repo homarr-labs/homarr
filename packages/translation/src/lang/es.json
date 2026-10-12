@@ -247,6 +247,82 @@
         "title": "Inicia sesión en tu cuenta",
         "subtitle": "¡Bienvenido de nuevo! Por favor introduce tus credenciales"
       },
+      "mcpConsent": {
+        "title": "Revisar acceso al cliente",
+        "description": "Revisar el acceso de este cliente antes de conectarse.",
+        "viewingHint": "Ver esta página no permite el acceso.",
+        "identityTitle": "Cuenta y cliente",
+        "loading": "Cargando la solicitud de acceso",
+        "allow": "Permitir acceso",
+        "deny": "Denegar acceso",
+        "decisionHint": "Sólo permitir el acceso si confía en este cliente y en el callback.",
+        "requestExpires": "La solicitud caduca (UTC):",
+        "details": "Detalles técnicos",
+        "returnHome": "Volver a Homarr",
+        "reload": "Recargar página de consentimiento",
+        "account": {
+          "name": "Conectado como",
+          "id": "ID Usuario",
+          "nameNotRecorded": "Nombre de usuario no registrado"
+        },
+        "client": {
+          "name": "Cliente",
+          "nameNotSupplied": "Nombre del cliente no suministrado",
+          "id": "ID de cliente",
+          "callbackHost": "Servidor de llamada",
+          "callbackUrl": "URL completa del callback",
+          "hostUnavailable": "Host de devolución de llamada no disponible",
+          "unverifiedHint": "Los nombres de los clientes son autoreportados, no verificados por Homarr.",
+          "destinationHint": "Tu decisión volverá a este callback. Si permites el acceso, el cliente puede cambiar el código de autorización por una credencial API."
+        },
+        "access": {
+          "title": "Acceso a la cuenta",
+          "description": "Utiliza tus permisos actuales, incluyendo los recursos compartidos.",
+          "details": "Ver permisos ({count})",
+          "noGlobalPermissions": "Utiliza tu cuenta y acceso a recursos compartidos, sin permisos globales."
+        },
+        "admin": {
+          "title": "Acceso total al administrador",
+          "description": "Puede administrar Homarr y servicios conectados, incluyendo acciones destructivas."
+        },
+        "credential": {
+          "title": "Movimiento de credenciales y tiempo de vida",
+          "breadth": "Funciona con la API HTTP y MCP de Homarr, incluyendo fuera de este cliente.",
+          "lifetime": "No hay expiración automática. El inicio de sesión no revoca el acceso.",
+          "manageConnections": "Revocar en la configuración general"
+        },
+        "error": {
+          "freshStart": "Iniciar una nueva solicitud de autorización del cliente. Homarr le pedirá que revise el acceso de nuevo.",
+          "unavailable": {
+            "title": "Solicitud de acceso no disponible",
+            "description": "Esta solicitud ha caducado, ya ha sido manejada o ya no está disponible. No puede ser aprobada desde esta página."
+          },
+          "invalid_browser": {
+            "title": "La solicitud de acceso pertenece a un navegador diferente",
+            "description": "Este navegador no puede verificar la solicitud original. Utiliza el navegador donde iniciaste la autorización o inicia una nueva solicitud del cliente."
+          },
+          "session_changed": {
+            "title": "Su sesión de inicio de sesión ha cambiado",
+            "description": "Esta solicitud estaba vinculada a un usuario o sesión de inicio de sesión diferente. No se puede aprobar con la sesión actual."
+          },
+          "invalid_request": {
+            "title": "La solicitud de acceso no pudo ser verificada",
+            "description": "La solicitud no es válida, caducó o ya no es verificable. Este intento no ha concedido acceso."
+          },
+          "access_denied": {
+            "title": "El acceso no se ha concedido",
+            "description": "El intento de autorización fue rechazado. No se concedió acceso a este intento."
+          },
+          "server_error": {
+            "title": "No se pudo completar la solicitud de acceso",
+            "description": "Homarr no pudo completar este intento de autorización. Comprueba tus conexiones de OAuth antes de volver a iniciar."
+          },
+          "unknown": {
+            "title": "Solicitud de acceso no disponible",
+            "description": "Esta página no puede confirmar el resultado de la autorización. Compruebe sus conexiones OAuth antes de comenzar de nuevo."
+          }
+        }
+      },
       "invite": {
         "title": "Únete a Homarr",
         "titleWithAppName": "Únete a {appName}",
@@ -1839,6 +1915,9 @@
     "pagination": {
       "pageOf": "Página {page} de {totalPages}"
     },
+    "navigation": {
+      "toggle": "Cambiar navegación"
+    },
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Dirección del servidor habitual",
@@ -3300,6 +3379,11 @@
         },
         "defaultTab": {
           "label": "Seleccionar pestaña predeterminada"
+        },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Sistema y luego Clúster",
+          "clusterFirst": "Clúster y sistema"
         },
         "visibleClusterSections": {
           "label": "Secciones de clúster visibles"
@@ -6171,15 +6255,6 @@
           "notice": "Para hacer que esta página desaparezca, pide al administrador del servidor que establezca un tablero de inicio para el servidor"
         }
       }
-    },
-    "snapshot": {
-      "take": "Tomar instantánea del estado del tablero",
-      "description": "Descarga una instantánea redactada para adjuntar un informe de error y ayudarnos a reproducir tu diseño",
-      "downloaded": "Snapshot descargado",
-      "downloadedDescription": "Adjunte el JSON y una captura de pantalla tomada en el mismo tamaño de la ventana a su informe de error. La instantánea incluye diseño, configuración, CSS personalizado, opciones de widget y datos cargados, con texto privado, URLs y credenciales redactadas.",
-      "playground": "Zona de juego abierta",
-      "failed": "No se puede capturar la instantánea del tablero",
-      "failedDescription": "Los datos del tablero no pudieron ser exportados de forma segura, o la instantánea excede los 10 MB."
     }
   },
   "layout": {
@@ -6393,6 +6468,31 @@
               "search": "Buscar",
               "firstDayOfWeek": "Primer día de la semana",
               "accessibility": "Accesibilidad",
+              "oauthConnections": {
+                "title": "Conexiones OAuth",
+                "description": "Estos clientes obtuvieron credenciales API para su cuenta a través de OAuth. Las credenciales funcionan con la API HTTP de Homarr, así como con MCP, no expiran automáticamente y permanecen válidas después de cerrar sesión.",
+                "revocationHint": "Revocar una conexión elimina su credencial API. Para volver a conectar, inicia la autorización de nuevo desde el cliente.",
+                "loading": "Cargando conexiones OAuth",
+                "retry": "Recargar conexiones",
+                "revoke": "Revocar conexión",
+                "confirmRevoke": "Confirmar revocación",
+                "empty": {
+                  "title": "No hay conexiones OAuth grabadas",
+                  "description": "Las nuevas conexiones OAuth aparecen aquí. Las credenciales antiguas sin los datos del cliente registrados pueden necesitar un administrador para revocarlas en las claves de API."
+                },
+                "loadError": {
+                  "title": "No se han podido cargar las conexiones OAuth",
+                  "description": "Intenta cargar la lista de nuevo. Esto no revoca ninguna credencial."
+                },
+                "success": {
+                  "title": "Conexión revocada",
+                  "description": "La credencial API guardada ha sido eliminada. Volver a conectar del cliente para conceder acceso de nuevo."
+                },
+                "error": {
+                  "title": "La conexión no pudo ser revocada",
+                  "description": "La credencial puede estar activa. Intenta revocarla de nuevo."
+                }
+              },
               "onboardingTours": {
                 "title": "Tours de introducción",
                 "description": "",
@@ -6933,7 +7033,8 @@
               "label": "Autenticación",
               "title": "Claves API",
               "button": {
-                "createApiToken": "Crear token de API"
+                "createApiToken": "Crear token de API",
+                "confirmDeletion": "Confirmar eliminación"
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7045,43 @@
               "table": {
                 "header": {
                   "createdBy": "Creado por",
+                  "source": "Integración",
                   "actions": "Acciones"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Clave API manual o heredada",
+                "unnamedClient": "Nombre del cliente no grabado",
+                "clientNameHint": "Los nombres de clientes son autoreportados y no son verificados.",
+                "details": "Detalles de conexión",
+                "credentialId": "ID de credencial",
+                "clientId": "ID de cliente",
+                "callbackHost": "Servidor de llamada",
+                "callbackUrl": "URL completa del callback",
+                "issuedAt": "Emitido (UTC)",
+                "unknown": "No grabado"
+              },
+              "empty": {
+                "title": "No hay claves API para mostrar",
+                "description": "Crea un token de API o ajusta los filtros de tabla para encontrar las claves existentes."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "La clave API no pudo ser creada",
+                  "description": "No se ha recibido ninguna nueva credencial. Compruebe la lista de claves antes de intentarlo de nuevo."
+                },
+                "deleteError": {
+                  "title": "La clave API no pudo ser eliminada",
+                  "description": "La credencial puede estar activa. Intente eliminarla de nuevo."
+                },
+                "deleteSuccess": {
+                  "title": "Clave API eliminada",
+                  "description": "La credencial de API guardada ha sido eliminada."
+                },
+                "refreshError": {
+                  "title": "Clave de API eliminada, pero la lista no se pudo actualizar",
+                  "description": "Recarga esta página para ver las claves API actuales."
                 }
               }
             },
@@ -6966,9 +7103,9 @@
                   "description": ""
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (nombre de usuario y consentimiento del navegador)",
+                  "description": "Inicie la autorización en su cliente OAuth y inicie sesión en Homarr si es necesario. Revise el cliente, el destino de la devolución de llamada y el acceso a la cuenta, luego elija Permitir el acceso sólo si confía en el cliente. Una credencial API se crea sólo después de la aprobación y un intercambio de código exitoso.",
+                  "hint": "Revocar conexiones OAuth grabadas en su propia configuración General. Los administradores también pueden revocar credenciales en la pestaña Autenticación. Estas credenciales funcionan con la API HTTP de Homarr's y MCP, no expiran automáticamente, y siguen siendo válidas después de cerrar la sesión."
                 },
                 "permissions": ""
               },

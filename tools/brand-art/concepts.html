@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Homarr — brand image concepts</title>
+    <style>
+      @font-face {
+        font-family: "Inter Tight";
+        src: url("node_modules/@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2")
+          format("woff2");
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 900;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2")
+          format("woff2");
+        font-weight: 100 800;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: #000;
+        overflow: hidden;
+      }
+      #stage {
+        position: relative;
+        overflow: hidden;
+        background: #070708;
+        color: #f4f4f7;
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-feature-settings: "ss01", "cv11";
+      }
+      #stage div,
+      #stage img,
+      #stage span.abs {
+        position: absolute;
+      }
+      #stage .flow,
+      #stage .flow * {
+        position: static;
+      }
+      img {
+        display: block;
+        max-width: none;
+      }
+      .clip {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script type="module">
+      const Q = new URLSearchParams(location.search);
+      const C = Q.get("c") ?? "1";
+      const W = Number(Q.get("w") ?? 1280);
+      const H = Number(Q.get("h") ?? 640);
+      const stage = document.getElementById("stage");
+      stage.style.width = `${W}px`;
+      stage.style.height = `${H}px`;
+      const SIZES = await fetch("assets/sizes.json").then((r) => r.json());
+      const RECTS = await fetch("assets/board-rects.json").then((r) => r.json());
+      const INTEGRATIONS = await fetch("assets/integrations-all.json").then((r) => r.json());
+      const loads = [];
+
+      const CORAL = "#fa5352";
+      const MUTED = "#9a9ca8";
+
+      function h(tag, css = "", ...kids) {
+        const e = document.createElement(tag);
+        if (css) e.style.cssText = css;
+        e.append(...kids.filter((k) => k !== null && k !== undefined));
+        return e;
+      }
+      const div = (css, ...kids) => h("div", css, ...kids);
+      function img(src, css = "") {
+        const e = h("img", css);
+        e.src = src;
+        loads.push(
+          e.decode().catch((err) => {
+            console.error("missing", src);
+            throw err;
+          }),
+        );
+        return e;
+      }
+      const size = (src) => SIZES[src] ?? [1, 1];
+      const add = (...els) => (stage.append(...els), els[0]);
+
+      /** Source crop [x,y,w,h] of `src` (natural px) covering a w×h box. */
+      function crop(src, [x, y, cw, ch], w, hh, css = "", ax = 0.5, ay = 0.5) {
+        const s = Math.max(w / cw, hh / ch);
+        const ox = x + (cw - w / s) * ax;
+        const oy = y + (ch - hh / s) * ay;
+        const [nw] = size(src);
+        return div(
+          `width:${w}px;height:${hh}px;overflow:hidden;${css}`,
+          img(src, `position:absolute;left:${-ox * s}px;top:${-oy * s}px;width:${nw * s}px`),
+        );
+      }
+      const full = (src, w, css = "") => {
+        const [nw, nh] = size(src);
+        return crop(src, [0, 0, nw, nh], w, (w * nh) / nw, css);
+      };
+      /** A rect of the live board capture (CSS px of the 1920×1080 viewport, image is 2×). */
+      const BOARD = "shots/board-1080.webp";
+      const boardRect = (r, s, css = "", pad = 0) =>
+        crop(
+          BOARD,
+          [(r[0] - pad) * 2, (r[1] - pad) * 2, (r[2] + pad * 2) * 2, (r[3] + pad * 2) * 2],
+          (r[2] + pad * 2) * s,
+          (r[3] + pad * 2) * s,
+          css,
+        );
+
+      // 3D lobster from the v2 reel (transparent 1920×1080 frame); bbox of the mark inside it.
+      const LOB = [485, 213, 950, 654];
+      function lobster(left, top, w, css = "") {
+        const s = w / LOB[2];
+        return div(
+          `left:${left}px;top:${top}px;width:${w}px;height:${LOB[3] * s}px;${css}`,
+          img(
+            "assets/lobster-front.webp",
+            `position:absolute;left:${-LOB[0] * s}px;top:${-LOB[1] * s}px;width:${1920 * s}px`,
+          ),
+        );
+      }
+      const lobH = (w) => (w * LOB[3]) / LOB[2];
+      const flat = (left, top, w, css = "") =>
+        img("assets/homarr.svg", `left:${left}px;top:${top}px;width:${w}px;${css}`);
+
+      function word(text, px, css = "") {
+        return h(
+          "span",
+          `font-family:"Inter Tight";font-size:${px}px;font-weight:830;letter-spacing:-0.045em;line-height:1;white-space:nowrap;${css}`,
+          text,
+        );
+      }
+      function mono(text, px, css = "") {
+        return div(
+          `font-family:"JetBrains Mono";font-size:${px}px;font-weight:600;text-transform:uppercase;white-space:nowrap;${css}`,
+          text,
+        );
+      }
+      function headline(lines, px, css = "") {
+        return div(
+          `font-family:"Inter Tight";font-weight:800;letter-spacing:-0.045em;line-height:1.02;font-size:${px}px;white-space:nowrap;${css}`,
+          ...lines.flatMap((l, i) => [
+            typeof l === "string" ? h("span", "", l) : h("span", `color:${CORAL}`, l[0]),
+            i < lines.length - 1 ? h("br") : null,
+          ]),
+        );
+      }
+      const at = (e, left, top) => ((e.style.left = `${left}px`), (e.style.top = `${top}px`), e);
+      const glow = (bg) => div(`inset:0;background:${bg}`);
+      function rays(x, y, reach, alpha = 0.08) {
+        return div(
+          `left:${x}px;top:${y}px;width:3000px;height:3000px;margin:-1500px 0 0 -1500px;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,130,130,${alpha}) 0deg 3deg,rgba(255,130,130,0) 3deg 12deg);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0%,rgba(0,0,0,.4) ${reach * 0.43}%,transparent ${reach}%)`,
+        );
+      }
+      function pill(text, solid = false) {
+        return h(
+          "span",
+          `font-family:'JetBrains Mono';font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:999px;white-space:nowrap;${solid ? `color:#fff;background:${CORAL}` : "color:#cfcfd6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)"}`,
+          text,
+        );
+      }
+      const row = (css, ...kids) =>
+        div(`display:flex;align-items:center;${css}`, ...kids.map((k) => ((k.style.position = "relative"), k)));
+      function lockup(left, top, px, css = "") {
+        const lw = px * 1.2;
+        return div(
+          `left:${left}px;top:${top}px;${css}`,
+          lobster(0, (px - lobH(lw)) / 2 + px * 0.04, lw),
+          div(`left:${lw + px * 0.28}px;top:0`, word("Homarr", px)),
+        );
+      }
+      const frame = (child, w, hh, css = "", r = 14) =>
+        div(
+          `width:${w}px;height:${hh}px;border-radius:${r}px;overflow:hidden;background:#1b1c21;box-shadow:0 40px 90px -30px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.13);${css}`,
+          child,
+        );
+      const icon = (key) => `assets/icons/${INTEGRATIONS[key]?.file ?? `${key}.svg`}`;
+
+      const WIDGETS = Object.keys(SIZES)
+        .filter((k) => k.startsWith("shots/widgets/"))
+        .sort();
+      const wid = (n) => WIDGETS.find((k) => k.includes(`/${String(n).padStart(2, "0")}-`));
+      /** A captured widget without the board background around its card. */
+      function widget(src, w, css = "", r = 10) {
+        const [nw, nh] = size(src);
+        const I = 14;
+        const hh = (w * (nh - I * 2)) / (nw - I * 2);
+        return frame(crop(src, [I, I, nw - I * 2, nh - I * 2], w, hh), w, hh, `border-radius:${r}px;${css}`, r);
+      }
+      const widgetH = (src, w) => {
+        const [nw, nh] = size(src);
+        return (w * (nh - 28)) / (nw - 28);
+      };
+
+      // 0 — contact sheet of captured widgets (for picking).
+      function c0() {
+        stage.style.height = "auto";
+        stage.style.width = "2400px";
+        const g = div(
+          "position:relative;display:flex;flex-wrap:wrap;gap:10px;padding:10px",
+          ...WIDGETS.map((k) =>
+            div(
+              "position:relative;width:180px",
+              img(k, "position:relative;width:180px"),
+              h("span", "font:11px monospace;color:#fff", k.slice(14)),
+            ),
+          ),
+        );
+        g.querySelectorAll("*").forEach((e) => (e.style.position = "relative"));
+        stage.append(g);
+      }
+
+      // 1 — The wall: every widget on the demo board, tilted into a wall around the lockup.
+      function c1() {
+        // Widgets with real-looking content, and pairs of app tiles ([a, b]) so the services are recognisable.
+        const pick = [
+          0,
+          [51, 54],
+          4,
+          12,
+          28,
+          [53, 57],
+          10,
+          1,
+          21,
+          [55, 56],
+          20,
+          13,
+          30,
+          [59, 52],
+          11,
+          25,
+          7,
+          33,
+          [60, 61],
+          14,
+          5,
+          15,
+          40,
+          [62, 58],
+          31,
+          8,
+          3,
+          26,
+        ];
+        const COLW = 210;
+        const GAP = 12;
+        const COLS = 9;
+        const wall = div(`left:${W / 2}px;top:${H / 2}px;width:0;height:0;transform:rotate(-12deg) scale(1)`);
+        const heights = Array(COLS).fill(0);
+        const order = [...pick, ...pick.slice(9), ...pick];
+        for (const item of order) {
+          const c = heights.indexOf(Math.min(...heights));
+          if (heights[c] > 1500) break;
+          const x = (c - COLS / 2) * (COLW + GAP);
+          const y = heights[c] - 760 + (c % 2) * 90;
+          if (Array.isArray(item)) {
+            const S = (COLW - GAP) / 2;
+            item.forEach((n, i) => wall.append(widget(wid(n), S, `left:${x + i * (S + GAP)}px;top:${y}px`)));
+            heights[c] += widgetH(wid(item[0]), S) + GAP;
+            continue;
+          }
+          wall.append(widget(wid(item), COLW, `left:${x}px;top:${y}px`));
+          heights[c] += widgetH(wid(item), COLW) + GAP;
+        }
+        add(wall);
+        add(
+          glow(
+            "radial-gradient(ellipse 34% 46% at 50% 50%,rgba(7,7,8,.97) 0%,rgba(7,7,8,.9) 45%,rgba(7,7,8,.35) 80%,rgba(7,7,8,.2) 100%)",
+          ),
+        );
+        add(glow("linear-gradient(180deg,rgba(7,7,8,.5),rgba(7,7,8,0) 25%,rgba(7,7,8,0) 75%,rgba(7,7,8,.6))"));
+        add(glow("radial-gradient(ellipse 30% 40% at 50% 46%,rgba(250,82,82,.18),rgba(250,82,82,0) 70%)"));
+        const LW = 130;
+        add(lobster(W / 2 - LW / 2, 150, LW));
+        add(div(`left:0;right:0;top:${150 + lobH(LW) + 18}px;text-align:center`, word("Homarr", 96)));
+        add(
+          div(
+            `left:0;right:0;top:${150 + lobH(LW) + 128}px;text-align:center;font-size:24px;font-weight:500;color:#d5d5dc`,
+            "The dashboard for your homelab.",
+          ),
+        );
+        add(
+          div(
+            `left:0;right:0;top:${150 + lobH(LW) + 176}px;display:flex;justify-content:center`,
+            mono(
+              "90+ integrations · drag and drop · open source",
+              13,
+              "position:relative;letter-spacing:.22em;color:#8f919d",
+            ),
+          ),
+        );
+      }
+
+      // 2 — One board, every screen: the same board on desktop, tablet and phone.
+      function c2() {
+        add(glow("radial-gradient(ellipse 45% 70% at 72% 50%,rgba(64,84,220,.22),rgba(64,84,220,0) 70%)"));
+        add(glow("radial-gradient(ellipse 35% 55% at 12% 30%,rgba(250,82,82,.22),rgba(250,82,82,0) 70%)"));
+        add(lockup(64, 64, 34));
+        add(at(headline(["One board.", ["Every screen."]], 60), 64, 170));
+        add(
+          at(
+            div(
+              "width:360px;font-size:19px;line-height:1.45;color:#c9cad3",
+              "Your apps, live data from 90+ self-hosted services and your notes, laid out once and reachable from anywhere.",
+            ),
+            64,
+            318,
+          ),
+        );
+        add(at(row("gap:10px", pill("Open source"), pill("Self-hosted"), pill("homarr.dev", true)), 64, 548));
+        const DW = 760;
+        add(frame(full("shots/demo-1080.webp", DW), DW, (DW * 9) / 16, "left:500px;top:64px"));
+        const TW = 330;
+        add(
+          frame(
+            full("shots/demo-tablet.webp", TW),
+            TW,
+            (TW * 1640) / 2360,
+            "left:520px;top:350px;border:5px solid #101014;border-radius:18px",
+            18,
+          ),
+        );
+        const PW = 168;
+        add(
+          frame(
+            crop("shots/demo-mobile.webp", [0, 0, 860, 1864], PW, (PW * 1864) / 860, "", 0.5, 0),
+            PW,
+            (PW * 1864) / 860,
+            "left:1090px;top:250px;border:5px solid #101014;border-radius:26px",
+            26,
+          ),
+        );
+      }
+
+      // 3 — Horizon: the board rising out of a coral horizon under a centred lockup.
+      function c3() {
+        add(glow("radial-gradient(ellipse 60% 55% at 50% 100%,rgba(250,82,82,.45),rgba(250,82,82,0) 70%)"));
+        add(rays(W / 2, H + 80, 40, 0.07));
+        const px = 66;
+        const lw = px * 1.2;
+        const tw = 330;
+        const left = W / 2 - (lw + px * 0.28 + tw) / 2;
+        add(lockup(left, 46, px));
+        add(
+          div(
+            `left:0;right:0;top:136px;text-align:center;font-size:22px;font-weight:500;color:#d5d5dc`,
+            "The modern dashboard for your self-hosted homelab.",
+          ),
+        );
+        const BW = 980;
+        const BH = (BW * 9) / 16;
+        const board = frame(
+          crop("shots/demo-2560.webp", [0, 0, 5120, 2880], BW, BH, "", 0.5, 0),
+          BW,
+          BH,
+          "left:0;top:0;border-radius:16px;box-shadow:0 -20px 120px -20px rgba(250,82,82,.45),0 0 0 1px rgba(255,255,255,.16)",
+          16,
+        );
+        add(
+          div(
+            `left:${(W - BW) / 2}px;top:200px;width:${BW}px;height:${BH}px;transform:perspective(2200px) rotateX(16deg);transform-origin:50% 0%`,
+            board,
+          ),
+        );
+        add(glow("linear-gradient(180deg,rgba(7,7,8,0) 70%,rgba(7,7,8,.55))"));
+      }
+
+      // 4 — Stop memorising ports: the addresses you type today, and the board that replaces them.
+      function c4() {
+        add(glow("radial-gradient(ellipse 40% 60% at 80% 55%,rgba(250,82,82,.22),rgba(250,82,82,0) 70%)"));
+        add(lockup(64, 56, 30));
+        add(at(headline(["Stop memorising", ["ports."]], 54), 64, 128));
+        const ADDR = [
+          ["sonarr", "192.168.1.20:8989"],
+          ["radarr", "192.168.1.20:7878"],
+          ["plex", "192.168.1.31:32400/web"],
+          ["jellyfin", "192.168.1.31:8096"],
+          ["proxmox", "https://192.168.1.2:8006"],
+          ["piHole", "192.168.1.5/admin"],
+          ["uptimeKuma", "192.168.1.20:3001"],
+          ["immich", "192.168.1.40:2283"],
+        ];
+        ADDR.forEach(([k, a], i) => {
+          const y = 272 + i * 40;
+          add(
+            div(
+              `left:64px;top:${y}px;display:flex;align-items:center;gap:14px;opacity:${1 - i * 0.07}`,
+              img(
+                icon(k),
+                "position:relative;width:22px;height:22px;object-fit:contain;filter:grayscale(1) brightness(1.3);opacity:.6",
+              ),
+              h(
+                "span",
+                `font:500 19px 'JetBrains Mono';color:#7d7f8b;text-decoration:line-through;text-decoration-color:rgba(250,82,82,.7);text-decoration-thickness:2px`,
+                a,
+              ),
+            ),
+          );
+        });
+        add(div(`left:548px;top:300px;font:300 64px Inter;color:${CORAL}`, "→"));
+        // The real app tiles from the board's rail, in a grid.
+        const apps = [51, 52, 53, 54, 55, 56, 57, 58, 59].map(wid);
+        const S = 150;
+        const G = 16;
+        apps.forEach((src, i) => {
+          add(widget(src, S, `left:${660 + (i % 3) * (S + G)}px;top:${92 + Math.floor(i / 3) * (S + G)}px`, 16));
+        });
+        add(
+          div(
+            `left:660px;top:${92 + 3 * (S + G) + 6}px;font-size:19px;color:#c9cad3`,
+            "Every service on one board, one click away.",
+          ),
+        );
+      }
+
+      // 5 — Manifesto: type only, with the 3D lobster bleeding off the edge.
+      function c5() {
+        add(glow("radial-gradient(ellipse 45% 70% at 82% 45%,rgba(250,82,82,.32),rgba(250,82,82,0) 70%)"));
+        add(rays(1000, 280, 30));
+        add(lobster(720, 70, 600, "opacity:.98"));
+        add(at(mono("Homarr", 15, `letter-spacing:.34em;color:${CORAL}`), 72, 78));
+        add(at(headline(["Your homelab,", ["one board."]], 104), 66, 120));
+        const FACTS = ["No YAML", "Drag and drop", "90+ integrations", "SSO · OIDC · LDAP", "Open source"];
+        add(
+          at(
+            div(
+              "display:flex;gap:10px;flex-wrap:wrap;width:640px",
+              ...FACTS.map((f) => ((f = pill(f)), (f.style.position = "relative"), (f.style.fontSize = "14px"), f)),
+            ),
+            72,
+            380,
+          ),
+        );
+        add(
+          at(
+            div(
+              "width:560px;font-size:20px;line-height:1.5;color:#b9bac4",
+              "Apps, live data from the services you self-host, and the notes you keep, on a dashboard you arrange by hand.",
+            ),
+            72,
+            470,
+          ),
+        );
+        add(at(mono("homarr.dev", 15, `letter-spacing:.2em;color:#fff`), 72, 584));
+      }
+
+      // 6 — Constellation: the lobster at the centre of every integration it talks to.
+      function c6() {
+        add(glow("radial-gradient(circle at 50% 44%,rgba(250,82,82,.28),rgba(250,82,82,0) 32%)"));
+        const keys = Object.keys(INTEGRATIONS);
+        const RINGS = [
+          [175, 12],
+          [260, 18],
+          [350, 24],
+          [445, 30],
+          [540, 34],
+        ];
+        let n = 0;
+        const cx = W / 2;
+        const cy = 270;
+        RINGS.forEach(([r, count], ri) => {
+          add(
+            div(
+              `left:${cx - r}px;top:${cy - r}px;width:${r * 2}px;height:${r * 2}px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,${0.07 - ri * 0.01})`,
+            ),
+          );
+          for (let i = 0; i < count; i++) {
+            const a = (i / count) * Math.PI * 2 + ri * 0.4;
+            const x = cx + Math.cos(a) * r;
+            const y = cy + Math.sin(a) * r * 0.86;
+            const k = keys[n++ % keys.length];
+            const s = 46 - ri * 3;
+            const fade = Math.max(0.25, 1 - ri * 0.17);
+            add(
+              div(
+                `left:${x - s / 2}px;top:${y - s / 2}px;width:${s}px;height:${s}px;border-radius:${s * 0.28}px;background:#18191e;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 10px 24px -10px #000;display:flex;align-items:center;justify-content:center;opacity:${fade}`,
+                img(icon(k), `position:relative;width:${s * 0.62}px;height:${s * 0.62}px;object-fit:contain`),
+              ),
+            );
+          }
+        });
+        add(glow("radial-gradient(ellipse 22% 30% at 50% 66%,rgba(7,7,8,.96),rgba(7,7,8,.8) 60%,rgba(7,7,8,0))"));
+        const LW = 150;
+        add(lobster(cx - LW / 2, cy - lobH(LW) / 2 - 10, LW));
+        add(div(`left:0;right:0;top:370px;text-align:center`, word("Homarr", 72)));
+        add(
+          div(
+            `left:0;right:0;top:456px;display:flex;justify-content:center`,
+            mono("The front door to your homelab", 15, "position:relative;letter-spacing:.28em;color:#cfcfd6"),
+          ),
+        );
+        add(
+          div(
+            `left:0;right:0;top:488px;text-align:center;font-size:18px;color:#9a9ca8`,
+            "90+ integrations, one dashboard.",
+          ),
+        );
+      }
+
+      // 7 — Exploded: the real board as a plane, with its widgets lifted off it.
+      function c7() {
+        add(glow("radial-gradient(ellipse 50% 70% at 70% 60%,rgba(64,84,220,.25),rgba(64,84,220,0) 70%)"));
+        add(glow("radial-gradient(ellipse 30% 50% at 10% 20%,rgba(250,82,82,.22),rgba(250,82,82,0) 70%)"));
+        const s = 0.46;
+        const plane = div(
+          `left:450px;top:110px;width:${1920 * s}px;height:${1080 * s}px;transform-style:preserve-3d;transform:perspective(2400px) rotateX(55deg) rotateZ(-38deg)`,
+        );
+        plane.append(
+          frame(
+            img(BOARD, `width:${1920 * s}px;filter:brightness(.55) saturate(.8)`),
+            1920 * s,
+            1080 * s,
+            "left:0;top:0",
+            12,
+          ),
+        );
+        const LIFT = {
+          downloads: 120,
+          assistant: 90,
+          notebook: 60,
+          calendar: 150,
+          weather: 110,
+          beszelSystemGrid: 40,
+          healthMonitoring: 70,
+          mediaMissing: 130,
+          timer: 170,
+          airQuality: 140,
+          clock: 95,
+        };
+        for (const [k, z] of Object.entries(LIFT)) {
+          const r = RECTS[k];
+          if (!r) continue;
+          plane.append(
+            div(
+              `left:${r[0] * s}px;top:${r[1] * s}px;width:${r[2] * s}px;height:${r[3] * s}px;background:rgba(0,0,0,.55);filter:blur(8px);border-radius:12px`,
+            ),
+          );
+          plane.append(
+            boardRect(
+              r,
+              s,
+              `left:${r[0] * s}px;top:${r[1] * s}px;border-radius:10px;transform:translateZ(${z}px);box-shadow:0 0 0 1px rgba(255,255,255,.18)`,
+            ),
+          );
+        }
+        add(plane);
+        add(lockup(64, 60, 34));
+        add(at(headline(["Built from", ["widgets."]], 62), 64, 150));
+        add(
+          at(
+            div(
+              "width:330px;font-size:19px;line-height:1.45;color:#c9cad3",
+              "Calendars, downloads, server stats, media requests and 60+ more. Drag them onto a grid, resize, done.",
+            ),
+            64,
+            300,
+          ),
+        );
+        add(at(row("gap:10px", pill("No YAML"), pill("homarr.dev", true)), 64, 548));
+      }
+
+      // 8 — Annotated: the board straight on, with what each part does.
+      function c8() {
+        add(glow("radial-gradient(ellipse 50% 60% at 50% 60%,rgba(64,84,220,.18),rgba(64,84,220,0) 70%)"));
+        const s = 0.43;
+        const bx = (W - 1920 * s) / 2;
+        const by = 150;
+        add(frame(img(BOARD, `width:${1920 * s}px`), 1920 * s, 1080 * s, `left:${bx}px;top:${by}px`, 12));
+        add(lockup(W / 2 - 150, 34, 46));
+        add(
+          div(
+            `left:0;right:0;top:100px;display:flex;justify-content:center`,
+            mono("Your homelab, at a glance", 13, "position:relative;letter-spacing:.3em;color:#9a9ca8"),
+          ),
+        );
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("width", W);
+        svg.setAttribute("height", H);
+        svg.style.cssText = "position:absolute;left:0;top:0";
+        add(svg);
+        const P = (k, fx = 0.5, fy = 0.5) => {
+          const r = RECTS[k];
+          return [bx + (r[0] + r[2] * fx) * s, by + (r[1] + r[3] * fy) * s];
+        };
+        const NOTES = [
+          ["left", 180, "Drag and drop", "No YAML, ever", P("calendar", 0.3, 0.5)],
+          ["left", 330, "Notes & custom widgets", "Markdown, JSX, any API", P("notebook", 0.2, 0.55)],
+          ["left", 480, "Media requests", "Seerr, Overseerr, Jellyseerr", P("mediaRequests-requestList", 0.3, 0.3)],
+          ["right", 180, "Live integrations", "90+ self-hosted apps", P("downloads", 0.75, 0.5)],
+          ["right", 330, "Assistant", "Ask about your setup", P("assistant", 0.7, 0.4)],
+          ["right", 480, "Your apps", "One click away", P("app5", 0.5, 0.5)],
+        ];
+        for (const [side, y, t, sub, [tx, ty]] of NOTES) {
+          const x = side === "left" ? 186 : W - 186;
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          const ex = side === "left" ? x + 8 : x - 8;
+          line.setAttribute("d", `M${ex} ${y + 12} L${side === "left" ? ex + 30 : ex - 30} ${y + 12} L${tx} ${ty}`);
+          line.setAttribute("stroke", CORAL);
+          line.setAttribute("stroke-width", "1.5");
+          line.setAttribute("fill", "none");
+          svg.append(line);
+          const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          dot.setAttribute("cx", tx);
+          dot.setAttribute("cy", ty);
+          dot.setAttribute("r", "5");
+          dot.setAttribute("fill", CORAL);
+          dot.setAttribute("stroke", "#070708");
+          dot.setAttribute("stroke-width", "2");
+          svg.append(dot);
+          add(
+            div(
+              `top:${y}px;${side === "left" ? `right:${W - x}px;text-align:right` : `left:${x}px`};width:170px`,
+              mono(t, 12, "position:relative;letter-spacing:.12em;color:#f4f4f7"),
+              div("position:relative;margin-top:6px;font-size:14px;color:#9a9ca8;white-space:nowrap", sub),
+            ),
+          );
+        }
+      }
+
+      // 9 — Connect · Arrange · Glance: three steps, each over the real screen.
+      function c9() {
+        add(glow("radial-gradient(ellipse 60% 40% at 50% 0%,rgba(250,82,82,.22),rgba(250,82,82,0) 70%)"));
+        add(rays(W / 2, -120, 40));
+        add(lockup(64, 52, 40));
+        add(at(row("gap:10px", pill("Open source"), pill("Self-hosted"), pill("homarr.dev", true)), W - 64 - 392, 62));
+        const COLS = [
+          ["01", "Connect", "Add your services.", "shots/manage-integrations.webp", [940, 140, 1500, 1500]],
+          ["02", "Arrange", "Drag widgets onto a grid.", "assets/blog/add-content-menu.webp", [780, 0, 660, 660]],
+          ["03", "Glance", "Watch it all, live.", BOARD, [2060, 120, 1500, 1060]],
+        ];
+        const CW = 368;
+        const G = 24;
+        COLS.forEach(([n, label, text, src, r], i) => {
+          const x = 64 + i * (CW + G);
+          add(
+            div(
+              `left:${x}px;top:148px;display:flex;align-items:center;gap:12px`,
+              h("span", `font:700 14px 'JetBrains Mono';color:${CORAL};letter-spacing:.1em`, n),
+              h("span", `width:34px;height:2px;background:${CORAL}`),
+              mono(label, 13, "position:relative;letter-spacing:.24em;color:#e9e9ee"),
+            ),
+          );
+          add(at(headline([text], 30, "white-space:normal;width:360px"), x, 178));
+          add(frame(crop(src, r, CW, 368, "", 0, 0), CW, 368, `left:${x}px;top:232px`, 12));
+        });
+      }
+
+      // 10 — One container: the docker run from the docs, and what it serves.
+      function c10() {
+        add(glow("radial-gradient(ellipse 50% 70% at 78% 55%,rgba(64,84,220,.22),rgba(64,84,220,0) 70%)"));
+        add(glow("radial-gradient(ellipse 30% 50% at 12% 25%,rgba(250,82,82,.22),rgba(250,82,82,0) 70%)"));
+        const BW = 720;
+        const BH = 470;
+        const bar = div(
+          "left:0;top:0;right:0;height:38px;background:#151519;border-bottom:1px solid rgba(255,255,255,.08)",
+          div(
+            "left:16px;top:14px;display:flex;gap:7px",
+            ...["#ff5f57", "#febc2e", "#28c840"].map((c) =>
+              h("span", `display:block;width:11px;height:11px;border-radius:50%;background:${c}`),
+            ),
+          ),
+          div(
+            "left:110px;right:110px;top:8px;height:22px;border-radius:7px;background:#232329;font:500 12px 'JetBrains Mono';color:#a5a7b2;display:flex;align-items:center;justify-content:center",
+            "localhost:7575",
+          ),
+        );
+        add(
+          frame(
+            div(
+              `inset:0`,
+              bar,
+              div(`left:0;top:38px`, crop(BOARD, [0, 0, 3840, 2160], BW, BH - 38, "position:relative", 0, 0)),
+            ),
+            BW,
+            BH,
+            `left:${W - BW - 40}px;top:120px`,
+            12,
+          ),
+        );
+        add(lockup(64, 52, 34));
+        add(at(headline(["One container.", ["Your whole homelab."]], 46), 64, 130));
+        const L = (t, c = "#d6d7de") => div(`position:relative;color:${c};white-space:pre`, t);
+        const term = div(
+          "width:530px;padding:22px 24px;border-radius:12px;background:#0f0f12;box-shadow:0 40px 90px -30px #000,0 0 0 1px rgba(255,255,255,.12);font:500 14.5px/1.62 'JetBrains Mono'",
+          L("$ docker run \\", "#fff"),
+          L("    --name homarr \\"),
+          L("    -p 7575:7575 \\"),
+          L("    -v ./appdata:/appdata \\"),
+          L("    -e SECRET_ENCRYPTION_KEY=… \\"),
+          L("    -d ghcr.io/homarr-labs/homarr", CORAL),
+          L(" "),
+          L("✓ Ready on http://localhost:7575", "#8ff0c4"),
+        );
+        term.querySelectorAll("div").forEach((d) => (d.style.position = "relative"));
+        add(at(term, 64, 270));
+      }
+
+      switch (C) {
+        case "0":
+          c0();
+          break;
+        case "1":
+          c1();
+          break;
+        case "2":
+          c2();
+          break;
+        case "3":
+          c3();
+          break;
+        case "4":
+          c4();
+          break;
+        case "5":
+          c5();
+          break;
+        case "6":
+          c6();
+          break;
+        case "7":
+          c7();
+          break;
+        case "8":
+          c8();
+          break;
+        case "9":
+          c9();
+          break;
+        case "10":
+          c10();
+          break;
+        default:
+          throw new Error(`unknown concept: ${C}`);
+      }
+      const fonts = [
+        '830 100px "Inter Tight"',
+        '800 100px "Inter Tight"',
+        '500 20px "Inter"',
+        '600 20px "JetBrains Mono"',
+      ];
+      window.__ready = Promise.all([...fonts.map((f) => document.fonts.load(f)), ...loads]).then(
+        () => document.fonts.ready,
+      );
+    </script>
+  </body>
+</html>

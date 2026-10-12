@@ -201,6 +201,7 @@ export const appRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL or custom URI scheme such as vscode://, or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
       },
@@ -298,7 +299,7 @@ export const appRouter = createTRPCRouter({
         summary: "Delete an app",
         description: "Delete an app by ID and invalidate linked integration caches. Requires app-full-all permission.",
       },
-      mcp: { enabled: true, description: "Delete an app by ID. REQUIRED: id (app ID string)" },
+      mcp: { enabled: true, effect: "destructive", description: "Delete an app by ID. REQUIRED: id (app ID string)" },
     })
     .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {

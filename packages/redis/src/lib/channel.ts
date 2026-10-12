@@ -774,7 +774,7 @@ export const invalidateWidgetCache = (namespace: string): void => {
 };
 
 /**
- * @deprecated This function should no longer be used, see history-channel functions.
+ * @deprecated Legacy history API retained for compatibility; no replacement is currently available.
  */
 export const createChannelEventHistoryOld = <TData>(channelName: string, maxElements = 15) => {
   const popElementsOverMaxAsync = async () => {

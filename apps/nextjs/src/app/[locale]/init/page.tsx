@@ -71,7 +71,7 @@ export default async function InitPage() {
         availableBoards: availableBoards.map(({ id, name }) => ({ id, name })),
       }}
       sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
-      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration /> : undefined}
+      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration refreshAfterSave={false} /> : undefined}
     />
   );
 }

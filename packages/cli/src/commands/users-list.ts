@@ -7,7 +7,9 @@ export const usersList = command({
   desc: "List all users (id, username, email)",
   // eslint-disable-next-line no-restricted-syntax
   handler: async () => {
-    const allUsers = await db.query.users.findMany();
+    const allUsers = await db.query.users.findMany({
+      columns: { id: true, name: true, email: true },
+    });
 
     if (allUsers.length === 0) {
       console.log("No users found");

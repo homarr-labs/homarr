@@ -67,7 +67,6 @@ interface Props<TPermission extends string> {
       id: string;
       name: string | null;
       image: string | null;
-      email: string | null;
     } | null;
   };
   translate: (key: TPermission) => string;
