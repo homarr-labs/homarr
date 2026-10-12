@@ -179,5 +179,4 @@ describe("findIcons", () => {
     expect(punctuationMatch.icons[0]?.icons.map((icon) => icon.id)).toEqual(["cafe-url"]);
     expect(fuzzyMatch.icons[0]?.icons.map((icon) => icon.id)).toEqual(["home-assistant"]);
   });
-
 });
