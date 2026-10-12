@@ -247,6 +247,82 @@
         "title": "Entreu al vostre compte",
         "subtitle": "Benvingut de nou! Si us plau, introduïu les credencials"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Uneix-te a Homarr",
         "titleWithAppName": "Uneix-te a {appName}",
@@ -1839,6 +1915,9 @@
     "pagination": {
       "pageOf": "Pàgina {page} de {totalPages}"
     },
+    "navigation": {
+      "toggle": ""
+    },
     "here": "aquí",
     "serviceUrlTemplate": {
       "serverTitle": "Adreça habitual del servidor",
@@ -3300,6 +3379,11 @@
         },
         "defaultTab": {
           "label": "Pestanya predeterminada"
+        },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
         },
         "visibleClusterSections": {
           "label": "Seccions del clúster visibles"
@@ -6171,15 +6255,6 @@
           "notice": "Per fer desaparèixer aquesta pàgina, demana a l'administrador del servidor que estableixi un tauler d'inici per al servidor"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
@@ -6393,6 +6468,31 @@
               "search": "Cerca",
               "firstDayOfWeek": "Primer dia de la setmana",
               "accessibility": "Accessibilitat",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Visites guiades d'introducció",
                 "description": "Restableix les visites guiades d'introducció per tornar-les a veure la pròxima vegada que visitis l'àrea de gestió o el tauler.",
@@ -6933,7 +7033,8 @@
               "label": "Autenticació",
               "title": "Claus d'API",
               "button": {
-                "createApiToken": "Crea un token d'API"
+                "createApiToken": "Crea un token d'API",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7045,43 @@
               "table": {
                 "header": {
                   "createdBy": "Creat per",
+                  "source": "Integració",
                   "actions": "Accions"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },
