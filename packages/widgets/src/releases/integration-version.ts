@@ -21,18 +21,23 @@ const parseVersion = (value: string | undefined) => {
   return numeric.split(".").map((part) => Number.parseInt(part, 10));
 };
 
-// Calendar versions ("2026.10.11", "20261011") only compare with other calendar versions.
+// Calendar versions ("2026.10.11", "20261011") only compare with other calendar versions in the same format: an
+// undotted date is a single part, so comparing it part by part with a dotted one is meaningless.
 const isCalendarVersion = (parts: number[]) => (parts[0] ?? 0) >= 1900;
+const isUndottedVersion = (parts: number[]) => parts.length === 1;
 
 /**
  * Compares every version part, padding the shorter one with zeros. A running version newer than the latest
- * release counts as up to date. Undefined when either version has an unsupported format, or when only one of them
- * is a calendar version.
+ * release counts as up to date. Undefined when either version has an unsupported format, when only one of them
+ * is a calendar version, or when calendar versions mix dotted and undotted formats.
  */
 export const isVersionUpToDate = (running: string | undefined, latest: string | undefined) => {
   const [runningParts, latestParts] = [parseVersion(running), parseVersion(latest)];
   if (!runningParts || !latestParts) return undefined;
   if (isCalendarVersion(runningParts) !== isCalendarVersion(latestParts)) return undefined;
+  if (isCalendarVersion(runningParts) && isUndottedVersion(runningParts) !== isUndottedVersion(latestParts)) {
+    return undefined;
+  }
 
   for (let index = 0; index < Math.max(runningParts.length, latestParts.length); index++) {
     const difference = (runningParts[index] ?? 0) - (latestParts[index] ?? 0);

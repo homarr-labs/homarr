@@ -20,6 +20,9 @@ describe("isVersionUpToDate", () => {
     { running: "4.0.20.3014", latest: "4.0.21.3020-ls330", expected: false },
     { running: "2026.10.1", latest: "2026.10.2", expected: false },
     { running: "2026.11.0", latest: "2026.10.2", expected: true },
+    { running: "20261011", latest: "20261012", expected: false },
+    { running: "2026.10", latest: "2026.10.1", expected: false },
+    { running: "2026.10.1", latest: "2026.10", expected: true },
   ])("$running against $latest is $expected", ({ running, latest, expected }) => {
     expect(isVersionUpToDate(running, latest)).toBe(expected);
   });
@@ -35,6 +38,8 @@ describe("isVersionUpToDate", () => {
     { running: "4.0.20.3014", latest: "2026.10.11" },
     { running: "4.0.20.3014", latest: "20261011" },
     { running: "2026.10.1", latest: "v4.0.20" },
+    { running: "2026.10.11", latest: "20261011" },
+    { running: "20261011", latest: "2026.10.11" },
     { running: "4..20", latest: "v4.0.20" },
     { running: "4.0.x", latest: "v4.0.20" },
     { running: "1.2.3abc", latest: "v1.2.3" },
