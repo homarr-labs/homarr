@@ -1,0 +1,20 @@
+---
+title: Lean build profile
+description: Build Homarr with fewer always-loaded features.
+---
+
+The experimental lean profile is a separate image built from the repository. The normal image keeps the full feature set.
+
+```sh
+docker build --build-arg HOMARR_BUILD_PROFILE=lean -t homarr:lean .
+```
+
+Use `homarr:lean` in your existing container configuration. The build argument defaults to `full`; it cannot be changed after building the image.
+
+The lean image requires SQLite with `DB_DRIVER=better-sqlite3` and `AUTH_PROVIDERS=credentials`. PostgreSQL, LDAP and OIDC login are unavailable. Before switching an existing installation, back up its appdata and verify that an administrator can sign in with a password. Changing the image does not convert a PostgreSQL database or create a password for an SSO account.
+
+The profile removes Assistant, REST/OpenAPI, MCP and API discovery endpoints. Native dashboard requests and API-key management remain available. Existing board and user data are retained; removed feature configuration becomes inaccessible while running the lean image.
+
+Scheduled tasks and WebSockets are disabled. Background refresh, task controls and live updates over WebSockets are unavailable, including the live log viewers. Data that depends on a scheduled job can remain stale; queries with their own refresh intervals and existing Beszel updates over HTTP can still run. Redis and the HTTP proxy remain part of the container.
+
+Memory depends on the dashboard, integrations and uptime. Cold idle measurements do not guarantee the same footprint after using the application.

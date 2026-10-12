@@ -1,0 +1,1559 @@
+--- a/apps/nextjs/next.config.ts
++++ b/apps/nextjs/next.config.ts
+@@ -34,6 +34,10 @@
+     HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
+   },
+   output: "standalone",
++  outputFileTracingRoot: path.resolve(import.meta.dirname, "../.."),
++  outputFileTracingIncludes: {
++    "/*": ["../../packages/translation/src/lang/*.json"],
++  },
+   reactStrictMode: true,
+   // react compiler breaks mantine-react-table, so disabled for now
+   //reactCompiler: true,
+@@ -46,7 +50,7 @@
+   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
+   experimental: {
+     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
+-    preloadEntriesOnStart: true,
++    preloadEntriesOnStart: false,
+     turbopackFileSystemCacheForBuild: true,
+     useTypeScriptCli: true,
+   },
+@@ -66,13 +70,7 @@
+     ],
+   },
+   async rewrites() {
+-    return [
+-      { source: "/.well-known/:path*", destination: "/well-known/:path*" },
+-      {
+-        source: "/api/mcp/:transport/.well-known/:path*",
+-        destination: "/well-known/:path*/api/mcp/:transport",
+-      },
+-    ];
++    return [];
+   },
+   // skipcq: JS-0116
+   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
+--- a/apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
++++ b/apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+@@ -6,15 +6,15 @@
+ import { defaultShouldDehydrateQuery, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+ import {
+-  createWSClient,
+   httpBatchStreamLink,
+   httpLink,
+   httpSubscriptionLink,
+   isNonJsonSerializable,
+   loggerLink,
+   splitLink,
+-  wsLink,
+ } from "@trpc/client";
++import type { TRPCLink } from "@trpc/client";
++import { observable } from "@trpc/server/observable";
+ import superjson from "superjson";
+ import type { SuperJSONResult } from "superjson";
+ 
+@@ -46,26 +46,10 @@
+     ? dynamic(() => import("./development-tools").then(({ DevelopmentTools: Tools }) => Tools), { ssr: false })
+     : () => null;
+ 
+-const getWebSocketProtocol = () => {
+-  if (typeof window === "undefined") {
+-    return "ws";
+-  }
+-
+-  return window.location.protocol === "https:" ? "wss" : "ws";
+-};
+-
+-const constructWebsocketUrl = () => {
+-  const fallback = `${getWebSocketProtocol()}://localhost:3001/websockets`;
+-  if (typeof window === "undefined") {
+-    return fallback;
+-  }
+-
+-  if (env.NODE_ENV === "development") {
+-    return fallback;
+-  }
+-
+-  return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
+-};
++const disabledWebSocketLink: TRPCLink<AppRouter> = () => () =>
++  observable((observer) => {
++    observer.error(new TRPCClientError("WebSocket live updates are disabled in the lean build."));
++  });
+ 
+ export function TRPCReactProvider({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) {
+   const { data: session } = useSession();
+@@ -105,20 +89,6 @@
+ 
+ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) => {
+   useEffect(clearLegacyDashboardPersistence, []);
+-  const wsClient = useMemo(
+-    () =>
+-      createWSClient({
+-        url: constructWebsocketUrl(),
+-        lazy: { enabled: true, closeMs: 30_000 },
+-      }),
+-    [],
+-  );
+-  useEffect(
+-    () => () => {
+-      void wsClient.close();
+-    },
+-    [wsClient],
+-  );
+   const [{ queryClient, rscStreamedQueryHashes }] = useState(() => {
+     const streamedHashes = new Set<string>();
+     const client = new QueryClient({
+@@ -198,10 +168,7 @@
+               transformer: superjson,
+               eventSourceOptions: { withCredentials: true },
+             }),
+-            false: wsLink<AppRouter>({
+-              client: wsClient,
+-              transformer: superjson,
+-            }),
++            false: disabledWebSocketLink,
+           }),
+           false: splitLink({
+             condition: ({ input }) => isNonJsonSerializable(input),
+@@ -227,7 +194,7 @@
+         }),
+       ],
+     });
+-  }, [wsClient]);
++  }, []);
+ 
+   return (
+     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
+--- a/apps/nextjs/src/app/[locale]/init/page.tsx
++++ b/apps/nextjs/src/app/[locale]/init/page.tsx
+@@ -16,7 +16,6 @@
+ import { DatabaseRestoreFlow } from "~/components/backup";
+ import { env } from "~/env";
+ import { getPackageVersion } from "~/versions/package-reader";
+-import { AssistantConfiguration } from "../manage/assistant/_components/assistant-configuration";
+ 
+ export default async function InitPage() {
+   const [state, session, requestHeaders, firstUser] = await Promise.all([
+@@ -50,6 +49,7 @@
+         workshopWebUrl: env.WORKSHOP_WEB_URL,
+       })
+     : { workshopApiUrl: "", workshopWebUrl: "" };
++
+   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
+ 
+   return (
+@@ -64,14 +64,12 @@
+         workshopApiUrl,
+         workshopUrl: workshopWebUrl,
+         serverOrigin: baseUrl,
+-        mcpEndpoint: `${baseUrl}/api/mcp`,
+         canConfigurePrivileged,
+         hasUsers: Boolean(firstUser),
+         initialBoard: initialBoard ?? null,
+         availableBoards: availableBoards.map(({ id, name }) => ({ id, name })),
+       }}
+       sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
+-      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration /> : undefined}
+     />
+   );
+ }
+--- a/apps/nextjs/src/app/[locale]/layout.tsx
++++ b/apps/nextjs/src/app/[locale]/layout.tsx
+@@ -18,7 +18,6 @@
+ 
+ import { env as authEnv } from "@homarr/auth/env";
+ import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+-import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
+ import { getRscUserSettingsAsync } from "@homarr/api/user-server";
+ import { auth } from "@homarr/auth/next";
+ import { createLogger } from "@homarr/core/infrastructure/logs";
+@@ -31,7 +30,6 @@
+ import { getI18n } from "@homarr/translation/server";
+ import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
+ 
+-import { AssistantGate } from "~/components/assistant/assistant-gate";
+ import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
+ import { env } from "~/env";
+ 
+@@ -105,16 +103,6 @@
+ 
+   const sessionPromise = auth();
+   const serverSettingsPromise = getRscServerSettingsAsync();
+-  const assistantAvailabilityPromise = sessionPromise.then(async (session) => {
+-    if (!session) return "unauthenticated" as const;
+-
+-    try {
+-      const enabled = await getRscAssistantAvailabilityAsync();
+-      return enabled ? ("enabled" as const) : ("unconfigured" as const);
+-    } catch {
+-      return "error" as const;
+-    }
+-  });
+   const userPromise = sessionPromise.then((session) =>
+     session
+       ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
+@@ -123,12 +111,11 @@
+         })
+       : null,
+   );
+-  const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
++  const [session, user, serverSettings, colorScheme] = await Promise.all([
+     sessionPromise,
+     userPromise,
+     serverSettingsPromise,
+     getCurrentColorSchemeAsync(),
+-    assistantAvailabilityPromise,
+   ]);
+   const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
+   const publicUrls = resolveHomarrUrlConfig({
+@@ -175,9 +162,6 @@
+     ),
+     (innerProps) => <ModalProvider {...innerProps} />,
+     (innerProps) => <SpotlightProvider {...innerProps} />,
+-    (innerProps) => (
+-      <AssistantGate availability={session ? assistantAvailability : "unauthenticated"} {...innerProps} />
+-    ),
+   ]);
+ 
+   return (
+--- a/apps/nextjs/src/app/[locale]/manage/about/page.tsx
++++ b/apps/nextjs/src/app/[locale]/manage/about/page.tsx
+@@ -207,7 +207,9 @@
+                 </TableTr>
+               </TableThead>
+               <TableTbody>
+-                {objectEntries(hotkeys).map(([key, shortcut]) => (
++                {objectEntries(hotkeys)
++                  .filter(([key]) => key !== "openAssistant" && key !== "openSpotlightAssistant")
++                  .map(([key, shortcut]) => (
+                   <TableTr key={key}>
+                     <TableTd>
+                       <Kbd size="md">
+--- a/apps/nextjs/src/app/[locale]/manage/layout.tsx
++++ b/apps/nextjs/src/app/[locale]/manage/layout.tsx
+@@ -10,7 +10,6 @@
+   IconBrandGithub,
+   IconBrandTablerFilled,
+   IconCertificate,
+-  IconClipboardListFilled,
+   IconDatabaseExport,
+   IconDirectionsFilled,
+   IconGitFork,
+@@ -20,7 +19,6 @@
+   IconMailForward,
+   IconPhotoFilled,
+   IconPointerFilled,
+-  IconRobot,
+   IconSearch,
+   IconSettingsFilled,
+   IconUserFilled,
+@@ -185,24 +183,12 @@
+           hidden: !session?.user.permissions.includes("admin"),
+         },
+         {
+-          label: tEntities("tasks"),
+-          icon: IconClipboardListFilled,
+-          href: "/manage/tools/tasks",
+-          hidden: !session?.user.permissions.includes("admin"),
+-        },
+-        {
+           label: t("items.tools.items.backup"),
+           icon: IconDatabaseExport,
+           href: "/manage/tools/backup",
+           hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
+         },
+       ],
+-    },
+-    {
+-      label: t("items.assistant"),
+-      href: "/manage/assistant",
+-      icon: IconRobot,
+-      hidden: !session?.user.permissions.includes("admin"),
+     },
+     {
+       label: t("items.settings"),
+--- a/apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
++++ b/apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
+@@ -17,7 +17,6 @@
+ 
+ interface ApiKeysManagementProps {
+   apiKeys: RouterOutputs["apiKeys"]["getAll"];
+-  onCreated: () => void;
+ }
+ 
+ type ApiKey = RouterOutputs["apiKeys"]["getAll"][number];
+@@ -56,12 +55,11 @@
+   );
+ };
+ 
+-export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps) => {
++export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
+   const [newApiKey, setNewApiKey] = useState<string | null>(null);
+   const { mutate: mutateCreate, isPending: isPendingCreate } = clientApi.apiKeys.create.useMutation({
+     onSuccess(data) {
+       setNewApiKey(data.apiKey);
+-      onCreated();
+     },
+   });
+   const { mutateAsync: mutateDeleteAsync, isPending: isPendingDelete } = clientApi.apiKeys.delete.useMutation({
+--- a/apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
++++ b/apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
+@@ -1,38 +1,12 @@
+-import { headers } from "next/headers";
+ import { notFound } from "next/navigation";
+ import { Stack } from "@mantine/core";
+ 
+ import { api } from "@homarr/api/server";
+ import { auth } from "@homarr/auth/next";
+-import { extractBaseUrlFromHeaders } from "@homarr/common";
+ import { getI18n } from "@homarr/translation/server";
+ 
+ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+-import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
+-import { ApiPageTabs } from "./components/api-page-tabs";
+-import { ScalarApiReferenceFrame } from "./components/scalar-api-reference-frame";
+-
+-import type { McpToolGroup } from "./components/api-page-tabs";
+-
+-function getMcpToolGroups(): McpToolGroup[] {
+-  const tools = extractMcpTools();
+-  const groups = new Map<string, McpToolGroup["tools"]>();
+-  for (const tool of tools) {
+-    const namespace = tool.pathInRouter[0] ?? "other";
+-    if (!groups.has(namespace)) {
+-      groups.set(namespace, []);
+-    }
+-    groups.get(namespace)?.push({
+-      name: tool.name,
+-      description: tool.description,
+-      type: tool.type,
+-    });
+-  }
+-  return Array.from(groups.entries()).map(([namespace, items]) => ({
+-    namespace,
+-    tools: items,
+-  }));
+-}
++import { ApiKeysManagement } from "./components/api-keys";
+ 
+ export async function generateMetadata() {
+   const session = await auth();
+@@ -52,27 +26,13 @@
+   if (!session?.user.permissions.includes("admin")) {
+     notFound();
+   }
+-  const [requestHeaders, apiKeys, t, toolGroups] = await Promise.all([
+-    headers(),
+-    api.apiKeys.getAll(),
+-    getI18n("management.page.tool.api.tab"),
+-    getMcpToolGroups(),
+-  ]);
+-  const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
++  const apiKeys = await api.apiKeys.getAll();
+ 
+   return (
+     <>
+       <DynamicBreadcrumb />
+       <Stack>
+-        <ApiPageTabs
+-          documentationLabel={t("documentation.label")}
+-          apiKeyLabel={t("apiKey.label")}
+-          mcpLabel={t("mcp.label")}
+-          documentationPanel={<ScalarApiReferenceFrame />}
+-          apiKeys={apiKeys}
+-          baseUrl={baseUrl}
+-          toolGroups={toolGroups}
+-        />
++        <ApiKeysManagement apiKeys={apiKeys} />
+       </Stack>
+     </>
+   );
+--- a/apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
++++ b/apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
+@@ -31,7 +31,6 @@
+   IconPencil,
+   IconPlus,
+   IconReplace,
+-  IconRobot,
+   IconSearch,
+   IconSettings,
+   IconSunMoon,
+@@ -120,6 +119,7 @@
+   }, []);
+   const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
+   const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
++    if (itemId === "assistant") return false;
+     const item = createBuiltinHeaderItem(itemId);
+     return !isRequiredHeaderItem(item) && !activeItemKeySet.has(getHeaderItemKey(item));
+   });
+@@ -642,7 +642,6 @@
+   if (itemId === "search") return IconSearch;
+   if (itemId === "home") return IconHome;
+   if (itemId === "boardSwitcher") return IconReplace;
+-  if (itemId === "assistant") return IconRobot;
+   if (itemId === "docker") return IconBrandDocker;
+   if (itemId === "boardEdit") return IconPencil;
+   if (itemId === "boardSettings") return IconSettings;
+--- a/apps/nextjs/src/components/assistant/assistant-context.tsx
++++ b/apps/nextjs/src/components/assistant/assistant-context.tsx
+@@ -2,10 +2,7 @@
+ 
+ import { createContext, useContext } from "react";
+ 
+-import type { AssistantProvider } from "@homarr/definitions";
+-import type { WorkshopAssistantUsage, WorkshopUser } from "@homarr/workshop/schema";
+ 
+-import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+ 
+ /**
+  * Context and hooks live in their own module so that consumers such as the user menu can read the
+@@ -33,27 +30,6 @@
+ 
+ export const AssistantContext = createContext<AssistantContextValue | null>(null);
+ 
+-export interface AssistantPreferencesContextValue {
+-  provider: AssistantProvider | null;
+-  defaultModelId: string | null;
+-  modelId: string | null;
+-  models: AssistantRuntimeModelOption[];
+-  reasoning: AssistantReasoningMode;
+-  isLoading: boolean;
+-  providerUser: WorkshopUser | null;
+-  quota: WorkshopAssistantUsage | null;
+-  quotaLoading: boolean;
+-  quotaError: string | null;
+-  setModelId: (modelId: string) => void;
+-  setReasoning: (reasoning: AssistantReasoningMode) => void;
+-  getRequestBody: () => { modelId?: string; reasoning: AssistantReasoningMode };
+-  getRequestHeaders: () => Record<string, string>;
+-  refreshQuota: () => Promise<void>;
+-  signInToProvider: () => Promise<void>;
+-}
+-
+-export const AssistantPreferencesContext = createContext<AssistantPreferencesContextValue | null>(null);
+-
+ export const useHomarrAssistant = () => {
+   const value = useContext(AssistantContext);
+   if (!value) {
+@@ -63,9 +39,3 @@
+ };
+ 
+ export const useOptionalHomarrAssistant = () => useContext(AssistantContext);
+-
+-export const useAssistantPreferences = () => {
+-  const value = useContext(AssistantPreferencesContext);
+-  if (!value) throw new Error("useAssistantPreferences must be used within AssistantPreferencesProvider");
+-  return value;
+-};
+--- a/apps/nextjs/src/components/board/items/item-select-modal.tsx
++++ b/apps/nextjs/src/components/board/items/item-select-modal.tsx
+@@ -151,7 +151,7 @@
+   const items = useMemo<WidgetItemData[]>(
+     () =>
+       widgetKinds
+-        .filter((kind) => kind !== "customApi")
++        .filter((kind) => kind !== "customApi" && kind !== "assistant")
+         .map((kind) => {
+           let description: string;
+           if (kind === "mediaMissing") {
+--- a/apps/nextjs/src/components/layout/header/configurable-header.tsx
++++ b/apps/nextjs/src/components/layout/header/configurable-header.tsx
+@@ -2,8 +2,8 @@
+ 
+ import type { ReactNode } from "react";
+ import { useEffect, useMemo, useRef, useState } from "react";
+-import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
+-import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSunMoon } from "@tabler/icons-react";
++import { AppShellHeader, Avatar, Group, Tooltip, useMantineColorScheme } from "@mantine/core";
++import { IconBrandDocker, IconHome, IconReplace, IconSettings, IconSunMoon } from "@tabler/icons-react";
+ 
+ import type { RouterOutputs } from "@homarr/api";
+ import { clientApi } from "@homarr/api/client";
+@@ -14,7 +14,6 @@
+ import type { HeaderItem } from "@homarr/validation/user";
+ import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/user";
+ 
+-import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
+ import { BoardSwitcher } from "~/components/board/board-switcher";
+ import type { BoardSwitcherControls } from "~/components/board/board-switcher";
+ import { ClientBurger } from "./burger";
+@@ -58,7 +57,6 @@
+   isDockerEnabled,
+ }: ConfigurableHeaderProps) => {
+   const { headerPreferences } = useSettings();
+-  const assistant = useOptionalHomarrAssistant();
+   const { toggleColorScheme } = useMantineColorScheme();
+   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
+   const t = useI18n("management.page.user.setting.general.header");
+@@ -93,7 +91,6 @@
+               searchDisplay={display.search}
+               logoDisplay={display.logo}
+               boardSwitcher={boardSwitcher}
+-              assistant={assistant}
+               openDockerModal={openDockerModal}
+               toggleColorScheme={toggleColorScheme}
+               label={(key) => t(`items.${key}` as never)}
+@@ -256,7 +253,6 @@
+   searchDisplay: "input" | "icon";
+   logoDisplay: "logo" | "logoAndText";
+   boardSwitcher: BoardSwitcherControls;
+-  assistant: ReturnType<typeof useOptionalHomarrAssistant>;
+   openDockerModal: () => void;
+   toggleColorScheme: () => void;
+   label: (key: string) => string;
+@@ -277,7 +273,6 @@
+   searchDisplay,
+   logoDisplay,
+   boardSwitcher,
+-  assistant,
+   openDockerModal,
+   toggleColorScheme,
+   label,
+@@ -355,24 +350,7 @@
+     );
+   }
+ 
+-  if (item.id === "assistant") {
+-    if (!assistant?.enabled) return null;
+-    return (
+-      <Tooltip label={label("assistant")}>
+-        <Indicator
+-          inline
+-          disabled={!assistant.isRunning && assistant.unreadCount === 0}
+-          color="red"
+-          size={16}
+-          label={assistant.isRunning ? <Loader type="bars" color="white" size={8} /> : assistant.unreadCount}
+-        >
+-          <HeaderButton aria-label={label("assistant")} onClick={assistant.open}>
+-            <IconRobot size={20} stroke={1.5} />
+-          </HeaderButton>
+-        </Indicator>
+-      </Tooltip>
+-    );
+-  }
++  if (item.id === "assistant") return null;
+ 
+   if (item.id === "docker") {
+     if (!isDockerEnabled) return null;
+--- a/apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
++++ b/apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+@@ -17,7 +17,6 @@
+ const spotlightHotkeys: HotkeyItem[] = [
+   [hotkeys.openSpotlight, () => openSpotlight(), { preventDefault: true }],
+   [hotkeys.openSpotlightApps, () => openSpotlight({ mode: "apps" }), { preventDefault: true }],
+-  [hotkeys.openSpotlightAssistant, () => openSpotlight({ mode: "assistant" }), { preventDefault: true }],
+   [hotkeys.openSpotlightPreferences, () => openSpotlight({ mode: "preferences" }), { preventDefault: true }],
+ ];
+ 
+--- a/apps/nextjs/src/components/user-avatar-menu.tsx
++++ b/apps/nextjs/src/components/user-avatar-menu.tsx
+@@ -2,7 +2,7 @@
+ 
+ import type { ReactNode } from "react";
+ import { useCallback } from "react";
+-import { Badge, Indicator, Kbd, Loader, Menu, Text } from "@mantine/core";
++import { Kbd, Menu } from "@mantine/core";
+ import {
+   IconBrandDocker,
+   IconHome,
+@@ -11,7 +11,6 @@
+   IconLogout,
+   IconReplace,
+   IconSettings,
+-  IconRobot,
+   IconTool,
+ } from "@tabler/icons-react";
+ 
+@@ -19,13 +18,12 @@
+ import { signOut, useSession } from "@homarr/auth/client";
+ import { constructBoardPermissions } from "@homarr/auth/shared";
+ import { useOptionalBoard } from "@homarr/boards/context";
+-import { hotkeys, invariantTechnicalLabels } from "@homarr/definitions";
++import { invariantTechnicalLabels } from "@homarr/definitions";
+ import { useModalAction } from "@homarr/modals";
+ import { useI18n } from "@homarr/translation/client";
+ import { Link } from "@homarr/ui";
+ 
+ import { useAuthContext } from "~/app/[locale]/_client-providers/session";
+-import { useOptionalHomarrAssistant } from "./assistant/assistant-context";
+ import type { BoardSwitcherControls } from "./board/board-switcher";
+ import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
+ import { CurrentLanguageCombobox } from "./language/current-language-combobox";
+@@ -54,7 +52,6 @@
+ 
+   const { logoutUrl, logoutRedirectInProgress } = useAuthContext();
+   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
+-  const assistant = useOptionalHomarrAssistant();
+ 
+   const handleSignout = useCallback(async () => {
+     const redirectUrl = logoutUrl ?? "/auth/login";
+@@ -106,29 +103,6 @@
+         <Menu.Divider />
+         {Boolean(session.data) && (
+           <>
+-            {assistant?.enabled && (
+-              <Menu.Item
+-                leftSection={
+-                  assistant.isRunning ? <Loader type="bars" color="red" size="xs" /> : <IconRobot size="1rem" />
+-                }
+-                rightSection={
+-                  assistant.unreadCount > 0 ? (
+-                    <Badge size="sm" variant="filled" color="red" circle>
+-                      {assistant.unreadCount > 99 ? "99+" : assistant.unreadCount}
+-                    </Badge>
+-                  ) : assistant.isRunning ? (
+-                    <Text size="xs" c="dimmed">
+-                      {t("assistantThinking")}
+-                    </Text>
+-                  ) : (
+-                    <Kbd size="xs">{formatHotkeyLabel(hotkeys.openAssistant, t("modifier"))}</Kbd>
+-                  )
+-                }
+-                onClick={assistant.open}
+-              >
+-                {t("assistant")}
+-              </Menu.Item>
+-            )}
+             <Menu.Item
+               component={Link}
+               href={`/manage/users/${session.data?.user.id}/general`}
+@@ -159,26 +133,7 @@
+         )}
+       </Menu.Dropdown>
+       <Menu.Target>
+-        <Indicator
+-          inline
+-          disabled={!assistant?.isRunning && !assistant?.unreadCount}
+-          color="red"
+-          size={20}
+-          offset={4}
+-          label={
+-            assistant?.isRunning ? (
+-              <Loader type="bars" color="white" size={10} />
+-            ) : assistant?.unreadCount ? (
+-              assistant.unreadCount > 99 ? (
+-                "99+"
+-              ) : (
+-                assistant.unreadCount
+-              )
+-            ) : undefined
+-          }
+-        >
+-          {children}
+-        </Indicator>
++        {children}
+       </Menu.Target>
+     </Menu>
+   );
+--- a/apps/nextjs/src/instrumentation-node.ts
++++ b/apps/nextjs/src/instrumentation-node.ts
+@@ -1,35 +1 @@
+-export async function registerNodeInstrumentation() {
+-  const { createLogger } = await import("@homarr/core/infrastructure/logs");
+-  const logger = createLogger({ module: "instrumentation" });
+-
+-  const startTasksAsync = async () => {
+-    try {
+-      const tasks = await import("@homarr/tasks");
+-      // Cron run-on-start hooks can perform slow external work. Keep dashboard
+-      // readiness independent, but never leave the process permanently degraded.
+-      void tasks.startupPromise.catch((cause: unknown) => {
+-        logger.error(new Error("Failed to start embedded tasks service", { cause }));
+-        process.exit(1);
+-      });
+-    } catch (cause) {
+-      const error = new Error("Failed to load embedded tasks service", { cause });
+-      logger.error(error);
+-      throw error;
+-    }
+-  };
+-
+-  const startWebsocketAsync = async () => {
+-    try {
+-      const websocket = await import("@homarr/websocket");
+-      // Listening is a bounded local readiness condition and prevents Next from
+-      // becoming healthy with subscriptions unavailable.
+-      await websocket.startupPromise;
+-    } catch (cause) {
+-      const error = new Error("Failed to start embedded websocket service", { cause });
+-      logger.error(error);
+-      throw error;
+-    }
+-  };
+-
+-  await Promise.all([startTasksAsync(), startWebsocketAsync()]);
+-}
++export function registerNodeInstrumentation() {}
+--- a/packages/api/src/root.ts
++++ b/packages/api/src/root.ts
+@@ -3,7 +3,6 @@
+ import { createTRPCRouter } from "./trpc";
+ 
+ export const appRouter = createTRPCRouter({
+-  assistant: lazy(() => import("./router/assistant").then((mod) => mod.assistantRouter)),
+   user: lazy(() => import("./router/user").then((mod) => mod.userRouter)),
+   group: lazy(() => import("./router/group").then((mod) => mod.groupRouter)),
+   invite: lazy(() => import("./router/invite").then((mod) => mod.inviteRouter)),
+--- a/packages/api/src/router/cron-jobs.ts
++++ b/packages/api/src/router/cron-jobs.ts
+@@ -1,4 +1,5 @@
+ import { observable } from "@trpc/server/observable";
++import { TRPCError } from "@trpc/server";
+ import z from "zod/v4";
+ 
+ import { createLogger } from "@homarr/core/infrastructure/logs";
+@@ -14,23 +15,33 @@
+ 
+ const logger = createLogger({ module: "cronJobsRouter" });
+ 
++const requireEmbeddedTaskRuntime = () => {
++  throw new TRPCError({
++    code: "PRECONDITION_FAILED",
++    message: "Embedded task controls are disabled in the lean build.",
++  });
++};
++
+ export const cronJobsRouter = createTRPCRouter({
+   triggerJob: permissionRequiredProcedure
+     .requiresPermission("admin")
+     .input(jobNameSchema)
+     .mutation(async ({ input, ctx }) => {
++      requireEmbeddedTaskRuntime();
+       await new JobManager(ctx.db, jobGroup).triggerAsync(input);
+     }),
+   startJob: permissionRequiredProcedure
+     .requiresPermission("admin")
+     .input(jobNameSchema)
+     .mutation(async ({ input, ctx }) => {
++      requireEmbeddedTaskRuntime();
+       await new JobManager(ctx.db, jobGroup).startAsync(input);
+     }),
+   stopJob: permissionRequiredProcedure
+     .requiresPermission("admin")
+     .input(jobNameSchema)
+     .mutation(({ input, ctx }) => {
++      requireEmbeddedTaskRuntime();
+       new JobManager(ctx.db, jobGroup).stop(input);
+     }),
+   updateJobInterval: permissionRequiredProcedure
+@@ -42,18 +53,21 @@
+       }),
+     )
+     .mutation(async ({ input, ctx }) => {
++      requireEmbeddedTaskRuntime();
+       await new JobManager(ctx.db, jobGroup).updateIntervalAsync(input.name, input.cron);
+     }),
+   disableJob: permissionRequiredProcedure
+     .requiresPermission("admin")
+     .input(jobNameSchema)
+     .mutation(async ({ input, ctx }) => {
++      requireEmbeddedTaskRuntime();
+       await new JobManager(ctx.db, jobGroup).disableAsync(input);
+     }),
+   enableJob: permissionRequiredProcedure
+     .requiresPermission("admin")
+     .input(jobNameSchema)
+     .mutation(async ({ input, ctx }) => {
++      requireEmbeddedTaskRuntime();
+       await new JobManager(ctx.db, jobGroup).enableAsync(input);
+     }),
+   getJobs: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
+--- a/packages/auth/configuration.ts
++++ b/packages/auth/configuration.ts
+@@ -11,10 +11,9 @@
+ import { createSessionCallback } from "./callbacks";
+ import { env } from "./env";
+ import { createSignInEventHandler } from "./events";
+-import { createCredentialsConfiguration, createLdapConfiguration } from "./providers/credentials/credentials-provider";
++import { createCredentialsConfiguration } from "./providers/credentials/credentials-provider";
+ import { EmptyNextAuthProvider } from "./providers/empty/empty-provider";
+ import { filterProviders } from "./providers/filter-providers";
+-import { OidcProvider } from "./providers/oidc/oidc-provider";
+ import { createRedirectUri } from "./redirect";
+ import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
+ 
+@@ -63,9 +62,7 @@
+     adapter,
+     providers: filterProviders([
+       Credentials(createCredentialsConfiguration(db)),
+-      Credentials(createLdapConfiguration(db)),
+       EmptyNextAuthProvider(),
+-      OidcProvider(headers),
+     ]),
+     callbacks: {
+       session: createSessionCallback(db),
+--- a/packages/auth/env.ts
++++ b/packages/auth/env.ts
+@@ -21,7 +21,19 @@
+   )
+   .default(["credentials"]);
+ 
++// Validate every requested provider token before the schema's transform drops unsupported values.
++const requestedAuthProviders = process.env.AUTH_PROVIDERS?.replaceAll(" ", "").toLowerCase().split(",");
++if (requestedAuthProviders?.some((provider) => provider !== "credentials")) {
++  throw new Error(
++    "This credentials-only Homarr build accepts only AUTH_PROVIDERS=credentials; LDAP, OIDC, and unknown providers are unavailable.",
++  );
++}
++
+ const authProviders = authProvidersSchema.safeParse(process.env.AUTH_PROVIDERS).data ?? [];
++
++if (!authProviders.includes("credentials") || authProviders.some((provider) => provider !== "credentials")) {
++  throw new Error("This credentials-only Homarr build supports only AUTH_PROVIDERS=credentials; LDAP and OIDC are unavailable.");
++}
+ 
+ export const env = createEnv({
+   server: {
+--- a/packages/auth/events.ts
++++ b/packages/auth/events.ts
+@@ -3,46 +3,30 @@
+ import type { NextAuthConfig } from "next-auth";
+ 
+ import { createLogger } from "@homarr/core/infrastructure/logs";
+-import { and, eq, inArray } from "@homarr/db";
++import { eq } from "@homarr/db";
+ import type { Database } from "@homarr/db";
+ import { groupMembers, groups, users } from "@homarr/db/schema";
+ import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
+ 
+-import { env } from "./env";
+-import { extractProfileName, getProfileValueByPath } from "./providers/oidc/profile";
+ 
+ const logger = createLogger({ module: "authEvents" });
+ 
+ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {
+-  return async ({ user, profile }) => {
+-    logger.debug(`SignIn EventHandler for user: ${JSON.stringify(user)} . profile: ${JSON.stringify(profile)}`);
++  return async ({ user }) => {
++    logger.debug(`SignIn EventHandler for user: ${JSON.stringify(user)}`);
+     if (!user.id) throw new Error("User ID is missing");
+ 
+     const dbUser = await db.query.users.findFirst({
+       where: eq(users.id, user.id),
+       columns: {
+         name: true,
+-        image: true,
+         colorScheme: true,
+-        provider: true,
+       },
+     });
+ 
+     if (!dbUser) throw new Error("User not found");
+ 
+-    const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
+-    const profileGroups = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
+-    // Groups from oidc provider are provided from the profile, it's not typed.
+-    if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc" && Array.isArray(profileGroups)) {
+-      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
+-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, profileGroups as string[]);
+-    }
+-
+-    // In ldap-authroization we return the groups from ldap, it's not typed.
+-    if ("groups" in user && Array.isArray(user.groups)) {
+-      logger.debug(`Using profile groups: ${JSON.stringify(user.groups)}`);
+-      await synchronizeGroupsWithExternalForUserAsync(db, user.id, user.groups as string[]);
+-    }
++    // LDAP and OIDC provider callbacks are intentionally absent in this build profile.
+     await addUserToEveryoneGroupIfNotMemberAsync(db, user.id);
+ 
+     if (dbUser.name !== user.name) {
+@@ -52,33 +36,6 @@
+         oldName: dbUser.name,
+         newName: user.name,
+       });
+-    }
+-
+-    if (profile && dbUser.provider === "oidc") {
+-      const profileUsername = extractProfileName(profile);
+-      if (!profileUsername) {
+-        throw new Error(`OIDC provider did not return a name properties='${Object.keys(profile).join(",")}'`);
+-      }
+-
+-      if (dbUser.name !== profileUsername) {
+-        await db.update(users).set({ name: profileUsername }).where(eq(users.id, user.id));
+-        logger.info("Username for user of oidc provider has changed.", {
+-          userId: user.id,
+-          oldName: dbUser.name,
+-          newName: profileUsername,
+-        });
+-      }
+-
+-      if (
+-        typeof profile.picture === "string" &&
+-        dbUser.image !== profile.picture &&
+-        !dbUser.image?.startsWith("data:")
+-      ) {
+-        await db.update(users).set({ image: profile.picture }).where(eq(users.id, user.id));
+-        logger.info("Profile picture for user of oidc provider has changed.", {
+-          userId: user.id,
+-        });
+-      }
+     }
+ 
+     logger.info("User logged in", { userId: user.id, userName: dbUser.name, timestamp: dayjs().format() });
+@@ -109,83 +66,3 @@
+     logger.info("Added user to everyone group.", { userId });
+   }
+ };
+-
+-const synchronizeGroupsWithExternalForUserAsync = async (db: Database, userId: string, externalGroups: string[]) => {
+-  const ignoredGroups = [everyoneGroup];
+-  const dbGroupMembers = await db.query.groupMembers.findMany({
+-    where: eq(groupMembers.userId, userId),
+-    with: {
+-      group: { columns: { name: true } },
+-    },
+-  });
+-
+-  /**
+-   * The below groups are those groups the user is part of in the external system, but not in Homarr.
+-   * So he has to be added to those groups.
+-   */
+-  const missingExternalGroupsForUser = externalGroups.filter(
+-    (externalGroup) => !dbGroupMembers.some(({ group }) => group.name === externalGroup),
+-  );
+-
+-  if (missingExternalGroupsForUser.length > 0) {
+-    logger.debug("Homarr does not have the user in certain groups.", {
+-      user: userId,
+-      count: missingExternalGroupsForUser.length,
+-    });
+-
+-    const groupIds = await db.query.groups.findMany({
+-      columns: {
+-        id: true,
+-      },
+-      where: inArray(groups.name, missingExternalGroupsForUser),
+-    });
+-
+-    logger.debug("Homarr has found groups in the database user is not in.", {
+-      user: userId,
+-      count: groupIds.length,
+-    });
+-
+-    if (groupIds.length > 0) {
+-      await db.insert(groupMembers).values(
+-        groupIds.map((group) => ({
+-          userId,
+-          groupId: group.id,
+-        })),
+-      );
+-
+-      logger.info("Added user to groups successfully.", { user: userId, count: groupIds.length });
+-    } else {
+-      logger.debug("User is already in all groups of Homarr.", { user: userId });
+-    }
+-  }
+-
+-  /**
+-   * The below groups are those groups the user is part of in Homarr, but not in the external system and not ignored.
+-   * So he has to be removed from those groups.
+-   */
+-  const groupsUserIsNoLongerMemberOfExternally = dbGroupMembers.filter(
+-    ({ group }) => !externalGroups.concat(ignoredGroups).includes(group.name),
+-  );
+-
+-  if (groupsUserIsNoLongerMemberOfExternally.length > 0) {
+-    logger.debug("Homarr has the user in certain groups that LDAP does not have.", {
+-      user: userId,
+-      count: groupsUserIsNoLongerMemberOfExternally.length,
+-    });
+-
+-    await db.delete(groupMembers).where(
+-      and(
+-        eq(groupMembers.userId, userId),
+-        inArray(
+-          groupMembers.groupId,
+-          groupsUserIsNoLongerMemberOfExternally.map(({ groupId }) => groupId),
+-        ),
+-      ),
+-    );
+-
+-    logger.info("Removed user from groups successfully.", {
+-      user: userId,
+-      count: groupsUserIsNoLongerMemberOfExternally.length,
+-    });
+-  }
+-};
+--- a/packages/auth/providers/credentials/credentials-provider.ts
++++ b/packages/auth/providers/credentials/credentials-provider.ts
+@@ -1,10 +1,9 @@
+ import type Credentials from "@auth/core/providers/credentials";
+ 
+ import type { Database } from "@homarr/db";
+-import { ldapSignInSchema, userSignInSchema } from "@homarr/validation/user";
++import { userSignInSchema } from "@homarr/validation/user";
+ 
+ import { authorizeWithBasicCredentialsAsync } from "./authorization/basic-authorization";
+-import { authorizeWithLdapCredentialsAsync } from "./authorization/ldap-authorization";
+ 
+ type CredentialsConfiguration = Parameters<typeof Credentials>[0];
+ 
+@@ -21,14 +20,3 @@
+     },
+   }) satisfies CredentialsConfiguration;
+ 
+-export const createLdapConfiguration = (db: Database) =>
+-  ({
+-    id: "ldap",
+-    type: "credentials",
+-    name: "Ldap",
+-    // eslint-disable-next-line no-restricted-syntax
+-    async authorize(credentials) {
+-      const data = await ldapSignInSchema.parseAsync(credentials);
+-      return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);
+-    },
+-  }) satisfies CredentialsConfiguration;
+--- a/packages/core/src/infrastructure/certificates/hostnames/db/schema.ts
++++ b/packages/core/src/infrastructure/certificates/hostnames/db/schema.ts
+@@ -1,8 +1,3 @@
+-import { createSchema } from "../../../db";
+-import * as postgresql from "./postgresql";
+ import * as sqlite from "./sqlite";
+ 
+-export const schema = createSchema({
+-  "better-sqlite3": () => sqlite,
+-  "node-postgres": () => postgresql,
+-});
++export const schema = sqlite;
+--- a/packages/core/src/infrastructure/db/drivers/index.ts
++++ b/packages/core/src/infrastructure/db/drivers/index.ts
+@@ -1,6 +1,5 @@
+ import { DB_CASING } from "../constants";
+-import { createDbMapping } from "../mapping";
+-import { createPostgresDb } from "./postgresql";
++import { dbEnv } from "../env";
+ import type { SharedDrizzleConfig } from "./shared";
+ import { WinstonDrizzleLogger } from "./shared";
+ import { createSqliteDb } from "./sqlite";
+@@ -18,8 +17,12 @@
+ export const createDb = <TSchema extends Record<string, unknown>>(schema: TSchema) => {
+   const config = createSharedConfig(schema);
+ 
+-  return createDbMapping({
+-    "node-postgres": () => createPostgresDb(config),
+-    "better-sqlite3": () => createSqliteDb(config),
+-  });
++  // Next manifest collection skips env validation; retain createDbMapping's SQLite fallback.
++  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
++  const selectedDriver = dbEnv.DRIVER ?? "better-sqlite3";
++  if (selectedDriver !== "better-sqlite3") {
++    throw new Error(`This SQLite-only Homarr runtime does not support DB_DRIVER=${selectedDriver}`);
++  }
++
++  return createSqliteDb(config);
+ };
+--- a/packages/core/src/infrastructure/db/env.ts
++++ b/packages/core/src/infrastructure/db/env.ts
+@@ -12,6 +12,17 @@
+       "Keep your previous Homarr image and back up your database before upgrading. " +
+       "For SQLite conversion instructions and PostgreSQL guidance for shared deployments, see https://homarr.dev/docs/advanced/mysql-to-sqlite. " +
+       "Changing DB_DRIVER or DB_URL alone does not migrate your data.",
++  );
++}
++
++if (
++  ["postgres", "postgresql"].includes(process.env.DB_DIALECT ?? "") ||
++  process.env.DB_DRIVER === "node-postgres" ||
++  Boolean(process.env.DB_HOST) ||
++  /^(postgres|postgresql):/i.test(process.env.DB_URL ?? "")
++) {
++  throw new Error(
++    "PostgreSQL is not supported by this SQLite-only Homarr build. Set DB_DIALECT=sqlite and DB_DRIVER=better-sqlite3, or use the multi-driver build.",
+   );
+ }
+ 
+--- a/packages/core/src/infrastructure/db/index.ts
++++ b/packages/core/src/infrastructure/db/index.ts
+@@ -4,5 +4,4 @@
+ export const createSchema = createDbMapping;
+ 
+ export { createSqliteDb } from "./drivers/sqlite";
+-export { createPostgresDb } from "./drivers/postgresql";
+ export { createSharedConfig as createSharedDbConfig } from "./drivers";
+--- a/packages/db/migrations/postgresql/migrate.ts
++++ b/packages/db/migrations/postgresql/migrate.ts
+@@ -1,29 +1,4 @@
+-import { migrate } from "drizzle-orm/node-postgres/migrator";
+-
+-import { createPostgresDb, createSharedDbConfig } from "@homarr/core/infrastructure/db";
+-
+-import type { Database } from "../..";
+-import * as pgSchema from "../../schema/postgresql";
+-import { applyCustomMigrationsAsync } from "../custom";
+-import { seedDataAsync } from "../seed";
+-
+-const migrationsFolder = process.argv[2] ?? ".";
+-
+-const migrateAsync = async () => {
+-  const config = createSharedDbConfig(pgSchema);
+-  const db = createPostgresDb(config);
+-
+-  await migrate(db, { migrationsFolder });
+-  await seedDataAsync(db as unknown as Database);
+-  await applyCustomMigrationsAsync(db as unknown as Database);
+-};
+-
+-migrateAsync()
+-  .then(() => {
+-    console.log("Migration complete");
+-    process.exit(0);
+-  })
+-  .catch((err) => {
+-    console.log("Migration failed", err);
+-    process.exit(1);
+-  });
++console.error(
++  "PostgreSQL migrations and database seeding are not supported by this SQLite-only Homarr build. Use the multi-driver build to migrate a PostgreSQL database.",
++);
++process.exitCode = 1;
+--- a/packages/db/schema/index.ts
++++ b/packages/db/schema/index.ts
+@@ -1,16 +1,10 @@
+ import type { InferSelectModel } from "drizzle-orm";
+ 
+-import { createSchema } from "@homarr/core/infrastructure/db";
+-
+-import * as pgSchema from "./postgresql";
+ import * as sqliteSchema from "./sqlite";
+ 
+-export type PostgreSqlSchema = typeof pgSchema;
++export type PostgreSqlSchema = typeof import("./postgresql");
+ 
+-export const schema = createSchema({
+-  "better-sqlite3": () => sqliteSchema,
+-  "node-postgres": () => pgSchema,
+-});
++export const schema = sqliteSchema;
+ 
+ // Sadly we can't use export * from here as we have multiple possible exports
+ export const {
+--- a/packages/onboarding/src/setup-studio.tsx
++++ b/packages/onboarding/src/setup-studio.tsx
+@@ -13,7 +13,6 @@
+   Checkbox,
+   Code,
+   ColorSwatch,
+-  CopyButton,
+   Fieldset,
+   Group,
+   Paper,
+@@ -25,7 +24,6 @@
+   Slider,
+   Stack,
+   Switch,
+-  Tabs,
+   Text,
+   TextInput,
+   ThemeIcon,
+@@ -43,8 +41,6 @@
+   IconBrandDocker,
+   IconBorderRadius,
+   IconCheck,
+-  IconCode,
+-  IconCopy,
+   IconDatabase,
+   IconDeviceMobile,
+   IconExternalLink,
+@@ -57,7 +53,6 @@
+   IconPalette,
+   IconPlugConnected,
+   IconRefresh,
+-  IconRobot,
+   IconSearch,
+   IconServer,
+   IconSparkles,
+@@ -98,7 +93,6 @@
+   cornerStyleValues,
+   IntegrationAvatar,
+   LanguageCombobox,
+-  Link,
+ } from "@homarr/ui";
+ import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
+ 
+@@ -159,7 +153,7 @@
+ const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
+ const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
+ 
+-export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingStudioProps) => {
++export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
+   const t = useI18n("init.studio");
+   const tCommon = useI18n("common.action");
+   const currentLocale = useCurrentLocale();
+@@ -502,7 +496,6 @@
+   const sectionProps: StudioSectionProps = {
+     headingRef: sectionHeadingRef,
+     environment,
+-    assistantConfiguration,
+     serverOrigin,
+     setServerOrigin,
+     urlMode,
+@@ -769,7 +762,6 @@
+ interface StudioSectionProps {
+   headingRef: React.RefObject<HTMLHeadingElement | null>;
+   environment: OnboardingStudioProps["environment"];
+-  assistantConfiguration: ReactNode;
+   serverOrigin: string;
+   setServerOrigin: (value: string) => void;
+   urlMode: UrlTemplateMode;
+@@ -1595,54 +1587,9 @@
+       <Title id="studio-section-title" ref={props.headingRef} order={2} tabIndex={-1} mb="xs">
+         {t("title")}
+       </Title>
+-      <Tabs defaultValue="workshop">
+-        <Tabs.List grow aria-label={t("tabsLabel")}>
+-          <Tabs.Tab value="workshop" leftSection={<IconSparkles size={16} />}>
+-            {t("workshop")}
+-          </Tabs.Tab>
+-          <Tabs.Tab value="assistant" leftSection={<IconRobot size={16} />}>
+-            {t("assistant")}
+-          </Tabs.Tab>
+-          <Tabs.Tab value="mcp" leftSection={<IconCode size={16} />}>
+-            MCP
+-          </Tabs.Tab>
+-        </Tabs.List>
+-        <Tabs.Panel value="workshop" pt="xs">
+-          <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
+-        </Tabs.Panel>
+-        <Tabs.Panel value="assistant" pt="xs">
+-          <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
+-        </Tabs.Panel>
+-        <Tabs.Panel value="mcp" pt="xs">
+-          <McpSetup environment={props.environment} />
+-        </Tabs.Panel>
+-      </Tabs>
++      <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
+     </Stack>
+   );
+-};
+-
+-const AssistantSetup = ({
+-  environment,
+-  configuration,
+-}: {
+-  environment: StudioSectionProps["environment"];
+-  configuration: ReactNode;
+-}) => {
+-  const t = useI18n("init.studio.extend.assistantSetup");
+-  if (!environment.canConfigurePrivileged) {
+-    return (
+-      <Alert icon={<IconKey size={18} />} title={t("loginTitle")}>
+-        <Stack gap="sm">
+-          <Text size="sm">{t("loginDescription")}</Text>
+-          <Button component={Link} href="/auth/login?callbackUrl=/manage/assistant" variant="light" w="fit-content">
+-            {t("loginAction")}
+-          </Button>
+-        </Stack>
+-      </Alert>
+-    );
+-  }
+-
+-  return configuration;
+ };
+ 
+ const WorkshopSetup = ({
+@@ -1708,112 +1655,6 @@
+     </Text>
+   </Stack>
+ );
+-
+-const McpSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
+-  const t = useI18n("init.studio.extend.mcpSetup");
+-  const [apiKey, setApiKey] = useState<string | null>(null);
+-  const sounds = useOnboardingSounds();
+-  const createKey = clientApi.apiKeys.create.useMutation({
+-    onSuccess(data) {
+-      sounds.success();
+-      setApiKey(data.apiKey);
+-    },
+-    onError(error) {
+-      sounds.error();
+-      showErrorNotification({ title: t("errorTitle"), message: error.message });
+-    },
+-  });
+-  const config = JSON.stringify(
+-    {
+-      mcpServers: {
+-        homarr: {
+-          url: environment.mcpEndpoint,
+-          headers: { ApiKey: apiKey ?? "<your-api-key>" },
+-        },
+-      },
+-    },
+-    null,
+-    2,
+-  );
+-  return (
+-    <Stack>
+-      <Alert icon={<IconCode size={18} />} title={t("title")} my="xs">
+-        {t("description")}
+-      </Alert>
+-      <TextInput label={t("endpoint")} value={environment.mcpEndpoint} readOnly />
+-      {environment.canConfigurePrivileged ? (
+-        apiKey ? (
+-          <Alert color="yellow" icon={<IconKey size={18} />} title={t("keyTitle")}>
+-            <Stack gap="xs">
+-              <Text size="sm">{t("keyDescription")}</Text>
+-              <Group wrap="nowrap">
+-                <Code style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>{apiKey}</Code>
+-                <CopyButton value={apiKey}>
+-                  {({ copied, copy }) => (
+-                    <ActionIcon
+-                      size={44}
+-                      onClick={() => {
+-                        sounds.pop();
+-                        copy();
+-                      }}
+-                      aria-label={t("copyKey")}
+-                      color={copied ? "green" : undefined}
+-                    >
+-                      {copied ? <IconCheck size={18} /> : <IconCopy size={18} />}
+-                    </ActionIcon>
+-                  )}
+-                </CopyButton>
+-              </Group>
+-            </Stack>
+-          </Alert>
+-        ) : (
+-          <Stack align="flex-start" gap="xs">
+-            <Button
+-              variant="light"
+-              leftSection={<IconKey size={16} />}
+-              loading={createKey.isPending}
+-              onClick={() => {
+-                sounds.click();
+-                createKey.mutate();
+-              }}
+-            >
+-              {t("createKey")}
+-            </Button>
+-            {createKey.error ? <Alert color="red">{createKey.error.message}</Alert> : null}
+-          </Stack>
+-        )
+-      ) : (
+-        <Alert color="yellow">{t("loginRequired")}</Alert>
+-      )}
+-      <Stack gap="xs">
+-        <Group justify="space-between">
+-          <Text fw={650} size="sm">
+-            {t("configuration")}
+-          </Text>
+-          <CopyButton value={config}>
+-            {({ copied, copy }) => (
+-              <Button
+-                variant="subtle"
+-                size="compact-sm"
+-                onClick={() => {
+-                  sounds.pop();
+-                  copy();
+-                }}
+-                leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+-              >
+-                {copied ? t("copied") : t("copy")}
+-              </Button>
+-            )}
+-          </CopyButton>
+-        </Group>
+-        <Code block>{config}</Code>
+-      </Stack>
+-      <Anchor component={Link} href="/manage/tools/api" size="sm">
+-        {t("advanced")}
+-      </Anchor>
+-    </Stack>
+-  );
+-};
+ 
+ const Review = (props: StudioSectionProps) => {
+   const t = useI18n("init.studio.review");
+--- a/packages/onboarding/src/types.ts
++++ b/packages/onboarding/src/types.ts
+@@ -12,7 +12,6 @@
+   workshopApiUrl: string;
+   workshopUrl: string;
+   serverOrigin: string;
+-  mcpEndpoint: string;
+   canConfigurePrivileged: boolean;
+   hasUsers: boolean;
+   initialBoard: { id: string; name: string; primaryColor: string; secondaryColor: string } | null;
+@@ -22,5 +21,4 @@
+ export interface OnboardingStudioProps {
+   environment: OnboardingEnvironment;
+   sqliteRestore?: ReactNode;
+-  assistantConfiguration?: ReactNode;
+ }
+--- a/packages/spotlight/src/components/mode-rail.tsx
++++ b/packages/spotlight/src/components/mode-rail.tsx
+@@ -3,7 +3,6 @@
+   IconApps,
+   IconCommand,
+   IconMovie,
+-  IconRobot,
+   IconSearch,
+   IconSettings,
+   IconUsers,
+@@ -34,7 +33,6 @@
+   apps: IconApps,
+   command: IconCommand,
+   preferences: IconSettings,
+-  assistant: IconRobot,
+   external: IconWorldSearch,
+   media: IconMovie,
+   userGroup: IconUsers,
+--- a/packages/spotlight/src/modes/index.tsx
++++ b/packages/spotlight/src/modes/index.tsx
+@@ -1,5 +1,4 @@
+ import { appIntegrationBoardMode } from "./app-integration-board";
+-import { assistantMode } from "./assistant";
+ import { commandMode } from "./command";
+ import { externalMode } from "./external";
+ import { homeMode } from "./home";
+@@ -12,7 +11,6 @@
+   appIntegrationBoardMode,
+   commandMode,
+   preferencesMode,
+-  assistantMode,
+   externalMode,
+   mediaMode,
+   userGroupMode,
+--- a/packages/spotlight/src/modes/page/pages-search-group.tsx
++++ b/packages/spotlight/src/modes/page/pages-search-group.tsx
+@@ -9,7 +9,6 @@
+   IconMailForward,
+   IconPhoto,
+   IconPlug,
+-  IconReport,
+   IconSearch,
+   IconSettings,
+   IconUsers,
+@@ -134,12 +133,6 @@
+         hidden: !session?.user.permissions.includes("other-view-logs"),
+       },
+       {
+-        icon: IconReport,
+-        path: "/manage/tools/tasks",
+-        name: t("manageTask.label"),
+-        hidden: !session?.user.permissions.includes("admin"),
+-      },
+-      {
+         icon: IconSettings,
+         path: "/manage/settings",
+         name: t("manageSettings.label"),
+--- a/packages/spotlight/src/open.ts
++++ b/packages/spotlight/src/open.ts
+@@ -8,7 +8,6 @@
+   | "apps"
+   | "command"
+   | "preferences"
+-  | "assistant"
+   | "external"
+   | "media"
+   | "userGroup";
+--- /dev/null
++++ b/packages/translation/src/catalog-loader.ts
+@@ -0,0 +1,43 @@
++import { access, readFile } from "node:fs/promises";
++import path from "node:path";
++
++import type { TranslationObject } from "./type";
++import type { SupportedLanguage } from "./languages";
++import { supportedLanguages } from "./languages";
++
++const isSupportedLanguage = (locale: string): locale is SupportedLanguage =>
++  supportedLanguages.includes(locale as SupportedLanguage);
++
++const catalogDirectoryCandidates = [
++  path.resolve(process.cwd(), "packages/translation/src/lang"),
++  path.resolve(process.cwd(), "../../packages/translation/src/lang"),
++];
++
++// Keep only the resolved directory string process-wide; catalog objects remain request-local.
++let resolvedCatalogDirectory: string | undefined;
++
++const getCatalogDirectoryAsync = async () => {
++  if (resolvedCatalogDirectory) return resolvedCatalogDirectory;
++
++  for (const candidate of catalogDirectoryCandidates) {
++    try {
++      await access(path.join(candidate, "en.json"));
++      resolvedCatalogDirectory = candidate;
++      return candidate;
++    } catch {
++      // Try the next fixed application-root-relative location.
++    }
++  }
++
++  throw new Error("Unable to locate the supported locale catalog directory");
++};
++
++export const readCatalogAsync = async (locale: SupportedLanguage): Promise<TranslationObject> => {
++  if (!isSupportedLanguage(locale)) {
++    throw new Error("Cannot read a catalog for an unsupported locale");
++  }
++
++  const filePath = path.join(await getCatalogDirectoryAsync(), `${locale}.json`);
++  const contents = await readFile(filePath, "utf8");
++  return JSON.parse(contents) as TranslationObject;
++};
+--- a/packages/translation/src/request.ts
++++ b/packages/translation/src/request.ts
+@@ -2,25 +2,27 @@
+ import { getRequestConfig } from "next-intl/server";
+ 
+ import type { TranslationObject } from ".";
+-import { fallbackLocale, isLocaleSupported } from ".";
+-import type { SupportedLanguage } from "./config";
+-import { createLanguageMapping } from "./mapping";
++import type { SupportedLanguage } from "./languages";
++import { fallbackLocale, supportedLanguages } from "./languages";
++import { readCatalogAsync } from "./catalog-loader";
++
++const isSupportedLanguage = (locale: string): locale is SupportedLanguage =>
++  supportedLanguages.includes(locale as SupportedLanguage);
+ 
+ // This file is referenced in the `next.config.js` file. See https://next-intl-docs.vercel.app/docs/usage/configuration
+ export default getRequestConfig(async ({ requestLocale }) => {
+   let currentLocale = await requestLocale;
+ 
+-  if (!currentLocale || !isLocaleSupported(currentLocale)) {
++  if (!currentLocale || !isSupportedLanguage(currentLocale)) {
+     currentLocale = fallbackLocale;
+   }
+   const typedLocale = currentLocale as SupportedLanguage;
+ 
+-  const languageMap = createLanguageMapping();
+-  const currentMessages = removeEmptyTranslations((await languageMap[typedLocale]()).default) as TranslationObject;
++  const currentMessages = removeEmptyTranslations(await readCatalogAsync(typedLocale)) as TranslationObject;
+ 
+-  // Fallback to default locale if the current locales messages if not all messages are present
++  // Fallback to default locale if the current locales messages are not all present.
+   if (currentLocale !== fallbackLocale) {
+-    const fallbackMessages = (await languageMap[fallbackLocale]()).default;
++    const fallbackMessages = await readCatalogAsync(fallbackLocale);
+     return {
+       locale: typedLocale,
+       messages: deepmerge(fallbackMessages, currentMessages),
+--- a/packages/validation/src/header-preferences.ts
++++ b/packages/validation/src/header-preferences.ts
+@@ -240,8 +240,16 @@
+   try {
+     const decoded = typeof value === "string" ? JSON.parse(value) : value;
+     const parsed = headerPreferencesMutationSchema.safeParse(decoded);
+-    if (parsed.success) return parsed.data;
+-    return defaultHeaderPreferences;
++    if (!parsed.success) return defaultHeaderPreferences;
++
++    const zones = Object.fromEntries(
++      headerZoneIds.map((zone) => [
++        zone,
++        parsed.data.zones[zone].filter((item) => item.type !== "builtin" || item.id !== "assistant"),
++      ]),
++    ) as HeaderZones;
++
++    return { ...parsed.data, zones };
+   } catch {
+     return defaultHeaderPreferences;
+   }

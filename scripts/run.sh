@@ -6,6 +6,27 @@ NGINX_PID=""
 REDIS_PID=""
 SHUTTING_DOWN=false
 
+# The profile is baked into the image; a runtime override cannot restore cut features.
+if [ "$(cat /app/build-profile 2>/dev/null)" = "lean" ]; then
+    if [ "${DB_DIALECT-sqlite}" != "sqlite" ] || \
+       [ "${DB_DRIVER-better-sqlite3}" != "better-sqlite3" ] || \
+       [ -n "${DB_HOST:-}" ]; then
+        echo "ERROR: the lean build supports only SQLite with DB_DRIVER=better-sqlite3." >&2
+        exit 1
+    fi
+    case "$(printf '%s' "${DB_URL:-}" | tr '[:upper:]' '[:lower:]')" in
+        postgres:*|postgresql:*)
+            echo "ERROR: the lean build does not support PostgreSQL. Use the full build." >&2
+            exit 1
+            ;;
+    esac
+    if [ "$(printf '%s' "${AUTH_PROVIDERS-credentials}" | tr '[:upper:]' '[:lower:]' | tr -d ' ')" != "credentials" ]; then
+        echo "ERROR: the lean build supports only AUTH_PROVIDERS=credentials. Use the full build for SSO." >&2
+        exit 1
+    fi
+    echo "Starting Homarr lean profile: embedded tasks and WebSockets are disabled."
+fi
+
 stop_process() {
     if [ -n "$1" ]; then
         kill -TERM "$1" 2>/dev/null

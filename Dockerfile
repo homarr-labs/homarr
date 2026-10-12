@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1.25
 
+ARG HOMARR_BUILD_PROFILE=full
+
 FROM oven/bun:1.4.2-alpine AS bun-tool
 
 FROM node:24.18.0-alpine AS base
@@ -9,7 +11,7 @@ ARG TARGETPLATFORM
 WORKDIR /app
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 # Compiler tools stay in the builder for optional native dependency fallbacks.
-RUN apk add --no-cache libstdc++ python3 make g++
+RUN apk add --no-cache libstdc++ python3 make g++ patch
 COPY bun.lock bunfig.toml package.json ./
 COPY patches ./patches
 COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
@@ -17,6 +19,8 @@ RUN --mount=type=cache,id=homarr-bun-cache,target=/root/.bun/install/cache,shari
     npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
 
 COPY . .
+ARG HOMARR_BUILD_PROFILE
+RUN node scripts/prepare-build-profile.mjs "$HOMARR_BUILD_PROFILE"
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
@@ -25,12 +29,14 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
-    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
-    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
+    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM}-${HOMARR_BUILD_PROFILE},target=/app/apps/nextjs/.next/cache,sharing=locked \
+    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM}-${HOMARR_BUILD_PROFILE},target=/app/.turbo,sharing=locked \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM alpine:3.24.2 AS runner
+ARG HOMARR_BUILD_PROFILE
+LABEL io.homarr.build-profile=$HOMARR_BUILD_PROFILE
 WORKDIR /app
 COPY --from=base /usr/local/bin/node /usr/local/bin/node
 # envsubst, privilege drop and AUTH_SECRET generation are used by the entrypoint.
@@ -47,6 +53,7 @@ RUN printf '#!/bin/sh\ncd /app/apps/cli && exec node ./cli.cjs "$@"\n' > /usr/bi
 COPY --from=builder /app/packages/db/migrations ./db/migrations
 # Ship only Next's traced production dependencies and application assets.
 COPY --from=builder /app/apps/nextjs/.output/standalone ./
+COPY --from=builder /app/.homarr-build-profile /app/build-profile
 COPY scripts/run.sh ./run.sh
 COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
