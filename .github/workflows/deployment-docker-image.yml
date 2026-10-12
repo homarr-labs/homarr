@@ -143,6 +143,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ needs.release.outputs.git_ref }}
 
       - name: Docker meta
@@ -187,6 +188,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          persist-credentials: false
           ref: ${{ needs.release.outputs.git_ref }}
 
       - name: Docker meta

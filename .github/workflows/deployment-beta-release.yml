@@ -28,6 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           fetch-depth: 0
       - name: Get Next Version
         id: semver

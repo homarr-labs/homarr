@@ -21,6 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
+          persist-credentials: false
           token: ${{ steps.obtainToken.outputs.token }}
           ref: dev
       - name: Setup
