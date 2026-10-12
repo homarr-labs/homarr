@@ -1,5 +1,5 @@
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
-import { and, isNull, like, or } from "@homarr/db";
+import { isNull, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { iconsFindSchema } from "@homarr/validation/icons";
 
