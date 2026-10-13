@@ -40,6 +40,7 @@ jobs:
         with:
           token: ${{ steps.obtainToken.outputs.token }}
           branch: update-integrations-readme
+          commit-message: "chore: update integrations list readme"
           base: dev
           title: "chore: update integrations list readme"
           delete-branch: true
