@@ -2,18 +2,14 @@
   --mantine-scale: 1;
   --beszel-chart-saturation: 65%;
   --beszel-chart-lightness: 50%;
-  --beszel-chart-background: hsl(30 0% 100%);
   --beszel-tooltip-background: hsl(30 8% 98%);
   --beszel-chart-foreground: hsl(30 0% 10%);
   --beszel-chart-muted: hsl(24 2.79% 35.1%);
   --beszel-chart-border: hsl(30 8.11% 85.49%);
 
-  background: var(--beszel-chart-background);
-
   @mixin dark {
     --beszel-chart-saturation: 60%;
     --beszel-chart-lightness: 55%;
-    --beszel-chart-background: hsl(220 5.5% 10.5%);
     --beszel-tooltip-background: hsl(220 5.5% 9%);
     --beszel-chart-foreground: hsl(220 2% 97%);
     --beszel-chart-muted: hsl(220 4% 67%);
