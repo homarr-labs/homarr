@@ -207,6 +207,9 @@ export const fetchGuardedAsync = async <TResult>(
       // The TypeError of new URL carries the full location and base, query strings included.
       const target = URL.parse(location, currentUrl);
       if (target === null) throw new Error(`Invalid redirect location from ${currentUrl.origin}`);
+      // undici refuses a url with credentials and puts all of it, query included, into its error.
+      target.username = "";
+      target.password = "";
       currentUrl = target;
     } finally {
       await dispatcher.destroy();

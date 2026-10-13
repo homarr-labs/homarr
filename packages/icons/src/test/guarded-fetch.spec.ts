@@ -305,6 +305,42 @@ describe("fetchGuardedAsync", () => {
     expect(mockedFetch).toHaveBeenCalledTimes(6);
   });
 
+  test("drops credentials from a redirect target", async () => {
+    mockResponses({
+      "http://192.168.1.10/": createResponse(302, "http://admin:secret@192.168.1.20/next?page=2"),
+      "http://192.168.1.20/next?page=2": createResponse(200),
+    });
+
+    await expect(fetchStatusAsync("http://192.168.1.10/")).resolves.toEqual({
+      status: 200,
+      url: "http://192.168.1.20/next?page=2",
+    });
+  });
+
+  test.each([
+    ["a refused address", {}, "http://127.0.0.1/home?token=abc", "Refusing to request http://127.0.0.1 because"],
+    [
+      "an invalid redirect location",
+      { "http://192.168.1.10/home?token=abc": createResponse(302, "http://[broken") },
+      "http://192.168.1.10/home?token=abc",
+      "Invalid redirect location from http://192.168.1.10",
+    ],
+    [
+      "a redirect loop",
+      { "http://192.168.1.10/home?token=abc": createResponse(302, "/home?token=abc") },
+      "http://192.168.1.10/home?token=abc",
+      "Too many redirects starting at http://192.168.1.10",
+    ],
+  ])("names only the origin in the error for %s", async (_name, responses, url, message) => {
+    mockResponses(responses);
+
+    const error = await fetchStatusAsync(url).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain(message);
+    expect((error as Error).message).not.toMatch(/home|token/);
+  });
+
   test("closes the connection of every hop", async () => {
     const destroy = vi.fn(() => Promise.resolve());
     mockedCreateAgent.mockImplementation(() => Promise.resolve({ destroy } as unknown as Dispatcher));
