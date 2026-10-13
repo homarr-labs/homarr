@@ -11,6 +11,7 @@ vi.hoisted(() => {
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { AdGuardHomeIntegration } from "../adguard-home-integration";
+import { filteringStatusSchema } from "../adguard-home-types";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
 
@@ -89,9 +90,52 @@ describe("AdGuardHomeIntegration", () => {
       expect(Number.isFinite(summary.adsBlockedTodayPercentage)).toBe(true);
     },
   );
+
+  test.each([
+    { filters: null, expected: 0 },
+    { filters: [], expected: 0 },
+    { filters: filteringStatus.filters, expected: 12 },
+  ])("reports $expected blocked domains for the configured filters", async ({ filters, expected }) => {
+    mockSummaryResponses({ filters });
+
+    await expect(integration.getSummaryAsync()).resolves.toMatchObject({
+      domainsBeingBlocked: expected,
+      adsBlockedTodayPercentage: 20,
+      dnsQueriesToday: 100,
+    });
+    if (filters === null) {
+      expect(filteringStatusSchema.parse({ filters }).filters).toBeNull();
+    }
+  });
+
+  test.each([undefined, "invalid", 0, {}, [null], [{ ...filteringStatus.filters[0], rules_count: "12" }]])(
+    "rejects malformed filtering status filters: %j",
+    async (filters) => {
+      mockSummaryResponses({ filters });
+
+      await expect(integration.getSummaryAsync()).rejects.toMatchObject({
+        cause: { message: expect.stringContaining("Filtering status parsing error") },
+      });
+    },
+  );
 });
 
 const jsonResponse = (body: unknown) => new Response(JSON.stringify(body), { status: 200 });
+
+function mockSummaryResponses(filtering: unknown) {
+  mockFetch.mockImplementation(async (url) => {
+    switch (new URL(url.toString()).pathname) {
+      case "/control/stats":
+        return jsonResponse(stats);
+      case "/control/status":
+        return jsonResponse(status);
+      case "/control/filtering/status":
+        return jsonResponse(filtering);
+      default:
+        throw new Error("Unexpected AdGuard request");
+    }
+  });
+}
 
 const stats = {
   time_units: "hours",
