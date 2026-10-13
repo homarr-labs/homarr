@@ -277,6 +277,30 @@ describe("fetchFaviconUrlAsync", () => {
     expect(performance.now() - start).toBeLessThan(500);
   });
 
+  test("parses a head full of unclosed link tags without stalling", async () => {
+    mockResponses({
+      [websiteUrl]: createPage(`<link rel="icon" href="/icon.png">${"<link".repeat(50_000)}`),
+    });
+
+    const start = performance.now();
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/icon.png");
+    expect(performance.now() - start).toBeLessThan(500);
+  });
+
+  test("parses a very long sizes attribute without stalling", async () => {
+    mockResponses({
+      [websiteUrl]: createPage(`<link rel="icon" sizes="${"1".repeat(64 * 1024)}" href="/icon.png">`),
+    });
+
+    const start = performance.now();
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/icon.png");
+    expect(performance.now() - start).toBeLessThan(500);
+  });
+
   test("sends no credentials and logs only the origin when the website fails", async () => {
     mockedFetch.mockRejectedValue(new Error("connection refused"));
 
