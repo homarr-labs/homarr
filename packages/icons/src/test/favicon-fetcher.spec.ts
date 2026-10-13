@@ -265,6 +265,18 @@ describe("fetchFaviconUrlAsync", () => {
     expect(result).toBe("https://app.example.com/icon.png");
   });
 
+  test("parses a link tag with a very long attribute without stalling", async () => {
+    mockResponses({
+      [websiteUrl]: createPage(`<link ${"a".repeat(64 * 1024)}><link rel="icon" href="/icon.png">`),
+    });
+
+    const start = performance.now();
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/icon.png");
+    expect(performance.now() - start).toBeLessThan(500);
+  });
+
   test("sends no credentials and logs only the origin when the website fails", async () => {
     mockedFetch.mockRejectedValue(new Error("connection refused"));
 
