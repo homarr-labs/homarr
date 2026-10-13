@@ -9,7 +9,14 @@ import { WidgetInteractionGuide } from "@site/src/components/widgets/interaction
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { releasesWidget } from ".";
+import { binderyIntegration } from "@site/docs/integrations/bindery";
+import { lidarrIntegration } from "@site/docs/integrations/lidarr";
+import { prowlarrIntegration } from "@site/docs/integrations/prowlarr";
+import { radarrIntegration } from "@site/docs/integrations/radarr";
+import { readarrIntegration } from "@site/docs/integrations/readarr";
+import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 
 <WidgetHeader widget={releasesWidget} categories={["Releases", "Software"]} />
 
@@ -39,6 +46,23 @@ For GitHub Container Registry, use `owner/package` identifiers such as `homarr-l
 Full image references such as `ghcr.io/homarr-labs/homarr:latest` are also accepted.
 
 Advanced view shows every configured repository in a roomier responsive layout. Repository names and details remain visible, and selecting a repository still expands its description and links.
+
+### Supported integrations
+
+<WidgetIntegrations
+  items={[
+    { integration: sonarrIntegration },
+    { integration: radarrIntegration },
+    { integration: lidarrIntegration },
+    { integration: readarrIntegration },
+    { integration: prowlarrIntegration },
+    { integration: binderyIntegration },
+  ]}
+/>
+
+### Linking integrations
+
+Linked integrations show the version each service is running next to the latest release. The status compares against the latest release the repository shows, which can be a pre-release, and is unknown when either version isn't a plain version number such as `4.0.20` or `v4.0.20` (LinuxServer.io's `-ls` build suffix is also supported).
 
 <WidgetInteractionGuide />
 

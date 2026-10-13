@@ -70,6 +70,21 @@ describe("matchesWidgetItemQuery", () => {
     expect(matches("releases", path, { itemId: "sibling-item", repositories: [{ id: "one" }] }, scope)).toBe(false);
   });
 
+  test("owns only the Releases service versions registered for linked integrations", () => {
+    const versionsQuery: NormalizedWidgetQuery = {
+      path: ["widget", "releases", "getServiceVersions"],
+      input: { integrationIds: ["sonarr-1"] },
+    };
+    const linkedScope = createScope({ integrationIds: ["sonarr-1", "radarr-1"], runtimeQueries: [versionsQuery] });
+    const unlinkedScope = createScope({ integrationIds: ["sonarr-1", "radarr-1"] });
+
+    expect(matches("releases", versionsQuery.path, versionsQuery.input, linkedScope)).toBe(true);
+    expect(matches("releases", versionsQuery.path, { integrationIds: ["sonarr-1", "radarr-1"] }, linkedScope)).toBe(
+      false,
+    );
+    expect(matches("releases", versionsQuery.path, versionsQuery.input, unlinkedScope)).toBe(false);
+  });
+
   test("normalizes Immich's all-photos sentinel and separates Immich widget kinds", () => {
     const carouselScope = createScope({
       integrationIds: ["immich-1"],
