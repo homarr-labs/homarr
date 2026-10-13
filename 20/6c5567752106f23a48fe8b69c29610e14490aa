@@ -1,0 +1,18 @@
+packages/api/src/router/onboard/onboard-router.ts
+  h_d6e478ca18e517 755
+packages/onboarding/src/setup-studio.tsx
+  h_d6e478ca18e517 1921-1935
+packages/widgets/src/releases/releases-repository.ts
+  h_d6e478ca18e517 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "206c5567752106f23a48fe8b69c29610e14490aa",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
