@@ -3,6 +3,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { AnyRequestError } from "../request-error";
 import type { ResponseError } from "../response-error";
+import { redactCredentialUrl } from "../credential-url";
 
 export abstract class HttpErrorHandler {
   protected logger: ILogger;
@@ -16,7 +17,7 @@ export abstract class HttpErrorHandler {
   }
 
   protected logResponseError<T extends { status: number; url: string | undefined }>(metadata: T) {
-    this.logger.debug("Received response error", metadata);
+    this.logger.debug("Received response error", { ...metadata, url: redactCredentialUrl(metadata.url) });
   }
 
   abstract handleRequestError(error: unknown): AnyRequestError | undefined;

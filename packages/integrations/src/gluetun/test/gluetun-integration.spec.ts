@@ -7,12 +7,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationTestingInput } from "../../base/integration";
 import { GluetunIntegration } from "../gluetun-integration";
-import {
-  gluetunDnsStatusSchema,
-  gluetunPublicIpSchema,
-  gluetunVpnSettingsSchema,
-  gluetunVpnStatusSchema,
-} from "../gluetun-types";
+import { gluetunPublicIpSchema, gluetunVpnStatusSchema } from "../gluetun-types";
 
 vi.mock("@homarr/db", async (importActual) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -37,7 +32,6 @@ const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 type FetchResponse = Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
 
 const VPN_STATUS_PAYLOAD = { status: "running" };
-const DNS_STATUS_PAYLOAD = { status: "running" };
 const PUBLIC_IP_PAYLOAD = {
   public_ip: "203.0.113.42",
   region: "Europe",
@@ -48,202 +42,6 @@ const PUBLIC_IP_PAYLOAD = {
   postal_code: "10115",
   timezone: "Europe/Berlin",
 };
-const VPN_SETTINGS_PAYLOAD = {
-  type: "wireguard",
-  provider: {
-    name: "mullvad",
-    server_selection: {
-      vpn: "wireguard",
-      countries: ["Germany"],
-      categories: null,
-      regions: null,
-      cities: ["Berlin"],
-      isps: null,
-      names: null,
-      numbers: null,
-      hostnames: ["de-ber-wg-001"],
-      owned_only: false,
-      free_only: false,
-      premium_only: false,
-      stream_only: false,
-      multi_hop_only: false,
-      port_forward_only: false,
-      secure_core_only: false,
-      tor_only: false,
-      openvpn: {
-        config_file_path: "",
-        protocol: "udp",
-        endpoint_ip: "",
-        custom_port: 0,
-        pia_encryption_preset: "",
-      },
-      wireguard: {
-        endpoint_ip: "203.0.113.1",
-        endpoint_port: 51820,
-        public_key: "pubkey",
-      },
-    },
-    port_forwarding: {
-      enabled: false,
-      provider: "mullvad",
-      status_file_path: "",
-      up_command: "",
-      down_command: "",
-      listening_port: 0,
-      username: "",
-      password: "",
-    },
-  },
-  openvpn: {
-    version: "",
-    user: "",
-    password: "",
-    config_file_path: "",
-    ciphers: null,
-    auth: "",
-    cert: "",
-    key: "",
-    encrypted_key: "",
-    key_passphrase: "",
-    pia_encryption_preset: "",
-    mssfix: 0,
-    interface: "tun0",
-    process_user: "",
-    verbosity: 0,
-    flags: null,
-  },
-  wireguard: {
-    private_key: "",
-    pre_shared_key: "",
-    addresses: ["10.0.0.2/32"],
-    allowed_ips: ["0.0.0.0/0"],
-    interface: "wg0",
-    persistent_keep_alive_interval: 25,
-    mtu: 1420,
-    implementation: "auto",
-  },
-};
-
-const ALT_VPN_SETTINGS_PAYLOAD = {
-  type: "openvpn",
-  provider: {
-    name: "custom",
-    server_selection: {
-      vpn: "openvpn",
-      countries: null,
-      categories: null,
-      regions: null,
-      cities: null,
-      isps: null,
-      names: null,
-      numbers: null,
-      hostnames: null,
-      owned_only: false,
-      free_only: false,
-      premium_only: false,
-      stream_only: false,
-      multi_hop_only: false,
-      port_forward_only: false,
-      secure_core_only: false,
-      tor_only: false,
-      openvpn: {
-        config_file_path: "/gluetun/custom.conf",
-        protocol: "tcp",
-        endpoint_ip: "0.0.0.0",
-        custom_port: 0,
-        pia_encryption_preset: "",
-      },
-      wireguard: {
-        endpoint_ip: "0.0.0.0",
-        endpoint_port: 0,
-        public_key: "",
-      },
-    },
-    port_forwarding: {
-      enabled: false,
-      provider: "",
-      status_file_path: "/tmp/gluetun/forwarded_port",
-      up_command: "",
-      down_command: "",
-      listening_port: [0],
-      ports_count: 0,
-      username: "",
-      password: "",
-    },
-  },
-  amneziawg: {
-    wireguard: {
-      private_key: "",
-      pre_shared_key: "",
-      addresses: null,
-      allowed_ips: ["0.0.0.0/0", "::/0"],
-      interface: "tun0",
-      persistent_keep_alive_interval: 0,
-      mtu: 0,
-      implementation: "userspace",
-    },
-    junk_packet_count: 0,
-    junk_packet_min: 0,
-    junk_packet_max: 0,
-    padding_s1: 0,
-    padding_s2: 0,
-    padding_s3: 0,
-    padding_s4: 0,
-    header_h1: "",
-    header_h2: "",
-    header_h3: "",
-    header_h4: "",
-    init_packet_i1: "",
-    init_packet_i2: "",
-    init_packet_i3: "",
-    init_packet_i4: "",
-    init_packet_i5: "",
-  },
-  openvpn: {
-    version: "2.6",
-    user: "",
-    password: "",
-    config_file_path: "/gluetun/custom.conf",
-    ciphers: null,
-    auth: "",
-    cert: "",
-    key: "",
-    encrypted_key: "",
-    key_passphrase: "",
-    pia_encryption_preset: "",
-    mssfix: 0,
-    interface: "tun0",
-    process_user: "nonrootuser",
-    verbosity: 1,
-    flags: null,
-  },
-  wireguard: {
-    private_key: "",
-    pre_shared_key: "",
-    addresses: null,
-    allowed_ips: ["0.0.0.0/0", "::/0"],
-    interface: "tun0",
-    persistent_keep_alive_interval: 0,
-    mtu: 0,
-    implementation: "auto",
-  },
-  pmtud: {
-    icmp_addresses: ["1.1.1.1", "8.8.8.8"],
-    tcp_addresses: [
-      "1.1.1.1:443",
-      "8.8.8.8:443",
-      "1.1.1.1:53",
-      "8.8.8.8:53",
-      "[2606:4700:4700::1111]:53",
-      "[2001:4860:4860::8888]:53",
-      "[2606:4700:4700::1111]:443",
-      "[2001:4860:4860::8888]:443",
-    ],
-  },
-  up_command: "",
-  down_command: "",
-};
-
 const jsonResponse = (body: unknown, init: ResponseInit = { status: 200 }): FetchResponse =>
   new Response(JSON.stringify(body), {
     ...init,
@@ -258,12 +56,8 @@ const setupHappyPath = () => {
     switch (pathname) {
       case "/v1/vpn/status":
         return Promise.resolve(jsonResponse(VPN_STATUS_PAYLOAD));
-      case "/v1/dns/status":
-        return Promise.resolve(jsonResponse(DNS_STATUS_PAYLOAD));
       case "/v1/publicip/ip":
         return Promise.resolve(jsonResponse(PUBLIC_IP_PAYLOAD));
-      case "/v1/vpn/settings":
-        return Promise.resolve(jsonResponse(VPN_SETTINGS_PAYLOAD));
       default:
         return Promise.resolve(jsonResponse({ error: "not found" }, { status: 404 }));
     }
@@ -296,25 +90,20 @@ describe("GluetunIntegration.getSummaryAsync", () => {
     vi.clearAllMocks();
   });
 
-  test("maps the four upstream responses into a flat VPN summary", async () => {
+  test("maps status and public IP into a flat VPN summary", async () => {
     setupHappyPath();
 
     const result = await createIntegrationWithApiKey().getSummaryAsync();
 
     expect(result).toEqual({
       vpnStatus: "running",
-      dnsStatus: "running",
       publicIp: "203.0.113.42",
       country: "Germany",
       city: "Berlin",
-      vpnProvider: {
-        protocol: "wireguard",
-        provider: "mullvad",
-      },
     });
   });
 
-  test("hits each of the four control endpoints exactly once", async () => {
+  test("hits only the two required control endpoints exactly once", async () => {
     setupHappyPath();
 
     await createIntegrationWithApiKey().getSummaryAsync();
@@ -324,10 +113,8 @@ describe("GluetunIntegration.getSummaryAsync", () => {
       return new URL(urlString).pathname;
     });
 
-    expect(calledPaths).toHaveLength(4);
-    expect(new Set(calledPaths)).toEqual(
-      new Set(["/v1/vpn/status", "/v1/dns/status", "/v1/publicip/ip", "/v1/vpn/settings"]),
-    );
+    expect(calledPaths).toHaveLength(2);
+    expect(new Set(calledPaths)).toEqual(new Set(["/v1/vpn/status", "/v1/publicip/ip"]));
   });
 
   test("sends X-API-Key header when an apiKey secret is configured", async () => {
@@ -449,93 +236,11 @@ describe("gluetun schemas", () => {
     expect(() => gluetunVpnStatusSchema.parse({})).toThrow();
   });
 
-  test("dns status schema mirrors vpn status schema", () => {
-    expect(gluetunDnsStatusSchema.parse({ status: "stopped" })).toEqual({ status: "stopped" });
-    expect(() => gluetunDnsStatusSchema.parse({ status: 42 })).toThrow();
-  });
-
   test("public ip schema parses the full payload", () => {
     expect(gluetunPublicIpSchema.parse(PUBLIC_IP_PAYLOAD)).toEqual(PUBLIC_IP_PAYLOAD);
   });
 
-  test("public ip schema rejects a missing required field", () => {
-    const { city: _city, ...partial } = PUBLIC_IP_PAYLOAD;
-    expect(() => gluetunPublicIpSchema.parse(partial)).toThrow();
-  });
-
-  test("vpn settings schema parses a wireguard payload", () => {
-    const parsed = gluetunVpnSettingsSchema.parse(VPN_SETTINGS_PAYLOAD);
-    expect(parsed.type).toBe("wireguard");
-    expect(parsed.provider.name).toBe("mullvad");
-  });
-
-  test("vpn settings schema accepts nullable server-selection arrays", () => {
-    const payloadWithNulls = {
-      ...VPN_SETTINGS_PAYLOAD,
-      provider: {
-        ...VPN_SETTINGS_PAYLOAD.provider,
-        server_selection: {
-          ...VPN_SETTINGS_PAYLOAD.provider.server_selection,
-          countries: null,
-          cities: null,
-        },
-      },
-    };
-
-    expect(() => gluetunVpnSettingsSchema.parse(payloadWithNulls)).not.toThrow();
-  });
-
-  test("vpn settings schema rejects a non-string type", () => {
-    expect(() => gluetunVpnSettingsSchema.parse({ ...VPN_SETTINGS_PAYLOAD, type: 1 })).toThrow();
-  });
-
-  test("vpn settings schema parses the live gluetun-latest custom/OpenVPN payload", () => {
-    const parsed = gluetunVpnSettingsSchema.parse(ALT_VPN_SETTINGS_PAYLOAD);
-    expect(parsed.type).toBe("openvpn");
-    expect(parsed.provider.name).toBe("custom");
-  });
-
-  test("vpn settings schema accepts null server-selection hostnames", () => {
-    const payload = {
-      ...VPN_SETTINGS_PAYLOAD,
-      provider: {
-        ...VPN_SETTINGS_PAYLOAD.provider,
-        server_selection: {
-          ...VPN_SETTINGS_PAYLOAD.provider.server_selection,
-          hostnames: null,
-        },
-      },
-    };
-
-    expect(() => gluetunVpnSettingsSchema.parse(payload)).not.toThrow();
-  });
-
-  test("vpn settings schema accepts listening_port as a number or a list", () => {
-    const asList = {
-      ...VPN_SETTINGS_PAYLOAD,
-      provider: {
-        ...VPN_SETTINGS_PAYLOAD.provider,
-        port_forwarding: {
-          ...VPN_SETTINGS_PAYLOAD.provider.port_forwarding,
-          listening_port: [0],
-        },
-      },
-    };
-
-    // The happy-path fixture already exercises the scalar form (listening_port: 0).
-    expect(() => gluetunVpnSettingsSchema.parse(VPN_SETTINGS_PAYLOAD)).not.toThrow();
-    expect(() => gluetunVpnSettingsSchema.parse(asList)).not.toThrow();
-  });
-
-  test("vpn settings schema accepts null wireguard addresses", () => {
-    const payload = {
-      ...VPN_SETTINGS_PAYLOAD,
-      wireguard: {
-        ...VPN_SETTINGS_PAYLOAD.wireguard,
-        addresses: null,
-      },
-    };
-
-    expect(() => gluetunVpnSettingsSchema.parse(payload)).not.toThrow();
+  test("public ip schema accepts absent optional metadata", () => {
+    expect(gluetunPublicIpSchema.parse({ public_ip: "203.0.113.42" })).toEqual({ public_ip: "203.0.113.42" });
   });
 });
