@@ -63,18 +63,18 @@ const DeferredWidgetHydration = async ({
 
 const RefreshedQueryHydration = async ({
   queryClient,
-  queryHashes,
-  promises,
+  queryHash,
+  promise,
 }: {
   queryClient: QueryClient;
-  queryHashes: Set<string>;
-  promises: Promise<unknown>[];
+  queryHash: string;
+  promise: Promise<unknown>;
 }) => {
-  await Promise.allSettled(promises);
+  await promise.catch(() => undefined);
   return (
     <HydrationBoundary
       state={dehydrate(queryClient, {
-        shouldDehydrateQuery: (query) => queryHashes.has(query.queryHash) && query.state.status === "success",
+        shouldDehydrateQuery: (query) => query.queryHash === queryHash && query.state.status === "success",
       })}
     />
   );
@@ -172,15 +172,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         <>
           <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
           <HydrationBoundary state={dehydrate(queryClient)}>
-            {restoredRefreshes.length > 0 && (
-              <Suspense fallback={null}>
-                <RefreshedQueryHydration
-                  queryClient={queryClient}
-                  queryHashes={restoredQueryHashes}
-                  promises={restoredRefreshes.map(({ promise }) => promise)}
-                />
+            {restoredRefreshes.map(({ queryHash, promise }) => (
+              <Suspense key={queryHash} fallback={null}>
+                <RefreshedQueryHydration queryClient={queryClient} queryHash={queryHash} promise={promise} />
               </Suspense>
-            )}
+            ))}
             {dependentQueries.length > 0 && (
               <Suspense fallback={null}>
                 <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
