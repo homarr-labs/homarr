@@ -1,4 +1,10 @@
 ## What's Changed
+* fix: protect integration credentials and DNS summaries by @ajnart in https://github.com/homarr-labs/homarr/pull/7170
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.5.0...v2.5.1
+
+## What's Changed
 * fix: fit Beszel Y-axis labels by @ajnart in https://github.com/homarr-labs/homarr/pull/7137
 * chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7144
 * chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7119
