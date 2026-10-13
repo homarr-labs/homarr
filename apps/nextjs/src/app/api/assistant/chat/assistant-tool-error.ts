@@ -74,6 +74,16 @@ export const getCustomWidgetConfigurationStatusRecovery = (toolName: string, inp
   };
 };
 
+// integration_create rejects a failed connection test with only its failure category as message
+const connectionTestFailureCategories = ["authorization", "certificate", "request", "statusCode", "parse", "unknown"];
+
+export const getConnectionTestFailureMessage = (error: unknown, toolName: string | undefined) => {
+  if (toolName !== "integration_create") return null;
+  const category = getErrorChain(error).find((candidate) => candidate.code === "BAD_REQUEST")?.message;
+  if (typeof category !== "string" || !connectionTestFailureCategories.includes(category)) return null;
+  return `The integration connection test failed (${category}), so nothing was saved. Check the URL and secrets with the user before retrying.`;
+};
+
 export const getSafeAssistantToolError = (error: unknown, options?: { toolName?: string }) => {
   const chain = getErrorChain(error);
   const isCustomWidgetTool = options?.toolName?.startsWith("customWidget_") === true;
@@ -99,7 +109,7 @@ export const getSafeAssistantToolError = (error: unknown, options?: { toolName?:
         const details = getCustomWidgetValidationDetails(chain);
         if (details) return `The custom widget input was invalid: ${details}`;
       }
-      return "The tool input was not valid.";
+      return getConnectionTestFailureMessage(error, options?.toolName) ?? "The tool input was not valid.";
     case "BAD_GATEWAY":
       if (options?.toolName === "integration_request") {
         return "The saved integration could not complete the HTTP request. Check service reachability and connection settings; this does not establish that the API path is wrong. A write may have completed before the connection failed: check state before retrying it.";

@@ -389,6 +389,7 @@ export const onboardRouter = createTRPCRouter({
               iconColor: null,
               itemRadius: input.board.itemRadius,
               disableStatus: false,
+              sourceBoardId: null,
               sections: [],
               layouts: pendingLayouts,
               items: [],
@@ -998,10 +999,10 @@ export const onboardRouter = createTRPCRouter({
           ...currentAnalytics,
           enableGeneral: input.server.analyticsEnabled ?? currentAnalytics.enableGeneral,
         }),
+        // Instance home boards are shown to anonymous visitors, so only a public board can be selected
         board: SuperJSON.stringify({
           ...currentBoardSettings,
-          homeBoardId: targetBoard.id,
-          mobileHomeBoardId: targetBoard.id,
+          ...(targetBoard.isPublic ? { homeBoardId: targetBoard.id, mobileHomeBoardId: targetBoard.id } : {}),
         }),
       };
 

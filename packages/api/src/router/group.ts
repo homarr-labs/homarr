@@ -4,13 +4,17 @@ import { z } from "zod/v4";
 import { canManageGroupMembersLocally, isGroupMembershipManagedLocally } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
+import { and, eq, handleTransactionsAsync, inArray, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
-import { everyoneGroup } from "@homarr/definitions";
+import { boards, groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
+import { selectGroupSchema, selectUserSchema } from "@homarr/db/validationSchemas";
+import type { SupportedAuthProvider } from "@homarr/definitions";
+import { everyoneGroup, groupPermissionKeys, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
+import { zodEnumFromArray } from "@homarr/validation/enums";
 import {
   groupCreateSchema,
+  groupSaveMembersSchema,
   groupSavePartialSettingsSchema,
   groupSavePermissionsSchema,
   groupSavePositionsSchema,
@@ -20,30 +24,59 @@ import {
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 
+const groupPermissionKeySchema = zodEnumFromArray(groupPermissionKeys);
+
 export const groupRouter = createTRPCRouter({
-  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    const dbGroups = await ctx.db.query.groups.findMany({
-      with: {
-        members: {
-          with: {
-            user: {
-              columns: {
-                id: true,
-                name: true,
-                email: true,
-                image: true,
+  getAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.void())
+    .output(
+      z.array(
+        selectGroupSchema.extend({
+          members: z.array(selectUserSchema.pick({ id: true, name: true, email: true, image: true })),
+          permissions: z.array(groupPermissionKeySchema),
+        }),
+      ),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/groups",
+        tags: ["groups"],
+        protect: true,
+        summary: "List all groups",
+        description: `Return every group with its position, home boards, owner ID, permissions, and members. A lower position takes precedence when resolving home boards. The reserved group named '${everyoneGroup}' is joined by every user on sign-in, is not part of the group order, and cannot be renamed, deleted, or have its members changed. Requires admin permission.`,
+      },
+    })
+    .query(async ({ ctx }) => {
+      const dbGroups = await ctx.db.query.groups.findMany({
+        with: {
+          members: {
+            with: {
+              user: {
+                columns: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  image: true,
+                },
               },
             },
           },
+          permissions: {
+            columns: {
+              permission: true,
+            },
+          },
         },
-      },
-    });
+      });
 
-    return dbGroups.map((group) => ({
-      ...group,
-      members: group.members.map((member) => member.user),
-    }));
-  }),
+      return dbGroups.map((group) => ({
+        ...group,
+        members: group.members.map((member) => member.user),
+        permissions: group.permissions.map((permission) => permission.permission),
+      }));
+    }),
 
   getPaginated: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -83,6 +116,28 @@ export const groupRouter = createTRPCRouter({
   getById: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(byIdSchema)
+    .output(
+      selectGroupSchema.extend({
+        members: z.array(
+          selectUserSchema
+            .pick({ id: true, name: true, email: true, image: true })
+            .extend({ provider: z.enum(supportedAuthProviders), isMembershipManagedLocally: z.boolean() }),
+        ),
+        permissions: z.array(groupPermissionKeySchema),
+        owner: selectUserSchema.pick({ id: true, name: true, image: true, email: true }).nullable(),
+      }),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/groups/{id}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Get a group",
+        description:
+          "Return a group with its position, home boards, owner, permissions, and members, including each member's authentication provider and whether the membership is managed locally. Memberships synchronized from an external provider (LDAP, or OIDC without local group management) cannot be changed. Requires admin permission.",
+      },
+    })
     .query(async ({ input, ctx }) => {
       const group = await ctx.db.query.groups.findFirst({
         where: eq(groups.id, input.id),
@@ -125,7 +180,10 @@ export const groupRouter = createTRPCRouter({
 
       return {
         ...group,
-        members: group.members.map((member) => member.user),
+        members: group.members.map((member) => ({
+          ...member.user,
+          isMembershipManagedLocally: isGroupMembershipManagedLocally(member.user.provider),
+        })),
         permissions: group.permissions.map((permission) => permission.permission),
       };
     }),
@@ -224,6 +282,17 @@ export const groupRouter = createTRPCRouter({
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupCreateSchema)
+    .output(z.object({ id: z.string() }))
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/groups",
+        tags: ["groups"],
+        protect: true,
+        summary: "Create a group",
+        description: `Create a group without permissions or members at the end of the group order and return its ID. The name must be unique and cannot be '${everyoneGroup}'. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
@@ -237,11 +306,22 @@ export const groupRouter = createTRPCRouter({
         ownerId: ctx.session.user.id,
       });
 
-      return id;
+      return { id };
     }),
   updateGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUpdateSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/groups/{id}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Rename a group",
+        description: `Change a group's name. The name must be unique and the '${everyoneGroup}' group cannot be renamed. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
@@ -258,21 +338,51 @@ export const groupRouter = createTRPCRouter({
   savePartialSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupSavePartialSettingsSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/groups/{id}/settings",
+        tags: ["groups"],
+        protect: true,
+        summary: "Update group home boards",
+        description: `Set or clear a group's desktop and mobile home boards. Omitted values remain unchanged and null clears a home board. Each board must exist; whether the group's members can view it is not checked. Also allowed for the '${everyoneGroup}' group. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
+      await throwIfBoardsNotFoundAsync(
+        ctx.db,
+        [input.homeBoardId, input.mobileHomeBoardId].filter((boardId) => typeof boardId === "string"),
+      );
+
+      if (input.homeBoardId === undefined && input.mobileHomeBoardId === undefined) return;
 
       await ctx.db
         .update(groups)
         .set({
-          homeBoardId: input.settings.homeBoardId,
-          mobileHomeBoardId: input.settings.mobileHomeBoardId,
+          homeBoardId: input.homeBoardId,
+          mobileHomeBoardId: input.mobileHomeBoardId,
         })
         .where(eq(groups.id, input.id));
     }),
   savePositions: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupSavePositionsSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/groups/positions",
+        tags: ["groups"],
+        protect: true,
+        summary: "Reorder groups",
+        description: `Set the order of all groups; the first group gets the lowest position and takes precedence when resolving home boards. List every group except '${everyoneGroup}' exactly once. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
+      await throwIfGroupPositionsIncompleteAsync(ctx.db, input.positions);
+
       const positions = input.positions.map((id, index) => ({ id, position: index + 1 }));
 
       await handleTransactionsAsync(ctx.db, {
@@ -295,6 +405,17 @@ export const groupRouter = createTRPCRouter({
   savePermissions: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupSavePermissionsSchema)
+    .output(z.object({ permissions: z.array(groupPermissionKeySchema) }))
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/groups/{groupId}/permissions",
+        tags: ["groups"],
+        protect: true,
+        summary: "Replace group permissions",
+        description: `Replace all permissions of a group and return the stored permissions. Omitted permissions are removed; implied permissions are not added. Also allowed for the '${everyoneGroup}' group. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
@@ -335,6 +456,8 @@ export const groupRouter = createTRPCRouter({
           });
         },
       });
+
+      return { permissions };
     }),
   transferOwnership: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -353,50 +476,156 @@ export const groupRouter = createTRPCRouter({
   deleteGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(byIdSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/groups/{id}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Delete a group",
+        description: `Delete a group with its permissions and memberships. The '${everyoneGroup}' group cannot be deleted. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
 
       await ctx.db.delete(groups).where(eq(groups.id, input.id));
     }),
-  addMember: permissionRequiredProcedure
+  saveMembers: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(groupUserSchema)
+    .input(groupSaveMembersSchema)
+    .output(z.object({ userIds: z.array(z.string()) }))
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/api/groups/{groupId}/members",
+        tags: ["groups"],
+        protect: true,
+        summary: "Replace group members",
+        description: `Replace the members of a group and return the resulting member IDs. Every user must exist and omitted members are removed. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be added or removed, so members with isMembershipManagedLocally set to false in GET /api/groups/{id} must stay listed. Not allowed for the '${everyoneGroup}' group. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfGroupMembersCannotBeManagedLocally();
 
-      const user = await ctx.db.query.users.findFirst({
-        where: eq(users.id, input.userId),
+      const userIds = [...new Set(input.userIds)];
+      const dbUsers = await getUsersOrThrowAsync(ctx.db, userIds);
+      const currentMembers = await ctx.db.query.groupMembers.findMany({
+        columns: {
+          userId: true,
+        },
+        with: {
+          user: {
+            columns: {
+              id: true,
+              provider: true,
+            },
+          },
+        },
+        where: eq(groupMembers.groupId, input.groupId),
       });
 
-      if (!user) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
+      const currentMemberIds = new Set(currentMembers.map((member) => member.userId));
+      const addedUsers = dbUsers.filter((user) => !currentMemberIds.has(user.id));
+      const removedUsers = currentMembers.map((member) => member.user).filter((user) => !userIds.includes(user.id));
+      throwIfUserMembershipsNotManagedLocally([...addedUsers, ...removedUsers]);
 
-      if (!isGroupMembershipManagedLocally(user.provider)) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "User's provider is not managed locally",
-        });
-      }
+      const addedMemberRows = addedUsers.map((user) => ({ groupId: input.groupId, userId: user.id }));
+      const removedUserIds = removedUsers.map((user) => user.id);
 
-      await ctx.db.insert(groupMembers).values({
-        groupId: input.groupId,
-        userId: input.userId,
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            if (removedUserIds.length > 0) {
+              await transaction
+                .delete(schema.groupMembers)
+                .where(
+                  and(
+                    eq(schema.groupMembers.groupId, input.groupId),
+                    inArray(schema.groupMembers.userId, removedUserIds),
+                  ),
+                );
+            }
+            if (addedMemberRows.length > 0) {
+              await transaction.insert(schema.groupMembers).values(addedMemberRows).onConflictDoNothing();
+            }
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            if (removedUserIds.length > 0) {
+              transaction
+                .delete(groupMembers)
+                .where(and(eq(groupMembers.groupId, input.groupId), inArray(groupMembers.userId, removedUserIds)))
+                .run();
+            }
+            if (addedMemberRows.length > 0) {
+              transaction.insert(groupMembers).values(addedMemberRows).onConflictDoNothing().run();
+            }
+          });
+        },
       });
+
+      const members = await ctx.db.query.groupMembers.findMany({
+        columns: {
+          userId: true,
+        },
+        where: eq(groupMembers.groupId, input.groupId),
+      });
+
+      return { userIds: members.map((member) => member.userId) };
+    }),
+  addMember: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(groupUserSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/groups/{groupId}/members/{userId}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Add a group member",
+        description: `Add a user to a group. Adding an existing member has no effect. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be added. Not allowed for the '${everyoneGroup}' group. Requires admin permission.`,
+      },
+    })
+    .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
+      throwIfGroupMembersCannotBeManagedLocally();
+      throwIfUserMembershipsNotManagedLocally(await getUsersOrThrowAsync(ctx.db, [input.userId]));
+
+      await ctx.db
+        .insert(groupMembers)
+        .values({
+          groupId: input.groupId,
+          userId: input.userId,
+        })
+        .onConflictDoNothing();
     }),
   removeMember: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUserSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/groups/{groupId}/members/{userId}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Remove a group member",
+        description: `Remove a user from a group. Removing a user who is not a member has no effect. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be removed. Not allowed for the '${everyoneGroup}' group. Requires admin permission.`,
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfGroupMembersCannotBeManagedLocally();
+      throwIfUserMembershipsNotManagedLocally(await getUsersOrThrowAsync(ctx.db, [input.userId]));
 
       await ctx.db
         .delete(groupMembers)
@@ -433,6 +662,95 @@ const throwIfGroupMembersCannotBeManagedLocally = () => {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Group members cannot be managed locally",
+    });
+  }
+};
+
+const getUsersOrThrowAsync = async (db: Database, userIds: string[]) => {
+  if (userIds.length === 0) return [];
+
+  const dbUsers = await db.query.users.findMany({
+    columns: {
+      id: true,
+      provider: true,
+    },
+    where: inArray(users.id, userIds),
+  });
+
+  if (dbUsers.length !== userIds.length) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "User not found",
+    });
+  }
+
+  return dbUsers;
+};
+
+const throwIfUserMembershipsNotManagedLocally = (dbUsers: { provider: SupportedAuthProvider }[]) => {
+  if (dbUsers.some((user) => !isGroupMembershipManagedLocally(user.provider))) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "User's provider is not managed locally",
+    });
+  }
+};
+
+const throwIfBoardsNotFoundAsync = async (db: Database, boardIds: string[]) => {
+  if (boardIds.length === 0) return;
+
+  const dbBoards = await db.query.boards.findMany({
+    columns: {
+      id: true,
+    },
+    where: inArray(boards.id, boardIds),
+  });
+  const dbBoardIds = new Set(dbBoards.map((board) => board.id));
+
+  if (boardIds.some((boardId) => !dbBoardIds.has(boardId))) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Board not found",
+    });
+  }
+};
+
+const throwIfGroupPositionsIncompleteAsync = async (db: Database, groupIds: string[]) => {
+  if (new Set(groupIds).size !== groupIds.length) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Group IDs must be unique",
+    });
+  }
+
+  const dbGroups = await db.query.groups.findMany({
+    columns: {
+      id: true,
+      name: true,
+    },
+  });
+  const dbGroupIds = new Set(dbGroups.map((group) => group.id));
+
+  if (groupIds.some((groupId) => !dbGroupIds.has(groupId))) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Group not found",
+    });
+  }
+
+  // The everyone group is the last fallback for home boards and therefore not part of the order
+  const dbEveryoneGroup = dbGroups.find((group) => group.name === everyoneGroup);
+  if (dbEveryoneGroup && groupIds.includes(dbEveryoneGroup.id)) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Action is forbidden for reserved group names",
+    });
+  }
+
+  if (groupIds.length !== dbGroups.filter((group) => group.name !== everyoneGroup).length) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Positions must include every group",
     });
   }
 };

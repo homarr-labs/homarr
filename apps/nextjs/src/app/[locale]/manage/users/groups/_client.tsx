@@ -80,7 +80,13 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         onChange={(event) => setSearch(event.currentTarget.value)}
         placeholder={`${tGroup("search")}...`}
       />
-      <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
+      {/* Remount when groups are added or removed so saving positions always sends every group */}
+      <GroupsTable
+        key={initialGroupIds.join(",")}
+        groups={filteredGroups}
+        initialGroupIds={initialGroupIds}
+        hasFilter={search.length !== 0}
+      />
     </Stack>
   );
 };

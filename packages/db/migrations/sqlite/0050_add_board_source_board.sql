@@ -1,0 +1,1 @@
+ALTER TABLE `board` ADD `source_board_id` text REFERENCES board(id) ON DELETE set null;

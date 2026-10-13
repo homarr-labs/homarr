@@ -4,9 +4,10 @@ import type { Session } from "@homarr/auth";
 import * as env from "@homarr/auth/env";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
-import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
+import { boards, groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import { everyoneGroup } from "@homarr/definitions";
 
 import { groupRouter } from "../group";
 
@@ -27,6 +28,38 @@ const adminSession = createSession(["admin"]);
 vi.mock("@homarr/auth", async () => {
   const mod = await import("@homarr/auth/security");
   return { ...mod, auth: () => ({}) as Session };
+});
+
+describe("getAll should return all groups", () => {
+  test("getAll should return groups with members and permissions", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const user = createDummyUser();
+    const groupId = createId();
+    await db.insert(users).values(user);
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+    await db.insert(groupMembers).values({ groupId, userId: user.id });
+    await db.insert(groupPermissions).values({ groupId, permission: "board-create" });
+
+    // Act
+    const result = await caller.getAll();
+
+    // Assert
+    expect(result).toEqual([
+      {
+        id: groupId,
+        name: "Group",
+        ownerId: null,
+        homeBoardId: null,
+        mobileHomeBoardId: null,
+        position: 1,
+        members: [{ id: user.id, name: user.name, email: user.email, image: user.image }],
+        permissions: ["board-create"],
+      },
+    ]);
+  });
 });
 
 describe("paginated should return a list of groups with pagination", () => {
@@ -195,8 +228,10 @@ describe("byId should return group by id including members and permissions", () 
     expect(result.members.length).toBe(1);
 
     const userKeys = Object.keys(result.members[0] ?? {});
-    expect(userKeys.length).toBe(5);
-    expect(["id", "name", "email", "image", "provider"].some((key) => userKeys.includes(key)));
+    expect(userKeys.length).toBe(6);
+    expect(
+      ["id", "name", "email", "image", "provider", "isMembershipManagedLocally"].some((key) => userKeys.includes(key)),
+    );
     expect(result.permissions.length).toBe(1);
     expect(result.permissions[0]).toBe("admin");
   });
@@ -217,6 +252,39 @@ describe("byId should return group by id including members and permissions", () 
 
     // Assert
     await expect(actAsync()).rejects.toThrow("Group not found");
+  });
+
+  test("should report whether the membership of each member is managed locally", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({
+      AUTH_PROVIDERS: ["credentials", "oidc", "ldap"],
+      AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT: false,
+    } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(users).values([
+      { id: "credentials", name: "Credentials" },
+      { id: "oidc", name: "Oidc", provider: "oidc" },
+      { id: "ldap", name: "Ldap", provider: "ldap" },
+    ]);
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+    await db.insert(groupMembers).values([
+      { groupId, userId: "credentials" },
+      { groupId, userId: "oidc" },
+      { groupId, userId: "ldap" },
+    ]);
+
+    // Act
+    const result = await caller.getById({ id: groupId });
+
+    // Assert
+    const managedLocallyByUserId = Object.fromEntries(
+      result.members.map((member) => [member.id, member.isMembershipManagedLocally]),
+    );
+    expect(managedLocallyByUserId).toEqual({ credentials: true, oidc: false, ldap: false });
   });
 
   test("without admin permissions it should throw unauthorized error", async () => {
@@ -248,11 +316,11 @@ describe("create should create group in database", () => {
 
     // Assert
     const item = await db.query.groups.findFirst({
-      where: eq(groups.id, result),
+      where: eq(groups.id, result.id),
     });
 
     expect(item).toBeDefined();
-    expect(item?.id).toBe(result);
+    expect(item?.id).toBe(result.id);
     expect(item?.ownerId).toBe(defaultOwnerId);
     expect(item?.name).toBe(name);
   });
@@ -647,6 +715,118 @@ describe("savePermissions should save permissions for group", () => {
   });
 });
 
+describe("savePartialSettings should save home boards of group", () => {
+  test("with existing boards it should save only the supplied home boards", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    const homeBoardId = createId();
+    const mobileHomeBoardId = createId();
+    await db.insert(boards).values([
+      { id: homeBoardId, name: "home" },
+      { id: mobileHomeBoardId, name: "mobile" },
+    ]);
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1, mobileHomeBoardId });
+
+    // Act
+    await caller.savePartialSettings({ id: groupId, homeBoardId });
+
+    // Assert
+    const group = await db.query.groups.findFirst({ where: eq(groups.id, groupId) });
+    expect(group?.homeBoardId).toBe(homeBoardId);
+    expect(group?.mobileHomeBoardId).toBe(mobileHomeBoardId);
+  });
+
+  test("without any setting it should keep the home boards", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    const homeBoardId = createId();
+    await db.insert(boards).values({ id: homeBoardId, name: "home" });
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1, homeBoardId });
+
+    // Act
+    await caller.savePartialSettings({ id: groupId });
+
+    // Assert
+    const group = await db.query.groups.findFirst({ where: eq(groups.id, groupId) });
+    expect(group?.homeBoardId).toBe(homeBoardId);
+  });
+
+  test("with non existing board it should throw not found error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+
+    // Act
+    const actAsync = async () => await caller.savePartialSettings({ id: groupId, mobileHomeBoardId: createId() });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Board not found");
+  });
+});
+
+describe("savePositions should save positions of groups", () => {
+  test("with every group except everyone it should save positions in the given order", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    await db.insert(groups).values([
+      { id: "everyone", name: everyoneGroup, position: -1 },
+      { id: "first", name: "First", position: 1 },
+      { id: "second", name: "Second", position: 2 },
+    ]);
+
+    // Act
+    await caller.savePositions({ positions: ["second", "first"] });
+
+    // Assert
+    const dbGroups = await db.query.groups.findMany({ columns: { id: true, position: true } });
+    expect(dbGroups.toSorted((groupA, groupB) => groupA.position - groupB.position)).toEqual([
+      { id: "everyone", position: -1 },
+      { id: "second", position: 1 },
+      { id: "first", position: 2 },
+    ]);
+  });
+
+  test.each([
+    [["second"], "Positions must include every group"],
+    [["first", "second", "first"], "Group IDs must be unique"],
+    [["first", "second", "unknown"], "Group not found"],
+    [["everyone", "first", "second"], "Action is forbidden for reserved group names"],
+  ])("with positions %s it should throw %s and keep positions", async (positions, expectedError) => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    await db.insert(groups).values([
+      { id: "everyone", name: everyoneGroup, position: -1 },
+      { id: "first", name: "First", position: 1 },
+      { id: "second", name: "Second", position: 2 },
+    ]);
+
+    // Act
+    const actAsync = async () => await caller.savePositions({ positions });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow(expectedError);
+    const dbGroups = await db.query.groups.findMany({ columns: { id: true, position: true } });
+    expect(dbGroups.toSorted((groupA, groupB) => groupA.position - groupB.position)).toEqual([
+      { id: "everyone", position: -1 },
+      { id: "first", position: 1 },
+      { id: "second", position: 2 },
+    ]);
+  });
+});
+
 describe("transferOwnership should transfer ownership of group", () => {
   test("with existing group and user it should transfer ownership", async () => {
     // Arrange
@@ -947,6 +1127,27 @@ describe("addMember should add member to group", () => {
     // Assert
     await expect(actAsync()).rejects.toThrow("User's provider is not managed locally");
   });
+
+  test("with user already being a member it should keep the single membership", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    const userId = createId();
+    await db.insert(users).values({ id: userId, name: "User" });
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+    await db.insert(groupMembers).values({ groupId, userId });
+
+    // Act
+    await caller.addMember({ groupId, userId });
+
+    // Assert
+    const members = await db.query.groupMembers.findMany({ where: eq(groupMembers.groupId, groupId) });
+    expect(members).toEqual([{ groupId, userId }]);
+  });
 });
 
 describe("removeMember should remove member from group", () => {
@@ -1070,6 +1271,131 @@ describe("removeMember should remove member from group", () => {
 
     // Assert
     await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
+  });
+
+  test("with a user from an externally managed provider it should throw FORBIDDEN error", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials", "ldap"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    const userId = createId();
+    await db.insert(users).values({ id: userId, name: "User", provider: "ldap" });
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+    await db.insert(groupMembers).values({ groupId, userId });
+
+    // Act
+    const actAsync = async () => await caller.removeMember({ groupId, userId });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("User's provider is not managed locally");
+    const members = await db.query.groupMembers.findMany({ where: eq(groupMembers.groupId, groupId) });
+    expect(members).toEqual([{ groupId, userId }]);
+  });
+});
+
+describe("saveMembers should replace members of group", () => {
+  test("with existing users it should replace the members and keep externally managed members", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials", "ldap"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(users).values([
+      { id: "removed", name: "Removed" },
+      { id: "kept", name: "Kept" },
+      { id: "added", name: "Added" },
+      { id: "external", name: "External", provider: "ldap" },
+    ]);
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+    await db.insert(groupMembers).values([
+      { groupId, userId: "removed" },
+      { groupId, userId: "kept" },
+      { groupId, userId: "external" },
+    ]);
+
+    // Act
+    const result = await caller.saveMembers({ groupId, userIds: ["kept", "added", "external", "added"] });
+
+    // Assert
+    expect(result.userIds.toSorted()).toEqual(["added", "external", "kept"]);
+    const members = await db.query.groupMembers.findMany({ where: eq(groupMembers.groupId, groupId) });
+    expect(members.map((member) => member.userId).toSorted()).toEqual(["added", "external", "kept"]);
+  });
+
+  test.each([
+    [[], "User's provider is not managed locally"],
+    [["external", "unknown"], "User not found"],
+  ])("with user ids %s it should throw %s and keep the members", async (userIds, expectedError) => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials", "ldap"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(users).values({ id: "external", name: "External", provider: "ldap" });
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+    await db.insert(groupMembers).values({ groupId, userId: "external" });
+
+    // Act
+    const actAsync = async () => await caller.saveMembers({ groupId, userIds });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow(expectedError);
+    const members = await db.query.groupMembers.findMany({ where: eq(groupMembers.groupId, groupId) });
+    expect(members).toEqual([{ groupId, userId: "external" }]);
+  });
+
+  test("with a user from an externally managed provider who is no member it should throw FORBIDDEN error", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials", "ldap"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(users).values({ id: "external", name: "External", provider: "ldap" });
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+
+    // Act
+    const actAsync = async () => await caller.saveMembers({ groupId, userIds: ["external"] });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("User's provider is not managed locally");
+  });
+
+  test("with everyone group it should throw FORBIDDEN error", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials"] } as never);
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({ id: groupId, name: everyoneGroup, position: -1 });
+
+    // Act
+    const actAsync = async () => await caller.saveMembers({ groupId, userIds: [] });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Action is forbidden for reserved group names");
+  });
+
+  test("without admin permissions it should throw unauthorized error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    // Act
+    const actAsync = async () => await caller.saveMembers({ groupId: createId(), userIds: [] });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Permission denied");
   });
 });
 

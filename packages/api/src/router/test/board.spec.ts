@@ -294,6 +294,30 @@ describe("getAllBoards should return all boards accessable to the current user",
       expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
     },
   );
+
+  test("with a copied board it should return the source board only when the source board is accessible", async () => {
+    // Arrange
+    const db = createDb();
+    const anonymousCaller = boardRouter.createCaller({ db, deviceType: undefined, session: null });
+    const viewAllCaller = boardRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: { ...defaultSession, user: { ...defaultSession.user, permissions: ["board-view-all"] } },
+    });
+    const sourceBoardId = createId();
+    await db.insert(boards).values([
+      { id: sourceBoardId, name: "source", isPublic: false },
+      { id: createId(), name: "copy", isPublic: true, sourceBoardId },
+    ]);
+
+    // Act
+    const anonymousResult = await anonymousCaller.getAllBoards();
+    const viewAllResult = await viewAllCaller.getAllBoards();
+
+    // Assert
+    expect(anonymousResult).toEqual([expect.objectContaining({ name: "copy", sourceBoardId: null })]);
+    expect(viewAllResult).toEqual(expect.arrayContaining([expect.objectContaining({ name: "copy", sourceBoardId })]));
+  });
 });
 
 describe("getManageOverview", () => {
@@ -679,7 +703,69 @@ describe("createBoard should create a new board", () => {
       boardId: dbBoard?.id,
       name: "newBoard",
       layoutId: dbBoard?.layouts.find((layout) => layout.role === "base")?.id,
+      mobileLayoutId: dbBoard?.layouts.find((layout) => layout.role === "mobile")?.id,
     });
+  });
+
+  test("should apply gutter column counts to the Base layout and create their canvases", async () => {
+    // Arrange
+    const db = createDb();
+    const session = {
+      ...defaultSession,
+      user: {
+        ...defaultSession.user,
+        permissions: ["board-create"] satisfies GroupPermissionKey[],
+      },
+    };
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    // Act
+    const result = await caller.createBoard({
+      name: "newBoard",
+      columnCount: 12,
+      leftGutterColumnCount: 2,
+      isPublic: true,
+    });
+
+    // Assert
+    const boardLayouts = await caller.getBoardLayouts({ id: result.boardId });
+    expect(boardLayouts).toEqual([
+      expect.objectContaining({ id: result.mobileLayoutId, leftGutterColumnCount: 0, rightGutterColumnCount: 0 }),
+      expect.objectContaining({ id: result.layoutId, leftGutterColumnCount: 2, rightGutterColumnCount: 0 }),
+    ]);
+    const rootSections = await db.query.sections.findMany({ where: eq(sections.boardId, result.boardId) });
+    expect(rootSections).toHaveLength(2);
+    expect(rootSections).toEqual(expect.arrayContaining([expect.objectContaining({ kind: "empty", xOffset: -1 })]));
+  });
+
+  test("should reject gutters that leave no dashboard column", async () => {
+    // Arrange
+    const db = createDb();
+    const session = {
+      ...defaultSession,
+      user: {
+        ...defaultSession.user,
+        permissions: ["board-create"] satisfies GroupPermissionKey[],
+      },
+    };
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+
+    // Act
+    const actAsync = async () =>
+      await caller.createBoard({
+        name: "newBoard",
+        columnCount: 4,
+        leftGutterColumnCount: 2,
+        rightGutterColumnCount: 2,
+        isPublic: true,
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
   test("should throw error when user has no board-create permission", async () => {
@@ -693,6 +779,42 @@ describe("createBoard should create a new board", () => {
     // Assert
     await expect(actAsync()).rejects.toThrowError("Permission denied");
   });
+
+  test.each([["existingBoard"], ["EXISTINGBOARD"]])(
+    "should throw conflict when creating %s while a board with similar name exists",
+    async (name) => {
+      // Arrange
+      const db = createDb();
+      const session = {
+        ...defaultSession,
+        user: {
+          ...defaultSession.user,
+          permissions: ["board-create"] satisfies GroupPermissionKey[],
+        },
+      };
+      const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+
+      await db.insert(users).values({
+        id: defaultCreatorId,
+      });
+      await db.insert(boards).values({
+        id: createId(),
+        name: "existingBoard",
+        creatorId: defaultCreatorId,
+      });
+
+      // Act
+      const actAsync = async () => await caller.createBoard({ name, columnCount: 12, isPublic: true });
+
+      // Assert
+      await expect(actAsync()).rejects.toMatchObject({
+        code: "CONFLICT",
+        message: "Board with similar name already exists",
+      });
+      const dbBoards = await db.query.boards.findMany();
+      expect(dbBoards).toHaveLength(1);
+    },
+  );
 });
 
 describe("duplicateBoard should preserve protected layout invariants", () => {
@@ -723,6 +845,55 @@ describe("duplicateBoard should preserve protected layout invariants", () => {
       ]),
     );
     expect(copiedBoard?.items.at(0)?.layouts).toHaveLength(2);
+  });
+});
+
+describe("duplicateBoard should remember the source board", () => {
+  const boardCreateSession = {
+    ...defaultSession,
+    user: {
+      ...defaultSession.user,
+      permissions: ["board-create"] satisfies GroupPermissionKey[],
+    },
+  };
+
+  test("stores the source board and returns the layout ids of the copy", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: boardCreateSession });
+    const { boardId, integrationId } = await createFullBoardAsync(db, "source");
+    await db.delete(integrationItems).where(eq(integrationItems.integrationId, integrationId));
+
+    // Act
+    const result = await caller.duplicateBoard({ id: boardId, name: "copy" });
+
+    // Assert
+    const copiedBoard = await db.query.boards.findFirst({
+      where: eq(boards.id, result.boardId),
+      with: { layouts: true },
+    });
+    expect(copiedBoard?.sourceBoardId).toBe(boardId);
+    expect(result).toEqual({
+      boardId: copiedBoard?.id,
+      baseLayoutId: copiedBoard?.layouts.find((layout) => layout.role === "base")?.id,
+      mobileLayoutId: copiedBoard?.layouts.find((layout) => layout.role === "mobile")?.id,
+    });
+  });
+
+  test("deleting the source board keeps the copy and clears its source", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: boardCreateSession });
+    const { boardId, integrationId } = await createFullBoardAsync(db, "source");
+    await db.delete(integrationItems).where(eq(integrationItems.integrationId, integrationId));
+    const { boardId: copiedBoardId } = await caller.duplicateBoard({ id: boardId, name: "copy" });
+
+    // Act
+    await caller.deleteBoard({ id: boardId });
+
+    // Assert
+    const copiedBoard = await db.query.boards.findFirst({ where: eq(boards.id, copiedBoardId) });
+    expect(copiedBoard?.sourceBoardId).toBeNull();
   });
 });
 
@@ -858,6 +1029,45 @@ describe("deleteBoard should delete board", () => {
     });
     expect(dbBoard).toBeUndefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
+  });
+
+  test("should clear instance home boards that reference the deleted board", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
+    const otherBoardId = createId();
+    await db.insert(boards).values([
+      { id: boardId, name: "board", creatorId: defaultCreatorId, isPublic: true },
+      { id: otherBoardId, name: "other", creatorId: defaultCreatorId, isPublic: true },
+    ]);
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: SuperJSON.stringify({
+        homeBoardId: boardId,
+        mobileHomeBoardId: otherBoardId,
+        enableStatusByDefault: false,
+        forceDisableStatus: true,
+      }),
+    });
+
+    // Act
+    await caller.deleteBoard({ id: boardId });
+
+    // Assert
+    const dbBoardSettings = await db.query.serverSettings.findFirst({
+      where: eq(serverSettings.settingKey, "board"),
+    });
+    expect(SuperJSON.parse(dbBoardSettings?.value ?? "null")).toStrictEqual({
+      homeBoardId: null,
+      mobileHomeBoardId: otherBoardId,
+      enableStatusByDefault: false,
+      forceDisableStatus: true,
+    });
   });
 
   test("should throw error when board not found", async () => {
@@ -1878,6 +2088,74 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
       expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
     },
   );
+
+  test("should reject unknown users without replacing existing permissions", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const user1 = await createRandomUserAsync(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
+    await db.insert(boardUserPermissions).values({
+      userId: user1,
+      permission: "view",
+      boardId,
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveUserBoardPermissions({
+        entityId: boardId,
+        permissions: [{ principalId: createId(), permission: "modify" }],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("User not found");
+    const dbUserPermissions = await db.query.boardUserPermissions.findMany({
+      where: eq(boardUserPermissions.boardId, boardId),
+    });
+    expect(dbUserPermissions).toEqual([{ userId: user1, permission: "view", boardId }]);
+  });
+
+  test("should reject a user listed more than once", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const user1 = await createRandomUserAsync(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveUserBoardPermissions({
+        entityId: boardId,
+        permissions: [
+          { principalId: user1, permission: "view" },
+          { principalId: user1, permission: "modify" },
+        ],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Principal IDs must be unique");
+  });
 });
 
 describe("saveGroupBoardPermissions should save group board permissions", () => {
@@ -1926,6 +2204,33 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
       expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
     },
   );
+
+  test("should reject unknown groups", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveGroupBoardPermissions({
+        entityId: boardId,
+        permissions: [{ principalId: createId(), permission: "view" }],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Group not found");
+  });
 });
 
 const createExistingLayout = (id: string) => ({
@@ -2265,6 +2570,101 @@ describe("saveLayouts should save layout changes", () => {
       });
 
     await expect(actAsync()).rejects.toThrowError("Layout roles cannot be changed");
+  });
+});
+
+describe("getBoardLayouts should return board layouts", () => {
+  test("returns all layouts ordered by breakpoint and requires view permission", async () => {
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const customLayout = createNewLayout(6);
+    await db.insert(layouts).values({ ...customLayout, boardId });
+
+    const result = await caller.getBoardLayouts({ id: boardId });
+
+    expect(result).toEqual([createMobileLayout(mobileLayoutId), customLayout, createExistingLayout(layoutId)]);
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "view");
+  });
+
+  test("restores the missing Mobile layout before returning the layouts", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+
+    const result = await caller.getBoardLayouts({ id: boardId });
+
+    expect(result).toEqual([
+      expect.objectContaining({ role: "mobile", breakpoint: 0 }),
+      createExistingLayout(layoutId),
+    ]);
+  });
+
+  test("hides a private board from a user without view permission", async () => {
+    const db = createDb();
+    const { boardId } = await createFullBoardAsync(db, "private");
+    const caller = boardRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: { ...defaultSession, user: { ...defaultSession.user, id: createId() } },
+    });
+
+    await expect(caller.getBoardLayouts({ id: boardId })).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+});
+
+describe("updateLayout should change one layout", () => {
+  test("changes the Base column count, rearranges its items and keeps the other layouts", async () => {
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+    const customLayout = createNewLayout(6);
+    await db.insert(layouts).values({ ...customLayout, boardId });
+    await db
+      .update(itemLayouts)
+      .set({ xOffset: 9 })
+      .where(and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)));
+
+    const result = await caller.updateLayout({ boardId, layoutId, columnCount: 3 });
+
+    expect(result).toEqual({ ...createExistingLayout(layoutId), columnCount: 3 });
+    expect(await caller.getBoardLayouts({ id: boardId })).toEqual([
+      createMobileLayout(mobileLayoutId),
+      customLayout,
+      { ...createExistingLayout(layoutId), columnCount: 3 },
+    ]);
+    const itemLayout = expectToBeDefined(
+      await db.query.itemLayouts.findFirst({
+        where: and(eq(itemLayouts.itemId, itemId), eq(itemLayouts.layoutId, layoutId)),
+      }),
+    );
+    expect(itemLayout.sectionId).toBe(sectionId);
+    expect(itemLayout.xOffset + itemLayout.width).toBeLessThanOrEqual(3);
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
+  });
+
+  test("rejects Mobile breakpoint and gutter changes and unknown layouts", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "default");
+    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
+
+    await expect(caller.updateLayout({ boardId, layoutId: mobileLayoutId, breakpoint: 480 })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
+    await expect(
+      caller.updateLayout({ boardId, layoutId: mobileLayoutId, leftGutterColumnCount: 1 }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(caller.updateLayout({ boardId, layoutId: createId(), columnCount: 6 })).rejects.toMatchObject({
+      code: "NOT_FOUND",
+    });
+
+    const mobileLayout = await db.query.layouts.findFirst({ where: eq(layouts.id, mobileLayoutId) });
+    expect(mobileLayout).toMatchObject({ breakpoint: 0, leftGutterColumnCount: 0 });
   });
 });
 
