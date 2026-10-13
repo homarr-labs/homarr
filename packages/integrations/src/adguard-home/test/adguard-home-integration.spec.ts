@@ -51,10 +51,44 @@ describe("AdGuardHomeIntegration", () => {
     await expect(resultPromise).resolves.toMatchObject({
       status: "enabled",
       adsBlockedToday: 20,
+      adsBlockedTodayPercentage: 20,
       dnsQueriesToday: 100,
       domainsBeingBlocked: 12,
     });
   });
+
+  test.each([
+    { timeUnits: "days", queries: [1000, 100], blocked: [900, 20], expected: 20 },
+    { timeUnits: "hours", queries: [0, 0], blocked: [0, 0], expected: 0 },
+    { timeUnits: "hours", queries: [40, 60], blocked: [0, 0], expected: 0 },
+    { timeUnits: "hours", queries: [40, 60], blocked: [40, 60], expected: 100 },
+  ])(
+    "reports the actual blocked share for $timeUnits buckets (expected $expected percent)",
+    async ({ timeUnits, queries, blocked, expected }) => {
+      mockFetch.mockImplementation(async (url) => {
+        switch (new URL(url.toString()).pathname) {
+          case "/control/stats":
+            return jsonResponse({
+              ...stats,
+              time_units: timeUnits,
+              dns_queries: queries,
+              blocked_filtering: blocked,
+              num_dns_queries: queries.reduce((sum, value) => sum + value, 0),
+              num_blocked_filtering: blocked.reduce((sum, value) => sum + value, 0),
+            });
+          case "/control/status":
+            return jsonResponse(status);
+          case "/control/filtering/status":
+            return jsonResponse(filteringStatus);
+          default:
+            throw new Error("Unexpected AdGuard request");
+        }
+      });
+      const summary = await integration.getSummaryAsync();
+      expect(summary.adsBlockedTodayPercentage).toBe(expected);
+      expect(Number.isFinite(summary.adsBlockedTodayPercentage)).toBe(true);
+    },
+  );
 });
 
 const jsonResponse = (body: unknown) => new Response(JSON.stringify(body), { status: 200 });
