@@ -22,7 +22,7 @@ export interface ReleasesRepositoryIntegration {
   kind: IntegrationKind;
   name: string;
   version: string;
-  /** Undefined when either version has no numeric part to compare. */
+  /** Undefined when either version has an unsupported format. */
   isUpToDate: boolean | undefined;
 }
 
