@@ -97,7 +97,7 @@ const untilAbortedAsync = <T>(promise: Promise<T>, signal: AbortSignal) =>
 
 const resolveAllowedAddressesAsync = async (url: URL, signal: AbortSignal): Promise<ResolvedAddress[]> => {
   if (url.protocol !== "http:" && url.protocol !== "https:") {
-    throw new Error(`Refusing to request ${url.protocol} url ${url.href}`);
+    throw new Error(`Refusing to request a ${url.protocol} url`);
   }
 
   const hostname = url.hostname.replace(/^\[(.*)\]$/, "$1");
@@ -111,7 +111,7 @@ const resolveAllowedAddressesAsync = async (url: URL, signal: AbortSignal): Prom
   if (addresses.length === 0) throw new Error(`${url.hostname} did not resolve to an address`);
   const blocked = addresses.find(isBlockedAddress);
   if (blocked !== undefined) {
-    throw new Error(`Refusing to request ${url.href} because it resolves to ${blocked.address}`);
+    throw new Error(`Refusing to request ${url.origin} because it resolves to ${blocked.address}`);
   }
 
   return addresses;
@@ -156,7 +156,7 @@ const requestHopAsync = async (
   options: GuardedFetchOptions,
 ): Promise<{ response: FetchResponse; dispatcher: Dispatcher }> => {
   const timeout = new AbortController();
-  const timer = setTimeout(() => timeout.abort(new Error(`Request to ${url.href} timed out`)), options.timeout);
+  const timer = setTimeout(() => timeout.abort(new Error(`Request to ${url.origin} timed out`)), options.timeout);
   const signal = options.signal ? AbortSignal.any([options.signal, timeout.signal]) : timeout.signal;
 
   try {
@@ -203,8 +203,11 @@ export const fetchGuardedAsync = async <TResult>(
       if (location === null) return await handleResponse(response, currentUrl);
 
       await cancelBodyAsync(response);
-      if (redirects === maximumRedirects) throw new Error(`Too many redirects starting at ${url.href}`);
-      currentUrl = new URL(location, currentUrl);
+      if (redirects === maximumRedirects) throw new Error(`Too many redirects starting at ${url.origin}`);
+      // The TypeError of new URL carries the full location and base, query strings included.
+      const target = URL.parse(location, currentUrl);
+      if (target === null) throw new Error(`Invalid redirect location from ${currentUrl.origin}`);
+      currentUrl = target;
     } finally {
       await dispatcher.destroy();
     }
