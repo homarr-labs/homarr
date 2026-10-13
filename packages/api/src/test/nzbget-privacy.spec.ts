@@ -1,32 +1,38 @@
 import type { MockAgent } from "undici";
 import { MockAgent as UndiciMockAgent } from "undici";
 import { transports } from "winston";
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { parse } from "superjson";
+import { afterAll, afterEach, beforeEach, expect, test, vi } from "vitest";
 
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type * as HttpInfrastructure from "@homarr/core/infrastructure/http";
+import { loggerMessageSchema } from "@homarr/core/infrastructure/logs/constants";
 
-import { RedisTransport } from "../../../core/src/infrastructure/logs/transports/redis-transport";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../settle-integrations";
 
 const fixture = vi.hoisted(() => {
   process.env.SKIP_ENV_VALIDATION = "true";
   process.env.LOG_LEVEL = "debug";
-  const serialized: string[] = [];
+  // Exercise the public logger's production Redis wiring with an in-memory client.
+  vi.stubEnv("CI", "");
+  vi.stubEnv("DISABLE_REDIS_LOGS", "");
+  const history: string[] = [];
+  const live: string[] = [];
   const pipeline = { lpush: vi.fn(), ltrim: vi.fn(), publish: vi.fn(), exec: vi.fn().mockResolvedValue([]) };
   pipeline.lpush.mockImplementation((_key: string, value: string) => {
-    serialized.push(value);
+    history.push(value);
     return pipeline;
   });
   pipeline.ltrim.mockImplementation(() => pipeline);
   pipeline.publish.mockImplementation((_key: string, value: string) => {
-    serialized.push(value);
+    live.push(value);
     return pipeline;
   });
   return {
     agent: null as MockAgent | null,
     console: [] as string[],
-    serialized,
+    history,
+    live,
     redis: { options: {}, on: vi.fn(), multi: vi.fn(() => pipeline) },
   };
 });
@@ -61,20 +67,28 @@ const input = {
 
 beforeEach(() => {
   fixture.console.length = 0;
-  fixture.serialized.length = 0;
+  fixture.history.length = 0;
+  fixture.live.length = 0;
   fixture.agent = new UndiciMockAgent();
   fixture.agent.disableNetConnect();
-  const redisTransport = new RedisTransport({ level: "debug" });
   vi.spyOn(transports.Console.prototype, "log").mockImplementation((info, callback) => {
-    const entry = info as Parameters<RedisTransport["log"]>[0];
-    fixture.console.push(Reflect.get(entry, Symbol.for("message")) as string);
-    redisTransport.log(entry, callback as () => void);
+    const entry = info as Record<symbol, unknown>;
+    const message = entry[Symbol.for("message")];
+    if (typeof message !== "string") {
+      throw new Error("Expected a formatted Console message");
+    }
+    fixture.console.push(message);
+    (callback as () => void)();
   });
 });
 
 afterEach(async () => {
   await fixture.agent?.close();
   vi.restoreAllMocks();
+});
+
+afterAll(() => {
+  vi.unstubAllEnvs();
 });
 
 test.each([401, 403, 500])(
@@ -100,13 +114,23 @@ test.each([401, 403, 500])(
     expect((failure as Error).cause).toMatchObject({ statusCode: status, url: "https://nzbget.example.com/jsonrpc" });
     await vi.waitFor(() => {
       expect(fixture.console.some((line) => line.includes("Integration query failed"))).toBe(true);
-      expect(fixture.serialized.some((line) => line.includes("Integration query failed"))).toBe(true);
+      expect(fixture.history.some((line) => line.includes("Integration query failed"))).toBe(true);
+      expect(fixture.live.some((line) => line.includes("Integration query failed"))).toBe(true);
     });
+    const decoded = [fixture.history, fixture.live].map((messages) =>
+      messages.map((value) => loggerMessageSchema.parse(parse(value))),
+    );
+    const consoleFailure = fixture.console.find((line) => line.includes("Integration query failed"));
+    for (const messages of decoded) {
+      expect(messages.some((message) => message.message === consoleFailure)).toBe(true);
+    }
     const destinations = [
       JSON.stringify(failure),
       JSON.stringify((failure as Error).cause),
       ...fixture.console,
-      ...fixture.serialized,
+      ...fixture.history,
+      ...fixture.live,
+      ...decoded.flatMap((messages) => messages.map((message) => message.message)),
     ];
     for (const destination of destinations) {
       for (const credential of input.decryptedSecrets) {
