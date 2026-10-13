@@ -114,25 +114,41 @@ const fetchPageAsync = async (
   }
 };
 
+// Matches </head> but not </header>.
+const headEndRegex = /<\/head[\s/>]/i;
+
+// Only the new text and the few characters before it are searched for </head>, so a page
+// sent in tiny chunks costs no more than one sent at once.
 const readDocumentHeadAsync = async (body: NonNullable<FetchResponse["body"]>): Promise<string> => {
   const reader = body.getReader();
   const decoder = new TextDecoder();
-  let html = "";
-  let readBytes = 0;
+  const texts: string[] = [];
+  let textLength = 0;
+  let tail = "";
+  let remainingBytes = maximumHtmlBytes;
 
   try {
-    while (readBytes < maximumHtmlBytes && !html.includes("</head>")) {
+    while (remainingBytes > 0) {
       const { done, value } = await reader.read();
       if (done) break;
 
-      readBytes += value.byteLength;
-      html += decoder.decode(value, { stream: true });
+      const chunk = value.subarray(0, remainingBytes);
+      remainingBytes -= chunk.byteLength;
+      const text = decoder.decode(chunk, { stream: true });
+      texts.push(text);
+
+      const searched = tail + text;
+      const headEnd = searched.search(headEndRegex);
+      if (headEnd !== -1) return texts.join("").slice(0, textLength - tail.length + headEnd);
+
+      textLength += text.length;
+      tail = searched.slice(-"</head".length);
     }
   } finally {
     await reader.cancel().catch(() => undefined);
   }
 
-  return html;
+  return texts.join("");
 };
 
 const linkTagRegex = /<link\b[^>]*>/gi;
