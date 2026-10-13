@@ -1,4 +1,10 @@
 ## What's Changed
+* fix: preserve widget backgrounds in Beszel charts by @ajnart in https://github.com/homarr-labs/homarr/pull/7172
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.5.1...v2.5.2
+
+## What's Changed
 * fix: protect integration credentials and DNS summaries by @ajnart in https://github.com/homarr-labs/homarr/pull/7170
 
 
