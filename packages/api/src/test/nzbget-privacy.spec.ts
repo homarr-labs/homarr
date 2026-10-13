@@ -31,6 +31,7 @@ const fixture = vi.hoisted(() => {
   return {
     agent: null as MockAgent | null,
     console: [] as string[],
+    requests: [] as string[],
     history,
     live,
     redis: { options: {}, on: vi.fn(), multi: vi.fn(() => pipeline) },
@@ -53,7 +54,7 @@ vi.mock("@homarr/core/infrastructure/http", async (importActual) => {
   };
 });
 
-const input = {
+const nzbget = {
   id: "owned-nzbget",
   kind: "nzbGet" as const,
   name: "Owned NZBGet",
@@ -65,8 +66,23 @@ const input = {
   ],
 };
 
+const sabnzbd = {
+  id: "owned-sabnzbd",
+  kind: "sabNzbd" as const,
+  name: "Owned SABnzbd",
+  url: "https://sabnzbd.example.com",
+  externalUrl: null,
+  decryptedSecrets: [{ kind: "apiKey" as const, value: "fixture-sab-query-key/:?&=" }],
+};
+const clients = [
+  { input: nzbget, method: "POST", expectedUrl: "https://nzbget.example.com/jsonrpc" },
+  { input: sabnzbd, method: "GET", expectedUrl: "https://sabnzbd.example.com/api?limit=10&output=json&mode=queue" },
+];
+const rejectedRequests = clients.flatMap((client) => [401, 403, 500].map((status) => ({ ...client, status })));
+
 beforeEach(() => {
   fixture.console.length = 0;
+  fixture.requests.length = 0;
   fixture.history.length = 0;
   fixture.live.length = 0;
   fixture.agent = new UndiciMockAgent();
@@ -91,10 +107,20 @@ afterAll(() => {
   vi.unstubAllEnvs();
 });
 
-test.each([401, 403, 500])(
-  "keeps rejected RPC credentials out of original errors, Console and Redis history/live messages (HTTP %i)",
-  async (status) => {
-    fixture.agent?.get(input.url).intercept({ path: /.*/, method: "POST" }).reply(status, "").persist();
+test.each(rejectedRequests)(
+  "keeps $input.name rejected credentials out of errors and Console/Redis messages (HTTP $status)",
+  async ({ input, method, expectedUrl, status }) => {
+    fixture.agent
+      ?.get(input.url)
+      .intercept({
+        path: (path) => {
+          fixture.requests.push(path);
+          return true;
+        },
+        method,
+      })
+      .reply(status, "")
+      .persist();
     const client = await createIntegrationAsync(input);
     let failure: unknown;
     const results = await settleIntegrationQueries(
@@ -111,12 +137,17 @@ test.each([401, 403, 500])(
     );
     expect(results).toEqual(["INTEGRATION_REQUEST_FAILED"]);
     expect(failure).toBeInstanceOf(Error);
-    expect((failure as Error).cause).toMatchObject({ statusCode: status, url: "https://nzbget.example.com/jsonrpc" });
     await vi.waitFor(() => {
       expect(fixture.console.some((line) => line.includes("Integration query failed"))).toBe(true);
       expect(fixture.history.some((line) => line.includes("Integration query failed"))).toBe(true);
       expect(fixture.live.some((line) => line.includes("Integration query failed"))).toBe(true);
     });
+    if (input.kind === "sabNzbd") {
+      expect(fixture.requests.length).toBeGreaterThan(0);
+      for (const path of fixture.requests) {
+        expect(new URL(path, input.url).searchParams.get("apikey")).toBe("fixture-sab-query-key/:?&=");
+      }
+    }
     const decoded = [fixture.history, fixture.live].map((messages) =>
       messages.map((value) => loggerMessageSchema.parse(parse(value))),
     );
@@ -125,12 +156,12 @@ test.each([401, 403, 500])(
       expect(messages.some((message) => message.message === consoleFailure)).toBe(true);
     }
     const destinations = [
-      JSON.stringify(failure),
-      JSON.stringify((failure as Error).cause),
       ...fixture.console,
       ...fixture.history,
       ...fixture.live,
       ...decoded.flatMap((messages) => messages.map((message) => message.message)),
+      JSON.stringify(failure),
+      JSON.stringify((failure as Error).cause),
     ];
     for (const destination of destinations) {
       for (const credential of input.decryptedSecrets) {
@@ -142,5 +173,6 @@ test.each([401, 403, 500])(
       );
       expect(destination).not.toContain("Authorization");
     }
+    expect((failure as Error).cause).toMatchObject({ statusCode: status, url: expectedUrl });
   },
 );
