@@ -12,8 +12,9 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
   createCertificateAgentAsync: vi.fn(),
   fetchWithTrustedCertificatesAsync: vi.fn(),
 }));
+const debugLog = vi.hoisted(() => vi.fn());
 vi.mock("@homarr/core/infrastructure/logs", () => ({
-  createLogger: () => ({ debug: vi.fn() }),
+  createLogger: () => ({ debug: debugLog }),
 }));
 
 type FetchResponse = Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
@@ -108,6 +109,7 @@ const requestedUrls = () => mockedFetch.mock.calls.map(([input]) => String(input
 
 describe("fetchFaviconUrlAsync", () => {
   beforeEach(() => {
+    debugLog.mockReset();
     mockedFetch.mockReset();
     mockedCreateAgent.mockReset();
     mockedCreateAgent.mockImplementation(() =>
@@ -218,6 +220,20 @@ describe("fetchFaviconUrlAsync", () => {
     const result = await fetchFaviconUrlAsync(websiteUrl);
 
     expect(result).toBe("https://app.example.com/icon.png");
+  });
+
+  test("sends no credentials and logs only the origin when the website fails", async () => {
+    mockedFetch.mockRejectedValue(new Error("connection refused"));
+
+    const result = await fetchFaviconUrlAsync("https://admin:secret@app.example.com/home?token=abc#section");
+
+    expect(result).toBeNull();
+    expect(requestedUrls()).toEqual(["https://app.example.com/home?token=abc", faviconUrl]);
+    expect(debugLog.mock.calls.map(([, metadata]) => (metadata as { origin: string }).origin)).toEqual([
+      "https://app.example.com",
+      "https://app.example.com",
+    ]);
+    expect(JSON.stringify(debugLog.mock.calls)).not.toMatch(/admin|secret|token|section/);
   });
 
   test("bounds the page body and not only the response headers", async () => {

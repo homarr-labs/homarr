@@ -62,23 +62,22 @@ const detectFaviconUrlAsync = async (websiteUrl: URL, signal: AbortSignal): Prom
   const declaredIconUrl = page?.html == null ? null : findDeclaredIconUrl(page.html, page.url);
   if (declaredIconUrl !== null) return declaredIconUrl;
 
-  // The well known icon belongs to the origin that actually served the page, which is a
-  // different one than the requested address whenever the app redirects across origins.
-  // page.url already reflects that even when the response carried no usable html, for
-  // example when a redirect lands on a non-html or bodyless response. page itself is only
-  // null when no response was obtained at all, which is the one case with no better url
-  // than the one originally requested.
+  // The well known icon belongs to the origin that served the page, which differs from the
+  // requested one when the app redirects across origins.
   const wellKnownUrl = new URL("/favicon.ico", page?.url.origin ?? websiteUrl.origin);
   return (await isImageAsync(wellKnownUrl, signal)) ? wellKnownUrl.href : null;
 };
 
+// Credentials in the app url are never sent to the site, and leaving them out here keeps
+// them out of every error raised further down.
 const parseHttpUrl = (value: string): URL | null => {
-  try {
-    const url = new URL(value.trim());
-    return url.protocol === "http:" || url.protocol === "https:" ? url : null;
-  } catch {
-    return null;
-  }
+  const url = URL.parse(value.trim());
+  if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) return null;
+
+  url.username = "";
+  url.password = "";
+  url.hash = "";
+  return url;
 };
 
 // Returns null only when no response was obtained at all. Once a response exists, its
@@ -104,13 +103,13 @@ const fetchPageAsync = async (
         try {
           return { html: await readDocumentHeadAsync(body), url: finalUrl };
         } catch (error) {
-          logger.debug("Unable to read website for favicon detection", { url: finalUrl.href, error });
+          logger.debug("Unable to read website for favicon detection", { origin: finalUrl.origin, error });
           return { html: null, url: finalUrl };
         }
       },
     );
   } catch (error) {
-    logger.debug("Unable to load website for favicon detection", { url: websiteUrl.href, error });
+    logger.debug("Unable to load website for favicon detection", { origin: websiteUrl.origin, error });
     return null;
   }
 };
@@ -210,7 +209,7 @@ const isImageAsync = async (url: URL, signal: AbortSignal): Promise<boolean> => 
       return contentType.startsWith("image/") || contentType.includes("icon");
     });
   } catch (error) {
-    logger.debug("Unable to load the well known favicon", { url: url.href, error });
+    logger.debug("Unable to load the well known favicon", { origin: url.origin, error });
     return false;
   }
 };
