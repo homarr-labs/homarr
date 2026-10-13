@@ -1,29 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-const calculateTimeAgo = (timestamp: Date) => {
-  return dayjs().to(timestamp);
-};
+export const DayJsLocaleContext = createContext<string | null>(null);
 
 export const useTimeAgo = (timestamp: Date, updateFrequency = 1000) => {
-  const [timeAgo, setTimeAgo] = useState(() => calculateTimeAgo(timestamp));
+  const locale = useContext(DayJsLocaleContext);
+  const [, setTick] = useState(0);
 
   useEffect(() => {
-    setTimeAgo(calculateTimeAgo(timestamp));
-  }, [timestamp]);
+    const intervalId = setInterval(() => setTick((tick) => tick + 1), updateFrequency);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => setTimeAgo(calculateTimeAgo(timestamp)), updateFrequency);
+    return () => clearInterval(intervalId);
+  }, [updateFrequency]);
 
-    return () => clearInterval(intervalId); // clear interval on hook unmount
-  }, [timestamp, updateFrequency]);
-
-  return timeAgo;
+  return dayjs()
+    .locale(locale ?? dayjs.locale())
+    .to(timestamp);
 };
 
 export const useIntegrationConnected = (updatedAt: Date, { timeout = 30000 }) => {

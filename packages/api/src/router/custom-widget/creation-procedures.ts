@@ -35,6 +35,7 @@ export const creationProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Requires administrator permission. Create a Custom JSX widget without reusing a preview. Prefer customWidget_createFromPreview after full preview validation and query checks so the definition is not streamed again.",
       },
@@ -55,6 +56,7 @@ export const creationProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Requires administrator permission. Persist an exact tested new-widget preview from customWidget_previewCreate or customWidget_previewReviseTemplate. Edit previews must use customWidget_updateFromPreview. Every query and action in the final preview revision must have current evidence.",
       },
@@ -99,6 +101,7 @@ export const creationProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Requires administrator permission. Update the existing Custom JSX widget associated with an edit preview, using that exact tested preview revision without creating a duplicate. Every query and action in the final preview revision must have current evidence.",
       },

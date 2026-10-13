@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2")
+          format("woff2");
+        font-weight: 100 800;
+      }
+      body {
+        margin: 0;
+        background: #111114;
+        font-family: "JetBrains Mono";
+        color: #e9e9ee;
+      }
+      main {
+        display: grid;
+        grid-template-columns: repeat(2, 1280px);
+        gap: 56px 40px;
+        padding: 40px;
+      }
+      figure {
+        margin: 0;
+      }
+      figcaption {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        margin-bottom: 14px;
+      }
+      figcaption b {
+        color: #fa5352;
+        margin-right: 12px;
+      }
+      img {
+        display: block;
+        width: 1280px;
+        height: 640px;
+        border-radius: 12px;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+      }
+    </style>
+  </head>
+  <body>
+    <main id="m"></main>
+    <script type="module">
+      const NAMES = [
+        "The wall",
+        "One board, every screen",
+        "Horizon",
+        "Stop memorising ports",
+        "Manifesto",
+        "Constellation",
+        "Built from widgets",
+        "Annotated board",
+        "Connect · Arrange · Glance",
+        "One container",
+      ];
+      const m = document.getElementById("m");
+      const loads = NAMES.map((n, i) => {
+        const f = document.createElement("figure");
+        const c = document.createElement("figcaption");
+        c.innerHTML = `<b>${String(i + 1).padStart(2, "0")}</b>${n}`;
+        const img = document.createElement("img");
+        img.src = `out/concept-${i + 1}.png`;
+        f.append(c, img);
+        m.append(f);
+        return img.decode();
+      });
+      window.__ready = Promise.all([...loads, document.fonts.load('600 20px "JetBrains Mono"')]);
+    </script>
+  </body>
+</html>

@@ -372,7 +372,6 @@ export const boardRouter = createTRPCRouter({
               id: true,
               name: true,
               image: true,
-              email: true,
             },
           },
           userPermissions: {
@@ -679,6 +678,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId, name, layoutId }. Requires board-create permission",
       },
@@ -757,6 +757,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Every widget-integration configuration must be valid. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
       },
@@ -1125,6 +1126,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Delete a board by its ID. Requires full permission on the board. Use board_getAllBoards to find the board ID",
       },
@@ -1307,8 +1309,9 @@ export const boardRouter = createTRPCRouter({
 
       const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
       const existingLayoutsById = new Map(board.layouts.map((layout) => [layout.id, layout]));
-      const addedLayouts = filterAddedItems(input.layouts, board.layouts);
-      const removedLayouts = filterRemovedItems(input.layouts, board.layouts);
+      const submittedLayoutIds = new Set(input.layouts.map(({ id }) => id));
+      const addedLayouts = input.layouts.filter(({ id }) => !existingLayoutsById.has(id));
+      const removedLayouts = board.layouts.filter(({ id }) => !submittedLayoutIds.has(id));
 
       if (addedLayouts.some((layout) => layout.role !== "custom")) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "New layouts must use the custom role" });
@@ -1395,7 +1398,7 @@ export const boardRouter = createTRPCRouter({
 
       const itemSectionLayoutsToUpdate: InferInsertModel<typeof itemLayouts>[] = [];
       const sectionLayoutsToUpdate: InferInsertModel<typeof sectionLayouts>[] = [];
-      const layoutsToUpdate = filterUpdatedItems(input.layouts, board.layouts);
+      const layoutsToUpdate = input.layouts.filter(({ id }) => existingLayoutsById.has(id));
       const resizeSourcesToUpdate = new Map<string, string | null>();
 
       for (const updatedLayout of layoutsToUpdate) {
@@ -1576,6 +1579,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Reset a board's Mobile or custom layout from its Base layout while preserving the target layout settings. Requires modify permission. REQUIRED: boardId (board ID), layoutId (non-Base layout ID)",
       },
@@ -1734,11 +1738,20 @@ export const boardRouter = createTRPCRouter({
         await validateTimetableOptionsChangeAsync(item.options, previousOptions);
       }
 
+      const storedItemIds = new Set(dbBoard.items.map(({ id }) => id));
+      const storedSectionIds = new Set(dbBoard.sections.map(({ id }) => id));
+      const submittedItemIds = new Set(input.items.map(({ id }) => id));
+      const submittedSectionIds = new Set(input.sections.map(({ id }) => id));
+      const addedItems = input.items.filter(({ id }) => !storedItemIds.has(id));
+      const addedSections = input.sections.filter(({ id }) => !storedSectionIds.has(id));
+      const updatedItems = input.items.filter(({ id }) => storedItemIds.has(id));
+      const updatedSections = input.sections.filter(({ id }) => storedSectionIds.has(id));
+      const removedItems = dbBoard.items.filter(({ id }) => !submittedItemIds.has(id));
+      const removedSections = dbBoard.sections.filter(({ id }) => !submittedSectionIds.has(id));
+
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
-            const addedSections = filterAddedItems(input.sections, dbBoard.sections);
-
             if (addedSections.length > 0) {
               await transaction.insert(schema.sections).values(
                 addedSections.map((section) => ({
@@ -1772,8 +1785,6 @@ export const boardRouter = createTRPCRouter({
                 await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
               }
             }
-
-            const addedItems = filterAddedItems(input.items, dbBoard.items);
 
             if (addedItems.length > 0) {
               await transaction.insert(schema.items).values(
@@ -1832,8 +1843,6 @@ export const boardRouter = createTRPCRouter({
               );
             }
 
-            const updatedItems = filterUpdatedItems(input.items, dbBoard.items);
-
             for (const item of updatedItems) {
               await transaction
                 .update(schema.items)
@@ -1862,8 +1871,6 @@ export const boardRouter = createTRPCRouter({
                   );
               }
             }
-
-            const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
 
             for (const section of updatedSections) {
               await transaction
@@ -1917,14 +1924,11 @@ export const boardRouter = createTRPCRouter({
                 );
             }
 
-            const removedItems = filterRemovedItems(input.items, dbBoard.items);
-
             const itemIds = removedItems.map((item) => item.id);
             if (itemIds.length > 0) {
               await transaction.delete(schema.items).where(inArray(schema.items.id, itemIds));
             }
 
-            const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
             const sectionIds = removedSections.map((section) => section.id);
 
             if (sectionIds.length > 0) {
@@ -1934,8 +1938,6 @@ export const boardRouter = createTRPCRouter({
         },
         handleSync(db) {
           db.transaction((transaction) => {
-            const addedSections = filterAddedItems(input.sections, dbBoard.sections);
-
             if (addedSections.length > 0) {
               transaction
                 .insert(sections)
@@ -1972,8 +1974,6 @@ export const boardRouter = createTRPCRouter({
                 transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
               }
             }
-
-            const addedItems = filterAddedItems(input.items, dbBoard.items);
 
             if (addedItems.length > 0) {
               transaction
@@ -2041,8 +2041,6 @@ export const boardRouter = createTRPCRouter({
                 .run();
             }
 
-            const updatedItems = filterUpdatedItems(input.items, dbBoard.items);
-
             for (const item of updatedItems) {
               transaction
                 .update(items)
@@ -2068,8 +2066,6 @@ export const boardRouter = createTRPCRouter({
                   .run();
               }
             }
-
-            const updatedSections = filterUpdatedItems(input.sections, dbBoard.sections);
 
             for (const section of updatedSections) {
               transaction
@@ -2123,14 +2119,11 @@ export const boardRouter = createTRPCRouter({
                 .run();
             }
 
-            const removedItems = filterRemovedItems(input.items, dbBoard.items);
-
             const itemIds = removedItems.map((item) => item.id);
             if (itemIds.length > 0) {
               transaction.delete(items).where(inArray(items.id, itemIds)).run();
             }
 
-            const removedSections = filterRemovedItems(input.sections, dbBoard.sections);
             const sectionIds = removedSections.map((section) => section.id);
 
             if (sectionIds.length > 0) {
@@ -2305,6 +2298,7 @@ export const boardRouter = createTRPCRouter({
       },
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Optional size {width,height} sets grid dimensions; width is capped by each layout's available columns. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
@@ -2978,7 +2972,6 @@ const getFullBoardWithWhereAsync = async (
           id: true,
           name: true,
           image: true,
-          email: true,
         },
       },
       sections: {
@@ -3122,12 +3115,3 @@ const parseSection = (section: unknown) => {
   }
   return result.data;
 };
-
-const filterAddedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
-  inputArray.filter((inputItem) => !dbArray.some((dbItem) => dbItem.id === inputItem.id));
-
-const filterRemovedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
-  dbArray.filter((dbItem) => !inputArray.some((inputItem) => dbItem.id === inputItem.id));
-
-const filterUpdatedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
-  inputArray.filter((inputItem) => dbArray.some((dbItem) => dbItem.id === inputItem.id));

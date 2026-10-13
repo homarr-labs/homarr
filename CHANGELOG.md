@@ -1,3 +1,29 @@
+## What's Changed
+* fix: fit Beszel Y-axis labels by @ajnart in https://github.com/homarr-labs/homarr/pull/7137
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7144
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7119
+* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7124
+* fix(release): generate changelogs with GitHub release notes by @ajnart in https://github.com/homarr-labs/homarr/pull/7121
+* fix: unify collapsible container headers and spacing by @ajnart in https://github.com/homarr-labs/homarr/pull/7153
+* perf: apply 57 performance and accessibility improvements across dashboards and services by @ajnart in https://github.com/homarr-labs/homarr/pull/7154
+* fix(ci): speed up checks and fix Workshop publication by @ajnart in https://github.com/homarr-labs/homarr/pull/7138
+* fix: match native Beszel chart colors and hover points by @ajnart in https://github.com/homarr-labs/homarr/pull/7159
+* docs(brand): add Homarr share images and their generator by @ajnart in https://github.com/homarr-labs/homarr/pull/7158
+* fix: honor container border color by @ajnart in https://github.com/homarr-labs/homarr/pull/7151
+* feat: allow health widget tab order by @ajnart in https://github.com/homarr-labs/homarr/pull/7152
+* fix(auth): synchronize singleton OIDC group claims by @Riccardo-Vecchi in https://github.com/homarr-labs/homarr/pull/7089
+* fix: enable assistant by default and preserve onboarding state by @ajnart in https://github.com/homarr-labs/homarr/pull/7135
+* feat(releases): use compact localized release ages by @ajnart in https://github.com/homarr-labs/homarr/pull/7155
+* fix: reveal resize grips on item hover and focus by @ajnart in https://github.com/homarr-labs/homarr/pull/7157
+* perf(plex): index proxied release images by @Riccardo-Vecchi in https://github.com/homarr-labs/homarr/pull/7100
+* fix(ping): treat every HTTP response as reachable by @ajnart in https://github.com/homarr-labs/homarr/pull/7133
+* chore(audit): security, runtime, widget and maintenance bundle by @ajnart in https://github.com/homarr-labs/homarr/pull/7146
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7162
+* chore(release): prepare v2.5.0 by @ajnart in https://github.com/homarr-labs/homarr/pull/7167
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.4.1...v2.5.0
+
 ## [2.4.1](https://github.com/homarr-labs/homarr/compare/v2.4.0...v2.4.1) (2026-10-10)
 
 ## [2.4.0](https://github.com/homarr-labs/homarr/compare/v2.3.0...v2.4.0) (2026-10-09)

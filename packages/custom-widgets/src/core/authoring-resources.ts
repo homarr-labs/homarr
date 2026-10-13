@@ -1,4 +1,5 @@
 import { customJsxAuthoringCatalog } from "./component-catalog";
+import { CUSTOM_WIDGET_SCHEMA } from "./custom-jsx-schema";
 import { customJsxTablerIconNames } from "./tabler-icons";
 
 export {
@@ -111,7 +112,7 @@ export const CUSTOM_WIDGET_SKILL_REFERENCES = {
 
 \`\`\`ts
 interface HomarrCustomWidgetV2 {
-  $schema: "homarr-custom-widget-v2";
+  $schema: "${CUSTOM_WIDGET_SCHEMA}";
   name: string;
   description?: string;
   iconUrl?: string;

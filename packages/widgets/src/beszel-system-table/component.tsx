@@ -181,7 +181,7 @@ export default function BeszelSystemTableWidget({
   const sortedSystems = useMemo(() => {
     const accessor = sortStatus.columnAccessor as keyof SystemRowWithKey;
     const dir = directionMultiplier[sortStatus.direction] ?? 1;
-    return [...systemsWithSource].toSorted((a, b) => {
+    return systemsWithSource.toSorted((a, b) => {
       const aVal = a[accessor] ?? 0;
       const bVal = b[accessor] ?? 0;
       if (typeof aVal === "string" && typeof bVal === "string") return aVal.localeCompare(bVal) * dir;

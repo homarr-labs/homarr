@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Box, Group } from "@mantine/core";
+import { TRPCError } from "@trpc/server";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -29,8 +30,11 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
 
   try {
     await api.docker.logs({ endpointId: resolvedEndpointId, id: containerId, tail: 1 });
-  } catch {
-    notFound();
+  } catch (error) {
+    if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+      notFound();
+    }
+    throw error;
   }
 
   return (

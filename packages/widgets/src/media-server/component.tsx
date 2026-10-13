@@ -225,18 +225,20 @@ export default function MediaServerWidget({
       integrationName: stream.integrationName,
     }));
 
-  const playingCount = flatSessions.filter(
-    (session) => session.currentlyPlaying && session.currentlyPlaying.playback?.state !== "paused",
-  ).length;
-  const transcodingCount = flatSessions.filter((session) => {
-    const status = getPlaybackStatus(session.currentlyPlaying?.metadata?.transcoding);
-    return status !== "directPlay" && status !== "directStream";
-  }).length;
-
-  const totalBitrateKbps = flatSessions.reduce(
-    (sum, session) => sum + (session.currentlyPlaying?.metadata?.bitrateKbps ?? 0),
-    0,
-  );
+  let playingCount = 0;
+  let transcodingCount = 0;
+  let totalBitrateKbps = 0;
+  if (isAdvanced || showBitrate) {
+    for (const session of flatSessions) {
+      const playing = session.currentlyPlaying;
+      if (isAdvanced) {
+        if (playing && playing.playback?.state !== "paused") playingCount++;
+        const status = getPlaybackStatus(playing?.metadata?.transcoding);
+        if (status !== "directPlay" && status !== "directStream") transcodingCount++;
+      }
+      if (showBitrate) totalBitrateKbps += playing?.metadata?.bitrateKbps ?? 0;
+    }
+  }
   const totalBitrateLabel = showBitrate ? formatBitrate(totalBitrateKbps) : null;
   const hasFailedIntegrations = currentStreams.some(({ error }) => Boolean(error));
 

@@ -50,6 +50,7 @@ const logger = createLogger({ module: "manageLayout" });
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
   const sessionPromise = auth();
+  const integrationsAccessPromise = sessionPromise.then(getIntegrationsSectionAccessAsync);
   const shouldRunManageTourPromise = sessionPromise.then(async (session) => {
     if (!session || nextEnv.DEMO_MODE) return false;
 
@@ -61,14 +62,14 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       return false;
     }
   });
-  const [t, tEntities, session, shouldRunManageTour] = await Promise.all([
+  const [t, tEntities, session, shouldRunManageTour, integrationsAccess] = await Promise.all([
     getI18n("management.navbar"),
     getI18n("common.entity"),
     sessionPromise,
     shouldRunManageTourPromise,
+    integrationsAccessPromise,
   ]);
   const appsAccess = getAppsSectionAccess(session);
-  const integrationsAccess = await getIntegrationsSectionAccessAsync(session);
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),

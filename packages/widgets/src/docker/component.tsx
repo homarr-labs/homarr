@@ -364,7 +364,7 @@ export default function DockerWidget({
 
   const sortedContainers = useMemo(() => {
     const multiplier = sortStatus.direction === "desc" ? -1 : 1;
-    return [...containers].toSorted(
+    return containers.toSorted(
       (first, second) => compareContainers(first, second, sortStatus.columnAccessor) * multiplier,
     );
   }, [containers, sortStatus]);

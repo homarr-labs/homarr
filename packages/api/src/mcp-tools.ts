@@ -1,4 +1,5 @@
 import { Ajv2020 } from "ajv/dist/2020.js";
+import type { ToolAnnotations } from "@modelcontextprotocol/server";
 import { addFormats, AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
 import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
 import { z } from "zod/v4";
@@ -8,6 +9,7 @@ export interface McpMeta {
     enabled: boolean;
     name?: string;
     description?: string;
+    effect?: "additive" | "destructive";
   };
 }
 
@@ -18,6 +20,7 @@ export interface McpTool {
   pathInRouter: string[];
   inputSchema: z.core.JSONSchema.JSONSchema;
   inputMode: "none" | "object";
+  annotations?: Pick<ToolAnnotations, "readOnlyHint" | "destructiveHint">;
 }
 
 export interface McpToolDiagnostic {
@@ -60,6 +63,9 @@ const getMcpMetadata = (meta: unknown): McpMeta["mcp"] => {
   if ("name" in metadata && typeof metadata.name === "string") result.name = metadata.name;
   if ("description" in metadata && typeof metadata.description === "string") {
     result.description = metadata.description;
+  }
+  if ("effect" in metadata && (metadata.effect === "additive" || metadata.effect === "destructive")) {
+    result.effect = metadata.effect;
   }
   return result;
 };
@@ -130,6 +136,10 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
         name,
         description: metadata.description ?? "",
         type: definition.type,
+        annotations: {
+          readOnlyHint: definition.type === "query",
+          destructiveHint: definition.type === "mutation" && metadata.effect !== "additive",
+        },
         pathInRouter: path.split("."),
         inputMode,
         inputSchema,

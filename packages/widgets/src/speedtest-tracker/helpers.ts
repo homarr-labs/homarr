@@ -70,15 +70,15 @@ export const selectLatestResult = (
 
 export const combineSpeedtestDashboards = (
   dashboards: SpeedtestTrackerDashboardData[],
-): SpeedtestTrackerDashboardData =>
-  dashboards.reduce<SpeedtestTrackerDashboardData>(
-    (combined, dashboard) => ({
-      latestResult: selectLatestResult(combined.latestResult, dashboard.latestResult),
-      stats: mergeStats(combined.stats, dashboard.stats),
-      recentResults: [...combined.recentResults, ...dashboard.recentResults],
-    }),
-    { latestResult: null, stats: null, recentResults: [] },
-  );
+): SpeedtestTrackerDashboardData => {
+  const combined: SpeedtestTrackerDashboardData = { latestResult: null, stats: null, recentResults: [] };
+  for (const dashboard of dashboards) {
+    combined.latestResult = selectLatestResult(combined.latestResult, dashboard.latestResult);
+    combined.stats = mergeStats(combined.stats, dashboard.stats);
+    for (const result of dashboard.recentResults) combined.recentResults.push(result);
+  }
+  return combined;
+};
 
 export const formatResultSpeed = (result: SpeedtestTrackerResult, dir: "download" | "upload"): string => {
   const bits = dir === "download" ? result.download_bits : result.upload_bits;

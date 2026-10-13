@@ -19,6 +19,7 @@ export const previewActionProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Test one action from the current preview revision. Supply its required params and keep preview actions simulated unless the user explicitly enabled live actions. Verify confirmation, permission, and invalidation metadata before createFromPreview or updateFromPreview persistence.",
       },

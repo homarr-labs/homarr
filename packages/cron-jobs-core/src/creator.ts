@@ -3,7 +3,6 @@ import { Cron } from "croner";
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { db } from "@homarr/db";
 
 import type { Logger } from "./logger";
 import type { ValidateCron } from "./validation";
@@ -75,11 +74,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
     return {
       name,
       cronExpression: defaultCronExpression,
-      async createTaskAsync() {
-        const configuration = await db.query.cronJobConfigurations.findFirst({
-          where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
-        });
-
+      createTask(configuration: { cronExpression: string } | undefined) {
         const cronExpression = options.preventCustomInterval
           ? defaultCronExpression
           : (configuration?.cronExpression ?? defaultCronExpression);
