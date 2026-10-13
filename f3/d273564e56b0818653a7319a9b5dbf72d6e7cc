@@ -1,0 +1,14 @@
+.github/workflows/update-integration-list.yml
+  h_d6e478ca18e517 50,54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f3d273564e56b0818653a7319a9b5dbf72d6e7cc",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
