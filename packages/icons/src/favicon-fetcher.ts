@@ -114,10 +114,11 @@ const fetchPageAsync = async (
   }
 };
 
-// Matches </head> but not </header>.
-const headEndRegex = /<\/head[\s/>]/i;
+// The head also ends at <body> because </head> is optional in HTML and minifiers drop it.
+// The character class keeps longer names such as </header> from matching.
+const headEndRegex = /<\/head[\s/>]|<body[\s/>]/i;
 
-// Only the new text and the few characters before it are searched for </head>, so a page
+// Only the new text and the few characters before it are searched for the head end, so a page
 // sent in tiny chunks costs no more than one sent at once.
 const readDocumentHeadAsync = async (body: NonNullable<FetchResponse["body"]>): Promise<string> => {
   const reader = body.getReader();

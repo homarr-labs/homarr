@@ -252,6 +252,22 @@ describe("fetchFaviconUrlAsync", () => {
     expect(result).toBe("https://app.example.com/head.png");
   });
 
+  test("ends the head at the body when the page leaves out </head>", async () => {
+    mockResponses({
+      [websiteUrl]: createResponse({
+        contentType: "text/html",
+        body: [
+          '<html><head><link rel="icon" href="/head.png"><bo',
+          'dy><link rel="apple-touch-icon" href="/body.png"></body></html>',
+        ],
+      }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/head.png");
+  });
+
   test("ignores a header element that is not the end of the head", async () => {
     mockResponses({
       [websiteUrl]: createResponse({
