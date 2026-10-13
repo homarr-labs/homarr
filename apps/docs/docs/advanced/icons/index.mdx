@@ -37,7 +37,7 @@ You can clear the selected image with the clear button or the usual keyboard sho
 
 ### Icon of the app website
 
-When an app has a URL, the picker offers the icon of that website as its first suggestion. Homarr requests the page the URL points to, reads its `<link rel="icon">` and `<link rel="apple-touch-icon">` declarations and falls back to `/favicon.ico` of the same origin. The suggestion is only requested while the picker is open and it is never selected for you, so an image you picked yourself is never replaced. Nothing is suggested when the site cannot be reached or declares no icon.
+When an app has a URL, the picker offers the icon of that website as its first suggestion. Homarr requests the page the URL points to without its credentials, query string or fragment. It reads the `<link rel="icon">` and `<link rel="apple-touch-icon">` declarations in the head of that page and falls back to `/favicon.ico` of the same origin. The suggestion is only requested while the picker is open and it is never selected for you, so an image you picked yourself is never replaced. Nothing is suggested when the site cannot be reached or declares no icon.
 
 ### Using external icons
 

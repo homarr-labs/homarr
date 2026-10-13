@@ -101,12 +101,15 @@ export const IconPicker = ({
   });
 
   const faviconSource = faviconSourceUrl?.trim() ?? "";
-  const faviconHostname = isHttpUrl(faviconSource) ? new URL(faviconSource).hostname : null;
+  const faviconPage = isHttpUrl(faviconSource) ? new URL(faviconSource) : null;
+  const faviconHostname = faviconPage?.hostname ?? null;
   // Detecting the icon reaches out to the website, so it only happens while the user
-  // actually browses for an image and not on every keystroke in the URL field.
+  // actually browses for an image and not on every keystroke in the URL field. The input
+  // of a query travels in the request url, which proxies write to their access logs, so
+  // credentials, query and fragment of the app url stay in the browser.
   const faviconQuery = clientApi.icon.detectFavicon.useQuery(
-    { href: faviconSource },
-    { enabled: faviconHostname !== null && directUrl === null && combobox.dropdownOpened, retry: false },
+    { href: faviconPage === null ? "" : `${faviconPage.origin}${faviconPage.pathname}` },
+    { enabled: faviconPage !== null && directUrl === null && combobox.dropdownOpened, retry: false },
   );
   const detectedFaviconUrl = faviconQuery.data?.url ?? null;
 

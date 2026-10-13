@@ -311,7 +311,7 @@ describe("IconPicker", () => {
     const input = await renderPicker(onChange, { faviconSourceUrl: "https://app.example.com" });
     await focusInput(input);
 
-    expect(detectFaviconQuery.mock.calls.at(-1)?.[0]).toEqual({ href: "https://app.example.com" });
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[0]).toEqual({ href: "https://app.example.com/" });
     expect(document.body.textContent).toContain("iconPicker.websiteIcon");
 
     const option = document.body.querySelector<HTMLElement>(
@@ -348,6 +348,15 @@ describe("IconPicker", () => {
 
     expect(onChange).toHaveBeenCalledWith("/api/user-medias/local-icon");
     expect(onChange).not.toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+  });
+
+  test("sends neither credentials nor the query of the app url to the server", async () => {
+    const input = await renderPicker(vi.fn(), {
+      faviconSourceUrl: "https://admin:secret@app.example.com/home?token=abc#section",
+    });
+    await focusInput(input);
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[0]).toEqual({ href: "https://app.example.com/home" });
   });
 
   test("detects the website icon only while the dropdown is open", async () => {
