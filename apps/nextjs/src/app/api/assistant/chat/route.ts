@@ -76,6 +76,7 @@ import {
 } from "./assistant-integration-research";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
 import { resolveAssistantReasoning, resolveAssistantTemperature } from "./assistant-reasoning";
+import { readAssistantRequestBodyAsync } from "./assistant-request-body";
 import {
   compactAssistantStepMessages,
   convertAssistantMessagesToModelMessages,
@@ -419,8 +420,8 @@ export async function POST(request: Request) {
     return Response.json({ error: "Sign in to use Assistant." }, { status: 401 });
   }
 
-  const requestBody = await request.text();
-  if (requestBody.length > assistantRequestMaxBytes) {
+  const requestBody = await readAssistantRequestBodyAsync(request, assistantRequestMaxBytes);
+  if (requestBody === null) {
     return Response.json({ error: "The assistant request is too large." }, { status: 413 });
   }
   const parsed = requestSchema.safeParse(

@@ -247,6 +247,82 @@
         "title": "登录你的账户",
         "subtitle": "欢迎回来！请输入您的凭证"
       },
+      "mcpConsent": {
+        "title": "审核客户端访问权限",
+        "description": "在连接之前审查此客户端的访问权限。",
+        "viewingHint": "查看此页面不允许访问。",
+        "identityTitle": "帐户和客户端",
+        "loading": "加载访问请求",
+        "allow": "允许访问",
+        "deny": "拒绝访问",
+        "decisionHint": "只有当您信任此客户端和回调时才允许访问。",
+        "requestExpires": "请求过期 (UTC)：",
+        "details": "技术细节",
+        "returnHome": "返回Homarr",
+        "reload": "重新加载同意页面",
+        "account": {
+          "name": "登录为",
+          "id": "用户 ID",
+          "nameNotRecorded": "用户名未被记录"
+        },
+        "client": {
+          "name": "客户端：",
+          "nameNotSupplied": "未提供客户端名称",
+          "id": "客户端ID",
+          "callbackHost": "回调主机",
+          "callbackUrl": "全回拨URL",
+          "hostUnavailable": "回调主机不可用",
+          "unverifiedHint": "客户名称是自报的，没有经过Homarr的验证。",
+          "destinationHint": "您的决定将返回到这个回调。如果您允许访问，客户端可以交换API凭据的验证码。"
+        },
+        "access": {
+          "title": "账户访问权限",
+          "description": "使用您当前的权限，包括共享资源。",
+          "details": "",
+          "noGlobalPermissions": "使用您的帐户和共享资源访问权限，没有全局权限。"
+        },
+        "admin": {
+          "title": "完全管理员权限",
+          "description": "可以管理 Homarr 和连接的服务，包括破坏性操作。"
+        },
+        "credential": {
+          "title": "凭据范围和寿命",
+          "breadth": "适用于 Homarr's HTTP API 和 MCP, 包括在此客户端之外。",
+          "lifetime": "没有自动过期。登出并不取消访问。",
+          "manageConnections": "在常规设置中撤销"
+        },
+        "error": {
+          "freshStart": "从客户端开始一个新的授权请求。Homarr 将再次要求您审查访问权限。",
+          "unavailable": {
+            "title": "访问请求不可用",
+            "description": "此请求已过期，已处理或不再可用。它无法从此页面获得批准。"
+          },
+          "invalid_browser": {
+            "title": "访问请求属于另一个浏览器",
+            "description": "此浏览器无法验证原始请求。请使用您开始授权的浏览器，或从客户端启动新请求。"
+          },
+          "session_changed": {
+            "title": "您的登录会话已更改",
+            "description": "此请求已链接到不同的用户或登录会话。无法在当前会话中获得批准。"
+          },
+          "invalid_request": {
+            "title": "无法验证访问请求",
+            "description": "请求无效、过期或不再可验证。此次尝试没有授权访问。"
+          },
+          "access_denied": {
+            "title": "未授予访问权限",
+            "description": "授权尝试被拒绝。此次尝试没有授予访问权限。"
+          },
+          "server_error": {
+            "title": "访问请求无法完成",
+            "description": "Homarr 无法完成此授权尝试。请检查您的 OAuth 连接后再重新启动。"
+          },
+          "unknown": {
+            "title": "访问请求不可用",
+            "description": "此页面无法确认授权结果。请检查您的 OAuth 连接后再重新启动。"
+          }
+        }
+      },
       "invite": {
         "title": "加入 Homarr",
         "titleWithAppName": "加入 {appName}",
@@ -1839,6 +1915,9 @@
     "pagination": {
       "pageOf": "第 {page} 页，共 {totalPages} 页"
     },
+    "navigation": {
+      "toggle": "切换导航"
+    },
     "here": "这里",
     "serviceUrlTemplate": {
       "serverTitle": "常用服务器地址",
@@ -3300,6 +3379,11 @@
         },
         "defaultTab": {
           "label": "默认标签"
+        },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "系统接下来的星团",
+          "clusterFirst": "集群然后是系统"
         },
         "visibleClusterSections": {
           "label": "可见集群部分"
@@ -6171,15 +6255,6 @@
           "notice": "要使这个页面消失，请服务器管理员为服务器设置一个主面板"
         }
       }
-    },
-    "snapshot": {
-      "take": "拍摄板状态的快照",
-      "description": "下载经过编辑的快照以附加到错误报告并帮助我们复制您的布局",
-      "downloaded": "Board 快照已下载",
-      "downloadedDescription": "将 JSON 附加到您的 bug 报告中以相同窗口大小拍摄的屏幕。 快照包括布局、设置、自定义 CSS 、小部件选项和加载数据，已编辑私密文本、URL和凭据。",
-      "playground": "打开棋盘播放列表",
-      "failed": "无法抓取板快照",
-      "failedDescription": "棋盘数据无法安全导出或快照超过 10 MB。"
     }
   },
   "layout": {
@@ -6393,6 +6468,31 @@
               "search": "搜索",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务",
+              "oauthConnections": {
+                "title": "OAuth 连接",
+                "description": "这些客户通过 OAuth 获取您账户的 API 凭据。 凭据适用于Homarr的 HTTP API 和 MCP，它不会自动过期，并且在您退出后继续有效。",
+                "revocationHint": "撤销连接将删除它的 API 凭据。要重新连接，再次从客户端开始授权。",
+                "loading": "正在加载 OAuth 连接",
+                "retry": "重新加载连接",
+                "revoke": "撤销连接",
+                "confirmRevoke": "确认取消",
+                "empty": {
+                  "title": "没有记录 OAuth 连接",
+                  "description": "在这里出现了新的 OAuth 连接。没有记录的客户端详细信息的旧凭据可能需要管理员撤销他们在 API 密钥中。"
+                },
+                "loadError": {
+                  "title": "无法加载 OAuth 连接",
+                  "description": "尝试重新加载列表。这不会撤销任何凭据。"
+                },
+                "success": {
+                  "title": "连接已取消",
+                  "description": "保存的 API 凭据已被删除。重新连接客户端以再次授予访问权限。"
+                },
+                "error": {
+                  "title": "无法吊销连接",
+                  "description": "凭证可能仍在激活。请尝试再次撤销。"
+                }
+              },
               "onboardingTours": {
                 "title": "新手指南",
                 "description": "重置新手指南，以便您下次访问管理区域或面板时再次看到它们。",
@@ -6933,7 +7033,8 @@
               "label": "认证",
               "title": "API 密钥",
               "button": {
-                "createApiToken": "创建 API 令牌"
+                "createApiToken": "创建 API 令牌",
+                "confirmDeletion": "确认删除"
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7045,43 @@
               "table": {
                 "header": {
                   "createdBy": "创建者",
+                  "source": "集成",
                   "actions": "操作"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "手动或旧版 API 密钥",
+                "unnamedClient": "未记录客户端名称",
+                "clientNameHint": "客户名称是自报的，未被验证。",
+                "details": "连接详情",
+                "credentialId": "凭据ID",
+                "clientId": "客户端ID",
+                "callbackHost": "回调主机",
+                "callbackUrl": "全回拨URL",
+                "issuedAt": "已发行(UTC)",
+                "unknown": "未记录"
+              },
+              "empty": {
+                "title": "没有要显示的 API 密钥",
+                "description": "创建一个 API 令牌或调整表过滤器以找到现有密钥。"
+              },
+              "feedback": {
+                "createError": {
+                  "title": "无法创建 API 密钥",
+                  "description": "没有收到新凭据。请在再次尝试之前检查密钥列表。"
+                },
+                "deleteError": {
+                  "title": "API 密钥无法删除",
+                  "description": "凭据可能仍在激活。请尝试再次删除。"
+                },
+                "deleteSuccess": {
+                  "title": "API 密钥已删除",
+                  "description": "保存的 API 凭据已被删除。"
+                },
+                "refreshError": {
+                  "title": "API 密钥已删除，但无法刷新列表",
+                  "description": "重新加载此页面以查看当前的 API 密钥。"
                 }
               }
             },

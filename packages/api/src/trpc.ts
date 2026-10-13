@@ -13,8 +13,8 @@ import { ZodError } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { extractBaseUrlFromHeaders, FlattenError } from "@homarr/common";
-import { userAgent } from "@homarr/common/server";
-import type { DeviceType } from "@homarr/common/server";
+import { resolveRequestIdentity, userAgent } from "@homarr/common/server";
+import type { DeviceType, RequestIdentity } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
@@ -43,6 +43,7 @@ interface ApiContext {
   deviceType: DeviceType;
   baseUrl?: `${string}://${string}`;
   onboardingClaimToken?: string;
+  requestIdentity?: RequestIdentity;
   db: typeof db;
 }
 
@@ -61,6 +62,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
     deviceType: userAgent(opts.headers).device.type,
     baseUrl: extractBaseUrlFromHeaders(opts.headers),
     onboardingClaimToken: getOnboardingClaimTokenFromCookieHeader(opts.headers.get("cookie")),
+    requestIdentity: resolveRequestIdentity(opts.headers),
     db,
   };
 };

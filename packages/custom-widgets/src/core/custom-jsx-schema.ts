@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-import { validateCustomJsxTemplate } from "../jsx/analyzer";
+import { prepareCustomJsxTemplate, validateCustomJsxTemplate } from "../jsx/analyzer";
 import { CUSTOM_JSX_BINDING_IDENTIFIER_PATTERN } from "../jsx/policy";
 import { validateCredentialFreeExport, validatePrototypeKeys } from "./definition-security";
 import { customWidgetOptionsSchema } from "./options-schema";
@@ -18,6 +18,7 @@ export * from "./options-schema";
 export * from "./request-schema";
 export const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
 const CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH = 50_000;
+const customJsxTemplateLengthSchema = z.string().min(1).max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH);
 
 export const normalizeCustomJsxAuthoringTemplate = (template: string) =>
   template
@@ -38,20 +39,16 @@ export const customJsxTemplateSchema = z
   .string()
   .transform(normalizeCustomJsxAuthoringTemplate)
   .pipe(
-    z
-      .string()
-      .min(1)
-      .max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH)
-      .superRefine((template, ctx) => {
-        for (const diagnostic of validateCustomJsxTemplate(template)) {
-          if (diagnostic.severity === "error") {
-            ctx.addIssue({
-              code: "custom",
-              message: `${diagnostic.message} (line ${diagnostic.line}, column ${diagnostic.column})`,
-            });
-          }
+    customJsxTemplateLengthSchema.superRefine((template, ctx) => {
+      for (const diagnostic of validateCustomJsxTemplate(template)) {
+        if (diagnostic.severity === "error") {
+          ctx.addIssue({
+            code: "custom",
+            message: `${diagnostic.message} (line ${diagnostic.line}, column ${diagnostic.column})`,
+          });
         }
-      }),
+      }
+    }),
   );
 
 export const customWidgetSecretInputSchema = z.strictObject({
@@ -92,13 +89,15 @@ export const customWidgetDefinitionSchema = z
     options: customWidgetOptionsSchema,
     template: customJsxTemplateSchema,
   })
-  .superRefine((definition, ctx) => {
-    validateRequests(definition, ctx);
-    validateCaseInsensitiveSourceIds(definition.sources, ctx);
-    validateTemplateRequests(definition.template, definition.requests, ctx);
-    validateCredentialFreeExport(definition, ctx);
-    validatePrototypeKeys(definition, ctx);
-  });
+  .superRefine(validateDefinition);
+
+function validateDefinition(definition: Definition, ctx: z.RefinementCtx) {
+  validateRequests(definition, ctx);
+  validateCaseInsensitiveSourceIds(definition.sources, ctx);
+  validateTemplateRequests(definition.template, definition.requests, ctx);
+  validateCredentialFreeExport(definition, ctx);
+  validatePrototypeKeys(definition, ctx);
+}
 
 type Definition = z.infer<typeof customWidgetDefinitionSchema>;
 
@@ -189,19 +188,42 @@ function validateCaseInsensitiveSourceIds(sources: Definition["sources"], ctx: z
   }
 }
 
+const previewTemplateSchema = z
+  .string()
+  .transform(normalizeCustomJsxAuthoringTemplate)
+  .transform(prepareCustomJsxTemplate)
+  .superRefine((analysis, ctx) => {
+    const length = customJsxTemplateLengthSchema.safeParse(analysis.template);
+    if (!length.success) {
+      for (const issue of length.error.issues) ctx.addIssue({ ...issue });
+    }
+    for (const diagnostic of analysis.diagnostics) {
+      if (diagnostic.severity === "error") {
+        ctx.addIssue({
+          code: "custom",
+          message: `${diagnostic.message} (line ${diagnostic.line}, column ${diagnostic.column})`,
+        });
+      }
+    }
+  });
+
 // Validate new previews strictly without making older saved definitions unreadable for repair.
-export const customWidgetPreviewDefinitionSchema = customWidgetDefinitionSchema.superRefine((definition, ctx) => {
-  const parameters = new Map(
-    Object.entries(definition.requests).map(([id, request]) => [
-      id,
-      collectCustomWidgetRequestReferences(request).params,
-    ]),
-  );
-  for (const diagnostic of validateCustomJsxTemplate(definition.template, parameters)) {
-    if (!diagnostic.message.startsWith("REQUEST_PARAMS_MISMATCH:")) continue;
-    ctx.addIssue({ code: "custom", path: ["template"], message: diagnostic.message });
-  }
-});
+export const customWidgetPreviewDefinitionSchema = z
+  .strictObject({ ...customWidgetDefinitionSchema.shape, template: previewTemplateSchema })
+  .superRefine((definition, ctx) => {
+    const analysis = definition.template;
+    validateDefinition({ ...definition, template: analysis.template }, ctx);
+    const parameters = new Map(
+      Object.entries(definition.requests).map(([id, request]) => [
+        id,
+        collectCustomWidgetRequestReferences(request).params,
+      ]),
+    );
+    for (const diagnostic of analysis.validateRequestParameters(parameters)) {
+      ctx.addIssue({ code: "custom", path: ["template"], message: diagnostic.message });
+    }
+  })
+  .transform((definition) => ({ ...definition, template: definition.template.template }));
 
 function validateTemplateRequests(template: string, requests: Record<string, CustomJsxRequest>, ctx: z.RefinementCtx) {
   for (const match of template.matchAll(/<(SubFetch|ActionButton|ToggleSwitch)\b([^>]*)>/gu)) {

@@ -38,6 +38,10 @@ export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 export const apiKeys = sqliteTable("apiKey", {
   id: text().notNull().primaryKey(),
   apiKey: text().notNull(),
+  oauthClientId: text(),
+  oauthClientName: text(),
+  oauthRedirectUri: text(),
+  oauthIssuedAt: int({ mode: "timestamp_ms" }),
   userId: text()
     .notNull()
     .references((): AnySQLiteColumn => users.id, {

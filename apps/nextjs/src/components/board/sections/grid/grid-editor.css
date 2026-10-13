@@ -222,7 +222,8 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   pointer-events: none;
 }
 
-.board-grid-entry:has(> .board-grid-resize-handle:hover) > .board-grid-resize-handle,
+.board-grid-entry:hover > .board-grid-resize-handle,
+.board-grid-entry:focus-within > .board-grid-resize-handle,
 .board-grid-entry:has(> .board-grid-resize-handle:active) > .board-grid-resize-handle {
   border-color: var(--mantine-color-dimmed);
   opacity: 1;

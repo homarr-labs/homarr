@@ -37,7 +37,7 @@ export const LanguageCombobox = ({
         combobox.closeDropdown();
       }}
     >
-      <Combobox.Target>
+      <Combobox.Target targetType="button" withExpandedAttribute>
         <InputBase
           component="button"
           type="button"

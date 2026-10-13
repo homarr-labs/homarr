@@ -10,6 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
@@ -19,7 +20,7 @@ import classes from "./component.module.css";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
-import type { BeszelTimePeriod } from "../beszel/_shared/chart";
+import { getLocalizedBeszelTimePeriodOptions } from "../beszel/_shared/options";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
@@ -64,14 +65,7 @@ export default function BeszelSystemStatsWidget({
   const selectedLabel = selectedSystem?.label;
   const systemExists = selectedSystem !== undefined;
   const includeDocker = options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork;
-  const periodOptions = [
-    { value: "1m", label: t("period.live") },
-    { value: "1h", label: t("period.oneHour") },
-    { value: "12h", label: t("period.twelveHours") },
-    { value: "24h", label: t("period.oneDay") },
-    { value: "1w", label: t("period.oneWeek") },
-    { value: "30d", label: t("period.thirtyDays") },
-  ];
+  const periodOptions = getLocalizedBeszelTimePeriodOptions(t);
   let layoutScale = 1;
   if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) {
     layoutScale = displayScale;
@@ -89,7 +83,7 @@ export default function BeszelSystemStatsWidget({
             {
               integrationIds: [selectedSystem.integrationId],
               systemId: selectedSystem.systemId,
-              timePeriod: options.timePeriod as BeszelTimePeriod,
+              timePeriod: options.timePeriod,
               includeDocker,
             },
             "query",
@@ -126,7 +120,9 @@ export default function BeszelSystemStatsWidget({
     (value: string) => {
       if (selectionSavePendingRef.current) return;
 
-      const timePeriod = value as BeszelTimePeriod;
+      const period = beszelTimePeriodSchema.safeParse(value);
+      if (!period.success) return;
+      const timePeriod = period.data;
       const previousValue = options.timePeriod;
       setOptions({ newOptions: { timePeriod } });
       if (hasChangeAccess && boardId && itemId) {
@@ -310,7 +306,7 @@ export default function BeszelSystemStatsWidget({
             showXAxis={responsiveWidth >= 220 && responsiveHeight >= 180}
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
-            timePeriod={options.timePeriod as BeszelTimePeriod}
+            timePeriod={options.timePeriod}
             columns={responsiveWidth > 600 ? 2 : 1}
             availableHeight={Math.floor(viewportHeight || height)}
             visibility={{
@@ -326,7 +322,7 @@ export default function BeszelSystemStatsWidget({
               dockerMemory: options.showDockerMemory,
               dockerNetwork: options.showDockerNetwork,
             }}
-            onSwitchToHistorical={() => handleTimePeriod("1h")}
+            onSwitchToHistorical={() => handleTimePeriod(defaultBeszelTimePeriod)}
           />
         </Stack>
       </ScrollArea>

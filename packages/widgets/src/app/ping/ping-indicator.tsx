@@ -17,7 +17,7 @@ export const PingIndicator = ({ appId }: PingIndicatorProps) => {
 
   if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("action.loading")}…`} />;
 
-  const isError = "error" in pingResult || pingResult.statusCode >= 500;
+  const isError = "error" in pingResult;
 
   return (
     <PingDot

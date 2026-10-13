@@ -51,10 +51,10 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   });
   const multiSelectAvailable = Boolean(innerProps.onSelectMany);
 
-  const selectableApps = useMemo(
-    () => [...apps, ...createdApps.filter((createdApp) => !apps.some((app) => app.id === createdApp.id))],
-    [apps, createdApps],
-  );
+  const selectableApps = useMemo(() => {
+    const appIds = new Set(apps.map((app) => app.id));
+    return [...apps, ...createdApps.filter((createdApp) => !appIds.has(createdApp.id))];
+  }, [apps, createdApps]);
 
   const filteredApps = useMemo(
     () =>

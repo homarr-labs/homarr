@@ -1,19 +1,7 @@
 import type { WidgetKind } from "@homarr/definitions";
+import { beszelMetricOptionKeys } from "@homarr/definitions/beszel";
 
-const BESZEL_OPTION_PROPERTIES = new Set([
-  "statusFilter",
-  "showCpu",
-  "showMemory",
-  "showDisk",
-  "showGpu",
-  "showLoadAvg",
-  "showNet",
-  "showTemp",
-  "showBattery",
-  "showServices",
-  "showUptime",
-  "showAgent",
-]);
+const BESZEL_OPTION_PROPERTIES = new Set<string>(["statusFilter", ...beszelMetricOptionKeys]);
 
 const TABLE_OPTION_PROPERTIES = new Set(["columnOrder", "columnWidths", "columns"]);
 

@@ -66,6 +66,17 @@ Workshop moderation only; it does not grant Homarr administrator access. The use
 The public community uses `PB_ALLOWED_ORIGINS=*` because self-hosted Homarr instances can run on any origin. Private
 deployments can use an explicit comma-separated allowlist.
 
+## Submission edits
+
+Every submission update must explicitly send `expectedRevision` equal to the last-read `revision`, including
+moderator and PocketBase superuser edits. In the PocketBase dashboard, replace `expectedRevision` with the record's
+current `revision` before saving; do not change `revision` itself. Workshop increments it on success. The stored
+`expectedRevision` describes the previous write, not the revision to use for the next edit.
+
+A stale update returns HTTP 409 with `data.expectedRevision.code = "revision_conflict"`. Reload the submission and
+reconcile changes before retrying. Missing or invalid expectations return HTTP 400. Homarr already fetches the current
+revision before submitting updates; superusers do not bypass the revision check.
+
 ## Validate changes
 
 Run the focused Workshop checks:

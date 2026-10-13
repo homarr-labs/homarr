@@ -71,16 +71,20 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
     );
   }
 
+  const tabs: ("system" | "cluster")[] = ["system", "cluster"];
+  if (props.options.tabOrder === "cluster-first") {
+    tabs.reverse();
+  }
+
   return (
     <ScrollArea h="100%">
       <Tabs defaultValue={props.options.defaultTab} variant="outline">
         <Tabs.List grow>
-          <Tabs.Tab value="system" fz="xs">
-            <b>{t("tab.system")}</b>
-          </Tabs.Tab>
-          <Tabs.Tab value="cluster" fz="xs">
-            <b>{t("tab.cluster")}</b>
-          </Tabs.Tab>
+          {tabs.map((tab) => (
+            <Tabs.Tab key={tab} value={tab} fz="xs">
+              <b>{t(`tab.${tab}`)}</b>
+            </Tabs.Tab>
+          ))}
         </Tabs.List>
         <Tabs.Panel value="system">
           <SystemHealthMonitoring {...props} integrationIds={systemIntegrationIds} />

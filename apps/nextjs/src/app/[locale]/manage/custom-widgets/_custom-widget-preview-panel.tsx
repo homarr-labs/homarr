@@ -44,10 +44,12 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
   const errorBoundaryMessages = useI18n("customWidget.editor.errorBoundary");
   const actionT = useI18n("common.action");
   const [fixture, setFixture] = useState<"live" | "loading" | "empty" | "error">("live");
+  const [activeTab, setActiveTab] = useState<string | null>("widget");
+  const showDiagnostics = activeTab === "diagnostics" && Boolean(props.preview.session);
   const liveActionsMutation = clientApi.customWidget.setPreviewLiveActions.useMutation();
   const journalQuery = clientApi.customWidget.previewJournal.useQuery(
     { sessionId: props.preview.session?.id ?? "" },
-    { enabled: Boolean(props.preview.session), refetchInterval: props.preview.session ? 2_000 : false },
+    { enabled: showDiagnostics, refetchInterval: showDiagnostics && 2_000, staleTime: 0 },
   );
   const candidate = props.candidate;
   const candidateTemplate = candidate?.template;
@@ -138,7 +140,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
             description={previewResult.description}
           />
         )}
-        <Tabs defaultValue="widget" keepMounted={false}>
+        <Tabs value={activeTab} onChange={setActiveTab} keepMounted={false}>
           <Tabs.List grow>
             {(["widget", "data", "options", "actions", "diagnostics"] as const).map((tab) => (
               <Tabs.Tab key={tab} value={tab}>
