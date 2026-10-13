@@ -33,14 +33,13 @@ const addressesByHostname: Record<string, string> = {
   localhost: "127.0.0.1",
 };
 
-const createBody = (content: string) => {
-  let read = false;
+const createBody = (content: string | string[]) => {
+  const chunks = (typeof content === "string" ? [content] : content).map((chunk) => new TextEncoder().encode(chunk));
   return {
     getReader: () => ({
       read: () => {
-        if (read) return Promise.resolve({ done: true, value: undefined });
-        read = true;
-        return Promise.resolve({ done: false, value: new TextEncoder().encode(content) });
+        const value = chunks.shift();
+        return Promise.resolve(value === undefined ? { done: true, value: undefined } : { done: false, value });
       },
       cancel: () => Promise.resolve(),
     }),
@@ -52,7 +51,7 @@ const createResponse = (options: {
   status?: number;
   location?: string;
   contentType?: string;
-  body?: string;
+  body?: string | string[];
 }): FetchResponse => {
   const status = options.status ?? 200;
   const headers: Record<string, string | undefined> = {
@@ -214,6 +213,50 @@ describe("fetchFaviconUrlAsync", () => {
       [websiteUrl]: createResponse({
         contentType: "Text/HTML; charset=UTF-8",
         body: '<html><head><link rel="icon" href="/icon.png"></head></html>',
+      }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/icon.png");
+  });
+
+  test("reads no more than 256 KiB of a page that arrives in a single chunk", async () => {
+    const padding = " ".repeat(256 * 1024);
+    mockResponses({
+      [websiteUrl]: createResponse({
+        contentType: "text/html",
+        body: `<html><head>${padding}<link rel="icon" href="/late.png"></head></html>`,
+      }),
+      [faviconUrl]: createResponse({ contentType: "image/x-icon", body: "binary" }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe(faviconUrl);
+  });
+
+  test("ignores icons declared after the end of the head", async () => {
+    mockResponses({
+      [websiteUrl]: createResponse({
+        contentType: "text/html",
+        body: [
+          '<html><head><link rel="icon" href="/head.png"></he',
+          'ad><body><header></header><link rel="apple-touch-icon" href="/body.png"></body></html>',
+        ],
+      }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/head.png");
+  });
+
+  test("ignores a header element that is not the end of the head", async () => {
+    mockResponses({
+      [websiteUrl]: createResponse({
+        contentType: "text/html",
+        body: '<html><head><header></header><link rel="icon" href="/icon.png"></head></html>',
       }),
     });
 
