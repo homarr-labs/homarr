@@ -151,11 +151,12 @@ const readDocumentHeadAsync = async (body: NonNullable<FetchResponse["body"]>): 
   return texts.join("");
 };
 
-const linkTagRegex = /<link\b[^>]*>/gi;
-// Without the lookbehind a long run of letters is rescanned from every position inside it,
-// which blocks the process for about a minute on a 256 KiB tag.
+// A tag ends at the next "<" and no name or size starts inside another one, so a long run of
+// letters, digits or unclosed tags is scanned once and not again from every position inside
+// it, which would block the process for over a minute at 256 KiB.
+const linkTagRegex = /<link\b[^<>]*>/gi;
 const attributeRegex = /(?<![a-z-])([a-z-]+)\s*=\s*("([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
-const sizeRegex = /(\d+)x(\d+)/gi;
+const sizeRegex = /(?<!\d)(\d+)x(\d+)/gi;
 
 const findDeclaredIconUrl = (html: string, pageUrl: URL): string | null => {
   const candidates: IconCandidate[] = [];
