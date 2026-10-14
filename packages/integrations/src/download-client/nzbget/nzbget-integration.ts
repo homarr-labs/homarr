@@ -115,9 +115,13 @@ export class NzbGetIntegration extends Integration implements IDownloadClientInt
   ): Promise<ReturnType<NzbGetClient[CallType]>> {
     const username = this.getSecretValue("username");
     const password = this.getSecretValue("password");
-    const url = this.url(`/${encodeURIComponent(username)}:${encodeURIComponent(password)}/jsonrpc`);
+    const url = this.url("/jsonrpc");
+    const headers = {
+      Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`,
+      "Content-Type": "application/json",
+    };
     const body = JSON.stringify({ method, params });
-    return await fetchAsync(url, { method: "POST", body })
+    return await fetchAsync(url, { method: "POST", body, headers })
       .then(async (response) => {
         if (!response.ok) {
           throw new ResponseError(response);

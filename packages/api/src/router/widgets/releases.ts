@@ -7,7 +7,10 @@ import { eq } from "@homarr/db";
 import { boards, items, widgetSecrets } from "@homarr/db/schema";
 import { releaseProviderKinds } from "@homarr/definitions";
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
+import { serviceVersionRequestHandler } from "@homarr/request-handler/service-version";
 
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
+import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
@@ -136,6 +139,37 @@ export const releasesRouter = createTRPCRouter({
             };
           }
         }),
+      );
+    }),
+  getServiceVersions: publicProcedure
+    .concat(createManyWidgetIntegrationMiddleware("query", "releases"))
+    .query(async ({ ctx }) => {
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = serviceVersionRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getDataAsync();
+
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationKind: integration.kind,
+            version: data.version,
+            updatedAt: timestamp,
+            error: undefined,
+          };
+        },
+        {
+          fallback: (integration, error) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integrationKind: integration.kind,
+            version: null,
+            updatedAt: new Date(0),
+            error: toPublicIntegrationError(error),
+          }),
+          throwOnAllFailures: true,
+        },
       );
     }),
 });
