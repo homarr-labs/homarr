@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Monitorizare uptime",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorizare sistem",
-      "security": "Securitate"
+      "security": "Securitate",
+      "serviceVersion": "Versiune"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL furnizor"
           },
+          "integrations": {
+            "label": "Integrări legate"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Nume sau proprietar/nume"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Deschide pagina de lansare",
       "releaseDescription": "Descriere lansare",
       "projectDescription": "Descriere proiect",
+      "runningVersions": "Versiuni care rulează",
+      "upToDate": "Actualizare actualizată",
+      "updateAvailable": "Actualizare disponibilă",
+      "unknownStatus": "Necunoscut",
       "created": "Creat",
       "error": {
         "label": "Eroare",

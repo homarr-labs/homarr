@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Spremljanje razpoložljivosti",
       "beszel": "Beszel",
       "systemMonitoring": "Sistemsko spremljanje",
-      "security": "Varnost"
+      "security": "Varnost",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL ponudnika"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Ime ali lastnik/ime"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Odpri stran izdaje",
       "releaseDescription": "Opis izdaje",
       "projectDescription": "Opis projekta",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Neznano",
       "created": "Ustvarjeno",
       "error": {
         "label": "Napaka",

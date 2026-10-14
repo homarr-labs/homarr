@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Моніторинг безперебійної роботи",
       "beszel": "Beszel",
       "systemMonitoring": "Системний моніторинг",
-      "security": "Безпека"
+      "security": "Безпека",
+      "serviceVersion": "Версія"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL постачальника"
           },
+          "integrations": {
+            "label": "Зв'язані інтеграції"
+          },
           "identifier": {
             "label": "Ідентифікатор",
             "placeholder": "Назва або Власник/Назва"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Відкрити сторінку релізу",
       "releaseDescription": "Опис релізу",
       "projectDescription": "Опис проекту",
+      "runningVersions": "Запущені версії",
+      "upToDate": "Остання версія",
+      "updateAvailable": "Доступне оновлення",
+      "unknownStatus": "Невідомо",
       "created": "Створено",
       "error": {
         "label": "Помилка",

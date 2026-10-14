@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Monitorování dostupnosti",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorování systému",
-      "security": "Bezpečnost"
+      "security": "Bezpečnost",
+      "serviceVersion": "Verze"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL poskytovatele"
           },
+          "integrations": {
+            "label": "Propojené integrace"
+          },
           "identifier": {
             "label": "Identifikátor",
             "placeholder": "Název nebo Vlastník/Název"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Otevřít stránku vydání",
       "releaseDescription": "Popis vydání",
       "projectDescription": "Popis projektu",
+      "runningVersions": "Spuštěné verze",
+      "upToDate": "Aktuální",
+      "updateAvailable": "K dispozici je aktualizace",
+      "unknownStatus": "Neznámý",
       "created": "Vytvořeno",
       "error": {
         "label": "Chyba",

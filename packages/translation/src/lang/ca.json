@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Monitoratge del temps d'activitat",
       "beszel": "Beszel",
       "systemMonitoring": "Monitoratge del sistema",
-      "security": "Seguretat"
+      "security": "Seguretat",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL del proveïdor"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nom o propietari/nom"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Obre la pàgina del llançament",
       "releaseDescription": "Descripció del llançament",
       "projectDescription": "Descripció del projecte",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "",
       "created": "Creat",
       "error": {
         "label": "Error",

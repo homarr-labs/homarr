@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Uptime Monitoring",
       "beszel": "Beszel",
       "systemMonitoring": "System monitoring",
-      "security": "Security"
+      "security": "Security",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Provider URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -4713,6 +4717,10 @@
       "openReleasePage": "",
       "releaseDescription": "",
       "projectDescription": "",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Unknown",
       "created": "",
       "error": {
         "label": "",
