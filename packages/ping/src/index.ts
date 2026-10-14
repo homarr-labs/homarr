@@ -9,21 +9,15 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 const logger = createLogger({ module: "ping" });
 
 export const sendPingRequestAsync = async (url: string) => {
-  let dispatcher: UndiciHttpAgent | undefined;
-
   try {
-    dispatcher = new UndiciHttpAgent({
-      connect: {
-        rejectUnauthorized: false, // Ping should always work, even with untrusted certificates
-      },
-    });
     const start = performance.now();
     return await withTimeoutAsync(async (signal) => {
       return await fetch(url, {
-        // Any response proves reachability; do not download a page or probe a redirect target.
-        method: "HEAD",
-        redirect: "manual",
-        dispatcher,
+        dispatcher: new UndiciHttpAgent({
+          connect: {
+            rejectUnauthorized: false, // Ping should always work, even with untrusted certificates
+          },
+        }),
         signal,
       });
     }).then((response) => {
@@ -36,7 +30,5 @@ export const sendPingRequestAsync = async (url: string) => {
     return {
       error: extractErrorMessage(error),
     };
-  } finally {
-    await dispatcher?.destroy();
   }
 };
