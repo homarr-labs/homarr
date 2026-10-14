@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Pieejamības uzraudzība",
       "beszel": "Beszel",
       "systemMonitoring": "Sistēmas uzraudzība",
-      "security": "Drošība"
+      "security": "Drošība",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Nodrošinātāja URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikators",
             "placeholder": "Vārds vai īpašnieks/vārds"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Atvērt laidiena lapu",
       "releaseDescription": "Laidiena apraksts",
       "projectDescription": "Projekta apraksts",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Nezināms",
       "created": "Izveidots",
       "error": {
         "label": "Kļūda",

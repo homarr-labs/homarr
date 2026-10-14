@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Мониторинг доступности",
       "beszel": "Beszel",
       "systemMonitoring": "Мониторинг системы",
-      "security": "Безопасность"
+      "security": "Безопасность",
+      "serviceVersion": "Версия"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL провайдера"
           },
+          "integrations": {
+            "label": "Связанные интеграции"
+          },
           "identifier": {
             "label": "Идентификатор",
             "placeholder": "Имя или Владелец/Имя"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Открыть страницу релиза",
       "releaseDescription": "Описание релиза",
       "projectDescription": "Описание проекта",
+      "runningVersions": "Запущенные версии",
+      "upToDate": "Актуально",
+      "updateAvailable": "Доступно обновление",
+      "unknownStatus": "Неизвестно",
       "created": "Создано",
       "error": {
         "label": "Ошибка",
