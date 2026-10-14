@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useMemo, useRef } from "react";
-import { Group, Stack, Text } from "@mantine/core";
+import { memo, useDeferredValue, useMemo, useRef } from "react";
+import { Box, Group, Stack, Text } from "@mantine/core";
 import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
 import dayjs from "dayjs";
@@ -11,6 +11,7 @@ import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { containerChartColor } from "./colors";
 import classes from "./chart.module.css";
 
@@ -114,21 +115,31 @@ interface BeszelChartPanelProps {
   chartProps: BeszelAreaChartProps;
 }
 
-export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => (
-  <Stack gap={4} style={panelStyle}>
-    <Group gap="xs" wrap="nowrap">
-      <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
-        {title}
-      </Text>
-      {subtitle && (
-        <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
-          {subtitle}
+export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => {
+  // Let the dashboard hydrate and handle input before mounting or refreshing SVG charts.
+  const deferredChartProps = useDeferredValue(chartProps, null);
+
+  return (
+    <Stack gap={4} style={panelStyle}>
+      <Group gap="xs" wrap="nowrap">
+        <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
+          {title}
         </Text>
+        {subtitle && (
+          <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
+            {subtitle}
+          </Text>
+        )}
+      </Group>
+      {deferredChartProps && <BeszelAreaChart {...deferredChartProps} />}
+      {!deferredChartProps && (
+        <Box h={chartProps.h}>
+          <WidgetQueryLoadingState />
+        </Box>
       )}
-    </Group>
-    <BeszelAreaChart {...chartProps} />
-  </Stack>
-));
+    </Stack>
+  );
+});
 
 type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;
