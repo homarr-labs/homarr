@@ -1,10 +1,10 @@
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 
-import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
+import type { SystemResourcePresentation } from "../native-view-types";
 
 export const NetworkTrafficChart = ({
   usageOverTime,
@@ -12,16 +12,18 @@ export const NetworkTrafficChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  presentation,
 }: {
   usageOverTime: number[];
   isUp: boolean;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  presentation: SystemResourcePresentation;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
   const t = useI18n("widget.systemResources.card");
-  const { formatByteRate } = useByteFormatter();
+  const { formatByteRate } = presentation;
 
   const max = Math.max(...usageOverTime);
   const upperBound = max + max * 0.2;
@@ -29,6 +31,7 @@ export const NetworkTrafficChart = ({
 
   return (
     <CommonChart
+      presentation={presentation}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "yellow.5" }]}

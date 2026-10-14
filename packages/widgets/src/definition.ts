@@ -10,7 +10,7 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
-import type { WidgetImports } from "./registry";
+import type { CanonicalDefinitions } from "./definition-registry";
 import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";
 
 export interface WidgetContextMenuAction {
@@ -191,7 +191,7 @@ export type WidgetComponentProps<TKind extends WidgetKind> = WidgetProps<TKind> 
   removeItem?: () => void;
 };
 
-export type WidgetOptionsRecordOf<TKind extends WidgetKind> = WidgetImports[TKind]["definition"]["createOptions"];
+export type WidgetOptionsRecordOf<TKind extends WidgetKind> = CanonicalDefinitions[TKind]["createOptions"];
 
 /**
  * The following type should only include values that can be available for user (including anonymous).

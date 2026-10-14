@@ -4,11 +4,11 @@ import type { ComponentType, ReactNode } from "react";
 import type { RenderSnapshot } from "./render";
 
 export const providerOrder = [
-  "settings",
   "session",
+  "settings",
   "locale",
-  "theme",
   "direction",
+  "theme",
   "query",
   "jotai",
   "modals",

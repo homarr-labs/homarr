@@ -1,14 +1,13 @@
 "use client";
 
-import { Stack, Text } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { UmamiContent } from "./umami-content";
+import { NativeUmamiNoWebsiteView } from "./native-view";
 
 export default function UmamiWidget({
   options,
@@ -76,7 +75,7 @@ export default function UmamiWidget({
       : [],
   );
 
-  if (!hasWebsite) return <NoWebsiteConfigured />;
+  if (!hasWebsite) return <NativeUmamiNoWebsiteView />;
 
   return (
     <UmamiContent
@@ -93,16 +92,5 @@ export default function UmamiWidget({
       height={responsiveHeight}
       displayMode={displayMode}
     />
-  );
-}
-
-function NoWebsiteConfigured() {
-  const t = useI18n("widget.umami");
-  return (
-    <Stack align="center" justify="center" h="100%">
-      <Text c="dimmed" size="sm">
-        {t("error.noWebsite")}
-      </Text>
-    </Stack>
   );
 }

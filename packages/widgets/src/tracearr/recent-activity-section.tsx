@@ -1,7 +1,7 @@
 import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 
 import type { TracearrHistorySession } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import type { TracearrViewDateProps } from "./native-view-types";
 
 import type { SourcedTracearrItem } from "./source";
 
@@ -11,14 +11,13 @@ export function RecentActivityList({
   sessions,
   showSource,
   transparent = false,
+  t,
+  locale,
 }: {
   sessions: SourcedTracearrHistorySession[];
   showSource: boolean;
   transparent?: boolean;
-}) {
-  const t = useI18n("widget.tracearr");
-  const locale = useCurrentIntlLocale();
-
+} & TracearrViewDateProps) {
   return (
     <Stack gap={4}>
       <Text size="xs" fw={600} c="dimmed" tt={transparent ? undefined : "uppercase"}>

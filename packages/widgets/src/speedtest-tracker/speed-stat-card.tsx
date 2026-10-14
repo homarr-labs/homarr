@@ -1,13 +1,14 @@
 "use client";
 
+import type { MantineSize } from "@mantine/core";
 import { Card, Flex, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
-import { useRequiredBoard } from "@homarr/boards/context";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 export interface SpeedStatCardProps {
+  itemRadius: MantineSize;
   icon: TablerIcon;
   color: "blue" | "teal" | "orange" | "green" | "red";
   value: string;
@@ -23,9 +24,9 @@ export function SpeedStatCard({
   label,
   compact = false,
   legacySurface = false,
+  itemRadius,
 }: SpeedStatCardProps) {
   const { ref, height, width } = useElementSize<HTMLDivElement>();
-  const board = useRequiredBoard();
   const isWide = width > height + 20;
   const hideLabel = height > 0 && height <= 38;
   const surfaceColor = `var(--mantine-color-${color}-filled)`;
@@ -40,7 +41,7 @@ export function SpeedStatCard({
       <Card
         ref={ref}
         p={compact ? "xs" : "sm"}
-        radius={board.itemRadius}
+        radius={itemRadius}
         withBorder={!legacySurface}
         bg={surfaceBackground}
         h="100%"

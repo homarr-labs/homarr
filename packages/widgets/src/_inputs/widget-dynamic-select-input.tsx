@@ -11,11 +11,9 @@ import { useI18n } from "@homarr/translation/client";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
+import type { DynamicSelectOption } from "./select-contracts";
 
-export interface DynamicSelectOption {
-  value: string;
-  label: string;
-}
+export type { DynamicSelectOption } from "./select-contracts";
 
 export const WidgetDynamicSelectInput = ({
   property,

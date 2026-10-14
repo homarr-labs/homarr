@@ -1,10 +1,16 @@
-import type { inferRouterOutputs } from "@trpc/server";
-
-import type { AppRouter } from "@homarr/api";
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-export type IconGroup = RouterOutput["icon"]["findIcons"]["icons"][number];
+export interface IconGroup {
+  id: string;
+  slug: string;
+  icons: { id: string; name: string; url: string }[];
+}
+
+export interface IconSearchResult {
+  icons: IconGroup[];
+  countIcons: number;
+}
+
 export type PickerIcon = IconGroup["icons"][number] & { repositorySlug: string };
 
 export interface IconPickerSections {

@@ -1,0 +1,30 @@
+{
+  "url": "http://127.0.0.1:3100/boards/public",
+  "status": 200,
+  "buildId": "674cf506-623c-4b6d-9c88-2a725e80b909",
+  "revision": 5,
+  "label": "Preserved conflict draft",
+  "columns": 3,
+  "widgetLabel": "Verified inventory",
+  "widget": {
+    "generation": 13,
+    "observedAt": "2026-10-10T16:09:53.747Z",
+    "freshUntil": "2026-10-10T16:09:58.747Z",
+    "staleUntil": "2026-10-10T16:10:53.747Z",
+    "status": "ready",
+    "data": {
+      "value": 73,
+      "unit": "items"
+    }
+  },
+  "headers": {
+    "cache-control": "no-store",
+    "x-fixture-render-bytes": "23166",
+    "x-fixture-render-cache": "hit",
+    "x-fixture-render-count": "5",
+    "x-fixture-render-entries": "1",
+    "x-fixture-render-in-flight": "0",
+    "x-fixture-revision": "5",
+    "x-fixture-widget-generation": "13"
+  }
+}

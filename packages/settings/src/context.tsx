@@ -8,11 +8,12 @@ import { createSettings } from "./creator";
 
 const SettingsContext = createContext<SettingsContextProps | null>(null);
 
-export const SettingsProvider = ({
-  user,
-  serverSettings,
-  children,
-}: PropsWithChildren<{ user: UserSettings | null; serverSettings: PublicServerSettings }>) => {
+export interface SettingsProviderProps extends PropsWithChildren {
+  readonly user: UserSettings | null;
+  readonly serverSettings: PublicServerSettings;
+}
+
+export const SettingsProvider = ({ user, serverSettings, children }: SettingsProviderProps) => {
   return (
     <SettingsContext.Provider value={createSettings({ user, serverSettings })}>{children}</SettingsContext.Provider>
   );

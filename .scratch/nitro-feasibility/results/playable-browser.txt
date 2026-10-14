@@ -1,0 +1,66 @@
+Homarr · Nitro fixture
+
+Preserved conflict draft
+PUBLIC FIXTURE
+
+Revision 5 · 3 columns
+
+Public board
+Private board
+
+Disposable synthetic data. Fixture authentication is not production authentication.
+
+Synthetic identities only. Local experiment, not production authentication.
+
+Fixture owner, session lasts up to 15 minutes
+
+Fixture identity
+
+Owner: both boards and edits. Viewer: public reads only.
+
+Select identity
+Log out
+
+Verified inventory
+
+73 items
+
+Observed: 2026-10-10T16:09:53.747Z
+
+Generation: 13 · ready
+
+Synthetic HTTP source. Refresh checks start after hydration, every 5 seconds while this board is visible.
+
+Synthetic source controls
+
+Owner-only fixture controls. Both boards read the same synthetic source.
+
+Source value (items)
+Set healthy source
+Simulate source error
+Simulate timeout
+
+Source value updated. The next accepted observation advances the widget generation.
+
+Edit board
+
+Changes stay in this draft until saved. Saving uses revision 5.
+
+No pending changes
+
+Board label *
+
+1 to 80 characters
+
+Columns
+
+Desktop layout, smaller screens adapt automatically
+
+Widget display label *
+
+Changes the label, not the source or refresh interval
+
+Saved revision 5. The board has refreshed.
+
+Save changes
+Discard draft

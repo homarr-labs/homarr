@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Center,
@@ -14,41 +14,81 @@ import {
 } from "@mantine/core";
 import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
 
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
 import { createModal, modalSizeSelect } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import type { TranslationFunction } from "@homarr/translation";
 import { selectGridCols, SelectableCard } from "@homarr/ui";
 
 import { AppForm } from "@homarr/forms-collection";
-import { useSession } from "@homarr/auth/client";
+import type {
+  AppCreateOutcome,
+  AppCreateOutcomeLabels,
+  AppFormProps,
+  AppFormValues,
+  CreatedApp,
+} from "@homarr/forms-collection";
 import { showErrorNotification } from "@homarr/notifications";
 
-type SelectableApp = RouterOutputs["app"]["selectable"][number];
+export interface SelectableApp extends AppFormValues {
+  id: string;
+}
 
-interface AppSelectModalProps {
+export interface AppSelectModalProps {
   onSelect?: (app: SelectableApp) => void;
   onSelectMany?: (apps: SelectableApp[]) => void;
   withCreate: boolean;
+  apps: SelectableApp[];
+  isPending: boolean;
+  canCreate: boolean;
+  createApp?: (values: AppFormValues) => Promise<CreatedApp>;
+  onCreated: (app: CreatedApp) => Promise<void>;
+  isCreating: boolean;
+  iconPickerProps: AppFormProps["iconPickerProps"];
+  isCurrentOwner: () => boolean;
+  onDirtyChange: AppFormProps["onDirtyChange"];
+  captureSubmissionOwner: AppFormProps["captureSubmissionOwner"];
+  outcomeLabels: AppCreateOutcomeLabels;
 }
 
-export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, innerProps }) => {
+export interface AppSelectContentProps {
+  innerProps: AppSelectModalProps;
+  actions: { closeModal: () => void };
+}
+
+export const AppSelectContent = ({ actions, innerProps }: AppSelectContentProps) => {
   const [search, setSearch] = useState("");
   const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
   const [createdApps, setCreatedApps] = useState<SelectableApp[]>([]);
   const [creating, setCreating] = useState(false);
+  const owner = useRef({ active: false });
+  const creationOwner = useRef(0);
+  const outcomeRef = useRef<AppCreateOutcome>({ kind: "idle" });
+  const [outcome, setOutcome] = useState<AppCreateOutcome>(outcomeRef.current);
+  const submitting = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const retryReconciliation = useRef<(() => Promise<void>) | null>(null);
+  const submissionOwner = useRef<ReturnType<AppFormProps["captureSubmissionOwner"]> | null>(null);
+  const { captureSubmissionOwner, isCurrentOwner, onDirtyChange } = innerProps;
+  useLayoutEffect(() => {
+    const lease = { active: true };
+    owner.current = lease;
+    return () => {
+      lease.active = false;
+    };
+  }, [captureSubmissionOwner, isCurrentOwner, onDirtyChange]);
+  const captureOwner = useCallback(() => {
+    const lease = owner.current;
+    const generation = creationOwner.current;
+    const captured = captureSubmissionOwner();
+    const origin = {
+      isCurrent: () => lease.active && generation === creationOwner.current && captured.isCurrent() && isCurrentOwner(),
+    };
+    submissionOwner.current = origin;
+    return origin;
+  }, [captureSubmissionOwner, isCurrentOwner]);
   const t = useI18n();
-  const { data: apps = [], isPending } = clientApi.app.selectable.useQuery();
-  const { data: session } = useSession();
-  const utils = clientApi.useUtils();
-  const canCreate = innerProps.withCreate && Boolean(session?.user.permissions.includes("app-create"));
-  const { mutateAsync: createApp, isPending: isCreating } = clientApi.app.create.useMutation({
-    onError: () =>
-      showErrorNotification({
-        title: t("common.notification.create.error"),
-        message: t("app.page.create.notification.error.message"),
-      }),
-  });
+  const { apps, isPending, isCreating, createApp } = innerProps;
+  const canCreate = innerProps.withCreate && innerProps.canCreate && createApp !== undefined && outcome.kind === "idle";
   const multiSelectAvailable = Boolean(innerProps.onSelectMany);
 
   const selectableApps = useMemo(
@@ -73,9 +113,13 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   );
 
   const handleSelect = (app: SelectableApp) => {
+    const lease = owner.current;
+    const captured = captureSubmissionOwner();
+    const isCurrent = () => lease.active && captured.isCurrent() && isCurrentOwner();
+    if (!isCurrent()) return;
     if (!multiSelectAvailable) {
       innerProps.onSelect?.(app);
-      actions.closeModal();
+      if (isCurrent()) actions.closeModal();
       return;
     }
     setSelectedAppIds((current) => {
@@ -87,8 +131,81 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   };
 
   const handleMultiSubmit = () => {
+    const lease = owner.current;
+    const captured = captureSubmissionOwner();
+    const isCurrent = () => lease.active && captured.isCurrent() && isCurrentOwner();
+    if (!isCurrent()) return;
     innerProps.onSelectMany?.(selectedApps);
-    actions.closeModal();
+    if (isCurrent()) actions.closeModal();
+  };
+
+  const publishOutcome = (next: AppCreateOutcome) => {
+    outcomeRef.current = next;
+    if (owner.current.active) setOutcome(next);
+  };
+
+  const handleCreate = async (values: AppFormValues, finish: boolean, afterSuccess?: () => void) => {
+    const lease = owner.current;
+    const generation = creationOwner.current;
+    const captured = submissionOwner.current;
+    const isCurrent = () =>
+      lease.active && generation === creationOwner.current && captured !== null && captured.isCurrent();
+    if (!canCreate || !createApp || !isCurrent() || submitting.current || outcomeRef.current.kind !== "idle")
+      throw new Error("App creation unavailable");
+    submitting.current = true;
+    setIsSubmitting(true);
+    let app: CreatedApp;
+    try {
+      app = await createApp(values);
+    } catch (error) {
+      publishOutcome({ kind: "unknown", error });
+      submitting.current = false;
+      if (lease.active) setIsSubmitting(false);
+      if (isCurrent()) showErrorNotification({ message: innerProps.outcomeLabels.unknown });
+      throw error;
+    }
+    publishOutcome({ kind: "confirmed", app });
+    const reconcile = async () => {
+      try {
+        await innerProps.onCreated(app);
+      } catch (error) {
+        publishOutcome({ kind: "reconcileheld", app, error });
+        if (isCurrent()) showErrorNotification({ message: innerProps.outcomeLabels.reconcileheld });
+        throw error;
+      } finally {
+        submitting.current = false;
+        if (lease.active) setIsSubmitting(false);
+      }
+      publishOutcome({ kind: "settled", app });
+      retryReconciliation.current = null;
+      if (!isCurrent()) return;
+      setCreatedApps((current) => [...current, app]);
+      setSelectedAppIds((current) => new Set(current).add(app.id));
+      if (!finish) {
+        if (isCurrent()) afterSuccess?.();
+        if (isCurrent()) publishOutcome({ kind: "idle" });
+        return;
+      }
+      if (isCurrent()) {
+        if (multiSelectAvailable) innerProps.onSelectMany?.([...selectedApps, app]);
+        else innerProps.onSelect?.(app);
+      }
+      if (isCurrent()) actions.closeModal();
+    };
+    retryReconciliation.current = async () => {
+      if (
+        !lease.active ||
+        captured === null ||
+        !captured.isCurrent() ||
+        submitting.current ||
+        outcomeRef.current.kind !== "reconcileheld"
+      )
+        return;
+      submitting.current = true;
+      setIsSubmitting(true);
+      await reconcile();
+    };
+    await reconcile();
   };
 
   return (
@@ -98,32 +215,28 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
           <Button
             variant="subtle"
             leftSection={<IconArrowLeft size={16} />}
-            onClick={() => setCreating(false)}
-            disabled={isCreating}
+            onClick={() => {
+              creationOwner.current += 1;
+              setCreating(false);
+            }}
+            disabled={isCreating || isSubmitting}
             style={{ alignSelf: "flex-start" }}
           >
             {t("app.action.select.backToApps")}
           </Button>
           <AppForm
+            iconPickerProps={innerProps.iconPickerProps}
+            disabled={!canCreate}
+            isCurrentOwner={innerProps.isCurrentOwner}
+            onDirtyChange={onDirtyChange}
+            captureSubmissionOwner={captureOwner}
             showBackToOverview={false}
             buttonLabels={{
               submit: t("app.action.select.createAndAdd"),
               submitAndCreateAnother: multiSelectAvailable ? t("app.action.select.createAnother") : undefined,
             }}
-            isPending={isCreating}
-            handleSubmit={async (values, finish, afterSuccess) => {
-              const app = await createApp(values);
-              setCreatedApps((current) => [...current, app]);
-              setSelectedAppIds((current) => new Set(current).add(app.id));
-              void utils.app.invalidate();
-              if (!finish) {
-                afterSuccess?.();
-                return;
-              }
-              if (multiSelectAvailable) innerProps.onSelectMany?.([...selectedApps, app]);
-              else innerProps.onSelect?.(app);
-              actions.closeModal();
-            }}
+            isPending={isCreating || isSubmitting}
+            handleSubmit={handleCreate}
           />
         </Stack>
       ) : (
@@ -151,7 +264,10 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
               <SimpleGrid cols={selectGridCols} spacing="sm">
                 {canCreate && (
                   <SelectableCard
-                    onClick={() => setCreating(true)}
+                    onClick={() => {
+                      creationOwner.current += 1;
+                      setCreating(true);
+                    }}
                     style={{ borderStyle: "dashed" }}
                     icon={
                       <ThemeIcon variant="light" color="primaryColor" size={34} radius="md">
@@ -200,7 +316,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
               <Button
                 variant="default"
                 size="xs"
-                disabled={selectedApps.length === 0 || isCreating}
+                disabled={selectedApps.length === 0 || isCreating || isSubmitting}
                 onClick={() => setSelectedAppIds(new Set())}
               >
                 {t("common.action.discard")}
@@ -217,10 +333,28 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
           </Group>
         </Paper>
       )}
+      {(outcome.kind === "unknown" || outcome.kind === "reconcileheld") && (
+        <Text component="output" aria-live="polite">
+          {innerProps.outcomeLabels[outcome.kind]}
+        </Text>
+      )}
+      {outcome.kind === "reconcileheld" && (
+        <Button
+          variant="default"
+          loading={isSubmitting}
+          onClick={() => {
+            void retryReconciliation.current?.().catch(() => {});
+          }}
+        >
+          {t("common.action.tryAgain")}
+        </Button>
+      )}
     </Stack>
   );
-}).withOptions({
-  defaultTitle: (t) => t("app.action.select.title"),
+};
+
+export const AppSelectModal = createModal<AppSelectModalProps>(AppSelectContent).withOptions({
+  defaultTitle: (t: TranslationFunction) => t("app.action.select.title"),
   size: modalSizeSelect,
 });
 

@@ -3,7 +3,7 @@ import { is } from "drizzle-orm";
 import type { InferInsertModel } from "drizzle-orm";
 import { PgDatabase } from "drizzle-orm/pg-core";
 
-import { objectEntries } from "@homarr/common";
+import { objectEntries } from "@homarr/common/object";
 
 import type { HomarrDatabase, HomarrDatabasePostgresql } from "./driver";
 import { db as configuredDatabase } from "./index";

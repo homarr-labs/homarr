@@ -1,0 +1,85 @@
+.workspace {
+  min-width: 0;
+  width: 100%;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  gap: var(--mantine-spacing-lg);
+  align-items: start;
+}
+
+.history {
+  min-width: 0;
+  padding-inline-end: var(--mantine-spacing-md);
+  border-inline-end: 1px solid var(--mantine-color-default-border);
+}
+
+.conversation {
+  min-width: 0;
+}
+
+.threadList {
+  list-style: none;
+}
+
+.threadRow {
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.threadRow[data-selected] {
+  background: var(--mantine-color-default-hover);
+}
+
+.threadTrigger {
+  display: block;
+  width: 100%;
+  text-align: start;
+  padding-block: var(--mantine-spacing-xs);
+  overflow-wrap: anywhere;
+}
+
+.messages {
+  min-width: 0;
+}
+
+.message {
+  max-width: 72ch;
+  padding-block: var(--mantine-spacing-md);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.message[data-role="user"] {
+  padding-inline: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-default-hover);
+  border-bottom: none;
+}
+
+.messageText {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.breakWord {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 48em) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .history {
+    display: none;
+    padding-inline-end: 0;
+    border-inline-end: none;
+  }
+
+  .history[data-opened] {
+    display: block;
+  }
+}

@@ -1,59 +1,43 @@
-import { parse } from "path";
+import { posix } from "node:path";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import type { IconFetchResources } from "../resources";
+import type { RepositoryIconGroup } from "../types";
+import { IconRepository, readIndexPath, readIndexRecord, readIndexString } from "./icon-repository";
+import type { IconRepositoryMetadata } from "./icon-repository";
 
-import type { IconRepositoryLicense } from "../types/icon-repository-license";
-import type { RepositoryIconGroup } from "../types/repository-icon-group";
-import { IconRepository } from "./icon-repository";
+export const parseJsdelivrIconIndex = (
+  value: unknown,
+  metadata: IconRepositoryMetadata,
+  limits: IconFetchResources["limits"],
+): RepositoryIconGroup => {
+  const record = readIndexRecord(value);
+  if (!Array.isArray(record.files) || record.files.length > limits.maximumFiles)
+    throw new Error("Invalid or oversized jsDelivr icon file list");
+  const template = metadata.repositoryBlobUrlTemplate;
+  if (!template) throw new Error("Repository blob URL is required");
+  const icons = record.files.flatMap((entry: unknown) => {
+    const file = readIndexRecord(entry);
+    const path = readIndexPath(file.name, limits.maximumPathLength);
+    const parsed = posix.parse(path);
+    if (![".png", ".svg", ".jpeg"].includes(parsed.ext)) return [];
+    const checksum = readIndexString(file.hash, limits.maximumPathLength);
+    if (typeof file.size !== "number" || !Number.isSafeInteger(file.size) || file.size < 0)
+      throw new Error("Invalid jsDelivr icon size");
+    return [
+      {
+        fileNameWithExtension: parsed.base,
+        imageUrl: template.replace("{0}", path).replace("{1}", parsed.name),
+        local: false,
+        sizeInBytes: file.size,
+        checksum,
+      },
+    ];
+  });
+  return { success: true, icons, slug: metadata.slug };
+};
 
 export class JsdelivrIconRepository extends IconRepository {
-  constructor(
-    public readonly name: string,
-    public readonly slug: string,
-    public readonly license: IconRepositoryLicense,
-    public readonly repositoryUrl: URL,
-    public readonly repositoryIndexingUrl: URL,
-    public readonly repositoryBlobUrlTemplate: string,
-  ) {
-    super(name, slug, license, repositoryUrl, repositoryIndexingUrl, repositoryBlobUrlTemplate);
+  protected async getAllIconsInternalAsync(signal?: AbortSignal): Promise<RepositoryIconGroup> {
+    return parseJsdelivrIconIndex(await this.readIndexAsync(signal), this.metadata, this.resources.limits);
   }
-
-  protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
-    const response = await withTimeoutAsync(async (signal) =>
-      fetchWithTrustedCertificatesAsync(this.repositoryIndexingUrl, { signal }),
-    );
-    const listOfFiles = (await response.json()) as JsdelivrApiResponse;
-
-    return {
-      success: true,
-      icons: listOfFiles.files
-        .filter(({ name: path }) =>
-          this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType),
-        )
-        .map(({ name: path, size: sizeInBytes, hash: checksum }) => {
-          const file = parse(path);
-          const fileNameWithExtension = file.base;
-
-          return {
-            imageUrl: this.repositoryBlobUrlTemplate.replace("{0}", path).replace("{1}", file.name),
-            fileNameWithExtension,
-            local: false,
-            sizeInBytes,
-            checksum,
-          };
-        }),
-      slug: this.slug,
-    };
-  }
-}
-
-interface JsdelivrApiResponse {
-  files: JsdelivrFile[];
-}
-
-interface JsdelivrFile {
-  name: string;
-  size: number;
-  hash: string;
 }

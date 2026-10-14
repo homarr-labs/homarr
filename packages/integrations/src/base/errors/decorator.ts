@@ -1,29 +1,19 @@
-import { isFunction } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { getIntegrationRuntimeResources } from "../../runtime/context";
+import { normalizeSanitizedIntegrationTransportError } from "../../runtime/transport-errors";
 
 import type { Integration } from "../integration";
 import type { IIntegrationErrorHandler } from "./handler";
-import { integrationFetchHttpErrorHandler } from "./http";
 import { IntegrationError } from "./integration-error";
 import { IntegrationUnknownError } from "./integration-unknown-error";
 import { IntegrationRequestError } from "./http/integration-request-error";
 import { IntegrationResponseError } from "./http/integration-response-error";
-import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./parse";
 
-const logger = createLogger({ module: "handleIntegrationErrors" });
 const loggedIntegrationErrors = new WeakSet<IntegrationError>();
 
 // ponytail: TypeScript requires `any[]` for mixin constructors (TS2545). The
 // decorator returns the same constructor type T, so callers retain exact args.
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-explicit-any
 type AbstractConstructor<T = {}> = abstract new (...args: any[]) => T;
-
-const defaultErrorHandlers: IIntegrationErrorHandler[] = [
-  integrationZodParseErrorHandler,
-  integrationJsonParseErrorHandler,
-  integrationFetchHttpErrorHandler,
-];
 
 interface IntegrationOperationMetadata {
   operation: string;
@@ -44,12 +34,6 @@ const createSafeErrorCause = (error: unknown, depth = 0): Error => {
   if (error instanceof Error && safeErrorNameRegex.test(error.name)) {
     safeError.name = error.name;
   }
-  if (error instanceof Error && error.stack) {
-    const originalHeader = Error.prototype.toString.call(error);
-    if (error.stack.startsWith(originalHeader)) {
-      safeError.stack = `${safeError.name}: ${safeError.message}${error.stack.slice(originalHeader.length)}`;
-    }
-  }
   return safeError;
 };
 
@@ -64,31 +48,19 @@ const logFailure = (
   }
 
   loggedIntegrationErrors.add(error);
-  const errorMetadata: Record<string, unknown> = { errorType: error.name };
-  if (error instanceof IntegrationRequestError) {
-    errorMetadata.requestType = error.cause.type;
-    errorMetadata.requestReason = error.cause.reason;
-    errorMetadata.requestCode = error.cause.code;
-  }
-  if (error instanceof IntegrationResponseError) {
-    errorMetadata.statusCode = error.cause.statusCode;
-  }
-  logger.warn(
-    new ErrorWithMetadata(
-      "Integration operation failed",
-      {
-        ...metadata,
-        durationMs,
-        failureType,
-        ...errorMetadata,
-      },
-      { cause: createSafeErrorCause(error) },
-    ),
-  );
+  getIntegrationRuntimeResources()?.log?.write("warn", "Integration operation failed", {
+    ...metadata,
+    durationMs,
+    failureType,
+    errorType: error.name,
+    requestType: error instanceof IntegrationRequestError ? error.cause.type : undefined,
+    requestReason: error instanceof IntegrationRequestError ? error.cause.reason : undefined,
+    requestCode: error instanceof IntegrationRequestError ? error.cause.code : undefined,
+    statusCode: error instanceof IntegrationResponseError ? error.cause.statusCode : undefined,
+  });
 };
 
 export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[]) => {
-  const combinedErrorHandlers = [...defaultErrorHandlers, ...errorHandlers];
   return <T extends AbstractConstructor<Integration>>(IntegrationBaseClass: T): T => {
     abstract class ErrorHandledIntegration extends IntegrationBaseClass {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -107,7 +79,7 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
 
             if (!descriptor) continue;
             const original: unknown = descriptor.value;
-            if (!isFunction(original)) continue;
+            if (typeof original !== "function") continue;
 
             processedProperties.add(propertyKey);
 
@@ -120,10 +92,11 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                 integrationName: this.publicIntegration.name,
               };
 
-              logger.debug("Integration operation started", operationMetadata);
+              const resources = getIntegrationRuntimeResources();
+              resources?.log?.write("debug", "Integration operation started", { ...operationMetadata });
 
               const logCompletion = () => {
-                logger.debug("Integration operation completed", {
+                resources?.log?.write("debug", "Integration operation completed", {
                   ...operationMetadata,
                   durationMs: Date.now() - startedAt,
                 });
@@ -136,7 +109,13 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                   throw error;
                 }
 
-                for (const handler of combinedErrorHandlers) {
+                const safeTransportError = normalizeSanitizedIntegrationTransportError(error, this.publicIntegration);
+                if (safeTransportError) {
+                  logFailure(safeTransportError, "normalized", operationMetadata, Date.now() - startedAt);
+                  throw safeTransportError;
+                }
+
+                for (const handler of [...(resources?.errorHandlers ?? []), ...errorHandlers]) {
                   const handledError = handler.handleError(error, this.publicIntegration);
                   if (!handledError) continue;
 
@@ -144,7 +123,9 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                   throw handledError;
                 }
 
-                const unknownError = new IntegrationUnknownError(this.publicIntegration, { cause: error });
+                const unknownError = new IntegrationUnknownError(this.publicIntegration, {
+                  cause: createSafeErrorCause(error),
+                });
                 logFailure(unknownError, "unknown", operationMetadata, Date.now() - startedAt);
                 throw unknownError;
               };

@@ -1,0 +1,252 @@
+[
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 1,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 2,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 3,
+    "status": 1,
+    "signal": null,
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ],
+    "output": "AssertionError: Got unwanted rejection: installed Undici must honor the current root and fingerprint grant\nActual message: \"fetch failed\"\n generatedMessage: false,\n   expected: undefined,\n   operator: \"doesNotReject\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at innerFail (node:assert:50:27)\n      at expectsNoError (node:assert:418:14)\n      at assert.doesNotReject (node:assert:437:19)\n      at processTicksAndRejections (native:7:39)\n\n232 |     }\n233 | \n234 |     // 3. If response is a network error, then reject p with a TypeError\n235 |     // and terminate these substeps.\n236 |     if (response.type === 'error') {\n237 |       p.reject(new TypeError('fetch failed', { cause: response.error }))\n                         ^\nTypeError: fetch failed\n      at processResponse (/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:237:20)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:1081:19\n      at processTicksAndRejections (native:7:39)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/index.js:157:7\n      at processTicksAndRejections (native:7:39)\n\nerror: certificate signature failure\n errno: 0,\n  code: \"CERT_SIGNATURE_FAILURE\"\n\n\nBun v1.4.2 (macOS arm64)\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 4,
+    "status": 1,
+    "signal": null,
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ],
+    "output": "AssertionError: Got unwanted rejection: installed Undici must honor the current root and fingerprint grant\nActual message: \"fetch failed\"\n generatedMessage: false,\n   expected: undefined,\n   operator: \"doesNotReject\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at innerFail (node:assert:50:27)\n      at expectsNoError (node:assert:418:14)\n      at assert.doesNotReject (node:assert:437:19)\n      at processTicksAndRejections (native:7:39)\n\n232 |     }\n233 | \n234 |     // 3. If response is a network error, then reject p with a TypeError\n235 |     // and terminate these substeps.\n236 |     if (response.type === 'error') {\n237 |       p.reject(new TypeError('fetch failed', { cause: response.error }))\n                         ^\nTypeError: fetch failed\n      at processResponse (/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:237:20)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:1081:19\n      at processTicksAndRejections (native:7:39)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/index.js:157:7\n      at processTicksAndRejections (native:7:39)\n\nerror: certificate signature failure\n errno: 0,\n  code: \"CERT_SIGNATURE_FAILURE\"\n\n\nBun v1.4.2 (macOS arm64)\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 5,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 6,
+    "status": 1,
+    "signal": null,
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ],
+    "output": "AssertionError: Got unwanted rejection: installed Undici must honor the current root and fingerprint grant\nActual message: \"fetch failed\"\n generatedMessage: false,\n   expected: undefined,\n   operator: \"doesNotReject\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at innerFail (node:assert:50:27)\n      at expectsNoError (node:assert:418:14)\n      at assert.doesNotReject (node:assert:437:19)\n      at processTicksAndRejections (native:7:39)\n\n232 |     }\n233 | \n234 |     // 3. If response is a network error, then reject p with a TypeError\n235 |     // and terminate these substeps.\n236 |     if (response.type === 'error') {\n237 |       p.reject(new TypeError('fetch failed', { cause: response.error }))\n                         ^\nTypeError: fetch failed\n      at processResponse (/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:237:20)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:1081:19\n      at processTicksAndRejections (native:7:39)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/index.js:157:7\n      at processTicksAndRejections (native:7:39)\n\nerror: certificate signature failure\n errno: 0,\n  code: \"CERT_SIGNATURE_FAILURE\"\n\n\nBun v1.4.2 (macOS arm64)\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 7,
+    "status": 1,
+    "signal": null,
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ],
+    "output": "AssertionError: Got unwanted rejection: installed Undici must honor the current root and fingerprint grant\nActual message: \"fetch failed\"\n generatedMessage: false,\n   expected: undefined,\n   operator: \"doesNotReject\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at innerFail (node:assert:50:27)\n      at expectsNoError (node:assert:418:14)\n      at assert.doesNotReject (node:assert:437:19)\n      at processTicksAndRejections (native:7:39)\n\n232 |     }\n233 | \n234 |     // 3. If response is a network error, then reject p with a TypeError\n235 |     // and terminate these substeps.\n236 |     if (response.type === 'error') {\n237 |       p.reject(new TypeError('fetch failed', { cause: response.error }))\n                         ^\nTypeError: fetch failed\n      at processResponse (/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:237:20)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:1081:19\n      at processTicksAndRejections (native:7:39)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/index.js:157:7\n      at processTicksAndRejections (native:7:39)\n\nerror: certificate signature failure\n errno: 0,\n  code: \"CERT_SIGNATURE_FAILURE\"\n\n\nBun v1.4.2 (macOS arm64)\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 8,
+    "status": 1,
+    "signal": null,
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ],
+    "output": "AssertionError: Got unwanted rejection: installed Undici must honor the current root and fingerprint grant\nActual message: \"fetch failed\"\n generatedMessage: false,\n   expected: undefined,\n   operator: \"doesNotReject\",\n       diff: \"simple\",\n       code: \"ERR_ASSERTION\"\n\n      at innerFail (node:assert:50:27)\n      at expectsNoError (node:assert:418:14)\n      at assert.doesNotReject (node:assert:437:19)\n      at processTicksAndRejections (native:7:39)\n\n232 |     }\n233 | \n234 |     // 3. If response is a network error, then reject p with a TypeError\n235 |     // and terminate these substeps.\n236 |     if (response.type === 'error') {\n237 |       p.reject(new TypeError('fetch failed', { cause: response.error }))\n                         ^\nTypeError: fetch failed\n      at processResponse (/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:237:20)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/lib/web/fetch/index.js:1081:19\n      at processTicksAndRejections (native:7:39)\n      at /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/undici/index.js:157:7\n      at processTicksAndRejections (native:7:39)\n\nerror: certificate signature failure\n errno: 0,\n  code: \"CERT_SIGNATURE_FAILURE\"\n\n\nBun v1.4.2 (macOS arm64)\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 1,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 2,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 3,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 4,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 1,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 2,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 3,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 4,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 5,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 6,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 7,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 8,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 1,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 2,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 3,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 4,
+    "status": 1,
+    "signal": null,
+    "codes": [],
+    "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nfile:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/packages/core/src/infrastructure/certificates/files/root-certificate.ts:14\n  constructor(\n    public readonly code: \"BAD_REQUEST\" | \"CONFLICT\",\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    message: string,\n\nSyntaxError [ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX]: TypeScript parameter property is not supported in strip-only mode\n    at parseTypeScript (node:internal/modules/typescript:68:40)\n    at processTypeScriptCode (node:internal/modules/typescript:146:42)\n    at stripTypeScriptModuleTypes (node:internal/modules/typescript:209:22)\n    at ModuleLoader.<anonymous> (node:internal/modules/esm/translators:680:29)\n    at #translate (node:internal/modules/esm/loader:434:20)\n    at afterLoad (node:internal/modules/esm/loader:502:29)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:507:12)\n    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:560:36)\n    at afterResolve (node:internal/modules/esm/loader:607:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:613:12) {\n  code: 'ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX'\n}\n\nNode.js v24.18.0\n"
+  }
+]

@@ -1,0 +1,45 @@
+## Findings
+
+No findings in the scoped successor binding. Checked the approved release plan, current host admission/CREATE/START/wait/closure paths, ENV and guest freezes, context projections, actual Bun result-review body, and readable acquisition/materialization associations. Only dedicated reads/grep were used; no files written or execution performed.
+
+## Verdict
+
+**Correct — ROLE ACCEPT `engineContext`; ROLE ACCEPT `namespaceAndStart`, subject to the conditions below.** These are fresh review decisions for later exact capture, not reconstructed earlier reviewer messages or execution grants.
+
+### Shared source, materialization and policy association
+
+`T` means `/private/var/folders/kx/hccbvbyd6sb61s6lrr2jyt2m0000gn/T/opencode`; `H=T/nitro-native-runtime-driver-t_05t8qe`; `C=T/nitro-native-runtime-caller-o_s9lpod`.
+
+Both decisions bind `H/author/host-launch.mjs`, **53584 bytes**, SHA256 `f2ff277fe458634d51b0e6e834028e043b8ca91e1280c3e723848cad18892694`, recorded in `H/records/guest-source-after.json`. The ENV successor and guest baseline join at **53586 bytes**, SHA256 `aac8b7f08efb95fa5585560c52d63ef3f826bbd913f7c822f4745cf1d56035c3`. Guest `simpleReplacementMatches:false` remains unchanged; acceptance does not turn that comparison into true.
+
+The association is exclusively attempt `native-runtime-driver-t_05t8qe-matplan01`, owner `nitro_native_owner_matplan01`, under `convergence-native-initialization-release-plan.md`. Proposed host policy remains **20/22/30 seconds**, sandbox **501:20**, **1000000000 NanoCpus / 1073741824 memory bytes / 64 PIDs**, MemorySwap equal to Memory; caller **18/23/30 seconds**, runner **35 seconds**. This review binds those semantics without supplying the separate failure-policy grant.
+
+Accepted static materialization is joined through `T/nitro-staticcopy-v2-readable-review-0cqchbih/records/{association,reconciliation-result}.json`: `C/records/native-materialization-static.json`, **117407 bytes**, SHA256 `cac0d43fe0c356eb77502adff33c3d580d147432af612e453fba070f5940850f`; `C/records/native-envelope-candidate.txt`, **1054 bytes**, SHA256 `6e5a55673e4eae5e4f59e3d2a483d6b5e4c9dde6e998818a888f741fe49d43d1`. Recorded facts are 104 copies/4716264 bytes, closed writers, empty0700 output and seven runtime/publication coordinates absent. These are retained observations, not newly measured continuing exclusivity. Metadata physical-facts acceptance does not clear its permanent exact-command-deviation HOLD.
+
+### ROLE ACCEPT — `engineContext`
+
+Context evidence is `T/nitro-native-runtime-context-metadata-jie9h38t/records/{index,supplement1-index,capacity1-index}.json` and their selected projections. Recorded original-index association is **3480 bytes**, SHA256 `471ead61250ccf4e17aeb2de6529625c1cc702794067eb6039f90d33c4a977f6`; supplement index **4891 bytes**, SHA256 `064acc124e878a0c3c02f9f96b26282f8840b9e2b86af17125327653584653e9`.
+
+The supported association is canonical endpoint `/Users/ajnart/.orbstack/run/docker.sock`, API `/v1.56`, reported Engine29.8.2/Moby `8af9fe3`, Linux/arm64, runtime `runc`, cgroupfs/v2. Image identity is `sha256:a81de950abb8b5d961ed8c1dcd345450fab8cda00ea3c11e7ec24a4ed4bb82ce`, digest `oven/bun@sha256:9114c058aeae42162ee16dd5084b95fe9473970bb6bcb5b232ab1630f0546895`.
+
+Bun’s actual acquired leaf is `/usr/local/bin/bun`, **79420872 bytes**, SHA256 `616f267a34278ff5ac282df37ffdfba1d7141f4f6926bca99af2cd6ef3ad32b1`. Original binding is **4767 bytes / `93c9ca7d41cdc01cb60cf022931a64e0e7be57c1fa89d8185b4ed11599e133e5`**; terminal result **10475 bytes / `d130d0b59dcc4d2193d61266a9c518b68b16a6e2df08ff68e6b8d2481636277b`**, joined by the readable acquisition association to stopped CID `637833a9b6c892692e255af4d7627a48b0ffba0f8811b8d6a7e6725a28d2df1a`.
+
+The actual independent RESULT ACCEPT body is `T/nitro-bun-result-review-binding-3ptwh0vm/records/result-review.txt`: session `ses_eca5fc89effeKB4o7vodOibTr5`, message `msg_135de142a0015euCcOp4wKujCO`, **1201 bytes**, SHA256 `be1176cb9a70c77f5df5cc29864a4e82d4a7a3e60f8cbc7c75f7431cbd91a338`, as recorded by its association. Historical pending-review fields remain historical.
+
+Current host admission requires the exact three image defaults: supplied seven-directory PATH, `/usr/local/bin` install bin, cache `"0"`. CREATE and all context joins use the same retained six-entry ENV, including original serialized child input; standard Engine-generated HOSTNAME is not a globally clean-environ claim.
+
+Conditions: maintain endpoint/image/source continuity and separately approved exclusivity; require actual image and target confinement observations. Advertised capacity/support does not measure resource enforcement, available capacity, guest filesystem access or Bun builtin/CJS/import eligibility. Unsupported predicates stop before START; runtime failure consumes the attempt without fallback, probe or retry. Acquisition does not establish image-layer/binary attestation or daemon unmount.
+
+### ROLE ACCEPT — `namespaceAndStart`
+
+I accept the **ordinary supported reported-commit contract** documented in `convergence-native-runtime-engine-contracts.md`, joined to current H: Moby `8af9fe3a36bab3e039862a2ab1cef1880c9b4d03`, containerd `ee2735368117d2eb259779949d5e75cdafec9761`, runc `29dd3dc2b13b4123162e5fe132504bb4b15569f1`, and standard Linux private-PID init-exit semantics.
+
+Explicitly, legacy `privatePidNamespaceMeasured:true` means **measured platform association plus accepted standard private-PID contract and mandatory future target observations**, not measurement of an uncreated namespace. Exact OrbStack patched-kernel/runtime-binary attestation remains unavailable; this scoped decision does not require or invent it.
+
+Original START204 is authoritative only for the sole exclusive original starter’s completed, settled response—not readiness or workload success. Lost, rejected, unknown or non204 START remains held and is never replayed. Wait200 headers, caller death, signal dispatch and provisional files cannot establish closure.
+
+Any eventual passing result must retain actual same-CID pre/post confinement, accepted original START204, complete successful wait body, exited/Pid0/exit0 with valid completion evidence, settled transports/controls, physically closed evidence files and the current host’s successful returned verdict. Only then is namespace-derived owned-context closure permissible, with `measuredProcessInventory:false`.
+
+Exclusive-writer, active-owner, caller/child/runner, failure-policy and initialization grants remain separate prerequisites. Exact candidate review and coordinator publication/invocation remain later gates. No universal inventory, physical deadline, application/current-product acceptance, or Docker prerequisite for ordinary self-hosted Homarr is inferred.
+
+**Not flagged:** historical PATH-only/root-policy holds are superseded only for the pinned successor; historical false flags, unavailable attestation and metadata exact-command HOLD remain intact.

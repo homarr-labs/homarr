@@ -1,0 +1,33 @@
+(node:74686) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/spikes/auth/adapter.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[31m✖ AuthFetch discards request-local cookie effects after a late sign-in failure [90m(117.327542ms)[39m[39m
+[34mℹ tests 1[39m
+[34mℹ suites 0[39m
+[34mℹ pass 0[39m
+[34mℹ fail 1[39m
+[34mℹ cancelled 0[39m
+[34mℹ skipped 0[39m
+[34mℹ todo 0[39m
+[34mℹ duration_ms 246.247792[39m
+
+[31m✖ failing tests:[39m
+
+test at .scratch/nitro-full-migration/spikes/auth/auth-fetch.test.mts:8:1
+[31m✖ AuthFetch discards request-local cookie effects after a late sign-in failure [90m(117.327542ms)[39m[39m
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  [32mactual[39m [31mexpected[39m
+  
+  [39m'[39m[39mh[39m[39mt[39m[39mt[39m[39mp[39m[39ms[39m[39m:[39m[39m/[39m[39m/[39m[39ma[39m[39mu[39m[39mt[39m[39mh[39m[39m-[39m[39ms[39m[39mp[39m[39mi[39m[39mk[39m[39me[39m[39m.[39m[39mi[39m[39mn[39m[39mv[39m[39ma[39m[39ml[39m[39mi[39m[39md[39m[39m/[39m[39ma[39m[32mf[39m[31mu[39m[39mt[39m[31mh[39m[31m/[39m[31ml[39m[31mo[39m[31mg[39m[31mi[39m[31mn[39m[31m?[39m[39me[39m[39mr[39m[32m-[39m[32ml[39m[31mr[39m[39mo[39m[31mr[39m[31m=[39m[31mC[39m[31mo[39m[31mn[39m[31mf[39m[31mi[39m[39mg[39m[31mu[39m[31mr[39m[31ma[39m[31mt[39m[39mi[39m[31mo[39m[39mn[39m[39m'[39m
+  
+      at TestContext.<anonymous> [90m(file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/[39m.scratch/nitro-full-migration/spikes/auth/auth-fetch.test.mts:32:10[90m)[39m
+  [90m    at async Test.run (node:internal/test_runner/test:1313:7)[39m
+  [90m    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)[39m {
+    generatedMessage: [33mtrue[39m,
+    code: [32m'ERR_ASSERTION'[39m,
+    actual: [32m'https://auth-spike.invalid/after-login'[39m,
+    expected: [32m'https://auth-spike.invalid/auth/login?error=Configuration'[39m,
+    operator: [32m'strictEqual'[39m,
+    diff: [32m'simple'[39m
+  }

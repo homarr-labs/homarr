@@ -1,6 +1,8 @@
 import SuperJSON from "superjson";
 
-import { createId, generateResponsiveGridFor, objectKeys } from "@homarr/common";
+import { createId } from "@homarr/common/id";
+import { generateResponsiveGridFor } from "@homarr/common/grid-algorithm";
+import { objectKeys } from "@homarr/common/object";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import {
   createDocumentationLink,

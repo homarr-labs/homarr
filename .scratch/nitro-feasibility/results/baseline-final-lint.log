@@ -1,0 +1,16 @@
+[0m[2m[35m$[0m [2m[1moxlint src server scripts/container vite.config.ts nitro.config.ts[0m
+scripts/container/package-output.ts:24:49: warning unicorn(no-array-sort): Use `Array#toSorted()` instead of `Array#sort()`. help: `Array#sort()` mutates the original array. Use `Array#toSorted()` to return a new sorted array without modifying the original.
+scripts/container/package-output.ts:119:39: warning unicorn(no-array-sort): Use `Array#toSorted()` instead of `Array#sort()`. help: `Array#sort()` mutates the original array. Use `Array#toSorted()` to return a new sorted array without modifying the original.
+src/features/viewer/board-viewer.tsx:57:55: warning jsx-a11y(prefer-tag-over-role): Prefer `output` over `role` attribute `status`. help: Replace HTML elements with `role` attribute `status` to corresponding semantic HTML tag `output`.
+src/server/widget/body.ts:2:3: warning eslint(no-useless-constructor): Redundant super call in constructor help: Remove this constructor or add code to it.
+scripts/container/run.ts:25:49: warning unicorn(no-array-sort): Use `Array#toSorted()` instead of `Array#sort()`. help: `Array#sort()` mutates the original array. Use `Array#toSorted()` to return a new sorted array without modifying the original.
+src/entry-client.tsx:1:1: warning import(no-unassigned-import): Imported module should be assigned help: Consider assigning the import to a variable or removing it if it's unused.
+scripts/container/healthcheck.ts:1:8: warning unicorn(require-module-specifiers): Empty export specifier is not allowed help: Remove empty braces
+src/server/render/handler.ts:58:55: warning eslint(no-underscore-dangle): Unexpected dangling '_' in '`__beforeLoadContext`'. help: Remove the dangling '_' or add `__beforeLoadContext` to the 'allow' configuration.
+src/features/widget/fixture-widget.tsx:79:23: warning jsx-a11y(prefer-tag-over-role): Prefer `output` over `role` attribute `status`. help: Replace HTML elements with `role` attribute `status` to corresponding semantic HTML tag `output`.
+src/features/widget/fixture-widget.tsx:87:35: warning jsx-a11y(prefer-tag-over-role): Prefer `output` over `role` attribute `status`. help: Replace HTML elements with `role` attribute `status` to corresponding semantic HTML tag `output`.
+src/entry-server.tsx:4:26: warning import(no-self-import): A module importing itself is not allowed help: Remove this import. A module should not import itself.
+src/entry-server.tsx:1:1: warning import(no-unassigned-import): Imported module should be assigned help: Consider assigning the import to a variable or removing it if it's unused.
+src/features/session/session-controls.tsx:115:23: warning jsx-a11y(prefer-tag-over-role): Prefer `output` over `role` attribute `status`. help: Replace HTML elements with `role` attribute `status` to corresponding semantic HTML tag `output`.
+src/features/editor/board-editor.tsx:290:25: warning jsx-a11y(prefer-tag-over-role): Prefer `output` over `role` attribute `status`. help: Replace HTML elements with `role` attribute `status` to corresponding semantic HTML tag `output`.
+src/features/editor/board-editor.tsx:353:29: warning jsx-a11y(prefer-tag-over-role): Prefer `output` over `role` attribute `status`. help: Replace HTML elements with `role` attribute `status` to corresponding semantic HTML tag `output`.

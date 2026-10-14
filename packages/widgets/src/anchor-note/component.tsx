@@ -2,8 +2,6 @@
 
 import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { ActionIcon, Badge, Button, Center, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
-import { IconEdit } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -14,10 +12,8 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import actionTargetClasses from "../common/action-target.module.css";
 import { storedContentToPlainText } from "./content";
-
-import "./anchor-note.css";
+import { AnchorNoteEmptyView, AnchorNoteView } from "./native-view";
 
 const AnchorNoteEditor = dynamic(() => import("./editor"), { ssr: false });
 
@@ -44,11 +40,7 @@ export default function AnchorNoteWidget({
   const t = useI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
   if (!noteId) {
-    return (
-      <Center h="100%">
-        <Text c="dimmed">{t("empty")}</Text>
-      </Center>
-    );
+    return <AnchorNoteEmptyView label={t("empty")} />;
   }
 
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
@@ -197,102 +189,52 @@ const AnchorNoteWidgetContent = ({
   if (!note) return <WidgetEmptyState />;
 
   return (
-    <Stack className="homarr-anchor-note" h="100%" gap="xs" p={height < 120 ? "xs" : "sm"}>
-      <Group justify="space-between" align="flex-start">
-        <Stack gap={2} style={{ flex: 1 }}>
-          {isEditing ? (
-            <TextInput value={draftTitle} onChange={(event) => setDraftTitle(event.currentTarget.value)} size="sm" />
-          ) : (
-            (isAdvanced || options.showTitle) && <Text fw={600}>{note.title || t("untitled")}</Text>
-          )}
-          {!isEditing && (isAdvanced || options.showUpdatedAt) && (
-            <Text size="xs" c="dimmed">
-              {tWidgetCommon("updatedAt", { date: updatedAtRelative })}
-            </Text>
-          )}
-          {!isEditing && isViewer && (
-            <Text size="xs" c="dimmed">
-              {t("readOnlyViewer")}
-            </Text>
-          )}
-          {!isEditing && isAdvanced && (
-            <Group gap={4}>
-              <Badge size="xs" variant="light">
-                {t(`permission.${note.permission}`)}
-              </Badge>
-              {note.isPinned && <Badge size="xs">{t("status.pinned")}</Badge>}
-              {note.isArchived && (
-                <Badge size="xs" color="gray">
-                  {t("status.archived")}
-                </Badge>
-              )}
-              <Text size="xs" c="dimmed">
-                {t("createdAt", { date: new Date(note.createdAt).toLocaleDateString(locale) })}
-              </Text>
-            </Group>
-          )}
-          {saveError && (
-            <Text size="xs" c="red">
-              {saveError}
-            </Text>
-          )}
-        </Stack>
-        <Group gap="xs" wrap="nowrap">
-          {(isEditing || canEdit) && (
-            <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
-              {isEditing ? (
-                <>
-                  <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
-                    {actionT("save")}
-                  </Button>
-                  <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
-                    {actionT("cancel")}
-                  </Button>
-                </>
-              ) : isAdvanced ? (
-                <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
-                  {actionT("edit")}
-                </Button>
-              ) : (
-                <Tooltip label={actionT("edit")}>
-                  <ActionIcon
-                    className={actionTargetClasses.root}
-                    aria-label={actionT("edit")}
-                    size="md"
-                    variant="light"
-                    onClick={handleEdit}
-                    disabled={isUpdating}
-                  >
-                    <IconEdit size="var(--mantine-font-size-md)" />
-                  </ActionIcon>
-                </Tooltip>
-              )}
-            </Group>
-          )}
-        </Group>
-      </Group>
-      {isEditing || isAdvanced ? (
-        <div
-          className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`}
-          style={{ flex: 1, minHeight: 0 }}
-        >
+    <AnchorNoteView
+      note={note}
+      width={width}
+      height={height}
+      isAdvanced={isAdvanced}
+      showTitle={options.showTitle}
+      showUpdatedAt={options.showUpdatedAt}
+      isEditing={isEditing}
+      isViewer={isViewer}
+      canEdit={canEdit}
+      isUpdating={isUpdating}
+      hasChanges={hasChanges}
+      draftTitle={draftTitle}
+      saveError={saveError}
+      plainText={plainText}
+      labels={{
+        untitled: !isEditing && (isAdvanced || options.showTitle) && !note.title ? t("untitled") : "",
+        updatedAt:
+          !isEditing && (isAdvanced || options.showUpdatedAt)
+            ? tWidgetCommon("updatedAt", { date: updatedAtRelative })
+            : "",
+        readOnlyViewer: !isEditing && isViewer ? t("readOnlyViewer") : "",
+        permission: !isEditing && isAdvanced ? t(`permission.${note.permission}`) : "",
+        pinned: !isEditing && isAdvanced && note.isPinned ? t("status.pinned") : "",
+        archived: !isEditing && isAdvanced && note.isArchived ? t("status.archived") : "",
+        createdAt:
+          !isEditing && isAdvanced ? t("createdAt", { date: new Date(note.createdAt).toLocaleDateString(locale) }) : "",
+        save: isEditing ? actionT("save") : "",
+        cancel: isEditing ? actionT("cancel") : "",
+        edit: !isEditing && canEdit ? actionT("edit") : "",
+        emptyContent: !isEditing && !isAdvanced && !plainText ? t("emptyContent") : "",
+      }}
+      onTitleChange={setDraftTitle}
+      onEdit={handleEdit}
+      onCancel={handleCancel}
+      onSave={handleSave}
+      editor={
+        isEditing || isAdvanced ? (
           <AnchorNoteEditor
             content={isEditing ? draftContent : note.content}
             readOnly={!isEditing}
             onChange={setDraftContent}
             placeholder={t("emptyContent")}
           />
-        </div>
-      ) : (
-        <Text
-          size={width < 180 || height < 100 ? "xs" : "sm"}
-          c={plainText ? undefined : "dimmed"}
-          style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
-          lineClamp={Math.max(2, Math.floor((height - 70) / 18))}
-        >
-          {plainText || t("emptyContent")}
-        </Text>
-      )}
-    </Stack>
+        ) : null
+      }
+    />
   );
 };

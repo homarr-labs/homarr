@@ -93,52 +93,55 @@ describe("subscribeRealtimeMetrics", () => {
     const subscriptionBodies: unknown[] = [];
     const encoder = new TextEncoder();
 
-    globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input);
-      if (url.endsWith("/api/collections/users/auth-with-password")) {
-        return Response.json({ token: "test-token", record: { id: "user-1" } });
-      }
-      if (url.includes("/api/collections/systems/records")) {
-        return Response.json({
-          page: 1,
-          perPage: 500,
-          totalItems: 1,
-          totalPages: 1,
-          items: [
-            {
-              id: "system-1",
-              name: "Server",
-              host: "localhost",
-              port: "45876",
-              status: "up",
-              info: { cpu: 1, mp: 2, dp: 3, u: 4, v: "0.18.7" },
-              created: "2026-07-11T00:00:00.000Z",
-              updated: "2026-07-11T00:00:00.000Z",
+    globalThis.fetch = Object.assign(
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+        if (url.endsWith("/api/collections/users/auth-with-password")) {
+          return Response.json({ token: "test-token", record: { id: "user-1" } });
+        }
+        if (url.includes("/api/collections/systems/records")) {
+          return Response.json({
+            page: 1,
+            perPage: 500,
+            totalItems: 1,
+            totalPages: 1,
+            items: [
+              {
+                id: "system-1",
+                name: "Server",
+                host: "localhost",
+                port: "45876",
+                status: "up",
+                info: { cpu: 1, mp: 2, dp: 3, u: 4, v: "0.18.7" },
+                created: "2026-07-11T00:00:00.000Z",
+                updated: "2026-07-11T00:00:00.000Z",
+              },
+            ],
+          });
+        }
+        if (url.endsWith("/api/realtime") && init?.method === "POST") {
+          subscriptionBodies.push(JSON.parse(String(init.body)));
+          expect(new Headers(init.headers).get("Authorization")).toBe("test-token");
+          return new Response(null, { status: 204 });
+        }
+        if (url.endsWith("/api/realtime")) {
+          const snapshot = JSON.stringify({
+            stats: { cpu: 5, m: 10, mu: 4, mp: 40, mb: 1, s: 0, su: 0, d: 20, du: 8, dp: 40 },
+            container: [{ n: "homarr", c: 1, m: 256 }],
+          });
+          const stream = new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(encoder.encode("event: PB_CONNECT\nid: client-1\ndata: {}\n\n"));
+              controller.enqueue(encoder.encode(`event: ${topic}\ndata: ${snapshot}\n\n`));
+              controller.close();
             },
-          ],
-        });
-      }
-      if (url.endsWith("/api/realtime") && init?.method === "POST") {
-        subscriptionBodies.push(JSON.parse(String(init.body)));
-        expect(new Headers(init.headers).get("Authorization")).toBe("test-token");
-        return new Response(null, { status: 204 });
-      }
-      if (url.endsWith("/api/realtime")) {
-        const snapshot = JSON.stringify({
-          stats: { cpu: 5, m: 10, mu: 4, mp: 40, mb: 1, s: 0, su: 0, d: 20, du: 8, dp: 40 },
-          container: [{ n: "homarr", c: 1, m: 256 }],
-        });
-        const stream = new ReadableStream<Uint8Array>({
-          start(controller) {
-            controller.enqueue(encoder.encode("event: PB_CONNECT\nid: client-1\ndata: {}\n\n"));
-            controller.enqueue(encoder.encode(`event: ${topic}\ndata: ${snapshot}\n\n`));
-            controller.close();
-          },
-        });
-        return new Response(stream, { headers: { "Content-Type": "text/event-stream" } });
-      }
-      throw new Error(`Unexpected request: ${init?.method ?? "GET"} ${url}`);
-    }) as typeof fetch;
+          });
+          return new Response(stream, { headers: { "Content-Type": "text/event-stream" } });
+        }
+        throw new Error(`Unexpected request: ${init?.method ?? "GET"} ${url}`);
+      }),
+      { preconnect: vi.fn<typeof fetch.preconnect>() },
+    );
 
     try {
       const integration = createBeszelIntegration();

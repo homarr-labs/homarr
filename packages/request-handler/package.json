@@ -12,6 +12,7 @@
     }
   },
   "exports": {
+    "./nitro-bindings": "./src/nitro-bindings/index.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {
@@ -29,6 +30,9 @@
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
+    "@tanstack/query-async-storage-persister": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-query-persist-client": "catalog:",
     "dayjs": "catalog:",
     "octokit": "catalog:",
     "superjson": "catalog:",

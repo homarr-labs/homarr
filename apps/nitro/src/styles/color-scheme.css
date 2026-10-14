@@ -1,0 +1,9 @@
+html[data-mantine-color-scheme="auto"] {
+  background-color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-mantine-color-scheme="auto"] {
+    background-color: #242424;
+  }
+}

@@ -1,41 +1,7 @@
-import { IconServerOff, IconSpeedboat } from "@tabler/icons-react";
-
-import { getWidgetIntegrationConfig } from "@homarr/definitions";
-
 import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { definition as canonicalDefinition } from "./definition";
 
-export const { definition, componentLoader } = createWidgetDefinition("speedtestTracker", {
-  icon: IconSpeedboat,
-  refetchInterval: null,
-  createOptions() {
-    return optionsBuilder.from(
-      (factory) => ({
-        showLatestResult: factory.switch({
-          defaultValue: true,
-        }),
-        showStats: factory.switch({
-          defaultValue: true,
-        }),
-        showRecentResults: factory.switch({
-          defaultValue: true,
-        }),
-        showPingGraph: factory.switch({
-          defaultValue: true,
-        }),
-      }),
-      {
-        showPingGraph: {
-          shouldHide: (options) => !options.showRecentResults,
-        },
-      },
-    );
-  },
-  ...getWidgetIntegrationConfig("speedtestTracker"),
-  errors: {
-    INTERNAL_SERVER_ERROR: {
-      icon: IconServerOff,
-      message: (t) => t("widget.speedtestTracker.error.internalServerError"),
-    },
-  },
-}).withDynamicImport(() => import("./component"));
+export const { definition, componentLoader } = createWidgetDefinition(
+  "speedtestTracker",
+  canonicalDefinition,
+).withDynamicImport(() => import("./component"));

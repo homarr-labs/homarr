@@ -4,7 +4,7 @@ import type { BackupDependencies, BackupEngine } from "./contracts";
 
 export interface SqliteBackupConfiguration {
   temporaryDirectory: string;
-  migrationsFolder?: string;
+  readonly migrationsFolder: string;
   targetKey: string;
   authorizeAsync: BackupDependencies["authorizeAsync"];
 }

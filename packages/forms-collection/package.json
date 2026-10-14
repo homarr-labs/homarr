@@ -12,7 +12,14 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./new-app/_form": "./src/new-app/_form.tsx",
+    "./new-app/_app-new-form": "./src/new-app/_app-new-form.tsx",
+    "./board-create/board-create-form": "./src/board-create/board-create-form.tsx",
+    "./icon-picker/icon-picker": "./src/icon-picker/icon-picker.tsx",
+    "./icon-picker/icon-picker.utils": "./src/icon-picker/icon-picker.utils.ts",
+    "./upload-media/upload-media": "./src/upload-media/upload-media.tsx",
+    "./user-create/user-create-password-fields": "./src/user-create/user-create-password-fields.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -31,6 +38,8 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
+    "@mantine/hooks": "catalog:",
+    "@tabler/icons-react": "catalog:",
     "react": "catalog:",
     "zod": "catalog:"
   },

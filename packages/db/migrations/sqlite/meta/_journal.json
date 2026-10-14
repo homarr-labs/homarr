@@ -344,6 +344,20 @@
       "when": 1790988595595,
       "tag": "0048_add_layout_resize_source",
       "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "6",
+      "when": 1791712104288,
+      "tag": "0049_robust_gateway",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "6",
+      "when": 1791828953283,
+      "tag": "0050_auth_credential_evidence",
+      "breakpoints": true
     }
   ]
 }

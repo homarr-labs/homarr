@@ -1,0 +1,13 @@
+# Runner control result — consumed, incomplete qualification
+
+**HOLD. One control and its observer ran; no retry is authorized.** The selected foreground control returned three identity/readiness frames and the tool's explicit 2000ms timeout message. The selected observer returned frame4, but after both original self-exit deadlines. This does not qualify descendant-session termination or final capture by the runner.
+
+Receipts are under `TEMP/nitro-runner-control-cp614t3k/records/`: `control-preflight.json`, `control-release.json`, `control-claim.json`, exclusive `control-identity.json`, and manually retained tool-visible responses `control-tool-response.txt` / `observation-tool-response.txt`. Original static preparation, selected texts and failed classification receipts remain unchanged. These response copies are tool-visible text, not an independently instrumented transport dump.
+
+- Primary PID53456 and independently sessioned child PID53457 published matching kernel birth identities, UID501/GID20, groups/sessions and a closed identity record. Installed libproc loading and the selected 136-byte ABI worked for these narrow calls; full library closure and a stable public ABI are not established.
+- Control primary root was monotonic47223633497166; child pre-spawn root47223740010125. Original self-exit deadlines were47248633497166 and47243740010125 respectively.
+- Observer root was47291744827458, approximately68 seconds after the primary root. Both queried PIDs returned0/ESRCH3 twice, but `beforeSelfExit=false` and disposition `unknown` for each. This establishes absence at that later observation only, not timeout-caused termination or parent/descendant reap.
+- The tool response carries a timeout classification but no explicit whole-process exit, signal, wait/reap, submission/return timing or truncation fields. Those remain unavailable. The long inter-invocation interval cannot be attributed to tool-return latency from retained payload clocks alone.
+- No signals, caller/worker invocation, Engine/container action, native database initialization or real-data operation occurred. There is no still-present original control PID in the retained observation; no cleanup signal was dispatched.
+
+The immediate-observation precondition failed. Preserve this incomplete attempt and its once claim; do not rerun, extend deadlines, replace it with another control, or reinterpret later absence as qualification. The required next capability is runner-associated bounded foreground return/capture and owned new-session descendant disposition evidence from the existing runner/operator. Guest bind ownership, finite native budgets/force policy, materialization and the distinct new-memory initialization remain held.

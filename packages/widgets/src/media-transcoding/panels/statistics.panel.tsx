@@ -2,22 +2,21 @@ import type { MantineColor, RingProgressProps } from "@mantine/core";
 import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tooltip } from "@mantine/core";
 import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
-import { useRequiredBoard } from "@homarr/boards/context";
 import type { TdarrPieSegment, TdarrStatistics } from "@homarr/integrations";
-import { useByteFormatter } from "@homarr/settings";
-import { useI18n } from "@homarr/translation/client";
+import type { TranscodingViewBindings } from "../native-view-types";
 import type { TablerIcon } from "@homarr/ui";
 
 const PIE_COLORS: MantineColor[] = ["cyan", "grape", "gray", "orange", "pink"];
 
-interface StatisticsPanelProps {
+interface StatisticsPanelProps extends Pick<
+  TranscodingViewBindings,
+  "tCommon" | "tStatistics" | "formatBytes" | "itemRadius"
+> {
   statistics: TdarrStatistics;
 }
 
 export function StatisticsPanel(props: StatisticsPanelProps) {
-  const t = useI18n("widget.mediaTranscoding.panel.statistics");
-  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
-  const { formatBytes } = useByteFormatter();
+  const { tStatistics: t, tCommon, formatBytes, itemRadius } = props;
 
   const allLibs = props.statistics;
 
@@ -37,17 +36,25 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
           icon={IconTransform}
           label={tCommon("transcodes")}
           value={props.statistics.totalTranscodeCount}
+          itemRadius={itemRadius}
         />
         <StatisticItem
           icon={IconHeartbeat}
           label={tCommon("healthChecks")}
           value={props.statistics.totalHealthCheckCount}
+          itemRadius={itemRadius}
         />
-        <StatisticItem icon={IconFileDescription} label={t("filesCount")} value={props.statistics.totalFileCount} />
+        <StatisticItem
+          icon={IconFileDescription}
+          label={t("filesCount")}
+          value={props.statistics.totalFileCount}
+          itemRadius={itemRadius}
+        />
         <StatisticItem
           icon={IconDatabaseHeart}
           label={t("savedSpace")}
           value={formatBytes(Math.floor(allLibs.totalSavedSpace))}
+          itemRadius={itemRadius}
         />
       </Group>
       <Group justify="center" wrap="wrap" grow>
@@ -92,13 +99,13 @@ interface StatisticItemProps {
   icon: TablerIcon;
   value: string | number;
   label: string;
+  itemRadius: TranscodingViewBindings["itemRadius"];
 }
 
 function StatisticItem(props: StatisticItemProps) {
-  const board = useRequiredBoard();
   return (
     <Tooltip label={props.label}>
-      <Card p={0} radius={board.itemRadius} miw={48} flex={1} bg="transparent">
+      <Card p={0} radius={props.itemRadius} miw={48} flex={1} bg="transparent">
         <Group justify="center" align="center" gap="xs" w="100%" wrap="nowrap">
           <props.icon size="var(--mantine-font-size-md)" style={{ flexShrink: 0 }} />
           <Text size="md">{props.value}</Text>

@@ -1281,6 +1281,22 @@
     }
   },
   "integration": {
+    "outcome": {
+      "pendingTitle": "Integration request in progress",
+      "pending": "Waiting for the save response. Another save is blocked while this request is unresolved.",
+      "savedTitle": "Integration save acknowledged",
+      "unconfirmedTitle": "Integration save outcome unknown",
+      "unconfirmed": "The save request was sent, but no successful response was received. It may have changed the server. Do not submit it again without checking the saved state. Refreshing reads cannot confirm this request's outcome.",
+      "refreshPending": "Refreshing the original permission-scoped reads.",
+      "refreshFailed": "The read refresh failed. This does not undo an acknowledged save. The refresh action retries reads only.",
+      "refreshIncomplete": "No completed refresh was observed for all eligible active reads. Disabled, static, paused or missing reads do not prove that the view is up to date. The save response is retained separately.",
+      "refreshComplete": "The observed active reads were refreshed. This does not establish the outcome of an unconfirmed save or refresh every possible view.",
+      "deliveryPending": "Waiting for the original completion callback. It will not be invoked again.",
+      "deliveryFailed": "The save was acknowledged, but its notification or completion callback failed. The callback may have partly run and will not be invoked again. Refreshing reads does not retry the save or callback.",
+      "retired": "The original workflow is no longer current. Its unresolved outcome is retained and repeat saving remains blocked. Completion will not be delivered to a replacement workflow.",
+      "integrationId": "Returned integration ID: {id}",
+      "refreshAction": "Retry original read refresh"
+    },
     "completion": {
       "modalTitle": "Service ready",
       "title": "{name} is connected",

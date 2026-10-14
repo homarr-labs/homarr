@@ -8,8 +8,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { statsEntriesSchema } from "./stats/config";
 import type { StatsEntry } from "./stats/config";
 
-import type { DynamicSelectOption } from "./_inputs/widget-dynamic-select-input";
-import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
+import type { DynamicSelectOption, inferSelectOptionValue, SelectOption } from "./_inputs/select-contracts";
 import type { ReleasesRepository } from "./releases/releases-repository";
 
 interface CommonInput<TType> {

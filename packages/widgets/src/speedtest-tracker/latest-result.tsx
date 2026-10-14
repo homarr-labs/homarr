@@ -1,6 +1,7 @@
 "use client";
 
 import { Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import type { MantineSize } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconCircleCheck, IconCircleX, IconWaveSine } from "@tabler/icons-react";
 
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
@@ -14,10 +15,12 @@ export function LatestResultSection({
   result,
   width = 500,
   compactSurface = false,
+  itemRadius,
 }: {
   result: SpeedtestTrackerResult;
   width?: number;
   compactSurface?: boolean;
+  itemRadius: MantineSize;
 }) {
   const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
@@ -40,6 +43,7 @@ export function LatestResultSection({
       </Group>
       <SimpleGrid cols={cols} spacing="xs" style={{ flex: 1, gridTemplateRows: "1fr" }}>
         <SpeedStatCard
+          itemRadius={itemRadius}
           icon={IconArrowDown}
           color="blue"
           value={formatResultSpeed(result, "download")}
@@ -47,6 +51,7 @@ export function LatestResultSection({
           legacySurface={compactSurface}
         />
         <SpeedStatCard
+          itemRadius={itemRadius}
           icon={IconArrowUp}
           color="teal"
           value={formatResultSpeed(result, "upload")}
@@ -54,6 +59,7 @@ export function LatestResultSection({
           legacySurface={compactSurface}
         />
         <SpeedStatCard
+          itemRadius={itemRadius}
           icon={IconWaveSine}
           color="orange"
           value={result.ping !== null ? `${result.ping.toFixed(1)} ms` : "—"}
@@ -62,6 +68,7 @@ export function LatestResultSection({
         />
         {result.healthy !== null && (
           <SpeedStatCard
+            itemRadius={itemRadius}
             icon={result.healthy ? IconCircleCheck : IconCircleX}
             color={result.healthy ? "green" : "red"}
             value={result.healthy ? t("healthy") : t("unhealthy")}

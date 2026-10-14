@@ -1,0 +1,12 @@
+.cardContainer {
+  transition:
+    box-shadow 150ms ease,
+    transform 100ms ease;
+}
+
+@media (hover: hover) {
+  .cardContainer:hover {
+    box-shadow: var(--mantine-shadow-md);
+    transform: scale(1.02);
+  }
+}

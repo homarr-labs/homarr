@@ -1,10 +1,7 @@
 import type { IntegrationKind } from "@homarr/definitions";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { getIntegrationRuntimeResources } from "../runtime/context";
 
 import type { Integration, IntegrationInput } from "./integration";
-
-const logger = createLogger({ module: "integrationFactory" });
 
 // Keep each import path explicit so Node and Turbopack can discover every lazy integration chunk.
 const integrationCreators = {
@@ -363,8 +360,9 @@ export function createIntegrationAsync<TKind extends keyof IntegrationCreators>(
 export async function createIntegrationAsync(
   integration: IntegrationInput & { kind: IntegrationKind },
 ): Promise<Integration> {
+  const logger = getIntegrationRuntimeResources()?.log;
   if (!Object.hasOwn(integrationCreators, integration.kind)) {
-    logger.warn("Integration client creation refused", {
+    logger?.write("warn", "Integration client creation refused", {
       integrationId: integration.id,
       integrationKind: integration.kind,
       reason: "integration-kind-unregistered",
@@ -375,28 +373,25 @@ export async function createIntegrationAsync(
   }
 
   const startedAt = Date.now();
-  logger.debug("Creating integration client", { integrationId: integration.id, integrationKind: integration.kind });
+  logger?.write("debug", "Creating integration client", {
+    integrationId: integration.id,
+    integrationKind: integration.kind,
+  });
 
   try {
     const instance = await integrationCreators[integration.kind](integration);
-    logger.debug("Integration client created", {
+    logger?.write("debug", "Integration client created", {
       integrationId: integration.id,
       integrationKind: integration.kind,
       durationMs: Date.now() - startedAt,
     });
     return instance;
   } catch (error) {
-    logger.warn(
-      new ErrorWithMetadata(
-        "Integration client creation failed",
-        {
-          integrationId: integration.id,
-          integrationKind: integration.kind,
-          durationMs: Date.now() - startedAt,
-        },
-        { cause: error },
-      ),
-    );
+    logger?.write("warn", "Integration client creation failed", {
+      integrationId: integration.id,
+      integrationKind: integration.kind,
+      durationMs: Date.now() - startedAt,
+    });
     throw error;
   }
 }

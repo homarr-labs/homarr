@@ -1,0 +1,13 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "noEmit": true,
+    "types": ["node", "bun"],
+    "paths": {
+      "@homarr/node-unifi": ["../../../../../../node_modules/@types/node-unifi"]
+    }
+  },
+  "include": ["./*.ts", "../board.ts", "../../checks/boards.mts"],
+  "exclude": ["node_modules"]
+}

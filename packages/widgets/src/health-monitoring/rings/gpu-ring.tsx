@@ -3,7 +3,7 @@ import { IconDeviceDesktop } from "@tabler/icons-react";
 
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { progressColor } from "../system-health";
+import { progressColor } from "../native-view-system";
 
 interface GpuRingProps {
   gpu: {

@@ -1,0 +1,14 @@
+# K generated assets — source publication
+
+Coordinator published the two actual generated migrations/snapshots and appended the two journal entries after Oracle `ses_eceaa0092ffeFlUJoA8Bd6mI4b` approval. No prior asset/entry was replaced. Isolated generation evidence and original raw SQLite SQL remain unchanged at `/private/var/folders/kx/hccbvbyd6sb61s6lrr2jyt2m0000gn/T/opencode/nitro-credential-assets-d4axMeII/`.
+
+| Engine     | Asset                                                            | SQL SHA256                                                         | Snapshot SHA256                                                    |
+| ---------- | ---------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| SQLite     | `0050_auth_credential_evidence`, index50, timestamp1791828953283 | `b521f900b160fb1256790be8e1bda41ce550ca7325bd480544bc969ac62e1108` | `069e9a6f6143119845d1de74a769b53ca9eded045abe516ebc315087ea0d9703` |
+| PostgreSQL | `0018_auth_credential_evidence`, index18, timestamp1791828953678 | `dafe9a445ec5e2aee227912461f405bc6f1ad2835ab1a1306a9c736eec85309d` | `7c9a7c6ad4ca1ba2909f30dca68317a4b7b3ed5744c00c68b614a9f1af24a549` |
+
+Raw SQLite SHA256 was `b516300da59863c8803001c40173e1102b410a88b03ab3d227455f191124dcef`. Exactly two reviewed preservation corrections were applied in a second candidate copy: old `apiKey` and `session` source projections now copy their original three columns plus `NULL,NULL`, because the predecessor tables lack both evidence columns. Destination lists, constraints, PK/FK/indexes and all other SQL remain unchanged. PostgreSQL SQL and both generated snapshots are byte-identical to generation output.
+
+Predecessor snapshot IDs match the actual tails. Snapshot differences are limited to the domain table, two nullable evidence columns/check per credential family and snapshot identity linkage. Neither engine seeds a namespace/head/domain row, assigns evidence or permits adoption. Generated numeric exits were0; outputs/prefixes/hashes were verified separately. This is source generation/publication, not executed migration or native preservation proof.
+
+Required next: private whole-target catalog, anchor-independent copied bundle/compatibility and copy/reset/seal joins. Original runtime anchor remains SQLite0049/PostgreSQL0017 and must not be repointed to the new tails. Reset ownership remains the four original runtime tables; preserve Auth domain/evidence. Populated predecessor migration, physical PK/FK/index/check verification and shutdown/race/restart/restore proof are unexecuted. File-backed/existing/restart adoption, generic COMMIT, writer closure, Auth HTTP success and real restore remain held.

@@ -83,14 +83,18 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
   private static Status(input: { status: number; url: string }) {
     if (input.status === 401 || input.status === 403) return this.Authorization(input.status);
 
-    // We don't want to leak the query parameters in the error message
-    const urlWithoutQuery = new URL(input.url);
-    urlWithoutQuery.search = "";
+    const urlWithoutQuery = URL.parse(input.url);
+    if (urlWithoutQuery) {
+      urlWithoutQuery.search = "";
+      urlWithoutQuery.hash = "";
+      urlWithoutQuery.username = "";
+      urlWithoutQuery.password = "";
+    }
 
     return new TestConnectionError("statusCode", {
       statusCode: input.status,
       reason: input.status in statusCodeMap ? statusCodeMap[input.status as keyof typeof statusCodeMap] : "other",
-      url: urlWithoutQuery.toString(),
+      url: urlWithoutQuery?.toString() ?? "",
     });
   }
 

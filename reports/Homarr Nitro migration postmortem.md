@@ -4,6 +4,8 @@
 
 Parent issue: [AJN-482 — Find the route to a lightweight Nitro Homarr](https://linear.app/ajnart/issue/AJN-482/find-the-route-to-a-lightweight-nitro-homarr).
 
+**Archival follow-up:** the user subsequently requested committing and pushing the complete checkout work, including `.scratch` and `.slim` records. That snapshot is on `docs/nitro-migration-postmortem`; the [handoff prompt](Homarr%20Nitro%20migration%20handoff%20prompt.md) maps its contents. This expands preservation, not migration or runtime authorization. Statements below about the documentation-only commit describe the initial commit `0240e5cfd`, before that follow-up.
+
 ## Bottom line
 
 The user describes roughly five days of work without the server they needed. The agent produced substantial research, extracted source, contracts, reviews and validation records, but failed to turn them into a maintained application that the user could start and test. A small earlier fixture did run; it was not the full migration and must not be presented as its delivery.

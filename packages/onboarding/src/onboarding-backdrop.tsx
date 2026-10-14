@@ -1,14 +1,5 @@
 import { IntegrationMarquee } from "@homarr/ui";
 
-import classes from "./onboarding-studio.module.css";
+import { OnboardingBackdropView } from "./presentation-backdrop";
 
-export const OnboardingBackdrop = () => (
-  <div className={classes.marqueeBackdrop} aria-hidden>
-    <div className={`${classes.marqueeRail} ${classes.marqueeRailLeft}`}>
-      <IntegrationMarquee />
-    </div>
-    <div className={`${classes.marqueeRail} ${classes.marqueeRailRight}`}>
-      <IntegrationMarquee />
-    </div>
-  </div>
-);
+export const OnboardingBackdrop = () => <OnboardingBackdropView marquee={<IntegrationMarquee />} />;

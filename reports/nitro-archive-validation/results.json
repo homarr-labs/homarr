@@ -1,0 +1,59 @@
+{
+  "recordedAt": "2026-10-14T07:29:11.458415+00:00",
+  "branch": "docs/nitro-migration-postmortem",
+  "scope": "Archival snapshot only; no source repair, tests, app startup, native invocation, restore or cutover.",
+  "checks": [
+    {
+      "name": "backend-lint",
+      "command": [
+        "bun",
+        "--no-env-file",
+        "run",
+        "--filter",
+        "@homarr/backend",
+        "lint"
+      ],
+      "exitCode": 0,
+      "output": "backend-lint.txt"
+    },
+    {
+      "name": "backend-typecheck",
+      "command": [
+        "bun",
+        "--no-env-file",
+        "run",
+        "--filter",
+        "@homarr/backend",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "output": "backend-typecheck.txt"
+    },
+    {
+      "name": "nitro-lint",
+      "command": [
+        "bun",
+        "--no-env-file",
+        "run",
+        "--filter",
+        "@homarr/nitro",
+        "lint"
+      ],
+      "exitCode": 0,
+      "output": "nitro-lint.txt"
+    },
+    {
+      "name": "nitro-typecheck",
+      "command": [
+        "bun",
+        "--no-env-file",
+        "run",
+        "--filter",
+        "@homarr/nitro",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "output": "nitro-typecheck.txt"
+    }
+  ]
+}

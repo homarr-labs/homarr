@@ -1,7 +1,7 @@
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
-import { createId } from "@homarr/common";
+import { createId } from "@homarr/common/id";
 import type { BoardLane } from "@homarr/definitions";
 import { emptySuperJSON, getRootSectionLane, rootSectionOffsets } from "@homarr/definitions";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";

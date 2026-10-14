@@ -1,17 +1,24 @@
-import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
+import { useLayoutEffect, useRef, useState } from "react";
+import { Button, Group, Image, Kbd, Stack, Text } from "@mantine/core";
 import { IconDownload, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory, getIntegrationName } from "@homarr/definitions";
-import { useModalAction } from "@homarr/modals";
-import { RequestMediaModal } from "@homarr/modals-collection";
+import { createModal, useModalAction } from "@homarr/modals";
+import type {
+  MediaRequestInformation,
+  MediaRequestInput,
+  MediaRequestTarget,
+} from "@homarr/modals-collection/search-engines/request-media-modal";
+import { RequestMediaContent, RequestMediaModal } from "@homarr/modals-collection/search-engines/request-media-modal";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
-import { filterCatalog, useSearchEnginesCatalogQuery } from "../../lib/catalog";
+import { filterCatalog, useIntegrationsCatalogQuery, useSearchEnginesCatalogQuery } from "../../lib/catalog";
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
@@ -70,6 +77,216 @@ type MediaRequestChildrenProps = {
   };
 };
 
+interface LegacyRequestMediaProps {
+  target: MediaRequestTarget;
+  integration: RouterOutputs["integration"]["all"][number];
+  session: NonNullable<ReturnType<typeof useSession>["data"]>;
+  sessionObservation: string;
+  intent: { retired: boolean; dispatched: boolean; presentation: { isCurrent: () => boolean } | null };
+}
+
+interface LegacyMediaOwner {
+  active: boolean;
+  presentation: { isCurrent: () => boolean };
+}
+
+const LegacyRequestMediaContent = ({
+  actions,
+  innerProps,
+}: {
+  actions: Parameters<typeof RequestMediaModal.component>[0]["actions"];
+  innerProps: LegacyRequestMediaProps;
+}) => {
+  const session = useSession();
+  const t = useI18n();
+  const utils = clientApi.useUtils();
+  const [owner, setOwner] = useState<LegacyMediaOwner | null>(null);
+  const [read, setRead] = useState<{ pending: boolean; ready: boolean; error: unknown }>({
+    pending: true,
+    ready: false,
+    error: null,
+  });
+  const sameSession =
+    session.status === "authenticated" &&
+    session.data === innerProps.session &&
+    JSON.stringify(session.data) === innerProps.sessionObservation;
+  const catalog = clientApi.integration.all.useQuery(undefined, {
+    enabled: false,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const integration = catalog.data?.find(
+    ({ id, kind }) => id === innerProps.target.integrationId && kind === innerProps.integration.kind,
+  );
+  const access =
+    catalog.isSuccess && integration?.permissions.hasUseAccess === true && integration.permissions.hasInteractAccess;
+  const options = clientApi.integration.getMediaRequestOptions.useQuery(innerProps.target, {
+    enabled: sameSession && access && read.ready && !innerProps.intent.retired,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const mutation = clientApi.integration.requestMedia.useMutation({ retry: false });
+  const committed = useRef<{
+    sameSession: boolean;
+    access: boolean;
+    options?: MediaRequestInformation;
+    optionsReady: boolean;
+  } | null>(null);
+  useLayoutEffect(() => {
+    committed.current = {
+      sameSession,
+      access,
+      options: options.data,
+      optionsReady: read.ready && options.isSuccess && !options.isFetching && !catalog.isFetching && !read.pending,
+    };
+    if (
+      !sameSession ||
+      (owner?.active === true &&
+        owner.presentation.isCurrent() &&
+        catalog.isFetchedAfterMount &&
+        catalog.isSuccess &&
+        !access)
+    )
+      innerProps.intent.retired = true;
+  });
+  const hasOwner = (mounted: LegacyMediaOwner | null, target: MediaRequestTarget = innerProps.target) =>
+    mounted !== null &&
+    mounted.active &&
+    mounted.presentation.isCurrent() &&
+    !innerProps.intent.retired &&
+    committed.current?.sameSession === true &&
+    target.integrationId === innerProps.target.integrationId &&
+    target.mediaId === innerProps.target.mediaId &&
+    target.mediaType === innerProps.target.mediaType;
+  const reconcile = async (target: MediaRequestTarget, mounted: LegacyMediaOwner | null) => {
+    const requireOwner = () => {
+      if (!hasOwner(mounted, target) || !committed.current?.access)
+        throw new Error("Media request is no longer current");
+    };
+    requireOwner();
+    await utils.integration.getMediaRequestOptions.invalidate(target, undefined, { throwOnError: true });
+    requireOwner();
+    await utils.integration.searchInIntegration.invalidate({ integrationId: target.integrationId }, undefined, {
+      throwOnError: true,
+    });
+    requireOwner();
+    await utils.integration.searchMediaRequests.invalidate(undefined, undefined, { throwOnError: true });
+    requireOwner();
+  };
+  const refresh = async (mounted: LegacyMediaOwner, reconcileUnknown = false) => {
+    if (!hasOwner(mounted)) return;
+    setRead((previous) => ({ ...previous, pending: true, error: null }));
+    try {
+      const result = await catalog.refetch({ throwOnError: true });
+      if (!hasOwner(mounted)) throw new Error("Media request is no longer current");
+      const allowed = result.data?.find(
+        ({ id, kind }) => id === innerProps.target.integrationId && kind === innerProps.integration.kind,
+      );
+      if (!allowed?.permissions.hasUseAccess || !allowed.permissions.hasInteractAccess) {
+        innerProps.intent.retired = true;
+        throw new Error("Media request access is no longer available");
+      }
+      await options.refetch({ throwOnError: true });
+      if (!hasOwner(mounted)) throw new Error("Media request is no longer current");
+      if (reconcileUnknown) await reconcile(innerProps.target, mounted);
+      if (mounted.active) setRead({ pending: false, ready: true, error: null });
+    } catch (error) {
+      if (mounted.active) setRead({ pending: false, ready: false, error });
+    }
+  };
+  const startup = useRef({ capturePresentationOwner: actions.capturePresentationOwner, refresh });
+  useLayoutEffect(() => {
+    innerProps.intent.presentation ??= startup.current.capturePresentationOwner();
+    const mounted = { active: true, presentation: innerProps.intent.presentation };
+    setOwner(mounted);
+    void startup.current.refresh(mounted);
+    return () => {
+      mounted.active = false;
+    };
+  }, [innerProps.intent]);
+  const isCurrentOwner = () => hasOwner(owner) && committed.current?.access === true;
+  const admitted =
+    sameSession &&
+    hasOwner(owner) &&
+    access &&
+    read.ready &&
+    !read.pending &&
+    options.isSuccess &&
+    !options.isFetching &&
+    !catalog.isFetching &&
+    !innerProps.intent.dispatched;
+  const requestMedia = (input: MediaRequestInput) => {
+    const current = committed.current;
+    if (!hasOwner(owner, input) || !current?.access || !current.optionsReady || innerProps.intent.dispatched)
+      throw new Error("Media request is not available");
+    const seasons = input.seasons;
+    if (
+      input.mediaType === "tv" &&
+      (seasons.length === 0 ||
+        seasons.some(
+          (season) =>
+            !current.options?.seasons?.some(({ seasonNumber }) => seasonNumber === season) ||
+            current.options?.requestedSeasons?.includes(season),
+        ))
+    )
+      throw new Error("Select an available unrequested season");
+    innerProps.intent.dispatched = true;
+    if (input.mediaType === "movie") return mutation.mutateAsync({ ...input, seasons: [] });
+    return mutation.mutateAsync(input);
+  };
+  const readError = read.error ?? catalog.error ?? options.error;
+  return (
+    <Stack>
+      <RequestMediaContent
+        actions={{
+          closeModal() {
+            if (owner) owner.active = false;
+            innerProps.intent.retired = true;
+            actions.closeModal();
+          },
+        }}
+        innerProps={{
+          ...innerProps.target,
+          data: sameSession && hasOwner(owner) && read.ready && options.isSuccess ? options.data : undefined,
+          isPendingQuery: (read.pending && hasOwner(owner)) || options.isFetching || catalog.isFetching,
+          isPendingMutation: mutation.isPending,
+          isCurrent: admitted,
+          isCurrentOwner,
+          requestMedia: admitted ? requestMedia : undefined,
+          onRequested: (target) => reconcile(target, owner),
+          outcomeLabels: {
+            unknown:
+              "The request outcome could not be confirmed. Refresh the integration and check whether the request exists before submitting again.",
+            reconcileheld:
+              "The request was accepted, but cached results could not be refreshed. Retry refresh; do not send the request again.",
+          },
+        }}
+      />
+      {readError !== null && (
+        <Text component="output" aria-live="polite">
+          {readError instanceof Error ? readError.message : "Could not refresh media request options"}
+        </Text>
+      )}
+      {(readError !== null || mutation.isError) && (
+        <Button
+          variant="default"
+          loading={read.pending}
+          disabled={!hasOwner(owner) || mutation.isPending || read.pending}
+          onClick={() => {
+            if (owner) void refresh(owner, mutation.isError);
+          }}
+        >
+          {t("common.action.tryAgain")}
+        </Button>
+      )}
+    </Stack>
+  );
+};
+
+const LegacyRequestMediaModal = createModal<LegacyRequestMediaProps>(LegacyRequestMediaContent).withOptions(
+  RequestMediaModal.options,
+);
+
 export const useMediaRequestSearchInteraction = (
   integration: MediaRequestChildrenProps["integration"],
   searchResult: FromIntegrationSearchResult,
@@ -126,14 +343,44 @@ export const useFromIntegrationSearchInteraction = (
 };
 
 export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenProps>({
-  useActions() {
-    const { openModal } = useModalAction(RequestMediaModal);
+  useActions(option) {
+    const { openModal } = useModalAction(LegacyRequestMediaModal);
+    const session = useSession();
+    const catalog = useIntegrationsCatalogQuery();
+    const integration = catalog.data?.find(
+      ({ id, kind }) => id === option.integration.id && kind === option.integration.kind,
+    );
+    const available =
+      session.status === "authenticated" &&
+      catalog.isSuccess &&
+      !catalog.isFetching &&
+      integration?.permissions.hasUseAccess === true &&
+      integration.permissions.hasInteractAccess &&
+      option.integration.permissions?.hasInteractAccess !== false &&
+      !(option.result.type === "movie" && option.result.inLibrary) &&
+      getIntegrationKindsByCategory("mediaRequest").some((kind) => kind === option.integration.kind);
+    const committed = useRef<{ option: MediaRequestChildrenProps; props: LegacyRequestMediaProps } | null>(null);
+    useLayoutEffect(() => {
+      committed.current = null;
+      if (available && session.data && integration)
+        committed.current = {
+          option,
+          props: {
+            target: { integrationId: option.integration.id, mediaId: option.result.id, mediaType: option.result.type },
+            integration,
+            session: session.data,
+            sessionObservation: JSON.stringify(session.data),
+            intent: { retired: false, dispatched: false, presentation: null },
+          },
+        };
+      return () => {
+        committed.current = null;
+      };
+    }, [available, integration, option, session.data]);
     return [
       {
         key: "request",
-        hide: (option) =>
-          (option.result.type === "movie" && option.result.inLibrary) ||
-          option.integration.permissions?.hasInteractAccess === false,
+        hide: !available,
         Component(option) {
           const t = useI18n("search.mode.media");
           return (
@@ -146,18 +393,19 @@ export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestCh
         },
         useInteraction: interaction.javaScript((option) => ({
           onSelect() {
-            openModal(
-              {
-                integrationId: option.integration.id,
-                mediaId: option.result.id,
-                mediaType: option.result.type,
+            const selected = committed.current;
+            if (
+              !selected ||
+              selected.option.integration.id !== option.integration.id ||
+              selected.option.result.id !== option.result.id ||
+              selected.option.result.type !== option.result.type
+            )
+              return;
+            openModal(selected.props, {
+              title(t) {
+                return t("search.engine.media.request.modal.title", { name: option.result.name });
               },
-              {
-                title(t) {
-                  return t("search.engine.media.request.modal.title", { name: option.result.name });
-                },
-              },
-            );
+            });
           },
         })),
       },
@@ -441,23 +689,23 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
       const isLoading = enginesQuery.isLoading || isWaitingForDdgResults;
       const isError = enginesQuery.isError || (ddgQuery.isError && ddgQueryEnabled && bangToken.length > 0);
 
-      const engineOptions = engineData.map(
-        (engine): ExternalOption => ({
+      const engineOptions = engineData.map((engine): ExternalOption => {
+        return {
           key: `engine-${engine.short}`,
           kind: "engine",
           engine,
-        }),
-      );
+        };
+      });
 
       const ddgOptions = ddgData
         .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
-        .map(
-          (bang): ExternalOption => ({
+        .map((bang): ExternalOption => {
+          return {
             key: `ddg-${bang.t}`,
             kind: "ddg",
             bang,
-          }),
-        );
+          };
+        });
 
       const searchActions: ExternalOption[] = [];
       if (locked && bangToken.length > 0) {

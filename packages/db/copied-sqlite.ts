@@ -1,18 +1,19 @@
 import { constants } from "node:fs";
 import { AsyncLocalStorage } from "node:async_hooks";
+import { randomUUID } from "node:crypto";
 import { chmod, lstat, mkdtemp, open, readFile, rm, rmdir } from "node:fs/promises";
 import { isAbsolute, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { getTableName, is } from "drizzle-orm";
-import { SQLiteTable } from "drizzle-orm/sqlite-core";
+import { drizzle } from "drizzle-orm/bun-sqlite";
 import { migrate } from "drizzle-orm/bun-sqlite/migrator";
-import type { BunSQLiteDatabase } from "drizzle-orm/bun-sqlite";
 import type { SQLQueryBindings } from "bun:sqlite";
 
 import { createSharedDbConfig, createSqliteDb } from "@homarr/core/infrastructure/db";
 
-import { assertSqliteMigrationHistory, migrationHistoryReadLimit } from "./migrations/compatibility";
+import { assertCopiedCatalogPrefix } from "./copied-runtime-catalog";
+import type { CopiedCatalogReader } from "./copied-runtime-catalog";
+import { assertSqliteMainTarget, readMainTargetBundle } from "./main-target-catalog";
 import { applyCustomMigrationsAsync } from "./migrations/custom";
+import { runtimeCatalog } from "./runtime-catalog";
 import * as schema from "./schema/sqlite";
 
 export type CopiedSqlValue = string | number | bigint | Uint8Array | null;
@@ -42,15 +43,19 @@ type CopyState = {
     | "disposed"
     | "failed";
   closed: boolean;
+  catalogIdentity?: string;
+  resetEpoch?: string;
   disposal?: Promise<void>;
 };
 
 const abort = (signal?: AbortSignal) => signal?.throwIfAborted();
 
-export const createSqliteCopyEngine = (config: { temporaryDirectory: string; migrationsFolder?: string }) => {
-  if (!isAbsolute(config.temporaryDirectory))
-    throw new TypeError("Copied SQLite resources require an explicit absolute temporary directory");
-  const migrationsFolder = config.migrationsFolder ?? fileURLToPath(new URL("./migrations/sqlite/", import.meta.url));
+export const createSqliteCopyEngine = (config: { temporaryDirectory: string; migrationsFolder: string }) => {
+  const temporaryDirectory = config.temporaryDirectory;
+  const migrationsFolder = config.migrationsFolder;
+  if (!isAbsolute(temporaryDirectory) || !isAbsolute(migrationsFolder))
+    throw new TypeError("Copied SQLite resources require explicit absolute temporary and migration directories");
+  const engineBundle = readMainTargetBundle("sqlite", migrationsFolder);
   const copies = new WeakMap<CopiedSqliteDatabase, CopyState>();
   const transactionScope = new AsyncLocalStorage<{ active: boolean }>();
   const stateFor = (copy: CopiedSqliteDatabase) => {
@@ -64,6 +69,79 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
     if (state.closed || ["migrating", "sealing", "sealed", "disposing", "disposed", "failed"].includes(state.phase))
       throw new Error("The copied SQLite resource is not available");
   };
+  const readerFor = (state: CopyState): CopiedCatalogReader => ({
+    all(query, values = []) {
+      return state.database.$client.query<CopiedSqlRow, SQLQueryBindings[]>(query).all(...values);
+    },
+    iterate(query, values = []) {
+      return state.database.$client.query<CopiedSqlRow, SQLQueryBindings[]>(query).iterate(...values);
+    },
+  });
+  const assertBundle = (state: CopyState) => {
+    const bundle = readMainTargetBundle("sqlite", migrationsFolder);
+    if (
+      bundle.identity !== engineBundle.identity ||
+      (state.catalogIdentity && state.catalogIdentity !== bundle.identity)
+    )
+      throw new Error("The configured copied SQLite migration bundle changed");
+    return bundle.identity;
+  };
+  const assertPrefix = (state: CopyState) => {
+    const identity = assertBundle(state);
+    assertCopiedCatalogPrefix(readerFor(state), migrationsFolder);
+    return identity;
+  };
+  const assertTarget = (state: CopyState, reader: CopiedCatalogReader) => {
+    assertBundle(state);
+    assertSqliteMainTarget(reader, migrationsFolder);
+  };
+  const assertNoTemporaryObjects = (reader: CopiedCatalogReader) => {
+    if (reader.all("SELECT name FROM sqlite_temp_master LIMIT 1").length)
+      throw new Error("Temporary objects are not supported for copied runtime reset or sealing");
+  };
+  const assertNoRuntimeReferrers = (reader: CopiedCatalogReader) => {
+    const runtimeTables = new Set(Object.values(runtimeCatalog.sqlite.tables).map((table) => table.name));
+    const placeholders = [...runtimeTables].map(() => "?").join(",");
+    for (const table of reader.iterate("SELECT name FROM main.sqlite_master WHERE type = 'table'")) {
+      if (typeof table.name !== "string") throw new Error("Unsupported copied database table");
+      if (runtimeTables.has(table.name)) continue;
+      if (
+        reader.all(`SELECT id FROM pragma_foreign_key_list(?, ?) WHERE lower("table") IN (${placeholders}) LIMIT 1`, [
+          table.name,
+          "main",
+          ...runtimeTables,
+        ]).length
+      )
+        throw new Error("Runtime reset cannot change referenced non-runtime tables");
+    }
+  };
+  const assertResetContents = (reader: CopiedCatalogReader, epoch: string) => {
+    for (const query of [
+      'SELECT 1 FROM main."homarr_runtime_history_entry" LIMIT 1',
+      'SELECT 1 FROM main."homarr_runtime_history_stream" LIMIT 1',
+      'SELECT 1 FROM main."homarr_runtime_state" LIMIT 1',
+    ]) {
+      if (reader.all(query).length) throw new Error("The copied runtime must be empty before sealing");
+    }
+    const expected = runtimeCatalog.initialMetaRows;
+    const rows = reader.all(
+      'SELECT id, epoch IS ? AS epoch_matches, epoch IS NULL AS epoch_is_null FROM main."homarr_runtime_meta" ORDER BY id LIMIT ?',
+      [epoch, expected.length + 1],
+    );
+    if (
+      rows.length !== expected.length ||
+      rows.some((row, index) => {
+        const target = expected[index];
+        return (
+          !target ||
+          row.id !== target.id ||
+          row.epoch_matches !== Number(target.epoch !== null) ||
+          row.epoch_is_null !== Number(target.epoch === null)
+        );
+      })
+    )
+      throw new Error("The copied runtime epoch does not match its owned reset");
+  };
   return {
     async createCopyAsync(bytes: Uint8Array, signal?: AbortSignal): Promise<CopiedSqliteDatabase> {
       abort(signal);
@@ -73,9 +151,9 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
         Buffer.from(bytes.subarray(0, 16)).toString("binary") !== "SQLite format 3\0"
       )
         throw new TypeError("Invalid copied SQLite image");
-      if (!(await lstat(config.temporaryDirectory)).isDirectory())
+      if (!(await lstat(temporaryDirectory)).isDirectory())
         throw new TypeError("Copied SQLite parent must be a regular directory");
-      const directory = await mkdtemp(join(config.temporaryDirectory, "homarr-sqlite-copy-"));
+      const directory = await mkdtemp(join(temporaryDirectory, "homarr-sqlite-copy-"));
       const path = join(directory, "copy.sqlite");
       let database: CopyState["database"] | undefined;
       try {
@@ -126,6 +204,14 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
             if (state.phase !== "ready") throw new Error("Only a converted copied database can be sealed");
             state.phase = "sealing";
             try {
+              const reader = readerFor(state);
+              assertNoTemporaryObjects(reader);
+              assertTarget(state, reader);
+              if (transactionScope.getStore()?.active || state.database.$client.inTransaction)
+                throw new Error("A copied runtime cannot be sealed inside a transaction");
+              if (!state.resetEpoch) throw new Error("The copied runtime must be reset before sealing");
+              assertNoRuntimeReferrers(reader);
+              assertResetContents(reader, state.resetEpoch);
               state.database.$client.query("VACUUM INTO ?").run(join(directory, "snapshot.sqlite"));
               state.database.$client.close(true);
               state.closed = true;
@@ -135,6 +221,7 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
               state.phase = "sealed";
               return { dialect: "sqlite", bytes: snapshot };
             } catch (error) {
+              state.resetEpoch = undefined;
               state.phase = "failed";
               throw error;
             }
@@ -178,82 +265,7 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
       assertAvailable(state);
       if (state.phase !== "copied" || metadata.dbDialect !== "sqlite")
         throw new Error("Unsupported copied database dialect or phase");
-      const tables = new Set<string>(
-        Object.values(schema)
-          .filter((table) => is(table, SQLiteTable))
-          .map((table) => getTableName(table)),
-      );
-      tables.add("__drizzle_migrations");
-      for (const object of copy.iterate("SELECT type, name, tbl_name, sql FROM sqlite_master")) {
-        const name = String(object.name);
-        const table = String(object.tbl_name);
-        if (object.type === "index" && object.sql === null && tables.has(table)) {
-          const internal = copy.all("SELECT name, origin FROM pragma_index_list(?) WHERE name = ? LIMIT 2", [
-            table,
-            name,
-          ]);
-          if (
-            name.startsWith(`sqlite_autoindex_${table}_`) &&
-            /^[1-9]\d*$/.test(name.slice(`sqlite_autoindex_${table}_`.length)) &&
-            internal.length === 1 &&
-            (internal[0]?.origin === "pk" || internal[0]?.origin === "u")
-          )
-            continue;
-        }
-        if (
-          object.type === "index" &&
-          tables.has(table) &&
-          typeof object.sql === "string" &&
-          /^CREATE\s+(?:UNIQUE\s+)?INDEX\s/i.test(object.sql)
-        )
-          continue;
-        if (
-          object.type === "table" &&
-          name === table &&
-          tables.has(name) &&
-          typeof object.sql === "string" &&
-          /^CREATE\s+TABLE\s/i.test(object.sql)
-        )
-          continue;
-        const statistics =
-          name === "sqlite_stat1"
-            ? ["tbl", "idx", "stat"]
-            : name === "sqlite_stat4"
-              ? ["tbl", "idx", "neq", "nlt", "ndlt", "sample"]
-              : undefined;
-        if (
-          object.type === "table" &&
-          name === table &&
-          statistics &&
-          object.sql === `CREATE TABLE ${name}(${statistics.join(",")})`
-        ) {
-          const columns = copy.all('SELECT name, type, pk, "notnull", dflt_value FROM pragma_table_info(?) LIMIT ?', [
-            name,
-            statistics.length + 1,
-          ]);
-          if (
-            columns.length === statistics.length &&
-            columns.every(
-              (column, index) =>
-                column.name === statistics[index] &&
-                column.type === "" &&
-                column.pk === 0 &&
-                column.notnull === 0 &&
-                column.dflt_value === null,
-            )
-          )
-            continue;
-        }
-        throw new Error("Unsupported copied database schema object");
-      }
-      assertSqliteMigrationHistory(
-        copy
-          .all("SELECT hash, created_at FROM __drizzle_migrations ORDER BY created_at LIMIT ?", [
-            migrationHistoryReadLimit(migrationsFolder),
-          ])
-          .map(({ hash, created_at }) => ({ hash, created_at })),
-        migrationsFolder,
-      );
+      state.catalogIdentity = assertPrefix(state);
       state.phase = "compatible";
     },
     async migrateSchemaAsync(copy: CopiedSqliteDatabase, signal?: AbortSignal) {
@@ -264,7 +276,9 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
         throw new Error("Copied database compatibility must be checked before migration");
       state.phase = "migrating";
       try {
-        migrate(state.database as unknown as BunSQLiteDatabase<typeof schema>, { migrationsFolder });
+        assertPrefix(state);
+        migrate(drizzle(state.database.$client, createSharedDbConfig(schema)), { migrationsFolder });
+        assertTarget(state, readerFor(state));
         state.phase = "schema-ready";
       } catch (error) {
         state.phase = "failed";
@@ -278,10 +292,58 @@ export const createSqliteCopyEngine = (config: { temporaryDirectory: string; mig
       if (state.phase !== "schema-ready") throw new Error("Copied SQL schema must migrate before content conversion");
       state.phase = "migrating";
       try {
+        assertTarget(state, readerFor(state));
         await applyCustomMigrationsAsync(state.database);
         abort(signal);
+        assertTarget(state, readerFor(state));
         state.phase = "ready";
       } catch (error) {
+        state.phase = "failed";
+        throw error;
+      }
+    },
+    async resetRuntimeAsync(copy: CopiedSqliteDatabase, signal?: AbortSignal): Promise<void> {
+      const state = stateFor(copy);
+      if (state.phase !== "ready") {
+        assertAvailable(state);
+        throw new Error("Copied content must be converted before runtime reset");
+      }
+      state.resetEpoch = undefined;
+      try {
+        assertAvailable(state);
+        if (transactionScope.getStore()?.active || state.database.$client.inTransaction)
+          throw new Error("A copied runtime cannot be reset inside a transaction");
+        abort(signal);
+        state.phase = "migrating";
+        const reader = readerFor(state);
+        assertNoTemporaryObjects(reader);
+        assertTarget(state, reader);
+        const epoch = randomUUID();
+        state.database.transaction(
+          () => {
+            abort(signal);
+            assertTarget(state, reader);
+            assertNoRuntimeReferrers(reader);
+            state.database.$client.query('DELETE FROM main."homarr_runtime_history_entry"').run();
+            state.database.$client.query('DELETE FROM main."homarr_runtime_history_stream"').run();
+            state.database.$client.query('DELETE FROM main."homarr_runtime_state"').run();
+            state.database.$client.query('DELETE FROM main."homarr_runtime_meta"').run();
+            state.database.$client
+              .query('INSERT INTO main."homarr_runtime_meta" (id, epoch) VALUES (1, ?), (2, NULL)')
+              .run(epoch);
+            assertTarget(state, reader);
+            assertResetContents(reader, epoch);
+            abort(signal);
+          },
+          { behavior: "immediate" },
+        );
+        abort(signal);
+        assertTarget(state, reader);
+        assertResetContents(reader, epoch);
+        state.resetEpoch = epoch;
+        state.phase = "ready";
+      } catch (error) {
+        state.resetEpoch = undefined;
         state.phase = "failed";
         throw error;
       }

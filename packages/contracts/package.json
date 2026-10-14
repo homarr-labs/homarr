@@ -1,0 +1,17 @@
+{
+  "name": "@homarr/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./request": "./src/request.ts",
+    "./contribution": "./src/contribution.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint src"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

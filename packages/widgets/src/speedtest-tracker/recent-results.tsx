@@ -3,10 +3,10 @@
 import { useMemo } from "react";
 import { AreaChart, ChartTooltip } from "@mantine/charts";
 import { Stack, useMantineTheme } from "@mantine/core";
+import type { MantineSize } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { XAxis } from "recharts";
 
-import { useRequiredBoard } from "@homarr/boards/context";
 import { formatBitRate } from "@homarr/common";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
@@ -100,7 +100,8 @@ function buildYAxisConfig(maxVal: number, stepOptions: { threshold: number; step
   const roundedMax = Math.ceil(maxVal / step) * step || step;
   const ticks: number[] = [];
   for (let val = 0; val <= roundedMax; val += step) ticks.push(val);
-  return { ticks, domain: [0, roundedMax] as [number, number] };
+  const domain: [number, number] = [0, roundedMax];
+  return { ticks, domain };
 }
 
 function formatTooltipDate(label: number | string | undefined, locale: string): string {
@@ -118,10 +119,12 @@ export function RecentResultsSection({
   results,
   showPingGraph,
   uppercaseLabels = false,
+  itemRadius,
 }: {
   results: SpeedtestTrackerResult[];
   showPingGraph: boolean;
   uppercaseLabels?: boolean;
+  itemRadius: MantineSize;
 }) {
   const t = useI18n("widget.speedtestTracker");
 
@@ -129,8 +132,13 @@ export function RecentResultsSection({
     <Stack gap={4} h="100%" style={{ minHeight: 0 }}>
       <SectionLabel uppercase={uppercaseLabels}>{t("recentResults")}</SectionLabel>
       <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 4 }}>
-        <SpeedSubChart results={results} showLabel={showPingGraph} uppercaseLabels={uppercaseLabels} />
-        {showPingGraph && <PingSubChart results={results} uppercaseLabels={uppercaseLabels} />}
+        <SpeedSubChart
+          results={results}
+          showLabel={showPingGraph}
+          uppercaseLabels={uppercaseLabels}
+          itemRadius={itemRadius}
+        />
+        {showPingGraph && <PingSubChart results={results} uppercaseLabels={uppercaseLabels} itemRadius={itemRadius} />}
       </div>
     </Stack>
   );
@@ -140,10 +148,12 @@ function SpeedSubChart({
   results,
   showLabel,
   uppercaseLabels,
+  itemRadius,
 }: {
   results: SpeedtestTrackerResult[];
   showLabel: boolean;
   uppercaseLabels: boolean;
+  itemRadius: MantineSize;
 }) {
   const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
@@ -152,13 +162,21 @@ function SpeedSubChart({
     <div style={{ flex: 2, minHeight: 0, display: "flex", flexDirection: "column", gap: 2 }}>
       {showLabel && <SectionLabel uppercase={uppercaseLabels}>{t("recentResultsSpeed")}</SectionLabel>}
       <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
-        {height > 0 && <SpeedHistoryChart results={results} height={height} />}
+        {height > 0 && <SpeedHistoryChart results={results} height={height} itemRadius={itemRadius} />}
       </div>
     </div>
   );
 }
 
-function PingSubChart({ results, uppercaseLabels }: { results: SpeedtestTrackerResult[]; uppercaseLabels: boolean }) {
+function PingSubChart({
+  results,
+  uppercaseLabels,
+  itemRadius,
+}: {
+  results: SpeedtestTrackerResult[];
+  uppercaseLabels: boolean;
+  itemRadius: MantineSize;
+}) {
   const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
@@ -166,14 +184,21 @@ function PingSubChart({ results, uppercaseLabels }: { results: SpeedtestTrackerR
     <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 2 }}>
       <SectionLabel uppercase={uppercaseLabels}>{t("recentResultsPing")}</SectionLabel>
       <div ref={ref} style={{ flex: 1, minHeight: 0 }}>
-        {height > 0 && <PingHistoryChart results={results} height={height} />}
+        {height > 0 && <PingHistoryChart results={results} height={height} itemRadius={itemRadius} />}
       </div>
     </div>
   );
 }
 
-function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
-  const board = useRequiredBoard();
+function SpeedHistoryChart({
+  results,
+  height,
+  itemRadius,
+}: {
+  results: SpeedtestTrackerResult[];
+  height: number;
+  itemRadius: MantineSize;
+}) {
   const theme = useMantineTheme();
   const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
@@ -220,7 +245,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
       tickLine="none"
       withLegend
       fillOpacity={0.2}
-      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
+      styles={{ root: { padding: 5, borderRadius: theme.radius[itemRadius] } }}
       valueFormatter={formatChartBitRate}
       xAxisProps={{
         type: "number",
@@ -245,13 +270,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
         strokeOpacity: 0.35,
       }))}
       tooltipProps={{
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        content: (props: any) => {
-          const { label, payload, active } = props as {
-            label?: number | string;
-            payload?: Record<string, unknown>[];
-            active?: boolean;
-          };
+        content: ({ label, payload, active }) => {
           if (!active || !payload?.length) return null;
           return (
             <ChartTooltip
@@ -280,8 +299,15 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
   );
 }
 
-function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
-  const board = useRequiredBoard();
+function PingHistoryChart({
+  results,
+  height,
+  itemRadius,
+}: {
+  results: SpeedtestTrackerResult[];
+  height: number;
+  itemRadius: MantineSize;
+}) {
   const theme = useMantineTheme();
   const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
@@ -329,7 +355,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
       tickLine="none"
       withLegend={false}
       fillOpacity={0.2}
-      styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
+      styles={{ root: { padding: 5, borderRadius: theme.radius[itemRadius] } }}
       valueFormatter={(val: number) => `${val} ms`}
       xAxisProps={{
         type: "number",
@@ -354,13 +380,7 @@ function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult
         strokeOpacity: 0.35,
       }))}
       tooltipProps={{
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        content: (props: any) => {
-          const { label, payload, active } = props as {
-            label?: number | string;
-            payload?: Record<string, unknown>[];
-            active?: boolean;
-          };
+        content: ({ label, payload, active }) => {
           if (!active || !payload?.length) return null;
           return (
             <ChartTooltip

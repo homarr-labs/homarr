@@ -1,3 +1,13 @@
 export * from "./src/icons-fetcher";
 export * from "./src/types";
 export * from "./src/auto-icon-searcher";
+export * from "./src/resources";
+export * from "./src/search";
+export * from "./src/sync";
+export * from "./src/sql";
+export * from "./src/service";
+export type { IconRepositoryMetadata } from "./src/repositories/icon-repository";
+export { IconSourceHttpError } from "./src/repositories/icon-repository";
+export * from "./src/repositories/local.icon-repository";
+export * from "./src/repositories/github.icon-repository";
+export * from "./src/repositories/jsdelivr.icon-repository";

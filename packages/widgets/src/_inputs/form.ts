@@ -2,6 +2,6 @@
 
 import { createFormContext } from "@homarr/form";
 
-import type { WidgetEditModalState } from "../modals/widget-edit-modal";
+import type { WidgetEditModalState } from "../edit-state";
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<WidgetEditModalState>();

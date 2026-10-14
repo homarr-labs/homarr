@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "../../certificates/index.ts",
+    "../index.ts"
+  ]
+}

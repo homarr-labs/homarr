@@ -1,0 +1,198 @@
+{
+  "container": "homarr-nitro-fixture-fixture-1",
+  "workload": "Existing mutable synthetic fixture under uncontrolled human traffic; no HTTP/browser actions made by collector. Cache/source/session state not interrogated or reset.",
+  "sampling": "Six cgroup-v2 snapshots at approximately two-second spacing; host monotonic time for CPU denominator. Cgroup includes page cache, regular healthcheck and transient docker-exec cat observer. PID1 VmRSS is separately read from proc; kernel kB interpreted as KiB. Samples are non-atomic across files.",
+  "comparison": "Exploratory snapshot only, not a fair benchmark or whole-Homarr RAM-savings comparison.",
+  "summary": {
+    "samples": 6,
+    "wallWindowSeconds": 10.3230605,
+    "cpuUsageDeltaMicroseconds": 134101,
+    "cpuUserDeltaMicroseconds": 81777,
+    "cpuSystemDeltaMicroseconds": 52325,
+    "cpuPercentOfOneCore": 1.2990430502659556,
+    "memoryCurrentBytesRange": [
+      100102144,
+      109035520
+    ],
+    "pid1RssBytesRange": [
+      68894720,
+      70336512
+    ]
+  },
+  "samples": [
+    {
+      "readStartedAtUTC": "2026-10-10T16:23:50.384297+00:00",
+      "readFinishedAtUTC": "2026-10-10T16:23:50.446606+00:00",
+      "hostMonotonicNs": 18610625,
+      "memoryCurrentBytes": 109035520,
+      "memoryCurrentMiB": 103.984375,
+      "cpuStat": {
+        "usage_usec": 8593919,
+        "user_usec": 5874092,
+        "system_usec": 2719826,
+        "nice_usec": 0,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "pid1Status": {
+        "Name": "bun",
+        "Pid": "1",
+        "VmRSS": "68688 kB",
+        "RssAnon": "46720 kB",
+        "RssFile": "21968 kB",
+        "RssShmem": "0 kB"
+      },
+      "pid1RssBytes": 70336512,
+      "pid1RssMiB": 67.078125,
+      "raw": "109035520\nusage_usec 8593919\nuser_usec 5874092\nsystem_usec 2719826\nnice_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\nName:\tbun\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t1\nNgid:\t0\nPid:\t1\nPPid:\t0\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t1024\nGroups:\t1000 \nNStgid:\t1\nNSpid:\t1\nNSpgid:\t1\nNSsid:\t1\nKthread:\t0\nVmPeak:\t10048372 kB\nVmSize:\t 6570444 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   92572 kB\nVmRSS:\t   68688 kB\nRssAnon:\t   46720 kB\nRssFile:\t   21968 kB\nRssShmem:\t       0 kB\nVmData:\t 5834324 kB\nVmStk:\t     184 kB\nVmExe:\t   56832 kB\nVmLib:\t    2392 kB\nVmPTE:\t     708 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t20\nSigQ:\t0/64277\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t00000001200044fa\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5697\nnonvoluntary_ctxt_switches:\t8209\n"
+    },
+    {
+      "readStartedAtUTC": "2026-10-10T16:23:52.451352+00:00",
+      "readFinishedAtUTC": "2026-10-10T16:23:52.510788+00:00",
+      "hostMonotonicNs": 2085529333,
+      "memoryCurrentBytes": 109035520,
+      "memoryCurrentMiB": 103.984375,
+      "cpuStat": {
+        "usage_usec": 8622732,
+        "user_usec": 5897949,
+        "system_usec": 2724783,
+        "nice_usec": 0,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "pid1Status": {
+        "Name": "bun",
+        "Pid": "1",
+        "VmRSS": "68688 kB",
+        "RssAnon": "46720 kB",
+        "RssFile": "21968 kB",
+        "RssShmem": "0 kB"
+      },
+      "pid1RssBytes": 70336512,
+      "pid1RssMiB": 67.078125,
+      "raw": "109035520\nusage_usec 8622732\nuser_usec 5897949\nsystem_usec 2724783\nnice_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\nName:\tbun\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t1\nNgid:\t0\nPid:\t1\nPPid:\t0\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t1024\nGroups:\t1000 \nNStgid:\t1\nNSpid:\t1\nNSpgid:\t1\nNSsid:\t1\nKthread:\t0\nVmPeak:\t10048372 kB\nVmSize:\t 6570444 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   92572 kB\nVmRSS:\t   68688 kB\nRssAnon:\t   46720 kB\nRssFile:\t   21968 kB\nRssShmem:\t       0 kB\nVmData:\t 5834324 kB\nVmStk:\t     184 kB\nVmExe:\t   56832 kB\nVmLib:\t    2392 kB\nVmPTE:\t     708 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t20\nSigQ:\t0/64277\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t00000001200044fa\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5708\nnonvoluntary_ctxt_switches:\t8226\n"
+    },
+    {
+      "readStartedAtUTC": "2026-10-10T16:23:54.515873+00:00",
+      "readFinishedAtUTC": "2026-10-10T16:23:54.581873+00:00",
+      "hostMonotonicNs": 4150063125,
+      "memoryCurrentBytes": 100253696,
+      "memoryCurrentMiB": 95.609375,
+      "cpuStat": {
+        "usage_usec": 8636942,
+        "user_usec": 5904551,
+        "system_usec": 2732391,
+        "nice_usec": 0,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "pid1Status": {
+        "Name": "bun",
+        "Pid": "1",
+        "VmRSS": "67280 kB",
+        "RssAnon": "46720 kB",
+        "RssFile": "20560 kB",
+        "RssShmem": "0 kB"
+      },
+      "pid1RssBytes": 68894720,
+      "pid1RssMiB": 65.703125,
+      "raw": "100253696\nusage_usec 8636942\nuser_usec 5904551\nsystem_usec 2732391\nnice_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\nName:\tbun\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t1\nNgid:\t0\nPid:\t1\nPPid:\t0\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t1024\nGroups:\t1000 \nNStgid:\t1\nNSpid:\t1\nNSpgid:\t1\nNSsid:\t1\nKthread:\t0\nVmPeak:\t10048372 kB\nVmSize:\t 6570444 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   92572 kB\nVmRSS:\t   67280 kB\nRssAnon:\t   46720 kB\nRssFile:\t   20560 kB\nRssShmem:\t       0 kB\nVmData:\t 5834324 kB\nVmStk:\t     184 kB\nVmExe:\t   56832 kB\nVmLib:\t    2392 kB\nVmPTE:\t     708 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t20\nSigQ:\t0/64277\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t00000001200044fa\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5722\nnonvoluntary_ctxt_switches:\t8251\n"
+    },
+    {
+      "readStartedAtUTC": "2026-10-10T16:23:56.584811+00:00",
+      "readFinishedAtUTC": "2026-10-10T16:23:56.639333+00:00",
+      "hostMonotonicNs": 6218968083,
+      "memoryCurrentBytes": 100102144,
+      "memoryCurrentMiB": 95.46484375,
+      "cpuStat": {
+        "usage_usec": 8653274,
+        "user_usec": 5916520,
+        "system_usec": 2736754,
+        "nice_usec": 0,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "pid1Status": {
+        "Name": "bun",
+        "Pid": "1",
+        "VmRSS": "67280 kB",
+        "RssAnon": "46720 kB",
+        "RssFile": "20560 kB",
+        "RssShmem": "0 kB"
+      },
+      "pid1RssBytes": 68894720,
+      "pid1RssMiB": 65.703125,
+      "raw": "100102144\nusage_usec 8653274\nuser_usec 5916520\nsystem_usec 2736754\nnice_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\nName:\tbun\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t1\nNgid:\t0\nPid:\t1\nPPid:\t0\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t1024\nGroups:\t1000 \nNStgid:\t1\nNSpid:\t1\nNSpgid:\t1\nNSsid:\t1\nKthread:\t0\nVmPeak:\t10048372 kB\nVmSize:\t 6570444 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   92572 kB\nVmRSS:\t   67280 kB\nRssAnon:\t   46720 kB\nRssFile:\t   20560 kB\nRssShmem:\t       0 kB\nVmData:\t 5834324 kB\nVmStk:\t     184 kB\nVmExe:\t   56832 kB\nVmLib:\t    2392 kB\nVmPTE:\t     708 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t20\nSigQ:\t0/64277\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t00000001200044fa\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5728\nnonvoluntary_ctxt_switches:\t8258\n"
+    },
+    {
+      "readStartedAtUTC": "2026-10-10T16:23:58.644381+00:00",
+      "readFinishedAtUTC": "2026-10-10T16:23:58.703308+00:00",
+      "hostMonotonicNs": 8278517125,
+      "memoryCurrentBytes": 105484288,
+      "memoryCurrentMiB": 100.59765625,
+      "cpuStat": {
+        "usage_usec": 8684346,
+        "user_usec": 5928198,
+        "system_usec": 2756148,
+        "nice_usec": 0,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "pid1Status": {
+        "Name": "bun",
+        "Pid": "1",
+        "VmRSS": "67400 kB",
+        "RssAnon": "46720 kB",
+        "RssFile": "20680 kB",
+        "RssShmem": "0 kB"
+      },
+      "pid1RssBytes": 69017600,
+      "pid1RssMiB": 65.8203125,
+      "raw": "105484288\nusage_usec 8684346\nuser_usec 5928198\nsystem_usec 2756148\nnice_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\nName:\tbun\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t1\nNgid:\t0\nPid:\t1\nPPid:\t0\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t1024\nGroups:\t1000 \nNStgid:\t1\nNSpid:\t1\nNSpgid:\t1\nNSsid:\t1\nKthread:\t0\nVmPeak:\t10048372 kB\nVmSize:\t 6570444 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   92572 kB\nVmRSS:\t   67400 kB\nRssAnon:\t   46720 kB\nRssFile:\t   20680 kB\nRssShmem:\t       0 kB\nVmData:\t 5834324 kB\nVmStk:\t     184 kB\nVmExe:\t   56832 kB\nVmLib:\t    2392 kB\nVmPTE:\t     708 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t20\nSigQ:\t0/64277\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t00000001200044fa\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5734\nnonvoluntary_ctxt_switches:\t8263\n"
+    },
+    {
+      "readStartedAtUTC": "2026-10-10T16:24:00.707545+00:00",
+      "readFinishedAtUTC": "2026-10-10T16:24:00.765257+00:00",
+      "hostMonotonicNs": 10341671125,
+      "memoryCurrentBytes": 105852928,
+      "memoryCurrentMiB": 100.94921875,
+      "cpuStat": {
+        "usage_usec": 8728020,
+        "user_usec": 5955869,
+        "system_usec": 2772151,
+        "nice_usec": 0,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "pid1Status": {
+        "Name": "bun",
+        "Pid": "1",
+        "VmRSS": "67400 kB",
+        "RssAnon": "46720 kB",
+        "RssFile": "20680 kB",
+        "RssShmem": "0 kB"
+      },
+      "pid1RssBytes": 69017600,
+      "pid1RssMiB": 65.8203125,
+      "raw": "105852928\nusage_usec 8728020\nuser_usec 5955869\nsystem_usec 2772151\nnice_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\nName:\tbun\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t1\nNgid:\t0\nPid:\t1\nPPid:\t0\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t1024\nGroups:\t1000 \nNStgid:\t1\nNSpid:\t1\nNSpgid:\t1\nNSsid:\t1\nKthread:\t0\nVmPeak:\t10048372 kB\nVmSize:\t 6570444 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   92572 kB\nVmRSS:\t   67400 kB\nRssAnon:\t   46720 kB\nRssFile:\t   20680 kB\nRssShmem:\t       0 kB\nVmData:\t 5834324 kB\nVmStk:\t     184 kB\nVmExe:\t   56832 kB\nVmLib:\t    2392 kB\nVmPTE:\t     708 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t20\nSigQ:\t0/64277\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000201001000\nSigCgt:\t00000001200044fa\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\tffff\nCpus_allowed_list:\t0-15\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t5742\nnonvoluntary_ctxt_switches:\t8283\n"
+    }
+  ]
+}

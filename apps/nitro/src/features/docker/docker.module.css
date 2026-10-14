@@ -1,0 +1,10 @@
+.terminal {
+  min-width: 0;
+  height: 32rem;
+  padding: var(--mantine-spacing-xs);
+  background: var(--mantine-color-black);
+}
+
+.terminal > div {
+  height: 100%;
+}

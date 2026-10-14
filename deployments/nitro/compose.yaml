@@ -1,0 +1,27 @@
+name: homarr-nitro-candidate
+services:
+  homarr:
+    profiles: [nitro-candidate]
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      target: nitro-candidate
+      args:
+        HOMARR_NITRO_ACTIVATION: ${HOMARR_NITRO_ACTIVATION:?Nitro acceptance is required}
+    environment:
+      HOMARR_NITRO_ACTIVATION: ${HOMARR_NITRO_ACTIVATION:?Nitro acceptance is required}
+      AUTH_SECRET: ${AUTH_SECRET:?Supply a persistent auth secret}
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY:?Supply a persistent encryption key}
+      NITRO_HOST: 0.0.0.0
+      NITRO_PORT: "7575"
+      SERVER_SHUTDOWN_TIMEOUT: "30"
+      PUID: ${PUID:-0}
+      PGID: ${PGID:-0}
+    ports:
+      - "127.0.0.1:7575:7575"
+    volumes:
+      - candidate_data:/appdata
+    stop_signal: SIGTERM
+    stop_grace_period: 60s
+volumes:
+  candidate_data:

@@ -22,6 +22,8 @@ import { IntegrationSelectModal } from "~/components/integration/integration-sel
 import type * as IntegrationEditFormModule from "~/components/integration/embedded-integration-edit-form";
 import type { EmbeddedIntegrationEditFormProps } from "~/components/integration/embedded-integration-edit-form";
 
+import type { ModalActions } from "../../../../../../packages/modals/src/type";
+
 const defaultWidgetSize = { width: 1, height: 1 };
 const ignoreAssistantAction = () => undefined;
 const ignoreAssistantPrompt = () => false;
@@ -111,7 +113,7 @@ const LazyIntegrationEditForm = (props: EmbeddedIntegrationEditFormProps) => (
 );
 
 interface LazyWidgetEditModalContentProps {
-  actions: { closeModal: () => void };
+  actions: ModalActions;
   innerProps: WidgetEditModalProps<WidgetKind>;
 }
 

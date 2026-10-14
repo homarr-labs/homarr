@@ -6,7 +6,7 @@ import type { PasswordInputProps } from "@mantine/core";
 import { useI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
 
-interface UserCreatePasswordFieldsProps {
+export interface UserCreatePasswordFieldsProps {
   passwordInputProps: PasswordInputProps;
   confirmPasswordInputProps: PasswordInputProps;
   variant?: PasswordInputProps["variant"];

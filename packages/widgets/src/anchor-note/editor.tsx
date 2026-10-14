@@ -7,6 +7,7 @@ import type { DeltaStatic } from "react-quill-new";
 
 import type { QuillDelta } from "./content";
 import { parseStoredOperations, stringifyDelta } from "./content";
+import { AnchorNoteEditorView } from "./native-view-editor";
 
 import "react-quill-new/dist/quill.snow.css";
 
@@ -15,42 +16,6 @@ type ReactQuillOnChange = NonNullable<ComponentProps<typeof ReactQuill>["onChang
 const DeltaConstructor = Quill.import("delta") as new (
   ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] },
 ) => DeltaStatic;
-
-const quillModules = {
-  toolbar: [
-    ["bold", "italic", "underline", "strike"],
-    [{ header: [1, 2, 3, 4, false] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-    [{ indent: "-1" }, { indent: "+1" }],
-    ["blockquote", "code-block"],
-    ["link"],
-    ["clean"],
-  ],
-  history: {
-    delay: 1000,
-    maxStack: 200,
-    userOnly: true,
-  },
-};
-
-const readOnlyModules = {
-  toolbar: false,
-};
-
-const quillFormats = [
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "header",
-  "align",
-  "list",
-  "indent",
-  "blockquote",
-  "code-block",
-  "link",
-];
 
 interface AnchorNoteEditorProps {
   content?: string | null;
@@ -70,13 +35,11 @@ export default function AnchorNoteEditor({ content, readOnly, placeholder, onCha
   );
 
   return (
-    <ReactQuill
-      theme="snow"
+    <AnchorNoteEditorView
+      editorComponent={ReactQuill}
       readOnly={readOnly}
       value={value}
       onChange={handleChange}
-      modules={readOnly ? readOnlyModules : quillModules}
-      formats={quillFormats}
       placeholder={placeholder}
     />
   );

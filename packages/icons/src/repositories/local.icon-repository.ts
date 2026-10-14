@@ -1,36 +1,42 @@
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 
-import type { InferSelectModel } from "@homarr/db";
-import { db } from "@homarr/db";
-import type { medias } from "@homarr/db/schema";
-
+import type { LocalIconMedia, LocalIconResources } from "../resources";
 import type { RepositoryIcon, RepositoryIconGroup } from "../types";
-import { IconRepository } from "./icon-repository";
 
 export const LOCAL_ICON_REPOSITORY_SLUG = "local";
-
-export class LocalIconRepository extends IconRepository {
-  constructor() {
-    super("Local", LOCAL_ICON_REPOSITORY_SLUG, undefined, undefined, undefined, undefined);
-  }
-  protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
-    const medias = await db.query.medias.findMany();
-    return {
-      success: true,
-      icons: medias.map(mapMediaToIcon),
-      slug: LOCAL_ICON_REPOSITORY_SLUG,
-    };
-  }
-}
-
 export const createLocalImageUrl = (id: string) => `/api/user-medias/${id}`;
 
-export const mapMediaToIcon = (
-  media: Pick<InferSelectModel<typeof medias>, "name" | "id" | "content" | "size">,
-): RepositoryIcon => ({
+export const mapMediaToIcon = (media: LocalIconMedia): RepositoryIcon => ({
   local: true,
   fileNameWithExtension: media.name,
   imageUrl: createLocalImageUrl(media.id),
   checksum: createHash("md5").update(media.content).digest("hex"),
   sizeInBytes: media.size,
 });
+
+export class LocalIconRepository {
+  readonly name = "Local";
+  readonly slug = LOCAL_ICON_REPOSITORY_SLUG;
+  readonly license = undefined;
+
+  constructor(private readonly resources: LocalIconResources) {}
+
+  async getAllIconsAsync(signal?: AbortSignal): Promise<RepositoryIconGroup> {
+    signal?.throwIfAborted();
+    await this.resources.assertCurrentAuthorityAsync(signal);
+    signal?.throwIfAborted();
+    let icons: RepositoryIcon[];
+    try {
+      const medias = await this.resources.readMediasAsync(signal);
+      signal?.throwIfAborted();
+      icons = medias.map(mapMediaToIcon);
+    } catch (error) {
+      signal?.throwIfAborted();
+      this.resources.reportSourceError(error, { slug: this.slug, kind: "unavailable" });
+      return { success: false, icons: [], slug: this.slug, failure: "source-unavailable" };
+    }
+    await this.resources.assertCurrentAuthorityAsync(signal);
+    signal?.throwIfAborted();
+    return { success: true, icons, slug: this.slug };
+  }
+}

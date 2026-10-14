@@ -1,23 +1,25 @@
 import { Center, RingProgress, Text, Tooltip } from "@mantine/core";
 import { IconBrain } from "@tabler/icons-react";
 
-import { useByteFormatter } from "@homarr/settings";
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { progressColor } from "../system-health";
+import { progressColor } from "../native-view-system";
 
 export const MemoryRing = ({
   available,
   used,
   isTiny,
   ariaLabel,
+  formatBytes,
+  formatBytesPair,
 }: {
   available: number;
   used: number;
   isTiny: boolean;
   ariaLabel: string;
+  formatBytes: (bytes: number) => string;
+  formatBytesPair: (used: number, total: number) => { used: string; total: string };
 }) => {
-  const { formatBytes, formatBytesPair } = useByteFormatter();
   const memoryUsage = formatMemoryUsage(available, used, formatBytes, formatBytesPair);
 
   const percentage = Math.max(0, Math.min(100, Number(memoryUsage.memUsed.percent)));

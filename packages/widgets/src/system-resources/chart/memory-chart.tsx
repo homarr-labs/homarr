@@ -1,10 +1,10 @@
 import { IconBrain } from "@tabler/icons-react";
 
-import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
+import type { SystemResourcePresentation } from "../native-view-types";
 
 export const SystemResourceMemoryChart = ({
   memoryUsageOverTime,
@@ -12,19 +12,21 @@ export const SystemResourceMemoryChart = ({
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  presentation,
 }: {
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  presentation: SystemResourcePresentation;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({
     index,
     usage,
   }));
   const t = useI18n("widget.systemResources.card");
-  const { formatBytesPair } = useByteFormatter();
+  const { formatBytesPair } = presentation;
 
   const percentageUsed =
     memoryUsageOverTime.length > 0 && totalCapacityInBytes > 0
@@ -45,6 +47,7 @@ export const SystemResourceMemoryChart = ({
 
   return (
     <CommonChart
+      presentation={presentation}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "red.6" }]}

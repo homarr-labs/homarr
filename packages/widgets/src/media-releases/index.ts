@@ -1,40 +1,7 @@
-import { IconTicket } from "@tabler/icons-react";
-
-import { getWidgetIntegrationConfig } from "@homarr/definitions";
-
 import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { definition as canonicalDefinition } from "./definition";
 
-export const { definition, componentLoader } = createWidgetDefinition("mediaReleases", {
-  icon: IconTicket,
-  supportsAdvancedFocus: true,
-  queryKey: [["widget", "mediaRelease"]],
-  refetchInterval: null,
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      layout: factory.select({
-        defaultValue: "backdrop",
-        options: [
-          {
-            value: "backdrop",
-            label: (t) => t("widget.mediaReleases.option.layout.option.backdrop.label"),
-          },
-          {
-            value: "poster",
-            label: (t) => t("widget.mediaReleases.option.layout.option.poster.label"),
-          },
-        ],
-      }),
-      showDescriptionTooltip: factory.switch({
-        defaultValue: true,
-      }),
-      showType: factory.switch({
-        defaultValue: true,
-      }),
-      showSource: factory.switch({
-        defaultValue: true,
-      }),
-    }));
-  },
-  ...getWidgetIntegrationConfig("mediaReleases"),
-}).withDynamicImport(() => import("./component"));
+export const { definition, componentLoader } = createWidgetDefinition(
+  "mediaReleases",
+  canonicalDefinition,
+).withDynamicImport(() => import("./component"));

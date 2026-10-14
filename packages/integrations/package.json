@@ -16,6 +16,7 @@
     "./anchor": "./src/anchor/anchor-types.ts",
     "./downloads": "./src/interfaces/downloads/download-client-items.ts",
     "./factory": "./src/factory.ts",
+    "./runtime": "./src/runtime/index.ts",
     "./response-contract": "./src/base/response-contract.ts",
     "./test-connection": "./src/base/test-connection/index.ts",
     "./types": "./src/types.ts",
@@ -42,6 +43,8 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@immich/sdk": "catalog:",
     "@jellyfin/sdk": "catalog:",
+    "axios": "catalog:",
+    "dayjs": "catalog:",
     "ical.js": "catalog:",
     "maria2": "catalog:",
     "octokit": "catalog:",
@@ -58,6 +61,7 @@
     "@types/node-unifi": "catalog:",
     "@types/ws": "catalog:",
     "@types/xml2js": "catalog:",
+    "bun-types": "1.3.10",
     "typescript": "catalog:"
   }
 }

@@ -6,7 +6,7 @@ import { Box, Group, Stack, Text } from "@mantine/core";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
-import { EVENT_COLORS, formatXLabel } from "./umami-utils";
+import type { formatXLabel } from "./umami-utils";
 
 interface UmamiEventsContentProps {
   series: UmamiEventSeries[];
@@ -14,6 +14,8 @@ interface UmamiEventsContentProps {
   hasSelectedEvents: boolean;
   chartType: string;
   showXAxis: boolean;
+  formatXLabel: typeof formatXLabel;
+  eventColors: readonly string[];
 }
 
 export function UmamiEventsContent({
@@ -22,6 +24,8 @@ export function UmamiEventsContent({
   hasSelectedEvents,
   chartType,
   showXAxis,
+  formatXLabel,
+  eventColors,
 }: UmamiEventsContentProps) {
   const t = useI18n("widget.umami");
   const locale = useCurrentIntlLocale();
@@ -37,12 +41,10 @@ export function UmamiEventsContent({
     );
   }
 
-  // Collect all unique timestamps across all series
   const allTimestamps = Array.from(
     new Set(series.flatMap(({ dataPoints }) => dataPoints.map(({ x: xPoint }) => xPoint))),
   ).toSorted();
 
-  // Build per-event lookup by timestamp string
   const byEvent = new Map(
     series.map((serie: UmamiEventSeries) => [
       serie.eventName,
@@ -60,7 +62,7 @@ export function UmamiEventsContent({
 
   const chartSeries = series.map((serie: UmamiEventSeries, index: number) => ({
     name: serie.eventName,
-    color: EVENT_COLORS[index % EVENT_COLORS.length] ?? "blue.5",
+    color: eventColors[index % eventColors.length] ?? "blue.5",
   }));
 
   return (

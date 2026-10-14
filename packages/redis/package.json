@@ -12,7 +12,9 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./cache": "./src/cache/index.ts",
+    "./state": "./src/state/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

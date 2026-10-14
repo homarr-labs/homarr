@@ -3,7 +3,7 @@ import { IconCpu } from "@tabler/icons-react";
 
 import { zoomCompensatedSize } from "@homarr/ui";
 
-import { progressColor } from "../system-health";
+import { progressColor } from "../native-view-system";
 
 const CPU_TEMPERATURE_MIN_CELSIUS = 0;
 const CPU_TEMPERATURE_MAX_CELSIUS = 100;

@@ -1,12 +1,10 @@
 "use client";
 
-import { Center, Stack, Text, ThemeIcon } from "@mantine/core";
-import { IconRobot } from "@tabler/icons-react";
-
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { useAssistantWidgetRenderer } from "./context";
+import { AssistantUnavailableView } from "./native-view";
 
 export default function AssistantWidget(props: WidgetComponentProps<"assistant">) {
   const Renderer = useAssistantWidgetRenderer();
@@ -14,19 +12,5 @@ export default function AssistantWidget(props: WidgetComponentProps<"assistant">
 
   if (Renderer) return <Renderer {...props} />;
 
-  return (
-    <Center h="100%" p="md">
-      <Stack align="center" gap="xs" ta="center">
-        <ThemeIcon variant="light" radius="xl" size="lg">
-          <IconRobot size="var(--mantine-font-size-xl)" />
-        </ThemeIcon>
-        <Text size="sm" fw={600}>
-          {t("title")}
-        </Text>
-        <Text size="xs" c="dimmed">
-          {t("description")}
-        </Text>
-      </Stack>
-    </Center>
-  );
+  return <AssistantUnavailableView title={t("title")} description={t("description")} />;
 }

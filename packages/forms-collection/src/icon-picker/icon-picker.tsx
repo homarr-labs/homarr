@@ -32,17 +32,40 @@ import {
   IconUpload,
 } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
 import { supportedLanguages } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
+import type { UploadMediaProps } from "../upload-media/upload-media";
+import type { IconSearchResult } from "./icon-picker.utils";
 import { arrangeIconPickerSections, isDirectImageUrl, isImageSource, isSvgImage } from "./icon-picker.utils";
 import classes from "./icon-picker.module.css";
 
-interface IconPickerProps {
+export interface IconPickerQuery {
+  data?: IconSearchResult;
+  isError: boolean;
+  isLoading: boolean;
+  isFetching: boolean;
+  refetch: () => Promise<unknown>;
+}
+
+export interface IconPickerResources {
+  useIcons: (
+    input: { searchText: string; limitPerGroup: number },
+    options: {
+      enabled: boolean;
+      placeholderData: (previous: IconSearchResult | undefined) => IconSearchResult | undefined;
+    },
+  ) => IconPickerQuery;
+  canUpload: boolean;
+  upload?: Pick<UploadMediaProps, "isPending" | "onSettled" | "isCurrentOwner" | "outcomeLabels"> & {
+    upload: NonNullable<UploadMediaProps["upload"]>;
+  };
+}
+
+export interface IconPickerProps extends IconPickerResources {
   value?: string;
+  defaultValue?: string;
   onChange: (iconUrl: string) => void;
   error?: string | null;
   onFocus?: FocusEventHandler;
@@ -58,6 +81,7 @@ type PreviewState = "idle" | "loading" | "ready" | "error";
 
 export const IconPicker = ({
   value: propsValue,
+  defaultValue = "",
   onChange,
   error,
   onFocus,
@@ -67,22 +91,24 @@ export const IconPicker = ({
   description,
   placeholder,
   suggestedSearch,
+  useIcons,
+  upload,
+  canUpload: hasUploadPermission,
 }: IconPickerProps) => {
-  const [value, setValue] = useUncontrolled({ value: propsValue, onChange, defaultValue: "" });
-  const [draft, setDraft] = useState(propsValue ?? "");
+  const [value, setValue] = useUncontrolled({ value: propsValue, onChange, defaultValue });
+  const [draft, setDraft] = useState(propsValue ?? defaultValue);
   const [hasEdited, setHasEdited] = useState(false);
   const [keyboardIndex, setKeyboardIndex] = useState(-1);
   const [previewState, setPreviewState] = useState<PreviewState>("idle");
-  const { data: session } = useSession();
   const tCommon = useI18n("common");
   const [debouncedDraft] = useDebouncedValue(draft, 250);
 
   const directUrl = isDirectImageUrl(draft) ? draft.trim() : null;
   const isCommittedValueDraft = debouncedDraft === (value ?? "");
   const searchText = directUrl !== null || isCommittedValueDraft ? "" : debouncedDraft.trim();
-  const canUpload = session?.user.permissions.includes("media-upload") ?? false;
+  const canUpload = hasUploadPermission && upload !== undefined;
 
-  const query = clientApi.icon.findIcons.useQuery(
+  const query = useIcons(
     { searchText, limitPerGroup: 24 },
     { enabled: directUrl === null, placeholderData: (previous) => previous },
   );
@@ -292,8 +318,9 @@ export const IconPicker = ({
           leftSection={leftSection}
           rightSection={
             <Group gap={2} wrap="nowrap">
-              {canUpload && (
+              {canUpload && upload && (
                 <UploadMedia
+                  {...upload}
                   onSuccess={(medias) => {
                     const first = medias.at(0);
                     if (!first) return;
@@ -301,17 +328,32 @@ export const IconPicker = ({
                     combobox.closeDropdown();
                   }}
                 >
-                  {({ onClick, loading }) => (
-                    <Tooltip label={tCommon("iconPicker.uploadImage")}>
+                  {({ onClick, loading, disabled, outcome, retryReconciliation }) => (
+                    <Tooltip
+                      label={
+                        retryReconciliation
+                          ? tCommon("action.tryAgain")
+                          : outcome === "unknown" || outcome === "reconcileheld"
+                            ? upload.outcomeLabels[outcome]
+                            : tCommon("iconPicker.uploadImage")
+                      }
+                    >
                       <ActionIcon
                         onClick={(event) => {
                           event.stopPropagation();
-                          onClick();
+                          if (retryReconciliation) {
+                            void retryReconciliation().catch(() => {});
+                          } else {
+                            onClick();
+                          }
                         }}
                         loading={loading}
+                        disabled={disabled && !retryReconciliation}
                         size="sm"
                         variant="subtle"
-                        aria-label={tCommon("iconPicker.uploadImage")}
+                        aria-label={
+                          retryReconciliation ? tCommon("action.tryAgain") : tCommon("iconPicker.uploadImage")
+                        }
                       >
                         <IconUpload size={16} stroke={1.5} />
                       </ActionIcon>

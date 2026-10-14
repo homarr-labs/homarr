@@ -1,17 +1,18 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
-import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
+import type { SystemResourcePresentation } from "../native-view-types";
 
 export const CombinedNetworkTrafficChart = ({
   usageOverTime,
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  presentation,
 }: {
   usageOverTime: {
     up: number;
@@ -20,6 +21,7 @@ export const CombinedNetworkTrafficChart = ({
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  presentation: SystemResourcePresentation;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({
     index,
@@ -27,7 +29,7 @@ export const CombinedNetworkTrafficChart = ({
     down: usage.down,
   }));
   const t = useI18n("widget.systemResources.card");
-  const { formatByteRate } = useByteFormatter();
+  const { formatByteRate } = presentation;
 
   const tooltipLabel = (index: number) => {
     const point = usageOverTime[index];
@@ -51,6 +53,7 @@ export const CombinedNetworkTrafficChart = ({
 
   return (
     <CommonChart
+      presentation={presentation}
       data={chartData}
       dataKey={"index"}
       series={[

@@ -1,10 +1,7 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { Fragment, Suspense } from "react";
-import { Box, Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Suspense } from "react";
 import { IconMinus } from "@tabler/icons-react";
-import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -13,11 +10,11 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getSafeAppHref } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
-import classes from "./app.module.css";
+import { AppNativeView } from "./native-view";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
@@ -39,144 +36,26 @@ export default function AppWidget({
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
 
-  let layoutScale = displayScale;
-  if (!Number.isFinite(layoutScale) || layoutScale <= 0) layoutScale = 1;
-
-  // Widget dimensions are logical pixels; compact sizing follows the displayed tile.
-  const isTiny = height * layoutScale < 100 || width * layoutScale < 100;
-  const isColumnLayout = options.layout.startsWith("column");
-  let padding = 12;
-  let fontSize = rem(14);
-  let gap = 12;
-  let titleLineClamp: number | undefined = 2;
-  let titleTruncate: "end" | undefined;
-  if (isTiny) {
-    padding = 4;
-    fontSize = rem(12);
-    titleLineClamp = undefined;
-    titleTruncate = "end";
-  }
-  if (isColumnLayout) gap = 0;
-
   return (
-    <Box h="100%" w="100%" pos="relative" style={{ "--mantine-scale": 1 / layoutScale }}>
-      <AppLink href={href} openInNewTab={options.openInNewTab} enabled={Boolean(href) && !isEditMode}>
-        <AppDescriptionTooltip
-          description={app.description}
-          enabled={options.descriptionDisplayMode === "tooltip" && Boolean(app.description) && !isEditMode}
-        >
-          <Flex
-            p={padding}
-            className={combineClasses("app-flex-wrapper", app.name, app.id, href && classes.appWithUrl)}
-            h="100%"
-            w="100%"
-            direction={options.layout}
-            justify="center"
-            align="center"
-            gap={gap}
-            onContextMenu={isEditMode ? (e) => e.preventDefault() : undefined}
-          >
-            <Stack gap={0} className={classes.appText} data-column={isColumnLayout || undefined}>
-              {options.showTitle && (
-                <Text
-                  className={combineClasses("app-title", classes.appTitle)}
-                  data-compact={isTiny || undefined}
-                  title={app.name}
-                  fw={700}
-                  size={fontSize}
-                  lh="sm"
-                  lineClamp={titleLineClamp}
-                  truncate={titleTruncate}
-                >
-                  {app.name}
-                </Text>
-              )}
-              {options.descriptionDisplayMode === "normal" && (
-                <Text
-                  className="app-description"
-                  size={fontSize}
-                  lh="sm"
-                  ta={isColumnLayout ? "center" : undefined}
-                  c="dimmed"
-                  lineClamp={4}
-                >
-                  {app.description?.split("\n").map((line, index) => (
-                    <Fragment key={index}>
-                      {line}
-                      <br />
-                    </Fragment>
-                  ))}
-                </Text>
-              )}
-            </Stack>
-            <MaskedOrNormalImage
-              imageUrl={app.iconUrl}
-              hasColor={board.iconColor !== null}
-              alt={app.name}
-              className={combineClasses(classes.appIcon, "app-icon")}
-              style={{
-                height: "100%",
-                width: "100%",
-                minWidth: "20%",
-                maxWidth: isColumnLayout ? undefined : "50%",
-              }}
-            />
-          </Flex>
-        </AppDescriptionTooltip>
-        {options.pingEnabled &&
+    <AppNativeView
+      app={app}
+      href={href}
+      options={options}
+      isEditMode={isEditMode}
+      height={height}
+      width={width}
+      displayScale={displayScale}
+      renderImage={(props) => <MaskedOrNormalImage {...props} hasColor={board.iconColor !== null} />}
+      status={
+        options.pingEnabled &&
         !settings.forceDisableStatus &&
         !board.disableStatus &&
         Boolean(app.pingUrl ?? app.href) ? (
           <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${tCommon("action.loading")}…`} />}>
             <PingIndicator appId={app.id} />
           </Suspense>
-        ) : null}
-      </AppLink>
-    </Box>
+        ) : null
+      }
+    />
   );
 }
-
-interface AppLinkProps {
-  href: string | undefined;
-  openInNewTab: boolean;
-  enabled: boolean;
-}
-
-const AppDescriptionTooltip = ({
-  description,
-  enabled,
-  children,
-}: PropsWithChildren<{ description?: string | null; enabled: boolean }>) =>
-  enabled ? (
-    <Tooltip.Floating
-      label={description?.split("\n").map((line, index) => (
-        <Fragment key={index}>
-          {line}
-          <br />
-        </Fragment>
-      ))}
-      position="right-start"
-      multiline
-      styles={{ tooltip: { maxWidth: 300 } }}
-    >
-      {children}
-    </Tooltip.Floating>
-  ) : (
-    children
-  );
-
-const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
-  enabled ? (
-    <UnstyledButton
-      component="a"
-      href={href}
-      target={openInNewTab ? "_blank" : undefined}
-      rel={openInNewTab ? SAFE_NEW_TAB_REL : undefined}
-      h="100%"
-      w="100%"
-    >
-      {children}
-    </UnstyledButton>
-  ) : (
-    children
-  );

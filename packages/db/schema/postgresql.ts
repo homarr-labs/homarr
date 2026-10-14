@@ -1,10 +1,11 @@
 import type { AdapterAccount } from "@auth/core/adapters";
 import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import {
   boolean,
+  check,
   customType,
   foreignKey,
   index,
@@ -40,10 +41,11 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import { defaultByteUnitSystem } from "@homarr/common";
+import { defaultByteUnitSystem } from "@homarr/common/number";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
+import { authCredentialSequence } from "../runtime-auth-credential/validation";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -53,15 +55,47 @@ const customBlob = customType<{ data: Buffer }>({
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/postgresql";
 
-export const apiKeys = pgTable("apiKey", {
-  id: varchar({ length: 64 }).notNull().primaryKey(),
-  apiKey: text().notNull(),
-  userId: varchar({ length: 64 })
-    .notNull()
-    .references((): AnyPgColumn => users.id, {
-      onDelete: "cascade",
-    }),
+const credentialSequence = customType<{ data: string; driverData: string }>({
+  dataType: () => "bigint",
+  toDriver: (value) => sql`CAST(${authCredentialSequence(value, 0n).toString()} AS BIGINT)`,
+  fromDriver: (value) => authCredentialSequence(value, 0n).toString(),
 });
+
+export const authCredentialDomain = pgTable(
+  "homarr_auth_credential_domain",
+  {
+    id: integer().notNull().primaryKey(),
+    namespace: text().notNull().unique(),
+    headSequence: credentialSequence("head_sequence").notNull(),
+    phase: text().$type<"initializing" | "ready">().notNull(),
+  },
+  (domain) => ({
+    singleton: check("homarr_auth_credential_domain_singleton", sql`${domain.id} = 1`),
+    head: check("homarr_auth_credential_domain_head", sql`${domain.headSequence} >= 0`),
+    phase: check("homarr_auth_credential_domain_phase", sql`${domain.phase} IN ('initializing', 'ready')`),
+  }),
+);
+
+export const apiKeys = pgTable(
+  "apiKey",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    apiKey: text().notNull(),
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references((): AnyPgColumn => users.id, {
+        onDelete: "cascade",
+      }),
+    authLifetimeSequence: credentialSequence("auth_lifetime_sequence"),
+    authWriteSequence: credentialSequence("auth_write_sequence"),
+  },
+  (key) => ({
+    evidence: check(
+      "apiKey_auth_evidence",
+      sql`(${key.authLifetimeSequence} IS NULL AND ${key.authWriteSequence} IS NULL) OR (${key.authLifetimeSequence} IS NOT NULL AND ${key.authWriteSequence} IS NOT NULL AND ${key.authLifetimeSequence} > 0 AND ${key.authWriteSequence} >= ${key.authLifetimeSequence})`,
+    ),
+  }),
+);
 
 export const users = pgTable("user", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
@@ -125,9 +159,15 @@ export const sessions = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     expires: timestamp().notNull(),
+    authLifetimeSequence: credentialSequence("auth_lifetime_sequence"),
+    authWriteSequence: credentialSequence("auth_write_sequence"),
   },
   (session) => ({
     userIdIdx: index("user_id_idx").on(session.userId),
+    evidence: check(
+      "session_auth_evidence",
+      sql`(${session.authLifetimeSequence} IS NULL AND ${session.authWriteSequence} IS NULL) OR (${session.authLifetimeSequence} IS NOT NULL AND ${session.authWriteSequence} IS NOT NULL AND ${session.authLifetimeSequence} > 0 AND ${session.authWriteSequence} >= ${session.authLifetimeSequence})`,
+    ),
   }),
 );
 

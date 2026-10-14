@@ -1,0 +1,107 @@
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-lg);
+  align-items: start;
+}
+
+.workspace[data-with-preview] {
+  grid-template-columns: minmax(0, 3fr) minmax(24rem, 2fr);
+}
+
+.previewPanel {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 52rem;
+  justify-self: center;
+}
+
+.previewCanvas {
+  width: 100%;
+  min-height: 24rem;
+  padding: var(--mantine-spacing-lg);
+  overflow: auto;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-8)
+  );
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--mantine-color-dimmed) 14%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--mantine-color-dimmed) 14%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 2rem 2rem;
+}
+
+.settingsPanel {
+  min-width: 0;
+}
+
+.switchOption {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.switchOption > *,
+.switchOption :global(.mantine-Switch-root),
+.switchOption :global(.mantine-Switch-body) {
+  width: 100%;
+}
+
+.switchOption :global(.mantine-Switch-body) {
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-md);
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  padding: var(--mantine-spacing-sm) 0;
+  padding-bottom: max(var(--mantine-spacing-sm), env(safe-area-inset-bottom));
+  border-top: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
+}
+
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--mantine-spacing-lg);
+  align-items: start;
+}
+
+.code {
+  font-family: var(--mantine-font-family-monospace);
+}
+
+@media (max-width: 68em) {
+  .workspace[data-with-preview],
+  .workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel {
+    position: static;
+  }
+
+  .workbench[data-mobile-pane="configure"] > .previewPanel,
+  .workbench[data-mobile-pane="preview"] > :not(.previewPanel) {
+    display: none;
+  }
+}

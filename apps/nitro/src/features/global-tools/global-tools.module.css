@@ -1,0 +1,69 @@
+.root {
+  min-height: 100dvh;
+}
+
+.header {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.navigation {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+}
+
+.main {
+  padding: var(--mantine-spacing-xs);
+  min-width: 0;
+}
+
+.skipLink {
+  position: fixed;
+  inset-block-start: var(--mantine-spacing-xs);
+  inset-inline-start: var(--mantine-spacing-xs);
+  z-index: var(--mantine-z-index-overlay);
+  transform: translateY(calc(-100% - var(--mantine-spacing-md)));
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.skipLink:focus-visible {
+  transform: none;
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.main:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
+.inspectorInner {
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+.inspectorContent {
+  --modal-content-flex: 0 0 100%;
+  --modal-content-max-height: min(88dvh, 52rem);
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--mantine-radius-lg) var(--mantine-radius-lg) 0 0;
+}
+
+@media (min-width: 48em) {
+  .inspectorInner {
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+
+  .inspectorContent {
+    --modal-content-flex: 0 0 min(34rem, 46vw);
+    --modal-content-height: 100dvh;
+    --modal-content-max-height: 100dvh;
+    width: min(34rem, 46vw);
+    border-radius: 0;
+  }
+}

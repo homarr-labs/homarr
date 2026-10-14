@@ -1,0 +1,120 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "paths": {
+      "@homarr/validation/*": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/*.ts"
+      ],
+      "@homarr/definitions": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/index.ts"
+      ],
+      "@homarr/definitions/cookie": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/cookie.ts"
+      ],
+      "@homarr/definitions/integration": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/integration.ts"
+      ],
+      "@homarr/definitions/docs/*": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/*.ts"
+      ],
+      "@homarr/translation": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/index.ts"
+      ],
+      "@homarr/translation/client": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/client/index.ts"
+      ],
+      "@homarr/translation/standalone": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/index.ts"
+      ],
+      "@homarr/translation/standalone/client": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/client.tsx"
+      ],
+      "@homarr/translation/standalone/server": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/server.ts"
+      ],
+      "@homarr/translation/runtime": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/index.ts"
+      ],
+      "@homarr/translation/server": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/server.ts"
+      ],
+      "@homarr/translation/middleware": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/middleware.ts"
+      ],
+      "@homarr/translation/languages": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/languages.ts"
+      ],
+      "@homarr/translation/request": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/request.ts"
+      ],
+      "@homarr/translation/dayjs": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/dayjs.ts"
+      ],
+      "@homarr/common": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/index.ts"
+      ],
+      "@homarr/common/types": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/types.ts"
+      ],
+      "@homarr/common/object": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/object.ts"
+      ],
+      "@homarr/common/url": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/url.ts"
+      ],
+      "@homarr/common/id": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/id.ts"
+      ],
+      "@homarr/common/grid-algorithm": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/grid-algorithm.ts"
+      ],
+      "@homarr/common/error": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/error.ts"
+      ],
+      "@homarr/common/response-error": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/response-error.ts"
+      ],
+      "@homarr/common/bounded-response": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/bounded-response.ts"
+      ],
+      "@homarr/common/request": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/request.ts"
+      ],
+      "@homarr/common/number": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/number.ts"
+      ],
+      "@homarr/common/date": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/date.ts"
+      ],
+      "@homarr/common/server": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/server.ts"
+      ],
+      "@homarr/common/client": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/client.ts"
+      ],
+      "@homarr/common/env": [
+        "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/env.ts"
+      ]
+    }
+  },
+  "files": [
+    "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/source-ui/auth-onboarding/index.ts",
+    "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/index.ts",
+    "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/onboarding/src/presentation-steps.tsx"
+  ]
+}

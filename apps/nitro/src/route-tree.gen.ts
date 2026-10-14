@@ -5,10 +5,13 @@
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as publicPublicRouteRouteImport } from "./routes/(public)/_public.route";
 import { Route as publicPublicIndexRouteImport } from "./routes/(public)/_public/index";
+import { Route as publicPublicPreviewRouteRouteImport } from "./routes/(public)/_public/preview.route";
 import { Route as publicPublicManagementRouteRouteImport } from "./routes/(public)/_public/management.route";
 import { Route as publicPublicManageRouteRouteImport } from "./routes/(public)/_public/manage.route";
 import { Route as publicPublicAboutRouteRouteImport } from "./routes/(public)/_public/about.route";
 import { Route as publicPublicAboutIndexRouteImport } from "./routes/(public)/_public/about.index";
+import { Route as publicPublicPreviewHeaderRouteImport } from "./routes/(public)/_public/preview/header";
+import { Route as publicPublicPreviewBackupRouteImport } from "./routes/(public)/_public/preview/backup";
 import { Route as publicPublicAboutStatusRouteImport } from "./routes/(public)/_public/about_.status";
 import { Route as publicPublicAboutRuntimeSectionRouteImport } from "./routes/(public)/_public/about/runtime.$section";
 
@@ -21,6 +24,12 @@ const publicPublicIndexRoute = publicPublicIndexRouteImport.update({
   path: "/",
   getParentRoute: () => publicPublicRouteRoute,
 } as any);
+const publicPublicPreviewRouteRoute =
+  publicPublicPreviewRouteRouteImport.update({
+    id: "/preview",
+    path: "/preview",
+    getParentRoute: () => publicPublicRouteRoute,
+  } as any);
 const publicPublicManagementRouteRoute =
   publicPublicManagementRouteRouteImport.update({
     id: "/management",
@@ -42,6 +51,18 @@ const publicPublicAboutIndexRoute = publicPublicAboutIndexRouteImport.update({
   path: "/",
   getParentRoute: () => publicPublicAboutRouteRoute,
 } as any);
+const publicPublicPreviewHeaderRoute =
+  publicPublicPreviewHeaderRouteImport.update({
+    id: "/header",
+    path: "/header",
+    getParentRoute: () => publicPublicPreviewRouteRoute,
+  } as any);
+const publicPublicPreviewBackupRoute =
+  publicPublicPreviewBackupRouteImport.update({
+    id: "/backup",
+    path: "/backup",
+    getParentRoute: () => publicPublicPreviewRouteRoute,
+  } as any);
 const publicPublicAboutStatusRoute = publicPublicAboutStatusRouteImport.update({
   id: "/about_/status",
   path: "/about/status",
@@ -58,16 +79,22 @@ export interface FileRoutesByFullPath {
   "/about": typeof publicPublicAboutRouteRouteWithChildren;
   "/manage": typeof publicPublicManageRouteRoute;
   "/management": typeof publicPublicManagementRouteRoute;
+  "/preview": typeof publicPublicPreviewRouteRouteWithChildren;
   "/": typeof publicPublicIndexRoute;
   "/about/status": typeof publicPublicAboutStatusRoute;
+  "/preview/backup": typeof publicPublicPreviewBackupRoute;
+  "/preview/header": typeof publicPublicPreviewHeaderRoute;
   "/about/": typeof publicPublicAboutIndexRoute;
   "/about/runtime/$section": typeof publicPublicAboutRuntimeSectionRoute;
 }
 export interface FileRoutesByTo {
   "/manage": typeof publicPublicManageRouteRoute;
   "/management": typeof publicPublicManagementRouteRoute;
+  "/preview": typeof publicPublicPreviewRouteRouteWithChildren;
   "/": typeof publicPublicIndexRoute;
   "/about/status": typeof publicPublicAboutStatusRoute;
+  "/preview/backup": typeof publicPublicPreviewBackupRoute;
+  "/preview/header": typeof publicPublicPreviewHeaderRoute;
   "/about": typeof publicPublicAboutIndexRoute;
   "/about/runtime/$section": typeof publicPublicAboutRuntimeSectionRoute;
 }
@@ -77,8 +104,11 @@ export interface FileRoutesById {
   "/(public)/_public/about": typeof publicPublicAboutRouteRouteWithChildren;
   "/(public)/_public/manage": typeof publicPublicManageRouteRoute;
   "/(public)/_public/management": typeof publicPublicManagementRouteRoute;
+  "/(public)/_public/preview": typeof publicPublicPreviewRouteRouteWithChildren;
   "/(public)/_public/": typeof publicPublicIndexRoute;
   "/(public)/_public/about_/status": typeof publicPublicAboutStatusRoute;
+  "/(public)/_public/preview/backup": typeof publicPublicPreviewBackupRoute;
+  "/(public)/_public/preview/header": typeof publicPublicPreviewHeaderRoute;
   "/(public)/_public/about/": typeof publicPublicAboutIndexRoute;
   "/(public)/_public/about/runtime/$section": typeof publicPublicAboutRuntimeSectionRoute;
 }
@@ -88,16 +118,22 @@ export interface FileRouteTypes {
     | "/about"
     | "/manage"
     | "/management"
+    | "/preview"
     | "/"
     | "/about/status"
+    | "/preview/backup"
+    | "/preview/header"
     | "/about/"
     | "/about/runtime/$section";
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/manage"
     | "/management"
+    | "/preview"
     | "/"
     | "/about/status"
+    | "/preview/backup"
+    | "/preview/header"
     | "/about"
     | "/about/runtime/$section";
   id:
@@ -106,8 +142,11 @@ export interface FileRouteTypes {
     | "/(public)/_public/about"
     | "/(public)/_public/manage"
     | "/(public)/_public/management"
+    | "/(public)/_public/preview"
     | "/(public)/_public/"
     | "/(public)/_public/about_/status"
+    | "/(public)/_public/preview/backup"
+    | "/(public)/_public/preview/header"
     | "/(public)/_public/about/"
     | "/(public)/_public/about/runtime/$section";
   fileRoutesById: FileRoutesById;
@@ -130,6 +169,13 @@ declare module "@tanstack/react-router" {
       path: "/";
       fullPath: "/";
       preLoaderRoute: typeof publicPublicIndexRouteImport;
+      parentRoute: typeof publicPublicRouteRoute;
+    };
+    "/(public)/_public/preview": {
+      id: "/(public)/_public/preview";
+      path: "/preview";
+      fullPath: "/preview";
+      preLoaderRoute: typeof publicPublicPreviewRouteRouteImport;
       parentRoute: typeof publicPublicRouteRoute;
     };
     "/(public)/_public/management": {
@@ -159,6 +205,20 @@ declare module "@tanstack/react-router" {
       fullPath: "/about/";
       preLoaderRoute: typeof publicPublicAboutIndexRouteImport;
       parentRoute: typeof publicPublicAboutRouteRoute;
+    };
+    "/(public)/_public/preview/header": {
+      id: "/(public)/_public/preview/header";
+      path: "/header";
+      fullPath: "/preview/header";
+      preLoaderRoute: typeof publicPublicPreviewHeaderRouteImport;
+      parentRoute: typeof publicPublicPreviewRouteRoute;
+    };
+    "/(public)/_public/preview/backup": {
+      id: "/(public)/_public/preview/backup";
+      path: "/backup";
+      fullPath: "/preview/backup";
+      preLoaderRoute: typeof publicPublicPreviewBackupRouteImport;
+      parentRoute: typeof publicPublicPreviewRouteRoute;
     };
     "/(public)/_public/about_/status": {
       id: "/(public)/_public/about_/status";
@@ -193,10 +253,27 @@ const publicPublicAboutRouteRouteWithChildren =
     publicPublicAboutRouteRouteChildren,
   );
 
+interface publicPublicPreviewRouteRouteChildren {
+  publicPublicPreviewBackupRoute: typeof publicPublicPreviewBackupRoute;
+  publicPublicPreviewHeaderRoute: typeof publicPublicPreviewHeaderRoute;
+}
+
+const publicPublicPreviewRouteRouteChildren: publicPublicPreviewRouteRouteChildren =
+  {
+    publicPublicPreviewBackupRoute: publicPublicPreviewBackupRoute,
+    publicPublicPreviewHeaderRoute: publicPublicPreviewHeaderRoute,
+  };
+
+const publicPublicPreviewRouteRouteWithChildren =
+  publicPublicPreviewRouteRoute._addFileChildren(
+    publicPublicPreviewRouteRouteChildren,
+  );
+
 interface publicPublicRouteRouteChildren {
   publicPublicAboutRouteRoute: typeof publicPublicAboutRouteRouteWithChildren;
   publicPublicManageRouteRoute: typeof publicPublicManageRouteRoute;
   publicPublicManagementRouteRoute: typeof publicPublicManagementRouteRoute;
+  publicPublicPreviewRouteRoute: typeof publicPublicPreviewRouteRouteWithChildren;
   publicPublicIndexRoute: typeof publicPublicIndexRoute;
   publicPublicAboutStatusRoute: typeof publicPublicAboutStatusRoute;
 }
@@ -205,6 +282,7 @@ const publicPublicRouteRouteChildren: publicPublicRouteRouteChildren = {
   publicPublicAboutRouteRoute: publicPublicAboutRouteRouteWithChildren,
   publicPublicManageRouteRoute: publicPublicManageRouteRoute,
   publicPublicManagementRouteRoute: publicPublicManagementRouteRoute,
+  publicPublicPreviewRouteRoute: publicPublicPreviewRouteRouteWithChildren,
   publicPublicIndexRoute: publicPublicIndexRoute,
   publicPublicAboutStatusRoute: publicPublicAboutStatusRoute,
 };

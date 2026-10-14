@@ -1,0 +1,34 @@
+{
+  "name": "@homarr/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./host": "./src/server/host.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "oxlint src server tests nitro.config.ts",
+    "test:fetch": "bun --no-env-file test tests/public-fetch.test.ts"
+  },
+  "dependencies": {
+    "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/contracts": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0",
+    "@orpc/server": "2.0.0-beta.43",
+    "cookie": "catalog:",
+    "nitro": "3.0.260903-beta",
+    "srvx": "1.0.5",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.10",
+    "@types/node": "24.13.3",
+    "typescript": "7.0.2"
+  }
+}

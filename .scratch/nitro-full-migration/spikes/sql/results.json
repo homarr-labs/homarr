@@ -1,0 +1,495 @@
+{
+  "runId": "sql-spike-1791656151876-4001ba11",
+  "runtime": {
+    "bun": "1.4.2",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "commands": [
+    {
+      "command": [
+        "docker",
+        "image",
+        "inspect",
+        "postgres@sha256:2cd82735a36356842d5eb1ef80db3ae8f1154172f0f653db48fde079b2a0b7f7",
+        "--format",
+        "{{.Id}}"
+      ],
+      "exitCode": 0,
+      "stdout": "sha256:0668926e2d4e44aca185cb03fbdb5fa76b2b615d4f95afa8a983e3afd61d5a54",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "create",
+        "--pull=never",
+        "--name",
+        "sql-spike-1791656151876-4001ba11",
+        "--label",
+        "homarr.sql-spike=true",
+        "--publish",
+        "127.0.0.1::5432",
+        "--tmpfs",
+        "/var/lib/postgresql/data:rw",
+        "--env",
+        "PGDATA=/var/lib/postgresql/data/owned",
+        "--env",
+        "POSTGRES_USER=sql_spike_only",
+        "--env",
+        "POSTGRES_PASSWORD=disposable_sql_spike_only",
+        "--env",
+        "POSTGRES_DB=sql_spike_only",
+        "postgres@sha256:2cd82735a36356842d5eb1ef80db3ae8f1154172f0f653db48fde079b2a0b7f7"
+      ],
+      "exitCode": 0,
+      "stdout": "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "start",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f"
+      ],
+      "exitCode": 0,
+      "stdout": "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "inspect",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "--format",
+        "{{json .NetworkSettings.Ports}} {{json .HostConfig.Tmpfs}} {{json .Mounts}}"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"5432/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"32772\"}]} {\"/var/lib/postgresql/data\":\"rw\"} []",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "port",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "5432/tcp"
+      ],
+      "exitCode": 0,
+      "stdout": "127.0.0.1:32772",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "exec",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "pg_isready",
+        "-U",
+        "sql_spike_only",
+        "-d",
+        "sql_spike_only"
+      ],
+      "exitCode": 2,
+      "stdout": "/var/run/postgresql:5432 - no response",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "exec",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "pg_isready",
+        "-U",
+        "sql_spike_only",
+        "-d",
+        "sql_spike_only"
+      ],
+      "exitCode": 2,
+      "stdout": "/var/run/postgresql:5432 - no response",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "exec",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "pg_isready",
+        "-U",
+        "sql_spike_only",
+        "-d",
+        "sql_spike_only"
+      ],
+      "exitCode": 1,
+      "stdout": "/var/run/postgresql:5432 - rejecting connections",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "exec",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "pg_isready",
+        "-U",
+        "sql_spike_only",
+        "-d",
+        "sql_spike_only"
+      ],
+      "exitCode": 0,
+      "stdout": "/var/run/postgresql:5432 - accepting connections",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "rm",
+        "--force",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f"
+      ],
+      "exitCode": 0,
+      "stdout": "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "docker",
+        "inspect",
+        "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "--format",
+        "{{.Id}}"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "error: no such object: d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f"
+    }
+  ],
+  "resources": [
+    {
+      "kind": "sqlite",
+      "identity": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/spikes/sql/fixtures/sql-spike-1791656151876-4001ba11.sqlite",
+      "cleaned": true
+    },
+    {
+      "kind": "postgres-container",
+      "identity": "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+      "cleaned": true,
+      "details": {
+        "name": "sql-spike-1791656151876-4001ba11",
+        "image": "postgres@sha256:2cd82735a36356842d5eb1ef80db3ae8f1154172f0f653db48fde079b2a0b7f7"
+      }
+    }
+  ],
+  "observations": [
+    {
+      "kind": "verified",
+      "name": "installed pin",
+      "evidence": {
+        "name": "drizzle-orm",
+        "version": "0.45.2",
+        "resolved": "file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/drizzle-orm/package.json"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "installed pin",
+      "evidence": {
+        "name": "pg",
+        "version": "8.22.0",
+        "resolved": "file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/pg/package.json"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "installed pin",
+      "evidence": {
+        "name": "db0",
+        "version": "0.4.1",
+        "resolved": "file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/db0/package.json"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "installed pin",
+      "evidence": {
+        "name": "nitro",
+        "version": "3.0.260903-beta",
+        "resolved": "file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/nitro/package.json"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct SQLite binding",
+      "evidence": {
+        "note": "O'Hara'); DROP TABLE probe; -- ? $1 雪",
+        "value": 7,
+        "bytes": [
+          0,
+          255,
+          17
+        ],
+        "sqlite": {
+          "version": "3.54.0"
+        }
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct SQLite rollback and savepoint",
+      "evidence": {
+        "durableRows": [
+          {
+            "id": 1,
+            "value": 8
+          },
+          {
+            "id": 3,
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "direct SQLite async callback commits before await",
+      "evidence": {
+        "beforeResume": [
+          {
+            "value": 20
+          }
+        ],
+        "afterFailure": [
+          {
+            "value": 21
+          }
+        ],
+        "inTransaction": false,
+        "awaited": "synthetic promise only; no network"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct SQLite force-close finalizes retained prepare",
+      "evidence": {
+        "closeFalseRetainedStatementWorks": true,
+        "closeTrueRejects": true
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "SQLite immediate exclusion across two owned connections",
+      "evidence": {
+        "busy": {
+          "name": "SQLiteError",
+          "message": "database is locked",
+          "code": "SQLITE_BUSY"
+        },
+        "committedValue": [
+          {
+            "value": 10
+          }
+        ],
+        "journal": {
+          "journal_mode": "delete"
+        },
+        "busyTimeout": "0 in probe only; not a proposed product default"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "db0 SQLite binding and pinned capability flags",
+      "evidence": {
+        "capabilities": {
+          "json": true,
+          "booleans": false,
+          "arrays": false,
+          "dates": false,
+          "uuids": false,
+          "transactions": true
+        },
+        "transactionCallbackAPI": false
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "db0 SQLite sequential raw rollback/savepoint",
+      "evidence": {
+        "rows": [
+          {
+            "id": 1,
+            "value": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "db0 SQLite unrelated query joins shared transaction",
+      "evidence": {
+        "unrelatedInsertAcknowledgedThenRolledBack": true,
+        "overlappingBeginRejected": true
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "db0 SQLite dispose guard excludes retained statements",
+      "evidence": {
+        "disposed": true,
+        "topLevelRejected": true,
+        "retainedStatementAfterDispose": {
+          "value": 8
+        },
+        "explicitNativeForceCloseRequired": true
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "db0 Drizzle integration incompatible with installed 0.45.2",
+      "evidence": {
+        "name": "SyntaxError",
+        "message": "Export named 'getColumnTable' not found in module '/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/drizzle-orm/index.js'."
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "owned PostgreSQL resource isolation",
+      "evidence": {
+        "containerId": "d738adee968910087db365c352e0405adb41820a1a6b0890ebc47f12f7814e3f",
+        "image": "postgres@sha256:2cd82735a36356842d5eb1ef80db3ae8f1154172f0f653db48fde079b2a0b7f7",
+        "loopbackPort": "127.0.0.1:32772",
+        "inspect": "{\"5432/tcp\":[{\"HostIp\":\"127.0.0.1\",\"HostPort\":\"32772\"}]} {\"/var/lib/postgresql/data\":\"rw\"} []"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct PostgreSQL binding",
+      "evidence": {
+        "note": "O'Hara'); DROP TABLE probe; -- ? $1 雪",
+        "value": 7,
+        "bytes": [
+          0,
+          255,
+          17
+        ],
+        "server": [
+          {
+            "server_version": "17.9 (Debian 17.9-1.pgdg13+1)"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct PostgreSQL rollback/savepoint",
+      "evidence": {
+        "rows": [
+          {
+            "id": 1,
+            "value": 8
+          },
+          {
+            "id": 3,
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct PostgreSQL async transaction isolation/row exclusion",
+      "evidence": {
+        "txPid": 90,
+        "observerPid": 91,
+        "observerCommittedUnrelatedRow": true,
+        "lockError": {
+          "name": "error",
+          "message": "canceling statement due to lock timeout",
+          "code": "55P03"
+        }
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct PostgreSQL same checked-out session across await",
+      "evidence": {
+        "pids": [
+          90,
+          90
+        ],
+        "poolTotal": 2,
+        "poolIdle": 2
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "direct PostgreSQL pool lifecycle",
+      "evidence": {
+        "totalAfterEnd": 0,
+        "queryAfterEndRejected": true
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "db0 PostgreSQL binding and pinned capabilities",
+      "evidence": {
+        "capabilities": {
+          "json": true,
+          "booleans": true,
+          "arrays": true,
+          "dates": true,
+          "uuids": true,
+          "transactions": true
+        },
+        "transactionCallbackAPI": false,
+        "driver": "Client"
+      }
+    },
+    {
+      "kind": "verified",
+      "name": "db0 PostgreSQL sequential raw rollback/savepoint",
+      "evidence": {
+        "rows": [
+          {
+            "id": 5,
+            "value": 8
+          }
+        ]
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "db0 PostgreSQL unrelated query joins shared session transaction",
+      "evidence": {
+        "transactionPid": {
+          "pid": 92
+        },
+        "unrelatedPid": {
+          "pid": 92
+        },
+        "acknowledgedUnrelatedInsertLostOnRollback": true
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "db0 PostgreSQL overlapping raw transactions commit each other's work",
+      "evidence": {
+        "bothRowsSurviveFirstOwnerRollback": true,
+        "note": "manual shared-session BEGIN schedule; not db0 v1 Drizzle integration"
+      }
+    },
+    {
+      "kind": "hazard",
+      "name": "db0 PostgreSQL retained statement reconnects after dispose",
+      "evidence": {
+        "oldPid": {
+          "pid": 92
+        },
+        "reopenedPid": {
+          "pid": 93
+        },
+        "topLevelRejected": true,
+        "disposed": true,
+        "cleanup": "explicit original connector.dispose closes recreated client"
+      }
+    }
+  ]
+}

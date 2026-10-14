@@ -15,19 +15,14 @@ import {
 import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import type { TdarrQueue } from "@homarr/integrations";
-import { useByteFormatter } from "@homarr/settings";
-import { useI18n } from "@homarr/translation/client";
+import type { TranscodingViewBindings } from "../native-view-types";
 
-interface QueuePanelProps {
+interface QueuePanelProps extends Pick<TranscodingViewBindings, "tCommon" | "tQueue" | "formatBytes"> {
   queue: TdarrQueue;
 }
 
 export function QueuePanel(props: QueuePanelProps) {
-  const { queue } = props;
-  const { formatBytes } = useByteFormatter();
-
-  const t = useI18n("widget.mediaTranscoding.panel.queue");
-  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
+  const { queue, formatBytes, tQueue: t, tCommon } = props;
 
   if (queue.array.length === 0) {
     return (

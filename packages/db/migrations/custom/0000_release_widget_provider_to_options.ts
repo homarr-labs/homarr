@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
 
-import { createId } from "@homarr/common";
+import { createId } from "@homarr/common/id";
 import { releaseProviderKinds } from "@homarr/definitions";
 
 import { eq } from "../..";

@@ -1,0 +1,29 @@
+.logs {
+  position: relative;
+  height: min(70dvh, 48rem);
+  min-height: 16rem;
+  overflow: auto;
+  padding: var(--mantine-spacing-md);
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+  font-family: var(--mantine-font-family-monospace);
+}
+
+.logEntry {
+  padding-block: var(--mantine-spacing-xs);
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.message {
+  margin: var(--mantine-spacing-xs) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+}
+
+.marker {
+  padding: var(--mantine-spacing-xs);
+  background: var(--mantine-color-yellow-light);
+  color: var(--mantine-color-text);
+  font-weight: 600;
+}

@@ -1,0 +1,614 @@
+[
+  {
+    "runtime": "bun-1.4.2",
+    "attempt": 1,
+    "status": 1,
+    "holds": [
+      "managed-https-https-proxy-route",
+      "managed-axios-https-proxy-route"
+    ],
+    "sourceEvidence": {
+      "currentSha256": "201e99497b4b54d3aa08c16e840198f92efcd64a26b731b1fa9278942fd12f5c",
+      "candidateSha256": "24cc88f1f11aeb3ec9219dec6efc24b30f686a854819477966d5e5f1b1a807a6",
+      "guardDelta": "Delete only the three-line Bun configured-native-proxy rejection block; every other runtime byte unchanged",
+      "dependencies": {
+        "request-signal": "1da4eef71a550be10c9ddc82cd37e4c620f42cabd9e3f7a9d4562f143c571f7e",
+        "timeout": "a2452f61cfd58385bb44a1a1a04560ebdbb7f9648a57d931eb00d5e000056da3",
+        "tls": "e30ef6a772f417161cf9924f92b79b1b35ac5f1f37e04781d03266d090bc671a",
+        "transport-agent": "47cabb8aa24b53e99243b66698873fd211e4edb19330520472451149356f36b5",
+        "https-agent": "1299076c269d52e08ebfbb83c995a6e4c980b68412536af48304ef10fc2bd048",
+        "ownership": "f55717f91165c78755eaae8fbc4c1d67590f087b146267cd9936e447b77f440a"
+      }
+    },
+    "fixture": {
+      "sparsePki": true,
+      "distinctRootSubjects": true,
+      "noFactoryOverrides": true,
+      "actualManagedRuntime": true
+    },
+    "cleanup": {
+      "nativeSettledBeforeFixtureCleanup": true,
+      "remainingSockets": 0
+    },
+    "results": [
+      {
+        "check": "current-source-bun-managed-proxy-guard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-mismatch-denied",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-exact-grant",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-wrong-fingerprint",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-changed-leaf",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-wrong-hostname",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-grant-untrusted-chain",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-proxy-auth-denial-no-fallback",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-late-target-response-after-retirement",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-mismatch-denied",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-exact-grant",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-wrong-fingerprint",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-changed-leaf",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-wrong-hostname",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-grant-untrusted-chain",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-proxy-auth-denial-no-fallback",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-late-target-response-after-retirement",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-empty",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-wildcard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-exact-host",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-matching-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-other-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-empty",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-wildcard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-exact-host",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-matching-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-other-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-https-proxy-route",
+        "status": "hold",
+        "detail": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      {
+        "check": "managed-https-pending-connect-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-invalidate",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-dispose",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-late-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-failed-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-https-proxy-route",
+        "status": "hold",
+        "detail": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      {
+        "check": "managed-axios-pending-connect-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-invalidate",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-dispose",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-late-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-failed-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-route",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-dispose",
+        "status": "pass"
+      }
+    ]
+  },
+  {
+    "runtime": "bun-1.4.2",
+    "attempt": 2,
+    "status": 1,
+    "holds": [
+      "managed-https-https-proxy-route",
+      "managed-axios-https-proxy-route"
+    ],
+    "sourceEvidence": {
+      "currentSha256": "201e99497b4b54d3aa08c16e840198f92efcd64a26b731b1fa9278942fd12f5c",
+      "candidateSha256": "24cc88f1f11aeb3ec9219dec6efc24b30f686a854819477966d5e5f1b1a807a6",
+      "guardDelta": "Delete only the three-line Bun configured-native-proxy rejection block; every other runtime byte unchanged",
+      "dependencies": {
+        "request-signal": "1da4eef71a550be10c9ddc82cd37e4c620f42cabd9e3f7a9d4562f143c571f7e",
+        "timeout": "a2452f61cfd58385bb44a1a1a04560ebdbb7f9648a57d931eb00d5e000056da3",
+        "tls": "e30ef6a772f417161cf9924f92b79b1b35ac5f1f37e04781d03266d090bc671a",
+        "transport-agent": "47cabb8aa24b53e99243b66698873fd211e4edb19330520472451149356f36b5",
+        "https-agent": "1299076c269d52e08ebfbb83c995a6e4c980b68412536af48304ef10fc2bd048",
+        "ownership": "f55717f91165c78755eaae8fbc4c1d67590f087b146267cd9936e447b77f440a"
+      }
+    },
+    "fixture": {
+      "sparsePki": true,
+      "distinctRootSubjects": true,
+      "noFactoryOverrides": true,
+      "actualManagedRuntime": true
+    },
+    "cleanup": {
+      "nativeSettledBeforeFixtureCleanup": true,
+      "remainingSockets": 0
+    },
+    "results": [
+      {
+        "check": "current-source-bun-managed-proxy-guard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-mismatch-denied",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-exact-grant",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-wrong-fingerprint",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-changed-leaf",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-wrong-hostname",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-grant-untrusted-chain",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-proxy-auth-denial-no-fallback",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-late-target-response-after-retirement",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-mismatch-denied",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-exact-grant",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-wrong-fingerprint",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-changed-leaf",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-wrong-hostname",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-grant-untrusted-chain",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-proxy-auth-denial-no-fallback",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-late-target-response-after-retirement",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-empty",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-wildcard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-exact-host",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-matching-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-other-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-empty",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-wildcard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-exact-host",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-matching-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-other-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-https-proxy-route",
+        "status": "hold",
+        "detail": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      {
+        "check": "managed-https-pending-connect-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-invalidate",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-dispose",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-late-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-failed-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-https-proxy-route",
+        "status": "hold",
+        "detail": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      {
+        "check": "managed-axios-pending-connect-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-invalidate",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-dispose",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-late-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-failed-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-route",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-dispose",
+        "status": "pass"
+      }
+    ]
+  },
+  {
+    "runtime": "bun-1.4.2",
+    "attempt": 3,
+    "status": 1,
+    "holds": [
+      "managed-https-https-proxy-route",
+      "managed-axios-https-proxy-route"
+    ],
+    "sourceEvidence": {
+      "currentSha256": "201e99497b4b54d3aa08c16e840198f92efcd64a26b731b1fa9278942fd12f5c",
+      "candidateSha256": "24cc88f1f11aeb3ec9219dec6efc24b30f686a854819477966d5e5f1b1a807a6",
+      "guardDelta": "Delete only the three-line Bun configured-native-proxy rejection block; every other runtime byte unchanged",
+      "dependencies": {
+        "request-signal": "1da4eef71a550be10c9ddc82cd37e4c620f42cabd9e3f7a9d4562f143c571f7e",
+        "timeout": "a2452f61cfd58385bb44a1a1a04560ebdbb7f9648a57d931eb00d5e000056da3",
+        "tls": "e30ef6a772f417161cf9924f92b79b1b35ac5f1f37e04781d03266d090bc671a",
+        "transport-agent": "47cabb8aa24b53e99243b66698873fd211e4edb19330520472451149356f36b5",
+        "https-agent": "1299076c269d52e08ebfbb83c995a6e4c980b68412536af48304ef10fc2bd048",
+        "ownership": "f55717f91165c78755eaae8fbc4c1d67590f087b146267cd9936e447b77f440a"
+      }
+    },
+    "fixture": {
+      "sparsePki": true,
+      "distinctRootSubjects": true,
+      "noFactoryOverrides": true,
+      "actualManagedRuntime": true
+    },
+    "cleanup": {
+      "nativeSettledBeforeFixtureCleanup": true,
+      "remainingSockets": 0
+    },
+    "results": [
+      {
+        "check": "current-source-bun-managed-proxy-guard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-mismatch-denied",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-exact-grant",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-wrong-fingerprint",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-changed-leaf",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-wrong-hostname",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-trust-grant-untrusted-chain",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-proxy-auth-denial-no-fallback",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-late-target-response-after-retirement",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-mismatch-denied",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-exact-grant",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-wrong-fingerprint",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-changed-leaf",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-wrong-hostname",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-trust-grant-untrusted-chain",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-proxy-auth-denial-no-fallback",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-late-target-response-after-retirement",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-empty",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-wildcard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-exact-host",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-matching-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-route-noProxy-other-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-empty",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-wildcard",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-exact-host",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-matching-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-route-noProxy-other-port",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-https-proxy-route",
+        "status": "hold",
+        "detail": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      {
+        "check": "managed-https-pending-connect-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-invalidate",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-dispose",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-late-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-https-pending-connect-failed-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-https-proxy-route",
+        "status": "hold",
+        "detail": "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+      },
+      {
+        "check": "managed-axios-pending-connect-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-invalidate",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-dispose",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-late-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-pending-connect-failed-connect",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-route",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-abort",
+        "status": "pass"
+      },
+      {
+        "check": "managed-axios-plain-http-dispose",
+        "status": "pass"
+      }
+    ]
+  }
+]

@@ -13,6 +13,9 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./runtime": "./src/runtime.ts",
+    "./sql": "./src/sql.ts",
+    "./runtime-bodies": "./src/jobs/runtime-bodies.ts",
     "./job-manager": "./src/job-manager.ts"
   },
   "scripts": {

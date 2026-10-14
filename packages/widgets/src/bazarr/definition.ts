@@ -1,0 +1,39 @@
+import { IconBadgeCc, IconServerOff } from "@tabler/icons-react";
+
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
+import type { WidgetDefinition } from "../definition";
+import { optionsBuilder } from "../options";
+
+export const definition = {
+  kind: "bazarr",
+  supportsAdvancedFocus: true,
+  icon: IconBadgeCc,
+  ...getWidgetIntegrationConfig("bazarr"),
+  createOptions() {
+    return optionsBuilder.from((factory) => ({
+      showMissingEpisodes: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
+      showMissingMovies: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
+      showProviderIssues: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
+      showHealthIssues: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
+    }));
+  },
+  errors: {
+    INTERNAL_SERVER_ERROR: {
+      icon: IconServerOff,
+      message: (t) => t("widget.bazarr.error.internalServerError"),
+    },
+  },
+} satisfies WidgetDefinition & { kind: "bazarr" };

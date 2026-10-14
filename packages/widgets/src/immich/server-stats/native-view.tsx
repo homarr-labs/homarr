@@ -1,0 +1,200 @@
+"use client";
+
+import React from "react";
+import { Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
+import type { RouterOutputs } from "@homarr/api";
+import type { ScopedTranslationFunction } from "@homarr/translation";
+import type { MediaSizeBindings } from "../../rendering/media";
+import type { WidgetComponentProps } from "../../definition";
+import classes from "./component.module.css";
+
+const MAX_ADVANCED_ALBUMS = 50;
+
+export interface ImmichServerStatsViewProps extends MediaSizeBindings {
+  stats: RouterOutputs["widget"]["immich"]["getServerStats"];
+  albums: RouterOutputs["widget"]["immich"]["getAlbums"];
+  options: WidgetComponentProps<"immich-serverStats">["options"];
+  displayMode: "compact" | "advanced";
+  width: number;
+  height: number;
+  t: ScopedTranslationFunction<"widget.immich-serverStats">;
+  locale: string;
+  formatBytes: (bytes: number) => string;
+  albumsPending: boolean;
+  loadingState: React.ReactNode;
+  emptyState: React.ReactNode;
+}
+
+export function ImmichServerStatsView({
+  stats,
+  albums,
+  options,
+  displayMode = "compact",
+  width,
+  height,
+  t,
+  formatBytes,
+  locale,
+  zoomCompensatedSize,
+  albumsPending,
+  loadingState,
+  emptyState,
+}: ImmichServerStatsViewProps) {
+  const isAdvanced = displayMode === "advanced";
+
+  const statVisibility = getImmichStatVisibility(options, isAdvanced);
+  const statCount =
+    Number(statVisibility.showUsers) +
+    Number(statVisibility.showPhotos) +
+    Number(statVisibility.showVideos) +
+    Number(statVisibility.showStorage);
+  const statsLayout = getImmichStatsLayout(width, height, statCount, isAdvanced);
+
+  const statItems = [
+    {
+      key: "users",
+      enabled: statVisibility.showUsers,
+      icon: <IconUsers style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
+      label: t("users"),
+      value: stats.userCount.toLocaleString(locale),
+    },
+    {
+      key: "photos",
+      enabled: statVisibility.showPhotos,
+      icon: <IconPhoto style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
+      label: t("photos"),
+      value: stats.photoCount.toLocaleString(locale),
+    },
+    {
+      key: "videos",
+      enabled: statVisibility.showVideos,
+      icon: <IconVideo style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
+      label: t("videos"),
+      value: stats.videoCount.toLocaleString(locale),
+    },
+    {
+      key: "storage",
+      enabled: statVisibility.showStorage,
+      icon: <IconDatabase style={zoomCompensatedSize(isAdvanced ? 18 : 20)} />,
+      label: t("storage"),
+      value: formatBytes(stats.totalLibraryUsageInBytes),
+    },
+  ]
+    .filter((item) => item.enabled)
+    .map(({ key, icon, label, value }) => (
+      <StatItem
+        key={key}
+        icon={icon}
+        label={label}
+        value={value}
+        dense={isAdvanced && statsLayout.dense}
+        compact={!isAdvanced}
+      />
+    ));
+
+  if (!isAdvanced) {
+    return (
+      <Stack gap="md" h="100%" p="md">
+        {statItems}
+      </Stack>
+    );
+  }
+
+  const statsContent = (
+    <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
+      {statItems}
+    </SimpleGrid>
+  );
+  const sortedAlbums = albums;
+  const maxAssets = sortedAlbums[0]?.assetCount ?? 1;
+  return (
+    <Stack gap="lg" h="100%" p="lg">
+      {statsContent}
+      <Group justify="space-between" wrap="nowrap">
+        <Text size="xs" c="dimmed">
+          {t("albumLimit", { count: MAX_ADVANCED_ALBUMS })}
+        </Text>
+      </Group>
+      <ScrollArea style={{ flex: 1, minHeight: 0 }}>
+        {albumsPending ? (
+          loadingState
+        ) : albums.length === 0 ? (
+          emptyState
+        ) : (
+          <SimpleGrid cols={width >= 900 ? 2 : 1} spacing="xs">
+            {sortedAlbums.map((album) => (
+              <Stack key={album.id} gap={4} p="xs">
+                <Group justify="space-between" wrap="nowrap">
+                  <Text size="sm" fw={600} truncate>
+                    {album.albumName}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {album.assetCount.toLocaleString(locale)}
+                  </Text>
+                </Group>
+                <Progress value={(album.assetCount / Math.max(maxAssets, 1)) * 100} size="sm" />
+              </Stack>
+            ))}
+          </SimpleGrid>
+        )}
+      </ScrollArea>
+    </Stack>
+  );
+}
+
+interface StatItemProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  dense: boolean;
+  compact: boolean;
+}
+
+function StatItem({ icon, label, value, dense, compact }: StatItemProps) {
+  if (dense) {
+    return (
+      <Stack gap={1} align="center" justify="center" className={classes.statItemDense} title={`${label}: ${value}`}>
+        <Text size="sm" fw={700} truncate="end" w="100%" ta="center">
+          {value}
+        </Text>
+        <Text size="xs" c="dimmed" truncate="end" w="100%" ta="center">
+          {label}
+        </Text>
+      </Stack>
+    );
+  }
+
+  return (
+    <Group justify="space-between" align="center" className={compact ? classes.statItemCompact : classes.statItem}>
+      <Group gap="sm" align="center" wrap="nowrap" miw={0}>
+        {icon}
+        <Text size="sm" fw={500} truncate="end">
+          {label}
+        </Text>
+      </Group>
+      <Text size="sm" fw={700} c="var(--mantine-primary-color)" truncate="end" title={String(value)}>
+        {value}
+      </Text>
+    </Group>
+  );
+}
+
+export const getImmichStatsLayout = (width: number, _height: number, itemCount: number, isAdvanced = false) => {
+  const count = Math.max(1, itemCount);
+  if (isAdvanced) {
+    return { columns: width >= 720 ? Math.min(count, 4) : width >= 360 ? Math.min(count, 2) : 1, dense: false };
+  }
+
+  return { columns: 1, dense: false };
+};
+
+export const getImmichStatVisibility = (
+  options: WidgetComponentProps<"immich-serverStats">["options"],
+  isAdvanced: boolean,
+) => ({
+  showUsers: isAdvanced || options.showUsers,
+  showPhotos: isAdvanced || options.showPhotos,
+  showVideos: isAdvanced || options.showVideos,
+  showStorage: isAdvanced || options.showStorage,
+});

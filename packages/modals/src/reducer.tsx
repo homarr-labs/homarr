@@ -52,12 +52,10 @@ export const modalReducer = (state: ModalsState, action: OpenAction | CloseActio
       };
     }
     case "CLOSE": {
-      const modal = state.modals.find((modal) => modal.id === action.modalId);
-      if (!modal) {
+      const found = state.modals.find((modal) => modal.id === action.modalId);
+      if (!found) {
         return state;
       }
-
-      modal.props.onClose?.();
 
       const remainingModals = state.modals.filter((modal) => modal.id !== action.modalId);
 
@@ -70,14 +68,6 @@ export const modalReducer = (state: ModalsState, action: OpenAction | CloseActio
       if (!state.modals.length) {
         return state;
       }
-
-      // Resolve modal stack from top to bottom
-      state.modals
-        .concat()
-        .reverse()
-        .forEach((modal) => {
-          modal.props.onClose?.();
-        });
 
       return {
         current: state.current,
@@ -108,6 +98,7 @@ const getModal = <TModal extends ModalDefinition>(modal: ModalState<TModal>) => 
         innerProps={innerProps}
         actions={{
           closeModal: () => context.closeModal(modal.id),
+          capturePresentationOwner: () => context.capturePresentationOwner(modal.id),
           setCloseInterceptor: (interceptor: (() => boolean) | null) => {
             closeInterceptor = interceptor;
           },

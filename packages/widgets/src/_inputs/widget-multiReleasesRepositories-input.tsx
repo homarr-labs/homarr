@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -36,7 +36,7 @@ import {
 } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { createId } from "@homarr/common";
+import { createId, isRecord } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
 import {
   getReleaseProviderDefaultUrl,
@@ -55,6 +55,12 @@ import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/rele
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
+import { useStaticWidgetInputOwner } from "./static-owner";
+import {
+  captureLegacyWidgetSession,
+  isLegacyWidgetSessionCurrent,
+  useLegacyWidgetIconResources,
+} from "./widget-app-input";
 
 interface FormValidation {
   hasErrors: boolean;
@@ -67,6 +73,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
   property,
   kind,
   itemId,
+  boardId,
 }: CommonWidgetInputProps<"multiReleasesRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
   const tRepository = useI18n("widget.releases.option.repositories");
@@ -79,7 +86,9 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     () => [tRepository("versionFilter.precision.options.none"), "#", "#.#", "#.#.#", "#.#.#.#", "#.#.#.#.#"],
     [tRepository],
   );
-  const { data: session } = useSession();
+  const observedSession = useSession();
+  const session = observedSession.data;
+  const sourceOwner = useStaticWidgetInputOwner(kind, property);
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
   const providerOptions = useMemo(
@@ -131,14 +140,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
 
     const index = repositories.length;
 
-    openEditModal({
-      fieldPath: `options.${property}.${index}`,
-      repository,
-      onRepositorySave: (saved) => onRepositorySave(saved, index),
-      onRepositoryCancel: () => onRepositoryRemove(index),
-      versionFilterPrecisionOptions,
-      providerOptions,
-    });
+    openRepository(repository, index, true);
   };
 
   const onRepositoryRemove = (index: number) => {
@@ -152,6 +154,123 @@ export const WidgetMultiReleasesRepositoriesInput = ({
         },
       };
     });
+  };
+
+  const binding = useMemo(() => ({ kind, property, itemId, boardId }), [kind, property, itemId, boardId]);
+  const mount = useRef<{ active: boolean } | null>(null);
+  const host = useRef({ binding, form, session: observedSession, sourceOwner, onRepositorySave, onRepositoryRemove });
+  const selection = useRef<{
+    active: boolean;
+    seen: boolean;
+    index: number;
+    id: string;
+    fields: string;
+    binding: typeof binding;
+    session: ReturnType<typeof captureLegacyWidgetSession>;
+  } | null>(null);
+  useLayoutEffect(() => {
+    const lease = { active: true };
+    mount.current = lease;
+    return () => {
+      lease.active = false;
+      if (selection.current) selection.current.active = false;
+    };
+  }, []);
+  useLayoutEffect(() => {
+    host.current = { binding, form, session: observedSession, sourceOwner, onRepositorySave, onRepositoryRemove };
+    const origin = selection.current;
+    if (!origin) return;
+    if (origin.binding !== binding || !isLegacyWidgetSessionCurrent(origin.session, observedSession))
+      origin.active = false;
+    const rows = form.values.options[property];
+    if (Array.isArray(rows)) {
+      const row: unknown = rows[origin.index];
+      if (isRecord(row) && row.id === origin.id && JSON.stringify(row) === origin.fields) origin.seen = true;
+      else if (origin.seen) origin.active = false;
+    } else if (origin.seen) origin.active = false;
+  });
+  const openRepository = (repository: ReleasesRepository, index: number, isNew: boolean) => {
+    const current = host.current;
+    const lease = mount.current;
+    if (
+      !lease?.active ||
+      current.binding !== binding ||
+      !current.sourceOwner.isCurrent() ||
+      current.session.status !== "authenticated"
+    )
+      return;
+    if (selection.current) selection.current.active = false;
+    const origin = {
+      active: true,
+      seen: !isNew,
+      index,
+      id: repository.id,
+      fields: JSON.stringify(repository),
+      binding,
+      session: captureLegacyWidgetSession(current.session.data),
+    };
+    selection.current = origin;
+    const isCurrentSource = () => {
+      const valid =
+        origin.active &&
+        origin.seen &&
+        selection.current === origin &&
+        lease.active &&
+        mount.current === lease &&
+        host.current.binding === binding &&
+        isLegacyWidgetSessionCurrent(origin.session, host.current.session);
+      if (!valid && origin.seen) origin.active = false;
+      return valid;
+    };
+    const props: RepositoryEditProps = {
+      fieldPath: `options.${property}.${index}`,
+      repository: { ...repository },
+      session: origin.session,
+      isCurrentSource,
+      onRepositorySave: (saved) => {
+        if (!isCurrentSource())
+          return { hasErrors: true, errors: { [`options.${property}.${index}`]: "Repository selection retired" } };
+        const form = host.current.form;
+        const beforeRows = form.getValues().options[property];
+        const before: unknown = Array.isArray(beforeRows) ? beforeRows[index] : undefined;
+        if (!isRecord(before) || before.id !== origin.id || JSON.stringify(before) !== origin.fields) {
+          origin.active = false;
+          return { hasErrors: true, errors: { [`options.${property}.${index}`]: "Repository selection changed" } };
+        }
+        const controlled = ["provider", "identifier", "name", "versionFilter", "iconUrl", "providerUrl"];
+        const untouched = JSON.stringify(Object.entries(before).filter(([key]) => !controlled.includes(key)));
+        const validation = host.current.onRepositorySave(saved, index);
+        const afterRows = form.getValues().options[property];
+        const after: unknown = Array.isArray(afterRows) ? afterRows[index] : undefined;
+        if (
+          !isCurrentSource() ||
+          !isRecord(after) ||
+          after.id !== origin.id ||
+          after.provider !== saved.provider ||
+          after.identifier !== saved.identifier ||
+          after.name !== saved.name ||
+          JSON.stringify(after.versionFilter) !== JSON.stringify(saved.versionFilter) ||
+          after.iconUrl !== saved.iconUrl ||
+          after.providerUrl !== saved.providerUrl ||
+          JSON.stringify(Object.entries(after).filter(([key]) => !controlled.includes(key))) !== untouched
+        ) {
+          origin.active = false;
+          return {
+            hasErrors: true,
+            errors: { ...validation.errors, [`options.${property}.${index}`]: "Repository selection changed" },
+          };
+        }
+        origin.fields = JSON.stringify(after);
+        return validation;
+      },
+      versionFilterPrecisionOptions,
+      providerOptions,
+    };
+    if (isNew)
+      props.onRepositoryCancel = () => {
+        if (isCurrentSource()) host.current.onRepositoryRemove(index);
+      };
+    openEditModal(props);
   };
 
   return (
@@ -220,15 +339,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                 </Group>
 
                 <Button
-                  onClick={() =>
-                    openEditModal({
-                      fieldPath: `options.${property}.${index}`,
-                      repository,
-                      onRepositorySave: (saved) => onRepositorySave(saved, index),
-                      versionFilterPrecisionOptions,
-                      providerOptions,
-                    })
-                  }
+                  onClick={() => openRepository(repository, index, false)}
                   variant="light"
                   leftSection={<IconEdit size="var(--mantine-font-size-sm)" />}
                   size="xs"
@@ -418,33 +529,81 @@ interface RepositoryEditProps {
   onRepositoryCancel?: () => void;
   versionFilterPrecisionOptions: string[];
   providerOptions: { value: ReleaseProviderKind; label: string }[];
+  session: ReturnType<typeof captureLegacyWidgetSession>;
+  isCurrentSource: () => boolean;
 }
 
-const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
+function RepositoryEditContent({
+  innerProps,
+  actions,
+}: {
+  innerProps: RepositoryEditProps;
+  actions: { closeModal: () => void; capturePresentationOwner: () => { isCurrent: () => boolean } };
+}) {
   const tRepository = useI18n("widget.releases.option.repositories");
   const actionT = useI18n("common.action");
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const session = useSession();
+  const owner = useRef<{ active: boolean; admitted: boolean; presentation: { isCurrent: () => boolean } } | null>(null);
+  const host = useRef({ innerProps, session, tempRepository });
+  const [ready, setReady] = useState(false);
+  useLayoutEffect(() => {
+    const lease = { active: true, admitted: false, presentation: actions.capturePresentationOwner() };
+    owner.current = lease;
+    return () => {
+      lease.active = false;
+    };
+  }, []);
+  useLayoutEffect(() => {
+    host.current = { innerProps, session, tempRepository };
+    const lease = owner.current;
+    if (!lease) return;
+    if (!isLegacyWidgetSessionCurrent(innerProps.session, session)) lease.active = false;
+    if (innerProps.isCurrentSource() && lease.active && !lease.admitted) {
+      lease.admitted = true;
+      setReady(true);
+    } else if (lease.admitted && !innerProps.isCurrentSource()) lease.active = false;
+  });
+  const isCurrentOwner = useCallback(() => {
+    const lease = owner.current;
+    const valid =
+      lease !== null &&
+      lease.active &&
+      lease.admitted &&
+      lease.presentation.isCurrent() &&
+      isLegacyWidgetSessionCurrent(host.current.innerProps.session, host.current.session) &&
+      host.current.innerProps.isCurrentSource();
+    if (!valid && lease?.admitted) lease.active = false;
+    return valid;
+  }, []);
+  const iconResources = useLegacyWidgetIconResources(isCurrentOwner, tempRepository.iconUrl);
+  const cancelOwner = owner.current;
   const handleConfirm = useCallback(() => {
+    if (!isCurrentOwner()) return;
     setLoading(true);
 
-    const validation = innerProps.onRepositorySave(tempRepository);
+    const validation = host.current.innerProps.onRepositorySave(host.current.tempRepository);
     setFormErrors(validation.errors);
     if (!validation.hasErrors) {
+      if (owner.current) owner.current.active = false;
       actions.closeModal();
     }
 
     setLoading(false);
-  }, [innerProps, tempRepository, actions]);
+  }, [innerProps, tempRepository, actions, isCurrentOwner]);
 
   const handleCancel = useCallback(() => {
-    if (innerProps.onRepositoryCancel) {
+    const lease = cancelOwner;
+    if (!lease || owner.current !== lease || !lease.presentation.isCurrent()) return;
+    if (isCurrentOwner() && innerProps.onRepositoryCancel) {
       innerProps.onRepositoryCancel();
     }
 
+    lease.active = false;
     actions.closeModal();
-  }, [innerProps, actions]);
+  }, [innerProps, actions, isCurrentOwner, cancelOwner]);
 
   const handleChange = useCallback((changedValue: Partial<ReleasesRepository>) => {
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
@@ -508,10 +667,12 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
 
         <div style={{ flex: 0.7 }}>
           <IconPicker
+            {...iconResources}
             withAsterisk={false}
             value={tempRepository.iconUrl ?? ""}
             suggestedSearch={tempRepository.name || tempRepository.identifier}
             onChange={(url) => {
+              if (!ready || !isCurrentOwner()) return;
               if (url === "") {
                 handleChange({ iconUrl: undefined });
               } else {
@@ -595,7 +756,9 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
       </Group>
     </Stack>
   );
-}).withOptions({
+}
+
+const RepositoryEditModal = createModal<RepositoryEditProps>(RepositoryEditContent).withOptions({
   defaultTitle(t) {
     return t("widget.releases.option.repositories.editForm.title");
   },

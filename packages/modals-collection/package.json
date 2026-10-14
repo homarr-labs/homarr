@@ -12,7 +12,12 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./apps/app-select-modal": "./src/apps/app-select-modal.tsx",
+    "./apps/quick-add-app/quick-add-app-modal": "./src/apps/quick-add-app/quick-add-app-modal.tsx",
+    "./docker/add-docker-app-to-homarr": "./src/docker/add-docker-app-to-homarr.tsx",
+    "./docker/confirm-docker-container-removal": "./src/docker/confirm-docker-container-removal.ts",
+    "./search-engines/request-media-modal": "./src/search-engines/request-media-modal.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -34,6 +39,7 @@
     "@mantine/core": "catalog:",
     "@tabler/icons-react": "catalog:",
     "dayjs": "catalog:",
+    "mantine-react-table": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -217,38 +217,100 @@ export function parseLegacyArchive(input: Uint8Array): ParsedLegacyArchive {
   }
 }
 
-export async function readBackupUploadAsync(request: Request): Promise<Uint8Array> {
-  const length = request.headers.get("content-length");
-  if (length !== null && (!/^\d+$/.test(length) || !Number.isSafeInteger(Number(length))))
+export async function readBackupUploadAsync(
+  request: Request,
+  signal: AbortSignal = request.signal,
+): Promise<Uint8Array> {
+  const checkAbort = () => {
+    if (signal.aborted) throw new BackupError("cancelled");
+  };
+  if (!request.body) {
+    checkAbort();
     throw new BackupError("invalid-archive");
-  if (length !== null && Number(length) > backupLimits.multipart) throw new BackupError("too-large");
-  if (!request.body) throw new BackupError("invalid-archive");
+  }
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
+  let cancellation: Promise<void> | undefined;
+  let finished = false;
+  const cancel = () => {
+    if (finished) return;
+    cancellation ??= Promise.resolve().then(() => reader.cancel(signal.reason));
+    void cancellation.catch(() => undefined);
+  };
+  signal.addEventListener("abort", cancel, { once: true });
+  let pendingRead: ReturnType<typeof reader.read> | undefined;
+  let body: Uint8Array<ArrayBuffer> | undefined;
+  let output: Uint8Array | undefined;
+  let failure: { error: unknown } | undefined;
+  let cleanupFailed = false;
   let size = 0;
   try {
+    checkAbort();
+    const length = request.headers.get("content-length");
+    if (length !== null && (!/^\d+$/.test(length) || !Number.isSafeInteger(Number(length))))
+      throw new BackupError("invalid-archive");
+    if (length !== null && Number(length) > backupLimits.multipart) throw new BackupError("too-large");
     while (true) {
-      const chunk = await reader.read();
-      if (chunk.done) break;
-      size += chunk.value.byteLength;
-      if (size > backupLimits.multipart) {
-        await reader.cancel();
-        throw new BackupError("too-large");
+      checkAbort();
+      pendingRead = reader.read();
+      const chunk = await pendingRead;
+      if (chunk.done) {
+        finished = true;
+        checkAbort();
+        break;
       }
-      chunks.push(chunk.value);
+      checkAbort();
+      size += chunk.value.byteLength;
+      if (size > backupLimits.multipart) throw new BackupError("too-large");
+      chunks.push(Uint8Array.from(chunk.value));
     }
-    const body = Buffer.concat(chunks, size);
+    checkAbort();
+    body = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      body.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
     const contentType = request.headers.get("content-type");
     if (!contentType?.startsWith("multipart/form-data;")) throw new BackupError("invalid-archive");
+    checkAbort();
     const form = await new Response(body, { headers: { "content-type": contentType } }).formData();
+    checkAbort();
     const file = form.get("file");
     if (!(file instanceof File) || form.getAll("file").length !== 1) throw new BackupError("invalid-archive");
     if (file.size > backupLimits.compressed) throw new BackupError("too-large");
-    return new Uint8Array(await file.arrayBuffer());
+    checkAbort();
+    output = new Uint8Array(await file.arrayBuffer());
+    checkAbort();
   } catch (error) {
-    if (error instanceof BackupError) throw error;
-    throw new BackupError("invalid-archive");
+    if (error instanceof BackupError) failure = { error };
+    else if (signal.aborted) failure = { error: new BackupError("cancelled") };
+    else failure = { error: new BackupError("invalid-archive") };
   } finally {
-    reader.releaseLock();
+    try {
+      if (!finished) cancel();
+      const settled = await Promise.allSettled([cancellation, pendingRead]);
+      if (settled[0]?.status === "rejected") cleanupFailed = true;
+    } catch {
+      cleanupFailed = true;
+    } finally {
+      signal.removeEventListener("abort", cancel);
+      body?.fill(0);
+      for (const chunk of chunks) chunk.fill(0);
+      try {
+        reader.releaseLock();
+      } catch {
+        cleanupFailed = true;
+      }
+      if (failure || cleanupFailed) output?.fill(0);
+    }
   }
+  if (cleanupFailed) throw new BackupError("cleanup-failed");
+  if (failure) throw failure.error;
+  if (signal.aborted) {
+    output?.fill(0);
+    throw new BackupError("cancelled");
+  }
+  if (!output) throw new BackupError("invalid-archive");
+  return output;
 }

@@ -1,6 +1,6 @@
 import superjson from "superjson";
 
-import { createId } from "@homarr/common";
+import { createId } from "@homarr/common/id";
 import {
   defaultBookmarkApps,
   defaultWidgetConfigs,

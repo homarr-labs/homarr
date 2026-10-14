@@ -1,0 +1,38 @@
+{
+  "task": "Read-only final experiment baseline during human testing",
+  "checkScope": "apps/nitro-experiment only; src, server, scripts/container, vite.config.ts, nitro.config.ts",
+  "checks": [
+    {
+      "cwd": "apps/nitro-experiment",
+      "command": "bun --no-env-file run lint",
+      "expandedCommand": "oxlint src server scripts/container vite.config.ts nitro.config.ts",
+      "exitCode": 0,
+      "warningCount": 15,
+      "log": ".scratch/nitro-feasibility/results/baseline-final-lint.log"
+    },
+    {
+      "cwd": "apps/nitro-experiment",
+      "command": "bun --no-env-file run typecheck",
+      "expandedCommand": "tsc --noEmit -p tsconfig.json",
+      "exitCode": 0,
+      "log": ".scratch/nitro-feasibility/results/baseline-final-typecheck.log"
+    }
+  ],
+  "provenanceEvidence": ".scratch/nitro-feasibility/results/baseline-final-provenance.json",
+  "samplesEvidence": ".scratch/nitro-feasibility/results/baseline-final-samples.json",
+  "allRecordedBuildInputsMatch": true,
+  "recordedBuildInputsChecked": 68,
+  "allowlistAddedOrMissingPaths": [],
+  "allRecordedOutputFilesMatch": true,
+  "recordedOutputFilesChecked": 36,
+  "excludedLintConfigNotBaked": true,
+  "buildId": "674cf506-623c-4b6d-9c88-2a725e80b909",
+  "container": "homarr-nitro-fixture-fixture-1",
+  "containerHealthyAtInspection": true,
+  "serverKeptUpUnchanged": true,
+  "applicationOrConfigurationEdits": false,
+  "buildOrInstallOrRestart": false,
+  "databaseOrCookieOrBrowserOrFeatureHttpActions": false,
+  "newTestsOrRepositoryWideChecks": false,
+  "remainingAcceptance": "Previously pending browser races, expiry/delayed delivery, same-image restart, durable seeding/cold-session/cache observations and complete feature acceptance remain unproven. This snapshot is not a fair benchmark or comparable Homarr RAM-savings claim."
+}

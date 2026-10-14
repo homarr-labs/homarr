@@ -1,67 +1,41 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Anchor, Box, Center, Group, Stack, Title } from "@mantine/core";
-import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
 import videojs from "video.js";
+import type Player from "video.js/dist/types/player";
 
 import { useI18n } from "@homarr/translation/client";
+import { createDocumentationLink } from "@homarr/definitions";
 
 import type { WidgetComponentProps } from "../definition";
+import { isYouTubeUrl, VideoNativeView } from "./native-view";
 import classes from "./component.module.css";
 
 import "video.js/dist/video-js.css";
 
-import type Player from "video.js/dist/types/player";
-
-import { createDocumentationLink } from "@homarr/definitions";
+export { isYouTubeUrl } from "./native-view";
 
 export default function VideoWidget({ options, isEditMode }: WidgetComponentProps<"video">) {
-  if (options.feedUrl.trim() === "") {
-    return <NoUrl />;
-  }
-
-  if (isYouTubeUrl(options.feedUrl)) {
-    return <ForYoutubeUseIframe />;
-  }
-
+  if (options.feedUrl.trim() === "") return <NoUrl />;
+  if (isYouTubeUrl(options.feedUrl)) return <ForYoutubeUseIframe />;
   return <Feed options={options} isEditMode={isEditMode} />;
 }
 
-export const isYouTubeUrl = (value: string): boolean => {
-  try {
-    const url = new URL(value);
-    return url.hostname === "youtu.be" || url.hostname === "youtube.com" || url.hostname.endsWith(".youtube.com");
-  } catch {
-    return false;
-  }
-};
-
 const NoUrl = () => {
   const t = useI18n("widget.video");
-
-  return (
-    <Center h="100%">
-      <Stack align="center">
-        <IconDeviceCctvOff />
-        <Title order={4}>{t("error.noUrl")}</Title>
-      </Stack>
-    </Center>
-  );
+  return <VideoNativeView state="no-url" message={t("error.noUrl")} />;
 };
 
 const ForYoutubeUseIframe = () => {
   const t = useI18n("widget.video");
   const tCommon = useI18n("common");
-
   return (
-    <Center h="100%">
-      <Stack align="center" gap="xs">
-        <IconBrandYoutube />
-        <Title order={4}>{t("error.forYoutubeUseIframe")}</Title>
-        <Anchor href={createDocumentationLink("/docs/widgets/iframe")}>{tCommon("action.checkoutDocs")}</Anchor>
-      </Stack>
-    </Center>
+    <VideoNativeView
+      state="youtube"
+      message={t("error.forYoutubeUseIframe")}
+      documentationHref={createDocumentationLink("/docs/widgets/iframe")}
+      documentationLabel={tCommon("action.checkoutDocs")}
+    />
   );
 };
 
@@ -73,22 +47,14 @@ const Feed = ({ options, isEditMode }: Pick<WidgetComponentProps<"video">, "opti
     if (playerRef.current) return;
     const videoElement = document.createElement("video-js");
     videoElement.classList.add("vjs-big-play-centered");
-    if (classes.video) {
-      videoElement.classList.add(classes.video);
-    }
+    if (classes.video) videoElement.classList.add(classes.video);
     videoRef.current?.appendChild(videoElement);
-
     playerRef.current = videojs(videoElement, {
       autoplay: options.hasAutoPlay,
       muted: options.isMuted,
       controls: options.hasControls,
-      sources: [
-        {
-          src: options.feedUrl,
-        },
-      ],
+      sources: [{ src: options.feedUrl }],
     });
-    // All other properties are updated with other useEffect
   }, [videoRef]);
 
   useEffect(() => {
@@ -113,7 +79,6 @@ const Feed = ({ options, isEditMode }: Pick<WidgetComponentProps<"video">, "opti
 
   useEffect(() => {
     const player = playerRef.current;
-
     return () => {
       if (player && !player.isDisposed()) {
         player.dispose();
@@ -122,9 +87,5 @@ const Feed = ({ options, isEditMode }: Pick<WidgetComponentProps<"video">, "opti
     };
   }, [playerRef]);
 
-  return (
-    <Group justify="center" w="100%" h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-      <Box w="100%" h="100%" ref={videoRef} />
-    </Group>
-  );
+  return <VideoNativeView state="feed" isEditMode={isEditMode} videoRef={videoRef} />;
 };

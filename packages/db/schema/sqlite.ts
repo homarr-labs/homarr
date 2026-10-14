@@ -3,7 +3,17 @@ import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { blob, foreignKey, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  blob,
+  check,
+  customType,
+  foreignKey,
+  index,
+  int,
+  primaryKey,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 
 import {
   backgroundImageAttachments,
@@ -28,22 +38,58 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import { defaultByteUnitSystem } from "@homarr/common";
+import { defaultByteUnitSystem } from "@homarr/common/number";
 import type { ByteUnitSystem } from "@homarr/common";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
+import { authCredentialSequence } from "../runtime-auth-credential/validation";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 
-export const apiKeys = sqliteTable("apiKey", {
-  id: text().notNull().primaryKey(),
-  apiKey: text().notNull(),
-  userId: text()
-    .notNull()
-    .references((): AnySQLiteColumn => users.id, {
-      onDelete: "cascade",
-    }),
+const credentialSequence = customType<{ data: string; driverData: string }>({
+  dataType: () => "integer",
+  toDriver: (value) => sql`CAST(${authCredentialSequence(value, 0n).toString()} AS INTEGER)`,
+  fromDriver: (value) => authCredentialSequence(value, 0n).toString(),
 });
+
+export const authCredentialDomain = sqliteTable(
+  "homarr_auth_credential_domain",
+  {
+    id: int().notNull().primaryKey(),
+    namespace: text().notNull().unique(),
+    headSequence: credentialSequence("head_sequence").notNull(),
+    phase: text().$type<"initializing" | "ready">().notNull(),
+  },
+  (domain) => ({
+    singleton: check("homarr_auth_credential_domain_singleton", sql`${domain.id} = 1`),
+    head: check(
+      "homarr_auth_credential_domain_head",
+      sql`typeof(${domain.headSequence}) = 'integer' AND ${domain.headSequence} >= 0`,
+    ),
+    phase: check("homarr_auth_credential_domain_phase", sql`${domain.phase} IN ('initializing', 'ready')`),
+  }),
+);
+
+export const apiKeys = sqliteTable(
+  "apiKey",
+  {
+    id: text().notNull().primaryKey(),
+    apiKey: text().notNull(),
+    userId: text()
+      .notNull()
+      .references((): AnySQLiteColumn => users.id, {
+        onDelete: "cascade",
+      }),
+    authLifetimeSequence: credentialSequence("auth_lifetime_sequence"),
+    authWriteSequence: credentialSequence("auth_write_sequence"),
+  },
+  (key) => ({
+    evidence: check(
+      "apiKey_auth_evidence",
+      sql`(${key.authLifetimeSequence} IS NULL AND ${key.authWriteSequence} IS NULL) OR (typeof(${key.authLifetimeSequence}) = 'integer' AND typeof(${key.authWriteSequence}) = 'integer' AND ${key.authLifetimeSequence} > 0 AND ${key.authWriteSequence} >= ${key.authLifetimeSequence})`,
+    ),
+  }),
+);
 
 export const users = sqliteTable("user", {
   id: text().notNull().primaryKey(),
@@ -107,9 +153,15 @@ export const sessions = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     expires: int({ mode: "timestamp_ms" }).notNull(),
+    authLifetimeSequence: credentialSequence("auth_lifetime_sequence"),
+    authWriteSequence: credentialSequence("auth_write_sequence"),
   },
   (session) => ({
     userIdIdx: index("user_id_idx").on(session.userId),
+    evidence: check(
+      "session_auth_evidence",
+      sql`(${session.authLifetimeSequence} IS NULL AND ${session.authWriteSequence} IS NULL) OR (typeof(${session.authLifetimeSequence}) = 'integer' AND typeof(${session.authWriteSequence}) = 'integer' AND ${session.authLifetimeSequence} > 0 AND ${session.authWriteSequence} >= ${session.authLifetimeSequence})`,
+    ),
   }),
 );
 

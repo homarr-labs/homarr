@@ -9,6 +9,11 @@
   "exports": {
     ".": "./index.ts",
     "./runtime": "./runtime.ts",
+    "./runtime-state": "./runtime-state.ts",
+    "./runtime-auth-session": "./runtime-auth-session.ts",
+    "./runtime-auth-credential": "./runtime-auth-credential.ts",
+    "./runtime-board": "./runtime-board.ts",
+    "./runtime-app": "./runtime-app.ts",
     "./driver": "./driver.ts",
     "./copied-sqlite": "./copied-sqlite.ts",
     "./trusted-hostnames": "./trusted-hostnames.ts",
@@ -60,7 +65,8 @@
     "drizzle-orm": "catalog:",
     "drizzle-zod": "catalog:",
     "pg": "catalog:",
-    "superjson": "catalog:"
+    "superjson": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

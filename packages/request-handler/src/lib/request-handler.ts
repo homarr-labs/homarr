@@ -6,6 +6,7 @@ interface Options<TData, TInput extends Record<string, unknown>> {
   staleIfErrorTtlMs?: number;
   requestTimeoutMs?: number;
   getSharedCacheAsync?: (input: TInput, cacheIdentity: string) => Promise<SharedCacheAdapter<TData>>;
+  signal?: AbortSignal;
 }
 
 export interface CacheEntry<TData> {
@@ -52,18 +53,19 @@ class RequestHandlerOverloadedError extends Error {
   }
 }
 
-const throwIfDeadlineExceeded = (deadlineAt: number) => {
+const throwIfDeadlineExceeded = (deadlineAt: number, signal?: AbortSignal) => {
+  signal?.throwIfAborted();
   if (Date.now() >= deadlineAt) throw new RequestHandlerTimeoutError();
 };
 
-const delayAsync = async (durationMs: number, deadlineAt: number) => {
-  throwIfDeadlineExceeded(deadlineAt);
+const delayAsync = async (durationMs: number, deadlineAt: number, signal?: AbortSignal) => {
+  throwIfDeadlineExceeded(deadlineAt, signal);
   const remainingMs = deadlineAt - Date.now();
   await new Promise<void>((resolve) => {
     const timer = setTimeout(resolve, Math.min(durationMs, remainingMs));
     timer.unref?.();
   });
-  throwIfDeadlineExceeded(deadlineAt);
+  throwIfDeadlineExceeded(deadlineAt, signal);
 };
 
 const waitForSettlementGraceAsync = async (settledAsync: Promise<void>, durationMs: number) => {
@@ -131,12 +133,14 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   const inflight = new Map<string, Promise<CacheEntry<TData>>>();
   const sharedCacheResolutions = new Map<string, Promise<SharedCacheAdapter<TData>>>();
   const upstreamSettlements = new Map<string, Promise<void>>();
+  const lifetime = new AbortController();
+  const signal = options.signal ? AbortSignal.any([options.signal, lifetime.signal]) : lifetime.signal;
   let expiryTimer: ReturnType<typeof setTimeout> | undefined;
   let expiryTimerAt: number | undefined;
   let generation = 0;
 
   const storeInMemory = (key: string, entry: CacheEntry<TData>, requestGeneration: number) => {
-    if (generation !== requestGeneration || Date.now() >= entry.staleUntil) return;
+    if (signal.aborted || generation !== requestGeneration || Date.now() >= entry.staleUntil) return;
     // The expiry timer is armed no later than the earliest staleUntil in the cache (see
     // scheduleExpiry), so while it has not come due nothing in the cache can be expired
     // and evictExpired would only walk 1000 entries to prove it. The scan is kept for when
@@ -161,17 +165,18 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   };
 
   const startRequestWithDeadline = (input: TInput, deadlineAt: number, upstreamKey: string) => {
-    throwIfDeadlineExceeded(deadlineAt);
+    throwIfDeadlineExceeded(deadlineAt, signal);
     if (upstreamSettlements.has(upstreamKey) || upstreamSettlements.size >= MAX_INFLIGHT_REQUESTS) {
       throw new RequestHandlerOverloadedError();
     }
 
     const controller = new AbortController();
+    const upstreamSignal = AbortSignal.any([controller.signal, signal]);
     const timeoutError = new RequestHandlerTimeoutError();
     const remainingMs = deadlineAt - Date.now();
     let upstreamRequest: Promise<TData>;
     try {
-      upstreamRequest = Promise.resolve(options.requestAsync(input, controller.signal));
+      upstreamRequest = Promise.resolve(options.requestAsync(input, upstreamSignal));
     } catch (error) {
       upstreamRequest = Promise.reject(error);
     }
@@ -185,13 +190,19 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
     });
 
     const resultAsync = new Promise<TData>((resolve, reject) => {
+      if (upstreamSignal.aborted) reject(upstreamSignal.reason);
+      const onAbort = () => reject(upstreamSignal.reason);
+      upstreamSignal.addEventListener("abort", onAbort, { once: true });
       const timer = setTimeout(() => {
         controller.abort(timeoutError);
         reject(timeoutError);
       }, remainingMs);
       timer.unref?.();
 
-      void upstreamRequest.then(resolve, reject).finally(() => clearTimeout(timer));
+      void upstreamRequest.then(resolve, reject).finally(() => {
+        clearTimeout(timer);
+        upstreamSignal.removeEventListener("abort", onAbort);
+      });
     });
 
     return { resultAsync, settledAsync };
@@ -244,6 +255,18 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
   };
 
   return {
+    stopAsync: async () => {
+      lifetime.abort(new Error("Request handler is stopped"));
+      generation += 1;
+      cache.clear();
+      if (expiryTimer) clearTimeout(expiryTimer);
+      expiryTimer = undefined;
+      expiryTimerAt = undefined;
+      await waitForSettlementGraceAsync(
+        Promise.allSettled(upstreamSettlements.values()).then(() => undefined),
+        Math.min(requestTimeoutMs, MAX_UPSTREAM_SETTLEMENT_GRACE_MS),
+      );
+    },
     invalidateCache: () => {
       generation += 1;
       cache.clear();
@@ -253,6 +276,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
     },
     handler: (input: TInput) => ({
       async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
+        signal.throwIfAborted();
         const deadlineAt = Date.now() + requestTimeoutMs;
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
         const baseKey = options.getCacheKey?.(input) ?? JSON.stringify(input);
@@ -261,7 +285,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
         const sharedCacheResolution = ttl > 0 ? resolveSharedCacheAsync(input, baseKey, requestGeneration) : undefined;
         if (sharedCacheResolution) {
           sharedCache = await sharedCacheResolution;
-          throwIfDeadlineExceeded(deadlineAt);
+          throwIfDeadlineExceeded(deadlineAt, signal);
         }
 
         const key = `${sharedCache?.generation ?? "local"}:${baseKey}`;
@@ -290,6 +314,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
           if (sharedCache?.isShared) {
             const sharedEntry = await sharedCache.getAsync();
+            signal.throwIfAborted();
             if (sharedEntry && Date.now() < sharedEntry.expiresAt) {
               storeInMemory(key, sharedEntry, requestGeneration);
               return sharedEntry;
@@ -302,8 +327,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
               const waitDeadlineAt = Math.min(deadlineAt, Date.now() + SHARED_REFRESH_MAX_WAIT_MS);
               let retryLockAt = Date.now() + SHARED_REFRESH_LOCK_RETRY_MS;
               while (lockToken === null && sharedCache.isShared) {
-                await delayAsync(SHARED_REFRESH_POLL_MS, waitDeadlineAt);
+                await delayAsync(SHARED_REFRESH_POLL_MS, waitDeadlineAt, signal);
                 const refreshedEntry = await sharedCache.getAsync();
+                signal.throwIfAborted();
                 if (refreshedEntry && Date.now() < refreshedEntry.expiresAt) {
                   storeInMemory(key, refreshedEntry, requestGeneration);
                   return refreshedEntry;
@@ -328,6 +354,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             const request = startRequestWithDeadline(input, deadlineAt, inflightKey);
             upstreamSettledAsync = request.settledAsync;
             const data = await request.resultAsync;
+            signal.throwIfAborted();
             const completedAt = Date.now();
             const staleIfErrorTtlMs = options.fallbackToStaleOnError
               ? Math.max(0, options.staleIfErrorTtlMs ?? DEFAULT_STALE_IF_ERROR_TTL_MS)
@@ -349,10 +376,12 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
               }
               if (canStoreInMemory) storeInMemory(key, entry, requestGeneration);
             }
+            signal.throwIfAborted();
             return entry;
           } catch (error) {
             if (
               options.fallbackToStaleOnError &&
+              !signal.aborted &&
               stale &&
               Date.now() < stale.staleUntil &&
               generation === requestGeneration

@@ -1,0 +1,150 @@
+ Image homarr-nitro-fixture:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 664B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.39kB done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/oven/bun:1.4.2@sha256:9114c058aeae42162ee16dd5084b95fe9473970bb6bcb5b232ab1630f0546895
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 732B done
+#4 DONE 0.1s
+
+#5 [build 1/8] FROM docker.io/oven/bun:1.4.2@sha256:9114c058aeae42162ee16dd5084b95fe9473970bb6bcb5b232ab1630f0546895
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 1.10MB 0.0s done
+#6 DONE 0.1s
+
+#7 [build 2/8] WORKDIR /build
+#7 CACHED
+
+#8 [build 3/8] COPY . .
+#8 DONE 0.2s
+
+#9 [build 4/8] RUN test "$(bun --version)" = "1.4.2" && test -f build-input.json
+#9 DONE 0.2s
+
+#10 [build 5/8] RUN bun install --frozen-lockfile --ignore-scripts --filter @homarr/nitro-experiment --filter '!./' --minimum-release-age 0
+#10 0.145 bun install v1.4.2 (744846f84)
+#10 0.154 note: skipped 40 workspaces listed in bun.lock but not on disk: "@homarr/analytics", "@homarr/api", "@homarr/auth", "@homarr/boards", "@homarr/cli", "@homarr/common", "@homarr/core", "@homarr/cron-job-status", "@homarr/cron-jobs", "@homarr/cron-jobs-core", "@homarr/custom-widgets", "@homarr/db", "@homarr/definitions", "@homarr/docker", "@homarr/docs", "@homarr/form", "@homarr/forms-collection", "@homarr/github", "@homarr/icons", "@homarr/image-proxy", "@homarr/integrations", "@homarr/modals", "@homarr/modals-collection", "@homarr/nextjs", "@homarr/notifications", "@homarr/onboarding", "@homarr/ping", "@homarr/redis", "@homarr/request-handler", "@homarr/server-settings", "@homarr/settings", "@homarr/spotlight", "@homarr/tasks", "@homarr/translation", "@homarr/tsconfig", "@homarr/ui", "@homarr/validation", "@homarr/websocket", "@homarr/widgets", "@homarr/workshop"
+#10 0.154 Resolving dependencies
+#10 0.154 Resolved, downloaded and extracted [4]
+#10 13.06 
+#10 13.06 + @vitejs/plugin-react@6.0.3
+#10 13.06 + oxfmt@0.58.0
+#10 13.06 + oxlint@1.73.0
+#10 13.06 + typescript@7.0.2
+#10 13.06 + vite@8.1.4
+#10 13.06 
+#10 13.06 473 packages installed [12.92s]
+#10 DONE 15.8s
+
+#11 [build 6/8] WORKDIR /build/apps/nitro-experiment
+#11 DONE 0.1s
+
+#12 [build 7/8] RUN bun run build
+#12 0.120 $ bun --bun vite build
+#12 0.369 
+#12 0.371 [nitro] ◐ Building [SSR]
+#12 0.371 vite v8.1.4 building ssr environment for production...
+#12 0.378 [2Ktransforming...✓ 6 modules transformed.
+#12 0.397 rendering chunks...
+#12 0.400 computing gzip size...
+#12 0.402 node_modules/.nitro/vite/services/ssr/assets/index-BG7JPBsR.css  233.73 kB │ gzip: 34.15 kB
+#12 0.402 node_modules/.nitro/vite/services/ssr/index.js                     1.38 kB │ gzip:  0.58 kB
+#12 0.402 
+#12 0.402 ✓ built in 30ms
+#12 0.402 
+#12 0.403 [nitro] ◐ Building [Client]
+#12 0.403 vite v8.1.4 building client environment for production...
+#12 0.407 [2Ktransforming...✓ 1073 modules transformed.
+#12 0.534 rendering chunks...
+#12 0.590 computing gzip size...
+#12 0.596 .output/public/assets/entry-client-BG7JPBsR.css  233.73 kB │ gzip:  34.15 kB
+#12 0.596 .output/public/assets/entry-client-BLjbfIY8.js   663.48 kB │ gzip: 202.45 kB
+#12 0.596 
+#12 0.597 [plugin builtin:vite-reporter] 
+#12 0.597 (!) Some chunks are larger than 500 kB after minification. Consider:
+#12 0.597 - Using dynamic import() to code-split the application
+#12 0.597 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+#12 0.597 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#12 0.597 ✓ built in 193ms
+#12 0.599 
+#12 0.599 [nitro] ◐ Building [Nitro] (preset: bun, compatibility: 2026-10-10)
+#12 0.599 [nitro] ✔ Generated public .output/public
+#12 0.600 vite v8.1.4 building nitro environment for production...
+#12 0.606 [2Ktransforming...✓ 1211 modules transformed.
+#12 0.740 ℹ Tracing dependencies:
+#12 0.740 - tslib (2.8.1)
+#12 0.741 ✔ Traced 1 dependencies (4 files) in 28ms.
+#12 0.741 ℹ Ensure your production environment matches the builder OS and architecture (linux-arm64) to avoid native module issues.
+#12 0.803 rendering chunks...
+#12 0.837 computing gzip size...
+#12 0.844 .output/server/_chunks/ssr-renderer.mjs                  1.02 kB │ gzip:   0.50 kB
+#12 0.844 .output/server/_runtime.mjs                              1.13 kB │ gzip:   0.56 kB
+#12 0.844 .output/server/_libs/hookable.mjs                        1.19 kB │ gzip:   0.53 kB
+#12 0.844 .output/server/_libs/scule.mjs                           1.52 kB │ gzip:   0.65 kB
+#12 0.844 .output/server/_ssr/ssr.mjs                              1.55 kB │ gzip:   0.63 kB
+#12 0.844 .output/server/_libs/ufo.mjs                             2.19 kB │ gzip:   0.71 kB
+#12 0.844 .output/server/_libs/tanstack__react-query.mjs           6.82 kB │ gzip:   1.82 kB
+#12 0.844 .output/server/_libs/orpc__contract.mjs                  7.30 kB │ gzip:   2.13 kB
+#12 0.844 .output/server/_libs/db0.mjs                             7.31 kB │ gzip:   2.13 kB
+#12 0.844 .output/server/_libs/tanstack__history.mjs              12.13 kB │ gzip:   3.49 kB
+#12 0.844 .output/server/_libs/orpc__json-schema.mjs              17.09 kB │ gzip:   4.43 kB
+#12 0.844 .output/server/_libs/@orpc/tanstack-query+[...].mjs     24.36 kB │ gzip:   5.66 kB
+#12 0.844 .output/server/_libs/openapi-spec__downgrader.mjs       25.43 kB │ gzip:   6.21 kB
+#12 0.844 .output/server/_libs/@floating-ui/dom+[...].mjs         25.70 kB │ gzip:   6.66 kB
+#12 0.844 .output/server/_libs/@floating-ui/core+[...].mjs        29.13 kB │ gzip:   7.15 kB
+#12 0.844 .output/server/_libs/@floating-ui/react+[...].mjs       41.23 kB │ gzip:  10.21 kB
+#12 0.844 .output/server/_libs/@orpc/client+[...].mjs             44.00 kB │ gzip:  11.69 kB
+#12 0.844 .output/server/_libs/h3+srvx.mjs                        48.27 kB │ gzip:  13.46 kB
+#12 0.844 .output/server/_libs/zod.mjs                            53.59 kB │ gzip:  10.37 kB
+#12 0.844 .output/server/_libs/@tanstack/router-core+[...].mjs    57.30 kB │ gzip:  15.84 kB
+#12 0.844 .output/server/_libs/tanstack__query-core.mjs           61.86 kB │ gzip:  12.94 kB
+#12 0.844 .output/server/index.mjs                               132.82 kB │ gzip:  31.96 kB
+#12 0.844 .output/server/_libs/orpc__zod+zod.mjs                 145.11 kB │ gzip:  33.84 kB
+#12 0.844 .output/server/_libs/@orpc/openapi+[...].mjs           154.64 kB │ gzip:  39.68 kB
+#12 0.844 .output/server/_libs/@mantine/core+[...].mjs           354.39 kB │ gzip:  71.57 kB
+#12 0.844 .output/server/_libs/react-dom+scheduler.mjs           457.60 kB │ gzip:  86.64 kB
+#12 0.844 .output/server/_libs/@tanstack/react-router+[...].mjs  601.16 kB │ gzip: 124.69 kB
+#12 0.844 
+#12 0.845 ✓ built in 245ms
+#12 0.846 ℹ Generated .output/nitro.json
+#12 0.846 
+#12 0.846 [nitro] ✔ You can preview this build using npx vite preview
+#12 DONE 1.2s
+
+#13 [build 8/8] RUN BUN_IMAGE="oven/bun:1.4.2@sha256:9114c058aeae42162ee16dd5084b95fe9473970bb6bcb5b232ab1630f0546895" TARGETPLATFORM="linux/arm64" bun scripts/container/package-output.ts
+#13 DONE 0.2s
+
+#14 [runtime 2/6] WORKDIR /app
+#14 CACHED
+
+#15 [runtime 3/6] RUN test "$(bun --version)" = "1.4.2" && test "$(id -u bun)" = "1000" && test "$(id -g bun)" = "1000" && mkdir -p /app/.fixture-data && chown 1000:1000 /app/.fixture-data
+#15 CACHED
+
+#16 [runtime 4/6] COPY --from=build /build/apps/nitro-experiment/.output/ ./.output/
+#16 DONE 0.1s
+
+#17 [runtime 5/6] COPY --from=build /build/apps/nitro-experiment/container-provenance.json ./container-provenance.json
+#17 DONE 0.1s
+
+#18 [runtime 6/6] COPY --from=build /build/apps/nitro-experiment/scripts/container/healthcheck.ts ./healthcheck.ts
+#18 DONE 0.1s
+
+#19 exporting to image
+#19 exporting layers 0.1s done
+#19 writing image sha256:2b2070a2893c9054939476584cc6d0c84ef66dd426b848599c1b85bfc2503d7b done
+#19 naming to docker.io/library/homarr-nitro-fixture:local done
+#19 DONE 0.1s
+
+#20 resolving provenance for metadata file
+#20 DONE 0.0s
+ Image homarr-nitro-fixture:local Built 

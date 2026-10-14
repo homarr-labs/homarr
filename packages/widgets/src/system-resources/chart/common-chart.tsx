@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { useState } from "react";
 import type { AreaChartSeries } from "@mantine/charts";
@@ -7,11 +6,11 @@ import { Card, Center, Group, Stack, Text, Tooltip, useComputedColorScheme, useM
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { YAxisProps } from "recharts";
 
-import { useRequiredBoard } from "@homarr/boards/context";
 import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { LabelDisplayModeOption } from "..";
+import type { SystemResourcePresentation } from "../native-view-types";
 
 export const CommonChart = ({
   data,
@@ -25,35 +24,33 @@ export const CommonChart = ({
   lastValue,
   chartType = "line",
   advanced = false,
+  presentation,
 }: {
-  data: Record<string, any>[];
+  data: Record<string, unknown>[];
   dataKey: string;
   series: AreaChartSeries[];
   title: ReactNode;
   icon: TablerIcon;
   labelDisplayMode: LabelDisplayModeOption;
-  // What to show on hover. Defaults to lastValue when omitted. Pass a function to reflect
-  // the datum under the cursor as it moves across multi-point data (e.g. memory's
-  // used/available at that point), instead of always showing the latest value.
   tooltipLabel?: ReactNode | ((index: number) => ReactNode);
   yAxisProps?: Omit<YAxisProps, "ref">;
   lastValue?: string;
   chartType?: "line" | "area";
   advanced?: boolean;
+  presentation: SystemResourcePresentation;
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
   const colorScheme = useComputedColorScheme("light");
-  const board = useRequiredBoard();
   const { hovered, ref: hoverRef } = useHover();
   const ref = useMergedRef(elementSizeRef, hoverRef);
 
-  const opacity = board.opacity / 100;
+  const opacity = presentation.opacity / 100;
   let backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
   const cardStyle: CSSProperties = { overflow: "hidden" };
   const chartRootStyle: CSSProperties = {
     padding: 5,
-    borderRadius: theme.radius[board.itemRadius],
+    borderRadius: theme.radius[presentation.itemRadius],
   };
   if (advanced) {
     backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
@@ -66,8 +63,6 @@ export const CommonChart = ({
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
   const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
-  // Track which data point the cursor is over so the tooltip can reflect that point
-  // instead of always showing the latest value while scrubbing across the chart.
   const [hoveredIndex, setHoveredIndex] = useState(data.length - 1);
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (data.length <= 1) return;
@@ -78,9 +73,6 @@ export const CommonChart = ({
     setHoveredIndex(Math.min(data.length - 1, Math.max(0, index)));
   };
 
-  // Clamp on read rather than syncing via an effect - handles data growing/shrinking
-  // between renders (e.g. history resetting on integration change) without ever
-  // handing a stale or out-of-range index to tooltipLabel.
   const clampedHoveredIndex = Math.max(0, Math.min(hoveredIndex, data.length - 1));
   const resolvedTooltipLabel =
     typeof tooltipLabel === "function" ? tooltipLabel(clampedHoveredIndex) : (tooltipLabel ?? lastValue);
@@ -94,7 +86,7 @@ export const CommonChart = ({
         style={cardStyle}
         p={0}
         bg={backgroundColor}
-        radius={board.itemRadius}
+        radius={presentation.itemRadius}
         onPointerMove={handlePointerMove}
       >
         {data.length > 1 && height > 40 && !hovered && (

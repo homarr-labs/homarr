@@ -1,18 +1,20 @@
-import { clientApi } from "@homarr/api/client";
+import type { NativeWidgetOutputs } from "@homarr/api/nitro/browser-contracts/widgets";
 
 import { toScopedStorageVolumeValue } from "./filter-storage-volumes";
 
-export const createStorageVolumeMultiSelectOptions = () => ({
+export interface StorageVolumeObservation {
+  data: NativeWidgetOutputs["healthMonitoring"]["listStorageVolumes"] | undefined;
+  isPending: boolean;
+  isError: boolean;
+}
+
+export type StorageVolumeObservationHook = (integrationIds: string[]) => readonly StorageVolumeObservation[];
+
+export const createStorageVolumeMultiSelectOptions = (useStorageVolumeObservations: StorageVolumeObservationHook) => ({
   defaultValue: [] as string[],
   withDescription: true,
   useOptions: (integrationIds: string[]) => {
-    const queryResults = clientApi.useQueries((queryBuilder) =>
-      integrationIds.map((integrationId) =>
-        queryBuilder.widget.healthMonitoring.listStorageVolumes({
-          integrationId,
-        }),
-      ),
-    );
+    const queryResults = useStorageVolumeObservations(integrationIds);
 
     const isPending = queryResults.some((queryResult) => queryResult.isPending);
     const isError = queryResults.every((queryResult) => queryResult.isError);

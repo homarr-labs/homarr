@@ -23,13 +23,34 @@ type HarnessRuntimeOptions = {
   name: string;
   env?: string;
   port?: number;
+  runtime?: HarnessRuntime;
 };
+
+type HarnessRuntime = "legacy" | "nitro-candidate";
+
+const runtimeOption = () =>
+  string("runtime").enum("legacy", "nitro-candidate").desc("Runtime target; Nitro requires accepted activation");
 
 const runtimeOptions = () => ({
   name: positional("name").required().desc("Name used for the image, container, and data volume"),
   env: string("env").alias("e").desc("Environment override KEY=VALUE; repeat the flag for more values"),
   port: number("port").int().min(0).max(65535).desc("Host port, or 0 for an automatically assigned port"),
+  runtime: runtimeOption(),
 });
+
+function runtimeName(name: string, runtime: HarnessRuntime): string {
+  const validated = validateHarnessName(name);
+  if (runtime === "nitro-candidate") {
+    return validateHarnessName(`${validated}.nitro-candidate`);
+  }
+  return validated;
+}
+
+function requireRuntimeActivation(runtime: HarnessRuntime): void {
+  if (runtime === "nitro-candidate" && process.env.HOMARR_NITRO_ACTIVATION !== "accepted") {
+    throw new Error("Nitro candidate remains held; explicitly supply HOMARR_NITRO_ACTIVATION=accepted after review");
+  }
+}
 
 function validateHarnessName(name: string): string {
   if (!validHarnessName.test(name)) {
@@ -111,9 +132,14 @@ async function repositoryRoot(): Promise<string> {
   return root;
 }
 
-function parseEnvironmentOverrides(raw?: string): Map<string, string> {
+function parseEnvironmentOverrides(raw: string | undefined, runtime: HarnessRuntime): Map<string, string> {
   const values = raw?.split(environmentSeparator) ?? [];
-  const environment = new Map(demoEnvironment);
+  const environment = new Map<string, string>();
+  if (runtime === "legacy") {
+    for (const [name, value] of demoEnvironment) {
+      environment.set(name, value);
+    }
+  }
 
   for (const value of values) {
     const separator = value.indexOf("=");
@@ -185,8 +211,23 @@ async function harnessEncryptionKey(name: string): Promise<string> {
   }
 }
 
-async function harnessEnvironment(name: string, raw?: string): Promise<string[]> {
-  const environment = parseEnvironmentOverrides(raw);
+async function harnessEnvironment(name: string, raw: string | undefined, runtime: HarnessRuntime): Promise<string[]> {
+  const environment = parseEnvironmentOverrides(raw, runtime);
+
+  if (runtime === "nitro-candidate") {
+    if (!environment.get("AUTH_SECRET") || !isEncryptionKey(environment.get("SECRET_ENCRYPTION_KEY"))) {
+      throw new Error(
+        "Nitro candidate requires explicit persistent AUTH_SECRET and 64-hex SECRET_ENCRYPTION_KEY overrides",
+      );
+    }
+    environment.set("HOMARR_NITRO_ACTIVATION", "accepted");
+    environment.set("NITRO_HOST", "0.0.0.0");
+    environment.set("NITRO_PORT", "7575");
+    environment.set("SERVER_SHUTDOWN_TIMEOUT", "30");
+    environment.delete("CI");
+    environment.delete("TEST");
+    return Array.from(environment, ([key, value]) => `${key}=${value}`);
+  }
 
   if (!environment.has("SECRET_ENCRYPTION_KEY")) {
     environment.set("SECRET_ENCRYPTION_KEY", await harnessEncryptionKey(name));
@@ -195,12 +236,18 @@ async function harnessEnvironment(name: string, raw?: string): Promise<string[]>
   return Array.from(environment, ([key, value]) => `${key}=${value}`);
 }
 
-async function buildHarnessImage(name: string): Promise<void> {
+async function buildHarnessImage(name: string, runtime: HarnessRuntime = "legacy"): Promise<void> {
+  requireRuntimeActivation(runtime);
   const root = await repositoryRoot();
-  const image = imageName(name);
+  const image = imageName(runtimeName(name, runtime));
+  const args = ["build", "--tag", image];
+  if (runtime === "nitro-candidate") {
+    args.push("--target", "nitro-candidate", "--build-arg", "HOMARR_NITRO_ACTIVATION=accepted");
+  }
+  args.push(".");
 
   console.log(`Building ${image} from ${root}`);
-  await runCommand("docker", ["build", "--tag", image, "."], root);
+  await runCommand("docker", args, root);
   console.log(`Built ${image}`);
 }
 
@@ -227,13 +274,23 @@ async function publishedPort(name: string): Promise<number> {
 }
 
 async function startHarness(options: HarnessRuntimeOptions): Promise<void> {
-  const name = validateHarnessName(options.name);
+  const runtime = options.runtime ?? "legacy";
+  requireRuntimeActivation(runtime);
+  const name = runtimeName(options.name, runtime);
   const image = imageName(name);
   const container = containerName(name);
   const requestedPort = options.port ?? 0;
-  const environment = await harnessEnvironment(name, options.env);
+  const environment = await harnessEnvironment(name, options.env, runtime);
 
-  await removeExistingContainer(name);
+  if (runtime === "legacy") {
+    await removeExistingContainer(name);
+  }
+  const runtimeArgs: string[] = [];
+  let publishedAddress = `${requestedPort}:7575`;
+  if (runtime === "nitro-candidate") {
+    runtimeArgs.push("--stop-timeout", "60");
+    publishedAddress = `127.0.0.1:${requestedPort}:7575`;
+  }
   console.log(`Starting ${container} from ${image}`);
   await runCommand("docker", [
     "run",
@@ -241,9 +298,10 @@ async function startHarness(options: HarnessRuntimeOptions): Promise<void> {
     "--name",
     container,
     "--publish",
-    `${requestedPort}:7575`,
+    publishedAddress,
     "--volume",
     `${volumeName(name)}:/appdata`,
+    ...runtimeArgs,
     ...environment.flatMap((value) => ["--env", value]),
     image,
   ]);
@@ -299,14 +357,15 @@ const harnessBuild = command({
   desc: "Build the current checkout as a named local Homarr image",
   options: {
     name: positional("name").required().desc("Local image tag"),
+    runtime: runtimeOption(),
   },
-  handler: async ({ name }) => buildHarnessImage(name),
+  handler: async ({ name, runtime }) => buildHarnessImage(name, runtime),
 });
 
 const harnessRun = command({
   name: "run",
   aliases: ["start", "up"],
-  desc: "Run a named local image in writable demo mode",
+  desc: "Run a named local image; legacy defaults to writable demo mode",
   options: runtimeOptions(),
   handler: async (options) => startHarness(options),
 });
@@ -314,10 +373,10 @@ const harnessRun = command({
 const harnessSetup = command({
   name: "setup",
   aliases: ["create"],
-  desc: "Build the current checkout and run its writable demo harness",
+  desc: "Build the current checkout and run the selected local runtime",
   options: runtimeOptions(),
   handler: async (options) => {
-    await buildHarnessImage(options.name);
+    await buildHarnessImage(options.name, options.runtime);
     await startHarness(options);
   },
 });
@@ -327,9 +386,10 @@ const harnessPort = command({
   desc: "Show the published host port and URL for a harness",
   options: {
     name: positional("name").required().desc("Harness name"),
+    runtime: runtimeOption(),
   },
-  handler: async ({ name }) => {
-    const port = await publishedPort(name);
+  handler: async ({ name, runtime }) => {
+    const port = await publishedPort(runtimeName(name, runtime ?? "legacy"));
     console.log(`Port: ${port}`);
     console.log(`URL: http://127.0.0.1:${port}`);
   },
@@ -341,10 +401,17 @@ const harnessStop = command({
   desc: "Stop a local harness container and keep its data volume",
   options: {
     name: positional("name").required().desc("Harness name"),
+    runtime: runtimeOption(),
   },
-  handler: async ({ name }) => {
-    const container = containerName(name);
-    await execCommand("docker", ["stop", container]);
+  handler: async ({ name, runtime }) => {
+    const selectedRuntime = runtime ?? "legacy";
+    const container = containerName(runtimeName(name, selectedRuntime));
+    const args = ["stop"];
+    if (selectedRuntime === "nitro-candidate") {
+      args.push("--time", "60");
+    }
+    args.push(container);
+    await execCommand("docker", args);
     console.log(`Stopped ${container}`);
   },
 });
@@ -352,6 +419,6 @@ const harnessStop = command({
 export const harnessRoot = command({
   name: "harness",
   aliases: ["local-harness"],
-  desc: "Build and run a local branch in a browser-ready demo harness",
+  desc: "Build and run a named local runtime; Nitro requires explicit activation",
   subcommands: [harnessBuild, harnessRun, harnessSetup, harnessPort, harnessStop],
 });

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2023",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "target": "ES2024",
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
@@ -11,7 +11,10 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "types": ["bun", "vite/client", "nitro/vite/types"],
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@homarr/node-unifi": ["${configDir}/../../node_modules/@types/node-unifi"]
+    }
   },
-  "include": ["src", "server", "tests", "vite.config.ts", "nitro.config.ts"]
+  "include": ["src", "tests", "vite.config.ts"]
 }

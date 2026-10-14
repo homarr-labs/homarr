@@ -1,0 +1,957 @@
+{
+  "schemaVersion": 1,
+  "input": {
+    "schemaVersion": 1,
+    "gitCommit": "66e2199f9cd1e4026249c3763413988bab8664c4",
+    "sourceBasis": "staged file bytes, including uncommitted application and packaging changes",
+    "inputSha256": "8f15f374a6052f23300250d6d3879d19787c4d57eb7683bc0fd97486eca9b183",
+    "files": [
+      {
+        "path": ".dockerignore",
+        "sha256": "c7a7c71bef84c4af0c117b4030dcb6f011546c7a09715b680227c777b4299c11",
+        "bytes": 690
+      },
+      {
+        "path": "apps/nitro-experiment/nitro.config.ts",
+        "sha256": "2e426581224ac001db4675b68db53d3c95042801b8eab8d820ba4e36c2eba642",
+        "bytes": 944
+      },
+      {
+        "path": "apps/nitro-experiment/package.json",
+        "sha256": "357ec48082b8d370d340e2d331bb4bc0eb28f6d6195eef1a725a8cf4eaec3580",
+        "bytes": 1340
+      },
+      {
+        "path": "apps/nitro-experiment/scripts/container/healthcheck.ts",
+        "sha256": "6f114139f422c2f10a4eb617a3b0f372f826728dfde85ca452a98b32d58eae4b",
+        "bytes": 1088
+      },
+      {
+        "path": "apps/nitro-experiment/scripts/container/package-output.ts",
+        "sha256": "9b9a1ed173fc2e28db78d571cdf4c13fb8e16cf65885e79c64e140c808896944",
+        "bytes": 5003
+      },
+      {
+        "path": "apps/nitro-experiment/scripts/container/run.ts",
+        "sha256": "87e6890010aae6c43d1444708cbc29248468c14cf824e1bac5dd3c2550f45a54",
+        "bytes": 4067
+      },
+      {
+        "path": "apps/nitro-experiment/server/plugins/fixture.ts",
+        "sha256": "0364a5abce5ac670fa09e838aaf6348da658f11917c658c4375bc59a4310efba",
+        "bytes": 660
+      },
+      {
+        "path": "apps/nitro-experiment/server/routes/api-docs.ts",
+        "sha256": "115cee33f83cc9975246181bff31f3138171c5d331f5406b7495bb2849a2ad0f",
+        "bytes": 258
+      },
+      {
+        "path": "apps/nitro-experiment/server/routes/openapi.ts",
+        "sha256": "81e8d5c56327a3ca5602efb4d7194edb9406a26608edd4495c1c14897afe654a",
+        "bytes": 258
+      },
+      {
+        "path": "apps/nitro-experiment/server/routes/rest.ts",
+        "sha256": "b975c2c55b5e70569930377b669ec608769058307a99a9bd2e81d497c725d945",
+        "bytes": 252
+      },
+      {
+        "path": "apps/nitro-experiment/server/routes/rpc.ts",
+        "sha256": "474041140f71649ffcbff3563ea1d76704211593b69768b8a3af3f97509cfa27",
+        "bytes": 575
+      },
+      {
+        "path": "apps/nitro-experiment/server/routes/source-control.ts",
+        "sha256": "77f15ce3b5f41eedb95192f04595c7d07dfab8d63e361b5b39f0247b6f6ed470",
+        "bytes": 272
+      },
+      {
+        "path": "apps/nitro-experiment/server/routes/source.ts",
+        "sha256": "3b30f981ccde66cc8eb5faaa47f1acad540973846159bbc3fd582e8b5c7509f3",
+        "bytes": 258
+      },
+      {
+        "path": "apps/nitro-experiment/src/app/root.tsx",
+        "sha256": "22a572780fbb66b3865156f62ac52d2084102772e8e55b462f2c0d801e6d8a12",
+        "bytes": 1044
+      },
+      {
+        "path": "apps/nitro-experiment/src/app/router.tsx",
+        "sha256": "e0011a7552adbd46296237703c1fe46430c276c8c28b412001c797802bd082df",
+        "bytes": 7796
+      },
+      {
+        "path": "apps/nitro-experiment/src/app/slots.ts",
+        "sha256": "50fd3a71e41e6cd80bf0bb6715a3e5ed0617ef597c7e8fa1e15836f262b0ebd7",
+        "bytes": 303
+      },
+      {
+        "path": "apps/nitro-experiment/src/contracts/rpc.ts",
+        "sha256": "d806f93e63eb036f5fdd7b203fb88fcce52640f050c80ae767633382add70141",
+        "bytes": 1080
+      },
+      {
+        "path": "apps/nitro-experiment/src/contracts/schemas.ts",
+        "sha256": "c3276f4776cb478b019cc53e910156d0839baca026ccc08c2d1af6c4b93f5572",
+        "bytes": 7701
+      },
+      {
+        "path": "apps/nitro-experiment/src/contracts/ui.ts",
+        "sha256": "b6302a568e029457cafed4467bf1ff1c668544ad0982c58401b79d39fc1224cc",
+        "bytes": 1092
+      },
+      {
+        "path": "apps/nitro-experiment/src/entry-client.tsx",
+        "sha256": "514bfc6b0491de535535924e33c1684e880b0b9d7af4ae61f2d12ad47fbba902",
+        "bytes": 135
+      },
+      {
+        "path": "apps/nitro-experiment/src/entry-server.tsx",
+        "sha256": "55ccdfa705282a17ffe8c0e88be3dbace1a72367315369e3bd3010e4cc854f21",
+        "bytes": 421
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/api-docs/api-docs.tsx",
+        "sha256": "61fa1dbca6f0cd5384548223072c1c722af1f72a13ac6dab6f411a52c81af7e4",
+        "bytes": 5747
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/api-docs/document.tsx",
+        "sha256": "3302cb8d64c1ed8aac8abe19be63a4d45f6c94844de9f8d2fc78e7f6151ea1be",
+        "bytes": 2073
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/api-docs/reference.ts",
+        "sha256": "aecf314c386e7dfb949661ff068db618ebf267ad464de82006a0cf3104f723bb",
+        "bytes": 1217
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/editor/board-editor.tsx",
+        "sha256": "a94cdcf79d84dfdb5731cb2bf4a473f2f8baa65c2e0c48a1a5a120b96678fdc9",
+        "bytes": 17766
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/editor/draft.ts",
+        "sha256": "df3cde6b74a3c8f9f8d2df5516a67a6ac79edf6842aad8c87f9e6cda6873d2d7",
+        "bytes": 1320
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/session/session-controls.tsx",
+        "sha256": "fcff3a6b0354ac542e24009293b3e471b68ac3e616f1cb830844e9781a9f04af",
+        "bytes": 6249
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/session/session-transition.ts",
+        "sha256": "0724611b5f6d150dc69c20337d6aa5cb2544da3045cf005f215834f11507baf1",
+        "bytes": 3231
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/viewer/board-viewer.tsx",
+        "sha256": "d83c3a9459ba18776e21c73983469f7c68b40fa259cb95a6e9aca1949017b6fb",
+        "bytes": 4009
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/viewer/document-state.tsx",
+        "sha256": "d6fb13601244d9d6527144b11509fda545190f432d38dbeb9d7eeceba1205e4d",
+        "bytes": 3358
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/viewer/serialized-state.ts",
+        "sha256": "86aadb69ae8d8d94faef78dc1c18a8c963960e169bfb95f41e98ac490eed342a",
+        "bytes": 785
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/widget/access.ts",
+        "sha256": "8baf4af8525f8d161520e1a0c5a25b42c8684fec13e11c30389575dabd1443f2",
+        "bytes": 950
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/widget/fixture-widget.tsx",
+        "sha256": "f05c0d0851df0c33a96a66c5b7a7fac8aeaff92f4eccec47ad153e6740a83541",
+        "bytes": 4325
+      },
+      {
+        "path": "apps/nitro-experiment/src/features/widget/source-controls.tsx",
+        "sha256": "d20cb80e8bef261a5dd3688d6ec61bc51ba34c971601251b8227f6ac4c6186e9",
+        "bytes": 5293
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/access/guards.ts",
+        "sha256": "1aa9102f73c14d164ba9fbf2977ffbb8350a3b55da8ba8cd405a19153c41726c",
+        "bytes": 1604
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/access/local-request.ts",
+        "sha256": "0be4d46f1301a7ed125aae148897d646c3d636d20f955af43d210270d7f02e76",
+        "bytes": 1542
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/board-read.ts",
+        "sha256": "5ce8f233c76cf6794fd372a0efc846dcce5a99feae8f9d68a671e0db1d8bdd43",
+        "bytes": 1263
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/board-save.ts",
+        "sha256": "61acb4fb9b9ee2ba4be92ebe50cab8ed98c536943d9b2d8e5257f5f85dd9c29c",
+        "bytes": 198
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/client.ts",
+        "sha256": "348b5669cb392199cfcc9646554168102c0e6df255ffde5fa6e6a4c2cba206b1",
+        "bytes": 675
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/implementer.ts",
+        "sha256": "a79d3bb17093672be4cf558ebb3919bf644326bf9d680b133897192a3eab0be9",
+        "bytes": 223
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/root.ts",
+        "sha256": "8d3cc531558a5931be54e43d8593fdf500f30b6c57f8bc23ce859c4e0efcafe8",
+        "bytes": 712
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/session.ts",
+        "sha256": "b9cc2a49c699ae3e4109e7db05854ab93be240967a6f3d89aa59f60f7cd97654",
+        "bytes": 661
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/api/widget.ts",
+        "sha256": "6aad83267464ad964b34ddfa7a57712a2b016eaacd3c9ce57e6eee88260bb4e6",
+        "bytes": 362
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/board-edit/service.ts",
+        "sha256": "6bbf2c59a2b9c8a605d883c20f3f3d1c052a63912fc4156475c2ffb5e34baa32",
+        "bytes": 1607
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/context/config.ts",
+        "sha256": "0697ed754f94e6a8cfaac5a30e05d838e464ed2b7cb8e088fefa74f5ab665d50",
+        "bytes": 2013
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/context/http.ts",
+        "sha256": "b59749f6eb12e143eb929d52faae81c2ae143826667cbc50dd8243c5664d3d7e",
+        "bytes": 1303
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/context/request.ts",
+        "sha256": "9c93813c7044e52d7898338cc49ecdd82cced4a9697c78cac941d3e453bfc655",
+        "bytes": 991
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/database/lifecycle.ts",
+        "sha256": "07e4d2bccc40a65cad55cf837b1570d9919d00f1d98ddc3d1a7b3d6eab910566",
+        "bytes": 1060
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/database/repository.ts",
+        "sha256": "db434b905978740a858a6fd797189629c87a6707236661b6c933bfc0f5edc109",
+        "bytes": 5041
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/render/cache.ts",
+        "sha256": "f6899518c308c532143c4d7e4aca86aa6e09f325df6185f2c85b60bf3d7d145b",
+        "bytes": 2651
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/render/handler.ts",
+        "sha256": "72e0ace9a3997f45f09e3487abc31d00ea79f75562c59b5f9b0b87f25046f43a",
+        "bytes": 6512
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/rest/document.ts",
+        "sha256": "dcc376a162e3da8a665e4eb55406dcc4331b8bbadf14cc82941d493f7d8490e0",
+        "bytes": 3476
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/rest/handlers.ts",
+        "sha256": "8ee847eb4b39f7716b6a3bdfe03bc8578a011684a455a9810c38d9bff190cd40",
+        "bytes": 2332
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/rest/router.ts",
+        "sha256": "a8c6f5a6006b10e6256e5cd2017e194f2694db5f3777bf5c255a3a7720770f57",
+        "bytes": 4085
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/session/service.ts",
+        "sha256": "4b2e27c0a48e699807ed63eb6d485787167123aedefb35374b56bbfcced0fc95",
+        "bytes": 6412
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/widget/body.ts",
+        "sha256": "813ca66864d465eb859fa5d06fea91efd2baf6c5c9e7f814633ea5381e4a9a3d",
+        "bytes": 1770
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/widget/handlers.ts",
+        "sha256": "6f68c165f5eb83925c9e7fcd07923f6ccab3d7e8e1eb17275a34d23206977e33",
+        "bytes": 2194
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/widget/service.ts",
+        "sha256": "bb86149f0f496ae3588407e1e225f4e9c563346b278443492d19664d0edc6d76",
+        "bytes": 7444
+      },
+      {
+        "path": "apps/nitro-experiment/src/server/widget/source.ts",
+        "sha256": "c0239babe772846b80f22f3c68979d2c40ef8d014cc34d9cd23759614362f63e",
+        "bytes": 3361
+      },
+      {
+        "path": "apps/nitro-experiment/tsconfig.json",
+        "sha256": "3736aaf923ab1cb4e1f29f4e58693dc9db27bbd8c6256cc5e801938bcdb98501",
+        "bytes": 496
+      },
+      {
+        "path": "apps/nitro-experiment/vite.config.ts",
+        "sha256": "4c21ec08c3b80177594178a56fc9ff8292f2209a01e6f95119e649e3d31a418e",
+        "bytes": 585
+      },
+      {
+        "path": "bun.lock",
+        "sha256": "3e420169824100ccb4a930f829f8832cead8932fa2c138973ae5cc3b8f6bb210",
+        "bytes": 686062
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "1007d931bb002b23ae584370154a1a7351e0ed62c31a8849557c57f895da32a8",
+        "bytes": 1349
+      },
+      {
+        "path": "package.json",
+        "sha256": "166ada8cbc7c82509baa43b7384b388e91d1772363f9d9eca85f8f5eef590977",
+        "bytes": 16394
+      },
+      {
+        "path": "patches/@types__node-unifi.patch",
+        "sha256": "5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5",
+        "bytes": 1328
+      },
+      {
+        "path": "patches/dns-caching.patch",
+        "sha256": "318202089fc2269311563ab964016aee8144e8f228dee846b26c67556baa80c4",
+        "bytes": 187
+      },
+      {
+        "path": "patches/mantine-datatable@9.3.1.patch",
+        "sha256": "8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254",
+        "bytes": 225355
+      },
+      {
+        "path": "patches/trpc-to-openapi.patch",
+        "sha256": "8d283209f305edbcee7f0ba3834d693afa36b4e6340173ce14075ee170e05355",
+        "bytes": 384
+      }
+    ]
+  },
+  "applicationManifest": {
+    "name": "@homarr/nitro-experiment",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+      "dev": "bun --bun vite --host 127.0.0.1 --port 3100 --strictPort",
+      "build": "bun --bun vite build",
+      "start": "NITRO_HOST=${NITRO_HOST:-127.0.0.1} NITRO_PORT=${NITRO_PORT:-3100} bun .output/server/index.mjs",
+      "lint": "oxlint src server scripts/container vite.config.ts nitro.config.ts",
+      "format": "oxfmt .",
+      "typecheck": "tsc --noEmit -p tsconfig.json"
+    },
+    "dependencies": {
+      "@mantine/core": "9.6.0",
+      "@mantine/hooks": "9.6.0",
+      "@orpc/client": "2.0.0-beta.43",
+      "@orpc/contract": "2.0.0-beta.43",
+      "@orpc/json-schema": "2.0.0-beta.43",
+      "@orpc/openapi": "2.0.0-beta.43",
+      "@orpc/server": "2.0.0-beta.43",
+      "@orpc/tanstack-query": "2.0.0-beta.43",
+      "@orpc/zod": "2.0.0-beta.43",
+      "@tanstack/react-query": "5.101.2",
+      "@tanstack/react-router": "1.168.8",
+      "db0": "0.4.1",
+      "nitro": "3.0.260903-beta",
+      "react": "19.2.7",
+      "react-dom": "19.2.7",
+      "zod": "4.6.5"
+    },
+    "devDependencies": {
+      "@types/bun": "1.3.10",
+      "@types/node": "24.13.3",
+      "@types/react": "19.2.17",
+      "@types/react-dom": "19.2.3",
+      "@vitejs/plugin-react": "6.0.3",
+      "oxfmt": "0.58.0",
+      "oxlint": "1.73.0",
+      "typescript": "7.0.2",
+      "vite": "8.1.4"
+    }
+  },
+  "runtime": {
+    "name": "bun",
+    "version": "1.4.2",
+    "platform": "linux",
+    "arch": "arm64",
+    "baseImage": "oven/bun:1.4.2@sha256:9114c058aeae42162ee16dd5084b95fe9473970bb6bcb5b232ab1630f0546895",
+    "targetPlatform": "linux/arm64"
+  },
+  "database": {
+    "abstraction": "nitro/database",
+    "connector": "db0/bun-sqlite",
+    "engine": "bun:sqlite",
+    "path": "/app/.fixture-data/fixture.sqlite"
+  },
+  "nitro": {
+    "date": "2026-10-10T16:07:02.083Z",
+    "preset": "bun",
+    "framework": {
+      "name": "nitro",
+      "version": "3.0.260903-beta"
+    },
+    "versions": {
+      "nitro": "3.0.260903-beta"
+    },
+    "serverEntry": "server/index.mjs",
+    "publicDir": "public",
+    "commands": {
+      "preview": "bun run ./server/index.mjs"
+    },
+    "config": {}
+  },
+  "outputSha256": "c993123bbb9835cf07c86ed842b22ac975461bfb0c74211dba0bb7ca18800b94",
+  "files": [
+    {
+      "path": "nitro.json",
+      "bytes": 330,
+      "sha256": "c4b317a4c6b2e9ef9623e05c7f7c0ce266beb1d3c4b805bf984dcc4a3f2592e9"
+    },
+    {
+      "path": "public/assets/entry-client-BG7JPBsR.css",
+      "bytes": 233736,
+      "sha256": "2b77e059a040fd834f11a91792f28435dc7fd68605b8a2d7726c1ad8af5fd5de"
+    },
+    {
+      "path": "public/assets/entry-client-BLjbfIY8.js",
+      "bytes": 663488,
+      "sha256": "72ec3d60d51038248b525ead7968c4a3e86e97465b09cc19ed7466a129239a22"
+    },
+    {
+      "path": "public/assets/index-BG7JPBsR.css",
+      "bytes": 233736,
+      "sha256": "2b77e059a040fd834f11a91792f28435dc7fd68605b8a2d7726c1ad8af5fd5de"
+    },
+    {
+      "path": "server/_chunks/ssr-renderer.mjs",
+      "bytes": 1025,
+      "sha256": "a3355426d6a3fa28e56dbcb07bf4895e65cb5c2f807b2689eaf16052e0d18c08"
+    },
+    {
+      "path": "server/_libs/@floating-ui/core+[...].mjs",
+      "bytes": 29137,
+      "sha256": "68d409317b3cf458fa258e76d1347342a67992d7b706f31ce022eb748a3c7df9"
+    },
+    {
+      "path": "server/_libs/@floating-ui/dom+[...].mjs",
+      "bytes": 25701,
+      "sha256": "dfd415c0350c7c41769af8f75a9a3cd4be08476aba0fe3f028c861da94c0104a"
+    },
+    {
+      "path": "server/_libs/@floating-ui/react+[...].mjs",
+      "bytes": 41233,
+      "sha256": "90b53dbe1fbcb466106c04f0ebbca2c74ed3ce281a736fc7bb270ea86b3c7a65"
+    },
+    {
+      "path": "server/_libs/@mantine/core+[...].mjs",
+      "bytes": 354394,
+      "sha256": "27f9c31e4c3b58c52149ce64ddc491cf3d053e95aa0c11829e3d92cc2274d548"
+    },
+    {
+      "path": "server/_libs/@orpc/client+[...].mjs",
+      "bytes": 44005,
+      "sha256": "3929bf6741884e6e5352b601d0a6f8e4cbc7be279866cb80e9542ed4f4aed956"
+    },
+    {
+      "path": "server/_libs/@orpc/openapi+[...].mjs",
+      "bytes": 154646,
+      "sha256": "445315de58595a7bf959e500bfabb5ba5690950e0d6346c926852832e98f4c41"
+    },
+    {
+      "path": "server/_libs/@orpc/tanstack-query+[...].mjs",
+      "bytes": 24362,
+      "sha256": "33753608b36e0e10e75bb1d046dfe0eced5a457886a4944a411e1345ab636a0b"
+    },
+    {
+      "path": "server/_libs/@tanstack/react-router+[...].mjs",
+      "bytes": 601163,
+      "sha256": "f9ee43ca79c68a9b2f398a038add7affc17b980a2b66a92a9241eb42d985126d"
+    },
+    {
+      "path": "server/_libs/@tanstack/router-core+[...].mjs",
+      "bytes": 57309,
+      "sha256": "f51e3cda22fe2176fc96f005dcd82bac9ece990bb9077d0ff75946658a23e22c"
+    },
+    {
+      "path": "server/_libs/db0.mjs",
+      "bytes": 7312,
+      "sha256": "eb3d5e0df1a59e5d2b9f16f14aedeaa22e2a17a1ee0ec577ae3375d123248863"
+    },
+    {
+      "path": "server/_libs/h3+srvx.mjs",
+      "bytes": 48274,
+      "sha256": "41bac1825f0ee51a7eeb59d1a32a83f74f780c280e3e01a55dd60a0eed7dc0b1"
+    },
+    {
+      "path": "server/_libs/hookable.mjs",
+      "bytes": 1199,
+      "sha256": "e97bf1590bf01b90945ef10cb5ad66e4c4cb1f32919da914d4ded46dbcdcd845"
+    },
+    {
+      "path": "server/_libs/openapi-spec__downgrader.mjs",
+      "bytes": 25434,
+      "sha256": "5ebe068fa1bcc0dcce6773d78f1957c6a3cf447a9125291992ca77b374e78b07"
+    },
+    {
+      "path": "server/_libs/orpc__contract.mjs",
+      "bytes": 7304,
+      "sha256": "5c495f5a59d9fd8cf8c849684c3f9e4692ad008fd347417e23f92fb9d5c877a2"
+    },
+    {
+      "path": "server/_libs/orpc__json-schema.mjs",
+      "bytes": 17092,
+      "sha256": "14914ca50934754bc284f6e980a9cb5c60ef5662b8b9792958afeff5271afd86"
+    },
+    {
+      "path": "server/_libs/orpc__zod+zod.mjs",
+      "bytes": 145112,
+      "sha256": "115c7410f4537f1b83931a3c48b9607f9966116f145fbf703fdaccda3a66e9b9"
+    },
+    {
+      "path": "server/_libs/react-dom+scheduler.mjs",
+      "bytes": 457608,
+      "sha256": "52cf2bf2b1a5a0445503e6e9f4a5a2f677a147aac0156627b04acfe7354811c0"
+    },
+    {
+      "path": "server/_libs/scule.mjs",
+      "bytes": 1527,
+      "sha256": "e7d6f324b4ffd41b4d8de6773375746f4b97bd8990e6170ab4781cd843190334"
+    },
+    {
+      "path": "server/_libs/tanstack__history.mjs",
+      "bytes": 12130,
+      "sha256": "157eb8a904942a289e9bb0379ecd638440b76c4fd479fc530c316dab19a21501"
+    },
+    {
+      "path": "server/_libs/tanstack__query-core.mjs",
+      "bytes": 61860,
+      "sha256": "285198e27e9516bad84927fd6ec4f5a504e45087fe81b856b6db0af4536ac8f2"
+    },
+    {
+      "path": "server/_libs/tanstack__react-query.mjs",
+      "bytes": 6825,
+      "sha256": "018bcc01171abc839edd430bcba2c7ce2d56fdf1fae944692698b9d4c9085689"
+    },
+    {
+      "path": "server/_libs/ufo.mjs",
+      "bytes": 2195,
+      "sha256": "0b552d69ff8b91b5de8f6079dc5d064d4686cdf617eac894bd3e4fff754ec121"
+    },
+    {
+      "path": "server/_libs/zod.mjs",
+      "bytes": 53596,
+      "sha256": "58948b597f2483ef76b6602608763518a6d8a4f1e78e8f05248a3dab162673b5"
+    },
+    {
+      "path": "server/_runtime.mjs",
+      "bytes": 1132,
+      "sha256": "20841edd9f581313f460fcb534870a104a7341996995d9444afd075755bd0407"
+    },
+    {
+      "path": "server/_ssr/ssr.mjs",
+      "bytes": 1550,
+      "sha256": "5a71c69c4e3f7a091d9c5e98050a8494d7e6936cf168ede982a70963a39634b9"
+    },
+    {
+      "path": "server/index.mjs",
+      "bytes": 132829,
+      "sha256": "ee87f1a0aa2ab4ca1ec636645864014295743653e005453f3f38fde5c732962d"
+    },
+    {
+      "path": "server/node_modules/tslib/modules/index.js",
+      "bytes": 1416,
+      "sha256": "b3a4765da2bc019c79f2c2c12b36f860e946119d976897f1ce945caf227d0468"
+    },
+    {
+      "path": "server/node_modules/tslib/modules/package.json",
+      "bytes": 26,
+      "sha256": "f2a77d1fa2e7ee710b2835b2933d75d9c7f5dad4f1bab69e1679876e32b5e9eb"
+    },
+    {
+      "path": "server/node_modules/tslib/package.json",
+      "bytes": 1034,
+      "sha256": "1c4a3859d49e56ff92506689b3acda75388c33269964409806e3fe663610efd5"
+    },
+    {
+      "path": "server/node_modules/tslib/tslib.js",
+      "bytes": 23382,
+      "sha256": "8855865a058bc0a6df8f5db45347be041a2d6bbe1654216c51a805648c1b6e8a"
+    },
+    {
+      "path": "server/package.json",
+      "bytes": 142,
+      "sha256": "686c5027c7c4876e925e4c457c0de329bfd1313d79bca0a108e5194599f3dbb6"
+    }
+  ],
+  "symlinks": [],
+  "literalImports": [
+    {
+      "file": "server/_chunks/ssr-renderer.mjs",
+      "kind": "import-statement",
+      "path": "../_libs/h3+srvx.mjs"
+    },
+    {
+      "file": "server/_chunks/ssr-renderer.mjs",
+      "kind": "dynamic-import",
+      "path": "../_ssr/ssr.mjs"
+    },
+    {
+      "file": "server/_libs/@floating-ui/dom+[...].mjs",
+      "kind": "import-statement",
+      "path": "./core+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@floating-ui/react+[...].mjs",
+      "kind": "import-statement",
+      "path": "../../_runtime.mjs"
+    },
+    {
+      "file": "server/_libs/@floating-ui/react+[...].mjs",
+      "kind": "import-statement",
+      "path": "./dom+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@mantine/core+[...].mjs",
+      "kind": "import-statement",
+      "path": "../../_runtime.mjs"
+    },
+    {
+      "file": "server/_libs/@mantine/core+[...].mjs",
+      "kind": "import-statement",
+      "path": "../@floating-ui/react+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@mantine/core+[...].mjs",
+      "kind": "import-statement",
+      "path": "../@floating-ui/dom+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@orpc/openapi+[...].mjs",
+      "kind": "import-statement",
+      "path": "./client+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@orpc/openapi+[...].mjs",
+      "kind": "import-statement",
+      "path": "../orpc__contract.mjs"
+    },
+    {
+      "file": "server/_libs/@orpc/openapi+[...].mjs",
+      "kind": "import-statement",
+      "path": "../orpc__json-schema.mjs"
+    },
+    {
+      "file": "server/_libs/@orpc/openapi+[...].mjs",
+      "kind": "import-statement",
+      "path": "../openapi-spec__downgrader.mjs"
+    },
+    {
+      "file": "server/_libs/@orpc/tanstack-query+[...].mjs",
+      "kind": "import-statement",
+      "path": "./client+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@tanstack/react-router+[...].mjs",
+      "kind": "import-statement",
+      "path": "../../_runtime.mjs"
+    },
+    {
+      "file": "server/_libs/@tanstack/react-router+[...].mjs",
+      "kind": "import-statement",
+      "path": "../@floating-ui/react+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@tanstack/react-router+[...].mjs",
+      "kind": "import-statement",
+      "path": "../tanstack__history.mjs"
+    },
+    {
+      "file": "server/_libs/@tanstack/router-core+[...].mjs",
+      "kind": "import-statement",
+      "path": "./react-router+[...].mjs"
+    },
+    {
+      "file": "server/_libs/@tanstack/router-core+[...].mjs",
+      "kind": "import-statement",
+      "path": "../tanstack__history.mjs"
+    },
+    {
+      "file": "server/_libs/db0.mjs",
+      "kind": "import-statement",
+      "path": "node:path"
+    },
+    {
+      "file": "server/_libs/db0.mjs",
+      "kind": "import-statement",
+      "path": "node:fs"
+    },
+    {
+      "file": "server/_libs/db0.mjs",
+      "kind": "import-statement",
+      "path": "bun:sqlite"
+    },
+    {
+      "file": "server/_libs/h3+srvx.mjs",
+      "kind": "import-statement",
+      "path": "./@orpc/openapi+[...].mjs"
+    },
+    {
+      "file": "server/_libs/orpc__contract.mjs",
+      "kind": "import-statement",
+      "path": "./@orpc/client+[...].mjs"
+    },
+    {
+      "file": "server/_libs/orpc__json-schema.mjs",
+      "kind": "import-statement",
+      "path": "./@orpc/client+[...].mjs"
+    },
+    {
+      "file": "server/_libs/orpc__zod+zod.mjs",
+      "kind": "import-statement",
+      "path": "./orpc__json-schema.mjs"
+    },
+    {
+      "file": "server/_libs/react-dom+scheduler.mjs",
+      "kind": "import-statement",
+      "path": "../_runtime.mjs"
+    },
+    {
+      "file": "server/_libs/react-dom+scheduler.mjs",
+      "kind": "import-statement",
+      "path": "./@floating-ui/react+[...].mjs"
+    },
+    {
+      "file": "server/_libs/tanstack__query-core.mjs",
+      "kind": "import-statement",
+      "path": "./@orpc/tanstack-query+[...].mjs"
+    },
+    {
+      "file": "server/_libs/tanstack__react-query.mjs",
+      "kind": "import-statement",
+      "path": "../_runtime.mjs"
+    },
+    {
+      "file": "server/_libs/tanstack__react-query.mjs",
+      "kind": "import-statement",
+      "path": "./@floating-ui/react+[...].mjs"
+    },
+    {
+      "file": "server/_libs/tanstack__react-query.mjs",
+      "kind": "import-statement",
+      "path": "./tanstack__query-core.mjs"
+    },
+    {
+      "file": "server/_libs/tanstack__react-query.mjs",
+      "kind": "import-statement",
+      "path": "./@orpc/tanstack-query+[...].mjs"
+    },
+    {
+      "file": "server/_libs/zod.mjs",
+      "kind": "import-statement",
+      "path": "./orpc__zod+zod.mjs"
+    },
+    {
+      "file": "server/_ssr/ssr.mjs",
+      "kind": "import-statement",
+      "path": "../index.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_runtime.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/h3+srvx.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@orpc/openapi+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/hookable.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@orpc/client+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/orpc__contract.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/orpc__zod+zod.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/zod.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/db0.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/scule.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@floating-ui/react+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@tanstack/react-router+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/orpc__json-schema.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/ufo.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/tanstack__query-core.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@orpc/tanstack-query+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/tanstack__react-query.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@tanstack/router-core+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/@mantine/core+[...].mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "./_libs/react-dom+scheduler.mjs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "node:crypto"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "node:path"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "node:fs"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "import-statement",
+      "path": "node:url"
+    },
+    {
+      "file": "server/index.mjs",
+      "kind": "dynamic-import",
+      "path": "./_chunks/ssr-renderer.mjs"
+    },
+    {
+      "file": "server/node_modules/tslib/modules/index.js",
+      "kind": "import-statement",
+      "path": "../tslib.js"
+    }
+  ],
+  "observedPackages": [
+    ".nitro",
+    "@floating-ui/core",
+    "@floating-ui/dom",
+    "@floating-ui/react",
+    "@floating-ui/utils",
+    "@mantine/core",
+    "@mantine/hooks",
+    "@openapi-spec/downgrader",
+    "@orpc/client",
+    "@orpc/contract",
+    "@orpc/json-schema",
+    "@orpc/openapi",
+    "@orpc/server",
+    "@orpc/shared",
+    "@orpc/tanstack-query",
+    "@orpc/zod",
+    "@standard-server/core",
+    "@standard-server/fetch",
+    "@standard-server/shared",
+    "@tanstack/history",
+    "@tanstack/query-core",
+    "@tanstack/react-query",
+    "@tanstack/react-router",
+    "@tanstack/react-store",
+    "@tanstack/router-core",
+    "@tanstack/store",
+    "clsx",
+    "cookie-es",
+    "db0",
+    "h3",
+    "hookable",
+    "nitro",
+    "react",
+    "react-dom",
+    "react-number-format",
+    "rou3",
+    "scheduler",
+    "scule",
+    "seroval",
+    "srvx",
+    "tslib",
+    "use-sync-external-store",
+    "zod"
+  ],
+  "graphLimitations": "Literal import and generated region/package metadata inventory; computed imports and application behavior still require final integration inspection."
+}

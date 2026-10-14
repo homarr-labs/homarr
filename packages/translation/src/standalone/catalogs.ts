@@ -43,7 +43,7 @@ const catalogImports = {
   zh: () => import("../lang/zh.json"),
   uk: () => import("../lang/uk.json"),
   vi: () => import("../lang/vi.json"),
-} satisfies Record<SupportedLanguage, () => Promise<{ default: TranslationObject }>>;
+} satisfies Record<SupportedLanguage, () => Promise<{ default: AbstractIntlMessages }>>;
 
 function removeEmptyTranslations(messages: AbstractIntlMessages): AbstractIntlMessages {
   const result: AbstractIntlMessages = {};

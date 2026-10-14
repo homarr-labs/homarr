@@ -1,0 +1,18 @@
+{
+  "extends": "../../../apps/backend/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@homarr/node-unifi": ["${configDir}/../../../node_modules/@types/node-unifi"]
+    }
+  },
+  "include": [
+    "../../../apps/backend/src",
+    "../../../apps/backend/server",
+    "../../../apps/backend/tests",
+    "../../../apps/backend/nitro.config.ts",
+    "../../../packages/api/src/nitro/assembly/authenticated-read.ts",
+    "../../../packages/api/src/nitro/assembly/authenticated-read-client.ts",
+    "../../../packages/api/src/nitro/assembly/native-read-resources.ts",
+    "../../../packages/api/src/nitro/routers/-icons/native-read-resources.ts"
+  ]
+}

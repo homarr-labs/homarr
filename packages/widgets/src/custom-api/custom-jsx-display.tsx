@@ -8,6 +8,7 @@ import type { CustomJsxRendererMessages, CustomWidgetPublishedQueryState } from 
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
 import { createCustomWidgetComponents, SAFE_BINDINGS } from "./jsx-components";
+import { CustomJsxPresentation } from "./native-view-custom-jsx";
 import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./widget-definition-context";
 
 export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
@@ -70,13 +71,12 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   const baseData = isRecord(data.data) ? data.data : {};
   const baseStatus = isRecord(data.status) ? data.status : {};
   const renderer = (
-    <CustomJsxRenderer
+    <CustomJsxPresentation
+      renderer={CustomJsxRenderer}
       template={String(data.template ?? "")}
-      data={{ ...baseData, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.data])) }}
-      status={{
-        ...baseStatus,
-        ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
-      }}
+      data={baseData}
+      status={baseStatus}
+      queryState={queryState}
       options={isRecord(data.options) ? data.options : {}}
       components={components}
       createBindings={SAFE_BINDINGS}

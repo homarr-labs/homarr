@@ -4,7 +4,7 @@ FROM oven/bun:1.4.2-alpine AS bun-tool
 
 FROM node:24.18.0-alpine AS base
 
-FROM base AS builder
+FROM base AS dependencies
 ARG TARGETPLATFORM
 WORKDIR /app
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
@@ -17,6 +17,8 @@ RUN --mount=type=cache,id=homarr-bun-cache,target=/root/.bun/install/cache,shari
     npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
 
 COPY . .
+
+FROM dependencies AS builder
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
@@ -29,6 +31,41 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
     TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
+
+FROM dependencies AS nitro-builder
+RUN apk add --no-cache bash
+ARG HOMARR_NITRO_ACTIVATION
+RUN HOMARR_NITRO_ACTIVATION="$HOMARR_NITRO_ACTIVATION" bash scripts/build-nitro-candidate.sh
+
+FROM alpine:3.24.2 AS nitro-candidate
+WORKDIR /app
+COPY --from=base /usr/local/bin/node /usr/local/bin/node
+COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
+RUN apk add --no-cache libstdc++ ca-certificates bash su-exec && \
+    mkdir -p /appdata/db /appdata/trusted-certificates
+COPY --from=nitro-builder /app/apps/nitro/.output ./apps/nitro/.output
+COPY --from=nitro-builder /app/packages/cli/cli.cjs ./apps/cli/cli.cjs
+COPY --from=nitro-builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
+COPY --from=nitro-builder /app/node_modules/bcrypt ./node_modules/bcrypt
+COPY --from=nitro-builder /app/node_modules/node-gyp-build ./node_modules/node-gyp-build
+COPY --from=nitro-builder /app/packages/db/migrations ./db/migrations
+COPY scripts/migrate-nitro.mjs ./scripts/migrate-nitro.mjs
+COPY --chmod=755 scripts/run-nitro.sh ./run.sh
+COPY --chmod=755 scripts/entrypoint-nitro.sh ./entrypoint.sh
+RUN printf '#!/bin/sh\ncd /app/apps/cli && exec node ./cli.cjs "$@"\n' > /usr/bin/homarr && \
+    chmod +x /usr/bin/homarr
+ENV DB_URL='/appdata/db/db.sqlite'
+ENV DB_DIALECT='sqlite'
+ENV DB_DRIVER='better-sqlite3'
+ENV NODE_ENV='production'
+ENV NITRO_HOST='0.0.0.0'
+ENV NITRO_PORT='7575'
+ENV SERVER_SHUTDOWN_TIMEOUT='30'
+VOLUME /appdata
+EXPOSE 7575
+STOPSIGNAL SIGTERM
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["bash", "/app/run.sh"]
 
 FROM alpine:3.24.2 AS runner
 WORKDIR /app

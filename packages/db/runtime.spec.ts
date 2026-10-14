@@ -15,6 +15,7 @@ import { users } from "./schema/sqlite";
 import { groups, groupMembers } from "./schema/sqlite";
 import { eq, is, SQL, sql } from "drizzle-orm";
 import { Pool } from "pg";
+import { createHash } from "node:crypto";
 import type { PoolConfig } from "pg";
 import {
   boundedPostgresTransactionAsync,
@@ -314,7 +315,11 @@ postgresProof(
   "bounded main PostgreSQL transactions keep one checkout, rollback waited writes and drain close",
   async () => {
     const config = await postgresProofConfig();
-    const runtime = createPersistenceRuntime({ engine: "postgresql", connection: config });
+    const runtime = createPersistenceRuntime({
+      engine: "postgresql",
+      connection: config,
+      migrationsFolder: fileURLToPath(new URL("./migrations/postgresql", import.meta.url)),
+    });
     const blocker = new Pool({ ...config, max: 1 });
     await runtime.openAsync();
     await runtime.migrateAsync();
@@ -436,7 +441,12 @@ postgresProof(
 );
 
 test("bounded SQLite transactions fence cancellation at commit and retain native rollback", async () => {
-  const runtime = createPersistenceRuntime({ engine: "sqlite", path: ":memory:", mode: "fresh" });
+  const runtime = createPersistenceRuntime({
+    engine: "sqlite",
+    path: ":memory:",
+    mode: "fresh",
+    migrationsFolder: fileURLToPath(new URL("./migrations/sqlite", import.meta.url)),
+  });
   await runtime.openAsync();
   await runtime.migrateAsync();
   const signal = new AbortController();
@@ -516,7 +526,12 @@ const migrationFolder = fileURLToPath(new URL("./migrations/sqlite", import.meta
 test("bounded SQLite excludes competing connections, restores busy timeout and revokes nested continuations", async () => {
   const directory = await mkdtemp(`${approvedTemporaryRoot}/persistence-g-sqlite-`);
   const path = `${directory}/owned.sqlite`;
-  const runtime = createPersistenceRuntime({ engine: "sqlite", path, mode: "fresh" });
+  const runtime = createPersistenceRuntime({
+    engine: "sqlite",
+    path,
+    mode: "fresh",
+    migrationsFolder: migrationFolder,
+  });
   let blocker: Database | undefined;
   try {
     await runtime.openAsync();
@@ -837,7 +852,7 @@ test("copied schema validation rejects a trigger whose name resembles SQLite int
     const engine = createSqliteCopyEngine({ temporaryDirectory: directory, migrationsFolder: migrationFolder });
     const copy = await engine.createCopyAsync(bytes);
     try {
-      expect(copy.all("SELECT hash FROM __drizzle_migrations")).toHaveLength(49);
+      expect(copy.all("SELECT hash FROM __drizzle_migrations")).toHaveLength(50);
       copy.run(
         "CREATE TRIGGER sqliteXevil AFTER UPDATE ON user BEGIN UPDATE user SET name = 'changed-by-trigger' WHERE id = NEW.id; END",
       );
@@ -876,8 +891,8 @@ test("copied compatibility bounds migration rows before materialization and reje
           copy,
         ),
       ).rejects.toThrow("migration history");
-      expect(largestLedgerRead).toBeLessThanOrEqual(50);
-      expect(read("SELECT COUNT(*) AS count FROM __drizzle_migrations")).toEqual([{ count: 64 }]);
+      expect(largestLedgerRead).toBe(51);
+      expect(read("SELECT COUNT(*) AS count FROM __drizzle_migrations")).toEqual([{ count: 65 }]);
     } finally {
       await copy.disposeAsync();
     }
@@ -1032,11 +1047,15 @@ test("a copied historical ledger upgrades through the real five content transfor
   const directory = await mkdtemp(`${approvedTemporaryRoot}/persistence-historical-`);
   const original = `${directory}/original.sqlite`;
   const historicalMigrations = `${directory}/migrations`;
-  const journal: { version: string; dialect: string; entries: { tag: string }[] } = JSON.parse(
+  const old49Migrations = `${directory}/old49-migrations`;
+  const old49Path = `${directory}/old49.sqlite`;
+  const journal: { version: string; dialect: string; entries: { tag: string; when: number }[] } = JSON.parse(
     await readFile(`${migrationFolder}/meta/_journal.json`, "utf8"),
   );
   const entries = journal.entries.slice(0, 46);
+  const old49Entries = journal.entries.slice(0, 49);
   try {
+    expect(journal.entries).toHaveLength(50);
     await mkdir(`${historicalMigrations}/meta`, { recursive: true });
     await writeFile(`${historicalMigrations}/meta/_journal.json`, JSON.stringify({ ...journal, entries }));
     for (const { tag } of entries)
@@ -1057,9 +1076,23 @@ test("a copied historical ledger upgrades through the real five content transfor
     const copy = await engine.createCopyAsync(bytes);
     const metadata = { dbDialect: "sqlite" as const, homarrVersion: "unknown", exportedAt: "2020-01-02T00:00:00Z" };
     try {
+      const sourceLedger = copy.all("SELECT * FROM __drizzle_migrations ORDER BY created_at");
+      expect(sourceLedger).toHaveLength(46);
       await engine.assertCompatibleAsync(metadata, copy);
       await engine.migrateSchemaAsync(copy);
-      expect(copy.all("SELECT hash FROM __drizzle_migrations")).toHaveLength(49);
+      const targetLedger = copy.all("SELECT * FROM __drizzle_migrations ORDER BY created_at");
+      expect(targetLedger).toHaveLength(50);
+      expect(targetLedger.slice(0, 46)).toEqual(sourceLedger);
+      const targetMigration = journal.entries[49];
+      if (targetMigration === undefined) throw new Error("Required target50 migration journal entry is missing");
+      expect(targetMigration.tag).toBe("0049_robust_gateway");
+      expect(targetLedger[49]).toEqual({
+        id: null,
+        hash: createHash("sha256")
+          .update(await readFile(`${migrationFolder}/0049_robust_gateway.sql`))
+          .digest("hex"),
+        created_at: targetMigration.when,
+      });
       expect(() =>
         copy.transaction(() => {
           copy.run("UPDATE user SET name = ? WHERE id = ?", ["rolled-back", "copied-user"]);
@@ -1097,8 +1130,35 @@ test("a copied historical ledger upgrades through the real five content transfor
         { id: "old-container", kind: "container" },
       ]);
       expect(copy.all("PRAGMA foreign_key_check")).toEqual([]);
+      await engine.resetRuntimeAsync(copy);
+      const resetMeta = copy.all("SELECT id, epoch FROM homarr_runtime_meta ORDER BY id");
+      expect(resetMeta).toHaveLength(2);
+      expect(resetMeta[0]?.epoch).not.toBe("homarr-runtime:uninitialized:v1");
+      expect(resetMeta[1]).toEqual({ id: 2, epoch: null });
       const sealed = await copy.sealAsync();
       expect(sealed.dialect).toBe("sqlite");
+      const sealedPath = `${directory}/sealed.sqlite`;
+      await writeFile(sealedPath, sealed.bytes, { flag: "wx" });
+      const observed = new Database(sealedPath, { readonly: true });
+      try {
+        expect(observed.query("SELECT * FROM __drizzle_migrations ORDER BY created_at").all()).toEqual(targetLedger);
+        expect(observed.query("SELECT id, epoch FROM homarr_runtime_meta ORDER BY id").all()).toEqual(resetMeta);
+        expect(observed.query("SELECT name FROM user WHERE id = 'copied-user'").all()).toEqual([
+          { name: "Saved identity" },
+        ]);
+        expect(
+          parse<Record<string, unknown>>(
+            String(
+              observed.query<{ options: string }, []>("SELECT options FROM item WHERE id = 'old-app'").get()?.options,
+            ),
+          ),
+        ).toEqual(app);
+        for (const table of ["homarr_runtime_state", "homarr_runtime_history_stream", "homarr_runtime_history_entry"])
+          expect(observed.query(`SELECT * FROM "${table}"`).all()).toEqual([]);
+      } finally {
+        observed.close(true);
+        await rm(sealedPath);
+      }
       const reopened = await engine.createCopyAsync(sealed.bytes);
       try {
         await engine.assertCompatibleAsync(metadata, reopened);
@@ -1120,11 +1180,79 @@ test("a copied historical ledger upgrades through the real five content transfor
     } finally {
       await invalid.disposeAsync();
     }
+    await mkdir(`${old49Migrations}/meta`, { recursive: true });
+    await writeFile(`${old49Migrations}/meta/_journal.json`, JSON.stringify({ ...journal, entries: old49Entries }));
+    for (const { tag } of old49Entries)
+      await copyFile(`${migrationFolder}/${tag}.sql`, `${old49Migrations}/${tag}.sql`);
+    const old49Fixture = Bun.spawnSync(
+      [
+        "node",
+        fileURLToPath(new URL("./test/create-legacy-copy-fixture.mjs", import.meta.url)),
+        old49Path,
+        old49Migrations,
+        "old49",
+      ],
+      { env: { PATH: process.env.PATH, HOME: process.env.HOME }, stdout: "pipe", stderr: "pipe" },
+    );
+    expect(old49Fixture.exitCode, old49Fixture.stderr.toString()).toBe(0);
+    const old49Bytes = await readFile(old49Path);
+    const old49Engine = createSqliteCopyEngine({ temporaryDirectory: directory, migrationsFolder: old49Migrations });
+    const old49Copy = await old49Engine.createCopyAsync(old49Bytes);
+    try {
+      const old49Ledger = old49Copy.all("SELECT * FROM __drizzle_migrations ORDER BY created_at");
+      expect(old49Ledger).toHaveLength(49);
+      await old49Engine.assertCompatibleAsync(metadata, old49Copy);
+      await old49Engine.migrateSchemaAsync(old49Copy);
+      await old49Engine.migrateContentAsync(old49Copy);
+      const old49Sealed = await old49Copy.sealAsync();
+      const old49SealedPath = `${directory}/old49-sealed.sqlite`;
+      await writeFile(old49SealedPath, old49Sealed.bytes, { flag: "wx" });
+      const old49Observed = new Database(old49SealedPath, { readonly: true });
+      try {
+        expect(old49Observed.query("SELECT * FROM __drizzle_migrations ORDER BY created_at").all()).toEqual(
+          old49Ledger,
+        );
+        expect(old49Observed.query("SELECT name FROM sqlite_master WHERE name LIKE 'homarr_runtime_%'").all()).toEqual(
+          [],
+        );
+        expect(old49Observed.query("SELECT name FROM user WHERE id = 'copied-user'").all()).toEqual([
+          { name: "Saved identity" },
+        ]);
+        expect(old49Observed.query("PRAGMA foreign_key_check").all()).toEqual([]);
+      } finally {
+        old49Observed.close(true);
+        await rm(old49SealedPath);
+      }
+      expect(await readFile(old49Path)).toEqual(old49Bytes);
+    } finally {
+      await old49Copy.disposeAsync();
+    }
+    const unsupportedReset = await old49Engine.createCopyAsync(old49Bytes);
+    try {
+      await old49Engine.assertCompatibleAsync(metadata, unsupportedReset);
+      await old49Engine.migrateSchemaAsync(unsupportedReset);
+      await old49Engine.migrateContentAsync(unsupportedReset);
+      await expect(old49Engine.resetRuntimeAsync(unsupportedReset)).rejects.toThrow(
+        "exact current SQLite target catalog",
+      );
+      await expect(unsupportedReset.sealAsync()).rejects.toThrow("not available");
+    } finally {
+      await unsupportedReset.disposeAsync();
+    }
   } finally {
     for (const { tag } of entries) await rm(`${historicalMigrations}/${tag}.sql`, { force: true });
     await rm(`${historicalMigrations}/meta/_journal.json`, { force: true });
     await rmdir(`${historicalMigrations}/meta`);
     await rmdir(historicalMigrations);
+    for (const { tag } of old49Entries) await rm(`${old49Migrations}/${tag}.sql`, { force: true });
+    await rm(`${old49Migrations}/meta/_journal.json`, { force: true });
+    await rmdir(`${old49Migrations}/meta`).catch((error: unknown) => {
+      if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") throw error;
+    });
+    await rmdir(old49Migrations).catch((error: unknown) => {
+      if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") throw error;
+    });
+    for (const suffix of ["", "-wal", "-shm", "-journal"]) await rm(`${old49Path}${suffix}`, { force: true });
     for (const suffix of ["", "-wal", "-shm", "-journal"]) await rm(`${original}${suffix}`, { force: true });
     await rmdir(directory);
   }
@@ -1261,12 +1389,23 @@ test("copied current-source SQLite data survives Bun migration and reopen withou
         fileURLToPath(new URL("./test/create-legacy-copy-fixture.mjs", import.meta.url)),
         original,
         migrationFolder,
+        "current",
       ],
       { env: { PATH: process.env.PATH, HOME: process.env.HOME }, stdout: "pipe", stderr: "pipe" },
     );
     expect(fixture.exitCode, fixture.stderr.toString()).toBe(0);
+    const originalBytes = await readFile(original);
     const legacy = new Database(original, { readonly: true });
     const ledger = legacy.query("SELECT hash, created_at FROM __drizzle_migrations ORDER BY id").all();
+    expect(ledger).toHaveLength(50);
+    const domainTables = legacy
+      .query<{ name: string }, []>(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'homarr_runtime_%' AND name != '__drizzle_migrations' ORDER BY name",
+      )
+      .all();
+    const originalDomainRows = Object.fromEntries(
+      domainTables.map(({ name }) => [name, legacy.query(`SELECT * FROM "${name}" ORDER BY rowid`).all()]),
+    );
     legacy.close(true);
     await copyFile(original, copied);
     let runtime = createPersistenceRuntime({
@@ -1351,6 +1490,59 @@ test("copied current-source SQLite data survives Bun migration and reopen withou
         persisted.close(true);
         unchanged.close(true);
       }
+      const engine = createSqliteCopyEngine({ temporaryDirectory: directory, migrationsFolder: migrationFolder });
+      const copy = await engine.createCopyAsync(originalBytes);
+      const metadata = { dbDialect: "sqlite" as const, homarrVersion: "unknown", exportedAt: "2020-01-02T00:00:00Z" };
+      try {
+        await engine.assertCompatibleAsync(metadata, copy);
+        await engine.migrateSchemaAsync(copy);
+        await expect(engine.resetRuntimeAsync(copy)).rejects.toThrow("converted before runtime reset");
+        await engine.migrateContentAsync(copy);
+        for (const table of ["homarr_runtime_state", "homarr_runtime_history_stream", "homarr_runtime_history_entry"])
+          expect(copy.all(`SELECT * FROM "${table}"`)).toHaveLength(1);
+        await engine.resetRuntimeAsync(copy);
+        const meta = copy.all("SELECT id, epoch FROM homarr_runtime_meta ORDER BY id");
+        expect(meta).toHaveLength(2);
+        expect(meta[0]?.id).toBe(1);
+        expect(meta[0]?.epoch).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+        expect(meta[0]?.epoch).not.toBe("disposable-imported-epoch");
+        expect(meta[0]?.epoch).not.toBe("homarr-runtime:uninitialized:v1");
+        expect(meta[1]).toEqual({ id: 2, epoch: null });
+        const sealed = await copy.sealAsync();
+        expect(() => copy.all("SELECT id FROM user")).toThrow("not available");
+        const sealedPath = `${directory}/sealed.sqlite`;
+        await writeFile(sealedPath, sealed.bytes, { flag: "wx" });
+        const observed = new Database(sealedPath, { readonly: true });
+        try {
+          expect(observed.query("SELECT hash, created_at FROM __drizzle_migrations ORDER BY id").all()).toEqual(ledger);
+          expect(observed.query("SELECT id, epoch FROM homarr_runtime_meta ORDER BY id").all()).toEqual(meta);
+          for (const table of ["homarr_runtime_state", "homarr_runtime_history_stream", "homarr_runtime_history_entry"])
+            expect(observed.query(`SELECT * FROM "${table}"`).all()).toEqual([]);
+          for (const { name } of domainTables)
+            expect(observed.query(`SELECT * FROM "${name}" ORDER BY rowid`).all()).toEqual(
+              originalDomainRows[name] ?? [],
+            );
+          expect(observed.query("PRAGMA foreign_key_check").all()).toEqual([]);
+        } finally {
+          observed.close(true);
+          await rm(sealedPath);
+        }
+      } finally {
+        await copy.disposeAsync();
+      }
+      const tampered = await engine.createCopyAsync(originalBytes);
+      try {
+        await engine.assertCompatibleAsync(metadata, tampered);
+        await engine.migrateSchemaAsync(tampered);
+        await engine.migrateContentAsync(tampered);
+        await engine.resetRuntimeAsync(tampered);
+        tampered.run("UPDATE homarr_runtime_meta SET epoch = ? WHERE id = 1", ["disposable-imported-epoch"]);
+        await expect(tampered.sealAsync()).rejects.toThrow("owned reset");
+        await expect(engine.resetRuntimeAsync(tampered)).rejects.toThrow("not available");
+      } finally {
+        await tampered.disposeAsync();
+      }
+      expect(await readFile(original)).toEqual(originalBytes);
     } finally {
       await runtime.closeAsync();
     }

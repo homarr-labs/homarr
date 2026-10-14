@@ -1,0 +1,242 @@
+[
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 1,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 2,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 3,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 4,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 5,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 6,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 7,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "sparse-pki",
+    "attempt": 8,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 1,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 2,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 3,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "bun",
+    "version": "1.4.2",
+    "variant": "standard-pki",
+    "attempt": 4,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 1,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24022) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 2,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24081) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 3,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24140) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 4,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24163) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 5,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24174) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 6,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24195) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 7,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24216) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "sparse-pki",
+    "attempt": 8,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24232) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 1,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24267) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 2,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24278) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 3,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24302) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  },
+  {
+    "runtime": "node",
+    "version": "v24.18.0",
+    "variant": "standard-pki",
+    "attempt": 4,
+    "status": 0,
+    "signal": null,
+    "codes": [],
+    "output": "PASS: six admin paths, trust versions, CA/race/file safety, fingerprint binding, real injected Fetch/Axios, revocation and disposal\n(node:24314) ExperimentalWarning: Transform Types is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+  }
+]

@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./runtime": "./src/runtime.ts",
     "./publisher": "./src/publisher.ts"
   },
   "scripts": {

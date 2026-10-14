@@ -1,0 +1,52 @@
+# Legacy widget adapters — six-file source return
+
+## Disposition
+
+**Source frozen for independent review and coordinator-owned fresh validation. No compiler, lint, test, application or native result is claimed.** Implemented the approved four adapters and parent→embedded amendment in `convergence-legacy-widget-adapters-plan.md:112–155` within exactly the six existing product files below. This report is the only additional repository file written.
+
+| Product file                                                                | Concrete cut                                                                                                                                                                                                                             |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/widgets/src/docker/component.tsx`                                 | Local modal-mounted connector, original modal options/content, committed inventory/session opener, exact selected endpoint/container descriptor, real `app.createMany`, awaited app/Docker-map invalidation.                             |
+| `packages/widgets/src/_inputs/widget-app-input.tsx`                         | Local QuickAdd connector, covered-parent source-field association, genuine create/selectable refresh/`id` delivery, dirty/submission captures, internal legacy icon-resource hook and copied session-observation helpers.                |
+| `packages/widgets/src/_inputs/widget-custom-widget-configuration-input.tsx` | Named icon-control connector, actual static source owner, definition/path/version association and shared legacy icon resources. Non-icon controls and definition APIs retained.                                                          |
+| `packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx`   | Committed repository source association, named existing modal content with actual presentation owner, shared icon resources and guarded local save/cancel delivery. Repository/provider formats retained.                                |
+| `packages/widgets/src/modals/embedded-app-edit-form.tsx`                    | Actual parent owner argument, independent presentation capture, dirty/form baseline observations, real update and separate unknown/known/reconciliation-held/settled outcomes.                                                           |
+| `packages/widgets/src/modals/widget-edit-modal.tsx`                         | Actual submission record registered before static-input retirement, the same owner passed to `submitIfDirty`, independent committed-host presentation factory and JSX handoff. Existing post-await/final-delivery/close checks retained. |
+
+Shared pure views/props, API/server/Auth source, manifests/dependencies, definitions, generated native query/source-UI APIs, static inputs and helper files were not edited. There is no new dependency, helper file, test, comment, cast, `any`, suppression, optional-prop weakening or fabricated affirmative permission/owner/version. Other Native2 and Spotlight Media1 writers remain disjoint; earlier diagnostic receipts were not changed.
+
+## Connected producers and ownership
+
+- All controllers use existing declared public API/Auth/Modal/Form libraries. Docker and QuickAdd reuse the original modal options/title and pure content via their narrow public subpaths. Actual presentation captures occur in committed mount effects or the parent's committed-host capture factory, not speculative render initializers or deep modal-context imports.
+- Session association retains the observed object and copied identity/permission/expiry fields. Committed losses retire the relevant records permanently; matching IDs after A→B→A do not revive old records. Async callbacks consult committed refs, captured mount/operation identities and real provider epochs. Callback or Mantine form-method identity is not a generation token. Cancel closes the actually owned presentation without granting a stale form write.
+- Docker dispatch requires actual `app-create`, successful nonfetching inventory and matching copied endpoint/container creation fields. `createMany` executes once and preserves `void`; reconciliation awaits typed app and Docker service-map invalidations. Optional protected refetches require the observed permission/resource admission; otherwise invalidation uses `refetchType: 'none'` rather than starting a protected read. Unrelated container actions and capability fallback are unchanged.
+- QuickAdd's child lifetime is its own actual modal epoch. Its source-field association remains mounted beneath the child instead of borrowing the parent's now-inactive presentation. Real app creation is followed by awaited cache invalidation and an actual selectable observer refresh containing the created `id`; only then does the original `onClose({id})` meaning deliver that ID to the original field. Dirty reporting participates in real submission admission.
+- The file-2 resource hook supplies the actual `icon.findIcons` hook/results and `media.uploadMedia(FormData)` mutation, with `media-upload`, captured field/form ownership, `retry: false`, retained real IDs and awaited typed media/icon invalidation errors. The existing Next provider's non-JSON `httpLink` path was read at `apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx:206–219`; no transport change or actual upload was performed.
+- Direct custom/repository icon controls provide their current field values; an intervening committed edit retires the old upload delivery. The hook distinguishes its own returned media-URL delivery from an unrelated edit and retains old-operation predicates for reconciliation. QuickAdd/embedded use their fixed icon-field form/presentation association, and their existing AppForm fieldsets are pending-disabled throughout upload and cache settlement; no inaccessible full-form-value observer or new shared-form API is invented.
+- Embedded submission registers the same supplied parent owner before invoking actual AppForm submission. It does not borrow the retired static input owner. Independent icon/read operations use the parent's actual mount/binding/session/presentation capture. Dirty state and the real handle govern clean adoption and completion; an absent form returns false. Successful reads and baseline identities are retained without changing the admitted initial-value key during an operation. Clean baseline changes remount only the actual baseline-bound AppForm; later dirty edits remain intact.
+- Real update resolution is stored separately from cache/read errors, together with submitted values, original app/baseline/session association and the actual `void` result. Parent retry of a known submission performs retained reads and acknowledges only matching submitted values. Different later edits remain dirty and return false; a later explicit different submission may write once after read settlement. Unknown outcomes remain unknown and cannot resend. Transient refresh errors keep the existing dirty AppForm mounted instead of losing its values; original errors and truthful outcome messages remain visible.
+
+The parent still checks its original submission owner after the child await, before final widget delivery and before close. Tabs, footer/buttons, modal size, CSS/Mantine presentation and widget option properties are retained. No server session version, credential capability, SQL authority or through-COMMIT continuity is asserted. Default legacy Next and existing per-call legacy RPC gates remain unchanged.
+
+## Private source capture
+
+New directory:
+
+`/private/var/folders/kx/hccbvbyd6sb61s6lrr2jyt2m0000gn/T/opencode/nitro-legacy-widget-adapters-source-536e93955447`
+
+It contains `before-index.json`, `after-index.json`, and numbered `1`–`6` `.before.tsx`, `.after.tsx`, `.diff` artifacts in the table order above. The indexes retain exact paths, sizes and SHA-256 pins for both source images and every diff. Existing before images were authenticated against their original pins before producing after artifacts; none were overwritten. Source stat identity/size/mtime/ctime was compared around each bounded read; access time was excluded.
+
+| No. | Before bytes | Frozen after bytes | Frozen after SHA-256                                               |
+| --- | -----------: | -----------------: | ------------------------------------------------------------------ |
+| 1   |         6704 |              14603 | `4cfd47909ee4867f81333618f09cde12f7ec922ed6ad4a033150bf86dd91f577` |
+| 2   |         3934 |              17023 | `5a4492da3cd539e458cf6cd17dfcd4139445e81631c5e0da86d47adc56d0fc3c` |
+| 3   |        12693 |              16368 | `872087ed017ce07e27adf5e309919d250f20650b61e7181b7452437763696f78` |
+| 4   |        31056 |              36195 | `463d51a7f292e6361cdc6f8bead4e62a3ecd492fbdb45b7ff304022e9775d029` |
+| 5   |         2862 |              15588 | `088f6fdc5573356d9c888c66541a96a57e099b6ce16fd156cc068b694b82e8b5` |
+| 6   |        41146 |              43198 | `d3391475a0a97c078e0a1737f46914f7e2973b8ffebfffad63d29460ae79ab3d` |
+
+Two bounded Python `-I -S -B` standard-library file-I/O/hash/difflib capture commands ran. The new directory is `0700`; artifact creation used `O_EXCL` and `0600`. Product/report edits used `functions.patch`. No compiler/lint/check/test, application/module evaluation/import, browser, native/SQL, Engine, network, private configuration/data or nested agent operation was launched. No whole-worktree conservation claim is made.
+
+## Remaining review and validation holds
+
+No extra file/export/producer allocation was needed beyond the approved parent file. Independent review must assess the actual six diffs and owner/write/read paths; fresh coordinator-owned widget typecheck and focused lint follow only after all writers freeze. Preserve applicable unchanged native/backend/owner profiles and old receipts. Source-only missing-prop repair is not a numeric-zero result or an emitted native-graph/runtime admission. UI observations cannot detect an unobserved future cookie/permission change; genuine provider/session observations remain deliberately conservative, and existing RPC reauthorization remains per-call only.

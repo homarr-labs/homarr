@@ -1,21 +1,18 @@
 import type { MantineColor } from "@mantine/core";
 import { ActionIcon, Divider, Group, Indicator, Popover, RingProgress, Stack, Text } from "@mantine/core";
-import { useColorScheme } from "@mantine/hooks";
 import { IconHeartbeat } from "@tabler/icons-react";
 
 import type { TdarrStatistics } from "@homarr/integrations";
-import { useI18n } from "@homarr/translation/client";
+import type { TranscodingViewBindings } from "./native-view-types";
 
 import actionTargetClasses from "../common/action-target.module.css";
 
-interface HealthCheckStatusProps {
+interface HealthCheckStatusProps extends Pick<TranscodingViewBindings, "tCommon" | "tHealthCheck" | "colorScheme"> {
   statistics: TdarrStatistics;
 }
 
 export function HealthCheckStatus(props: HealthCheckStatusProps) {
-  const colorScheme = useColorScheme();
-  const t = useI18n("widget.mediaTranscoding.healthCheck");
-  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
+  const { colorScheme, tHealthCheck: t, tCommon } = props;
 
   const indicatorColor = props.statistics.failedHealthCheckCount
     ? "red"

@@ -258,6 +258,7 @@
   },
   "scripts": {
     "build": "bun --no-env-file run --filter @homarr/nitro build",
+    "build:nitro:candidate": "bash scripts/build-nitro-candidate.sh",
     "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
     "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",
     "benchmark:board-graph": "node --experimental-strip-types scripts/benchmarks/board-static-graph.mts",
@@ -290,6 +291,7 @@
     "docker:workshop": "docker compose -f apps/workshop/docker-compose.yml up --build workshop",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "docker:dev:up": "docker compose -f ./development/development.docker-compose.yml up -d redis",
+    "docker:nitro:candidate": "docker compose --env-file /dev/null -f deployments/nitro/compose.yaml --profile nitro-candidate up --build",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
     "lint": "turbo lint --continue",

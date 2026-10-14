@@ -2,7 +2,7 @@ import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { TracearrViolation } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import type { TracearrViewDateProps } from "./native-view-types";
 
 import type { SourcedTracearrItem } from "./source";
 
@@ -12,14 +12,13 @@ export function ViolationsList({
   violations,
   showSource,
   transparent = false,
+  t,
+  locale,
 }: {
   violations: SourcedTracearrViolation[];
   showSource: boolean;
   transparent?: boolean;
-}) {
-  const t = useI18n("widget.tracearr");
-  const locale = useCurrentIntlLocale();
-
+} & TracearrViewDateProps) {
   return (
     <Stack gap={4}>
       <Text size="xs" fw={600} c="dimmed" tt={transparent ? undefined : "uppercase"}>

@@ -1,0 +1,11 @@
+import "@gfazioli/mantine-onboarding-tour/styles.css";
+import "@homarr/notifications/styles.css";
+import "@mantine/lightbox/styles.css";
+import "@homarr/spotlight/styles.css";
+import "@homarr/ui/styles.css";
+import "flag-icons/css/flag-icons.min.css";
+import "mantine-datatable/styles.css";
+import "../styles/color-scheme.css";
+import "../styles/scroll-area.css";
+import "../styles/font.css";
+import "@mantine/dropzone/styles.css";

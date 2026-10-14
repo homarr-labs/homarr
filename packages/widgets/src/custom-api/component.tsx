@@ -1,8 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Button, Center, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -13,6 +12,7 @@ import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useDemoReadOnly } from "../demo-read-only";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
+import { CustomApiUnavailableView } from "./native-view";
 
 const CustomJsxDisplay = dynamic(() => import("./custom-jsx-display"), { ssr: false });
 
@@ -104,31 +104,21 @@ function Unavailable({
   onRemove?: () => void;
 }) {
   return (
-    <Center h="100%" p="sm">
-      <Stack align="center" gap="xs">
-        <IconAlertTriangle
-          style={zoomCompensatedSize(32)}
-          color={`var(--mantine-color-${danger ? "red" : "yellow"}-6)`}
-        />
-        <Text c="dimmed" size="sm" ta="center">
-          {message}
-        </Text>
-        {supplementaryMessage && (
-          <Text size="sm" fw={600} ta="center">
-            {supplementaryMessage}
-          </Text>
-        )}
-        {actionLabel && actionHref && (
+    <CustomApiUnavailableView
+      message={message}
+      danger={danger}
+      removeLabel={removeLabel}
+      supplementaryMessage={supplementaryMessage}
+      onRemove={onRemove}
+      iconStyle={zoomCompensatedSize(32)}
+      action={
+        actionLabel &&
+        actionHref && (
           <Button component={Link} href={actionHref} size="compact-sm" color="yellow" variant="light">
             {actionLabel}
           </Button>
-        )}
-        {removeLabel && onRemove && (
-          <Button size="compact-sm" color="red" variant="light" onClick={onRemove}>
-            {removeLabel}
-          </Button>
-        )}
-      </Stack>
-    </Center>
+        )
+      }
+    />
   );
 }

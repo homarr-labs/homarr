@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
+}
+
+.homarr-font-sans {
+  font-family: "Inter", "Inter Fallback";
+  font-style: normal;
+}
+
+.homarr-font-variable {
+  --font-sans: "Inter", "Inter Fallback";
+}

@@ -1,7 +1,7 @@
 import { afterEach, expect, test } from "bun:test";
 import { Database } from "bun:sqlite";
 import { createCipheriv, createDecipheriv, createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, resolve } from "node:path";
 
@@ -38,8 +38,54 @@ function freshDirectory() {
   return directory;
 }
 
-function migrateFixture(db: Database) {
-  migrate(drizzle(db), { migrationsFolder: migrations });
+function migrateFixture(db: Database, migrationsFolder = migrations) {
+  migrate(drizzle(db), { migrationsFolder });
+}
+
+function old49Migrations(directory: string) {
+  const journal: { entries: { tag: string; when: number }[] } = JSON.parse(
+    readFileSync(join(migrations, "meta/_journal.json"), "utf8"),
+  );
+  expect(journal.entries).toHaveLength(50);
+  expect(journal.entries[49]?.tag).toBe("0049_robust_gateway");
+  const entries = journal.entries.slice(0, 49);
+  const folder = join(directory, "old49-migrations");
+  mkdirSync(join(folder, "meta"), { recursive: true });
+  writeFileSync(join(folder, "meta/_journal.json"), JSON.stringify({ ...journal, entries }), { flag: "wx" });
+  for (const { tag } of entries) copyFileSync(join(migrations, `${tag}.sql`), join(folder, `${tag}.sql`));
+  return folder;
+}
+
+function populateImportedRuntime(db: Database) {
+  db.query('UPDATE "homarr_runtime_meta" SET epoch = ? WHERE id = 1').run("disposable-imported-epoch");
+  db.query('INSERT INTO "homarr_runtime_state" (epoch, key, value) VALUES (?, ?, ?)').run(
+    "disposable-imported-epoch",
+    "disposable-state",
+    "disposable-value",
+  );
+  db.query('INSERT INTO "homarr_runtime_history_stream" (epoch, kind, name, head_sequence) VALUES (?, ?, ?, ?)').run(
+    "disposable-imported-epoch",
+    "log",
+    "disposable-stream",
+    1,
+  );
+  db.query(
+    'INSERT INTO "homarr_runtime_history_entry" (epoch, kind, name, sequence, payload) VALUES (?, ?, ?, ?, ?)',
+  ).run("disposable-imported-epoch", "log", "disposable-stream", 1, "disposable-payload");
+}
+
+function assertResetSnapshot(db: Database) {
+  for (const table of ["homarr_runtime_state", "homarr_runtime_history_stream", "homarr_runtime_history_entry"])
+    expect(db.query(`SELECT * FROM "${table}"`).all()).toEqual([]);
+  const meta = db
+    .query<{ id: number; epoch: string | null }, []>('SELECT id, epoch FROM "homarr_runtime_meta" ORDER BY id')
+    .all();
+  expect(meta).toHaveLength(2);
+  expect(meta[0]?.id).toBe(1);
+  expect(meta[0]?.epoch).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  expect(meta[0]?.epoch).not.toBe("disposable-imported-epoch");
+  expect(meta[0]?.epoch).not.toBe("homarr-runtime:uninitialized:v1");
+  expect(meta[1]).toEqual({ id: 2, epoch: null });
 }
 
 function ciphertext(text: string) {
@@ -333,145 +379,240 @@ function decryptTarget(value: string) {
   return Buffer.concat([decipher.update(Buffer.from(data, "hex")), decipher.final()]).toString();
 }
 
-test("a genuine full-schema old-format export preserves all 40 families and raw values while converting six ciphertext columns and logging out", async () => {
-  const directory = freshDirectory();
-  const seed = new Database(":memory:");
-  migrateFixture(seed);
-  const password = populateAllFamilies(seed);
-  const rows = Object.fromEntries(
-    Object.values(sourceModels).map((table) => [table, seed.query(`SELECT * FROM "${table}" ORDER BY rowid`).all()]),
-  );
-  seed.close();
-  const rowsPath = join(directory, "synthetic-rows.json");
-  const sourcePath = join(directory, "source.sqlite");
-  const archivePath = join(directory, "legacy-backup.zip");
-  writeFileSync(rowsPath, stringify(rows), { flag: "wx", mode: 0o600 });
-  const fixture = spawnSync(
-    "node",
-    [
-      resolve("packages/api/src/backup-runtime/create-legacy-fixture.mjs"),
-      sourcePath,
-      migrations,
-      archivePath,
-      rowsPath,
-    ],
-    { env: { PATH: process.env.PATH ?? "/usr/bin:/bin" }, encoding: "utf8" },
-  );
-  if (fixture.status !== 0) {
-    const diagnostic: unknown = JSON.parse(fixture.stderr);
-    if (
-      typeof diagnostic === "object" &&
-      diagnostic !== null &&
-      "name" in diagnostic &&
-      typeof diagnostic.name === "string"
-    )
-      throw new Error(
-        `Disposable legacy driver fixture failed: ${diagnostic.name}, ${"code" in diagnostic && typeof diagnostic.code === "string" ? diagnostic.code : "unknown-code"}, ${"phase" in diagnostic && typeof diagnostic.phase === "string" ? diagnostic.phase : "unknown-phase"}`,
-      );
-    throw new Error("Disposable legacy driver fixture failed");
-  }
-  const db = new Database(sourcePath, { readonly: true });
-  const before = Object.fromEntries(
-    Object.values(sourceModels).map((table) => [table, db.query(`SELECT * FROM "${table}" ORDER BY rowid`).all()]),
-  );
-  const originalLedger = db.query('SELECT * FROM "__drizzle_migrations" ORDER BY created_at').all();
-  db.close();
-  const archive = readFileSync(archivePath);
-  const originalDatabase = createHash("sha256").update(readFileSync(sourcePath)).digest("hex");
-  const originalArchive = createHash("sha256").update(archive).digest("hex");
-  const copyDirectory = freshDirectory();
-  const dependencies = createSqliteBackupDependencies({
-    temporaryDirectory: copyDirectory,
-    migrationsFolder: migrations,
-    targetKey,
-    authorizeAsync: async () => {},
-  });
-  const inspection = await inspectLegacyBackupAsync(archive, dependencies);
-  expect(Object.keys(inspection.counts)).toHaveLength(40);
-  expect(Object.values(inspection.counts).every((count) => count > 0)).toBe(true);
-  expect(inspection.homeBoard).toEqual({ id: "board-1", name: "Preserved board" });
-  expect(JSON.stringify(inspection)).not.toContain(sourceKey);
-  expect(JSON.stringify(parseLegacyArchive(archive))).not.toContain(sourceKey);
-  const prepared = await prepareLegacyBackupAsync(archive, dependencies, { selectedBoardId: "board-1" });
-  expect(JSON.stringify(prepared)).not.toContain(sourceKey);
-  prepared.withServerSnapshot(({ bytes }) => {
-    const restored = readPreparedSnapshot(bytes);
-    try {
-      for (const table of Object.values(sourceModels)) {
-        if (
-          [
-            "session",
-            "verificationToken",
-            "integrationSecret",
-            "widget_secret",
-            "custom_widget_v2_secret",
-            "custom_widget_secret",
-            "assistant_configuration",
-            "serverSetting",
-          ].includes(table)
-        )
-          continue;
-        expect(restored.query(`SELECT * FROM "${table}" ORDER BY rowid`).all()).toEqual(before[table] ?? []);
-      }
-      expect(restored.query('SELECT * FROM "session"').all()).toEqual([]);
-      expect(restored.query('SELECT * FROM "verificationToken"').all()).toEqual([]);
-      expect(
-        restored.query('SELECT * FROM "serverSetting" WHERE setting_key = ?').get("__onboarding_claim"),
-      ).toBeNull();
-      expect(
-        restored.query('SELECT * FROM "serverSetting" WHERE setting_key != ? ORDER BY rowid').all("__onboarding_claim"),
-      ).toEqual(
-        (before.serverSetting as Record<string, SqlValue>[]).filter((row) => row.setting_key !== "__onboarding_claim"),
-      );
-      const user = restored.query<{ password: string }, []>('SELECT password FROM "user"').get();
-      expect(user?.password).toBe(password);
-      expect(compareSync("disposable-password", user?.password ?? "")).toBe(true);
-      const values: [string, string, string][] = [
-        ["integrationSecret", "value", "integration-value"],
-        ["widget_secret", "value", "widget-value"],
-        ["custom_widget_v2_secret", "encrypted_value", "v2-value"],
-        ["custom_widget_secret", "value", "legacy-value"],
-        ["assistant_configuration", "encrypted_api_key", "assistant-api-key"],
-        ["assistant_configuration", "encrypted_headers", '{"Authorization":"assistant-header"}'],
-      ];
-      for (const [table, column, expected] of values) {
-        const row = restored.query<Record<string, string>, []>(`SELECT "${column}" FROM "${table}"`).get();
-        expect(decryptTarget(row?.[column ?? ""] ?? "")).toBe(expected);
-        const originalRows = before[table] ?? [];
-        const restoredRows = restored
-          .query<Record<string, SqlValue>, []>(`SELECT * FROM "${table}" ORDER BY rowid`)
-          .all();
-        const ciphertextColumns =
-          table === "assistant_configuration" ? ["encrypted_api_key", "encrypted_headers"] : [column];
-        const removeCiphertext = (record: unknown) =>
-          Object.fromEntries(
-            Object.entries(record as Record<string, unknown>).filter(([key]) => !ciphertextColumns.includes(key)),
-          );
-        expect(restoredRows.map(removeCiphertext)).toEqual(originalRows.map(removeCiphertext));
-      }
-      expect(restored.query("PRAGMA foreign_key_check").all()).toEqual([]);
-      expect(restored.query('SELECT * FROM "__drizzle_migrations"').all()).toHaveLength(49);
-      expect(restored.query('SELECT * FROM "__drizzle_migrations" ORDER BY created_at').all()).toEqual(originalLedger);
-    } finally {
-      restored.close();
+test("genuine old49 and current50 exports preserve all 40 families and raw values through target50 reset and sealed reopen", async () => {
+  for (const sourceVersion of [49, 50]) {
+    const directory = freshDirectory();
+    const oldMigrations = old49Migrations(directory);
+    let sourceMigrations = oldMigrations;
+    if (sourceVersion === 50) sourceMigrations = migrations;
+    const seed = new Database(":memory:");
+    migrateFixture(seed, sourceMigrations);
+    const password = populateAllFamilies(seed);
+    if (sourceVersion === 50) populateImportedRuntime(seed);
+    const rows = Object.fromEntries(
+      Object.values(sourceModels).map((table) => [table, seed.query(`SELECT * FROM "${table}" ORDER BY rowid`).all()]),
+    );
+    if (sourceVersion === 50)
+      for (const table of [
+        "homarr_runtime_meta",
+        "homarr_runtime_state",
+        "homarr_runtime_history_stream",
+        "homarr_runtime_history_entry",
+      ])
+        rows[table] = seed.query(`SELECT * FROM "${table}" ORDER BY rowid`).all();
+    seed.close();
+    const rowsPath = join(directory, "synthetic-rows.json");
+    const sourcePath = join(directory, "source.sqlite");
+    const archivePath = join(directory, "legacy-backup.zip");
+    writeFileSync(rowsPath, stringify(rows), { flag: "wx", mode: 0o600 });
+    const fixture = spawnSync(
+      "node",
+      [
+        resolve("packages/api/src/backup-runtime/create-legacy-fixture.mjs"),
+        sourcePath,
+        sourceMigrations,
+        archivePath,
+        rowsPath,
+        String(sourceVersion),
+      ],
+      { env: { PATH: process.env.PATH ?? "/usr/bin:/bin", NODE_ENV: "test" }, encoding: "utf8" },
+    );
+    if (fixture.status !== 0) {
+      const diagnostic: unknown = JSON.parse(fixture.stderr);
+      if (
+        typeof diagnostic === "object" &&
+        diagnostic !== null &&
+        "name" in diagnostic &&
+        typeof diagnostic.name === "string"
+      )
+        throw new Error(
+          `Disposable legacy driver fixture failed: ${diagnostic.name}, ${"code" in diagnostic && typeof diagnostic.code === "string" ? diagnostic.code : "unknown-code"}, ${"phase" in diagnostic && typeof diagnostic.phase === "string" ? diagnostic.phase : "unknown-phase"}`,
+        );
+      throw new Error("Disposable legacy driver fixture failed");
     }
-  });
-  expect(createHash("sha256").update(archive).digest("hex")).toBe(originalArchive);
-  expect(createHash("sha256").update(readFileSync(sourcePath)).digest("hex")).toBe(originalDatabase);
-  expect(readdirSync(copyDirectory)).toEqual([]);
-  console.info(
-    JSON.stringify({
-      evidence: "disposable-current-backup-join",
-      populatedFamilies: Object.keys(inspection.counts).length,
-      sourceRows: Object.values(inspection.counts).reduce((total, count) => total + count, 0),
-      ciphertextColumns: Object.keys(inspection.encryptedFields).length,
-      ledgerEntries: originalLedger.length,
-      sourceArchiveSha256: originalArchive,
-      sourceDatabaseSha256: originalDatabase,
-      originalDigestsUnchanged: true,
-      copyDirectoryEmpty: true,
-    }),
-  );
+    const db = new Database(sourcePath, { readonly: true });
+    const before = Object.fromEntries(
+      Object.values(sourceModels).map((table) => [table, db.query(`SELECT * FROM "${table}" ORDER BY rowid`).all()]),
+    );
+    const originalLedger = db.query('SELECT * FROM "__drizzle_migrations" ORDER BY created_at').all();
+    expect(originalLedger).toHaveLength(sourceVersion);
+    db.close();
+    const archive = readFileSync(archivePath);
+    const originalDatabase = createHash("sha256").update(readFileSync(sourcePath)).digest("hex");
+    const originalArchive = createHash("sha256").update(archive).digest("hex");
+    const copyDirectory = freshDirectory();
+    const dependencies = createSqliteBackupDependencies({
+      temporaryDirectory: copyDirectory,
+      migrationsFolder: migrations,
+      targetKey,
+      authorizeAsync: async () => {},
+    });
+    const inspection = await inspectLegacyBackupAsync(archive, dependencies);
+    expect(Object.keys(inspection.counts)).toHaveLength(40);
+    expect(Object.values(inspection.counts).reduce((total, count) => total + count, 0)).toBe(43);
+    expect(Object.keys(inspection.encryptedFields)).toHaveLength(6);
+    expect(Object.values(inspection.counts).every((count) => count > 0)).toBe(true);
+    expect(inspection.homeBoard).toEqual({ id: "board-1", name: "Preserved board" });
+    expect(JSON.stringify(inspection)).not.toContain(sourceKey);
+    expect(JSON.stringify(parseLegacyArchive(archive))).not.toContain(sourceKey);
+    const resetRuntime = dependencies.engine.resetRuntimeAsync;
+    const createCopy = dependencies.engine.createCopyAsync;
+    let createdCopy: Awaited<ReturnType<typeof createCopy>> | undefined;
+    let resetComplete = false;
+    let sealedAfterReset = false;
+    dependencies.engine.createCopyAsync = async (bytes, signal) => {
+      const copy = await createCopy(bytes, signal);
+      createdCopy = copy;
+      const seal = copy.sealAsync.bind(copy);
+      copy.sealAsync = async () => {
+        expect(resetComplete).toBe(true);
+        sealedAfterReset = true;
+        return seal();
+      };
+      return copy;
+    };
+    dependencies.engine.resetRuntimeAsync = async (copy, signal) => {
+      const actualCreatedCopy = createdCopy;
+      if (actualCreatedCopy === undefined) throw new Error("Required created copy is missing before runtime reset");
+      expect(copy).toBe(actualCreatedCopy);
+      expect(copy.all('SELECT * FROM "session"')).toEqual([]);
+      expect(copy.all('SELECT * FROM "verificationToken"')).toEqual([]);
+      expect(copy.all('SELECT * FROM "serverSetting" WHERE setting_key = ?', ["__onboarding_claim"])).toEqual([]);
+      await resetRuntime(copy, signal);
+      resetComplete = true;
+    };
+    const prepared = await prepareLegacyBackupAsync(archive, dependencies, { selectedBoardId: "board-1" });
+    expect(resetComplete && sealedAfterReset).toBe(true);
+    expect(JSON.stringify(prepared)).not.toContain(sourceKey);
+    prepared.withServerSnapshot(({ bytes }) => {
+      const restored = readPreparedSnapshot(bytes);
+      try {
+        for (const table of Object.values(sourceModels)) {
+          if (
+            [
+              "session",
+              "verificationToken",
+              "integrationSecret",
+              "widget_secret",
+              "custom_widget_v2_secret",
+              "custom_widget_secret",
+              "assistant_configuration",
+              "serverSetting",
+            ].includes(table)
+          )
+            continue;
+          expect(restored.query(`SELECT * FROM "${table}" ORDER BY rowid`).all()).toEqual(before[table] ?? []);
+        }
+        expect(restored.query('SELECT * FROM "session"').all()).toEqual([]);
+        expect(restored.query('SELECT * FROM "verificationToken"').all()).toEqual([]);
+        expect(
+          restored.query('SELECT * FROM "serverSetting" WHERE setting_key = ?').get("__onboarding_claim"),
+        ).toBeNull();
+        expect(
+          restored
+            .query('SELECT * FROM "serverSetting" WHERE setting_key != ? ORDER BY rowid')
+            .all("__onboarding_claim"),
+        ).toEqual(
+          (before.serverSetting as Record<string, SqlValue>[]).filter(
+            (row) => row.setting_key !== "__onboarding_claim",
+          ),
+        );
+        const user = restored.query<{ password: string }, []>('SELECT password FROM "user"').get();
+        expect(user?.password).toBe(password);
+        expect(compareSync("disposable-password", user?.password ?? "")).toBe(true);
+        const values: [string, string, string][] = [
+          ["integrationSecret", "value", "integration-value"],
+          ["widget_secret", "value", "widget-value"],
+          ["custom_widget_v2_secret", "encrypted_value", "v2-value"],
+          ["custom_widget_secret", "value", "legacy-value"],
+          ["assistant_configuration", "encrypted_api_key", "assistant-api-key"],
+          ["assistant_configuration", "encrypted_headers", '{"Authorization":"assistant-header"}'],
+        ];
+        for (const [table, column, expected] of values) {
+          const row = restored.query<Record<string, string>, []>(`SELECT "${column}" FROM "${table}"`).get();
+          expect(decryptTarget(row?.[column ?? ""] ?? "")).toBe(expected);
+          const originalRows = before[table] ?? [];
+          const restoredRows = restored
+            .query<Record<string, SqlValue>, []>(`SELECT * FROM "${table}" ORDER BY rowid`)
+            .all();
+          const ciphertextColumns =
+            table === "assistant_configuration" ? ["encrypted_api_key", "encrypted_headers"] : [column];
+          const removeCiphertext = (record: unknown) =>
+            Object.fromEntries(
+              Object.entries(record as Record<string, unknown>).filter(([key]) => !ciphertextColumns.includes(key)),
+            );
+          expect(restoredRows.map(removeCiphertext)).toEqual(originalRows.map(removeCiphertext));
+        }
+        expect(restored.query("PRAGMA foreign_key_check").all()).toEqual([]);
+        const targetLedger = restored.query('SELECT * FROM "__drizzle_migrations" ORDER BY created_at').all();
+        expect(targetLedger).toHaveLength(50);
+        expect(targetLedger.slice(0, sourceVersion)).toEqual(originalLedger);
+        const journal: { entries: { tag: string; when: number }[] } = JSON.parse(
+          readFileSync(join(migrations, "meta/_journal.json"), "utf8"),
+        );
+        expect(journal.entries[49]?.tag).toBe("0049_robust_gateway");
+        expect(targetLedger[49]).toEqual({
+          id: null,
+          hash: createHash("sha256")
+            .update(readFileSync(join(migrations, "0049_robust_gateway.sql")))
+            .digest("hex"),
+          created_at: journal.entries[49]?.when,
+        });
+        assertResetSnapshot(restored);
+      } finally {
+        restored.close();
+      }
+    });
+    expect(createHash("sha256").update(archive).digest("hex")).toBe(originalArchive);
+    expect(createHash("sha256").update(readFileSync(sourcePath)).digest("hex")).toBe(originalDatabase);
+    expect(readdirSync(copyDirectory)).toEqual([]);
+    if (sourceVersion === 49) {
+      const oldTargetDirectory = freshDirectory();
+      const oldTarget = createSqliteBackupDependencies({
+        temporaryDirectory: oldTargetDirectory,
+        migrationsFolder: oldMigrations,
+        targetKey,
+        authorizeAsync: async () => {},
+      });
+      const resetOldTarget = oldTarget.engine.resetRuntimeAsync;
+      const createOldTargetCopy = oldTarget.engine.createCopyAsync;
+      let oldTargetResetAttempted = false;
+      let oldTargetSealed = false;
+      oldTarget.engine.createCopyAsync = async (bytes, signal) => {
+        const copy = await createOldTargetCopy(bytes, signal);
+        const seal = copy.sealAsync.bind(copy);
+        copy.sealAsync = async () => {
+          oldTargetSealed = true;
+          return seal();
+        };
+        return copy;
+      };
+      oldTarget.engine.resetRuntimeAsync = async (copy, signal) => {
+        expect(copy.all("SELECT hash FROM __drizzle_migrations")).toHaveLength(49);
+        oldTargetResetAttempted = true;
+        await resetOldTarget(copy, signal);
+      };
+      await expect(prepareLegacyBackupAsync(archive, oldTarget)).rejects.toMatchObject({ code: "invalid-database" });
+      expect(oldTargetResetAttempted).toBe(true);
+      expect(oldTargetSealed).toBe(false);
+      expect(readdirSync(oldTargetDirectory)).toEqual([]);
+    }
+    console.info(
+      JSON.stringify({
+        evidence: "disposable-target50-backup-join",
+        populatedFamilies: Object.keys(inspection.counts).length,
+        sourceRows: Object.values(inspection.counts).reduce((total, count) => total + count, 0),
+        ciphertextColumns: Object.keys(inspection.encryptedFields).length,
+        ledgerEntries: originalLedger.length,
+        targetLedgerEntries: 50,
+        sameCopyResetBeforeSeal: resetComplete && sealedAfterReset,
+        sourceArchiveSha256: originalArchive,
+        sourceDatabaseSha256: originalDatabase,
+        originalDigestsUnchanged: true,
+        copyDirectoryEmpty: true,
+      }),
+    );
+  }
 });
 
 test("current ZIP and legacy key-entry archives reject traversal, bombs, wrong dialect, corrupt same-key secrets, invalid board choice and denied access", async () => {
@@ -687,6 +828,45 @@ test("content migration cannot seal a copy containing undecryptable target-key s
     prepareLegacyBackupAsync(archive, { engine: sealFailure, targetKey, authorizeAsync: async () => {} }),
   ).rejects.toMatchObject({ code: "invalid-database" });
   expect(readdirSync(sealingDirectory)).toEqual([]);
+  const resetDirectory = freshDirectory();
+  const resetFailure = engineFixture(resetDirectory);
+  const resetRuntime = resetFailure.resetRuntimeAsync;
+  const createResetCopy = resetFailure.createCopyAsync;
+  let sealed = false;
+  resetFailure.createCopyAsync = async (bytes, signal) => {
+    const copy = await createResetCopy(bytes, signal);
+    const seal = copy.sealAsync.bind(copy);
+    copy.sealAsync = async () => {
+      sealed = true;
+      return seal();
+    };
+    return copy;
+  };
+  resetFailure.resetRuntimeAsync = async (copy, signal) => {
+    await resetRuntime(copy, signal);
+    throw new Error("Synthetic post-reset interruption");
+  };
+  await expect(
+    prepareLegacyBackupAsync(archive, { engine: resetFailure, targetKey, authorizeAsync: async () => {} }),
+  ).rejects.toMatchObject({ code: "invalid-database" });
+  expect(sealed).toBe(false);
+  expect(readdirSync(resetDirectory)).toEqual([]);
+  const cleanupDirectory = freshDirectory();
+  const cleanupFailure = engineFixture(cleanupDirectory);
+  const createCleanupCopy = cleanupFailure.createCopyAsync;
+  cleanupFailure.createCopyAsync = async (bytes, signal) => {
+    const copy = await createCleanupCopy(bytes, signal);
+    const dispose = copy.disposeAsync.bind(copy);
+    copy.disposeAsync = async () => {
+      await dispose();
+      throw new Error("Synthetic post-disposal interruption");
+    };
+    return copy;
+  };
+  await expect(
+    prepareLegacyBackupAsync(archive, { engine: cleanupFailure, targetKey, authorizeAsync: async () => {} }),
+  ).rejects.toMatchObject({ code: "cleanup-failed" });
+  expect(readdirSync(cleanupDirectory)).toEqual([]);
 });
 
 test("a source-scoped Custom JSX secret cannot be prepared with a missing serialized source reference", async () => {

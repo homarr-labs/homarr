@@ -1,0 +1,19 @@
+.header {
+  direction: inherit;
+  position: relative;
+  overflow: hidden;
+  padding: var(--mantine-spacing-xs);
+  padding-left: calc(var(--mantine-spacing-xs) * 2);
+  border-left: 1px solid var(--mantine-color-blue-6);
+  background-color: light-dark(
+    var(--mantine-color-blue-0),
+    color-mix(in oklch, var(--mantine-color-blue-9), transparent 85%)
+  );
+}
+
+:global([dir="rtl"]) .header {
+  padding-left: var(--mantine-spacing-xs);
+  padding-right: calc(var(--mantine-spacing-xs) * 2);
+  border-left: none;
+  border-right: 1px solid var(--mantine-color-blue-6);
+}

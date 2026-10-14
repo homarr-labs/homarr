@@ -1,0 +1,854 @@
+[
+  {
+    "generation": 1,
+    "mode": "openssl-pair",
+    "client": "openssl",
+    "status": "fail"
+  },
+  {
+    "generation": 1,
+    "mode": "root-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "root-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "root-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "pair-ca",
+    "client": "fetch",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 1,
+    "mode": "pair-ca",
+    "client": "https",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 1,
+    "mode": "pair-ca",
+    "client": "axios",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE",
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-context-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-context-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-context-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-context-only",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-context-only",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "bundle-context-only",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "joined-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "joined-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "joined-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "root-first-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "root-first-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 1,
+    "mode": "root-first-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "openssl-pair",
+    "client": "openssl",
+    "status": "fail"
+  },
+  {
+    "generation": 2,
+    "mode": "root-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "root-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "root-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "pair-ca",
+    "client": "fetch",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 2,
+    "mode": "pair-ca",
+    "client": "https",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 2,
+    "mode": "pair-ca",
+    "client": "axios",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE",
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-context-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-context-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-context-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-context-only",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-context-only",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "bundle-context-only",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "joined-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "joined-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "joined-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "root-first-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "root-first-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 2,
+    "mode": "root-first-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "openssl-pair",
+    "client": "openssl",
+    "status": "fail"
+  },
+  {
+    "generation": 3,
+    "mode": "root-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "root-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "root-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "pair-ca",
+    "client": "fetch",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 3,
+    "mode": "pair-ca",
+    "client": "https",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 3,
+    "mode": "pair-ca",
+    "client": "axios",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE",
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-context-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-context-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-context-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-context-only",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-context-only",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "bundle-context-only",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "joined-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "joined-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "joined-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "root-first-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "root-first-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 3,
+    "mode": "root-first-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "openssl-pair",
+    "client": "openssl",
+    "status": "fail"
+  },
+  {
+    "generation": 4,
+    "mode": "root-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "root-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "root-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "pair-ca",
+    "client": "fetch",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 4,
+    "mode": "pair-ca",
+    "client": "https",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 4,
+    "mode": "pair-ca",
+    "client": "axios",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE",
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-context-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-context-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-context-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-context-only",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-context-only",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "bundle-context-only",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "joined-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "joined-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "joined-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "root-first-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "root-first-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 4,
+    "mode": "root-first-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "openssl-pair",
+    "client": "openssl",
+    "status": "fail"
+  },
+  {
+    "generation": 5,
+    "mode": "root-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "root-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "root-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "pair-ca",
+    "client": "fetch",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 5,
+    "mode": "pair-ca",
+    "client": "https",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 5,
+    "mode": "pair-ca",
+    "client": "axios",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE",
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-context-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-context-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-context-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-context-only",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-context-only",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "bundle-context-only",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "joined-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "joined-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "joined-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "root-first-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "root-first-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 5,
+    "mode": "root-first-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "openssl-pair",
+    "client": "openssl",
+    "status": "fail"
+  },
+  {
+    "generation": 6,
+    "mode": "root-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "root-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "root-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "pair-ca",
+    "client": "fetch",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 6,
+    "mode": "pair-ca",
+    "client": "https",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 6,
+    "mode": "pair-ca",
+    "client": "axios",
+    "status": "fail",
+    "codes": [
+      "CERT_SIGNATURE_FAILURE",
+      "CERT_SIGNATURE_FAILURE"
+    ]
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-context-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-context-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-context-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-context-only",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-context-only",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "bundle-context-only",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "joined-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "joined-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "joined-ca",
+    "client": "axios",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "root-first-ca",
+    "client": "fetch",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "root-first-ca",
+    "client": "https",
+    "status": "pass"
+  },
+  {
+    "generation": 6,
+    "mode": "root-first-ca",
+    "client": "axios",
+    "status": "pass"
+  }
+]

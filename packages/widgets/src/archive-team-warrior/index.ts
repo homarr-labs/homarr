@@ -1,19 +1,7 @@
-import { IconArchive } from "@tabler/icons-react";
-
-import { getWidgetIntegrationConfig } from "@homarr/definitions";
-
 import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { definition as rawDefinition } from "./definition";
 
-export const { definition, componentLoader } = createWidgetDefinition("archiveTeamWarrior", {
-  icon: IconArchive,
-  supportsAdvancedFocus: true,
-  ...getWidgetIntegrationConfig("archiveTeamWarrior"),
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      showBroadcastMessage: factory.switch({
-        defaultValue: true,
-      }),
-    }));
-  },
-}).withDynamicImport(() => import("./component"));
+export const { definition, componentLoader } = createWidgetDefinition(
+  "archiveTeamWarrior",
+  rawDefinition,
+).withDynamicImport(() => import("./component"));

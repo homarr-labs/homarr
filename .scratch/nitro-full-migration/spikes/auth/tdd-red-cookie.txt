@@ -1,0 +1,32 @@
+(node:75288) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/spikes/auth/adapter.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[31m✖ AuthFetch discards request-local cookie effects after a late sign-in failure [90m(116.350167ms)[39m[39m
+[34mℹ tests 1[39m
+[34mℹ suites 0[39m
+[34mℹ pass 0[39m
+[34mℹ fail 1[39m
+[34mℹ cancelled 0[39m
+[34mℹ skipped 0[39m
+[34mℹ todo 0[39m
+[34mℹ duration_ms 222.570167[39m
+
+[31m✖ failing tests:[39m
+
+test at .scratch/nitro-full-migration/spikes/auth/auth-fetch.test.mts:9:1
+[31m✖ AuthFetch discards request-local cookie effects after a late sign-in failure [90m(116.350167ms)[39m[39m
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> [90m(file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/[39m.scratch/nitro-full-migration/spikes/auth/auth-fetch.test.mts:37:10[90m)[39m
+  [90m    at async Test.run (node:internal/test_runner/test:1313:7)[39m
+  [90m    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)[39m {
+    generatedMessage: [33mtrue[39m,
+    code: [32m'ERR_ASSERTION'[39m,
+    actual: [33mtrue[39m,
+    expected: [33mfalse[39m,
+    operator: [32m'strictEqual'[39m,
+    diff: [32m'simple'[39m
+  }

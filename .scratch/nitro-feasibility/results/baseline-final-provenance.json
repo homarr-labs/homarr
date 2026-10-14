@@ -1,0 +1,906 @@
+{
+  "observedAtUTC": "2026-10-10T16:24:41.594669+00:00",
+  "container": {
+    "name": "homarr-nitro-fixture-fixture-1",
+    "id": "50866799dc9e7c7b9f3592aff11b7371e771542b382a298cd46e6ba71ac97946",
+    "imageId": "sha256:2b2070a2893c9054939476584cc6d0c84ef66dd426b848599c1b85bfc2503d7b",
+    "state": "running",
+    "healthy": "healthy",
+    "startedAt": "2026-10-10T16:07:09.365514112Z",
+    "entrypoint": [
+      "bun",
+      "--no-env-file"
+    ],
+    "cmd": [
+      ".output/server/index.mjs"
+    ],
+    "uid": "1000:1000",
+    "ports": {
+      "3100/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "3100"
+        }
+      ]
+    },
+    "volumes": [
+      {
+        "name": "homarr-nitro-fixture_fixture-data",
+        "destination": "/app/.fixture-data",
+        "type": "volume"
+      }
+    ]
+  },
+  "image": {
+    "id": "sha256:2b2070a2893c9054939476584cc6d0c84ef66dd426b848599c1b85bfc2503d7b",
+    "os": "linux",
+    "arch": "arm64",
+    "createdAt": "2026-10-10T18:07:02.977622411+02:00",
+    "uncompressedSizeBytes": 238088464,
+    "uncompressedSizeMiB": 227.05885314941406,
+    "compressedSize": null,
+    "compressedSizeStatus": "unavailable; not inferred from Docker local image size or prior base-layer downloads"
+  },
+  "engine": {
+    "os": "linux",
+    "architecture": "aarch64",
+    "version": "29.4.0",
+    "cpuCount": 16
+  },
+  "nativePlatformEvidence": "Docker engine aarch64, image linux/arm64 and executing Bun arm64 agree; no alternate-platform execution or emulation benchmark attempted.",
+  "runtime": {
+    "bun": "1.4.2",
+    "os": "linux",
+    "arch": "arm64"
+  },
+  "buildIds": [
+    "674cf506-623c-4b6d-9c88-2a725e80b909"
+  ],
+  "inputSha256": "8f15f374a6052f23300250d6d3879d19787c4d57eb7683bc0fd97486eca9b183",
+  "outputSha256": "c993123bbb9835cf07c86ed842b22ac975461bfb0c74211dba0bb7ca18800b94",
+  "gitCommitContextOnly": "66e2199f9cd1e4026249c3763413988bab8664c4",
+  "sourceBasis": "staged file bytes, including uncommitted application and packaging changes",
+  "provenanceSha256": "9426d178852f516faafc2eec3ffe4c6a5f0d9fe06e32578838029bb6117749bc",
+  "matchesPreviouslyCapturedProvenance": true,
+  "inputFileCount": 68,
+  "allRecordedInputsMatch": true,
+  "allowlistAddedPaths": [],
+  "allowlistMissingPaths": [],
+  "inputChecks": [
+    {
+      "stagedPath": ".dockerignore",
+      "currentPath": "apps/nitro-experiment/.dockerignore",
+      "existsRegularFile": true,
+      "expectedSha256": "c7a7c71bef84c4af0c117b4030dcb6f011546c7a09715b680227c777b4299c11",
+      "currentSha256": "c7a7c71bef84c4af0c117b4030dcb6f011546c7a09715b680227c777b4299c11",
+      "expectedBytes": 690,
+      "currentBytes": 690,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/nitro.config.ts",
+      "currentPath": "apps/nitro-experiment/nitro.config.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "2e426581224ac001db4675b68db53d3c95042801b8eab8d820ba4e36c2eba642",
+      "currentSha256": "2e426581224ac001db4675b68db53d3c95042801b8eab8d820ba4e36c2eba642",
+      "expectedBytes": 944,
+      "currentBytes": 944,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/package.json",
+      "currentPath": "apps/nitro-experiment/package.json",
+      "existsRegularFile": true,
+      "expectedSha256": "357ec48082b8d370d340e2d331bb4bc0eb28f6d6195eef1a725a8cf4eaec3580",
+      "currentSha256": "357ec48082b8d370d340e2d331bb4bc0eb28f6d6195eef1a725a8cf4eaec3580",
+      "expectedBytes": 1340,
+      "currentBytes": 1340,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/scripts/container/healthcheck.ts",
+      "currentPath": "apps/nitro-experiment/scripts/container/healthcheck.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "6f114139f422c2f10a4eb617a3b0f372f826728dfde85ca452a98b32d58eae4b",
+      "currentSha256": "6f114139f422c2f10a4eb617a3b0f372f826728dfde85ca452a98b32d58eae4b",
+      "expectedBytes": 1088,
+      "currentBytes": 1088,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/scripts/container/package-output.ts",
+      "currentPath": "apps/nitro-experiment/scripts/container/package-output.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "9b9a1ed173fc2e28db78d571cdf4c13fb8e16cf65885e79c64e140c808896944",
+      "currentSha256": "9b9a1ed173fc2e28db78d571cdf4c13fb8e16cf65885e79c64e140c808896944",
+      "expectedBytes": 5003,
+      "currentBytes": 5003,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/scripts/container/run.ts",
+      "currentPath": "apps/nitro-experiment/scripts/container/run.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "87e6890010aae6c43d1444708cbc29248468c14cf824e1bac5dd3c2550f45a54",
+      "currentSha256": "87e6890010aae6c43d1444708cbc29248468c14cf824e1bac5dd3c2550f45a54",
+      "expectedBytes": 4067,
+      "currentBytes": 4067,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/plugins/fixture.ts",
+      "currentPath": "apps/nitro-experiment/server/plugins/fixture.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "0364a5abce5ac670fa09e838aaf6348da658f11917c658c4375bc59a4310efba",
+      "currentSha256": "0364a5abce5ac670fa09e838aaf6348da658f11917c658c4375bc59a4310efba",
+      "expectedBytes": 660,
+      "currentBytes": 660,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/routes/api-docs.ts",
+      "currentPath": "apps/nitro-experiment/server/routes/api-docs.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "115cee33f83cc9975246181bff31f3138171c5d331f5406b7495bb2849a2ad0f",
+      "currentSha256": "115cee33f83cc9975246181bff31f3138171c5d331f5406b7495bb2849a2ad0f",
+      "expectedBytes": 258,
+      "currentBytes": 258,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/routes/openapi.ts",
+      "currentPath": "apps/nitro-experiment/server/routes/openapi.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "81e8d5c56327a3ca5602efb4d7194edb9406a26608edd4495c1c14897afe654a",
+      "currentSha256": "81e8d5c56327a3ca5602efb4d7194edb9406a26608edd4495c1c14897afe654a",
+      "expectedBytes": 258,
+      "currentBytes": 258,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/routes/rest.ts",
+      "currentPath": "apps/nitro-experiment/server/routes/rest.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "b975c2c55b5e70569930377b669ec608769058307a99a9bd2e81d497c725d945",
+      "currentSha256": "b975c2c55b5e70569930377b669ec608769058307a99a9bd2e81d497c725d945",
+      "expectedBytes": 252,
+      "currentBytes": 252,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/routes/rpc.ts",
+      "currentPath": "apps/nitro-experiment/server/routes/rpc.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "474041140f71649ffcbff3563ea1d76704211593b69768b8a3af3f97509cfa27",
+      "currentSha256": "474041140f71649ffcbff3563ea1d76704211593b69768b8a3af3f97509cfa27",
+      "expectedBytes": 575,
+      "currentBytes": 575,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/routes/source-control.ts",
+      "currentPath": "apps/nitro-experiment/server/routes/source-control.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "77f15ce3b5f41eedb95192f04595c7d07dfab8d63e361b5b39f0247b6f6ed470",
+      "currentSha256": "77f15ce3b5f41eedb95192f04595c7d07dfab8d63e361b5b39f0247b6f6ed470",
+      "expectedBytes": 272,
+      "currentBytes": 272,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/server/routes/source.ts",
+      "currentPath": "apps/nitro-experiment/server/routes/source.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "3b30f981ccde66cc8eb5faaa47f1acad540973846159bbc3fd582e8b5c7509f3",
+      "currentSha256": "3b30f981ccde66cc8eb5faaa47f1acad540973846159bbc3fd582e8b5c7509f3",
+      "expectedBytes": 258,
+      "currentBytes": 258,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/app/root.tsx",
+      "currentPath": "apps/nitro-experiment/src/app/root.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "22a572780fbb66b3865156f62ac52d2084102772e8e55b462f2c0d801e6d8a12",
+      "currentSha256": "22a572780fbb66b3865156f62ac52d2084102772e8e55b462f2c0d801e6d8a12",
+      "expectedBytes": 1044,
+      "currentBytes": 1044,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/app/router.tsx",
+      "currentPath": "apps/nitro-experiment/src/app/router.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "e0011a7552adbd46296237703c1fe46430c276c8c28b412001c797802bd082df",
+      "currentSha256": "e0011a7552adbd46296237703c1fe46430c276c8c28b412001c797802bd082df",
+      "expectedBytes": 7796,
+      "currentBytes": 7796,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/app/slots.ts",
+      "currentPath": "apps/nitro-experiment/src/app/slots.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "50fd3a71e41e6cd80bf0bb6715a3e5ed0617ef597c7e8fa1e15836f262b0ebd7",
+      "currentSha256": "50fd3a71e41e6cd80bf0bb6715a3e5ed0617ef597c7e8fa1e15836f262b0ebd7",
+      "expectedBytes": 303,
+      "currentBytes": 303,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/contracts/rpc.ts",
+      "currentPath": "apps/nitro-experiment/src/contracts/rpc.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "d806f93e63eb036f5fdd7b203fb88fcce52640f050c80ae767633382add70141",
+      "currentSha256": "d806f93e63eb036f5fdd7b203fb88fcce52640f050c80ae767633382add70141",
+      "expectedBytes": 1080,
+      "currentBytes": 1080,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/contracts/schemas.ts",
+      "currentPath": "apps/nitro-experiment/src/contracts/schemas.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "c3276f4776cb478b019cc53e910156d0839baca026ccc08c2d1af6c4b93f5572",
+      "currentSha256": "c3276f4776cb478b019cc53e910156d0839baca026ccc08c2d1af6c4b93f5572",
+      "expectedBytes": 7701,
+      "currentBytes": 7701,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/contracts/ui.ts",
+      "currentPath": "apps/nitro-experiment/src/contracts/ui.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "b6302a568e029457cafed4467bf1ff1c668544ad0982c58401b79d39fc1224cc",
+      "currentSha256": "b6302a568e029457cafed4467bf1ff1c668544ad0982c58401b79d39fc1224cc",
+      "expectedBytes": 1092,
+      "currentBytes": 1092,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/entry-client.tsx",
+      "currentPath": "apps/nitro-experiment/src/entry-client.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "514bfc6b0491de535535924e33c1684e880b0b9d7af4ae61f2d12ad47fbba902",
+      "currentSha256": "514bfc6b0491de535535924e33c1684e880b0b9d7af4ae61f2d12ad47fbba902",
+      "expectedBytes": 135,
+      "currentBytes": 135,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/entry-server.tsx",
+      "currentPath": "apps/nitro-experiment/src/entry-server.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "55ccdfa705282a17ffe8c0e88be3dbace1a72367315369e3bd3010e4cc854f21",
+      "currentSha256": "55ccdfa705282a17ffe8c0e88be3dbace1a72367315369e3bd3010e4cc854f21",
+      "expectedBytes": 421,
+      "currentBytes": 421,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/api-docs/api-docs.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/api-docs/api-docs.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "61fa1dbca6f0cd5384548223072c1c722af1f72a13ac6dab6f411a52c81af7e4",
+      "currentSha256": "61fa1dbca6f0cd5384548223072c1c722af1f72a13ac6dab6f411a52c81af7e4",
+      "expectedBytes": 5747,
+      "currentBytes": 5747,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/api-docs/document.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/api-docs/document.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "3302cb8d64c1ed8aac8abe19be63a4d45f6c94844de9f8d2fc78e7f6151ea1be",
+      "currentSha256": "3302cb8d64c1ed8aac8abe19be63a4d45f6c94844de9f8d2fc78e7f6151ea1be",
+      "expectedBytes": 2073,
+      "currentBytes": 2073,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/api-docs/reference.ts",
+      "currentPath": "apps/nitro-experiment/src/features/api-docs/reference.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "aecf314c386e7dfb949661ff068db618ebf267ad464de82006a0cf3104f723bb",
+      "currentSha256": "aecf314c386e7dfb949661ff068db618ebf267ad464de82006a0cf3104f723bb",
+      "expectedBytes": 1217,
+      "currentBytes": 1217,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/editor/board-editor.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/editor/board-editor.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "a94cdcf79d84dfdb5731cb2bf4a473f2f8baa65c2e0c48a1a5a120b96678fdc9",
+      "currentSha256": "a94cdcf79d84dfdb5731cb2bf4a473f2f8baa65c2e0c48a1a5a120b96678fdc9",
+      "expectedBytes": 17766,
+      "currentBytes": 17766,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/editor/draft.ts",
+      "currentPath": "apps/nitro-experiment/src/features/editor/draft.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "df3cde6b74a3c8f9f8d2df5516a67a6ac79edf6842aad8c87f9e6cda6873d2d7",
+      "currentSha256": "df3cde6b74a3c8f9f8d2df5516a67a6ac79edf6842aad8c87f9e6cda6873d2d7",
+      "expectedBytes": 1320,
+      "currentBytes": 1320,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/session/session-controls.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/session/session-controls.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "fcff3a6b0354ac542e24009293b3e471b68ac3e616f1cb830844e9781a9f04af",
+      "currentSha256": "fcff3a6b0354ac542e24009293b3e471b68ac3e616f1cb830844e9781a9f04af",
+      "expectedBytes": 6249,
+      "currentBytes": 6249,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/session/session-transition.ts",
+      "currentPath": "apps/nitro-experiment/src/features/session/session-transition.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "0724611b5f6d150dc69c20337d6aa5cb2544da3045cf005f215834f11507baf1",
+      "currentSha256": "0724611b5f6d150dc69c20337d6aa5cb2544da3045cf005f215834f11507baf1",
+      "expectedBytes": 3231,
+      "currentBytes": 3231,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/viewer/board-viewer.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/viewer/board-viewer.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "d83c3a9459ba18776e21c73983469f7c68b40fa259cb95a6e9aca1949017b6fb",
+      "currentSha256": "d83c3a9459ba18776e21c73983469f7c68b40fa259cb95a6e9aca1949017b6fb",
+      "expectedBytes": 4009,
+      "currentBytes": 4009,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/viewer/document-state.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/viewer/document-state.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "d6fb13601244d9d6527144b11509fda545190f432d38dbeb9d7eeceba1205e4d",
+      "currentSha256": "d6fb13601244d9d6527144b11509fda545190f432d38dbeb9d7eeceba1205e4d",
+      "expectedBytes": 3358,
+      "currentBytes": 3358,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/viewer/serialized-state.ts",
+      "currentPath": "apps/nitro-experiment/src/features/viewer/serialized-state.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "86aadb69ae8d8d94faef78dc1c18a8c963960e169bfb95f41e98ac490eed342a",
+      "currentSha256": "86aadb69ae8d8d94faef78dc1c18a8c963960e169bfb95f41e98ac490eed342a",
+      "expectedBytes": 785,
+      "currentBytes": 785,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/widget/access.ts",
+      "currentPath": "apps/nitro-experiment/src/features/widget/access.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "8baf4af8525f8d161520e1a0c5a25b42c8684fec13e11c30389575dabd1443f2",
+      "currentSha256": "8baf4af8525f8d161520e1a0c5a25b42c8684fec13e11c30389575dabd1443f2",
+      "expectedBytes": 950,
+      "currentBytes": 950,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/widget/fixture-widget.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/widget/fixture-widget.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "f05c0d0851df0c33a96a66c5b7a7fac8aeaff92f4eccec47ad153e6740a83541",
+      "currentSha256": "f05c0d0851df0c33a96a66c5b7a7fac8aeaff92f4eccec47ad153e6740a83541",
+      "expectedBytes": 4325,
+      "currentBytes": 4325,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/features/widget/source-controls.tsx",
+      "currentPath": "apps/nitro-experiment/src/features/widget/source-controls.tsx",
+      "existsRegularFile": true,
+      "expectedSha256": "d20cb80e8bef261a5dd3688d6ec61bc51ba34c971601251b8227f6ac4c6186e9",
+      "currentSha256": "d20cb80e8bef261a5dd3688d6ec61bc51ba34c971601251b8227f6ac4c6186e9",
+      "expectedBytes": 5293,
+      "currentBytes": 5293,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/access/guards.ts",
+      "currentPath": "apps/nitro-experiment/src/server/access/guards.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "1aa9102f73c14d164ba9fbf2977ffbb8350a3b55da8ba8cd405a19153c41726c",
+      "currentSha256": "1aa9102f73c14d164ba9fbf2977ffbb8350a3b55da8ba8cd405a19153c41726c",
+      "expectedBytes": 1604,
+      "currentBytes": 1604,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/access/local-request.ts",
+      "currentPath": "apps/nitro-experiment/src/server/access/local-request.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "0be4d46f1301a7ed125aae148897d646c3d636d20f955af43d210270d7f02e76",
+      "currentSha256": "0be4d46f1301a7ed125aae148897d646c3d636d20f955af43d210270d7f02e76",
+      "expectedBytes": 1542,
+      "currentBytes": 1542,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/board-read.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/board-read.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "5ce8f233c76cf6794fd372a0efc846dcce5a99feae8f9d68a671e0db1d8bdd43",
+      "currentSha256": "5ce8f233c76cf6794fd372a0efc846dcce5a99feae8f9d68a671e0db1d8bdd43",
+      "expectedBytes": 1263,
+      "currentBytes": 1263,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/board-save.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/board-save.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "61acb4fb9b9ee2ba4be92ebe50cab8ed98c536943d9b2d8e5257f5f85dd9c29c",
+      "currentSha256": "61acb4fb9b9ee2ba4be92ebe50cab8ed98c536943d9b2d8e5257f5f85dd9c29c",
+      "expectedBytes": 198,
+      "currentBytes": 198,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/client.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/client.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "348b5669cb392199cfcc9646554168102c0e6df255ffde5fa6e6a4c2cba206b1",
+      "currentSha256": "348b5669cb392199cfcc9646554168102c0e6df255ffde5fa6e6a4c2cba206b1",
+      "expectedBytes": 675,
+      "currentBytes": 675,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/implementer.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/implementer.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "a79d3bb17093672be4cf558ebb3919bf644326bf9d680b133897192a3eab0be9",
+      "currentSha256": "a79d3bb17093672be4cf558ebb3919bf644326bf9d680b133897192a3eab0be9",
+      "expectedBytes": 223,
+      "currentBytes": 223,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/root.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/root.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "8d3cc531558a5931be54e43d8593fdf500f30b6c57f8bc23ce859c4e0efcafe8",
+      "currentSha256": "8d3cc531558a5931be54e43d8593fdf500f30b6c57f8bc23ce859c4e0efcafe8",
+      "expectedBytes": 712,
+      "currentBytes": 712,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/session.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/session.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "b9cc2a49c699ae3e4109e7db05854ab93be240967a6f3d89aa59f60f7cd97654",
+      "currentSha256": "b9cc2a49c699ae3e4109e7db05854ab93be240967a6f3d89aa59f60f7cd97654",
+      "expectedBytes": 661,
+      "currentBytes": 661,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/api/widget.ts",
+      "currentPath": "apps/nitro-experiment/src/server/api/widget.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "6aad83267464ad964b34ddfa7a57712a2b016eaacd3c9ce57e6eee88260bb4e6",
+      "currentSha256": "6aad83267464ad964b34ddfa7a57712a2b016eaacd3c9ce57e6eee88260bb4e6",
+      "expectedBytes": 362,
+      "currentBytes": 362,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/board-edit/service.ts",
+      "currentPath": "apps/nitro-experiment/src/server/board-edit/service.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "6bbf2c59a2b9c8a605d883c20f3f3d1c052a63912fc4156475c2ffb5e34baa32",
+      "currentSha256": "6bbf2c59a2b9c8a605d883c20f3f3d1c052a63912fc4156475c2ffb5e34baa32",
+      "expectedBytes": 1607,
+      "currentBytes": 1607,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/context/config.ts",
+      "currentPath": "apps/nitro-experiment/src/server/context/config.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "0697ed754f94e6a8cfaac5a30e05d838e464ed2b7cb8e088fefa74f5ab665d50",
+      "currentSha256": "0697ed754f94e6a8cfaac5a30e05d838e464ed2b7cb8e088fefa74f5ab665d50",
+      "expectedBytes": 2013,
+      "currentBytes": 2013,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/context/http.ts",
+      "currentPath": "apps/nitro-experiment/src/server/context/http.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "b59749f6eb12e143eb929d52faae81c2ae143826667cbc50dd8243c5664d3d7e",
+      "currentSha256": "b59749f6eb12e143eb929d52faae81c2ae143826667cbc50dd8243c5664d3d7e",
+      "expectedBytes": 1303,
+      "currentBytes": 1303,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/context/request.ts",
+      "currentPath": "apps/nitro-experiment/src/server/context/request.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "9c93813c7044e52d7898338cc49ecdd82cced4a9697c78cac941d3e453bfc655",
+      "currentSha256": "9c93813c7044e52d7898338cc49ecdd82cced4a9697c78cac941d3e453bfc655",
+      "expectedBytes": 991,
+      "currentBytes": 991,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/database/lifecycle.ts",
+      "currentPath": "apps/nitro-experiment/src/server/database/lifecycle.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "07e4d2bccc40a65cad55cf837b1570d9919d00f1d98ddc3d1a7b3d6eab910566",
+      "currentSha256": "07e4d2bccc40a65cad55cf837b1570d9919d00f1d98ddc3d1a7b3d6eab910566",
+      "expectedBytes": 1060,
+      "currentBytes": 1060,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/database/repository.ts",
+      "currentPath": "apps/nitro-experiment/src/server/database/repository.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "db434b905978740a858a6fd797189629c87a6707236661b6c933bfc0f5edc109",
+      "currentSha256": "db434b905978740a858a6fd797189629c87a6707236661b6c933bfc0f5edc109",
+      "expectedBytes": 5041,
+      "currentBytes": 5041,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/render/cache.ts",
+      "currentPath": "apps/nitro-experiment/src/server/render/cache.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "f6899518c308c532143c4d7e4aca86aa6e09f325df6185f2c85b60bf3d7d145b",
+      "currentSha256": "f6899518c308c532143c4d7e4aca86aa6e09f325df6185f2c85b60bf3d7d145b",
+      "expectedBytes": 2651,
+      "currentBytes": 2651,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/render/handler.ts",
+      "currentPath": "apps/nitro-experiment/src/server/render/handler.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "72e0ace9a3997f45f09e3487abc31d00ea79f75562c59b5f9b0b87f25046f43a",
+      "currentSha256": "72e0ace9a3997f45f09e3487abc31d00ea79f75562c59b5f9b0b87f25046f43a",
+      "expectedBytes": 6512,
+      "currentBytes": 6512,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/rest/document.ts",
+      "currentPath": "apps/nitro-experiment/src/server/rest/document.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "dcc376a162e3da8a665e4eb55406dcc4331b8bbadf14cc82941d493f7d8490e0",
+      "currentSha256": "dcc376a162e3da8a665e4eb55406dcc4331b8bbadf14cc82941d493f7d8490e0",
+      "expectedBytes": 3476,
+      "currentBytes": 3476,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/rest/handlers.ts",
+      "currentPath": "apps/nitro-experiment/src/server/rest/handlers.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "8ee847eb4b39f7716b6a3bdfe03bc8578a011684a455a9810c38d9bff190cd40",
+      "currentSha256": "8ee847eb4b39f7716b6a3bdfe03bc8578a011684a455a9810c38d9bff190cd40",
+      "expectedBytes": 2332,
+      "currentBytes": 2332,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/rest/router.ts",
+      "currentPath": "apps/nitro-experiment/src/server/rest/router.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "a8c6f5a6006b10e6256e5cd2017e194f2694db5f3777bf5c255a3a7720770f57",
+      "currentSha256": "a8c6f5a6006b10e6256e5cd2017e194f2694db5f3777bf5c255a3a7720770f57",
+      "expectedBytes": 4085,
+      "currentBytes": 4085,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/session/service.ts",
+      "currentPath": "apps/nitro-experiment/src/server/session/service.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "4b2e27c0a48e699807ed63eb6d485787167123aedefb35374b56bbfcced0fc95",
+      "currentSha256": "4b2e27c0a48e699807ed63eb6d485787167123aedefb35374b56bbfcced0fc95",
+      "expectedBytes": 6412,
+      "currentBytes": 6412,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/widget/body.ts",
+      "currentPath": "apps/nitro-experiment/src/server/widget/body.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "813ca66864d465eb859fa5d06fea91efd2baf6c5c9e7f814633ea5381e4a9a3d",
+      "currentSha256": "813ca66864d465eb859fa5d06fea91efd2baf6c5c9e7f814633ea5381e4a9a3d",
+      "expectedBytes": 1770,
+      "currentBytes": 1770,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/widget/handlers.ts",
+      "currentPath": "apps/nitro-experiment/src/server/widget/handlers.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "6f68c165f5eb83925c9e7fcd07923f6ccab3d7e8e1eb17275a34d23206977e33",
+      "currentSha256": "6f68c165f5eb83925c9e7fcd07923f6ccab3d7e8e1eb17275a34d23206977e33",
+      "expectedBytes": 2194,
+      "currentBytes": 2194,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/widget/service.ts",
+      "currentPath": "apps/nitro-experiment/src/server/widget/service.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "bb86149f0f496ae3588407e1e225f4e9c563346b278443492d19664d0edc6d76",
+      "currentSha256": "bb86149f0f496ae3588407e1e225f4e9c563346b278443492d19664d0edc6d76",
+      "expectedBytes": 7444,
+      "currentBytes": 7444,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/src/server/widget/source.ts",
+      "currentPath": "apps/nitro-experiment/src/server/widget/source.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "c0239babe772846b80f22f3c68979d2c40ef8d014cc34d9cd23759614362f63e",
+      "currentSha256": "c0239babe772846b80f22f3c68979d2c40ef8d014cc34d9cd23759614362f63e",
+      "expectedBytes": 3361,
+      "currentBytes": 3361,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/tsconfig.json",
+      "currentPath": "apps/nitro-experiment/tsconfig.json",
+      "existsRegularFile": true,
+      "expectedSha256": "3736aaf923ab1cb4e1f29f4e58693dc9db27bbd8c6256cc5e801938bcdb98501",
+      "currentSha256": "3736aaf923ab1cb4e1f29f4e58693dc9db27bbd8c6256cc5e801938bcdb98501",
+      "expectedBytes": 496,
+      "currentBytes": 496,
+      "matches": true
+    },
+    {
+      "stagedPath": "apps/nitro-experiment/vite.config.ts",
+      "currentPath": "apps/nitro-experiment/vite.config.ts",
+      "existsRegularFile": true,
+      "expectedSha256": "4c21ec08c3b80177594178a56fc9ff8292f2209a01e6f95119e649e3d31a418e",
+      "currentSha256": "4c21ec08c3b80177594178a56fc9ff8292f2209a01e6f95119e649e3d31a418e",
+      "expectedBytes": 585,
+      "currentBytes": 585,
+      "matches": true
+    },
+    {
+      "stagedPath": "bun.lock",
+      "currentPath": "bun.lock",
+      "existsRegularFile": true,
+      "expectedSha256": "3e420169824100ccb4a930f829f8832cead8932fa2c138973ae5cc3b8f6bb210",
+      "currentSha256": "3e420169824100ccb4a930f829f8832cead8932fa2c138973ae5cc3b8f6bb210",
+      "expectedBytes": 686062,
+      "currentBytes": 686062,
+      "matches": true
+    },
+    {
+      "stagedPath": "Dockerfile",
+      "currentPath": "apps/nitro-experiment/Dockerfile",
+      "existsRegularFile": true,
+      "expectedSha256": "1007d931bb002b23ae584370154a1a7351e0ed62c31a8849557c57f895da32a8",
+      "currentSha256": "1007d931bb002b23ae584370154a1a7351e0ed62c31a8849557c57f895da32a8",
+      "expectedBytes": 1349,
+      "currentBytes": 1349,
+      "matches": true
+    },
+    {
+      "stagedPath": "package.json",
+      "currentPath": "package.json",
+      "existsRegularFile": true,
+      "expectedSha256": "166ada8cbc7c82509baa43b7384b388e91d1772363f9d9eca85f8f5eef590977",
+      "currentSha256": "166ada8cbc7c82509baa43b7384b388e91d1772363f9d9eca85f8f5eef590977",
+      "expectedBytes": 16394,
+      "currentBytes": 16394,
+      "matches": true
+    },
+    {
+      "stagedPath": "patches/@types__node-unifi.patch",
+      "currentPath": "patches/@types__node-unifi.patch",
+      "existsRegularFile": true,
+      "expectedSha256": "5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5",
+      "currentSha256": "5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5",
+      "expectedBytes": 1328,
+      "currentBytes": 1328,
+      "matches": true
+    },
+    {
+      "stagedPath": "patches/dns-caching.patch",
+      "currentPath": "patches/dns-caching.patch",
+      "existsRegularFile": true,
+      "expectedSha256": "318202089fc2269311563ab964016aee8144e8f228dee846b26c67556baa80c4",
+      "currentSha256": "318202089fc2269311563ab964016aee8144e8f228dee846b26c67556baa80c4",
+      "expectedBytes": 187,
+      "currentBytes": 187,
+      "matches": true
+    },
+    {
+      "stagedPath": "patches/mantine-datatable@9.3.1.patch",
+      "currentPath": "patches/mantine-datatable@9.3.1.patch",
+      "existsRegularFile": true,
+      "expectedSha256": "8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254",
+      "currentSha256": "8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254",
+      "expectedBytes": 225355,
+      "currentBytes": 225355,
+      "matches": true
+    },
+    {
+      "stagedPath": "patches/trpc-to-openapi.patch",
+      "currentPath": "patches/trpc-to-openapi.patch",
+      "existsRegularFile": true,
+      "expectedSha256": "8d283209f305edbcee7f0ba3834d693afa36b4e6340173ce14075ee170e05355",
+      "currentSha256": "8d283209f305edbcee7f0ba3834d693afa36b4e6340173ce14075ee170e05355",
+      "expectedBytes": 384,
+      "currentBytes": 384,
+      "matches": true
+    }
+  ],
+  "allRecordedOutputFilesMatch": true,
+  "outputChecks": [
+    {
+      "path": "nitro.json",
+      "matches": true
+    },
+    {
+      "path": "public/assets/entry-client-BG7JPBsR.css",
+      "matches": true
+    },
+    {
+      "path": "public/assets/entry-client-BLjbfIY8.js",
+      "matches": true
+    },
+    {
+      "path": "public/assets/index-BG7JPBsR.css",
+      "matches": true
+    },
+    {
+      "path": "server/_chunks/ssr-renderer.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@floating-ui/core+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@floating-ui/dom+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@floating-ui/react+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@mantine/core+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@orpc/client+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@orpc/openapi+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@orpc/tanstack-query+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@tanstack/react-router+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/@tanstack/router-core+[...].mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/db0.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/h3+srvx.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/hookable.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/openapi-spec__downgrader.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/orpc__contract.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/orpc__json-schema.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/orpc__zod+zod.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/react-dom+scheduler.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/scule.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/tanstack__history.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/tanstack__query-core.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/tanstack__react-query.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/ufo.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_libs/zod.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_runtime.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/_ssr/ssr.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/index.mjs",
+      "matches": true
+    },
+    {
+      "path": "server/node_modules/tslib/modules/index.js",
+      "matches": true
+    },
+    {
+      "path": "server/node_modules/tslib/modules/package.json",
+      "matches": true
+    },
+    {
+      "path": "server/node_modules/tslib/package.json",
+      "matches": true
+    },
+    {
+      "path": "server/node_modules/tslib/tslib.js",
+      "matches": true
+    },
+    {
+      "path": "server/package.json",
+      "matches": true
+    }
+  ],
+  "excludedLintConfig": {
+    "path": "apps/nitro-experiment/.oxlintrc.json",
+    "exists": true,
+    "inBuildProvenance": false,
+    "sha256": "1f5ddf0165a84bbbf7d757978cc14aeda412ee91ae1eeb40be30de8ce0127b92",
+    "basis": "Current local lint configuration checked, not baked image input. Its inherited root lint configuration is also not baked."
+  },
+  "limitations": "File hash consistency is not feature acceptance, race/restart verification or a reproducible clean Git commit; source remains uncommitted. Runtime output reads exclude fixture DB, environment, cookies and HTTP actions."
+}

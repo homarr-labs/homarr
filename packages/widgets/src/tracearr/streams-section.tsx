@@ -1,9 +1,8 @@
 import { Badge, Box, Group, Paper, Progress, Stack, Text, Tooltip } from "@mantine/core";
 import { IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
 
-import { formatDuration } from "@homarr/common";
 import type { TracearrStream } from "@homarr/integrations/types";
-import { useI18n } from "@homarr/translation/client";
+import type { TracearrViewDurationProps } from "./native-view-types";
 
 import type { SourcedTracearrItem } from "./source";
 
@@ -14,14 +13,14 @@ export function StreamsList({
   width,
   showSource,
   transparent = false,
+  t,
+  formatDuration,
 }: {
   streams: SourcedTracearrStream[];
   width: number;
   showSource: boolean;
   transparent?: boolean;
-}) {
-  const t = useI18n("widget.tracearr");
-
+} & TracearrViewDurationProps) {
   if (streams.length === 0) {
     return (
       <Text c="dimmed" ta="center" size="sm">
@@ -39,6 +38,8 @@ export function StreamsList({
           compact={width < 300}
           showSource={showSource}
           transparent={transparent}
+          t={t}
+          formatDuration={formatDuration}
         />
       ))}
     </Stack>
@@ -50,13 +51,14 @@ function StreamCard({
   compact,
   showSource,
   transparent,
+  t,
+  formatDuration,
 }: {
   stream: SourcedTracearrStream;
   compact: boolean;
   showSource: boolean;
   transparent: boolean;
-}) {
-  const t = useI18n("widget.tracearr");
+} & TracearrViewDurationProps) {
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
 

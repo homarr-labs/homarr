@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Cache-Control: no-store
+Content-Type: text/html; charset=UTF-8
+X-Fixture-Render-Cache: miss
+X-Fixture-Render-Count: 1
+X-Fixture-Render-Entries: 1
+X-Fixture-Render-Bytes: 23163
+X-Fixture-Render-In-Flight: 0
+X-Fixture-Revision: 1
+X-Fixture-Widget-Generation: 1
+Date: Sat, 10 Oct 2026 15:59:11 GMT
+Content-Length: 16839
+

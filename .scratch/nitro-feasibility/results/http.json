@@ -1,0 +1,199 @@
+{
+  "observations": [
+    {
+      "name": "populated coherent HTML/bootstrap cache reuse",
+      "passed": true,
+      "first": {
+        "cache-control": "no-store",
+        "x-fixture-render-bytes": "23163",
+        "x-fixture-render-cache": "miss",
+        "x-fixture-render-count": "1",
+        "x-fixture-render-entries": "1",
+        "x-fixture-render-in-flight": "0",
+        "x-fixture-revision": "1",
+        "x-fixture-widget-generation": "1"
+      },
+      "second": {
+        "cache-control": "no-store",
+        "x-fixture-render-bytes": "23163",
+        "x-fixture-render-cache": "hit",
+        "x-fixture-render-count": "1",
+        "x-fixture-render-entries": "1",
+        "x-fixture-render-in-flight": "0",
+        "x-fixture-revision": "1",
+        "x-fixture-widget-generation": "1"
+      },
+      "bytes": 16839,
+      "sha256": "10fceb60cdb7839543637f92ee494e448038cdceea488e074adbf123b81e649a",
+      "buildId": "674cf506-623c-4b6d-9c88-2a725e80b909"
+    },
+    {
+      "name": "bootstrap snapshot equality",
+      "passed": true
+    },
+    {
+      "name": "anonymous/boards/private",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "anonymous/api/boards/private",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "anonymoustyped-denial",
+      "passed": true
+    },
+    {
+      "name": "anonymoustyped-denial",
+      "passed": true
+    },
+    {
+      "name": "owner private sanitized projection",
+      "passed": true
+    },
+    {
+      "name": "owner private warm hit",
+      "passed": true
+    },
+    {
+      "name": "owner mounted REST",
+      "passed": true
+    },
+    {
+      "name": "viewer after warm private/boards/private",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "viewer after warm private/api/boards/private",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "viewer after warm privatetyped-denial",
+      "passed": true
+    },
+    {
+      "name": "viewer after warm privatetyped-denial",
+      "passed": true
+    },
+    {
+      "name": "viewer save denied",
+      "passed": true
+    },
+    {
+      "name": "logout after warm private/boards/private",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "logout after warm private/api/boards/private",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "logout after warm privatetyped-denial",
+      "passed": true
+    },
+    {
+      "name": "logout after warm privatetyped-denial",
+      "passed": true
+    },
+    {
+      "name": "missing Origin",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "foreign Origin",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "foreign Host",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "read method mutation",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "name": "foreign read Origin",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "invalid REST /api/boards/unknown",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "name": "invalid REST /api/boards/public?extra=1",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "name": "OpenAPI exact executable surface",
+      "passed": true,
+      "version": "3.1.0",
+      "paths": [
+        "/boards/{boardId}"
+      ]
+    },
+    {
+      "name": "/api-docs HEAD",
+      "passed": true
+    },
+    {
+      "name": "/api-docs POST",
+      "passed": true
+    },
+    {
+      "name": "/openapi.json HEAD",
+      "passed": true
+    },
+    {
+      "name": "/openapi.json POST",
+      "passed": true
+    },
+    {
+      "name": "docs CSP static",
+      "passed": true
+    },
+    {
+      "name": "HTTP source healthy 73",
+      "passed": true,
+      "generation": 3,
+      "observedAt": "2026-10-10T16:07:21.322Z"
+    },
+    {
+      "name": "source error last good stale",
+      "passed": true,
+      "error": "source-error"
+    },
+    {
+      "name": "750ms upstream deadline",
+      "passed": true,
+      "elapsedMs": 761.463666,
+      "error": "timeout"
+    },
+    {
+      "name": "mounted atomic CAS exactly one commit/conflict",
+      "passed": true,
+      "outcomes": [
+        "saved",
+        "CONFLICT"
+      ]
+    },
+    {
+      "name": "save HTML unchanged build",
+      "passed": true,
+      "revision": 2,
+      "buildId": "674cf506-623c-4b6d-9c88-2a725e80b909"
+    }
+  ]
+}

@@ -1,23 +1,6 @@
-import { IconDeviceCctv } from "@tabler/icons-react";
-
 import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { definition as videoDefinition } from "./definition";
 
-export const { definition, componentLoader } = createWidgetDefinition("video", {
-  supportsAdvancedFocus: false,
-  icon: IconDeviceCctv,
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      feedUrl: factory.text({
-        defaultValue: "",
-      }),
-      hasAutoPlay: factory.switch({
-        withDescription: true,
-      }),
-      isMuted: factory.switch({
-        defaultValue: true,
-      }),
-      hasControls: factory.switch(),
-    }));
-  },
-}).withDynamicImport(() => import("./component"));
+export const { definition, componentLoader } = createWidgetDefinition("video", videoDefinition).withDynamicImport(
+  () => import("./component"),
+);

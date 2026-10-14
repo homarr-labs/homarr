@@ -1,16 +1,12 @@
-import { Headers } from "undici";
-
-import { ResponseError } from "@homarr/common/server";
 import { getIntegrationHttpAuthDefinition } from "@homarr/definitions";
-import {
-  createAxiosCertificateInstanceAsync,
-  fetchWithTrustedCertificatesAsync,
-} from "@homarr/core/infrastructure/http";
 
 import { Integration } from "../base/integration";
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import type { IntegrationHttpAuthentication } from "../http-auth";
 import { resolveDeclaredHttpAuthentication } from "../http-auth";
+import { getIntegrationRuntimeResources, requireIntegrationRuntimeResources } from "../runtime/context";
+import { createStatsFetchContext } from "../runtime/stats-transport";
+import { withIntegrationTestingAsync } from "../runtime/testing";
 import type { StatsProvider } from "./types";
 import type { StatsFetchContext } from "./types";
 
@@ -23,18 +19,14 @@ export class StatsIntegration extends Integration {
   }
 
   public override async getHttpAuthenticationAsync() {
+    getIntegrationRuntimeResources()?.context.signal.throwIfAborted();
     if (this.integration.kind && getIntegrationHttpAuthDefinition(this.integration.kind).type !== "adapter")
       return await super.getHttpAuthenticationAsync();
-    if (this.provider.getHttpAuthenticationAsync) {
-      const signal = AbortSignal.timeout(15_000);
-      return await this.provider.getHttpAuthenticationAsync({
-        signal,
-        url: new URL(this.integration.url),
-        secret: (kind) => this.getSecretValue(kind),
-        hasSecret: (kind) => this.hasSecretValue(kind),
-        requestAsync: this.createRequestAsync(signal, undefined, undefined, true),
-        requestResponseAsync: this.createResponseRequestAsync(signal),
-      });
+    const getAuthenticationAsync = this.provider.getHttpAuthenticationAsync;
+    if (getAuthenticationAsync) {
+      return await this.withContextAsync(AbortSignal.timeout(15_000), undefined, undefined, (context) =>
+        getAuthenticationAsync.call(this.provider, context),
+      );
     }
     if (!this.provider.getHttpAuthentication) return await super.getHttpAuthenticationAsync();
     return this.provider.getHttpAuthentication({
@@ -44,82 +36,51 @@ export class StatsIntegration extends Integration {
   }
 
   async getStatsAsync(signal = AbortSignal.timeout(30_000), testing?: IntegrationTestingInput) {
-    const definition = this.integration.kind ? getIntegrationHttpAuthDefinition(this.integration.kind) : undefined;
-    let authentication: IntegrationHttpAuthentication | undefined;
-    if (definition && definition.type !== "adapter") {
-      authentication = resolveDeclaredHttpAuthentication(this.integration, definition);
-    }
-    return await this.provider.fetchAsync({
+    return await this.withContextAsync(
       signal,
-      url: new URL(this.integration.url),
-      secret: (kind) => this.getSecretValue(kind),
-      hasSecret: (kind) => this.hasSecretValue(kind),
-      requestAsync: this.createRequestAsync(signal, testing, authentication),
-      requestResponseAsync: this.createResponseRequestAsync(signal, testing),
-    });
+      testing,
+      () => {
+        const definition = this.integration.kind ? getIntegrationHttpAuthDefinition(this.integration.kind) : undefined;
+        return definition && definition.type !== "adapter"
+          ? resolveDeclaredHttpAuthentication(this.integration, definition)
+          : undefined;
+      },
+      (context) => this.provider.fetchAsync(context),
+    );
   }
 
-  private createResponseRequestAsync(
+  private async withContextAsync<T>(
     signal: AbortSignal,
-    testing?: IntegrationTestingInput,
-  ): StatsFetchContext["requestResponseAsync"] {
-    return async (path, init) => {
-      try {
-        const fetchAsync = testing?.fetchAsync ?? fetchWithTrustedCertificatesAsync;
-        const response = await fetchAsync(this.url(path), { ...init, signal, redirect: "error" });
-        // Login bodies can be empty or contain sensitive error details. Do not read them.
-        await response.body?.cancel();
-        let headerBytes = 0;
-        for (const [name, value] of response.headers) {
-          headerBytes += Buffer.byteLength(name) + Buffer.byteLength(value);
-          if (headerBytes > 16_384) throw new Error("Response headers are too large");
-        }
-        return { status: response.status, headers: response.headers };
-      } catch {
-        // Fetch errors may retain the password body or session cookies in their cause.
-        throw new Error("Stats authentication request failed");
-      }
+    testing: IntegrationTestingInput | undefined,
+    authentication: (() => IntegrationHttpAuthentication | undefined) | undefined,
+    operation: (context: StatsFetchContext) => Promise<T>,
+  ) {
+    const resources = getIntegrationRuntimeResources();
+    const operationSignal = resources ? AbortSignal.any([signal, resources.context.signal]) : signal;
+    operationSignal.throwIfAborted();
+    const executeAsync = async (transport: IntegrationTestingInput) => {
+      operationSignal.throwIfAborted();
+      const invokeAsync = async () => {
+        operationSignal.throwIfAborted();
+        return await operation(
+          createStatsFetchContext(this.integration, operationSignal, transport, {
+            authentication: authentication?.(),
+            transport: this.provider.transport,
+          }),
+        );
+      };
+      return resources
+        ? await resources.transport.runAsync({ ...resources.context, signal: operationSignal }, invokeAsync)
+        : await invokeAsync();
     };
-  }
-
-  private createRequestAsync(
-    signal: AbortSignal,
-    testing?: IntegrationTestingInput,
-    authentication?: IntegrationHttpAuthentication,
-    sanitizeErrors = false,
-  ): StatsFetchContext["requestAsync"] {
-    const hasQueryAuthentication = Object.keys(authentication?.query ?? {}).length > 0;
-    const requestFailure = new Error("Stats request failed");
-    return async (path, init) => {
-      // Paths belong to compiled providers, never to dashboard input.
-      const url = this.url(path);
-      for (const [name, value] of Object.entries(authentication?.query ?? {})) url.searchParams.set(name, value);
-      const headers = new Headers(init?.headers);
-      for (const [name, value] of Object.entries(authentication?.headers ?? {})) headers.set(name, value);
-      try {
-        if (this.provider.transport === "axios") {
-          const client = testing?.axiosInstance ?? (await createAxiosCertificateInstanceAsync());
-          const response = await client.request<unknown>({
-            url: url.toString(),
-            method: init?.method ?? "GET",
-            headers: Object.fromEntries(headers),
-            data: init?.body,
-            signal,
-            maxRedirects: 0,
-          });
-          return response.data;
-        }
-        const fetchAsync = testing?.fetchAsync ?? fetchWithTrustedCertificatesAsync;
-        const response = await fetchAsync(url, { ...init, headers, signal, redirect: "error" });
-        if (!response.ok) throw new ResponseError({ status: response.status });
-        return await response.json();
-      } catch (error) {
-        if (!sanitizeErrors && !hasQueryAuthentication) throw error;
-        if (error instanceof ResponseError) throw error;
-        // A transport error may contain credentials in its URL, body, or cause.
-        throw requestFailure;
-      }
-    };
+    if (testing) return await executeAsync(testing);
+    const runtime = resources ?? requireIntegrationRuntimeResources();
+    return await withIntegrationTestingAsync(
+      this.integration,
+      { ...runtime.context, signal: operationSignal },
+      runtime.transport,
+      executeAsync,
+    );
   }
 
   protected async testingAsync(input: IntegrationTestingInput) {

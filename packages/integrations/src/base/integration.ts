@@ -1,10 +1,8 @@
 import type tls from "node:tls";
 import type { AxiosInstance } from "axios";
 import type { Dispatcher } from "undici";
-import { fetch as undiciFetch } from "undici";
+import type { fetch as undiciFetch } from "undici";
 
-import { removeTrailingSlash } from "@homarr/common";
-import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import { getIntegrationHttpAuthDefinition } from "@homarr/definitions";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
@@ -13,7 +11,7 @@ import { resolveDeclaredHttpAuthentication } from "../http-auth";
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { TestConnectionError } from "./test-connection/test-connection-error";
 import type { TestingResult } from "./test-connection/test-connection-service";
-import { TestConnectionService } from "./test-connection/test-connection-service";
+import { getIntegrationRuntimeResources, requireIntegrationRuntimeResources } from "../runtime/context";
 import type { IntegrationSecret } from "./types";
 
 export interface IntegrationInput {
@@ -56,7 +54,8 @@ export abstract class Integration {
   }
 
   protected getSecretValue(kind: IntegrationSecretKind) {
-    const secret = this.integration.decryptedSecrets.find((secret) => secret.kind === kind);
+    getIntegrationRuntimeResources()?.context.signal.throwIfAborted();
+    const secret = this.integration.decryptedSecrets.find((entry) => entry.kind === kind);
     if (!secret) {
       throw new Error(`No secret of kind ${kind} was found`);
     }
@@ -72,7 +71,7 @@ export abstract class Integration {
     path: `/${string}`,
     queryParams?: Record<string, string | Date | number | boolean | null | undefined>,
   ) {
-    const baseUrl = removeTrailingSlash(inputUrl);
+    const baseUrl = inputUrl.replace(/\/+$/, "");
     const url = new URL(`${baseUrl}${path}`);
 
     if (queryParams) {
@@ -108,30 +107,12 @@ export abstract class Integration {
   }
 
   public async testConnectionAsync(): Promise<TestingResult> {
+    const resources = requireIntegrationRuntimeResources();
     try {
-      const url = new URL(this.integration.url);
-      return await new TestConnectionService(url).handleAsync(async ({ ca, checkServerIdentity }) => {
-        const fetchDispatcher = await createCertificateAgentAsync({
-          ca,
-          checkServerIdentity,
-        });
-
-        const axiosInstance = await createAxiosCertificateInstanceAsync({
-          ca,
-          checkServerIdentity,
-        });
-
-        const testingAsync: typeof this.testingAsync = this.testingAsync.bind(this);
-        return await testingAsync({
-          dispatcher: fetchDispatcher,
-          fetchAsync: async (url, options) => await undiciFetch(url, { ...options, dispatcher: fetchDispatcher }),
-          axiosInstance,
-          options: {
-            ca,
-            checkServerIdentity,
-          },
-        });
-      });
+      resources.context.signal.throwIfAborted();
+      return await resources.transport.testConnectionAsync(this.integration, resources.context, (input) =>
+        this.testingAsync(input),
+      );
     } catch (error) {
       if (!(error instanceof TestConnectionError)) {
         return TestConnectionError.UnknownResult(error);

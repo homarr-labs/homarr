@@ -19,6 +19,8 @@ function PublicLayout() {
           <Group>
             <Link to="/">Home</Link>
             <Link to="/about">About</Link>
+            <Link to="/preview/header">Header draft</Link>
+            <Link to="/preview/backup">Backup display</Link>
             <Link to="/manage">Management</Link>
           </Group>
         </Group>

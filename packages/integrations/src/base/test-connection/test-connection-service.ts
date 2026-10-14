@@ -1,23 +1,11 @@
 import type { X509Certificate } from "node:crypto";
-import tls from "node:tls";
-
-import { getPortFromUrl } from "@homarr/common";
-import {
-  getAllTrustedCertificatesAsync,
-  getTrustedCertificateHostnamesAsync,
-} from "@homarr/core/infrastructure/certificates";
-import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
-import { createLogger } from "@homarr/core/infrastructure/logs";
+import type tls from "node:tls";
 
 import type { IntegrationRequestErrorOfType } from "../errors/http/integration-request-error";
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
 import { IntegrationError } from "../errors/integration-error";
 import type { AnyTestConnectionError } from "./test-connection-error";
 import { TestConnectionError } from "./test-connection-error";
-
-const logger = createLogger({
-  module: "testConnectionService",
-});
 
 export type TestingResult =
   | {
@@ -32,18 +20,19 @@ type AsyncTestingCallback = (input: {
   checkServerIdentity: typeof tls.checkServerIdentity;
 }) => Promise<TestingResult>;
 
+export interface TestConnectionResources {
+  getTlsOptionsAsync: () => Promise<Parameters<AsyncTestingCallback>[0]>;
+  fetchCertificateAsync: (url: URL) => Promise<X509Certificate | undefined>;
+}
+
 export class TestConnectionService {
-  constructor(private url: URL) {}
+  constructor(
+    private url: URL,
+    private resources: TestConnectionResources,
+  ) {}
 
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
-    logger.debug("Testing connection", {
-      url: this.url.toString(),
-    });
-
-    const testingResult = await testingCallbackAsync({
-      ca: await getAllTrustedCertificatesAsync(),
-      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
-    })
+    const testingResult = await testingCallbackAsync(await this.resources.getTlsOptionsAsync())
       .then((result) => {
         if (result.success) return result;
 
@@ -72,63 +61,18 @@ export class TestConnectionService {
       });
 
     if (testingResult.success) {
-      logger.debug("Testing connection succeeded", {
-        url: this.url.toString(),
-      });
-
       return testingResult;
     }
-
-    logger.debug("Testing connection failed", {
-      url: this.url.toString(),
-      error: `${testingResult.error.name}: ${testingResult.error.message}`,
-    });
 
     if (!(testingResult.error instanceof IntegrationRequestError)) {
       return testingResult.error.toResult();
     }
 
-    const certificate = await this.fetchCertificateAsync();
+    const certificate = await this.resources.fetchCertificateAsync(this.url);
     if (!certificate) {
       return TestConnectionError.UnknownResult(new Error("Unable to fetch certificate"));
     }
 
     return TestConnectionError.CertificateResult(testingResult.error.cause, certificate);
-  }
-
-  private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {
-    logger.debug("Fetching certificate", {
-      url: this.url.toString(),
-    });
-
-    const url = this.url;
-    const port = getPortFromUrl(url);
-    const socket = await new Promise<tls.TLSSocket>((resolve, reject) => {
-      try {
-        const innerSocket = tls.connect(
-          {
-            host: url.hostname,
-            servername: url.hostname,
-            port,
-            rejectUnauthorized: false,
-          },
-          () => {
-            resolve(innerSocket);
-          },
-        );
-      } catch (error) {
-        reject(new Error("Unable to fetch certificate", { cause: error }));
-      }
-    });
-
-    const x509 = socket.getPeerX509Certificate();
-    socket.destroy();
-
-    logger.debug("Fetched certificate", {
-      url: this.url.toString(),
-      subject: x509?.subject,
-      issuer: x509?.issuer,
-    });
-    return x509;
   }
 }

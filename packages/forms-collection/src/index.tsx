@@ -4,6 +4,7 @@ export * from "./new-app/_form";
 export * from "./board-create/board-create-form";
 
 export * from "./icon-picker/icon-picker";
+export * from "./icon-picker/icon-picker.utils";
 
 export * from "./upload-media/upload-media";
 

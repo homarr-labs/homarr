@@ -1,20 +1,33 @@
-import superjson from "superjson";
-
-import { createKeyedFingerprint, decryptSecret, encryptSecret, verifyKeyedFingerprint } from "@homarr/common/server";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { createGetSetChannel, getIntegrationSessionStoreKey } from "@homarr/redis";
-
+import { requireIntegrationRuntimeResources } from "../runtime/context";
 import type { IntegrationSecret } from "./types";
 
-const logger = createLogger({ module: "sessionStore" });
 const sessionEnvelopeType = "homarr-integration-session";
 const sessionEnvelopeVersion = 1;
 
-interface SessionStoreIntegration {
+export interface SessionStoreIntegration {
   id: string;
   url: string;
   decryptedSecrets: readonly IntegrationSecret[];
+}
+
+export interface SessionStoreBacking {
+  getAsync: () => Promise<string | null>;
+  setIfCurrentAsync: (value: string, options?: { ttlSeconds?: number }) => Promise<boolean>;
+  removeIfCurrentAsync: () => Promise<boolean>;
+}
+
+export interface SessionStoreResources {
+  createBacking: (
+    integration: Pick<SessionStoreIntegration, "id" | "url">,
+    configurationFingerprint: string,
+  ) => SessionStoreBacking;
+  encrypt: (value: string) => string;
+  decrypt: (value: string) => string;
+  fingerprint: (value: string) => string;
+  verifyFingerprint: (value: string, fingerprint: string) => boolean;
+  serialize: (value: unknown) => string;
+  deserialize: (value: string) => unknown;
+  reportFailure?: (operation: "read" | "write", integrationId: string) => void;
 }
 
 interface SessionEnvelope<TValue> {
@@ -56,40 +69,33 @@ const isSessionEnvelope = <TValue>(value: unknown): value is SessionEnvelope<TVa
   );
 };
 
-export const createSessionStore = <TValue>(integration: SessionStoreIntegration) => {
-  const channelName = getIntegrationSessionStoreKey(integration.id);
-  const channel = createGetSetChannel<`${string}.${string}`>(channelName);
+export const createSessionStore = <TValue>(
+  integration: SessionStoreIntegration,
+  resources: SessionStoreResources = requireIntegrationRuntimeResources().sessions,
+) => {
   const serializedConfiguration = serializeSessionConfiguration(integration);
-  const configurationFingerprint = createKeyedFingerprint(serializedConfiguration);
+  const configurationFingerprint = resources.fingerprint(serializedConfiguration);
+  const channel = resources.createBacking({ id: integration.id, url: integration.url }, configurationFingerprint);
 
   return {
     async getAsync() {
-      logger.debug("Getting session from store", { store: channelName });
       const value = await channel.getAsync();
       if (!value) return null;
       try {
-        const envelope = superjson.parse<unknown>(decryptSecret(value));
+        const envelope = resources.deserialize(resources.decrypt(value));
         if (!isSessionEnvelope<TValue>(envelope)) {
-          logger.debug("Ignoring legacy or unsupported session", { store: channelName });
           return null;
         }
-        if (!verifyKeyedFingerprint(serializedConfiguration, envelope.configurationFingerprint)) {
-          logger.debug("Ignoring session for a different integration configuration", { store: channelName });
+        if (!resources.verifyFingerprint(serializedConfiguration, envelope.configurationFingerprint)) {
           return null;
         }
         return envelope.value;
-      } catch (error) {
-        logger.warn("Failed to load session", { store: channelName, error });
+      } catch {
+        resources.reportFailure?.("read", integration.id);
         return null;
       }
     },
-    /**
-     * @param value session to store
-     * @param options pass `ttlSeconds` when the credential has a known lifetime, so a stored
-     * session can never outlive the token it holds
-     */
     async setAsync(value: TValue, options?: { ttlSeconds?: number }) {
-      logger.debug("Updating session in store", { store: channelName, ttlSeconds: options?.ttlSeconds });
       try {
         const envelope: SessionEnvelope<TValue> = {
           type: sessionEnvelopeType,
@@ -97,14 +103,14 @@ export const createSessionStore = <TValue>(integration: SessionStoreIntegration)
           configurationFingerprint,
           value,
         };
-        await channel.setAsync(encryptSecret(superjson.stringify(envelope)), options);
-      } catch (error) {
-        logger.error(new ErrorWithMetadata("Failed to save session", { store: channelName }, { cause: error }));
+        const saved = await channel.setIfCurrentAsync(resources.encrypt(resources.serialize(envelope)), options);
+        if (!saved) resources.reportFailure?.("write", integration.id);
+      } catch {
+        resources.reportFailure?.("write", integration.id);
       }
     },
     async clearAsync() {
-      logger.debug("Cleared session in store", { store: channelName });
-      await channel.removeAsync();
+      await channel.removeIfCurrentAsync();
     },
   };
 };

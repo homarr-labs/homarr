@@ -2,20 +2,20 @@ import { Group, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDevices, IconNetwork, IconUsers, IconVideo } from "@tabler/icons-react";
 
 import type { TracearrDashboardData } from "@homarr/integrations/types";
-import { useI18n } from "@homarr/translation/client";
+import type { TracearrViewTextProps } from "./native-view-types";
 
 export function StatsBar({
   stats,
   summary,
   width,
   transparent = false,
+  t,
 }: {
   stats: TracearrDashboardData["stats"];
   summary: TracearrDashboardData["streams"]["summary"];
   width: number;
   transparent?: boolean;
-}) {
-  const t = useI18n("widget.tracearr");
+} & TracearrViewTextProps) {
   const cols = width > 400 ? 4 : width > 250 ? 2 : 1;
 
   return (

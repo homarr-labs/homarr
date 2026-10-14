@@ -1,0 +1,193 @@
+import { z } from "zod/v4";
+
+import { colorSchemes } from "@homarr/definitions";
+import type { TranslationObject } from "@homarr/translation";
+
+import { zodEnumFromArray } from "./enums";
+import { createCustomErrorParams } from "./form/i18n";
+import { nullableEmailSchema, optionalEmailSchema } from "./email";
+import { headerPreferencesSchema, headerPreferencesPatchSchema } from "./header-preferences";
+
+export {
+  createBoardHeaderItem,
+  createBuiltinHeaderItem,
+  defaultHeaderPreferences,
+  getDefaultHeaderZone,
+  getHeaderItemKey,
+  getHeaderItems,
+  getHeaderItemZone,
+  headerBuiltinItemIds,
+  headerItemIds,
+  headerItemSchema,
+  headerLogoDisplayValues,
+  headerPreferenceItemIds,
+  headerPreferencesMutationSchema,
+  headerPreferencesSchema,
+  headerPreferencesVersion,
+  headerSearchDisplayValues,
+  headerZoneIds,
+  isRequiredHeaderItem,
+  parseHeaderPreferences,
+  requiredHeaderBuiltinItemIds,
+} from "./header-preferences";
+export type {
+  HeaderBoardItem,
+  HeaderBuiltinItem,
+  HeaderBuiltinItemId,
+  HeaderItem,
+  HeaderItemId,
+  HeaderLogoDisplay,
+  HeaderPreferenceItemId,
+  HeaderPreferences,
+  HeaderSearchDisplay,
+  HeaderZoneId,
+  HeaderZones,
+} from "./header-preferences";
+
+// We always want the lowercase version of the username to compare it in a case-insensitive way
+export const usernameSchema = z.string().trim().toLowerCase().min(3).max(255);
+
+const regexCheck = (regex: RegExp) => (value: string) => regex.test(value);
+export const passwordRequirements = [
+  { check: (value) => value.length >= 8, value: "length" },
+  { check: regexCheck(/[a-z]/), value: "lowercase" },
+  { check: regexCheck(/[A-Z]/), value: "uppercase" },
+  { check: regexCheck(/\d/), value: "number" },
+  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!\-~`"_/\\[\]{}]/), value: "special" },
+] satisfies {
+  check: (value: string) => boolean;
+  value: keyof TranslationObject["user"]["field"]["password"]["suggestion"];
+}[];
+
+export const userPasswordSchema = z.string().min(8).max(255);
+
+const addConfirmPasswordRefinement = <
+  TSchema extends z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,
+>(
+  schema: TSchema,
+) => {
+  return schema.refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    params: createCustomErrorParams({
+      key: "passwordsDoNotMatch",
+      params: {},
+    }),
+  });
+};
+
+export const userBaseCreateSchema = z.object({
+  username: usernameSchema,
+  password: userPasswordSchema,
+  confirmPassword: z.string(),
+  email: optionalEmailSchema,
+});
+
+export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema).and(
+  z.object({ groupIds: z.array(z.string()) }),
+);
+
+export const userInitSchema = addConfirmPasswordRefinement(userBaseCreateSchema);
+
+export const userSignInSchema = z.object({
+  name: z.string().min(1),
+  password: z.string().min(1),
+});
+
+export const ldapSignInSchema = z.object({
+  name: z
+    .string()
+    .min(1)
+    // Prevent special characters that could lead to LDAP injection attacks
+    .regex(/^[^\\,+<>;"=)(*|!&]+$/, {
+      message: "Invalid characters in ldap username",
+    }),
+  password: z.string().min(1),
+});
+
+export const userRegistrationSchema = addConfirmPasswordRefinement(
+  z.object({
+    username: usernameSchema,
+    password: userPasswordSchema,
+    confirmPassword: z.string(),
+  }),
+);
+
+export const userRegistrationApiSchema = userRegistrationSchema.and(
+  z.object({
+    inviteId: z.string(),
+    token: z.string(),
+  }),
+);
+
+export const userEditProfileSchema = z.object({
+  id: z.string(),
+  name: usernameSchema,
+  email: nullableEmailSchema,
+});
+
+const baseChangePasswordSchema = z.object({
+  previousPassword: z.string().min(1),
+  password: userPasswordSchema,
+  confirmPassword: z.string(),
+});
+
+export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
+
+export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema).and(
+  z.object({
+    userId: z.string(),
+  }),
+);
+
+export const userChangeHomeBoardsSchema = z.object({
+  homeBoardId: z.string().nullable(),
+  mobileHomeBoardId: z.string().nullable(),
+});
+
+export const userChangeSearchPreferencesSchema = z.object({
+  defaultSearchEngineId: z.string().min(1).nullable(),
+  openInNewTab: z.boolean(),
+  ddgBangsEnabled: z.boolean(),
+});
+
+export const userChangeColorSchemeSchema = z.object({
+  colorScheme: zodEnumFromArray(colorSchemes),
+});
+
+export const userByteUnitSystemSchema = z.object({
+  byteUnitSystem: z.enum(["binary", "decimal"]),
+});
+
+export const userFirstDayOfWeekSchema = z.object({
+  firstDayOfWeek: z.literal([0, 1, 2, 3, 4, 5, 6]),
+});
+
+export const userPingIconsEnabledSchema = z.object({
+  pingIconsEnabled: z.boolean(),
+});
+
+export const userEnableRightClickOnWidgetsSchema = z.object({
+  enableRightClickOnWidgets: z.boolean(),
+});
+
+export const userDdgBangsSchema = z.object({
+  ddgBangs: z.boolean(),
+});
+
+export const userPreferencesSchema = z.strictObject({
+  ...userChangeColorSchemeSchema.shape,
+  ...userByteUnitSystemSchema.shape,
+  ...userFirstDayOfWeekSchema.shape,
+  ...userPingIconsEnabledSchema.shape,
+  ...userEnableRightClickOnWidgetsSchema.shape,
+  ...userChangeHomeBoardsSchema.shape,
+  defaultSearchEngineId: userChangeSearchPreferencesSchema.shape.defaultSearchEngineId,
+  openSearchInNewTab: z.boolean(),
+  ddgBangs: z.boolean(),
+  headerPreferences: headerPreferencesSchema,
+});
+
+export const userPreferencesPatchSchema = userPreferencesSchema
+  .partial()
+  .extend({ headerPreferences: headerPreferencesPatchSchema.optional() })
+  .refine((patch) => Object.keys(patch).length > 0, "Supply at least one preference");

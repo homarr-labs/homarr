@@ -1,81 +1,21 @@
-import type { WidgetComponentProps } from "../definition";
+import type {
+  ColorablePatchMonStatKey,
+  PatchMonStatKey,
+  StatColorContext,
+  StatSeverity,
+  StatThresholdRule,
+  ThresholdMode,
+} from "./stat-color-presets";
+import { COLORABLE_PATCHMON_STATS, PATCHMON_STAT_COLOR_PRESETS } from "./stat-color-presets";
 import { clampPercentThreshold } from "./threshold-validation";
 
-export type PatchMonStatKey =
-  | "totalHosts"
-  | "hostsNeedingUpdates"
-  | "securityUpdates"
-  | "upToDateHosts"
-  | "hostsWithSecurityUpdates"
-  | "recentUpdates24h"
-  | "totalOutdatedPackages"
-  | "totalRepos";
+export * from "./stat-color-presets";
 
-export type ColorablePatchMonStatKey = Extract<
-  PatchMonStatKey,
-  "hostsNeedingUpdates" | "securityUpdates" | "hostsWithSecurityUpdates" | "upToDateHosts" | "totalOutdatedPackages"
->;
-
-export type StatSeverity = "green" | "yellow" | "red" | "neutral";
-export type ThresholdMode = "absolute" | "percent";
-
-export interface StatColorContext {
-  totalHosts: number;
-}
-
-export interface StatThresholdRule {
-  direction: "lowerIsBetter" | "higherIsBetter";
-  mode: ThresholdMode;
-  warningAt: number;
-  criticalAt: number;
-  skipYellow?: boolean;
-}
-
-type PatchMonColorOptions = WidgetComponentProps<"patchmon">["options"];
-
-export const COLORABLE_PATCHMON_STATS = [
-  "hostsNeedingUpdates",
-  "securityUpdates",
-  "hostsWithSecurityUpdates",
-  "upToDateHosts",
-  "totalOutdatedPackages",
-] as const satisfies readonly ColorablePatchMonStatKey[];
-
-export const NEUTRAL_PATCHMON_STATS = ["totalHosts", "totalRepos", "recentUpdates24h"] as const;
-
-export const PATCHMON_STAT_COLOR_PRESETS: Record<ColorablePatchMonStatKey, StatThresholdRule> = {
-  hostsNeedingUpdates: {
-    direction: "lowerIsBetter",
-    mode: "absolute",
-    warningAt: 1,
-    criticalAt: 5,
-  },
-  securityUpdates: {
-    direction: "lowerIsBetter",
-    mode: "absolute",
-    warningAt: 1,
-    criticalAt: 10,
-  },
-  hostsWithSecurityUpdates: {
-    direction: "lowerIsBetter",
-    mode: "absolute",
-    warningAt: 1,
-    criticalAt: 1,
-    skipYellow: true,
-  },
-  upToDateHosts: {
-    direction: "higherIsBetter",
-    mode: "percent",
-    warningAt: 90,
-    criticalAt: 90,
-  },
-  totalOutdatedPackages: {
-    direction: "lowerIsBetter",
-    mode: "absolute",
-    warningAt: 1,
-    criticalAt: 50,
-  },
-};
+type PatchMonColorOptions = {
+  enableThresholdColors: boolean;
+  useCustomThresholds: boolean;
+} & Record<`${ColorablePatchMonStatKey}ThresholdMode`, ThresholdMode> &
+  Record<`${ColorablePatchMonStatKey}WarningAt` | `${ColorablePatchMonStatKey}CriticalAt`, number>;
 
 const thresholdModeOptionKey = {
   hostsNeedingUpdates: "hostsNeedingUpdatesThresholdMode",
@@ -163,9 +103,9 @@ const getThresholdRule = (statKey: ColorablePatchMonStatKey, options: PatchMonCo
     return PATCHMON_STAT_COLOR_PRESETS[statKey];
   }
 
-  const mode = options[thresholdModeOptionKey[statKey]] as ThresholdMode;
-  const warningAt = clampPercentThreshold(options[warningAtOptionKey[statKey]] as number, mode);
-  const criticalAt = clampPercentThreshold(options[criticalAtOptionKey[statKey]] as number, mode);
+  const mode = options[thresholdModeOptionKey[statKey]];
+  const warningAt = clampPercentThreshold(options[warningAtOptionKey[statKey]], mode);
+  const criticalAt = clampPercentThreshold(options[criticalAtOptionKey[statKey]], mode);
   const preset = PATCHMON_STAT_COLOR_PRESETS[statKey];
 
   return {

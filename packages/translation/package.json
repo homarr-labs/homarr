@@ -17,6 +17,7 @@
     "./standalone": "./src/standalone/index.ts",
     "./standalone/client": "./src/standalone/client.tsx",
     "./standalone/server": "./src/standalone/server.ts",
+    "./standalone/dayjs": "./src/standalone/dayjs.ts",
     "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server.ts",
     "./middleware": "./src/middleware.ts",

@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./runtime": "./src/runtime.ts",
     "./expressions": "./src/expressions.ts",
     "./logger": "./src/logger.ts"
   },

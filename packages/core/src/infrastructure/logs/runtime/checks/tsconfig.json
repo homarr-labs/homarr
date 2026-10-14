@@ -1,0 +1,7 @@
+{
+  "extends": "../../../../../../../tooling/typescript/base.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": ["../**/*.ts", "../../constants.ts"]
+}

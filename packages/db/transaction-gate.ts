@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { createTableRelationsHelpers, extractTablesRelationalConfig } from "drizzle-orm";
+import { createTableRelationsHelpers, extractTablesRelationalConfig, is, SQL } from "drizzle-orm";
 import type { ExtractTablesWithRelations } from "drizzle-orm";
 import { SQLiteBunSession, SQLiteBunTransaction } from "drizzle-orm/bun-sqlite";
 import { NodePgSession, NodePgTransaction } from "drizzle-orm/node-postgres";
@@ -11,8 +11,25 @@ import { createDatabaseScope } from "@homarr/core/infrastructure/db";
 import type { createSharedDbConfig, DatabaseScope } from "@homarr/core/infrastructure/db";
 
 import type { HomarrDatabase, HomarrDatabasePostgresql } from "./driver";
+import type { AuthSessionSqlResult, PreparedAuthSessionMutation } from "./runtime-auth-session/contracts";
+import { executeAuthSessionMutationAsync, lockAuthCredentialDomainAsync } from "./runtime-auth-session/statements";
+import type { CopiedCatalogReader } from "./copied-runtime-catalog";
+import type { CopiedSqlRow, CopiedSqlValue } from "./copied-sqlite";
+import { assertSqliteMainTarget } from "./main-target-catalog";
+import { requireAuthCredentialClock } from "./runtime-auth-credential/validation";
+import { rejectOnboarding } from "./runtime-onboarding/contracts";
+import type {
+  CapturedOnboardingMutation,
+  OnboardingClaimResult,
+  OnboardingNativePublicationBounds,
+  OnboardingNativePublicationFacts,
+} from "./runtime-onboarding/contracts";
+import { onboardingStatements } from "./runtime-onboarding/statements";
+import type { OnboardingExpiryWitness } from "./runtime-onboarding/statements";
 import * as pgSchema from "./schema/postgresql";
 import * as sqliteSchema from "./schema/sqlite";
+import type { PreparedSqlitePreservationObservation, SqlitePreservationClock } from "./runtime-preservation";
+import type { OnboardingCoreReadClock } from "./runtime-onboarding-read";
 
 export interface BoundedTransactionOperation {
   signal: AbortSignal;
@@ -22,6 +39,7 @@ export interface BoundedTransactionOperation {
 
 export class TransactionCommitAmbiguousError extends Error {
   readonly code = "TRANSACTION_COMMIT_AMBIGUOUS";
+  readonly retryable = false;
 
   constructor(cause: unknown) {
     super("Transaction COMMIT was dispatched; its durability outcome is ambiguous", { cause });
@@ -31,6 +49,85 @@ export class TransactionCommitAmbiguousError extends Error {
 
 type TransactionFailure = { kind: "none" } | { kind: "failed"; error: unknown };
 type TransactionOutcome<T> = { kind: "success"; value: T } | { kind: "failed"; error: unknown };
+
+export interface NativeOnboardingObservation {
+  readonly kind: "native-onboarding-observation";
+}
+
+export type NativeOnboardingObservationFacts = Omit<OnboardingNativePublicationFacts, "runtimeGuard">;
+
+interface NativeOnboardingObservationRecord {
+  prepared: CapturedOnboardingMutation | undefined;
+  resourceLifetime: AbortSignal | undefined;
+  entered: boolean;
+  readonly command: OnboardingNativePublicationFacts["command"];
+  commit: OnboardingNativePublicationFacts["commit"];
+  finalGate: OnboardingNativePublicationFacts["finalGate"];
+  bounds: OnboardingNativePublicationBounds | null;
+  unit: OnboardingNativePublicationFacts["unit"];
+  cleanup: OnboardingNativePublicationFacts["cleanup"];
+  failureStage: OnboardingNativePublicationFacts["failureStage"];
+  cleanupFailureCount: number;
+}
+
+const nativeOnboardingObservations = new WeakMap<NativeOnboardingObservation, NativeOnboardingObservationRecord>();
+
+export const prepareNativeOnboardingObservation = (
+  prepared: CapturedOnboardingMutation,
+  resourceLifetime: AbortSignal,
+): NativeOnboardingObservation => {
+  const handle: NativeOnboardingObservation = Object.freeze({ kind: "native-onboarding-observation" });
+  nativeOnboardingObservations.set(handle, {
+    prepared,
+    resourceLifetime,
+    entered: false,
+    command: prepared.invocation.kind,
+    commit: "not-dispatched",
+    finalGate: "not-passed",
+    bounds: null,
+    unit: "pending",
+    cleanup: "pending",
+    failureStage: "none",
+    cleanupFailureCount: 0,
+  });
+  return handle;
+};
+
+export const readNativeOnboardingObservation = (
+  handle: NativeOnboardingObservation,
+): NativeOnboardingObservationFacts | undefined => {
+  const record = nativeOnboardingObservations.get(handle);
+  if (!record) return undefined;
+  return Object.freeze({
+    command: record.command,
+    commit: record.commit,
+    finalGate: record.finalGate,
+    bounds: record.bounds,
+    unit: record.unit,
+    cleanup: record.cleanup,
+    failureStage: record.failureStage,
+    cleanupFailureCount: record.cleanupFailureCount,
+  });
+};
+
+export const disposeNativeOnboardingObservation = (handle: NativeOnboardingObservation): void => {
+  nativeOnboardingObservations.delete(handle);
+};
+
+const enterNativeOnboardingObservation = (
+  handle: NativeOnboardingObservation | undefined,
+  prepared: CapturedOnboardingMutation,
+  resourceLifetime: AbortSignal,
+): NativeOnboardingObservationRecord | undefined => {
+  if (!handle) return undefined;
+  const record = nativeOnboardingObservations.get(handle);
+  if (!record || record.entered || record.prepared !== prepared || record.resourceLifetime !== resourceLifetime)
+    return rejectOnboarding();
+  record.entered = true;
+  record.prepared = undefined;
+  record.resourceLifetime = undefined;
+  return record;
+};
 
 const createFailureCapture = () => {
   let failure: TransactionFailure = { kind: "none" };
@@ -157,15 +254,19 @@ const relationalSchema = <T extends Record<string, unknown>>(fullSchema: T) => {
   };
 };
 
-export const boundedSqliteTransaction = <T>(
+interface TransactionGate {
+  check(): number;
+  commitCheck?(): void;
+}
+
+const runBoundedSqliteTransaction = <T>(
   client: Database,
   config: ReturnType<typeof createSharedDbConfig<typeof sqliteSchema>>,
-  operation: BoundedTransactionOperation,
-  resourceLifetime: AbortSignal,
   callback: (database: HomarrDatabase) => T,
   quarantine: (reason: unknown) => void,
+  gate: TransactionGate,
+  observation?: NativeOnboardingObservationRecord,
 ): T => {
-  const gate = createGate(operation, resourceLifetime);
   if (client.inTransaction) throw new Error("Bounded transactions cannot join an existing native transaction");
   if (callback.constructor.name === "AsyncFunction")
     throw new TypeError("SQLite transactions require a synchronous callback");
@@ -179,6 +280,11 @@ export const boundedSqliteTransaction = <T>(
   const cleanupErrors: unknown[] = [];
   const cleanupFailed = (error: unknown) => {
     cleanupErrors.push(error);
+    if (observation) {
+      observation.cleanupFailureCount += 1;
+      observation.cleanup = "failed";
+      if (observation.failureStage === "none") observation.failureStage = "cleanup";
+    }
     unusable = true;
     quarantine(error);
   };
@@ -199,12 +305,14 @@ export const boundedSqliteTransaction = <T>(
     onFailure: failures.record,
   });
   let outcome: TransactionOutcome<T>;
+  let failureStage: OnboardingNativePublicationFacts["failureStage"] = "admission";
   try {
     client.run("PRAGMA busy_timeout = 0");
     gate.check();
     client.run("BEGIN IMMEDIATE");
     begun = true;
     gate.check();
+    failureStage = "body";
     const result = callback(scope.database as unknown as HomarrDatabase);
     if (
       result !== null &&
@@ -218,13 +326,19 @@ export const boundedSqliteTransaction = <T>(
     scope.revoke();
     const failure = failures.failure;
     if (failure.kind === "failed") throw failure.error;
-    gate.check();
+    if (gate.commitCheck) gate.commitCheck();
+    else gate.check();
+    failureStage = "commit";
     dispatched = true;
+    if (observation) observation.commit = "dispatched-unconfirmed";
     client.run("COMMIT");
+    if (observation) observation.commit = "acknowledged";
     begun = false;
+    failureStage = "post-commit-guard";
     gate.check();
     outcome = { kind: "success", value: result };
   } catch (error) {
+    if (observation && observation.failureStage === "none") observation.failureStage = failureStage;
     outcome = { kind: "failed", error };
     try {
       if (begun && client.inTransaction) client.run("ROLLBACK");
@@ -246,18 +360,70 @@ export const boundedSqliteTransaction = <T>(
       }
     }
   }
-  return finishTransaction(includeFailure(outcome, failures.failure), cleanupErrors, dispatched);
+  const settled = includeFailure(outcome, failures.failure);
+  if (observation) {
+    if (observation.cleanup === "pending") observation.cleanup = "complete";
+    observation.unit = "returned";
+    if (settled.kind === "failed" || cleanupErrors.length > 0) observation.unit = "rejected";
+  }
+  if (dispatched && (settled.kind === "failed" || cleanupErrors.length > 0))
+    quarantine(new TransactionCommitAmbiguousError(settled.kind === "failed" ? settled.error : cleanupErrors));
+  return finishTransaction(settled, cleanupErrors, dispatched);
 };
 
-export const boundedPostgresTransactionAsync = async <T>(
-  pool: Pool,
-  config: ReturnType<typeof createSharedDbConfig<typeof pgSchema>>,
+export const boundedSqliteTransaction = <T>(
+  client: Database,
+  config: ReturnType<typeof createSharedDbConfig<typeof sqliteSchema>>,
   operation: BoundedTransactionOperation,
   resourceLifetime: AbortSignal,
+  callback: (database: HomarrDatabase) => T,
+  quarantine: (reason: unknown) => void,
+): T => runBoundedSqliteTransaction(client, config, callback, quarantine, createGate(operation, resourceLifetime));
+
+export const boundedSqlitePreservationObservation = (
+  client: Database,
+  config: ReturnType<typeof createSharedDbConfig<typeof sqliteSchema>>,
+  clock: SqlitePreservationClock,
+  read: () => PreparedSqlitePreservationObservation,
+  quarantine: (reason: unknown) => void,
+): PreparedSqlitePreservationObservation =>
+  runBoundedSqliteTransaction(client, config, read, quarantine, {
+    check: () => clock.check(),
+    commitCheck() {
+      clock.check();
+    },
+  });
+
+export const boundedSqliteOnboardingCoreRead = (
+  client: Database,
+  config: ReturnType<typeof createSharedDbConfig<typeof sqliteSchema>>,
+  clock: OnboardingCoreReadClock,
+  read: () => void,
+  commitCheck: () => void,
+  quarantine: (reason: unknown) => void,
+): void =>
+  runBoundedSqliteTransaction(client, config, read, quarantine, {
+    check: () => clock.check(),
+    commitCheck() {
+      clock.check();
+      commitCheck();
+      clock.check();
+    },
+  });
+
+const postgresTransactionBegin = "BEGIN";
+const postgresSnapshotBegin = "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY";
+
+const runBoundedPostgresTransactionAsync = async <T>(
+  pool: Pool,
+  config: ReturnType<typeof createSharedDbConfig<typeof pgSchema>>,
   callback: (database: HomarrDatabasePostgresql) => Promise<T>,
   quarantine: (reason: unknown) => void,
+  gate: TransactionGate,
+  beginStatement: typeof postgresTransactionBegin | typeof postgresSnapshotBegin,
+  admission?: "auth-establishment" | "onboarding",
+  observation?: NativeOnboardingObservationRecord,
 ): Promise<T> => {
-  const gate = createGate(operation, resourceLifetime);
   const client = await pool.connect();
   let begun = false;
   let beginAttempted = false;
@@ -267,6 +433,11 @@ export const boundedPostgresTransactionAsync = async <T>(
   const cleanupErrors: unknown[] = [];
   const cleanupFailed = (error: unknown) => {
     cleanupErrors.push(error);
+    if (observation) {
+      observation.cleanupFailureCount += 1;
+      observation.cleanup = "failed";
+      if (observation.failureStage === "none") observation.failureStage = "cleanup";
+    }
     evict = true;
     quarantine(error);
   };
@@ -300,6 +471,7 @@ export const boundedPostgresTransactionAsync = async <T>(
     },
   });
   let outcome: TransactionOutcome<T>;
+  let failureStage: OnboardingNativePublicationFacts["failureStage"] = "admission";
   try {
     client.on("error", onError);
     const connectionParameters: unknown = Reflect.get(client, "connectionParameters");
@@ -328,11 +500,57 @@ export const boundedPostgresTransactionAsync = async <T>(
     scope = createDatabaseScope(transaction, { synchronousTransactions: false, onFailure: failures.record });
     gate.check();
     beginAttempted = true;
-    await client.query("BEGIN");
+    await client.query(beginStatement);
     begun = true;
     gate.check();
+    if (admission === "auth-establishment" || admission === "onboarding") {
+      const remaining = gate.check();
+      await client.query("SELECT set_config('statement_timeout', $1, true), set_config('lock_timeout', $1, true)", [
+        `${remaining}ms`,
+      ]);
+      gate.check();
+      const isolation = await client.query<{ isolation: string }>(
+        "SELECT current_setting('transaction_isolation') AS isolation",
+      );
+      if (isolation.rows.length !== 1 || isolation.rows[0]?.isolation !== "read committed")
+        throw new TypeError("Auth establishment requires PostgreSQL READ COMMITTED");
+      await lockAuthCredentialDomainAsync(scope.database);
+      gate.check();
+      for (const statement of [
+        'LOCK TABLE "user" IN SHARE ROW EXCLUSIVE MODE',
+        'LOCK TABLE "account" IN SHARE ROW EXCLUSIVE MODE',
+        'LOCK TABLE "group" IN SHARE ROW EXCLUSIVE MODE',
+        'LOCK TABLE "groupMember" IN SHARE ROW EXCLUSIVE MODE',
+      ]) {
+        const lockRemaining = gate.check();
+        await client.query("SELECT set_config('statement_timeout', $1, true), set_config('lock_timeout', $1, true)", [
+          `${lockRemaining}ms`,
+        ]);
+        gate.check();
+        await client.query(statement);
+        gate.check();
+      }
+      if (admission === "onboarding") {
+        for (const statement of [
+          'LOCK TABLE "groupPermission" IN SHARE ROW EXCLUSIVE MODE',
+          'LOCK TABLE "session" IN SHARE ROW EXCLUSIVE MODE',
+          'LOCK TABLE "apiKey" IN SHARE ROW EXCLUSIVE MODE',
+          'LOCK TABLE "onboarding" IN SHARE ROW EXCLUSIVE MODE',
+          'LOCK TABLE "serverSetting" IN SHARE ROW EXCLUSIVE MODE',
+        ]) {
+          const remaining = gate.check();
+          await client.query("SELECT set_config('statement_timeout', $1, true), set_config('lock_timeout', $1, true)", [
+            `${remaining}ms`,
+          ]);
+          gate.check();
+          await client.query(statement);
+          gate.check();
+        }
+      }
+    }
     let result: T;
     try {
+      failureStage = "body";
       result = await callback(scope.database);
     } finally {
       scope.revoke();
@@ -341,13 +559,19 @@ export const boundedPostgresTransactionAsync = async <T>(
     }
     const failure = failures.failure;
     if (failure.kind === "failed") throw failure.error;
-    gate.check();
+    if (gate.commitCheck) gate.commitCheck();
+    else gate.check();
+    failureStage = "commit";
     commitDispatched = true;
+    if (observation) observation.commit = "dispatched-unconfirmed";
     await client.query("COMMIT");
+    if (observation) observation.commit = "acknowledged";
     begun = false;
+    failureStage = "post-commit-guard";
     gate.check();
     outcome = { kind: "success", value: result };
   } catch (error) {
+    if (observation && observation.failureStage === "none") observation.failureStage = failureStage;
     outcome = { kind: "failed", error };
     scope?.revoke();
     await scope?.settleAsync();
@@ -391,5 +615,359 @@ export const boundedPostgresTransactionAsync = async <T>(
       }
     }
   }
-  return finishTransaction(includeFailure(outcome, failures.failure), cleanupErrors, commitDispatched);
+  const settled = includeFailure(outcome, failures.failure);
+  if (observation) {
+    if (observation.cleanup === "pending") observation.cleanup = "complete";
+    observation.unit = "returned";
+    if (settled.kind === "failed" || cleanupErrors.length > 0) observation.unit = "rejected";
+  }
+  if (commitDispatched && (settled.kind === "failed" || cleanupErrors.length > 0))
+    quarantine(new TransactionCommitAmbiguousError(settled.kind === "failed" ? settled.error : cleanupErrors));
+  return finishTransaction(settled, cleanupErrors, commitDispatched);
+};
+
+const createBoundedPostgresTransaction =
+  (beginStatement: typeof postgresTransactionBegin | typeof postgresSnapshotBegin, admission?: "auth-establishment") =>
+  async <T>(
+    pool: Pool,
+    config: ReturnType<typeof createSharedDbConfig<typeof pgSchema>>,
+    operation: BoundedTransactionOperation,
+    resourceLifetime: AbortSignal,
+    callback: (database: HomarrDatabasePostgresql) => Promise<T>,
+    quarantine: (reason: unknown) => void,
+  ): Promise<T> =>
+    runBoundedPostgresTransactionAsync(
+      pool,
+      config,
+      callback,
+      quarantine,
+      createGate(operation, resourceLifetime),
+      beginStatement,
+      admission,
+    );
+
+export const boundedPostgresTransactionAsync = createBoundedPostgresTransaction(postgresTransactionBegin);
+export const boundedPostgresSnapshotAsync = createBoundedPostgresTransaction(postgresSnapshotBegin);
+
+const boundedPostgresAuthEstablishmentAsync = createBoundedPostgresTransaction(
+  postgresTransactionBegin,
+  "auth-establishment",
+);
+
+export const boundedPostgresAuthSessionMutationAsync = (
+  pool: Pool,
+  config: ReturnType<typeof createSharedDbConfig<typeof pgSchema>>,
+  operation: BoundedTransactionOperation,
+  resourceLifetime: AbortSignal,
+  prepared: PreparedAuthSessionMutation,
+  quarantine: (reason: unknown) => void,
+): Promise<AuthSessionSqlResult> => {
+  if (config.logger !== false) throw new TypeError("Auth session SQL logging must be disabled at the resource");
+  return boundedPostgresAuthEstablishmentAsync(
+    pool,
+    config,
+    operation,
+    resourceLifetime,
+    (database) => executeAuthSessionMutationAsync(database, prepared),
+    quarantine,
+  );
+};
+
+const createOnboardingGate = (
+  prepared: CapturedOnboardingMutation,
+  resourceLifetime: AbortSignal,
+  observation?: NativeOnboardingObservationRecord,
+) => {
+  const { operation, configuration } = prepared;
+  let wallDeadlineAt = operation.deadlineAt;
+  let monotonicExpiresAt = Math.min(
+    operation.originalMonotonicExpiresAt,
+    operation.originalMonotonicStartedAt + (wallDeadlineAt - operation.originalWallStartedAt),
+  );
+  let lastObservedAt = operation.originalMonotonicStartedAt;
+  let armed = false;
+  const expiries: OnboardingExpiryWitness[] = [];
+  const check = (): number => {
+    resourceLifetime.throwIfAborted();
+    operation.lifetime.throwIfAborted();
+    operation.signal.throwIfAborted();
+    const wall = requireAuthCredentialClock(Date.now(), configuration);
+    const configured = configuration.now();
+    requireAuthCredentialClock(configured, configuration);
+    const now = Math.max(wall, configured);
+    const monotonic = performance.now();
+    if (!Number.isFinite(monotonic) || monotonic < lastObservedAt || !Number.isFinite(monotonicExpiresAt))
+      return rejectOnboarding();
+    lastObservedAt = monotonic;
+    for (const expiry of expiries) {
+      if (expiry.expiresAt <= now || (expiry.hostDeadlineAt !== null && expiry.hostDeadlineAt <= now))
+        return rejectOnboarding();
+    }
+    const remaining = Math.min(
+      operation.originalWallStartedAt + operation.originalBudgetMs - now,
+      operation.originalMonotonicExpiresAt - monotonic,
+      wallDeadlineAt - now,
+      monotonicExpiresAt - monotonic,
+    );
+    if (!Number.isFinite(remaining) || remaining < 1) return rejectOnboarding();
+    resourceLifetime.throwIfAborted();
+    operation.lifetime.throwIfAborted();
+    operation.signal.throwIfAborted();
+    if (observation) {
+      let claimExpiresAt: number | null = null;
+      let session: OnboardingNativePublicationBounds["session"] = null;
+      for (const expiry of expiries) {
+        if (expiry.source === "claim") claimExpiresAt = expiry.expiresAt;
+        if (expiry.source === "session" && expiry.hostDeadlineAt !== null)
+          session = Object.freeze({ expiresAt: expiry.expiresAt, hostDeadlineAt: expiry.hostDeadlineAt });
+      }
+      observation.bounds = Object.freeze({
+        originalWallStartedAt: operation.originalWallStartedAt,
+        originalMonotonicStartedAt: operation.originalMonotonicStartedAt,
+        originalBudgetMs: operation.originalBudgetMs,
+        originalMonotonicExpiresAt: operation.originalMonotonicExpiresAt,
+        originalDeadlineAt: operation.deadlineAt,
+        effectiveWallDeadlineAt: wallDeadlineAt,
+        effectiveMonotonicExpiresAt: monotonicExpiresAt,
+        maximumAbsoluteClockSkewMs: configuration.maximumAbsoluteClockSkewMs,
+        lastNativeMonotonicAt: monotonic,
+        claimExpiresAt,
+        session,
+      });
+    }
+    return Math.min(2147483647, Math.floor(remaining));
+  };
+  check();
+  return {
+    check,
+    observe(expiry: OnboardingExpiryWitness) {
+      const previous = expiries.find((value) => value.source === expiry.source);
+      if (previous && (previous.expiresAt !== expiry.expiresAt || previous.hostDeadlineAt !== expiry.hostDeadlineAt))
+        return rejectOnboarding();
+      let deadline = expiry.expiresAt - configuration.maximumAbsoluteClockSkewMs;
+      if (expiry.hostDeadlineAt !== null) deadline = Math.min(deadline, expiry.hostDeadlineAt);
+      if (!Number.isFinite(deadline)) return rejectOnboarding();
+      wallDeadlineAt = Math.min(wallDeadlineAt, deadline);
+      monotonicExpiresAt = Math.min(
+        monotonicExpiresAt,
+        operation.originalMonotonicExpiresAt,
+        operation.originalMonotonicStartedAt + (deadline - operation.originalWallStartedAt),
+      );
+      if (!previous) expiries.push(Object.freeze({ ...expiry }));
+      check();
+    },
+    arm() {
+      check();
+      armed = true;
+    },
+    commitCheck() {
+      if (!armed) return rejectOnboarding();
+      check();
+      if (observation) observation.finalGate = "passed";
+    },
+  };
+};
+
+const assertOnboardingSqliteTarget = (
+  client: Database,
+  migrationsFolder: string,
+  gate: TransactionGate,
+  quarantine: (reason: unknown) => void,
+  observation?: NativeOnboardingObservationRecord,
+) => {
+  let nativeFailed = false;
+  const guardFailures = new Set<unknown>();
+  const check = () => {
+    try {
+      gate.check();
+      if (!client.inTransaction) return rejectOnboarding();
+    } catch (error) {
+      guardFailures.add(error);
+      throw error;
+    }
+  };
+  const reader: CopiedCatalogReader = {
+    all(query, values = []) {
+      check();
+      const statement = client.prepare<CopiedSqlRow, CopiedSqlValue[]>(query);
+      const cleanupErrors: unknown[] = [];
+      let outcome: TransactionOutcome<CopiedSqlRow[]>;
+      try {
+        check();
+        const rows = statement.all(...values);
+        check();
+        outcome = { kind: "success", value: rows };
+      } catch (error) {
+        if (!guardFailures.has(error)) nativeFailed = true;
+        if (observation && observation.failureStage === "none") observation.failureStage = "body";
+        outcome = { kind: "failed", error };
+      } finally {
+        try {
+          statement.finalize();
+        } catch (error) {
+          cleanupErrors.push(error);
+          if (observation) {
+            observation.cleanupFailureCount += 1;
+            observation.cleanup = "failed";
+            if (observation.failureStage === "none") observation.failureStage = "cleanup";
+          }
+          nativeFailed = true;
+          quarantine(error);
+        }
+        try {
+          check();
+        } catch (error) {
+          cleanupErrors.push(error);
+          if (observation) {
+            observation.cleanupFailureCount += 1;
+            observation.cleanup = "failed";
+            if (observation.failureStage === "none") observation.failureStage = "cleanup";
+          }
+        }
+      }
+      return finishTransaction(outcome, cleanupErrors, false);
+    },
+    *iterate(query, values = []) {
+      check();
+      const statement = client.prepare<CopiedSqlRow, CopiedSqlValue[]>(query);
+      let iterator: IterableIterator<CopiedSqlRow> | undefined;
+      let outcome: TransactionOutcome<void> = { kind: "success", value: undefined };
+      const cleanupErrors: unknown[] = [];
+      try {
+        check();
+        iterator = statement.iterate(...values);
+        for (;;) {
+          check();
+          const step = iterator.next();
+          check();
+          if (step.done) break;
+          yield step.value;
+        }
+      } catch (error) {
+        if (!guardFailures.has(error)) nativeFailed = true;
+        if (observation && observation.failureStage === "none") observation.failureStage = "body";
+        outcome = { kind: "failed", error };
+      } finally {
+        try {
+          iterator?.return?.();
+        } catch (error) {
+          cleanupErrors.push(error);
+          if (observation) {
+            observation.cleanupFailureCount += 1;
+            observation.cleanup = "failed";
+            if (observation.failureStage === "none") observation.failureStage = "cleanup";
+          }
+          nativeFailed = true;
+          quarantine(error);
+        }
+        try {
+          statement.finalize();
+        } catch (error) {
+          cleanupErrors.push(error);
+          if (observation) {
+            observation.cleanupFailureCount += 1;
+            observation.cleanup = "failed";
+            if (observation.failureStage === "none") observation.failureStage = "cleanup";
+          }
+          nativeFailed = true;
+          quarantine(error);
+        }
+        try {
+          check();
+        } catch (error) {
+          cleanupErrors.push(error);
+          if (observation) {
+            observation.cleanupFailureCount += 1;
+            observation.cleanup = "failed";
+            if (observation.failureStage === "none") observation.failureStage = "cleanup";
+          }
+        }
+        finishTransaction(outcome, cleanupErrors, false);
+      }
+    },
+  };
+  check();
+  try {
+    assertSqliteMainTarget(reader, migrationsFolder);
+    check();
+  } catch (error) {
+    if (observation && observation.failureStage === "none") observation.failureStage = "body";
+    if (nativeFailed || !guardFailures.has(error)) quarantine(error);
+    throw error;
+  }
+};
+
+export const boundedSqliteOnboardingMutation = (
+  client: Database,
+  config: ReturnType<typeof createSharedDbConfig<typeof sqliteSchema>>,
+  resourceLifetime: AbortSignal,
+  prepared: CapturedOnboardingMutation,
+  migrationsFolder: string,
+  quarantine: (reason: unknown) => void,
+  observed?: NativeOnboardingObservation,
+): OnboardingClaimResult | void => {
+  if (config.logger !== false) throw new TypeError("Onboarding SQL logging must be disabled at the resource");
+  const observation = enterNativeOnboardingObservation(observed, prepared, resourceLifetime);
+  const gate = createOnboardingGate(prepared, resourceLifetime, observation);
+  return runBoundedSqliteTransaction(
+    client,
+    config,
+    (database) => {
+      assertOnboardingSqliteTarget(client, migrationsFolder, gate, quarantine, observation);
+      const statements = onboardingStatements("sqlite", prepared);
+      let step = statements.next();
+      while (!step.done) {
+        gate.check();
+        if (is(step.value, SQL)) step = statements.next(database.all<unknown>(step.value));
+        else {
+          gate.observe(step.value);
+          step = statements.next([]);
+        }
+        gate.check();
+      }
+      assertOnboardingSqliteTarget(client, migrationsFolder, gate, quarantine, observation);
+      gate.arm();
+      return step.value;
+    },
+    quarantine,
+    gate,
+    observation,
+  );
+};
+
+export const boundedPostgresOnboardingMutationAsync = (
+  pool: Pool,
+  config: ReturnType<typeof createSharedDbConfig<typeof pgSchema>>,
+  resourceLifetime: AbortSignal,
+  prepared: CapturedOnboardingMutation,
+  quarantine: (reason: unknown) => void,
+  observed?: NativeOnboardingObservation,
+): Promise<OnboardingClaimResult | void> => {
+  if (config.logger !== false) throw new TypeError("Onboarding SQL logging must be disabled at the resource");
+  const observation = enterNativeOnboardingObservation(observed, prepared, resourceLifetime);
+  const gate = createOnboardingGate(prepared, resourceLifetime, observation);
+  return runBoundedPostgresTransactionAsync(
+    pool,
+    config,
+    async (database) => {
+      const statements = onboardingStatements("postgresql", prepared);
+      let step = statements.next();
+      while (!step.done) {
+        gate.check();
+        if (is(step.value, SQL)) step = statements.next((await database.execute(step.value)).rows);
+        else {
+          gate.observe(step.value);
+          step = statements.next([]);
+        }
+        gate.check();
+      }
+      gate.arm();
+      return step.value;
+    },
+    quarantine,
+    gate,
+    postgresTransactionBegin,
+    "onboarding",
+    observation,
+  );
 };

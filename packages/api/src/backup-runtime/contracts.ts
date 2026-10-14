@@ -21,6 +21,7 @@ export interface BackupEngine {
   assertCompatibleAsync(metadata: BackupMetadata, copy: CopiedDatabase, signal?: AbortSignal): Promise<void>;
   migrateSchemaAsync(copy: CopiedDatabase, signal?: AbortSignal): Promise<void>;
   migrateContentAsync(copy: CopiedDatabase, signal?: AbortSignal): Promise<void>;
+  resetRuntimeAsync(copy: CopiedDatabase, signal?: AbortSignal): Promise<void>;
 }
 
 export interface BackupDependencies {

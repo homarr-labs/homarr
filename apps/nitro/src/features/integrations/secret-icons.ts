@@ -1,0 +1,39 @@
+import {
+  IconCode,
+  IconGrid3x3,
+  IconKey,
+  IconLink,
+  IconMessage,
+  IconPassword,
+  IconPasswordUser,
+  IconPlug,
+  IconServer,
+  IconTag,
+  IconUser,
+} from "@tabler/icons-react";
+import type { TablerIcon } from "@tabler/icons-react";
+
+import type { IntegrationSecretKind } from "@homarr/definitions";
+
+export const integrationSecretIcons = {
+  username: IconUser,
+  apiKey: IconKey,
+  password: IconPassword,
+  realm: IconServer,
+  tokenId: IconGrid3x3,
+  personalAccessToken: IconPasswordUser,
+  topic: IconMessage,
+  url: IconLink,
+  opnsenseApiKey: IconKey,
+  opnsenseApiSecret: IconPassword,
+  patchmonApiKey: IconKey,
+  patchmonApiSecret: IconPassword,
+  githubAppId: IconCode,
+  githubInstallationId: IconPlug,
+  privateKey: IconKey,
+  slug: IconTag,
+  wazuhIndexerUrl: IconLink,
+  wazuhIndexerUsername: IconUser,
+  wazuhIndexerPassword: IconPassword,
+  wazuhDashboardUrl: IconLink,
+} satisfies Record<IntegrationSecretKind, TablerIcon>;

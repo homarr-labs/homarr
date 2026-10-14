@@ -1,0 +1,100 @@
+{
+  "verdict": "diagnostic-only",
+  "mode": "contamination",
+  "versions": {
+    "node": "v24.16.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "@auth/core": {
+      "version": "0.41.3",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/@auth/core/index.js"
+    },
+    "@auth/drizzle-adapter": {
+      "version": "1.11.3",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/@auth/drizzle-adapter/index.js"
+    },
+    "bcrypt": {
+      "version": "6.0.0",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/bcrypt/bcrypt.js"
+    },
+    "ldapts": {
+      "version": "8.1.8",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/ldapts/dist/index.cjs"
+    }
+  },
+  "sourceSha256": {
+    "index.js": "92b58f370424c53b2b4d75b2c70ef6d50f6aaff6bfc407eaf031a462f4f9b9cf",
+    "lib/utils/assert.js": "527ccf487d7824c9e17e848ec3648dabf678a509693efc30f015dce217a3e178",
+    "lib/init.js": "45a08cee278050cf25e4b8af2d9414da97ecffdc0c2b522f8fa1374fb271fa94",
+    "lib/actions/callback/index.js": "b7a6919639300254d84124e30421c3ef312f77ba54c2a4e3c954561e3fe14c5e",
+    "lib/actions/session.js": "7ae48f381cc94b80e1c3c3e4a74677b3c8b2d430a6acb5581ea418bbe0d1a285",
+    "lib/actions/signout.js": "2840edc43d30d6f477b92e624206abce5e551d7b93aa39637f55b5623bc77ad9",
+    "lib/utils/web.js": "b6c6614ae4dfd0e96821d7d40f2c8071dc0de950f86a7e94881155bfaa13bc0a"
+  },
+  "fixture": {
+    "origin": "https://auth-spike.invalid",
+    "basePath": "/api/auth",
+    "maxAge": 600,
+    "updateAge": 60,
+    "secureCookies": true,
+    "bcryptCost": 10
+  },
+  "observations": {
+    "providerlessReaderModuleState": {
+      "before": {
+        "status": 200,
+        "location": null,
+        "setCookies": [
+          "__Host-auth-spike.csrf-token=3797569ac279a38739130cbe173ca62acf1f64e2327c4dba827a2de8650fc2d3%7Cc8742185ed6d4927048a3282c026e2959c37143bef26411c91aa4519f7194375; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax"
+        ],
+        "cacheControl": "private, no-cache, no-store",
+        "body": null
+      },
+      "after": {
+        "status": 500,
+        "location": null,
+        "setCookies": [],
+        "cacheControl": null,
+        "body": {
+          "message": "There was a problem with the server configuration. Check the server logs for more information."
+        }
+      }
+    }
+  },
+  "traces": [
+    {
+      "requestId": "before-credentials",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "register-credentials",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "after-credentials",
+      "steps": [],
+      "errors": [
+        {
+          "type": "UnsupportedStrategy",
+          "message": "Signing in with credentials only supported if JWT strategy is enabled. Read more at https://errors.authjs.dev#unsupportedstrategy"
+        }
+      ],
+      "stagedCookies": []
+    }
+  ],
+  "adapterCalls": [],
+  "ldapDispatchCalls": [],
+  "remainingDisposableSessions": [],
+  "limits": [
+    "No production persistence proof",
+    "No real LDAP login or role policy",
+    "No production JWT approval",
+    "No placeholder or provider-type assertion bypass",
+    "No native database credentials session creation reached"
+  ]
+}

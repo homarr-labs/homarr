@@ -7,7 +7,7 @@
       "rules": { "import/default": "off", "import/no-self-import": "off" }
     },
     {
-      "files": ["src/entry-server.tsx", "src/entry-client.tsx"],
+      "files": ["src/entry-server.tsx", "src/entry-client.tsx", "src/app/preview-styles.ts"],
       "rules": { "import/no-unassigned-import": "off" }
     }
   ]

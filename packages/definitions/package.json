@@ -15,6 +15,8 @@
     ".": "./index.ts",
     "./cookie": "./src/cookie.ts",
     "./integration": "./src/integration.ts",
+    "./stock-price": "./src/stock-price.ts",
+    "./widget-integration-contracts": "./src/widget-integration-contracts.ts",
     "./docs/*": "./src/docs/*.ts"
   },
   "scripts": {

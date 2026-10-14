@@ -1,9 +1,9 @@
-import type { RouterOutputs } from "@homarr/api";
+import type { NativeWidgetOutputs } from "@homarr/api/nitro/browser-contracts/widgets";
 import { formatDuration, metricToImperial } from "@homarr/common";
 
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
 
-export type WeatherData = NonNullable<RouterOutputs["widget"]["weather"]["atLocation"]>;
+export type WeatherData = NonNullable<NativeWidgetOutputs["weather"]["atLocation"]>;
 export type DailyWeatherData = WeatherData["daily"][number];
 
 export const toPreferredTemperature = (value: number | null | undefined, isFahrenheit = false): number | null => {

@@ -1,0 +1,17 @@
+# K Docker successor — source-only freeze
+
+Oracle authorization in principle: `ses_ece61e4b3ffeWbV4O1ETRyh5DZ`, including the mandatory P1 compilation-origin correction. Created only the fresh successor `records/launch-schema.py` and this report. The frozen launcher in `nitro-schema-capture-iLcFdopr` was read as the baseline; its source, approval, once-lock and evidence were not edited, removed or reset.
+
+## Precise delta
+
+1. `STAGE` is fixed to `/private/var/folders/kx/hccbvbyd6sb61s6lrr2jyt2m0000gn/T/opencode/nitro-schema-successor-sd8vxJIM`.
+2. Docker retains `self.invocation = shutil.which("docker", path=HOST_PATH)`, requires its lexical basename to be `docker`, and separately resolves `self.executable` canonically. `subprocess.Popen` receives lexical invocation as `argv[0]` and canonical `executable=self.executable`. All queued actual argv receipts and `create-argv.json` record that same lexical invocation, never mislabel canonical `docker-tools` as actual argv0. No symlink creation, installation, shell, credential/config adoption, additional environment forwarding or trust bypass.
+3. `ORIGINAL_COMPILE_CONTROL` is fixed to `/private/var/folders/kx/hccbvbyd6sb61s6lrr2jyt2m0000gn/T/opencode/nitro-schema-capture-iLcFdopr/control`. The preserved manifest's `source.path` and `output.path` must equal that exact original origin plus `schema-control.ts` and `schema-control.mjs`, respectively. Sizes and hashes still match the **actual successor inventory** and independently frozen approval. The manifest is not rewritten and its provenance is not treated as a fresh compilation. No arbitrary original-origin parameter or proof bypass is introduced.
+
+All other baseline source is carried forward: exact four control files/103 authenticated assets/six capability evidence files, fixed14-key approval, captured security/default mask policy, not-applicable LSM/default seccomp, actual init, fixed clean environment, image/resource/mount/network restrictions, fixed producer receipt/ledger/strict-close join,120second live budget and shared absolute TERM10/KILL5 phases, bounded in-memory live evidence/no live filesystem writes, one create, retained history and no retry/restart/cleanup. No control, compilation manifest, assets, approval or old records were written here.
+
+## Evidence boundary and remaining gates
+
+Coordinator reports the successor already contains byte-preserved control/source/output/provenance, assets and capability/default-policy evidence with private modes. Coordinator also reports the old stage retained its once-lock and image-inspect CLI127 caused by unsupported canonical argv0 `docker-tools`, with no container create/native run; separate fresh lexical Docker queries exited0 and located the cached image. These are supplied coordinator observations, not executions or checks performed by this source-author allocation.
+
+No commands, checks, tests, evaluation, native SQL, environment/data/secret access or nested agents occurred. Before any future single successor host launch, independently review the **actual successor byte delta/closure**, obtain the builtin-CLI canonical-executable/lexical-argv0 probe, and freeze a separately authenticated successor approval with its actual stage/launcher hash and unchanged preserved input/evidence hashes. No launcher/approval digest or successful execution is invented here. K acceptance, adoption, activation and product-admission holds remain unchanged.

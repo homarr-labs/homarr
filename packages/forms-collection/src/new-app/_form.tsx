@@ -1,7 +1,7 @@
 "use client";
 
-import type { ChangeEventHandler } from "react";
-import { useCallback, useEffect, useImperativeHandle, useRef } from "react";
+import type { ChangeEventHandler, FormEvent } from "react";
+import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
 import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { z } from "zod/v4";
@@ -13,8 +13,10 @@ import { Link } from "@homarr/ui";
 import { appManageSchema } from "@homarr/validation/app";
 
 import { IconPicker } from "../icon-picker/icon-picker";
+import type { IconPickerResources } from "../icon-picker/icon-picker";
 
-type FormType = z.infer<typeof appManageSchema>;
+export type AppFormValues = z.infer<typeof appManageSchema>;
+type FormType = AppFormValues;
 
 const toFormValues = (values: FormType | undefined): FormType => ({
   name: values?.name ?? "",
@@ -24,22 +26,34 @@ const toFormValues = (values: FormType | undefined): FormType => ({
   pingUrl: values?.pingUrl ?? "",
 });
 
+const matchesFormValues = (current: FormType, submitted: FormType) =>
+  current.name === submitted.name &&
+  current.description === submitted.description &&
+  current.iconUrl === submitted.iconUrl &&
+  current.href === submitted.href &&
+  current.pingUrl === submitted.pingUrl;
+
 export interface AppFormHandle {
   submit: () => Promise<boolean>;
   isDirty: () => boolean;
 }
 
-interface AppFormProps {
+export interface AppFormProps {
   showBackToOverview: boolean;
   buttonLabels: {
     submit: string;
     submitAndCreateAnother?: string;
   };
   initialValues?: FormType;
-  handleSubmit: (values: FormType, redirect: boolean, afterSuccess?: () => void) => void | Promise<void>;
+  handleSubmit: (values: FormType, redirect: boolean, afterSuccess?: () => void) => Promise<void>;
   isPending: boolean;
   hideButtons?: boolean;
   formRef?: React.Ref<AppFormHandle>;
+  iconPickerProps: IconPickerResources;
+  disabled?: boolean;
+  isCurrentOwner: () => boolean;
+  onDirtyChange: (dirty: boolean) => void;
+  captureSubmissionOwner: () => { isCurrent: () => boolean };
 }
 
 export const AppForm = ({
@@ -50,6 +64,11 @@ export const AppForm = ({
   isPending,
   hideButtons,
   formRef,
+  iconPickerProps,
+  disabled = false,
+  isCurrentOwner,
+  onDirtyChange,
+  captureSubmissionOwner,
 }: AppFormProps) => {
   const tApp = useI18n("app");
   const tCommon = useI18n("common");
@@ -82,42 +101,119 @@ export const AppForm = ({
   }, [initialValuesKey]);
 
   const shouldCreateAnother = useRef(false);
-  const handleSubmit = useCallback(
-    async (values: FormType) => {
-      const redirect = !shouldCreateAnother.current;
-      const afterSuccess = shouldCreateAnother.current
-        ? () => {
-            form.reset();
-            shouldCreateAnother.current = false;
-          }
-        : undefined;
+  const submitting = useRef(false);
+  const binding = useMemo(
+    () => ({ captureSubmissionOwner, initialValuesKey, isCurrentOwner, onDirtyChange }),
+    [captureSubmissionOwner, initialValuesKey, isCurrentOwner, onDirtyChange],
+  );
+  const owner = useRef<{ active: boolean; binding: typeof binding } | null>(null);
+  const currentForm = useRef(form);
+  const reportedDirty = useRef<{ owner: object; dirty: boolean } | null>(null);
+  useLayoutEffect(() => {
+    const lease = { active: true, binding };
+    owner.current = lease;
+    return () => {
+      lease.active = false;
+    };
+  }, [binding]);
+  useLayoutEffect(() => {
+    currentForm.current = form;
+    const lease = owner.current;
+    if (!lease?.active || lease.binding !== binding || !isCurrentOwner()) return;
+    const dirty = form.isDirty();
+    if (reportedDirty.current?.owner === lease && reportedDirty.current.dirty === dirty) return;
+    reportedDirty.current = { owner: lease, dirty };
+    onDirtyChange(dirty);
+  });
+  const submit = useCallback(
+    (event?: FormEvent<HTMLFormElement>): Promise<boolean> => {
+      event?.preventDefault();
+      const lease = owner.current;
+      if (!lease?.active || lease.binding !== binding || submitting.current || isPending || disabled)
+        return Promise.resolve(false);
+      submitting.current = true;
+      const createAnother = shouldCreateAnother.current;
       shouldCreateAnother.current = false;
-      await originalHandleSubmit(values, redirect, afterSuccess);
+      try {
+        const submissionOwner = captureSubmissionOwner();
+        const isCurrent = () =>
+          lease.active && owner.current === lease && submissionOwner.isCurrent() && isCurrentOwner();
+        if (!isCurrent()) {
+          submitting.current = false;
+          return Promise.resolve(false);
+        }
+        const submitted = toFormValues(currentForm.current.getValues());
+        return new Promise<boolean>((resolve) => {
+          const finish = (success: boolean) => {
+            try {
+              resolve(success && isCurrent());
+            } catch {
+              resolve(false);
+            } finally {
+              submitting.current = false;
+            }
+          };
+          const acknowledgeSubmitted = () => {
+            if (!isCurrent()) return;
+            const actual = currentForm.current.getValues();
+            currentForm.current.resetDirty(submitted);
+            currentForm.current.setDirty({
+              name: actual.name !== submitted.name,
+              description: actual.description !== submitted.description,
+              iconUrl: actual.iconUrl !== submitted.iconUrl,
+              href: actual.href !== submitted.href,
+              pingUrl: actual.pingUrl !== submitted.pingUrl,
+            });
+          };
+          const handleSubmit = async (values: FormType) => {
+            try {
+              if (!isCurrent() || !matchesFormValues(values, submitted)) return false;
+              let didReset = false;
+              const afterSuccess = createAnother
+                ? () => {
+                    if (!isCurrent()) return;
+                    if (matchesFormValues(currentForm.current.getValues(), submitted)) {
+                      currentForm.current.reset();
+                      didReset = true;
+                    } else {
+                      acknowledgeSubmitted();
+                    }
+                  }
+                : undefined;
+              await originalHandleSubmit(submitted, !createAnother, afterSuccess);
+              if (!isCurrent()) return false;
+              if (!didReset) acknowledgeSubmitted();
+              return isCurrent();
+            } catch {
+              return false;
+            }
+          };
+          try {
+            currentForm.current.onSubmit(
+              (values) => {
+                void handleSubmit(values).then(finish);
+              },
+              () => finish(false),
+            )(event);
+          } catch {
+            finish(false);
+          }
+        });
+      } catch {
+        submitting.current = false;
+        return Promise.resolve(false);
+      }
     },
-    [form, originalHandleSubmit],
+    [binding, captureSubmissionOwner, disabled, isCurrentOwner, isPending, originalHandleSubmit],
   );
 
   useImperativeHandle(
     formRef,
     () => ({
-      submit: () =>
-        new Promise<boolean>((resolve) => {
-          form.onSubmit(
-            async (values) => {
-              try {
-                await Promise.resolve(handleSubmit(values));
-                form.resetDirty(values);
-                resolve(true);
-              } catch {
-                resolve(false);
-              }
-            },
-            () => resolve(false),
-          )();
-        }),
+      submit: () => submit(),
       isDirty: () => form.isDirty(),
     }),
-    [form, handleSubmit],
+    [form, submit],
   );
 
   const [opened, { open, close }] = useDisclosure((initialValues?.pingUrl?.length ?? 0) > 0);
@@ -132,10 +228,11 @@ export const AppForm = ({
   };
 
   const formFields = (
-    <fieldset disabled={isPending} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
+    <fieldset disabled={isPending || disabled} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label={tCommon("field.name")} />
         <IconPicker
+          {...iconPickerProps}
           {...form.getInputProps("iconUrl")}
           suggestedSearch={initialValues === undefined ? form.values.name : undefined}
         />
@@ -199,14 +296,9 @@ export const AppForm = ({
 
   return (
     <form
-      onSubmit={form.onSubmit(
-        (values) => {
-          void handleSubmit(values).catch(() => {});
-        },
-        () => {
-          shouldCreateAnother.current = false;
-        },
-      )}
+      onSubmit={(event) => {
+        void submit(event);
+      }}
     >
       {formFields}
     </form>

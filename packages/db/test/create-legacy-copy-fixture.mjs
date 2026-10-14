@@ -2,12 +2,35 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { stringify } from "superjson";
+import { readFileSync } from "node:fs";
+import { isAbsolute, join } from "node:path";
 
 const [path, migrationsFolder, mode] = process.argv.slice(2);
-if (!path || !migrationsFolder) throw new Error("Explicit fixture path and migration folder are required");
+if (!path || !migrationsFolder || !isAbsolute(path) || !isAbsolute(migrationsFolder))
+  throw new Error("Explicit fixture path and migration folder are required");
+const versions = { historical: 46, old49: 49, current: 50 };
+const version = versions[mode];
+const journal = JSON.parse(readFileSync(join(migrationsFolder, "meta/_journal.json"), "utf8"));
+if (!version || journal.entries.length !== version) throw new Error("Explicit fixture migration version required");
 const database = new Database(path);
 try {
   migrate(drizzle(database), { migrationsFolder });
+  if (database.prepare("SELECT COUNT(*) AS count FROM __drizzle_migrations").get().count !== version)
+    throw new Error("Fixture migration ledger mismatch");
+  if (mode === "current") {
+    database.prepare('UPDATE "homarr_runtime_meta" SET epoch = ? WHERE id = 1').run("disposable-imported-epoch");
+    database
+      .prepare('INSERT INTO "homarr_runtime_state" (epoch, key, value) VALUES (?, ?, ?)')
+      .run("disposable-imported-epoch", "disposable-state", "disposable-value");
+    database
+      .prepare('INSERT INTO "homarr_runtime_history_stream" (epoch, kind, name, head_sequence) VALUES (?, ?, ?, ?)')
+      .run("disposable-imported-epoch", "log", "disposable-stream", 1);
+    database
+      .prepare(
+        'INSERT INTO "homarr_runtime_history_entry" (epoch, kind, name, sequence, payload) VALUES (?, ?, ?, ?, ?)',
+      )
+      .run("disposable-imported-epoch", "log", "disposable-stream", 1, "disposable-payload");
+  }
   database
     .prepare("INSERT INTO user (id, name, password, open_search_in_new_tab) VALUES (?, ?, ?, ?)")
     .run("copied-user", "Saved identity", "$2b$10$odRXt5e95kSQV5Axmk/FeO6GVOxuRQQ8NnRcBA78Wg4V3kZxPY68u", 0);
@@ -74,16 +97,14 @@ try {
     database
       .prepare("INSERT INTO integration (id, name, url, kind) VALUES (?, ?, ?, ?)")
       .run("old-github", "GitHub", "http://127.0.0.1/disposable", "github");
-    database
-      .prepare("INSERT INTO item (id, board_id, kind, options) VALUES (?, ?, ?, ?)")
-      .run(
-        "old-release",
-        "copied-board",
-        "releases",
-        stringify({
-          repositories: [{ providerKey: "Github", providerIntegrationId: "old-github", repository: "fixture/repo" }],
-        }),
-      );
+    database.prepare("INSERT INTO item (id, board_id, kind, options) VALUES (?, ?, ?, ?)").run(
+      "old-release",
+      "copied-board",
+      "releases",
+      stringify({
+        repositories: [{ providerKey: "Github", providerIntegrationId: "old-github", repository: "fixture/repo" }],
+      }),
+    );
     database
       .prepare("INSERT INTO integration_item (item_id, integration_id) VALUES (?, ?)")
       .run("old-release", "old-github");

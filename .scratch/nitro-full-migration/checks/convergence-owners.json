@@ -1,0 +1,25 @@
+{
+  "extends": "./evening-read-adapters.json",
+  "include": [
+    "../../../apps/backend/src",
+    "../../../apps/backend/server",
+    "../../../apps/backend/tests",
+    "../../../apps/backend/nitro.config.ts",
+    "../../../packages/api/src/nitro/assembly/authenticated-read.ts",
+    "../../../packages/api/src/nitro/assembly/authenticated-read-client.ts",
+    "../../../packages/api/src/nitro/assembly/native-read-resources.ts",
+    "../../../packages/api/src/nitro/routers/-icons/native-read-resources.ts",
+    "../../../packages/api/src/backup-runtime/nitro-join/contracts.ts",
+    "../../../packages/api/src/backup-runtime/nitro-join/service.ts",
+    "../../../packages/api/src/backup-runtime/nitro-join/index.ts",
+    "../../../packages/api/src/backup-runtime/archive.ts",
+    "../../../packages/api/src/backup-runtime/index.ts",
+    "../../../packages/api/src/nitro/routers/-onboard-transitions/helpers.ts",
+    "../../../packages/api/src/nitro/routers/-cron-jobs/resources.ts",
+    "../../../packages/api/src/nitro/routers/-cron-jobs/helpers.ts",
+    "../../../packages/api/src/nitro/routers/cron-jobs.ts",
+    "../../../packages/integrations/src/nitro-bindings/native.ts",
+    "../../../packages/integrations/src/nitro-bindings/configuration.ts",
+    "../../../packages/integrations/src/nitro-bindings/index.ts"
+  ]
+}

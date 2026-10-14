@@ -3,11 +3,11 @@ import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
-import type { Database, InferSelectModel } from "@homarr/db";
-import { asc, eq, inArray, like } from "@homarr/db";
-import { apps, integrations } from "@homarr/db/schema";
+import type { Database, InferInsertModel, InferSelectModel } from "@homarr/db";
+import { and, asc, eq, exists, inArray, like, ne, or, sql } from "@homarr/db";
+import { apps, iconRepositories, icons, integrations, medias } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
-import { getIconForName } from "@homarr/icons";
+import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG } from "@homarr/icons/local";
 import { invalidateIntegrationResponseCacheAsync } from "@homarr/redis";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
@@ -225,15 +225,46 @@ export const appRouter = createTRPCRouter({
     .input(appCreateManySchema)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(apps).values(
-        input.map((app) => ({
-          id: createId(),
+      const insertValues: InferInsertModel<typeof apps>[] = [];
+
+      for (const app of input) {
+        const id = createId();
+        let iconUrl = app.iconUrl;
+
+        if (iconUrl === null || iconUrl === undefined) {
+          const [icon] = await ctx.db
+            .select({ url: icons.url })
+            .from(icons)
+            .innerJoin(iconRepositories, eq(iconRepositories.id, icons.iconRepositoryId))
+            .where(
+              and(
+                like(icons.name, `%${app.name}%`),
+                or(
+                  ne(iconRepositories.slug, LOCAL_ICON_REPOSITORY_SLUG),
+                  exists(
+                    ctx.db
+                      .select({ id: medias.id })
+                      .from(medias)
+                      .where(eq(icons.url, sql`${createLocalImageUrl("")} || ${medias.id}`)),
+                  ),
+                ),
+              ),
+            )
+            .limit(1);
+
+          iconUrl = icon?.url ?? defaultIcon;
+        }
+
+        insertValues.push({
+          id,
           name: app.name,
           description: app.description,
-          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
+          iconUrl,
           href: app.href,
-        })),
-      );
+        });
+      }
+
+      await ctx.db.insert(apps).values(insertValues);
     }),
   update: permissionRequiredProcedure
     .requiresPermission("app-modify-all")

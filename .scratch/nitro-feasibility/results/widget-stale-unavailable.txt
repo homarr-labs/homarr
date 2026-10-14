@@ -1,0 +1,22 @@
+Verified inventory
+
+73 items
+
+Observed: 2026-10-10T16:07:56.589Z
+
+Generation: 10 · stale
+
+Synthetic HTTP source. Refresh checks start after hydration, every 5 seconds while this board is visible.
+
+Last-good observation retained: timeout.
+
+Synthetic source controls
+
+Owner-only fixture controls. Both boards read the same synthetic source.
+
+Source value (items)
+Set healthy source
+Simulate source error
+Simulate timeout
+
+Source delay enabled, longer than the widget deadline.

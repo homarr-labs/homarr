@@ -4,22 +4,26 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
+import type { SystemResourcePresentation } from "../native-view-types";
 
 export const SystemResourceCPUChart = ({
   cpuUsageOverTime,
   hasShadow,
   labelDisplayMode,
   advanced = false,
+  presentation,
 }: {
   cpuUsageOverTime: number[];
   hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
   advanced?: boolean;
+  presentation: SystemResourcePresentation;
 }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
 
   return (
     <CommonChart
+      presentation={presentation}
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "blue.5" }]}

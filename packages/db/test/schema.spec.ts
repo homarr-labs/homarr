@@ -14,17 +14,12 @@ const postgresqlTables = { ...postgresqlSchema };
 
 // Normalize the PostgreSQL custom Buffer type for comparison with SQLite.
 type FixedPostgresqlConfig = {
-  [key in keyof PostgreisqlConfig]: {
-    [column in keyof PostgreisqlConfig[key]]: {
-      [property in Exclude<
-        keyof PostgreisqlConfig[key][column],
-        "dataType" | "data"
-      >]: PostgreisqlConfig[key][column][property];
+  [key in keyof PgConfig]: {
+    [column in keyof PgConfig[key]]: {
+      [property in Exclude<keyof PgConfig[key][column], "dataType" | "data">]: PgConfig[key][column][property];
     } & {
-      dataType: PostgreisqlConfig[key][column]["data"] extends Buffer
-        ? "buffer"
-        : PostgreisqlConfig[key][column]["dataType"];
-      data: PostgreisqlConfig[key][column]["data"] extends Buffer ? Buffer : PostgreisqlConfig[key][column]["data"];
+      dataType: PgConfig[key][column]["data"] extends Buffer ? "buffer" : PgConfig[key][column]["dataType"];
+      data: PgConfig[key][column]["data"] extends Buffer ? Buffer : PgConfig[key][column]["data"];
     };
   };
 };
@@ -32,7 +27,15 @@ type FixedPostgresqlConfig = {
 type FixedSqliteConfig = {
   [key in keyof SqliteConfig]: {
     [column in keyof SqliteConfig[key]]: {
-      [property in Exclude<keyof SqliteConfig[key][column], "dataType" | "data">]: SqliteConfig[key][column][property];
+      [property in Exclude<keyof SqliteConfig[key][column], "dataType" | "data">]: [key, column, property] extends [
+        "authCredentialDomain",
+        "id",
+        "hasDefault",
+      ]
+        ? SqliteConfig[key][column][property] extends true
+          ? false
+          : "Unexpected SQLite INTEGER PRIMARY KEY hasDefault"
+        : SqliteConfig[key][column][property];
     } & {
       dataType: SqliteConfig[key][column]["dataType"] extends Buffer ? "buffer" : SqliteConfig[key][column]["dataType"];
       data: SqliteConfig[key][column]["data"] extends Buffer ? Buffer : SqliteConfig[key][column]["data"];
@@ -153,7 +156,7 @@ type SqliteConfig = {
     : never;
 };
 
-type PostgreisqlConfig = {
+type PgConfig = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof postgresqlSchema]: (typeof postgresqlSchema)[K] extends PgTableWithColumns<any>
     ? {

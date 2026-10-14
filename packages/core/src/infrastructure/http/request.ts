@@ -1,12 +1,10 @@
-import { createHash } from "node:crypto";
 import type { AgentOptions } from "node:https";
 import { Agent as HttpsAgent } from "node:https";
 import type { LookupFunction } from "node:net";
-import { checkServerIdentity, createSecureContext } from "node:tls";
-import type { SecureContext } from "node:tls";
-import axios from "axios";
+import type { checkServerIdentity } from "node:tls";
+import { create as createAxios } from "axios";
 import type { EnvHttpProxyAgent as UndiciEnvHttpProxyAgent, RequestInfo, RequestInit, Response } from "undici";
-import { fetch } from "undici";
+import { fetch } from "undici/index.js";
 
 import {
   getAllTrustedCertificatesAsync,
@@ -14,47 +12,13 @@ import {
 } from "@homarr/core/infrastructure/certificates";
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
-import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { getHttpRequestSignal } from "./request-signal";
 import { withTimeoutAsync } from "./timeout";
+import { createCustomCheckServerIdentity, createTlsContextCache } from "./tls";
 
-// Parsing the entire CA store for every parallel connection adds synchronous
-// work to the rendering thread. Reuse only the TLS context, never auth or data.
-const tlsContexts = new Map<string, SecureContext>();
-const getTlsContext = (ca: NonNullable<AgentOptions["ca"]>) => {
-  const hash = createHash("sha256");
-  for (const certificate of Array.isArray(ca) ? ca : [ca]) {
-    hash
-      .update(String(Buffer.byteLength(certificate)))
-      .update(":")
-      .update(certificate);
-  }
-  const identity = hash.digest("hex");
-  const existing = tlsContexts.get(identity);
-  if (existing) return existing;
-  const context = createSecureContext({ ca });
-  if (tlsContexts.size >= 4) {
-    const oldest = tlsContexts.keys().next().value;
-    if (oldest !== undefined) tlsContexts.delete(oldest);
-  }
-  tlsContexts.set(identity, context);
-  return context;
-};
+const { getTlsContext } = createTlsContextCache();
 
-export const createCustomCheckServerIdentity = (
-  trustedHostnames: TrustedCertificateHostname[],
-): typeof checkServerIdentity => {
-  return (hostname, peerCertificate) => {
-    const matchingTrustedHostnames = trustedHostnames.filter(
-      (cert) => cert.thumbprint === peerCertificate.fingerprint256,
-    );
-
-    // We trust the certificate if we have a matching hostname
-    if (matchingTrustedHostnames.some((cert) => cert.hostname === hostname)) return undefined;
-
-    return checkServerIdentity(hostname, peerCertificate);
-  };
-};
+export { createCustomCheckServerIdentity } from "./tls";
 
 export const createCertificateAgentAsync = async (
   override?: Partial<{
@@ -73,6 +37,7 @@ export const createCertificateAgentAsync = async (
   return new UndiciHttpAgent({
     ...agentOptions,
     connect: {
+      ca,
       secureContext: getTlsContext(ca),
       checkServerIdentity: identityCheck,
       ...(override?.lookup ? { lookup: override.lookup } : {}),
@@ -95,7 +60,7 @@ export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" |
 export const createAxiosCertificateInstanceAsync = async (
   override?: Pick<AgentOptions, "ca" | "checkServerIdentity">,
 ) => {
-  const client = axios.create({
+  const client = createAxios({
     httpsAgent: await createHttpsAgentAsync(override),
   });
   client.interceptors.request.use((config) => {

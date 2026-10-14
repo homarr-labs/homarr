@@ -1,0 +1,41 @@
+const sourceAssets = [
+  ["favicon.ico", 176126, "b2c2a74c9fc676ece8a8b21b2c939ad3ee744f1215c99b61d071c56194d661f1"],
+  ["sw.js", 160, "7b410671a1b97c3338d912fa489dc7e6bf6c615af507c05e80209b27b7769e45"],
+  ["logo/logo.png", 3408, "749d5d458bed50ddce6fddaeb79575a136879eb0b188dd2b52308133ce456801"],
+  ["images/demo-dashboard-background.svg", 2428, "949294cd6759d9002b99277e9c28c11dc949f8bb778024c74037ec1ff46a9642"],
+  ["images/mock/avatar.jpg", 608975, "2422dca7cc7cbfdeaabaa55b0138bb389ac2b7c677974cec09e237c682123b60"],
+  ["images/pwa/192.maskable.png", 3478, "fecdde6f150925a92eb7fb97abe8621948151700cc0ae9fcb15f5f1aa6dbb4a5"],
+  ["images/pwa/512.maskable.png", 11657, "2a04ad62b1c0fbc19c38d939c5f414457633b74ae8996c94325fa029dd779151"],
+  ["images/apps/imdb.svg", 4008, "27f93b15a075b015e2448eca7949f7a3da03c37fbf26cecf6df3bdab45fda993"],
+  ["images/apps/lastfm.svg", 2241, "39605fa70ed7e3d58c20b2360e5f3202614ef9ac58f51e730e7b7607347df7e0"],
+  ["images/apps/lidarr.svg", 55137, "21655693baccd6d69169f5429d7ca360be31796cc343624acb578751eb639fc7"],
+  ["images/apps/nextcloud.svg", 739, "892404c0c7c74cb22d6c728e967fcf5cb680f7d343db1cdfef92186d44cce6d3"],
+  ["images/apps/radarr.svg", 1052, "f680b82ace17c6cb211215de4bfcf780b2f2c4fd7263d7cd9aa4a485ee6364fd"],
+  ["images/apps/readarr.svg", 1836, "eaf5019a500067623cde107ea5ccdbb9856a0502c31fa0582b9f98240aa09561"],
+  ["images/apps/sonarr.svg", 2236, "89f1fae3f2f197007072e2e454dccd6e2732210178cab4f493dce0221842f122"],
+  ["images/apps/the-tvdb.svg", 2832, "d85c8b8060c9b00c9409840d4eb51c06286545eec695d002126d70841230764a"],
+  ["images/apps/tmdb.svg", 2232, "5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4"],
+  ["images/apps/truenas.svg", 484, "8e71330189a28a39877d972222f9d554d5f9647775448e5103fb2738423eb3cc"],
+  ["images/apps/unraid-alt.svg", 577, "243bda8dd628b56bea599453974a085810ad94ad02032882337293842a81642d"],
+  ["images/apps/vgmdb.svg", 4754, "38513662484499b6ea4af81020545b28f2d58d32c79951f334ae1f716de682d7"],
+  ["images/kubernetes/configmaps.svg", 7818, "79cd881b717aed580d90a83f4c67c7f2c2b5672a26669ef61d0ddd2da6aac2af"],
+  ["images/kubernetes/ingresses.svg", 5309, "66ac75442eff83ef51a8d1ef01edd858cc621b0f43ff60e2170f1d10c4d49813"],
+  ["images/kubernetes/namespaces.svg", 5078, "6539e288ca6f5ce9c88aedf8520301618d0b1e0115783483104096b0c5a8ad19"],
+  ["images/kubernetes/nodes.svg", 8296, "a99367b8a805d9bbc91ef82cf47c8a243fe4e6dd8ff2ce4342f597c2cbec965a"],
+  ["images/kubernetes/pods.svg", 5917, "3356f7ca970f811da2b1aa34a0f13e846255378727809ab6629837a842db0a2d"],
+  ["images/kubernetes/secrets.svg", 7719, "144fb9972d456ef172fcebbe6a6d7d4921254c6586b0381962c9add0b34468c2"],
+  ["images/kubernetes/services.svg", 6860, "a86fad881253c4d7abbe7413c0efbca2e7dde7e54a55774f79349494bd823990"],
+  ["images/kubernetes/volumes.svg", 6360, "93d6ccca227c8631eaac916fc37911d5c16e07607cbd4bfb8825e2972c22ad66"],
+] as const;
+
+export const originalStaticAssets = Object.freeze(
+  sourceAssets.map(([path, bytes, sha256]) =>
+    Object.freeze({
+      href: `/${path}`,
+      source: `apps/nextjs/public/${path}`,
+      destination: `apps/nitro/public/${path}`,
+      bytes,
+      sha256,
+    }),
+  ),
+);

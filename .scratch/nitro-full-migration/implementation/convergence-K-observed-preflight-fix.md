@@ -1,0 +1,17 @@
+# K observed-preflight source fix
+
+Source-only handoff for `/private/var/folders/kx/hccbvbyd6sb61s6lrr2jyt2m0000gn/T/opencode/nitro-schema-observed-lpMYbMzd`. No commands, checks, compilation, module evaluation, application boot, or native SQL performed. No further source edits by this lease; host input freezing and hash approval remain coordinator work.
+
+## Exact deltas
+
+- `control/schema-control.ts`: append `BUN_RUNTIME_TRANSPILER_CACHE_PATH: ""` to the strict fixed environment. Add the literal `fixedInitPropagationTag = "master:4"`; the generic propagation rejection permits only the fixed init path with exactly one optional field equal to that tag. Existing unique readonly-overlay mount, PID 1, executable, canonical-path, empty-work, capacity, and freshness checks remain required before directory creation or native open. Core-zero horizontal-padding parsing is unchanged.
+- `records/launch-schema.py`: change only the fixed stage and actual forthcoming compilation-origin literals; append `BUN_RUNTIME_TRANSPILER_CACHE_PATH=` to the env-i command. Add only `root-preflight-observation.json` to the existing finite evidence set and require its existing approval-map hash to equal `9b503be40c55707c313c340671c708a3937150c8ebdbe1e7f1cceea9e1225064`. The existing bounded safe reader and JSON parser validate only recorded observation/native-free flags, terminal stopped-zero state, init identity, and the unique readonly-overlay init mount with exactly `["master:4"]` before container creation. Prestart `OomKillDisable` remains strictly false; explicit null is accepted only after a same-CID inspect establishes an exited terminal stopped state. Missing, true, and other representations are not admitted.
+- `.scratch/nitro-full-migration/implementation/convergence-K-observed-preflight-fix.md`: this handoff record.
+
+The multiline projection was read only to identify existing raw-record field paths. It is not included in the evidence set and is not an alternate authority. The entire unchanged raw observation is hash-bound through the existing host evidence approval map; no manifest or approval-schema keys were added. `ORIGINAL_COMPILE_CONTROL` identifies the new compilation location, not a claim that old source was compiled there.
+
+## Unchanged boundaries and pending gates
+
+Control inventory, the three runtime-envelope keys, legacy asset filename grammar, all 103 historical pins, capture, SQL/query/migration/native-proof and receipt semantics, strict close, bounds, image/Bun/UID/GID, network, capabilities, NNP, memory/tmpfs, two readonly binds, once-lock/CID handling, lexical Docker argv0 and canonical executable, client reaping, queued streams, ambiguous-create handling, stopped proof, and the 120-second watchdog with finite TERM 10/KILL 5 signal/wait/inspect phases remain unchanged. Old stages, once-locks, CIDs, raw evidence, projection, copied inputs, generated control output, compile manifest, source authorization, policy JSON, and product sources were not written.
+
+Native SQL attempts remain at the coordinator-reported zero. Independent source/AST and launcher review, new compilation at this stage with the 111-input closure, disjoint 110-Drizzle-input review, static type/lint validation, frozen hashes, and authenticated approval remain required before one synthetic native experiment. This handoff performs or authorizes no run and clears no K, D, adoption, or production hold.

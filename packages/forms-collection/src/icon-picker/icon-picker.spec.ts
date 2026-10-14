@@ -4,12 +4,14 @@ import { afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vi
 import { MantineProvider } from "@mantine/core";
 
 import type { Root } from "react-dom/client";
+import type { UploadMediaProps } from "../upload-media/upload-media";
+import type { IconPickerProps, IconPickerQuery, IconPickerResources } from "./icon-picker";
 import type { IconGroup } from "./icon-picker.utils";
 
 const { findIconsQuery, refetch, uploadSelection, sessionPermissions } = vi.hoisted(() => ({
-  findIconsQuery: vi.fn(),
-  refetch: vi.fn(),
-  uploadSelection: vi.fn(),
+  findIconsQuery: vi.fn<IconPickerResources["useIcons"]>(),
+  refetch: vi.fn<IconPickerQuery["refetch"]>().mockResolvedValue(undefined),
+  uploadSelection: vi.fn<NonNullable<UploadMediaProps["upload"]>>().mockResolvedValue(["uploaded"]),
   sessionPermissions: { current: [] as string[] },
 }));
 
@@ -26,39 +28,23 @@ let queryResult: {
   isError: boolean;
 };
 
-vi.mock("@homarr/api/client", () => ({
-  clientApi: {
-    icon: {
-      findIcons: {
-        useQuery: (input: { searchText: string; limitPerGroup: number }, options: { enabled: boolean }) => {
-          findIconsQuery(input, options);
-          return { ...queryResult, refetch };
-        },
-      },
-    },
-  },
-}));
-vi.mock("@homarr/auth/client", () => ({
-  useSession: () => ({ data: { user: { permissions: sessionPermissions.current } } }),
-}));
 vi.mock("@homarr/translation", () => ({ supportedLanguages: [] }));
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string, params?: Record<string, string>) =>
     params ? `${key}:${Object.values(params).join(",")}` : key,
 }));
 vi.mock("../upload-media/upload-media", () => ({
-  UploadMedia: ({
-    children,
-    onSuccess,
-  }: {
-    children: (props: object) => unknown;
-    onSuccess: (medias: unknown) => void;
-  }) =>
+  UploadMedia: ({ children, onSuccess, upload, isPending = false, isCurrentOwner }: UploadMediaProps) =>
     children({
-      loading: false,
-      onClick: () => {
-        uploadSelection();
-        onSuccess([{ id: "uploaded", url: "/api/user-medias/uploaded" }]);
+      loading: isPending,
+      disabled: !upload || isPending || !isCurrentOwner(),
+      outcome: "idle",
+      retryReconciliation: null,
+      onClick: async () => {
+        if (!upload || isPending || !isCurrentOwner()) return;
+        const mediaIds = await upload(new FormData());
+        if (!isCurrentOwner()) return;
+        await onSuccess?.(mediaIds.map((id) => ({ id, url: `/api/user-medias/${id}` })));
       },
     }),
 }));
@@ -105,6 +91,7 @@ const advanceDebounce = async () => {
 describe("IconPicker", () => {
   let container: HTMLDivElement;
   let root: Root;
+  let owner: { active: boolean } | undefined;
 
   beforeAll(() => {
     Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", { value: true, writable: true });
@@ -134,6 +121,7 @@ describe("IconPicker", () => {
   });
 
   afterEach(() => {
+    if (owner) owner.active = false;
     act(() => root.unmount());
     container.remove();
     document.querySelectorAll("[data-combobox-dropdown]").forEach((element) => element.remove());
@@ -142,13 +130,32 @@ describe("IconPicker", () => {
 
   const renderPicker = async (
     onChange: (value: string) => void,
-    props: Partial<React.ComponentProps<typeof IconPicker>> = {},
+    props: Partial<Omit<IconPickerProps, keyof IconPickerResources | "onChange">> = {},
   ) => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
+    const pickerContainer = container;
+    const pickerOwner = { active: true };
+    owner = pickerOwner;
+    const pickerProps: IconPickerProps = {
+      value: "",
+      ...props,
+      onChange,
+      useIcons(input, options) {
+        findIconsQuery(input, options);
+        return { ...queryResult, refetch };
+      },
+      canUpload: sessionPermissions.current.includes("media-upload"),
+      upload: {
+        upload: uploadSelection,
+        isPending: false,
+        isCurrentOwner: () => pickerOwner.active && pickerContainer.isConnected,
+        outcomeLabels: { unknown: "fixture.upload.unknown", reconcileheld: "fixture.upload.reconcileheld" },
+      },
+    };
     await act(async () => {
-      root.render(createElement(MantineProvider, null, createElement(IconPicker, { value: "", onChange, ...props })));
+      root.render(createElement(MantineProvider, null, createElement(IconPicker, pickerProps)));
     });
     const input = container.querySelector("input");
     if (!input) throw new Error("Icon picker input was not rendered");

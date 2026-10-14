@@ -1,24 +1,6 @@
-import { IconNotes } from "@tabler/icons-react";
-
-import { getWidgetIntegrationConfig } from "@homarr/definitions";
-
 import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { definition as rawDefinition } from "./definition";
 
-export const { definition, componentLoader } = createWidgetDefinition("anchorNote", {
-  icon: IconNotes,
-  supportsAdvancedFocus: true,
-  queryKey: [["widget", "anchorNotes"]],
-  ...getWidgetIntegrationConfig("anchorNote"),
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      noteId: factory.anchorNote(),
-      showTitle: factory.switch({
-        defaultValue: true,
-      }),
-      showUpdatedAt: factory.switch({
-        defaultValue: true,
-      }),
-    }));
-  },
-}).withDynamicImport(() => import("./component"));
+export const { definition, componentLoader } = createWidgetDefinition("anchorNote", rawDefinition).withDynamicImport(
+  () => import("./component"),
+);

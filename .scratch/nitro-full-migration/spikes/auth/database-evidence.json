@@ -1,0 +1,406 @@
+{
+  "verdict": "diagnostic-only",
+  "mode": "database",
+  "versions": {
+    "node": "v24.16.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "@auth/core": {
+      "version": "0.41.3",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/@auth/core/index.js"
+    },
+    "@auth/drizzle-adapter": {
+      "version": "1.11.3",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/@auth/drizzle-adapter/index.js"
+    },
+    "bcrypt": {
+      "version": "6.0.0",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/bcrypt/bcrypt.js"
+    },
+    "ldapts": {
+      "version": "8.1.8",
+      "resolved": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/ldapts/dist/index.cjs"
+    }
+  },
+  "sourceSha256": {
+    "index.js": "92b58f370424c53b2b4d75b2c70ef6d50f6aaff6bfc407eaf031a462f4f9b9cf",
+    "lib/utils/assert.js": "527ccf487d7824c9e17e848ec3648dabf678a509693efc30f015dce217a3e178",
+    "lib/init.js": "45a08cee278050cf25e4b8af2d9414da97ecffdc0c2b522f8fa1374fb271fa94",
+    "lib/actions/callback/index.js": "b7a6919639300254d84124e30421c3ef312f77ba54c2a4e3c954561e3fe14c5e",
+    "lib/actions/session.js": "7ae48f381cc94b80e1c3c3e4a74677b3c8b2d430a6acb5581ea418bbe0d1a285",
+    "lib/actions/signout.js": "2840edc43d30d6f477b92e624206abce5e551d7b93aa39637f55b5623bc77ad9",
+    "lib/utils/web.js": "b6c6614ae4dfd0e96821d7d40f2c8071dc0de950f86a7e94881155bfaa13bc0a"
+  },
+  "fixture": {
+    "origin": "https://auth-spike.invalid",
+    "basePath": "/api/auth",
+    "maxAge": 600,
+    "updateAge": 60,
+    "secureCookies": true,
+    "bcryptCost": 10
+  },
+  "observations": {
+    "concurrentDatabaseReads": [
+      {
+        "status": 200,
+        "location": null,
+        "setCookies": [
+          "__Host-auth-spike.csrf-token=70045496cf1d885779cf4c7db695e730cee1d20e9c7327232ce972e50f04cebe%7C8c9a4c176460e163e7c8f661f37452a8b9e4976e2acb25068d7d3946a26f0586; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "auth-spike.session-token=disposable-alice-fresh; Path=/; Expires=Sat, 10 Oct 2026 18:31:04 GMT; HttpOnly; Secure; SameSite=Lax"
+        ],
+        "cacheControl": "private, no-cache, no-store",
+        "body": {
+          "user": {
+            "id": "local-a",
+            "name": "alice",
+            "email": "alice@example.invalid"
+          },
+          "expires": "2026-10-10T18:30:54.482Z"
+        }
+      },
+      {
+        "status": 200,
+        "location": null,
+        "setCookies": [
+          "__Host-auth-spike.csrf-token=ca7a5dc8146b97c61e4a8290e6206c278c351b2610cdc08e0c42eaffabb461fa%7Cefd61a1552de8eacdd1b6fd9b52076f677caeb8af4fa211cd7151d2cf1e78adc; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "auth-spike.session-token=disposable-bob-due; Path=/; Expires=Sat, 10 Oct 2026 18:31:04 GMT; HttpOnly; Secure; SameSite=Lax"
+        ],
+        "cacheControl": "private, no-cache, no-store",
+        "body": {
+          "user": {
+            "id": "local-b",
+            "name": "bob",
+            "email": "bob@example.invalid"
+          },
+          "expires": "2026-10-10T18:22:44.482Z"
+        }
+      }
+    ],
+    "renewalProjection": {
+      "returnedExpiry": "2026-10-10T18:22:44.482Z",
+      "persistedExpiry": "2026-10-10T18:31:04.495Z",
+      "returnedProjectionUsesPreUpdateRow": true
+    },
+    "expired": {
+      "status": 200,
+      "location": null,
+      "setCookies": [
+        "__Host-auth-spike.csrf-token=e8a8385f88d69ce7c35b84fe93cdf0dc714e410fc627c1e5da0e9fb85ac04398%7C2e7d8516cd4ff29ef5af0fd04db448a22e0eca8b03d765eecb571edfbd59309c; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "auth-spike.session-token=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+      ],
+      "cacheControl": "private, no-cache, no-store",
+      "body": null
+    },
+    "missing": {
+      "status": 200,
+      "location": null,
+      "setCookies": [
+        "__Host-auth-spike.csrf-token=cb3daf039435454644c328d28f8c1027abc67f85d830d5c31c0366d92859f8d2%7Cfd3667a3d3ceb20824883194d27246ad96041f88361ac289c79aeb10be79ea9a; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "auth-spike.session-token=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+      ],
+      "cacheControl": "private, no-cache, no-store",
+      "body": null
+    },
+    "lateSessionEvent": {
+      "status": 200,
+      "location": null,
+      "setCookies": [
+        "__Host-auth-spike.csrf-token=211ed33b59edd632f1c6791cf1e81fec1786b9f0ea44c90360f2c7bd087dc48e%7C83080721ff85f1f86e20412bd2e06a66d739fca0dbe8198ca7448f9c8e420578; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "auth-spike.session-token=disposable-late-event; Path=/; Expires=Sat, 10 Oct 2026 18:31:04 GMT; HttpOnly; Secure; SameSite=Lax"
+      ],
+      "cacheControl": "private, no-cache, no-store",
+      "body": {
+        "user": {
+          "id": "local-a",
+          "name": "alice",
+          "email": "alice@example.invalid"
+        },
+        "expires": "2026-10-10T18:22:44.482Z"
+      }
+    },
+    "lateSessionCallback": {
+      "status": 200,
+      "location": null,
+      "setCookies": [
+        "__Host-auth-spike.csrf-token=8d62f3c9657a1d311fe4b28cb853caef8ce6acdb31b349f468d52ef2e7715693%7C68699b0a4439be666e7acd7d41e9d422fb2c9fcde397740725c809bb20f0e2ec; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax"
+      ],
+      "cacheControl": "private, no-cache, no-store",
+      "body": null
+    },
+    "signout": {
+      "logout": {
+        "status": 302,
+        "location": "https://auth-spike.invalid/signed-out",
+        "setCookies": [
+          "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid%2Fsigned-out; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "auth-spike.session-token=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+        ],
+        "cacheControl": null,
+        "body": ""
+      },
+      "revoked": {
+        "status": 200,
+        "location": null,
+        "setCookies": [
+          "__Host-auth-spike.csrf-token=43cedb0aa5d35103238bebb5e5dcc69e90e3786882a522f7af583af47dae0ce7%7C73e33e866b3aeb98b6755e56a9a635d5a41cfe5ea3d65fda2a1203e99d7920d4; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid; Path=/; HttpOnly; Secure; SameSite=Lax",
+          "auth-spike.session-token=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+        ],
+        "cacheControl": "private, no-cache, no-store",
+        "body": null
+      }
+    },
+    "lateSignoutEvent": {
+      "status": 302,
+      "location": "https://auth-spike.invalid/signed-out",
+      "setCookies": [
+        "__Secure-auth-spike.callback-url=https%3A%2F%2Fauth-spike.invalid%2Fsigned-out; Path=/; HttpOnly; Secure; SameSite=Lax",
+        "auth-spike.session-token=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+      ],
+      "cacheControl": null,
+      "body": ""
+    },
+    "sessionCsrfDenied": {
+      "status": 400,
+      "location": null,
+      "setCookies": [],
+      "cacheControl": null,
+      "body": null
+    }
+  },
+  "traces": [
+    {
+      "requestId": "db-concurrent-0",
+      "steps": [
+        "session",
+        "event:session"
+      ],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-concurrent-1",
+      "steps": [
+        "session",
+        "event:session"
+      ],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-expired",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-missing",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-late-event",
+      "steps": [
+        "session",
+        "event:session"
+      ],
+      "errors": [
+        {
+          "type": "EventError",
+          "message": "Read more at https://errors.authjs.dev#eventerror",
+          "cause": "Injected late session event failure"
+        }
+      ],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-late-callback",
+      "steps": [
+        "session"
+      ],
+      "errors": [
+        {
+          "type": "SessionTokenError",
+          "message": "Read more at https://errors.authjs.dev#sessiontokenerror",
+          "cause": "Injected session callback failure"
+        }
+      ],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-signout:csrf",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-signout",
+      "steps": [
+        "event:signOut"
+      ],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-revoked",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-signout-event:csrf",
+      "steps": [],
+      "errors": [],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-signout-event",
+      "steps": [
+        "event:signOut"
+      ],
+      "errors": [
+        {
+          "type": "EventError",
+          "message": "Read more at https://errors.authjs.dev#eventerror",
+          "cause": "Injected late sign-out event failure"
+        }
+      ],
+      "stagedCookies": []
+    },
+    {
+      "requestId": "db-session-csrf-denied",
+      "steps": [],
+      "errors": [
+        {
+          "type": "MissingCSRF",
+          "message": "CSRF token was missing during an action session. Read more at https://errors.authjs.dev#missingcsrf"
+        }
+      ],
+      "stagedCookies": []
+    }
+  ],
+  "adapterCalls": [
+    {
+      "requestId": "fixture-seed",
+      "method": "createSession",
+      "userId": "local-a",
+      "sessionToken": "disposable-alice-fresh"
+    },
+    {
+      "requestId": "fixture-seed",
+      "method": "createSession",
+      "userId": "local-b",
+      "sessionToken": "disposable-bob-due"
+    },
+    {
+      "requestId": "fixture-seed",
+      "method": "createSession",
+      "userId": "local-a",
+      "sessionToken": "disposable-expired"
+    },
+    {
+      "requestId": "fixture-seed",
+      "method": "createSession",
+      "userId": "local-a",
+      "sessionToken": "disposable-late-event"
+    },
+    {
+      "requestId": "fixture-seed",
+      "method": "createSession",
+      "userId": "local-b",
+      "sessionToken": "disposable-late-callback"
+    },
+    {
+      "requestId": "db-concurrent-0",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-alice-fresh"
+    },
+    {
+      "requestId": "db-concurrent-1",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-bob-due"
+    },
+    {
+      "requestId": "db-concurrent-1",
+      "method": "updateSession",
+      "sessionToken": "disposable-bob-due"
+    },
+    {
+      "requestId": "db-expired",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-expired"
+    },
+    {
+      "requestId": "db-expired",
+      "method": "deleteSession",
+      "sessionToken": "disposable-expired"
+    },
+    {
+      "requestId": "db-missing",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-missing"
+    },
+    {
+      "requestId": "db-late-event",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-late-event"
+    },
+    {
+      "requestId": "db-late-event",
+      "method": "updateSession",
+      "sessionToken": "disposable-late-event"
+    },
+    {
+      "requestId": "db-late-callback",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-late-callback"
+    },
+    {
+      "requestId": "db-late-callback",
+      "method": "updateSession",
+      "sessionToken": "disposable-late-callback"
+    },
+    {
+      "requestId": "db-signout",
+      "method": "deleteSession",
+      "sessionToken": "disposable-alice-fresh"
+    },
+    {
+      "requestId": "db-revoked",
+      "method": "getSessionAndUser",
+      "sessionToken": "disposable-alice-fresh"
+    },
+    {
+      "requestId": "db-signout-event",
+      "method": "deleteSession",
+      "sessionToken": "disposable-bob-due"
+    }
+  ],
+  "ldapDispatchCalls": [],
+  "remainingDisposableSessions": [
+    {
+      "sessionToken": "disposable-late-event",
+      "userId": "local-a",
+      "expires": "2026-10-10T18:31:04.498Z"
+    },
+    {
+      "sessionToken": "disposable-late-callback",
+      "userId": "local-b",
+      "expires": "2026-10-10T18:31:04.498Z"
+    }
+  ],
+  "limits": [
+    "No production persistence proof",
+    "No real LDAP login or role policy",
+    "No production JWT approval",
+    "No placeholder or provider-type assertion bypass",
+    "No native database credentials session creation reached"
+  ]
+}

@@ -1,0 +1,4 @@
+(node:87379) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/.scratch/nitro-full-migration/spikes/auth/adapter.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)

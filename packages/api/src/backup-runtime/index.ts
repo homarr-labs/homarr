@@ -123,40 +123,56 @@ export async function prepareLegacyBackupAsync(
   options: PreparationOptions = {},
 ) {
   const { archive, copy } = await openCopyAsync(bytes, dependencies, options, "prepare");
+  let snapshot: Awaited<ReturnType<CopiedDatabase["sealAsync"]>> | undefined;
+  let transferred = false;
   try {
-    assertEncryptionKey(dependencies.targetKey);
-    if (options.trustedSourceKey !== undefined) assertEncryptionKey(options.trustedSourceKey);
-    archive.withServerContents((_database, archiveKey) => {
-      if (archiveKey && options.trustedSourceKey && archiveKey.toLowerCase() !== options.trustedSourceKey.toLowerCase())
-        throw new BackupError("key-conflict");
-      convertEncryptedFields(copy, options.trustedSourceKey ?? archiveKey, dependencies.targetKey);
-    });
-    checkAbort(options.signal);
+    let prepared: PreparedLegacyBackup;
     try {
-      await dependencies.engine.migrateContentAsync(copy, options.signal);
-    } catch {
-      throw new BackupError("migration-failed");
+      assertEncryptionKey(dependencies.targetKey);
+      if (options.trustedSourceKey !== undefined) assertEncryptionKey(options.trustedSourceKey);
+      archive.withServerContents((_database, archiveKey) => {
+        if (
+          archiveKey &&
+          options.trustedSourceKey &&
+          archiveKey.toLowerCase() !== options.trustedSourceKey.toLowerCase()
+        )
+          throw new BackupError("key-conflict");
+        convertEncryptedFields(copy, options.trustedSourceKey ?? archiveKey, dependencies.targetKey);
+      });
+      checkAbort(options.signal);
+      try {
+        await dependencies.engine.migrateContentAsync(copy, options.signal);
+      } catch {
+        throw new BackupError("migration-failed");
+      }
+      convertEncryptedFields(copy, dependencies.targetKey, dependencies.targetKey);
+      validateCopiedDatabase(copy);
+      const inspection = inspectCopiedDatabase(copy, archive.metadata, archive.carriesEncryptionKey);
+      if (options.selectedBoardId !== undefined) {
+        const selected = inspection.boards.find((board) => board.id === options.selectedBoardId);
+        if (!selected) throw new BackupError("invalid-board");
+        inspection.homeBoard = selected;
+      }
+      copy.transaction(() => {
+        copy.run('DELETE FROM "session"');
+        copy.run('DELETE FROM "verificationToken"');
+        copy.run('DELETE FROM "serverSetting" WHERE "setting_key" = ?', ["__onboarding_claim"]);
+      });
+      checkAbort(options.signal);
+      await dependencies.engine.resetRuntimeAsync(copy, options.signal);
+      checkAbort(options.signal);
+      snapshot = await copy.sealAsync();
+      checkAbort(options.signal);
+      prepared = new PreparedLegacyBackup(inspection, snapshot.bytes);
+    } catch (error) {
+      throw error instanceof BackupError ? error : new BackupError("invalid-database");
+    } finally {
+      await disposeCopyAsync(copy);
     }
-    convertEncryptedFields(copy, dependencies.targetKey, dependencies.targetKey);
-    validateCopiedDatabase(copy);
-    const inspection = inspectCopiedDatabase(copy, archive.metadata, archive.carriesEncryptionKey);
-    if (options.selectedBoardId !== undefined) {
-      const selected = inspection.boards.find((board) => board.id === options.selectedBoardId);
-      if (!selected) throw new BackupError("invalid-board");
-      inspection.homeBoard = selected;
-    }
-    copy.transaction(() => {
-      copy.run('DELETE FROM "session"');
-      copy.run('DELETE FROM "verificationToken"');
-      copy.run('DELETE FROM "serverSetting" WHERE "setting_key" = ?', ["__onboarding_claim"]);
-    });
     checkAbort(options.signal);
-    const snapshot = await copy.sealAsync();
-    checkAbort(options.signal);
-    return new PreparedLegacyBackup(inspection, snapshot.bytes);
-  } catch (error) {
-    throw error instanceof BackupError ? error : new BackupError("invalid-database");
+    transferred = true;
+    return prepared;
   } finally {
-    await disposeCopyAsync(copy);
+    if (!transferred) snapshot?.bytes.fill(0);
   }
 }

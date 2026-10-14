@@ -1,0 +1,9 @@
+{
+  "extends": ["../../.oxlintrc.json"],
+  "overrides": [
+    {
+      "files": ["src/entry-server.tsx"],
+      "rules": { "import/default": "off" }
+    }
+  ]
+}

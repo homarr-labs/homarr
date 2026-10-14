@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-unstable-nested-components -- Widget modules and definition-bound fallbacks are loaded dynamically. */
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ComponentType, CSSProperties, FormEvent, PropsWithChildren } from "react";
 import {
   Accordion,
@@ -46,7 +46,10 @@ import { zodErrorMap } from "@homarr/validation/form/i18n";
 
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
-import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
+import type { CapturedStaticWidgetInputOwner } from "../_inputs/static-owner";
+import { StaticWidgetInputOwnerProvider } from "../_inputs/static-owner";
+import { captureLegacyWidgetSession } from "../_inputs/widget-app-input";
+import type { WidgetEditModalState } from "../edit-state";
 import type { OptionsBuilderResult } from "../options";
 import type { WidgetComponentProps, WidgetDefinition } from "../definition";
 import { WidgetError } from "../errors/component";
@@ -54,15 +57,11 @@ import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
 import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
-import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
+import type { EmbeddedAppEditFormHandle, EmbeddedAppOperationOwner } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
 import classes from "./widget-edit-modal.module.css";
 
-export interface WidgetEditModalState {
-  options: Record<string, unknown>;
-  integrationIds: string[];
-  advancedOptions: BoardItemAdvancedOptions;
-}
+export type { WidgetEditModalState } from "../edit-state";
 
 export interface WidgetEditModalSize {
   width: number;
@@ -394,7 +393,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const tItem = useI18n("item.edit");
   const tCommon = useI18n("common");
   const board = useOptionalBoard();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const theme = useMantineTheme();
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
   const integrationEditHandles = useRef(new Map<string, EmbeddedIntegrationEditFormHandle>());
@@ -410,6 +409,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     return normalizePreviewSize(resize.initialSize, resize.maximumSize);
   });
   const widgetFormId = useId();
+  const submitting = useRef(false);
 
   z.config({
     customError: zodErrorMap(t),
@@ -462,7 +462,180 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
   const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
+  const observedPrincipal = session?.user.id;
+  const observedPermissions = session?.user.permissions.join("\0");
+  const observedSessionFields = captureLegacyWidgetSession(session)?.fields;
+  const inputBinding = useMemo(
+    () => ({
+      kind: innerProps.kind,
+      definition: innerProps.definition,
+      value: innerProps.value,
+      boardId: innerProps.boardId ?? board?.id,
+      itemId: innerProps.itemId,
+      appId: innerProps.appId,
+      settings: innerProps.settings,
+      session,
+      sessionStatus,
+      observedPrincipal,
+      observedPermissions,
+      observedSessionFields,
+    }),
+    [
+      innerProps.kind,
+      innerProps.definition,
+      innerProps.value,
+      innerProps.boardId,
+      board?.id,
+      innerProps.itemId,
+      innerProps.appId,
+      innerProps.settings,
+      session,
+      sessionStatus,
+      observedPrincipal,
+      observedPermissions,
+      observedSessionFields,
+    ],
+  );
+  const inputOwner = useRef<{
+    active: boolean;
+    binding: typeof inputBinding;
+    canConfigureWidget: boolean;
+    presentation: CapturedStaticWidgetInputOwner;
+    owner: CapturedStaticWidgetInputOwner;
+  } | null>(null);
+  const mountOwner = useRef<{ active: boolean } | null>(null);
+  const appSubmission = useRef<{
+    active: boolean;
+    binding: typeof inputBinding;
+    presentation: EmbeddedAppOperationOwner;
+  } | null>(null);
+  const currentInputHost = useRef({ binding: inputBinding, canConfigureWidget, actions, mounted: false });
+  const [publishedInputOwner, setPublishedInputOwner] = useState<CapturedStaticWidgetInputOwner | null>(null);
+  const deniedInputOwner = useMemo<CapturedStaticWidgetInputOwner>(() => ({ isCurrent: () => false }), []);
+  const retireInputOwner = () => {
+    const lease = inputOwner.current;
+    if (lease) lease.active = false;
+    inputOwner.current = null;
+    setPublishedInputOwner(null);
+  };
+
+  useLayoutEffect(() => {
+    const mount = { active: true };
+    mountOwner.current = mount;
+    return () => {
+      mount.active = false;
+      currentInputHost.current.mounted = false;
+      const lease = inputOwner.current;
+      if (lease) lease.active = false;
+      inputOwner.current = null;
+      if (appSubmission.current) appSubmission.current.active = false;
+      if (mountOwner.current === mount) mountOwner.current = null;
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    currentInputHost.current = { binding: inputBinding, canConfigureWidget, actions, mounted: true };
+    const submission = appSubmission.current;
+    if (submission && (submission.binding !== inputBinding || !submission.presentation.isCurrent()))
+      submission.active = false;
+    const previous = inputOwner.current;
+    if (
+      previous?.active &&
+      previous.binding === inputBinding &&
+      previous.canConfigureWidget === canConfigureWidget &&
+      !submitting.current &&
+      previous.presentation.isCurrent()
+    ) {
+      return;
+    }
+    if (previous) previous.active = false;
+    inputOwner.current = null;
+    if (submitting.current || isSubmitting) return;
+    const presentation = actions.capturePresentationOwner();
+    if (!presentation.isCurrent()) return;
+    const lease = {
+      active: true,
+      binding: inputBinding,
+      canConfigureWidget,
+      presentation,
+      owner: deniedInputOwner,
+    };
+    lease.owner = {
+      isCurrent: () => {
+        const host = currentInputHost.current;
+        const isCurrent =
+          lease.active &&
+          inputOwner.current === lease &&
+          host.mounted &&
+          host.binding === lease.binding &&
+          host.canConfigureWidget &&
+          !submitting.current &&
+          lease.presentation.isCurrent();
+        if (!isCurrent) lease.active = false;
+        return isCurrent;
+      },
+    };
+    inputOwner.current = lease;
+    setPublishedInputOwner(lease.owner);
+  });
+
+  useLayoutEffect(() => {
+    actions.setCloseInterceptor?.(() => {
+      const lease = inputOwner.current;
+      if (lease) lease.active = false;
+      inputOwner.current = null;
+      return true;
+    });
+    return () => actions.setCloseInterceptor?.(null);
+  }, [actions.setCloseInterceptor]);
+
+  let staticInputOwner = deniedInputOwner;
+  let renderInputLease: typeof inputOwner.current = null;
+  if (
+    publishedInputOwner &&
+    inputOwner.current?.binding === inputBinding &&
+    inputOwner.current.owner === publishedInputOwner
+  ) {
+    renderInputLease = inputOwner.current;
+  }
+  if (renderInputLease && canConfigureWidget) {
+    staticInputOwner = renderInputLease.owner;
+  }
+  const closePresentation = actions.capturePresentationOwner();
+  const closeMount = mountOwner.current;
+  const closeModal = () => {
+    if (
+      !closeMount?.active ||
+      mountOwner.current !== closeMount ||
+      currentInputHost.current.binding !== inputBinding ||
+      !closePresentation.isCurrent()
+    )
+      return;
+    retireInputOwner();
+    actions.closeModal();
+  };
   const appId = innerProps.appId;
+  const captureEmbeddedAppPresentationOwner = useCallback((): EmbeddedAppOperationOwner => {
+    const host = currentInputHost.current;
+    const mount = mountOwner.current;
+    const binding = host.binding;
+    const presentation = host.actions.capturePresentationOwner();
+    let active = mount?.active === true && host.mounted;
+    return {
+      isCurrent: () => {
+        const valid =
+          active &&
+          mount !== null &&
+          mount.active &&
+          mountOwner.current === mount &&
+          currentInputHost.current.mounted &&
+          currentInputHost.current.binding === binding &&
+          presentation.isCurrent();
+        if (!valid) active = false;
+        return valid;
+      },
+    };
+  }, []);
   const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
   const canModifyAllIntegrations = session?.user.permissions.includes("integration-full-all") ?? false;
   const selectedIntegrations = getSelectedWidgetIntegrations(innerProps.integrationData, form.values.integrationIds);
@@ -519,12 +692,15 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     setActiveIntegrationId(integrationId);
   };
 
-  const handleSubmit = form.onSubmit(
-    async (values) => {
-      setIsSubmitting(true);
-      try {
+  const handleSubmit = (submissionOwner: CapturedStaticWidgetInputOwner) =>
+    form.onSubmit(
+      async (values) => {
+        if (!submissionOwner.isCurrent()) return;
+        setIsSubmitting(true);
         let appSaved = true;
-        if (showAppTab) appSaved = await (appEditRef.current?.submitIfDirty() ?? false);
+        if (showAppTab) appSaved = await (appEditRef.current?.submitIfDirty(submissionOwner) ?? false);
+
+        if (!submissionOwner.isCurrent()) return;
 
         if (!appSaved) {
           setActiveTab("app");
@@ -532,7 +708,9 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         }
 
         for (const [integrationId, integrationEditHandle] of integrationEditHandles.current.entries()) {
+          if (!submissionOwner.isCurrent()) return;
           const integrationSaved = await integrationEditHandle.submitIfDirty();
+          if (!submissionOwner.isCurrent()) return;
           if (!integrationSaved) {
             beginEditingIntegration(integrationId);
             setActiveTab("integration");
@@ -540,6 +718,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           }
         }
 
+        if (!submissionOwner.isCurrent()) return;
         innerProps.onSuccessfulEdit(
           {
             ...values,
@@ -550,21 +729,64 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           },
           previewSize ?? undefined,
         );
+        if (!submissionOwner.isCurrent()) return;
+        retireInputOwner();
         actions.closeModal();
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    () => setActiveTab("widget"),
-  );
+      },
+      () => {
+        if (submissionOwner.isCurrent()) setActiveTab("widget");
+      },
+    );
 
-  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
-    handleSubmit(event);
+  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const lease = renderInputLease;
+    const mount = mountOwner.current;
+    if (
+      submitting.current ||
+      !lease?.active ||
+      inputOwner.current !== lease ||
+      !mount?.active ||
+      currentInputHost.current.binding !== inputBinding ||
+      !lease.presentation.isCurrent()
+    )
+      return;
+    const presentation = lease.presentation;
+    const record = { active: true, binding: inputBinding, presentation };
+    if (appSubmission.current) appSubmission.current.active = false;
+    appSubmission.current = record;
+    const submissionOwner = {
+      isCurrent: () => {
+        const valid =
+          record.active &&
+          appSubmission.current === record &&
+          mount.active &&
+          mountOwner.current === mount &&
+          currentInputHost.current.mounted &&
+          currentInputHost.current.binding === inputBinding &&
+          presentation.isCurrent();
+        if (!valid) record.active = false;
+        return valid;
+      },
+    };
+    if (!submissionOwner.isCurrent()) return;
+    retireInputOwner();
+    submitting.current = true;
+    try {
+      await handleSubmit(submissionOwner)(event);
+    } finally {
+      record.active = false;
+      if (appSubmission.current === record) appSubmission.current = null;
+      submitting.current = false;
+      if (currentInputHost.current.mounted) setIsSubmitting(false);
+    }
   };
 
   const canCreateIntegration = maxIntegrations === 1 || form.values.integrationIds.length < maxIntegrations;
   const handleOpenNewIntegration = innerProps.onOpenNewIntegration
     ? () => {
+        if (!staticInputOwner.isCurrent()) return;
+        retireInputOwner();
         innerProps.onOpenNewIntegration?.((newId) => {
           if (newId) {
             form.setFieldValue("integrationIds", [...(maxIntegrations > 1 ? form.values.integrationIds : []), newId]);
@@ -574,6 +796,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     : undefined;
 
   const handlePreviewOptionsChange = (newOptions: Record<string, unknown>) => {
+    if (!staticInputOwner.isCurrent()) return;
     form.setFieldValue("options", {
       ...form.values.options,
       ...newOptions,
@@ -753,102 +976,110 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
 
   const footer = (
     <Box className={classes.footer}>
-      <ModalFormFooter onCancel={actions.closeModal} form={widgetFormId} loading={isSubmitting} />
+      <ModalFormFooter onCancel={closeModal} form={widgetFormId} loading={isSubmitting} />
     </Box>
   );
 
   return (
     <FormProvider form={form}>
-      <Stack gap="sm">
-        {showResourceTabs ? (
-          <Tabs value={activeTab} onChange={setActiveTab} keepMounted keepMountedMode="display-none">
-            <Tabs.List grow>
-              <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
-              {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}
-              {showIntegrationTab && <Tabs.Tab value="integration">{tItem("tab.integration")}</Tabs.Tab>}
-            </Tabs.List>
-            <Tabs.Panel value="widget" pt="sm">
-              {widgetFormContent}
-            </Tabs.Panel>
-            {showAppTab && (
-              <Tabs.Panel value="app" pt="sm">
-                {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
+      <StaticWidgetInputOwnerProvider owner={staticInputOwner}>
+        <Stack gap="sm">
+          {showResourceTabs ? (
+            <Tabs value={activeTab} onChange={setActiveTab} keepMounted keepMountedMode="display-none">
+              <Tabs.List grow>
+                <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
+                {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}
+                {showIntegrationTab && <Tabs.Tab value="integration">{tItem("tab.integration")}</Tabs.Tab>}
+              </Tabs.List>
+              <Tabs.Panel value="widget" pt="sm">
+                {widgetFormContent}
               </Tabs.Panel>
-            )}
-            {showIntegrationTab && (
-              <Tabs.Panel value="integration" pt="sm">
-                <Stack>
-                  {displayedIntegrationId === null && (
-                    <>
-                      <Text size="sm" c="dimmed">
-                        {tItem("integration.description")}
-                      </Text>
-                      {selectedIntegrations.map((integration) => {
-                        const canEdit = editableIntegrationIds.includes(integration.id);
-                        return (
-                          <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
-                            <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
-                              <IntegrationAvatar kind={integration.kind} size="sm" />
-                              <Stack gap={0} style={{ minWidth: 0 }}>
-                                <Text fw={600} size="sm" truncate>
-                                  {integration.name}
+              {showAppTab && (
+                <Tabs.Panel value="app" pt="sm">
+                  {appId && (
+                    <EmbeddedAppEditForm
+                      appId={appId}
+                      handleRef={appEditRef}
+                      capturePresentationOwner={captureEmbeddedAppPresentationOwner}
+                    />
+                  )}
+                </Tabs.Panel>
+              )}
+              {showIntegrationTab && (
+                <Tabs.Panel value="integration" pt="sm">
+                  <Stack>
+                    {displayedIntegrationId === null && (
+                      <>
+                        <Text size="sm" c="dimmed">
+                          {tItem("integration.description")}
+                        </Text>
+                        {selectedIntegrations.map((integration) => {
+                          const canEdit = editableIntegrationIds.includes(integration.id);
+                          return (
+                            <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
+                              <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+                                <IntegrationAvatar kind={integration.kind} size="sm" />
+                                <Stack gap={0} style={{ minWidth: 0 }}>
+                                  <Text fw={600} size="sm" truncate>
+                                    {integration.name}
+                                  </Text>
+                                  <Text size="xs" c="dimmed" truncate>
+                                    {integration.url}
+                                  </Text>
+                                </Stack>
+                              </Group>
+                              {canEdit ? (
+                                <Button
+                                  type="button"
+                                  variant="light"
+                                  leftSection={<IconPencil size={16} />}
+                                  onClick={() => beginEditingIntegration(integration.id)}
+                                  aria-label={tItem("integration.editLabel", { name: integration.name })}
+                                >
+                                  {tItem("integration.action")}
+                                </Button>
+                              ) : (
+                                <Text size="xs" c="dimmed" ta="end">
+                                  {tItem("integration.fullAccessRequired")}
                                 </Text>
-                                <Text size="xs" c="dimmed" truncate>
-                                  {integration.url}
-                                </Text>
-                              </Stack>
+                              )}
                             </Group>
-                            {canEdit ? (
-                              <Button
-                                type="button"
-                                variant="light"
-                                leftSection={<IconPencil size={16} />}
-                                onClick={() => beginEditingIntegration(integration.id)}
-                                aria-label={tItem("integration.editLabel", { name: integration.name })}
-                              >
-                                {tItem("integration.action")}
-                              </Button>
-                            ) : (
-                              <Text size="xs" c="dimmed" ta="end">
-                                {tItem("integration.fullAccessRequired")}
-                              </Text>
-                            )}
-                          </Group>
-                        );
-                      })}
-                    </>
-                  )}
-                  {displayedIntegrationId !== null && selectedIntegrations.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="subtle"
-                      leftSection={<IconArrowLeft size={16} />}
-                      onClick={() => setActiveIntegrationId(null)}
-                      style={{ alignSelf: "start" }}
-                    >
-                      {tCommon("action.previous")}
-                    </Button>
-                  )}
-                  {integrationIdsToRender.map((integrationId) => (
-                    <Box key={integrationId} hidden={displayedIntegrationId !== integrationId}>
-                      {IntegrationEditForm && (
-                        <IntegrationEditForm
-                          integrationId={integrationId}
-                          handleRef={getIntegrationEditRef(integrationId)}
-                          onSuccess={innerProps.onIntegrationSaved}
-                        />
-                      )}
-                    </Box>
-                  ))}
-                </Stack>
-              </Tabs.Panel>
-            )}
-          </Tabs>
-        ) : (
-          widgetFormContent
-        )}
-        {footer}
-      </Stack>
+                          );
+                        })}
+                      </>
+                    )}
+                    {displayedIntegrationId !== null && selectedIntegrations.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="subtle"
+                        leftSection={<IconArrowLeft size={16} />}
+                        onClick={() => setActiveIntegrationId(null)}
+                        style={{ alignSelf: "start" }}
+                      >
+                        {tCommon("action.previous")}
+                      </Button>
+                    )}
+                    {integrationIdsToRender.map((integrationId) => (
+                      <Box key={integrationId} hidden={displayedIntegrationId !== integrationId}>
+                        {IntegrationEditForm && (
+                          <IntegrationEditForm
+                            integrationId={integrationId}
+                            handleRef={getIntegrationEditRef(integrationId)}
+                            onSuccess={innerProps.onIntegrationSaved}
+                          />
+                        )}
+                      </Box>
+                    ))}
+                  </Stack>
+                </Tabs.Panel>
+              )}
+            </Tabs>
+          ) : (
+            widgetFormContent
+          )}
+          {footer}
+        </Stack>
+      </StaticWidgetInputOwnerProvider>
     </FormProvider>
   );
 }).withOptions({

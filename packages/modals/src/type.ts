@@ -7,6 +7,7 @@ import type { ModalPresentation } from "./modal-presentation";
 
 export interface ModalActions {
   closeModal: () => void;
+  capturePresentationOwner: () => { isCurrent: () => boolean };
   setCloseInterceptor?: (interceptor: (() => boolean) | null) => void;
 }
 

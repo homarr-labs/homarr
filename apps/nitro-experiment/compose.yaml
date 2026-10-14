@@ -1,0 +1,19 @@
+name: homarr-nitro-fixture
+services:
+  fixture:
+    image: homarr-nitro-fixture:local
+    pull_policy: never
+    build:
+      context: ${NITRO_FIXTURE_BUILD_CONTEXT:-.}
+      dockerfile: Dockerfile
+    environment:
+      NITRO_HOST: 0.0.0.0
+      NITRO_PORT: "3100"
+      NITRO_FIXTURE_ORIGIN: http://127.0.0.1:3100
+    ports:
+      - "127.0.0.1:3100:3100"
+    volumes:
+      - fixture-data:/app/.fixture-data
+    stop_grace_period: 15s
+volumes:
+  fixture-data:

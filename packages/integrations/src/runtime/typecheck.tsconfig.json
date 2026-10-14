@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "types": ["node", "bun-types"],
+    "paths": {
+      "@homarr/node-unifi": ["../../../../node_modules/@types/node-unifi"]
+    }
+  },
+  "include": ["./**/*.ts", "../base/**/*.ts"],
+  "exclude": ["../base/**/*.spec.ts"]
+}

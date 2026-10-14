@@ -1,0 +1,10 @@
+export { NativeAria2Client } from "./aria2";
+export { NativeDelugeClient } from "./deluge";
+export { NativeNzbGetClient } from "./nzbget";
+export { NativeQBittorrentClient } from "./qbittorrent";
+export { NativeSabnzbdClient } from "./sabnzbd";
+export { NativeSlskdClient } from "./slskd";
+export { NativeTransmissionClient } from "./transmission";
+export { DownloadClientHoldError, DownloadProtocolError } from "./contracts";
+export type { DownloadIntegrationKind, DownloadPublicClient } from "./contracts";
+export { pickDownloadClientStats } from "./stats";

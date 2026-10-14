@@ -15,7 +15,12 @@ export const createSqliteDb = <TSchema extends Record<string, unknown>>(
   config: SharedDrizzleConfig<TSchema>,
   options: SqliteConnectionOptions,
 ) => {
-  const connection = new Database(options.path, { readonly: options.readonly, create: false, strict: true });
+  const connection = new Database(options.path, {
+    readonly: options.readonly,
+    readwrite: !options.readonly,
+    create: false,
+    strict: true,
+  });
   try {
     connection.exec("PRAGMA foreign_keys = ON");
     const database = drizzle(connection, config) as unknown as BaseSQLiteDatabase<"sync", Changes, TSchema> & {
@@ -49,7 +54,11 @@ export const createSqliteDb = <TSchema extends Record<string, unknown>>(
       },
     });
   } catch (error) {
-    connection.close(true);
+    try {
+      connection.close(true);
+    } catch (cleanupError) {
+      throw new AggregateError([error, cleanupError], "SQLite construction and cleanup failures", { cause: error });
+    }
     throw error;
   }
 };

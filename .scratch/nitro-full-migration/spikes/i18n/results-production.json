@@ -1,0 +1,1744 @@
+{
+  "status": "compatibility-probe-completed-with-existing-catalog-findings",
+  "runtime": "v26.3.0",
+  "bunVersion": "1.4.2",
+  "mode": "production",
+  "resolvedEngineEntry": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/use-intl/dist/esm/production/core.js",
+  "packages": {
+    "next-intl": {
+      "version": "4.13.1",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/next-intl/package.json",
+      "dependencies": {
+        "@formatjs/intl-localematcher": "^0.8.1",
+        "@parcel/watcher": "^2.4.1",
+        "@swc/core": "^1.15.2",
+        "icu-minify": "^4.13.1",
+        "negotiator": "^1.0.0",
+        "next-intl-swc-plugin-extractor": "^4.13.1",
+        "po-parser": "^2.1.1",
+        "use-intl": "^4.13.1"
+      }
+    },
+    "use-intl/core": {
+      "version": "4.13.1",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/use-intl/package.json"
+    },
+    "react": {
+      "version": "19.2.7",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/react/package.json"
+    },
+    "react-dom/server": {
+      "version": "19.2.7",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/react-dom/package.json"
+    },
+    "intl-messageformat": {
+      "version": "11.1.1",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/intl-messageformat/package.json"
+    },
+    "@formatjs/icu-messageformat-parser": {
+      "version": "3.5.0",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/@formatjs/icu-messageformat-parser/package.json"
+    },
+    "deepmerge": {
+      "version": "4.3.1",
+      "file": "/Users/ajnart/.local/share/opencode/worktree/2c02d700e9bb9919ae05fff4b6cf05db10ebd1a9/rework-hono/node_modules/deepmerge/package.json"
+    }
+  },
+  "fixture": {
+    "timeZone": "UTC",
+    "now": "2026-10-10T12:00:00.000Z",
+    "instant": "2026-03-29T00:30:00.000Z",
+    "productDefault": false
+  },
+  "fallback": {
+    "blankFallbacks": 5360,
+    "nonblankExtraKeys": 140,
+    "nonblankWhitespaceLeaves": 141
+  },
+  "catalogSweep": {
+    "units": [
+      {
+        "locale": "ca",
+        "sha256": "bf37b73afc3410514f475984d025eb8e6104716f2e7ff80032145eef1d24b165",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 40,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "cn",
+        "sha256": "2b255a7c1d88695fa0101c8502a07146940d99d559b5eda5cbf9489c3a62c232",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 3,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "cr",
+        "sha256": "3b30105cff6731dd231ec9d43d30f130c6830441ebede35ba544bd3e27ecd549",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 404,
+        "richRendered": 0,
+        "pluralMessages": 0,
+        "numberMessages": 0,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "cs",
+        "sha256": "c7819bb29a277402c8a1abc5bacea43b64b0a079af44d20be7073164a55b1889",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 9,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 408,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "da",
+        "sha256": "9bff26d5770d8efe806dcaf7165e78dfc01ee46c7ef6b758782e0d514e41b273",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 319,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "de",
+        "sha256": "e99fb77bc7965836efb6ebc2705908d2b876313df21a5e208a0cf636b3817a75",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 225,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "de-CH",
+        "sha256": "6a6ae2cb771e70fe5ff6deb5c9740f477f6b4b046d5a5381b1c0ab5e7b07cc84",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 42,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 408,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "en-gb",
+        "sha256": "f2f9d645c9466e59a77d006279d8adf14b9ebce23ddd490b4b847930914dc6db",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 646,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 50,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "en",
+        "sha256": "50bc793809db36031bb03964b480019aeb0765e995ba3a7c312bb0d2c9f1d763",
+        "rawStringLeaves": 4590,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4590,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": []
+      },
+      {
+        "locale": "el",
+        "sha256": "07171901dd6fe9a7a5cae01db0e6fc8bc39f8297f1d48fb0934eb1c2278d9641",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 41,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "es",
+        "sha256": "5f2e8b150c44f6a3f87cc97388ee0105b1f5518416f747a2a56bfa3dbd440961",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 418,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "et",
+        "sha256": "bf63e11c977f40e2a206c2bee80813f3b7508cde1722cca722e844781900ee7d",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 45,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "fi",
+        "sha256": "b03595fe70ddb0e9d61bed84262dea634d49827dad2c7ff99b28c34e8681ec3f",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 749,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 408,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "fr",
+        "sha256": "84e2b5349328c10ab905ab9d3a51b4e2439b04e412790aeed1eda8fe72996eeb",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 200,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 51,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "he",
+        "sha256": "f51e1140f997842ea1f34acdcbabfa4d2373a5b583ff109b70c639c9283f0aaf",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 654,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "hr",
+        "sha256": "78da6591006f878d4a26d6b7376be9ba7995ba7cf3944fcba5abd5d4674c509e",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 38,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "hu",
+        "sha256": "f35cc337f2d74721cfe25cdba53b0d80609222928b93cffff7adc940e4b93c48",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 34,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "it",
+        "sha256": "b81863d3e93947da84e01abc22981caad378d0ceb1e5816d6b33cafe5bd179c8",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "ja",
+        "sha256": "a7d617656bae7d2ecd19de0a4e2730eaa1d1a688e10f7c8338d96302675f365a",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 613,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4594,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "ko",
+        "sha256": "435173c509c712a13a0076f0109030af05ee44b2cb1a55a9ab30a1cf245c0d95",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 37,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "lt",
+        "sha256": "76f2d5b2d21ad5ccbe280b3269f8a53ed5110dc679ae68b33fb1e8fd0bb754f2",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 67,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "lv",
+        "sha256": "daafd018ae204e6565fdfbaad8bfd3e215256bc05c853a9b24f4d6674d26e89b",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 56,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "nl",
+        "sha256": "ed31e062a73db072735e212d43f530bf58a8abcef8b62253240c9d4220d7f98e",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 324,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 413,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "no",
+        "sha256": "f712bf7c215a48f1dccebce8cb2a94edb879e841b0e2fe313da5e631c029a0b8",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "pl",
+        "sha256": "bc83d6306f7f4a486e00cbe058d843496d27998db24915142224ffc928c90de0",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 410,
+        "richRendered": 11,
+        "pluralMessages": 51,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "pt",
+        "sha256": "6e9763961c00fbc9f44007799fb442033690b73e886f8fe182a346f19dd64f92",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 7,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "pt-br",
+        "sha256": "2646a703d76c7b044139fd6e63f7882b61a4971357983d06276ec9cb1cfd4e7c",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 191,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 50,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "ro",
+        "sha256": "ef0f5d56c087d87197c8958cf397f3395df550ed52177d36d3a3c1350e1931e7",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 50,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "ru",
+        "sha256": "4bf6afed7576aacdfcbbb1029c4359d445597fde2c2f9179db13816b76c635e3",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 408,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "sk",
+        "sha256": "6dc46984010d3f8ec3f1cbee8e66557e70a90703abf86923d11286dee26d2581",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 551,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 410,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "sl",
+        "sha256": "496c7c15a5a8e03a754ab913e9830a83c80da6f81caa29e49f0fcce7b23ffa1f",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 42,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4596,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 58,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "sv",
+        "sha256": "d44629a9a21da82035297365f49c83f193b7055f49966909f421278ca5e2faee",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 6,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4595,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "tr",
+        "sha256": "744cceb70619b7612ea2ade6f44810a04773d7cc1df793cfdd04b30403da4a99",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 34,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 408,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "zh",
+        "sha256": "594d22ec942ca588c1e01c94a7937f029a43c5cc0df4248a3d6783f1173dd15f",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 20,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 413,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "uk",
+        "sha256": "5c545c4a8173c21291af7d4bd3b9ab3846d2b9bca8406b747fe64b111dd7668d",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 0,
+        "mergedStringLeaves": 4597,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 408,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 14,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      },
+      {
+        "locale": "vi",
+        "sha256": "69cdb1c03ebd62a5cb975de654faffa805d317096be08a31516fff98eabb7753",
+        "rawStringLeaves": 4597,
+        "blankStringLeaves": 54,
+        "mergedStringLeaves": 4590,
+        "parsedRawLeaves": 4597,
+        "dynamicFormatted": 409,
+        "richRendered": 9,
+        "pluralMessages": 49,
+        "numberMessages": 21,
+        "extraKeys": [
+          "board.snapshot.take",
+          "board.snapshot.description",
+          "board.snapshot.downloaded",
+          "board.snapshot.downloadedDescription",
+          "board.snapshot.playground",
+          "board.snapshot.failed",
+          "board.snapshot.failedDescription"
+        ]
+      }
+    ],
+    "failures": [
+      {
+        "kind": "parse",
+        "locale": "ca",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "Utilitzeu «{option:name}» per a les opcions del giny i «{param:name}» per als valors d'invocació.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "cn",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "使用 {option:name} 表示小部件选项，{param:name} 表示调用值。",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "cs",
+        "key": "tips.multiSelectApps",
+        "message": "Tip: Podržte Ctrl / <unk> pro vybrání více aplikací najednou",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "cs",
+        "key": "item.selection.pasteShortcut",
+        "message": "Zde vložte zkopírované položky (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "de",
+        "key": "tips.multiSelectApps",
+        "message": "Tipp: Strg / <unk> halten um mehrere Apps gleichzeitig auszuwählen",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "de",
+        "key": "item.selection.pasteShortcut",
+        "message": "Kopierte Elemente hier einfügen (Strg / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "de-CH",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "Verwenden Sie «{option:name}» für Widget-Optionen und «{param:name}» für Aufrufwerte.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "et",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "Kasuta vidina suvandite jaoks „{option:name}“ ja väljakutse väärtuste jaoks „{param:name}“.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "fr",
+        "key": "tips.multiSelectApps",
+        "message": "Astuce : Maintenez Ctrl / <unk> pour sélectionner plusieurs applications à la fois",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "fr",
+        "key": "item.selection.pasteShortcut",
+        "message": "Coller les éléments copiés ici (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "hu",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "A widgetbeállításokhoz használd az „{option:name}”, a meghívási értékekhez pedig a „{param:name}” formátumot.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "it",
+        "key": "tips.multiSelectApps",
+        "message": "Mancia: Tieni premuto Ctrl / <unk> per selezionare più applicazioni contemporaneamente",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "it",
+        "key": "item.selection.pasteShortcut",
+        "message": "Incolla qui gli elementi copiati (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ja",
+        "key": "widget.airQuality.category.hazardous",
+        "message": "<unk>",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ja",
+        "key": "widget.weather.advanced.detailLabel.precipitation",
+        "message": "<unk>",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ja",
+        "key": "widget.weather.advanced.detailLabel.humidity",
+        "message": "平均<unk>",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ko",
+        "key": "board.setting.section.layout.edit.action",
+        "message": "레이아웃 편집　　　},{",
+        "detail": "SyntaxError: EXPECT_ARGUMENT_CLOSING_BRACE"
+      },
+      {
+        "kind": "parse",
+        "locale": "lt",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "Valdiklio parinktims naudokite „{option:name}“, o iškvietimo reikšmėms – „{param:name}“.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "pl",
+        "key": "tips.multiSelectApps",
+        "message": "Wskazówka: Przytrzymaj Ctrl / <unk> aby wybrać wiele aplikacji na raz",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "pl",
+        "key": "item.selection.pasteShortcut",
+        "message": "Wklej tutaj skopiowane elementy (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ro",
+        "key": "tips.multiSelectApps",
+        "message": "Sfat: Țineți apăsat Ctrl / <unk> pentru a selecta mai multe aplicații dintr-o dată",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ro",
+        "key": "item.selection.pasteShortcut",
+        "message": "Lipiți elementele copiate aici (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ru",
+        "key": "tips.multiSelectApps",
+        "message": "Совет: удерживайте Ctrl / <unk> чтобы выбрать несколько приложений одновременно",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "ru",
+        "key": "item.selection.pasteShortcut",
+        "message": "Вставить скопированные элементы здесь (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "sk",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "Pre možnosti miniaplikácie použite „{option:name}“ a pre hodnoty vyvolania „{param:name}“.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "sl",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "message": "Za možnosti gradnika uporabite »{option:name}«, za vrednosti priklica pa »{param:name}«.",
+        "detail": "SyntaxError: MALFORMED_ARGUMENT"
+      },
+      {
+        "kind": "parse",
+        "locale": "sv",
+        "key": "tips.multiSelectApps",
+        "message": "Tips: Håll Ctrl / <unk> för att välja flera appar samtidigt",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      },
+      {
+        "kind": "parse",
+        "locale": "sv",
+        "key": "item.selection.pasteShortcut",
+        "message": "Klistra in kopierade objekt här (Ctrl / <unk> + V)",
+        "detail": "SyntaxError: UNCLOSED_TAG"
+      }
+    ],
+    "malformedRuntime": [
+      {
+        "locale": "ca",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "Utilitzeu «{option:name}» per a les opcions del giny i «{param:name}» per als valors d'invocació.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "cn",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "使用 {option:name} 表示小部件选项，{param:name} 表示调用值。",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "cs",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Tip: Podržte Ctrl / <unk> pro vybrání více aplikací najednou",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "cs",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Zde vložte zkopírované položky (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "de",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Tipp: Strg / <unk> halten um mehrere Apps gleichzeitig auszuwählen",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "de",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Kopierte Elemente hier einfügen (Strg / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "de-CH",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "Verwenden Sie «{option:name}» für Widget-Optionen und «{param:name}» für Aufrufwerte.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "et",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "Kasuta vidina suvandite jaoks „{option:name}“ ja väljakutse väärtuste jaoks „{param:name}“.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "fr",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Astuce : Maintenez Ctrl / <unk> pour sélectionner plusieurs applications à la fois",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "fr",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Coller les éléments copiés ici (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "hu",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "A widgetbeállításokhoz használd az „{option:name}”, a meghívási értékekhez pedig a „{param:name}” formátumot.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "it",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Mancia: Tieni premuto Ctrl / <unk> per selezionare più applicazioni contemporaneamente",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "it",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Incolla qui gli elementi copiati (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ja",
+        "key": "widget.airQuality.category.hazardous",
+        "withoutValues": "<unk>",
+        "withEmptyValues": "widget.airQuality.category.hazardous",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ja",
+        "key": "widget.weather.advanced.detailLabel.precipitation",
+        "withoutValues": "<unk>",
+        "withEmptyValues": "widget.weather.advanced.detailLabel.precipitation",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ja",
+        "key": "widget.weather.advanced.detailLabel.humidity",
+        "withoutValues": "平均<unk>",
+        "withEmptyValues": "widget.weather.advanced.detailLabel.humidity",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ko",
+        "key": "board.setting.section.layout.edit.action",
+        "withoutValues": "레이아웃 편집　　　},{",
+        "withEmptyValues": "board.setting.section.layout.edit.action",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "lt",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "Valdiklio parinktims naudokite „{option:name}“, o iškvietimo reikšmėms – „{param:name}“.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "pl",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Wskazówka: Przytrzymaj Ctrl / <unk> aby wybrać wiele aplikacji na raz",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "pl",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Wklej tutaj skopiowane elementy (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ro",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Sfat: Țineți apăsat Ctrl / <unk> pentru a selecta mai multe aplicații dintr-o dată",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ro",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Lipiți elementele copiate aici (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ru",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Совет: удерживайте Ctrl / <unk> чтобы выбрать несколько приложений одновременно",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "ru",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Вставить скопированные элементы здесь (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "sk",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "Pre možnosti miniaplikácie použite „{option:name}“ a pre hodnoty vyvolania „{param:name}“.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "sl",
+        "key": "customWidget.workbench.builder.pathDescription",
+        "withoutValues": "Za možnosti gradnika uporabite »{option:name}«, za vrednosti priklica pa »{param:name}«.",
+        "withEmptyValues": "customWidget.workbench.builder.pathDescription",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "sv",
+        "key": "tips.multiSelectApps",
+        "withoutValues": "Tips: Håll Ctrl / <unk> för att välja flera appar samtidigt",
+        "withEmptyValues": "tips.multiSelectApps",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      },
+      {
+        "locale": "sv",
+        "key": "item.selection.pasteShortcut",
+        "withoutValues": "Klistra in kopierade objekt här (Ctrl / <unk> + V)",
+        "withEmptyValues": "item.selection.pasteShortcut",
+        "errorCodes": [
+          "INVALID_MESSAGE"
+        ]
+      }
+    ]
+  },
+  "errorContracts": {
+    "defaultMissingFallback": "sample.missing",
+    "customMissingFallback": "MISSING_MESSAGE:sample.missing",
+    "missingInterpolationWithoutValues": "Hello {name}",
+    "errors": [
+      {
+        "code": "MISSING_MESSAGE",
+        "message": "MISSING_MESSAGE: sample.missing (en)"
+      },
+      {
+        "code": "FORMATTING_ERROR",
+        "message": "FORMATTING_ERROR: The intl string context variable \"name\" was not provided to the string \"Hello {name}\""
+      },
+      {
+        "code": "INVALID_MESSAGE",
+        "message": "INVALID_MESSAGE"
+      },
+      {
+        "code": "INVALID_MESSAGE",
+        "message": "INVALID_MESSAGE"
+      },
+      {
+        "code": "MISSING_MESSAGE",
+        "message": "MISSING_MESSAGE: absent (en)"
+      },
+      {
+        "code": "MISSING_MESSAGE",
+        "message": "MISSING_MESSAGE: sample.missing (en)"
+      }
+    ]
+  },
+  "pluralFixtures": [
+    {
+      "locale": "en",
+      "values": [
+        {
+          "count": 0,
+          "category": "other"
+        },
+        {
+          "count": 1,
+          "category": "one"
+        },
+        {
+          "count": 2,
+          "category": "other"
+        },
+        {
+          "count": 3,
+          "category": "other"
+        },
+        {
+          "count": 5,
+          "category": "other"
+        },
+        {
+          "count": 11,
+          "category": "other"
+        },
+        {
+          "count": 21,
+          "category": "other"
+        },
+        {
+          "count": 22,
+          "category": "other"
+        },
+        {
+          "count": 101,
+          "category": "other"
+        },
+        {
+          "count": 1.5,
+          "category": "other"
+        }
+      ],
+      "numericStringExact": "exact-one",
+      "nestedRichHtml": "<div><strong><em>&lt;script&gt;alert(1)&lt;/script&gt;</em></strong><a href=\"/fixture/docs\">Docs</a></div>"
+    },
+    {
+      "locale": "ru",
+      "values": [
+        {
+          "count": 0,
+          "category": "many"
+        },
+        {
+          "count": 1,
+          "category": "one"
+        },
+        {
+          "count": 2,
+          "category": "few"
+        },
+        {
+          "count": 3,
+          "category": "few"
+        },
+        {
+          "count": 5,
+          "category": "many"
+        },
+        {
+          "count": 11,
+          "category": "many"
+        },
+        {
+          "count": 21,
+          "category": "one"
+        },
+        {
+          "count": 22,
+          "category": "few"
+        },
+        {
+          "count": 101,
+          "category": "one"
+        },
+        {
+          "count": 1.5,
+          "category": "other"
+        }
+      ],
+      "numericStringExact": "exact-one",
+      "nestedRichHtml": "<div><strong><em>&lt;script&gt;alert(1)&lt;/script&gt;</em></strong><a href=\"/fixture/docs\">Docs</a></div>"
+    },
+    {
+      "locale": "pl",
+      "values": [
+        {
+          "count": 0,
+          "category": "many"
+        },
+        {
+          "count": 1,
+          "category": "one"
+        },
+        {
+          "count": 2,
+          "category": "few"
+        },
+        {
+          "count": 3,
+          "category": "few"
+        },
+        {
+          "count": 5,
+          "category": "many"
+        },
+        {
+          "count": 11,
+          "category": "many"
+        },
+        {
+          "count": 21,
+          "category": "many"
+        },
+        {
+          "count": 22,
+          "category": "few"
+        },
+        {
+          "count": 101,
+          "category": "many"
+        },
+        {
+          "count": 1.5,
+          "category": "other"
+        }
+      ],
+      "numericStringExact": "exact-one",
+      "nestedRichHtml": "<div><strong><em>&lt;script&gt;alert(1)&lt;/script&gt;</em></strong><a href=\"/fixture/docs\">Docs</a></div>"
+    },
+    {
+      "locale": "he",
+      "values": [
+        {
+          "count": 0,
+          "category": "other"
+        },
+        {
+          "count": 1,
+          "category": "one"
+        },
+        {
+          "count": 2,
+          "category": "two"
+        },
+        {
+          "count": 3,
+          "category": "other"
+        },
+        {
+          "count": 5,
+          "category": "other"
+        },
+        {
+          "count": 11,
+          "category": "other"
+        },
+        {
+          "count": 21,
+          "category": "other"
+        },
+        {
+          "count": 22,
+          "category": "other"
+        },
+        {
+          "count": 101,
+          "category": "other"
+        },
+        {
+          "count": 1.5,
+          "category": "other"
+        }
+      ],
+      "numericStringExact": "exact-one",
+      "nestedRichHtml": "<div><strong><em>&lt;script&gt;alert(1)&lt;/script&gt;</em></strong><a href=\"/fixture/docs\">Docs</a></div>"
+    }
+  ],
+  "formattingFixtures": [
+    {
+      "locale": "en",
+      "number": "12,345.67",
+      "date": "Sunday, March 29, 2026 at 00:30",
+      "relative": "1 hour ago",
+      "actualPluralKey": "init.studio.board.columnCount",
+      "pluralOutputs": [
+        {
+          "count": 0,
+          "output": "0 columns"
+        },
+        {
+          "count": 1,
+          "output": "1 column"
+        },
+        {
+          "count": 2,
+          "output": "2 columns"
+        },
+        {
+          "count": 5,
+          "output": "5 columns"
+        },
+        {
+          "count": 11,
+          "output": "11 columns"
+        },
+        {
+          "count": 21,
+          "output": "21 columns"
+        },
+        {
+          "count": 22,
+          "output": "22 columns"
+        },
+        {
+          "count": 1.5,
+          "output": "1.5 columns"
+        }
+      ],
+      "numericString": "2 columns",
+      "actualNumberKey": "customWidget.editor.status.characters",
+      "numberOutput": "12,345.67 characters"
+    },
+    {
+      "locale": "fr",
+      "number": "12 345,67",
+      "date": "dimanche 29 mars 2026 à 00:30",
+      "relative": "il y a 1 heure",
+      "actualPluralKey": "init.studio.board.columnCount",
+      "pluralOutputs": [
+        {
+          "count": 0,
+          "output": "0 colonne"
+        },
+        {
+          "count": 1,
+          "output": "1 colonne"
+        },
+        {
+          "count": 2,
+          "output": "2 colonnes"
+        },
+        {
+          "count": 5,
+          "output": "5 colonnes"
+        },
+        {
+          "count": 11,
+          "output": "11 colonnes"
+        },
+        {
+          "count": 21,
+          "output": "21 colonnes"
+        },
+        {
+          "count": 22,
+          "output": "22 colonnes"
+        },
+        {
+          "count": 1.5,
+          "output": "1,5 colonne"
+        }
+      ],
+      "numericString": "2 colonnes",
+      "actualNumberKey": "customWidget.editor.status.characters",
+      "numberOutput": "12 345,67 caractères"
+    },
+    {
+      "locale": "ru",
+      "number": "12 345,67",
+      "date": "воскресенье, 29 марта 2026 г. в 00:30",
+      "relative": "1 час назад",
+      "actualPluralKey": "init.studio.board.columnCount",
+      "pluralOutputs": [
+        {
+          "count": 0,
+          "output": "0 столбцов"
+        },
+        {
+          "count": 1,
+          "output": "1 столбец"
+        },
+        {
+          "count": 2,
+          "output": "2 столбцов"
+        },
+        {
+          "count": 5,
+          "output": "5 столбцов"
+        },
+        {
+          "count": 11,
+          "output": "11 столбцов"
+        },
+        {
+          "count": 21,
+          "output": "21 столбец"
+        },
+        {
+          "count": 22,
+          "output": "22 столбцов"
+        },
+        {
+          "count": 1.5,
+          "output": "1,5 столбцов"
+        }
+      ],
+      "numericString": "2 столбцов",
+      "actualNumberKey": "customWidget.editor.status.characters",
+      "numberOutput": "12 345,67 символы"
+    },
+    {
+      "locale": "pl",
+      "number": "12 345,67",
+      "date": "niedziela, 29 marca 2026 o 00:30",
+      "relative": "1 godzinę temu",
+      "actualPluralKey": "init.studio.board.columnCount",
+      "pluralOutputs": [
+        {
+          "count": 0,
+          "output": "0 kolumny"
+        },
+        {
+          "count": 1,
+          "output": "1 kolumna"
+        },
+        {
+          "count": 2,
+          "output": "2 kolumny"
+        },
+        {
+          "count": 5,
+          "output": "5 kolumny"
+        },
+        {
+          "count": 11,
+          "output": "11 kolumny"
+        },
+        {
+          "count": 21,
+          "output": "21 kolumny"
+        },
+        {
+          "count": 22,
+          "output": "22 kolumny"
+        },
+        {
+          "count": 1.5,
+          "output": "1,5 kolumny"
+        }
+      ],
+      "numericString": "2 kolumny",
+      "actualNumberKey": "customWidget.editor.status.characters",
+      "numberOutput": "12 345,67 znaki"
+    },
+    {
+      "locale": "he",
+      "number": "12,345.67",
+      "date": "יום ראשון, 29 במרץ 2026 בשעה 0:30",
+      "relative": "לפני שעה (1)",
+      "actualPluralKey": "init.studio.board.columnCount",
+      "pluralOutputs": [
+        {
+          "count": 0,
+          "output": "0 עמודות"
+        },
+        {
+          "count": 1,
+          "output": "1 עמודה"
+        },
+        {
+          "count": 2,
+          "output": "2 עמודות"
+        },
+        {
+          "count": 5,
+          "output": "5 עמודות"
+        },
+        {
+          "count": 11,
+          "output": "11 עמודות"
+        },
+        {
+          "count": 21,
+          "output": "21 עמודות"
+        },
+        {
+          "count": 22,
+          "output": "22 עמודות"
+        },
+        {
+          "count": 1.5,
+          "output": "1.5 עמודות"
+        }
+      ],
+      "numericString": "2 עמודות",
+      "actualNumberKey": "customWidget.editor.status.characters",
+      "numberOutput": "12,345.67 תווים"
+    }
+  ],
+  "realEnglishRichExamples": {
+    "app": "<div>Click <a href=\"/fixture/apps/new\">here</a> to create a new app</div>",
+    "docs": "<div>This group is reserved for system use and restricts some actions. <a href=\"/fixture/docs\">Docs</a></div>",
+    "status": "<div>Received unexpected 503 (&lt;unavailable&gt;) response from <a href=\"/fixture/status\">status</a>. Please verify that the URL is pointing to the base URL of the integration.</div>",
+    "certificate": "<div>Only self signed certificates without a chain can be fetched automatically. If you are using a self signed certificate, please make sure to upload the CA certificate manually. You can find instructions on how to do this <a href=\"/fixture/certificates\">Docs</a>.</div>",
+    "invite": "<div>Your invitation has been generated. After this modal closes, <b>you&#x27;ll not be able to copy this link anymore.</b> If you do no longer wish to invite said person, you can delete this invitation any time.</div>",
+    "assistant": "<div>Resets in 2 hours at <time dateTime=\"2026-10-10T12:00:00.000Z\">12:00 UTC</time></div>"
+  },
+  "typedCandidate": {
+    "callbackResult": "Show usage for 2 filesystems",
+    "rootAndScopedEqual": true,
+    "keyNamespaceCompileAssertions": true,
+    "ICUArgumentGenerationClaimed": false
+  },
+  "concurrentRequests": [
+    {
+      "catalogLocale": "en",
+      "messageEngineLocale": "en",
+      "formatterLocale": "en",
+      "fixtureZone": "UTC",
+      "fixtureNow": "2026-10-10T12:00:00.000Z",
+      "before": "2 columns",
+      "after": "2 columns",
+      "number": "12,345.67",
+      "html": "<section data-locale=\"en\" data-zone=\"UTC\" data-now=\"2026-10-10T12:00:00.000Z\"><p>Click <a href=\"/fixture/apps/new\">here</a> to create a new app</p><p>2 columns</p><p>12,345.67</p><p>Sunday, March 29, 2026 at 00:30</p><p>1 hour ago</p></section>"
+    },
+    {
+      "catalogLocale": "he",
+      "messageEngineLocale": "he",
+      "formatterLocale": "he",
+      "fixtureZone": "UTC",
+      "fixtureNow": "2026-10-10T12:00:00.000Z",
+      "before": "2 עמודות",
+      "after": "2 עמודות",
+      "number": "12,345.67",
+      "html": "<section data-locale=\"he\" data-zone=\"UTC\" data-now=\"2026-10-10T12:00:00.000Z\"><p>לחץ על <a href=\"/fixture/apps/new\">here</a> כדי ליצור אפליקציה חדשה</p><p>2 עמודות</p><p>12,345.67</p><p>יום ראשון, 29 במרץ 2026 בשעה 0:30</p><p>לפני שעה (1)</p></section>"
+    }
+  ],
+  "catalogHashesUnchanged": true
+}

@@ -1,0 +1,299 @@
+{
+  "schema": "homarr-stack-audit-cross-reconciliation-v1",
+  "mode": "frozen-report parsing plus current filename metadata; not another source audit",
+  "observation": {
+    "at": "2026-10-11T13:23:38.018250+00:00",
+    "branch": "rework-hono",
+    "head": "c009cba62d8ffab1d19186e4df62674b616979fd",
+    "atomic": false,
+    "before_own_report_creation": true,
+    "later_changes": "Further additions are deltas outside this labeled observation; no automatic coverage or acceptance."
+  },
+  "scope": {
+    "writes": [".scratch/nitro-full-migration/STACK-AUDIT-COVERAGE.md", ".scratch/nitro-full-migration/stack-audit/coverage.json"],
+    "source_content_read": false,
+    "source_content_hashes_computed": false,
+    "product_mutations": false,
+    "checks_builds_installs_runtime_env_providers_network_sql_browser_git_mutation_nested_agents": false,
+    "acceptance_claimed": false,
+    "all_file_behavioral_review_claimed": false
+  },
+  "counts": {
+    "frozen_pairs": 17,
+    "decoded_primary_rows": 5310,
+    "decoded_primary_unique_paths": 5310,
+    "primary_duplicate_rows": 0,
+    "primary_cross_partition_collisions": 0,
+    "primary_ignored_generated_output_exclusions": 21,
+    "primary_paths_in_current_nonignored_git_set": 5289,
+    "recorded_product_support_paths": 4841,
+    "current_git_names": 5433,
+    "current_tracked_names": 4307,
+    "current_nonignored_untracked_names": 1126,
+    "current_product_support_paths": 4933,
+    "recorded_current_product_support_intersection": 4841,
+    "current_unrecorded_product_support_paths": 92,
+    "current_unrecorded_excluded_evidence_paths": 52,
+    "current_modified_tracked_recorded_product_support_names": 95,
+    "current_product_support_assigned_root_gaps": 5,
+    "current_product_support_ownership_overlaps": 0,
+    "direct_root_product_support_files_without_assignment": 0,
+    "current_owned_names_missing_during_nonfollowing_stat": 0,
+    "current_symlink_names_not_followed": 1
+  },
+  "set_fingerprints": {
+    "encoding": "UTF-8; exact repository-relative paths sorted lexicographically, joined by LF, with one terminal LF; SHA-256. These are filename-set fingerprints, never source-content hashes.",
+    "decoded_primary_unique_paths": "abd6eb5393a42ebdd04dca3bb5d52bc42a360201a51751d7c943be9cfbcfbe9d",
+    "current_git_names": "79c6cb8fb96df2d7f7686901cdcd01aa82780adef8bd5b5d3c75ac444284866f",
+    "recorded_product_support_paths": "3c1718c5f7f54a242682a338a8fcaf5fe4a096a4267da5f1da4bca894111d15c",
+    "current_product_support_paths": "198c4194ea012d2f6775d5616440d0703fb74887adaf53287d33cb7836709eff",
+    "current_unrecorded_product_support_paths": "dcab166042c3dc13595c9e44ae2c507554d964182c602ee7f2612e15cb24447d"
+  },
+  "owned_path_union": {
+    "encoding": "referential union of every partition.primary_decoder applied to its frozen JSON manifest; no target/reference/glob expansion",
+    "materialized_primary_path_count": 5310,
+    "eligible_recorded_product_support_path_count": 4841,
+    "duplicates": [],
+    "cross_partition_collisions": [],
+    "current_assigned_root_overlaps": [],
+    "missing_current_product_support_paths": [],
+    "primary_paths_not_in_current_nonignored_git_set": "The 21 A12 rows whose status is excluded; ignored generated outputs, not evidence of deletion."
+  },
+  "denominator": {
+    "name": "repository-owned product/support filename footprint, not production-module or semantic-review count",
+    "retained": ["source", "configuration", "docs", "CI/deployment/developer/E2E tooling", "checked-in migration inputs", "locale catalogs", "generated component/public schema input catalogs", "lock/checksum files", "static media", "dependency patch inputs"],
+    "metadata_and_excluded_retained_files_are_not_inspected_or_accepted": true,
+    "excluded_roots": [".agents", ".claude", ".scratch", "apps/nitro-experiment", "implementation", "reports", "research_notes", "stack-audit"],
+    "excluded_path_components": ["node_modules", ".turbo", ".next", ".output", ".nitro", ".tanstack", "dist", "build"],
+    "excluded_exact_paths": ["tools/motion-reel/reel.js"],
+    "excluded_report_rule": "A08.files entries with profile generated_result",
+    "recorded_excluded_counts": {"instructions_scratch_evidence_historical_experiment": 433, "ignored_vendor_build_cache_output": 21, "generated_check_results": 14, "generated_bundle": 1},
+    "current_excluded_counts": {"instructions_scratch_evidence_historical_experiment": 451, "audit_outputs": 34, "generated_check_results": 14, "generated_bundle": 1},
+    "unrecorded_current_excluded_counts": {"instructions_scratch_evidence_historical_experiment": 18, "audit_outputs": 34},
+    "ignored_output_side_lists": {"A03": 3, "A07": 15, "A10": 12, "A15": 12, "A17": 5},
+    "side_list_rule": "Separate metadata/exclusion evidence; never add side lists to primary owned or product totals. A12's 21 ignored rows are already explicit primary exclusions.",
+    "no_recursive_ignored_vendor_build_or_evidence_body_census": true
+  },
+  "partition_columns": ["audit", "primary_rows", "unique_primary_paths", "product_support_paths", "product_support_set_sha256"],
+  "partition_counts": [
+    ["A01", 771, 771, 771, "6720fe305416fe2dcb3fb65d017c2cfd7dcf76944101dbd632164bdf0fa0ec75"],
+    ["A02", 263, 263, 263, "05ada2edff2416d3663425173840cd52295916290881445a8ca4942df11211c8"],
+    ["A03", 393, 393, 393, "a8ece6ebdb38ad5244b1fc3ca92c03ec6b9e79dc2fb151a01a336ddbc1fe6a62"],
+    ["A04", 85, 85, 85, "0589a9497e6997647343bb6a69c6d3d08c130bbcc2eeee951e070c51c14085cc"],
+    ["A05", 489, 489, 489, "a13de796b9fedd68cb4a069041bedc6eaab344754354201877f5b9137d8fceee"],
+    ["A06", 221, 221, 221, "d1e37b28bd1990862b108a2612a756938c5ecfe45f36673e52fb8b221fcfe800"],
+    ["A07", 203, 203, 203, "db96414cca9e20fb25908beff945fe8649a53e9a65b2246898e9d39cb75715de"],
+    ["A08", 107, 107, 93, "1b537d1ccb61a277fcc0d56440c56de05f867ef20a13bf04422de4dc1e3a86a8"],
+    ["A09", 340, 340, 340, "a4e74c6656ea9e3b35c15f62e06d58d30f5ad39fb42914ee260546adc5f7762b"],
+    ["A10", 126, 126, 126, "bad706d48a433c6428f3d7e4f47bc4dacdd96a08e9d655f732736a19822a47d6"],
+    ["A11", 216, 216, 216, "e1408a197fbcf4b9f53a8a6c36c657c76bbedf411529cbeeb276dbb98395e328"],
+    ["A12", 96, 96, 75, "d850901d7d827fc7af5aaec18d7898bed9aa628598a4966d0f454ed2d6aa27c7"],
+    ["A13", 144, 144, 144, "a1db365444d63e1db111d354b826599f7244d3ff138af41c61e6227bace3bdd0"],
+    ["A14", 46, 46, 46, "657f6d8a9220064d4289d6797b9cca00b1fd3e7580f170f386130a1a1d4252a1"],
+    ["A15", 928, 928, 928, "a6701090efd427cd57a6efbd7006ec0c8e3e114558240bb692fc451e68e0853d"],
+    ["A16", 449, 449, 448, "c59be980d2597a5c30451c7c812dd14123c7f0dcfa4ce403dfef1bce0cf4f652"],
+    ["A17", 433, 433, 0, "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"]
+  ],
+  "partitions": {
+    "A01": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A01",
+      "sha256": {"md": "0d350ea39a37cc0fbdd461bb0d5808b8654077de6758fb40c25be3dd63ebef8d", "json": "ca90ce395550ab395112fe34ce8798870c128319809b115f8392ee55a780ea4a"},
+      "assigned_roots": ["apps/nextjs"],
+      "primary_decoder": "For each files_by_directory group, split each files string at |; basename is field 0; join apps/nextjs, group.directory (omit .), basename.",
+      "inspection_decoder": "Class b/g: metadata-only. Others: whole-text static. detailed_content_review paths are relative to apps/nextjs and supplement scans with targeted complete reviews.",
+      "snapshot_depth": {"whole_text_static": 764, "detailed_complete": 37, "scan_only": 727, "metadata_only": 7}
+    },
+    "A02": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A02",
+      "sha256": {"md": "a72470248ddaf04ca5b0fbad86155d52363b658b5313e4b6e2efbd93429dff10", "json": "0da479a874ceacd334048a4b92d931aaaaf57d96a0a16298be39f8f051f1f8fd"},
+      "assigned_roots": ["apps/nitro"],
+      "primary_decoder": "Join scope and files[row][0]. Rows follow row_schema; targets are not source ownership.",
+      "inspection_decoder": "row[1]: D detailed complete, S static-only, G generated structural text scan, X metadata exclusion.",
+      "snapshot_depth": {"detailed_complete": 71, "scan_only": 190, "generated_structural_text": 1, "excluded_manifest": 1}
+    },
+    "A03": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A03",
+      "sha256": {"md": "b6c35206a75fb1358057cad9f9939219d7175f99a1362f1048373535652c0ca2", "json": "2bf8e0912506232d3825ddd99c0cb56b959014ccfed6c072bbbe3c9d5ceda7f2"},
+      "assigned_roots": ["packages/api"],
+      "primary_decoder": "Join encoding.pathBase and each files dictionary key.",
+      "inspection_decoder": "files[key][0]: R complete content review plus scan, S whole-text scan-only, X no body. Class defaults/path overrides refine preservation and blockers, not inspection depth.",
+      "snapshot_depth": {"detailed_complete": 66, "scan_only": 324, "excluded_manifest": 1, "excluded_credential_fixtures": 2}
+    },
+    "A04": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A04",
+      "sha256": {"md": "fb3c886eb3161acadfb3d7036ea190717060531c03424ee55c1353f0c3cc3eb7", "json": "831e9abbdaf786b95b2215efacfd6e1e664f6b3caf105d8a06f7295f3b484371"},
+      "assigned_roots": ["packages/auth"],
+      "primary_decoder": "Join scope and each files object's path.",
+      "inspection_decoder": "depth detailed_read means entire safe text returned. static_scan means import/export/test/gate-marker matches, explicitly not full-body verification.",
+      "snapshot_depth": {"detailed_complete": 53, "marker_scan_not_full_body": 32}
+    },
+    "A05": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A05",
+      "sha256": {"md": "d41963468b048961887ce3330530d536b9f30ac3d1a4c98ab4d1e575f496c4f9", "json": "4b05ec49c75a7b8b59a30028960c6bebe6598f4f83acf0d23c0cf1da00563e5d"},
+      "assigned_roots": ["packages/widgets"],
+      "primary_decoder": "files[row][0] is already the exact repository-relative source path.",
+      "inspection_decoder": "row[1]: manual complete text and manual read; manual-range whole scan plus declared ranges; scan whole inert text scan; excluded-active-owner excluded from accepted dependency inspection. package.json initial text observation is not current authority.",
+      "snapshot_depth": {"whole_text_static": 487, "detailed_complete": 54, "detailed_partial": 2, "scan_only": 431, "active_owner_exclusions": 2}
+    },
+    "A06": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A06",
+      "sha256": {"md": "cd152cd2778b1eedbed233e46619d49642ebe171d8b9acc2eb4438cba93163af", "json": "d0af578b54add14745d556ac0ad0ea39a57a0e808dd2cd8f1560fc8991f37f12"},
+      "assigned_roots": ["packages/boards", "packages/form", "packages/forms-collection", "packages/modals", "packages/modals-collection", "packages/notifications", "packages/onboarding", "packages/settings", "packages/spotlight", "packages/ui"],
+      "primary_decoder": "For each packages group, join group.root and each group.files row[0].",
+      "inspection_decoder": "row[1]: M full manual plus scan; S full static only; G generated CSS typing full static only. Reported static_only 122 includes G 8, so do not add 8 again.",
+      "snapshot_depth": {"whole_text_static": 221, "detailed_complete": 99, "ordinary_static_only": 114, "generated_static_only": 8}
+    },
+    "A07": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A07",
+      "sha256": {"md": "e3ae1152de65433b1be24e46f0ea5a4f2564696c8884bff568a033ca63df4add", "json": "518720edcc3707f4113f0c3c1273815da523f700a1c8c285da64501ce3c22002"},
+      "assigned_roots": ["packages/definitions", "packages/validation", "packages/common", "packages/translation", "packages/server-settings"],
+      "primary_decoder": "Each files row[0] is repository-relative. observedArtifactExclusions and excludedTrees are not primary owned rows.",
+      "inspection_decoder": "row[1] inspected: full manual safe text; classified asset statuses: metadata/incidental bounded observations, not full payload/ICU/translation review; excluded: active manifest no accepted body authority.",
+      "snapshot_depth": {"detailed_complete": 159, "asset_metadata_limited_observations": 43, "excluded_manifest": 1}
+    },
+    "A08": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A08",
+      "sha256": {"md": "91a98977a5e1f2e0926d96b132b42bd375d6790b8244d3cf8393ee8c6c532868", "json": "f9af17820f407ccf2b0396eddbc2a1c13a69c81598987b4efdb3e565ccd2635a"},
+      "assigned_roots": ["packages/core", "packages/redis"],
+      "primary_decoder": "Each files object's path is repository-relative. Apply profiles and row overrides for findings, never count profile targets as source files.",
+      "inspection_decoder": "status inspected: complete safe-text read; active_manifest excluded; generated_result no body and excluded from product denominator. No quantified complete-semantic subset is supplied.",
+      "snapshot_depth": {"complete_safe_text_read": 92, "detailed_semantic_subset": null, "excluded_manifest": 1, "generated_result_evidence": 14}
+    },
+    "A09": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A09",
+      "sha256": {"md": "798f13569526b72363e95d8e129f4b9519cdebe3976f53f2ae1ff6af39f982d2", "json": "38afe15f2d7ea248ce662b6b90941850ea2c43aa9b18fe41c710d656c3da4a20"},
+      "assigned_roots": ["packages/integrations"],
+      "primary_decoder": "Join scope and files row[0]; use final explicit files array, not initial/second snapshot sums.",
+      "inspection_decoder": "row[1] M excluded manifest; A fixture metadata-only; others whole-text static. manualFullTextPaths and keys of manualPartialTextPaths are relative to scope and supplement scans. Their sets are disjoint and all belong to text rows.",
+      "snapshot_depth": {"whole_text_static": 336, "detailed_complete": 43, "detailed_partial": 3, "scan_only": 290, "excluded_manifest": 1, "fixture_metadata_only": 3, "second_snapshot_active_unaccepted_static_subset": 34},
+      "vendor_reference_exception": "Report records narrow installed SDK declaration/UniFi implementation references; not repository-owned product paths or accepted dependencies. This reconciliation does not reopen them."
+    },
+    "A10": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A10",
+      "sha256": {"md": "bdf5fc85a2980e029674c36fa7b59278a45d8a3bb2e67e3aece6ba27feab742c", "json": "2cce80b34eb17832536f87cdc59eaf63bb6e222b8f39da5e9bc11423f857c49a"},
+      "assigned_roots": ["packages/request-handler", "packages/cron-jobs", "packages/cron-jobs-core", "packages/cron-job-status"],
+      "primary_decoder": "Join each files dictionary package key and its local file dictionary key. Inspection is local row[1], after line count row[0]. metadata_exclusions are supplemental, not product rows.",
+      "inspection_decoder": "I full static text; M full manifest text but mutable authority excluded; G supplemental generated metadata only. Selected complete traces are not a separately enumerated full-semantic subset.",
+      "snapshot_depth": {"whole_text_static": 126, "ordinary_static_text": 122, "mutable_manifest_text_not_authority": 4, "detailed_semantic_subset": null, "supplemental_generated_metadata": 12}
+    },
+    "A11": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A11",
+      "sha256": {"md": "ec66bf21015cb89a1b90717963f2506c0b395201cb358d403addcbe4723c8ade", "json": "450e8d564f73047687501781e14cd80c045178af7389422cf793555fc87ead9c"},
+      "assigned_roots": ["packages/db"],
+      "primary_decoder": "Join packages/db and files row[0]. Named migrate.cjs build outputs are not primary ownership rows.",
+      "inspection_decoder": "row[1]: M full manual plus frozen scan, S frozen scan-only, B HEAD-only static baseline with current implementation held, Q historical SQL text only, G migration-input metadata only, H active untracked filename only. Preserve exact frozen basis, not current-byte coverage.",
+      "snapshot_depth": {"frozen_text_static": 119, "detailed_complete": 20, "ordinary_frozen_static": 22, "baseline_only_current_body_held": 11, "historical_sql_static_never_executed": 66, "migration_input_metadata": 70, "untracked_current_body_held": 27}
+    },
+    "A12": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A12",
+      "sha256": {"md": "565655f1c1adec182e61b6492f140e42634d8c5075d3c31bd283dd16489136b0", "json": "afea53e64fc66dcfeeb6c109925a8ec6234fabc37112b004bf79cf436959dcd2"},
+      "assigned_roots": ["packages/icons", "packages/image-proxy", "packages/ping", "packages/docker", "packages/analytics", "packages/workshop", "packages/cli"],
+      "primary_decoder": "files row[0] is repository-relative; row[1] inspected versus excluded distinguishes 75 safe files from 21 ignored outputs in the same array.",
+      "inspection_decoder": "75 complete manual/model text reads, not execution or resolved-graph proof. Excluded output rows have no body review or validation claim.",
+      "snapshot_depth": {"detailed_complete_text": 75, "ignored_generated_output_primary_exclusions": 21}
+    },
+    "A13": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A13",
+      "sha256": {"md": "bf2a534b4852eb3e2aae811903b742b87867b3b62a9e6d15299ec98fb65205c5", "json": "a7bcf9ce5ab192d6cd480c3f5a655989648768c665d9d5d633df1cd569825da5"},
+      "assigned_roots": ["packages/custom-widgets"],
+      "primary_decoder": "Join scope and files row[0]; coverage is row[2], not line count row[1] or role/class row[3].",
+      "inspection_decoder": "F full displayed semantic/model review plus scan; S whole-text static only; G generated-input catalog metadata only, not reviewed/reproduced source.",
+      "snapshot_depth": {"whole_text_static": 143, "detailed_complete": 70, "scan_only": 73, "generated_input_metadata": 1}
+    },
+    "A14": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A14",
+      "sha256": {"md": "32a817643f0fc1860d7ce3bf53159666cfd97e8e27ddb53e6af0e438e612c688", "json": "61e209b16b0166825af45a7da5f0abc7424176e5fa9b873b6e1cb78fa874db63"},
+      "assigned_roots": ["apps/tasks", "apps/websocket", "apps/workshop"],
+      "primary_decoder": "Each files object's path is repository-relative; excluded_subtrees and external_or_generated_references do not enumerate primary files.",
+      "inspection_decoder": "Use inspection field rather than status alone. All 46 were full safe-text read; classified go.sum has generated-integrity-text inspection. Runtime/script/test labels never mean execution.",
+      "snapshot_depth": {"complete_safe_text_read": 46, "full_safe_text_static": 24, "manual_runtime_source_static_not_run": 16, "configuration_examples": 2, "static_html_templates": 3, "generated_integrity_text": 1, "detailed_semantic_subset": null}
+    },
+    "A15": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A15",
+      "sha256": {"md": "03e7110df595cea222daabbce718cec2bb4ea6a209a71601dd9cfe291364d8ed", "json": "4be8490b6bd2bd80e8442dd9059c7ad0dcadbcdb7f80c93be76b16c5219d208f"},
+      "assigned_roots": ["apps/docs"],
+      "primary_decoder": "For each inventory directory and basename, join apps/docs, directory (omit .), basename. excluded_generated is supplemental ignored evidence.",
+      "inspection_decoder": "Apply first matching profile_rules in returned order, requiring prefix and extension predicates together when both exist; select profiles[profile].inspection. detailed_reads relative paths upgrade safe text only. Assets/generated inputs remain metadata-only.",
+      "snapshot_depth": {"whole_text_static": 590, "detailed_complete": 66, "scan_only": 524, "asset_metadata_only": 332, "generated_public_input_metadata": 6, "supplemental_ignored_generated": 12}
+    },
+    "A16": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A16",
+      "sha256": {"md": "410ba4085f10e133c905addebd30cbee1a75c15f6d62e2d0186c6f5911a65421", "json": "3a771fee405cce974c6a4f61ae6a89425365899b7c807425fa67a9f7ff7fb005"},
+      "assigned_roots": [".github", ".run", ".vscode", "deployments", "development", "docs", "e2e", "patches", "scripts", "static-data", "test", "tooling", "tools"],
+      "direct_root_files_assigned": true,
+      "primary_decoder": "Join each inventory directory key (omit empty root) and basename. Scope additionally owns every direct-root file, not arbitrary unassigned descendants.",
+      "inspection_decoder": "Default whole text. metadata_only_rules exact sensitive/lock/vendor lists, recursive prefixes and asset suffixes override; package.json is separate mutable manifest metadata sample. manual_review.complete/partial supplement static depth; provided_instructions_reviewed remains distinct.",
+      "snapshot_depth": {"whole_text_static": 239, "manual_complete_subset": 30, "manual_partial_subset": 6, "provided_instructions_reviewed": 1, "metadata_only": 209, "mutable_manifest_metadata_sample": 1, "generated_bundle_excluded_from_product_subset": 1},
+      "installed_documentation_exception": "Frozen report cites installed Turbo documentation; not product ownership or fresh reference inspection by this reconciliation."
+    },
+    "A17": {
+      "report_base": ".scratch/nitro-full-migration/stack-audit/A17",
+      "sha256": {"md": "2c296ebd5cb80a5cf82458adfe351e25ce95b1fb3c92d855c0d37bb1c9d2641b", "json": "e6d3a61dcb0de757b55e22810550e16df01a0e985c774d02cbc4ed90818a9b1a"},
+      "assigned_roots": [".agents", ".claude", ".scratch", "implementation", "reports", "research_notes", "apps/nitro-experiment", "STACK-CUTOVER.md"],
+      "primary_decoder": "tracked.regularFiles row[0], tracked.symlinks[].path, and every groups[].prefix joined with groups[].files row[0]. Do not include ignoredEvidence.files in primary owned union; those are 5 ignored logs. scopeRootMetadata directories/missing paths are not owned files.",
+      "inspection_decoder": "All entries metadata-only and not product; no contents reviewed. Historical experiment names are not active graph/dependency or cutover acceptance evidence.",
+      "snapshot_depth": {"tracked_instruction_entries_metadata": 14, "untracked_evidence_experiment_metadata": 419, "supplemental_ignored_logs": 5, "content_reviewed": 0}
+    }
+  },
+  "current_unreviewed_deltas": {
+    "count": 92,
+    "status": "added after partition snapshot/current active lease—not reviewed",
+    "git_state": "nonignored-untracked",
+    "content_read": false,
+    "accepted_coverage": false,
+    "encoding": "Each group root joined with every explicit relative filename is one exact delta. No globs. audit identifies only prior root assignment, not a lease or review.",
+    "groups": [
+      {"root": "apps/backend", "audit": null, "count": 5, "files": ["package.json", "src/infrastructure/cache/board-snapshots.ts", "src/infrastructure/cache/contracts.ts", "src/infrastructure/cache/index.ts", "src/infrastructure/cache/nitro-storage.ts"]},
+      {"root": "apps/nitro", "audit": "A02", "count": 8, "files": ["src/navigation/index.ts", "src/navigation/intent.ts", "src/navigation/owner.ts", "src/navigation/query-loader.ts", "src/navigation/scope.ts", "src/query/index.ts", "src/query/scope.ts", "src/query/types.ts"]},
+      {"root": "packages/api", "audit": "A03", "count": 1, "files": ["src/contracts/projection.ts"]},
+      {"root": "packages/integrations", "audit": "A09", "count": 39, "files": [
+        "src/native-clients/downloads/deluge.ts", "src/native-clients/downloads/index.ts", "src/native-clients/downloads/qbittorrent.ts", "src/native-clients/downloads/transmission.ts",
+        "src/native-clients/media/audio.ts", "src/native-clients/media/emby.ts", "src/native-clients/media/immich.ts", "src/native-clients/media/index.ts", "src/native-clients/media/jellyfin.ts", "src/native-clients/media/playback.ts", "src/native-clients/media/plex.ts", "src/native-clients/media/stats.ts", "src/native-clients/media/tdarr.ts", "src/native-clients/media/tracearr.ts",
+        "src/native-clients/network-home/index.ts", "src/native-clients/network-home/opnsense.ts", "src/native-clients/network-home/pi-hole-v6.ts", "src/native-clients/network-home/public-contracts.ts", "src/native-clients/network-home/stats.ts", "src/native-clients/network-home/technitium.ts", "src/native-clients/network-home/unifi-controller.ts",
+        "src/native-clients/specialists/bazarr.ts", "src/native-clients/specialists/mock.ts", "src/native-clients/specialists/scalar-projections.ts", "src/native-clients/specialists/speedtest.ts", "src/native-clients/specialists/traefik.ts", "src/native-clients/specialists/umami.ts", "src/native-clients/specialists/uptime-kuma.ts", "src/native-clients/specialists/warrior.ts", "src/native-clients/specialists/wazuh-wire.ts", "src/native-clients/specialists/wazuh.ts",
+        "src/native-clients/systems/beszel-realtime.ts", "src/native-clients/systems/beszel-schemas.ts", "src/native-clients/systems/beszel.ts", "src/native-clients/systems/dashdot.ts", "src/native-clients/systems/index.ts", "src/native-clients/systems/proxmox.ts", "src/native-clients/systems/stats.ts", "src/native-clients/systems/truenas.ts"
+      ]},
+      {"root": "packages/widgets", "audit": "A05", "count": 39, "files": [
+        "src/app/native-view.tsx", "src/archive-team-warrior/native-view.tsx", "src/assistant/native-view.tsx", "src/beszel-alerts/native-view.tsx", "src/beszel-system-grid/native-view.tsx", "src/beszel-system-stats/native-view.tsx", "src/beszel-system-table/native-view.tsx", "src/calendar/native-view-day.tsx", "src/calendar/native-view-event-list.tsx", "src/custom-api/native-view-custom-jsx.tsx", "src/custom-api/native-view.tsx", "src/dns-hole/controls/native-view.tsx", "src/dns-hole/summary/native-view.tsx", "src/immich/album-carousel/native-view.tsx", "src/immich/server-stats/native-view.tsx", "src/llama-cpp/native-view.tsx", "src/media-missing/native-view.tsx", "src/media-releases/native-view.tsx", "src/media-requests/list/native-view.tsx", "src/media-requests/stats/native-view.tsx", "src/media-server/native-view.tsx", "src/minecraft/server-status/native-view.tsx", "src/notebook/native-view.tsx", "src/notifications/native-view.tsx", "src/rendering/extensions.ts", "src/rendering/media.ts", "src/rssFeed/native-view.tsx", "src/smart-home/entity-state/native-view.tsx", "src/smart-home/execute-automation/native-view.tsx", "src/speedtest-tracker/native-view.tsx", "src/stocks/native-view.tsx", "src/system-disks/native-view.tsx", "src/system-resources/native-view-types.ts", "src/system-resources/native-view.tsx", "src/timetable/native-view.tsx", "src/ups/native-view.tsx", "src/video/native-view.tsx", "src/vpn/native-view.tsx", "src/wud/native-view.tsx"
+      ]}
+    ]
+  },
+  "assignment_gaps": {
+    "absent_assignment_roots": ["apps/backend"],
+    "exact_paths": ["apps/backend/package.json", "apps/backend/src/infrastructure/cache/board-snapshots.ts", "apps/backend/src/infrastructure/cache/contracts.ts", "apps/backend/src/infrastructure/cache/index.ts", "apps/backend/src/infrastructure/cache/nitro-storage.ts"],
+    "direct_root_file_gaps": [],
+    "ownership_assignment_inferred_from_proposed_targets": false,
+    "status": "added after partition snapshot/current active lease—not reviewed",
+    "later_coordinator_note": "At the labeled audit snapshots, the five apps/backend delta paths had no assigned root. The coordinator now reports explicit new leases and independent reviews recorded in ROSTER; this artifact-only correction does not read ROSTER, rescan source, change historical counts, grant coverage approval or confer ticket/runtime acceptance."
+  },
+  "current_metadata_limits": {
+    "commands": ["git ls-files --cached --others --exclude-standard -z", "git ls-files --cached -z", "git ls-files --stage -z", "git ls-files --modified -z", "git rev-parse HEAD", "git branch --show-current"],
+    "filesystem": "Non-following lstat on named entries only; no source bytes, link traversal or directory-content crawl.",
+    "symlinks_not_followed": [".claude/skills"],
+    "missing_during_lstat": [],
+    "tracked_modification_interpretation": "95 recorded product/support names are currently modified versus index metadata; this does not prove modification timing against each audit or certify current bytes. No content rereview performed.",
+    "ignored_exclusion_interpretation": "21 A12 primary excluded outputs do not occur in current nonignored Git names; existence/deletion is not inferred.",
+    "concurrency": "Git listings, report snapshots and later lstat observations are not an atomic content freeze. New filenames after observation remain additional unreviewed deltas."
+  },
+  "boundary_ambiguities": [
+    {"boundary": "steering location", "fact": "A16 looked for absent root STACK-CUTOVER.md; A17 records that absence and a distinct .scratch/nitro-full-migration/STACK-CUTOVER.md evidence path.", "consequence": "A16 specification/target assumptions remain limited; reconciliation does not read steering or repair its source audit. Absent root file is not a missing existing product entry."},
+    {"boundary": "backend ownership", "fact": "apps/backend is a proposed destination in prior returns, not an assigned source root; five current names exist only as unreviewed metadata.", "consequence": "Explicit owner/review required; no relocation/lease/implementation authority inferred."},
+    {"boundary": "retained separate site/service", "fact": "A15 apps/docs and A14 apps/workshop are inventoried but retain unresolved replacement exceptions. A12 packages/workshop and A16 root docs are different roots.", "consequence": "Main-app coverage cannot justify repository-wide framework removal or service replacement."},
+    {"boundary": "generated inputs versus evidence outputs", "fact": "Migration journals/snapshots, locale/component/public catalogs and static asset inputs remain product/support metadata; scratch, audit outputs, live logs, Core check results and bundled reel output do not.", "consequence": "Input retention is not body review, artifact freshness, disposable-state permission or acceptance."},
+    {"boundary": "tooling and historical presentations", "fact": "A16 tools include developer CLI, converter fixtures, benchmarks and showreel assets; filename metadata alone cannot settle every benchmark-result versus workload-input role.", "consequence": "Product/support counts are broader than production modules; unestablished artifact provenance remains ambiguous, not semantic runtime evidence."},
+    {"boundary": "mutable declarations/current implementations", "fact": "Returns exclude or limit active manifest/declaration authority; A09 second-pass additions are unaccepted static observations; A11 has baseline-only and held current bodies; 95 current modified recorded names remain unreviewed as current bytes.", "consequence": "Frozen filename membership cannot grant current dependency, producer, security or parity acceptance."},
+    {"boundary": "inspection code vocabulary", "fact": "G and M mean different things across schemas; classified status can coexist with content-read integrity text in A14.", "consequence": "Use each partition's documented decoder; never unify statuses by letter or assume all-file semantic review."}
+  ],
+  "reproduction": {
+    "inputs": "All seventeen report_base pairs at recorded SHA-256 identities; no source contents required.",
+    "steps": [
+      "Expand every primary_decoder to exact source paths. Reject non-relative/traversal paths; normalize separators and dot directory markers without resolving symlinks.",
+      "Retain owner sets and detect duplicates before taking the union. Ignore targets, consumer/reference lists, globs and supplemental ignored evidence when enumerating primary ownership.",
+      "Apply denominator exclusions to primary paths. Remaining set is recorded product/support footprint; inspect depths remain partition-specific facts, not accepted coverage.",
+      "For a new labeled observation, deduplicate NUL-separated current cached and nonignored untracked names. Apply the same denominator exclusions. Do not reread any source body.",
+      "Compute current minus recorded for deltas; match assigned_roots by exact root or slash-prefixed descendant and A16 direct_root_files_assigned for top-level files only. Root match never grants review.",
+      "Emit exact delta names, root gaps, collisions and non-following stat limitations. Recompute filename-set hashes with the recorded encoding. Never sum incompatible historical counts or promote metadata/static scans to behavioral acceptance."
+    ],
+    "semantic_review_limitation": "Complete reads are model/source-text observations at each return's stated basis. Most rows are lexical/static or metadata/excluded; runtime/bundler/compiler closure, current authority/resources/SQL/native settlement, physical lifecycles, same-listener packaged deployment and mounted UI parity remain unverified or held. No global all-file behavioral-review percentage is asserted."
+  }
+}

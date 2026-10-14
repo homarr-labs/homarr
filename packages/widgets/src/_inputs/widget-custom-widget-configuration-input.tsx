@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   Accordion,
   Alert,
@@ -19,6 +19,7 @@ import { DateInput, TimeInput } from "@mantine/dates";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { isRecord } from "@homarr/common";
 import type { CustomWidgetOption } from "@homarr/custom-widgets/core";
@@ -30,9 +31,18 @@ import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
+import { useStaticWidgetInputOwner } from "./static-owner";
+import {
+  captureLegacyWidgetSession,
+  isLegacyWidgetSessionCurrent,
+  useLegacyWidgetIconResources,
+} from "./widget-app-input";
 
 export const WidgetCustomWidgetConfigurationInput = ({
   property,
+  kind,
+  boardId,
+  itemId,
 }: CommonWidgetInputProps<"customWidgetConfiguration">) => {
   const form = useFormContext();
   const labels = useI18n("widget.customApi.configuration");
@@ -88,6 +98,11 @@ export const WidgetCustomWidgetConfigurationInput = ({
           path={`options.${property}.${name}`}
           configuration={effectiveConfiguration}
           definitionId={definitionId}
+          kind={kind}
+          property={property}
+          boardId={boardId}
+          itemId={itemId}
+          definitionVersion={definitionVersion}
         />
       ))}
       {advanced.length > 0 && (
@@ -103,6 +118,11 @@ export const WidgetCustomWidgetConfigurationInput = ({
                     path={`options.${property}.${name}`}
                     configuration={effectiveConfiguration}
                     definitionId={definitionId}
+                    kind={kind}
+                    property={property}
+                    boardId={boardId}
+                    itemId={itemId}
+                    definitionVersion={definitionVersion}
                   />
                 ))}
               </Stack>
@@ -119,11 +139,21 @@ function OptionField({
   path,
   configuration,
   definitionId,
+  kind,
+  property,
+  boardId,
+  itemId,
+  definitionVersion,
 }: {
   option: CustomWidgetOption;
   path: string;
   configuration: Record<string, unknown>;
   definitionId: string;
+  kind: CommonWidgetInputProps<"customWidgetConfiguration">["kind"];
+  property: string;
+  boardId: string | undefined;
+  itemId: string | undefined;
+  definitionVersion: number | undefined;
 }) {
   const form = useFormContext();
   const input = form.getInputProps(path, { type: option.control === "switch" ? "checkbox" : "input" });
@@ -175,7 +205,18 @@ function OptionField({
   if (option.control === "color") return <ColorInput {...common} {...input} />;
   if (option.control === "date") return <DateInput {...common} valueFormat="YYYY-MM-DD" {...input} />;
   if (option.control === "time") return <TimeInput {...common} {...input} />;
-  if (option.control === "icon") return <IconPicker withAsterisk={false} {...input} />;
+  if (option.control === "icon")
+    return (
+      <LegacyCustomOptionIcon
+        path={path}
+        kind={kind}
+        property={property}
+        boardId={boardId}
+        itemId={itemId}
+        definitionId={definitionId}
+        definitionVersion={definitionVersion}
+      />
+    );
   if (option.control === "timeZone")
     return <Select {...common} searchable data={Intl.supportedValuesOf("timeZone")} {...input} />;
   if (option.control === "json")
@@ -190,6 +231,131 @@ function OptionField({
       />
     );
   return <TextInput {...common} type={option.control === "url" ? "url" : "text"} {...input} />;
+}
+
+function LegacyCustomOptionIcon({
+  path,
+  kind,
+  property,
+  boardId,
+  itemId,
+  definitionId,
+  definitionVersion,
+}: {
+  path: string;
+  kind: CommonWidgetInputProps<"customWidgetConfiguration">["kind"];
+  property: string;
+  boardId: string | undefined;
+  itemId: string | undefined;
+  definitionId: string;
+  definitionVersion: number | undefined;
+}) {
+  const form = useFormContext();
+  const session = useSession();
+  const source = useStaticWidgetInputOwner(kind, property);
+  const binding = useMemo(
+    () => ({ path, kind, property, boardId, itemId, definitionId, definitionVersion }),
+    [path, kind, property, boardId, itemId, definitionId, definitionVersion],
+  );
+  const mount = useRef<{ active: boolean } | null>(null);
+  const host = useRef({ binding, form, session, source });
+  const admitted = useRef<{
+    active: boolean;
+    mount: NonNullable<typeof mount.current>;
+    binding: typeof binding;
+    session: ReturnType<typeof captureLegacyWidgetSession>;
+    source: typeof source;
+  } | null>(null);
+  const [published, setPublished] = useState<typeof admitted.current>(null);
+  useLayoutEffect(() => {
+    const lease = { active: true };
+    mount.current = lease;
+    return () => {
+      lease.active = false;
+      if (admitted.current) admitted.current.active = false;
+    };
+  }, []);
+  useLayoutEffect(() => {
+    host.current = { binding, form, session, source };
+    const origin = admitted.current;
+    if (origin) {
+      if (
+        origin.mount !== mount.current ||
+        origin.binding !== binding ||
+        origin.source !== source ||
+        !origin.source.isCurrent() ||
+        !isLegacyWidgetSessionCurrent(origin.session, session)
+      ) {
+        origin.active = false;
+        if (published === origin) setPublished(null);
+      }
+    }
+    const lease = mount.current;
+    const different =
+      !origin ||
+      origin.mount !== lease ||
+      origin.binding !== binding ||
+      origin.source !== source ||
+      !isLegacyWidgetSessionCurrent(origin.session, session);
+    if (
+      lease?.active &&
+      different &&
+      (!origin || !origin.active) &&
+      source.isCurrent() &&
+      session.status === "authenticated"
+    ) {
+      const replacement = {
+        active: true,
+        mount: lease,
+        binding,
+        session: captureLegacyWidgetSession(session.data),
+        source,
+      };
+      admitted.current = replacement;
+      setPublished(replacement);
+    }
+  });
+  const isCurrentOwner = useCallback(() => {
+    const origin = published;
+    const valid =
+      origin !== null &&
+      origin.mount.active &&
+      mount.current === origin.mount &&
+      admitted.current === origin &&
+      origin.active &&
+      origin.binding === host.current.binding &&
+      origin.source.isCurrent() &&
+      isLegacyWidgetSessionCurrent(origin.session, host.current.session);
+    if (!valid && origin) origin.active = false;
+    return valid;
+  }, [published]);
+  const input = form.getInputProps(path);
+  const resources = useLegacyWidgetIconResources(isCurrentOwner, input.value);
+  const upload = resources.upload;
+  if (upload)
+    resources.upload = {
+      ...upload,
+      isCurrentOwner: () => isCurrentOwner() && upload.isCurrentOwner(),
+      upload: async (formData) => {
+        if (!isCurrentOwner()) throw new Error("Custom icon admission retired");
+        return upload.upload(formData);
+      },
+      onSettled: async () => {
+        if (!isCurrentOwner() || !upload.onSettled) throw new Error("Custom icon reconciliation unavailable");
+        await upload.onSettled();
+        if (!isCurrentOwner()) throw new Error("Custom icon admission retired");
+      },
+    };
+  return (
+    <IconPicker
+      {...resources}
+      withAsterisk={false}
+      {...input}
+      onChange={(url) => {
+        if (published && isCurrentOwner()) host.current.form.setFieldValue(published.binding.path, url);
+      }}
+    />
+  );
 }
 
 function DynamicOptionField({

@@ -1,7 +1,7 @@
 import type { RefinementCtx } from "zod/v4";
 import { z } from "zod/v4";
 
-import type { ThresholdMode } from "./stat-colors";
+import type { ThresholdMode } from "./stat-color-presets";
 
 const percentThresholdSchema = z.number().int().min(0).max(100);
 

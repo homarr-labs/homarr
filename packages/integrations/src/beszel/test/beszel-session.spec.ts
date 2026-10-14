@@ -110,17 +110,20 @@ describe("BeszelIntegration session lifecycle", () => {
   beforeEach(() => {
     store.clear();
     authCount = 0;
-    globalThis.fetch = vi.fn((input: RequestInfo | URL) => {
-      const url = String(input);
-      if (url.endsWith("/api/collections/users/auth-with-password")) {
-        authCount++;
-        return Promise.resolve(Response.json({ token: issuedToken, record: { id: "user-1" } }));
-      }
-      if (url.includes("/api/collections/systems/records")) {
-        return Promise.resolve(Response.json({ page: 1, perPage: 500, totalItems: 0, totalPages: 0, items: [] }));
-      }
-      throw new Error(`Unexpected request: ${url}`);
-    }) as typeof fetch;
+    globalThis.fetch = Object.assign(
+      vi.fn((input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.endsWith("/api/collections/users/auth-with-password")) {
+          authCount++;
+          return Promise.resolve(Response.json({ token: issuedToken, record: { id: "user-1" } }));
+        }
+        if (url.includes("/api/collections/systems/records")) {
+          return Promise.resolve(Response.json({ page: 1, perPage: 500, totalItems: 0, totalPages: 0, items: [] }));
+        }
+        throw new Error(`Unexpected request: ${url}`);
+      }),
+      { preconnect: vi.fn<typeof fetch.preconnect>() },
+    );
   });
 
   afterEach(() => {

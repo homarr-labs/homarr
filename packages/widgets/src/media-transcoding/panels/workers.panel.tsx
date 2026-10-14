@@ -16,16 +16,15 @@ import {
 import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import type { TdarrWorker } from "@homarr/integrations";
-import { useI18n } from "@homarr/translation/client";
+import type { TranscodingViewBindings } from "../native-view-types";
 
-interface WorkersPanelProps {
+interface WorkersPanelProps extends Pick<TranscodingViewBindings, "tCommon" | "tWorkers"> {
   workers: TdarrWorker[];
   isTiny: boolean;
 }
 
 export function WorkersPanel(props: WorkersPanelProps) {
-  const t = useI18n("widget.mediaTranscoding.panel.workers");
-  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
+  const { tWorkers: t, tCommon } = props;
 
   if (props.workers.length === 0) {
     return (

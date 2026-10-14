@@ -1,0 +1,127 @@
+[
+  {
+    "check": "native-http",
+    "status": "pass",
+    "detail": "Authenticated owned proxy observed"
+  },
+  {
+    "check": "native-https",
+    "status": "pass",
+    "detail": "Authenticated owned proxy observed"
+  },
+  {
+    "check": "axios-native-http",
+    "status": "pass",
+    "detail": "Authenticated owned proxy observed"
+  },
+  {
+    "check": "axios-native-https",
+    "status": "pass",
+    "detail": "Authenticated owned proxy observed"
+  },
+  {
+    "check": "runtime-fetch-https",
+    "status": "pass"
+  },
+  {
+    "check": "runtime-fetch-http-proxy-fallback",
+    "status": "pass"
+  },
+  {
+    "check": "explicit-no-proxy",
+    "status": "pass"
+  },
+  {
+    "check": "fingerprint-grant-does-not-bypass-chain",
+    "status": "pass"
+  },
+  {
+    "check": "proxy-auth-denial-no-direct-fallback",
+    "status": "pass"
+  },
+  {
+    "check": "fetch-proxy-cancellation",
+    "status": "pass"
+  },
+  {
+    "check": "https-proxy-cancellation",
+    "status": "pass"
+  },
+  {
+    "check": "axios-proxy-cancellation",
+    "status": "pass"
+  },
+  {
+    "check": "pending-connect-native-destroy",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-native-abort",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-axios-abort",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-runtime-fetch-dispose",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-runtime-native-dispose",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-runtime-native-abort",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-runtime-axios-dispose",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-runtime-axios-abort",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-connect-runtime-native-late-connect",
+    "status": "pass",
+    "detail": "Real proxy socket close and request rejection awaited without fixture intervention"
+  },
+  {
+    "check": "pending-direct-tls-destroy",
+    "status": "pass",
+    "detail": "Real direct TLS peer closed without fixture intervention"
+  },
+  {
+    "check": "pending-direct-tls-abort",
+    "status": "pass",
+    "detail": "Real direct TLS peer closed without fixture intervention"
+  },
+  {
+    "check": "pending-direct-tls-runtime-dispose",
+    "status": "pass",
+    "detail": "Real direct TLS peer closed without fixture intervention"
+  },
+  {
+    "check": "failed-connect-physical-close",
+    "status": "pass",
+    "detail": "407 callback rejects and closes undelivered socket without fixture intervention"
+  },
+  {
+    "check": "runtime-node-native-proxy",
+    "status": "pass"
+  },
+  {
+    "check": "runtime-proxy-disposal",
+    "status": "pass"
+  }
+]

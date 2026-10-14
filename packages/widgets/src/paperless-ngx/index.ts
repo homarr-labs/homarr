@@ -1,51 +1,7 @@
-import { IconFileText, IconServerOff } from "@tabler/icons-react";
-
-import { getWidgetIntegrationConfig } from "@homarr/definitions";
-
 import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { definition as canonicalDefinition } from "./definition";
 
-export const { definition, componentLoader } = createWidgetDefinition("paperlessNgx", {
-  supportsAdvancedFocus: false,
-  icon: IconFileText,
-  refetchInterval: null,
-  ...getWidgetIntegrationConfig("paperlessNgx"),
-  createOptions() {
-    return optionsBuilder.from((factory) => ({
-      showInboxRatio: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-      showInboxRing: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-      showDocumentsTotal: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-      showDocumentsInbox: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-      showCorrespondents: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-      showTags: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-      showDocumentTypes: factory.switch({
-        defaultValue: true,
-        withDescription: true,
-      }),
-    }));
-  },
-  errors: {
-    INTERNAL_SERVER_ERROR: {
-      icon: IconServerOff,
-      message: (t) => t("widget.paperlessNgx.error.internalServerError"),
-    },
-  },
-}).withDynamicImport(() => import("./component"));
+export const { definition, componentLoader } = createWidgetDefinition(
+  "paperlessNgx",
+  canonicalDefinition,
+).withDynamicImport(() => import("./component"));

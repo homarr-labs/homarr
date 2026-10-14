@@ -51,7 +51,10 @@ describe("ConfirmModal", () => {
     await act(async () =>
       root.render(
         <MantineProvider>
-          <ConfirmModalComponent actions={{ closeModal }} innerProps={{ children: "Remove containers?", onConfirm }} />
+          <ConfirmModalComponent
+            actions={{ closeModal, capturePresentationOwner: () => ({ isCurrent: () => false }) }}
+            innerProps={{ children: "Remove containers?", onConfirm }}
+          />
         </MantineProvider>,
       ),
     );
@@ -84,7 +87,7 @@ describe("ConfirmModal", () => {
       root.render(
         <MantineProvider>
           <ConfirmModalComponent
-            actions={{ closeModal }}
+            actions={{ closeModal, capturePresentationOwner: () => ({ isCurrent: () => false }) }}
             innerProps={{ children: "Remove containers?", confirmProps: { onClick }, onConfirm }}
           />
         </MantineProvider>,
