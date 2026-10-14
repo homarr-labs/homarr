@@ -1,0 +1,1895 @@
+.scratch/nitro-feasibility/ROSTER.md
+  s_8b1d5a69f175a9::t_333c7671f809a2 1-41
+.scratch/nitro-feasibility/results/lint.log
+  s_8b1d5a69f175a9::t_e6d15a2192d68e 1-16
+.scratch/nitro-full-migration/AUTH-CREDENTIAL-REVISION-DESIGN.md
+  s_01e8d17f7740df::t_4432ca112ef1da 1-201
+.scratch/nitro-full-migration/AUTH-REVISION-DOMAIN.md
+  s_01e8d17f7740df::t_3189c9c36a3d8e 1-228
+.scratch/nitro-full-migration/CONVERGENCE-NEXT.md
+  s_59ffa5bfdcd3ba::t_bb26cdaff8f5a3 1-41
+.scratch/nitro-full-migration/CURRENT-COMPILER-LAYOUT.md
+  s_8b1d5a69f175a9::t_83124ec4d3c395 1-137
+.scratch/nitro-full-migration/EVENING-INTEGRATION-SPRINT.md
+  s_00d9eee545672e::t_a2f7589f30f89f 1-41
+.scratch/nitro-full-migration/MAIN-RETAINED-OWNER-HOST-ADAPTATION-PLAN.md
+  s_a426323822b13f::t_54113855cf2dff 1-86
+.scratch/nitro-full-migration/PUBLIC-PRODUCER-BINDING-SOURCE-PLAN.md
+  s_59ffa5bfdcd3ba::t_386c1cb6fbbeac 1-34
+.scratch/nitro-full-migration/PUBLIC-PRODUCER-CONCRETE-BINDING-PLAN.md
+  s_a426323822b13f::t_181cc88b2d7d08 1-36
+.scratch/nitro-full-migration/PUBLIC-PRODUCER-JOIN-READINESS-PLAN.md
+  s_59ffa5bfdcd3ba::t_d68e079e2a544b 1-27
+.scratch/nitro-full-migration/Q16-Q18-PRODUCTION-JOINS.md
+  s_5749b2ccfeffb1::t_7c2651a2dce416 1-132
+.scratch/nitro-full-migration/RESEARCH.md
+  s_8b1d5a69f175a9::t_03f152eb16e737 1-38
+.scratch/nitro-full-migration/SESSION-LOGOUT-JOIN.md
+  s_01e8d17f7740df::t_35e321406fcc38 1-188
+.scratch/nitro-full-migration/SHARED-FORM-CONSUMER-JOINS.md
+  s_8b1d5a69f175a9::t_72d5df7a4ee3ea 1-146
+.scratch/nitro-full-migration/WRITER-RULES.md
+  s_59ffa5bfdcd3ba::t_cc24d628ec28a1 1-7
+.scratch/nitro-full-migration/checks/convergence-owners.json
+  s_01e8d17f7740df::t_9b8429c8982fa2 1-25
+.scratch/nitro-full-migration/checks/evening-read-adapters.json
+  s_01e8d17f7740df::t_6bec2107ac63b6 1-18
+.scratch/nitro-full-migration/implementation/auth-credential-target-capture-tool-correction.md
+  s_01e8d17f7740df::t_c5adb1f5ab544d 1-51
+.scratch/nitro-full-migration/implementation/auth-credential-target-capture-tool.md
+  s_01e8d17f7740df::t_0471e39a3ab89a 1-111
+.scratch/nitro-full-migration/implementation/contracts-focused-validation.md
+  s_5749b2ccfeffb1::t_0aef9272e9e5f8 1-96
+.scratch/nitro-full-migration/implementation/convergence-BK.md
+  s_01e8d17f7740df::t_ed14458926eac2 1-57
+.scratch/nitro-full-migration/implementation/convergence-BP.md
+  s_59ffa5bfdcd3ba::t_bf3d8a28bc0061 1-53
+.scratch/nitro-full-migration/implementation/convergence-C0.md
+  s_01e8d17f7740df::t_e7be78247c19c8 1-47
+.scratch/nitro-full-migration/implementation/convergence-D-repair.md
+  s_01e8d17f7740df::t_daba26e4a28cc5 1-32
+.scratch/nitro-full-migration/implementation/convergence-D-runtime.md
+  s_01e8d17f7740df::t_41705efbbce3c1 1-90
+.scratch/nitro-full-migration/implementation/convergence-DP.md
+  s_59ffa5bfdcd3ba::t_35b785d98420af 1-234
+.scratch/nitro-full-migration/implementation/convergence-E1.md
+  s_01e8d17f7740df::t_b73939b73451ab 1-31
+.scratch/nitro-full-migration/implementation/convergence-E2.md
+  s_01e8d17f7740df::t_05e57f55c4c048 1-30
+.scratch/nitro-full-migration/implementation/convergence-E3.md
+  s_01e8d17f7740df::t_e091a9dcc927f3 1-33
+.scratch/nitro-full-migration/implementation/convergence-E4.md
+  s_01e8d17f7740df::t_7d68c3313d92a8 1-20
+.scratch/nitro-full-migration/implementation/convergence-E7.md
+  s_01e8d17f7740df::t_9563ad175cb701 1-25
+.scratch/nitro-full-migration/implementation/convergence-E8.md
+  s_01e8d17f7740df::t_b8ce098dee4175 1-29
+.scratch/nitro-full-migration/implementation/convergence-JS.md
+  s_01e8d17f7740df::t_f3b3091c9b6c9a 1-132
+.scratch/nitro-full-migration/implementation/convergence-K-plan.md
+  s_01e8d17f7740df::t_085bc26b2803b5 1-90
+.scratch/nitro-full-migration/implementation/convergence-LC-implementation.md
+  s_01e8d17f7740df::t_24c3abb9910c30 1-25
+.scratch/nitro-full-migration/implementation/convergence-LC.md
+  s_01e8d17f7740df::t_9e95374acf64df 1-63
+.scratch/nitro-full-migration/implementation/convergence-LR.md
+  s_01e8d17f7740df::t_770aa914b2f166 1-46
+.scratch/nitro-full-migration/implementation/convergence-MR.md
+  s_01e8d17f7740df::t_20a35f308ca0da 1-183
+.scratch/nitro-full-migration/implementation/convergence-OC.md
+  s_01e8d17f7740df::t_1bebad4640d385 1-36
+.scratch/nitro-full-migration/implementation/convergence-PU1.md
+  s_59ffa5bfdcd3ba::t_51e43cec8131bb 1-27
+.scratch/nitro-full-migration/implementation/convergence-PU2.md
+  s_01e8d17f7740df::t_4ee1cd436165b4 1-50
+.scratch/nitro-full-migration/implementation/convergence-SD.md
+  s_01e8d17f7740df::t_a31c74c3c2450c 1-29
+.scratch/nitro-full-migration/implementation/convergence-SR-rtl.md
+  s_59ffa5bfdcd3ba::t_c4bf59530fb07a 1-26
+.scratch/nitro-full-migration/implementation/convergence-SR.md
+  s_59ffa5bfdcd3ba::t_b7512abcc1ddaa 1-152
+.scratch/nitro-full-migration/implementation/convergence-ST.md
+  s_01e8d17f7740df::t_7efef0326a8c0e 1-31
+.scratch/nitro-full-migration/implementation/convergence-W-canonical.md
+  s_01e8d17f7740df::t_cdbdebe63a5715 1-14
+.scratch/nitro-full-migration/implementation/convergence-W-ownership.md
+  s_01e8d17f7740df::t_659cac54b165a4 1-77
+.scratch/nitro-full-migration/implementation/convergence-WG-select-types.md
+  s_01e8d17f7740df::t_4dfda17e1238fa 1-10
+.scratch/nitro-full-migration/implementation/convergence-legacy-embedded-normalization-source.md
+  s_a426323822b13f::t_0d0215a3c48d20 1-34
+.scratch/nitro-full-migration/implementation/convergence-legacy-icon-cron-source.md
+  s_a426323822b13f::t_6b62266176e995 1-51
+.scratch/nitro-full-migration/implementation/convergence-legacy-media-format-syntax-source.md
+  s_a426323822b13f::t_37aa27ca7e3a6f 1-35
+.scratch/nitro-full-migration/implementation/convergence-native-materialization-metadata-renewed-result.md
+  s_a426323822b13f::t_ea18680c95d402 1-75
+.scratch/nitro-full-migration/implementation/evening-A-auth.md
+  s_59ffa5bfdcd3ba::t_dd9f870872d799 1-91
+.scratch/nitro-full-migration/implementation/evening-A-read-implementation.md
+  s_00d9eee545672e::t_355b659c1f5072 1-80
+.scratch/nitro-full-migration/implementation/evening-C-compiler.md
+  s_00d9eee545672e::t_64b712ac614fe4 1-58
+.scratch/nitro-full-migration/implementation/evening-C-implementation.md
+  s_00d9eee545672e::t_d102a62f5af308 1-12
+.scratch/nitro-full-migration/implementation/evening-D-deployment.md
+  s_59ffa5bfdcd3ba::t_6c4c0c84a9bc64 1-108
+.scratch/nitro-full-migration/implementation/evening-D-implementation.md
+  s_00d9eee545672e::t_b4f1381e75a0b6 1-62
+.scratch/nitro-full-migration/implementation/evening-H-epoch-config.md
+  s_59ffa5bfdcd3ba::t_f3b302cf33a712 1-31
+.scratch/nitro-full-migration/implementation/evening-H-host.md
+  s_00d9eee545672e::t_82ee12aac5367d 1-90
+.scratch/nitro-full-migration/implementation/evening-H-implementation.md
+  s_59ffa5bfdcd3ba::t_0a97f2769871a5 1-78
+.scratch/nitro-full-migration/implementation/evening-I-icon-implementation.md
+  s_00d9eee545672e::t_51835938b4d1c0 1-17
+.scratch/nitro-full-migration/implementation/evening-J-jobs-integrations.md
+  s_59ffa5bfdcd3ba::t_af91ab38d81df0 1-67
+.scratch/nitro-full-migration/implementation/evening-M-media-restore.md
+  s_59ffa5bfdcd3ba::t_a7e8b534176308 1-70
+.scratch/nitro-full-migration/implementation/evening-M-restore-slot-implementation.md
+  s_00d9eee545672e::t_4c19f49ac88055 1-16
+.scratch/nitro-full-migration/implementation/evening-P-epoch-implementation.md
+  s_00d9eee545672e::t_637440ab2a3326 1-34
+.scratch/nitro-full-migration/implementation/evening-P-persistence.md
+  s_59ffa5bfdcd3ba::t_42ceac07e7b9c7 1-130
+.scratch/nitro-full-migration/implementation/evening-R-rpc.md
+  s_59ffa5bfdcd3ba::t_d596ea4c589552 1-88
+.scratch/nitro-full-migration/implementation/evening-U-private-ui.md
+  s_00d9eee545672e::t_6890322bcad1a2 1-122
+.scratch/nitro-full-migration/implementation/evening-U-public-implementation.md
+  s_01e8d17f7740df::t_666cb5c0fe9c38 1-70
+.scratch/nitro-full-migration/implementation/evening-W-widgets.md
+  s_59ffa5bfdcd3ba::t_b6acb0f967e2ec 1-120
+.scratch/nitro-full-migration/implementation/evening-W0-implementation.md
+  s_00d9eee545672e::t_5b54089b055b50 1-37
+.scratch/nitro-full-migration/implementation/evening-W0-repair.md
+  s_00d9eee545672e::t_a14b738a609dc0 1-52
+.scratch/nitro-full-migration/implementation/icon-native-read-byte-ceiling.md
+  s_01e8d17f7740df::t_e0a159e14fa547 1-80
+.scratch/nitro-full-migration/implementation/icon-native-read-source.md
+  s_01e8d17f7740df::t_f77f6a4d4e6cde 1-85
+.scratch/nitro-full-migration/implementation/modal-action-fixture-types-correction.md
+  s_01e8d17f7740df::t_cc3c4e821527ed 1-50
+.scratch/nitro-full-migration/implementation/modal-combined-validation-ancestor-probes.md
+  s_01e8d17f7740df::t_c31563e8e12630 1-146
+.scratch/nitro-full-migration/implementation/modal-combined-validation-profiles.md
+  s_01e8d17f7740df::t_a3dba416ba3fb7 1-113
+.scratch/nitro-full-migration/implementation/modal-combined-validation.md
+  s_01e8d17f7740df::t_acd74fd9229be5 1-104
+.scratch/nitro-full-migration/implementation/modal-native-build-info-node-reader-correction.md
+  s_01e8d17f7740df::t_701193231c0702 1-63
+.scratch/nitro-full-migration/implementation/modal-native-build-info-node-reader-prelaunch-witness.md
+  s_01e8d17f7740df::t_e574e82e4fbf30 1-69
+.scratch/nitro-full-migration/implementation/modal-native-build-info-node-reader-runner-source.md
+  s_01e8d17f7740df::t_2a18525edd3076 1-57
+.scratch/nitro-full-migration/implementation/modal-native-build-info-node-reader-source.md
+  s_01e8d17f7740df::t_f0ff07d87b7560 1-102
+.scratch/nitro-full-migration/implementation/modal-native-build-info-reader-route.md
+  s_01e8d17f7740df::t_a38d6f00d8fb4e 1-135
+.scratch/nitro-full-migration/implementation/modal-native-module-specifier-provenance.md
+  s_01e8d17f7740df::t_80a5d825bb34cb 1-111
+.scratch/nitro-full-migration/implementation/native-main-complete-package-validation.md
+  s_01e8d17f7740df::t_6189213c0892e2 1-65
+.scratch/nitro-full-migration/implementation/native-main-contracts-platform-library-validation.md
+  s_01e8d17f7740df::t_310b760c83184f 1-78
+.scratch/nitro-full-migration/implementation/native-main-string-decoder-completion-context-witness.md
+  s_01e8d17f7740df::t_b1f657015f5b81 1-68
+.scratch/nitro-full-migration/implementation/native-main-string-decoder-metadata-witness.md
+  s_01e8d17f7740df::t_9bfc587fed8471 1-55
+.scratch/nitro-full-migration/implementation/playable-02.md
+  s_5749b2ccfeffb1::t_b5fc8ed747d915 1-93
+.scratch/nitro-full-migration/implementation/playable-04-review.md
+  s_5749b2ccfeffb1::t_4dd2c663ad35f9 1-20
+.scratch/nitro-full-migration/implementation/playable-05-review.md
+  s_5749b2ccfeffb1::t_e9c91d359236fc 1-27
+.scratch/nitro-full-migration/implementation/playable-08.md
+  s_5749b2ccfeffb1::t_0e832781b66129 1-82
+.scratch/nitro-full-migration/implementation/playable-15.md
+  s_5749b2ccfeffb1::t_de1f42e72b2d09 1-185
+.scratch/nitro-full-migration/implementation/playable-27-bun-body-types-review.md
+  s_01e8d17f7740df::t_c9593da9e20331 1-63
+.scratch/nitro-full-migration/implementation/playable-27-bun-body-types.md
+  s_01e8d17f7740df::t_1ca90fa95aa1ad 1-82
+.scratch/nitro-full-migration/implementation/playable-27-review.md
+  s_8b1d5a69f175a9::t_3115ad478ecbd5 1-60
+.scratch/nitro-full-migration/implementation/playable-29.md
+  s_5749b2ccfeffb1::t_f31e36c0a646be 1-114
+.scratch/nitro-full-migration/implementation/playable-32-type-correction.md
+  s_01e8d17f7740df::t_16f663698a423e 1-97
+.scratch/nitro-full-migration/implementation/production-session-authority-deadline.md
+  s_01e8d17f7740df::t_be1d49ba08ecb7 1-87
+.scratch/nitro-full-migration/implementation/production-session-logout-closing-guard.md
+  s_01e8d17f7740df::t_63007d824c26e5 1-81
+.scratch/nitro-full-migration/implementation/public-api-producer-development-review.md
+  s_59ffa5bfdcd3ba::t_dd127fd661fa2b 1-59
+.scratch/nitro-full-migration/implementation/public-producer-concrete-binding-readiness.md
+  s_00d9eee545672e::t_8c113c0887fb5d 1-147
+.scratch/nitro-full-migration/implementation/public-producer-join-readiness-development-review.md
+  s_01e8d17f7740df::t_74c0379d59a6fa 1-99
+.scratch/nitro-full-migration/issues/dashboard-navigation.md
+  s_8b1d5a69f175a9::t_f6172b28ad7276 1-11
+.scratch/nitro-full-migration/issues/extended-features.md
+  s_8b1d5a69f175a9::t_83e2cfada40a09 1-11
+.scratch/nitro-full-migration/issues/integrations.md
+  s_8b1d5a69f175a9::t_9edbff907e7651 1-11
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/attempt-lifecycle.ts
+  s_5749b2ccfeffb1::t_7e570d7aee70c0 1-102
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/contracts.ts
+  s_5749b2ccfeffb1::t_325db3a8bf2817 1-80
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/feedback.tsx
+  s_5749b2ccfeffb1::t_811582fd59be5e 1-33
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/index.ts
+  s_5749b2ccfeffb1::t_fb11a6fa6b3919 1-20
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/login-form.tsx
+  s_5749b2ccfeffb1::t_a44e510b358c5a 1-266
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/logout-button.tsx
+  s_5749b2ccfeffb1::t_227f8c3a683dfc 1-91
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/navigation.ts
+  s_5749b2ccfeffb1::t_fc1845e20f9e06 1-38
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/auth/password-recovery.tsx
+  s_5749b2ccfeffb1::t_8ce7762b6abc58 1-32
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/account.tsx
+  s_5749b2ccfeffb1::t_7f72355023f519 1-316
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/claim.ts
+  s_5749b2ccfeffb1::t_8b604d8bf8d17d 1-36
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/connections.tsx
+  s_5749b2ccfeffb1::t_d1cedd7e8d7753 1-313
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/errors.ts
+  s_5749b2ccfeffb1::t_79cc658e5aa370 1-19
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/index.ts
+  s_5749b2ccfeffb1::t_06cd8d3fc10929 1-4
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/native-read.ts
+  s_5749b2ccfeffb1::t_d325c97a27615d 1-32
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/onboarding.module.css
+  s_5749b2ccfeffb1::t_b938f589ba4cfe 1-119
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/setup-studio.tsx
+  s_5749b2ccfeffb1::t_33ee9163b7b963 1-1166
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/studio.tsx
+  s_5749b2ccfeffb1::t_7cf7131afae16a 1-259
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/features/onboarding/types.ts
+  s_5749b2ccfeffb1::t_2d4d74ddd21f6d 1-240
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/source-ui/auth-onboarding/contracts.ts
+  s_5749b2ccfeffb1::t_47962225b6cf7c 1-70
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/source-ui/auth-onboarding/index.ts
+  s_5749b2ccfeffb1::t_5bf4534cd7f859 1-12
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/source-ui/auth-onboarding/invite.tsx
+  s_5749b2ccfeffb1::t_bdd7a26861d117 1-43
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/source-ui/auth-onboarding/login.tsx
+  s_5749b2ccfeffb1::t_c28580e6f3aa9c 1-24
+.scratch/nitro-full-migration/playable23-check-9X1hoq/apps/nitro/src/source-ui/auth-onboarding/registration-form.tsx
+  s_5749b2ccfeffb1::t_8b2688e4ad958c 1-82
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/index.ts
+  s_5749b2ccfeffb1::t_7020243725464a 1
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/array.ts
+  s_5749b2ccfeffb1::t_4b61a2e323673a 1-15
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/bounded-response.ts
+  s_5749b2ccfeffb1::t_b3d4a6b5aea359 1-45
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/client.ts
+  s_5749b2ccfeffb1::t_aed2be24c0146c 1
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/cookie.ts
+  s_5749b2ccfeffb1::t_a4e558b78bb90d 1-10
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/date.ts
+  s_5749b2ccfeffb1::t_5293987248be11 1-43
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/encryption.ts
+  s_5749b2ccfeffb1::t_09ea2549f3fb90 1-45
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/error.ts
+  s_5749b2ccfeffb1::t_b37b49389752ff 1-24
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/axios-http-error-handler.ts
+  s_5749b2ccfeffb1::t_9862a3074ea88c 1-44
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/fetch-http-error-handler.ts
+  s_5749b2ccfeffb1::t_8603e988a8a31b 1-66
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/http-error-handler.ts
+  s_5749b2ccfeffb1::t_343bf629a7d329 1-24
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/index.ts
+  s_5749b2ccfeffb1::t_4bd79aa298488a 1-6
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/node-fetch-http-error-handler.ts
+  s_5749b2ccfeffb1::t_016c953b76416a 1-42
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/octokit-http-error-handler.ts
+  s_5749b2ccfeffb1::t_79d2adb2b240a1 1-33
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/ofetch-http-error-handler.ts
+  s_5749b2ccfeffb1::t_00fdb07256d913 1-40
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/handlers/tsdav-http-error-handler.ts
+  s_5749b2ccfeffb1::t_d9d320ee3291cb 1-28
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/index.ts
+  s_5749b2ccfeffb1::t_6fcf8d6b4bafc4 1-3
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/request-error.ts
+  s_5749b2ccfeffb1::t_3fee4fd5c432a4 1-78
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/http/response-error.ts
+  s_5749b2ccfeffb1::t_b6885976051bd8 1-12
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/index.ts
+  s_5749b2ccfeffb1::t_5fd3f8bde95961 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/parse/handlers/index.ts
+  s_5749b2ccfeffb1::t_362a3a7c9aef03 1-3
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/parse/handlers/json-parse-error-handler.ts
+  s_5749b2ccfeffb1::t_206fa2b8ea22a6 1-18
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/parse/handlers/parse-error-handler.ts
+  s_5749b2ccfeffb1::t_5eb4077963e975 1-17
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/parse/handlers/zod-parse-error-handler.ts
+  s_5749b2ccfeffb1::t_459b8661686ae0 1-26
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/parse/index.ts
+  s_5749b2ccfeffb1::t_62b21f74fcc7d1 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/errors/parse/parse-error.ts
+  s_5749b2ccfeffb1::t_80ce5f867e4504 1-10
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/function.ts
+  s_5749b2ccfeffb1::t_8a28d92a0361d0 1-3
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/grid-algorithm.ts
+  s_5749b2ccfeffb1::t_a264894045b0cd 1-125
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/hooks.ts
+  s_5749b2ccfeffb1::t_3e72a9fce68e43 1-44
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/id.ts
+  s_5749b2ccfeffb1::t_dcf70106845c07 1
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/index.ts
+  s_5749b2ccfeffb1::t_a48a99a189a221 1-16
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/layout-resize-source.ts
+  s_5749b2ccfeffb1::t_92912e5b4407a4 1-79
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/number.ts
+  s_5749b2ccfeffb1::t_9b9b42818682b4 1-151
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/object.ts
+  s_5749b2ccfeffb1::t_53c4909cc94d5a 1-18
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/request.ts
+  s_5749b2ccfeffb1::t_7e3e60b7159380 1-15
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/revalidate-path-action.ts
+  s_5749b2ccfeffb1::t_8b0b431b1b30a8 1-7
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/security.ts
+  s_5749b2ccfeffb1::t_e7a98a14f73d6d 1-10
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/server.ts
+  s_5749b2ccfeffb1::t_32bf22572619c9 1-5
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/stopwatch.ts
+  s_5749b2ccfeffb1::t_a5e29099846f86 1-55
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/string.ts
+  s_5749b2ccfeffb1::t_6aad0a6ced1c27 1-61
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/theme.ts
+  s_5749b2ccfeffb1::t_6ffe2bb95203cf 1-5
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/types.ts
+  s_5749b2ccfeffb1::t_7f3e8242b94d67 1-28
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/common/src/url.ts
+  s_5749b2ccfeffb1::t_fd8c1f61628150 1-101
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/index.ts
+  s_5749b2ccfeffb1::t_134fa20dd30caa 1
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/_definition.ts
+  s_5749b2ccfeffb1::t_7ca72c7639633a 1-17
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/assistant.ts
+  s_5749b2ccfeffb1::t_36e9e7c951af6e 1-188
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/auth.ts
+  s_5749b2ccfeffb1::t_303152e0da3830 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/board.ts
+  s_5749b2ccfeffb1::t_e5d3a69c5d1a9a 1-61
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/cookie.ts
+  s_5749b2ccfeffb1::t_7cb421d76b452e 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docker-integration-match.ts
+  s_5749b2ccfeffb1::t_aa8a09e3ac0c19 1-56
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docker-service-discovery.ts
+  s_5749b2ccfeffb1::t_0a5b487475ff43 1-147
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docker.ts
+  s_5749b2ccfeffb1::t_25affa7fe4d944 1-11
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/codegen.ts
+  s_5749b2ccfeffb1::t_9cd68d4ef0fd1f 1-48
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_5749b2ccfeffb1::t_1c6c6aa2f1bf60 1-288
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/index.ts
+  s_5749b2ccfeffb1::t_c37f2be3b1a000 1-23
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/metadata.ts
+  s_5749b2ccfeffb1::t_8d2993c848cece 1-55
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/sitemap-paths.json
+  s_5749b2ccfeffb1::t_486b741d7e1234 1-284
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/docs/widget-doc-slugs.ts
+  s_5749b2ccfeffb1::t_7332de828a0375 1-73
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/emptysuperjson.ts
+  s_5749b2ccfeffb1::t_486a3440d26b20 1
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/group.ts
+  s_5749b2ccfeffb1::t_f28bba6ec21bb0 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/hotkeys.ts
+  s_5749b2ccfeffb1::t_07e9fa0e4180df 1-10
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/index.ts
+  s_5749b2ccfeffb1::t_1d231e77197910 1-24
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/integration-url-template.ts
+  s_5749b2ccfeffb1::t_71e67a99aa3d97 1-66
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/integration.ts
+  s_5749b2ccfeffb1::t_a81f7bbbb702d3 1-1227
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/invariant-technical-labels.ts
+  s_5749b2ccfeffb1::t_ad3fa1bdfcb7fb 1-14
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/kubernetes.ts
+  s_5749b2ccfeffb1::t_9d2e0c7fbedec7 1-112
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/onboarding.ts
+  s_5749b2ccfeffb1::t_8505e3919de78c 1-5
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/permissions.ts
+  s_5749b2ccfeffb1::t_f340414682c88b 1-255
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/release-provider.ts
+  s_5749b2ccfeffb1::t_f5d37a5466b5af 1-78
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/search-engine.ts
+  s_5749b2ccfeffb1::t_a5e826a2832b86 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/section.ts
+  s_5749b2ccfeffb1::t_58da8ac6bf0b97 1-40
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/user.ts
+  s_5749b2ccfeffb1::t_d0b2859767fda4 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/widget-integration-map.ts
+  s_5749b2ccfeffb1::t_32a893ac148510 1-252
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/widget-name.ts
+  s_5749b2ccfeffb1::t_62f4976b5f5503 1-24
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/definitions/src/widget.ts
+  s_5749b2ccfeffb1::t_3cf11d6fdd8499 1-104
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/onboarding/src/onboarding-studio.module.css
+  s_5749b2ccfeffb1::t_ab0285e6e7042a 1-612
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/onboarding/src/presentation-steps.tsx
+  s_5749b2ccfeffb1::t_0ca70f6ef82909 1-232
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/index.ts
+  s_5749b2ccfeffb1::t_953b4294414218 1
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/client/index.ts
+  s_5749b2ccfeffb1::t_631d23d42bb7ad 1-16
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/client/use-change-locale.ts
+  s_5749b2ccfeffb1::t_7e6eef080c100c 1-25
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/client/use-current-locale.ts
+  s_5749b2ccfeffb1::t_1898f3a77667f6 1-7
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/config.ts
+  s_5749b2ccfeffb1::t_454b5e66a30313 1-450
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/dayjs.ts
+  s_5749b2ccfeffb1::t_b6be43c4beaa76 1-48
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/index.ts
+  s_5749b2ccfeffb1::t_6fff7f182b63ac 1-19
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/ca.json
+  s_5749b2ccfeffb1::t_6b7ac60a51c31a 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/cn.json
+  s_5749b2ccfeffb1::t_15e873a9bf463a 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/cr.json
+  s_5749b2ccfeffb1::t_a7032a47edbed5 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/cs.json
+  s_5749b2ccfeffb1::t_9c80961819c1ec 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/da.json
+  s_5749b2ccfeffb1::t_e3f625242725d5 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/de-CH.json
+  s_5749b2ccfeffb1::t_a7b0bc37b5363f 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/de.json
+  s_5749b2ccfeffb1::t_d9e1c5e8a178df 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/el.json
+  s_5749b2ccfeffb1::t_0b1483006de3ae 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/en-gb.json
+  s_5749b2ccfeffb1::t_588d7de7ad1651 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/en.json
+  s_5749b2ccfeffb1::t_d1928b9b5556a7 1-8659
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/es.json
+  s_5749b2ccfeffb1::t_9e9a050eb64e74 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/et.json
+  s_5749b2ccfeffb1::t_9bb8de0fa4790f 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/fi.json
+  s_5749b2ccfeffb1::t_d0a5c6aaa613e1 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/fr.json
+  s_5749b2ccfeffb1::t_a0a933cb2d1986 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/he.json
+  s_5749b2ccfeffb1::t_25641ab1812029 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/hr.json
+  s_5749b2ccfeffb1::t_278500007c19a5 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/hu.json
+  s_5749b2ccfeffb1::t_3c87defc028d81 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/it.json
+  s_5749b2ccfeffb1::t_5794bcd8fedfe9 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/ja.json
+  s_5749b2ccfeffb1::t_010abe1a5dc1f7 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/ko.json
+  s_5749b2ccfeffb1::t_94739c2cef49d0 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/lt.json
+  s_5749b2ccfeffb1::t_81caf99a1df067 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/lv.json
+  s_5749b2ccfeffb1::t_df55cb9bbb0f67 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/nl.json
+  s_5749b2ccfeffb1::t_26fbc3441106f3 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/no.json
+  s_5749b2ccfeffb1::t_ed85e3543bc8e6 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/pl.json
+  s_5749b2ccfeffb1::t_4b4685679c1bd5 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/pt-br.json
+  s_5749b2ccfeffb1::t_785565b2b5c025 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/pt.json
+  s_5749b2ccfeffb1::t_9651dcdbd086cf 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/ro.json
+  s_5749b2ccfeffb1::t_456646cfbac277 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/ru.json
+  s_5749b2ccfeffb1::t_8f37a4573940b2 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/sk.json
+  s_5749b2ccfeffb1::t_71f962dbd5948b 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/sl.json
+  s_5749b2ccfeffb1::t_258adf5d15a9d0 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/sv.json
+  s_5749b2ccfeffb1::t_4a068d71918b09 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/tr.json
+  s_5749b2ccfeffb1::t_6831e1b1e463a5 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/uk.json
+  s_5749b2ccfeffb1::t_20ac7161ddcfb9 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/vi.json
+  s_5749b2ccfeffb1::t_3a1694c5947acd 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/lang/zh.json
+  s_5749b2ccfeffb1::t_348bff08e25490 1-8673
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/languages.ts
+  s_5749b2ccfeffb1::t_07965215295d39 1-46
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/mantine-react-table/ca.json
+  s_5749b2ccfeffb1::t_397ec5217e9eb7 1-93
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/mantine-react-table/en.json
+  s_5749b2ccfeffb1::t_5e834b5cdb3aee 1-93
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/mantine-react-table/lt.json
+  s_5749b2ccfeffb1::t_e25c452e106740 1-93
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/mantine-react-table/lv.json
+  s_5749b2ccfeffb1::t_d627a4ab44ce8e 1-93
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/mantine-react-table/sl.json
+  s_5749b2ccfeffb1::t_edd2523b8de347 1-93
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/mapping.ts
+  s_5749b2ccfeffb1::t_261f905d25f290 1-22
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/middleware.ts
+  s_5749b2ccfeffb1::t_e79b164c835ccd 1-13
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/request.ts
+  s_5749b2ccfeffb1::t_6eb75d9e0c41fb 1-57
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/routing.ts
+  s_5749b2ccfeffb1::t_395b8d6675763b 1-20
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/bunfig.check.toml
+  s_5749b2ccfeffb1::t_73f5c8570ed026 1-2
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/culture.ts
+  s_5749b2ccfeffb1::t_995bf0210197fb 1-82
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/date.ts
+  s_5749b2ccfeffb1::t_ba3187b37c3555 1-55
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/index.ts
+  s_5749b2ccfeffb1::t_87bf403568280f 1-31
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/locale.ts
+  s_5749b2ccfeffb1::t_280ad223967680 1-84
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/relative-refresh.ts
+  s_5749b2ccfeffb1::t_d6677b03698f9f 1-33
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/resources.ts
+  s_5749b2ccfeffb1::t_60e549c226bda2 1-76
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/runtime/tsconfig.check.json
+  s_5749b2ccfeffb1::t_4446945b949f4d 1-17
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/server.ts
+  s_5749b2ccfeffb1::t_2d7d24aaa23f89 1-15
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/catalogs.ts
+  s_5749b2ccfeffb1::t_7580d2e7db995f 1-72
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/client.tsx
+  s_5749b2ccfeffb1::t_8b2f43e765bd9f 1-48
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/compatibility-check.ts
+  s_5749b2ccfeffb1::t_dae77816ba7f63 1-78
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/compatibility-types.ts
+  s_5749b2ccfeffb1::t_8e34ae95da1328 1-24
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/i18n.spec.tsx
+  s_5749b2ccfeffb1::t_623cc3153739f9 1-73
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/index.ts
+  s_5749b2ccfeffb1::t_a00b180bc937ad 1-14
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/server.ts
+  s_5749b2ccfeffb1::t_0d7bed3427ecd9 1-37
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/tsconfig.json
+  s_5749b2ccfeffb1::t_e1b70630ca0d94 1-17
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/types.ts
+  s_5749b2ccfeffb1::t_5539ca06889d44 1-31
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/standalone/vitest.config.mts
+  s_5749b2ccfeffb1::t_736a88301be127 1-12
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/translation/src/type.ts
+  s_5749b2ccfeffb1::t_f500d206120d29 1-19
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/app.ts
+  s_5749b2ccfeffb1::t_20a181f4aefde7 1-35
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/board.ts
+  s_5749b2ccfeffb1::t_43974d53f39a79 1-197
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/certificates.ts
+  s_5749b2ccfeffb1::t_bac37c4e504b20 1-58
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/common.ts
+  s_5749b2ccfeffb1::t_4417c9ca4e7317 1-16
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/email.ts
+  s_5749b2ccfeffb1::t_18cd5913e0a110 1-16
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/enums.ts
+  s_5749b2ccfeffb1::t_c470172bbf297e 1-11
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/form/i18n.ts
+  s_5749b2ccfeffb1::t_67a5cd22a06ead 1-152
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/group.ts
+  s_5749b2ccfeffb1::t_a2df40fcd43517 1-40
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/header-preferences.ts
+  s_5749b2ccfeffb1::t_ea9f7241df739e 1-251
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/icons.ts
+  s_5749b2ccfeffb1::t_7045f1eb28d6d5 1-6
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/integration.ts
+  s_5749b2ccfeffb1::t_e0196af71cdbd7 1-45
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/media.ts
+  s_5749b2ccfeffb1::t_405b32280b4b25 1-39
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/onboarding.ts
+  s_5749b2ccfeffb1::t_dde07b8092805f 1-112
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/permissions.ts
+  s_5749b2ccfeffb1::t_99b34860829b67 1-15
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/redirection-url.ts
+  s_5749b2ccfeffb1::t_ed115dadf46fc9 1-14
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/search-engine.ts
+  s_5749b2ccfeffb1::t_2616a1f9e584c1 1-38
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/shared.ts
+  s_5749b2ccfeffb1::t_68abd3c4495b4d 1-102
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/user.ts
+  s_5749b2ccfeffb1::t_c088e2dc280bff 1-193
+.scratch/nitro-full-migration/playable23-check-9X1hoq/packages/validation/src/widgets/media-request.ts
+  s_5749b2ccfeffb1::t_5558814d6ad55a 1-12
+.scratch/nitro-full-migration/playable23-check-9X1hoq/tsconfig.json
+  s_5749b2ccfeffb1::t_7191332eb66171 1-120
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/attempt-lifecycle.ts
+  s_5749b2ccfeffb1::t_ad47831b310c63 1-102
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/contracts.ts
+  s_5749b2ccfeffb1::t_4faf582c90e8e4 1-80
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/feedback.tsx
+  s_5749b2ccfeffb1::t_e4669b8eb4e062 1-33
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/index.ts
+  s_5749b2ccfeffb1::t_f626817fe1aa6d 1-20
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/login-form.tsx
+  s_5749b2ccfeffb1::t_eeab78c55df80d 1-266
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/logout-button.tsx
+  s_5749b2ccfeffb1::t_b135bb53556770 1-91
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/navigation.ts
+  s_5749b2ccfeffb1::t_eef65c868f2f43 1-38
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/auth/password-recovery.tsx
+  s_5749b2ccfeffb1::t_29d4d7a4a29632 1-32
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/account.tsx
+  s_5749b2ccfeffb1::t_f514519084187c 1-316
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/claim.ts
+  s_5749b2ccfeffb1::t_fb903f3d207b40 1-36
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/connections.tsx
+  s_5749b2ccfeffb1::t_434cb223f28271 1-313
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/errors.ts
+  s_5749b2ccfeffb1::t_8c55511a762439 1-19
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/index.ts
+  s_5749b2ccfeffb1::t_9b8a0fa9d7c197 1-4
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/native-read.ts
+  s_5749b2ccfeffb1::t_9ae5230bf38ee3 1-32
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/onboarding.module.css
+  s_5749b2ccfeffb1::t_d7d17e6999c12e 1-119
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/setup-studio.tsx
+  s_5749b2ccfeffb1::t_92e87303f5824c 1-1166
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/studio.tsx
+  s_5749b2ccfeffb1::t_5b761a316b9790 1-259
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/features/onboarding/types.ts
+  s_5749b2ccfeffb1::t_f63bef7b044964 1-240
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/source-ui/auth-onboarding/contracts.ts
+  s_5749b2ccfeffb1::t_4e6b3ceab3d194 1-70
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/source-ui/auth-onboarding/index.ts
+  s_5749b2ccfeffb1::t_36e2ffd89eb898 1-12
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/source-ui/auth-onboarding/invite.tsx
+  s_5749b2ccfeffb1::t_b446f7537a5e9f 1-43
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/source-ui/auth-onboarding/login.tsx
+  s_5749b2ccfeffb1::t_739a4ffd62b1ee 1-24
+.scratch/nitro-full-migration/playable23-final-4mQQhK/apps/nitro/src/source-ui/auth-onboarding/registration-form.tsx
+  s_5749b2ccfeffb1::t_5b1fc2b28327da 1-82
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/index.ts
+  s_5749b2ccfeffb1::t_06d7dbb78f2566 1
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/array.ts
+  s_5749b2ccfeffb1::t_03adca265b74e9 1-15
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/bounded-response.ts
+  s_5749b2ccfeffb1::t_aa05db29249b95 1-45
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/client.ts
+  s_5749b2ccfeffb1::t_2c70fc64f6c0ec 1
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/cookie.ts
+  s_5749b2ccfeffb1::t_b079ac948d98d0 1-10
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/date.ts
+  s_5749b2ccfeffb1::t_82000d269279c8 1-43
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/encryption.ts
+  s_5749b2ccfeffb1::t_762a521ec4d156 1-45
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/error.ts
+  s_5749b2ccfeffb1::t_1abbcff8167862 1-24
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/axios-http-error-handler.ts
+  s_5749b2ccfeffb1::t_61f250eeec8525 1-44
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/fetch-http-error-handler.ts
+  s_5749b2ccfeffb1::t_f7a1fcb7c16761 1-66
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/http-error-handler.ts
+  s_5749b2ccfeffb1::t_d11d1a67cc8e32 1-24
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/index.ts
+  s_5749b2ccfeffb1::t_fbd4540aebec59 1-6
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/node-fetch-http-error-handler.ts
+  s_5749b2ccfeffb1::t_3231a4aea97db7 1-42
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/octokit-http-error-handler.ts
+  s_5749b2ccfeffb1::t_ebcac5ea39fbd0 1-33
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/ofetch-http-error-handler.ts
+  s_5749b2ccfeffb1::t_eb90f70db1485f 1-40
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/handlers/tsdav-http-error-handler.ts
+  s_5749b2ccfeffb1::t_014346f9735138 1-28
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/index.ts
+  s_5749b2ccfeffb1::t_a3e91b32daba33 1-3
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/request-error.ts
+  s_5749b2ccfeffb1::t_ea8d4ed0802538 1-78
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/http/response-error.ts
+  s_5749b2ccfeffb1::t_45b7f289097a9f 1-12
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/index.ts
+  s_5749b2ccfeffb1::t_008e3ea5618b6c 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/parse/handlers/index.ts
+  s_5749b2ccfeffb1::t_855218ce573ecb 1-3
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/parse/handlers/json-parse-error-handler.ts
+  s_5749b2ccfeffb1::t_10a3dfc2c7f943 1-18
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/parse/handlers/parse-error-handler.ts
+  s_5749b2ccfeffb1::t_61ebb2980bb645 1-17
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/parse/handlers/zod-parse-error-handler.ts
+  s_5749b2ccfeffb1::t_abb701beb19159 1-26
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/parse/index.ts
+  s_5749b2ccfeffb1::t_e458b234f8ca53 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/errors/parse/parse-error.ts
+  s_5749b2ccfeffb1::t_a53e46c1e93a0a 1-10
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/function.ts
+  s_5749b2ccfeffb1::t_3b32f2c9a8576a 1-3
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/grid-algorithm.ts
+  s_5749b2ccfeffb1::t_bdf45c55db309b 1-125
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/hooks.ts
+  s_5749b2ccfeffb1::t_ea5f3a2a3c2477 1-44
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/id.ts
+  s_5749b2ccfeffb1::t_98f78e3779a504 1
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/index.ts
+  s_5749b2ccfeffb1::t_68d60829532656 1-16
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/layout-resize-source.ts
+  s_5749b2ccfeffb1::t_7fb1aeba2d89e6 1-79
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/number.ts
+  s_5749b2ccfeffb1::t_cb0e151906d0b5 1-151
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/object.ts
+  s_5749b2ccfeffb1::t_83fd7cafad3835 1-18
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/request.ts
+  s_5749b2ccfeffb1::t_eaf7d7232255a5 1-15
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/revalidate-path-action.ts
+  s_5749b2ccfeffb1::t_4bf7dd8671da7a 1-7
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/security.ts
+  s_5749b2ccfeffb1::t_1fcfac51b25998 1-10
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/server.ts
+  s_5749b2ccfeffb1::t_e5717409189d98 1-5
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/stopwatch.ts
+  s_5749b2ccfeffb1::t_1d449a97fb909b 1-55
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/string.ts
+  s_5749b2ccfeffb1::t_6268328220873d 1-61
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/theme.ts
+  s_5749b2ccfeffb1::t_d44adfb2794082 1-5
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/types.ts
+  s_5749b2ccfeffb1::t_d399c572e1bd94 1-28
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/common/src/url.ts
+  s_5749b2ccfeffb1::t_703a72921b6545 1-101
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/index.ts
+  s_5749b2ccfeffb1::t_a17bef5b0c5ec0 1
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/_definition.ts
+  s_5749b2ccfeffb1::t_df6adef3bb2fc0 1-17
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/assistant.ts
+  s_5749b2ccfeffb1::t_f4f3f3eb8c4241 1-188
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/auth.ts
+  s_5749b2ccfeffb1::t_d6167835cebdb2 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/board.ts
+  s_5749b2ccfeffb1::t_c78ef5c5954622 1-61
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/cookie.ts
+  s_5749b2ccfeffb1::t_44091665a854ea 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docker-integration-match.ts
+  s_5749b2ccfeffb1::t_b6dd2d621ec28e 1-56
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docker-service-discovery.ts
+  s_5749b2ccfeffb1::t_cfab22dc42295b 1-147
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docker.ts
+  s_5749b2ccfeffb1::t_7b5255be4c4695 1-11
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docs/codegen.ts
+  s_5749b2ccfeffb1::t_2e4136eb318381 1-48
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_5749b2ccfeffb1::t_8459c006356f9e 1-288
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docs/index.ts
+  s_5749b2ccfeffb1::t_81cf4aea3be680 1-23
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docs/metadata.ts
+  s_5749b2ccfeffb1::t_8e502a27a932ab 1-55
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docs/sitemap-paths.json
+  s_5749b2ccfeffb1::t_b2312eac205b21 1-284
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/docs/widget-doc-slugs.ts
+  s_5749b2ccfeffb1::t_71a859af877ede 1-73
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/emptysuperjson.ts
+  s_5749b2ccfeffb1::t_fe061c4c8620e5 1
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/group.ts
+  s_5749b2ccfeffb1::t_c9e5fd27f9164a 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/hotkeys.ts
+  s_5749b2ccfeffb1::t_bebe5ed6891338 1-10
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/index.ts
+  s_5749b2ccfeffb1::t_95978e62adb7b6 1-24
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/integration-url-template.ts
+  s_5749b2ccfeffb1::t_75a7dcc08517ed 1-66
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/integration.ts
+  s_5749b2ccfeffb1::t_c5054d45778c30 1-1227
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/invariant-technical-labels.ts
+  s_5749b2ccfeffb1::t_5a3a83e08b7a8a 1-14
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/kubernetes.ts
+  s_5749b2ccfeffb1::t_73ce8852459e42 1-112
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/onboarding.ts
+  s_5749b2ccfeffb1::t_1c17ea438ca037 1-5
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/permissions.ts
+  s_5749b2ccfeffb1::t_1c4cd44014c58b 1-255
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/release-provider.ts
+  s_5749b2ccfeffb1::t_6fb9fd221fdd78 1-78
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/search-engine.ts
+  s_5749b2ccfeffb1::t_2cc5a62222abff 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/section.ts
+  s_5749b2ccfeffb1::t_e501b091f27ef8 1-40
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/user.ts
+  s_5749b2ccfeffb1::t_43bf603c9ce4ce 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/widget-integration-map.ts
+  s_5749b2ccfeffb1::t_1ca5879b7afe6a 1-252
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/widget-name.ts
+  s_5749b2ccfeffb1::t_7b291cc69f416b 1-24
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/definitions/src/widget.ts
+  s_5749b2ccfeffb1::t_1038d24690f298 1-104
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/homarr-wordmark-light.tsx
+  s_5749b2ccfeffb1::t_79d3d62f3e6308 1-227
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/onboarding-auth-shell.tsx
+  s_5749b2ccfeffb1::t_2e5fe2b72e0e7f 1-52
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/onboarding-backdrop.tsx
+  s_5749b2ccfeffb1::t_fa013a8a762311 1-5
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/onboarding-studio.module.css
+  s_5749b2ccfeffb1::t_bbb6a469be1d7d 1-612
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/onboarding-wordmark.tsx
+  s_5749b2ccfeffb1::t_8b5ae2ca52e01e 1-103
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/presentation-auth-shell.tsx
+  s_5749b2ccfeffb1::t_794d38c5c3111b 1-139
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/presentation-backdrop.tsx
+  s_5749b2ccfeffb1::t_96b7e07e8561f0 1-12
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/presentation-steps.tsx
+  s_5749b2ccfeffb1::t_9206ad543ed36b 1-233
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/presentation.ts
+  s_5749b2ccfeffb1::t_3bea9c823cba0d 1-8
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/onboarding/src/use-onboarding-sounds.ts
+  s_5749b2ccfeffb1::t_9251da0f38f367 1-25
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/index.ts
+  s_5749b2ccfeffb1::t_16a42018f2e58f 1
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/client/index.ts
+  s_5749b2ccfeffb1::t_f63b4f1e69e6d1 1-16
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/client/use-change-locale.ts
+  s_5749b2ccfeffb1::t_072a00bac85ad0 1-25
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/client/use-current-locale.ts
+  s_5749b2ccfeffb1::t_411b7a4696f5f5 1-7
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/config.ts
+  s_5749b2ccfeffb1::t_9ae3cc61c9b429 1-450
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/dayjs.ts
+  s_5749b2ccfeffb1::t_65498acc3a2b3d 1-48
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/index.ts
+  s_5749b2ccfeffb1::t_15f102551c9fa3 1-19
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/ca.json
+  s_5749b2ccfeffb1::t_bdc98db4e29c78 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/cn.json
+  s_5749b2ccfeffb1::t_f6152978158d4d 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/cr.json
+  s_5749b2ccfeffb1::t_77b5897daaf25d 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/cs.json
+  s_5749b2ccfeffb1::t_e1f2b9a5cca3c1 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/da.json
+  s_5749b2ccfeffb1::t_4315e94886f0f5 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/de-CH.json
+  s_5749b2ccfeffb1::t_0b679d174ff1a3 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/de.json
+  s_5749b2ccfeffb1::t_d847151705a099 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/el.json
+  s_5749b2ccfeffb1::t_6a11046a8f17e4 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/en-gb.json
+  s_5749b2ccfeffb1::t_022a671fe26170 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/en.json
+  s_5749b2ccfeffb1::t_9af1a02da2c147 1-8659
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/es.json
+  s_5749b2ccfeffb1::t_85cee87c8b356a 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/et.json
+  s_5749b2ccfeffb1::t_44f8e9c4407ef3 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/fi.json
+  s_5749b2ccfeffb1::t_4fa6de9f5ac591 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/fr.json
+  s_5749b2ccfeffb1::t_45ff2e8c11bed3 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/he.json
+  s_5749b2ccfeffb1::t_37ac91d1bd02cd 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/hr.json
+  s_5749b2ccfeffb1::t_d6541d234162f9 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/hu.json
+  s_5749b2ccfeffb1::t_c72a3931c069d2 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/it.json
+  s_5749b2ccfeffb1::t_f73fce6514bb16 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/ja.json
+  s_5749b2ccfeffb1::t_b2d97acdb09f96 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/ko.json
+  s_5749b2ccfeffb1::t_8fc120cd74ca53 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/lt.json
+  s_5749b2ccfeffb1::t_e9bc8e0074a132 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/lv.json
+  s_5749b2ccfeffb1::t_f5c62076ef0e37 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/nl.json
+  s_5749b2ccfeffb1::t_0e793e8e552444 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/no.json
+  s_5749b2ccfeffb1::t_c0fca68b4bad5d 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/pl.json
+  s_5749b2ccfeffb1::t_e7b55eeec6b159 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/pt-br.json
+  s_5749b2ccfeffb1::t_235522b1cee5a8 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/pt.json
+  s_5749b2ccfeffb1::t_3e86c8195fa682 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/ro.json
+  s_5749b2ccfeffb1::t_fe07de3d1123b1 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/ru.json
+  s_5749b2ccfeffb1::t_d6e5ef977dfe77 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/sk.json
+  s_5749b2ccfeffb1::t_a6f9074ac31aee 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/sl.json
+  s_5749b2ccfeffb1::t_c2c7a6aad9451c 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/sv.json
+  s_5749b2ccfeffb1::t_f1edf45c56ed62 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/tr.json
+  s_5749b2ccfeffb1::t_733fa7cd88ddc8 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/uk.json
+  s_5749b2ccfeffb1::t_3088115ac91f67 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/vi.json
+  s_5749b2ccfeffb1::t_ed3d7a2226ca3f 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/lang/zh.json
+  s_5749b2ccfeffb1::t_28fda91240ea8f 1-8673
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/languages.ts
+  s_5749b2ccfeffb1::t_b55b4ef1b7319a 1-46
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/mantine-react-table/ca.json
+  s_5749b2ccfeffb1::t_e983081ebf8c70 1-93
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/mantine-react-table/en.json
+  s_5749b2ccfeffb1::t_537d6e73afd64e 1-93
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/mantine-react-table/lt.json
+  s_5749b2ccfeffb1::t_ec303e12c25531 1-93
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/mantine-react-table/lv.json
+  s_5749b2ccfeffb1::t_ec75df69ef587a 1-93
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/mantine-react-table/sl.json
+  s_5749b2ccfeffb1::t_da0a540d055715 1-93
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/mapping.ts
+  s_5749b2ccfeffb1::t_d8deccfa814e4b 1-22
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/middleware.ts
+  s_5749b2ccfeffb1::t_8913fcea488155 1-13
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/request.ts
+  s_5749b2ccfeffb1::t_5291f9e805fb41 1-57
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/routing.ts
+  s_5749b2ccfeffb1::t_c77b00826c48af 1-20
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/bunfig.check.toml
+  s_5749b2ccfeffb1::t_61db3ea9706280 1-2
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/culture.ts
+  s_5749b2ccfeffb1::t_59dabf7188d28e 1-82
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/date.ts
+  s_5749b2ccfeffb1::t_51d68a395313d9 1-55
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/index.ts
+  s_5749b2ccfeffb1::t_449d4428634fc7 1-31
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/locale.ts
+  s_5749b2ccfeffb1::t_2c5b7219b79113 1-84
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/relative-refresh.ts
+  s_5749b2ccfeffb1::t_7634703e9a42b8 1-33
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/resources.ts
+  s_5749b2ccfeffb1::t_7c97122daeb6df 1-76
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/runtime/tsconfig.check.json
+  s_5749b2ccfeffb1::t_f0c27844bc7e6e 1-17
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/server.ts
+  s_5749b2ccfeffb1::t_d9a58bfaa0340d 1-15
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/catalogs.ts
+  s_5749b2ccfeffb1::t_1945936aa70f91 1-72
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/client.tsx
+  s_5749b2ccfeffb1::t_7865b5e96d268a 1-48
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/compatibility-check.ts
+  s_5749b2ccfeffb1::t_aea3e9a5d230b8 1-78
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/compatibility-types.ts
+  s_5749b2ccfeffb1::t_e99457d373f208 1-24
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/i18n.spec.tsx
+  s_5749b2ccfeffb1::t_a1c1cbe97ed515 1-73
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/index.ts
+  s_5749b2ccfeffb1::t_7c177f0bbc4bd7 1-14
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/server.ts
+  s_5749b2ccfeffb1::t_74e7b7e6551b4d 1-37
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/tsconfig.json
+  s_5749b2ccfeffb1::t_1f472195f7226b 1-17
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/types.ts
+  s_5749b2ccfeffb1::t_bba733c6370f0d 1-31
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/standalone/vitest.config.mts
+  s_5749b2ccfeffb1::t_233b0e417a9c38 1-12
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/translation/src/type.ts
+  s_5749b2ccfeffb1::t_767ba0cb7b6d86 1-19
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/app.ts
+  s_5749b2ccfeffb1::t_5be8a2cf0f44a1 1-35
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/board.ts
+  s_5749b2ccfeffb1::t_62fa2a667b55b6 1-197
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/certificates.ts
+  s_5749b2ccfeffb1::t_d33d58a5a9db46 1-58
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/common.ts
+  s_5749b2ccfeffb1::t_972bf32fcdb231 1-16
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/email.ts
+  s_5749b2ccfeffb1::t_1bbaa64924a783 1-16
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/enums.ts
+  s_5749b2ccfeffb1::t_eb945ee54d515a 1-11
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/form/i18n.ts
+  s_5749b2ccfeffb1::t_e6e29176ed29e3 1-152
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/group.ts
+  s_5749b2ccfeffb1::t_559905760bb247 1-40
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/header-preferences.ts
+  s_5749b2ccfeffb1::t_b6ab50b7ccecf6 1-251
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/icons.ts
+  s_5749b2ccfeffb1::t_8f692211758fb4 1-6
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/integration.ts
+  s_5749b2ccfeffb1::t_fb2ffffacef888 1-45
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/media.ts
+  s_5749b2ccfeffb1::t_3c8172be3edf83 1-39
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/onboarding.ts
+  s_5749b2ccfeffb1::t_516bfdd6dc4e42 1-112
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/permissions.ts
+  s_5749b2ccfeffb1::t_608d9cc0281c19 1-15
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/redirection-url.ts
+  s_5749b2ccfeffb1::t_46e1616cc2ec58 1-14
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/search-engine.ts
+  s_5749b2ccfeffb1::t_6625317ec1a492 1-38
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/shared.ts
+  s_5749b2ccfeffb1::t_82e397bc73c90e 1-102
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/user.ts
+  s_5749b2ccfeffb1::t_59faa32c2780ed 1-193
+.scratch/nitro-full-migration/playable23-final-4mQQhK/packages/validation/src/widgets/media-request.ts
+  s_5749b2ccfeffb1::t_854bb3aed3c1ba 1-12
+.scratch/nitro-full-migration/playable23-final-4mQQhK/tsconfig.json
+  s_5749b2ccfeffb1::t_cf46e94bb57249 1-120
+.slim/deepwork/nitro-feasibility.md
+  s_8b1d5a69f175a9::t_b9b8c5c0eeec2c 1-81
+apps/backend/nitro.config.ts
+  s_59ffa5bfdcd3ba::t_56733aec3b3b1a 1-2,7-10
+apps/backend/package.json
+  s_01e8d17f7740df::t_2ede8b5074e2c3 1-34
+apps/backend/src/server/compose.ts
+  s_01e8d17f7740df::t_3cdbd811da2540 1-64
+apps/backend/src/server/runtime-composition/configuration.ts
+  s_00d9eee545672e::t_a4ba8b3b6efe97 1-56
+apps/backend/src/server/runtime-composition/public-rpc.ts
+  s_01e8d17f7740df::t_f24eadcdfa6ce0 1-263
+apps/backend/tsconfig.json
+  s_00d9eee545672e::t_29816ebbfe511f 1-20
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  s_01e8d17f7740df::t_92b0ff21be25ae 25-26,116
+apps/nitro/public/images/apps/imdb.svg
+  s_5749b2ccfeffb1::t_a42efe11b1e6a6 1-3
+apps/nitro/public/images/apps/lastfm.svg
+  s_5749b2ccfeffb1::t_0759b95a64168f 1-4
+apps/nitro/public/images/apps/lidarr.svg
+  s_5749b2ccfeffb1::t_a91af9a573fce1 1-25
+apps/nitro/public/images/apps/nextcloud.svg
+  s_5749b2ccfeffb1::t_75f0b613dfa37a 1
+apps/nitro/public/images/apps/radarr.svg
+  s_5749b2ccfeffb1::t_71b6e7efff9088 1
+apps/nitro/public/images/apps/readarr.svg
+  s_5749b2ccfeffb1::t_8593f249597f7e 1
+apps/nitro/public/images/apps/sonarr.svg
+  s_5749b2ccfeffb1::t_096f85aad219e9 1
+apps/nitro/public/images/apps/the-tvdb.svg
+  s_5749b2ccfeffb1::t_eff0d6c9ded2e5 1-9
+apps/nitro/public/images/apps/tmdb.svg
+  s_5749b2ccfeffb1::t_94d3f4bbf494c7 1
+apps/nitro/public/images/apps/truenas.svg
+  s_5749b2ccfeffb1::t_ae63e8f8343a9b 1
+apps/nitro/public/images/apps/unraid-alt.svg
+  s_5749b2ccfeffb1::t_119f99f68b01f7 1
+apps/nitro/public/images/apps/vgmdb.svg
+  s_5749b2ccfeffb1::t_75dc032744578c 1-47
+apps/nitro/public/images/demo-dashboard-background.svg
+  s_5749b2ccfeffb1::t_35e55db1aca2e1 1-53
+apps/nitro/public/images/kubernetes/configmaps.svg
+  s_5749b2ccfeffb1::t_17f0880c72222b 1-141
+apps/nitro/public/images/kubernetes/ingresses.svg
+  s_5749b2ccfeffb1::t_b2925738f4bd4e 1-84
+apps/nitro/public/images/kubernetes/namespaces.svg
+  s_5749b2ccfeffb1::t_c33f5d00e79944 1-85
+apps/nitro/public/images/kubernetes/nodes.svg
+  s_5749b2ccfeffb1::t_712456a3dbd13b 1-84
+apps/nitro/public/images/kubernetes/pods.svg
+  s_5749b2ccfeffb1::t_914641b34aa077 1-103
+apps/nitro/public/images/kubernetes/secrets.svg
+  s_5749b2ccfeffb1::t_0014bac652c05e 1-128
+apps/nitro/public/images/kubernetes/services.svg
+  s_5749b2ccfeffb1::t_c477d388f7df08 1-117
+apps/nitro/public/images/kubernetes/volumes.svg
+  s_5749b2ccfeffb1::t_62f1fc77c68a85 1-97
+apps/nitro/public/sw.js
+  s_5749b2ccfeffb1::t_4d70eef34805e4 1-7
+apps/nitro/src/app/preview-document.ts
+  s_59ffa5bfdcd3ba::t_a6f27539c36d6b 1-45
+apps/nitro/src/app/private-providers.tsx
+  s_01e8d17f7740df::t_bf680293d65d5c 1-206
+apps/nitro/src/app/private-shell.tsx
+  s_59ffa5bfdcd3ba::t_fa1ed03dfae938 1-35
+apps/nitro/src/app/providers.tsx
+  s_00d9eee545672e::t_b174ec6b2bf656 1-2,6-7,10,12-19,21-31,33-37,40-41
+apps/nitro/src/app/public-providers.tsx
+  s_00d9eee545672e::t_e3cde5a5dd00b1 1-196
+apps/nitro/src/app/router.tsx
+  s_00d9eee545672e::t_6c70a980f34a3f 8,14,33-51,53
+apps/nitro/src/client/authenticated-read.ts
+  s_59ffa5bfdcd3ba::t_6645718f1b55b8 1-9
+apps/nitro/src/contracts/providers.ts
+  s_00d9eee545672e::t_b1985d26a43384 8,11
+apps/nitro/src/contracts/render.ts
+  s_01e8d17f7740df::t_cd9acf69f8548c 3-200,206,226-242
+apps/nitro/src/entry-client.tsx
+  s_59ffa5bfdcd3ba::t_81163a502eb824 2,10,17-18,21
+apps/nitro/src/entry-server.tsx
+  s_59ffa5bfdcd3ba::t_1e067317d30d1f 1-4,8,10-17
+apps/nitro/src/features/auth/navigation.ts
+  s_01e8d17f7740df::t_d90a1518d5e076 1-46
+apps/nitro/src/features/certificates/confirm-action.tsx
+  s_5749b2ccfeffb1::t_0d8a5e8a7dcf60 1-28
+apps/nitro/src/features/certificates/list-page.tsx
+  s_5749b2ccfeffb1::t_d8c8980e18d716 1-139
+apps/nitro/src/features/identity/groups.tsx
+  s_5749b2ccfeffb1::t_e09356044956dd 1-572
+apps/nitro/src/features/identity/invites.tsx
+  s_5749b2ccfeffb1::t_9d51fb2ee16af1 1-257
+apps/nitro/src/features/identity/read-boundary.tsx
+  s_01e8d17f7740df::t_44bf881256f116 1-95
+apps/nitro/src/features/identity/workbench.tsx
+  s_00d9eee545672e::t_3de7ed2d7fb80b 1-95
+apps/nitro/src/features/integrations/app-picker.tsx
+  s_5749b2ccfeffb1::t_1e535d9e523017 1-269
+apps/nitro/src/features/integrations/pages.tsx
+  s_01e8d17f7740df::t_6edd8064b79ba7 1-245
+apps/nitro/src/features/media/contracts.ts
+  s_5749b2ccfeffb1::t_505c29eb09da3a 1-59
+apps/nitro/src/features/onboarding/studio.tsx
+  s_00d9eee545672e::t_3558acd0d20301 1-260
+apps/nitro/src/features/operations/index.ts
+  s_5749b2ccfeffb1::t_dfe7720e8ffc54 1-17
+apps/nitro/src/features/operations/tasks-panel.tsx
+  s_5749b2ccfeffb1::t_2fe05f4c75ceee 1-141
+apps/nitro/src/features/widgets-editor/contracts.ts
+  s_01e8d17f7740df::t_8af8f18595840f 1-218
+apps/nitro/src/features/widgets-editor/definition-resources.tsx
+  s_01e8d17f7740df::t_c7842e7d24b156 1-252
+apps/nitro/src/features/widgets-runtime/index.ts
+  s_01e8d17f7740df::t_56bd79e6bcbaa2 1-26
+apps/nitro/src/features/workshop/browse.tsx
+  s_5749b2ccfeffb1::t_ed5f6a73056de8 1-162
+apps/nitro/src/features/workshop/index.ts
+  s_5749b2ccfeffb1::t_67f0e15b4e8f61 1-28
+apps/nitro/src/query/authenticated-read.ts
+  s_59ffa5bfdcd3ba::t_e9cda6524ae015 1-11
+apps/nitro/src/query/scope-owner.ts
+  s_59ffa5bfdcd3ba::t_346485c46349f5 1-235
+apps/nitro/src/query/scope.ts
+  s_59ffa5bfdcd3ba::t_676fc624f41874 1-5
+apps/nitro/src/query/types.ts
+  s_59ffa5bfdcd3ba::t_196fd950df8be3 1-48
+apps/nitro/src/routes/__root.tsx
+  s_01e8d17f7740df::t_f9366eeedca424 6-11,26,28-30,32-37,40-43,50-68,70-78
+apps/nitro/src/source-ui/apps/index.ts
+  s_5749b2ccfeffb1::t_37e2b591e2d65f 1-17
+apps/nitro/src/source-ui/apps/management.tsx
+  s_5749b2ccfeffb1::t_b8b33b5b7a4de4 1-234
+apps/nitro/src/source-ui/assistant/assistant-activity-state.ts
+  s_5749b2ccfeffb1::t_1ca363cf0ed944 1-34
+apps/nitro/src/source-ui/assistant/assistant-ask-user.ts
+  s_5749b2ccfeffb1::t_1974017a60f942 1-37
+apps/nitro/src/source-ui/assistant/assistant-auto-approval.tsx
+  s_5749b2ccfeffb1::t_77470807cbee20 1-166
+apps/nitro/src/source-ui/assistant/assistant-automatic-action-progress.tsx
+  s_5749b2ccfeffb1::t_71c3e3dbe17a7d 1-12
+apps/nitro/src/source-ui/assistant/assistant-conversation-controls.ts
+  s_5749b2ccfeffb1::t_15ee83225e642b 1-13
+apps/nitro/src/source-ui/assistant/assistant-directives.ts
+  s_5749b2ccfeffb1::t_c939ff30b5ea30 1-9
+apps/nitro/src/source-ui/assistant/assistant-human-tool-status.ts
+  s_5749b2ccfeffb1::t_17911c443f345d 1-7
+apps/nitro/src/source-ui/assistant/assistant-image.module.css
+  s_5749b2ccfeffb1::t_63b86e2c996036 1-69
+apps/nitro/src/source-ui/assistant/assistant-image.tsx
+  s_5749b2ccfeffb1::t_5f36c20de19070 1-91
+apps/nitro/src/source-ui/assistant/assistant-markdown-image.ts
+  s_5749b2ccfeffb1::t_c3e9b9cc2dea67 1-34
+apps/nitro/src/source-ui/assistant/assistant-markdown.ts
+  s_5749b2ccfeffb1::t_d25c84bd879297 1-35
+apps/nitro/src/source-ui/assistant/assistant-message-grouping.ts
+  s_5749b2ccfeffb1::t_217d947894baf7 1-8
+apps/nitro/src/source-ui/assistant/assistant-panel.module.css
+  s_5749b2ccfeffb1::t_c9cdd6c9c11577 1-2348
+apps/nitro/src/source-ui/assistant/assistant-panel.tsx
+  s_5749b2ccfeffb1::t_8094163120ac5e 1-763
+apps/nitro/src/source-ui/assistant/assistant-preferences.ts
+  s_5749b2ccfeffb1::t_9d33e9daefe81f 1-60
+apps/nitro/src/source-ui/assistant/assistant-question-portal.tsx
+  s_5749b2ccfeffb1::t_9869ae96b25c1b 1-17
+apps/nitro/src/source-ui/assistant/assistant-reasoning-state.ts
+  s_5749b2ccfeffb1::t_c6546cb8f13486 1-20
+apps/nitro/src/source-ui/assistant/assistant-tool-contracts.ts
+  s_5749b2ccfeffb1::t_4fdb77c7f6cd1e 1-163
+apps/nitro/src/source-ui/assistant/assistant-tool-label.ts
+  s_5749b2ccfeffb1::t_9d4ce4f32b7199 1-9
+apps/nitro/src/source-ui/assistant/assistant-tool-rendering.tsx
+  s_5749b2ccfeffb1::t_f90b8d69c42b2b 1-443
+apps/nitro/src/source-ui/assistant/assistant-tool-result.ts
+  s_5749b2ccfeffb1::t_4ff614a07a9c37 1-257
+apps/nitro/src/source-ui/assistant/assistant-tool-trace.ts
+  s_5749b2ccfeffb1::t_3c0c3e5f68ef77 1-18
+apps/nitro/src/source-ui/assistant/assistant-trigger-scroll.ts
+  s_5749b2ccfeffb1::t_9e8463f9986e61 1-17
+apps/nitro/src/source-ui/assistant/assistant-url.ts
+  s_5749b2ccfeffb1::t_d6890d22781e6a 1-11
+apps/nitro/src/source-ui/assistant/escape.ts
+  s_5749b2ccfeffb1::t_2384788316a048 1-19
+apps/nitro/src/source-ui/boards/fixed-grid-item.tsx
+  s_5749b2ccfeffb1::t_d17d98b1b33cad 1-207
+apps/nitro/src/source-ui/boards/grid-editor.css
+  s_5749b2ccfeffb1::t_9126002cc5d112 1-310
+apps/nitro/src/source-ui/boards/scaled-board-canvas.module.css
+  s_5749b2ccfeffb1::t_925bd8fb9a870a 1-44
+apps/nitro/src/source-ui/boards/scaled-board-canvas.tsx
+  s_5749b2ccfeffb1::t_e13a253958052a 1-73
+apps/nitro/src/source-ui/boards/section-grid.module.css
+  s_5749b2ccfeffb1::t_a148ebfd3b0988 1-85
+apps/nitro/src/source-ui/certificates/management-views.tsx
+  s_5749b2ccfeffb1::t_6106504f670244 1-160
+apps/nitro/src/source-ui/groups/contracts.ts
+  s_5749b2ccfeffb1::t_4cdff0dbb59a75 1-21
+apps/nitro/src/source-ui/groups/group-pages.tsx
+  s_5749b2ccfeffb1::t_7654a6d15869a3 1-276
+apps/nitro/src/source-ui/integrations/index.ts
+  s_5749b2ccfeffb1::t_b48f6e65562d6b 1-10
+apps/nitro/src/source-ui/media/media-actions.tsx
+  s_5749b2ccfeffb1::t_a0643f3e3a142b 1-111
+apps/nitro/src/source-ui/search/palette.tsx
+  s_5749b2ccfeffb1::t_79afa61d2f9577 1-7
+apps/nitro/src/source-ui/users/user-detail.tsx
+  s_5749b2ccfeffb1::t_1fccb4a5caa8de 1-335
+apps/nitro/src/source-ui/workshop/code-viewer.tsx
+  s_5749b2ccfeffb1::t_b957bc2ec3ad70 1-78
+apps/nitro/src/source-ui/workshop/contracts.ts
+  s_5749b2ccfeffb1::t_ae57d45331029a 1-49
+bun.lock
+  s_01e8d17f7740df::t_99678494fb52bc 38-61,244-263,265-266,268,271-273,276-283,287,292-327,336-337,437-438,445,463,548-554,560,567,693,764-765,820-821,838,874,968-970,1067,1074,1143,1146,1173,1497,1601,1937-1938,1945-1946,1985,2375-2378,2385-2388,2393-2396,2955,3747,5145-5146,5733-5734,5759-5762,5823-5838,5883-5884,5895-5898,6025-6026,6119-6122,6181-6182,6243-6244,6333-6336,6531-6562,6733-6734
+implementation/convergence-RD.md
+  s_01e8d17f7740df::t_063df1b71df053 1-11
+implementation/convergence-RK.md
+  s_01e8d17f7740df::t_b2e9e1565e51ef 1-15
+implementation/convergence-RS.md
+  s_01e8d17f7740df::t_cf1eb084ac1af3 1-17
+implementation/convergence-SH.md
+  s_01e8d17f7740df::t_0b4e1450e916bf 1-12
+packages/api/src/backup-runtime/index.ts
+  s_01e8d17f7740df::t_7e7255493672c4 126-127,129,131-170,173-174,176
+packages/api/src/backup-runtime/nitro-join/contracts.ts
+  s_59ffa5bfdcd3ba::t_58312ca37dfd11 1-60
+packages/api/src/backup-runtime/nitro-join/index.ts
+  s_59ffa5bfdcd3ba::t_c386ffa11a65f4 1-13
+packages/api/src/nitro/assembly/authenticated-read-client.ts
+  s_59ffa5bfdcd3ba::t_ccd89c48fdb00e 1-7
+packages/api/src/nitro/browser-contracts/widgets.ts
+  s_01e8d17f7740df::t_e28de73d972c70 1-6
+packages/api/src/nitro/routers/-icons/native-read-resources.ts
+  s_00d9eee545672e::t_fa85a74e6181ae 1-29
+packages/api/src/nitro/routers/-onboard-transitions/helpers.ts
+  s_01e8d17f7740df::t_b8eb288f2151ff 1-1065
+packages/auth/nitro/production-sessions/bounded-body.ts
+  s_8b1d5a69f175a9::t_d7dbdbbe58c08f 1-195
+packages/contracts/src/request.ts
+  s_a426323822b13f::t_5194c3edd29c71 1-51
+packages/cron-jobs/src/jobs/icons-updater.ts
+  s_a426323822b13f::t_d406c394c23bcc 1,8-15,21-300,309-312,390-391,393-394,419-422
+packages/db/runtime-auth-credential/contracts.ts
+  s_01e8d17f7740df::t_2269a9624e0e58 1-77
+packages/db/runtime-auth-credential/statements.ts
+  s_01e8d17f7740df::t_b00722574e8c79 1-355
+packages/db/runtime-auth-credential/validation.ts
+  s_01e8d17f7740df::t_8643345ad76a69 1-299
+packages/db/schema/postgresql.ts
+  s_01e8d17f7740df::t_7192a4450d316e 4,8,44,48,58-61,64-99,162-163,167-170
+packages/db/schema/sqlite.ts
+  s_01e8d17f7740df::t_1506b21bce5596 6-16,41,45,49-52,55-93,156-157,161-164
+packages/definitions/src/stock-price.ts
+  s_01e8d17f7740df::t_5119ba34ee3eb3 1-4
+packages/forms-collection/src/new-app/_form.tsx
+  s_01e8d17f7740df::t_d2e11701b0495d 3-4,16,18-19,29-35,41,48,52-56,67-71,104-135,137-205,207,213,216,231,235,299-301
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_01e8d17f7740df::t_9af254cfe24ec8 1,19,23-29,32-34,36,40-55,58,63-88,90-91,116-119,122,134-137,139-208,218-222,228-232,238-239,267-270,319,336-351,354-357
+packages/modals/src/index.tsx
+  s_01e8d17f7740df::t_bddbb14d191b30 4,6,16,27,33-42,44-94,105-106,126-134,139,152,162-163,173-174
+packages/modals/src/reducer.tsx
+  s_01e8d17f7740df::t_26f9c47c009b22 55-56,101
+packages/modals/src/type.ts
+  s_01e8d17f7740df::t_8d1b49965905be 10
+packages/onboarding/src/onboarding-auth-shell.tsx
+  s_5749b2ccfeffb1::t_26ad404324b5c0 3-5,25-47,50-51
+packages/onboarding/src/presentation-steps.tsx
+  s_00d9eee545672e::t_2b8febccb14b03 1-235
+packages/onboarding/src/presentation.ts
+  s_5749b2ccfeffb1::t_80dd011e4feafb 1-8
+packages/spotlight/src/modes/external/search-engines-search-group.tsx
+  s_a426323822b13f::t_a96bf8381c8bc1 1-2,7,10-16,21,80-289,346-379,383,396-406,408,692-693,697-698,702-703,707-708
+packages/translation/src/lang/en.json
+  s_01e8d17f7740df::t_a54f11b5a07bc7 1284-1299
+packages/translation/src/standalone/catalogs.ts
+  s_01e8d17f7740df::t_a038d1c079f831 46
+packages/widgets/package.json
+  s_01e8d17f7740df::t_1b6567f9767dcd 18-20,27,30-31,43-45,83,86,113
+packages/widgets/src/_inputs/select-contracts.ts
+  s_01e8d17f7740df::t_ae62eb00465646 1-21
+packages/widgets/src/_inputs/static-owner.tsx
+  s_01e8d17f7740df::t_4f863233801284 1-53
+packages/widgets/src/_inputs/static.ts
+  s_01e8d17f7740df::t_6e50cf17149ff9 1-12
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_01e8d17f7740df::t_7fa46f39aefc92 14,16
+packages/widgets/src/_inputs/widget-select-input.tsx
+  s_01e8d17f7740df::t_303a40db016551 4,6-7,15-17,19-21,23-25,27,29-99,112-120,158-166
+packages/widgets/src/anchor-note/definition.ts
+  s_01e8d17f7740df::t_553736d9d3192b 1-25
+packages/widgets/src/anchor-note/index.ts
+  s_01e8d17f7740df::t_3cd2d5ea1b17fc 2,4-6
+packages/widgets/src/app/definition.ts
+  s_01e8d17f7740df::t_241fc9d1fd670a 1-107
+packages/widgets/src/app/index.ts
+  s_01e8d17f7740df::t_1a3524602cf0b8 2,4-6
+packages/widgets/src/archive-team-warrior/definition.ts
+  s_01e8d17f7740df::t_4f5a66cb0afe7b 1-20
+packages/widgets/src/archive-team-warrior/index.ts
+  s_01e8d17f7740df::t_49d21fc79c7ef4 2,4-7
+packages/widgets/src/assistant/definition.ts
+  s_01e8d17f7740df::t_4544a8744b2b06 1-12
+packages/widgets/src/assistant/index.ts
+  s_01e8d17f7740df::t_71f26926c80f59 2,4-6
+packages/widgets/src/audio-stats/definition.ts
+  s_01e8d17f7740df::t_213998ec3c5981 1-56
+packages/widgets/src/audio-stats/index.ts
+  s_01e8d17f7740df::t_e51d2d58cc4d8b 1-2,4-7
+packages/widgets/src/beszel-alerts/definition.ts
+  s_01e8d17f7740df::t_52cf017af4ea68 1-40
+packages/widgets/src/beszel-alerts/index.ts
+  s_01e8d17f7740df::t_de44a6a5d37b37 1-2,4-7
+packages/widgets/src/beszel-system-grid/definition.ts
+  s_01e8d17f7740df::t_d0b020fea4edf9 1-39
+packages/widgets/src/beszel-system-grid/index.ts
+  s_01e8d17f7740df::t_103543535fcdf9 2,4-7
+packages/widgets/src/beszel-system-table/definition.ts
+  s_01e8d17f7740df::t_0dbb4814ae1ccb 1-77
+packages/widgets/src/beszel-system-table/index.ts
+  s_01e8d17f7740df::t_4d30fd5e67f923 1-2,4-7
+packages/widgets/src/bookmarks/add-button-view.tsx
+  s_01e8d17f7740df::t_f431fb80a51072 1-211
+packages/widgets/src/bookmarks/add-button.tsx
+  s_01e8d17f7740df::t_d150969cc71a2b 7,9,11,13,17,20-33
+packages/widgets/src/bookmarks/definition.tsx
+  s_01e8d17f7740df::t_936d495dd9e8e4 1-91
+packages/widgets/src/bookmarks/index.tsx
+  s_01e8d17f7740df::t_82ef9fddba1233 2,8-9,12-20,22-36,38-42,44-49
+packages/widgets/src/bookmarks/selection-type.ts
+  s_01e8d17f7740df::t_0cbf929ef845ef 1-29
+packages/widgets/src/calendar/definition.ts
+  s_01e8d17f7740df::t_2f32c18cec3815 1-40
+packages/widgets/src/calendar/index.ts
+  s_01e8d17f7740df::t_427d1b91088e2c 1-2,4-6
+packages/widgets/src/coolify/definition.ts
+  s_01e8d17f7740df::t_a9a7502def3ccd 1-32
+packages/widgets/src/coolify/index.ts
+  s_01e8d17f7740df::t_c63ac2e5bca465 2,4-6
+packages/widgets/src/custom-api/definition.ts
+  s_01e8d17f7740df::t_251bb6470cd0a3 1-23
+packages/widgets/src/definition-registry.ts
+  s_01e8d17f7740df::t_c8c95ceef17d41 1-109
+packages/widgets/src/definition.ts
+  s_01e8d17f7740df::t_f4f4fb6e567e83 13,194
+packages/widgets/src/dns-hole/controls/definition.ts
+  s_01e8d17f7740df::t_98e71398acf66e 1-28
+packages/widgets/src/dns-hole/controls/index.ts
+  s_01e8d17f7740df::t_afb51d379b858b 2,6-9
+packages/widgets/src/dns-hole/summary/definition.ts
+  s_01e8d17f7740df::t_49b056a43610ed 1-39
+packages/widgets/src/dns-hole/summary/index.ts
+  s_01e8d17f7740df::t_c4c25c30e5a698 2,6-9
+packages/widgets/src/docker/definition.ts
+  s_01e8d17f7740df::t_98930f91fa1d63 1-116
+packages/widgets/src/docker/index.ts
+  s_01e8d17f7740df::t_8a9edbe2e7fabb 4-11,13-14
+packages/widgets/src/health-monitoring/definition.ts
+  s_01e8d17f7740df::t_48720b6e9960dc 1-128
+packages/widgets/src/health-monitoring/index.ts
+  s_01e8d17f7740df::t_ef53a408e4b209 1,4,6-16,18-19
+packages/widgets/src/iframe/definition.ts
+  s_01e8d17f7740df::t_2bfbf0055d07c5 1-39
+packages/widgets/src/iframe/index.ts
+  s_01e8d17f7740df::t_7482efd22818a0 2,4-6
+packages/widgets/src/immich/server-stats/definition.ts
+  s_01e8d17f7740df::t_8b522487a27417 1-37
+packages/widgets/src/immich/server-stats/index.ts
+  s_01e8d17f7740df::t_d6847614b6a6b6 1-2,4-7
+packages/widgets/src/media-releases/definition.ts
+  s_01e8d17f7740df::t_2cb340955f83ab 1-41
+packages/widgets/src/media-releases/index.ts
+  s_01e8d17f7740df::t_9435bcd9e14ca1 2,4-7
+packages/widgets/src/media-requests/list/definition.ts
+  s_01e8d17f7740df::t_6644e2d5614fb9 1-56
+packages/widgets/src/media-requests/stats/definition.ts
+  s_01e8d17f7740df::t_85d569d6e31c71 1-27
+packages/widgets/src/media-server/definition.ts
+  s_01e8d17f7740df::t_a3ec5028dd302d 1-28
+packages/widgets/src/media-server/index.ts
+  s_01e8d17f7740df::t_36730da2059f56 1-2,4-7
+packages/widgets/src/notebook/definition.ts
+  s_01e8d17f7740df::t_8d18bb71c4a14c 1-30
+packages/widgets/src/notebook/index.ts
+  s_01e8d17f7740df::t_9a74322d24899f 2,4-6
+packages/widgets/src/notifications/definition.ts
+  s_01e8d17f7740df::t_c4d025968f4f6b 1-32
+packages/widgets/src/notifications/index.ts
+  s_01e8d17f7740df::t_9796d89f825847 1-2,4-7
+packages/widgets/src/options.ts
+  s_01e8d17f7740df::t_9fa891522ce026 11
+packages/widgets/src/paperless-ngx/definition.ts
+  s_01e8d17f7740df::t_a851282c8bb721 1-52
+packages/widgets/src/paperless-ngx/index.ts
+  s_01e8d17f7740df::t_c1253615d5b214 2,4-7
+packages/widgets/src/patchmon/definition.ts
+  s_01e8d17f7740df::t_8f51a81245097e 1-261
+packages/widgets/src/patchmon/index.ts
+  s_01e8d17f7740df::t_119767c2083690 2,4-7
+packages/widgets/src/patchmon/stat-color-presets.ts
+  s_01e8d17f7740df::t_2f20f687150425 1-73
+packages/widgets/src/patchmon/stat-colors.ts
+  s_01e8d17f7740df::t_e9ffaba05f2ff7 1-9,12-18,106-108
+packages/widgets/src/patchmon/threshold-validation.ts
+  s_01e8d17f7740df::t_b75c3571e7fbd0 4
+packages/widgets/src/smart-home/entity-state/definition.ts
+  s_01e8d17f7740df::t_eb574520acd7a3 1-32
+packages/widgets/src/smart-home/entity-state/index.ts
+  s_01e8d17f7740df::t_fd581b1374fd7e 2,4-7
+packages/widgets/src/smart-home/execute-automation/definition.ts
+  s_01e8d17f7740df::t_d2f337f4fc2414 1-19
+packages/widgets/src/smart-home/execute-automation/index.ts
+  s_01e8d17f7740df::t_1d4d647d2f6b4c 2,4-7
+packages/widgets/src/speedtest-tracker/definition.ts
+  s_01e8d17f7740df::t_19a8435b6889bb 1-42
+packages/widgets/src/speedtest-tracker/index.ts
+  s_01e8d17f7740df::t_f99654eeca459e 2,4-7
+packages/widgets/src/stats/definition.ts
+  s_01e8d17f7740df::t_464fb7b6824cf1 1-39
+packages/widgets/src/stats/index.ts
+  s_01e8d17f7740df::t_b1c4bccdf8d963 2,4-6
+packages/widgets/src/stocks/definition.ts
+  s_01e8d17f7740df::t_8c849a5eab5173 1-49
+packages/widgets/src/stocks/index.ts
+  s_01e8d17f7740df::t_69827cb547c89a 1,3-4,6,8-11
+packages/widgets/src/storage-volume-options.ts
+  s_01e8d17f7740df::t_7ea166e77e780e 1,5-13,17
+packages/widgets/src/system-disks/definition.ts
+  s_01e8d17f7740df::t_fe947274236e41 1-48
+packages/widgets/src/system-disks/index.ts
+  s_01e8d17f7740df::t_03e98bae617269 1,4,6-19
+packages/widgets/src/system-resources/definition.ts
+  s_01e8d17f7740df::t_43c5e8457644c9 1-53
+packages/widgets/src/system-resources/index.ts
+  s_01e8d17f7740df::t_b9bbca6b767bb6 2,4-7
+packages/widgets/src/tracearr/definition.ts
+  s_01e8d17f7740df::t_50ea0b20e33cf2 1-37
+packages/widgets/src/tracearr/index.ts
+  s_01e8d17f7740df::t_ac79924a669f04 2,4-7
+packages/widgets/src/traefik/definition.ts
+  s_01e8d17f7740df::t_6e7aa7a4c7c67d 1-32
+packages/widgets/src/traefik/index.ts
+  s_01e8d17f7740df::t_9666b33f76d4f0 2,4-6
+packages/widgets/src/umami/definition.ts
+  s_01e8d17f7740df::t_cbbc047f1381bb 1-102
+packages/widgets/src/umami/index.ts
+  s_01e8d17f7740df::t_4f61ea413e09d7 1-2,4,6-8
+packages/widgets/src/ups/definition.ts
+  s_01e8d17f7740df::t_3a4f3902516716 1-32
+packages/widgets/src/ups/index.ts
+  s_01e8d17f7740df::t_e6d8ab457ccbd1 2,4-6
+packages/widgets/src/uptime-kuma/definition.ts
+  s_01e8d17f7740df::t_393e099bba8639 1-47
+packages/widgets/src/uptime-kuma/index.ts
+  s_01e8d17f7740df::t_68624ca4e51f9e 2,4-7
+packages/widgets/src/video/definition.ts
+  s_01e8d17f7740df::t_dbf9da60cd8e9c 1-24
+packages/widgets/src/video/index.ts
+  s_01e8d17f7740df::t_e8105851c62fec 2,4-6
+packages/widgets/src/vpn/definition.ts
+  s_01e8d17f7740df::t_fa84daa2d4ab0b 1-17
+packages/widgets/src/vpn/index.ts
+  s_01e8d17f7740df::t_44a16483c6d7a8 2,4-6
+.github/workflows/nitro-candidate.yml
+  s_5749b2ccfeffb1::t_468fb0f3ae52c9 1-48
+.scratch/nitro-full-migration/CONTRACTS.md
+  s_7f39f4ed781c70::t_52d8be65073598 1-204
+.scratch/nitro-full-migration/PLAYABLE-WAVE32.md
+  s_b268122f3e7372::t_cf220e65652762 1-126
+.scratch/nitro-full-migration/implementation/playable-03.md
+  s_0559c70ca0becf::t_aea98ecc1db9f0 1-122
+.scratch/nitro-full-migration/implementation/playable-04.md
+  s_c9d3b91d1c4d07::t_7da7c2dcc14835 1-169
+.scratch/nitro-full-migration/implementation/playable-06.md
+  s_5749b2ccfeffb1::t_20de1ff78b46d6 1-139
+.scratch/nitro-full-migration/implementation/playable-11.md
+  s_73405e86bfe439::t_d6960f6124cc45 1-120
+.scratch/nitro-full-migration/implementation/playable-12.md
+  s_0559c70ca0becf::t_863c3a8792e6dc 1-161
+.scratch/nitro-full-migration/implementation/playable-28-review.md
+  s_0559c70ca0becf::t_2bd1eaab2d448c 1-47
+.scratch/nitro-full-migration/implementation/playable-28.md
+  s_5749b2ccfeffb1::t_c42d039cef3324 1-115
+.scratch/nitro-full-migration/implementation/playable-p6-dot-style.md
+  s_b268122f3e7372::t_73e5151c391288 1-110
+.scratch/nitro-full-migration/implementation/production-request-lifecycle.md
+  s_b268122f3e7372::t_29a0d02b3ef171 1-73
+apps/backend/src/infrastructure/cache/nitro-storage.ts
+  s_c9d3b91d1c4d07::t_83df89db300121 1-229
+apps/nitro/src/app/preview-header.tsx
+  s_b268122f3e7372::t_5fa3afd8a1b907 1-45
+apps/nitro/src/app/preview-styles.ts
+  s_5749b2ccfeffb1::t_ccb3683907d087 1-11
+apps/nitro/src/app/preview.tsx
+  s_b268122f3e7372::t_76947c07243306 1-115
+apps/nitro/src/client/expansion.ts
+  s_6042944d82d715::t_cd366b4bc45be0 1-9
+apps/nitro/src/client/rpc-link.ts
+  s_6042944d82d715::t_1a3f4d2ddc184c 1-26
+apps/nitro/src/features/apps/management.tsx
+  s_0559c70ca0becf::t_95778e081b4e13 1-219
+apps/nitro/src/features/assistant/index.ts
+  s_c9d3b91d1c4d07::t_f93811e192a22b 1-19
+apps/nitro/src/features/assistant/rich.tsx
+  s_c9d3b91d1c4d07::t_8f2d9ae2f5879e 1-107
+apps/nitro/src/features/backup/backup-page.tsx
+  s_6042944d82d715::t_68c6977aa1cedf 1-28
+apps/nitro/src/features/backup/contracts.ts
+  s_5749b2ccfeffb1::t_1bc678d5d4d4de 1-31
+apps/nitro/src/features/backup/index.ts
+  s_6042944d82d715::t_22a938c1d73fe4 1-9
+apps/nitro/src/features/backup/preview-panel.tsx
+  s_6042944d82d715::t_b997571c5cea30 1-66
+apps/nitro/src/features/backup/restore-review.tsx
+  s_6042944d82d715::t_1f4036bc8e1209 1-110
+apps/nitro/src/features/certificates/connection-certificate.tsx
+  s_6042944d82d715::t_80e44106c5d18e 1-171
+apps/nitro/src/features/certificates/details.tsx
+  s_6042944d82d715::t_46e96b6e348bbe 1-82
+apps/nitro/src/features/certificates/hostnames-page.tsx
+  s_6042944d82d715::t_9522119d9423ee 1-55
+apps/nitro/src/features/certificates/remove-actions.tsx
+  s_6042944d82d715::t_9363282779aa99 1-88
+apps/nitro/src/features/docker/add-apps.tsx
+  s_5749b2ccfeffb1::t_1667700b952125 1-148
+apps/nitro/src/features/docker/index.ts
+  s_5749b2ccfeffb1::t_6d0063352feb93 1-22
+apps/nitro/src/features/docker/inventory.tsx
+  s_6042944d82d715::t_993b42d86f3ffd 1-136
+apps/nitro/src/features/global-tools/chrome.tsx
+  s_98df0679b8048c::t_eb55e62f0a3ff2 1-117
+apps/nitro/src/features/global-tools/source-providers.tsx
+  s_5749b2ccfeffb1::t_6685a52c5d4759 1-71
+apps/nitro/src/features/global-tools/source-session.tsx
+  s_5749b2ccfeffb1::t_9d61c4ba98a25d 1-140
+apps/nitro/src/features/identity/permissions.tsx
+  s_0559c70ca0becf::t_6f544b18afe6d8 1-157
+apps/nitro/src/features/identity/preferences.tsx
+  s_0559c70ca0becf::t_75565a3486796f 1-374
+apps/nitro/src/features/integrations/access.tsx
+  s_c9d3b91d1c4d07::t_22a85336fbacd8 1-355
+apps/nitro/src/features/integrations/connection-error.tsx
+  s_6042944d82d715::t_8404bd68ddf205 1-372
+apps/nitro/src/features/integrations/index.ts
+  s_c9d3b91d1c4d07::t_0ded8c89059f4b 1-22
+apps/nitro/src/features/integrations/list-page.tsx
+  s_c9d3b91d1c4d07::t_9b4ff2b47579d9 1-282
+apps/nitro/src/features/kubernetes/contracts.ts
+  s_98df0679b8048c::t_30dd5411b7322e 1-42
+apps/nitro/src/features/kubernetes/models.ts
+  s_98df0679b8048c::t_1872748e7a248d 1-252
+apps/nitro/src/features/kubernetes/queries.ts
+  s_c9d3b91d1c4d07::t_e6cee2e1b84729 1-47
+apps/nitro/src/features/settings/instance-form.tsx
+  s_5749b2ccfeffb1::t_4acafc84ce4d75 1-208
+apps/nitro/src/features/widgets-editor/board-draft-apply.tsx
+  s_5749b2ccfeffb1::t_67bf8448d6db63 1-85
+apps/nitro/src/features/widgets-runtime/generated-context.tsx
+  s_6042944d82d715::t_1acdf6df4bdf72 1-27
+apps/nitro/src/features/widgets-runtime/transport-link.ts
+  s_5749b2ccfeffb1::t_deeb3336447b7c 1-32
+apps/nitro/src/features/widgets-runtime/transport.ts
+  s_5749b2ccfeffb1::t_1bf41707380f3a 1-12
+apps/nitro/src/features/workshop/source-setup.tsx
+  s_0559c70ca0becf::t_698ed81110b264 1-175
+apps/nitro/src/navigation/source-routes.ts
+  s_5749b2ccfeffb1::t_0708b6e227e073 1-66
+apps/nitro/src/query/browser.ts
+  s_5749b2ccfeffb1::t_0042a9cdbd76c7 1-66
+apps/nitro/src/query/index.ts
+  s_6042944d82d715::t_9bbf975de4e500 1-16
+apps/nitro/src/query/provider.tsx
+  s_5749b2ccfeffb1::t_e699b0830f9394 1-30
+apps/nitro/src/routes/(public)/_public.route.tsx
+  s_5749b2ccfeffb1::t_bdd3609d158119 22-23
+apps/nitro/src/routes/(public)/_public/index.tsx
+  s_5749b2ccfeffb1::t_5b4b7e8605ae34 1,3,5
+apps/nitro/src/routes/(public)/_public/preview.route.tsx
+  s_b268122f3e7372::t_78822e02a9c826 1-23
+apps/nitro/src/routes/(public)/_public/preview/backup.tsx
+  s_5749b2ccfeffb1::t_a780a089b543d4 1-19
+apps/nitro/src/source-ui/assistant/assistant-board-settings-tool.tsx
+  s_b268122f3e7372::t_35a18e450ec9eb 1-472
+apps/nitro/src/source-ui/assistant/assistant-history.tsx
+  s_c9d3b91d1c4d07::t_f6bf6bb2233927 1-367
+apps/nitro/src/source-ui/assistant/index.ts
+  s_0559c70ca0becf::t_c063d845edffd4 1-42
+apps/nitro/src/source-ui/auth-onboarding/contracts.ts
+  s_6042944d82d715::t_0fc871700bc526 1-70
+apps/nitro/src/source-ui/auth-onboarding/index.ts
+  s_6042944d82d715::t_1ddb018be61b9e 1-12
+apps/nitro/src/source-ui/auth-onboarding/login.tsx
+  s_6042944d82d715::t_9ef618b9d99df2 1-24
+apps/nitro/src/source-ui/auth-onboarding/registration-form.tsx
+  s_6042944d82d715::t_6b557aba7f4582 1-82
+apps/nitro/src/source-ui/backup/cards.tsx
+  s_6042944d82d715::t_a946ba815b1a8f 1-44
+apps/nitro/src/source-ui/backup/database-restore-flow.tsx
+  s_6042944d82d715::t_4066d38bdc0965 1-118
+apps/nitro/src/source-ui/boards/board-item-clipboard.ts
+  s_5749b2ccfeffb1::t_5a7a0c323f71a5 1-49
+apps/nitro/src/source-ui/boards/empty-position.ts
+  s_5749b2ccfeffb1::t_c9ac98160e6455 1-26
+apps/nitro/src/source-ui/boards/layout/geometry.ts
+  s_5749b2ccfeffb1::t_f8a471860845c2 1-65
+apps/nitro/src/source-ui/boards/layout/index.ts
+  s_5749b2ccfeffb1::t_c8553e11e084da 1-5
+apps/nitro/src/source-ui/boards/layout/reflow.ts
+  s_5749b2ccfeffb1::t_a8ee3796c9c7dc 1-150
+apps/nitro/src/source-ui/boards/layout/types.ts
+  s_5749b2ccfeffb1::t_431f2389bd2399 1-10
+apps/nitro/src/source-ui/boards/section-collapse-storage.ts
+  s_5749b2ccfeffb1::t_0e5ce2d7269a4e 1-35
+apps/nitro/src/source-ui/chrome/contracts.ts
+  s_5749b2ccfeffb1::t_d24b32bc68344a 1-147
+apps/nitro/src/source-ui/chrome/index.ts
+  s_98df0679b8048c::t_19a946f86c815a 1-55
+apps/nitro/src/source-ui/docker/actions.tsx
+  s_6042944d82d715::t_629953b3ba5616 1-136
+apps/nitro/src/source-ui/docker/add-apps.tsx
+  s_5749b2ccfeffb1::t_d698a5e5d6d28b 1-76
+apps/nitro/src/source-ui/docker/contracts.ts
+  s_6042944d82d715::t_2462e46a1a5803 1-55
+apps/nitro/src/source-ui/docker/index.ts
+  s_5749b2ccfeffb1::t_c778f6771e8545 1-13
+apps/nitro/src/source-ui/docker/management.tsx
+  s_5749b2ccfeffb1::t_04b2659bc55c03 1-43
+apps/nitro/src/source-ui/docker/table.tsx
+  s_6042944d82d715::t_e38d660c2cb6ee 1-70
+apps/nitro/src/source-ui/document/assets.ts
+  s_6042944d82d715::t_380986bd325971 1-41
+apps/nitro/src/source-ui/document/head.tsx
+  s_c9d3b91d1c4d07::t_7e413a3b1c5d4b 1-132
+apps/nitro/src/source-ui/groups/groups-table.tsx
+  s_0559c70ca0becf::t_efea85b2823484 1-86
+apps/nitro/src/source-ui/groups/groups.module.css
+  s_c9d3b91d1c4d07::t_a299ec2f822932 1-13
+apps/nitro/src/source-ui/groups/permissions.tsx
+  s_5749b2ccfeffb1::t_4ce4c3e2569030 1-347
+apps/nitro/src/source-ui/integrations/api-key-settings-link.tsx
+  s_5749b2ccfeffb1::t_8dafb1ccabf631 1-20
+apps/nitro/src/source-ui/integrations/certificate-details.tsx
+  s_5749b2ccfeffb1::t_374686a0ba38a8 1-34
+apps/nitro/src/source-ui/integrations/secret-card.tsx
+  s_5749b2ccfeffb1::t_eb179c844ead70 1-16
+apps/nitro/src/source-ui/kubernetes/configmaps/configmaps-table.tsx
+  s_5749b2ccfeffb1::t_d1de9944e4930c 1-51
+apps/nitro/src/source-ui/kubernetes/contracts.ts
+  s_98df0679b8048c::t_7b7567eab70bb7 1-53
+apps/nitro/src/source-ui/kubernetes/index.ts
+  s_c9d3b91d1c4d07::t_69eff731905202 1-38
+apps/nitro/src/source-ui/kubernetes/ingresses/ingresses-table.tsx
+  s_c9d3b91d1c4d07::t_440eefe058e01e 1-83
+apps/nitro/src/source-ui/kubernetes/kubernetes-context-selector.tsx
+  s_98df0679b8048c::t_2fa89184251885 1-76
+apps/nitro/src/source-ui/kubernetes/namespaces/namespaces-table.tsx
+  s_6042944d82d715::t_850177c8e1c567 1-71
+apps/nitro/src/source-ui/kubernetes/nodes/nodes-table.tsx
+  s_6042944d82d715::t_73f21eb73afcd7 1-102
+apps/nitro/src/source-ui/kubernetes/pods/pods-table.tsx
+  s_5749b2ccfeffb1::t_0e6ae832ff47f9 1-56
+apps/nitro/src/source-ui/kubernetes/presentation.tsx
+  s_c9d3b91d1c4d07::t_519282684983b9 1-136
+apps/nitro/src/source-ui/kubernetes/secrets/secrets-table.tsx
+  s_5749b2ccfeffb1::t_d7c40bcaf4dc9a 1-52
+apps/nitro/src/source-ui/kubernetes/services/services-table.tsx
+  s_5749b2ccfeffb1::t_f70a8a3715d663 1-64
+apps/nitro/src/source-ui/kubernetes/table-hooks.ts
+  s_6042944d82d715::t_7479d8dee3539f 1-27
+apps/nitro/src/source-ui/kubernetes/volumes/volumes-table.tsx
+  s_5749b2ccfeffb1::t_19c86796253fed 1-62
+apps/nitro/src/source-ui/media/contracts.ts
+  s_c9d3b91d1c4d07::t_375bceaf0d8923 1-48
+apps/nitro/src/source-ui/media/index.ts
+  s_c9d3b91d1c4d07::t_75d081f71ee765 1-12
+apps/nitro/src/source-ui/media/media-management.tsx
+  s_c9d3b91d1c4d07::t_32f3ddf6265f95 1-24
+apps/nitro/src/source-ui/operations/index.ts
+  s_6042944d82d715::t_e9a589cc392daf 1-14
+apps/nitro/src/source-ui/operations/log-context.tsx
+  s_c9d3b91d1c4d07::t_5d301a02e44afa 1-58
+apps/nitro/src/source-ui/operations/logs-view.tsx
+  s_c9d3b91d1c4d07::t_6710fc4cfda8d1 1-64
+apps/nitro/src/source-ui/operations/tasks-table.tsx
+  s_5749b2ccfeffb1::t_5ae3c099ef2533 1-346
+apps/nitro/src/source-ui/operations/terminal.module.css
+  s_c9d3b91d1c4d07::t_d4e0029de9ef05 1-3
+apps/nitro/src/source-ui/search/preferences.tsx
+  s_5749b2ccfeffb1::t_c7929920abd76e 1-248
+apps/nitro/src/source-ui/settings/board-select.tsx
+  s_c9d3b91d1c4d07::t_aabefba953562e 1-28
+apps/nitro/src/source-ui/settings/header-composer.module.css
+  s_c9d3b91d1c4d07::t_62cce12deb707a 1-288
+apps/nitro/src/source-ui/settings/header-composer.tsx
+  s_5749b2ccfeffb1::t_cc3c6cf34f7be7 1-666
+apps/nitro/src/source-ui/settings/index.ts
+  s_c9d3b91d1c4d07::t_1296e6a5ebb669 1-4
+apps/nitro/src/source-ui/users/api-keys.tsx
+  s_5749b2ccfeffb1::t_af97bdcbd8cc16 1-140
+apps/nitro/src/source-ui/users/index.ts
+  s_c9d3b91d1c4d07::t_a57fd196a3d6f9 1-6
+apps/nitro/src/source-ui/widgets-editor/code-editor.tsx
+  s_98df0679b8048c::t_b151bc7287fd51 1-45
+apps/nitro/src/source-ui/widgets-editor/index.ts
+  s_0559c70ca0becf::t_d0b82c6e30bf76 1-13
+apps/nitro/src/source-ui/widgets-editor/workbench-context.tsx
+  s_98df0679b8048c::t_382ccd294aa1de 1-32
+apps/nitro/src/source-ui/workshop/account.tsx
+  s_5749b2ccfeffb1::t_c35d659487dadc 1-33
+apps/nitro/src/source-ui/workshop/index.ts
+  s_0559c70ca0becf::t_7d8463d7ec0d9f 1-9
+apps/nitro/src/source-ui/workshop/screenshots.tsx
+  s_6042944d82d715::t_2b9115ba9400e6 1-167
+apps/nitro/src/source-ui/workshop/security-review.tsx
+  s_0559c70ca0becf::t_03709920b96187 1-32
+deployments/nitro/compose.yaml
+  s_5749b2ccfeffb1::t_1f6d024ef9779a 1-27
+implementation/playable-01-postcss-review.md
+  s_b268122f3e7372::t_de458943f07559 1-117
+package.json
+  s_6042944d82d715::t_85447b2528a8a4 261,294
+packages/api/src/backup-runtime/create-legacy-fixture.mjs
+  s_6042944d82d715::t_b709297c11603c 16,22,28-29,37-38,42-45
+packages/api/src/nitro/assembly/public-integration.ts
+  s_6042944d82d715::t_06085c9758d3da 1-7
+packages/api/src/nitro/browser-contracts/public-integration.ts
+  s_6042944d82d715::t_6b953680c4af74 1-7
+packages/api/src/nitro/routers/-integration-management/access.ts
+  s_6042944d82d715::t_83bcd3752ebe9f 1-133
+packages/auth/nitro/production-sessions/origin.ts
+  s_6042944d82d715::t_2261ce1a060117 1-150
+packages/cli/src/commands/harness.ts
+  s_98df0679b8048c::t_7abaaeda9344dd 26,29-33,38,41-54,135,137-142,214-230,239-240,242-247,250,277-279,283,285-293,301,304,360,362,368,376,379,389,391-392,404,406-414,422
+packages/core/src/infrastructure/http/https-agent.ts
+  s_5749b2ccfeffb1::t_33ab189b46a9b5 1-246
+packages/db/test/create-legacy-copy-fixture.mjs
+  s_6042944d82d715::t_e68eb093526c21 5-6,9-14,18-33,100-107
+packages/forms-collection/src/board-create/board-create-form.tsx
+  s_6042944d82d715::t_64e7008d3bb48b 3-5,15-35,37-44,47-57,60-72,81,83-160,165,189,194-200,204-208,212-227,233,239,242-244,270
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_0559c70ca0becf::t_20f1f8b3f2decf 39-40,44-66,68,84,94-96,98-99,109,111,321,323,331-340,344-348,351,354-356
+packages/forms-collection/src/icon-picker/icon-picker.utils.ts
+  s_6042944d82d715::t_e980d00c8d7504 3-13
+packages/forms-collection/src/index.tsx
+  s_6042944d82d715::t_a0da84729b2144 7
+packages/forms-collection/src/user-create/user-create-password-fields.tsx
+  s_6042944d82d715::t_2c3f77a14736ee 9
+packages/modals-collection/src/docker/add-docker-app-to-homarr.tsx
+  s_6042944d82d715::t_23e3f87c1f8786 1,6,11,13,15-31,33-37,44-49,51-67,84-122,127-135,138-142,173-180,183-188,192-207,211-216
+packages/modals-collection/src/search-engines/request-media-modal.tsx
+  s_6042944d82d715::t_834d1edd7df667 1,7,11,17-23,25-50,52-71,73,96,101-102,121-125,127-140,144-182,198-204,207-218,222-237,240-242,246
+packages/onboarding/src/onboarding-backdrop.tsx
+  s_c9d3b91d1c4d07::t_23ab417dbaac3c 3,5
+packages/onboarding/src/presentation-auth-shell.tsx
+  s_6042944d82d715::t_05cf956557ae3b 1-140
+packages/onboarding/src/presentation-backdrop.tsx
+  s_c9d3b91d1c4d07::t_440c485f145f22 1-12
+packages/redis/src/cache/board-snapshots.ts
+  s_5749b2ccfeffb1::t_503e1b8233faf8 1-34
+packages/redis/src/cache/contracts.ts
+  s_c9d3b91d1c4d07::t_6becfba8cf9e96 1-14
+packages/redis/src/cache/index.ts
+  s_c9d3b91d1c4d07::t_0d8e0b61461b45 1-8
+packages/spotlight/src/components/runtime-palette.tsx
+  s_7c04db8c545b62::t_c3a5c1c2eb6dec 1-226
+packages/translation/package.json
+  s_b268122f3e7372::t_2f119b73eb4184 20
+packages/ui/package.json
+  s_b268122f3e7372::t_25b7ed319f7f9a 22-30,32-38,54-55
+packages/widgets/src/common/native-read-rendering.ts
+  s_6042944d82d715::t_901c6abfd83d2a 1-14
+packages/widgets/src/common/native-video-renderer.tsx
+  s_5749b2ccfeffb1::t_8dd1503c212002 1-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "241041ca9ae563cf74688b49ac6ca1e12442dfb0",
+  "prompts": {},
+  "sessions": {
+    "s_00d9eee545672e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12fc3-6532-7483-af9d-07e71149ec51",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_01e8d17f7740df": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1268b-f643-7c41-b14c-a49ad65a4fdf",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_0559c70ca0becf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-b93c-7681-8c02-21811f74ed20",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5749b2ccfeffb1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-5d31-7090-8035-0e501d3f763d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_59ffa5bfdcd3ba": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fbb8-1651-7d42-8527-b8ebdc368014",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_6042944d82d715": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b46-0a0b-7da2-a557-f716adc5330f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_73405e86bfe439": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b77-96d7-75e2-a9d8-6881a2be0236",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7c04db8c545b62": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b78-20b7-7562-9deb-df2955676bb0",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7f39f4ed781c70": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b46-7c63-71e1-b491-23d193ff5a30",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8b1d5a69f175a9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ff0d-51af-74b0-a648-dd404bc11429",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_98df0679b8048c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b5f-4289-7133-a20a-a082d78877fe",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a426323822b13f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a11bc1-af3d-7e01-b9f4-a625eaa7ba40",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b268122f3e7372": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b1bee00-2fbf-4fd4-bb2c-5e6728fdec81",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c9d3b91d1c4d07": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a12b45-e097-7211-925b-e41cb8183a6f",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
