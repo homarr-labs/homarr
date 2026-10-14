@@ -22,6 +22,7 @@ import { env } from "~/env";
 import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
+import { CachedWidgetRefresh } from "./_cached-widget-refresh";
 import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
 import { createBoardQuerySnapshot } from "./_query-snapshot";
 import { WidgetResourcePreload } from "./_widget-resource-preload";
@@ -56,25 +57,6 @@ const DeferredWidgetHydration = async ({
         shouldDehydrateQuery: (query) =>
           query.meta?.streamedBeszelSelection === true &&
           (query.state.status === "pending" || query.state.status === "success"),
-      })}
-    />
-  );
-};
-
-const RefreshedQueryHydration = async ({
-  queryClient,
-  queryHash,
-  promise,
-}: {
-  queryClient: QueryClient;
-  queryHash: string;
-  promise: Promise<unknown>;
-}) => {
-  await promise.catch(() => undefined);
-  return (
-    <HydrationBoundary
-      state={dehydrate(queryClient, {
-        shouldDehydrateQuery: (query) => query.queryHash === queryHash && query.state.status === "success",
       })}
     />
   );
@@ -172,11 +154,9 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         <>
           <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
           <HydrationBoundary state={dehydrate(queryClient)}>
-            {restoredRefreshes.map(({ queryHash, promise }) => (
-              <Suspense key={queryHash} fallback={null}>
-                <RefreshedQueryHydration queryClient={queryClient} queryHash={queryHash} promise={promise} />
-              </Suspense>
-            ))}
+            {restoredRefreshes.length > 0 && (
+              <CachedWidgetRefresh queryHashes={restoredRefreshes.map(({ queryHash }) => queryHash)} />
+            )}
             {dependentQueries.length > 0 && (
               <Suspense fallback={null}>
                 <DeferredWidgetHydration queryClient={queryClient} queries={dependentQueries} />
