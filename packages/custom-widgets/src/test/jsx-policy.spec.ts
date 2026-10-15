@@ -91,22 +91,19 @@ describe("shared Custom JSX policy", () => {
   });
 
   test("accepts the concise Icon alias used by the AI prompt", () => {
-    expect(validateCustomJsxTemplate('<ThemeIcon><Icon name="brand-docker" /></ThemeIcon>')).toEqual([]);
+    expect(validateCustomJsxTemplate('<ThemeIcon><Icon name="cloud-rain" /></ThemeIcon>')).toEqual([]);
   });
 
-  test.each(["IconCloudUpload", "cloud-rain", "not-a-real-icon"])(
-    "rejects invisible unsupported icon names: %s",
-    (name) => {
-      expect(validateCustomJsxTemplate(`<Icon name="${name}" />`)).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            severity: "error",
-            message: expect.stringContaining("registered kebab-case icon name"),
-          }),
-        ]),
-      );
-    },
-  );
+  test.each(["IconCloudUpload", "not-a-real-icon"])("rejects invisible unsupported icon names: %s", (name) => {
+    expect(validateCustomJsxTemplate(`<Icon name="${name}" />`)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          severity: "error",
+          message: expect.stringContaining("registered kebab-case icon name"),
+        }),
+      ]),
+    );
+  });
 
   test.each(["Anchor", "Button", "TextInput"])("rejects %s inside a manual SubFetch trigger", (component) => {
     const template = `<SubFetch requestId="search" trigger="manual" triggerContent={<Card><${component} /></Card>} />`;
