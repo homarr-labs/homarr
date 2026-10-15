@@ -112,7 +112,6 @@ const getServerHydratedSnapshot = () => false;
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
-  const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const queryClient = useQueryClient();
   const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const canvasScale = useBoardCanvasScale();
@@ -142,7 +141,15 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         getQueryKey(clientApi.widget.archiveTeamWarrior.getStatus, { integrationId }, "query"),
       ) === undefined;
   }
-  if (!hydrated && (!prepared || needsBrowser) && item.kind !== "app" && item.kind !== "bookmarks") {
+  const deferred = (!prepared || needsBrowser) && item.kind !== "app" && item.kind !== "bookmarks";
+  // A hydration-time switch would be an urgent update to every dehydrated
+  // Widget boundary, so Widgets rendered on the server never switch.
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getHydratedSnapshot,
+    deferred ? getServerHydratedSnapshot : getHydratedSnapshot,
+  );
+  if (!hydrated) {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
