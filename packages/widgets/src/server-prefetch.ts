@@ -3,7 +3,7 @@ import { setImmediate } from "node:timers/promises";
 import type { FetchQueryOptions, QueryClient, QueryKey } from "@tanstack/react-query";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
-import { api, trpc } from "@homarr/api/server";
+import { api as requestApi, trpc as requestTrpc } from "@homarr/api/server";
 import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
@@ -40,6 +40,10 @@ const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
 type Board = RouterOutputs["board"]["getHomeBoard"];
 type Item = Board["items"][number];
 type BeszelStatsInput = RouterInputs["widget"]["beszel"]["getSystemStats"];
+interface PrefetchClients {
+  api: typeof requestApi;
+  trpc: typeof requestTrpc;
+}
 const mediaRequestStatuses = ["pending", "approved", "declined", "failed", "completed"] as const;
 
 const isInitiallyVisible = (board: Board, item: Item, layoutId: string) => {
@@ -62,7 +66,7 @@ export const getInitiallyVisibleWidgetKinds = (board: Board, layoutId: string) =
   ...new Set(board.items.filter((item) => isInitiallyVisible(board, item, layoutId)).map((item) => item.kind)),
 ];
 
-const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
+const prefetchBeszelStats = (queryClient: QueryClient, item: Item, { api, trpc }: PrefetchClients) => {
   const { integrationIds, options } = item;
   const storedValue = String(options.systemId ?? "");
   const selection = resolveStoredBeszelQuerySelection(storedValue, integrationIds);
@@ -129,7 +133,9 @@ export const prefetchInitialWidgetData = (
   board: Board,
   layoutId: string,
   isAuthenticated: boolean,
+  clients: PrefetchClients = { api: requestApi, trpc: requestTrpc },
 ) => {
+  const { trpc } = clients;
   const dependentQueries: Promise<void>[] = [];
   const calendarMonth = getUnambiguousCalendarMonth();
   if (isAuthenticated) prefetchQuery(queryClient, trpc.integration.all.queryOptions());
@@ -150,7 +156,7 @@ export const prefetchInitialWidgetData = (
         if (!integrationIds.length) break;
         prefetchQuery(queryClient, trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
         if (item.kind === "beszelSystemStats") {
-          const discovery = prefetchBeszelStats(queryClient, item);
+          const discovery = prefetchBeszelStats(queryClient, item, clients);
           if (discovery) dependentQueries.push(discovery);
         }
         break;

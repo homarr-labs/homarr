@@ -1,4 +1,5 @@
 import { analyticsJob } from "./jobs/analytics";
+import { boardPreparationJob } from "./jobs/board-preparation";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { pingJob } from "./jobs/ping";
 import { createCronJobGroup } from "./lib";
@@ -6,6 +7,7 @@ import { createCronJobGroup } from "./lib";
 const getJobGroup = () => {
   return createCronJobGroup({
     analytics: analyticsJob,
+    boardPreparation: boardPreparationJob,
     iconsUpdater: iconsUpdaterJob,
     ping: pingJob,
   });

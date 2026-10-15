@@ -9,6 +9,7 @@ import "@homarr/docker/env";
 
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { supportedLanguages } from "@homarr/translation/languages";
 
 // Package path does not work... so we need to use relative path
 const withNextIntl = createNextIntlPlugin({
@@ -100,7 +101,12 @@ const nextConfig: NextConfig = {
   // skipcq: JS-0116
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
+    const locale = `:locale(${supportedLanguages.join("|")})`;
     return [
+      ...["/prepared-board/:path*", "/", "/boards/:name", `/${locale}`, `/${locale}/boards/:name`].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }],
+      })),
       {
         source: "/sw.js",
         headers: [

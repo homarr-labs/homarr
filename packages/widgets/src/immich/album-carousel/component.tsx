@@ -14,6 +14,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useHydrationTime, useInitialRenderTime } from "@homarr/common";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
 
@@ -30,6 +31,7 @@ export default function ImmichAlbumCarouselWidget({
   displayMode = "compact",
   widgetRuntimeRef,
 }: WidgetComponentProps<"immich-albumCarousel">) {
+  const initialRenderTime = useInitialRenderTime();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [firstPreviewPhoto, setFirstPreviewPhoto] = useState<{ albumId: string; assetId: string } | null>(null);
@@ -58,12 +60,12 @@ export default function ImmichAlbumCarouselWidget({
   const photoAssets = useMemo(() => {
     const assets = album?.assets.filter((asset) => asset.type === "IMAGE") ?? [];
     if (!options.randomizePhotos) return assets;
-    const randomized = shuffle(assets);
+    const randomized = shuffle(assets, initialRenderTime);
     if (!fullAlbum || !firstPreviewPhoto || firstPreviewPhoto.albumId !== albumId) return randomized;
     const first = randomized.find((asset) => asset.id === firstPreviewPhoto.assetId);
     if (!first) return randomized;
     return [first, ...randomized.filter((asset) => asset.id !== first.id)];
-  }, [album?.assets, albumId, firstPreviewPhoto, fullAlbum, options.randomizePhotos]);
+  }, [album?.assets, albumId, firstPreviewPhoto, fullAlbum, options.randomizePhotos, initialRenderTime]);
 
   useEffect(() => {
     if (photoAssets.length === 0) return;
@@ -107,14 +109,21 @@ export default function ImmichAlbumCarouselWidget({
   );
 }
 
-function shuffle<T>(items: T[]) {
+function shuffle<T>(items: T[], seed?: number) {
   const shuffled = [...items];
+  let state = seed ?? 0;
   for (let index = shuffled.length - 1; index > 0; index--) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
+    let random: number;
+    if (seed === undefined) random = Math.random();
+    else {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      random = state / 0x1_0000_0000;
+    }
+    const randomIndex = Math.floor(random * (index + 1));
     const current = shuffled[index];
-    const random = shuffled[randomIndex];
-    if (current === undefined || random === undefined) continue;
-    shuffled[index] = random;
+    const randomAsset = shuffled[randomIndex];
+    if (current === undefined || randomAsset === undefined) continue;
+    shuffled[index] = randomAsset;
     shuffled[randomIndex] = current;
   }
   return shuffled;
@@ -149,6 +158,9 @@ function Carousel({
 }: CarouselProps) {
   const t = useI18n("widget.immich-albumCarousel");
   const locale = useCurrentIntlLocale();
+  const initialTime = useHydrationTime();
+  const dateOptions: Intl.DateTimeFormatOptions = {};
+  if (initialTime !== undefined) dateOptions.timeZone = "UTC";
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -233,7 +245,7 @@ function Carousel({
             )}
             <Group gap="xs">
               <IconCalendar size="var(--mantine-font-size-md)" />
-              <Text size="xs">{new Date(currentAsset.fileModifiedAt).toLocaleDateString(locale)}</Text>
+              <Text size="xs">{new Date(currentAsset.fileModifiedAt).toLocaleDateString(locale, dateOptions)}</Text>
             </Group>
             <Text size="xs" c="dimmed">
               {safeCurrentIndex + 1} / {assets.length}

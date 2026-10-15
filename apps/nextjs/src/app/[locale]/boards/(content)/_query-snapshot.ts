@@ -108,7 +108,11 @@ const getGenerationsAsync = async (ids: Set<string>) => {
   return Object.fromEntries(entries.map(([id, generation]) => [id, generation.value]));
 };
 
-export const createBoardQuerySnapshot = (board: Board, integrations: Integrations) => {
+export const createBoardQuerySnapshot = (
+  board: Board,
+  integrations: Integrations,
+  { preserveTimestamps = false }: { preserveTimestamps?: boolean } = {},
+) => {
   // A board edit must not restore data from a widget that has since been
   // removed or reconfigured, even if another widget uses the same integration.
   const boardContentFingerprint = createHash("sha256")
@@ -159,10 +163,11 @@ export const createBoardQuerySnapshot = (board: Board, integrations: Integration
         ...snapshot,
         clientState: {
           mutations: [],
-          queries: queries.map((query) => ({
-            ...query,
-            state: { ...query.state, dataUpdatedAt: Date.now(), fetchStatus: "idle" as const },
-          })),
+          queries: queries.map((query) => {
+            const state = { ...query.state, fetchStatus: "idle" as const };
+            if (!preserveTimestamps) state.dataUpdatedAt = Date.now();
+            return { ...query, state };
+          }),
         },
       };
     },

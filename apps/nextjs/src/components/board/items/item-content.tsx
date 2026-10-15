@@ -11,6 +11,7 @@ import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useInitialRenderTime } from "@homarr/common";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
@@ -104,6 +105,7 @@ const getHydratedSnapshot = () => true;
 const getServerHydratedSnapshot = () => false;
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
+  const prepared = useInitialRenderTime() !== undefined;
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -111,9 +113,11 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const width = measuredWidth || getLogicalTrackSize(item.width);
   const height = measuredHeight || getLogicalTrackSize(item.height);
 
-  // App and bookmark HTML is already in the initial document. Other widget
-  // modules render after hydration while their server queries already run.
-  if (!hydrated && item.kind !== "app" && item.kind !== "bookmarks") {
+  // Prepared views render reusable Widget content in the background. Calendars
+  // still need the browser's local date; their initial data is already retained.
+  // Ordinary SSR keeps #7176's deferred Widget rendering.
+  const needsBrowser = item.kind === "calendar";
+  if (!hydrated && (!prepared || needsBrowser) && item.kind !== "app" && item.kind !== "bookmarks") {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
@@ -190,7 +194,10 @@ const ResolvedBoardItemContent = ({
   definition: WidgetDefinition;
   Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
 }) => {
+  const prepared = useInitialRenderTime() !== undefined;
   const sourceRef = useRef<HTMLDivElement>(null);
+  const compactHostRef = useRef<HTMLDivElement | null>(null);
+  const preparedSurfaceRef = useRef<HTMLDivElement | null>(null);
   const advancedFocusTriggerRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const previewEntranceFrameRef = useRef<number | null>(null);
@@ -225,12 +232,28 @@ const ResolvedBoardItemContent = ({
   const isManual = activeFocus?.activation === "manual";
 
   useIsomorphicEffect(() => {
-    if (!supportsAdvancedFocus) return;
+    if (!supportsAdvancedFocus || prepared) return;
     const target = document.createElement("div");
     target.className = advancedFocusClasses.surfacePortalTarget ?? "";
     setSurfacePortalTarget(target);
     return () => target.remove();
-  }, [supportsAdvancedFocus]);
+  }, [supportsAdvancedFocus, prepared]);
+
+  const mountPreparedSurface = useCallback((host: HTMLDivElement | null) => {
+    preparedSurfaceRef.current = host;
+    if (host) setSurfacePortalTarget(host);
+  }, []);
+
+  useIsomorphicEffect(() => {
+    if (!prepared) return;
+    return () => {
+      // Restore the React-owned host before React removes its original parent.
+      // Moving this host keeps the same Widget instance in compact/focus modes.
+      const host = compactHostRef.current;
+      const surface = preparedSurfaceRef.current;
+      if (host && surface && surface.parentNode !== host) host.append(surface);
+    };
+  }, [prepared]);
 
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
 
@@ -268,6 +291,7 @@ const ResolvedBoardItemContent = ({
 
   const mountCompactHost = useCallback(
     (host: HTMLDivElement | null) => {
+      compactHostRef.current = host;
       if (!host || !surfacePortalTarget || isAdvanced) return;
       cancelPreviewEntrance();
       if (host.childNodes.length !== 1 || host.firstChild !== surfacePortalTarget) {
@@ -419,8 +443,13 @@ const ResolvedBoardItemContent = ({
           )}
           <div ref={mountCompactHost} className={advancedFocusClasses.surfaceHost}>
             {!supportsAdvancedFocus && widgetCard}
+            {supportsAdvancedFocus && prepared && (
+              <div ref={mountPreparedSurface} className={advancedFocusClasses.surfacePortalTarget}>
+                {widgetCard}
+              </div>
+            )}
           </div>
-          {surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
+          {!prepared && surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
           {isPreview && (
             <Portal reuseTargetNode={false}>
               <div ref={mountPreviewHost} className={advancedFocusClasses.surfaceHostAdvanced} />

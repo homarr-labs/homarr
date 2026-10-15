@@ -29,13 +29,32 @@ export const BoardProviders = ({
   const layoutOverrideId = isLayoutEditRequest ? requestedLayoutId : null;
 
   return (
+    <BoardStateProviders
+      {...{ children, initialBoard, initialLayoutId, initialViewportWidth, canModify }}
+      layoutOverrideId={layoutOverrideId}
+    />
+  );
+};
+
+export const PreparedBoardProviders = (props: PropsWithChildren<Props>) => (
+  <BoardStateProviders {...props} layoutOverrideId={null} />
+);
+
+const BoardStateProviders = ({
+  children,
+  initialBoard,
+  initialLayoutId,
+  initialViewportWidth,
+  layoutOverrideId,
+}: PropsWithChildren<Props & { layoutOverrideId: string | null }>) => {
+  return (
     <BoardProvider
       initialBoard={initialBoard}
       initialLayoutId={initialLayoutId}
       initialViewportWidth={initialViewportWidth}
       layoutOverrideId={layoutOverrideId}
     >
-      <EditModeProvider initialOpen={isLayoutEditRequest}>{children}</EditModeProvider>
+      <EditModeProvider initialOpen={layoutOverrideId !== null}>{children}</EditModeProvider>
     </BoardProvider>
   );
 };
