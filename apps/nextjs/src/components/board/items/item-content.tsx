@@ -30,7 +30,7 @@ import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/
 import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-shell";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { getLogicalTrackSize } from "~/components/board/layout";
+import { getLogicalGridSize } from "~/components/board/layout";
 import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
@@ -102,6 +102,9 @@ const BoardItemPendingCard = ({ item, innerRef }: Pick<BoardItemCardProps, "item
   );
 };
 
+// Matches .staticItem[data-type="item"] > .contentMount in section-grid.module.css.
+const itemInsetPixels = 10;
+
 const subscribeToHydration = () => () => undefined;
 const getHydratedSnapshot = () => true;
 const getServerHydratedSnapshot = () => false;
@@ -111,10 +114,15 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const queryClient = useQueryClient();
   const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
+  const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
-  const width = measuredWidth || getLogicalTrackSize(item.width);
-  const height = measuredHeight || getLogicalTrackSize(item.height);
+  // Until measured, match the content box: the grid footprint minus the card
+  // inset, which stays 10 screen pixels per side at any canvas scale. Size
+  // dependent Widget layouts then keep their server-rendered branch.
+  const inset = (2 * itemInsetPixels) / canvasScale;
+  const width = measuredWidth || getLogicalGridSize(item.width) - inset;
+  const height = measuredHeight || getLogicalGridSize(item.height) - inset;
 
   // Prepared views render reusable Widget content in the background. Calendars
   // still need the browser's local date; their initial data is already retained.

@@ -34,7 +34,8 @@
     "./prefetch": "./src/prefetch.ts",
     "./refetch-intervals": "./src/refetch-intervals.ts",
     "./widget-card-shell": "./src/widget-card-shell.tsx",
-    "./server-prefetch": "./src/server-prefetch.ts"
+    "./server-prefetch": "./src/server-prefetch.ts",
+    "./widget-styles": "./src/widget-styles.tsx"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

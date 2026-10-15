@@ -24,8 +24,10 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
 
 // Server HTML is reused across widths of one layout, including prepared views.
 // Fit it to the real viewport before first paint; React takes over on hydration.
-// Streamed Suspense content is parsed hidden, so wait until it has a size.
-const fitBeforePaintScript = `(()=>{const v=document.currentScript?.previousElementSibling,s=v?.firstElementChild,c=s?.firstElementChild;if(!c)return;const fit=()=>{const w=v.clientWidth,l=Number(c.dataset.logicalWidth),h=Number(v.dataset.canvasInitialHeight);if(!(w>0&&l>0))return false;const k=w/l;s.style.width=l*k+"px";s.style.height=h*k+"px";c.style.zoom=String(k);c.style.setProperty("--board-canvas-inverse-scale",String(1/k));c.style.setProperty("--board-canvas-ui-scale",String(k<1?1/k:1));return true};if(fit())return;const o=new ResizeObserver(()=>{if(v.dataset.boardHydrated==="true"||fit())o.disconnect()});o.observe(v)})()`;
+// Section grids derive their insets and UI scale from the canvas scale, so
+// rescale those server values too. Streamed Suspense content is parsed hidden,
+// so wait until it has a size.
+const fitBeforePaintScript = `(()=>{const v=document.currentScript?.previousElementSibling,s=v?.firstElementChild,c=s?.firstElementChild;if(!c)return;const u=k=>k<1?1/k:1,k0=Number(v.dataset.canvasScale);const scaleVar=(e,n,f)=>{const x=parseFloat(e.style.getPropertyValue(n));if(Number.isFinite(x))e.style.setProperty(n,n==="--board-container-inset"?x*f+"px":String(x*f))};const fit=()=>{const w=v.clientWidth,l=Number(c.dataset.logicalWidth),h=Number(v.dataset.canvasInitialHeight);if(!(w>0&&l>0&&k0>0))return false;const k=w/l;s.style.width=l*k+"px";s.style.height=h*k+"px";c.style.zoom=String(k);c.style.setProperty("--board-canvas-inverse-scale",String(1/k));c.style.setProperty("--board-canvas-ui-scale",String(u(k)));for(const e of c.querySelectorAll("[data-grid-section-id]")){scaleVar(e,"--board-canvas-inverse-scale",k0/k);scaleVar(e,"--board-canvas-ui-scale",u(k)/u(k0))}for(const e of c.querySelectorAll("[data-section-id]"))scaleVar(e,"--board-container-inset",k0/k);return true};if(fit())return;const o=new ResizeObserver(()=>{if(v.dataset.boardHydrated==="true"||fit())o.disconnect()});o.observe(v)})()`;
 
 interface ScaledBoardCanvasProps {
   logicalWidth: number;

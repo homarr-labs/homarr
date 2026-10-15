@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DataTableColumn } from "mantine-datatable";
 import { useDataTableColumns } from "mantine-datatable";
 
@@ -136,6 +136,20 @@ export const usePersistedTableLayout = <T>({
       columns,
     });
 
+  // The column store reads the browser only after mount. Until it holds the
+  // saved layout, render that layout directly so the table does not reflow.
+  const savedColumns = useMemo(
+    () =>
+      restoredOrder.flatMap((accessor) => {
+        const column = columns.find((candidate) => String(candidate.accessor) === accessor);
+        if (!column) return [];
+        const width = savedWidths[accessor];
+        if (width === undefined) return [column];
+        return [{ ...column, width }];
+      }),
+    [columns, restoredOrder, savedWidths],
+  );
+  const [isStoreSynced, setIsStoreSynced] = useState(false);
   const lastStoreKey = useRef(storeKey);
   const hydrated = useRef(false);
   const previousOrder = useRef(columnsOrder);
@@ -144,6 +158,7 @@ export const usePersistedTableLayout = <T>({
     if (lastStoreKey.current !== storeKey) {
       lastStoreKey.current = storeKey;
       hydrated.current = false;
+      setIsStoreSynced(false);
     }
     if (hydrated.current) return;
 
@@ -158,6 +173,7 @@ export const usePersistedTableLayout = <T>({
       previousOrder.current = columnsOrder;
       previousWidths.current = columnsWidth;
       hydrated.current = true;
+      setIsStoreSynced(true);
       return;
     }
 
@@ -231,5 +247,6 @@ export const usePersistedTableLayout = <T>({
     visibleAccessorSet,
   ]);
 
+  if (!isStoreSynced) return { effectiveColumns: savedColumns, storeKey };
   return { effectiveColumns, storeKey };
 };
