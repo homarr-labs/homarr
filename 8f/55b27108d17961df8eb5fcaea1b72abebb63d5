@@ -1,0 +1,19 @@
+packages/widgets/src/widget-styles.tsx
+  s_0ed34ca6aa2512::t_7aa3844a61be3a 4,89-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8f55b27108d17961df8eb5fcaea1b72abebb63d5",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
