@@ -1,0 +1,29 @@
+apps/docs/docs/management/tasks/index.mdx
+  s_0ed34ca6aa2512::t_e0370119c54c30 24
+apps/nextjs/src/board-preparation/prepare.ts
+  s_0ed34ca6aa2512::t_9f0c1d99ae24cb 19,172-181,282-283
+apps/nextjs/src/board-preparation/proxy.ts
+  s_0ed34ca6aa2512::t_54d44ab8c97cca 3,115-117,120-121,158
+apps/nextjs/src/board-preparation/store.ts
+  s_0ed34ca6aa2512::t_bdae3e7f9a2f45 43,48,55,162-174,177-178
+packages/cron-jobs/src/board-preparation-request.ts
+  s_0ed34ca6aa2512::t_c1ee681586ce8b 4
+packages/cron-jobs/src/jobs/board-preparation.ts
+  s_0ed34ca6aa2512::t_f9992ed39c4a30 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a39488b77e5171f141ea1cedfbc1635f6591c437",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
