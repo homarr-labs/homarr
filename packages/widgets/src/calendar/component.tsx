@@ -35,7 +35,7 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
   const [month, setMonth] = useState(() => new Date());
   const runtimeInput = {
     integrationIds: props.integrationIds,
-    month: month.getMonth(),
+    month: month.getMonth() + 1,
     year: month.getFullYear(),
     releaseType: props.options.releaseType,
     showUnmonitored: props.options.showUnmonitored,
@@ -68,7 +68,16 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
   setMonth: (date: Date) => void;
 }
 
-const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, displayMode }: FetchCalendarProps) => {
+const FetchCalendar = ({
+  month,
+  setMonth,
+  isEditMode,
+  integrationIds,
+  options,
+  displayMode,
+  width,
+  height,
+}: FetchCalendarProps) => {
   const input = {
     integrationIds,
     month: month.getMonth() + 1,
@@ -111,11 +120,15 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
       setMonth={setMonth}
       options={options}
       displayMode={displayMode}
+      width={width}
+      height={height}
     />
   );
 };
 
 interface CalendarBaseProps {
+  width: number;
+  height: number;
   isEditMode: boolean;
   events: CalendarEventWithSource[];
   failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
@@ -135,13 +148,17 @@ const CalendarBase = ({
   setMonth,
   options,
   displayMode,
+  width: initialWidth,
+  height: initialHeight,
 }: CalendarBaseProps) => {
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
-  const { ref, width, height } = useElementSize();
+  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize();
+  const width = measuredWidth || initialWidth;
+  const height = measuredHeight || initialHeight;
   const isSmall = width < 256;
 
   const normalizedEvents = useMemo(

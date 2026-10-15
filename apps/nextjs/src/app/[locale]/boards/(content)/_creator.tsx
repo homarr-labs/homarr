@@ -125,7 +125,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         getCapturedViewIdAsync(),
       ]);
       if (capturedViewId) {
-        const snapshot = createBoardQuerySnapshot(board, integrations, { preserveTimestamps: true });
+        const snapshot = createBoardQuerySnapshot(board, integrations);
         await snapshot.restoreAsync(queryClient).catch(() => undefined);
         const queries = await settleCapturedQueriesAsync(queryClient, {
           board,

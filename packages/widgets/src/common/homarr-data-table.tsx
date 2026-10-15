@@ -8,6 +8,8 @@ import { DataTable } from "mantine-datatable";
 
 import { scrollAreaDefaultProps } from "@homarr/ui";
 
+import type { TableLayoutChange } from "./use-persisted-table-layout";
+
 const fallbackColumnWidth = 60;
 
 const getColumnWidth = (width: string | number | undefined): number => {
@@ -26,6 +28,7 @@ type HomarrDataTableProps<T> = DataTableProps<T> & {
   cellPadding: string;
   rowCursor?: "auto" | "default";
   preserveColumnWidths?: boolean;
+  onColumnLayoutChange?: (change: TableLayoutChange) => void;
 };
 
 export function HomarrDataTable<T>({
@@ -37,12 +40,18 @@ export function HomarrDataTable<T>({
   columns,
   defaultColumnProps,
   onMouseDownCapture,
+  onDoubleClick,
+  onDragStartCapture,
+  onDragEndCapture,
+  onDrop,
+  onColumnLayoutChange,
   scrollAreaProps,
   style,
   ...props
 }: HomarrDataTableProps<T>) {
   const [resizePreviewWidths, setResizePreviewWidths] = useState<Record<string, number>>();
   const removeResizeListeners = useRef<() => void>(() => undefined);
+  const draggedColumn = useRef<Element | null>(null);
   useEffect(() => () => removeResizeListeners.current(), []);
 
   const handleMouseDownCapture = useCallback(
@@ -79,11 +88,13 @@ export function HomarrDataTable<T>({
       const startX = event.clientX;
 
       removeResizeListeners.current();
+      let resized = false;
       const handleMouseMove = (moveEvent: MouseEvent) => {
         const delta = Math.min(
           nextWidth - minimumWidth,
           Math.max(minimumWidth - currentWidth, moveEvent.clientX - startX),
         );
+        resized = moveEvent.clientX !== startX;
         setResizePreviewWidths({
           ...widths,
           [currentAccessor]: currentWidth + delta,
@@ -92,6 +103,7 @@ export function HomarrDataTable<T>({
       };
       const handleResizeEnd = () => {
         removeResizeListeners.current();
+        if (resized) onColumnLayoutChange?.("columnWidths");
         requestAnimationFrame(() => requestAnimationFrame(() => setResizePreviewWidths(undefined)));
       };
       removeResizeListeners.current = () => {
@@ -103,7 +115,7 @@ export function HomarrDataTable<T>({
       window.addEventListener("mouseup", handleResizeEnd);
       window.addEventListener("blur", handleResizeEnd);
     },
-    [onMouseDownCapture],
+    [onColumnLayoutChange, onMouseDownCapture],
   );
 
   const mergedClassName = [
@@ -157,6 +169,33 @@ export function HomarrDataTable<T>({
       striped={false}
       columns={fittedColumns}
       onMouseDownCapture={handleMouseDownCapture}
+      onDoubleClick={(event) => {
+        onDoubleClick?.(event);
+        if (event.target instanceof Element && event.target.closest(".mantine-datatable-header-resizable-handle")) {
+          onColumnLayoutChange?.("columnWidths");
+        }
+      }}
+      onDragStartCapture={(event) => {
+        onDragStartCapture?.(event);
+        if (event.target instanceof Element) {
+          draggedColumn.current = event.target.closest('.mantine-datatable-header-cell-draggable[draggable="true"]');
+        }
+      }}
+      onDragEndCapture={(event) => {
+        onDragEndCapture?.(event);
+        draggedColumn.current = null;
+      }}
+      onDrop={(event) => {
+        onDrop?.(event);
+        let target: Element | null = null;
+        if (event.target instanceof Element) {
+          target = event.target.closest('.mantine-datatable-header-cell-draggable[draggable="true"]');
+        }
+        if (draggedColumn.current && target && draggedColumn.current !== target) {
+          onColumnLayoutChange?.("columnOrder");
+        }
+        draggedColumn.current = null;
+      }}
       className={mergedClassName}
       style={[{ pointerEvents: isEditMode ? "none" : undefined, "--homarr-table-min-width": minimumTableWidth }, style]}
       defaultColumnProps={{

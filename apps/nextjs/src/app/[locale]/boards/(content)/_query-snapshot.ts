@@ -21,7 +21,7 @@ const snapshotRestoreBudgetMs = 50;
 const maxQueryBytes = 128 * 1024;
 const maxBeszelStatsBytes = 256 * 1024;
 const maxSnapshotBytes = 512 * 1024;
-const snapshotVersion = "board-widget-queries-v1";
+const snapshotVersion = "board-widget-queries-v2";
 
 type Integrations = Awaited<ReturnType<typeof getIntegrationsWithPermissionsAsync>>;
 type CachedQuery = PersistedClient["clientState"]["queries"][number];
@@ -86,6 +86,7 @@ const getShareableQueries = (
   let totalBytes = 0;
   return queries.filter((query) => {
     if (query.meta?.rscWidgetPrefetch !== true || query.state.status !== "success") return false;
+    if (query.state.dataUpdatedAt < Date.now() - snapshotMaxAgeMs) return false;
     const ids = getQueryIntegrationIds(query.queryKey, board);
     if (!ids?.every((id) => boardIntegrationIds.has(id) && allowedIds.has(id))) return false;
     const serialized = superjson.stringify({ key: query.queryKey, data: query.state.data });
@@ -108,11 +109,7 @@ const getGenerationsAsync = async (ids: Set<string>) => {
   return Object.fromEntries(entries.map(([id, generation]) => [id, generation.value]));
 };
 
-export const createBoardQuerySnapshot = (
-  board: Board,
-  integrations: Integrations,
-  { preserveTimestamps = false }: { preserveTimestamps?: boolean } = {},
-) => {
+export const createBoardQuerySnapshot = (board: Board, integrations: Integrations) => {
   // A board edit must not restore data from a widget that has since been
   // removed or reconfigured, even if another widget uses the same integration.
   const boardContentFingerprint = createHash("sha256")
@@ -163,11 +160,7 @@ export const createBoardQuerySnapshot = (
         ...snapshot,
         clientState: {
           mutations: [],
-          queries: queries.map((query) => {
-            const state = { ...query.state, fetchStatus: "idle" as const };
-            if (!preserveTimestamps) state.dataUpdatedAt = Date.now();
-            return { ...query, state };
-          }),
+          queries: queries.map((query) => ({ ...query, state: { ...query.state, fetchStatus: "idle" as const } })),
         },
       };
     },

@@ -11,7 +11,10 @@ interface TableLayoutOptions extends Record<string, unknown> {
   columnWidths?: string;
 }
 
+export type TableLayoutChange = "columnOrder" | "columnWidths";
+
 interface PendingTableLayout {
+  changes: Set<TableLayoutChange>;
   layout: TableLayoutOptions;
   onLayoutChange: (layout: TableLayoutOptions) => void;
   storeKey: string;
@@ -52,28 +55,15 @@ export const useTableLayoutPersistence = ({
     [boardId, hasChangeAccess, itemId, saveItemOptions, setOptions],
   );
 
-const toPixelWidth = (width: string | number): number | undefined => {
+const toPixelWidth = (width: string | number | undefined): number | undefined => {
   if (typeof width === "number" && Number.isFinite(width) && width > 0) return width;
   if (typeof width !== "string" || !width.endsWith("px")) return undefined;
 
-  const parsedWidth = Number.parseInt(width, 10);
+  const parsedWidth = Number.parseFloat(width);
   return Number.isFinite(parsedWidth) && parsedWidth > 0 ? parsedWidth : undefined;
 };
 
-const getColumnWidthMap = (
-  columnsWidth: Record<string, string | number>[],
-  visibleAccessorSet: ReadonlySet<string>,
-): Record<string, number> => {
-  const widths: Record<string, number> = {};
-  for (const entry of columnsWidth) {
-    for (const [accessor, width] of Object.entries(entry)) {
-      if (!visibleAccessorSet.has(accessor)) continue;
-      const pixelWidth = toPixelWidth(width);
-      if (pixelWidth !== undefined) widths[accessor] = pixelWidth;
-    }
-  }
-  return widths;
-};
+const normalizeWidth = (width: string | number | undefined) => toPixelWidth(width) ?? width ?? "auto";
 
 export const parseColumnOrder = (value: string, columnAccessors: readonly string[]): string[] => {
   if (!value) return [];
@@ -130,21 +120,6 @@ export const usePersistedTableLayout = <T>({
     [savedOrder, visibleAccessors, visibleAccessorSet],
   );
   const storeKey = `${storeKeyPrefix}-${itemId ?? "preview"}-${[...visibleAccessors].toSorted().join(",")}`;
-  // The Widget options hold the saved layout. The table's own browser copy loads
-  // after mount, so it would reflow the table and save itself back on every visit.
-  const clearedStoreKey = useRef<string | undefined>(undefined);
-  if (typeof window !== "undefined" && clearedStoreKey.current !== storeKey) {
-    clearedStoreKey.current = storeKey;
-    for (const suffix of ["order", "width"]) window.localStorage.removeItem(`${storeKey}-columns-${suffix}`);
-  }
-  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
-    useDataTableColumns<T>({
-      key: storeKey,
-      columns,
-    });
-
-  // The column store reads the browser only after mount. Until it holds the
-  // saved layout, render that layout directly so the table does not reflow.
   const savedColumns = useMemo(
     () =>
       restoredOrder.flatMap((accessor) => {
@@ -156,48 +131,73 @@ export const usePersistedTableLayout = <T>({
       }),
     [columns, restoredOrder, savedWidths],
   );
-  const [isStoreSynced, setIsStoreSynced] = useState(false);
-  const lastStoreKey = useRef(storeKey);
-  const hydrated = useRef(false);
-  const previousOrder = useRef(columnsOrder);
-  const previousWidths = useRef(columnsWidth);
+  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
+    useDataTableColumns<T>({ key: storeKey, columns: savedColumns });
+  const currentWidths = useMemo<Record<string, string | number>>(
+    () => Object.fromEntries(columnsWidth.flatMap((entry) => Object.entries(entry))),
+    [columnsWidth],
+  );
+  const layoutKey = JSON.stringify([storeKey, columnOrder, columnWidths]);
+  const restoringLayoutKey = useRef<string | undefined>(undefined);
+  const [syncedLayoutKey, setSyncedLayoutKey] = useState<string>();
   useEffect(() => {
-    if (lastStoreKey.current !== storeKey) {
-      lastStoreKey.current = storeKey;
-      hydrated.current = false;
-      setIsStoreSynced(false);
+    const widths = savedColumns.map(({ accessor, width }) => ({ accessor: String(accessor), width: width ?? "auto" }));
+    if (restoringLayoutKey.current !== layoutKey) {
+      restoringLayoutKey.current = layoutKey;
+      setSyncedLayoutKey(undefined);
+      setColumnsOrder(restoredOrder);
+      setMultipleColumnWidths(widths);
+      return;
     }
-    if (hydrated.current) return;
+    if (syncedLayoutKey === layoutKey) return;
 
     const orderMatches =
       columnsOrder.length === restoredOrder.length &&
       columnsOrder.every((accessor, index) => accessor === restoredOrder[index]);
-    const currentWidths = getColumnWidthMap(columnsWidth, visibleAccessorSet);
-    const visibleWidths = Object.entries(savedWidths).filter(([accessor]) => visibleAccessorSet.has(accessor));
-    const widthsMatch = visibleWidths.every(([accessor, width]) => currentWidths[accessor] === width);
+    const widthsMatch = widths.every(
+      ({ accessor, width }) => normalizeWidth(currentWidths[accessor]) === normalizeWidth(width),
+    );
 
     if (orderMatches && widthsMatch) {
-      previousOrder.current = columnsOrder;
-      previousWidths.current = columnsWidth;
-      hydrated.current = true;
-      setIsStoreSynced(true);
+      setSyncedLayoutKey(layoutKey);
       return;
     }
 
     if (!orderMatches) setColumnsOrder(restoredOrder);
-    if (!widthsMatch) {
-      setMultipleColumnWidths(visibleWidths.map(([accessor, width]) => ({ accessor, width })));
-    }
+    if (!widthsMatch) setMultipleColumnWidths(widths);
   }, [
     columnsOrder,
-    columnsWidth,
+    currentWidths,
+    layoutKey,
     restoredOrder,
-    savedWidths,
+    savedColumns,
     setColumnsOrder,
     setMultipleColumnWidths,
-    storeKey,
-    visibleAccessorSet,
+    syncedLayoutKey,
   ]);
+
+  const layout = useMemo(() => {
+    const newLayout: TableLayoutOptions = {};
+    const fullOrder = [...savedOrder, ...columnAccessors.filter((accessor) => !savedOrder.includes(accessor))];
+    const reorderedVisibleColumns = [...columnsOrder];
+    const mergedOrder = fullOrder.map((accessor) =>
+      visibleAccessorSet.has(accessor) ? (reorderedVisibleColumns.shift() ?? accessor) : accessor,
+    );
+    if (JSON.stringify(mergedOrder) !== JSON.stringify(fullOrder)) newLayout.columnOrder = JSON.stringify(mergedOrder);
+
+    const widthMap: Record<string, number> = { ...savedWidths };
+    let widthsChanged = false;
+    for (const column of columns) {
+      const accessor = String(column.accessor);
+      const width = toPixelWidth(currentWidths[accessor]);
+      const defaultWidth = toPixelWidth(column.width);
+      if ((width ?? defaultWidth) !== (savedWidths[accessor] ?? defaultWidth)) widthsChanged = true;
+      if (width === undefined) delete widthMap[accessor];
+      else widthMap[accessor] = width;
+    }
+    if (widthsChanged) newLayout.columnWidths = JSON.stringify(widthMap);
+    return newLayout;
+  }, [columnAccessors, columns, columnsOrder, currentWidths, savedOrder, savedWidths, visibleAccessorSet]);
 
   const pendingLayout = useRef<PendingTableLayout | undefined>(undefined);
   const saveTimeout = useRef<number | undefined>(undefined);
@@ -206,54 +206,35 @@ export const usePersistedTableLayout = <T>({
     pendingLayout.current = undefined;
     window.clearTimeout(saveTimeout.current);
     saveTimeout.current = undefined;
-    if (pending) pending.onLayoutChange(pending.layout);
+    if (pending && Object.keys(pending.layout).length > 0) pending.onLayoutChange(pending.layout);
   }, []);
   useEffect(() => {
     if (pendingLayout.current && pendingLayout.current.storeKey !== storeKey) flushPendingLayout();
   }, [flushPendingLayout, storeKey]);
   useEffect(() => () => flushPendingLayout(), [flushPendingLayout]);
-  useEffect(() => {
-    if (!hydrated.current) return;
-
-    const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(previousOrder.current);
-    const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(previousWidths.current);
-    previousOrder.current = columnsOrder;
-    previousWidths.current = columnsWidth;
-    if (!orderChanged && !widthsChanged) return;
-
-    const newLayout: TableLayoutOptions = {};
-    if (orderChanged) {
-      const fullOrder = [...savedOrder, ...columnAccessors.filter((accessor) => !savedOrder.includes(accessor))];
-      const reorderedVisibleColumns = [...columnsOrder];
-      const mergedOrder = fullOrder.map((accessor) =>
-        visibleAccessorSet.has(accessor) ? (reorderedVisibleColumns.shift() ?? accessor) : accessor,
-      );
-      newLayout.columnOrder = JSON.stringify(mergedOrder);
+  const updatePendingLayout = useCallback(() => {
+    const pending = pendingLayout.current;
+    if (!pending || pending.storeKey !== storeKey) return;
+    const nextLayout: TableLayoutOptions = {};
+    for (const change of pending.changes) {
+      const value = layout[change];
+      if (value !== undefined) nextLayout[change] = value;
     }
-    if (widthsChanged) {
-      const widthMap: Record<string, number> = { ...savedWidths };
-      Object.assign(widthMap, getColumnWidthMap(columnsWidth, visibleAccessorSet));
-      newLayout.columnWidths = JSON.stringify(widthMap);
-    }
+    pending.layout = nextLayout;
+  }, [layout, storeKey]);
+  useEffect(updatePendingLayout, [updatePendingLayout]);
+  const onColumnLayoutChange = useCallback(
+    (change: TableLayoutChange) => {
+      if (pendingLayout.current && pendingLayout.current.storeKey !== storeKey) flushPendingLayout();
+      pendingLayout.current ??= { changes: new Set(), layout: {}, onLayoutChange, storeKey };
+      pendingLayout.current.changes.add(change);
+      updatePendingLayout();
+      window.clearTimeout(saveTimeout.current);
+      saveTimeout.current = window.setTimeout(flushPendingLayout, layoutSaveDelay);
+    },
+    [flushPendingLayout, onLayoutChange, storeKey, updatePendingLayout],
+  );
 
-    if (pendingLayout.current && pendingLayout.current.storeKey !== storeKey) flushPendingLayout();
-    pendingLayout.current = pendingLayout.current
-      ? { ...pendingLayout.current, layout: { ...pendingLayout.current.layout, ...newLayout } }
-      : { layout: newLayout, onLayoutChange, storeKey };
-    window.clearTimeout(saveTimeout.current);
-    saveTimeout.current = window.setTimeout(flushPendingLayout, layoutSaveDelay);
-  }, [
-    columnAccessors,
-    columnsOrder,
-    columnsWidth,
-    flushPendingLayout,
-    onLayoutChange,
-    savedOrder,
-    savedWidths,
-    storeKey,
-    visibleAccessorSet,
-  ]);
-
-  if (!isStoreSynced) return { effectiveColumns: savedColumns, storeKey };
-  return { effectiveColumns, storeKey };
+  if (syncedLayoutKey !== layoutKey) return { effectiveColumns: savedColumns, storeKey, onColumnLayoutChange };
+  return { effectiveColumns, storeKey, onColumnLayoutChange };
 };
