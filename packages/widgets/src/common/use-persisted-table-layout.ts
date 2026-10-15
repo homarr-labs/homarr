@@ -130,6 +130,13 @@ export const usePersistedTableLayout = <T>({
     [savedOrder, visibleAccessors, visibleAccessorSet],
   );
   const storeKey = `${storeKeyPrefix}-${itemId ?? "preview"}-${[...visibleAccessors].toSorted().join(",")}`;
+  // The Widget options hold the saved layout. The table's own browser copy loads
+  // after mount, so it would reflow the table and save itself back on every visit.
+  const clearedStoreKey = useRef<string | undefined>(undefined);
+  if (typeof window !== "undefined" && clearedStoreKey.current !== storeKey) {
+    clearedStoreKey.current = storeKey;
+    for (const suffix of ["order", "width"]) window.localStorage.removeItem(`${storeKey}-columns-${suffix}`);
+  }
   const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
     useDataTableColumns<T>({
       key: storeKey,
