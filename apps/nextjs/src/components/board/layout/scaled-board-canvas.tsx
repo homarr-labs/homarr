@@ -3,11 +3,11 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Box } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
 
 import { calculateBoardUiScale } from "@homarr/boards/scale";
 
 import classes from "./scaled-board-canvas.module.css";
+import { useHydrationSafeElementSize } from "./use-hydration-safe-element-size";
 
 export { calculateBoardUiScale } from "@homarr/boards/scale";
 
@@ -48,8 +48,8 @@ export const ScaledBoardCanvas = ({
   label,
   children,
 }: PropsWithChildren<ScaledBoardCanvasProps>) => {
-  const { ref: viewportRef, width: availableWidth } = useElementSize<HTMLDivElement>();
-  const { ref: canvasRef, height: logicalHeight } = useElementSize<HTMLDivElement>();
+  const { ref: viewportRef, width: availableWidth } = useHydrationSafeElementSize<HTMLDivElement>();
+  const { ref: canvasRef, height: logicalHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {

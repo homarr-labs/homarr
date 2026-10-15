@@ -3,7 +3,7 @@ import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState,
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
-import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
+import { useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 import combineClasses from "clsx";
@@ -32,6 +32,7 @@ import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-s
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { getLogicalGridSize } from "~/components/board/layout";
 import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { useHydrationSafeElementSize } from "~/components/board/layout/use-hydration-safe-element-size";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
@@ -113,7 +114,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
   const queryClient = useQueryClient();
-  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
+  const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
