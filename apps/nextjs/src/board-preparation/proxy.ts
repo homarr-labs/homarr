@@ -1,5 +1,6 @@
 import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { TRPCError } from "@trpc/server";
 
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth/server";
 import { boardViewportWidthCookieName } from "@homarr/boards/layout-selection";
@@ -111,11 +112,13 @@ const resolvePreparedResponseAsync = async (
   return { hit: true, html, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
 };
 
-// Client navigations, prefetches and Server Actions carry router state and
-// need RSC payloads. Only a plain document load can reuse a captured page.
+// Client navigations, prefetches and Server Actions need RSC payloads. Next
+// strips their RSC headers and _rsc parameter before the proxy runs, so accept
+// only what browsers send for a document load: an HTML Accept header.
 const isDocumentRequest = (request: NextRequest) => {
   if (request.method !== "GET" && request.method !== "HEAD") return false;
-  for (const header of ["rsc", "next-router-prefetch", "next-router-state-tree", "next-action", "purpose"]) {
+  if (!request.headers.get("accept")?.includes("text/html")) return false;
+  for (const header of ["next-url", "next-request-id", "next-html-request-id", "next-action", "purpose"]) {
     if (request.headers.has(header)) return false;
   }
   if (request.headers.get("sec-purpose")?.includes("prefetch")) return false;
@@ -152,6 +155,7 @@ export const getPreparedBoardResponseAsync = async (
   const backgroundWork: Promise<void>[] = [];
   const pending = resolvePreparedResponseAsync(request, locale, name, backgroundWork).catch(
     (cause: unknown): Lookup => {
+      if (cause instanceof TRPCError) return { hit: false, reason: "no_board_access" };
       // Database errors can include query parameters such as session tokens.
       let errorType: string = typeof cause;
       if (cause instanceof Error) errorType = cause.name;

@@ -1,7 +1,7 @@
 import { env } from "@homarr/common/env";
 import { createKeyedFingerprint, verifyKeyedFingerprint } from "@homarr/common/server";
 
-export const preparationEndpoint = "/api/board-preparation";
+const preparationEndpoint = "/api/board-preparation";
 const signatureHeader = "x-homarr-board-preparation";
 const captureHeader = "x-homarr-board-capture";
 const signatureLifetimeMs = 30_000;

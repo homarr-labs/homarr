@@ -5,7 +5,7 @@ import { createCronJob } from "../lib";
 
 export const boardPreparationJob = createCronJob("boardPreparation", "0 */3 * * *", {
   runOnStart: true,
-  expectedMaximumDurationInMillis: 60_000,
+  expectedMaximumDurationInMillis: 5 * 60_000,
 }).withCallback(async () => {
   // Tasks start during instrumentation, before Next necessarily accepts HTTP.
   // Waiting here does not hold dashboard readiness or the application's listener.

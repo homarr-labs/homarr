@@ -40,19 +40,19 @@ export interface BoardPreparationContext {
   layoutId: string;
 }
 
-export interface PreparedDocument {
+interface PreparedDocument {
   token: string;
   html: string;
 }
 
-export interface PreparedVersion {
+interface PreparedVersion {
   fingerprint: string;
   token: string;
   validUntil: number;
   preparedAt: number;
 }
 
-export interface BoardPreparationVariant {
+interface BoardPreparationVariant {
   spec: BoardPreparationSpec;
   lastSeenAt: number;
 }
@@ -160,9 +160,22 @@ const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
 
 export const rememberBoardPreparationAsync = async (id: string, spec: BoardPreparationSpec) => {
   return await updateRegistryAsync((registry) => {
+    // A full registry makes room for the visit instead of locking out new views.
+    if (!registry[id] && Object.keys(registry).length >= maxVariants) {
+      const oldest = Object.entries(registry).toSorted((a, b) => a[1].lastSeenAt - b[1].lastSeenAt)[0];
+      if (oldest) delete registry[oldest[0]];
+    }
+    registry[id] = { spec, lastSeenAt: Date.now() };
+    return true;
+  });
+};
+
+/** Retires a view whose viewer session has ended, so later runs stop retrying it. */
+export const forgetBoardPreparationAsync = async (id: string) => {
+  return await updateRegistryAsync((registry) => {
     const existing = registry[id];
-    if (!existing && Object.keys(registry).length >= maxVariants) return false;
-    registry[id] = { ...existing, spec, lastSeenAt: Date.now() };
+    if (!existing) return false;
+    registry[id] = { ...existing, lastSeenAt: 0 };
     return true;
   });
 };

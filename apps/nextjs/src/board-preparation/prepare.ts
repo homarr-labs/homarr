@@ -16,6 +16,7 @@ import { localeCookieKey } from "@homarr/definitions/cookie";
 import { getBoardPreparationSpec, loadBoardPreparationContextAsync, withPreparedLayout } from "./context";
 import {
   createBoardPreparationLockAsync,
+  forgetBoardPreparationAsync,
   getBoardPreparationFingerprint,
   getBoardPreparationId,
   getPreparationNamespaceAsync,
@@ -168,7 +169,16 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
       return;
     }
     const { spec } = variant;
-    const session = await resolveViewerAsync(spec);
+    let session: Session | null;
+    try {
+      session = await resolveViewerAsync(spec);
+    } catch {
+      // Logged out, extended or deleted sessions are expected; the next visit
+      // registers the current session as a new view.
+      await forgetBoardPreparationAsync(id);
+      log.debug("Board preparation skipped", { reason: "viewer_session_ended" });
+      return;
+    }
     const context = await loadSpecContextAsync(spec, session);
     if (!context || getBoardPreparationId(getBoardPreparationSpec(context, spec)) !== id) {
       log.debug("Board preparation skipped", { reason: "ineligible_context", boardId: spec.boardId });
@@ -269,7 +279,8 @@ export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string
   if (boardId) scope = "board";
   if (id) scope = "view";
   log.info("Board preparation run started", { scope });
-  const deadline = Date.now() + 60_000;
+  // Stays inside the five minute preparation request timeout.
+  const deadline = Date.now() + 4 * 60_000;
   await removeAbandonedCaptureSessionsAsync();
   if (!id && !boardId) await discoverHomeBoardsAsync();
   let ids = [id];
