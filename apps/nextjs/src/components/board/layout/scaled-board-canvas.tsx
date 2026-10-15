@@ -24,15 +24,13 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
 
 // Server HTML is reused across widths of one layout, including prepared views.
 // Fit it to the real viewport before first paint; React takes over on hydration.
-// Streamed Suspense content is parsed hidden, so derive its width from the page.
-const fitBeforePaintScript = `(()=>{const v=document.currentScript?.previousElementSibling,s=v?.firstElementChild,c=s?.firstElementChild;if(!c)return;const p=v.dataset.canvasInlinePadding,w=v.clientWidth||(p?document.documentElement.clientWidth-Number(p):0),l=Number(c.dataset.logicalWidth),h=Number(v.dataset.canvasInitialHeight);if(!(w>0&&l>0))return;const k=w/l;s.style.width=l*k+"px";s.style.height=h*k+"px";c.style.zoom=String(k);c.style.setProperty("--board-canvas-inverse-scale",String(1/k));c.style.setProperty("--board-canvas-ui-scale",String(k<1?1/k:1))})()`;
+// Streamed Suspense content is parsed hidden, so wait until it has a size.
+const fitBeforePaintScript = `(()=>{const v=document.currentScript?.previousElementSibling,s=v?.firstElementChild,c=s?.firstElementChild;if(!c)return;const fit=()=>{const w=v.clientWidth,l=Number(c.dataset.logicalWidth),h=Number(v.dataset.canvasInitialHeight);if(!(w>0&&l>0))return false;const k=w/l;s.style.width=l*k+"px";s.style.height=h*k+"px";c.style.zoom=String(k);c.style.setProperty("--board-canvas-inverse-scale",String(1/k));c.style.setProperty("--board-canvas-ui-scale",String(k<1?1/k:1));return true};if(fit())return;const o=new ResizeObserver(()=>{if(v.dataset.boardHydrated==="true"||fit())o.disconnect()});o.observe(v)})()`;
 
 interface ScaledBoardCanvasProps {
   logicalWidth: number;
   initialLogicalHeight: number;
   initialAvailableWidth: number;
-  /** Horizontal space outside the canvas; omitted when the width is not the viewport's. */
-  inlinePadding?: number;
   label: string;
 }
 
@@ -45,7 +43,6 @@ export const ScaledBoardCanvas = ({
   logicalWidth,
   initialLogicalHeight,
   initialAvailableWidth,
-  inlinePadding,
   label,
   children,
 }: PropsWithChildren<ScaledBoardCanvasProps>) => {
@@ -80,7 +77,6 @@ export const ScaledBoardCanvas = ({
         data-canvas-overflow={hasHorizontalOverflow ? "true" : "false"}
         data-canvas-initial-height={initialLogicalHeight}
         data-canvas-initial-width={initialAvailableWidth}
-        data-canvas-inline-padding={inlinePadding}
         aria-label={label}
       >
         <Box

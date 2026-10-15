@@ -102,7 +102,6 @@ export const ClientBoard = () => {
                 logicalWidth={logicalWidth}
                 initialLogicalHeight={initialLogicalHeight}
                 initialAvailableWidth={initialAvailableWidth}
-                inlinePadding={representativeWidth === null ? inlinePadding : undefined}
                 label={board.name}
               >
                 <BoardGridEditorBoundary key={currentLayoutId}>
