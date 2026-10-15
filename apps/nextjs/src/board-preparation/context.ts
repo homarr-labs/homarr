@@ -1,6 +1,7 @@
 import type { Session } from "@homarr/auth";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { getBoardForSessionAsync } from "@homarr/api/board-server";
+import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -18,14 +19,14 @@ export const loadBoardPreparationContextAsync = async ({
   name,
   deviceType,
   locale,
-  viewportWidth,
+  layout,
   colorScheme,
 }: {
   session: Session | null;
   name?: string;
   deviceType: DeviceType;
   locale: SupportedLanguage;
-  viewportWidth: number;
+  layout: { viewportWidth: number } | { layoutId: string };
   colorScheme?: RootLayoutData["colorScheme"];
 }): Promise<BoardPreparationContext | null> => {
   const [board, root, integrations] = await Promise.all([
@@ -59,15 +60,34 @@ export const loadBoardPreparationContextAsync = async ({
     }
     generations[id] = generation.value;
   }
-  return {
-    board,
-    root: { ...root, colorScheme: colorScheme ?? root.serverSettings.appearance.defaultColorScheme },
-    integrations,
-    generations,
-    locale,
-    viewportWidth,
-    layoutId: getLayoutIdForViewportWidth(board.layouts, viewportWidth),
-  };
+  let layoutId: string;
+  if ("layoutId" in layout) layoutId = layout.layoutId;
+  else layoutId = getLayoutIdForViewportWidth(board.layouts, layout.viewportWidth);
+  const context = withPreparedLayout(
+    {
+      board,
+      root: { ...root, colorScheme: colorScheme ?? root.serverSettings.appearance.defaultColorScheme },
+      integrations,
+      generations,
+      locale,
+      viewportWidth: 0,
+      layoutId,
+    },
+    layoutId,
+  );
+  if (!context) logger.debug("Board preparation context unavailable", { boardId: board.id, reason: "missing_layout" });
+  return context;
+};
+
+// One prepared view serves every width of a layout. The canvas fits itself to
+// the browser before first paint, so the render width is only a placeholder.
+export const withPreparedLayout = (
+  context: BoardPreparationContext,
+  layoutId: string,
+): BoardPreparationContext | null => {
+  const layout = context.board.layouts.find(({ id }) => id === layoutId);
+  if (!layout) return null;
+  return { ...context, layoutId, viewportWidth: getRepresentativeLayoutWidth(layout, context.board.layouts) };
 };
 
 export const getBoardPreparationSpec = (context: BoardPreparationContext): BoardPreparationSpec => ({
@@ -76,6 +96,6 @@ export const getBoardPreparationSpec = (context: BoardPreparationContext): Board
   viewerId: context.root.session?.user.id ?? null,
   sessionExpires: context.root.session?.expires ?? null,
   locale: context.locale,
-  viewportWidth: context.viewportWidth,
+  layoutId: context.layoutId,
   colorScheme: context.root.colorScheme,
 });

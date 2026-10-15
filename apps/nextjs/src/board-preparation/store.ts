@@ -26,7 +26,7 @@ export interface BoardPreparationSpec {
   viewerId: string | null;
   sessionExpires: string | null;
   locale: SupportedLanguage;
-  viewportWidth: number;
+  layoutId: string;
   colorScheme: RootLayoutData["colorScheme"];
 }
 
@@ -72,7 +72,7 @@ export const getPreparationNamespaceAsync = () => {
       // A ready marker proves this listener has rendered the page. Replicas
       // with the same build must not publish readiness for each other's caches.
       const instance = createKeyedFingerprint(`${hostname()}:${process.pid}`);
-      return `board-preparation-v1:${createKeyedFingerprint(buildId)}:${instance}`;
+      return `board-preparation-v2:${createKeyedFingerprint(buildId)}:${instance}`;
     } catch {
       return null;
     }
@@ -80,23 +80,16 @@ export const getPreparationNamespaceAsync = () => {
   return namespacePromise;
 };
 
+// Sessions of one viewer share a view. Each request still proves its own session.
 export const getBoardPreparationId = (spec: BoardPreparationSpec) =>
-  createKeyedFingerprint(
-    JSON.stringify([
-      spec.boardId,
-      spec.viewerId,
-      spec.sessionExpires,
-      spec.locale,
-      spec.viewportWidth,
-      spec.colorScheme,
-    ]),
-  );
+  createKeyedFingerprint(JSON.stringify([spec.boardId, spec.viewerId, spec.locale, spec.layoutId, spec.colorScheme]));
 
 export const getBoardPreparationFingerprint = (context: BoardPreparationContext) => {
   const input = { ...context, root: { ...context.root } };
   if (input.root.session) {
     input.root.session = {
       ...input.root.session,
+      expires: "",
       user: { ...input.root.session.user, permissions: input.root.session.user.permissions.toSorted() },
     };
   }
@@ -107,7 +100,7 @@ export const getBoardPreparationFingerprint = (context: BoardPreparationContext)
 
 const registryChannel = (namespace: string) =>
   createGetSetChannel<Registry>(`${namespace}:registry`, { useBoundedCacheClient: true });
-const catalogChannel = createGetSetChannel<Registry>("board-preparation-v1:catalog", { useBoundedCacheClient: true });
+const catalogChannel = createGetSetChannel<Registry>("board-preparation-v2:catalog", { useBoundedCacheClient: true });
 const latestVariants = (registry: Registry, limit: number): Registry =>
   Object.fromEntries(
     Object.entries(registry)
@@ -130,7 +123,7 @@ export const readBoardPreparationRegistryAsync = async () => {
 const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
-  const lock = createLockChannel("board-preparation-v1:catalog-lock", { useBoundedCacheClient: true });
+  const lock = createLockChannel("board-preparation-v2:catalog-lock", { useBoundedCacheClient: true });
   for (let attempt = 0; attempt < 3; attempt++) {
     const token = await lock.acquireAsync(5);
     if (!token) {
@@ -147,7 +140,7 @@ const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
       if (!(await lock.setIfOwnedAsync(token, `${namespace}:registry`, registry, preparationMaxAgeMs))) return false;
       await lock.setIfOwnedAsync(
         token,
-        "board-preparation-v1:catalog",
+        "board-preparation-v2:catalog",
         latestVariants({ ...catalog, ...registry }, maxVariants),
         preparationMaxAgeMs,
       );

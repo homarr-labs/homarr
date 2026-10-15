@@ -22,6 +22,10 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
   return availableWidth / logicalWidth;
 };
 
+// Server HTML is reused across widths of one layout, including prepared views.
+// Fit it to the real viewport before first paint; React takes over on hydration.
+const fitBeforePaintScript = `(()=>{const v=document.currentScript?.previousElementSibling,s=v?.firstElementChild,c=s?.firstElementChild;if(!c)return;const w=v.clientWidth,l=Number(c.dataset.logicalWidth),h=Number(v.dataset.canvasInitialHeight);if(!(w>0&&l>0))return;const k=w/l;s.style.width=l*k+"px";s.style.height=h*k+"px";c.style.zoom=String(k);c.style.setProperty("--board-canvas-inverse-scale",String(1/k));c.style.setProperty("--board-canvas-ui-scale",String(k<1?1/k:1))})()`;
+
 interface ScaledBoardCanvasProps {
   logicalWidth: number;
   initialLogicalHeight: number;
@@ -61,33 +65,42 @@ export const ScaledBoardCanvas = ({
   const hasHorizontalOverflow = resolvedAvailableWidth > 0 && visualWidth - resolvedAvailableWidth > 0.5;
 
   return (
-    <Box
-      component="section"
-      ref={viewportRef}
-      className={classes.viewport}
-      data-testid="board-canvas"
-      data-board-hydrated={isHydrated ? "true" : "false"}
-      data-canvas-scale={scale}
-      data-canvas-overflow={hasHorizontalOverflow ? "true" : "false"}
-      data-canvas-initial-height={initialLogicalHeight}
-      data-canvas-initial-width={initialAvailableWidth}
-      aria-label={label}
-    >
-      <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
+    <>
+      <Box
+        component="section"
+        ref={viewportRef}
+        className={classes.viewport}
+        data-testid="board-canvas"
+        data-board-hydrated={isHydrated ? "true" : "false"}
+        data-canvas-scale={scale}
+        data-canvas-overflow={hasHorizontalOverflow ? "true" : "false"}
+        data-canvas-initial-height={initialLogicalHeight}
+        data-canvas-initial-width={initialAvailableWidth}
+        aria-label={label}
+      >
         <Box
-          ref={canvasRef}
-          data-board-canvas-content
-          className={classes.canvas}
-          style={{
-            "--board-canvas-inverse-scale": inverseScale,
-            "--board-canvas-ui-scale": uiScale,
-            width: logicalWidth,
-            zoom: scale,
-          }}
+          className={classes.sizer}
+          style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}
+          suppressHydrationWarning
         >
-          <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
+          <Box
+            ref={canvasRef}
+            data-board-canvas-content
+            data-logical-width={logicalWidth}
+            className={classes.canvas}
+            suppressHydrationWarning
+            style={{
+              "--board-canvas-inverse-scale": inverseScale,
+              "--board-canvas-ui-scale": uiScale,
+              width: logicalWidth,
+              zoom: scale,
+            }}
+          >
+            <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
+          </Box>
         </Box>
       </Box>
-    </Box>
+      <script dangerouslySetInnerHTML={{ __html: fitBeforePaintScript }} />
+    </>
   );
 };

@@ -62,7 +62,7 @@ const resolvePreparedResponseAsync = async (
     session,
     locale,
     name,
-    viewportWidth: getViewportWidth(request),
+    layout: { viewportWidth: getViewportWidth(request) },
     colorScheme,
     deviceType: userAgent(request.headers).device.type,
   });

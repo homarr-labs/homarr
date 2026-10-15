@@ -23,7 +23,7 @@ import { prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
 import { createBoardQuerySnapshot } from "~/app/[locale]/boards/(content)/_query-snapshot";
 import type { Item } from "~/app/[locale]/boards/_types";
-import { getBoardPreparationSpec, loadBoardPreparationContextAsync } from "./context";
+import { getBoardPreparationSpec, loadBoardPreparationContextAsync, withPreparedLayout } from "./context";
 import {
   createBoardPreparationLockAsync,
   getBoardPreparationFingerprint,
@@ -125,6 +125,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
       session,
       name: boardRow.name,
       deviceType: undefined,
+      layout: { layoutId: spec.layoutId },
     });
     if (!context || getBoardPreparationId(getBoardPreparationSpec(context)) !== id) {
       log.debug("Board preparation skipped", { reason: "ineligible_context", boardId: spec.boardId });
@@ -133,7 +134,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
     log.debug("Preparing Board view", {
       boardId: spec.boardId,
       locale: spec.locale,
-      viewportWidth: spec.viewportWidth,
+      layoutId: spec.layoutId,
       widgetCount: context.board.items.length,
     });
     const queryStopwatch = new Stopwatch();
@@ -272,6 +273,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
           session: await resolveViewerAsync(spec),
           name: latestBoard.name,
           deviceType: undefined,
+          layout: { layoutId: spec.layoutId },
         });
         // A mutation may finish while slow Integrations or rendering run. Retry
         // with the new inputs rather than publishing a superseded presentation.
@@ -342,19 +344,21 @@ const discoverHomeBoardsAsync = async () => {
     }
   }
   for (const session of viewers.values()) {
-    for (const viewportWidth of [1440, 390]) {
+    for (const deviceType of [undefined, "mobile"] as const) {
       try {
-        let deviceType: "mobile" | undefined;
-        if (viewportWidth === 390) deviceType = "mobile";
         const context = await loadBoardPreparationContextAsync({
           session,
           deviceType,
-          viewportWidth,
+          layout: { viewportWidth: 0 },
           locale: settings.culture.defaultLocale,
         });
         if (!context) continue;
-        const spec = getBoardPreparationSpec(context);
-        await rememberBoardPreparationAsync(getBoardPreparationId(spec), spec);
+        for (const { id: layoutId } of context.board.layouts) {
+          const layoutContext = withPreparedLayout(context, layoutId);
+          if (!layoutContext) continue;
+          const spec = getBoardPreparationSpec(layoutContext);
+          await rememberBoardPreparationAsync(getBoardPreparationId(spec), spec);
+        }
       } catch {
         /* No accessible home Board is a normal first-run condition. */
       }
