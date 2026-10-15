@@ -6,7 +6,6 @@ import { localeCookieKey } from "@homarr/definitions/cookie";
 import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
-import { isPreparationRequest, preparedBoardPath } from "@homarr/cron-jobs/board-preparation";
 
 let isOnboardingFinished = false;
 let onboardingStepPromise: Promise<string> | null = null;
@@ -55,10 +54,10 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   }
   const decodedSegments = decodedPath.split("/").filter(Boolean);
   if (
-    decodedSegments[0] === preparedBoardPath.slice(1) ||
-    (supportedLanguages.includes(decodedSegments[0] as SupportedLanguage) &&
-      decodedSegments[1] === preparedBoardPath.slice(1))
+    decodedSegments[0] === "prepared-board" ||
+    (supportedLanguages.includes(decodedSegments[0] as SupportedLanguage) && decodedSegments[1] === "prepared-board")
   ) {
+    const { isPreparationRequest } = await import("@homarr/cron-jobs/board-preparation");
     if ((request.method === "GET" || request.method === "HEAD") && isPreparationRequest(request)) {
       // Preparation warms the lookup/auth module graph as well as the HTML, so
       // the first visitor does not pay for evaluating those server imports.

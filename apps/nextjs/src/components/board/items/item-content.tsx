@@ -5,12 +5,14 @@ import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
 import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import { clientApi } from "@homarr/api/client";
 import { useInitialRenderTime } from "@homarr/common";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
@@ -107,6 +109,7 @@ const getServerHydratedSnapshot = () => false;
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
   const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
+  const queryClient = useQueryClient();
   const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
@@ -116,7 +119,20 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   // Prepared views render reusable Widget content in the background. Calendars
   // still need the browser's local date; their initial data is already retained.
   // Ordinary SSR keeps #7176's deferred Widget rendering.
-  const needsBrowser = item.kind === "calendar";
+  let needsBrowser = item.kind === "calendar";
+  const integrationId = item.integrationIds[0];
+  // A failed background prefetch has no data to hydrate. Suspending here would
+  // start the browser HTTP transport and read cookies during static rendering.
+  if (prepared && integrationId && item.kind === "wud") {
+    needsBrowser =
+      queryClient.getQueryData(getQueryKey(clientApi.widget.wud.getStats, { integrationId }, "query")) === undefined;
+  }
+  if (prepared && integrationId && item.kind === "archiveTeamWarrior") {
+    needsBrowser =
+      queryClient.getQueryData(
+        getQueryKey(clientApi.widget.archiveTeamWarrior.getStatus, { integrationId }, "query"),
+      ) === undefined;
+  }
   if (!hydrated && (!prepared || needsBrowser) && item.kind !== "app" && item.kind !== "bookmarks") {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }

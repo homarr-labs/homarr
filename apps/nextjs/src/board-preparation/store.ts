@@ -111,6 +111,10 @@ const catalogChannel = createGetSetChannel<Registry>("board-preparation-v1:catal
 const latestVariants = (registry: Registry, limit: number): Registry =>
   Object.fromEntries(
     Object.entries(registry)
+      .filter(([, { spec, lastSeenAt }]) => {
+        if (lastSeenAt <= Date.now() - preparationMaxAgeMs) return false;
+        return spec.sessionExpires === null || Date.parse(spec.sessionExpires) > Date.now() + 30_000;
+      })
       .toSorted((a, b) => b[1].lastSeenAt - a[1].lastSeenAt)
       .slice(0, limit),
   );
@@ -118,10 +122,12 @@ const latestVariants = (registry: Registry, limit: number): Registry =>
 export const readBoardPreparationRegistryAsync = async () => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return {} as Registry;
-  return (await registryChannel(namespace).getAsync()) ?? latestVariants((await catalogChannel.getAsync()) ?? {}, 96);
+  const registry = await registryChannel(namespace).getAsync();
+  if (registry) return latestVariants(registry, maxVariants);
+  return latestVariants((await catalogChannel.getAsync()) ?? {}, 96);
 };
 
-const updateRegistryAsync = async (update: (registry: Registry) => void) => {
+const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
   const lock = createLockChannel("board-preparation-v1:catalog-lock", { useBoundedCacheClient: true });
@@ -133,11 +139,12 @@ const updateRegistryAsync = async (update: (registry: Registry) => void) => {
     }
     try {
       const catalog = (await catalogChannel.getAsync()) ?? {};
-      const registry = (await registryChannel(namespace).getAsync()) ?? latestVariants(catalog, 96);
-      update(registry);
-      // Reservations are not reassigned: a native cache pathname never changes
-      // identity, even when its payload expires or another viewer visits.
-      if (!(await lock.setPersistentIfOwnedAsync(token, `${namespace}:registry`, registry))) return false;
+      const stored = await registryChannel(namespace).getAsync();
+      const registry = latestVariants(stored ?? catalog, stored ? maxVariants : 96);
+      if (!update(registry)) return false;
+      // Retire expired viewers and unused widths. IDs still bind each pathname
+      // to its original viewer; retired process namespaces also expire in Redis.
+      if (!(await lock.setIfOwnedAsync(token, `${namespace}:registry`, registry, preparationMaxAgeMs))) return false;
       await lock.setIfOwnedAsync(
         token,
         "board-preparation-v1:catalog",
@@ -153,10 +160,11 @@ const updateRegistryAsync = async (update: (registry: Registry) => void) => {
 };
 
 export const rememberBoardPreparationAsync = async (id: string, spec: BoardPreparationSpec) => {
-  await updateRegistryAsync((registry) => {
+  return await updateRegistryAsync((registry) => {
     const existing = registry[id];
-    if (!existing && Object.keys(registry).length >= maxVariants) return;
+    if (!existing && Object.keys(registry).length >= maxVariants) return false;
     registry[id] = { ...existing, spec, lastSeenAt: Date.now() };
+    return true;
   });
 };
 

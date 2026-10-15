@@ -68,7 +68,8 @@ const resolvePreparedResponseAsync = async (
   const usable = ready && ready.fingerprint === fingerprint && ready.validUntil > Date.now() + 30_000;
 
   if (!registry[id] || registry[id].lastSeenAt < Date.now() - 60_000 || !usable) {
-    await rememberBoardPreparationAsync(id, spec);
+    const registered = await rememberBoardPreparationAsync(id, spec);
+    if (!registered && !usable) return null;
   }
   if (!usable) {
     // The current request keeps its existing SSR path; preparation is independent.

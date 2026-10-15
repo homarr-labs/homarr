@@ -301,15 +301,18 @@ export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string
     ids = ids.toSorted((a, b) => (versions.get(a)?.preparedAt ?? 0) - (versions.get(b)?.preparedAt ?? 0));
   }
   // One render at a time keeps the burst from monopolizing the dashboard process.
+  const failures: unknown[] = [];
   for (const viewId of ids) {
     if (signal?.aborted || Date.now() >= deadline) break;
     if (!viewId) continue;
     try {
-      for (let attempt = 0; attempt < 2; attempt++) {
-        if ((await prepareBoardAsync(viewId)) !== "changed") break;
-      }
+      const result = await prepareBoardAsync(viewId);
+      if (result === "changed" && (await prepareBoardAsync(viewId)) === "changed")
+        throw new Error("Board inputs changed during both preparation attempts");
     } catch (cause) {
+      failures.push(cause);
       logger.warn(new Error("Could not prepare a Board; its ordinary route remains available", { cause }));
     }
   }
+  if (failures.length > 0) throw new AggregateError(failures, "Some Board views could not be prepared");
 };

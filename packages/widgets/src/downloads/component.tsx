@@ -46,7 +46,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useIntegrationConnected } from "@homarr/common";
+import { useHydrationTime, useIntegrationConnected } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
@@ -307,6 +307,7 @@ export default function DownloadClientsWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"downloads">) {
+  const initialTime = useHydrationTime();
   const { formatByteRate, formatBytes, formatBytesPair } = useByteFormatter();
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -628,7 +629,7 @@ export default function DownloadClientsWidget({
         noWrap: true,
         render: (record) => {
           if (!record.added) return <Text size={size.fontSize}>—</Text>;
-          return <Text size={size.fontSize}>{dayjs(record.added).fromNow()}</Text>;
+          return <Text size={size.fontSize}>{dayjs(record.added).from(dayjs(initialTime))}</Text>;
         },
       },
       includeColumn("ratio") && {
@@ -695,7 +696,17 @@ export default function DownloadClientsWidget({
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, displayMode, formatByteRate, formatBytes, formatBytesPair, progressColumnWidth, size, t]);
+  }, [
+    columnContext,
+    displayMode,
+    formatByteRate,
+    formatBytes,
+    formatBytesPair,
+    progressColumnWidth,
+    size,
+    t,
+    initialTime,
+  ]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
