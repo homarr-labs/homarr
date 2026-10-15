@@ -1,6 +1,7 @@
 import { BlockList, isIP } from "node:net";
 import { Jellyfin } from "@jellyfin/sdk";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
+import type { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
 import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
 import { getUserApi } from "@jellyfin/sdk/lib/utils/api/user-api";
@@ -251,13 +252,21 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       releaseDate: new Date(item.PremiereDate ?? item.DateCreated!),
       imageUrls: {
         poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
-        backdrop: super.externalUrl(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
+        backdrop: this.getMediaReleaseBackdropUrl(item),
       },
       producer: item.Studios?.at(0)?.Name ?? undefined,
       rating: item.CommunityRating?.toFixed(1),
       tags: item.Genres ?? [],
       href: super.externalUrl(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
+  }
+
+  private getMediaReleaseBackdropUrl(item: BaseItemDto) {
+    let itemId: string | undefined;
+    if (item.BackdropImageTags?.length) itemId = item.Id;
+    else if (item.ParentBackdropImageTags?.length) itemId = item.ParentBackdropItemId ?? undefined;
+    if (!itemId) return undefined;
+    return super.externalUrl(`/Items/${itemId}/Images/Backdrop/0?maxWidth=960&quality=70`).toString();
   }
 
   private mapMediaReleaseType(type: BaseItemKind | undefined): MediaType {
