@@ -10,6 +10,7 @@ function isValidIconProp(value: unknown): value is string | number {
 export function SafeTablerIcon(props: Record<string, unknown>) {
   if (typeof props.name !== "string" || !supportedIconNames.has(props.name)) return null;
   let name = props.name;
+  // Preserve Homarr's legacy pulse alias (previously IconHeartbeat) for existing saved widgets.
   if (name === "pulse") name = "heartbeat";
 
   let sprite = "outline";
