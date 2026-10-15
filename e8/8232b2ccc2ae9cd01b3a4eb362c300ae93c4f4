@@ -1,0 +1,23 @@
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_0ed34ca6aa2512::t_d36dad9b0f47e2 6,35,117
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_0ed34ca6aa2512::t_69df0339b356e2 10,51-52
+apps/nextjs/src/components/board/layout/use-hydration-safe-element-size.ts
+  s_0ed34ca6aa2512::t_fb2a6769c83cfb 1-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e88232b2ccc2ae9cd01b3a4eb362c300ae93c4f4",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
