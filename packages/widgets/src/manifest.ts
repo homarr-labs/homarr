@@ -63,9 +63,15 @@ export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, (
 
     const promise = loader();
     promises.set(key, promise);
-    void promise.catch(() => {
-      if (promises.get(key) === promise) promises.delete(key);
-    });
+    // React's use() reads a settled status synchronously. Without it a module
+    // that loaded before hydration still suspends its Widget once, and an
+    // urgent update in that window client-renders the server HTML away.
+    void promise.then(
+      (value) => Object.assign(promise, { status: "fulfilled", value }),
+      () => {
+        if (promises.get(key) === promise) promises.delete(key);
+      },
+    );
     return promise;
   };
 };
