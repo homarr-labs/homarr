@@ -1,0 +1,23 @@
+packages/common/src/initial-render-time.ts
+  s_0ed34ca6aa2512::t_3a1c05f4c31168 18-19,22
+packages/widgets/src/docker/component.tsx
+  s_0ed34ca6aa2512::t_c47cd3bb523fff 39,269-271,492
+packages/widgets/src/media-releases/component.tsx
+  s_0ed34ca6aa2512::t_e7c84e22b5efc7 22,46-48,91,111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "be93c8bacf2a9049d87483384439ec8d72b4b681",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
