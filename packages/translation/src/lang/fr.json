@@ -2309,6 +2309,10 @@
         "appId": {
           "label": "Choisir une application"
         },
+        "openInNewWindow": {
+          "label": "Ouvrir dans une nouvelle fenêtre",
+          "description": "Ouvrir cette application dans une fenêtre séparée plutôt que dans un onglet. Les réglages du navigateur peuvent modifier ce comportement."
+        },
         "showTitle": {
           "label": "Afficher le nom de l'application"
         },

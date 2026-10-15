@@ -22,6 +22,7 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
       (factory) => ({
         appId: factory.app(),
         openInNewTab: factory.switch({ defaultValue: true }),
+        openInNewWindow: factory.switch({ defaultValue: false, withDescription: true }),
         showTitle: factory.switch({ defaultValue: true }),
         descriptionDisplayMode: factory.select({
           options: [
@@ -88,6 +89,11 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
         pingEnabled: factory.switch({ defaultValue: settings.enableStatusByDefault }),
       }),
       {
+        openInNewTab: {
+          shouldHide({ openInNewWindow }) {
+            return openInNewWindow;
+          },
+        },
         pingEnabled: {
           shouldHide() {
             return settings.forceDisableStatus;

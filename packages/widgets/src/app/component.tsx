@@ -60,7 +60,12 @@ export default function AppWidget({
 
   return (
     <Box h="100%" w="100%" pos="relative" style={{ "--mantine-scale": 1 / layoutScale }}>
-      <AppLink href={href} openInNewTab={options.openInNewTab} enabled={Boolean(href) && !isEditMode}>
+      <AppLink
+        href={href}
+        openInNewTab={options.openInNewTab}
+        openInNewWindow={options.openInNewWindow}
+        enabled={Boolean(href) && !isEditMode}
+      >
         <AppDescriptionTooltip
           description={app.description}
           enabled={options.descriptionDisplayMode === "tooltip" && Boolean(app.description) && !isEditMode}
@@ -139,6 +144,7 @@ export default function AppWidget({
 interface AppLinkProps {
   href: string | undefined;
   openInNewTab: boolean;
+  openInNewWindow: boolean;
   enabled: boolean;
 }
 
@@ -165,13 +171,30 @@ const AppDescriptionTooltip = ({
     children
   );
 
-const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
+const AppLink = ({ href, openInNewTab, openInNewWindow, enabled, children }: PropsWithChildren<AppLinkProps>) =>
   enabled ? (
     <UnstyledButton
       component="a"
       href={href}
-      target={openInNewTab ? "_blank" : undefined}
-      rel={openInNewTab ? SAFE_NEW_TAB_REL : undefined}
+      target={openInNewTab || openInNewWindow ? "_blank" : undefined}
+      rel={openInNewTab || openInNewWindow ? SAFE_NEW_TAB_REL : undefined}
+      onClick={(event) => {
+        if (
+          !openInNewWindow ||
+          !href ||
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        window.open(href, "_blank", "popup,noopener,noreferrer");
+      }}
       h="100%"
       w="100%"
     >
