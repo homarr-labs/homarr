@@ -111,6 +111,8 @@ interface NumberInput extends CommonInput<number> {
 }
 
 interface SliderInput extends CommonInput<number> {
+  withNumberInput?: boolean;
+  suffix?: string;
   validate: z.ZodNumber;
   step?: number;
 }
@@ -211,6 +213,8 @@ const optionsFactory = {
   }),
   slider: (input: SliderInput) => ({
     type: "slider" as const,
+    withNumberInput: input.withNumberInput ?? false,
+    suffix: input.suffix,
     defaultValue: input.defaultValue ?? input.validate.minValue ?? 0,
     step: input.step,
     withDescription: input.withDescription ?? false,
@@ -375,7 +379,7 @@ const optionsFactory = {
   }),
 };
 
-type WidgetOptionFactory = typeof optionsFactory;
+export type WidgetOptionFactory = typeof optionsFactory;
 
 export type WidgetOptionDefinition =
   | ReturnType<WidgetOptionFactory[Exclude<keyof WidgetOptionFactory, "sortableItemList">]>

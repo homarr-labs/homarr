@@ -31,13 +31,14 @@ import classes from "./component.module.css";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
-import { statusColorMap, thresholdColor } from "../beszel/_shared/colors";
+import { statusColorMap } from "../beszel/_shared/colors";
 import { formatLoadAvg, formatPercent, formatTemp, formatUptime, getProgressTrackSize } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
+import { getBeszelMetricColor } from "../beszel/_shared/threshold-colors";
 import { isBeszelGridMetricVisible } from "./display";
 
 interface SizeConfig {
@@ -131,13 +132,26 @@ interface MetricRowProps {
   icon: React.ReactNode;
   label: string;
   value: string;
+  valueColor?: string;
   progress?: { value: number; color: string };
   size: SizeConfig;
 }
 
-const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "progress" | "size">) => (
+const MetricValue = ({
+  value,
+  valueColor,
+  progress,
+  size,
+}: Pick<MetricRowProps, "value" | "valueColor" | "progress" | "size">) => (
   <Group gap={6} wrap="nowrap" style={{ flex: 1, minWidth: 0, marginLeft: "auto" }}>
-    <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+    <Text
+      size={size.fontSize}
+      c={valueColor}
+      fw={500}
+      w={size.valueMiw}
+      ta="left"
+      style={{ whiteSpace: "nowrap", flexShrink: 0 }}
+    >
       {value}
     </Text>
     {progress && (
@@ -151,13 +165,13 @@ const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "
   </Group>
 );
 
-const MetricRow = ({ icon, label, value, progress, size }: MetricRowProps) => (
+const MetricRow = ({ icon, label, value, valueColor, progress, size }: MetricRowProps) => (
   <Group gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: size.rowHeight }}>
     {icon}
     <Text size={size.fontSize} c="dimmed" w={size.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {label}
     </Text>
-    <MetricValue value={value} progress={progress} size={size} />
+    <MetricValue value={value} valueColor={valueColor} progress={progress} size={size} />
   </Group>
 );
 
@@ -182,6 +196,7 @@ type BeszelMetricRenderer = {
     size: SizeConfig,
     tCommon: SystemCardProps["tCommon"],
     formatByteRate: (bytes: number) => string,
+    options: SystemCardProps["options"],
   ) => React.ReactNode;
   visible: (system: BeszelSystemRow, options: SystemCardProps["options"], advanced: boolean) => boolean;
 };
@@ -189,13 +204,13 @@ type BeszelMetricRenderer = {
 const metricRenderers: BeszelMetricRenderer[] = [
   {
     key: "showCpu",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig, _tCommon, _formatByteRate, options) => (
       <MetricRow
         key="cpu"
         icon={<Cpu style={zoomCompensatedSize(sz.iconSize)} />}
         label={invariantTechnicalLabels.cpu}
         value={formatPercent(s.cpu)}
-        progress={{ value: s.cpu, color: thresholdColor(s.cpu) }}
+        progress={{ value: s.cpu, color: getBeszelMetricColor(options, "cpu", s.cpu) }}
         size={sz}
       />
     ),
@@ -204,13 +219,13 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showMemory",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig, _tCommon, _formatByteRate, options) => (
       <MetricRow
         key="mem"
         icon={<MemoryStick style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.memory")}
         value={formatPercent(s.memory)}
-        progress={{ value: s.memory, color: thresholdColor(s.memory) }}
+        progress={{ value: s.memory, color: getBeszelMetricColor(options, "memory", s.memory) }}
         size={sz}
       />
     ),
@@ -219,13 +234,19 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showDisk",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig, _tCommon, _formatByteRate, options) => (
       <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
         <HardDrive style={zoomCompensatedSize(sz.iconSize)} />
         <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
           {t("metric.disk")}
         </Text>
-        <DiskUsage system={s} fontSize={sz.fontSize} progressSize={sz.progressSize} valueMiw={sz.valueMiw} />
+        <DiskUsage
+          getColor={(value) => getBeszelMetricColor(options, "disk", value)}
+          system={s}
+          fontSize={sz.fontSize}
+          progressSize={sz.progressSize}
+          valueMiw={sz.valueMiw}
+        />
       </Group>
     ),
     visible: (s: BeszelSystemRow, o: SystemCardProps["options"], advanced: boolean) =>
@@ -233,13 +254,13 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showGpu",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig, _tCommon, _formatByteRate, options) => (
       <MetricRow
         key="gpu"
         icon={<Monitor style={zoomCompensatedSize(sz.iconSize)} />}
         label={invariantTechnicalLabels.gpu}
         value={formatPercent(s.gpu)}
-        progress={{ value: s.gpu, color: thresholdColor(s.gpu) }}
+        progress={{ value: s.gpu, color: getBeszelMetricColor(options, "gpu", s.gpu) }}
         size={sz}
       />
     ),
@@ -282,12 +303,15 @@ const metricRenderers: BeszelMetricRenderer[] = [
   },
   {
     key: "showTemp",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig, _tCommon, _formatByteRate, options) => (
       <MetricRow
         key="temp"
         icon={<Thermometer style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.temp")}
         value={formatTemp(s.temp, false)}
+        valueColor={
+          options.thresholdMode === "off" || s.temp === null ? undefined : getBeszelMetricColor(options, "temp", s.temp)
+        }
         size={sz}
       />
     ),
@@ -420,7 +444,7 @@ const SystemCard = ({
       )}
 
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
-        {visibleMetrics.map((m) => m.render(system, t, size, tCommon, formatByteRate))}
+        {visibleMetrics.map((m) => m.render(system, t, size, tCommon, formatByteRate, options))}
       </Stack>
       {hiddenMetricCount > 0 && (
         <Text size="xs" c="dimmed" ta="right">

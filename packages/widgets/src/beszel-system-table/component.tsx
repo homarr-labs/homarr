@@ -33,13 +33,14 @@ import { HomarrDataTable } from "../common/homarr-data-table";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
 import type { BeszelSystemRow } from "../beszel/_shared/types";
-import { loadAvgColor, statusColorMap, thresholdColor } from "../beszel/_shared/colors";
+import { loadAvgColor, statusColorMap } from "../beszel/_shared/colors";
 import { formatLoadAvg, formatPercent, formatTemp, formatUptime, getProgressTrackSize } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 import { getBeszelTableVisibleMetricKeys } from "./display";
+import { beszelNeutralColor, getBeszelMetricColor } from "../beszel/_shared/threshold-colors";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -93,18 +94,13 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
-const PercentCell = ({ value, size }: { value: number; size: SizeConfig }) => {
+const PercentCell = ({ value, size, color }: { value: number; size: SizeConfig; color: string }) => {
   return (
     <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
       <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
         {formatPercent(value)}
       </Text>
-      <Progress
-        value={value}
-        color={thresholdColor(value)}
-        size={getProgressTrackSize(size.progressSize)}
-        style={{ flex: 1 }}
-      />
+      <Progress value={value} color={color} size={getProgressTrackSize(size.progressSize)} style={{ flex: 1 }} />
     </Group>
   );
 };
@@ -270,7 +266,9 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.cpu} size={size} />,
+        render: (record) => (
+          <PercentCell value={record.cpu} size={size} color={getBeszelMetricColor(options, "cpu", record.cpu)} />
+        ),
       },
       visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
@@ -282,7 +280,13 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.memory} size={size} />,
+        render: (record) => (
+          <PercentCell
+            value={record.memory}
+            size={size}
+            color={getBeszelMetricColor(options, "memory", record.memory)}
+          />
+        ),
       },
       visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
@@ -297,6 +301,7 @@ export default function BeszelSystemTableWidget({
         render: (record) => (
           <DiskUsage
             system={record}
+            getColor={(value) => getBeszelMetricColor(options, "disk", value)}
             fontSize={size.fontSize}
             progressSize={size.progressSize}
             valueMiw={size.valueMiw}
@@ -314,7 +319,9 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.gpu} size={size} />,
+        render: (record) => (
+          <PercentCell value={record.gpu} size={size} color={getBeszelMetricColor(options, "gpu", record.gpu)} />
+        ),
       },
       visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",
@@ -331,7 +338,13 @@ export default function BeszelSystemTableWidget({
             <Box
               w={7}
               h={7}
-              bg={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"}
+              bg={
+                options.thresholdMode === "off"
+                  ? beszelNeutralColor
+                  : record.loadAvg
+                    ? loadAvgColor(record.loadAvg[0], record.cores)
+                    : "gray"
+              }
               style={{ borderRadius: "50%", flexShrink: 0 }}
             />
             <Text size={size.fontSize}>{formatLoadAvg(record.loadAvg)}</Text>
@@ -364,7 +377,18 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <Text size={size.fontSize}>{formatTemp(record.temp, false)}</Text>,
+        render: (record) => (
+          <Text
+            size={size.fontSize}
+            c={
+              options.thresholdMode === "off" || record.temp === null
+                ? undefined
+                : getBeszelMetricColor(options, "temp", record.temp)
+            }
+          >
+            {formatTemp(record.temp, false)}
+          </Text>
+        ),
       },
       visibleMetricKeys.has("showBattery") && {
         accessor: "battery",
@@ -416,7 +440,7 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [formatByteRate, formatBytes, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
+  }, [formatByteRate, formatBytes, tBeszel, tCommon, size, visibleMetricKeys, isAdvanced, options]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
