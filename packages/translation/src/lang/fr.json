@@ -2309,9 +2309,14 @@
         "appId": {
           "label": "Choisir une application"
         },
-        "openInNewWindow": {
-          "label": "Ouvrir dans une nouvelle fenêtre",
-          "description": "Ouvrir cette application dans une fenêtre séparée plutôt que dans un onglet. Les réglages du navigateur peuvent modifier ce comportement."
+        "openIn": {
+          "label": "Ouvrir l'application dans",
+          "description": "Choisissez où ouvrir cette application. Les réglages du navigateur peuvent modifier l'ouverture dans une fenêtre séparée.",
+          "option": {
+            "currentTab": "L'onglet actuel",
+            "newTab": "Un nouvel onglet",
+            "newWindow": "Une nouvelle fenêtre"
+          }
         },
         "showTitle": {
           "label": "Afficher le nom de l'application"

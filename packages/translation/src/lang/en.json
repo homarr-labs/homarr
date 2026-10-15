@@ -2309,9 +2309,14 @@
         "appId": {
           "label": "Choose app"
         },
-        "openInNewWindow": {
-          "label": "Open in new window",
-          "description": "Open this app in a separate window instead of a tab. Your browser settings may override this preference."
+        "openIn": {
+          "label": "Open app in",
+          "description": "Choose where this app opens. Your browser settings may override requests for a separate window.",
+          "option": {
+            "currentTab": "Current tab",
+            "newTab": "New tab",
+            "newWindow": "New window"
+          }
         },
         "showTitle": {
           "label": "Show app name"
