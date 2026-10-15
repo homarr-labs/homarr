@@ -1,6 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
 
 import type { WidgetKind } from "@homarr/definitions";
@@ -85,8 +86,13 @@ const widgetStyles = {
   wazuhAuthFailures: dynamic(() => import("./wazuh-auth-failures/component").then(() => NoStyles)),
 } satisfies Record<WidgetKind, ComponentType>;
 
-export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) =>
-  kinds.map((kind) => {
-    const Styles = widgetStyles[kind];
-    return <Styles key={kind} />;
-  });
+// Its own boundary: these modules load lazily in the browser, and suspending
+// the Board's boundary during hydration would make React render it again.
+export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => (
+  <Suspense fallback={null}>
+    {kinds.map((kind) => {
+      const Styles = widgetStyles[kind];
+      return <Styles key={kind} />;
+    })}
+  </Suspense>
+);
