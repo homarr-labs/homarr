@@ -145,27 +145,21 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
-  const content = (
-    <LoadedBoardItemContent
-      item={item}
-      width={width}
-      height={height}
-      widgetStateRef={widgetStateRef}
-      widgetRuntimeRef={widgetRuntimeRef}
-      contentRef={ref}
-    />
-  );
-  // React streams any large Suspense boundary as a separate segment, and
-  // browsers batch those reveals, painting the pending card first. A prepared
-  // document renders Widgets inline; hydration keeps that HTML while modules load.
-  let boundedContent = <Suspense fallback={<BoardItemPendingCard item={item} innerRef={ref} />}>{content}</Suspense>;
-  if (prepared) boundedContent = content;
   return (
     <ErrorBoundary
       resetKeys={[item.kind]}
       fallbackRender={(fallbackProps) => <WidgetDefinitionLoadError {...fallbackProps} item={item} innerRef={ref} />}
     >
-      {boundedContent}
+      <Suspense fallback={<BoardItemPendingCard item={item} innerRef={ref} />}>
+        <LoadedBoardItemContent
+          item={item}
+          width={width}
+          height={height}
+          widgetStateRef={widgetStateRef}
+          widgetRuntimeRef={widgetRuntimeRef}
+          contentRef={ref}
+        />
+      </Suspense>
     </ErrorBoundary>
   );
 };
