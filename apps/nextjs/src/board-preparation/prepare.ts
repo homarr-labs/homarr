@@ -6,6 +6,7 @@ import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { appRouter, createCaller, createTRPCContext } from "@homarr/api";
 import type { Session } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
+import { createId, Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, db, desc, eq, gt } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
@@ -77,11 +78,20 @@ const settleQueriesAsync = async (client: QueryClientType, dependentQueries: Pro
   }
 };
 
-export const prepareBoardAsync = async (id: string) => {
+export const prepareBoardAsync = async (id: string, runId?: string) => {
+  const log = logger.child({ runId, viewId: id.slice(0, 12) });
+  const stopwatch = new Stopwatch();
+  log.debug("Starting Board view preparation");
   const lock = await createBoardPreparationLockAsync(id);
-  if (!lock) return;
+  if (!lock) {
+    log.debug("Board preparation skipped", { reason: "no_production_build" });
+    return;
+  }
   const lease = await lock.acquireAsync(180);
-  if (!lease) return;
+  if (!lease) {
+    log.debug("Board preparation skipped", { reason: "already_running" });
+    return;
+  }
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: 30_000 } } });
   let timer: ReturnType<typeof setTimeout> | undefined;
   let capacity: Awaited<ReturnType<typeof createBoardPreparationLockAsync>> = null;
@@ -92,20 +102,39 @@ export const prepareBoardAsync = async (id: string) => {
       capacityLease = (await capacity?.acquireAsync(180)) ?? null;
       if (capacityLease) break;
     }
-    if (!capacity || !capacityLease) return;
+    if (!capacity || !capacityLease) {
+      log.debug("Board preparation skipped", { reason: "render_capacity" });
+      return;
+    }
     const variant = (await readBoardPreparationRegistryAsync())[id];
-    if (!variant) return;
+    if (!variant) {
+      log.debug("Board preparation skipped", { reason: "not_registered" });
+      return;
+    }
     const { spec } = variant;
     const session = await resolveViewerAsync(spec);
     const boardRow = await db.query.boards.findFirst({ where: eq(boards.id, spec.boardId), columns: { name: true } });
-    if (!boardRow) return;
+    if (!boardRow) {
+      log.debug("Board preparation skipped", { reason: "board_deleted", boardId: spec.boardId });
+      return;
+    }
     const context = await loadBoardPreparationContextAsync({
       ...spec,
       session,
       name: boardRow.name,
       deviceType: undefined,
     });
-    if (!context || getBoardPreparationId(getBoardPreparationSpec(context)) !== id) return;
+    if (!context || getBoardPreparationId(getBoardPreparationSpec(context)) !== id) {
+      log.debug("Board preparation skipped", { reason: "ineligible_context", boardId: spec.boardId });
+      return;
+    }
+    log.debug("Preparing Board view", {
+      boardId: spec.boardId,
+      locale: spec.locale,
+      viewportWidth: spec.viewportWidth,
+      widgetCount: context.board.items.length,
+    });
+    const queryStopwatch = new Stopwatch();
     const fingerprint = getBoardPreparationFingerprint(context);
     const snapshot = createBoardQuerySnapshot(context.board, context.integrations, { preserveTimestamps: true });
     await snapshot.restoreAsync(queryClient);
@@ -156,6 +185,17 @@ export const prepareBoardAsync = async (id: string) => {
     clearTimeout(timer);
     await snapshot.saveAsync(queryClient);
 
+    const cachedQueries = queryClient.getQueryCache().getAll();
+    const failedQueries = cachedQueries.filter((query) => query.state.status === "error");
+    const queryDurationMs = Math.round(queryStopwatch.getElapsedInMilliseconds());
+    const retainedQueryCount = failedQueries.filter((query) => query.state.data !== undefined).length;
+    log.debug("Board preparation queries settled", {
+      durationMs: queryDurationMs,
+      queryCount: cachedQueries.length,
+      failedQueryCount: failedQueries.length,
+      retainedQueryCount,
+    });
+
     const queries = dehydrate(queryClient, {
       shouldDehydrateMutation: () => false,
       shouldDehydrateQuery: (query) => query.state.data !== undefined,
@@ -167,6 +207,7 @@ export const prepareBoardAsync = async (id: string) => {
     }
     let slot: 0 | 1 = 0;
     if (previous?.slot === 0) slot = 1;
+    const renderStopwatch = new Stopwatch();
     const prepared = await writePreparedBoardAsync(id, slot, { context, queries }, lock, lease);
     const path = `${preparedBoardPath}/${spec.locale}/${id}/${slot}`;
     // Invalidation is committed when its request finishes. Doing it in this
@@ -191,18 +232,26 @@ export const prepareBoardAsync = async (id: string) => {
         cache: "no-store",
       });
       const html = await response.text();
+      const originCache = response.headers.get("x-nextjs-cache");
+      const versionMatches = html.includes(`data-homarr-prepared-token="${prepared.token}"`);
+      log.debug("Board render cache warmup attempt", {
+        attempt: attempt + 1,
+        statusCode: response.status,
+        originCache,
+        versionMatches,
+      });
       if (!response.ok) {
         throw new Error("Prepared Board did not produce the expected HTML");
       }
-      if (
-        response.headers.get("x-nextjs-cache") === "HIT" &&
-        html.includes(`data-homarr-prepared-token="${prepared.token}"`)
-      ) {
+      if (originCache === "HIT" && versionMatches) {
         const latestBoard = await db.query.boards.findFirst({
           where: eq(boards.id, spec.boardId),
           columns: { name: true },
         });
-        if (!latestBoard) return;
+        if (!latestBoard) {
+          log.debug("Board preparation skipped", { reason: "board_deleted", boardId: spec.boardId });
+          return;
+        }
         const latest = await loadBoardPreparationContextAsync({
           ...spec,
           session: await resolveViewerAsync(spec),
@@ -211,7 +260,10 @@ export const prepareBoardAsync = async (id: string) => {
         });
         // A mutation may finish while slow Integrations or rendering run. Retry
         // with the new inputs rather than publishing a superseded presentation.
-        if (!latest || getBoardPreparationFingerprint(latest) !== fingerprint) return "changed" as const;
+        if (!latest || getBoardPreparationFingerprint(latest) !== fingerprint) {
+          log.debug("Board preparation needs retry", { reason: "inputs_changed", boardId: spec.boardId });
+          return "changed" as const;
+        }
         let validUntil = Date.now() + preparationMaxAgeMs;
         if (session) validUntil = Math.min(validUntil, Date.parse(session.expires));
         if (
@@ -229,7 +281,18 @@ export const prepareBoardAsync = async (id: string) => {
           ))
         )
           throw new Error("Board preparation lease expired before publication");
-        return;
+        log.info("Prepared Board view published", {
+          boardId: spec.boardId,
+          durationMs: Math.round(stopwatch.getElapsedInMilliseconds()),
+          queryDurationMs,
+          renderDurationMs: Math.round(renderStopwatch.getElapsedInMilliseconds()),
+          queryCount: queries.queries.length,
+          failedQueryCount: failedQueries.length,
+          retainedQueryCount,
+          renderAttempts: attempt + 1,
+          slot,
+        });
+        return "prepared" as const;
       }
       await delay(100);
     }
@@ -284,7 +347,17 @@ const discoverHomeBoardsAsync = async () => {
 };
 
 export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string, signal?: AbortSignal) => {
-  if (!(await getPreparationNamespaceAsync())) return;
+  if (!(await getPreparationNamespaceAsync())) {
+    logger.debug("Board preparation run skipped", { reason: "no_production_build" });
+    return;
+  }
+  const runId = createId();
+  const log = logger.child({ runId });
+  const stopwatch = new Stopwatch();
+  let scope = "recent";
+  if (boardId) scope = "board";
+  if (id) scope = "view";
+  log.info("Board preparation run started", { scope });
   const deadline = Date.now() + 60_000;
   if (!id && !boardId) await discoverHomeBoardsAsync();
   let ids = [id];
@@ -302,17 +375,36 @@ export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string
   }
   // One render at a time keeps the burst from monopolizing the dashboard process.
   const failures: unknown[] = [];
+  let preparedCount = 0;
+  let skippedCount = 0;
   for (const viewId of ids) {
-    if (signal?.aborted || Date.now() >= deadline) break;
+    if (signal?.aborted || Date.now() >= deadline) {
+      let reason = "time_budget";
+      if (signal?.aborted) reason = "request_aborted";
+      log.debug("Board preparation run stopped early", { reason });
+      break;
+    }
     if (!viewId) continue;
     try {
-      const result = await prepareBoardAsync(viewId);
-      if (result === "changed" && (await prepareBoardAsync(viewId)) === "changed")
-        throw new Error("Board inputs changed during both preparation attempts");
+      let result = await prepareBoardAsync(viewId, runId);
+      if (result === "changed") result = await prepareBoardAsync(viewId, runId);
+      if (result === "changed") throw new Error("Board inputs changed during both preparation attempts");
+      if (result === "prepared") preparedCount++;
+      else skippedCount++;
     } catch (cause) {
       failures.push(cause);
-      logger.warn(new Error("Could not prepare a Board; its ordinary route remains available", { cause }));
+      log
+        .child({ viewId: viewId.slice(0, 12) })
+        .warn(new Error("Could not prepare a Board; its ordinary route remains available", { cause }));
     }
   }
+  log.info("Board preparation run finished", {
+    durationMs: Math.round(stopwatch.getElapsedInMilliseconds()),
+    candidateCount: ids.length,
+    preparedCount,
+    skippedCount,
+    failedCount: failures.length,
+    deferredCount: ids.length - preparedCount - skippedCount - failures.length,
+  });
   if (failures.length > 0) throw new AggregateError(failures, "Some Board views could not be prepared");
 };

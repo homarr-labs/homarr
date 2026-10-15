@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth/server";
 import { boardViewportWidthCookieName } from "@homarr/boards/layout-selection";
 import { userAgent } from "@homarr/common/server";
+import { Stopwatch } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
 import { colorSchemeCookieKey } from "@homarr/definitions";
@@ -24,6 +26,8 @@ import {
   readPreparedVersionAsync,
   rememberBoardPreparationAsync,
 } from "./store";
+
+const logger = createLogger({ module: "boardPreparation", scope: "cache" });
 
 const getViewportWidth = (request: NextRequest) => {
   for (const value of [
@@ -60,7 +64,10 @@ const resolvePreparedResponseAsync = async (
     colorScheme,
     deviceType: userAgent(request.headers).device.type,
   });
-  if (!context) return null;
+  if (!context) {
+    logger.debug("Prepared Board cache bypassed", { reason: "ineligible_context" });
+    return null;
+  }
   const spec = getBoardPreparationSpec(context);
   const id = getBoardPreparationId(spec);
   const fingerprint = getBoardPreparationFingerprint(context);
@@ -69,15 +76,25 @@ const resolvePreparedResponseAsync = async (
 
   if (!registry[id] || registry[id].lastSeenAt < Date.now() - 60_000 || !usable) {
     const registered = await rememberBoardPreparationAsync(id, spec);
-    if (!registered && !usable) return null;
+    if (!registered && !usable) {
+      logger.debug("Prepared Board cache bypassed", { reason: "registration_unavailable", viewId: id.slice(0, 12) });
+      return null;
+    }
   }
   if (!usable) {
+    let reason = "missing";
+    if (ready) {
+      reason = "expired";
+      if (ready.fingerprint !== fingerprint) reason = "inputs_changed";
+    }
+    logger.debug("Prepared Board cache miss", { reason, viewId: id.slice(0, 12), boardId: spec.boardId });
     // The current request keeps its existing SSR path; preparation is independent.
     const configuration = await db.query.cronJobConfigurations.findFirst({
       where: eq(cronJobConfigurations.name, "boardPreparation"),
       columns: { isEnabled: true },
     });
     if (configuration?.isEnabled !== false) await requestBoardPreparationAsync({ viewId: id });
+    else logger.debug("Board preparation request skipped", { reason: "task_disabled", viewId: id.slice(0, 12) });
     return null;
   }
   const path = `${preparedBoardPath}/${locale}/${id}/${ready.slot}${request.nextUrl.search}`;
@@ -94,7 +111,7 @@ const resolvePreparedResponseAsync = async (
   });
   response.headers.set("Cache-Control", "private, no-store, max-age=0");
   response.headers.set("X-Homarr-Board-Cache", "HIT");
-  return response;
+  return { response, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
 };
 
 export const getPreparedBoardResponseAsync = async (
@@ -109,21 +126,47 @@ export const getPreparedBoardResponseAsync = async (
   const path = new URL(rewrite).pathname.split("/").filter(Boolean);
   // This includes the locale middleware's rewritten home route, /{locale}.
   if (path.length !== 1 && !(path.length === 3 && path[1] === "boards")) return null;
-  if ([...request.nextUrl.searchParams.keys()].some((key) => key !== "_rsc")) return null;
+  if ([...request.nextUrl.searchParams.keys()].some((key) => key !== "_rsc")) {
+    logger.debug("Prepared Board cache bypassed", { reason: "query_parameters" });
+    return null;
+  }
   const locale = path[0] as SupportedLanguage;
   let name: string | undefined;
   if (path.length === 3 && path[2]) name = decodeURIComponent(path[2]);
-  const pending = resolvePreparedResponseAsync(request, locale, name, localizedResponse).catch(() => null);
+  const stopwatch = new Stopwatch();
+  let fallbackReason = "cache_unavailable";
+  const pending = resolvePreparedResponseAsync(request, locale, name, localizedResponse).catch((cause: unknown) => {
+    fallbackReason = "lookup_failed";
+    // Database errors can include query parameters such as session tokens.
+    let errorType: string = typeof cause;
+    if (cause instanceof Error) errorType = cause.name;
+    logger.debug("Prepared Board cache lookup failed; using ordinary SSR", { errorType });
+    return null;
+  });
   event.waitUntil(pending.then(() => undefined));
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
     // A cache outage or a cold preparation must not hold up ordinary SSR.
-    return await Promise.race([
+    const result = await Promise.race([
       pending,
       new Promise<null>((resolve) => {
-        timeout = setTimeout(() => resolve(null), 100);
+        timeout = setTimeout(() => {
+          fallbackReason = "lookup_budget_exceeded";
+          resolve(null);
+        }, 100);
       }),
     ]);
+    const durationMs = Math.round(stopwatch.getElapsedInMilliseconds());
+    if (!result) {
+      logger.debug("Using ordinary Board SSR", { reason: fallbackReason, durationMs });
+      return null;
+    }
+    logger.debug("Serving prepared Board view", {
+      viewId: result.viewId,
+      ageMs: Date.now() - result.preparedAt,
+      durationMs,
+    });
+    return result.response;
   } finally {
     clearTimeout(timeout);
   }
