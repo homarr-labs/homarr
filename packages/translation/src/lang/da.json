@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Oppetidsovervågning",
       "beszel": "Beszel",
       "systemMonitoring": "System Overvågning",
-      "security": "Sikkerhed"
+      "security": "Sikkerhed",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Linkede Integrationer"
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller ejer/navn"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
       "projectDescription": "Projektbeskrivelse",
+      "runningVersions": "Kørende Versioner",
+      "upToDate": "Op til dato",
+      "updateAvailable": "Opdatering tilgængelig",
+      "unknownStatus": "Ukendt",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",

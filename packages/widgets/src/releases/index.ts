@@ -2,9 +2,9 @@ import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
-import { releaseProviderKinds } from "@homarr/definitions";
+import { getWidgetIntegrationConfig, releaseProviderKinds } from "@homarr/definitions";
 
-import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 const relativeDateSchema = z
@@ -15,9 +15,13 @@ const relativeDateSchema = z
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
   supportsAdvancedFocus: true,
   icon: IconRocket,
-  queryKey: [["widget", "releases", "getLatest"]],
-  queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { itemId: scope.itemId }),
+  queryKeys: [[["widget", "releases", "getLatest"]], [["widget", "releases", "getServiceVersions"]]],
+  queryMatcher: (query, scope) =>
+    query.path.at(-1) === "getServiceVersions"
+      ? matchesWidgetRuntimeQuery(query, scope)
+      : widgetQueryInputMatches(query.input, { itemId: scope.itemId }),
   refetchInterval: null,
+  ...getWidgetIntegrationConfig("releases"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       newReleaseWithin: factory.text({
@@ -71,6 +75,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
               .optional(),
             iconUrl: z.string().optional(),
             providerUrl: z.string().url().optional(),
+            integrationIds: z.array(z.string()).optional(),
           }),
         ),
       }),

@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Uptime-monitoring",
       "beszel": "Beszel",
       "systemMonitoring": "Systeem monitoring",
-      "security": "Beveiliging"
+      "security": "Beveiliging",
+      "serviceVersion": "Versie"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Gekoppelde integraties"
+          },
           "identifier": {
             "label": "Identificator",
             "placeholder": "Naam of Eigenaar/naam"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Uitgavepagina openen",
       "releaseDescription": "Uitgave beschrijving",
       "projectDescription": "Project beschrijving",
+      "runningVersions": "Lopende versies",
+      "upToDate": "Bijgewerkt tot",
+      "updateAvailable": "Update beschikbaar",
+      "unknownStatus": "Onbekend",
       "created": "Aangemaakt",
       "error": {
         "label": "Fout",

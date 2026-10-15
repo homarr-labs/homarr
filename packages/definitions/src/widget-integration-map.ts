@@ -135,6 +135,7 @@ export const widgetIntegrationConfigs = {
   },
   mediaServer: { supportedIntegrations: getIntegrationKindsByCategory("mediaService") },
   calendar: { supportedIntegrations: getIntegrationKindsByCategory("calendar"), integrationsRequired: false },
+  releases: { supportedIntegrations: getIntegrationKindsByCategory("serviceVersion"), integrationsRequired: false },
   downloads: { supportedIntegrations: getIntegrationKindsByCategory("downloadClient") },
   "mediaRequests-requestList": { supportedIntegrations: getIntegrationKindsByCategory("mediaRequest") },
   "mediaRequests-requestStats": { supportedIntegrations: getIntegrationKindsByCategory("mediaRequest") },
@@ -294,6 +295,7 @@ export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
   { kind: "clock", width: 2, height: 1 },
   { kind: "weather", width: 2, height: 1, options: { showHumidity: false, showCity: false, hasForecast: false } },
   { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
+  { kind: "releases", width: 1, height: 1, skip: true },
 ];
 
 const defaultWidgetConfigByKind = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));

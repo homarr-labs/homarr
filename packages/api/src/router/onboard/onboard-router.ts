@@ -752,8 +752,7 @@ export const onboardRouter = createTRPCRouter({
           }
           return null;
         }
-        const config = getDefaultWidgetConfig(widgetKind);
-        return config.skip ? null : { widgetKind, integration, config };
+        return { widgetKind, integration, config: getDefaultWidgetConfig(widgetKind) };
       };
 
       const linkExistingDockerWidget = (
@@ -832,7 +831,6 @@ export const onboardRouter = createTRPCRouter({
         if (existingItemsByKind.has(kind) || newItems.some((item) => item.kind === kind)) continue;
         if (getWidgetIntegrationIssue(kind, [])) continue;
         const config = getDefaultWidgetConfig(kind);
-        if (config.skip) continue;
         placeNewItem(
           kind,
           config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
