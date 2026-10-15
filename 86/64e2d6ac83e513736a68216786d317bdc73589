@@ -1,0 +1,16 @@
+apps/nextjs/src/board-preparation/prepare.ts
+  h_d6e478ca18e517 137-139,142
+packages/widgets/src/common/use-persisted-table-layout.ts
+  h_d6e478ca18e517 133-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8664e2d6ac83e513736a68216786d317bdc73589",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
