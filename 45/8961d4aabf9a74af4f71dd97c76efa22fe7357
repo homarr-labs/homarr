@@ -1,0 +1,33 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_widget-resource-preload.tsx
+  s_0ed34ca6aa2512::t_e9e1d4e5195fcb 5,9,14
+apps/nextjs/src/board-preparation/prepare.ts
+  s_0ed34ca6aa2512::t_e7aad1307aa271 140-142,193-197,225
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_0ed34ca6aa2512::t_5f1120cc9b7596 33,105-107,117,120-125
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_0ed34ca6aa2512::t_9ba07ea771e737 27-30
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_0ed34ca6aa2512::t_8d1980775dd944 347,367
+packages/widgets/package.json
+  s_0ed34ca6aa2512::t_fd1092242ca542 37-38
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_0ed34ca6aa2512::t_dc0e16ba1d0778 3,139-152,161,176,250
+packages/widgets/src/widget-styles.tsx
+  s_0ed34ca6aa2512::t_ceb1811d7a63ff 1-92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "458961d4aabf9a74af4f71dd97c76efa22fe7357",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
