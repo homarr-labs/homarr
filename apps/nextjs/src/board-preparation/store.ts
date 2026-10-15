@@ -1,11 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { hostname } from "node:os";
-import { randomUUID } from "node:crypto";
 import { setTimeout } from "node:timers/promises";
-import { cache } from "react";
-import { serialize, stringify } from "superjson";
-import type { DehydratedState } from "@tanstack/react-query";
+import { serialize } from "superjson";
 
 import { createKeyedFingerprint } from "@homarr/common/server";
 import { hashObjectBase64 } from "@homarr/common";
@@ -18,7 +14,7 @@ import type { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 
 export const preparationMaxAgeMs = 72 * 60 * 60_000;
 const maxVariants = 128;
-const maxPayloadBytes = 2 * 1024 * 1024;
+const maxDocumentBytes = 4 * 1024 * 1024;
 
 export interface BoardPreparationSpec {
   boardId: string;
@@ -28,6 +24,10 @@ export interface BoardPreparationSpec {
   locale: SupportedLanguage;
   layoutId: string;
   colorScheme: RootLayoutData["colorScheme"];
+  /** Public path the view answers, e.g. "/" or "/boards/home". */
+  pathname: string;
+  /** Selects the mobile home Board when capturing "/". */
+  deviceType: "mobile" | null;
 }
 
 export interface BoardPreparationContext {
@@ -40,15 +40,12 @@ export interface BoardPreparationContext {
   layoutId: string;
 }
 
-export interface PreparedBoard {
+export interface PreparedDocument {
   token: string;
-  renderedAt: number;
-  context: BoardPreparationContext;
-  queries: DehydratedState;
+  html: string;
 }
 
 export interface PreparedVersion {
-  slot: 0 | 1;
   fingerprint: string;
   token: string;
   validUntil: number;
@@ -69,10 +66,8 @@ export const getPreparationNamespaceAsync = () => {
     try {
       const buildId = (await readFile(resolve(process.cwd(), ".next/BUILD_ID"), "utf8")).trim();
       if (!buildId) return null;
-      // A ready marker proves this listener has rendered the page. Replicas
-      // with the same build must not publish readiness for each other's caches.
-      const instance = createKeyedFingerprint(`${hostname()}:${process.pid}`);
-      return `board-preparation-v2:${createKeyedFingerprint(buildId)}:${instance}`;
+      // Captured documents reference this build's assets only.
+      return `board-preparation-v3:${createKeyedFingerprint(buildId)}`;
     } catch {
       return null;
     }
@@ -80,16 +75,27 @@ export const getPreparationNamespaceAsync = () => {
   return namespacePromise;
 };
 
-// Sessions of one viewer share a view. Each request still proves its own session.
+// The document embeds the session expiry, which drives the client's login
+// redirect, so each session keeps its own view.
 export const getBoardPreparationId = (spec: BoardPreparationSpec) =>
-  createKeyedFingerprint(JSON.stringify([spec.boardId, spec.viewerId, spec.locale, spec.layoutId, spec.colorScheme]));
+  createKeyedFingerprint(
+    JSON.stringify([
+      spec.boardId,
+      spec.viewerId,
+      spec.sessionExpires,
+      spec.locale,
+      spec.layoutId,
+      spec.colorScheme,
+      spec.pathname,
+      spec.deviceType,
+    ]),
+  );
 
 export const getBoardPreparationFingerprint = (context: BoardPreparationContext) => {
   const input = { ...context, root: { ...context.root } };
   if (input.root.session) {
     input.root.session = {
       ...input.root.session,
-      expires: "",
       user: { ...input.root.session.user, permissions: input.root.session.user.permissions.toSorted() },
     };
   }
@@ -100,7 +106,7 @@ export const getBoardPreparationFingerprint = (context: BoardPreparationContext)
 
 const registryChannel = (namespace: string) =>
   createGetSetChannel<Registry>(`${namespace}:registry`, { useBoundedCacheClient: true });
-const catalogChannel = createGetSetChannel<Registry>("board-preparation-v2:catalog", { useBoundedCacheClient: true });
+const catalogChannel = createGetSetChannel<Registry>("board-preparation-v3:catalog", { useBoundedCacheClient: true });
 const latestVariants = (registry: Registry, limit: number): Registry =>
   Object.fromEntries(
     Object.entries(registry)
@@ -123,7 +129,7 @@ export const readBoardPreparationRegistryAsync = async () => {
 const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
-  const lock = createLockChannel("board-preparation-v2:catalog-lock", { useBoundedCacheClient: true });
+  const lock = createLockChannel("board-preparation-v3:catalog-lock", { useBoundedCacheClient: true });
   for (let attempt = 0; attempt < 3; attempt++) {
     const token = await lock.acquireAsync(5);
     if (!token) {
@@ -140,7 +146,7 @@ const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
       if (!(await lock.setIfOwnedAsync(token, `${namespace}:registry`, registry, preparationMaxAgeMs))) return false;
       await lock.setIfOwnedAsync(
         token,
-        "board-preparation-v2:catalog",
+        "board-preparation-v3:catalog",
         latestVariants({ ...catalog, ...registry }, maxVariants),
         preparationMaxAgeMs,
       );
@@ -177,40 +183,27 @@ export const readPreparedVersionAsync = async (id: string) => {
   }).getAsync();
 };
 
-export const publishPreparedBoardAsync = async (
+export const writePreparedDocumentAsync = async (
   id: string,
+  document: PreparedDocument,
   ready: PreparedVersion,
   lock: PreparationLock,
-  token: string,
+  lease: string,
 ) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
-  return await lock.setIfOwnedAsync(token, `${namespace}:ready:${id}`, ready, preparationMaxAgeMs);
+  if (Buffer.byteLength(document.html) > maxDocumentBytes) throw new Error("Prepared Board exceeds its size budget");
+  // The marker carries the document token; readers reject a mismatched pair.
+  if (!(await lock.setIfOwnedAsync(lease, `${namespace}:document:${id}`, document, preparationMaxAgeMs))) return false;
+  return await lock.setIfOwnedAsync(lease, `${namespace}:ready:${id}`, ready, preparationMaxAgeMs);
 };
 
-export const writePreparedBoardAsync = async (
-  id: string,
-  slot: 0 | 1,
-  value: Omit<PreparedBoard, "token" | "renderedAt">,
-  lock: PreparationLock,
-  token: string,
-) => {
-  const namespace = await getPreparationNamespaceAsync();
-  if (!namespace) throw new Error("No production build for Board preparation");
-  const prepared = { ...value, token: randomUUID(), renderedAt: Date.now() };
-  if (Buffer.byteLength(stringify(prepared)) > maxPayloadBytes) {
-    throw new Error("Prepared Board exceeds its size budget");
-  }
-  const saved = await lock.setIfOwnedAsync(token, `${namespace}:view:${id}:${slot}`, prepared, preparationMaxAgeMs);
-  if (!saved) throw new Error("Board preparation lease expired");
-  return prepared;
-};
-
-export const readPreparedBoardAsync = cache(async (id: string, slot: string) => {
-  if (!/^[a-f0-9]{64}$/.test(id) || !/^[01]$/.test(slot)) return null;
+export const readPreparedDocumentAsync = async (id: string, token: string) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return null;
-  return await createGetSetChannel<PreparedBoard>(`${namespace}:view:${id}:${slot}`, {
+  const document = await createGetSetChannel<PreparedDocument>(`${namespace}:document:${id}`, {
     useBoundedCacheClient: true,
   }).getAsync();
-});
+  if (document?.token !== token) return null;
+  return document.html;
+};

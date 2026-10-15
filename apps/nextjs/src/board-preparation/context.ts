@@ -90,7 +90,10 @@ export const withPreparedLayout = (
   return { ...context, layoutId, viewportWidth: getRepresentativeLayoutWidth(layout, context.board.layouts) };
 };
 
-export const getBoardPreparationSpec = (context: BoardPreparationContext): BoardPreparationSpec => ({
+export const getBoardPreparationSpec = (
+  context: BoardPreparationContext,
+  route: Pick<BoardPreparationSpec, "pathname" | "deviceType">,
+): BoardPreparationSpec => ({
   boardId: context.board.id,
   boardName: context.board.name,
   viewerId: context.root.session?.user.id ?? null,
@@ -98,4 +101,6 @@ export const getBoardPreparationSpec = (context: BoardPreparationContext): Board
   locale: context.locale,
   layoutId: context.layoutId,
   colorScheme: context.root.colorScheme,
+  pathname: route.pathname,
+  deviceType: route.deviceType,
 });

@@ -103,7 +103,7 @@ const nextConfig: NextConfig = {
   async headers() {
     const locale = `:locale(${supportedLanguages.join("|")})`;
     return [
-      ...["/prepared-board/:path*", "/", "/boards/:name", `/${locale}`, `/${locale}/boards/:name`].map((source) => ({
+      ...["/", "/boards/:name", `/${locale}`, `/${locale}/boards/:name`].map((source) => ({
         source,
         headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }],
       })),

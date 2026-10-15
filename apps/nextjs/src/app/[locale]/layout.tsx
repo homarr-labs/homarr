@@ -1,19 +1,94 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+
+import "@gfazioli/mantine-onboarding-tour/styles.css";
+import "@homarr/notifications/styles.css";
+import "@mantine/lightbox/styles.css";
+import "@homarr/spotlight/styles.css";
+import "@homarr/ui/styles.css";
+import "flag-icons/css/flag-icons.min.css";
+import "mantine-datatable/styles.css";
+import "~/styles/color-scheme.scss";
+import "~/styles/scroll-area.scss";
+
 import { notFound } from "next/navigation";
+import { ColorSchemeScript } from "@mantine/core";
+import type { DayOfWeek } from "@mantine/dates";
+import { NextIntlClientProvider } from "next-intl";
 
+import { env as authEnv } from "@homarr/auth/env";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
+import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
+import { InitialRenderTimeProvider } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ModalProvider } from "@homarr/modals";
+import { Notifications } from "@homarr/notifications";
+import { SettingsProvider } from "@homarr/settings";
+import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
-import { isLocaleSupported } from "@homarr/translation";
+import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
+import { getI18n } from "@homarr/translation/server";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
+import { AssistantGate } from "~/components/assistant/assistant-gate";
+import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
+import { env } from "~/env";
+
+import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
+import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
+import { ViewportHint } from "~/components/layout/viewport-hint";
+import { getCapturedViewIdAsync } from "~/board-preparation/captured-view";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
-import { loadRootLayoutDataAsync } from "./_root-layout-data";
-import { RootLayoutView } from "./_root-layout-view";
-import { createRootMetadataAsync } from "./_root-metadata";
+import { DayJsLoader } from "./_client-providers/dayjs-loader";
+import { JotaiProvider } from "./_client-providers/jotai";
+import { CustomMantineProvider } from "./_client-providers/mantine";
+import { AuthProvider } from "./_client-providers/session";
+import { TRPCReactProvider } from "./_client-providers/trpc";
+import { composeWrappers } from "./compose";
+
+const fontSans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const logger = createLogger({ module: "rootLayout" });
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const [serverSettings, colorScheme] = await Promise.all([getRscServerSettingsAsync(), getCurrentColorSchemeAsync()]);
-  return await createRootMetadataAsync({ serverSettings, colorScheme });
+  const [serverSettings, colorScheme, t] = await Promise.all([
+    getRscServerSettingsAsync(),
+    getCurrentColorSchemeAsync(),
+    getI18n("metadata"),
+  ]);
+  const { appName, faviconImageUrl, logoImageUrl } = serverSettings.branding;
+  const logo = logoImageUrl ?? "/logo/logo.png";
+  const favicon = faviconImageUrl ?? logo;
+  const description = t("description");
+
+  return {
+    title: {
+      default: appName,
+      template: `%s • ${appName}`,
+    },
+    description,
+    openGraph: {
+      title: t("dashboardTitle", { appName }),
+      description,
+      url: env.HOMARR_WEBSITE_URL,
+      siteName: appName,
+    },
+    icons: {
+      icon: favicon,
+      apple: logo,
+    },
+    appleWebApp: {
+      title: appName,
+      capable: true,
+      startupImage: { url: logo },
+      statusBarStyle: colorScheme === "dark" ? "black-translucent" : "default",
+    },
+  };
 };
 
 export const generateViewport = async (): Promise<Viewport> => {
@@ -26,12 +101,124 @@ export default async function Layout(props: {
   params: Promise<{ locale: SupportedLanguage }>;
 }) {
   const { locale } = await props.params;
-  if (!isLocaleSupported(locale)) notFound();
+  if (!isLocaleSupported(locale)) {
+    notFound();
+  }
 
-  const [data, colorScheme] = await Promise.all([loadRootLayoutDataAsync(auth()), getCurrentColorSchemeAsync()]);
+  const sessionPromise = auth();
+  const serverSettingsPromise = getRscServerSettingsAsync();
+  const assistantAvailabilityPromise = sessionPromise.then(async (session) => {
+    if (!session) return "unauthenticated" as const;
+
+    try {
+      const enabled = await getRscAssistantAvailabilityAsync();
+      return enabled ? ("enabled" as const) : ("unconfigured" as const);
+    } catch {
+      return "error" as const;
+    }
+  });
+  const userPromise = sessionPromise.then((session) =>
+    session
+      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
+          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
+          return null;
+        })
+      : null,
+  );
+  const [session, user, serverSettings, colorScheme, assistantAvailability, capturedViewId] = await Promise.all([
+    sessionPromise,
+    userPromise,
+    serverSettingsPromise,
+    getCurrentColorSchemeAsync(),
+    assistantAvailabilityPromise,
+    getCapturedViewIdAsync(),
+  ]);
+  // A captured document hydrates later; its first client render must use the
+  // capture clock, and Widgets render into the document instead of deferring.
+  let initialRenderTime: number | undefined;
+  if (capturedViewId) initialRenderTime = Date.now();
+  const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
+  const publicUrls = resolveHomarrUrlConfig({
+    homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
+    workshopApiUrl: env.WORKSHOP_API_URL,
+    workshopWebUrl: env.WORKSHOP_WEB_URL,
+  });
+
+  const StackedProvider = composeWrappers([
+    (innerProps) => {
+      return <AuthProvider session={session} logoutUrl={authEnv.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
+    },
+    (innerProps) => (
+      <SettingsProvider
+        user={
+          user
+            ? {
+                ...user,
+                // Convert type, because output schema is not smart enough to infer $type from drizzle
+                firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
+              }
+            : null
+        }
+        serverSettings={{
+          board: {
+            homeBoardId: serverSettings.board.homeBoardId,
+            mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
+            enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+            forceDisableStatus: serverSettings.board.forceDisableStatus,
+          },
+          search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
+          user: { enableGravatar: serverSettings.user.enableGravatar },
+          branding: serverSettings.branding,
+        }}
+        {...innerProps}
+      />
+    ),
+    (innerProps) => <JotaiProvider {...innerProps} />,
+    (innerProps) => <TRPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
+    (innerProps) => <DayJsLoader {...innerProps} />,
+    (innerProps) => <NextIntlClientProvider {...innerProps} />,
+    (innerProps) => (
+      <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} branding={serverSettings.branding} />
+    ),
+    (innerProps) => <ModalProvider {...innerProps} />,
+    (innerProps) => <SpotlightProvider {...innerProps} />,
+    (innerProps) => (
+      <AssistantGate availability={session ? assistantAvailability : "unauthenticated"} {...innerProps} />
+    ),
+  ]);
+
   return (
-    <RootLayoutView locale={locale} data={{ ...data, colorScheme }}>
-      {props.children}
-    </RootLayoutView>
+    <html
+      lang={locale}
+      dir={direction}
+      style={{
+        backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
+      }}
+      suppressHydrationWarning
+    >
+      <head>
+        <ColorSchemeScript defaultColorScheme={colorScheme} />
+        <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
+        {session ? (
+          <>
+            <meta name="homarr-workshop-api-url" content={publicUrls.workshopApiUrl} />
+            <meta name="homarr-workshop-web-url" content={publicUrls.workshopWebUrl} />
+          </>
+        ) : null}
+        <SearchEngineOptimization />
+        <CrowdinLiveTranslation locale={locale} />
+        <style data-homarr-global-custom-css>{serverSettings.branding.customCss}</style>
+      </head>
+      <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
+        <ViewportHint />
+        <InitialRenderTimeProvider initialTime={initialRenderTime}>
+          <StackedProvider>
+            <Notifications pauseResetOnHover="notification" />
+            <ServiceWorkerRegistration />
+            {props.children}
+          </StackedProvider>
+        </InitialRenderTimeProvider>
+      </body>
+    </html>
   );
 }

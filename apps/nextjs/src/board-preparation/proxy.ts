@@ -9,12 +9,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
 import { colorSchemeCookieKey } from "@homarr/definitions";
-import {
-  createPreparationHeaders,
-  getPreparationOrigin,
-  preparedBoardPath,
-  requestBoardPreparationAsync,
-} from "@homarr/cron-jobs/board-preparation";
+import { requestBoardPreparationAsync } from "@homarr/cron-jobs/board-preparation";
 import type { SupportedLanguage } from "@homarr/translation";
 
 import { getBoardPreparationSpec, loadBoardPreparationContextAsync } from "./context";
@@ -23,12 +18,16 @@ import {
   getBoardPreparationId,
   getPreparationNamespaceAsync,
   readBoardPreparationRegistryAsync,
+  readPreparedDocumentAsync,
   readPreparedVersionAsync,
   rememberBoardPreparationAsync,
 } from "./store";
 
 const logger = createLogger({ module: "boardPreparation", scope: "cache" });
 const pendingPreparations = new Map<string, Promise<void>>();
+const cacheHeader = "X-Homarr-Board-Cache";
+
+type Lookup = { hit: true; html: string; viewId: string; preparedAt: number } | { hit: false; reason: string };
 
 const getViewportWidth = (request: NextRequest) => {
   for (const value of [
@@ -48,9 +47,8 @@ const resolvePreparedResponseAsync = async (
   request: NextRequest,
   locale: SupportedLanguage,
   name: string | undefined,
-  localizedResponse: NextResponse,
   backgroundWork: Promise<void>[],
-) => {
+): Promise<Lookup> => {
   const [session, registry] = await Promise.all([
     getSessionFromToken(db, request.cookies.get(sessionTokenCookieName)?.value),
     readBoardPreparationRegistryAsync(),
@@ -66,11 +64,10 @@ const resolvePreparedResponseAsync = async (
     colorScheme,
     deviceType: userAgent(request.headers).device.type,
   });
-  if (!context) {
-    logger.debug("Prepared Board cache bypassed", { reason: "ineligible_context" });
-    return null;
-  }
-  const spec = getBoardPreparationSpec(context);
+  if (!context) return { hit: false, reason: "ineligible" };
+  let deviceType: "mobile" | null = null;
+  if (name === undefined && userAgent(request.headers).device.type === "mobile") deviceType = "mobile";
+  const spec = getBoardPreparationSpec(context, { pathname: request.nextUrl.pathname, deviceType });
   const id = getBoardPreparationId(spec);
   const fingerprint = getBoardPreparationFingerprint(context);
   const ready = await readPreparedVersionAsync(id);
@@ -78,10 +75,7 @@ const resolvePreparedResponseAsync = async (
 
   if (!registry[id] || registry[id].lastSeenAt < Date.now() - 60_000 || !usable) {
     const registered = await rememberBoardPreparationAsync(id, spec);
-    if (!registered && !usable) {
-      logger.debug("Prepared Board cache bypassed", { reason: "registration_unavailable", viewId: id.slice(0, 12) });
-      return null;
-    }
+    if (!registered && !usable) return { hit: false, reason: "registration_unavailable" };
   }
   if (!usable) {
     let reason = "missing";
@@ -109,55 +103,60 @@ const resolvePreparedResponseAsync = async (
       }
       backgroundWork.push(preparation);
     } else logger.debug("Board preparation request skipped", { reason: "task_disabled", viewId: id.slice(0, 12) });
-    return null;
+    return { hit: false, reason };
   }
-  const path = `${preparedBoardPath}/${locale}/${id}/${ready.slot}${request.nextUrl.search}`;
-  // Always target our own listener. Never send an internal proof to a Host or
-  // forwarded-host supplied by the visitor. Some local hostname configurations
-  // proxy the rewrite through HTTP; that second hop must carry the same proof.
-  const url = new URL(path, getPreparationOrigin());
-  const requestHeaders = new Headers(request.headers);
-  for (const [key, value] of Object.entries(createPreparationHeaders(request.method, path)))
-    requestHeaders.set(key, value);
-  const response = NextResponse.rewrite(url, {
-    headers: localizedResponse.headers,
-    request: { headers: requestHeaders },
-  });
-  response.headers.set("Cache-Control", "private, no-store, max-age=0");
-  response.headers.set("X-Homarr-Board-Cache", "HIT");
-  return { response, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
+  // A concurrent publication can replace the document after the marker read.
+  const html = await readPreparedDocumentAsync(id, ready.token);
+  if (!html) return { hit: false, reason: "document_unavailable" };
+  return { hit: true, html, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
 };
 
+// Client navigations, prefetches and Server Actions carry router state and
+// need RSC payloads. Only a plain document load can reuse a captured page.
+const isDocumentRequest = (request: NextRequest) => {
+  if (request.method !== "GET" && request.method !== "HEAD") return false;
+  for (const header of ["rsc", "next-router-prefetch", "next-router-state-tree", "next-action", "purpose"]) {
+    if (request.headers.has(header)) return false;
+  }
+  if (request.headers.get("sec-purpose")?.includes("prefetch")) return false;
+  const destination = request.headers.get("sec-fetch-dest");
+  return destination === null || destination === "document";
+};
+
+/**
+ * Serves a Prepared Board view for a plain document request, after checking
+ * the visitor's session, Board access and render inputs. Otherwise annotates
+ * the ordinary response with the reason and lets SSR continue.
+ */
 export const getPreparedBoardResponseAsync = async (
   request: NextRequest,
   event: NextFetchEvent,
   localizedResponse: NextResponse,
 ) => {
-  if (request.method !== "GET" && request.method !== "HEAD") return null;
-  if (!(await getPreparationNamespaceAsync())) return null;
   const rewrite = localizedResponse.headers.get("x-middleware-rewrite");
   if (!rewrite || localizedResponse.status !== 200) return null;
   const path = new URL(rewrite).pathname.split("/").filter(Boolean);
   // This includes the locale middleware's rewritten home route, /{locale}.
   if (path.length !== 1 && !(path.length === 3 && path[1] === "boards")) return null;
-  if ([...request.nextUrl.searchParams.keys()].some((key) => key !== "_rsc")) {
-    logger.debug("Prepared Board cache bypassed", { reason: "query_parameters" });
+  const bypass = (reason: string) => {
+    localizedResponse.headers.set(cacheHeader, `BYPASS; reason=${reason}`);
     return null;
-  }
+  };
+  if (!(await getPreparationNamespaceAsync())) return bypass("no_production_build");
+  if (!isDocumentRequest(request)) return null;
+  if (request.nextUrl.search) return bypass("query_parameters");
   const locale = path[0] as SupportedLanguage;
   let name: string | undefined;
   if (path.length === 3 && path[2]) name = decodeURIComponent(path[2]);
   const stopwatch = new Stopwatch();
-  let fallbackReason = "cache_unavailable";
   const backgroundWork: Promise<void>[] = [];
-  const pending = resolvePreparedResponseAsync(request, locale, name, localizedResponse, backgroundWork).catch(
-    (cause: unknown) => {
-      fallbackReason = "lookup_failed";
+  const pending = resolvePreparedResponseAsync(request, locale, name, backgroundWork).catch(
+    (cause: unknown): Lookup => {
       // Database errors can include query parameters such as session tokens.
       let errorType: string = typeof cause;
       if (cause instanceof Error) errorType = cause.name;
       logger.debug("Prepared Board cache lookup failed; using ordinary SSR", { errorType });
-      return null;
+      return { hit: false, reason: "lookup_failed" };
     },
   );
   // Register the whole lifetime now: a slow lookup can schedule preparation
@@ -168,24 +167,28 @@ export const getPreparedBoardResponseAsync = async (
     // A cache outage or a cold preparation must not hold up ordinary SSR.
     const result = await Promise.race([
       pending,
-      new Promise<null>((resolve) => {
-        timeout = setTimeout(() => {
-          fallbackReason = "lookup_budget_exceeded";
-          resolve(null);
-        }, 100);
+      new Promise<Lookup>((resolve) => {
+        timeout = setTimeout(() => resolve({ hit: false, reason: "lookup_budget_exceeded" }), 100);
       }),
     ]);
     const durationMs = Math.round(stopwatch.getElapsedInMilliseconds());
-    if (!result) {
-      logger.debug("Using ordinary Board SSR", { reason: fallbackReason, durationMs });
+    if (!result.hit) {
+      logger.debug("Using ordinary Board SSR", { reason: result.reason, durationMs });
+      localizedResponse.headers.set(cacheHeader, `MISS; reason=${result.reason}`);
       return null;
     }
-    logger.debug("Serving prepared Board view", {
-      viewId: result.viewId,
-      ageMs: Date.now() - result.preparedAt,
-      durationMs,
-    });
-    return result.response;
+    const ageSeconds = Math.max(0, Math.round((Date.now() - result.preparedAt) / 1000));
+    logger.debug("Serving prepared Board view", { viewId: result.viewId, ageSeconds, durationMs });
+    const headers = new Headers();
+    for (const [key, value] of localizedResponse.headers) {
+      if (!key.startsWith("x-middleware-")) headers.append(key, value);
+    }
+    headers.set("Content-Type", "text/html; charset=utf-8");
+    headers.set("Cache-Control", "private, no-store, max-age=0");
+    headers.set(cacheHeader, `HIT; age=${ageSeconds}`);
+    let body: string | null = result.html;
+    if (request.method === "HEAD") body = null;
+    return new NextResponse(body, { status: 200, headers });
   } finally {
     clearTimeout(timeout);
   }

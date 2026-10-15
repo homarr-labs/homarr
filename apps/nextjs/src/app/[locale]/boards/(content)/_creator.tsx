@@ -18,6 +18,8 @@ import { getI18n } from "@homarr/translation/server";
 import { prefetchForKind } from "@homarr/widgets/prefetch";
 import { getInitiallyVisibleWidgetKinds, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
+import { settleCapturedQueriesAsync } from "~/board-preparation/capture";
+import { getCapturedViewIdAsync } from "~/board-preparation/captured-view";
 import { env } from "~/env";
 import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
@@ -117,7 +119,34 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
 
       const layoutId = getLayoutIdForViewportWidth(board.layouts, await viewportWidthPromise);
-      const [session, integrations] = await Promise.all([sessionPromise, integrationsPromise]);
+      const [session, integrations, capturedViewId] = await Promise.all([
+        sessionPromise,
+        integrationsPromise,
+        getCapturedViewIdAsync(),
+      ]);
+      if (capturedViewId) {
+        const snapshot = createBoardQuerySnapshot(board, integrations, { preserveTimestamps: true });
+        await snapshot.restoreAsync(queryClient).catch(() => undefined);
+        const queries = await settleCapturedQueriesAsync(queryClient, {
+          board,
+          layoutId,
+          isAuthenticated: Boolean(session),
+        });
+        await snapshot.saveAsync(queryClient).catch(() => undefined);
+        // Rendered without Suspense so the whole Board is in the stored document,
+        // and its pre-paint canvas script runs in place.
+        return (
+          <>
+            <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
+            <HydrationBoundary state={queries}>
+              <CachedWidgetRefresh queryHashes={queries.queries.map((query) => query.queryHash)} />
+              <IntegrationProvider integrations={integrations}>
+                <ClientBoard />
+              </IntegrationProvider>
+            </HydrationBoundary>
+          </>
+        );
+      }
       const snapshot = createBoardQuerySnapshot(board, integrations);
       await snapshot.restoreAsync(queryClient).catch(() => undefined);
       const restoredQueryHashes = new Set(

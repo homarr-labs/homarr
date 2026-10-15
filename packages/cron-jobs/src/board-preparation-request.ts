@@ -1,12 +1,17 @@
 import { env } from "@homarr/common/env";
 import { createKeyedFingerprint, verifyKeyedFingerprint } from "@homarr/common/server";
 
-export const preparedBoardPath = "/prepared-board";
 export const preparationEndpoint = "/api/board-preparation";
 const signatureHeader = "x-homarr-board-preparation";
+const captureHeader = "x-homarr-board-capture";
+const signatureLifetimeMs = 30_000;
 
 const signedValue = (method: string, path: string, timestamp: number) =>
   `homarr-board-preparation-v1:${method}:${path}:${timestamp}`;
+const signedCapture = (viewId: string, timestamp: number) => `homarr-board-capture-v1:${viewId}:${timestamp}`;
+
+const isFresh = (timestamp: number) =>
+  Number.isSafeInteger(timestamp) && Math.abs(Date.now() - timestamp) <= signatureLifetimeMs;
 
 export const createPreparationHeaders = (method: string, path: string) => {
   if (!env.SECRET_ENCRYPTION_KEY) throw new Error("Board preparation requires a configured encryption key");
@@ -22,9 +27,25 @@ export const isPreparationRequest = (request: Request) => {
   if (!signature) return false;
   const [time, fingerprint] = signature.split(".");
   const timestamp = Number(time);
-  if (!fingerprint || !Number.isSafeInteger(timestamp) || Math.abs(Date.now() - timestamp) > 30_000) return false;
+  if (!fingerprint || !isFresh(timestamp)) return false;
   const url = new URL(request.url);
   return verifyKeyedFingerprint(signedValue(request.method, url.pathname + url.search, timestamp), fingerprint);
+};
+
+/** Marks a loopback render whose document will be stored as a Prepared Board view. */
+export const createCaptureHeaders = (viewId: string) => {
+  if (!env.SECRET_ENCRYPTION_KEY) throw new Error("Board preparation requires a configured encryption key");
+  const timestamp = Date.now();
+  return { [captureHeader]: `${viewId}.${timestamp}.${createKeyedFingerprint(signedCapture(viewId, timestamp))}` };
+};
+
+export const readCaptureViewId = (headers: Pick<Headers, "get">) => {
+  if (!env.SECRET_ENCRYPTION_KEY) return null;
+  const [viewId, time, fingerprint] = headers.get(captureHeader)?.split(".") ?? [];
+  const timestamp = Number(time);
+  if (!viewId || !fingerprint || !isFresh(timestamp)) return null;
+  if (!verifyKeyedFingerprint(signedCapture(viewId, timestamp), fingerprint)) return null;
+  return viewId;
 };
 
 export const getPreparationOrigin = () => {

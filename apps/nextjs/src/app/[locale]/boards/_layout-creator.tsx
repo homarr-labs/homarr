@@ -7,14 +7,12 @@ import { TRPCError } from "@trpc/server";
 
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
-import type { Session } from "@homarr/auth";
-import type { ColorScheme } from "@homarr/definitions";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "@homarr/boards/layout-selection";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
 
-import { MainHeaderView } from "~/components/layout/header";
+import { MainHeader } from "~/components/layout/header";
 import { appShellLogoHeight } from "~/components/layout/constants";
 import { BoardLogo, BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
@@ -22,7 +20,7 @@ import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import type { Board } from "./_types";
-import { BoardProviders, PreparedBoardProviders } from "./_providers";
+import { BoardProviders } from "./_providers";
 import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
@@ -102,89 +100,37 @@ export const createBoardLayout = <TParams extends Params>({
     const initialLayoutId = getLayoutIdForViewportWidth(initialBoard.layouts, initialViewportWidth);
 
     return (
-      <BoardLayoutView
+      <BoardProviders
         initialBoard={initialBoard}
         initialLayoutId={initialLayoutId}
         initialViewportWidth={initialViewportWidth}
         canModify={hasChangeAccess}
-        colorScheme={colorScheme}
-        shouldRunBoardTour={shouldRunBoardTour}
-        session={session}
-        headerActions={headerActions}
-        headerBoardEditAction={headerBoardEditAction}
-        headerBoardSettingsAction={headerBoardSettingsAction}
-        withCustomCss={withCustomCss}
       >
-        {children}
-      </BoardLayoutView>
+        <BoardReadyProvider>
+          <BoardMantineProvider defaultColorScheme={colorScheme}>
+            <ModalProvider>
+              {withCustomCss && <CustomCss />}
+              <BoardTourGate enabled={shouldRunBoardTour}>
+                <ClientShell hasNavigation={false}>
+                  <MainHeader
+                    logo={<BoardLogo size={appShellLogoHeight} />}
+                    logoWithTitle={<BoardLogoWithTitle size="md" />}
+                    actions={headerActions}
+                    boardEditAction={headerBoardEditAction}
+                    boardSettingsAction={headerBoardSettingsAction}
+                    hasNavigation={false}
+                  />
+                  <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
+                </ClientShell>
+              </BoardTourGate>
+            </ModalProvider>
+          </BoardMantineProvider>
+        </BoardReadyProvider>
+      </BoardProviders>
     );
   };
 
   return Layout;
-};
-
-interface BoardLayoutViewProps {
-  prepared?: boolean;
-  initialBoard: Board;
-  initialLayoutId: string;
-  initialViewportWidth: number;
-  canModify: boolean;
-  colorScheme: ColorScheme;
-  shouldRunBoardTour: boolean;
-  session: Session | null;
-  headerActions?: JSX.Element;
-  headerBoardEditAction?: JSX.Element;
-  headerBoardSettingsAction?: JSX.Element;
-  withCustomCss?: boolean;
-}
-
-export const BoardLayoutView = ({
-  children,
-  initialBoard,
-  initialLayoutId,
-  initialViewportWidth,
-  canModify,
-  colorScheme,
-  shouldRunBoardTour,
-  session,
-  headerActions,
-  headerBoardEditAction,
-  headerBoardSettingsAction,
-  withCustomCss = true,
-  prepared = false,
-}: PropsWithChildren<BoardLayoutViewProps>) => {
-  let Providers = BoardProviders;
-  if (prepared) Providers = PreparedBoardProviders;
-  return (
-    <Providers
-      initialBoard={initialBoard}
-      initialLayoutId={initialLayoutId}
-      initialViewportWidth={initialViewportWidth}
-      canModify={canModify}
-    >
-      <BoardReadyProvider>
-        <BoardMantineProvider defaultColorScheme={colorScheme}>
-          <ModalProvider>
-            {withCustomCss && <CustomCss />}
-            <BoardTourGate enabled={shouldRunBoardTour}>
-              <ClientShell hasNavigation={false}>
-                <MainHeaderView
-                  session={session}
-                  logo={<BoardLogo size={appShellLogoHeight} />}
-                  logoWithTitle={<BoardLogoWithTitle size="md" />}
-                  actions={headerActions}
-                  boardEditAction={headerBoardEditAction}
-                  boardSettingsAction={headerBoardSettingsAction}
-                  hasNavigation={false}
-                />
-                <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
-              </ClientShell>
-            </BoardTourGate>
-          </ModalProvider>
-        </BoardMantineProvider>
-      </BoardReadyProvider>
-    </Providers>
-  );
 };
 
 export const getInitialViewportWidthAsync = cache(async () => {

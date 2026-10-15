@@ -39,13 +39,7 @@ const loadBoardEditorAsync = async () =>
   ]);
 const BoardEditActions = dynamic(loadEditActionsAsync, { ssr: false });
 
-export const BoardContentEditAction = ({
-  demoReadOnly,
-  prepared = false,
-}: {
-  demoReadOnly: boolean;
-  prepared?: boolean;
-}) => {
+export const BoardContentEditAction = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
@@ -55,8 +49,7 @@ export const BoardContentEditAction = ({
   return (
     <>
       {isEditMode && <BoardEditActions />}
-      {prepared && <EditModeMenu demoReadOnly={demoReadOnly} searchParams={new URLSearchParams()} />}
-      {!prepared && <RoutedEditModeMenu demoReadOnly={demoReadOnly} />}
+      <EditModeMenu demoReadOnly={demoReadOnly} />
     </>
   );
 };
@@ -77,24 +70,14 @@ export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boo
   );
 };
 
-const RoutedEditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
-  const searchParams = useSearchParams();
-  return <EditModeMenu demoReadOnly={demoReadOnly} searchParams={searchParams} />;
-};
-
-const EditModeMenu = ({
-  demoReadOnly,
-  searchParams,
-}: {
-  demoReadOnly: boolean;
-  searchParams: Pick<URLSearchParams, "get">;
-}) => {
+const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
   const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { openConfirmModal } = useConfirmModal();
   const tCommon = useI18n("common");
   const tBoardSetting = useI18n("board.setting");

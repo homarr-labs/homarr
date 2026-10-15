@@ -44,30 +44,6 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split("/").filter(Boolean);
   const routeSegments = supportedLanguages.includes(segments[0] as SupportedLanguage) ? segments.slice(1) : segments;
-  // This must run before locale/onboarding rewrites. Prepared HTML contains
-  // viewer data; a URL is never an access token, including RSC/dotted paths.
-  let decodedPath = pathname;
-  try {
-    decodedPath = decodeURIComponent(pathname);
-  } catch {
-    /* Invalid paths remain inaccessible below. */
-  }
-  const decodedSegments = decodedPath.split("/").filter(Boolean);
-  if (
-    decodedSegments[0] === "prepared-board" ||
-    (supportedLanguages.includes(decodedSegments[0] as SupportedLanguage) && decodedSegments[1] === "prepared-board")
-  ) {
-    const { isPreparationRequest } = await import("@homarr/cron-jobs/board-preparation");
-    if ((request.method === "GET" || request.method === "HEAD") && isPreparationRequest(request)) {
-      // Preparation warms the lookup/auth module graph as well as the HTML, so
-      // the first visitor does not pay for evaluating those server imports.
-      await import("./board-preparation/proxy");
-      const response = NextResponse.next();
-      response.headers.set("Cache-Control", "private, no-store, max-age=0");
-      return response;
-    }
-    return new NextResponse(null, { status: 404, headers: { "Cache-Control": "private, no-store" } });
-  }
   const isOnboardingAccessRoute =
     (routeSegments.length === 1 && routeSegments[0] === "init") ||
     (routeSegments.length === 2 && routeSegments[0] === "auth" && routeSegments[1] === "login");
@@ -97,6 +73,9 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   const next = createI18nMiddleware(defaultLocale);
   const response = next(request);
   if (!event) return response;
+  const { readCaptureViewId } = await import("@homarr/cron-jobs/board-preparation");
+  // A capture renders the ordinary route; it must never be answered by a capture.
+  if (readCaptureViewId(request.headers)) return response;
   const { getPreparedBoardResponseAsync } = await import("./board-preparation/proxy");
   const prepared = await getPreparedBoardResponseAsync(request, event, response);
   if (prepared) return prepared;
@@ -104,9 +83,5 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
 }
 
 export const config = {
-  matcher: [
-    "/prepared-board/:path*",
-    "/:locale/prepared-board/:path*",
-    "/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)",
-  ],
+  matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
 };

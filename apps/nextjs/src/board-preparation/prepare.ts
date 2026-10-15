@@ -1,28 +1,18 @@
-import { setTimeout as delay } from "node:timers/promises";
-import { dehydrate, hydrate, QueryClient } from "@tanstack/react-query";
-import type { QueryClient as QueryClientType } from "@tanstack/react-query";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { randomBytes, randomUUID } from "node:crypto";
+import { TRPCError } from "@trpc/server";
 
-import { appRouter, createCaller, createTRPCContext } from "@homarr/api";
 import type { Session } from "@homarr/auth";
-import { createSessionAsync } from "@homarr/auth/server";
+import { createSessionAsync, sessionTokenCookieName } from "@homarr/auth/server";
+import { boardViewportWidthCookieName } from "@homarr/boards/layout-selection";
 import { createId, Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { and, db, desc, eq, gt } from "@homarr/db";
+import { createCaptureHeaders, getPreparationOrigin } from "@homarr/cron-jobs/board-preparation";
+import { and, db, desc, eq, gt, like, notLike } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
-import { boards, sessions, users } from "@homarr/db/schema";
-import {
-  createPreparationHeaders,
-  getPreparationOrigin,
-  preparedBoardPath,
-  preparationEndpoint,
-} from "@homarr/cron-jobs/board-preparation";
-import type { WidgetKind } from "@homarr/definitions";
-import { prefetchForKind } from "@homarr/widgets/prefetch";
-import { prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
+import { sessions, users } from "@homarr/db/schema";
+import { colorSchemeCookieKey } from "@homarr/definitions";
+import { localeCookieKey } from "@homarr/definitions/cookie";
 
-import { createBoardQuerySnapshot } from "~/app/[locale]/boards/(content)/_query-snapshot";
-import type { Item } from "~/app/[locale]/boards/_types";
 import { getBoardPreparationSpec, loadBoardPreparationContextAsync, withPreparedLayout } from "./context";
 import {
   createBoardPreparationLockAsync,
@@ -30,12 +20,10 @@ import {
   getBoardPreparationId,
   getPreparationNamespaceAsync,
   preparationMaxAgeMs,
-  publishPreparedBoardAsync,
   readBoardPreparationRegistryAsync,
   readPreparedVersionAsync,
-  readPreparedBoardAsync,
   rememberBoardPreparationAsync,
-  writePreparedBoardAsync,
+  writePreparedDocumentAsync,
 } from "./store";
 import type { BoardPreparationSpec } from "./store";
 
@@ -62,21 +50,91 @@ const resolveViewerAsync = async (
   return { ...session, expires: spec.sessionExpires, user: { ...session.user, ...user } };
 };
 
-const settleQueriesAsync = async (client: QueryClientType, dependentQueries: Promise<void>[]) => {
-  await Promise.allSettled(dependentQueries);
-  // Discovery can register another query. Read again after each settled group.
-  while (true) {
-    const pending = client
-      .getQueryCache()
-      .getAll()
-      .flatMap((query) => {
-        if (query.state.fetchStatus !== "fetching" || !query.promise) return [];
-        return [query.promise];
-      });
-    if (pending.length === 0) return;
-    await Promise.allSettled(pending);
+const desktopUserAgent =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36";
+const mobileUserAgent =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1";
+const captureSessionPrefix = "board-preparation-capture:";
+
+const loadSpecContextAsync = async (spec: BoardPreparationSpec, session: Session | null) => {
+  let name: string | undefined;
+  if (spec.pathname !== "/") name = spec.boardName;
+  try {
+    return await loadBoardPreparationContextAsync({
+      session,
+      name,
+      deviceType: spec.deviceType ?? undefined,
+      locale: spec.locale,
+      colorScheme: spec.colorScheme,
+      layout: { layoutId: spec.layoutId },
+    });
+  } catch (cause) {
+    // A renamed, deleted or no longer accessible Board stays on the ordinary route.
+    if (cause instanceof TRPCError) return null;
+    throw cause;
   }
 };
+
+// The capture renders the ordinary route as this viewer, through the same
+// session check as any visit. The token never leaves this process.
+const withCaptureSessionAsync = async <T>(
+  spec: BoardPreparationSpec,
+  callback: (token: string | null) => Promise<T>,
+) => {
+  if (!spec.viewerId || !spec.sessionExpires) return await callback(null);
+  const sessionToken = `${captureSessionPrefix}${Date.now()}:${randomBytes(32).toString("hex")}`;
+  await db.insert(sessions).values({
+    sessionToken,
+    userId: spec.viewerId,
+    expires: new Date(spec.sessionExpires),
+  });
+  try {
+    return await callback(sessionToken);
+  } finally {
+    await db.delete(sessions).where(eq(sessions.sessionToken, sessionToken));
+  }
+};
+
+// A crash between insert and delete must not leave a usable session behind.
+const removeAbandonedCaptureSessionsAsync = async () => {
+  const rows = await db.query.sessions.findMany({
+    where: like(sessions.sessionToken, `${captureSessionPrefix}%`),
+    columns: { sessionToken: true },
+  });
+  const abandoned = rows
+    .map(({ sessionToken }) => sessionToken)
+    .filter((token) => Number(token.slice(captureSessionPrefix.length).split(":")[0]) < Date.now() - 10 * 60_000);
+  for (const sessionToken of abandoned) await db.delete(sessions).where(eq(sessions.sessionToken, sessionToken));
+};
+
+const captureDocumentAsync = async (id: string, spec: BoardPreparationSpec, viewportWidth: number) =>
+  await withCaptureSessionAsync(spec, async (sessionToken) => {
+    const cookies = [
+      `${localeCookieKey}=${spec.locale}`,
+      `${colorSchemeCookieKey}=${spec.colorScheme}`,
+      `${boardViewportWidthCookieName}=${viewportWidth}`,
+    ];
+    if (sessionToken) cookies.push(`${sessionTokenCookieName}=${sessionToken}`);
+    let userAgent = desktopUserAgent;
+    if (spec.deviceType === "mobile") userAgent = mobileUserAgent;
+    const response = await fetch(getPreparationOrigin() + spec.pathname, {
+      headers: {
+        ...createCaptureHeaders(id),
+        accept: "text/html",
+        cookie: cookies.join("; "),
+        "user-agent": userAgent,
+      },
+      redirect: "manual",
+      cache: "no-store",
+      signal: AbortSignal.timeout(90_000),
+    });
+    const html = await response.text();
+    if (response.status !== 200 || !response.headers.get("content-type")?.includes("text/html")) {
+      throw new Error(`Board capture returned HTTP ${response.status}`);
+    }
+    if (!html.includes('data-testid="board-canvas"')) throw new Error("Board capture did not render the Board");
+    return html;
+  });
 
 export const prepareBoardAsync = async (id: string, runId?: string) => {
   const log = logger.child({ runId, viewId: id.slice(0, 12) });
@@ -92,8 +150,6 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
     log.debug("Board preparation skipped", { reason: "already_running" });
     return;
   }
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: 30_000 } } });
-  let timer: ReturnType<typeof setTimeout> | undefined;
   let capacity: Awaited<ReturnType<typeof createBoardPreparationLockAsync>> = null;
   let capacityLease: string | null = null;
   try {
@@ -113,211 +169,46 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
     }
     const { spec } = variant;
     const session = await resolveViewerAsync(spec);
-    const boardRow = await db.query.boards.findFirst({ where: eq(boards.id, spec.boardId), columns: { name: true } });
-    if (!boardRow) {
-      log.debug("Board preparation skipped", { reason: "board_deleted", boardId: spec.boardId });
-      return;
-    }
-    // The registered ID already selects the Board, including a mobile home.
-    // Reload it by its current name rather than selecting a home Board again.
-    const context = await loadBoardPreparationContextAsync({
-      ...spec,
-      session,
-      name: boardRow.name,
-      deviceType: undefined,
-      layout: { layoutId: spec.layoutId },
-    });
-    if (!context || getBoardPreparationId(getBoardPreparationSpec(context)) !== id) {
+    const context = await loadSpecContextAsync(spec, session);
+    if (!context || getBoardPreparationId(getBoardPreparationSpec(context, spec)) !== id) {
       log.debug("Board preparation skipped", { reason: "ineligible_context", boardId: spec.boardId });
       return;
     }
-    log.debug("Preparing Board view", {
-      boardId: spec.boardId,
-      locale: spec.locale,
-      layoutId: spec.layoutId,
-      widgetCount: context.board.items.length,
-    });
-    const queryStopwatch = new Stopwatch();
     const fingerprint = getBoardPreparationFingerprint(context);
-    const snapshot = createBoardQuerySnapshot(context.board, context.integrations, { preserveTimestamps: true });
-    await snapshot.restoreAsync(queryClient);
-    const previous = await readPreparedVersionAsync(id);
-    if (previous?.fingerprint === fingerprint && previous.validUntil > Date.now()) {
-      const retained = await readPreparedBoardAsync(id, String(previous.slot));
-      if (retained?.token === previous.token) {
-        hydrate(queryClient, {
-          mutations: [],
-          queries: retained.queries.queries.filter(
-            (query) => query.state.dataUpdatedAt > Date.now() - preparationMaxAgeMs,
-          ),
-        });
-      }
-    }
+    log.debug("Capturing Board view", { boardId: spec.boardId, locale: spec.locale, layoutId: spec.layoutId });
+    const captureStopwatch = new Stopwatch();
+    const html = await captureDocumentAsync(id, spec, context.viewportWidth);
+    const captureDurationMs = Math.round(captureStopwatch.getElapsedInMilliseconds());
 
-    const headers = new Headers({ "x-trpc-source": "board-preparation" });
-    const apiContext = createTRPCContext({ headers, session });
-    const api = createCaller(apiContext);
-    const trpc = createTRPCOptionsProxy({ router: appRouter, ctx: apiContext, queryClient });
-    const itemsByKind = new Map<WidgetKind, Item[]>();
-    for (const item of context.board.items) {
-      const items = itemsByKind.get(item.kind) ?? [];
-      items.push(item);
-      itemsByKind.set(item.kind, items);
+    // A mutation may finish while slow Integrations render. Retry with the new
+    // inputs rather than publishing a superseded document.
+    const latest = await loadSpecContextAsync(spec, await resolveViewerAsync(spec));
+    if (!latest || getBoardPreparationFingerprint(latest) !== fingerprint) {
+      log.debug("Board preparation needs retry", { reason: "inputs_changed", boardId: spec.boardId });
+      return "changed" as const;
     }
-    for (const [kind, items] of itemsByKind) prefetchForKind(kind, queryClient, items);
-    // These two consumers suspend instead of rendering an empty query state.
-    // Resolve them here so a static render never tries request-cookie transport.
-    for (const item of context.board.items) {
-      const integrationId = item.integrationIds[0];
-      if (!integrationId) continue;
-      if (item.kind === "wud") void queryClient.prefetchQuery(trpc.widget.wud.getStats.queryOptions({ integrationId }));
-      if (item.kind === "archiveTeamWarrior") {
-        void queryClient.prefetchQuery(trpc.widget.archiveTeamWarrior.getStatus.queryOptions({ integrationId }));
-      }
-    }
-    const dependent = prefetchInitialWidgetData(queryClient, context.board, context.layoutId, session !== null, {
-      api,
-      trpc,
+    let validUntil = Date.now() + preparationMaxAgeMs;
+    if (session) validUntil = Math.min(validUntil, Date.parse(session.expires));
+    const token = randomUUID();
+    const preparedAt = Date.now();
+    if (
+      !(await writePreparedDocumentAsync(
+        id,
+        { token, html },
+        { fingerprint, token, validUntil, preparedAt },
+        lock,
+        lease,
+      ))
+    )
+      throw new Error("Board preparation lease expired before publication");
+    log.info("Prepared Board view published", {
+      boardId: spec.boardId,
+      durationMs: Math.round(stopwatch.getElapsedInMilliseconds()),
+      captureDurationMs,
+      documentBytes: Buffer.byteLength(html),
     });
-    const queryTimedOut = await Promise.race([
-      settleQueriesAsync(queryClient, dependent).then(() => false),
-      new Promise<boolean>((resolve) => {
-        timer = setTimeout(() => resolve(true), 30_000);
-      }),
-    ]);
-    clearTimeout(timer);
-    let timedOutRetainedQueryCount = 0;
-    if (queryTimedOut) {
-      const pendingQueries = queryClient.getQueryCache().findAll({ fetchStatus: "fetching" });
-      timedOutRetainedQueryCount = pendingQueries.filter((query) => query.state.data !== undefined).length;
-      // Cancellation reverts to the last cached value and its original age.
-      // Keep it alongside fast queries, without persisting in-flight promises.
-      await queryClient.cancelQueries({ fetchStatus: "fetching" });
-      log.warn("Board preparation query budget exceeded; using available data", {
-        pendingQueryCount: pendingQueries.length,
-        retainedQueryCount: timedOutRetainedQueryCount,
-      });
-    }
-    await snapshot.saveAsync(queryClient);
-
-    const cachedQueries = queryClient.getQueryCache().getAll();
-    const failedQueries = cachedQueries.filter((query) => query.state.status === "error");
-    const queryDurationMs = Math.round(queryStopwatch.getElapsedInMilliseconds());
-    const retainedQueryCount =
-      failedQueries.filter((query) => query.state.data !== undefined).length + timedOutRetainedQueryCount;
-    log.debug("Board preparation queries settled", {
-      durationMs: queryDurationMs,
-      queryCount: cachedQueries.length,
-      failedQueryCount: failedQueries.length,
-      retainedQueryCount,
-    });
-
-    const queries = dehydrate(queryClient, {
-      shouldDehydrateMutation: () => false,
-      shouldDehydrateQuery: (query) => query.state.data !== undefined && query.state.fetchStatus !== "fetching",
-    });
-    // A failed refresh with retained data is still useful presentation data.
-    // Never persist a rejected promise or serialize an upstream error into HTML.
-    for (const query of queries.queries) {
-      query.state = { ...query.state, status: "success", fetchStatus: "idle", error: null, fetchFailureReason: null };
-    }
-    let slot: 0 | 1 = 0;
-    if (previous?.slot === 0) slot = 1;
-    const renderStopwatch = new Stopwatch();
-    const prepared = await writePreparedBoardAsync(id, slot, { context, queries }, lock, lease);
-    const path = `${preparedBoardPath}/${spec.locale}/${id}/${slot}`;
-    // Invalidation is committed when its request finishes. Doing it in this
-    // request and then fetching would still see the old Full Route Cache entry.
-    const invalidatePath = `${preparationEndpoint}?invalidate=${id}&slot=${slot}`;
-    const invalidated = await fetch(getPreparationOrigin() + invalidatePath, {
-      method: "POST",
-      headers: createPreparationHeaders("POST", invalidatePath),
-      redirect: "error",
-      signal: AbortSignal.timeout(5_000),
-    });
-    await invalidated.arrayBuffer();
-    if (!invalidated.ok) throw new Error("Could not invalidate the inactive Board render slot");
-
-    // HTTP 200 alone could be dynamic SSR. Require the expected version and an
-    // origin cache HIT before making the new HTML/RSC entry available to visitors.
-    for (let attempt = 0; attempt < 4; attempt++) {
-      const response = await fetch(getPreparationOrigin() + path, {
-        headers: createPreparationHeaders("GET", path),
-        redirect: "error",
-        signal: AbortSignal.timeout(20_000),
-        cache: "no-store",
-      });
-      const html = await response.text();
-      const originCache = response.headers.get("x-nextjs-cache");
-      const versionMatches = html.includes(`data-homarr-prepared-token="${prepared.token}"`);
-      log.debug("Board render cache warmup attempt", {
-        attempt: attempt + 1,
-        statusCode: response.status,
-        originCache,
-        versionMatches,
-      });
-      if (!response.ok) {
-        throw new Error("Prepared Board did not produce the expected HTML");
-      }
-      if (originCache === "HIT" && versionMatches) {
-        const latestBoard = await db.query.boards.findFirst({
-          where: eq(boards.id, spec.boardId),
-          columns: { name: true },
-        });
-        if (!latestBoard) {
-          log.debug("Board preparation skipped", { reason: "board_deleted", boardId: spec.boardId });
-          return;
-        }
-        const latest = await loadBoardPreparationContextAsync({
-          ...spec,
-          session: await resolveViewerAsync(spec),
-          name: latestBoard.name,
-          deviceType: undefined,
-          layout: { layoutId: spec.layoutId },
-        });
-        // A mutation may finish while slow Integrations or rendering run. Retry
-        // with the new inputs rather than publishing a superseded presentation.
-        if (!latest || getBoardPreparationFingerprint(latest) !== fingerprint) {
-          log.debug("Board preparation needs retry", { reason: "inputs_changed", boardId: spec.boardId });
-          return "changed" as const;
-        }
-        let validUntil = Date.now() + preparationMaxAgeMs;
-        if (session) validUntil = Math.min(validUntil, Date.parse(session.expires));
-        if (
-          !(await publishPreparedBoardAsync(
-            id,
-            {
-              slot,
-              fingerprint,
-              token: prepared.token,
-              validUntil,
-              preparedAt: Date.now(),
-            },
-            lock,
-            lease,
-          ))
-        )
-          throw new Error("Board preparation lease expired before publication");
-        log.info("Prepared Board view published", {
-          boardId: spec.boardId,
-          durationMs: Math.round(stopwatch.getElapsedInMilliseconds()),
-          queryDurationMs,
-          renderDurationMs: Math.round(renderStopwatch.getElapsedInMilliseconds()),
-          queryCount: queries.queries.length,
-          failedQueryCount: failedQueries.length,
-          retainedQueryCount,
-          queryTimedOut,
-          renderAttempts: attempt + 1,
-          slot,
-        });
-        return "prepared" as const;
-      }
-      await delay(100);
-    }
-    throw new Error("Prepared Board did not enter the origin page cache");
+    return "prepared" as const;
   } finally {
-    clearTimeout(timer);
-    queryClient.clear();
     await lock.releaseAsync(lease);
     if (capacity && capacityLease) await capacity.releaseAsync(capacityLease);
   }
@@ -327,7 +218,7 @@ const discoverHomeBoardsAsync = async () => {
   const settings = await getServerSettingsAsync(db);
   const activeSessions = await db.query.sessions.findMany({
     columns: { userId: true, expires: true },
-    where: gt(sessions.expires, new Date()),
+    where: and(gt(sessions.expires, new Date()), notLike(sessions.sessionToken, `${captureSessionPrefix}%`)),
     orderBy: desc(sessions.expires),
     limit: 32,
   });
@@ -356,7 +247,7 @@ const discoverHomeBoardsAsync = async () => {
         for (const { id: layoutId } of context.board.layouts) {
           const layoutContext = withPreparedLayout(context, layoutId);
           if (!layoutContext) continue;
-          const spec = getBoardPreparationSpec(layoutContext);
+          const spec = getBoardPreparationSpec(layoutContext, { pathname: "/", deviceType: deviceType ?? null });
           await rememberBoardPreparationAsync(getBoardPreparationId(spec), spec);
         }
       } catch {
@@ -379,6 +270,7 @@ export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string
   if (id) scope = "view";
   log.info("Board preparation run started", { scope });
   const deadline = Date.now() + 60_000;
+  await removeAbandonedCaptureSessionsAsync();
   if (!id && !boardId) await discoverHomeBoardsAsync();
   let ids = [id];
   if (!id) {
