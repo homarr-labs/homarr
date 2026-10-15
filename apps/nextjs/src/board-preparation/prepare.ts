@@ -134,12 +134,13 @@ const captureDocumentAsync = async (id: string, spec: BoardPreparationSpec, view
       throw new Error(`Board capture returned HTTP ${response.status}`);
     }
     if (!html.includes('data-testid="board-canvas"')) throw new Error("Board capture did not render the Board");
-    // React throttles Suspense reveals to 300ms after a fallback first paints.
-    // The stored document is complete, so reveal it on the next frame instead.
-    return html.replace(revealThrottleScript, "");
+    // React throttles each Suspense reveal batch to 300ms after the previous
+    // one, timed from $RT. The stored document is complete, so every batch
+    // reveals on the next frame, before hydration can claim a pending boundary.
+    return html.replaceAll(revealThrottleTimestamp, "");
   });
 
-const revealThrottleScript = "<script>requestAnimationFrame(function(){$RT=performance.now()});</script>";
+const revealThrottleTimestamp = "$RT=performance.now()";
 // Each streamed Suspense reveal is painted in a later batch; few is better.
 const countStreamedReveals = (html: string) => html.split("$RC(").length - 1;
 
