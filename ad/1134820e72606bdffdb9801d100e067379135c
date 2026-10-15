@@ -1,0 +1,27 @@
+apps/nextjs/src/board-preparation/context.ts
+  s_0ed34ca6aa2512::t_8eb26a7b3eb9ac 4,22,29,63-90,99
+apps/nextjs/src/board-preparation/prepare.ts
+  s_0ed34ca6aa2512::t_b7677726254266 26,128,137,276,347,352,356-361
+apps/nextjs/src/board-preparation/proxy.ts
+  s_0ed34ca6aa2512::t_114689dcb50b51 65
+apps/nextjs/src/board-preparation/store.ts
+  s_0ed34ca6aa2512::t_cc17da2543be70 29,75,83,85,92,103,126,143
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_0ed34ca6aa2512::t_0bc325978ecd53 25-28,68-80,82-84,86-100,103-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ad1134820e72606bdffdb9801d100e067379135c",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
