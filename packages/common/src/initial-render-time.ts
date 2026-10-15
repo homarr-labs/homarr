@@ -15,9 +15,11 @@ export const useInitialRenderTime = () => useContext(InitialRenderTimeContext);
 
 // Cached HTML and its first browser render must use the same clock. Switch to
 // real time immediately after hydration, without hiding the retained content.
+export const useIsHydrated = () => useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
+
 export const useHydrationTime = () => {
   const initialTime = useInitialRenderTime();
-  const hydrated = useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
+  const hydrated = useIsHydrated();
   if (hydrated) return undefined;
   return initialTime;
 };

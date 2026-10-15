@@ -36,7 +36,7 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useTimeAgo } from "@homarr/common";
+import { useIsHydrated, useTimeAgo } from "@homarr/common";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
@@ -266,6 +266,9 @@ export default function DockerWidget({
   const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
+  // A stale retained query reports its mount refetch on the hydration render,
+  // which the server-rendered button does not have.
+  const isRefreshing = useIsHydrated() && isFetching;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
     async onSuccess() {
       await Promise.all([
@@ -486,7 +489,7 @@ export default function DockerWidget({
                 size={footerRefreshButtonSize}
                 variant="transparent"
                 c="var(--mantine-color-text)"
-                loading={isFetching || refreshInventory.isPending}
+                loading={isRefreshing || refreshInventory.isPending}
                 onClick={() => refreshInventory.mutate()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
                 style={{ position: "relative", overflow: "visible" }}
