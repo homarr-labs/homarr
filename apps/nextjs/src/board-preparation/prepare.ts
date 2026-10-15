@@ -194,7 +194,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
     const fingerprint = getBoardPreparationFingerprint(context);
     log.debug("Capturing Board view", { boardId: spec.boardId, locale: spec.locale, layoutId: spec.layoutId });
     const captureStopwatch = new Stopwatch();
-    const html = await captureDocumentAsync(id, spec, context.viewportWidth);
+    const html = await captureDocumentAsync(id, spec, variant.viewportWidth ?? context.viewportWidth);
     const captureDurationMs = Math.round(captureStopwatch.getElapsedInMilliseconds());
 
     // A mutation may finish while slow Integrations render. Retry with the new

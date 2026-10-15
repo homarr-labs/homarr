@@ -55,6 +55,8 @@ interface PreparedVersion {
 interface BoardPreparationVariant {
   spec: BoardPreparationSpec;
   lastSeenAt: number;
+  /** The visitor's last browser width, so size-dependent Widgets capture their final branch. */
+  viewportWidth?: number;
 }
 
 type Registry = Record<string, BoardPreparationVariant>;
@@ -158,14 +160,14 @@ const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
   return false;
 };
 
-export const rememberBoardPreparationAsync = async (id: string, spec: BoardPreparationSpec) => {
+export const rememberBoardPreparationAsync = async (id: string, spec: BoardPreparationSpec, viewportWidth?: number) => {
   return await updateRegistryAsync((registry) => {
     // A full registry makes room for the visit instead of locking out new views.
     if (!registry[id] && Object.keys(registry).length >= maxVariants) {
       const oldest = Object.entries(registry).toSorted((a, b) => a[1].lastSeenAt - b[1].lastSeenAt)[0];
       if (oldest) delete registry[oldest[0]];
     }
-    registry[id] = { spec, lastSeenAt: Date.now() };
+    registry[id] = { spec, lastSeenAt: Date.now(), viewportWidth: viewportWidth ?? registry[id]?.viewportWidth };
     return true;
   });
 };

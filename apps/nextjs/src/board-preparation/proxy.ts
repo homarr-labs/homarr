@@ -30,7 +30,7 @@ const cacheHeader = "X-Homarr-Board-Cache";
 
 type Lookup = { hit: true; html: string; viewId: string; preparedAt: number } | { hit: false; reason: string };
 
-const getViewportWidth = (request: NextRequest) => {
+const readViewportWidth = (request: NextRequest) => {
   for (const value of [
     request.cookies.get(boardViewportWidthCookieName)?.value,
     request.headers.get("sec-ch-viewport-width"),
@@ -38,10 +38,43 @@ const getViewportWidth = (request: NextRequest) => {
     const width = Number(value);
     if (Number.isInteger(width) && width >= 200 && width <= 10_000) return width;
   }
+  return undefined;
+};
+
+const getViewportWidth = (request: NextRequest) => {
+  const width = readViewportWidth(request);
+  if (width !== undefined) return width;
   const agent = request.headers.get("user-agent") ?? "";
   if (/iPad|Tablet|PlayBook|Silk/i.test(agent)) return 1024;
   if (/Mobi|Android|iPhone|iPod|IEMobile|Opera Mini/i.test(agent)) return 390;
   return 1440;
+};
+
+const requestPreparationAsync = async (id: string) => {
+  const configuration = await db.query.cronJobConfigurations.findFirst({
+    where: eq(cronJobConfigurations.name, "boardPreparation"),
+    columns: { isEnabled: true },
+  });
+  if (configuration?.isEnabled === false) {
+    logger.debug("Board preparation request skipped", { reason: "task_disabled", viewId: id.slice(0, 12) });
+    return;
+  }
+  await requestBoardPreparationAsync({ viewId: id });
+};
+
+const requestPreparation = (id: string, backgroundWork: Promise<void>[]) => {
+  let preparation = pendingPreparations.get(id);
+  if (!preparation) {
+    preparation = requestPreparationAsync(id)
+      .catch((cause: unknown) => {
+        let errorType: string = typeof cause;
+        if (cause instanceof Error) errorType = cause.name;
+        logger.warn("Could not request Board preparation", { viewId: id.slice(0, 12), errorType });
+      })
+      .finally(() => pendingPreparations.delete(id));
+    pendingPreparations.set(id, preparation);
+  }
+  backgroundWork.push(preparation);
 };
 
 const resolvePreparedResponseAsync = async (
@@ -73,10 +106,18 @@ const resolvePreparedResponseAsync = async (
   const fingerprint = getBoardPreparationFingerprint(context);
   const ready = await readPreparedVersionAsync(id);
   const usable = ready && ready.fingerprint === fingerprint && ready.validUntil > Date.now() + 30_000;
+  const viewportWidth = readViewportWidth(request);
+  const variant = registry[id];
+  const stale = !variant || variant.lastSeenAt < Date.now() - 60_000;
 
-  if (!registry[id] || registry[id].lastSeenAt < Date.now() - 60_000 || !usable) {
-    const registered = await rememberBoardPreparationAsync(id, spec);
+  if (stale || !usable) {
+    const registered = await rememberBoardPreparationAsync(id, spec, viewportWidth);
     if (!registered && !usable) return { hit: false, reason: "registration_unavailable" };
+  }
+  // A view captured at another width reflows size-dependent Widgets after
+  // hydration. Serve it, and capture this width for the next visit.
+  if (usable && stale && variant && viewportWidth !== undefined && variant.viewportWidth !== viewportWidth) {
+    requestPreparation(id, backgroundWork);
   }
   if (!usable) {
     let reason = "missing";
@@ -86,24 +127,7 @@ const resolvePreparedResponseAsync = async (
     }
     logger.debug("Prepared Board cache miss", { reason, viewId: id.slice(0, 12), boardId: spec.boardId });
     // The current request keeps its existing SSR path; preparation is independent.
-    const configuration = await db.query.cronJobConfigurations.findFirst({
-      where: eq(cronJobConfigurations.name, "boardPreparation"),
-      columns: { isEnabled: true },
-    });
-    if (configuration?.isEnabled !== false) {
-      let preparation = pendingPreparations.get(id);
-      if (!preparation) {
-        preparation = requestBoardPreparationAsync({ viewId: id })
-          .catch((cause: unknown) => {
-            let errorType: string = typeof cause;
-            if (cause instanceof Error) errorType = cause.name;
-            logger.warn("Could not request Board preparation", { viewId: id.slice(0, 12), errorType });
-          })
-          .finally(() => pendingPreparations.delete(id));
-        pendingPreparations.set(id, preparation);
-      }
-      backgroundWork.push(preparation);
-    } else logger.debug("Board preparation request skipped", { reason: "task_disabled", viewId: id.slice(0, 12) });
+    requestPreparation(id, backgroundWork);
     return { hit: false, reason };
   }
   // A concurrent publication can replace the document after the marker read.
