@@ -1,0 +1,55 @@
+apps/nextjs/next.config.ts
+  s_0ed34ca6aa2512::t_53d225394f7723 106
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_0ed34ca6aa2512::t_c3c3c34548453d 105
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_0ed34ca6aa2512::t_0713898a51fce3 21-22,122-149
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_0ed34ca6aa2512::t_9e6c1b7526b1cb 42,52,73,80
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  s_0ed34ca6aa2512::t_efd07483ea0732 15,23,103,109-129
+apps/nextjs/src/app/[locale]/boards/_providers.tsx
+  s_0ed34ca6aa2512::t_6d9f8149bf853a 38
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_0ed34ca6aa2512::t_0675a632c6278d 2-13,15-17,19,21-22,24-29,31-37,39-42,44-56,59-91,104-188,191-222
+apps/nextjs/src/app/api/board-preparation/route.ts
+  s_0ed34ca6aa2512::t_c83e061e8a3531 1
+apps/nextjs/src/board-preparation/capture.ts
+  s_0ed34ca6aa2512::t_56a9a98db3c478 1-78
+apps/nextjs/src/board-preparation/captured-view.ts
+  s_0ed34ca6aa2512::t_b3c4b75290cf68 1-7
+apps/nextjs/src/board-preparation/context.ts
+  s_0ed34ca6aa2512::t_a130f3a2b9efeb 93-96,104-105
+apps/nextjs/src/board-preparation/prepare.ts
+  s_0ed34ca6aa2512::t_d01349de6a9a80 1-2,5-6,9-10,12-14,26,53-94,98-138,172-173,178-181,183-188,190-208,210,221,250,273
+apps/nextjs/src/board-preparation/proxy.ts
+  s_0ed34ca6aa2512::t_23a3eb72fea80c 12,21,28-30,51,67-70,78,106,108-123,126-130,141-142,144-147,153-154,159,170-171,175-177,180-191
+apps/nextjs/src/board-preparation/store.ts
+  s_0ed34ca6aa2512::t_eeeb70d8ca9848 4,17,27-30,43,45,69-70,78-79,81-92,109,132,149,186,188,191,195-198,201,204,207-209
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_0ed34ca6aa2512::t_3bcc04b3365156 27-28,34-35,48,83
+apps/nextjs/src/components/layout/header.tsx
+  s_0ed34ca6aa2512::t_f2369191a0b5e6 5,19,26-27,40
+apps/nextjs/src/proxy.ts
+  s_0ed34ca6aa2512::t_ff403ef98a506b 76-78,86
+packages/cron-jobs/src/board-preparation-request.ts
+  s_0ed34ca6aa2512::t_63292bb91f4d21 6-7,11-14,30,35-50
+packages/widgets/src/server-prefetch.ts
+  s_0ed34ca6aa2512::t_8fd4ca61676807 6,65,153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ea6930383678f8e638813e3992104be5db7c24f5",
+  "prompts": {},
+  "sessions": {
+    "s_0ed34ca6aa2512": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69c21126-4998-4be4-a9af-24cc95676eea",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
