@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Tööaja seire",
       "beszel": "Beszel",
       "systemMonitoring": "Süsteemi jälgimine",
-      "security": "Turvalisus"
+      "security": "Turvalisus",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Pakkuja URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikaator",
             "placeholder": "Nimi või omanik/nimi"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Ava väljalaske leht",
       "releaseDescription": "Väljalaske kirjeldus",
       "projectDescription": "Projekti kirjeldus",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "",
       "created": "Loodud",
       "error": {
         "label": "Viga",

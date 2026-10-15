@@ -1921,7 +1921,10 @@ const Review = (props: StudioSectionProps) => {
 const getPreviewWidgetKinds = (props: StudioSectionProps) => [
   ...new Set([
     ...generalWidgets,
-    ...props.drafts.filter(isIntegrationDraftComplete).flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
+    ...props.drafts
+      .filter(isIntegrationDraftComplete)
+      .flatMap((draft) => getWidgetKindsForIntegration(draft.kind))
+      .filter((kind) => !getDefaultWidgetConfig(kind).skip),
     ...props.discoveredApps
       .filter((app) => props.selectedAppIds.includes(app.sourceId))
       .flatMap((app) => {

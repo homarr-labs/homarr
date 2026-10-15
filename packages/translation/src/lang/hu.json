@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Üzemidő Figyelés",
       "beszel": "Beszel",
       "systemMonitoring": "Rendszerfelügyelet",
-      "security": "Biztonság"
+      "security": "Biztonság",
+      "serviceVersion": "Verzió"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Szolgáltató URL-je"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Azonosító",
             "placeholder": "Név vagy tulajdonos/név"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Kiadási oldal megnyitása",
       "releaseDescription": "Kiadás leírása",
       "projectDescription": "Projekt leírása",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Ismeretlen",
       "created": "Létrehozva",
       "error": {
         "label": "Hiba",

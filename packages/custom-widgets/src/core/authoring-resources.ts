@@ -1,6 +1,6 @@
 import { customJsxAuthoringCatalog } from "./component-catalog";
 import { CUSTOM_WIDGET_SCHEMA } from "./custom-jsx-schema";
-import { customJsxTablerIconNames } from "./tabler-icons";
+import { customJsxTablerIconExamples } from "./tabler-icons";
 
 export {
   findCustomWidgetComponents,
@@ -53,7 +53,9 @@ const assistantReferenceTypeIds = new Set(
 
 export const CUSTOM_WIDGET_ASSISTANT_COMPONENT_REFERENCE = JSON.stringify({
   mantineVersion: customJsxAuthoringCatalog.mantineVersion,
-  iconNames: customJsxTablerIconNames,
+  iconNames: customJsxTablerIconExamples,
+  iconNaming:
+    "All installed Tabler kebab-case names are supported; iconNames are examples. Filled icons end in -filled.",
   format: "Props are [name, type ID, required]. Shared props apply unless blocked. Type IDs resolve through types.",
   types: Object.fromEntries([...assistantReferenceTypeIds].map((id) => [id, customJsxAuthoringCatalog.types[id]])),
   registeredNames: customJsxAuthoringCatalog.components

@@ -36,6 +36,7 @@ export const categoryTranslationKeys: Record<string, string> = {
   documents: "integration.category.documents",
   mediaLibrary: "integration.category.mediaLibrary",
   uptimeMonitoring: "integration.category.uptimeMonitoring",
+  serviceVersion: "integration.category.serviceVersion",
 };
 
 export interface IntegrationGridItem {

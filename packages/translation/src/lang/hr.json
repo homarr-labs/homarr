@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Nadzor dostupnosti",
       "beszel": "Beszel",
       "systemMonitoring": "Nadzor sustava",
-      "security": "Sigurnost"
+      "security": "Sigurnost",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL pružatelja"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Naziv ili vlasnik/naziv"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Otvori stranicu izdanja",
       "releaseDescription": "Opis izdanja",
       "projectDescription": "Opis projekta",
+      "runningVersions": "",
+      "upToDate": "Ažurirano",
+      "updateAvailable": "",
+      "unknownStatus": "Nepoznato",
       "created": "Stvoreno",
       "error": {
         "label": "Pogreška",

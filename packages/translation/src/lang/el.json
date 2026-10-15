@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Παρακολούθηση Διαθεσιμότητας",
       "beszel": "Beszel",
       "systemMonitoring": "Παρακολούθηση Συστήματος",
-      "security": "Ασφάλεια"
+      "security": "Ασφάλεια",
+      "serviceVersion": "Έκδοση"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL παρόχου"
           },
+          "integrations": {
+            "label": "Συνδεδεμένες Ενσωματώσεις"
+          },
           "identifier": {
             "label": "Αναγνωριστικό",
             "placeholder": "Όνομα ή Κάτοχος/Όνομα"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Άνοιγμα σελίδας έκδοσης",
       "releaseDescription": "Περιγραφή έκδοσης",
       "projectDescription": "Περιγραφή έργου",
+      "runningVersions": "Εκτελούμενες Εκδόσεις",
+      "upToDate": "Μέχρι σήμερα",
+      "updateAvailable": "Διαθέσιμη ενημέρωση",
+      "unknownStatus": "Άγνωστο",
       "created": "",
       "error": {
         "label": "Σφάλμα",

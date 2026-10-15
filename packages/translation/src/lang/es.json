@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Monitoreo de disponibilidad",
       "beszel": "Beszel",
       "systemMonitoring": "Monitoreo del Sistema",
-      "security": "Seguridad"
+      "security": "Seguridad",
+      "serviceVersion": "Versión"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Integraciones vinculadas"
+          },
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nombre o Propietario/Nombre"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Abrir Página de Publicación",
       "releaseDescription": "Descripción de Publicación",
       "projectDescription": "Descripción del Proyecto",
+      "runningVersions": "Versiones en ejecución",
+      "upToDate": "Actualizado",
+      "updateAvailable": "Actualización disponible",
+      "unknownStatus": "Desconocido",
       "created": "Creado",
       "error": {
         "label": "Error",
