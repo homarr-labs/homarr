@@ -1,0 +1,36 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 128
+apps/nextjs/src/app/[locale]/boards/(content)/_query-snapshot.ts
+  h_d6e478ca18e517 24,89,112,163
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  h_d6e478ca18e517 30
+packages/image-proxy/src/index.ts
+  h_d6e478ca18e517 1,4,14,43-44,58,151-155,158,163,173
+packages/widgets/src/beszel-system-table/component.tsx
+  h_d6e478ca18e517 421,461
+packages/widgets/src/calendar/component.tsx
+  h_d6e478ca18e517 38,71-80,123-124,130-131,151-152,159-161
+packages/widgets/src/common/homarr-data-table.tsx
+  h_d6e478ca18e517 11-12,31,43-47,54,91,97,106,118,172-198
+packages/widgets/src/common/use-persisted-table-layout.spec.ts
+  h_d6e478ca18e517 29,38,74
+packages/widgets/src/common/use-persisted-table-layout.ts
+  h_d6e478ca18e517 14-15,17,58,62,66,134-142,144-150,152,157-159,162,167,170-171,173,176,179-201,209,215-221,223-236,238-239
+packages/widgets/src/docker/component.tsx
+  h_d6e478ca18e517 398,448
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 711,803
+packages/widgets/src/media-requests/list/component.tsx
+  h_d6e478ca18e517 159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5a3462039a8b06a8ab190d515674fd63c7635c5f",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
