@@ -21,9 +21,10 @@ export const revalidate = false;
 export const generateStaticParams = () => [];
 
 export const generateViewport = async ({ params }: { params: Promise<Params> }): Promise<Viewport> => {
-  const { viewId, slot } = await params;
+  const { locale, viewId, slot } = await params;
+  if (!isLocaleSupported(locale)) notFound();
   const prepared = await readPreparedBoardAsync(viewId, slot);
-  if (!prepared) notFound();
+  if (!prepared || prepared.context.locale !== locale) notFound();
   return { themeColor: prepared.context.root.serverSettings.branding.primaryColor };
 };
 

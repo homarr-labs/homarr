@@ -28,6 +28,7 @@ import {
 } from "./store";
 
 const logger = createLogger({ module: "boardPreparation", scope: "cache" });
+const pendingPreparations = new Map<string, Promise<void>>();
 
 const getViewportWidth = (request: NextRequest) => {
   for (const value of [
@@ -48,6 +49,7 @@ const resolvePreparedResponseAsync = async (
   locale: SupportedLanguage,
   name: string | undefined,
   localizedResponse: NextResponse,
+  backgroundWork: Promise<void>[],
 ) => {
   const [session, registry] = await Promise.all([
     getSessionFromToken(db, request.cookies.get(sessionTokenCookieName)?.value),
@@ -93,8 +95,20 @@ const resolvePreparedResponseAsync = async (
       where: eq(cronJobConfigurations.name, "boardPreparation"),
       columns: { isEnabled: true },
     });
-    if (configuration?.isEnabled !== false) await requestBoardPreparationAsync({ viewId: id });
-    else logger.debug("Board preparation request skipped", { reason: "task_disabled", viewId: id.slice(0, 12) });
+    if (configuration?.isEnabled !== false) {
+      let preparation = pendingPreparations.get(id);
+      if (!preparation) {
+        preparation = requestBoardPreparationAsync({ viewId: id })
+          .catch((cause: unknown) => {
+            let errorType: string = typeof cause;
+            if (cause instanceof Error) errorType = cause.name;
+            logger.warn("Could not request Board preparation", { viewId: id.slice(0, 12), errorType });
+          })
+          .finally(() => pendingPreparations.delete(id));
+        pendingPreparations.set(id, preparation);
+      }
+      backgroundWork.push(preparation);
+    } else logger.debug("Board preparation request skipped", { reason: "task_disabled", viewId: id.slice(0, 12) });
     return null;
   }
   const path = `${preparedBoardPath}/${locale}/${id}/${ready.slot}${request.nextUrl.search}`;
@@ -135,15 +149,20 @@ export const getPreparedBoardResponseAsync = async (
   if (path.length === 3 && path[2]) name = decodeURIComponent(path[2]);
   const stopwatch = new Stopwatch();
   let fallbackReason = "cache_unavailable";
-  const pending = resolvePreparedResponseAsync(request, locale, name, localizedResponse).catch((cause: unknown) => {
-    fallbackReason = "lookup_failed";
-    // Database errors can include query parameters such as session tokens.
-    let errorType: string = typeof cause;
-    if (cause instanceof Error) errorType = cause.name;
-    logger.debug("Prepared Board cache lookup failed; using ordinary SSR", { errorType });
-    return null;
-  });
-  event.waitUntil(pending.then(() => undefined));
+  const backgroundWork: Promise<void>[] = [];
+  const pending = resolvePreparedResponseAsync(request, locale, name, localizedResponse, backgroundWork).catch(
+    (cause: unknown) => {
+      fallbackReason = "lookup_failed";
+      // Database errors can include query parameters such as session tokens.
+      let errorType: string = typeof cause;
+      if (cause instanceof Error) errorType = cause.name;
+      logger.debug("Prepared Board cache lookup failed; using ordinary SSR", { errorType });
+      return null;
+    },
+  );
+  // Register the whole lifetime now: a slow lookup can schedule preparation
+  // after the response budget, when Next has already captured waitUntil work.
+  event.waitUntil(pending.then(() => Promise.all(backgroundWork)).then(() => undefined));
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
     // A cache outage or a cold preparation must not hold up ordinary SSR.

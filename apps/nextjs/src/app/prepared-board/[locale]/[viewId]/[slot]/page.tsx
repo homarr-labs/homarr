@@ -29,7 +29,7 @@ export const generateMetadata = async ({ params }: { params: Promise<Params> }):
   if (!isLocaleSupported(locale)) notFound();
   setRequestLocale(locale);
   const prepared = await readPreparedBoardAsync(viewId, slot);
-  if (!prepared) notFound();
+  if (!prepared || prepared.context.locale !== locale) notFound();
   const { board, root } = prepared.context;
   const [t, metadata] = await Promise.all([getI18n("board"), createRootMetadataAsync(root)]);
   const branding = root.serverSettings.branding;

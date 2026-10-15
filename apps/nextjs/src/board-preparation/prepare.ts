@@ -118,6 +118,8 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
       log.debug("Board preparation skipped", { reason: "board_deleted", boardId: spec.boardId });
       return;
     }
+    // The registered ID already selects the Board, including a mobile home.
+    // Reload it by its current name rather than selecting a home Board again.
     const context = await loadBoardPreparationContextAsync({
       ...spec,
       session,
@@ -176,19 +178,32 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
       api,
       trpc,
     });
-    await Promise.race([
-      settleQueriesAsync(queryClient, dependent),
-      new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error("Board preparation queries exceeded 30 seconds")), 30_000);
+    const queryTimedOut = await Promise.race([
+      settleQueriesAsync(queryClient, dependent).then(() => false),
+      new Promise<boolean>((resolve) => {
+        timer = setTimeout(() => resolve(true), 30_000);
       }),
     ]);
     clearTimeout(timer);
+    let timedOutRetainedQueryCount = 0;
+    if (queryTimedOut) {
+      const pendingQueries = queryClient.getQueryCache().findAll({ fetchStatus: "fetching" });
+      timedOutRetainedQueryCount = pendingQueries.filter((query) => query.state.data !== undefined).length;
+      // Cancellation reverts to the last cached value and its original age.
+      // Keep it alongside fast queries, without persisting in-flight promises.
+      await queryClient.cancelQueries({ fetchStatus: "fetching" });
+      log.warn("Board preparation query budget exceeded; using available data", {
+        pendingQueryCount: pendingQueries.length,
+        retainedQueryCount: timedOutRetainedQueryCount,
+      });
+    }
     await snapshot.saveAsync(queryClient);
 
     const cachedQueries = queryClient.getQueryCache().getAll();
     const failedQueries = cachedQueries.filter((query) => query.state.status === "error");
     const queryDurationMs = Math.round(queryStopwatch.getElapsedInMilliseconds());
-    const retainedQueryCount = failedQueries.filter((query) => query.state.data !== undefined).length;
+    const retainedQueryCount =
+      failedQueries.filter((query) => query.state.data !== undefined).length + timedOutRetainedQueryCount;
     log.debug("Board preparation queries settled", {
       durationMs: queryDurationMs,
       queryCount: cachedQueries.length,
@@ -198,7 +213,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
 
     const queries = dehydrate(queryClient, {
       shouldDehydrateMutation: () => false,
-      shouldDehydrateQuery: (query) => query.state.data !== undefined,
+      shouldDehydrateQuery: (query) => query.state.data !== undefined && query.state.fetchStatus !== "fetching",
     });
     // A failed refresh with retained data is still useful presentation data.
     // Never persist a rejected promise or serialize an upstream error into HTML.
@@ -289,6 +304,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
           queryCount: queries.queries.length,
           failedQueryCount: failedQueries.length,
           retainedQueryCount,
+          queryTimedOut,
           renderAttempts: attempt + 1,
           slot,
         });
