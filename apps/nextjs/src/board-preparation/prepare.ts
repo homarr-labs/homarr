@@ -137,7 +137,7 @@ const captureDocumentAsync = async (id: string, spec: BoardPreparationSpec, view
     return html;
   });
 
-// The page's own loading boundary always streams once.
+// Each streamed Suspense reveal is painted in a later batch; few is better.
 const countStreamedReveals = (html: string) => html.split("$RC(").length - 1;
 
 export const prepareBoardAsync = async (id: string, runId?: string) => {
@@ -190,11 +190,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
     const fingerprint = getBoardPreparationFingerprint(context);
     log.debug("Capturing Board view", { boardId: spec.boardId, locale: spec.locale, layoutId: spec.layoutId });
     const captureStopwatch = new Stopwatch();
-    let html = await captureDocumentAsync(id, spec, context.viewportWidth);
-    // Widget modules load on their first render in this process, so that capture
-    // streams each Widget as a separate Suspense reveal. Browsers batch those
-    // reveals and paint empty cards first; render again with the modules ready.
-    if (countStreamedReveals(html) > 1) html = await captureDocumentAsync(id, spec, context.viewportWidth);
+    const html = await captureDocumentAsync(id, spec, context.viewportWidth);
     const captureDurationMs = Math.round(captureStopwatch.getElapsedInMilliseconds());
 
     // A mutation may finish while slow Integrations render. Retry with the new
