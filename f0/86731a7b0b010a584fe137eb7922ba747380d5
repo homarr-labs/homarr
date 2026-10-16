@@ -1,0 +1,19 @@
+apps/nextjs/package.json
+  s_36ae2996f58463::t_154312fad530fd 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f086731a7b0b010a584fe137eb7922ba747380d5",
+  "prompts": {},
+  "sessions": {
+    "s_36ae2996f58463": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fd973305-4260-4656-ab92-054245fcb42e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
