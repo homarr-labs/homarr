@@ -37,6 +37,7 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
             },
           ],
           defaultValue: "newTab",
+          allowDeselect: false,
           withDescription: true,
         }),
         showTitle: factory.switch({ defaultValue: true }),

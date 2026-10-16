@@ -187,7 +187,15 @@ const AppLink = ({ href, openIn, enabled, children }: PropsWithChildren<AppLinkP
         }
 
         event.preventDefault();
-        window.open(href, "_blank", "popup,noopener,noreferrer");
+        // Use the link's Shift-click behavior instead of requesting a popup.
+        event.currentTarget.dispatchEvent(
+          new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            shiftKey: true,
+          }),
+        );
       }}
       h="100%"
       w="100%"
