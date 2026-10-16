@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
+import { useEditMode } from "./edit-mode";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
 import { updateBoardName } from "./updater";
 
@@ -70,6 +71,7 @@ export const BoardProvider = ({
   initialViewportWidth: number;
   layoutOverrideId?: string | null;
 }>) => {
+  const [isEditMode] = useEditMode();
   const { data } = clientApi.board.getBoardByName.useQuery(
     { name: initialBoard.name },
     {
@@ -78,6 +80,9 @@ export const BoardProvider = ({
       // avoid an immediate duplicate request while still surfacing remote edits
       // when a user later returns to the board.
       staleTime: 30_000,
+      // A refetch would replace the unsaved changes of edit mode with the saved board.
+      refetchOnWindowFocus: !isEditMode,
+      refetchOnReconnect: !isEditMode,
     },
   );
   const currentLayout = useSyncExternalStore(
