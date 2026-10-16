@@ -120,7 +120,15 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
                   opacity: position === currentIndex ? 1 : 0.65,
                 }}
               >
-                <Image src={client.fileUrl(submissionId, file, "192x128")} alt="" h={64} w={96} fit="cover" />
+                <Image
+                  src={client.fileUrl(submissionId, file, "192x128")}
+                  alt=""
+                  h={64}
+                  w={96}
+                  fit="cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               </Box>
             </UnstyledButton>
           ))}

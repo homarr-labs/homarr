@@ -9,10 +9,7 @@ import type { BackupAnalysis, MigrationFile, MigrationStatus } from "./types";
 import { PREVIEW_TABLE_KEYS } from "./types";
 
 const DRIZZLE_MIGRATIONS_TABLE = "__drizzle_migrations";
-const MIGRATION_PREVIEW_DELAY_MS = 250;
-const MIGRATION_COMPLETE_DELAY_MS = 100;
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const getAppliedMigrationCount = (db: any): number => {
   try {
@@ -122,7 +119,7 @@ export const useBackupAnalysis = () => {
                 phase: "applying",
               });
 
-              await delay(MIGRATION_PREVIEW_DELAY_MS);
+              await yieldToBrowser();
 
               try {
                 const statements = migration.sql
@@ -158,10 +155,8 @@ export const useBackupAnalysis = () => {
                 tag: migration.tag,
                 phase: "done",
               });
-              sounds.success();
-
-              await delay(MIGRATION_COMPLETE_DELAY_MS);
             }
+            sounds.success();
           }
 
           const counts = countEntities(db);

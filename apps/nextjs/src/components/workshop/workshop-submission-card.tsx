@@ -28,6 +28,8 @@ export function WorkshopSubmissionCard({ client, item, actions }: WorkshopSubmis
         {screenshot ? (
           <Image
             src={client.fileUrl(item.id, screenshot, "600x400")}
+            loading="lazy"
+            decoding="async"
             h={PREVIEW_HEIGHT}
             fit="cover"
             alt={t("screenshotAlt", { title: item.title, count: 1 })}

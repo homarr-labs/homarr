@@ -37,7 +37,7 @@ export const UsersAccessForm = <TPermission extends string>({
 }: FormProps<TPermission>) => {
   const { defaultPermission } = useAccessContext();
   const [users, setUsers] = useState<Map<string, UserItemContentProps["user"]>>(
-    new Map(accessQueryData.users.map(({ user }) => [user.id, user])),
+    () => new Map(accessQueryData.users.map(({ user }) => [user.id, user])),
   );
   const tPermissions = useI18n("permission");
   const form = useForm({

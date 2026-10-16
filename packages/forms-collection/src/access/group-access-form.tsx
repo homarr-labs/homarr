@@ -21,7 +21,7 @@ export const GroupAccessForm = <TPermission extends string>({
 }: Omit<FormProps<TPermission>, "entity">) => {
   const { defaultPermission } = useAccessContext();
   const [groups, setGroups] = useState<Map<string, AccessQueryData<string>["groups"][number]["group"]>>(
-    new Map(accessQueryData.groups.map(({ group }) => [group.id, group])),
+    () => new Map(accessQueryData.groups.map(({ group }) => [group.id, group])),
   );
   const tPermissions = useI18n("permission");
   const form = useForm({

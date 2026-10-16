@@ -1,11 +1,14 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useMemo } from "react";
 
 import { ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
-import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+
+import { useCustomWidgetEditorMessages } from "../custom-widgets/use-custom-widget-editor-messages";
+
+const displayDiagnostic: CustomWidgetEditorMessages["diagnostic"] = (diagnostic) => diagnostic.value ?? diagnostic.code;
 
 /** Read-only source view of a Workshop submission, used for both widget JSON and Custom CSS. */
 export function WorkshopCodeViewer({
@@ -18,42 +21,16 @@ export function WorkshopCodeViewer({
   height?: string;
 }) {
   const id = useId();
-  const t = useI18n("customWidget.editor");
-  const tCommon = useI18n("common");
   const workshopT = useI18n("workshop");
-  const messages: CustomWidgetEditorMessages = {
-    languageJsx: invariantTechnicalLabels.jsx,
-    languageJson: invariantTechnicalLabels.json,
-    undo: tCommon("action.undo"),
-    redo: t("action.redo"),
-    components: t("action.components"),
-    componentSearch: t("componentReference.search"),
-    componentEmpty: t("componentReference.empty"),
-    componentCount: (count) => t("componentReference.count", { count }),
-    insertStarter: t("action.insertStarter"),
-    format: t("action.format"),
-    copy: tCommon("action.copy"),
-    copied: t("action.copied"),
-    schema: t("action.schema"),
-    schemaTab: invariantTechnicalLabels.jsonSchema,
-    minimalTab: t("reference.minimal"),
-    fullTab: t("reference.full"),
-    errors: (count) => t("status.errors", { count }),
-    warnings: (count) => t("status.warnings", { count }),
-    ready: t("status.ready"),
-    position: (cursor) => t("status.position", cursor),
-    characters: (count, limit) =>
-      limit ? t("status.charactersWithLimit", { count, limit }) : t("status.characters", { count }),
-    diagnosticsTitle: t("diagnostics.title"),
-    diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
-  };
-
-  let displayValue = value;
-  if (language === "json") {
-    try {
-      displayValue = JSON.stringify(JSON.parse(value) as unknown, null, 2);
-    } catch {}
-  }
+  const messages = useCustomWidgetEditorMessages(displayDiagnostic);
+  const displayValue = useMemo(() => {
+    if (language === "json") {
+      try {
+        return JSON.stringify(JSON.parse(value) as unknown, null, 2);
+      } catch {}
+    }
+    return value;
+  }, [language, value]);
 
   return (
     <ReadOnlyCustomWidgetCode

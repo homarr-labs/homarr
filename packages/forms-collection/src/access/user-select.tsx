@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Group, Stack, Text } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -30,27 +31,24 @@ export const UserSelect = ({
 }: UserSelectProps) => {
   const tUser = useI18n("user.action.select");
   const tCommon = useI18n("common");
-  const { data: users, isPending } = clientApi.user.selectable.useQuery({ providers: allowedProviders });
-  const availableUsers = (users ?? []).filter((user) => !presentUserIds.includes(user.id));
-  const options: AccessPickerOption<SelectableUser>[] = availableUsers.map((user) => ({
-    value: user.id,
-    label: user.name ?? "",
-    keywords: [user.email ?? ""],
-    item: user,
-    content: (
-      <Group wrap="nowrap" gap="xs">
-        <UserAvatar user={user} size="xs" />
-        <Stack gap={0}>
-          <Text size="sm">{user.name}</Text>
-          {user.email && (
-            <Text size="xs" c="dimmed">
-              {user.email}
-            </Text>
-          )}
-        </Stack>
-      </Group>
-    ),
-  }));
+  const [opened, setOpened] = useState(false);
+  const { data: users, isPending } = clientApi.user.selectable.useQuery(
+    { providers: allowedProviders },
+    { enabled: opened },
+  );
+  const options: AccessPickerOption<SelectableUser>[] = [];
+  if (opened) {
+    const presentUserIdSet = new Set(presentUserIds);
+    for (const user of users ?? []) {
+      if (presentUserIdSet.has(user.id)) continue;
+      options.push({
+        value: user.id,
+        label: user.name ?? "",
+        keywords: [user.email ?? ""],
+        item: user,
+      });
+    }
+  }
 
   const handleSelect = ({ item: user }: AccessPickerOption<SelectableUser>) =>
     onSelect({
@@ -68,8 +66,24 @@ export const UserSelect = ({
       triggerLabel={triggerLabel ?? tCommon("action.add")}
       triggerProps={triggerProps}
       options={options}
+      renderOption={renderUserOption}
       isPending={isPending}
+      onOpenedChange={setOpened}
       onSelect={handleSelect}
     />
   );
 };
+
+const renderUserOption = ({ item: user }: AccessPickerOption<SelectableUser>) => (
+  <Group wrap="nowrap" gap="xs">
+    <UserAvatar user={user} size="xs" />
+    <Stack gap={0}>
+      <Text size="sm">{user.name}</Text>
+      {user.email && (
+        <Text size="xs" c="dimmed">
+          {user.email}
+        </Text>
+      )}
+    </Stack>
+  </Group>
+);

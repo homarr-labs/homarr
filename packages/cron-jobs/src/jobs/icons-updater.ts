@@ -31,7 +31,9 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
 
   const databaseIconRepositories = await db.query.iconRepositories.findMany({
     with: {
-      icons: true,
+      icons: {
+        columns: { checksum: true },
+      },
     },
   });
 

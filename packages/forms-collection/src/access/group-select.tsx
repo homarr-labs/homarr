@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Text } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -29,15 +30,21 @@ export const GroupSelect = ({
 }: GroupSelectProps) => {
   const tGroup = useI18n("group.action.select");
   const tCommon = useI18n("common");
-  const { data: groups, isPending } = clientApi.group.selectable.useQuery({ withPermissions });
-  const availableGroups = (groups ?? []).filter((group) => !presentGroupIds.includes(group.id));
-  const options: AccessPickerOption<SelectableGroup>[] = availableGroups.map((group) => ({
-    value: group.id,
-    label: group.name,
-    keywords: getGroupPermissions(group) ?? [],
-    item: group,
-    content: <Text size="sm">{group.name}</Text>,
-  }));
+  const [opened, setOpened] = useState(false);
+  const { data: groups, isPending } = clientApi.group.selectable.useQuery({ withPermissions }, { enabled: opened });
+  const options: AccessPickerOption<SelectableGroup>[] = [];
+  if (opened) {
+    const presentGroupIdSet = new Set(presentGroupIds);
+    for (const group of groups ?? []) {
+      if (presentGroupIdSet.has(group.id)) continue;
+      options.push({
+        value: group.id,
+        label: group.name,
+        keywords: getGroupPermissions(group) ?? [],
+        item: group,
+      });
+    }
+  }
 
   const handleSelect = ({ item: group }: AccessPickerOption<SelectableGroup>) =>
     onSelect({
@@ -54,11 +61,15 @@ export const GroupSelect = ({
       triggerLabel={triggerLabel ?? tCommon("action.add")}
       triggerProps={triggerProps}
       options={options}
+      renderOption={renderGroupOption}
       isPending={isPending}
+      onOpenedChange={setOpened}
       onSelect={handleSelect}
     />
   );
 };
+
+const renderGroupOption = ({ item: group }: AccessPickerOption<SelectableGroup>) => <Text size="sm">{group.name}</Text>;
 
 const getGroupPermissions = (group: SelectableGroup) => {
   if ("permissions" in group) return group.permissions as GroupPermissionKey[];

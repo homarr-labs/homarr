@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Group, Stack, Tabs } from "@mantine/core";
 import { IconUser, IconUserDown, IconUsersGroup } from "@tabler/icons-react";
@@ -80,6 +82,7 @@ export const AccessSettings = <TPermission extends string>({
   entity,
   translate,
 }: Props<TPermission>) => {
+  const [visitedTabs, setVisitedTabs] = useState(["user"]);
   const [counts, setCounts] = useState({
     user: query.data.users.length + (entity.owner ? 1 : 0),
     group: query.data.groups.length,
@@ -121,7 +124,17 @@ export const AccessSettings = <TPermission extends string>({
       translate={translate}
     >
       <Stack>
-        <Tabs color="red" defaultValue="user">
+        <Tabs
+          color="red"
+          defaultValue="user"
+          onChange={(value) => {
+            if (!value) return;
+            setVisitedTabs((visited) => {
+              if (visited.includes(value)) return visited;
+              return [...visited, value];
+            });
+          }}
+        >
           <Tabs.List grow>
             <TabItem value="user" count={counts.user} icon={IconUser} />
             <TabItem value="group" count={counts.group} icon={IconUsersGroup} />
@@ -144,25 +157,29 @@ export const AccessSettings = <TPermission extends string>({
           </Tabs.Panel>
 
           <Tabs.Panel value="group">
-            <GroupAccessForm<TPermission>
-              accessQueryData={query.data}
-              handleCountChange={(callback) =>
-                setCounts(({ group, ...others }) => ({
-                  group: callback(group),
-                  ...others,
-                }))
-              }
-              handleSubmit={handleGroupSubmit}
-              isPending={groupsMutation.isPending}
-            />
+            {visitedTabs.includes("group") && (
+              <GroupAccessForm<TPermission>
+                accessQueryData={query.data}
+                handleCountChange={(callback) =>
+                  setCounts(({ group, ...others }) => ({
+                    group: callback(group),
+                    ...others,
+                  }))
+                }
+                handleSubmit={handleGroupSubmit}
+                isPending={groupsMutation.isPending}
+              />
+            )}
           </Tabs.Panel>
 
           <Tabs.Panel value="inherited">
-            <InheritAccessTable<TPermission>
-              accessQueryData={query.data}
-              fullAccessGroupPermission={permission.fullAccessGroupPermission}
-              mapPermissions={permission.groupPermissionMapping}
-            />
+            {visitedTabs.includes("inherited") && (
+              <InheritAccessTable<TPermission>
+                accessQueryData={query.data}
+                fullAccessGroupPermission={permission.fullAccessGroupPermission}
+                mapPermissions={permission.groupPermissionMapping}
+              />
+            )}
           </Tabs.Panel>
         </Tabs>
       </Stack>

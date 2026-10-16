@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
   Avatar,
@@ -61,19 +61,18 @@ export default function StatsWidget({
   const plain = localPlain ?? options.plain;
   const pending = useRef(new Set<string>());
   const retry = useRef(new Map<string, number>());
-  const entries = statsEntriesSchema.safeParse(options.entries).data ?? [];
-  const orderedEntries = entries.toSorted((a, b) => {
-    const position = (id: string) => {
-      const index = order.indexOf(id);
-      if (index >= 0) return index;
-      return order.length + entries.findIndex((entry) => entry.id === id);
-    };
-    return position(a.id) - position(b.id);
-  });
-  const visibleEntries = orderedEntries.filter((entry) => !entry.hidden && !hidden.includes(entry.id));
+  const entries = useMemo(() => statsEntriesSchema.safeParse(options.entries).data ?? [], [options.entries]);
+  const orderedEntries = useMemo(() => {
+    const positions = new Map(entries.map((entry, index) => [entry.id, order.length + index]));
+    order.forEach((id, index) => positions.set(id, index));
+    return entries.toSorted((a, b) => (positions.get(a.id) ?? 0) - (positions.get(b.id) ?? 0));
+  }, [entries, order]);
+  const hiddenIds = new Set(hidden);
+  const visibleEntries = orderedEntries.filter((entry) => !entry.hidden && !hiddenIds.has(entry.id));
   const ids = [...new Set(integrationIds)];
+  const visibleIntegrationIds = new Set(visibleEntries.map((entry) => entry.integrationId));
   // Queries are per integration instance, never per metric. Click and advanced details reuse these snapshots.
-  const visibleIds = ids.filter((id) => advanced || visibleEntries.some((entry) => entry.integrationId === id));
+  const visibleIds = ids.filter((id) => advanced || visibleIntegrationIds.has(id));
   const catalogs = clientApi.useQueries((api) =>
     ids.map((integrationId) => api.widget.stats.catalog({ integrationId }, { staleTime: 60_000, retry: false })),
   );
@@ -164,8 +163,8 @@ export default function StatsWidget({
   }, [demoReadOnly, visibleIds, snapshots, refresh]);
 
   const tableEntries = advanced
-    ? ids.flatMap((id) => {
-        const catalog = catalogs[ids.indexOf(id)]?.data;
+    ? ids.flatMap((id, index) => {
+        const catalog = catalogs[index]?.data;
         if (!catalog) return [{ id, integrationId: id, metric: "", label: "", compact: false }];
         return catalog.metrics.map((metric) => ({
           id: `${id}:${metric.key}`,
@@ -176,40 +175,43 @@ export default function StatsWidget({
         }));
       })
     : visibleEntries;
-  const tableRecords: StatsTableRow[] = tableEntries.map((entry) => {
-    const catalog = catalogs[ids.indexOf(entry.integrationId)];
-    const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
-    const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
-    const refreshFailed = !!snapshot?.error || hasRefreshError(entry.integrationId);
-    const unavailable =
-      !ids.includes(entry.integrationId) ||
-      (!!catalog?.error && !catalog.data) ||
-      (!!snapshot?.error && !snapshot.data) ||
-      (!!catalog?.data && !metric);
-    const loading =
-      !unavailable && !refreshFailed && !snapshot?.data?.error && (snapshot?.data?.updatedAt == null || !metric);
-    let value = "—";
-    let status = "";
-    if (snapshot?.data && metric)
-      value = formatStatsValue(snapshot.data.values[entry.metric], metric.unit, compact ?? entry.compact);
-    if (refreshFailed) status = t("refreshFailed");
-    if (snapshot?.data?.error) status = t("refreshFailed");
-    if ((refreshFailed || snapshot?.data?.error) && snapshot?.data?.updatedAt == null) status = t("fetchFailed");
-    if (unavailable) {
-      value = t("unavailable");
-      status = t("unavailable");
+  const tableRecords: StatsTableRow[] = [];
+  if (table) {
+    for (const entry of tableEntries) {
+      const catalog = catalogs[ids.indexOf(entry.integrationId)];
+      const snapshot = snapshots[visibleIds.indexOf(entry.integrationId)];
+      const metric = catalog?.data?.metrics.find((item) => item.key === entry.metric);
+      const refreshFailed = !!snapshot?.error || hasRefreshError(entry.integrationId);
+      const unavailable =
+        !ids.includes(entry.integrationId) ||
+        (!!catalog?.error && !catalog.data) ||
+        (!!snapshot?.error && !snapshot.data) ||
+        (!!catalog?.data && !metric);
+      const loading =
+        !unavailable && !refreshFailed && !snapshot?.data?.error && (snapshot?.data?.updatedAt == null || !metric);
+      let value = "—";
+      let status = "";
+      if (snapshot?.data && metric)
+        value = formatStatsValue(snapshot.data.values[entry.metric], metric.unit, compact ?? entry.compact);
+      if (refreshFailed) status = t("refreshFailed");
+      if (snapshot?.data?.error) status = t("refreshFailed");
+      if ((refreshFailed || snapshot?.data?.error) && snapshot?.data?.updatedAt == null) status = t("fetchFailed");
+      if (unavailable) {
+        value = t("unavailable");
+        status = t("unavailable");
+      }
+      tableRecords.push({
+        id: entry.id,
+        integrationId: entry.integrationId,
+        source: catalog?.data?.name ?? "",
+        iconUrl: catalog?.data?.iconUrl,
+        metric: entry.label || metric?.label || entry.metric,
+        value,
+        status,
+        loading,
+      });
     }
-    return {
-      id: entry.id,
-      integrationId: entry.integrationId,
-      source: catalog?.data?.name ?? "",
-      iconUrl: catalog?.data?.iconUrl,
-      metric: entry.label || metric?.label || entry.metric,
-      value,
-      status,
-      loading,
-    };
-  });
+  }
 
   let physicalWidth = width;
   if (!advanced && Number.isFinite(displayScale) && displayScale > 0) physicalWidth *= displayScale;
@@ -308,7 +310,7 @@ export default function StatsWidget({
                               style={{ flex: 1 }}
                               size="xs"
                               label={label}
-                              checked={!hidden.includes(entry.id)}
+                              checked={!hiddenIds.has(entry.id)}
                               onChange={(event) => {
                                 if (event.currentTarget.checked)
                                   setHidden((values) => values.filter((id) => id !== entry.id));

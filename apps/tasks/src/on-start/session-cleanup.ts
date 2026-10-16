@@ -1,6 +1,6 @@
 import { env } from "@homarr/auth/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db, eq, inArray } from "@homarr/db";
+import { db, inArray } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 import { supportedAuthProviders } from "@homarr/definitions";
 
@@ -15,22 +15,20 @@ export async function cleanupSessionsAsync() {
     const currentAuthProviders = env.AUTH_PROVIDERS;
 
     const inactiveAuthProviders = supportedAuthProviders.filter((provider) => !currentAuthProviders.includes(provider));
-    const subQuery = db
-      .select({ id: users.id })
-      .from(users)
-      .where(inArray(users.provider, inactiveAuthProviders))
-      .as("sq");
-    const sessionsWithInactiveProviders = await db
-      .select({ userId: sessions.userId })
-      .from(sessions)
-      .rightJoin(subQuery, eq(sessions.userId, subQuery.id));
+    if (inactiveAuthProviders.length === 0) {
+      logger.debug("No sessions to delete");
+      return;
+    }
 
-    const userIds = sessionsWithInactiveProviders.map(({ userId }) => userId).filter((value) => value !== null);
-    await db.delete(sessions).where(inArray(sessions.userId, userIds));
+    const subQuery = db.select({ id: users.id }).from(users).where(inArray(users.provider, inactiveAuthProviders));
+    const deletedSessions = await db
+      .delete(sessions)
+      .where(inArray(sessions.userId, subQuery))
+      .returning({ userId: sessions.userId });
 
-    if (sessionsWithInactiveProviders.length > 0) {
+    if (deletedSessions.length > 0) {
       logger.info("Deleted sessions for inactive providers", {
-        count: userIds.length,
+        count: deletedSessions.length,
       });
     } else {
       logger.debug("No sessions to delete");

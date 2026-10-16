@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { Alert, Button, Group, ScrollArea, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { IconArrowLeft, IconX } from "@tabler/icons-react";
 
@@ -11,10 +12,13 @@ import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
 
-import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
 import type { CreatedIntegrationResult } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
 import { IntegrationSelectGrid } from "./integration-select-grid";
 import { IntegrationCompletionModal } from "./integration-completion-modal";
+
+const NewIntegrationForm = dynamic(() =>
+  import("~/app/[locale]/manage/integrations/new/_integration-new-form").then((module) => module.NewIntegrationForm),
+);
 
 interface IntegrationSelectModalProps {
   onSuccess?: (result?: CreatedIntegrationResult) => void;
@@ -35,7 +39,11 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   const [step, setStep] = useState<"select" | "form">(isDirectForm ? "form" : "select");
   const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(directKind ?? null);
   const { openModal: openCompletionModal } = useModalAction(IntegrationCompletionModal);
-  const { data: integrationData, isError: isIntegrationDataError, refetch } = clientApi.integration.all.useQuery();
+  const {
+    data: integrationData,
+    isError: isIntegrationDataError,
+    refetch,
+  } = clientApi.integration.all.useQuery(undefined, { enabled: step === "select" });
 
   useEffect(() => {
     if (step === "form" && !isDirectForm) {

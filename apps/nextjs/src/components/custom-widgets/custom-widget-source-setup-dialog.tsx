@@ -85,10 +85,12 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
         title: t("action.configureSources"),
         message: t("notification.sourcesConfigured"),
       });
-      await utils.customWidget.get.invalidate({ id: definitionId });
-      await utils.customWidget.list.invalidate();
-      await utils.customWidget.available.invalidate();
-      await utils.widget.customApi.getData.invalidate();
+      await Promise.all([
+        utils.customWidget.get.invalidate({ id: definitionId }),
+        utils.customWidget.list.invalidate(),
+        utils.customWidget.available.invalidate(),
+        utils.widget.customApi.getData.invalidate(),
+      ]);
       await revalidatePathActionAsync("/manage/custom-widgets");
       router.refresh();
       onClose();

@@ -1,11 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import type { SegmentedControlItem } from "@mantine/core";
-import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
-import { WidgetIntegrationSelect } from "@homarr/widgets/widget-integration-select";
+import { Button, Fieldset, Grid, Group, SegmentedControl, Skeleton, Stack, Textarea, TextInput } from "@mantine/core";
 import type { z } from "zod/v4";
 
-import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
@@ -15,6 +15,10 @@ import { Link } from "@homarr/ui";
 import { searchEngineManageSchema } from "@homarr/validation/search-engine";
 
 type FormType = z.infer<typeof searchEngineManageSchema>;
+
+const SearchEngineIntegrationSelect = dynamic(() => import("./_integration-select"), {
+  loading: () => <Skeleton h={65} />,
+});
 
 interface SearchEngineFormProps {
   submitButtonTranslation: (t: ScopedTranslationFunction<"common">) => string;
@@ -28,8 +32,6 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
   const { submitButtonTranslation, handleSubmit, initialValues, isPending, disableShort } = props;
   const t = useI18n("search.engine");
   const tCommon = useI18n("common");
-
-  const [integrationData] = clientApi.integration.allThatSupportSearch.useSuspenseQuery();
 
   const form = useZodForm(searchEngineManageSchema, {
     initialValues: initialValues ?? {
@@ -81,14 +83,12 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
           )}
 
           {form.values.type === "fromIntegration" && (
-            <WidgetIntegrationSelect
-              label="Integration"
-              data={integrationData}
-              canSelectMultiple={false}
-              onChange={(value) => form.setFieldValue("integrationId", value[0])}
-              value={form.values.integrationId !== undefined ? [form.values.integrationId] : []}
-              withAsterisk
-            />
+            <Suspense fallback={<Skeleton h={65} />}>
+              <SearchEngineIntegrationSelect
+                onChange={(value) => form.setFieldValue("integrationId", value[0])}
+                value={form.values.integrationId !== undefined ? [form.values.integrationId] : []}
+              />
+            </Suspense>
           )}
         </Fieldset>
 

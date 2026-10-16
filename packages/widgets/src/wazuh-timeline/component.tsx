@@ -9,6 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { formatLocalizedDate } from "../common/locale";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
@@ -27,21 +28,16 @@ const formatInterval = (intervalMs: number, locale: string) => {
 const stackOrder = ["low", "medium", "high", "critical"] as const;
 
 const formatTick = (timestamp: number, range: "1h" | "24h" | "7d" | "30d", locale: string, detailed: boolean) => {
-  const date = new Date(timestamp);
+  let options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
   if (range === "1h" || (range === "24h" && !detailed)) {
-    return date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+    options = { hour: "2-digit", minute: "2-digit" };
+  } else if (range === "24h") {
+    options = { weekday: "short", hour: "2-digit", minute: "2-digit" };
+  } else if (range === "7d") {
+    options = { weekday: "short", day: "numeric" };
   }
-  if (range === "24h") {
-    return date.toLocaleString(locale, { weekday: "short", hour: "2-digit", minute: "2-digit" });
-  }
-  if (range === "7d") {
-    return detailed
-      ? date.toLocaleString(locale, { weekday: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
-      : date.toLocaleDateString(locale, { weekday: "short", day: "numeric" });
-  }
-  return detailed
-    ? date.toLocaleString(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
-    : date.toLocaleDateString(locale, { day: "numeric", month: "short" });
+  if (detailed) options = { ...options, hour: "2-digit", minute: "2-digit" };
+  return formatLocalizedDate(timestamp, locale, options, "Invalid Date");
 };
 
 export default function WazuhTimelineWidget({

@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { filterIntegrationsWithQueryAccessAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -118,17 +118,10 @@ export const integrationRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session.user.id),
-      });
-
       const integrationsFromDb = await ctx.db.query.integrations.findMany({
         where: like(integrations.name, `%${input.query}%`),
         orderBy: asc(integrations.name),
-        with: getIntegrationAccessRelationsAsync(
-          ctx.session.user.id,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
+        with: getIntegrationAccessRelations(ctx.db, ctx.session.user.id),
       });
 
       return integrationsFromDb
@@ -755,26 +748,23 @@ const hasIntegrationQueryAccess = (
   },
 ) => hasGlobalIntegrationAccess(session) || constructIntegrationPermissions(integration, session).hasUseAccess;
 
-const getIntegrationAccessRelationsAsync = (userId: string, groupIds: string[]) => ({
+const getIntegrationAccessRelations = (db: Database, userId: string) => ({
   userPermissions: {
     where: eq(integrationUserPermissions.userId, userId),
   },
   groupPermissions: {
-    where: inArray(integrationGroupPermissions.groupId, groupIds),
+    where: inArray(
+      integrationGroupPermissions.groupId,
+      db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, userId)),
+    ),
   },
 });
 
 const getAccessibleIntegrationsAsync = async (ctx: { db: Database; session: Session }, where?: SQL) => {
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session.user.id),
-  });
-
   const integrationsFromDb = await ctx.db.query.integrations.findMany({
     where,
-    with: getIntegrationAccessRelationsAsync(
-      ctx.session.user.id,
-      groupsOfCurrentUser.map((group) => group.groupId),
-    ),
+    columns: { id: true, name: true, kind: true, url: true },
+    with: getIntegrationAccessRelations(ctx.db, ctx.session.user.id),
   });
 
   return integrationsFromDb
@@ -800,17 +790,13 @@ const getAccessibleIntegrationsAsync = async (ctx: { db: Database; session: Sess
 
 interface IntegrationRouterContext {
   db: Database;
-  session: Parameters<typeof hasQueryAccessToIntegrationsAsync>[2];
+  session: Session | null;
 }
 
 const getAccessibleMediaRequestSearchIntegrationsAsync = async (
   ctx: IntegrationRouterContext,
   integrationIds?: string[],
 ) => {
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
-  });
-
   const integrationsFromDb = await ctx.db.query.integrations.findMany({
     where:
       integrationIds && integrationIds.length > 0
@@ -827,15 +813,7 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
           },
         },
       },
-      userPermissions: {
-        where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
-      },
-      groupPermissions: {
-        where: inArray(
-          integrationGroupPermissions.groupId,
-          groupsOfCurrentUser.map((group) => group.groupId),
-        ),
-      },
+      ...getIntegrationAccessRelations(ctx.db, ctx.session?.user.id ?? ""),
     },
   });
 
@@ -846,21 +824,16 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
     });
   }
 
-  const integrationsWithAccess = await Promise.all(
-    integrationsFromDb.map(async (integration) => ({
-      integration,
-      hasAccess: await hasQueryAccessToIntegrationsAsync(ctx.db, [integration], ctx.session),
-    })),
-  );
+  const integrationsWithAccess = await filterIntegrationsWithQueryAccessAsync(ctx.db, integrationsFromDb, ctx.session);
 
-  if (integrationIds && integrationsWithAccess.some(({ hasAccess }) => !hasAccess)) {
+  if (integrationIds && integrationsWithAccess.length !== integrationsFromDb.length) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "User does not have permission to query one or more media request search integrations",
     });
   }
 
-  return integrationsWithAccess.filter(({ hasAccess }) => hasAccess).map(({ integration }) => integration);
+  return integrationsWithAccess;
 };
 
 interface UpdateSecretInput {

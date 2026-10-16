@@ -7,6 +7,7 @@ import combineClasses from "clsx";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getContainerMinimumSizes } from "@homarr/boards/layout-data";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
@@ -419,84 +420,6 @@ const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   return enabled ? getGridRowCountForVisualHeight(visualHeight, canvasScale) : 0;
 };
 
-const containerMinimumSizeCache = new WeakMap<
-  ReturnType<typeof useRequiredBoard>,
-  Map<string, ReadonlyMap<string, { width: number; height: number }>>
->();
-
-const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, layoutId: string) => {
-  const cachedByLayout = containerMinimumSizeCache.get(board);
-  const cached = cachedByLayout?.get(layoutId);
-  if (cached) return cached;
-
-  const directItemsBySectionId = new Map<string, PlacementBounds[]>();
-  for (const item of board.items) {
-    const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-    if (!layout) continue;
-    const entries = directItemsBySectionId.get(layout.sectionId) ?? [];
-    entries.push(layout);
-    directItemsBySectionId.set(layout.sectionId, entries);
-  }
-
-  const directSectionsBySectionId = new Map<string, { id: string; placement: PlacementBounds }[]>();
-  for (const section of board.sections) {
-    if (section.kind !== "container") continue;
-    const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
-    if (!layout) continue;
-    const entries = directSectionsBySectionId.get(layout.parentSectionId) ?? [];
-    entries.push({ id: section.id, placement: layout });
-    directSectionsBySectionId.set(layout.parentSectionId, entries);
-  }
-
-  const minimumBySectionId = new Map<string, { width: number; height: number }>();
-  const visiting = new Set<string>();
-  const resolve = (sectionId: string): { width: number; height: number } => {
-    const existing = minimumBySectionId.get(sectionId);
-    if (existing) return existing;
-    if (visiting.has(sectionId)) return { width: 1, height: 1 };
-    visiting.add(sectionId);
-
-    const section = board.sections.find((candidate) => candidate.id === sectionId);
-    // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
-    // so it shouldn't have a content-derived height floor imposed by its parent's grid.
-    const isScrollable = section?.kind === "container" && section.options.scrollable;
-
-    const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
-    const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
-      const minimum = resolve(id);
-      return {
-        ...placement,
-        width: Math.max(placement.width, minimum.width),
-        height: Math.max(placement.height, minimum.height),
-      };
-    });
-    const children = [...itemBounds, ...sectionBounds];
-    const minimum = {
-      width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
-      height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
-    };
-    visiting.delete(sectionId);
-    minimumBySectionId.set(sectionId, minimum);
-    return minimum;
-  };
-
-  for (const section of board.sections) {
-    if (section.kind === "container") resolve(section.id);
-  }
-
-  const nextByLayout = cachedByLayout ?? new Map();
-  nextByLayout.set(layoutId, minimumBySectionId);
-  containerMinimumSizeCache.set(board, nextByLayout);
-  return minimumBySectionId;
-};
-
-interface PlacementBounds {
-  xOffset: number;
-  yOffset: number;
-  width: number;
-  height: number;
-}
-
 const withPlacement = <
   TItem extends {
     id: string;
@@ -510,6 +433,14 @@ const withPlacement = <
   placement: SectionGridPlacement | undefined,
 ): TItem => {
   if (!placement) return item;
+  if (
+    item.xOffset === placement.x &&
+    item.yOffset === placement.y &&
+    item.width === placement.w &&
+    item.height === placement.h
+  ) {
+    return item;
+  }
   return {
     ...item,
     xOffset: placement.x,

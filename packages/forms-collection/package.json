@@ -12,7 +12,8 @@
     }
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./access": "./src/access/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -31,6 +32,7 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
+    "@tabler/icons-react": "catalog:",
     "react": "catalog:",
     "zod": "catalog:"
   },

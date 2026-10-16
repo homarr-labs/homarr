@@ -1,18 +1,23 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Alert, Button, Center, Paper, Stack, Text, Title } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import type { OnboardingStudioProps } from "./types";
-import { AccountSetup } from "./account";
 import { getOnboardingAccessState } from "./claim-state";
-import { Finish } from "./finish";
-import { SetupStudio } from "./setup-studio";
-import { Welcome } from "./welcome";
+
+const AccountSetup = lazy(() => import("./account").then((module) => ({ default: module.AccountSetup })));
+const stepComponents = {
+  start: lazy(() => import("./welcome").then((module) => ({ default: module.Welcome }))),
+  user: AccountSetup,
+  group: AccountSetup,
+  setup: lazy(() => import("./setup-studio").then((module) => ({ default: module.SetupStudio }))),
+  finish: lazy(() => import("./finish").then((module) => ({ default: module.Finish }))),
+};
 
 type ClaimState = "checking" | "ready" | "locked" | "signIn" | "error";
 
@@ -114,15 +119,17 @@ export const OnboardingStudio = (props: OnboardingStudioProps) => {
     );
   }
 
-  switch (props.environment.currentStep) {
-    case "start":
-      return <Welcome {...props} />;
-    case "user":
-    case "group":
-      return <AccountSetup {...props} />;
-    case "setup":
-      return <SetupStudio {...props} />;
-    case "finish":
-      return <Finish {...props} />;
-  }
+  const Step = stepComponents[props.environment.currentStep];
+
+  return (
+    <Suspense
+      fallback={
+        <Center mih="100dvh" p="md">
+          <output>{tCommon("loading")}</output>
+        </Center>
+      }
+    >
+      <Step {...props} />
+    </Suspense>
+  );
 };

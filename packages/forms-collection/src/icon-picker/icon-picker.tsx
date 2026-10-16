@@ -82,15 +82,15 @@ export const IconPicker = ({
   const searchText = directUrl !== null || isCommittedValueDraft ? "" : debouncedDraft.trim();
   const canUpload = session?.user.permissions.includes("media-upload") ?? false;
 
-  const query = clientApi.icon.findIcons.useQuery(
-    { searchText, limitPerGroup: 24 },
-    { enabled: directUrl === null, placeholderData: (previous) => previous },
-  );
-
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
+
+  const query = clientApi.icon.findIcons.useQuery(
+    { searchText, limitPerGroup: 24 },
+    { enabled: combobox.dropdownOpened && directUrl === null, placeholderData: (previous) => previous },
+  );
 
   useEffect(() => {
     setDraft(value ?? "");
@@ -418,7 +418,7 @@ export const IconPicker = ({
               </Group>
             </Paper>
           ) : (
-            renderSearchResults()
+            combobox.dropdownOpened && renderSearchResults()
           )}
         </Combobox.Options>
       </Combobox.Dropdown>
