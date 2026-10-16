@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL biçimi örnekleri",
+        "examples": "Desteklenen bağlantı örnekleri",
+        "requiresHandler": "Özel protokoller, cihazınızda ilişkilendirilmiş bir uygulama gerektirir."
+      },
       "description": {
         "label": "Tanım"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Uygulama seç"
+        },
+        "openIn": {
+          "label": "Uygulamayı şurada aç",
+          "description": "Bu uygulamanın nerede açılacağını seçin. Tarayıcı ayarlarınız ayrı bir pencerede açılmasını değiştirebilir.",
+          "option": {
+            "currentTab": "Geçerli sekme",
+            "newTab": "Yeni sekme",
+            "newWindow": "Yeni pencere"
+          }
         },
         "showTitle": {
           "label": "Uygulama adını göster"

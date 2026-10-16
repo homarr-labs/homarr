@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 형식 예시",
+        "examples": "지원되는 링크 예시",
+        "requiresHandler": "사용자 지정 프로토콜을 사용하려면 기기에 연결된 앱이 필요합니다."
+      },
       "description": {
         "label": "설명"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "앱 선택"
+        },
+        "openIn": {
+          "label": "앱을 열 위치",
+          "description": "이 앱을 열 위치를 선택하세요. 브라우저 설정에 따라 별도 창으로 열리지 않을 수 있습니다.",
+          "option": {
+            "currentTab": "현재 탭",
+            "newTab": "새 탭",
+            "newWindow": "새 창"
+          }
         },
         "showTitle": {
           "label": "앱 이름 표시"

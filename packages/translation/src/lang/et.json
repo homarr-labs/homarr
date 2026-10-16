@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL-vormingute näited",
+        "examples": "Toetatud linkide näited",
+        "requiresHandler": "Kohandatud protokollid nõuavad sinu seadmes nendega seotud rakendust."
+      },
       "description": {
         "label": "Kirjeldus"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Vali rakendus"
+        },
+        "openIn": {
+          "label": "Rakenduse avamiskoht",
+          "description": "Vali, kus see rakendus avaneb. Brauseri seaded võivad eraldi aknas avamise soovi eirata.",
+          "option": {
+            "currentTab": "Praegune vahekaart",
+            "newTab": "Uus vahekaart",
+            "newWindow": "Uus aken"
+          }
         },
         "showTitle": {
           "label": "Näita rakenduse nime"

@@ -29,7 +29,7 @@ export const AppUrlLabel = () => {
               "mailto:contact@example.com",
               "vscode://file/path",
             ].map((example) => (
-              <Text key={example} component="code" size="xs">
+              <Text key={example} component="code" size="xs" dir="ltr">
                 {example}
               </Text>
             ))}

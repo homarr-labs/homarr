@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Példák URL-formátumokra",
+        "examples": "Példák támogatott hivatkozásokra",
+        "requiresHandler": "Az egyéni protokollokhoz társított alkalmazás szükséges az eszközön."
+      },
       "description": {
         "label": "Leírás"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Alkalmazás"
+        },
+        "openIn": {
+          "label": "Alkalmazás megnyitása",
+          "description": "Válassza ki, hol nyíljon meg az alkalmazás. A böngésző beállításai felülbírálhatják a külön ablakban való megnyitást.",
+          "option": {
+            "currentTab": "Az aktuális lapon",
+            "newTab": "Új lapon",
+            "newWindow": "Új ablakban"
+          }
         },
         "showTitle": {
           "label": "Alkalmazás nevének megjelenítése"

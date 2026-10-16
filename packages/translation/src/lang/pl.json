@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Przykłady formatów URL",
+        "examples": "Przykłady obsługiwanych linków",
+        "requiresHandler": "Niestandardowe protokoły wymagają powiązanej aplikacji na urządzeniu."
+      },
       "description": {
         "label": "Opis"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Wybierz aplikację"
+        },
+        "openIn": {
+          "label": "Otwórz aplikację w",
+          "description": "Wybierz, gdzie otworzyć tę aplikację. Ustawienia przeglądarki mogą zmienić otwieranie w osobnym oknie.",
+          "option": {
+            "currentTab": "Bieżącej karcie",
+            "newTab": "Nowej karcie",
+            "newWindow": "Nowym oknie"
+          }
         },
         "showTitle": {
           "label": "Pokaż nazwę aplikacji"
