@@ -1,10 +1,10 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Center, Group, Loader, Modal, Stack, Text } from "@mantine/core";
 
+import { SourceSetupPanel } from "@homarr/forms-collection/custom-widgets";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getCustomWidgetSourceSetups } from "@homarr/custom-widgets/core";

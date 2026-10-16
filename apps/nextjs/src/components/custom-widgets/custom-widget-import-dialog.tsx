@@ -1,8 +1,8 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import type { ModalProps } from "@mantine/core";
 
+import { SourceSetupPanel } from "@homarr/forms-collection/custom-widgets";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { ImportReviewDialog } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";

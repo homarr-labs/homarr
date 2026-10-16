@@ -1,6 +1,5 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import {
@@ -21,6 +20,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconFlag } from "@tabler/icons-react";
 
+import { SourceSetupPanel } from "@homarr/forms-collection/custom-widgets";
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { ImportReviewContent } from "@homarr/custom-widgets/workbench";

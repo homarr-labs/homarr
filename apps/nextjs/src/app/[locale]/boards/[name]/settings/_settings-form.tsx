@@ -15,7 +15,7 @@ import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema, boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import { homarrLogoPath } from "~/components/layout/logo/constants";
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { useUnsavedChangesGuard } from "~/components/manage/use-unsaved-changes-guard";
 

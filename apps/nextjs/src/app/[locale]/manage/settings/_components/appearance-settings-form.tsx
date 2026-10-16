@@ -7,9 +7,8 @@ import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { SelectWithCustomItems } from "@homarr/ui";
+import { SelectWithCustomItems, SectionCard } from "@homarr/ui";
 
-import { SectionCard } from "~/components/manage/section-card";
 import type { FormValues } from "./settings-form";
 
 interface AppearanceSettingsFormProps {

@@ -18,7 +18,7 @@ import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
 import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
-import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
+import { IntegrationSourceSelect } from "@homarr/forms-collection/custom-widgets";
 
 import { useI18n } from "@homarr/translation/client";
 

@@ -10,7 +10,7 @@ import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 import { useSettings } from "@homarr/settings";
 
-import { SectionCard } from "~/components/manage/section-card";
+import { SectionCard } from "@homarr/ui";
 import type { Board } from "../../_types";
 import type { FormValues } from "./_settings-form";
 

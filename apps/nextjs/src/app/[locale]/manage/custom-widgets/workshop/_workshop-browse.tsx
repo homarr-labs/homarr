@@ -6,11 +6,11 @@ import { ActionIcon, Button, Group, Select, Stack, Tooltip } from "@mantine/core
 import { IconBuildingStore, IconExternalLink } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
-import { Link, SearchInput, TablePagination } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, NoResults } from "@homarr/ui";
 import { useWorkshopQuery } from "@homarr/workshop/backend";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { NoResults } from "~/components/no-results";
+
 import { WorkshopAccountButton, useWorkshopSession } from "~/components/workshop/workshop-session";
 import { WorkshopSubmissionGrid } from "~/components/workshop/workshop-submission-grid";
 import { WorkshopVoteControl } from "~/components/workshop/workshop-vote-control";

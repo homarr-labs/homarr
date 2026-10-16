@@ -11,7 +11,7 @@ import type {
 } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
-import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
+import { IntegrationSourceSelect } from "@homarr/forms-collection/custom-widgets";
 
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";

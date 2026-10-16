@@ -6,7 +6,7 @@ import { ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
 import { useI18n } from "@homarr/translation/client";
 
-import { useCustomWidgetEditorMessages } from "../custom-widgets/use-custom-widget-editor-messages";
+import { useCustomWidgetEditorMessages } from "@homarr/forms-collection/custom-widgets";
 
 const displayDiagnostic: CustomWidgetEditorMessages["diagnostic"] = (diagnostic) => diagnostic.value ?? diagnostic.code;
 

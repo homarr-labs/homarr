@@ -18,10 +18,10 @@ import {
 import { IconPicker } from "@homarr/forms-collection";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { BoardColorInput, CornerStylePicker, cornerStyleValues } from "@homarr/ui";
+import { BoardColorInput, CornerStylePicker, cornerStyleValues, SectionCard } from "@homarr/ui";
 
 import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
-import { SectionCard } from "~/components/manage/section-card";
+
 import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
 import type { FormValues } from "./settings-form";
 
