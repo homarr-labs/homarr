@@ -13,6 +13,7 @@ export const AppUrlLabel = () => {
     <Group component="span" gap={4} wrap="nowrap">
       {invariantTechnicalLabels.url}
       <Tooltip
+        interactive
         withArrow
         multiline
         w={300}

@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
-import { Box, Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Box, Flex, rem, Stack, Text, Tooltip } from "@mantine/core";
 import { IconMinus } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -13,10 +13,11 @@ import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getSafeAppHref } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
+import { AppLink } from "./_app-link";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
@@ -136,12 +137,6 @@ export default function AppWidget({
   );
 }
 
-interface AppLinkProps {
-  href: string | undefined;
-  openIn: WidgetComponentProps<"app">["options"]["openIn"];
-  enabled: boolean;
-}
-
 const AppDescriptionTooltip = ({
   description,
   enabled,
@@ -161,47 +156,6 @@ const AppDescriptionTooltip = ({
     >
       {children}
     </Tooltip.Floating>
-  ) : (
-    children
-  );
-
-const AppLink = ({ href, openIn, enabled, children }: PropsWithChildren<AppLinkProps>) =>
-  enabled ? (
-    <UnstyledButton
-      component="a"
-      href={href}
-      target={openIn !== "currentTab" ? "_blank" : undefined}
-      rel={openIn !== "currentTab" ? SAFE_NEW_TAB_REL : undefined}
-      onClick={(event) => {
-        if (
-          openIn !== "newWindow" ||
-          !href ||
-          event.defaultPrevented ||
-          event.button !== 0 ||
-          event.ctrlKey ||
-          event.metaKey ||
-          event.shiftKey ||
-          event.altKey
-        ) {
-          return;
-        }
-
-        event.preventDefault();
-        // Use the link's Shift-click behavior instead of requesting a popup.
-        event.currentTarget.dispatchEvent(
-          new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-            view: window,
-            shiftKey: true,
-          }),
-        );
-      }}
-      h="100%"
-      w="100%"
-    >
-      {children}
-    </UnstyledButton>
   ) : (
     children
   );
