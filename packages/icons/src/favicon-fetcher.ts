@@ -44,28 +44,41 @@ interface IconCandidate {
  * them away from loopback and metadata addresses but lets them reach the local
  * network, where self hosted apps usually run next to Homarr.
  */
-export const fetchFaviconUrlAsync = async (href: string): Promise<string | null> => {
+export const fetchFaviconUrlAsync = async (href: string): Promise<string | null> =>
+  (await fetchWebsiteMetadataAsync(href)).iconUrl;
+
+export interface WebsiteMetadata {
+  title: string | null;
+  iconUrl: string | null;
+}
+
+/**
+ * Resolves the title and icon of a website with the same requests and safeguards as
+ * fetchFaviconUrlAsync. Either value is `null` when it cannot be determined.
+ */
+export const fetchWebsiteMetadataAsync = async (href: string): Promise<WebsiteMetadata> => {
   const websiteUrl = parseHttpUrl(href);
-  if (websiteUrl === null) return null;
+  if (websiteUrl === null) return { title: null, iconUrl: null };
 
   const deadline = new AbortController();
   const timer = setTimeout(() => deadline.abort(new Error("Favicon detection timed out")), detectionTimeoutInMs);
   try {
-    return await detectFaviconUrlAsync(websiteUrl, deadline.signal);
+    return await detectWebsiteMetadataAsync(websiteUrl, deadline.signal);
   } finally {
     clearTimeout(timer);
   }
 };
 
-const detectFaviconUrlAsync = async (websiteUrl: URL, signal: AbortSignal): Promise<string | null> => {
+const detectWebsiteMetadataAsync = async (websiteUrl: URL, signal: AbortSignal): Promise<WebsiteMetadata> => {
   const page = await fetchPageAsync(websiteUrl, signal);
+  const title = page?.html == null ? null : findTitle(page.html);
   const declaredIconUrl = page?.html == null ? null : findDeclaredIconUrl(page.html, page.url);
-  if (declaredIconUrl !== null) return declaredIconUrl;
+  if (declaredIconUrl !== null) return { title, iconUrl: declaredIconUrl };
 
   // The well known icon belongs to the origin that served the page, which differs from the
   // requested one when the app redirects across origins.
   const wellKnownUrl = new URL("/favicon.ico", page?.url.origin ?? websiteUrl.origin);
-  return (await isImageAsync(wellKnownUrl, signal)) ? wellKnownUrl.href : null;
+  return { title, iconUrl: (await isImageAsync(wellKnownUrl, signal)) ? wellKnownUrl.href : null };
 };
 
 // Credentials in the app url are never sent to the site, and leaving them out here keeps
@@ -158,6 +171,29 @@ const readDocumentHeadAsync = async (body: NonNullable<FetchResponse["body"]>): 
 const linkTagRegex = /<link\b[^<>]*>/gi;
 const attributeRegex = /(?<![a-z-])([a-z-]+)\s*=\s*("([^"]*)"|'([^']*)'|([^\s"'>]+))/gi;
 const sizeRegex = /(?<!\d)(\d+)x(\d+)/gi;
+
+// Like the link tag, the title tag and its text end at the next "<", so unclosed titles are
+// scanned once. Entities have a bounded length for the same reason.
+const titleRegex = /<title\b[^<>]*>([^<]*)/i;
+const entityRegex = /&(#x[\da-f]{1,6}|#\d{1,7}|[a-z]{2,8});/gi;
+const namedEntities: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
+const maximumTitleLength = 512;
+
+const findTitle = (html: string): string | null => {
+  const rawTitle = titleRegex.exec(html)?.[1]?.slice(0, maximumTitleLength);
+  if (rawTitle === undefined) return null;
+
+  const title = decodeEntities(rawTitle).replaceAll(/\s+/g, " ").trim();
+  return title.length > 0 ? title : null;
+};
+
+const decodeEntities = (text: string): string =>
+  text.replaceAll(entityRegex, (entity, name: string) => {
+    if (!name.startsWith("#")) return namedEntities[name.toLowerCase()] ?? entity;
+
+    const codePoint = name[1]?.toLowerCase() === "x" ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
+    return codePoint > 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : entity;
+  });
 
 const findDeclaredIconUrl = (html: string, pageUrl: URL): string | null => {
   const candidates: IconCandidate[] = [];

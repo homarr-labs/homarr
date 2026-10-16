@@ -6067,6 +6067,15 @@
       "addApp": "Add app",
       "connectService": "Connect service"
     },
+    "urlDrop": {
+      "hint": "Drop to add as an app",
+      "resolving": "Adding app…",
+      "notification": {
+        "success": {
+          "message": "{name} was added to the board"
+        }
+      }
+    },
     "setupChecklist": {
       "title": "Make this board useful",
       "description": "Pick up where you left off. Progress follows the content already on this board.",
