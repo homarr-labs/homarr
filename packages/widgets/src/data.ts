@@ -1,6 +1,7 @@
 import type { AnyQueryProcedure, inferProcedureInput, inferProcedureOutput } from "@trpc/server";
 
 import type { AppRouter } from "@homarr/api";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import { createTrpcQueryKey } from "./trpc-query-key";
 
@@ -24,6 +25,8 @@ export interface WidgetDataContext<TOptions = Record<string, unknown>> {
   integrationIds: string[];
   itemId?: string;
   displayMode?: "compact" | "advanced";
+  board?: { disableStatus: boolean };
+  settings?: Pick<SettingsContextProps, "forceDisableStatus">;
 }
 
 export interface WidgetDataQuery<TInput = unknown> {

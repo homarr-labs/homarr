@@ -13,6 +13,25 @@ import {
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { widgetQuery } from "../data";
+import type { WidgetDataContext } from "../data";
+import type { RouterOutputs } from "@homarr/api";
+
+export const getAppPingQuery = (
+  app: RouterOutputs["app"]["byId"],
+  context: WidgetDataContext<{ pingEnabled: boolean }>,
+) =>
+  widgetQuery(
+    "widget.app.ping",
+    { id: app.id },
+    {
+      enabled:
+        context.options.pingEnabled &&
+        !context.settings?.forceDisableStatus &&
+        !context.board?.disableStatus &&
+        Boolean(app.pingUrl ?? app.href),
+      stream: false,
+    },
+  );
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
@@ -108,12 +127,14 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
   .withData({
     mode: "queries",
     stream: true,
-    queries: ({ options }) => ({
-      main: widgetQuery("app.byId", { id: options.appId }, { enabled: Boolean(options.appId) }),
-      ping: widgetQuery(
-        "widget.app.ping",
-        { id: options.appId },
-        { enabled: Boolean(options.appId) && options.pingEnabled, stream: false },
+    queries: (context) => ({
+      main: widgetQuery(
+        "app.byId",
+        { id: context.options.appId },
+        {
+          enabled: Boolean(context.options.appId),
+          after: (app) => ({ ping: getAppPingQuery(app, context) }),
+        },
       ),
     }),
   })

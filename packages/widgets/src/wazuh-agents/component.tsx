@@ -24,7 +24,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { useWidgetNow } from "../common/use-widget-now";
+import { useWidgetNow, useWidgetTimeZone } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
 import { WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
@@ -129,6 +129,7 @@ export default function WazuhAgentsWidget({
   const t = useI18n("widget.wazuhAgents");
   const locale = useCurrentIntlLocale();
   const now = useWidgetNow("minute");
+  const timeZone = useWidgetTimeZone();
   const query = clientApi.widget.wazuh.getAgents.useQuery(
     definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
@@ -191,8 +192,8 @@ export default function WazuhAgentsWidget({
       <Tooltip
         label={
           snapshotAgeMs > 2 * 60 * 60_000
-            ? t("staleSnapshot", { time: new Date(overview.asOf).toLocaleString(locale) })
-            : t("snapshotHint", { time: new Date(overview.asOf).toLocaleString(locale) })
+            ? t("staleSnapshot", { time: new Date(overview.asOf).toLocaleString(locale, { timeZone }) })
+            : t("snapshotHint", { time: new Date(overview.asOf).toLocaleString(locale, { timeZone }) })
         }
         withArrow
         multiline
@@ -200,8 +201,8 @@ export default function WazuhAgentsWidget({
       >
         <Badge size="sm" variant="dot" color={snapshotColor(snapshotAgeMs)} radius="sm">
           {width >= 300
-            ? t("snapshot", { age: dayjs(overview.asOf).fromNow(true) })
-            : dayjs(overview.asOf).fromNow(true)}
+            ? t("snapshot", { age: dayjs(overview.asOf).from(dayjs(now ?? undefined), true) })
+            : dayjs(overview.asOf).from(dayjs(now ?? undefined), true)}
         </Badge>
       </Tooltip>
     );

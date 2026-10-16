@@ -1,9 +1,8 @@
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { getAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
+import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import type { Session } from "@homarr/auth";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db } from "@homarr/db";
 import type { ColorScheme } from "@homarr/definitions";
 
 import type { AssistantAvailability } from "~/components/assistant/assistant-gate";
@@ -24,7 +23,7 @@ export const loadRootLayoutDataAsync = async (sessionPromise: Promise<Session | 
   const availabilityPromise = sessionPromise.then(async (session): Promise<AssistantAvailability> => {
     if (!session) return "unauthenticated";
     try {
-      if (await getAssistantAvailabilityAsync(db)) return "enabled";
+      if (await getRscAssistantAvailabilityAsync()) return "enabled";
       return "unconfigured";
     } catch {
       return "error";

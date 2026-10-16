@@ -122,6 +122,8 @@ export const prefetchInitialWidgetData = async (
         data.queries({
           integrationIds: item.integrationIds,
           itemId: item.id,
+          board,
+          settings: settings.board,
           options: reduceWidgetOptionsWithDefinition(definition, settings.board, item.options),
         }),
       );

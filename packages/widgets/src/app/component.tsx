@@ -1,5 +1,5 @@
 "use client";
-import { definition } from ".";
+import { definition, getAppPingQuery } from ".";
 
 import type { PropsWithChildren } from "react";
 import { Fragment } from "react";
@@ -28,7 +28,8 @@ export default function AppWidget({
 }: WidgetComponentProps<"app">) {
   const settings = useSettings();
   const board = useRequiredBoard();
-  const queries = definition.data.queries({ options, integrationIds: [] });
+  const context = { options, integrationIds: [], board, settings };
+  const queries = definition.data.queries(context);
   const appQuery = clientApi.app.byId.useQuery(queries.main.input, {
     enabled: Boolean(options.appId),
   });
@@ -38,6 +39,7 @@ export default function AppWidget({
   if (!options.appId) return <WidgetEmptyState />;
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
+  const ping = getAppPingQuery(app, context);
 
   let layoutScale = displayScale;
   if (!Number.isFinite(layoutScale) || layoutScale <= 0) layoutScale = 1;
@@ -123,12 +125,7 @@ export default function AppWidget({
             />
           </Flex>
         </AppDescriptionTooltip>
-        {options.pingEnabled &&
-        !settings.forceDisableStatus &&
-        !board.disableStatus &&
-        Boolean(app.pingUrl ?? app.href) ? (
-          <PingIndicator input={queries.ping.input} />
-        ) : null}
+        {ping.enabled && <PingIndicator input={ping.input} />}
       </AppLink>
     </Box>
   );
