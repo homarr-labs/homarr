@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "업타임 모니터링",
       "beszel": "Beszel",
       "systemMonitoring": "시스템 모니터링",
-      "security": "보안"
+      "security": "보안",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "공급자 URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "식별자",
             "placeholder": "이름 또는 소유자/이름"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "릴리스 페이지 열기",
       "releaseDescription": "릴리스 설명",
       "projectDescription": "프로젝트 설명",
+      "runningVersions": "",
+      "upToDate": "최신",
+      "updateAvailable": "",
+      "unknownStatus": "알 수 없음",
       "created": "생성됨",
       "error": {
         "label": "오류",

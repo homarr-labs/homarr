@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Veikimo stebėjimas",
       "beszel": "Beszel",
       "systemMonitoring": "Sistemos stebėjimas",
-      "security": "Apsauga"
+      "security": "Apsauga",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Teikėjo URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikatorius",
             "placeholder": "Vardas arba savininkas / vardas"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Atidaryti leidimo puslapį",
       "releaseDescription": "Leidimo aprašymas",
       "projectDescription": "Projekto aprašymas",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Nežinoma",
       "created": "Sukurta",
       "error": {
         "label": "Klaida",

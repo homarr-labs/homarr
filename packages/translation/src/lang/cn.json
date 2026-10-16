@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "运行时间监控",
       "beszel": "Beszel",
       "systemMonitoring": "系统监控",
-      "security": "安全"
+      "security": "安全",
+      "serviceVersion": "版本"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "提供商 URL"
           },
+          "integrations": {
+            "label": "链接的集成"
+          },
           "identifier": {
             "label": "标识符",
             "placeholder": "姓名或所有者名称"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
       "projectDescription": "项目描述",
+      "runningVersions": "运行中的版本",
+      "upToDate": "已是最新",
+      "updateAvailable": "有可用更新",
+      "unknownStatus": "未知",
       "created": "已创建",
       "error": {
         "label": "错误",

@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/assemble-standalone.mjs",
+    "build": "node scripts/prepare-tabler-icons.mjs && node scripts/assemble-standalone.mjs",
     "clean": "git clean -xdf .next .output .turbo node_modules",
-    "dev": "bun run with-env node ../../node_modules/next/dist/bin/next dev",
+    "dev": "node scripts/prepare-tabler-icons.mjs && bun run with-env node ../../node_modules/next/dist/bin/next dev",
     "format": "oxfmt .",
     "lint": "oxlint",
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
@@ -125,6 +125,7 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@tabler/icons-sprite": "catalog:",
     "@types/adm-zip": "catalog:",
     "@types/better-sqlite3": "catalog:",
     "@types/chroma-js": "catalog:",

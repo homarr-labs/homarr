@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Giám sát thời gian hoạt động",
       "beszel": "Beszel",
       "systemMonitoring": "Giám sát hệ thống",
-      "security": "Bảo mật"
+      "security": "Bảo mật",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "URL nhà cung cấp"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Mã định danh",
             "placeholder": "Tên hoặc Chủ sở hữu/Tên"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Mở trang bản phát hành",
       "releaseDescription": "Mô tả bản phát hành",
       "projectDescription": "Mô tả dự án",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Không rõ",
       "created": "Đã tạo",
       "error": {
         "label": "Lỗi",

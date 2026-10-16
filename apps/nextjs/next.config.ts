@@ -108,6 +108,10 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }],
       })),
       {
+        source: "/tabler-icons/:version/:asset",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         source: "/sw.js",
         headers: [
           { key: "Content-Type", value: "application/javascript; charset=utf-8" },
