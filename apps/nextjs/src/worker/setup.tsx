@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  Accordion,
   Alert,
   Badge,
   Button,
   Group,
-  Modal,
   NativeSelect,
   Paper,
   Stack,
@@ -16,7 +16,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconAffiliate, IconCheck, IconCloud, IconKey, IconPlugConnected, IconUsers } from "@tabler/icons-react";
+import { IconAffiliate, IconCheck, IconKey, IconPlugConnected, IconUsers } from "@tabler/icons-react";
 
 import type { EnrollmentChallenge } from "@homarr/remote-protocol";
 import type { WorkerEnrollment } from "@homarr/remote-platform/types";
@@ -34,14 +34,13 @@ import { WorkerAccount, errorMessage, usePlatformAccount } from "./platform";
 import { WorkerOrganizations } from "./organizations";
 import { WorkerSharing } from "./sharing";
 import { WorkerMcp } from "./mcp";
+import { WorkerLocalAccounts, WorkerLocalLoginLink } from "./local-accounts";
 
 export function WorkerSetup({
-  opened,
   onClose,
   initialLink,
   initialTab,
 }: {
-  opened: boolean;
   onClose: () => void;
   initialLink: string;
   initialTab: string;
@@ -50,10 +49,13 @@ export function WorkerSetup({
   const snapshot = useWorkerConnections();
   const { session, request } = usePlatformAccount();
   const [link, setLink] = useState("");
+  const [cryptoAvailable, setCryptoAvailable] = useState(false);
+  useEffect(() => setCryptoAvailable(browserCryptoAvailable()), []);
   const [tab, setTab] = useState<string | null>("workers");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [expandedWorkerId, setExpandedWorkerId] = useState<string | null>(null);
   const [selectedWorkerId, setSelectedWorkerId] = useState<string | null>(null);
   useEffect(() => {
     if (initialLink) setLink(initialLink);
@@ -61,9 +63,10 @@ export function WorkerSetup({
   useEffect(() => {
     setTab(initialTab);
   }, [initialTab]);
-  const selected = snapshot.workers.find(
-    ({ worker }) => worker.workerId === (selectedWorkerId ?? snapshot.primaryWorkerId),
-  );
+  const selected =
+    snapshot.workers.find(({ worker }) => worker.workerId === selectedWorkerId) ??
+    snapshot.workers.find(({ worker }) => worker.workerId === snapshot.primaryWorkerId) ??
+    snapshot.workers[0];
   const connection = useMemo(() => {
     if (!selected?.connected) return null;
     return pool.getConnection(selected.worker.workerId);
@@ -80,27 +83,38 @@ export function WorkerSetup({
       setBusy(false);
     }
   }
+  async function connectInput(input: ConnectionInput) {
+    const saved = matchingSavedWorker(
+      snapshot.workers.map(({ worker }) => worker),
+      input,
+    );
+    let worker: SavedWorker;
+    const restoreSaved =
+      input.credential.kind === "claim" || input.credential.kind === "grant" || input.credential.kind === "invite";
+    if (saved && restoreSaved) worker = await pool.restore(saved.workerId);
+    else worker = await pool.connectInput(input);
+    // Adding a service worker keeps the board on its current primary.
+    // A shared board link still opens the board it was created for.
+    if (!snapshot.primaryWorkerId || input.credential.kind === "share" || worker.grant.role === "viewer") {
+      pool.setPrimary(worker.workerId);
+    }
+    setSelectedWorkerId(worker.workerId);
+    setLink("");
+    onClose();
+  }
   async function connect(event: React.FormEvent) {
     event.preventDefault();
-    await action(async () => {
-      const input = parseConnectionLink(link, window.location.origin);
-      const saved = matchingSavedWorker(
-        snapshot.workers.map(({ worker }) => worker),
-        input,
-      );
-      let worker: SavedWorker;
-      if (saved && input.credential.kind !== "share") worker = await pool.restore(saved.workerId);
-      else worker = await pool.connectInput(input);
-      // Adding a service worker keeps the board on its current primary.
-      // A shared board link still opens the board it was created for.
-      if (!snapshot.primaryWorkerId || input.credential.kind === "share" || worker.grant.role === "viewer") {
-        pool.setPrimary(worker.workerId);
-      }
-      setSelectedWorkerId(worker.workerId);
-      setLink("");
-      onClose();
-    });
+    await action(() => connectInput(parseConnectionLink(link, window.location.origin)));
   }
+  const localLogin = useMemo(() => {
+    if (!link) return false;
+    try {
+      const input = parseConnectionLink(link, window.location.origin);
+      return input.credential.kind === "local-register" || input.credential.kind === "local-login";
+    } catch {
+      return false;
+    }
+  }, [link]);
   async function enroll(worker: SavedWorker) {
     await action(async () => {
       const { challenge } = await request<{ challenge: EnrollmentChallenge }>("/api/workers/challenge", {
@@ -127,29 +141,26 @@ export function WorkerSetup({
     });
   }
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={
-        <Group gap="xs">
-          <IconPlugConnected size={22} />
-          <Text fw={600}>Your Homarr workers</Text>
-        </Group>
-      }
-      size="xl"
-      centered
-    >
+    <>
       <Stack>
         <Text c="dimmed" size="sm">
           Pick the worker that stores your boards. Keep other workers connected to use integrations from your other
           servers.
         </Text>
+        {(tab === "organizations" || tab === "sharing" || tab === "mcp") && snapshot.workers.length > 1 && (
+          <NativeSelect
+            label="Worker"
+            value={selected?.worker.workerId ?? ""}
+            onChange={(event) => setSelectedWorkerId(event.currentTarget.value)}
+            data={snapshot.workers.map(({ worker }) => ({ label: worker.name, value: worker.workerId }))}
+          />
+        )}
         <Tabs value={tab} onChange={setTab}>
-          <Tabs.List>
+          <Tabs.List style={{ flexWrap: "wrap" }}>
             <Tabs.Tab value="workers" leftSection={<IconPlugConnected size={16} />}>
               Workers
             </Tabs.Tab>
-            <Tabs.Tab value="account" leftSection={<IconCloud size={16} />}>
+            <Tabs.Tab value="account" leftSection={<IconUsers size={16} />}>
               Account
             </Tabs.Tab>
             <Tabs.Tab value="organizations" leftSection={<IconUsers size={16} />}>
@@ -164,7 +175,7 @@ export function WorkerSetup({
           </Tabs.List>
           <Tabs.Panel value="workers" pt="md">
             <Stack>
-              {!browserCryptoAvailable() && (
+              {!cryptoAvailable && (
                 <Alert color="yellow">Open Homarr using its HTTPS address before connecting a worker.</Alert>
               )}
               <Paper withBorder p="md" radius="md">
@@ -180,24 +191,30 @@ export function WorkerSetup({
                       onChange={(event) => setLink(event.currentTarget.value)}
                       autoComplete="off"
                       data-private="true"
+                      spellCheck={false}
                     />
                     {link && (
                       <Text size="sm" c="green">
-                        <IconCheck size={14} /> Invitation received. Press Connect worker.
+                        <IconCheck size={14} /> Connection link ready.
                       </Text>
                     )}
-                    <Button type="submit" loading={busy} disabled={!browserCryptoAvailable()}>
-                      Connect worker
-                    </Button>
+                    {!localLogin && (
+                      <Button type="submit" loading={busy} disabled={!cryptoAvailable}>
+                        Connect worker
+                      </Button>
+                    )}
                   </Stack>
                 </form>
+                <WorkerLocalLoginLink link={link} onConnect={connectInput} />
               </Paper>
               {snapshot.workers.map((entry) => (
                 <Paper key={entry.worker.workerId} withBorder p="md" radius="md">
                   <Stack gap="sm">
                     <Group justify="space-between">
                       <div>
-                        <Text fw={600}>{entry.worker.name}</Text>
+                        <Text fw={600} style={{ overflowWrap: "anywhere" }}>
+                          {entry.worker.name}
+                        </Text>
                         <Text size="xs" c="dimmed">
                           {entry.worker.workerId.slice(0, 24)}…
                         </Text>
@@ -226,7 +243,16 @@ export function WorkerSetup({
                       >
                         Open Homarr
                       </Button>
-                      <Button size="xs" variant="light" onClick={() => setSelectedWorkerId(entry.worker.workerId)}>
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={() => {
+                          setSelectedWorkerId(entry.worker.workerId);
+                          setExpandedWorkerId((current) =>
+                            current === entry.worker.workerId ? null : entry.worker.workerId,
+                          );
+                        }}
+                      >
                         Connection settings
                       </Button>
                       {entry.connected && session.user && entry.worker.grant.role === "owner" && (
@@ -248,7 +274,7 @@ export function WorkerSetup({
                         Forget this browser
                       </Button>
                     </Group>
-                    {selected?.worker.workerId === entry.worker.workerId && (
+                    {expandedWorkerId === entry.worker.workerId && (
                       <ConnectionSettings
                         worker={entry.worker}
                         apply={(input) =>
@@ -270,10 +296,55 @@ export function WorkerSetup({
             </Stack>
           </Tabs.Panel>
           <Tabs.Panel value="account" pt="md">
-            <WorkerAccount />
+            <Stack>
+              <Text size="sm" c="dimmed">
+                Your local organization and users are managed on your worker.
+              </Text>
+              <Group>
+                <Button variant="default" onClick={() => setTab("organizations")}>
+                  Manage local organization
+                </Button>
+              </Group>
+              <Paper withBorder p="md" radius="md">
+                <Stack gap="sm">
+                  <Title order={4}>Homarr cloud account</Title>
+                  <Text size="sm" c="dimmed">
+                    Optional. Use a cloud account to organize workers across servers.
+                  </Text>
+                  <WorkerAccount />
+                </Stack>
+              </Paper>
+            </Stack>
           </Tabs.Panel>
           <Tabs.Panel value="organizations" pt="md">
-            <WorkerOrganizations />
+            <Stack>
+              {connection && selected && (
+                <WorkerLocalAccounts key={selected.worker.workerId} worker={selected.worker} connection={connection} />
+              )}
+              {!connection && (
+                <Paper withBorder p="md" radius="md">
+                  <Stack gap="xs">
+                    <Title order={3}>Your local organization</Title>
+                    <Text c="dimmed" size="sm">
+                      Connect a worker to create an organization and invite users.
+                    </Text>
+                    <Group>
+                      <Button variant="default" onClick={() => setTab("workers")}>
+                        Connect a worker
+                      </Button>
+                    </Group>
+                  </Stack>
+                </Paper>
+              )}
+              <Accordion variant="separated">
+                <Accordion.Item value="cloud-organizations">
+                  <Accordion.Control>Cloud organizations · optional</Accordion.Control>
+                  <Accordion.Panel>
+                    <WorkerOrganizations />
+                  </Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
+            </Stack>
           </Tabs.Panel>
           <Tabs.Panel value="sharing" pt="md">
             {connection && selected ? (
@@ -294,14 +365,7 @@ export function WorkerSetup({
             )}
           </Tabs.Panel>
         </Tabs>
-        {(tab === "sharing" || tab === "mcp") && snapshot.workers.length > 1 && (
-          <NativeSelect
-            label="Worker"
-            value={selected?.worker.workerId ?? ""}
-            onChange={(event) => setSelectedWorkerId(event.currentTarget.value)}
-            data={snapshot.workers.map(({ worker }) => ({ label: worker.name, value: worker.workerId }))}
-          />
-        )}
+
         {error && (
           <Alert color="red" role="alert">
             {error}
@@ -309,7 +373,7 @@ export function WorkerSetup({
         )}
         {notice && <Alert color="green">{notice}</Alert>}
       </Stack>
-    </Modal>
+    </>
   );
 }
 

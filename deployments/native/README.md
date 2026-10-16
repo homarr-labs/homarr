@@ -34,3 +34,7 @@ The gateway serves the normal frontend at `/`, the account and MCP service at `/
 Keep all four named volumes: each worker owns its dashboard and integration database, `platform-data` holds account-directory and approved MCP state, and `broker-secrets` holds the encryption key for that MCP state. Back up the broker database and key together. Losing the broker key requires authorizing the affected worker connections again.
 
 The frontend stores its own device keys in the browser. A platform account or organization membership still requires worker approval before it can access private worker data. Hosted MCP access uses separately approved worker credentials; browser keys are not uploaded.
+
+Worker connections and local organizations are managed under **Management → Your Homarr workers**. A local invitation lets a member create a username and password on that worker without GitHub. Keep the worker's sign-in link for another browser; the administrator manages membership and sessions on the same page.
+
+The sample workers disable internet requests. Their weather widgets use the browser instead. For another worker, enable `WORKER_ALLOW_BROWSER_WEATHER=true` alongside `NO_EXTERNAL_CONNECTION=true` to allow this. Only public Open-Meteo weather and air-quality requests use this path; the provider receives the widget location and browser IP.

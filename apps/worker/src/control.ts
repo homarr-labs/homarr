@@ -88,6 +88,13 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
         const board = await readBoard(state, principal, id, request.signal);
         if (!board) return Response.json({ error: "Board not found" }, { status: 404 });
         response = Response.json(board);
+      } else if (path === "/remote/local-accounts" || path.startsWith("/remote/local-accounts/")) {
+        state.access.requireOwner(principal);
+        const { localAccountsRequest } = await import("./local-accounts");
+        let body: Record<string, unknown> = {};
+        if (request.method === "POST") body = await readBody(request);
+        response = await localAccountsRequest(state, principal, request, body);
+        getChannels().revalidate();
       } else if (path.startsWith("/remote/access/")) {
         state.access.requireOwner(principal);
         const parts = path.slice("/remote/access/".length).split("/");

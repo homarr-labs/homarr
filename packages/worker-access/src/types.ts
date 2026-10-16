@@ -22,7 +22,12 @@ export type GrantScope = {
   service?: ServiceScope;
   userId?: string;
 };
+export type LocalAccountCredential =
+  | { kind: "local-login"; username: string; password: string }
+  | { kind: "local-register"; inviteId: string; token: string; username: string; password: string };
+
 export type AccessCredential =
+  | LocalAccountCredential
   | { kind: "claim"; secret: string }
   | { kind: "grant"; token: string }
   | { kind: "invite"; token: string }
@@ -44,6 +49,7 @@ export type AccessGrant = {
   parentGrantId: string | null;
   type?: "share" | "invite";
   anonymous?: boolean;
+  localAccount?: boolean;
 };
 
 export type IssuedGrant = AccessGrant & { token: string };

@@ -20,6 +20,8 @@ export interface WorkerBootstrap {
 export const WorkerWorkspaceContext = createContext<{
   pool: WorkerConnectionPool;
   platformPath: string;
+  initialLink?: string;
+  clearInitialLink?: () => void;
   manageWorkers: () => void;
   organizationId: string | null;
   setOrganizationId: (organizationId: string | null) => void;

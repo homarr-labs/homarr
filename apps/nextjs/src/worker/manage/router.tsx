@@ -11,6 +11,7 @@ import { WorkerCustomWidgetsRoute, WorkerWorkshopRedirect } from "./custom-widge
 import { WorkerMediaRoute } from "./media";
 import { WorkerAssistantRoute, WorkerManagementHome, WorkerSettingsRoute } from "./settings";
 import { WorkerToolsRoute } from "./tools";
+import { WorkerManagementPage } from "../workers-page";
 import { WorkerUsersRoute } from "./users";
 
 export function WorkerManagementRouter({
@@ -31,6 +32,8 @@ export function WorkerManagementRouter({
   const props = { segments, searchParams };
   if (segments.length === 0) return <WorkerManagementHome />;
   switch (segments[0]) {
+    case "workers":
+      return <WorkerManagementPage />;
     case "boards":
       return <WorkerBoardsRoute />;
     case "apps":

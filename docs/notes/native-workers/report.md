@@ -1,6 +1,6 @@
 # Normal Homarr with independent workers
 
-The frontend is the normal Homarr app: its board editor, widgets, Custom Widgets, settings, management pages, and appearance. A small bar at the bottom opens worker setup and switches the worker supplying the current boards. The earlier separate viewer is retained only for its existing demo.
+The frontend is the normal Homarr app: its board editor, widgets, Custom Widgets, settings, management pages, and appearance. “Your Homarr workers” is a page under Management. A compact header switcher changes the worker supplying the current boards; the management navigation keeps Homarr’s normal groups. The earlier separate viewer is retained only for its existing demo.
 
 ## What runs where
 
@@ -25,7 +25,7 @@ bash scripts/native-demo.sh pair primary
 bash scripts/native-demo.sh pair integrations
 ```
 
-Open the private setup link printed for the primary. It opens normal Homarr. Add the second link in **Worker setup**; your primary stays selected. To use the second worker's services, open **Integrations** and approve/import the selected services. They then appear in the normal widget integration picker.
+Open the private setup link printed for the primary. It opens normal Homarr. Add the second link in **Management → Your Homarr workers**; your primary stays selected. To use the second worker's services, open **Integrations** and approve/import the selected services. They then appear in the normal widget integration picker.
 
 The demo starts with sample data. Each worker keeps separate persistent storage. `bash scripts/native-demo.sh down` stops the demo while keeping its data and keys. See `deployments/native/README.md` for HTTPS and separate-host deployment.
 
@@ -47,11 +47,13 @@ These are final local Docker image storage figures, not RAM. The normal Next.js 
 
 | Container             | Image storage |
 | --------------------- | ------------- |
-| Headless worker image | 122.84 MiB    |
-| Normal frontend image | 346.34 MiB    |
+| Headless worker image | 122.85 MiB    |
+| Normal frontend image | 346.64 MiB    |
 | Account and MCP image | 90.98 MiB     |
 | Routing relay image   | 90.40 MiB     |
 
 The transport and caches have finite bounds. Browser requests share a bounded queue, with room reserved for ordinary requests while live subscriptions run. Media previews and hosted MCP requests/results have size limits. Dedicated service approvals expire and can be revoked. Credential-bearing legacy embed/timetable URLs fail closed in shared views; owner and native-user connections retain their normal behavior.
+
+Worker-local organizations also support invitations and native username/password users without GitHub; their passwords, sessions and group permissions stay on the worker. The administrator can manage their invitations and sessions. Explicit `WORKER_ALLOW_BROWSER_WEATHER=true` lets an offline worker’s authorized weather reads use the browser’s public Open-Meteo connection.
 
 Live GitHub sign-in and production deployment to homarr.dev were explicitly excluded. The routing relay stays blind; the approved hosted MCP gateway sees the tool data it handles. No external cryptographic audit is claimed.

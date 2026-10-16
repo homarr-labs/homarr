@@ -131,6 +131,7 @@ export async function createBrowserConnection(options: {
     result: ReturnType<typeof deferred<Response>>;
     completion: ReturnType<typeof deferred<void>>;
     controller?: ReadableStreamDefaultController<Uint8Array>;
+    responsePull?: ReturnType<typeof deferred<void>>;
     removeAbort: () => void;
     method: string;
     started: boolean;
@@ -165,6 +166,7 @@ export async function createBrowserConnection(options: {
       void request.uploadReader?.cancel().catch(() => {});
       request.result.reject(error);
       request.completion.reject(error);
+      request.responsePull?.resolve();
       request.controller?.error(error);
     }
     requests.clear();
@@ -214,6 +216,7 @@ export async function createBrowserConnection(options: {
         void pending.uploadReader?.cancel().catch(() => {});
         pending.result.reject(abortError());
         pending.completion.reject(abortError());
+        pending.responsePull?.resolve();
         pending.controller?.error(abortError());
         sendBackground({ type: "request-cancel", id });
       }
@@ -265,6 +268,7 @@ export async function createBrowserConnection(options: {
           pending.removeAbort();
           result.reject(error);
           pending.completion.reject(error);
+          pending.responsePull?.resolve();
           pending.controller?.error(error);
           sendBackground({ type: "request-cancel", id });
         }
@@ -328,10 +332,14 @@ export async function createBrowserConnection(options: {
             pending.controller = controller;
           },
           pull() {
+            if (pending.responsePull) return pending.responsePull.promise;
+            pending.responsePull = deferred<void>();
             pending.credits++;
             sendBackground({ type: "response-credit", id });
+            return pending.responsePull.promise;
           },
           cancel() {
+            pending.responsePull?.resolve();
             pending.removeAbort();
             requests.delete(id);
             pending.completion.reject(abortError());
@@ -347,7 +355,10 @@ export async function createBrowserConnection(options: {
       if (!pending.started || !pending.controller || pending.credits <= 0 || typeof message.data !== "string")
         throw new Error("Invalid response chunk");
       pending.credits--;
+      const pulling = pending.responsePull;
+      pending.responsePull = undefined;
       pending.controller.enqueue(fromBase64Url(message.data, CHUNK_BYTES));
+      pulling?.resolve();
     } else if (message.type === "response-end") {
       if (!pending.started) throw new Error("Response ended before headers");
       pending.removeAbort();
@@ -355,6 +366,7 @@ export async function createBrowserConnection(options: {
       pending.uploadStopped = true;
       pending.uploadCredit?.reject(abortError());
       void pending.uploadReader?.cancel().catch(() => {});
+      pending.responsePull?.resolve();
       pending.controller?.close();
       pending.completion.resolve();
     } else if (message.type === "response-error") {
@@ -366,6 +378,7 @@ export async function createBrowserConnection(options: {
       void pending.uploadReader?.cancel().catch(() => {});
       pending.result.reject(error);
       pending.completion.reject(error);
+      pending.responsePull?.resolve();
       pending.controller?.error(error);
     } else throw new Error("Unexpected encrypted response");
   }

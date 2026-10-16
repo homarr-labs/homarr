@@ -71,7 +71,17 @@ export function WorkerProviders({ bootstrap, children }: PropsWithChildren<{ boo
     for (const { queryKey, ...options } of dashboardSupportingQueryPolicies) client.setQueryDefaults(queryKey, options);
     return client;
   });
-  const [apiClient] = useState(() => clientApi.createClient({ links: [createWorkerLink(connection)] }));
+  const [apiClient] = useState(() =>
+    clientApi.createClient({
+      links: [
+        createWorkerLink({
+          fetch: connection.fetch,
+          fetchSubscription: connection.fetchSubscription,
+          browserWeather: bootstrap.runtime.browserWeather,
+        }),
+      ],
+    }),
+  );
   useEffect(() => () => queryClient.clear(), [queryClient]);
   useEffect(
     () =>

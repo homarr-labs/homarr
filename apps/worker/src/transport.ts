@@ -74,7 +74,15 @@ export class WorkerChannels {
       transport,
       identity: this.state.identity,
       authorize: async (credential, device) => {
-        const authorization = await this.state.access.authenticateEnvelope(device, credential as AccessCredential);
+        let authorization: AuthenticatedEnvelope;
+        const input = credential as AccessCredential;
+        if (input.kind === "local-login" || input.kind === "local-register") {
+          const { authenticateLocalAccount } = await import("./local-accounts");
+          const { userId, passwordHash } = await authenticateLocalAccount(this.state, input);
+          authorization = await this.state.access.authenticateNativeAccount(device, userId);
+          const { recordLocalSession } = await import("./local-accounts");
+          await recordLocalSession(authorization, passwordHash);
+        } else authorization = await this.state.access.authenticateEnvelope(device, input);
         await this.assertAuthorization(authorization);
         if ((credential as AccessCredential).kind === "claim") await writePairingFile(this.state);
         return authorization;

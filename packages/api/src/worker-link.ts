@@ -9,9 +9,12 @@ import { observable } from "@trpc/server/observable";
 import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/unstable-core-do-not-import";
 
 import type { AppRouter } from "./legacy";
+import { requestBrowserWeatherAsync } from "./browser-weather";
 
 /** Only the browser transport is shared; native routers and handlers are never imported. */
 export interface WorkerFetch {
+  /** Explicitly allow public Open-Meteo reads in browsers for an offline worker. */
+  browserWeather?: boolean;
   fetch(input: string | URL | Request, init?: RequestInit): Promise<Response>;
   fetchSubscription?(input: string | URL | Request, init?: RequestInit): Promise<Response>;
 }
@@ -213,11 +216,15 @@ function workerRequest(selected: WorkerFetch, op: Operation): OperationResultObs
     });
     void (async () => {
       try {
-        const result = await native.call(op.path.split("."), nativeInput(op.input), {
+        let result = await native.call(op.path.split("."), nativeInput(op.input), {
           signal: abort.signal,
           context: {},
         });
         if (!active) return;
+        if (op.type === "query" && result === null && selected.browserWeather === true) {
+          result = await requestBrowserWeatherAsync(op.path, op.input, abort.signal);
+          if (!active) return;
+        }
         if (op.type !== "subscription") {
           observer.next({ result: { type: "data", data: result } });
           observer.complete();

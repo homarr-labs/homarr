@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ActionIcon, Badge, Button, Group, NativeSelect, Paper, Text, Tooltip } from "@mantine/core";
-import { IconPlugConnected, IconSettings } from "@tabler/icons-react";
+import { Alert, Menu, Text, Tooltip } from "@mantine/core";
+import { IconCheck, IconPlugConnected, IconSettings } from "@tabler/icons-react";
+
+import { HeaderButton } from "~/components/layout/header/button";
 
 import { useWorkerConnections, useWorkerWorkspace } from "./context";
 import { errorMessage } from "./platform";
 
+/** Compact header access; worker management itself lives on its management page. */
 export function WorkerDock() {
   const { pool, manageWorkers } = useWorkerWorkspace();
   const snapshot = useWorkerConnections();
@@ -14,6 +17,7 @@ export function WorkerDock() {
   const [error, setError] = useState("");
   const active = snapshot.workers.find(({ worker }) => worker.workerId === snapshot.primaryWorkerId);
   async function select(workerId: string) {
+    if (workerId === snapshot.primaryWorkerId) return;
     setBusy(true);
     setError("");
     try {
@@ -26,61 +30,50 @@ export function WorkerDock() {
       setBusy(false);
     }
   }
+  let label = "Your Homarr workers";
+  if (active) label = `Your Homarr workers · ${active.worker.name}`;
   return (
-    <Paper
-      component="aside"
-      aria-label="Homarr workers"
-      withBorder
-      radius="xl"
-      shadow="md"
-      px="sm"
-      py={6}
-      style={{
-        position: "fixed",
-        bottom: 12,
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 190,
-        maxWidth: "calc(100vw - 24px)",
-      }}
-    >
-      <Group gap="xs" wrap="nowrap">
-        <Tooltip label="Workers and organizations">
-          <ActionIcon variant="subtle" onClick={manageWorkers} aria-label="Manage workers">
-            <IconPlugConnected size={20} />
-          </ActionIcon>
+    <Menu position="bottom-end" withinPortal width={260}>
+      <Menu.Target>
+        <Tooltip label={label}>
+          <HeaderButton aria-label={label} loading={busy}>
+            <IconPlugConnected size={20} stroke={1.5} />
+          </HeaderButton>
         </Tooltip>
-        {active ? (
-          <>
-            <NativeSelect
-              aria-label="Board worker"
-              value={active.worker.workerId}
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Label>Board worker</Menu.Label>
+        {snapshot.workers.map(({ worker, connected }) => {
+          let selection;
+          if (worker.workerId === snapshot.primaryWorkerId) selection = <IconCheck size={16} />;
+          return (
+            <Menu.Item
+              key={worker.workerId}
               disabled={busy}
-              onChange={(event) => void select(event.currentTarget.value)}
-              data={snapshot.workers.map(({ worker }) => ({ label: worker.name, value: worker.workerId }))}
-              styles={{ input: { border: 0, background: "transparent", maxWidth: 220 } }}
-              style={{ flex: 1, minWidth: 0, width: "clamp(100px, 40vw, 220px)" }}
-            />
-            <Badge size="xs" color={active.connected ? "green" : "gray"} variant="dot" visibleFrom="sm">
-              {active.worker.mode}
-            </Badge>
-          </>
-        ) : (
-          <Button size="xs" variant="subtle" onClick={manageWorkers}>
-            Connect your worker
-          </Button>
+              rightSection={selection}
+              onClick={() => void select(worker.workerId)}
+            >
+              <Text size="sm" truncate>
+                {worker.name}
+              </Text>
+              {!connected && (
+                <Text size="xs" c="dimmed">
+                  Offline · reconnect to open
+                </Text>
+              )}
+            </Menu.Item>
+          );
+        })}
+        <Menu.Divider />
+        <Menu.Item leftSection={<IconSettings size={16} />} onClick={manageWorkers}>
+          Your Homarr workers
+        </Menu.Item>
+        {error && (
+          <Alert color="red" role="alert" m="xs">
+            {error}
+          </Alert>
         )}
-        <Tooltip label="Worker setup">
-          <ActionIcon variant="subtle" onClick={manageWorkers} aria-label="Worker setup">
-            <IconSettings size={18} />
-          </ActionIcon>
-        </Tooltip>
-      </Group>
-      {error && (
-        <Text size="xs" c="red" maw={400}>
-          {error}
-        </Text>
-      )}
-    </Paper>
+      </Menu.Dropdown>
+    </Menu>
   );
 }

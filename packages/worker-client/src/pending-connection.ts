@@ -7,7 +7,13 @@ function bootstrapLink(value: unknown): string {
   if (typeof value !== "string" || value.length > 65_536) return "";
   try {
     const input = parseConnectionLink(value);
-    if (input.credential.kind === "claim" || input.credential.kind === "invite") return value;
+    if (
+      input.credential.kind === "claim" ||
+      input.credential.kind === "invite" ||
+      input.credential.kind === "local-register" ||
+      input.credential.kind === "local-login"
+    )
+      return value;
   } catch {
     // Only a complete bootstrap link can be resumed. Never keep share/grant access here.
   }

@@ -146,6 +146,33 @@ export class WorkerAccess {
     return this.authenticated(device.deviceId, { ...grant, token });
   }
 
+  /** Server-only entrypoint after native password verification; never accepts a client user ID. */
+  async authenticateNativeAccount(device: VerifiedDevice, userId: string): Promise<AuthenticatedEnvelope> {
+    if (!this.claimed || (await fingerprint(device.devicePublicJwk)) !== device.deviceId)
+      throw new WorkerAccessError("UNAUTHORIZED", "Verified worker device required");
+    const grant = {
+      ...this.newGrant(device.deviceId, {
+        role: "user",
+        userId,
+        expiresAt: this.now() + 30 * 24 * 60 * 60 * 1000,
+      }),
+      localAccount: true,
+    };
+    const token = await sign(this.identity, grant);
+    this.store.insertGrant(grant, token);
+    this.recordDevice(device);
+    return this.authenticated(device.deviceId, { ...grant, token });
+  }
+
+  revokeUserSessions(owner: AccessPrincipal, userId: string) {
+    this.requireOwner(owner);
+    this.store.db
+      .query(
+        "UPDATE grants SET revoked = 1 WHERE json_extract(payload, '$.role') = 'user' AND json_extract(payload, '$.localAccount') = 1 AND json_extract(payload, '$.userId') = ?",
+      )
+      .run(userId);
+  }
+
   async grantAccess(owner: AccessPrincipal, input: GrantScope & { devicePublicJwk: JsonWebKey; accountId?: string }) {
     const authority = this.requireOwner(owner);
     const deviceId = await fingerprint(input.devicePublicJwk);

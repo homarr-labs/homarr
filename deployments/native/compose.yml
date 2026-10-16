@@ -81,6 +81,7 @@ services:
       WORKER_RELAY_CONNECT_URL: ws://relay:8787
       WORKER_ALLOWED_ORIGINS: ${HOMARR_PUBLIC_URL:-http://localhost:43105}
       WORKER_RUN_OPTIONAL_JOBS: "false"
+      WORKER_ALLOW_BROWSER_WEATHER: ${WORKER_ALLOW_BROWSER_WEATHER:-false}
       HOMARR_STATE_BACKEND: memory
     volumes:
       - worker-primary-data:/appdata

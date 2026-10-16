@@ -31,6 +31,53 @@ function client(router: AnyRouter) {
 }
 
 describe("existing Homarr hooks over native worker RPC", () => {
+  test("browser weather requires opt-in, a null worker result, and successful authorization", async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response("unavailable", { status: 503 }));
+    vi.stubGlobal("fetch", fetch);
+    try {
+      let allowed = true;
+      let result: unknown = null;
+      const worker = client({
+        widget: {
+          weather: {
+            atLocation: os.handler(() => {
+              if (!allowed) throw new ORPCError("FORBIDDEN");
+              return result;
+            }),
+          },
+        },
+        unrelated: os.handler(() => null),
+      });
+      const api = createTRPCUntypedClient<AppRouter>({
+        links: [createWorkerLink({ ...worker.connection, browserWeather: true })],
+      });
+      const input = { latitude: 48.85, longitude: 2.35, url: "https://private.invalid" };
+      expect(await worker.client.query("widget.weather.atLocation", input)).toBeNull();
+      expect(await api.query("unrelated")).toBeNull();
+      allowed = false;
+      await expect(api.query("widget.weather.atLocation", input)).rejects.toMatchObject({
+        data: { code: "FORBIDDEN" },
+      });
+      expect(fetch).not.toHaveBeenCalled();
+      allowed = true;
+      result = { current: "worker data" };
+      expect(await api.query("widget.weather.atLocation", input)).toEqual(result);
+      expect(fetch).not.toHaveBeenCalled();
+      result = null;
+      await expect(api.query("widget.weather.atLocation", input)).rejects.toThrow("Open-Meteo returned 503");
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const call = fetch.mock.calls[0];
+      if (!call) throw new Error("Expected a browser weather request");
+      const [url, options] = call;
+      expect(url.origin).toBe("https://api.open-meteo.com");
+      expect(url.pathname).toBe("/v1/forecast");
+      expect(url.searchParams.has("url")).toBe(false);
+      expect(options).toMatchObject({ credentials: "omit", redirect: "error", referrerPolicy: "no-referrer" });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   test("native media uploads preserve repeated FormData files and all bytes", async () => {
     const bytes = new Uint8Array(3 * 1024 * 1024).fill(19);
     const form = new FormData();

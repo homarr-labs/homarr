@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
   Alert,
   AppShellMain,
-  Box,
   Button,
   Center,
   Loader,
@@ -16,22 +15,6 @@ import {
   Title,
   v8CssVariablesResolver,
 } from "@mantine/core";
-import {
-  IconAffiliate,
-  IconApi,
-  IconBox,
-  IconBrandDocker,
-  IconBrandTabler,
-  IconCertificate,
-  IconClipboardList,
-  IconDatabaseExport,
-  IconLayoutDashboard,
-  IconPhoto,
-  IconRobot,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react";
 
 import { configureWorkerTransport } from "@homarr/api/worker-link";
 import { supportedLanguages } from "@homarr/translation/languages";
@@ -43,13 +26,13 @@ import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
 
 import { WorkerBoard } from "./board";
-import { WorkerWorkspaceContext, useWorkerBootstrap, useWorkerConnections, useWorkerWorkspace } from "./context";
+import { WorkerWorkspaceContext, useWorkerConnections, useWorkerWorkspace } from "./context";
 import type { WorkerBootstrap } from "./context";
-import { WorkerDock } from "./dock";
 import { WorkerHeader } from "./header";
 import { PlatformAccountProvider, errorMessage } from "./platform";
 import { WorkerProviders } from "./providers";
-import { WorkerSetup } from "./setup";
+import { DisconnectedWorkersPage } from "./workers-page";
+import { useWorkerManagementLinks } from "./navigation";
 import { CustomWidgetConfigurationEntry } from "~/app/[locale]/custom-widget-configuration/[token]/configuration-entry";
 
 const WorkerManagementRouter = dynamic(
@@ -69,11 +52,12 @@ const ScalarApiReference = dynamic(() =>
 
 export function WorkerApp({ platformPath }: { platformPath: string }) {
   const [pool] = useState(() => new WorkerConnectionPool());
-  const [setupOpened, setSetupOpened] = useState(false);
+  const router = useRouter();
+  const requestedWorkersTab = useSearchParams().get("workers");
   const [initialLink, setInitialLink] = useState("");
-  const [initialTab, setInitialTab] = useState("workers");
   const [organizationId, setOrganizationIdState] = useState<string | null>(null);
-  const manageWorkers = useCallback(() => setSetupOpened(true), []);
+  const manageWorkers = useCallback(() => router.push("/manage/workers"), [router]);
+  const clearInitialLink = useCallback(() => setInitialLink(""), []);
   const setOrganizationId = useCallback((value: string | null) => {
     setOrganizationIdState(value);
     try {
@@ -84,8 +68,8 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
     }
   }, []);
   const context = useMemo(
-    () => ({ pool, platformPath, manageWorkers, organizationId, setOrganizationId }),
-    [pool, platformPath, manageWorkers, organizationId, setOrganizationId],
+    () => ({ pool, platformPath, manageWorkers, organizationId, setOrganizationId, initialLink, clearInitialLink }),
+    [pool, platformPath, manageWorkers, organizationId, setOrganizationId, initialLink, clearInitialLink],
   );
   useEffect(() => {
     let active = true;
@@ -97,20 +81,19 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
     }
     const address = new URL(window.location.href);
     const requestedTab = address.searchParams.get("workers");
-    if (requestedTab && ["workers", "account", "organizations", "sharing", "mcp"].includes(requestedTab)) {
-      setInitialTab(requestedTab);
-      setSetupOpened(true);
-      address.searchParams.delete("workers");
-      history.replaceState(history.state, "", `${address.pathname}${address.search}${address.hash}`);
-    }
+    const legacyTab = requestedTab && ["workers", "account", "organizations", "sharing", "mcp"].includes(requestedTab);
     const fragment = new URLSearchParams(window.location.hash.slice(1));
     const incomingWorkerId = fragment.get("worker");
     const hasSetupLink = Boolean(incomingWorkerId);
-    if (hasSetupLink) {
-      setInitialLink(window.location.href);
-      setSetupOpened(true);
-      if (!fragment.has("share"))
-        history.replaceState(history.state, "", `${window.location.pathname}${window.location.search}`);
+    if (hasSetupLink) setInitialLink(window.location.href);
+    if (hasSetupLink || legacyTab) {
+      const params = new URLSearchParams();
+      if (legacyTab) params.set("tab", requestedTab);
+      const search = params.toString();
+      let destination = "/manage/workers";
+      if (search) destination += `?${search}`;
+      // Keep the private link only in memory after capturing it for the connection form.
+      router.replace(destination);
     }
     void pool
       .hydrate()
@@ -122,41 +105,35 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
         if (primary && primary !== incomingWorkerId) await pool.restore(primary);
       })
       .catch(() => {
-        if (active) setSetupOpened(true);
+        if (active) router.replace("/manage/workers");
       });
     return () => {
       active = false;
       configureWorkerTransport(null);
       pool.close();
     };
-  }, [pool]);
+  }, [pool, router]);
+  useEffect(() => {
+    if (
+      !requestedWorkersTab ||
+      !["workers", "account", "organizations", "sharing", "mcp"].includes(requestedWorkersTab)
+    )
+      return;
+    router.replace(`/manage/workers?tab=${encodeURIComponent(requestedWorkersTab)}`);
+  }, [requestedWorkersTab, router]);
   return (
     <WorkerWorkspaceContext.Provider value={context}>
       <PlatformAccountProvider>
         <MantineProvider theme={theme} defaultColorScheme="auto" cssVariablesResolver={v8CssVariablesResolver}>
-          <WorkerWorkspace
-            setupOpened={setupOpened}
-            closeSetup={() => setSetupOpened(false)}
-            initialLink={initialLink}
-            initialTab={initialTab}
-          />
+          <WorkerWorkspace />
         </MantineProvider>
       </PlatformAccountProvider>
     </WorkerWorkspaceContext.Provider>
   );
 }
 
-function WorkerWorkspace({
-  setupOpened,
-  closeSetup,
-  initialLink,
-  initialTab,
-}: {
-  setupOpened: boolean;
-  closeSetup: () => void;
-  initialLink: string;
-  initialTab: string;
-}) {
+function WorkerWorkspace() {
+  const pathname = usePathname();
   const { pool, manageWorkers } = useWorkerWorkspace();
   const snapshot = useWorkerConnections();
   const [bootstrapResult, setBootstrap] = useState<{ scope: string; value: WorkerBootstrap } | null>(null);
@@ -221,20 +198,15 @@ function WorkerWorkspace({
         fetch={resourceFetch}
       >
         <WorkerProviders bootstrap={bootstrap}>
-          <Box pb={68}>
-            <NativeWorkspace />
-          </Box>
+          <NativeWorkspace />
         </WorkerProviders>
       </ResourceFetchProvider>
     );
   }
-  return (
-    <>
-      {content}
-      <WorkerDock />
-      <WorkerSetup opened={setupOpened} onClose={closeSetup} initialLink={initialLink} initialTab={initialTab} />
-    </>
-  );
+  if ((!bootstrap || !connection) && pathname.replace(/\/$/, "").endsWith("/manage/workers")) {
+    return <DisconnectedWorkersPage />;
+  }
+  return content;
 }
 
 function NativeWorkspace() {
@@ -276,53 +248,11 @@ function NativeWorkspace() {
 }
 
 function ManagementShell({ children }: { children: React.ReactNode }) {
-  const { session, runtime } = useWorkerBootstrap();
-  const isAdmin = session.user.permissions.includes("admin");
+  const links = useWorkerManagementLinks();
   return (
     <ClientShell hasNavigation>
       <WorkerHeader hasNavigation />
-      <MainNavigation
-        links={[
-          { icon: IconLayoutDashboard, label: "Boards", href: "/manage/boards" },
-          { icon: IconBox, label: "Apps", href: "/manage/apps" },
-          { icon: IconAffiliate, label: "Integrations", href: "/manage/integrations" },
-          { icon: IconApi, label: "Custom widgets", href: "/manage/custom-widgets", hidden: !isAdmin },
-          { icon: IconSearch, label: "Search engines", href: "/manage/search-engines" },
-          { icon: IconPhoto, label: "Media", href: "/manage/medias" },
-          { icon: IconUsers, label: "Users", href: "/manage/users", hidden: !isAdmin },
-          { icon: IconUsers, label: "Invites", href: "/manage/users/invites", hidden: !isAdmin },
-          { icon: IconUsers, label: "Groups", href: "/manage/users/groups", hidden: !isAdmin },
-          {
-            icon: IconBrandDocker,
-            label: "Docker",
-            href: "/manage/tools/docker",
-            hidden: !isAdmin || !runtime.dockerEnabled,
-          },
-          {
-            icon: IconBox,
-            label: "Kubernetes",
-            href: "/manage/tools/kubernetes",
-            hidden: !isAdmin || !runtime.kubernetesEnabled,
-          },
-          { icon: IconApi, label: "API", href: "/manage/tools/api", hidden: !isAdmin },
-          {
-            icon: IconBrandTabler,
-            label: "Logs",
-            href: "/manage/tools/logs",
-            hidden: !session.user.permissions.includes("other-view-logs"),
-          },
-          { icon: IconCertificate, label: "Certificates", href: "/manage/tools/certificates", hidden: !isAdmin },
-          { icon: IconClipboardList, label: "Tasks", href: "/manage/tools/tasks", hidden: !isAdmin },
-          {
-            icon: IconDatabaseExport,
-            label: "Backup",
-            href: "/manage/tools/backup",
-            hidden: !isAdmin || runtime.databaseDriver !== "better-sqlite3",
-          },
-          { icon: IconRobot, label: "Assistant", href: "/manage/assistant", hidden: !isAdmin },
-          { icon: IconSettings, label: "Settings", href: "/manage/settings", hidden: !isAdmin },
-        ]}
-      />
+      <MainNavigation links={links} />
       <AppShellMain>{children}</AppShellMain>
     </ClientShell>
   );

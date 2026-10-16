@@ -370,6 +370,145 @@ afterAll(async () => {
 });
 
 describe("real worker and blind relay security", () => {
+  test("local organization invitations create native accounts with reusable encrypted login and revocable sessions", async () => {
+    await dbModule.db
+      .insert(schema.groups)
+      .values({ id: "local-account-everyone", name: "everyone", position: 100 })
+      .onConflictDoNothing();
+    const everyone = guard(
+      await dbModule.db.query.groups.findFirst({ where: dbModule.eq(schema.groups.name, "everyone") }),
+    );
+    await dbModule.db
+      .update(schema.groups)
+      .set({ homeBoardId: publicBoard })
+      .where(dbModule.eq(schema.groups.id, everyone.id));
+    await dbModule.db.insert(schema.groupPermissions).values({ groupId: everyone.id, permission: "app-create" });
+    await dbModule.db
+      .insert(schema.boardGroupPermissions)
+      .values({ groupId: everyone.id, boardId: publicBoard, permission: "view" });
+    await post(owner, "/remote/local-accounts", { name: "Local test organization" });
+    const { invitation } = await post<{ invitation: { id: string; token: string } }>(
+      owner,
+      "/remote/local-accounts/invitations",
+      {},
+    );
+    const username = "local-worker-member";
+    const password = "Local-account-password-123!";
+    const registration = {
+      kind: "local-register" as const,
+      inviteId: invitation.id,
+      token: invitation.token,
+      username,
+      password,
+    };
+    const registered = await connect(registration, undefined, true);
+    const grant = (registered.connection.authorization as { grant: IssuedGrant }).grant;
+    expect(grant.role).toBe("user");
+    expect(grant.localAccount).toBe(true);
+    const user = await dbModule.db.query.users.findFirst({ where: dbModule.eq(schema.users.id, guard(grant.userId)) });
+    expect(user?.provider).toBe("credentials");
+    const memberships = await dbModule.db.query.groupMembers.findMany({
+      where: dbModule.eq(schema.groupMembers.userId, guard(grant.userId)),
+    });
+    expect(memberships.map((member) => member.groupId)).toContain(everyone.id);
+    expect(user?.password).not.toBe(password);
+    expect(user?.password?.startsWith("$2b$")).toBe(true);
+    expect(
+      await dbModule.db.query.invites.findFirst({ where: dbModule.eq(schema.invites.id, invitation.id) }),
+    ).toBeUndefined();
+    await expect(connect(registration)).rejects.toThrow();
+    await expect(connect({ kind: "local-login", username, password: "incorrect-password" })).rejects.toThrow();
+    const returning = await connect({ kind: "local-login", username, password });
+    const returningGrant = (returning.connection.authorization as { grant: IssuedGrant }).grant;
+    expect(returningGrant.userId).toBe(grant.userId);
+    expect(returningGrant.id).not.toBe(grant.id);
+    expect((await returning.connection.fetch("/remote/local-accounts")).status).toBe(403);
+    const bootstrap = await returning.connection.fetch("/remote/frontend/bootstrap");
+    expect(bootstrap.status).toBe(200);
+    expect(
+      ((await bootstrap.json()) as { session: { user: { permissions: string[] } } }).session.user.permissions,
+    ).not.toContain("admin");
+    expect(
+      (
+        (await (await returning.connection.fetch("/remote/frontend/bootstrap")).json()) as {
+          session: { user: { permissions: string[] } };
+        }
+      ).session.user.permissions,
+    ).toContain("app-create");
+    expect((await rpc(returning.connection).board.getHomeBoard()).id).toBe(publicBoard);
+    const members = (await (await owner.fetch("/remote/local-accounts")).json()) as {
+      members: { id: string; sessions: number }[];
+    };
+    expect(members.members).toContainEqual(expect.objectContaining({ id: grant.userId, sessions: 2 }));
+    await post(owner, `/remote/local-accounts/sessions/${grant.userId}`, {});
+    await expect(connect({ kind: "grant", token: returningGrant.token }, returning.device)).rejects.toThrow();
+    const signedInAgain = await connect({ kind: "local-login", username, password });
+    expect((signedInAgain.connection.authorization as { grant: IssuedGrant }).grant.userId).toBe(grant.userId);
+    const newPassword = "Changed-local-account-password-456!";
+    await rpc(owner).user.changePassword({
+      userId: guard(grant.userId),
+      previousPassword: "admin-reset",
+      password: newPassword,
+      confirmPassword: newPassword,
+    });
+    const previousGrant = (signedInAgain.connection.authorization as { grant: IssuedGrant }).grant;
+    await expect(connect({ kind: "grant", token: previousGrant.token }, signedInAgain.device)).rejects.toThrow();
+    const afterReset = (await (await owner.fetch("/remote/local-accounts")).json()) as {
+      members: { id: string; sessions: number }[];
+    };
+    expect(afterReset.members).toContainEqual(expect.objectContaining({ id: grant.userId, sessions: 0 }));
+    await expect(connect({ kind: "local-login", username, password })).rejects.toThrow();
+    const afterPasswordChange = await connect({ kind: "local-login", username, password: newPassword });
+    expect((afterPasswordChange.connection.authorization as { grant: IssuedGrant }).grant.userId).toBe(grant.userId);
+    expect((await owner.fetch(`/remote/local-accounts/members/${grant.userId}`, { method: "DELETE" })).status).toBe(
+      200,
+    );
+    await expect(connect({ kind: "local-login", username, password: newPassword })).rejects.toThrow();
+    const revoked = await post<{ invitation: { id: string; token: string } }>(
+      owner,
+      "/remote/local-accounts/invitations",
+      {},
+    );
+    expect(
+      (await owner.fetch(`/remote/local-accounts/invitations/${revoked.invitation.id}`, { method: "DELETE" })).status,
+    ).toBe(200);
+    await expect(
+      connect({
+        ...registration,
+        inviteId: revoked.invitation.id,
+        token: revoked.invitation.token,
+        username: "revoked-invite-member",
+      }),
+    ).rejects.toThrow();
+    const createdByAdmin = await post<{ id: string }>(owner, "/remote/local-accounts/members", {
+      username: "admin-created-local-member",
+      password,
+    });
+    const createdLogin = await connect({ kind: "local-login", username: "admin-created-local-member", password });
+    expect((createdLogin.connection.authorization as { grant: IssuedGrant }).grant.userId).toBe(createdByAdmin.id);
+    expect(relayFrames.join("\n")).not.toContain(password);
+    expect(relayFrames.join("\n")).not.toContain(invitation.token);
+    await dbModule.db
+      .update(schema.groups)
+      .set({ homeBoardId: everyone.homeBoardId })
+      .where(dbModule.eq(schema.groups.id, everyone.id));
+    await dbModule.db
+      .delete(schema.groupPermissions)
+      .where(
+        dbModule.and(
+          dbModule.eq(schema.groupPermissions.groupId, everyone.id),
+          dbModule.eq(schema.groupPermissions.permission, "app-create"),
+        ),
+      );
+    await dbModule.db
+      .delete(schema.boardGroupPermissions)
+      .where(
+        dbModule.and(
+          dbModule.eq(schema.boardGroupPermissions.groupId, everyone.id),
+          dbModule.eq(schema.boardGroupPermissions.boardId, publicBoard),
+        ),
+      );
+  }, 30_000);
   test("claims exactly once through an authenticated encrypted channel and retains local private state", async () => {
     expect(state.access.claimed).toBe(true);
     expect(ownerGrant.role).toBe("owner");

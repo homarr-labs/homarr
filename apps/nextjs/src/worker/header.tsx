@@ -10,6 +10,7 @@ import { ConfigurableHeader } from "~/components/layout/header/configurable-head
 import { BoardLogo, BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { HomarrLogo, HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 
+import { WorkerDock } from "./dock";
 import { useWorkerBootstrap } from "./context";
 
 export function WorkerHeader({
@@ -31,6 +32,7 @@ export function WorkerHeader({
   }
   return (
     <ConfigurableHeader
+      actions={<WorkerDock />}
       logo={logo}
       logoWithTitle={logoWithTitle}
       avatar={

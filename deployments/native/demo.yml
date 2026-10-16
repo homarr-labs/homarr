@@ -6,9 +6,11 @@ services:
       DEMO_READ_ONLY: "false"
       UNSAFE_ENABLE_MOCK_INTEGRATION: "true"
       NO_EXTERNAL_CONNECTION: "true"
+      WORKER_ALLOW_BROWSER_WEATHER: "true"
   worker-integrations:
     environment:
       DEMO_MODE: "true"
       DEMO_READ_ONLY: "false"
       UNSAFE_ENABLE_MOCK_INTEGRATION: "true"
       NO_EXTERNAL_CONNECTION: "true"
+      WORKER_ALLOW_BROWSER_WEATHER: "true"

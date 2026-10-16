@@ -85,6 +85,8 @@ export const frontendRouter = createApiRouter({
     return { step: normalizeOnboardingStep(state?.step), defaultLocale: settings.culture.defaultLocale };
   }),
   runtime: publicProcedure.query(() => ({
+    browserWeather:
+      process.env.NO_EXTERNAL_CONNECTION === "true" && process.env.WORKER_ALLOW_BROWSER_WEATHER === "true",
     databaseDriver: dbEnv.DRIVER,
     groupMemberManagementType: getGroupMemberManagementType(),
     locallyManageableProviders: getLocallyManageableProviders(),

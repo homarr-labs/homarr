@@ -8,7 +8,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { groupMembers, groupPermissions, groups, invites, onboarding, users } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, invites, onboarding, sessions, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
@@ -670,6 +670,7 @@ export const userRouter = createApiRouter({
           password: hashedPassword,
         })
         .where(eq(users.id, input.userId));
+      await context.db.delete(sessions).where(eq(sessions.userId, input.userId));
     }),
   updatePreferences: protectedProcedure
     .meta({

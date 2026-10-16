@@ -1,12 +1,13 @@
 import type { Session } from "@homarr/auth";
 import { getCurrentUserPermissionsAsync } from "@homarr/auth/server";
-import { db, eq, inArray } from "@homarr/db";
+import { and, db, eq, gt, inArray } from "@homarr/db";
 import {
   boardUserPermissions,
   groupMembers,
   integrationGroupPermissions,
   integrationUserPermissions,
   users,
+  sessions,
 } from "@homarr/db/schema";
 import { WorkerAccessError } from "@homarr/worker-access";
 import type { AccessPrincipal } from "@homarr/worker-access";
@@ -31,6 +32,18 @@ export async function getNativeUserSession(state: WorkerState, principal: Access
   const grant = state.access.assertActive(principal);
   if (grant.role !== "user") throw new WorkerAccessError("FORBIDDEN", "Native user grant required");
   const user = await requireNativeUser(grant.userId);
+  if (grant.localAccount) {
+    const [membership, session] = await Promise.all([
+      db.query.groupMembers.findFirst({
+        where: and(eq(groupMembers.groupId, `worker-local:${state.workerId}`), eq(groupMembers.userId, user.id)),
+      }),
+      db.query.sessions.findFirst({
+        where: and(eq(sessions.sessionToken, grant.id), eq(sessions.userId, user.id), gt(sessions.expires, new Date())),
+      }),
+    ]);
+    if (!membership || !session)
+      throw new WorkerAccessError("UNAUTHORIZED", "Local account membership or session revoked");
+  }
   const permissions = await getCurrentUserPermissionsAsync(db, user.id);
   state.access.assertActive(principal);
   return {

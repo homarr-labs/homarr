@@ -91,3 +91,12 @@
 - Final images: frontend `6f8b0dae10af73102f8b9b6094f22381a29f878ea18d5505c0fa99c9dc2c87e3` (363,164,677 bytes); worker `3572fb6176112152960f679d323c04d66e68d448f7fcfce4adcf0ecf5c2d12ed` (128,803,917 bytes). Platform `cd879a78f1ed5d75ca437410879d32433ffe6043a82ec04dc1364e71fe629e4d` is 95,401,921 bytes; the routing relay remains a separate Bun image. All named worker/account/key volumes survived recreation. The worker has no Next/React/Node/Nginx/Redis/tRPC runtime.
 - The existing 8443 demo and its keys remain intact. The report landing page now teaches the normal frontend, includes the validated read-only sample, and renders static SVG rather than relying on Mermaid. Private owner links are served on a separate unlisted, no-store setup page; no owner tokens were committed or included in the public report.
 - No live GitHub sign-in, homarr.dev deployment, public image publication, or external cryptographic audit was performed or claimed. The full unit run's 48 failures are original-source failures, with attribution preserved in `test-audit.md`.
+
+### Management and local-user follow-up
+
+- Follow-up base: `2987562e8`; scope and detailed evidence: `followup.md`.
+- Replaced the floating worker menu with `/manage/workers`, a compact header switcher and the normal grouped management navigation.
+- Fixed the real Logs disconnect: pending browser stream reads previously issued excess credits before any chunk arrived. A red/green encrypted harness and eight focused stream/cancellation cases validate the fix.
+- Local organizations reuse native groups/users/Everyone defaults/password hashes/sessions, with one-use invitation registration and returning password login over encryption. The focused security flow passes 30 assertions. Review findings for default membership and secondary-worker navigation were fixed and re-reviewed.
+- Browser weather is explicitly enabled in the sample deployment, with worker authorization before fixed public Open-Meteo requests. Source browser checks prove actual native current weather and forecasts, fresh-browser user signup/login, native user visibility and a 360px layout.
+- Final worker and frontend builds were deployed with existing volumes. Six services remain healthy; the existing 8443 demo remains untouched. Source QA services were stopped and task-only owner invitations revoked. Final container acceptance is recorded in `followup.md`.

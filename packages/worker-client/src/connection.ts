@@ -13,6 +13,8 @@ import { prepareBootstrapDevice, sameWorkerPin } from "./vault";
 import { createWorkerRequestScheduler } from "./scheduler";
 
 export type WorkerCredential =
+  | { kind: "local-login"; username: string; password: string }
+  | { kind: "local-register"; inviteId: string; token: string; username: string; password: string }
   | { kind: "claim"; secret: string }
   | { kind: "grant" | "invite" | "share"; token: string };
 export interface WorkerGrant {
@@ -99,9 +101,20 @@ export function parseConnectionLink(value: string, baseUrl?: string): Connection
   const claim = fragment.get("claim");
   const invite = fragment.get("invite");
   const share = fragment.get("share");
-  if ([claim, invite, share].filter(Boolean).length !== 1)
-    throw new Error("The link must contain exactly one pairing, invitation, or sharing secret.");
-  if (claim) credential = { kind: "claim", secret: claim };
+  const localInvite = fragment.get("localInvite");
+  const login = fragment.get("login");
+  if ([claim, invite, share, localInvite, login].filter(Boolean).length !== 1)
+    throw new Error("The link must contain exactly one pairing, invitation, sharing, or sign-in credential.");
+  if (localInvite)
+    credential = {
+      kind: "local-register",
+      inviteId: localInvite,
+      token: fragment.get("token") ?? "",
+      username: "",
+      password: "",
+    };
+  else if (login) credential = { kind: "local-login", username: "", password: "" };
+  else if (claim) credential = { kind: "claim", secret: claim };
   else if (invite) credential = { kind: "invite", token: invite };
   else if (share) credential = { kind: "share", token: share };
   else throw new Error("The link is missing its private access secret.");
@@ -155,7 +168,11 @@ export async function openWorker(
   if ((await getWorkerId(input.pinnedIdentity)) !== input.workerId)
     throw new Error("This link does not match the server identity. Ask its owner for a fresh link.");
   let deviceIdentity = input.deviceIdentity;
-  if (input.credential.kind === "claim" || input.credential.kind === "invite")
+  if (
+    input.credential.kind === "claim" ||
+    input.credential.kind === "invite" ||
+    input.credential.kind === "local-register"
+  )
     deviceIdentity = await prepareBootstrapDevice(input.workerId, input.pinnedIdentity, deviceIdentity);
   deviceIdentity ??= await generateDeviceIdentity(false);
   if (!input.relayCapability) throw new Error("This link is missing its connection capability.");
