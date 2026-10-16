@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const { definition, componentLoader } = createWidgetDefinition("weather", {
   icon: IconCloud,
@@ -68,4 +69,15 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
       },
     );
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ options }) => ({
+      main: widgetQuery("widget.weather.atLocation", {
+        latitude: options.location.latitude,
+        longitude: options.location.longitude,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

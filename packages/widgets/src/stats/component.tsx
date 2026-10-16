@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -75,21 +76,26 @@ export default function StatsWidget({
   const ids = [...new Set(integrationIds)];
   // Queries are per integration instance, never per metric. Click and advanced details reuse these snapshots.
   const visibleIds = ids.filter((id) => advanced || visibleEntries.some((entry) => entry.integrationId === id));
+  const queries = definition.data.queries({
+    integrationIds,
+    displayMode,
+    options: {
+      ...options,
+      entries: entries.map((entry) => ({ ...entry, hidden: !visibleIds.includes(entry.integrationId) })),
+    },
+  });
   const catalogs = clientApi.useQueries((api) =>
-    ids.map((integrationId) => api.widget.stats.catalog({ integrationId }, { staleTime: 60_000, retry: false })),
+    queries.catalogs.map(({ input }) => api.widget.stats.catalog(input, { staleTime: 60_000, retry: false })),
   );
   const snapshots = clientApi.useQueries((api) =>
-    visibleIds.map((integrationId) =>
-      api.widget.stats.snapshot(
-        { integrationId },
-        {
-          staleTime: 30_000,
-          refetchInterval: demoReadOnly ? false : 60_000,
-          refetchOnWindowFocus: !demoReadOnly,
-          refetchIntervalInBackground: false,
-          retry: false,
-        },
-      ),
+    queries.snapshots.map(({ input }) =>
+      api.widget.stats.snapshot(input, {
+        staleTime: 30_000,
+        refetchInterval: demoReadOnly ? false : 60_000,
+        refetchOnWindowFocus: !demoReadOnly,
+        refetchIntervalInBackground: false,
+        retry: false,
+      }),
     ),
   );
 

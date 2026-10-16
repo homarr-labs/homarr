@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 import {
   defaultWorldClockCities,
   getTimeZoneOptions,
@@ -172,4 +173,15 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
       },
     );
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ options }) => ({
+      main: widgetQuery(
+        "widget.weather.atLocation",
+        { latitude: options.weatherLocation.latitude, longitude: options.weatherLocation.longitude },
+        { enabled: options.showWeather },
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

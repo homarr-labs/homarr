@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
@@ -89,10 +90,9 @@ const AnchorNoteWidgetContent = ({
   const tWidgetCommon = useI18n("widget.common");
   const actionT = useI18n("common.action");
   const locale = useCurrentIntlLocale();
-  const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery({
-    integrationId,
-    noteId,
-  });
+  const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery(
+    definition.data.queries({ options, integrationIds: [integrationId] }).main.input,
+  );
   const note = getUsableWidgetQueryData(noteQuery);
   const { refetch } = noteQuery;
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useCallback, useMemo, useState } from "react";
 import {
@@ -55,7 +56,7 @@ import { selectReleaseRepositoriesForDisplay } from "./display";
 import { getFailedServiceVersionIntegrations, getRowIntegrationVersions, truncateVersion } from "./integration-version";
 import type { ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
-import { getReleasesLatestInputs, getReleasesLinkedIntegrationIds, normalizeReleasesRepositories } from "./query-input";
+import { normalizeReleasesRepositories } from "./query-input";
 
 dayjs.extend(isBetween);
 dayjs.extend(utc);
@@ -113,10 +114,11 @@ export default function ReleasesWidget({
     [options.repositories],
   );
 
-  const latestInputs = useMemo(
-    () => getReleasesLatestInputs(itemId, normalizedRepositories),
-    [itemId, normalizedRepositories],
+  const queries = useMemo(
+    () => definition.data.queries({ options, integrationIds, itemId }),
+    [options, integrationIds, itemId],
   );
+  const latestInputs = queries.latest.map(({ input }) => input);
 
   const queryResults = clientApi.useQueries((trpc) =>
     latestInputs.map((input) => trpc.widget.releases.getLatest(input, { staleTime: getReleasesQueryStaleTimeMs })),
@@ -129,11 +131,8 @@ export default function ReleasesWidget({
   const isInitialLoading = queryResults.some(isInitialWidgetQueryPending);
 
   // Only integrations linked by a repository are queried; attaching alone shows nothing.
-  const linkedIntegrationIds = useMemo(
-    () => getReleasesLinkedIntegrationIds(integrationIds, normalizedRepositories),
-    [integrationIds, normalizedRepositories],
-  );
-  const serviceVersionsInput = useMemo(() => ({ integrationIds: linkedIntegrationIds }), [linkedIntegrationIds]);
+  const serviceVersionsInput = queries.services.input;
+  const linkedIntegrationIds = serviceVersionsInput.integrationIds;
   const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(serviceVersionsInput, {
     enabled: linkedIntegrationIds.length > 0,
   });

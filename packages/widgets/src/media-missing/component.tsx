@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -65,8 +66,7 @@ export default function MediaMissingWidget({
   const isAdvanced = displayMode === "advanced";
   const showMissing = isAdvanced || options.showMissing;
   const showQueued = isAdvanced || options.showQueued;
-  const pageSize = isAdvanced ? Math.max(Number(options.pageSize), 50) : Number(options.pageSize);
-  const input = { integrationIds, pageSize };
+  const input = definition.data.queries({ options, integrationIds, displayMode }).main.input;
   useWidgetRuntimeQueries(widgetRuntimeRef, [getQueryKey(clientApi.widget.mediaOrganizer.getData, input, "query")]);
   const mediaQuery = clientApi.widget.mediaOrganizer.getData.useQuery(input, {
     staleTime: 60 * 1000,

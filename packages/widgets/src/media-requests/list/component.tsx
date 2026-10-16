@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconSearch, IconThumbDown, IconThumbUp } from "@tabler/icons-react";
@@ -36,14 +37,9 @@ export default function MediaServerWidget({
       .filter(({ id }) => integrationIds.includes(id))
       .map(({ id }) => id),
   );
-  const mediaRequestQuery = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
-    integrationIds,
-    statuses:
-      options.statusFilter.length > 0
-        ? options.statusFilter
-        : ["pending", "approved", "declined", "failed", "completed"],
-    recentDays: options.recentDays,
-  });
+  const mediaRequestQuery = clientApi.widget.mediaRequests.getLatestRequests.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const mediaRequestData = getUsableWidgetQueryData(mediaRequestQuery);
 
   if (isInitialWidgetQueryPending(mediaRequestQuery)) return <WidgetQueryLoadingState />;

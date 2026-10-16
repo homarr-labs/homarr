@@ -16,15 +16,14 @@ import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
 import { useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useBoardRestoration, useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
-import { clientApi } from "@homarr/api/client";
 import { useInitialRenderTime } from "@homarr/common";
+import { getWidgetDataQueries, getWidgetDataQueryKey } from "@homarr/widgets/data";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
@@ -154,7 +153,6 @@ const getServerHydratedSnapshot = () => false;
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
   const { register } = useBoardRestoration();
-  const queryClient = useQueryClient();
   const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -168,24 +166,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const width = measuredWidth || getLogicalGridSize(item.width) - inset - border;
   const height = measuredHeight || getLogicalGridSize(item.height) - inset - border;
 
-  // Prepared views render reusable Widget content in the background. Calendars
-  // still need the browser's local date; their initial data is already retained.
-  // Ordinary SSR keeps #7176's deferred Widget rendering.
-  let needsBrowser = item.kind === "calendar";
-  const integrationId = item.integrationIds[0];
-  // A failed background prefetch has no data to hydrate. Suspending here would
-  // start the browser HTTP transport and read cookies during static rendering.
-  if (prepared && integrationId && item.kind === "wud") {
-    needsBrowser =
-      queryClient.getQueryData(getQueryKey(clientApi.widget.wud.getStats, { integrationId }, "query")) === undefined;
-  }
-  if (prepared && integrationId && item.kind === "archiveTeamWarrior") {
-    needsBrowser =
-      queryClient.getQueryData(
-        getQueryKey(clientApi.widget.archiveTeamWarrior.getStatus, { integrationId }, "query"),
-      ) === undefined;
-  }
-  const deferred = (!prepared || needsBrowser) && item.kind !== "app" && item.kind !== "bookmarks";
+  const deferred = !prepared && item.kind !== "app" && item.kind !== "bookmarks";
   // A hydration-time switch would be an urgent update to every dehydrated
   // Widget boundary, so Widgets rendered on the server never switch.
   const hydrated = useSyncExternalStore(
@@ -592,6 +573,27 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;
   const queryClient = useQueryClient();
   const widgetQueryKeys = getWidgetQueryKeys(definition, item.kind);
+  const t = useI18n();
+  const data = definition.data;
+  const needsBrowser =
+    data.mode === "browser" ||
+    (data.mode === "queries" &&
+      data.requiresData === true &&
+      getWidgetDataQueries(data.queries({ options, integrationIds: item.integrationIds, itemId: item.id })).some(
+        (query) => queryClient.getQueryData(getWidgetDataQueryKey(query)) === undefined,
+      ));
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getHydratedSnapshot,
+    needsBrowser ? getServerHydratedSnapshot : getHydratedSnapshot,
+  );
+
+  if (!hydrated)
+    return (
+      <Text c="dimmed" size="sm" p="sm">
+        {getWidgetName(item.kind, t)}
+      </Text>
+    );
 
   return (
     <QueryErrorResetBoundary>

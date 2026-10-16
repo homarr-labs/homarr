@@ -3,6 +3,7 @@ import { IconRoute, IconRouteOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("traefik", {
@@ -28,4 +29,9 @@ export const { definition, componentLoader } = createWidgetDefinition("traefik",
       message: (t) => t("widget.traefik.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.traefik.getDashboard", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

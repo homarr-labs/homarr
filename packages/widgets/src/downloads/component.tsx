@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import "../widgets-common.css";
 import "./styles.css";
@@ -67,7 +68,6 @@ import {
   getDownloadColumnAccessors,
   getDownloadsStatsDisplay,
 } from "./helpers";
-import { resolveDownloadsQueryInput } from "./query-input";
 
 dayjs.extend(relativeTime);
 
@@ -319,7 +319,7 @@ export default function DownloadClientsWidget({
   );
 
   const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
-    resolveDownloadsQueryInput(integrationIds, options),
+    definition.data.queries({ options, integrationIds }).main.input,
   );
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);

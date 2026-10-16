@@ -5,8 +5,6 @@ import type { Database } from "@homarr/db";
 import { and, eq, inArray, or } from "@homarr/db";
 import { boards, items } from "@homarr/db/schema";
 
-import type { WidgetComponentProps } from "../../../../widgets/src";
-
 export class AppAccessControl {
   constructor(
     private db: Database,
@@ -36,11 +34,11 @@ export class AppAccessControl {
 
     return itemsWithApps.flatMap((item) => {
       if (item.kind === "app") {
-        const parsedOptions = SuperJSON.parse<WidgetComponentProps<"app">["options"]>(item.options);
+        const parsedOptions = SuperJSON.parse<{ appId: string }>(item.options);
         return [parsedOptions.appId];
       }
 
-      const parsedOptions = SuperJSON.parse<WidgetComponentProps<"bookmarks">["options"]>(item.options);
+      const parsedOptions = SuperJSON.parse<{ items: string[] }>(item.options);
       return parsedOptions.items;
     });
   }

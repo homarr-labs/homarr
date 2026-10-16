@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { PropsWithChildren } from "react";
 import { Fragment } from "react";
@@ -27,7 +28,9 @@ export default function AppWidget({
 }: WidgetComponentProps<"app">) {
   const settings = useSettings();
   const board = useRequiredBoard();
-  const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
+  const appQuery = clientApi.app.byId.useQuery(definition.data.queries({ options, integrationIds: [] }).main.input, {
+    enabled: Boolean(options.appId),
+  });
   const app = getUsableWidgetQueryData(appQuery);
   const href = getSafeAppHref(app?.href);
 

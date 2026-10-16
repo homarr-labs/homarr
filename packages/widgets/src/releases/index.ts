@@ -6,6 +6,8 @@ import { getWidgetIntegrationConfig, releaseProviderKinds } from "@homarr/defini
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
+import { normalizeReleasesRepositories, getReleasesLatestInputs, getReleasesLinkedIntegrationIds } from "./query-input";
 
 const relativeDateSchema = z
   .string()
@@ -81,4 +83,22 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options, itemId }) => {
+      const repositories = normalizeReleasesRepositories(options.repositories);
+      const linked = getReleasesLinkedIntegrationIds(integrationIds, repositories);
+      return {
+        services: widgetQuery(
+          "widget.releases.getServiceVersions",
+          { integrationIds: linked },
+          { enabled: linked.length > 0 },
+        ),
+        latest: getReleasesLatestInputs(itemId, repositories).map((input) =>
+          widgetQuery("widget.releases.getLatest", input),
+        ),
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));

@@ -3,6 +3,7 @@ import { IconHeadphones, IconServerOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 const hideUnlessNavidrome = {
@@ -51,4 +52,11 @@ export const { definition, componentLoader } = createWidgetDefinition("audioStat
       message: (t) => t("widget.audioStats.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.audioStats.getStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

@@ -1,4 +1,5 @@
 "use client";
+import { getCalendarQueryInput } from "./query-input";
 
 import { useMemo, useState } from "react";
 import { ActionIcon, Box, Center, Group, Loader, Stack, Text, Tooltip, useMantineTheme } from "@mantine/core";
@@ -33,13 +34,7 @@ import classes from "./component.module.css";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(() => new Date());
-  const runtimeInput = {
-    integrationIds: props.integrationIds,
-    month: month.getMonth() + 1,
-    year: month.getFullYear(),
-    releaseType: props.options.releaseType,
-    showUnmonitored: props.options.showUnmonitored,
-  };
+  const runtimeInput = getCalendarQueryInput(props.integrationIds, props.options, month);
   useWidgetRuntimeQueries(
     props.widgetRuntimeRef,
     props.integrationIds.length > 0
@@ -78,13 +73,7 @@ const FetchCalendar = ({
   width,
   height,
 }: FetchCalendarProps) => {
-  const input = {
-    integrationIds,
-    month: month.getMonth() + 1,
-    year: month.getFullYear(),
-    releaseType: options.releaseType,
-    showUnmonitored: options.showUnmonitored,
-  };
+  const input = getCalendarQueryInput(integrationIds, options, month);
   const calendarQuery = clientApi.widget.calendar.findAllEvents.useQuery(input);
   const data = getUsableWidgetQueryData(calendarQuery);
   const { isPending } = calendarQuery;

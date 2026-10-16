@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useComputedColorScheme } from "@mantine/core";
@@ -238,7 +239,7 @@ export default function SystemResources({
 }: WidgetComponentProps<"systemDisks">) {
   const t = useI18n("widget.systemDisks");
   const { formatBytesPair } = useByteFormatter();
-  const queryInput = { integrationIds };
+  const queryInput = definition.data.queries({ options, integrationIds }).main.input;
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
   const data = results.filter(

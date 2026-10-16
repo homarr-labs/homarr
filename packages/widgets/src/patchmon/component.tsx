@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { RingProgress, ScrollArea, Text, Tooltip } from "@mantine/core";
@@ -75,8 +76,10 @@ export default function PatchMonWidget({
   displayMode,
 }: WidgetComponentProps<"patchmon">) {
   const t = useI18n("widget.patchmon");
-  const integrationId = integrationIds[0] ?? "";
-  const statsQuery = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
+  const statsQuery = clientApi.widget.patchmon.getStats.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+    { staleTime: 60 * 1000 },
+  );
   const stats = getUsableWidgetQueryData(statsQuery);
 
   if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;

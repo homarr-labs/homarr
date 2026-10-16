@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { BoxProps } from "@mantine/core";
 import {
@@ -76,9 +77,9 @@ export default function DnsHoleSummaryWidget({
   height,
   displayScale = 1,
 }: WidgetComponentProps<typeof widgetKind>) {
-  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({
-    integrationIds,
-  });
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
 
   const t = useI18n();

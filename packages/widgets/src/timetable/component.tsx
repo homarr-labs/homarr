@@ -2,6 +2,7 @@ import { Alert, Badge, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { definition } from ".";
 import { useHydrationTime } from "@homarr/common";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
@@ -25,7 +26,7 @@ export default function TimetableWidget({
   return (
     <TimetableWidgetInner
       station={options.station}
-      baseUrl={options.baseUrl}
+      options={options}
       itemId={itemId}
       displayMode={displayMode}
       width={width}
@@ -36,24 +37,21 @@ export default function TimetableWidget({
 
 interface TimetableWidgetInnerProps {
   station: DynamicSelectOption;
-  baseUrl: string;
+  options: WidgetComponentProps<"timetable">["options"];
   itemId?: string;
   displayMode: "compact" | "advanced";
   width: number;
   height: number;
 }
 
-const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, height }: TimetableWidgetInnerProps) => {
+const TimetableWidgetInner = ({ station, options, itemId, displayMode, width, height }: TimetableWidgetInnerProps) => {
   const {
     data: timetable,
     error,
     isPending,
-  } = clientApi.widget.timetable.getTimetable.useQuery({
-    baseUrl,
-    itemId,
-    stationId: station.value,
-    limit: displayMode === "advanced" ? 50 : 10,
-  });
+  } = clientApi.widget.timetable.getTimetable.useQuery(
+    definition.data.queries({ options, itemId, displayMode, integrationIds: [] }).main.input,
+  );
   const t = useI18n("widget.timetable");
   const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();

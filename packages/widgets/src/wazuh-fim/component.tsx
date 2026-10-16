@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Box, Center, Group, ScrollArea, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import {
@@ -42,15 +43,8 @@ export default function WazuhFimWidget({ integrationIds, options, width, height 
   const t = useI18n("widget.wazuhFim");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getFim.useQuery(
-    {
-      integrationId,
-      range: options.range,
-      event: options.event,
-      limit: options.limit,
-      includeRegistry: options.includeRegistry,
-    },
+    definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

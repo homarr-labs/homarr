@@ -1,11 +1,9 @@
 import { dehydrate } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 
-import { trpc } from "@homarr/api/server";
-import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { prefetchCapturedWidgetData, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
+import { prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 import type { CapturePrefetchOutcome } from "@homarr/widgets/server-prefetch";
 
 import type { Board } from "~/app/[locale]/boards/_types";
@@ -48,35 +46,16 @@ export const settleCapturedQueriesAsync = async (
     preparationFailed: 0,
   };
   let capturePreparationFailureReason: string | null = null;
-  const withinDeadline = () => Date.now() < deadline;
-  // These two consumers suspend instead of rendering an empty query state.
-  for (const item of board.items) {
-    const integrationId = item.integrationIds[0];
-    if (!integrationId || !withinDeadline()) continue;
-    if (item.kind === "wud") void queryClient.prefetchQuery(trpc.widget.wud.getStats.queryOptions({ integrationId }));
-    if (item.kind === "archiveTeamWarrior") {
-      void queryClient.prefetchQuery(trpc.widget.archiveTeamWarrior.getStatus.queryOptions({ integrationId }));
-    }
-  }
   const work = (async () => {
-    const dependent = prefetchInitialWidgetData(queryClient, board, layoutId, isAuthenticated, deadline);
-    const serverSettings = await getRscServerSettingsAsync().catch(() => null);
-    if (!serverSettings) {
-      captureOutcome.preparationFailed++;
-      capturePreparationFailureReason = "server_settings_unavailable";
-    } else if (withinDeadline()) {
-      await prefetchCapturedWidgetData(queryClient, board, layoutId, {
-        isAuthenticated,
+    let dependent: Promise<void>[] = [];
+    try {
+      dependent = await prefetchInitialWidgetData(queryClient, board, layoutId, isAuthenticated, {
         deadline,
         outcome: captureOutcome,
-        settings: {
-          enableStatusByDefault: serverSettings.board.enableStatusByDefault,
-          forceDisableStatus: serverSettings.board.forceDisableStatus,
-        },
       });
-    } else {
-      captureOutcome.timedOut++;
-      capturePreparationFailureReason = "deadline_before_coverage";
+    } catch {
+      captureOutcome.preparationFailed++;
+      capturePreparationFailureReason = "widget_data_unavailable";
     }
     await settleQueriesAsync(queryClient, dependent);
     return false;

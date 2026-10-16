@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -23,7 +24,6 @@ import type { WidgetComponentProps } from "../../definition";
 import { useWidgetRuntimeActions } from "../../runtime-hooks";
 import { getUsableWidgetQueryData } from "../../common/query-state";
 import classes from "./component.module.css";
-import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
 export default function ImmichAlbumCarouselWidget({
   integrationIds,
@@ -35,18 +35,15 @@ export default function ImmichAlbumCarouselWidget({
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [firstPreviewPhoto, setFirstPreviewPhoto] = useState<{ albumId: string; assetId: string } | null>(null);
-  let albumId: string | undefined;
-  if (options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID) albumId = options.albumId;
-  const integrationId = integrationIds[0] ?? "";
+  const queries = definition.data.queries({ options, integrationIds });
+  const albumId = queries.main.input.albumId;
 
-  const albumQuery = clientApi.widget.immich.getAlbum.useQuery(
-    { integrationId, albumId },
-    { enabled: integrationIds.length > 0 },
-  );
-  const previewQuery = clientApi.widget.immich.getAlbumPreview.useQuery(
-    { integrationId, albumId: albumId ?? "", randomizePhotos: options.randomizePhotos },
-    { enabled: integrationIds.length > 0 && albumId !== undefined },
-  );
+  const albumQuery = clientApi.widget.immich.getAlbum.useQuery(queries.main.input, {
+    enabled: integrationIds.length > 0,
+  });
+  const previewQuery = clientApi.widget.immich.getAlbumPreview.useQuery(queries.preview.input, {
+    enabled: integrationIds.length > 0 && albumId !== undefined,
+  });
   const fullAlbum = getUsableWidgetQueryData(albumQuery);
   const preview = previewQuery.data;
   const album = fullAlbum ?? preview;

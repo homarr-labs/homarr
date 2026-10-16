@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
@@ -24,7 +25,7 @@ export default function AudioStatsWidget({
   widgetRuntimeRef,
 }: WidgetComponentProps<"audioStats">) {
   const { formatBytes } = useByteFormatter();
-  const statsInput = { integrationId: integrationIds[0] ?? "" };
+  const statsInput = definition.data.queries({ options, integrationIds }).main.input;
   const { data: response, error: statsError } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
   const streamsInput = { integrationIds: [statsInput.integrationId], showOnlyPlaying: true };
   const streamsEnabled = displayMode === "advanced" && response?.kind === "navidrome";

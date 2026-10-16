@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useId } from "react";
 import { CompositeChart, Sparkline } from "@mantine/charts";
@@ -28,10 +29,9 @@ import {
 } from "./display";
 
 export default function AirQualityWidget({ options, width, height, displayMode }: WidgetComponentProps<"airQuality">) {
-  const query = clientApi.widget.airQuality.atLocation.useQuery({
-    latitude: options.location.latitude,
-    longitude: options.location.longitude,
-  });
+  const query = clientApi.widget.airQuality.atLocation.useQuery(
+    definition.data.queries({ options, integrationIds: [] }).main.input,
+  );
   const airQuality = getUsableWidgetQueryData(query);
 
   if (isInitialWidgetQueryPending(query)) return <WidgetQueryLoadingState />;

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 /* eslint-disable react/no-unstable-nested-components -- TimerPopover uses render props to wire controlled targets. */
 /* eslint-disable import/no-unassigned-import -- The shared widget stylesheet is loaded for its side effects. */
@@ -67,7 +68,9 @@ export default function DnsHoleControlsWidget({
     .map(({ id }) => id)
     .filter((id) => integrationIds.includes(id));
 
-  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({ integrationIds });
+  const summaryQuery = clientApi.widget.dnsHole.summary.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const summaryResults = getUsableWidgetQueryData(summaryQuery) ?? [];
   const summaries = summaryResults.filter(isAvailableDnsSummaryResult);
   const utils = clientApi.useUtils();

@@ -12,6 +12,7 @@ import {
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
@@ -103,4 +104,12 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
       hideLogsLink: true,
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ options }) => ({
+      main: widgetQuery("app.byId", { id: options.appId }, { enabled: Boolean(options.appId) }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

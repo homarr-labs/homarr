@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import "./styles.css";
 
@@ -90,11 +91,6 @@ const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" |
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}&endpointId=${encodeURIComponent(container.endpointId)}`;
 
 const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
-
-const getContainersQueryInput = (endpointIds: string[]) => {
-  if (endpointIds.length === 0) return undefined;
-  return { endpointIds };
-};
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useI18n("docker.field.state.option");
@@ -263,7 +259,9 @@ export default function DockerWidget({
   const responsiveWidth = width * displayScale;
 
   const utils = clientApi.useUtils();
-  const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
+  const containersQuery = clientApi.docker.getContainers.useQuery(
+    definition.data.queries({ options, integrationIds: [] }).main.input,
+  );
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
   // A stale retained query reports its mount refetch on the hydration render,

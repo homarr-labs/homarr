@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
@@ -23,4 +24,15 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
     }));
   },
   ...getWidgetIntegrationConfig("mediaServer"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.mediaServer.getCurrentStreams", {
+        integrationIds,
+        showOnlyPlaying: options.showOnlyPlaying,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useMemo, useRef } from "react";
 import type { ReactNode } from "react";
@@ -71,7 +72,9 @@ interface LlamacppContentProps {
 
 function LlamacppContent({ integrationId, options, width, height, displayMode }: LlamacppContentProps) {
   const t = useI18n("widget.llamacpp");
-  const { data, isError } = clientApi.widget.llamacpp.getStats.useQuery({ integrationId });
+  const { data, isError } = clientApi.widget.llamacpp.getStats.useQuery(
+    definition.data.queries({ options, integrationIds: [integrationId] }).main.input,
+  );
 
   // Tracks the in-flight request across polls so the widget can show the average
   // speed since that request started: /slots reports the request id (taskId) and how

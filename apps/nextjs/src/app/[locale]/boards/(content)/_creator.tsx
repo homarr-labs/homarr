@@ -57,7 +57,7 @@ const DeferredWidgetHydration = async ({
     <HydrationBoundary
       state={dehydrate(queryClient, {
         shouldDehydrateQuery: (query) =>
-          query.meta?.streamedBeszelSelection === true &&
+          query.meta?.rscWidgetDependent === true &&
           (query.state.status === "pending" || query.state.status === "success"),
       })}
     />
@@ -155,7 +155,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           .filter((query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success")
           .map((query) => query.queryHash),
       );
-      const dependentQueries = prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(session));
+      const dependentQueries = await prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(session));
       const refreshingQueries = queryClient
         .getQueryCache()
         .getAll()

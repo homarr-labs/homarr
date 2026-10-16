@@ -3,6 +3,7 @@ import { IconReportSearch, IconServerOff, IconTestPipe } from "@tabler/icons-rea
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 const createOptions = () =>
@@ -37,4 +38,12 @@ export const { definition, componentLoader } = createWidgetDefinition("indexerMa
       message: (t) => t("widget.indexerManager.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.indexerManager.getIndexersStatus", { integrationIds }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

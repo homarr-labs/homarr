@@ -7,6 +7,7 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 const columnsList = [
   "name",
@@ -99,4 +100,15 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
       message: (t) => t("widget.dockerContainers.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ options }) => ({
+      main: widgetQuery(
+        "docker.getContainers",
+        options.endpointIds.length > 0 ? { endpointIds: options.endpointIds } : undefined,
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

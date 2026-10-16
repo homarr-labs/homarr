@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 
 /**
  * Feed must conform to one of the following standards:
@@ -56,4 +57,16 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ options }) => ({
+      main: widgetQuery("widget.rssFeed.getFeeds", {
+        urls: options.feedUrls,
+        maximumAmountPosts: options.maximumAmountPosts,
+        descriptionMaxLength: options.descriptionMaxLength,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

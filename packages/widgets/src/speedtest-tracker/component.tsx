@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useMemo } from "react";
 import { Box, Group, Stack, Text } from "@mantine/core";
@@ -23,7 +24,9 @@ export default function SpeedtestTrackerWidget({
   width,
 }: WidgetComponentProps<"speedtestTracker">) {
   const t = useI18n("widget.speedtestTracker");
-  const dashboardQuery = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
+  const dashboardQuery = clientApi.widget.speedtestTracker.getDashboard.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const dashboardData = getUsableWidgetQueryData(dashboardQuery) ?? emptyDashboardData;
   const successfulDashboards = useMemo(() => getAvailableSpeedtestDashboards(dashboardData), [dashboardData]);
 

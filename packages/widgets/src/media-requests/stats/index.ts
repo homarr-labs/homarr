@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 
 import { createWidgetDefinition } from "../../definition";
+import { widgetQuery } from "../../data";
 
 const createOptions = () => ({});
 
@@ -23,4 +24,9 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
     },
   ],
   ...getWidgetIntegrationConfig("mediaRequests-requestStats"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.mediaRequests.getStats", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

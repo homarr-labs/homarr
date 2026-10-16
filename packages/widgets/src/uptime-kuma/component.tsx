@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { Badge, Box, Group, RingProgress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
@@ -121,7 +122,9 @@ function UptimeKumaContent({
   displayScale,
 }: UptimeKumaContentProps) {
   const t = useI18n("widget.uptimeKuma");
-  const dashboardQuery = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
+  const dashboardQuery = clientApi.widget.uptimeKuma.getDashboard.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const dashboardData = getUsableWidgetQueryData(dashboardQuery);
 
   if (!dashboardData) return <WidgetEmptyState />;

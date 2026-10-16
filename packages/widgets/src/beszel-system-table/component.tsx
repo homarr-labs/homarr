@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Group, Progress, Text } from "@mantine/core";
@@ -127,7 +128,9 @@ export default function BeszelSystemTableWidget({
   const { data: session } = useSession();
   const { formatByteRate, formatBytes } = useByteFormatter();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const systemsData = getUsableWidgetQueryData(systemsQuery);
   const results = useMemo(() => systemsData ?? [], [systemsData]);
   const { isPending } = systemsQuery;

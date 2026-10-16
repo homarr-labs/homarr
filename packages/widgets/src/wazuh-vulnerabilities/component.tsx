@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Anchor, Badge, Box, Center, Group, Progress, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconBug } from "@tabler/icons-react";
@@ -161,15 +162,8 @@ export default function WazuhVulnerabilitiesWidget({
   const t = useI18n("widget.wazuhVulnerabilities");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getVulnerabilities.useQuery(
-    {
-      integrationId,
-      cveLimit: options.cveLimit,
-      agentLimit: options.agentLimit,
-      cveOrder: options.cveOrder,
-      minSeverity: options.minSeverity,
-    },
+    definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 5 * 60_000, refetchInterval: 5 * 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

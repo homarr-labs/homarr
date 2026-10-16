@@ -3,6 +3,7 @@ import { IconCpu } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("llamacpp", {
@@ -21,4 +22,11 @@ export const { definition, componentLoader } = createWidgetDefinition("llamacpp"
       showSpeculative: factory.switch({ defaultValue: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.llamacpp.getStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

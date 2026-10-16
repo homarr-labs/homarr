@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Center, Flex, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
@@ -10,10 +11,9 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { VpnIntegrationCard } from "./vpn-card";
 
 export default function VpnWidget({ options, integrationIds, width, height }: WidgetComponentProps<"vpn">) {
-  const summariesQuery = clientApi.widget.vpn.getSummaries.useQuery({
-    ...options,
-    integrationIds,
-  });
+  const summariesQuery = clientApi.widget.vpn.getSummaries.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const integrations = getUsableWidgetQueryData(summariesQuery) ?? [];
   const { isPending } = summariesQuery;
   const t = useI18n("widget.vpn");

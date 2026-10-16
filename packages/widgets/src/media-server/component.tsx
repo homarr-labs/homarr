@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
@@ -174,10 +175,9 @@ export default function MediaServerWidget({
   isEditMode,
   displayMode,
 }: WidgetComponentProps<"mediaServer">) {
-  const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
-    integrationIds,
-    showOnlyPlaying: options.showOnlyPlaying,
-  });
+  const currentStreamsQuery = clientApi.widget.mediaServer.getCurrentStreams.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const currentStreamsData = getUsableWidgetQueryData(currentStreamsQuery);
   const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
 

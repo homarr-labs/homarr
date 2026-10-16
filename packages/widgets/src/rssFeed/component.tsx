@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useRef, useState } from "react";
 import { Alert, Box, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
@@ -59,11 +60,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     if (initialTime !== undefined) date = date.utc();
     return date.format("YYYY-MM-DD HH:mm:ss Z");
   };
-  const feed = useLiveFeed({
-    urls: options.feedUrls,
-    maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
-    descriptionMaxLength: typeof options.descriptionMaxLength === "number" ? options.descriptionMaxLength : 250,
-  });
+  const feed = useLiveFeed(definition.data.queries({ options, integrationIds: [] }).main.input);
 
   const board = useRequiredBoard();
   const t = useI18n("widget.rssFeed");

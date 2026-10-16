@@ -21,4 +21,6 @@ export const { definition, componentLoader } = createWidgetDefinition("countdown
       showSeconds: factory.switch({ defaultValue: false, withDescription: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "static" })
+  .withDynamicImport(() => import("./component"));

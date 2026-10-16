@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import {
   Badge,
@@ -79,7 +80,9 @@ interface UpsContentProps {
 
 function UpsContent({ integrationIds, options, width, height, displayMode }: UpsContentProps) {
   const t = useI18n("widget.ups");
-  const summariesQuery = clientApi.widget.ups.getSummaries.useQuery({ integrationIds });
+  const summariesQuery = clientApi.widget.ups.getSummaries.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const data = getUsableWidgetQueryData(summariesQuery);
 
   if (!data) return <WidgetEmptyState />;

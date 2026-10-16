@@ -51,4 +51,6 @@ export const { definition, componentLoader } = createWidgetDefinition("timer", {
       },
     );
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({ mode: "static" })
+  .withDynamicImport(() => import("./component"));
