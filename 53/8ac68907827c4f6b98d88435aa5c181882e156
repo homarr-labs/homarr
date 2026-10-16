@@ -1,0 +1,19 @@
+apps/nextjs/src/proxy.ts
+  s_a805e5a52ac9d9::t_3bb935ba5a7f0d 86-88,91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "538ac68907827c4f6b98d88435aa5c181882e156",
+  "prompts": {},
+  "sessions": {
+    "s_a805e5a52ac9d9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1ede953-68e0-484b-a66c-b0021e6c4b0a",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
