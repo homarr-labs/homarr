@@ -83,9 +83,12 @@ export async function proxy(request: NextRequest) {
   if (isBoardDebugPreview) {
     // Replay can load application chunks, but cannot call APIs, subscribe,
     // submit forms, load external resources or register a service worker.
+    // The dev server only hydrates once its HMR socket connects.
+    let connectSource = "'none'";
+    if (process.env.NODE_ENV === "development") connectSource = `ws://${request.nextUrl.host}`;
     response.headers.set(
       "Content-Security-Policy",
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'none'; frame-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'",
+      `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src ${connectSource}; frame-src 'none'; media-src 'none'; worker-src 'none'; form-action 'none'; base-uri 'none'; frame-ancestors 'self'`,
     );
   }
   return response;
