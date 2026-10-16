@@ -124,18 +124,6 @@ the `Everyone` group, and server defaults. Server-wide fallback boards must be p
 
 See [Users and groups](/docs/management/users) and [Server settings](/docs/management/settings#boards).
 
-## Layout problems after an update
-
-Check the running version before rearranging a board to compensate for a display problem:
-
-- **v2.4.0: widgets overlap outside edit mode.** [v2.4.1](https://github.com/homarr-labs/homarr/releases/tag/v2.4.1)
-  fixes an invisible control taking up layout space. Saved layouts do not need to be changed for this regression.
-- **Container header spacing or border color problems on earlier v2 releases.**
-  [v2.5.0](https://github.com/homarr-labs/homarr/releases/tag/v2.5.0) includes fixes for Container headers, spacing, and border colors.
-
-If the problem remains on a release containing the relevant fix, report the exact version, browser, affected layout,
-and screenshots of view and edit modes. Remove private board content before sharing screenshots.
-
 ## Widget previews
 
 The add and edit dialogs use the target board section’s sizing and scale. Large widgets may be shrunk to fit the preview area; their content layout is preserved. Custom CSS that depends on dashboard ancestors may render differently inside the dialog.

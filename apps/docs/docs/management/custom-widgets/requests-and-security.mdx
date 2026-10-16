@@ -73,6 +73,8 @@ also use structured `json` and `multiSelect` option values, for example `{ "enti
 A definition can contain up to **64 named requests**, including load queries, manual queries, and actions. This is
 separate from the runtime limit of **four active requests per viewer/item** and **eight per definition**. For example,
 eight load queries fit in one definition; they do not need to run at the same time.
+For a single placed widget, the four-request viewer/item limit applies before the eight-request definition limit.
+Multiple placements of the same definition still share its definition limit.
 
 Since Homarr **v2.5.0**, load queries wait up to 60 seconds for concurrency capacity. Manual requests fail immediately
 when capacity is unavailable. The per-minute limits still apply; waiting for capacity does not bypass them.
