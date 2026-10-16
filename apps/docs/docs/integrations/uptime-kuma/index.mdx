@@ -23,6 +23,23 @@ Uptime Kuma monitors the availability of your services and provides uptime stati
 
 <AddingIntegration />
 
+### Status page URL and monitors
+
+Use the Uptime Kuma instance root as the integration URL, and enter only the status page slug in the slug field.
+For a status page at `https://kuma.example.com/status/services`, use:
+
+| Field           | Value                      |
+| --------------- | -------------------------- |
+| Integration URL | `https://kuma.example.com` |
+| Slug            | `services`                 |
+
+Homarr reads `/api/status-page/services` and `/api/status-page/heartbeat/services` from that instance. Both must return
+JSON reachable from the Homarr server without an interactive sign-in. Do not use `/status/services` or an API endpoint
+as the integration URL. Preserve any reverse-proxy base path in the instance URL.
+
+Only monitors in the selected status page's public groups are included. If a monitor is missing, check that it belongs
+to that status page. A successful connection does not mean every monitor in Uptime Kuma is included.
+
 ### Secrets
 
 <IntegrationSecrets
