@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemples de formats d’URL",
+        "examples": "Exemples de liens acceptés",
+        "requiresHandler": "Les protocoles personnalisés nécessitent une application associée sur votre appareil."
+      },
       "description": {
         "label": "Description"
       },

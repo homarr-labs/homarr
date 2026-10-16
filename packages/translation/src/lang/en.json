@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL format examples",
+        "examples": "Examples of accepted links",
+        "requiresHandler": "Custom protocols require an associated application on your device."
+      },
       "description": {
         "label": "Description"
       },
