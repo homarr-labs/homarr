@@ -1,0 +1,24 @@
+apps/nextjs/src/app/[locale]/_root-layout-data.ts
+  h_d6e478ca18e517 2,26
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 2,31-32,42,128
+packages/widgets/src/app/index.ts
+  h_d6e478ca18e517 16-34,130-137
+packages/widgets/src/data.ts
+  h_d6e478ca18e517 4,28-29
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 125-126
+packages/widgets/src/wazuh-agents/component.tsx
+  h_d6e478ca18e517 27,132,195-196,204-205
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2b7d4d9a646545b9ac4cfa92ba445740e0fe45c1",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
