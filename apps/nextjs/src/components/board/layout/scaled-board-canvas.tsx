@@ -22,12 +22,94 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
   return availableWidth / logicalWidth;
 };
 
-// Server HTML is reused across widths of one layout, including prepared views.
-// Fit it to the real viewport before first paint; React takes over on hydration.
-// Section grids derive their insets and UI scale from the canvas scale, so
-// rescale those server values too. Streamed Suspense content is parsed hidden,
-// so wait until it has a size.
-const fitBeforePaintScript = `(()=>{const v=document.currentScript?.previousElementSibling,s=v?.firstElementChild,c=s?.firstElementChild;if(!c)return;const u=k=>k<1?1/k:1,k0=Number(v.dataset.canvasScale);const scaleVar=(e,n,f)=>{const x=parseFloat(e.style.getPropertyValue(n));if(Number.isFinite(x))e.style.setProperty(n,n==="--board-container-inset"?x*f+"px":String(x*f))};const fit=()=>{const w=v.clientWidth,l=Number(c.dataset.logicalWidth),h=Number(v.dataset.canvasInitialHeight);if(!(w>0&&l>0&&k0>0))return false;const k=w/l;s.style.width=l*k+"px";s.style.height=h*k+"px";c.style.zoom=String(k);c.style.setProperty("--board-canvas-inverse-scale",String(1/k));c.style.setProperty("--board-canvas-ui-scale",String(u(k)));for(const e of c.querySelectorAll("[data-grid-section-id]")){scaleVar(e,"--board-canvas-inverse-scale",k0/k);scaleVar(e,"--board-canvas-ui-scale",u(k)/u(k0))}for(const e of c.querySelectorAll("[data-section-id]"))scaleVar(e,"--board-container-inset",k0/k);return true};if(fit())return;const stop=()=>{m.disconnect();o.disconnect()},check=()=>{if(v.dataset.boardHydrated==="true"||fit())stop()},m=new MutationObserver(check),o=new ResizeObserver(check);m.observe(document.documentElement,{attributes:true,childList:true,subtree:true});o.observe(v)})()`;
+const setBoardCanvasStyle = (element: HTMLElement, property: string, value: number, suffix = "") => {
+  const current = Number.parseFloat(element.style.getPropertyValue(property));
+  if (Number.isFinite(current) && Math.abs(current - value) < 0.000001) return;
+  element.style.setProperty(property, `${value}${suffix}`);
+};
+
+const installBoardCanvasFitting = (
+  calculateScale: typeof calculateBoardCanvasScale,
+  calculateUiScale: typeof calculateBoardUiScale,
+  setStyle: typeof setBoardCanvasStyle,
+) => {
+  const viewport = document.currentScript?.previousElementSibling;
+  if (!(viewport instanceof HTMLElement)) return;
+  const sizer = viewport.firstElementChild;
+  const canvas = sizer?.firstElementChild;
+  if (!(sizer instanceof HTMLElement) || !(canvas instanceof HTMLElement)) return;
+
+  const adjustedStyles = new WeakMap<HTMLElement, Map<string, { value: number; scale: number; applied: string }>>();
+  const adjustStyle = (
+    element: HTMLElement,
+    property: string,
+    renderedScale: number,
+    factor: (sourceScale: number) => number,
+    suffix = "",
+  ) => {
+    const current = element.style.getPropertyValue(property);
+    const value = Number.parseFloat(current);
+    if (!Number.isFinite(value)) return;
+    let styles = adjustedStyles.get(element);
+    if (!styles) {
+      styles = new Map();
+      adjustedStyles.set(element, styles);
+    }
+    let source = styles.get(property);
+    if (!source || source.applied !== current) {
+      source = { value, scale: renderedScale, applied: current };
+      styles.set(property, source);
+    }
+    setStyle(element, property, source.value * factor(source.scale), suffix);
+    source.applied = element.style.getPropertyValue(property);
+  };
+  const check = () => {
+    if (!viewport.isConnected) {
+      stop();
+      return;
+    }
+    const width = viewport.clientWidth;
+    const logicalWidth = Number(canvas.dataset.logicalWidth);
+    const renderedScale = Number(viewport.dataset.canvasScale);
+    if (!(width > 0 && logicalWidth > 0 && renderedScale > 0)) return;
+    const measuredWidth = Number(viewport.dataset.canvasMeasuredWidth);
+    if (
+      measuredWidth > 0 &&
+      Math.abs(measuredWidth - width) < 1 &&
+      Math.abs(renderedScale * logicalWidth - width) < 1 &&
+      Math.abs(Number(canvas.style.zoom) * logicalWidth - width) < 1
+    ) {
+      stop();
+      return;
+    }
+
+    const scale = calculateScale(width, logicalWidth);
+    const uiScale = calculateUiScale(scale);
+    setStyle(sizer, "width", logicalWidth * scale, "px");
+    setStyle(sizer, "height", Number(viewport.dataset.canvasInitialHeight) * scale, "px");
+    setStyle(canvas, "zoom", scale);
+    setStyle(canvas, "--board-canvas-inverse-scale", 1 / scale);
+    setStyle(canvas, "--board-canvas-ui-scale", uiScale);
+    for (const section of canvas.querySelectorAll<HTMLElement>("[data-grid-section-id]")) {
+      adjustStyle(section, "--board-canvas-inverse-scale", renderedScale, (source) => source / scale);
+      adjustStyle(section, "--board-canvas-ui-scale", renderedScale, (source) => uiScale / calculateUiScale(source));
+    }
+    for (const section of canvas.querySelectorAll<HTMLElement>("[data-section-id]")) {
+      adjustStyle(section, "--board-container-inset", renderedScale, (source) => source / scale, "px");
+    }
+  };
+  const mutations = new MutationObserver(check);
+  const measurements = new ResizeObserver(check);
+  const stop = () => {
+    mutations.disconnect();
+    measurements.disconnect();
+  };
+  mutations.observe(document.documentElement, { attributes: true, childList: true, subtree: true });
+  measurements.observe(viewport);
+  check();
+};
+
+const fitBeforePaintScript = `(${installBoardCanvasFitting.toString()})(${calculateBoardCanvasScale.toString()},${calculateBoardUiScale.toString()},${setBoardCanvasStyle.toString()})`;
 
 interface ScaledBoardCanvasProps {
   logicalWidth: number;
@@ -76,6 +158,7 @@ export const ScaledBoardCanvas = ({
         data-testid="board-canvas"
         data-board-hydrated={isHydrated ? "true" : "false"}
         data-canvas-scale={scale}
+        data-canvas-measured-width={availableWidth}
         data-canvas-overflow={hasHorizontalOverflow ? "true" : "false"}
         data-canvas-initial-height={initialLogicalHeight}
         data-canvas-initial-width={initialAvailableWidth}
