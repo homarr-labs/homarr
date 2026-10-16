@@ -1,0 +1,16 @@
+apps/nextjs/src/board-preparation/capture.ts
+  h_d6e478ca18e517 98-104,113-121
+packages/widgets/src/notebook/sanitize-content.ts
+  h_d6e478ca18e517 152-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2409404575b4d0cd5297eb05234bc4fd4aa6932a",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
