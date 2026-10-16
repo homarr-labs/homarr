@@ -24,7 +24,7 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
 
 const setBoardCanvasStyle = (element: HTMLElement, property: string, value: number, suffix = "") => {
   const current = Number.parseFloat(element.style.getPropertyValue(property));
-  if (Number.isFinite(current) && Math.abs(current - value) < 0.000001) return;
+  if (Number.isFinite(current) && Math.abs(current - value) < Math.max(1, Math.abs(value)) * 0.00001) return;
   element.style.setProperty(property, `${value}${suffix}`);
 };
 
