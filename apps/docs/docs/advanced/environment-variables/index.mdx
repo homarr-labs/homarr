@@ -25,32 +25,33 @@ This is especially useful for [docker secrets](https://docs.docker.com/engine/sw
 
 | Environment variable   | Purpose                                                                                                    | Default                        |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| `HOMARR_BACKEND_URL`   | Internal backend HTTP origin used by a separately launched Next.js dashboard. Read at runtime.             | `http://127.0.0.1:3002`        |
+| `HOMARR_FRONTEND_MODE` | Set to `workers` to use the normal Next.js frontend with encrypted workers.                                | Classic HTTP frontend          |
+| `HOMARR_PLATFORM_PATH` | Public path used for the account and MCP platform; keep it aligned with the reverse-proxy route.           | `/platform`                    |
+| `HOMARR_BACKEND_URL`   | Internal backend HTTP origin used by the classic frontend. Read at runtime.                                | `http://127.0.0.1:3002`        |
 | `BACKEND_CORS_ORIGINS` | Comma-separated exact frontend origins allowed to send authenticated browser requests to the backend.      | Same-origin access             |
 | `BACKEND_HOST`         | Direct HTTP bind address in source deployments. The Docker image binds the backend privately behind Nginx. | `0.0.0.0`; Docker: `127.0.0.1` |
 | `BACKEND_PORT`         | Direct HTTP port in source deployments.                                                                    | `3002`                         |
 
-See [headless deployment](/docs/advanced/development/headless) for the backend-only Docker target and separate frontend operation.
+See [headless deployment](/docs/advanced/development/headless) for the worker frontend and the existing HTTP backend setup.
 
-### Encrypted worker and remote frontend
+### Workers and platform
 
-The separate `worker` image generates persistent secrets on first startup and uses local in-process state instead of Redis. Its `PUID`/`PGID` defaults are `1000`. Keep the original `SECRET_ENCRYPTION_KEY` when attaching existing data.
+Set each worker's `WORKER_PLATFORM_URL` to your normal Homarr frontend. Its image default points to the earlier `/remote/` path, so override it for the native worker frontend. The [native deployment README](https://github.com/homarr-labs/homarr/blob/main/deployments/native/README.md) has the source Compose and proxy configuration.
 
-| Variable                          | Purpose                                               | Default                                                                         |
-| --------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `WORKER_PLATFORM_URL`             | Frontend destination for local pairing links          | `https://homarr.dev/remote/`                                                    |
-| `WORKER_PUBLIC_URL`               | Browser-reachable direct worker URL                   | `http://localhost:3002`                                                         |
-| `WORKER_RELAY_URL`                | Optional HTTPS/WSS blind relay URL                    | Disabled                                                                        |
-| `WORKER_ALLOWED_ORIGINS`          | Exact browser origins accepted by the direct socket   | Platform origin; supplied Compose uses `https://homarr.dev`                     |
-| `WORKER_RELAY_REGISTRATION_TOKEN` | Optional relay socket registration token              | Unset                                                                           |
-| `WORKER_RUN_OPTIONAL_JOBS`        | Enable analytics and icon-catalog startup jobs        | `false`                                                                         |
-| `HOMARR_WORKER_STATE_DIRECTORY`   | Private identity, grants and local pairing directory  | `/appdata/worker`                                                               |
-| `HOMARR_STATE_BACKEND`            | Worker cache/PubSub implementation                    | Worker image: `memory`                                                          |
-| `REMOTE_PUBLIC_URL`               | Public account service URL, including its path        | Source: `http://localhost:3104/remote`; deployment: `https://homarr.dev/remote` |
-| `REMOTE_PLATFORM_DB`              | Persistent connection-directory SQLite file           | Source: `./data/platform.sqlite`; deployment: `/appdata/platform.sqlite`        |
-| `WORKSHOP_API_URL`                | Existing Workshop PocketBase for remote account login | `https://homarr.dev`                                                            |
+| Variable                   | Purpose                                                                                            | Default                                                                              |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `WORKER_PLATFORM_URL`      | Frontend URL used for worker pairing links.                                                        | `https://homarr.dev/remote/`                                                         |
+| `WORKER_PUBLIC_URL`        | Browser-reachable direct worker URL.                                                               | `http://localhost:3002`                                                              |
+| `WORKER_RELAY_URL`         | Public HTTPS/WSS relay URL used by this worker.                                                    | Disabled                                                                             |
+| `WORKER_ALLOWED_ORIGINS`   | Exact browser origins allowed to connect directly to the worker.                                   | Platform origin                                                                      |
+| `WORKER_RELAY_CONNECT_URL` | Optional internal worker-to-relay URL when the service network differs from `WORKER_RELAY_URL`.    | Unset                                                                                |
+| `REMOTE_PUBLIC_URL`        | Public platform URL, including its path; it must match the reverse-proxy route.                    | Source: `http://localhost:3104/remote`; native Compose: `HOMARR_PUBLIC_URL/platform` |
+| `REMOTE_PLATFORM_DB`       | Persistent account and worker-directory database.                                                  | Source: `./data/platform.sqlite`; container: `/appdata/platform.sqlite`              |
+| `REMOTE_MCP_DB`            | Persistent database for hosted MCP OAuth and worker approvals.                                     | Sibling of `REMOTE_PLATFORM_DB`; native Compose: `/appdata/mcp.sqlite`               |
+| `REMOTE_BROKER_KEY_FILE`   | 32-byte key file that encrypts the hosted MCP worker credentials. Back it up with `REMOTE_MCP_DB`. | Sibling of `REMOTE_MCP_DB`; native Compose: `/secrets/broker.key`                    |
+| `REMOTE_MCP_RELAY_URLS`    | Comma-separated public relay URLs allowed for hosted MCP connections.                              | Unset                                                                                |
 
-`VITE_REMOTE_BASE_PATH` is a frontend build argument; it must match the path in `REMOTE_PUBLIC_URL` (default `/remote`). See [headless deployment](/docs/advanced/development/headless) for pairing, HTTPS/Tailscale and share-access requirements.
+`WORKER_RELAY_CONNECT_URL` is for operators wiring workers to a private relay address. Hosted MCP also requires a configured relay; direct or Tailscale-only worker access is not reachable by the hosted service. See [headless deployment](/docs/advanced/development/headless) for the access model.
 
 ## General
 

@@ -7,7 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { useWorkerWorkspace } from "~/worker/context";
 
-/** Hosted MCP uses account OAuth and explicit worker approvals rather than a dashboard API key. */
+/** Hosted MCP uses account OAuth and explicit worker approvals rather than an instance API key. */
 export function WorkerMcpInstructions() {
   const { platformPath, manageWorkers } = useWorkerWorkspace();
   const t = useI18n("management.page.tool.api.tab.mcp");

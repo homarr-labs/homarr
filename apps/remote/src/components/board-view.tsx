@@ -60,16 +60,16 @@ export function BoardView({ connection, boards }: { connection: WorkerConnection
         <div className="empty-icon">
           <Glyph name="server" size={26} />
         </div>
-        <h2>No dashboards available</h2>
+        <h2>No boards available</h2>
         <p>
-          This device has no permitted dashboards yet. Ask the owner for access, or create a board using the worker API.
+          This device has no permitted boards yet. Ask the owner for access, or create a board using the worker API.
         </p>
       </div>
     );
   return (
     <>
       <Group justify="space-between" mb="lg">
-        <fieldset className="board-tabs" aria-label="Dashboards">
+        <fieldset className="board-tabs" aria-label="Boards">
           {boards.map((board) => (
             <Button
               key={board.id}
@@ -94,7 +94,7 @@ export function BoardView({ connection, boards }: { connection: WorkerConnection
       {loading && (
         <Group className="state-message">
           <Loader size="xs" />
-          <span>Reading your dashboard through the encrypted connection…</span>
+          <span>Reading your board through the encrypted connection…</span>
         </Group>
       )}
       {error && (
@@ -133,7 +133,7 @@ export function BoardView({ connection, boards }: { connection: WorkerConnection
           ))}
           {!snapshot.apps.length && !snapshot.widgets.length && (
             <Text c="dimmed" size="sm">
-              This dashboard is empty.
+              This board is empty.
             </Text>
           )}
         </div>

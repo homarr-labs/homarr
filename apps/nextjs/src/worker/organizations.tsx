@@ -158,7 +158,7 @@ export function WorkerOrganizations() {
     if (!primary) return;
     if (!pool.getWorker(primary.workerId))
       throw new Error(
-        `Organization selected. Connect ${primary.name} with its private setup or invitation link in Workers to open its dashboard.`,
+        `Organization selected. Connect ${primary.name} with its private setup or invitation link in Workers to open its board.`,
       );
     await openWorker(primary);
   }
@@ -229,8 +229,8 @@ export function WorkerOrganizations() {
             <Badge variant="light">{selected.role}</Badge>
           </Group>
           <Text size="sm" c="dimmed">
-            Your primary worker stores dashboards. Other workers provide integrations. Each worker approves private
-            access separately.
+            Your primary worker stores boards. Other workers provide integrations. Each worker approves private access
+            separately.
           </Text>
           {workers.map((worker) => {
             const local = connections.workers.find((entry) => entry.worker.workerId === worker.workerId);

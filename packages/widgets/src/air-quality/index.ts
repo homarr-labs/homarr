@@ -1,5 +1,6 @@
 import { IconWind } from "@tabler/icons-react";
 
+import { defaultWeatherLocation } from "@homarr/definitions";
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -21,11 +22,7 @@ export const { definition, componentLoader } = createWidgetDefinition("airQualit
   createOptions() {
     return optionsBuilder.from((factory) => ({
       location: factory.location({
-        defaultValue: {
-          name: "Paris",
-          latitude: 48.85341,
-          longitude: 2.3488,
-        },
+        defaultValue: { ...defaultWeatherLocation },
       }),
       aqiStandard: factory.select({
         defaultValue: "auto",

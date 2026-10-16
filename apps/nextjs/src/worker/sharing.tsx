@@ -79,7 +79,7 @@ export function WorkerSharing({ worker, connection }: { worker: SavedWorker; con
     setError("");
     setLink("");
     try {
-      if ((kind === "share" || role === "viewer") && !boardIds.length) throw new Error("Choose a dashboard to share.");
+      if ((kind === "share" || role === "viewer") && !boardIds.length) throw new Error("Choose a board to share.");
       if (kind === "invite" && role === "user" && !userId) throw new Error("Choose an existing Homarr user.");
       let expiresAt: number | null = null;
       if (duration !== "permanent") expiresAt = Date.now() + Number(duration) * 1_000;
@@ -134,9 +134,9 @@ export function WorkerSharing({ worker, connection }: { worker: SavedWorker; con
     <Stack>
       <form onSubmit={(event) => void create(event)}>
         <Stack>
-          <Title order={4}>Share your dashboards</Title>
+          <Title order={4}>Share your boards</Title>
           <Text c="dimmed" size="sm">
-            Links give access only to the dashboards you choose. You can revoke them here.
+            Links give access only to the boards you choose. You can revoke them here.
           </Text>
           <NativeSelect
             label="Access"
@@ -146,7 +146,7 @@ export function WorkerSharing({ worker, connection }: { worker: SavedWorker; con
               if (event.currentTarget.value === "invite" && duration === "permanent") setDuration("86400");
             }}
             data={[
-              { value: "share", label: "Dashboard link" },
+              { value: "share", label: "Board link" },
               { value: "invite", label: "Device invitation" },
             ]}
           />
@@ -162,7 +162,7 @@ export function WorkerSharing({ worker, connection }: { worker: SavedWorker; con
               value={role}
               onChange={(event) => setRole(event.currentTarget.value)}
               data={[
-                { value: "viewer", label: "View selected dashboards" },
+                { value: "viewer", label: "View selected boards" },
                 { value: "user", label: "Existing Homarr user" },
                 { value: "owner", label: "Manage this worker" },
               ]}
@@ -213,9 +213,7 @@ export function WorkerSharing({ worker, connection }: { worker: SavedWorker; con
             />
           )}
           {kind === "invite" && role === "owner" && (
-            <Alert color="yellow">
-              An owner can change integrations, dashboards, and other devices on this worker.
-            </Alert>
+            <Alert color="yellow">An owner can change integrations, boards, and other devices on this worker.</Alert>
           )}
           <Group>
             <Button type="submit" loading={busy}>

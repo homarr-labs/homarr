@@ -5,7 +5,7 @@ import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import { TestLogger } from "../logs";
 
-vi.mock("undici", () => {
+vi.mock("undici/index.js", () => {
   return {
     EnvHttpProxyAgent: class EnvHttpProxyAgent {
       dispatch(_options: Dispatcher.DispatchOptions, _handler: Dispatcher.DispatchHandler): boolean {

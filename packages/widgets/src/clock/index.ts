@@ -1,4 +1,6 @@
 import { IconClock } from "@tabler/icons-react";
+
+import { defaultClockWeatherLocation } from "@homarr/definitions";
 import dayjs from "dayjs";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
@@ -105,11 +107,7 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           withDescription: true,
         }),
         weatherLocation: factory.location({
-          defaultValue: {
-            name: "Brisbane",
-            latitude: -27.4698,
-            longitude: 153.0251,
-          },
+          defaultValue: { ...defaultClockWeatherLocation },
         }),
         isWeatherFormatFahrenheit: factory.switch({
           defaultValue: false,

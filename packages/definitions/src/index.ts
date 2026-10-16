@@ -2,6 +2,7 @@ export * from "./board";
 export * from "./integration";
 export * from "./section";
 export * from "./widget";
+export * from "./widget-location";
 export * from "./widget-name";
 export * from "./permissions";
 export * from "./docker";

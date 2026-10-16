@@ -1,5 +1,6 @@
 import superjson from "superjson";
 
+import { defaultClockWeatherLocation, defaultWeatherLocation } from "@homarr/definitions";
 import type { AccessPrincipal } from "@homarr/worker-access";
 import { WorkerAccessError } from "@homarr/worker-access";
 
@@ -368,10 +369,10 @@ function matchesLocalItem(item: ViewerItem, call: NativeViewerCall) {
     const kinds = ["weather", "clock", "dateTime"];
     if (call.path.includes("airQuality")) kinds.splice(0, kinds.length, "airQuality");
     if (!kinds.includes(item.kind)) return false;
-    let point = record(item.options.location);
+    let point = record(item.options.location ?? defaultWeatherLocation);
     if (item.kind === "clock" || item.kind === "dateTime") {
       if (item.options.showWeather !== true) return false;
-      point = record(item.options.weatherLocation);
+      point = record(item.options.weatherLocation ?? defaultClockWeatherLocation);
     }
     return input.latitude === point.latitude && input.longitude === point.longitude;
   }

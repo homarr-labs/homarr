@@ -1,7 +1,7 @@
 import type tls from "node:tls";
 import type { AxiosInstance } from "axios";
 import type { Dispatcher } from "undici";
-import { fetch as undiciFetch } from "undici";
+import { fetch as undiciFetch } from "undici/index.js";
 
 import { removeTrailingSlash } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";

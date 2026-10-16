@@ -1,4 +1,4 @@
-import { fetch } from "undici";
+import { fetch } from "undici/index.js";
 
 import { extractErrorMessage } from "@homarr/common";
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";

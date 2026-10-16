@@ -92,7 +92,7 @@ export function WorkerAccess({
       let expiresAt: number | null = null;
       if (duration !== "permanent") expiresAt = Date.now() + Number(duration) * 1000;
       if ((kind === "share" || role === "viewer") && !boardIds.length)
-        throw new Error("Select at least one dashboard to share.");
+        throw new Error("Select at least one board to share.");
       const path = `/remote/access/${kind === "share" ? "shares" : "invitations"}`;
       const response = await workerRequest<{ share?: IssuedAccess; invitation?: IssuedAccess }>(connection, path, {
         method: "POST",
@@ -108,7 +108,7 @@ export function WorkerAccess({
             method: "POST",
             body: JSON.stringify({
               grantId: issued.id,
-              label: label.trim() || "Shared dashboard",
+              label: label.trim() || "Shared board",
               expiresAt,
               anonymous,
             }),
@@ -163,7 +163,7 @@ export function WorkerAccess({
       <Paper className="panel" withBorder>
         <Title order={3}>Viewer access</Title>
         <Text c="dimmed" size="sm" mt="sm">
-          This device can read the dashboards shared with it. An owner manages invitations, sharing links, and other
+          This device can read the boards shared with it. An owner manages invitations, sharing links, and other
           devices.
         </Text>
       </Paper>
@@ -173,7 +173,7 @@ export function WorkerAccess({
       <Paper className="panel" withBorder>
         <Title order={3}>Share a little of your Homarr.</Title>
         <Text c="dimmed" size="sm" mt="xs">
-          Choose exactly which dashboards a link can open. Revoke it from your worker at any time.
+          Choose exactly which boards a link can open. Revoke it from your worker at any time.
         </Text>
         <form onSubmit={create}>
           <div className="form-grid two" style={{ marginTop: 22 }}>
@@ -185,7 +185,7 @@ export function WorkerAccess({
                 if (e.currentTarget.value === "invite" && duration === "permanent") setDuration("86400");
               }}
               data={[
-                { value: "share", label: "Dashboard link · no account required" },
+                { value: "share", label: "Board link · no account required" },
                 { value: "invite", label: "Device invitation" },
               ]}
             />
@@ -202,7 +202,7 @@ export function WorkerAccess({
             />
             <TextInput
               label="Label"
-              placeholder="Family dashboard"
+              placeholder="Family board"
               maxLength={100}
               value={label}
               onChange={(e) => setLabel(e.currentTarget.value)}
@@ -213,14 +213,14 @@ export function WorkerAccess({
                 value={role}
                 onChange={(e) => setRole(e.currentTarget.value)}
                 data={[
-                  { value: "viewer", label: "Viewer · selected dashboards" },
+                  { value: "viewer", label: "Viewer · selected boards" },
                   { value: "owner", label: "Owner · full worker access" },
                 ]}
               />
             )}
           </div>
           <fieldset className="dashboard-picker">
-            <legend>Dashboards this link may read</legend>
+            <legend>Boards this link may read</legend>
             <Stack gap="sm">
               {boards.map((board) => (
                 <Checkbox
@@ -237,7 +237,7 @@ export function WorkerAccess({
             </Stack>
             {!boards.length && (
               <Text size="sm" c="dimmed">
-                Create a dashboard before sharing viewer access.
+                Create a board before sharing viewer access.
               </Text>
             )}
           </fieldset>
@@ -252,7 +252,7 @@ export function WorkerAccess({
           )}
           {kind === "invite" && role === "owner" && (
             <Alert color="yellow" mt="lg">
-              An owner can manage integrations, other devices, and all dashboards on this worker.
+              An owner can manage integrations, other devices, and all boards on this worker.
             </Alert>
           )}
           <Button type="submit" mt="lg" loading={busy} leftSection={<Glyph name="link" />}>
@@ -293,7 +293,7 @@ export function WorkerAccess({
               <Glyph name="globe" />
               <div className="grow">
                 <strong>
-                  {shareAudience(share)} · {share.boardIds.length} dashboards
+                  {shareAudience(share)} · {share.boardIds.length} boards
                 </strong>
                 <span>
                   {expiryLabel(share.expiresAt)} · {share.id.slice(0, 10)}

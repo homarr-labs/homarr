@@ -340,7 +340,7 @@ export class GlobalMcpGateway {
                   {},
                   AbortSignal.any([request.signal, context.mcpReq.signal]),
                 );
-                if (!Array.isArray(response.integrations) || response.integrations.length > 100)
+                if (!Array.isArray(response.integrations) || response.integrations.length > 1000)
                   throw new Error("Invalid integration discovery");
                 const service = catalog.approval.grant?.service;
                 if (!service) throw new Error("MCP approval is unavailable");

@@ -155,6 +155,7 @@ const executeRequest = async (
   resolved: ResolvedDefinition,
   request: IdentifiedRequest,
   params: Record<string, string | number | boolean>,
+  signal?: AbortSignal,
   load?: RequestLimitInput["load"],
 ) => {
   await throwIfActionForbiddenAsync(
@@ -188,11 +189,11 @@ const executeRequest = async (
           .filter((secret) => secret.sourceId === source.id)
           .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),
       );
-      if (load?.signal?.aborted)
-        throw new ApiError({ code: "BAD_REQUEST", message: "Custom widget load was cancelled" });
+      if (signal?.aborted) throw new ApiError({ code: "BAD_REQUEST", message: "Custom widget request was cancelled" });
       const targetUrl = renderRequestTarget(connection.baseUrl, request, values);
       const response = await executeCustomWidgetRequest({
         ...connection,
+        signal,
         targetUrl,
         method: request.method,
         body: renderRequestBody(request, values),
@@ -237,7 +238,9 @@ export const customApiRouter = createApiRouter({
     const entries = await Promise.all(
       loadRequests.map(async ([requestId, request]) => {
         try {
-          const response = await executeRequest(context, resolved, { id: requestId, ...request }, {}, { signal });
+          const response = await executeRequest(context, resolved, { id: requestId, ...request }, {}, signal, {
+            signal,
+          });
           return [
             requestId,
             {
@@ -334,7 +337,7 @@ export const customApiRouter = createApiRouter({
     const entries = await Promise.all(
       requests.map(async ([id, request]) => {
         try {
-          const response = await executeRequest(context, resolved, { id, ...request }, {}, { signal });
+          const response = await executeRequest(context, resolved, { id, ...request }, {}, signal, { signal });
           return [id, { data: response.data, status: { ok: response.ok, status: response.status } }] as const;
         } catch {
           return [id, { data: null, status: { ok: false, status: 0 } }] as const;
@@ -347,13 +350,13 @@ export const customApiRouter = createApiRouter({
     };
   }),
 
-  queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ context, input }) => {
+  queryRequest: publicProcedure.input(namedRequestInputSchema).query(async ({ context, input, signal }) => {
     const resolved = await resolvePlacedDefinitionAsync(context, input.itemId);
     const request = findRequest(resolved, input.requestId, "query");
     if (request.trigger !== "manual") {
       throw new ApiError({ code: "BAD_REQUEST", message: "Load queries cannot be invoked manually" });
     }
-    const response = await executeRequest(context, resolved, request, input.params);
+    const response = await executeRequest(context, resolved, request, input.params, signal);
     return {
       ok: response.ok,
       status: response.status,
@@ -365,14 +368,14 @@ export const customApiRouter = createApiRouter({
 
   executeAction: protectedProcedure
     .input(namedRequestInputSchema.extend({ confirmed: z.boolean().optional() }))
-    .mutation(async ({ context, input }) => {
+    .mutation(async ({ context, input, signal }) => {
       const resolved = await resolvePlacedDefinitionAsync(context, input.itemId);
       const request = findRequest(resolved, input.requestId, "action");
       const needsConfirmation = request.confirmation !== undefined || request.method === "DELETE";
       if (needsConfirmation && input.confirmed !== true) {
         throw new ApiError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
       }
-      const response = await executeRequest(context, resolved, request, input.params);
+      const response = await executeRequest(context, resolved, request, input.params, signal);
       if (response.ok && request.invalidates?.length) {
         invalidateCustomWidgetResponseCache(
           request.invalidates.flatMap((requestId) => [

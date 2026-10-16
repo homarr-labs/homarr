@@ -1,76 +1,50 @@
 ---
-title: Headless backend
+title: Headless and native workers
 ---
 
-Homarr has two separate deployment targets: a small encrypted worker for a remote frontend, and a conventional HTTP backend for the existing Next.js dashboard. Both run the native oRPC backend on Bun.
+Homarr can run its normal Next.js frontend with independent encrypted workers. Set `HOMARR_FRONTEND_MODE=workers` to use this frontend mode; each worker runs the Bun backend and keeps its own board and integration data. The existing HTTP backend remains available for the classic frontend.
 
-## Try it with sample data
+## Try the native setup
 
-With Docker running, run this from the Homarr checkout:
-
-```sh
-bash deployments/demo/demo.sh up
-```
-
-Open the private pairing link printed by the script. It connects your browser to a separate demo worker with sample dashboards. GitHub sign-in is optional. The demo keeps its own data and does not attach your existing Homarr installation.
-
-The website opens at `http://localhost:43100/remote/`. Use localhost on the machine running Docker; another device needs an HTTPS address, such as Tailscale Serve. `bash deployments/demo/demo.sh down` stops the demo and keeps its data for the next run. The following sections describe independent deployments.
-
-## Encrypted worker
-
-Build and start the standalone worker:
+With Docker running, start the sample installation from the Homarr checkout:
 
 ```sh
-docker compose -f deployments/worker/compose.yml up -d --build
-docker compose -f deployments/worker/compose.yml exec worker homarr-worker pair
+bash scripts/native-demo.sh up
+bash scripts/native-demo.sh pair primary
 ```
 
-The second command prints the local pairing link. Open it in the remote frontend to claim the worker. Treat the initial link as an administrator credential. The worker removes the initial claim secret from its pairing file after a successful claim; later devices need an invitation from an approved owner. Browser device keys and grants remain in that browser's storage.
+Open the private setup link in your browser. It pairs the primary worker with the normal Homarr frontend at `http://localhost:43105/`. Use localhost on the computer running Docker. The worker bar at the bottom switches between connected workers; the primary worker keeps your boards.
 
-The worker exposes port 3002 and persists its database, encryption keys, worker identity and grants under `/appdata`. Its image contains Bun, backend code and migrations, with no Node, Next.js, Nginx or Redis service. First startup generates persistent secrets automatically. When attaching existing Homarr data, supply the original `SECRET_ENCRYPTION_KEY` and back up the data first. Do not discard `/appdata/worker` when recreating the container.
-
-Configure these values in the environment used by Compose:
-
-| Variable                          | Purpose                                                                | Default                                                |
-| --------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------ |
-| `WORKER_PLATFORM_URL`             | Remote frontend pairing destination                                    | `https://homarr.dev/remote/`                           |
-| `WORKER_PUBLIC_URL`               | Browser-reachable direct worker address                                | `http://localhost:3002`                                |
-| `WORKER_RELAY_URL`                | Optional blind relay HTTPS/WSS address                                 | Disabled                                               |
-| `WORKER_ALLOWED_ORIGINS`          | Comma-separated exact browser origins allowed on the direct connection | Compose: `https://homarr.dev`; source: platform origin |
-| `WORKER_RELAY_REGISTRATION_TOKEN` | Optional server-side relay registration token                          | Unset                                                  |
-| `WORKER_RUN_OPTIONAL_JOBS`        | Start analytics and the icon-catalog updater                           | `false`                                                |
-
-The supplied Compose file binds the port to host loopback. Put a TLS reverse proxy or Tailscale Serve in front of it for another machine to reach it. A hosted HTTPS frontend needs a browser-compatible HTTPS/WSS worker address; a plain LAN HTTP URL can be blocked by the browser. Relay mode uses an outbound worker connection and does not require publishing the worker port. Configure the same relay URL in the remote frontend. Selecting direct mode does not silently fall back to a relay.
-
-Allow WebSocket upgrades and keep the proxy read timeout above the worker/relay heartbeat window; the supplied proxy uses 300 seconds. A shorter timeout can disconnect an otherwise healthy idle dashboard.
-
-Only liveness/readiness routes are readable over raw HTTP. Native `/rpc`, REST `/api`, MCP `/api/mcp`, uploads and event streams are available through the authenticated encrypted connection. An ordinary `curl /rpc/...` or API key alone cannot bypass pairing. Alternative clients can use `@homarr/remote-protocol` and supply `RemoteConnection.fetch` to their API client; oRPC is not the gRPC wire protocol.
-
-Owners can issue device invitations and board-scoped temporary or permanent share links. Anonymous shares allow any holder to read the selected boards. Private shares additionally require an already approved worker device and respect its existing board permissions. Platform login alone does not grant access to a worker. Revocation and expiry apply to active connections as well as later requests.
-
-An invitation enrolls one browser device. That device can safely retry an interrupted setup using its saved key; another device cannot reuse the invitation. After connecting, reopen the worker from the browser's saved connections. If a setup link is opened again in that browser, choose **Reconnect this browser**.
-
-## Hosted frontend and account service
-
-`Dockerfile.remote` builds the separate TanStack frontend and account/directory service. The `deployments/remote/` directory includes a Compose configuration and reverse-proxy locations for `/remote/` and an optional `/relay/` on the main Homarr domain. These are source-build deployment files, not a published service guarantee.
-
-The account service uses the existing Workshop PocketBase `users` collection and configured GitHub provider through `WORKSHOP_API_URL`. It stores connection-directory metadata and sessions in its own persistent volume. It does not store worker grants, pairing secrets or decrypted dashboard traffic. Back up the directory volume and existing PocketBase data separately.
-
-The browser and worker decrypt traffic. The relay can observe routing IDs, connection timing and ciphertext lengths. This design trusts the published frontend code; an operator able to replace that code could change what runs in the browser.
-
-## Conventional HTTP backend
-
-For API-key automation or the existing dashboard's HTTP transport:
+Add the sample integration worker in the same browser:
 
 ```sh
-docker build --target backend -t homarr:backend .
-docker compose --env-file .env -f deployments/headless/compose.yml up -d
+bash scripts/native-demo.sh pair integrations
 ```
 
-This target still includes Node for existing operational entrypoints, Nginx and Redis support. Set persistent `SECRET_ENCRYPTION_KEY` and `AUTH_SECRET` values and the public `BASE_URL`. The Compose configuration exposes port 7575 and persists `/appdata`.
+Open its setup link. Adding it keeps the primary worker selected. To use its services on boards, open **Manage → Integrations** on the primary worker, use **Services from your other workers**, select the integration worker, load its integrations, choose the ones to share, then approve and add them. The source worker retains the credentials and access approval.
 
-The native procedure tree is under `/rpc`; REST and its schema are under `/api` and `/api/openapi`. Send the `ApiKey` header for automation. Cookie-based browser clients on another origin require an exact `BACKEND_CORS_ORIGINS` entry and credentials enabled. Set `BACKEND_LEGACY_TRPC=true` to enable the optional `/api/trpc` adapter for old clients. The default full-dashboard image enables this adapter automatically.
+`bash scripts/native-demo.sh down` stops the containers and preserves their data. For a different device or a production host, use an HTTPS reverse proxy that supports WebSocket upgrades.
 
-A separately launched Next.js dashboard uses `HOMARR_BACKEND_URL` for the internal backend origin. Route its browser API and subscription paths to that backend. It does not connect directly to the encrypted worker: the remote frontend owns pairing and encrypted transport.
+## Deploy the frontend and workers
 
-For source development, follow the [development setup](/docs/advanced/development/getting-started), then start `bun run dev:backend` or `bun run --filter @homarr/worker dev` explicitly. The conventional backend needs Redis; the worker uses local in-process state. Do not start the standalone task or WebSocket runtimes alongside a backend that already owns them.
+The source deployment uses separate `frontend` and `platform` targets from `Dockerfile.frontend` and the `worker` target from the root `Dockerfile`. The native Compose stack adds a gateway and relay. Start it with your public frontend origin and relay address:
+
+```sh
+HOMARR_PUBLIC_URL=https://homarr.example.com \
+HOMARR_PUBLIC_RELAY_URL=wss://homarr.example.com/relay \
+docker compose -p homarr-native -f deployments/native/compose.yml up -d --build
+```
+
+Set `WORKER_PLATFORM_URL` on each worker to the URL of your normal Homarr frontend. The worker image's older default, `https://homarr.dev/remote/`, points to the previous remote frontend and does not match this setup. The native Compose file supplies the correct value for its gateway.
+
+Keep the worker, platform, and broker volumes. Back up the platform MCP database with its broker key; losing that key prevents the platform from restoring existing hosted MCP approvals. The [native deployment README](https://github.com/homarr-labs/homarr/blob/main/deployments/native/README.md) covers the Compose services, proxy routing, and storage.
+
+The configured Workshop PocketBase and its GitHub provider can identify account and organization membership. That metadata alone does not grant private worker access: each worker still requires explicit approval for a device or service.
+
+The relay forwards encrypted worker traffic and can see routing IDs, connection timing, and ciphertext lengths. Hosted OAuth MCP requires a worker relay connection; direct or Tailscale-only access does not make a worker reachable by the hosted service. The MCP gateway can read the tool arguments and results you approve, and stores its separate limited worker credential encrypted at rest. It never receives the browser's owner key.
+
+## Keep the classic HTTP backend
+
+The classic frontend can continue to use a separately deployed HTTP backend through `HOMARR_BACKEND_URL`. This path uses the existing backend API and its Redis configuration; it does not require worker mode. See [environment variables](/docs/advanced/environment-variables) for the backend settings.
+
+For the source development setup, see [getting started](/docs/advanced/development/getting-started).

@@ -39,9 +39,18 @@ The regular self-hosted frontend remains available. The worker container exclude
 
 ## Validation and limits
 
-Chromium checks cover the actual native board editor, saving/reloading, board creation, integration creation/editing/deletion, immediate integration selection, Custom Widget creation/preview/placement/reload, and a 360px layout. Firefox checks cover persistent device access and native uploads with encrypted image previews. Final container, suite, and review results are recorded in the scratchpad as they finish.
+Chromium checks cover the actual native board editor, saving/reloading, board creation, integration creation/editing/deletion, immediate integration selection, Custom Widget creation/preview/placement/reload, and a 360px layout. The final containers also pass two-worker switching, importing source services, reading their native widgets, and query-only action restrictions. Firefox passes persistent device access, a 3 MiB native upload, private Image/Avatar/SubData, and exact backup media integrity.
 
-The frontend and workers have separate image sizes and memory costs. The intermediate frontend image was 345.72 MiB; the intermediate worker was 122.83 MiB. These are storage figures, not RAM. Final image measurements belong to the final acceptance record.
+The full unit run finished with 4,823 passed, 48 failed, and 12 skipped. All 48 failures also reproduce on the original source; [the test audit](test-audit.md) identifies them. Migration regressions found during the run were fixed and their focused checks pass. Both [parallel review axes](review.md) completed and their concrete findings are resolved. The [scratchpad](scratchpad.md) contains container IDs, exact checks, and evidence paths.
+
+These are final local Docker image storage figures, not RAM. The normal Next.js frontend and Bun runtime images account for most shared installation space; each worker runs independently.
+
+| Container             | Image storage |
+| --------------------- | ------------- |
+| Headless worker image | 122.84 MiB    |
+| Normal frontend image | 346.34 MiB    |
+| Account and MCP image | 90.98 MiB     |
+| Routing relay image   | 90.40 MiB     |
 
 The transport and caches have finite bounds. Browser requests share a bounded queue, with room reserved for ordinary requests while live subscriptions run. Media previews and hosted MCP requests/results have size limits. Dedicated service approvals expire and can be revoked. Credential-bearing legacy embed/timetable URLs fail closed in shared views; owner and native-user connections retain their normal behavior.
 

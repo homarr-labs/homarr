@@ -67,7 +67,7 @@ Homarr becomes the instance administrator.
 Use `bun run docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
 default data; use `bun run db:seed` to seed it explicitly later.
 
-`bun run dev` starts only Next.js. `bun run dev:backend` starts HTTP on port 3002, scheduled tasks, and WebSocket subscriptions on port 3001. Do not start the standalone tasks or WebSocket scripts alongside it. For a different backend origin, set `HOMARR_BACKEND_URL` in the dashboard environment. See [headless deployment](/docs/advanced/development/headless) to run without the dashboard.
+`bun run dev` starts only Next.js. By default, it uses the classic frontend and connects to `bun run dev:backend` over HTTP. That command starts the backend on port 3002, scheduled tasks, and WebSocket subscriptions on port 3001. Do not start the standalone tasks or WebSocket scripts alongside it. For a different backend origin, set `HOMARR_BACKEND_URL` in the dashboard environment. Set `HOMARR_FRONTEND_MODE=workers` to run the normal Homarr frontend with encrypted workers; see [headless deployment](/docs/advanced/development/headless) for the platform and worker services.
 
 Workshop contributors can set up PocketBase and Fumadocs with the dedicated
 [Workshop development guide](/docs/advanced/development/workshop).

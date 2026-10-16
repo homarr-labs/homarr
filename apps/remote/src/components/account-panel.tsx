@@ -85,7 +85,7 @@ export function AccountPanel({
             <strong>On this device</strong>
           </div>
           <div>
-            <span>Dashboard data</span>
+            <span>Board data</span>
             <strong>On your server</strong>
           </div>
         </div>

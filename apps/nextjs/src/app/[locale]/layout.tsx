@@ -57,7 +57,7 @@ const logger = createLogger({ module: "rootLayout" });
 
 export const generateMetadata = async (): Promise<Metadata> => {
   if (isWorkerFrontend()) {
-    return { title: "Homarr", description: "Your dashboards and workers", robots: { index: false, follow: false } };
+    return { title: "Homarr", description: "Your boards and workers", robots: { index: false, follow: false } };
   }
   const [serverSettings, colorScheme, t] = await Promise.all([
     getRscServerSettingsAsync(),

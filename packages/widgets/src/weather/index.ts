@@ -2,6 +2,7 @@ import { IconCloud } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
+import { defaultWeatherLocation } from "@homarr/definitions";
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -30,11 +31,7 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
         showCurrentWindSpeed: factory.switch(),
         useImperialSpeed: factory.switch(),
         location: factory.location({
-          defaultValue: {
-            name: "Paris",
-            latitude: 48.85341,
-            longitude: 2.3488,
-          },
+          defaultValue: { ...defaultWeatherLocation },
         }),
         dateFormat: factory.select({
           options: [

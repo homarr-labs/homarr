@@ -382,7 +382,7 @@ export function createRemotePlatformApp(options: PlatformOptions) {
       shareId: randomToken(),
       workerId: worker.workerId,
       grantId: idField(body.grantId, "worker grant ID"),
-      label: "Shared dashboard",
+      label: "Shared board",
       anonymous: body.anonymous,
       expiresAt,
       revokedAt: null,

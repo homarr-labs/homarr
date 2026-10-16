@@ -1,4 +1,4 @@
-import { setGlobalDispatcher } from "undici";
+import { setGlobalDispatcher } from "undici/index.js";
 
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 

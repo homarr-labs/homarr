@@ -91,8 +91,8 @@ export function WorkerSetup({
       let worker: SavedWorker;
       if (saved && input.credential.kind !== "share") worker = await pool.restore(saved.workerId);
       else worker = await pool.connectInput(input);
-      // Adding a service worker keeps the dashboard on its current primary.
-      // A shared dashboard link still opens the dashboard it was created for.
+      // Adding a service worker keeps the board on its current primary.
+      // A shared board link still opens the board it was created for.
       if (!snapshot.primaryWorkerId || input.credential.kind === "share" || worker.grant.role === "viewer") {
         pool.setPrimary(worker.workerId);
       }
@@ -141,7 +141,7 @@ export function WorkerSetup({
     >
       <Stack>
         <Text c="dimmed" size="sm">
-          Pick the worker that stores your dashboards. Keep other workers connected to use integrations from your other
+          Pick the worker that stores your boards. Keep other workers connected to use integrations from your other
           servers.
         </Text>
         <Tabs value={tab} onChange={setTab}>
@@ -207,7 +207,7 @@ export function WorkerSetup({
                           {entry.connected ? "Connected" : "Offline"}
                         </Badge>
                         {snapshot.primaryWorkerId === entry.worker.workerId && (
-                          <Badge variant="light">Dashboard worker</Badge>
+                          <Badge variant="light">Board worker</Badge>
                         )}
                       </Group>
                     </Group>

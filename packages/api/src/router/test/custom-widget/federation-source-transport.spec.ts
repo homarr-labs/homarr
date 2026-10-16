@@ -3,10 +3,15 @@ import type { AddressInfo } from "node:net";
 import { WebSocketServer } from "ws";
 import { RPCHandler } from "@orpc/server/fetch";
 import { expect, test } from "vitest";
+import { stringify } from "superjson";
 
 import type { Session } from "@homarr/auth";
+import { markFederationUnavailable } from "@homarr/auth/server";
 import { encryptSecret } from "@homarr/common/server";
 import {
+  boards,
+  customWidgetDefinitions,
+  items,
   federationConnections,
   integrationOrigins,
   integrationSecrets,
@@ -24,10 +29,12 @@ import {
 import type { RemoteTransport } from "@homarr/remote-protocol";
 
 import { closeFederationConnection } from "../../../federation/client";
-import { createApiRouter } from "../../../procedure";
+import { createApiCaller, createApiRouter } from "../../../procedure";
 import { federationSourceProcedures } from "../../custom-widget/federation-source";
 import { executeCustomWidgetRequest } from "../../custom-widget/request-executor";
 import { resolveCustomWidgetSource } from "../../custom-widget/source-resolver";
+import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
+import { customApiRouter } from "../../widgets/custom-api";
 
 test("a primary Custom Widget executes its source query and action through encrypted native RPC", async () => {
   const secret = "source-only-custom-widget-token";
@@ -40,6 +47,9 @@ test("a primary Custom Widget executes its source query and action through encry
     expires: new Date(Date.now() + 3600_000).toISOString(),
   } satisfies Session;
   const calls: Array<{ url?: string; method?: string; body: string; authorization?: string }> = [];
+  let started: (() => void) | undefined;
+  let cancelled: (() => void) | undefined;
+  let sourceFinished: (() => void) | undefined;
   const upstream = createServer(async (request, response) => {
     const chunks: Buffer[] = [];
     for await (const chunk of request) chunks.push(Buffer.from(chunk));
@@ -49,6 +59,11 @@ test("a primary Custom Widget executes its source query and action through encry
       body: Buffer.concat(chunks).toString(),
       authorization: request.headers.authorization,
     });
+    if (request.url?.includes("/slow")) {
+      response.once("close", () => cancelled?.());
+      started?.();
+      return;
+    }
     response.writeHead(200, { "Content-Type": "application/json" });
     response.end(JSON.stringify({ count: calls.length, echoedCredential: secret }));
   });
@@ -122,6 +137,7 @@ test("a primary Custom Widget executes its source query and action through encry
             prefix: "/rpc",
             context: { db: sourceDb, session, deviceType: undefined },
           });
+          sourceFinished?.();
           if (!result.matched) return new Response(null, { status: 404 });
           return result.response;
         },
@@ -198,14 +214,103 @@ test("a primary Custom Widget executes its source query and action through encry
     expect(calls.every((call) => call.authorization?.includes(secret))).toBe(true);
     expect(frames.join("\n")).not.toContain(secret);
     expect(frames.join("\n")).not.toContain("Items/Counts");
+    await primaryDb.insert(boards).values({ id: "placed-board", name: "Placed board", creatorId: userId });
+    await primaryDb.insert(customWidgetDefinitions).values({
+      id: "placed-definition",
+      creatorId: userId,
+      ...serializeCustomWidgetDefinition({
+        $schema: "homarr-custom-widget-v2",
+        name: "Placed remote widget",
+        sources: { default: source },
+        requests: {
+          load: {
+            source: "default",
+            kind: "query",
+            method: "GET",
+            path: "/slow/load",
+            auth: "inherit",
+            permission: "view",
+            trigger: "load",
+          },
+          query: {
+            source: "default",
+            kind: "query",
+            method: "GET",
+            path: "/slow/query",
+            auth: "inherit",
+            permission: "view",
+            trigger: "manual",
+          },
+          action: {
+            source: "default",
+            kind: "action",
+            method: "POST",
+            path: "/slow/action",
+            auth: "inherit",
+            permission: "modify",
+            trigger: "manual",
+          },
+        },
+        options: {},
+        template: "<Text>Remote</Text>",
+      }),
+    });
+    await primaryDb.insert(items).values({
+      id: "placed-item",
+      boardId: "placed-board",
+      kind: "customApi",
+      options: stringify({ definitionId: "placed-definition", configuration: {}, configurationVersion: 1 }),
+    });
+    const placed = createApiCaller(customApiRouter, { db: primaryDb, session, deviceType: undefined });
+    for (const operation of ["getData", "getShareData", "queryRequest", "executeAction"] as const) {
+      // Each case starts with a healthy source; a canceled connection is marked unavailable.
+      markFederationUnavailable(connectionId, false);
+      const controller = new AbortController();
+      const reachedUpstream = new Promise<void>((resolve) => {
+        started = resolve;
+      });
+      const sourceSettled = new Promise<void>((resolve) => {
+        sourceFinished = resolve;
+      });
+      const upstreamCancelled = new Promise<void>((resolve) => {
+        cancelled = resolve;
+      });
+      let pending: Promise<unknown>;
+      if (operation === "getData" || operation === "getShareData") {
+        pending = placed[operation]({ itemId: "placed-item" }, { signal: controller.signal });
+      } else {
+        let requestId = "query";
+        if (operation === "executeAction") requestId = "action";
+        pending = placed[operation]({ itemId: "placed-item", requestId }, { signal: controller.signal });
+      }
+      const settled = pending.catch(() => undefined);
+      await Promise.race([
+        reachedUpstream,
+        pending.then(() => {
+          throw new Error(`${operation} returned before reaching upstream`);
+        }),
+      ]);
+      controller.abort();
+      await Promise.race([
+        upstreamCancelled,
+        new Promise<never>((_, reject) => {
+          const timeout = setTimeout(() => reject(new Error(`${operation} did not cancel upstream HTTP`)), 2000);
+          timeout.unref();
+        }),
+      ]);
+      await settled;
+      await sourceSettled;
+      closeFederationConnection(connectionId);
+    }
     authorized = false;
     await expect(executeCustomWidgetRequest(request)).rejects.toMatchObject({ code: "BAD_GATEWAY" });
-    expect(calls).toHaveLength(3);
+    expect(calls).toHaveLength(7);
   } finally {
     closeFederationConnection(connectionId);
     for (const connection of connections) connection.close();
     for (const socket of sockets.clients) socket.terminate();
     await new Promise<void>((resolve) => sockets.close(() => resolve()));
+    upstream.closeAllConnections();
     await new Promise<void>((resolve, reject) =>
       upstream.close((error) => {
         if (error) reject(error);
@@ -213,4 +318,4 @@ test("a primary Custom Widget executes its source query and action through encry
       }),
     );
   }
-});
+}, 15000);

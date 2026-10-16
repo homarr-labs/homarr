@@ -103,11 +103,12 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
       address.searchParams.delete("workers");
       history.replaceState(history.state, "", `${address.pathname}${address.search}${address.hash}`);
     }
-    const hasSetupLink = window.location.hash.includes("worker=");
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const incomingWorkerId = fragment.get("worker");
+    const hasSetupLink = Boolean(incomingWorkerId);
     if (hasSetupLink) {
       setInitialLink(window.location.href);
       setSetupOpened(true);
-      const fragment = new URLSearchParams(window.location.hash.slice(1));
       if (!fragment.has("share"))
         history.replaceState(history.state, "", `${window.location.pathname}${window.location.search}`);
     }
@@ -116,7 +117,9 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
       .then(async () => {
         if (!active) return;
         const primary = pool.getSnapshot().primaryWorkerId;
-        if (primary && !hasSetupLink) await pool.restore(primary);
+        // A second worker's invitation must not strand the saved primary offline.
+        // Same-worker setup retains its explicit confirmation/recovery path.
+        if (primary && primary !== incomingWorkerId) await pool.restore(primary);
       })
       .catch(() => {
         if (active) setSetupOpened(true);
@@ -192,8 +195,7 @@ function WorkerWorkspace({
       <Stack align="center" maw={560}>
         <Title order={1}>Homarr</Title>
         <Text c="dimmed" ta="center">
-          Your dashboards live on your workers. Connect one to open Homarr, then add more workers for your other
-          services.
+          Your boards live on your workers. Connect one to open Homarr, then add more workers for your other services.
         </Text>
         {pending && <Loader aria-label="Opening worker" />}
         {error && (
@@ -266,7 +268,7 @@ function NativeWorkspace() {
       <Stack align="center">
         <Text>This page is unavailable in the worker workspace.</Text>
         <Button component={Link} href="/boards">
-          Open dashboards
+          Open boards
         </Button>
       </Stack>
     </Center>
@@ -281,7 +283,7 @@ function ManagementShell({ children }: { children: React.ReactNode }) {
       <WorkerHeader hasNavigation />
       <MainNavigation
         links={[
-          { icon: IconLayoutDashboard, label: "Dashboards", href: "/manage/boards" },
+          { icon: IconLayoutDashboard, label: "Boards", href: "/manage/boards" },
           { icon: IconBox, label: "Apps", href: "/manage/apps" },
           { icon: IconAffiliate, label: "Integrations", href: "/manage/integrations" },
           { icon: IconApi, label: "Custom widgets", href: "/manage/custom-widgets", hidden: !isAdmin },

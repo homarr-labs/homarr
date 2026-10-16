@@ -2,7 +2,8 @@ import { lookup } from "node:dns/promises";
 import { BlockList, isIP } from "node:net";
 import type { LookupFunction } from "node:net";
 import type { ConnectionOptions } from "node:tls";
-import { Agent } from "undici";
+// Use the installed dispatcher: Bun substitutes bare "undici" with an incomplete built-in shim.
+import { Agent } from "undici/index.js";
 
 import type { CustomJsxNetworkScope } from "../core";
 import { CustomWidgetDomainError } from "./errors";

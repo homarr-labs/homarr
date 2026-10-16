@@ -21,9 +21,9 @@ function TryHomarr() {
       </header>
       <div className="try-intro">
         <div className="eyebrow">Start here</div>
-        <h1>Your server. A dashboard in your browser.</h1>
+        <h1>Your server. A board in your browser.</h1>
         <p>
-          The worker is Homarr running on your server. This page connects to it privately. You can try the dashboard and
+          The worker is Homarr running on your server. This page connects to it privately. You can try the board and
           sharing without an account.
         </p>
       </div>
@@ -31,7 +31,7 @@ function TryHomarr() {
         <div>
           <Glyph name="user" />
           <strong>Your browser</strong>
-          <span>Shows the dashboard</span>
+          <span>Shows the board</span>
         </div>
         <span className="try-arrow" aria-hidden="true">
           ↔
@@ -78,15 +78,14 @@ function TryHomarr() {
         </li>
         <li>
           <Paper className="panel" withBorder>
-            <Title order={2}>Try a dashboard, then share it.</Title>
+            <Title order={2}>Try a board, then share it.</Title>
             <Text c="dimmed" mt="sm">
-              Open <strong>Demo-dashboard</strong>. Choose <strong>Manage access</strong>, select that dashboard, and
-              choose <strong>Create private link</strong>. Keep “Allow anyone with this link” enabled for this first
-              try.
+              Open <strong>Demo-dashboard</strong>. Choose <strong>Manage access</strong>, select that board, and choose{" "}
+              <strong>Create private link</strong>. Keep “Allow anyone with this link” enabled for this first try.
             </Text>
             <Text size="sm" mt="md">
               Open the link in a private browser window to see the guest view. Back in your owner window, choose{" "}
-              <strong>Revoke</strong> under sharing links. The guest dashboard closes.
+              <strong>Revoke</strong> under sharing links. The guest board closes.
             </Text>
           </Paper>
         </li>
@@ -100,7 +99,7 @@ function TryHomarr() {
             <Title order={3}>Sign-in is optional.</Title>
             <Text size="sm" c="dimmed">
               Your account keeps a list of servers and lets you invite other people to that list. Pairing, reading a
-              dashboard, and creating a sharing link work without signing in.
+              board, and creating a sharing link work without signing in.
             </Text>
             <Text size="sm" c="dimmed">
               A demo on Tailscale is still private to that network. A guest needs network access as well as the sharing

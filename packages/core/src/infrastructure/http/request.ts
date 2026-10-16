@@ -6,7 +6,7 @@ import { checkServerIdentity, createSecureContext } from "node:tls";
 import type { SecureContext } from "node:tls";
 import axios from "axios";
 import type { EnvHttpProxyAgent as UndiciEnvHttpProxyAgent, RequestInfo, RequestInit, Response } from "undici";
-import { fetch } from "undici";
+import { fetch } from "undici/index.js";
 
 import {
   getAllTrustedCertificatesAsync,

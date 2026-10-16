@@ -53,7 +53,7 @@ export function WorkerDock() {
         {active ? (
           <>
             <NativeSelect
-              aria-label="Dashboard worker"
+              aria-label="Board worker"
               value={active.worker.workerId}
               disabled={busy}
               onChange={(event) => void select(event.currentTarget.value)}

@@ -1,4 +1,4 @@
-import { Headers } from "undici";
+import { Headers } from "undici/index.js";
 
 import { ResponseError } from "@homarr/common/server";
 import { getIntegrationHttpAuthDefinition } from "@homarr/definitions";

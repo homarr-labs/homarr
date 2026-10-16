@@ -200,6 +200,7 @@ async function approve(
   f: ReturnType<typeof fixture>,
   fixtureWorker: Awaited<ReturnType<typeof workerFixture>>,
   organizationId?: string,
+  integrationIds = ["same-integration-id"],
 ) {
   const prepare = await f.app.request(`${publicUrl}/api/mcp/approvals/prepare`, {
     method: "POST",
@@ -227,7 +228,7 @@ async function approve(
     parentGrantId: "root-grant",
     service: {
       purpose: "mcp",
-      integrationIds: ["same-integration-id"],
+      integrationIds,
       access: "query",
       procedurePaths: ["integration.all"],
       audience: pending.audience,
@@ -529,4 +530,47 @@ test("hosted account routes mount once and reuse platform HttpOnly sessions with
   expect(untrustedBrowser.status).toBe(403);
   const session = await app.request(`${publicUrl}/api/session`, { headers: { Cookie: cookie } });
   expect(((await session.json()) as { user: { id: string } }).user.id).toBe("alice0000000000");
+});
+
+test("integration discovery returns 101 approved integrations with provenance and rejects invalid or oversized responses", async () => {
+  const integrationIds = Array.from({ length: 101 }, (_, index) => `integration-${index}`);
+  let response: unknown = { integrations: integrationIds.map((id) => ({ id, name: id, kind: "test" })) };
+  const f = fixture(async ({ identity }) => ({
+    deviceIdentity: identity,
+    authorization: {},
+    close() {},
+    async fetch(input) {
+      const path =
+        typeof input === "string" ? input : input instanceof URL ? input.pathname : new URL(input.url).pathname;
+      if (path === "/remote/mcp/catalog") return Response.json({ tools: [catalogTool] });
+      return Response.json(response);
+    },
+  }));
+  const worker = await workerFixture(f, "Large worker");
+  await approve(f, worker, undefined, integrationIds);
+  const token = await accessToken(f);
+  const discover = async () => {
+    const result = await mcpRequest(f, token, "tools/call", { name: "homarr_integrations", arguments: {} });
+    return JSON.parse(required((result.result.content as { text: string }[])[0]).text);
+  };
+  const result = await discover();
+  expect(result.unavailableWorkers).toEqual([]);
+  expect(result.integrations).toHaveLength(101);
+  expect(result.integrations.map((integration: { integrationId: string }) => integration.integrationId)).toEqual(
+    integrationIds,
+  );
+  expect(
+    result.integrations.every(
+      (integration: { workerId: string; organizationId: unknown }) =>
+        integration.workerId === worker.worker.workerId && integration.organizationId === null,
+    ),
+  ).toBe(true);
+  for (const invalid of [
+    { integrations: "invalid" },
+    { integrations: Array.from({ length: 1001 }, () => ({ id: integrationIds[0] })) },
+    { integrations: [{ id: integrationIds[0], name: "x".repeat(4 * 1024 * 1024) }] },
+  ]) {
+    response = invalid;
+    expect(await discover()).toEqual({ integrations: [], unavailableWorkers: [worker.worker.workerId] });
+  }
 });

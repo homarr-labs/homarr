@@ -36,7 +36,7 @@ export function WorkerBoard({ name }: { name?: string }) {
   if (query.isPending)
     return (
       <Center mih="80dvh">
-        <Loader aria-label="Loading dashboard" />
+        <Loader aria-label="Loading board" />
       </Center>
     );
   if (query.data) return <ConnectedBoard key={query.data.id} board={query.data} />;
@@ -48,12 +48,12 @@ export function WorkerBoard({ name }: { name?: string }) {
         <Center mih="70dvh">
           <Stack align="center" maw={480}>
             <Text size="xl" fw={600}>
-              Your dashboards
+              Your boards
             </Text>
-            {name && <Alert color="red">{query.error?.message ?? "This dashboard is unavailable."}</Alert>}
-            {!name && <Text c="dimmed">Create your first dashboard on this worker.</Text>}
+            {name && <Alert color="red">{query.error?.message ?? "This board is unavailable."}</Alert>}
+            {!name && <Text c="dimmed">Create your first board on this worker.</Text>}
             <Button component={Link} href="/manage/boards">
-              Manage dashboards
+              Manage boards
             </Button>
           </Stack>
         </Center>

@@ -176,7 +176,7 @@ export function RemoteConsole() {
         }
       });
       attempt = connection;
-      // Authorization must survive failures while loading dashboard data, or a stale UI attempt.
+      // Authorization must survive failures while loading board data, or a stale UI attempt.
       if (!isShare) {
         await saveWorker(worker);
         setSaved((workers) => [...workers.filter((item) => item.workerId !== worker.workerId), worker]);
@@ -328,10 +328,10 @@ export function RemoteConsole() {
   ];
   const directoryWorker = directory.find((worker) => worker.workerId === live?.worker.workerId);
   let pageTitle = "Your servers. Anywhere.";
-  let pageDescription = "Connect your Homarr workers and open your dashboards, wherever you are.";
+  let pageDescription = "Connect your Homarr workers and open your boards, wherever you are.";
   if (tab === "access") {
     pageTitle = "Access, on your terms.";
-    pageDescription = "Share a dashboard, invite a device, or bring someone into your worker's directory.";
+    pageDescription = "Share a board, invite a device, or bring someone into your worker's directory.";
   }
   if (tab === "account") {
     pageTitle = "Your account.";
@@ -377,7 +377,7 @@ export function RemoteConsole() {
         {busy && (
           <Group className="state-message">
             <Loader size="sm" />
-            <span>Opening the private dashboard…</span>
+            <span>Opening the private board…</span>
           </Group>
         )}
       </div>
@@ -506,8 +506,8 @@ export function RemoteConsole() {
                 </div>
                 <h2>Connect your server.</h2>
                 <p>
-                  Open the private setup link from the demo launcher. You can try a dashboard and share it without
-                  signing in.
+                  Open the private setup link from the demo launcher. You can try a board and share it without signing
+                  in.
                 </p>
                 <Button
                   variant="light"

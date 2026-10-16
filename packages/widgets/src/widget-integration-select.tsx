@@ -118,7 +118,7 @@ export const WidgetIntegrationSelect = ({
             <Stack gap={0}>
               <span>{item.name}</span>
               <Text size="xs" c="dimmed">
-                {item.url}
+                {item.origin?.workerName ?? item.url}
               </Text>
             </Stack>
           </Group>
@@ -207,6 +207,7 @@ export interface IntegrationSelectOption {
   name: string;
   url: string;
   kind: IntegrationKind;
+  origin?: { workerName: string } | null;
   permissions?: {
     hasUseAccess: boolean;
     hasInteractAccess: boolean;
@@ -224,7 +225,7 @@ interface IntegrationPillProps {
 const IntegrationPill = ({ option, onRemove, showRemoveButton, removeLabel }: IntegrationPillProps) => (
   <Group align="center" wrap="nowrap" gap={0} className={classes.pill} mih={24} pr={!showRemoveButton ? 10 : undefined}>
     <Avatar src={getIconUrl(option.kind)} size={14} mr={6} />
-    <Text span size="xs" lh={1} fw={500}>
+    <Text span size="xs" lh={1} fw={500} title={option.origin?.workerName}>
       {option.name}
     </Text>
     {showRemoveButton && (

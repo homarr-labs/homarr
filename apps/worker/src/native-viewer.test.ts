@@ -14,6 +14,18 @@ const board = (...items: ViewerItem[]): ViewerBoard => ({ id: "shared", name: "S
 const query = (path: string, input?: unknown) => ({ path, kind: "query" as const, input });
 
 describe("native viewer publication boundary", () => {
+  test("location reads use normal widget defaults and still reject other locations", () => {
+    for (const [kind, path, options, coordinates] of [
+      ["weather", "widget.weather.atLocation", {}, { latitude: 48.85341, longitude: 2.3488 }],
+      ["airQuality", "widget.airQuality.atLocation", {}, { latitude: 48.85341, longitude: 2.3488 }],
+      ["clock", "widget.weather.atLocation", { showWeather: true }, { latitude: -27.4698, longitude: 153.0251 }],
+    ] as const) {
+      const policy = createNativeViewerPolicy([board(item(kind, options))]);
+      expect(() => policy.authorize(query(path, coordinates))).not.toThrow();
+      expect(() => policy.authorize(query(path, { latitude: 0, longitude: 0 }))).toThrow();
+    }
+  });
+
   test("normal board reads retain layouts while unrelated public dashboards stay outside the share", () => {
     const policy = createNativeViewerPolicy([board(item("clock"))]);
     expect(() => policy.authorize(query("board.getBoardByName", { name: "sHaReD bOaRd" }))).not.toThrow();

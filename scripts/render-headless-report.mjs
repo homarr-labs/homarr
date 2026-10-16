@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { marked } from "marked";
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const sourceDirectory = join(repository, "docs/notes/remote");
+const sourceDirectory = join(repository, "docs/notes/native-workers");
 const options = {};
 for (let index = 2; index < process.argv.length; index += 2) {
   const key = process.argv[index];
@@ -16,12 +16,11 @@ for (let index = 2; index < process.argv.length; index += 2) {
 }
 if (!options.output) throw new Error("Pass --output with the report destination directory");
 const destination = resolve(options.output);
-const demoUrl = options["demo-url"] ?? "https://brainzilla.llama-stonecat.ts.net:8443/remote/";
-const demoGuideUrl = new URL("try", demoUrl).href;
+const demoUrl = options["demo-url"] ?? "https://brainzilla.llama-stonecat.ts.net:8445/";
+const demoGuideUrl = "#try";
 const demoCommand =
   options["demo-command"] ??
-  "bash deployments/demo/demo.sh up --public-url https://brainzilla.llama-stonecat.ts.net:8443";
-const pairCommand = "bash deployments/demo/demo.sh pair";
+  "bash scripts/native-demo.sh up --public-url https://brainzilla.llama-stonecat.ts.net:8445";
 let sampleUrl = demoUrl;
 let hasSample = false;
 if (options["demo-link-file"]) {
@@ -78,13 +77,13 @@ function flowDiagram(technical = false) {
   const desktop = `<svg class="flow-wide" xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" role="img" aria-labelledby="diagram-title-${technical} diagram-desc-${technical}">
 <title id="diagram-title-${technical}">Your browser connects to your Homarr worker, directly or through an optional relay</title><desc id="diagram-desc-${technical}">Your browser and private server open the messages. An optional relay passes encrypted messages between them. Direct HTTPS or Tailscale skips the Homarr relay. Account sign-in is separate from private dashboard traffic.${technical ? " Your database and integrations remain attached to the private worker." : ""}</desc>
 <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#7882a0"/></marker></defs><style>.node{fill:#fff;stroke:#dbe1f0;stroke-width:2}.worker{fill:#eee8fc;stroke:#ab94e4;stroke-width:2}.relay{fill:#f8f9fd;stroke:#a1abc6;stroke-width:2;stroke-dasharray:6 5}.wire{fill:none;stroke:#7882a0;stroke-width:2}.account{fill:none;stroke:#ac98e3;stroke-width:2;stroke-dasharray:5 5}.account-box{fill:#f8f9fd;stroke:#dbe1f0;stroke-width:1.5}.label{font:700 20px system-ui,sans-serif;fill:#242d49}.small-label{font:650 15px system-ui,sans-serif;fill:#242d49}.note{font:14px system-ui,sans-serif;fill:#56617a}.accent{fill:#633ac7}</style>
-<rect x="55" y="108" width="210" height="94" rx="16" class="node"/><text x="160" y="147" text-anchor="middle" class="label">Your browser</text><text x="160" y="173" text-anchor="middle" class="note">The frontend you choose</text>
+<rect x="55" y="108" width="210" height="94" rx="16" class="node"/><text x="160" y="147" text-anchor="middle" class="label">Your browser</text><text x="160" y="173" text-anchor="middle" class="note">Normal Homarr frontend</text>
 <rect x="355" y="108" width="210" height="94" rx="16" class="relay"/><text x="460" y="147" text-anchor="middle" class="label">Optional relay</text><text x="460" y="173" text-anchor="middle" class="note">Passes sealed messages</text>
-<rect x="655" y="108" width="210" height="94" rx="16" class="worker"/><text x="760" y="147" text-anchor="middle" class="label">Your server</text><text x="760" y="173" text-anchor="middle" class="note">The small Homarr worker</text>
+<rect x="655" y="108" width="210" height="94" rx="16" class="worker"/><text x="760" y="147" text-anchor="middle" class="label">Your workers</text><text x="760" y="173" text-anchor="middle" class="note">Primary + integrations</text>
 <path d="M276 155H343" class="wire" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M576 155H643" class="wire" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
 <path d="M160 211V250H760V211" class="wire" marker-start="url(#arrow)" marker-end="url(#arrow)"/><rect x="294" y="238" width="332" height="25" rx="10" fill="#fff"/><text x="460" y="256" text-anchor="middle" class="small-label">Or connect directly with HTTPS / Tailscale</text>
 ${supplementary}</svg>`;
-  const mobile = `<svg class="flow-small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 515" role="img" aria-labelledby="mobile-title-${technical} mobile-desc-${technical}"><title id="mobile-title-${technical}">Browser, optional relay and private worker</title><desc id="mobile-desc-${technical}">Your browser connects to your private worker through an optional blind relay, or directly using HTTPS or Tailscale. Account sign-in is separate. Your database and integrations stay on your server.</desc><defs><marker id="mobile-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#7882a0"/></marker></defs><style>.m-box{fill:white;stroke:#dbe1f0;stroke-width:2}.m-relay{fill:#f8f9fd;stroke:#a1abc6;stroke-width:2;stroke-dasharray:6 5}.m-worker{fill:#eee8fc;stroke:#ab94e4;stroke-width:2}.m-line{fill:none;stroke:#7882a0;stroke-width:2}.m-title{font:700 23px system-ui,sans-serif;fill:#242d49}.m-note{font:16px system-ui,sans-serif;fill:#56617a}</style><rect x="92" y="30" width="310" height="85" rx="15" class="m-box"/><text x="247" y="65" text-anchor="middle" class="m-title">Your browser</text><text x="247" y="91" text-anchor="middle" class="m-note">The frontend you choose</text><path d="M247 125V175" class="m-line" marker-start="url(#mobile-arrow)" marker-end="url(#mobile-arrow)"/><rect x="92" y="185" width="310" height="85" rx="15" class="m-relay"/><text x="247" y="220" text-anchor="middle" class="m-title">Optional relay</text><text x="247" y="246" text-anchor="middle" class="m-note">Passes sealed messages</text><path d="M247 280V330" class="m-line" marker-start="url(#mobile-arrow)" marker-end="url(#mobile-arrow)"/><rect x="92" y="340" width="310" height="85" rx="15" class="m-worker"/><text x="247" y="375" text-anchor="middle" class="m-title">Your server</text><text x="247" y="401" text-anchor="middle" class="m-note">The small Homarr worker</text><path d="M82 72H46V382H82" class="m-line" marker-start="url(#mobile-arrow)" marker-end="url(#mobile-arrow)"/><text x="25" y="227" transform="rotate(-90 25 227)" text-anchor="middle" class="m-note">Or direct HTTPS / Tailscale</text><text x="220" y="464" text-anchor="middle" class="m-note">Account sign-in stays separate.</text><text x="220" y="490" text-anchor="middle" class="m-note">Your server decides who can connect.</text></svg>`;
+  const mobile = `<svg class="flow-small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 515" role="img" aria-labelledby="mobile-title-${technical} mobile-desc-${technical}"><title id="mobile-title-${technical}">Browser, optional relay and private worker</title><desc id="mobile-desc-${technical}">Your browser connects to your private worker through an optional blind relay, or directly using HTTPS or Tailscale. Account sign-in is separate. Your database and integrations stay on your server.</desc><defs><marker id="mobile-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#7882a0"/></marker></defs><style>.m-box{fill:white;stroke:#dbe1f0;stroke-width:2}.m-relay{fill:#f8f9fd;stroke:#a1abc6;stroke-width:2;stroke-dasharray:6 5}.m-worker{fill:#eee8fc;stroke:#ab94e4;stroke-width:2}.m-line{fill:none;stroke:#7882a0;stroke-width:2}.m-title{font:700 23px system-ui,sans-serif;fill:#242d49}.m-note{font:16px system-ui,sans-serif;fill:#56617a}</style><rect x="92" y="30" width="310" height="85" rx="15" class="m-box"/><text x="247" y="65" text-anchor="middle" class="m-title">Your browser</text><text x="247" y="91" text-anchor="middle" class="m-note">Normal Homarr frontend</text><path d="M247 125V175" class="m-line" marker-start="url(#mobile-arrow)" marker-end="url(#mobile-arrow)"/><rect x="92" y="185" width="310" height="85" rx="15" class="m-relay"/><text x="247" y="220" text-anchor="middle" class="m-title">Optional relay</text><text x="247" y="246" text-anchor="middle" class="m-note">Passes sealed messages</text><path d="M247 280V330" class="m-line" marker-start="url(#mobile-arrow)" marker-end="url(#mobile-arrow)"/><rect x="92" y="340" width="310" height="85" rx="15" class="m-worker"/><text x="247" y="375" text-anchor="middle" class="m-title">Your workers</text><text x="247" y="401" text-anchor="middle" class="m-note">Primary + integrations</text><path d="M82 72H46V382H82" class="m-line" marker-start="url(#mobile-arrow)" marker-end="url(#mobile-arrow)"/><text x="25" y="227" transform="rotate(-90 25 227)" text-anchor="middle" class="m-note">Or direct HTTPS / Tailscale</text><text x="220" y="464" text-anchor="middle" class="m-note">Account sign-in stays separate.</text><text x="220" y="490" text-anchor="middle" class="m-note">Your server decides who can connect.</text></svg>`;
   return desktop + mobile;
 }
 
@@ -132,27 +131,32 @@ for (const note of notes) {
 }
 
 const report = notes.find((note) => note.filename === "report.md")?.markdown ?? "";
-const imageMiB = /\|\s*Final native worker image\s*\|[^|]+\|\s*([\d.]+)/.exec(report)?.[1];
-let sizeFact = "The frontend runs separately";
+const imageMiB = /\|\s*Headless worker image\s*\|\s*([\d.]+)\s*MiB/.exec(report)?.[1];
+let sizeFact = "A small Bun worker";
 if (imageMiB) sizeFact = `${escape(imageMiB)} MiB worker image`;
-let sampleLabel = "Open the demo";
-let sampleHelp = "This demo is on the private Tailscale network. A pairing link connects your browser to its worker.";
-let steps = `<li><h3>Start the demo</h3><p>Run the command below in the Homarr checkout. It starts the website, relay and a disposable worker, then prints your private pairing link.</p></li><li><h3>Open your pairing link</h3><p>Open that link in your browser to connect. If you opened the demo first, paste the link into its connection form.</p></li><li><h3>Browse, then share</h3><p>View the sample dashboards. Create an invitation or a dashboard share, and try it in a second browser window.</p></li>`;
+let sampleLabel = "Open normal Homarr";
+let sampleHelp =
+  "Use your private setup link from this chat to connect the demo workers. This demo is on your private Tailscale network.";
 if (hasSample) {
-  sampleLabel = "Open sample dashboard";
+  sampleLabel = "Try the normal Homarr board";
   sampleHelp =
-    "One click, no GitHub sign-in needed. This view-only sample is reachable on the private Tailscale network.";
-  steps = `<li><h3>Open the sample</h3><p>Use the button above. Its sharing link connects your browser to the sample worker automatically.</p></li><li><h3>Explore the dashboard</h3><p>Browse the sample widgets and images. The website reads them from the worker through the relay.</p></li><li><h3>Try the owner controls</h3><p>Use a private owner invitation from this chat, or start your own disposable demo below to try invitations, sharing and revocation.</p></li>`;
+    "Open the sample and press Connect worker to see the normal Homarr interface. Use your separate private owner link to try editing and worker setup.";
 }
-const introduction = `<span class="eyebrow">Homarr, with the pieces separated</span><h1>Your server does the work.<br>Your browser chooses the view.</h1><p class="lead">Run a small Homarr service on your own server. Open it from a separate website, keep your integrations at home, and share only the dashboards you choose.</p>
-<div class="actions"><a class="button" href="${escape(sampleUrl)}">${sampleLabel} <span aria-hidden="true">&nbsp;↗</span></a><a href="#try">What to try</a></div><p class="small">${sampleHelp}</p>
-<figure class="diagram">${flowDiagram()}<figcaption>The relay cannot open the messages. You can skip it and connect directly.</figcaption></figure>
-<section id="try" aria-labelledby="try-title"><h2 id="try-title">Try it in three steps</h2><ol class="steps">${steps}</ol>
-<details><summary>Run your own disposable demo</summary><p>You need <strong>Docker with Docker Compose</strong> and a checkout of this Homarr branch. From that checkout, run:</p><pre class="command"><code>bash deployments/demo/demo.sh up</code></pre><p>The command starts the demo and prints your private first-launch pairing link. Open the complete link in your browser to get owner controls.</p><p>Already running? Check how to connect:</p><pre class="command"><code>${escape(pairCommand)}</code></pre><p>Once a browser owns the worker, use that browser or an invitation from it. Restarting the demo keeps its access settings.</p><details><summary>Command for this Tailscale development server</summary><p>From <code>/home/habs/.codex/worktrees/headless-hono/homarr</code>:</p><pre class="command"><code>${escape(demoCommand)}</code></pre></details><p class="small">Keep the pairing link private. The report contains only a view-only sample share, never the worker's owner access.</p></details></section>
-<section class="facts" aria-label="What is different"><div><strong>Your data stays with your server</strong><span>Your integrations and dashboard data live in the worker.</span></div><div><strong>${sizeFact}</strong><span>Stored Docker image size; running memory is measured separately.</span></div><div><strong>A separate frontend</strong><span>Use the remote viewer now, or build another frontend on the same backend.</span></div></section>
-<details><summary>What this demo includes</summary><p>A working connection screen, remembered devices, a read-only dashboard viewer, invitations, dashboard shares and private images. The original dashboard editor is a separate optional frontend. This viewer does not reproduce every widget's visual design or interactive controls.</p><p>Account login helps remember workers. It does not grant access to a private worker by itself. Connecting locally with a pairing link does not require testing the live GitHub sign-in.</p><p>Demo data is disposable. The launcher uses its own containers and volumes; it does not connect this page to your existing Homarr installation.</p></details>
-<section id="notes" aria-labelledby="evidence-title"><h2 id="evidence-title">Want the details?</h2><p><a href="report.html">Read the full technical report</a> for the size breakdown, test results and limitations. The individual evidence notes are here:</p>${noteLinks()}</section>`;
-await writeFile(join(destination, "index.html"), document("Try Homarr's independent worker", introduction));
+const introduction = `<span class="eyebrow">Normal Homarr · independent workers</span><h1>The Homarr you know.<br>Workers wherever you need them.</h1>
+<p class="lead">Keep the normal board editor, widgets, Custom Widgets and settings. A small bar at the bottom connects your workers. One worker stores your boards; other workers can provide integrations.</p>
+<div class="actions"><a class="button" href="${escape(sampleUrl)}">${sampleLabel} <span aria-hidden="true">&nbsp;↗</span></a><a href="#try">How to try it</a></div><p class="small">${sampleHelp}</p>
+<figure class="diagram">${flowDiagram()}<figcaption>Your browser connects to your workers. The routing relay passes encrypted messages. Hosted MCP uses the relay as a separately approved client.</figcaption></figure>
+<section id="try" aria-labelledby="try-title"><h2 id="try-title">Three things to try</h2><ol class="steps">
+<li><h3>Open normal Homarr</h3><p>Use the sample above, or open your private owner link and press Connect worker to try editing. The board, editor and settings are the normal Homarr frontend.</p></li>
+<li><h3>Use the worker bar</h3><p>Open the small bar at the bottom. Add your second private worker link; the primary stays selected. Switch workers there when you want to open their boards.</p></li>
+<li><h3>Use another worker's services</h3><p>On the primary, open Integrations. Choose services from your other worker and approve them. They appear in the normal widget picker.</p></li></ol>
+<details><summary>Run your own two-worker demo</summary><p>From this Homarr checkout, with Docker running:</p><pre class="command"><code>bash scripts/native-demo.sh up
+bash scripts/native-demo.sh pair primary
+bash scripts/native-demo.sh pair integrations</code></pre><p>Open the complete private link printed for the primary, then add the second in Worker setup. No GitHub sign-in is needed for local pairing. Stopping the demo keeps its data and keys:</p><pre class="command"><code>bash scripts/native-demo.sh down</code></pre><details><summary>Command for this Tailscale development server</summary><pre class="command"><code>${escape(demoCommand)}</code></pre></details><p class="small">Keep owner links private. A public sample link is read-only and limited to its selected demo board.</p></details></section>
+<section class="facts" aria-label="What changed"><div><strong>Normal Homarr</strong><span>The existing editor and widgets, with worker connections.</span></div><div><strong>${sizeFact}</strong><span>Docker image storage. Running memory is a separate measurement.</span></div><div><strong>Independent services</strong><span>The frontend can start with no worker, database or Redis.</span></div></section>
+<details><summary>Accounts, organizations and MCP</summary><p>Your existing Workshop/GitHub account organizes workers and invites people. Private access is still approved by each worker. Global OAuth MCP discovers approved services and always uses the encrypted relay.</p><p>The relay cannot decrypt requests. The separately approved hosted MCP gateway handles the tool data it returns. Your browser's owner key is not copied to it. Live GitHub sign-in and deployment to homarr.dev were excluded from this local verification.</p></details>
+<section id="notes" aria-labelledby="evidence-title"><h2 id="evidence-title">Report and checks</h2><p><a href="report.html">Read the implementation report</a>. The scratchpad, agreed scope and baseline test audit are separate notes:</p>${noteLinks()}</section>`;
+await writeFile(join(destination, "index.html"), document("Normal Homarr with independent workers", introduction));
 console.log(
-  `Rendered ${notes.length} evidence pages, a friendly introduction and static SVG diagrams in ${destination}`,
+  `Rendered ${notes.length} native-worker notes and a short guide with static SVG diagrams in ${destination}`,
 );

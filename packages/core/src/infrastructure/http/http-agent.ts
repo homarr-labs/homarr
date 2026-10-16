@@ -1,5 +1,5 @@
 import type { Dispatcher } from "undici";
-import { EnvHttpProxyAgent } from "undici";
+import { EnvHttpProxyAgent } from "undici/index.js";
 
 import type { ILogger } from "@homarr/core/infrastructure/logs";
 import { createLogger } from "@homarr/core/infrastructure/logs";

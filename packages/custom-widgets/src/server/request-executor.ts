@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { STATUS_CODES } from "node:http";
-import { Headers, Response } from "undici";
+import { Headers, Response } from "undici/index.js";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 export type {
