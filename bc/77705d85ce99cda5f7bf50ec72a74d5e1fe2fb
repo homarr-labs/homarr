@@ -1,0 +1,136 @@
+.github/renovate.json5
+  h_d6e478ca18e517 5-8
+.gitignore
+  h_d6e478ca18e517 72
+CHANGELOG.md
+  h_d6e478ca18e517 1-22
+apps/docs/docs/getting-started/installation/helm.md
+  h_d6e478ca18e517 5,7,15,79-84,90-95,99,106,110,123,127,136,142,153,157,159,163,171,174,184,188,190,194,203,206,216,234,245,247,263,270,287,301,316,330,345,352-354,375-482
+apps/docs/docs/integrations/jellyfin/index.mdx
+  h_d6e478ca18e517 22
+apps/nextjs/next.config.ts
+  h_d6e478ca18e517 110-113
+apps/nextjs/package.json
+  h_d6e478ca18e517 7,9,128
+apps/nextjs/scripts/prepare-tabler-icons.mjs
+  h_d6e478ca18e517 1-25
+apps/nextjs/src/app/api/assistant/chat/assistant-tool-policy.ts
+  h_d6e478ca18e517 35
+apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css
+  h_d6e478ca18e517 23
+apps/nextjs/src/components/board/layout/test/scaled-board-canvas.spec.ts
+  h_d6e478ca18e517 47,51
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  h_d6e478ca18e517 174
+bun.lock
+  h_d6e478ca18e517 206,1276,2677-2678
+package.json
+  h_d6e478ca18e517 3,77
+packages/boards/src/scale.ts
+  h_d6e478ca18e517 4
+packages/custom-widgets/package.json
+  h_d6e478ca18e517 24
+packages/custom-widgets/src/core/authoring-catalog.ts
+  h_d6e478ca18e517 8,118-126
+packages/custom-widgets/src/core/authoring-resources.ts
+  h_d6e478ca18e517 3,56-58
+packages/custom-widgets/src/core/tabler-icons.ts
+  h_d6e478ca18e517 1-8,11-14,16-17
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  h_d6e478ca18e517 91
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  h_d6e478ca18e517 94,97-106
+packages/custom-widgets/src/workbench/code-language.ts
+  h_d6e478ca18e517 95
+packages/integrations/src/jellyfin/jellyfin-integration.ts
+  h_d6e478ca18e517 243-270
+packages/integrations/src/prowlarr/prowlarr-integration.ts
+  h_d6e478ca18e517 80
+packages/ping/src/index.ts
+  h_d6e478ca18e517 16-20
+packages/translation/src/lang/ca.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/cn.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/cr.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/cs.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/da.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/de-CH.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/de.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/el.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/en-gb.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/es.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/et.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/fi.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/fr.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/he.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/hr.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/hu.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/it.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/ja.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/ko.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/lt.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/lv.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/nl.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/no.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/pl.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/pt-br.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/pt.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/ro.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/ru.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/sk.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/sl.json
+  h_d6e478ca18e517 1515-1516,3919,4658-4660,4720-4723
+packages/translation/src/lang/sv.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/tr.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/uk.json
+  h_d6e478ca18e517 24,31,35,62,1515-1516,2548-2549,2556,4426,4477,4658-4660,4720-4723
+packages/translation/src/lang/vi.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/translation/src/lang/zh.json
+  h_d6e478ca18e517 1515-1516,4658-4660,4720-4723
+packages/widgets/src/app/ping/ping-indicator.tsx
+  h_d6e478ca18e517 20
+packages/widgets/src/custom-api/jsx-icon-adapter.tsx
+  h_d6e478ca18e517 1,3-4,11-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bc77705d85ce99cda5f7bf50ec72a74d5e1fe2fb",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
