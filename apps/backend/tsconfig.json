@@ -1,0 +1,17 @@
+{
+  "extends": "@homarr/tsconfig/base.json",
+  "compilerOptions": {
+    "types": [
+      "node",
+      "bun"
+    ],
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}

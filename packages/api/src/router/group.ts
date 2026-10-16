@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import { canManageGroupMembersLocally, isGroupMembershipManagedLocally } from "@homarr/auth/server";
@@ -18,11 +18,11 @@ import {
   groupUserSchema,
 } from "@homarr/validation/group";
 
-import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createApiRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../procedure";
 
-export const groupRouter = createTRPCRouter({
-  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    const dbGroups = await ctx.db.query.groups.findMany({
+export const groupRouter = createApiRouter({
+  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ context }) => {
+    const dbGroups = await context.db.query.groups.findMany({
       with: {
         members: {
           with: {
@@ -48,11 +48,11 @@ export const groupRouter = createTRPCRouter({
   getPaginated: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(paginatedSchema)
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input, context }) => {
       const whereQuery = input.search ? like(groups.name, `%${input.search.trim()}%`) : undefined;
-      const groupCount = await ctx.db.$count(groups, whereQuery);
+      const groupCount = await context.db.$count(groups, whereQuery);
 
-      const dbGroups = await ctx.db.query.groups.findMany({
+      const dbGroups = await context.db.query.groups.findMany({
         with: {
           members: {
             with: {
@@ -83,8 +83,8 @@ export const groupRouter = createTRPCRouter({
   getById: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(byIdSchema)
-    .query(async ({ input, ctx }) => {
-      const group = await ctx.db.query.groups.findFirst({
+    .query(async ({ input, context }) => {
+      const group = await context.db.query.groups.findFirst({
         where: eq(groups.id, input.id),
         with: {
           members: {
@@ -117,7 +117,7 @@ export const groupRouter = createTRPCRouter({
       });
 
       if (!group) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Group not found",
         });
@@ -132,11 +132,11 @@ export const groupRouter = createTRPCRouter({
   // Is protected because also used in board access / integration access forms
   selectable: protectedProcedure
     .input(z.object({ withPermissions: z.boolean().default(false) }).optional())
-    .query(async ({ ctx, input }) => {
-      const withPermissions = input?.withPermissions && ctx.session.user.permissions.includes("admin");
+    .query(async ({ context, input }) => {
+      const withPermissions = input?.withPermissions && context.session.user.permissions.includes("admin");
 
       if (!withPermissions) {
-        return await ctx.db.query.groups.findMany({
+        return await context.db.query.groups.findMany({
           columns: {
             id: true,
             name: true,
@@ -144,7 +144,7 @@ export const groupRouter = createTRPCRouter({
         });
       }
 
-      const groups = await ctx.db.query.groups.findMany({
+      const groups = await context.db.query.groups.findMany({
         columns: {
           id: true,
           name: true,
@@ -165,8 +165,8 @@ export const groupRouter = createTRPCRouter({
         limit: z.number().min(1).max(100).default(10),
       }),
     )
-    .query(async ({ input, ctx }) => {
-      return await ctx.db.query.groups.findMany({
+    .query(async ({ input, context }) => {
+      return await context.db.query.groups.findMany({
         where: like(groups.name, `%${input.query}%`),
         columns: {
           id: true,
@@ -178,10 +178,10 @@ export const groupRouter = createTRPCRouter({
   createInitialExternalGroup: onboardingProcedure
     .requiresStep("group")
     .input(groupCreateSchema)
-    .mutation(async ({ input, ctx }) => {
-      await checkSimilarNameAndThrowAsync(ctx.db, input.name);
+    .mutation(async ({ input, context }) => {
+      await checkSimilarNameAndThrowAsync(context.db, input.name);
 
-      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+      const maxPosition = await getMaxGroupPositionAsync(context.db);
 
       const groupId = createId();
       const groupRow = {
@@ -190,7 +190,7 @@ export const groupRouter = createTRPCRouter({
         position: maxPosition + 1,
       };
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             const transitionResult = await transaction
@@ -199,7 +199,7 @@ export const groupRouter = createTRPCRouter({
               .where(eq(schema.onboarding.step, "group"));
             const transitionedRows = transitionResult.rowCount ?? 0;
             if (transitionedRows !== 1) {
-              throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
+              throw new ApiError({ code: "CONFLICT", message: "The initial external group was already created." });
             }
             await transaction.insert(schema.groups).values(groupRow);
             await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
@@ -213,7 +213,7 @@ export const groupRouter = createTRPCRouter({
               .where(eq(onboarding.step, "group"))
               .run();
             if (transitionResult.changes !== 1) {
-              throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
+              throw new ApiError({ code: "CONFLICT", message: "The initial external group was already created." });
             }
             transaction.insert(groups).values(groupRow).run();
             transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
@@ -224,17 +224,17 @@ export const groupRouter = createTRPCRouter({
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupCreateSchema)
-    .mutation(async ({ input, ctx }) => {
-      await checkSimilarNameAndThrowAsync(ctx.db, input.name);
+    .mutation(async ({ input, context }) => {
+      await checkSimilarNameAndThrowAsync(context.db, input.name);
 
-      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+      const maxPosition = await getMaxGroupPositionAsync(context.db);
 
       const id = createId();
-      await ctx.db.insert(groups).values({
+      await context.db.insert(groups).values({
         id,
         name: input.name,
         position: maxPosition + 1,
-        ownerId: ctx.session.user.id,
+        ownerId: context.session.user.id,
       });
 
       return id;
@@ -242,13 +242,13 @@ export const groupRouter = createTRPCRouter({
   updateGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUpdateSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.id);
-      await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.id);
+      await throwIfGroupNameIsReservedAsync(context.db, input.id);
 
-      await checkSimilarNameAndThrowAsync(ctx.db, input.name, input.id);
+      await checkSimilarNameAndThrowAsync(context.db, input.name, input.id);
 
-      await ctx.db
+      await context.db
         .update(groups)
         .set({
           name: input.name,
@@ -258,10 +258,10 @@ export const groupRouter = createTRPCRouter({
   savePartialSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupSavePartialSettingsSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.id);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.id);
 
-      await ctx.db
+      await context.db
         .update(groups)
         .set({
           homeBoardId: input.settings.homeBoardId,
@@ -272,10 +272,10 @@ export const groupRouter = createTRPCRouter({
   savePositions: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupSavePositionsSchema)
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input, context }) => {
       const positions = input.positions.map((id, index) => ({ id, position: index + 1 }));
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         handleAsync: async (db, schema) => {
           await db.transaction(async (trx) => {
             for (const { id, position } of positions) {
@@ -295,14 +295,14 @@ export const groupRouter = createTRPCRouter({
   savePermissions: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupSavePermissionsSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.groupId);
 
       // Stored exactly as selected - implied permissions are resolved at read time through
       // getPermissionsWithChildren, so nothing is silently escalated here.
       const permissions = [...new Set(input.permissions)];
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             await transaction.delete(schema.groupPermissions).where(eq(schema.groupPermissions.groupId, input.groupId));
@@ -339,11 +339,11 @@ export const groupRouter = createTRPCRouter({
   transferOwnership: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUserSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
-      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(context.db, input.groupId);
 
-      await ctx.db
+      await context.db
         .update(groups)
         .set({
           ownerId: input.userId,
@@ -353,39 +353,39 @@ export const groupRouter = createTRPCRouter({
   deleteGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(byIdSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.id);
-      await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.id);
+      await throwIfGroupNameIsReservedAsync(context.db, input.id);
 
-      await ctx.db.delete(groups).where(eq(groups.id, input.id));
+      await context.db.delete(groups).where(eq(groups.id, input.id));
     }),
   addMember: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUserSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
-      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(context.db, input.groupId);
       throwIfGroupMembersCannotBeManagedLocally();
 
-      const user = await ctx.db.query.users.findFirst({
+      const user = await context.db.query.users.findFirst({
         where: eq(users.id, input.userId),
       });
 
       if (!user) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
 
       if (!isGroupMembershipManagedLocally(user.provider)) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "User's provider is not managed locally",
         });
       }
 
-      await ctx.db.insert(groupMembers).values({
+      await context.db.insert(groupMembers).values({
         groupId: input.groupId,
         userId: input.userId,
       });
@@ -393,12 +393,12 @@ export const groupRouter = createTRPCRouter({
   removeMember: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUserSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
-      await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
+    .mutation(async ({ input, context }) => {
+      await throwIfGroupNotFoundAsync(context.db, input.groupId);
+      await throwIfGroupNameIsReservedAsync(context.db, input.groupId);
       throwIfGroupMembersCannotBeManagedLocally();
 
-      await ctx.db
+      await context.db
         .delete(groupMembers)
         .where(and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.userId)));
     }),
@@ -410,7 +410,7 @@ const checkSimilarNameAndThrowAsync = async (db: Database, name: string, ignoreI
   });
 
   if (similar) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "CONFLICT",
       message: "Found group with similar name",
     });
@@ -421,7 +421,7 @@ const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
   const count = await db.$count(groups, and(eq(groups.id, id), eq(groups.name, everyoneGroup)));
 
   if (count > 0) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "FORBIDDEN",
       message: "Action is forbidden for reserved group names",
     });
@@ -430,7 +430,7 @@ const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
 
 const throwIfGroupMembersCannotBeManagedLocally = () => {
   if (!canManageGroupMembersLocally()) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "FORBIDDEN",
       message: "Group members cannot be managed locally",
     });
@@ -443,7 +443,7 @@ const throwIfGroupNotFoundAsync = async (db: Database, id: string) => {
   });
 
   if (!group) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "NOT_FOUND",
       message: "Group not found",
     });

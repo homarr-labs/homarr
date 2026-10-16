@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import type { Database } from "@homarr/db";
@@ -19,7 +19,7 @@ import {
   parseBrandingSettings,
 } from "@homarr/server-settings";
 
-import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure, publicProcedure } from "../procedure";
 
 const boardServerSettingsSchema = z.object({
   homeBoardId: z.string().nullable(),
@@ -42,13 +42,13 @@ const legacyAuthBrandingUpdateSchema = z.object({
 const saveBoardSettingsAsync = async (db: Database, input: unknown) => {
   const parsedInput = boardServerSettingsUpdateSchema.safeParse(input);
   if (!parsedInput.success) {
-    throw new TRPCError({ code: "BAD_REQUEST", cause: parsedInput.error, message: parsedInput.error.message });
+    throw new ApiError({ code: "BAD_REQUEST", cause: parsedInput.error, message: parsedInput.error.message });
   }
 
   const current = await getServerSettingByKeyAsync(db, "board");
   const parsedSettings = boardServerSettingsSchema.safeParse({ ...current, ...parsedInput.data });
   if (!parsedSettings.success) {
-    throw new TRPCError({ code: "BAD_REQUEST", cause: parsedSettings.error, message: parsedSettings.error.message });
+    throw new ApiError({ code: "BAD_REQUEST", cause: parsedSettings.error, message: parsedSettings.error.message });
   }
   const next = parsedSettings.data;
   const boardIds = [next.homeBoardId, next.mobileHomeBoardId].filter((id) => id !== null);
@@ -61,7 +61,7 @@ const saveBoardSettingsAsync = async (db: Database, input: unknown) => {
     const publicBoardIds = new Set(publicBoards.map((board) => board.id));
     const invalidBoardIds = boardIds.filter((id) => !publicBoardIds.has(id));
     if (invalidBoardIds.length > 0) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "BAD_REQUEST",
         message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
       });
@@ -79,19 +79,19 @@ const saveBoardSettingsAsync = async (db: Database, input: unknown) => {
   return next;
 };
 
-export const serverSettingsRouter = createTRPCRouter({
-  getCulture: publicProcedure.query(async ({ ctx }) => {
-    return await getServerSettingByKeyAsync(ctx.db, "culture");
+export const serverSettingsRouter = createApiRouter({
+  getCulture: publicProcedure.query(async ({ context }) => {
+    return await getServerSettingByKeyAsync(context.db, "culture");
   }),
-  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    return await getServerSettingsAsync(ctx.db);
+  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ context }) => {
+    return await getServerSettingsAsync(context.db);
   }),
   getBranding: publicProcedure
     .meta({
       mcp: { enabled: true, description: "Returns the public instance branding configuration." },
     })
-    .query(async ({ ctx }) => {
-      const branding = await getServerSettingByKeyAsync(ctx.db, "branding");
+    .query(async ({ context }) => {
+      const branding = await getServerSettingByKeyAsync(context.db, "branding");
       return parseBrandingSettings(branding);
     }),
   getBoardSettings: permissionRequiredProcedure
@@ -114,8 +114,8 @@ export const serverSettingsRouter = createTRPCRouter({
     })
     .input(z.void())
     .output(boardServerSettingsSchema)
-    .query(async ({ ctx }) => {
-      return await getServerSettingByKeyAsync(ctx.db, "board");
+    .query(async ({ context }) => {
+      return await getServerSettingByKeyAsync(context.db, "board");
     }),
   updateBoardSettings: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -137,8 +137,8 @@ export const serverSettingsRouter = createTRPCRouter({
     })
     .input(boardServerSettingsUpdateSchema)
     .output(boardServerSettingsSchema)
-    .mutation(async ({ ctx, input }) => {
-      return await saveBoardSettingsAsync(ctx.db, input);
+    .mutation(async ({ context, input }) => {
+      return await saveBoardSettingsAsync(context.db, input);
     }),
   saveSettings: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -148,13 +148,13 @@ export const serverSettingsRouter = createTRPCRouter({
         value: z.record(z.string(), z.unknown()),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       if (input.settingsKey === "board") {
-        await saveBoardSettingsAsync(ctx.db, input.value);
+        await saveBoardSettingsAsync(context.db, input.value);
         return;
       }
       if (input.settingsKey === "branding") {
-        const current = await getServerSettingByKeyAsync(ctx.db, "branding");
+        const current = await getServerSettingByKeyAsync(context.db, "branding");
         const parsedInput = brandingServerSettingsUpdateSchema.parse(input.value);
         const legacyInput = legacyAuthBrandingUpdateSchema.parse(input.value);
         const authBranding = { ...current.authBranding };
@@ -167,16 +167,16 @@ export const serverSettingsRouter = createTRPCRouter({
           ...parsedInput,
           authBranding,
         });
-        await updateServerSettingByKeyAsync(ctx.db, "branding", value);
+        await updateServerSettingByKeyAsync(context.db, "branding", value);
         return;
       }
       if (input.settingsKey === "analytics") {
         const parsedInput = analyticsServerSettingsUpdateSchema.parse(input.value);
-        await updateAnalyticsServerSettingAsync(ctx.db, (current) => ({ ...current, ...parsedInput }));
+        await updateAnalyticsServerSettingAsync(context.db, (current) => ({ ...current, ...parsedInput }));
         return;
       }
-      const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
-      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
+      const current = await getServerSettingByKeyAsync(context.db, input.settingsKey);
+      await updateServerSettingByKeyAsync(context.db, input.settingsKey, {
         ...current,
         ...input.value,
       } as ServerSettings[typeof input.settingsKey]);

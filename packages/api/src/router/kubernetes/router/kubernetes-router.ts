@@ -1,16 +1,16 @@
-import { lazy } from "@trpc/server";
+import { createLazyRouter } from "../../../procedure";
 
-import { createTRPCRouter } from "../../../trpc";
+import { createApiRouter } from "../../../procedure";
 
-export const kubernetesRouter = createTRPCRouter({
-  contexts: lazy(() => import("./contexts").then((mod) => mod.contextsRouter)),
-  nodes: lazy(() => import("./nodes").then((mod) => mod.nodesRouter)),
-  cluster: lazy(() => import("./cluster").then((mod) => mod.clusterRouter)),
-  namespaces: lazy(() => import("./namespaces").then((mod) => mod.namespacesRouter)),
-  ingresses: lazy(() => import("./ingresses").then((mod) => mod.ingressesRouter)),
-  services: lazy(() => import("./services").then((mod) => mod.servicesRouter)),
-  pods: lazy(() => import("./pods").then((mod) => mod.podsRouter)),
-  secrets: lazy(() => import("./secrets").then((mod) => mod.secretsRouter)),
-  configMaps: lazy(() => import("./configMaps").then((mod) => mod.configMapsRouter)),
-  volumes: lazy(() => import("./volumes").then((mod) => mod.volumesRouter)),
+export const kubernetesRouter = createApiRouter({
+  contexts: createLazyRouter(() => import("./contexts").then((mod) => mod.contextsRouter)),
+  nodes: createLazyRouter(() => import("./nodes").then((mod) => mod.nodesRouter)),
+  cluster: createLazyRouter(() => import("./cluster").then((mod) => mod.clusterRouter)),
+  namespaces: createLazyRouter(() => import("./namespaces").then((mod) => mod.namespacesRouter)),
+  ingresses: createLazyRouter(() => import("./ingresses").then((mod) => mod.ingressesRouter)),
+  services: createLazyRouter(() => import("./services").then((mod) => mod.servicesRouter)),
+  pods: createLazyRouter(() => import("./pods").then((mod) => mod.podsRouter)),
+  secrets: createLazyRouter(() => import("./secrets").then((mod) => mod.secretsRouter)),
+  configMaps: createLazyRouter(() => import("./configMaps").then((mod) => mod.configMapsRouter)),
+  volumes: createLazyRouter(() => import("./volumes").then((mod) => mod.volumesRouter)),
 });

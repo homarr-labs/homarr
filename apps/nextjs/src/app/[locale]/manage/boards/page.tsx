@@ -15,7 +15,7 @@ import { CreateBoardButton } from "./_components/create-board-button";
 export default async function ManageBoardsPage() {
   const t = await getI18n("management.page.board");
   const session = await auth();
-  const boards = await api.board.getManageOverview();
+  const boards = await api.board.getManageOverview.query();
   const canCreateBoards = session?.user.permissions.includes("board-create");
 
   return (

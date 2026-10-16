@@ -2,9 +2,9 @@ import { llamacppStatsRequestHandler } from "@homarr/request-handler/llamacpp";
 import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const llamacppRouter = createTRPCRouter({
+export const llamacppRouter = createApiRouter({
   getStats: publicProcedure
     .meta({
       mcp: {
@@ -14,11 +14,11 @@ export const llamacppRouter = createTRPCRouter({
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "llamacpp"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") {
         return { stats: mockWidgetData.llamacpp, updatedAt: new Date(mockWidgetData.timestamp) };
       }
-      const handler = llamacppStatsRequestHandler.handler({ ...ctx.integration, kind: "llamacpp" }, {});
+      const handler = llamacppStatsRequestHandler.handler({ ...context.integration, kind: "llamacpp" }, {});
       const { data, timestamp } = await handler.getDataAsync();
 
       return {

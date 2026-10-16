@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
@@ -87,7 +87,7 @@ export async function updateCustomWidgetDefinition(
           .where(eq(schema.customWidgetDefinitions.id, input.id))
           .limit(1)
           .for("update");
-        if (!stored) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!stored) throw new ApiError({ code: "NOT_FOUND" });
         const storedSecrets = await transaction
           .select()
           .from(schema.customWidgetSecrets)
@@ -151,7 +151,7 @@ export async function updateCustomWidgetDefinition(
             .where(eq(customWidgetDefinitions.id, input.id))
             .limit(1)
             .get();
-          if (!stored) throw new TRPCError({ code: "NOT_FOUND" });
+          if (!stored) throw new ApiError({ code: "NOT_FOUND" });
           const storedSecrets = transaction
             .select()
             .from(customWidgetSecrets)
@@ -216,7 +216,7 @@ function assertExpectedState(
 ) {
   if (expectedStateFingerprint === undefined) return;
   if (getCustomWidgetDefinitionStateFingerprint(definition, secrets) === expectedStateFingerprint) return;
-  throw new TRPCError({
+  throw new ApiError({
     code: "CONFLICT",
     message:
       "Custom widget definition or credentials changed after this preview was created. Create a new preview and retry.",

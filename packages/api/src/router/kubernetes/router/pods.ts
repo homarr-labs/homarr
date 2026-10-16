@@ -1,18 +1,18 @@
 import type { KubeConfig, V1OwnerReference, V1ReplicaSet } from "@kubernetes/client-node";
 import { AppsV1Api } from "@kubernetes/client-node";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../../procedure";
 
 import { splitToChunksWithNItems } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesPod } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
-import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../../procedure";
 import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 const logger = createLogger({ module: "podsRouter" });
 
-export const podsRouter = createTRPCRouter({
+export const podsRouter = createApiRouter({
   getPods: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -72,7 +72,7 @@ export const podsRouter = createTRPCRouter({
 
         return pods;
       } catch (error) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes pods",
           cause: error,

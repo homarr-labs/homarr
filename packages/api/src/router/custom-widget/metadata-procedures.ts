@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { CUSTOM_WIDGET_MCP_AUTHORING_PROMPT } from "@homarr/custom-widgets/authoring-prompt";
@@ -22,7 +22,7 @@ import {
 } from "@homarr/custom-widgets/core";
 import { addCustomJsxDiagnosticSourceExcerpts, validateCustomJsxTemplate } from "@homarr/custom-widgets/jsx/analyzer";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 
 const customWidgetTemplateMaxLength = 50_000;
 const customWidgetTemplateValidationInputSchema = z
@@ -30,16 +30,16 @@ const customWidgetTemplateValidationInputSchema = z
     template: z.string().min(1).max(customWidgetTemplateMaxLength).optional(),
     templateLines: z.array(z.string().max(10_000)).min(1).max(2_000).optional(),
   })
-  .superRefine((input, ctx) => {
+  .superRefine((input, context) => {
     if (input.template === undefined && input.templateLines === undefined) {
-      ctx.addIssue({ code: "custom", message: "Provide template or templateLines" });
+      context.addIssue({ code: "custom", message: "Provide template or templateLines" });
     }
     if (input.template !== undefined && input.templateLines !== undefined) {
-      ctx.addIssue({ code: "custom", path: ["templateLines"], message: "Provide only one template format" });
+      context.addIssue({ code: "custom", path: ["templateLines"], message: "Provide only one template format" });
     }
     const joinedLength = input.templateLines?.reduce((length, line) => length + line.length + 1, 0) ?? 0;
     if (joinedLength > customWidgetTemplateMaxLength) {
-      ctx.addIssue({
+      context.addIssue({
         code: "custom",
         path: ["templateLines"],
         message: `The JSX template must contain at most ${customWidgetTemplateMaxLength} characters`,
@@ -142,7 +142,7 @@ export const metadataProcedures = {
     .input(z.object({ name: z.string().trim().min(1).max(128).describe("A component name from the catalog.") }))
     .query(({ input }) => {
       const component = getCustomWidgetComponent(input.name);
-      if (!component) throw new TRPCError({ code: "NOT_FOUND", message: "Custom JSX component not found" });
+      if (!component) throw new ApiError({ code: "NOT_FOUND", message: "Custom JSX component not found" });
       return component;
     }),
 
@@ -198,7 +198,7 @@ export const metadataProcedures = {
     .input(z.object({ name: z.string().trim().min(1).max(128).describe("An example ID from the catalog.") }))
     .query(({ input }) => {
       const example = getCustomWidgetExample(input.name);
-      if (!example) throw new TRPCError({ code: "NOT_FOUND", message: "Custom JSX example not found" });
+      if (!example) throw new ApiError({ code: "NOT_FOUND", message: "Custom JSX example not found" });
       const { template, ...widget } = example.widget;
       return { ...example, widget: { ...widget, templateLines: template.split("\n") } };
     }),

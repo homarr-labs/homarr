@@ -10,7 +10,7 @@ import {
   createOneWidgetIntegrationMiddleware,
 } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
 interface DnsHoleSummaryResult {
   integrationId: string;
@@ -25,7 +25,7 @@ interface DnsHoleSummaryResult {
   error?: string;
 }
 
-export const dnsHoleRouter = createTRPCRouter({
+export const dnsHoleRouter = createApiRouter({
   summary: publicProcedure
     .meta({
       mcp: {
@@ -35,9 +35,9 @@ export const dnsHoleRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "dnsHoleSummary"))
-    .query(async ({ ctx }) => {
-      return await settleIntegrationQueries<(typeof ctx.integrations)[number], DnsHoleSummaryResult>(
-        ctx.integrations,
+    .query(async ({ context }) => {
+      return await settleIntegrationQueries<(typeof context.integrations)[number], DnsHoleSummaryResult>(
+        context.integrations,
         async (integration) => {
           const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
           return {
@@ -69,7 +69,7 @@ export const dnsHoleRouter = createTRPCRouter({
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("interact", "dnsHoleControls"))
-    .mutation(async ({ ctx: { integration } }) => {
+    .mutation(async ({ context: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
       await dnsHoleRequestHandler.invalidateCacheAsync([integration.id]);
@@ -89,7 +89,7 @@ export const dnsHoleRouter = createTRPCRouter({
       }),
     )
     .concat(createOneWidgetIntegrationMiddleware("interact", "dnsHoleControls"))
-    .mutation(async ({ ctx: { integration }, input }) => {
+    .mutation(async ({ context: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
       await dnsHoleRequestHandler.invalidateCacheAsync([integration.id]);

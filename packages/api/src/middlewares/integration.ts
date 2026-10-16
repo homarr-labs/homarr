@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
@@ -13,7 +13,7 @@ import type { IntegrationKind, WidgetIntegrationKind, WidgetKindWithIntegration 
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
-import { publicProcedure } from "../trpc";
+import { publicProcedure } from "../procedure";
 
 export type IntegrationAction = "query" | "interact";
 
@@ -37,24 +37,24 @@ const throwUnexpectedIntegrationKind = (kind: IntegrationKind, allowedKinds: rea
     integrationKind: kind,
     allowedIntegrationKinds: allowedKinds,
   });
-  throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Integration kind validation failed" });
+  throw new ApiError({ code: "INTERNAL_SERVER_ERROR", message: "Integration kind validation failed" });
 };
 
 const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   kinds: readonly TKind[],
 ) => {
-  return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ input, ctx, next }) => {
+  return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ context, next }, input) => {
     const accessMetadata: IntegrationAccessMetadata = {
       action,
       cardinality: "one",
-      userId: ctx.session?.user.id,
+      userId: context.session?.user.id,
       requestedIntegrationIds: [input.integrationId],
       allowedIntegrationKinds: kinds,
     };
     logger.debug("Resolving integration access", accessMetadata);
 
-    const integration = await ctx.db.query.integrations.findFirst({
+    const integration = await context.db.query.integrations.findFirst({
       where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
       with: {
         app: true,
@@ -71,13 +71,13 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
 
     if (!integration) {
       logger.warn("Integration access target was not found", accessMetadata);
-      throw new TRPCError({
+      throw new ApiError({
         code: "NOT_FOUND",
         message: `Integration with id ${input.integrationId} not found or not of kinds ${kinds.join(",")}`,
       });
     }
 
-    await throwIfActionIsNotAllowedAsync(action, ctx.db, [integration], ctx.session);
+    await throwIfActionIsNotAllowedAsync(action, context.db, [integration], context.session);
     logger.debug("Integration access granted", {
       ...accessMetadata,
       resolvedIntegrationKinds: [integration.kind],
@@ -91,7 +91,7 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
     const { secrets, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest } = integration;
 
     return next({
-      ctx: {
+      context: {
         integration: {
           ...rest,
           externalUrl: rest.app?.href ?? null,
@@ -110,7 +110,7 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
  * Creates a middleware that provides the integration in the context that is of the specified kinds
  * @param action query for showing data or interact for mutating data
  * @param kinds kinds of integrations that are supported
- * @returns middleware that can be used with trpc
+ * @returns middleware that can be used with native oRPC
  * @example publicProcedure.concat(createOneIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration was not found
  * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on the specified integration
@@ -126,79 +126,81 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   kinds: readonly TKind[],
 ) => {
-  return publicProcedure.input(z.object({ integrationIds: z.array(z.string()) })).use(async ({ ctx, input, next }) => {
-    const accessMetadata: IntegrationAccessMetadata = {
-      action,
-      cardinality: "many",
-      userId: ctx.session?.user.id,
-      requestedIntegrationIds: input.integrationIds,
-      allowedIntegrationKinds: kinds,
-    };
-    logger.debug("Resolving integration access", accessMetadata);
+  return publicProcedure
+    .input(z.object({ integrationIds: z.array(z.string()) }))
+    .use(async ({ context, next }, input) => {
+      const accessMetadata: IntegrationAccessMetadata = {
+        action,
+        cardinality: "many",
+        userId: context.session?.user.id,
+        requestedIntegrationIds: input.integrationIds,
+        allowedIntegrationKinds: kinds,
+      };
+      logger.debug("Resolving integration access", accessMetadata);
 
-    const findIntegrations = async () => {
-      if (input.integrationIds.length === 0) return [];
+      const findIntegrations = async () => {
+        if (input.integrationIds.length === 0) return [];
 
-      return await ctx.db.query.integrations.findMany({
-        where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
-        with: {
-          app: true,
-          secrets: true,
-          items: {
-            with: {
-              item: true,
+        return await context.db.query.integrations.findMany({
+          where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
+          with: {
+            app: true,
+            secrets: true,
+            items: {
+              with: {
+                item: true,
+              },
             },
+            userPermissions: true,
+            groupPermissions: true,
           },
-          userPermissions: true,
-          groupPermissions: true,
-        },
-      });
-    };
-    const dbIntegrations = await findIntegrations();
+        });
+      };
+      const dbIntegrations = await findIntegrations();
 
-    const offset = input.integrationIds.length - dbIntegrations.length;
-    if (offset !== 0) {
-      logger.warn("Integration access targets were not found", {
+      const offset = input.integrationIds.length - dbIntegrations.length;
+      if (offset !== 0) {
+        logger.warn("Integration access targets were not found", {
+          ...accessMetadata,
+          missingIntegrationCount: offset,
+          resolvedIntegrationIds: dbIntegrations.map(({ id }) => id),
+          resolvedIntegrationKinds: dbIntegrations.map(({ kind }) => kind),
+        });
+        throw new ApiError({
+          code: "NOT_FOUND",
+          message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}: ([${input.integrationIds.join(",")}] compared to [${dbIntegrations.map(({ id, kind }) => `${kind}:${id}`).join(",")}])`,
+        });
+      }
+
+      if (dbIntegrations.length >= 1) {
+        await throwIfActionIsNotAllowedAsync(action, context.db, dbIntegrations, context.session);
+      }
+
+      logger.debug("Integration access granted", {
         ...accessMetadata,
-        missingIntegrationCount: offset,
-        resolvedIntegrationIds: dbIntegrations.map(({ id }) => id),
         resolvedIntegrationKinds: dbIntegrations.map(({ kind }) => kind),
       });
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: `${offset} of the specified integrations not found or not of kinds ${kinds.join(",")}: ([${input.integrationIds.join(",")}] compared to [${dbIntegrations.map(({ id, kind }) => `${kind}:${id}`).join(",")}])`,
+
+      return next({
+        context: {
+          integrations: dbIntegrations.map(
+            ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => {
+              const narrowedKind = kinds.find((allowedKind) => allowedKind === kind);
+              if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
+              return {
+                ...rest,
+                externalUrl: rest.app?.href ?? null,
+                kind: narrowedKind,
+                decryptedSecrets: secrets.map((secret) => ({
+                  ...secret,
+                  value: decryptSecret(secret.value),
+                })),
+              };
+            },
+          ),
+        },
       });
-    }
-
-    if (dbIntegrations.length >= 1) {
-      await throwIfActionIsNotAllowedAsync(action, ctx.db, dbIntegrations, ctx.session);
-    }
-
-    logger.debug("Integration access granted", {
-      ...accessMetadata,
-      resolvedIntegrationKinds: dbIntegrations.map(({ kind }) => kind),
     });
-
-    return next({
-      ctx: {
-        integrations: dbIntegrations.map(
-          ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => {
-            const narrowedKind = kinds.find((allowedKind) => allowedKind === kind);
-            if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
-            return {
-              ...rest,
-              externalUrl: rest.app?.href ?? null,
-              kind: narrowedKind,
-              decryptedSecrets: secrets.map((secret) => ({
-                ...secret,
-                value: decryptSecret(secret.value),
-              })),
-            };
-          },
-        ),
-      },
-    });
-  });
 };
 
 /**
@@ -206,7 +208,7 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
  * It also ensures that the user has permission to perform the specified action on the integrations
  * @param action query for showing data or interact for mutating data
  * @param kinds kinds of integrations that are supported
- * @returns middleware that can be used with trpc
+ * @returns middleware that can be used with native oRPC
  * @example publicProcedure.concat(createManyIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration was not found
  * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
@@ -263,7 +265,7 @@ const throwIfActionIsNotAllowedAsync = async (
       integrationKinds: integrationRecords.map(getIntegrationKindForLog),
     });
 
-    throw new TRPCError({
+    throw new ApiError({
       code: "FORBIDDEN",
       message: "User does not have permission to interact with at least one of the specified integrations",
     });
@@ -280,7 +282,7 @@ const throwIfActionIsNotAllowedAsync = async (
     integrationKinds: integrationRecords.map(getIntegrationKindForLog),
   });
 
-  throw new TRPCError({
+  throw new ApiError({
     code: "FORBIDDEN",
     message: "User does not have permission to query at least one of the specified integration",
   });

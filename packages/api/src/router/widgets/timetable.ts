@@ -1,6 +1,6 @@
 import { lookup } from "node:dns/promises";
 import { BlockList, isIP } from "node:net";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { parse } from "superjson";
 import z from "zod";
 
@@ -15,7 +15,7 @@ import {
 } from "@homarr/request-handler/timetable";
 import { DEFAULT_TIMETABLE_BASE_URL, normalizeTimetableBaseUrl } from "@homarr/request-handler/timetable-url";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const baseUrlSchema = z.string().url().max(2_048);
@@ -70,7 +70,7 @@ const normalizeBaseUrlOrThrowBadRequest = (baseUrl: string) => {
   try {
     return normalizeTimetableBaseUrl(baseUrl);
   } catch (cause) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: cause instanceof Error ? cause.message : "Invalid timetable base URL",
       cause,
@@ -79,7 +79,7 @@ const normalizeBaseUrlOrThrowBadRequest = (baseUrl: string) => {
 };
 
 const throwInvalidSavedTimetableConfiguration = (cause: unknown): never => {
-  throw new TRPCError({
+  throw new ApiError({
     code: "INTERNAL_SERVER_ERROR",
     message: "Timetable widget configuration is invalid",
     cause,
@@ -127,7 +127,7 @@ const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<Ti
       hostname.endsWith(".home.arpa"));
 
   if (isInternalHostname) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Timetable base URL must use a public host" });
+    throw new ApiError({ code: "BAD_REQUEST", message: "Timetable base URL must use a public host" });
   }
 
   let addresses: TimetableResolvedAddress[];
@@ -140,7 +140,7 @@ const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<Ti
       (entry): entry is TimetableResolvedAddress => entry.family === 4 || entry.family === 6,
     );
   } catch (cause) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: "Timetable base URL host could not be resolved",
       cause,
@@ -148,7 +148,7 @@ const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<Ti
   }
 
   if (addresses.length === 0 || addresses.some(({ address, family }) => isBlockedTimetableAddress(address, family))) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: "Timetable base URL must not target a private or internal address",
     });
@@ -160,7 +160,7 @@ const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<Ti
 const normalizeTimetableOptionsBaseUrlOrThrowBadRequest = (options: Record<string, unknown>) => {
   const parsedOptions = timetableOptionsSchema.safeParse(options);
   if (!parsedOptions.success) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid timetable widget options" });
+    throw new ApiError({ code: "BAD_REQUEST", message: "Invalid timetable widget options" });
   }
   return normalizeBaseUrlOrThrowBadRequest(parsedOptions.data.baseUrl ?? DEFAULT_TIMETABLE_BASE_URL);
 };
@@ -196,20 +196,20 @@ interface ResolvedTimetableSource {
 }
 
 const resolveTimetableBaseUrlAsync = async (
-  ctx: { db: Database; session: Session | null },
+  context: { db: Database; session: Session | null },
   input: z.infer<typeof timetableSourceSchema>,
   allowBoardConfiguration = false,
 ): Promise<ResolvedTimetableSource> => {
   const requestedBaseUrl = normalizeBaseUrlOrThrowBadRequest(input.baseUrl);
   if (allowBoardConfiguration) {
     if (input.boardId) {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
       if (input.itemId) {
-        const item = await ctx.db.query.items.findFirst({
+        const item = await context.db.query.items.findFirst({
           columns: { id: true },
           where: and(eq(items.id, input.itemId), eq(items.kind, "timetable"), eq(items.boardId, input.boardId)),
         });
-        if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "Timetable widget not found" });
+        if (!item) throw new ApiError({ code: "NOT_FOUND", message: "Timetable widget not found" });
       }
       if (requestedBaseUrl === DEFAULT_TIMETABLE_BASE_URL) {
         return { baseUrl: requestedBaseUrl };
@@ -221,26 +221,26 @@ const resolveTimetableBaseUrlAsync = async (
       return { baseUrl: requestedBaseUrl, pinnedAddresses };
     }
     if (requestedBaseUrl !== DEFAULT_TIMETABLE_BASE_URL) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "Board modify access is required for this endpoint" });
+      throw new ApiError({ code: "FORBIDDEN", message: "Board modify access is required for this endpoint" });
     }
     return { baseUrl: DEFAULT_TIMETABLE_BASE_URL };
   }
   if (!input.itemId) {
     if (requestedBaseUrl !== DEFAULT_TIMETABLE_BASE_URL) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "A saved timetable widget is required for this endpoint" });
+      throw new ApiError({ code: "FORBIDDEN", message: "A saved timetable widget is required for this endpoint" });
     }
     return { baseUrl: DEFAULT_TIMETABLE_BASE_URL };
   }
 
-  const item = await ctx.db.query.items.findFirst({
+  const item = await context.db.query.items.findFirst({
     where: and(eq(items.id, input.itemId), eq(items.kind, "timetable")),
   });
-  if (!item) throw new TRPCError({ code: "NOT_FOUND", message: "Timetable widget not found" });
+  if (!item) throw new ApiError({ code: "NOT_FOUND", message: "Timetable widget not found" });
 
-  await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
+  await throwIfActionForbiddenAsync(context, eq(boards.id, item.boardId), "view");
   const savedBaseUrl = getSavedTimetableBaseUrl(item.options);
   if (requestedBaseUrl !== savedBaseUrl) {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Timetable URL does not match the saved widget" });
+    throw new ApiError({ code: "FORBIDDEN", message: "Timetable URL does not match the saved widget" });
   }
   if (savedBaseUrl === DEFAULT_TIMETABLE_BASE_URL) return { baseUrl: savedBaseUrl };
 
@@ -248,7 +248,7 @@ const resolveTimetableBaseUrlAsync = async (
   return { baseUrl: savedBaseUrl, pinnedAddresses };
 };
 
-export const timetableRouter = createTRPCRouter({
+export const timetableRouter = createApiRouter({
   getTimetable: publicProcedure
     .input(
       timetableSourceSchema.extend({
@@ -256,8 +256,8 @@ export const timetableRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(100),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const { baseUrl, pinnedAddresses } = await resolveTimetableBaseUrlAsync(ctx, input);
+    .query(async ({ context, input }) => {
+      const { baseUrl, pinnedAddresses } = await resolveTimetableBaseUrlAsync(context, input);
       const { itemId: _itemId, boardId: _boardId, ...handlerInput } = input;
       const { data } = await timetableGetTimetableRequestHandler
         .handler({ ...handlerInput, baseUrl, pinnedAddresses })
@@ -270,8 +270,8 @@ export const timetableRouter = createTRPCRouter({
         query: z.string().max(200),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const { baseUrl, pinnedAddresses } = await resolveTimetableBaseUrlAsync(ctx, input, true);
+    .query(async ({ context, input }) => {
+      const { baseUrl, pinnedAddresses } = await resolveTimetableBaseUrlAsync(context, input, true);
       const { itemId: _itemId, boardId: _boardId, ...handlerInput } = input;
       const { data } = await timetableSearchStationsRequestHandler
         .handler({ ...handlerInput, baseUrl, pinnedAddresses })

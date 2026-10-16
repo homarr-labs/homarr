@@ -28,7 +28,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { useIntegrationConnected } from "@homarr/common";
+import { useIntegrationConnected } from "@homarr/common/hooks";
 import { integrationDefs } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";

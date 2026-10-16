@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { encryptSecret } from "@homarr/common/server";
@@ -6,19 +6,19 @@ import { and, eq, handleTransactionsAsync } from "@homarr/db";
 import { boards, items, widgetSecrets } from "@homarr/db/schema";
 import { releaseProviderKinds } from "@homarr/definitions";
 
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const secretKindSchema = z.enum(releaseProviderKinds);
 
-const resolveItemWithBoardAccess = async (ctx: { db: any; session: any }, itemId: string) => {
-  const item = await ctx.db.query.items.findFirst({ where: eq(items.id, itemId) });
-  if (!item || item.kind !== "releases") throw new TRPCError({ code: "NOT_FOUND" });
-  await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "modify");
+const resolveItemWithBoardAccess = async (context: { db: any; session: any }, itemId: string) => {
+  const item = await context.db.query.items.findFirst({ where: eq(items.id, itemId) });
+  if (!item || item.kind !== "releases") throw new ApiError({ code: "NOT_FOUND" });
+  await throwIfActionForbiddenAsync(context, eq(boards.id, item.boardId), "modify");
   return item;
 };
 
-export const widgetSecretsRouter = createTRPCRouter({
+export const widgetSecretsRouter = createApiRouter({
   setSecret: protectedProcedure
     .meta({
       mcp: {
@@ -28,13 +28,13 @@ export const widgetSecretsRouter = createTRPCRouter({
       },
     })
     .input(z.object({ itemId: z.string(), kind: secretKindSchema, value: z.string().min(1).max(4096) }))
-    .mutation(async ({ ctx, input }) => {
-      await resolveItemWithBoardAccess(ctx, input.itemId);
+    .mutation(async ({ context, input }) => {
+      await resolveItemWithBoardAccess(context, input.itemId);
 
       const encrypted = encryptSecret(input.value);
       const row = { itemId: input.itemId, kind: input.kind, value: encrypted, updatedAt: new Date() };
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (tx) => {
             await tx
@@ -63,10 +63,10 @@ export const widgetSecretsRouter = createTRPCRouter({
       },
     })
     .input(z.object({ itemId: z.string(), kind: secretKindSchema }))
-    .mutation(async ({ ctx, input }) => {
-      await resolveItemWithBoardAccess(ctx, input.itemId);
+    .mutation(async ({ context, input }) => {
+      await resolveItemWithBoardAccess(context, input.itemId);
 
-      await ctx.db
+      await context.db
         .delete(widgetSecrets)
         .where(and(eq(widgetSecrets.itemId, input.itemId), eq(widgetSecrets.kind, input.kind)));
     }),
@@ -80,11 +80,11 @@ export const widgetSecretsRouter = createTRPCRouter({
       },
     })
     .input(z.object({ itemId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      await resolveItemWithBoardAccess(ctx, input.itemId);
+    .query(async ({ context, input }) => {
+      await resolveItemWithBoardAccess(context, input.itemId);
 
       try {
-        const secrets = await ctx.db.query.widgetSecrets.findMany({
+        const secrets = await context.db.query.widgetSecrets.findMany({
           where: eq(widgetSecrets.itemId, input.itemId),
           columns: { kind: true },
         });

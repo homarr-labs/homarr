@@ -21,8 +21,8 @@ const transport = vi.hoisted(() => {
   };
 });
 
-vi.mock("@homarr/auth/next", () => ({ auth: transport.auth }));
-vi.mock("~/env", () => ({ env: transport.env }));
+vi.mock("@homarr/auth/http", () => ({ getSessionFromRequestAsync: transport.auth }));
+vi.mock("@homarr/api/http/env", () => ({ env: transport.env }));
 vi.mock("@homarr/db", async () => {
   const { default: Database } = await import("better-sqlite3");
   const { drizzle } = await import("drizzle-orm/better-sqlite3");
@@ -41,11 +41,11 @@ import { comparePasswordsAsync } from "@homarr/auth/security";
 import { db } from "@homarr/db";
 import { apiKeys, users } from "@homarr/db/schema";
 
-import { getMcpConsentBindingCookieName, readMcpConsent } from "./_grant";
-import type { McpConsentSession } from "./_grant";
-import { GET as authorize, POST as decide } from "./authorize/route";
-import { POST as register } from "./register/route";
-import { POST as redeem } from "./token/route";
+import { getMcpConsentBindingCookieName, readMcpConsent } from "@homarr/api/http/mcp/oauth/_grant";
+import type { McpConsentSession } from "@homarr/api/http/mcp/oauth/_grant";
+import { GET as authorize, POST as decide } from "@homarr/api/http/mcp/oauth/authorize/route";
+import { POST as register } from "@homarr/api/http/mcp/oauth/register/route";
+import { POST as redeem } from "@homarr/api/http/mcp/oauth/token/route";
 
 const origin = "https://homarr.test";
 const callback = "http://127.0.0.1:8765/callback?keep=one&code=old&error=old&error_description=old&state=old";

@@ -1,4 +1,4 @@
-import type { Session } from "next-auth";
+import type { Session } from "../types";
 
 import type { Database } from "@homarr/db";
 import { and, eq, inArray, or } from "@homarr/db";

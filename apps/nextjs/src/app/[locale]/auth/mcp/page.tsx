@@ -1,15 +1,15 @@
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Anchor, Button, Code, Divider, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
-import { sessionTokenCookieName } from "@homarr/auth/server";
+import { getTrpcUrl } from "@homarr/api/shared";
+import type { McpConsentResult } from "@homarr/api/http/mcp/oauth/_grant";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getIntlLocale } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 
 import { formatOAuthDisplayText, getOAuthCallbackHost } from "~/app/[locale]/manage/tools/api/components/oauth-display";
-import { getMcpConsentBindingCookieName, readMcpConsent } from "~/app/api/mcp/oauth/_grant";
 import { ConsentProblem } from "./_consent-problem";
 import { ConsentPermissions } from "./_permissions";
 
@@ -24,16 +24,15 @@ export default async function McpConsentPage({ params, searchParams }: McpConsen
     return <ConsentProblem reason="invalid_request" />;
   }
 
-  const [session, cookieStore] = await Promise.all([auth(), cookies()]);
-  const sessionToken = cookieStore.get(sessionTokenCookieName)?.value;
-  const result = readMcpConsent({
-    pendingId: query.pending,
-    browserBinding: cookieStore.get(getMcpConsentBindingCookieName(query.pending))?.value ?? null,
-    session:
-      session && sessionToken
-        ? { userId: session.user.id, sessionToken, expiresAt: Date.parse(session.expires) }
-        : null,
+  const [session, requestHeaders] = await Promise.all([auth(), headers()]);
+  const backendUrl = new URL("/api/mcp/oauth/consent", getTrpcUrl());
+  backendUrl.searchParams.set("pending", query.pending);
+  const response = await fetch(backendUrl, {
+    headers: { cookie: requestHeaders.get("cookie") ?? "" },
+    cache: "no-store",
   });
+  if (!response.ok) return <ConsentProblem reason="unavailable" />;
+  const result = (await response.json()) as McpConsentResult;
 
   if (!result.ok) {
     if (result.error === "login_required") {

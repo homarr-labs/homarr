@@ -1,4 +1,4 @@
-import type { McpConsentNativeErrorReason } from "~/app/api/mcp/oauth/_grant";
+import type { McpConsentNativeErrorReason } from "@homarr/api/http/mcp/oauth/_grant";
 import { ConsentProblem } from "../_consent-problem";
 
 interface McpConsentErrorPageProps {

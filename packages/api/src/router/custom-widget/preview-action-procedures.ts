@@ -1,7 +1,7 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import {
   getPreviewRequestSource,
   getPreviewRequestSourceConfigurationFailure,
@@ -25,19 +25,19 @@ export const previewActionProcedures = {
       },
     })
     .input(previewSessionRequestSchema.extend({ confirmed: z.boolean().optional() }))
-    .mutation(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+    .mutation(async ({ context, input }) => {
+      const session = await getPreviewSession(input.sessionId, context.session.user.id);
       const definition = session.requests[input.requestId];
       if (definition?.kind !== "action")
-        throw new TRPCError({ code: "NOT_FOUND", message: "Preview action was not found" });
+        throw new ApiError({ code: "NOT_FOUND", message: "Preview action was not found" });
       const request = { id: input.requestId, ...definition };
       const sourceConfigurationFailure = getPreviewRequestSourceConfigurationFailure(session, request);
       if (sourceConfigurationFailure) return { ...sourceConfigurationFailure, simulated: false as const };
       const params = resolveCustomWidgetRequestValues(request, session.options, input.params);
       const body = renderRequestBody(request, params);
       if (!session.liveActions) {
-        const resolved = await getPreviewRequestSource(ctx, session, request);
-        if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+        const resolved = await getPreviewRequestSource(context, session, request);
+        if (!resolved) throw new ApiError({ code: "NOT_FOUND", message: "Preview source was not found" });
         renderRequestTarget(resolved.baseUrl, request, params);
         await recordPreviewJournal(session, {
           requestId: request.id,
@@ -60,18 +60,18 @@ export const previewActionProcedures = {
         };
       }
       if ((request.confirmation || request.method === "DELETE") && input.confirmed !== true) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
+        throw new ApiError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
       }
       const release = await acquireCustomWidgetRequestLimit({
         category: request.method === "DELETE" ? "delete" : "action",
-        userId: ctx.session.user.id,
+        userId: context.session.user.id,
         itemId: `preview:${session.id}`,
         definitionId: session.definitionId ?? `preview:${session.id}`,
       });
       const startedAt = Date.now();
       try {
-        const resolved = await getPreviewRequestSource(ctx, session, request);
-        if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+        const resolved = await getPreviewRequestSource(context, session, request);
+        if (!resolved) throw new ApiError({ code: "NOT_FOUND", message: "Preview source was not found" });
         const targetUrl = renderRequestTarget(resolved.baseUrl, request, params);
         const response = await executeCustomWidgetRequest({
           ...resolved,

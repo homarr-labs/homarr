@@ -1,4 +1,4 @@
-import { observable } from "@trpc/server/observable";
+import { observable } from "../subscription";
 import z from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -7,7 +7,8 @@ import type { LoggerMessage } from "@homarr/redis";
 import { loggingChannel } from "@homarr/redis";
 import { zodEnumFromArray } from "@homarr/validation/enums";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../procedure";
+import { subscriptionEvents } from "../subscription";
 
 const logger = createLogger({ module: "logRouter" });
 
@@ -15,7 +16,7 @@ type LogSubscriptionEvent =
   | { type: "history"; messages: LoggerMessage[] }
   | { type: "message"; message: LoggerMessage };
 
-export const logRouter = createTRPCRouter({
+export const logRouter = createApiRouter({
   subscribe: permissionRequiredProcedure
     .requiresPermission("other-view-logs")
     .input(
@@ -23,8 +24,8 @@ export const logRouter = createTRPCRouter({
         levels: z.array(zodEnumFromArray(logLevels)).default(["info"]),
       }),
     )
-    .subscription(({ input }) => {
-      return observable<LogSubscriptionEvent>((emit) => {
+    .subscription(({ input, signal }) => {
+      const events = observable<LogSubscriptionEvent>((emit) => {
         let isClosed = false;
         let unsubscribe: (() => void) | null = null;
         let isHistoryLoaded = false;
@@ -50,7 +51,7 @@ export const logRouter = createTRPCRouter({
             }
 
             unsubscribe = unsubscribeFromLogging;
-            logger.info("A tRPC client has connected to the logging procedure");
+            logger.info("A oRPC client has connected to the logging procedure");
 
             const history = (await loggingChannel.getRecentAsync()).filter((message) =>
               input.levels.includes(message.level),
@@ -81,5 +82,6 @@ export const logRouter = createTRPCRouter({
           unsubscribe?.();
         };
       });
+      return subscriptionEvents(events, signal);
     }),
 });

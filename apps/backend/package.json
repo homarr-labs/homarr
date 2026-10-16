@@ -1,0 +1,42 @@
+{
+  "name": "@homarr/backend",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --env-file=../../.env --watch src/index.ts",
+    "start": "bun --env-file=../../.env src/index.ts",
+    "build": "bun ../../scripts/assemble-backend.mjs",
+    "typecheck": "tsc --noEmit",
+    "format": "oxfmt .",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/backend-handlers": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
+    "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/tasks": "workspace:^0.1.0",
+    "@homarr/websocket": "workspace:^0.1.0",
+    "@orpc/client": "catalog:",
+    "@orpc/server": "catalog:",
+    "@trpc/server": "catalog:",
+    "hono": "catalog:",
+    "trpc-to-openapi": "catalog:",
+    "zod": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/zod": "catalog:",
+    "@orpc/json-schema": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bun": "catalog:",
+    "esbuild": "catalog:",
+    "typescript": "catalog:"
+  }
+}

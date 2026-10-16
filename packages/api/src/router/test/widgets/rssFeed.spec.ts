@@ -16,6 +16,7 @@ import {
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
+import { createCallerFactory } from "../../../procedure";
 import type { WidgetComponentProps } from "../../../../../widgets/src/definition";
 import { canAccessAllFeedsAsync, restrictUrlsAsync, rssFeedRouter } from "../../widgets/rssFeed";
 
@@ -44,7 +45,7 @@ describe("rssFeedRouter", () => {
     test("redacts feed secrets from logs and returns a generic error when every feed fails", async () => {
       const feedUrl = "https://user:password@example.com/feed?token=secret";
       mocks.getFeed.mockRejectedValue(new Error(`Failed to fetch ${feedUrl}`));
-      const caller = rssFeedRouter.createCaller({
+      const caller = createCallerFactory(rssFeedRouter)({
         db: createDb(),
         deviceType: undefined,
         session: createSession(["board-create"]),
@@ -72,7 +73,7 @@ describe("rssFeedRouter", () => {
         if (input.url === failedUrl) throw new Error(`Failed to fetch ${failedUrl}`);
         return { data: { entries: [{ id: "entry" }] } };
       });
-      const caller = rssFeedRouter.createCaller({
+      const caller = createCallerFactory(rssFeedRouter)({
         db: createDb(),
         deviceType: undefined,
         session: createSession(["board-create"]),

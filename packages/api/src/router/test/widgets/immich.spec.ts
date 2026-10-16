@@ -8,6 +8,7 @@ import type { Database } from "@homarr/db";
 import { integrations, integrationUserPermissions, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../../procedure";
 import { immichRouter } from "../../widgets/immich";
 
 vi.hoisted(() => {
@@ -49,7 +50,11 @@ const createCallerAsync = async () => {
 
   return {
     integrationId,
-    caller: immichRouter.createCaller({ db: db as Database, deviceType: undefined, session: createSession(userId) }),
+    caller: createCallerFactory(immichRouter)({
+      db: db as Database,
+      deviceType: undefined,
+      session: createSession(userId),
+    }),
   };
 };
 

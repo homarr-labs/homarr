@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import {
@@ -11,7 +11,7 @@ import {
 import type { CustomWidgetAuthConfig } from "@homarr/custom-widgets/server";
 import { integrationKinds } from "@homarr/definitions";
 
-import { protectedProcedure } from "../../trpc";
+import { protectedProcedure } from "../../procedure";
 import { getIntegrationHttpConnection, selectIntegrationForHttpRequest } from "./integration-http";
 
 export const integrationRequestSchema = z.object({
@@ -66,7 +66,7 @@ export function resolveIntegrationRequestUrl(baseUrl: string, path: string): URL
   // Reject normalization tricks before resolving against the saved URL's path.
   // eslint-disable-next-line no-control-regex -- Reject URL parser control-character normalization.
   if (/^[a-z][a-z\d+.-]*:/i.test(path) || path.startsWith("//") || /[\\\s\u0000-\u001f\u007f]/u.test(path)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "path must be a relative integration endpoint" });
+    throw new ApiError({ code: "BAD_REQUEST", message: "path must be a relative integration endpoint" });
   }
   try {
     const base = new URL(baseUrl);
@@ -79,7 +79,7 @@ export function resolveIntegrationRequestUrl(baseUrl: string, path: string): URL
     assertCustomWidgetPathScope(target, base.pathname);
     return target;
   } catch {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: "path must stay within the saved integration URL without credentials or a fragment",
     });
@@ -149,24 +149,24 @@ export const integrationRequestProcedure = protectedProcedure
       data: z.json(),
     }),
   )
-  .mutation(async ({ ctx, input }) => {
+  .mutation(async ({ context, input }) => {
     if (
       [input.integrationId, input.integrationName, input.integrationKind].filter((value) => value !== undefined)
         .length !== 1
     )
-      throw new TRPCError({
+      throw new ApiError({
         code: "BAD_REQUEST",
         message: "Supply exactly one of integrationId, integrationName or integrationKind",
       });
     if (input.method === "DELETE" && input.confirmed !== true)
-      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
+      throw new ApiError({ code: "PRECONDITION_FAILED", message: "This action requires confirmation" });
     if (["GET", "HEAD"].includes(input.method) && input.body !== undefined)
-      throw new TRPCError({ code: "BAD_REQUEST", message: "GET and HEAD requests cannot include a body" });
+      throw new ApiError({ code: "BAD_REQUEST", message: "GET and HEAD requests cannot include a body" });
     if (input.bodyEncoding === "raw" && input.body !== undefined && typeof input.body !== "string")
-      throw new TRPCError({ code: "BAD_REQUEST", message: "Raw bodies must be strings" });
+      throw new ApiError({ code: "BAD_REQUEST", message: "Raw bodies must be strings" });
     if (Buffer.byteLength(JSON.stringify(input.headers ?? {})) > 16 * 1024)
-      throw new TRPCError({ code: "PAYLOAD_TOO_LARGE", message: "Headers exceed the 16 KiB limit" });
-    const integration = await selectIntegrationForHttpRequest(ctx, input);
+      throw new ApiError({ code: "PAYLOAD_TOO_LARGE", message: "Headers exceed the 16 KiB limit" });
+    const integration = await selectIntegrationForHttpRequest(context, input);
     const targetUrl = resolveIntegrationRequestUrl(integration.url, input.path);
     // Decrypt only after authorization, from the same snapshot as URL and permissions.
     // Never log upstream data or retain secret-bearing error causes.
@@ -200,9 +200,9 @@ export const integrationRequestProcedure = protectedProcedure
         data: redactIntegrationResponse(response.data, secrets) as z.infer<ReturnType<typeof z.json>>,
       };
     } catch (error) {
-      if (error instanceof CustomWidgetDomainError) throw new TRPCError({ code: error.code, message: error.message });
-      if (error instanceof TRPCError) throw new TRPCError({ code: error.code, message: error.message });
-      throw new TRPCError({
+      if (error instanceof CustomWidgetDomainError) throw new ApiError({ code: error.code, message: error.message });
+      if (error instanceof ApiError) throw new ApiError({ code: error.code, message: error.message });
+      throw new ApiError({
         code: "BAD_GATEWAY",
         message: "Integration request failed; check the service state before retrying a write",
       });

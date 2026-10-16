@@ -9,12 +9,15 @@
   "exports": {
     ".": "./index.ts",
     "./next": "./next.ts",
+    "./http": "./http.ts",
+    "./types": "./types.ts",
     "./security": "./security.ts",
     "./api-key": "./api-key/index.ts",
     "./client": "./client.ts",
     "./server": "./server.ts",
     "./shared": "./shared.ts",
-    "./env": "./env.ts"
+    "./env": "./env.ts",
+    "./request-session": "./request-session.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

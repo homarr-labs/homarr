@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { splitToChunksWithNItems } from "@homarr/common";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
@@ -13,7 +13,7 @@ import {
 } from "../integration/integration-http";
 
 export async function assertCustomWidgetIntegrationBindings(
-  ctx: IntegrationHttpContext,
+  context: IntegrationHttpContext,
   sources: Record<string, CustomWidgetSource>,
 ) {
   const integrationSources = Object.values(sources).filter(
@@ -21,7 +21,7 @@ export async function assertCustomWidgetIntegrationBindings(
       source.type === "integration" && Boolean(source.integrationId),
   );
   for (const chunk of splitToChunksWithNItems(integrationSources, 4)) {
-    const results = await Promise.allSettled(chunk.map((source) => resolveIntegration(ctx, source)));
+    const results = await Promise.allSettled(chunk.map((source) => resolveIntegration(context, source)));
     // Keep the first source's validation error even when a later lookup finishes first.
     for (const result of results) {
       if (result.status === "rejected") throw result.reason;
@@ -30,18 +30,18 @@ export async function assertCustomWidgetIntegrationBindings(
 }
 
 async function resolveIntegration(
-  ctx: IntegrationHttpContext,
+  context: IntegrationHttpContext,
   source: Extract<CustomWidgetSource, { type: "integration" }>,
 ) {
   if (!source.integrationId) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "PRECONDITION_FAILED",
       message: "Select an existing integration for this widget source",
     });
   }
-  const integration = await getIntegrationForHttpRequest(ctx, source.integrationId);
+  const integration = await getIntegrationForHttpRequest(context, source.integrationId);
   if (integration.kind !== source.integrationKind) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "PRECONDITION_FAILED",
       message: "The selected integration is unavailable or has a different type",
     });
@@ -50,14 +50,14 @@ async function resolveIntegration(
 }
 
 export async function getCustomWidgetIntegrationCacheVersion(
-  ctx: IntegrationHttpContext,
+  context: IntegrationHttpContext,
   source: Extract<CustomWidgetSource, { type: "integration" }>,
 ) {
-  return getIntegrationHttpCacheVersion(await resolveIntegration(ctx, source));
+  return getIntegrationHttpCacheVersion(await resolveIntegration(context, source));
 }
 
 export async function resolveCustomWidgetSource(
-  ctx: IntegrationHttpContext,
+  context: IntegrationHttpContext,
   source: CustomWidgetSource,
   request: Pick<CustomJsxRequest, "kind" | "method" | "auth">,
   getSecrets: () => Array<{ kind: string; value: string }>,
@@ -78,6 +78,6 @@ export async function resolveCustomWidgetSource(
     }
     return { baseUrl: source.baseUrl, networkScope: source.networkScope, auth, cacheVersion: "" };
   }
-  const integration = await resolveIntegration(ctx, source);
+  const integration = await resolveIntegration(context, source);
   return getIntegrationHttpConnection(integration, request.auth !== "none");
 }

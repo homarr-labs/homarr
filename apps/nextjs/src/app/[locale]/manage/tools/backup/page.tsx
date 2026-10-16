@@ -1,8 +1,8 @@
+import { getBackendRuntimeAsync } from "@homarr/api/server";
 import { notFound } from "next/navigation";
 import { Stack, Title } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
-import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -11,7 +11,7 @@ import { BackupImportCard } from "./_components/backup-import-card";
 
 export async function generateMetadata() {
   const session = await auth();
-  if (!session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3") {
+  if (!session?.user.permissions.includes("admin") || (await getBackendRuntimeAsync()).databaseDriver !== "better-sqlite3") {
     return {};
   }
 
@@ -24,7 +24,7 @@ export async function generateMetadata() {
 
 export default async function BackupPage() {
   const session = await auth();
-  if (!session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3") {
+  if (!session?.user.permissions.includes("admin") || (await getBackendRuntimeAsync()).databaseDriver !== "better-sqlite3") {
     notFound();
   }
 

@@ -15,7 +15,7 @@ const routeMocks = vi.hoisted(() => ({
   retry: vi.fn(),
 }));
 
-vi.mock("@homarr/auth/next", () => ({ auth: routeMocks.auth }));
+vi.mock("@homarr/auth/request-session", () => ({ getSessionFromRequestAsync: routeMocks.auth }));
 vi.mock("@homarr/api/custom-widget-configuration", () => ({
   assertCustomWidgetIntegrationBindings: routeMocks.assertIntegrationBindings,
   claimCustomWidgetConfigurationRequestForUser: routeMocks.claimForUser,
@@ -31,7 +31,7 @@ vi.mock("@homarr/custom-widgets/server", () => ({
 }));
 vi.mock("@homarr/db", () => ({ db: { kind: "test-db" } }));
 
-import { GET, POST } from "./route";
+import { GET, POST } from "@homarr/backend-handlers/custom-widgets/configuration-request/route";
 
 const token = "owner-configuration-token";
 const ownerId = "admin-owner";

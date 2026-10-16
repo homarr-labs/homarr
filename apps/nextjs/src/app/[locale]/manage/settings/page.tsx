@@ -23,9 +23,9 @@ export default async function SettingsPage() {
   }
 
   const [serverSettings, selectableBoards, selectableSearchEngines, tSettings] = await Promise.all([
-    api.serverSettings.getAll(),
-    api.board.getPublicBoards(),
-    api.searchEngine.getSelectable({ withIntegrations: false }),
+    api.serverSettings.getAll.query(),
+    api.board.getPublicBoards.query(),
+    api.searchEngine.getSelectable.query({ withIntegrations: false }),
     getI18n("management.page.settings"),
   ]);
 

@@ -1,3 +1,1 @@
-export function serializeMcpToolResult(result: unknown): string {
-  return JSON.stringify(result) ?? "null";
-}
+export * from "@homarr/api/http/mcp/_serialize-result";

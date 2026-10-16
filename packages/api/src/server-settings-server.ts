@@ -1,8 +1,5 @@
 import { cache } from "react";
 
-import { db } from "@homarr/db";
-import { getServerSettingsAsync } from "@homarr/db/queries";
+import { api } from "./server";
 
-// One settings snapshot per RSC request, shared by the root layout, theme, and
-// widget prefetching. React invalidates this cache between requests.
-export const getRscServerSettingsAsync = cache(async () => await getServerSettingsAsync(db));
+export const getRscServerSettingsAsync = cache(async () => await api.frontend.settings.query());

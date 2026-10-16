@@ -5,6 +5,7 @@ import { describe, expect, test } from "vitest";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../procedure";
 import { iconsRouter } from "../icons";
 
 describe("findIcons", () => {
@@ -30,7 +31,7 @@ describe("findIcons", () => {
         iconRepositoryId: "other-icons",
       },
     ]);
-    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(iconsRouter)({ db, deviceType: undefined, session: null });
 
     const result = await caller.findIcons({ searchText: "discord", limitPerGroup: 6 });
 
@@ -45,7 +46,7 @@ describe("findIcons", () => {
   test("keeps repositories when browsing without a search", async () => {
     const db = createDb();
     await db.insert(iconRepositories).values({ id: "empty", slug: "example/empty" });
-    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(iconsRouter)({ db, deviceType: undefined, session: null });
 
     const result = await caller.findIcons({ limitPerGroup: 6 });
 
@@ -62,7 +63,7 @@ describe("findIcons", () => {
       checksum: "homarr",
       iconRepositoryId: "dashboard-icons",
     });
-    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(iconsRouter)({ db, deviceType: undefined, session: null });
 
     await expect(caller.findIcons({ searchText: "homarr" })).resolves.toMatchObject({
       countIcons: 1,
@@ -79,7 +80,7 @@ describe("findIcons", () => {
     "matches normalized search %s before applying the group limit",
     async (searchText) => {
       const db = createDb();
-      const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+      const caller = createCallerFactory(iconsRouter)({ db, deviceType: undefined, session: null });
 
       await db.insert(iconRepositories).values({ id: "repository", slug: "dashboard-icons" });
       await db.insert(icons).values([

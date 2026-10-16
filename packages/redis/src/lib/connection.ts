@@ -1,13 +1,14 @@
 import type { RedisOptions } from "ioredis";
 
 import type { RedisClient } from "@homarr/core/infrastructure/redis";
-import { createRedisClient } from "@homarr/core/infrastructure/redis";
+import { createRedisClient, isMemoryStateBackend } from "@homarr/core/infrastructure/redis";
 
 /**
  * Creates a new Redis connection
  * @returns redis client
  */
 export const createRedisConnection = (options: RedisOptions = {}) => {
+  if (isMemoryStateBackend()) return createRedisClient(options);
   if (Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS)) {
     return null;
   }

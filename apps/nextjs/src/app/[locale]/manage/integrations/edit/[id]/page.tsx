@@ -18,8 +18,8 @@ export default async function EditIntegrationPage(props: EditIntegrationPageProp
   const params = await props.params;
   const editT = await getI18n("integration.page.edit");
   const t = await getI18n();
-  const integration = await api.integration.byId({ id: params.id }).catch(catchTrpcNotFound);
-  const integrationPermissions = await api.integration.getIntegrationPermissions({ id: integration.id });
+  const integration = await api.integration.byId.query({ id: params.id }).catch(catchTrpcNotFound);
+  const integrationPermissions = await api.integration.getIntegrationPermissions.query({ id: integration.id });
 
   return (
     <>

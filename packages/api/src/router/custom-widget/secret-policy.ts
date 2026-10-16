@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import {
   getCustomWidgetRequiredSecretKinds,
@@ -34,7 +34,7 @@ export function assertSecretSources(
     return !source || !authType || !new Set<string>(requiredSecretKinds(authType)).has(secret.kind);
   });
   if (invalid) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: `Secret does not match source '${invalid.sourceId}' authentication`,
     });

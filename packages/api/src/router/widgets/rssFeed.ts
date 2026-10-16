@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
@@ -11,7 +11,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const logger = createLogger({ module: "rssFeed" });
 
@@ -31,13 +31,13 @@ const feedsInput = z.object({
   descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
 });
 
-export const rssFeedRouter = createTRPCRouter({
-  getFeeds: publicProcedure.input(feedsInput).query(async ({ ctx, input }) => {
+export const rssFeedRouter = createApiRouter({
+  getFeeds: publicProcedure.input(feedsInput).query(async ({ context, input }) => {
     if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
 
-    const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
+    const urls = (await canAccessAllFeedsAsync(context.db, context.session))
       ? input.urls
-      : await restrictUrlsAsync(ctx.db, input.urls);
+      : await restrictUrlsAsync(context.db, input.urls);
 
     const settled = await Promise.allSettled(
       urls.map(async (url) => {
@@ -61,7 +61,7 @@ export const rssFeedRouter = createTRPCRouter({
       }
     });
     if (settled.length > 0 && failures.length === settled.length) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "BAD_GATEWAY",
         message: "All RSS feed requests failed",
       });

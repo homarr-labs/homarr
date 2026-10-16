@@ -55,11 +55,9 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/settings": "workspace:^0.1.0",
     "@homarr/spotlight": "workspace:^0.1.0",
-    "@homarr/tasks": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@homarr/websocket": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
     "@homarr/workshop": "workspace:^0.1.0",
     "@mantine/colors-generator": "catalog:",
@@ -120,7 +118,8 @@
     "superjson": "catalog:",
     "use-deep-compare-effect": "catalog:",
     "yaml": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "@homarr/backend-handlers": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

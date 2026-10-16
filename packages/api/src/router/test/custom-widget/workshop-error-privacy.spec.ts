@@ -30,6 +30,7 @@ vi.mock("@homarr/workshop/backend", () => ({
   },
 }));
 
+import { createCallerFactory } from "../../../procedure";
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 
 const session = {
@@ -42,7 +43,7 @@ const session = {
 } satisfies Session;
 
 const createCaller = () =>
-  customWidgetRouter.createCaller({
+  createCallerFactory(customWidgetRouter)({
     db: createDb(),
     deviceType: undefined,
     session,
@@ -83,7 +84,7 @@ describe("Workshop backend error privacy", () => {
     mocks.logger.error.mockClear();
   });
 
-  test("redacts backend lookup failures from TRPC output and logs", async () => {
+  test("redacts backend lookup failures from oRPC output and logs", async () => {
     const apiKey = "workshop-lookup-secret";
     mocks.get.mockRejectedValueOnce(createTokenizedFailure(apiKey));
 
@@ -97,7 +98,7 @@ describe("Workshop backend error privacy", () => {
     expectSafeFailure(error, apiKey, "Workshop widget lookup failed", "workshop_widget_lookup_failed");
   });
 
-  test("redacts backend search failures from TRPC output and logs", async () => {
+  test("redacts backend search failures from oRPC output and logs", async () => {
     const apiKey = "workshop-search-secret";
     mocks.list.mockRejectedValueOnce(createTokenizedFailure(apiKey));
 

@@ -1,4 +1,4 @@
-import type { Session } from "next-auth";
+import type { Session } from "./types";
 
 import { generateSecureRandomToken } from "@homarr/common/server";
 import type { Database } from "@homarr/db";

@@ -1,0 +1,32 @@
+diff --git a/lib/protocol/crypto.js b/lib/protocol/crypto.js
+--- a/lib/protocol/crypto.js
++++ b/lib/protocol/crypto.js
+@@ -27,9 +27,12 @@
+ let ChaChaPolyDecipher;
+ let GenericDecipher;
+ try {
+-  binding = require('./crypto/build/Release/sshcrypto.node');
+-  ({ AESGCMCipher, ChaChaPolyCipher, GenericCipher,
+-     AESGCMDecipher, ChaChaPolyDecipher, GenericDecipher } = binding);
++  // Bun cannot load the optional V8/libuv accelerator; use the JS implementation.
++  if (!process.versions.bun) {
++    binding = require('./crypto/build/Release/sshcrypto.node');
++    ({ AESGCMCipher, ChaChaPolyCipher, GenericCipher,
++       AESGCMDecipher, ChaChaPolyDecipher, GenericDecipher } = binding);
++  }
+ } catch {}
+ 
+ const CIPHER_STREAM = 1 << 0;
+diff --git a/lib/protocol/constants.js b/lib/protocol/constants.js
+--- a/lib/protocol/constants.js
++++ b/lib/protocol/constants.js
+@@ -4,7 +4,8 @@
+ 
+ let cpuInfo;
+ try {
+-  cpuInfo = require('cpu-features')();
++  if (!process.versions.bun)
++    cpuInfo = require('cpu-features')();
+ } catch {}
+ 
+ const { bindingAvailable, CIPHER_INFO, MAC_INFO } = require('./crypto.js');

@@ -12,6 +12,7 @@ import { createDb } from "@homarr/db/test";
 import { BUNDLED_CUSTOM_WIDGETS, customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { describe, expect, test } from "vitest";
 
+import { createCallerFactory } from "../../../procedure";
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 import { getCustomWidgetConfigurationRequestForUser } from "../../custom-widget/configuration-requests";
 import { configureCustomWidgetSourceFromRequest } from "../../custom-widget/secret-persistence";
@@ -46,11 +47,11 @@ if (!jellyfinDefaultSource || jellyfinDefaultSource.type === "integration")
   throw new Error("Jellyfin default source is missing");
 
 function createCaller(db: ReturnType<typeof createDb>) {
-  return customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+  return createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
 }
 
 function createNonAdminCaller(db: ReturnType<typeof createDb>) {
-  return customWidgetRouter.createCaller({
+  return createCallerFactory(customWidgetRouter)({
     db,
     deviceType: undefined,
     session: nonAdminSession,

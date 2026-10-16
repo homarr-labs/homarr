@@ -1,11 +1,7 @@
 // Importing env files here to validate on build
 import path from "node:path";
 
-import "@homarr/auth/env";
-import "@homarr/core/infrastructure/db/env";
-import "@homarr/common/env";
 import "@homarr/core/infrastructure/logs/env";
-import "@homarr/docker/env";
 
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
@@ -14,17 +10,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
-
-const getDevelopmentServiceAliases = () => {
-  if (process.env.NODE_ENV !== "development") {
-    return undefined;
-  }
-
-  return {
-    "@homarr/tasks": "./src/instrumentation-noop.ts",
-    "@homarr/websocket": "./src/instrumentation-noop.ts",
-  };
-};
 
 const contentSecurityPolicy = `
   default-src 'self';
@@ -75,9 +60,6 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
-    // Development runs tasks and WebSocket as separate processes. These aliases
-    // keep their production-only instrumentation imports out of the dev graph.
-    resolveAlias: getDevelopmentServiceAliases(),
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
@@ -89,13 +71,9 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    return [
-      { source: "/.well-known/:path*", destination: "/well-known/:path*" },
-      {
-        source: "/api/mcp/:transport/.well-known/:path*",
-        destination: "/well-known/:path*/api/mcp/:transport",
-      },
-    ];
+    // Route handlers read HOMARR_BACKEND_URL at request time, allowing the same
+    // frontend image to connect to independently deployed backend services.
+    return [{ source: "/.well-known/:path*", destination: "/well-known/:path*" }];
   },
   // skipcq: JS-0116
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax

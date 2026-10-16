@@ -1,6 +1,5 @@
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-
-import { createSharedDbConfig, createSqliteDb } from "@homarr/core/infrastructure/db";
+import { createSharedDbConfig, openSqliteDatabase } from "@homarr/core/infrastructure/db";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 import * as sqliteSchema from "../../schema/sqlite";
 import { applyCustomMigrationsAsync } from "../custom";
@@ -10,9 +9,10 @@ const migrationsFolder = process.argv[2] ?? ".";
 
 const migrateAsync = async () => {
   const config = createSharedDbConfig(sqliteSchema);
-  const db = createSqliteDb(config);
+  const connection = openSqliteDatabase(dbEnv.URL, config);
+  const db = connection.db;
 
-  migrate(db, { migrationsFolder });
+  connection.migrate({ migrationsFolder });
 
   await seedDataAsync(db);
   await applyCustomMigrationsAsync(db);

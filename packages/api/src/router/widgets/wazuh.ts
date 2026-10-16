@@ -24,7 +24,7 @@ import {
 } from "@homarr/request-handler/wazuh";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const logger = createLogger({ module: "wazuhRouter" });
 
@@ -60,7 +60,7 @@ const getDashboardUrl = (integration: WazuhContextIntegration): string | null =>
 
 /**
  * Wazuh widgets render friendly messages for auth, TLS and reachability problems, so upstream failures are
- * returned as a safe reason instead of a generic tRPC error.
+ * returned as a safe reason instead of a generic oRPC error.
  */
 const settleAsync = async <TData>(
   operation: string,
@@ -95,13 +95,13 @@ const wazuhProcedure = (widgetKind: WidgetKind & `wazuh${string}`, description: 
 
 const timeRange = z.enum(wazuhTimeRanges);
 
-export const wazuhRouter = createTRPCRouter({
+export const wazuhRouter = createApiRouter({
   getAgents: wazuhProcedure(
     "wazuhAgents",
     "Get Wazuh agent counts and the full agent list (status, IP, OS, version, last keepalive, groups).",
-  ).query(async ({ ctx }) => {
-    if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAgents);
-    const integration = { ...ctx.integration, kind: "wazuh" as const };
+  ).query(async ({ context }) => {
+    if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAgents);
+    const integration = { ...context.integration, kind: "wazuh" as const };
     return await settleAsync("getAgents", integration, () =>
       wazuhAgentsRequestHandler.handler(integration, {}).getDataAsync(),
     );
@@ -114,9 +114,9 @@ export const wazuhRouter = createTRPCRouter({
         hours: z.number().int().min(1).max(720).default(24),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAlerts);
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAlerts);
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getAlerts", integration, () =>
         wazuhAlertsRequestHandler
           .handler(integration, { minLevel: input.minLevel, limit: input.limit, hours: input.hours })
@@ -128,9 +128,9 @@ export const wazuhRouter = createTRPCRouter({
     "Get Wazuh alert counts by severity for a time range compared with the previous period, plus manager version and indexer health.",
   )
     .input(z.object({ range: timeRange.default("24h") }))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhSummary);
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhSummary);
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getSummary", integration, () =>
         wazuhSummaryRequestHandler.handler(integration, { range: input.range }).getDataAsync(),
       );
@@ -146,9 +146,9 @@ export const wazuhRouter = createTRPCRouter({
         minLevel: z.number().int().min(0).max(16).default(0),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhTimeline);
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhTimeline);
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getTimeline", integration, () =>
         getWazuhTimelineRequestHandler(input.range).handler(integration, input).getDataAsync(),
       );
@@ -165,9 +165,9 @@ export const wazuhRouter = createTRPCRouter({
         minLevel: z.number().int().min(0).max(16).default(0),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult({ ...mockWidgetData.wazuhTopList, kind: input.kind });
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult({ ...mockWidgetData.wazuhTopList, kind: input.kind });
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getTopList", integration, () =>
         wazuhTopListRequestHandler.handler(integration, input).getDataAsync(),
       );
@@ -184,9 +184,9 @@ export const wazuhRouter = createTRPCRouter({
         minSeverity: z.enum(["all", "medium", "high", "critical"]).default("all"),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhVulnerabilities);
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhVulnerabilities);
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getVulnerabilities", integration, () =>
         wazuhVulnerabilitiesRequestHandler.handler(integration, input).getDataAsync(),
       );
@@ -203,9 +203,9 @@ export const wazuhRouter = createTRPCRouter({
         includeRegistry: z.boolean().default(true),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhFim);
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhFim);
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getFim", integration, () =>
         wazuhFimRequestHandler.handler(integration, input).getDataAsync(),
       );
@@ -220,9 +220,9 @@ export const wazuhRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(25).default(6),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAuthFailures);
-      const integration = { ...ctx.integration, kind: "wazuh" as const };
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockResult(mockWidgetData.wazuhAuthFailures);
+      const integration = { ...context.integration, kind: "wazuh" as const };
       return await settleAsync("getAuthFailures", integration, () =>
         wazuhAuthFailuresRequestHandler.handler(integration, input).getDataAsync(),
       );

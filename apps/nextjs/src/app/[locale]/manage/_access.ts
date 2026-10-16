@@ -13,7 +13,7 @@ export const getAppsSectionAccess = (session: Session | null) =>
   getAppManagementAccess(session?.user.permissions ?? []);
 
 // Share the authorized list within this render request, keyed by the current user.
-export const getManageIntegrationsAsync = cache((_userId: string) => api.integration.all());
+export const getManageIntegrationsAsync = cache((_userId: string) => api.integration.all.query());
 
 /**
  * Pure variant for callers that already fetched the integrations the user can see, so the list is

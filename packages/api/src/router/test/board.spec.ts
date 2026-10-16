@@ -26,6 +26,7 @@ import {
 import { createDb } from "@homarr/db/test";
 import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
 
+import { createCallerFactory } from "../../procedure";
 import type { RouterOutputs } from "../..";
 import { boardRouter } from "../board";
 import * as boardAccess from "../board/board-access";
@@ -65,7 +66,7 @@ describe("getAllBoards should return all boards accessable to the current user",
   test("without session it should return only public boards", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: null });
 
     const user1 = await createRandomUserAsync(db);
     const user2 = await createRandomUserAsync(db);
@@ -96,7 +97,7 @@ describe("getAllBoards should return all boards accessable to the current user",
   test("with session containing board-view-all permission it should return all boards", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({
+    const caller = createCallerFactory(boardRouter)({
       db,
       deviceType: undefined,
       session: {
@@ -138,7 +139,7 @@ describe("getAllBoards should return all boards accessable to the current user",
   test("with session user beeing creator it should return all private boards of them", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const user1 = await createRandomUserAsync(db);
     const user2 = await createRandomUserAsync(db);
@@ -180,7 +181,7 @@ describe("getAllBoards should return all boards accessable to the current user",
     async (permission) => {
       // Arrange
       const db = createDb();
-      const caller = boardRouter.createCaller({
+      const caller = createCallerFactory(boardRouter)({
         db,
         deviceType: undefined,
         session: defaultSession,
@@ -246,7 +247,7 @@ describe("getAllBoards should return all boards accessable to the current user",
     async (permission) => {
       // Arrange
       const db = createDb();
-      const caller = boardRouter.createCaller({
+      const caller = createCallerFactory(boardRouter)({
         db,
         deviceType: undefined,
         session: defaultSession,
@@ -299,7 +300,7 @@ describe("getAllBoards should return all boards accessable to the current user",
 describe("getManageOverview", () => {
   test("does not expose a public board creator email to anonymous callers", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: null });
     const creatorId = createId();
 
     await db.insert(users).values({ id: creatorId, name: "Board creator", email: "private@example.com" });
@@ -313,7 +314,7 @@ describe("getManageOverview", () => {
 
   test("returns the same accessible board set as getAllBoards", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const otherUserId = await createRandomUserAsync(db);
     const publicBoardId = createId();
     const creatorBoardId = createId();
@@ -347,7 +348,7 @@ describe("getManageOverview", () => {
 
   test("returns compact previews by default and full previews on request", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const boardId = createId();
     const hiddenBoardId = createId();
     const baseLayoutId = createId();
@@ -503,7 +504,7 @@ describe("getManageOverview", () => {
 
   test("includes app and widget icons in compact previews", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const boardId = createId();
     const layoutId = createId();
     const rootSectionId = createId();
@@ -561,7 +562,7 @@ describe("getManageOverview", () => {
 
   test("uses the highest-breakpoint layout when a board has no base layout", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const boardId = createId();
     const mobileLayoutId = createId();
     const tabletLayoutId = createId();
@@ -641,7 +642,7 @@ describe("createBoard should create a new board", () => {
         permissions: ["board-create"] satisfies GroupPermissionKey[],
       },
     };
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session });
 
     await db.insert(users).values({
       id: defaultCreatorId,
@@ -685,7 +686,7 @@ describe("createBoard should create a new board", () => {
   test("should throw error when user has no board-create permission", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     // Act
     const actAsync = async () => await caller.createBoard({ name: "newBoard", columnCount: 12, isPublic: true });
@@ -705,7 +706,7 @@ describe("duplicateBoard should preserve protected layout invariants", () => {
         permissions: ["board-create"] satisfies GroupPermissionKey[],
       },
     };
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session });
     const { boardId, integrationId } = await createFullBoardAsync(db, "source");
     await db.delete(integrationItems).where(eq(integrationItems.integrationId, integrationId));
 
@@ -730,7 +731,7 @@ describe("rename board should rename board", () => {
   test("should rename board", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
     await db.insert(users).values({
@@ -758,7 +759,7 @@ describe("rename board should rename board", () => {
   test("should throw error when similar board name exists", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     await db.insert(users).values({
       id: defaultCreatorId,
@@ -785,7 +786,7 @@ describe("rename board should rename board", () => {
   test("should throw error when board not found", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     // Act
     const actAsync = async () => await caller.renameBoard({ id: "nonExistentBoardId", name: "newName" });
@@ -801,7 +802,7 @@ describe("changeBoardVisibility should change board visibility", () => {
     async (visibility) => {
       // Arrange
       const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+      const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
       const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
       await db.insert(users).values({
@@ -836,7 +837,7 @@ describe("deleteBoard should delete board", () => {
   test("should delete board", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
     await db.insert(users).values({
@@ -863,7 +864,7 @@ describe("deleteBoard should delete board", () => {
   test("should throw error when board not found", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     // Act
     const actAsync = async () => await caller.deleteBoard({ id: "nonExistentBoardId" });
@@ -878,7 +879,7 @@ describe("getHomeBoard should return home board", () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const fullBoardProps = await createFullBoardAsync(db, "home");
     await db
@@ -902,7 +903,7 @@ describe("getHomeBoard should return home board", () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const fullBoardProps = await createFullBoardAsync(db, "home");
     await db.insert(serverSettings).values({
@@ -923,7 +924,7 @@ describe("getHomeBoard should return home board", () => {
   test("should throw error when home board not configured in serverSettings", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     await createFullBoardAsync(db, "home");
 
     // Act
@@ -939,7 +940,7 @@ describe("getBoardByName should return board by name", () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const fullBoardProps = await createFullBoardAsync(db, name);
 
@@ -963,7 +964,7 @@ describe("getBoardByName should return board by name", () => {
 
   it("returns configured container behavior", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, sectionId: rootSectionId, layoutId } = await createFullBoardAsync(db, "default");
     const sectionId = await addContainerAsync(db, {
       boardId,
@@ -996,7 +997,7 @@ describe("getBoardByName should return board by name", () => {
   it("should throw error when not present", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     await createFullBoardAsync(db, "default");
 
     // Act
@@ -1011,7 +1012,7 @@ describe("getBoardSettings should return editable board settings", () => {
   test("returns current custom CSS and requires modify permission", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId } = await createFullBoardAsync(db, "default");
     const customCss = ".dashboard-card { border-radius: 0.5rem; }";
     await db.update(boards).set({ customCss, primaryColor: "#123456", pageTitle: null }).where(eq(boards.id, boardId));
@@ -1034,7 +1035,7 @@ describe("savePartialBoardSettings should save general settings", () => {
     // Arrange
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const newPageTitle = "newPageTitle";
     const newMetaTitle = "newMetaTitle";
@@ -1091,7 +1092,7 @@ describe("savePartialBoardSettings should save general settings", () => {
 
   it("should throw error when board not found", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const actAsync = async () =>
       await caller.savePartialBoardSettings({
@@ -1110,7 +1111,7 @@ describe("saveBoard should save full board", () => {
   it("should remove section when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
@@ -1147,7 +1148,7 @@ describe("saveBoard should save full board", () => {
   it("should remove item when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, itemId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
 
@@ -1204,7 +1205,7 @@ describe("saveBoard should save full board", () => {
   it("should remove integration reference when not present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: integrationUseSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: integrationUseSession });
     const anotherIntegration = {
       id: createId(),
       kind: "adGuardHome",
@@ -1274,7 +1275,7 @@ describe("saveBoard should save full board", () => {
   it("should add root section when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
@@ -1322,7 +1323,7 @@ describe("saveBoard should save full board", () => {
   });
   it("should add and update container behavior options", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId, sectionId: rootSectionId } = await createFullBoardAsync(db, "default");
     const containerId = createId();
 
@@ -1425,7 +1426,7 @@ describe("saveBoard should save full board", () => {
   });
   it("should add a container without layouts", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, sectionId: rootSectionId } = await createFullBoardAsync(db, "default");
     const containerId = createId();
 
@@ -1463,7 +1464,7 @@ describe("saveBoard should save full board", () => {
   it("should add item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
 
@@ -1535,7 +1536,7 @@ describe("saveBoard should save full board", () => {
   it("should add integration reference when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: integrationUseSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: integrationUseSession });
     const integration = {
       id: createId(),
       kind: "plex",
@@ -1603,7 +1604,7 @@ describe("saveBoard should save full board", () => {
   });
   it("should update section when present in input", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
     const containerId = createId();
@@ -1688,7 +1689,7 @@ describe("saveBoard should save full board", () => {
   it("should update item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, itemId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
 
@@ -1752,7 +1753,7 @@ describe("saveBoard should save full board", () => {
   });
   it("should fail when board not found", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const actAsync = async () =>
       await caller.saveBoard({
@@ -1769,7 +1770,7 @@ describe("getBoardPermissions should return board permissions", () => {
   test("should return board permissions", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
     const user1 = await createRandomUserAsync(db);
@@ -1844,7 +1845,7 @@ describe("saveUserBoardPermissions should save user board permissions", () => {
     async (permission) => {
       // Arrange
       const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+      const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
       const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
       const user1 = await createRandomUserAsync(db);
@@ -1886,7 +1887,7 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
     async (permission) => {
       // Arrange
       const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+      const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
       const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
       await db.insert(users).values({
@@ -1973,7 +1974,7 @@ describe("saveLayouts should save layout changes", () => {
   test("should add layout when not present in database", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
@@ -2000,7 +2001,7 @@ describe("saveLayouts should save layout changes", () => {
   test("should add items and containers generated from grid-algorithm when new layout is added", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
@@ -2032,7 +2033,7 @@ describe("saveLayouts should save layout changes", () => {
   test("should update layout when present in input", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
@@ -2059,7 +2060,7 @@ describe("saveLayouts should save layout changes", () => {
   test("should update position of items when column count changes", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
@@ -2086,7 +2087,7 @@ describe("saveLayouts should save layout changes", () => {
   });
   test("should reserve gutter columns and return gutter contents to the canvas when disabled", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "gutters");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
 
@@ -2141,7 +2142,7 @@ describe("saveLayouts should save layout changes", () => {
   });
   test("should create one gutter root when layouts are saved concurrently", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId } = await createFullBoardAsync(db, "concurrent-gutters");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const input = {
@@ -2164,7 +2165,7 @@ describe("saveLayouts should save layout changes", () => {
   });
   test("should project a new custom layout from the resized Base layout", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
     const secondItemId = createId();
@@ -2206,7 +2207,7 @@ describe("saveLayouts should save layout changes", () => {
   test("should remove layout when not present in input", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
@@ -2235,7 +2236,7 @@ describe("saveLayouts should save layout changes", () => {
   test("should fail when board not found", async () => {
     // Arrange
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
 
     const { layoutId } = await createFullBoardAsync(db, "default");
 
@@ -2251,7 +2252,7 @@ describe("saveLayouts should save layout changes", () => {
   });
   test("should reject changing protected layout roles", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
     const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
 
@@ -2271,7 +2272,7 @@ describe("saveLayouts should save layout changes", () => {
 describe("resetLayout should rebuild a layout from Base", () => {
   test("should replace target item positions and preserve layout metadata", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, sectionId, itemId } = await createFullBoardAsync(db, "default");
     await addMobileLayoutAsync(db, boardId);
     const customLayoutId = createId();
@@ -2305,7 +2306,7 @@ describe("resetLayout should rebuild a layout from Base", () => {
 
   test("should reject resetting Base", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId } = await createFullBoardAsync(db, "default");
 
     await expect(caller.resetLayout({ boardId, layoutId })).rejects.toThrowError("Base layout cannot be reset");
@@ -2315,7 +2316,7 @@ describe("resetLayout should rebuild a layout from Base", () => {
 describe("updateItemLayout should change only one item placement", () => {
   test("resizes an item without changing other items", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, sectionId, layoutId, itemId } = await createFullBoardAsync(db, "targeted-layout");
     const otherItemId = await addItemAsync(db, { boardId, sectionId, layoutId, xOffset: 7, yOffset: 0 });
 
@@ -2342,7 +2343,7 @@ describe("updateItemLayout should change only one item placement", () => {
 
   test("rejects overlap and preserves the original placement", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, sectionId, layoutId, itemId } = await createFullBoardAsync(db, "layout-overlap");
     await addItemAsync(db, { boardId, sectionId, layoutId, xOffset: 2, yOffset: 0 });
 
@@ -2358,7 +2359,7 @@ describe("updateItemLayout should change only one item placement", () => {
 
   test("rejects a foreign item or layout and a placement outside its section", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, layoutId, itemId } = await createFullBoardAsync(db, "layout-scope");
 
     await expect(
@@ -2375,7 +2376,7 @@ describe("updateItemLayout should change only one item placement", () => {
   test("hides a board from a user without modify permission", async () => {
     const db = createDb();
     const { boardId, layoutId, itemId } = await createFullBoardAsync(db, "layout-permissions");
-    const caller = boardRouter.createCaller({
+    const caller = createCallerFactory(boardRouter)({
       db,
       deviceType: undefined,
       session: { ...defaultSession, user: { ...defaultSession.user, id: createId() } },
@@ -2390,7 +2391,7 @@ describe("updateItemLayout should change only one item placement", () => {
 describe("Custom Widget placement permissions", () => {
   test("rejects a direct addItem request from a non-admin board modifier", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId } = await createFullBoardAsync(db, "custom-widget-add");
 
     await expect(
@@ -2409,7 +2410,7 @@ describe("Custom Widget placement permissions", () => {
 
   test("rejects a direct saveBoard request that adds a Custom Widget for a non-admin", async () => {
     const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: defaultSession });
     const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "custom-widget-save");
 
     await expect(

@@ -32,7 +32,7 @@ export default async function GroupPermissionsPage(props: GroupPermissionsPagePr
   }
 
   const [group, tPermissionsPage, { permissionLabels, permissionDescriptions }] = await Promise.all([
-    api.group.getById({ id: params.id }),
+    api.group.getById.query({ id: params.id }),
     getI18n("management.page.group.setting.permissions"),
     buildPermissionTextsAsync(),
   ]);

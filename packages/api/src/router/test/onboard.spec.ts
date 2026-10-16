@@ -22,6 +22,7 @@ import { createDb } from "@homarr/db/test";
 import type { WidgetKind } from "@homarr/definitions";
 import type { OnboardingCompleteSetupInput } from "@homarr/validation/onboarding";
 
+import { createCallerFactory } from "../../procedure";
 import { claimOnboardingAsync, isOnboardingClaimValidAsync } from "../../onboarding-claim";
 import * as integrationConnection from "../integration/integration-test-connection";
 
@@ -53,7 +54,7 @@ import { onboardRouter } from "../onboard/onboard-router";
 import { normalizeOnboardingStep } from "../onboard/onboard-queries";
 
 const createCaller = (db: ReturnType<typeof createDb>, onboardingClaimToken?: string) =>
-  onboardRouter.createCaller({ db, deviceType: undefined, session: null, onboardingClaimToken });
+  createCallerFactory(onboardRouter)({ db, deviceType: undefined, session: null, onboardingClaimToken });
 
 const completionInput = (boardId: string, name = "Configured-board"): OnboardingCompleteSetupInput => ({
   server: {

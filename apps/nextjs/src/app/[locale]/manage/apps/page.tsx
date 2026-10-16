@@ -50,7 +50,7 @@ export default async function AppsPage(props: AppsPageProps) {
   // Without app-modify-all the user may add apps but not browse the ones they cannot manage,
   // so the list stays empty instead of leaking every app name and URL.
   const { items: apps, totalCount } = canManageAll
-    ? await api.app.getPaginated(searchParams)
+    ? await api.app.getPaginated.query(searchParams)
     : { items: [], totalCount: 0 };
   const totalPages = Math.ceil(totalCount / searchParams.pageSize);
 

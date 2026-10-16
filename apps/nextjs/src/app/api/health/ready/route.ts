@@ -1,5 +1,1 @@
-export function GET() {
-  return new Response(undefined, {
-    status: 200,
-  });
-}
+export { forwardBackendRequestAsync as GET } from "~/server/backend-proxy";

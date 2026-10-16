@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes } from "@homarr/ui";
 

@@ -1,13 +1,13 @@
 import type { V1HTTPIngressPath, V1Ingress, V1IngressRule } from "@kubernetes/client-node";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../../procedure";
 
 import type { KubernetesIngress, KubernetesIngressPath, KubernetesIngressRuleAndPath } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
-import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../../procedure";
 import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
-export const ingressesRouter = createTRPCRouter({
+export const ingressesRouter = createApiRouter({
   getIngresses: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -50,7 +50,7 @@ export const ingressesRouter = createTRPCRouter({
 
         return ingresses.items.map(mapIngress);
       } catch (error) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes ingresses",
           cause: error,

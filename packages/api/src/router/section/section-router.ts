@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
@@ -7,9 +7,9 @@ import { sectionCollapseStates, sections } from "@homarr/db/schema";
 import { emptySuperJSON } from "@homarr/definitions";
 import { containerSectionOptionsSchema } from "@homarr/validation/shared";
 
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure } from "../../procedure";
 
-export const sectionRouter = createTRPCRouter({
+export const sectionRouter = createApiRouter({
   changeCollapsed: protectedProcedure
     .input(
       z.object({
@@ -17,25 +17,25 @@ export const sectionRouter = createTRPCRouter({
         collapsed: z.boolean(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const section = await ctx.db.query.sections.findFirst({
+    .mutation(async ({ context, input }) => {
+      const section = await context.db.query.sections.findFirst({
         where: eq(sections.id, input.sectionId),
         with: {
           collapseStates: {
-            where: eq(sectionCollapseStates.userId, ctx.session.user.id),
+            where: eq(sectionCollapseStates.userId, context.session.user.id),
           },
         },
       });
 
       if (!section) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: `Section not found id=${input.sectionId}`,
         });
       }
 
       if (section.kind !== "container") {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: `Section cannot be collapsed id=${input.sectionId}`,
         });
@@ -45,28 +45,31 @@ export const sectionRouter = createTRPCRouter({
       const parsedOptions = containerSectionOptionsSchema.safeParse(rawOptions);
 
       if (!parsedOptions.success || !parsedOptions.data.collapsible) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: `Section cannot be collapsed id=${input.sectionId}`,
         });
       }
 
       if (section.collapseStates.length === 0) {
-        await ctx.db.insert(sectionCollapseStates).values({
+        await context.db.insert(sectionCollapseStates).values({
           sectionId: section.id,
-          userId: ctx.session.user.id,
+          userId: context.session.user.id,
           collapsed: input.collapsed,
         });
         return;
       }
 
-      await ctx.db
+      await context.db
         .update(sectionCollapseStates)
         .set({
           collapsed: input.collapsed,
         })
         .where(
-          and(eq(sectionCollapseStates.sectionId, section.id), eq(sectionCollapseStates.userId, ctx.session.user.id)),
+          and(
+            eq(sectionCollapseStates.sectionId, section.id),
+            eq(sectionCollapseStates.userId, context.session.user.id),
+          ),
         );
     }),
 });

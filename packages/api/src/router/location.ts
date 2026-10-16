@@ -4,7 +4,7 @@ import { env } from "@homarr/common/env";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createApiRouter, publicProcedure } from "../procedure";
 
 const citySchema = z.object({
   id: z.number(),
@@ -33,7 +33,7 @@ export const locationSearchCityOutput = z
       .transform(() => ({ results: [] })), // We fallback to empty array if no results
   );
 
-export const locationRouter = createTRPCRouter({
+export const locationRouter = createApiRouter({
   searchCity: publicProcedure
     .input(locationSearchCityInput)
     .output(locationSearchCityOutput)

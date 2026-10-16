@@ -1,9 +1,9 @@
 import { statsRouter } from "./router/widgets/stats";
-export { createTRPCContext } from "./trpc";
+export { createApiContext } from "./procedure";
 export { callMcpTool, extractMcpToolsFromProcedures } from "./mcp-tools";
 export type { McpTool } from "./mcp-tools";
 
-import { createTRPCRouter } from "./trpc";
+import { createApiRouter } from "./procedure";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
 import { boardRouter } from "./router/board";
@@ -33,7 +33,7 @@ import { userRouter } from "./router/user";
 import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
 import { wudRouter } from "./router/widgets/wud";
 
-export const mcpRouter = createTRPCRouter({
+export const mcpRouter = createApiRouter({
   stats: statsRouter,
   app: appRouterForApps,
   apiKeys: apiKeysRouter,

@@ -21,7 +21,7 @@ export default async function SearchEngineEditPage(props: SearchEngineEditPagePr
     notFound();
   }
 
-  const searchEngine = await api.searchEngine.byId({ id: params.id });
+  const searchEngine = await api.searchEngine.byId.query({ id: params.id });
   const t = await getI18n("search.engine.page.edit");
 
   return (

@@ -1,4 +1,4 @@
-import type { Provider } from "next-auth/providers";
+import type { Provider } from "@auth/core/providers";
 
 import { env } from "../env";
 

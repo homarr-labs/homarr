@@ -41,7 +41,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
   if (!session) redirect("/auth/login");
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
-  const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
+  const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated.query(searchParams);
   const totalPages = Math.ceil(totalCount / searchParams.pageSize);
 
   if (totalPages > 0 && searchParams.page > totalPages) {

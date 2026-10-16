@@ -2,10 +2,9 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack, Title } from "@mantine/core";
 
-import { api } from "@homarr/api/server";
+import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
-import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -14,12 +13,12 @@ import { DockerTable } from "./docker-table";
 
 export default async function DockerPage() {
   const session = await auth();
-  if (!(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER)) {
+  if (!(session?.user.permissions.includes("admin") && (await getBackendRuntimeAsync()).dockerEnabled)) {
     notFound();
   }
 
   const [{ containers, endpoints, timestamp }, requestHeaders] = await Promise.all([
-    api.docker.getContainers(),
+    api.docker.getContainers.query(),
     headers(),
   ]);
   const tDocker = await getI18n("docker");

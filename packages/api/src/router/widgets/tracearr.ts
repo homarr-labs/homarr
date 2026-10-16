@@ -3,14 +3,14 @@ import { mockWidgetData } from "@homarr/integrations";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const tracearrRouter = createTRPCRouter({
+export const tracearrRouter = createApiRouter({
   getDashboard: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "tracearr"))
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           if (integration.kind === "mock") {
             return {

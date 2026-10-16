@@ -4,15 +4,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { localeCookieKey } from "@homarr/definitions";
 
 const mocks = vi.hoisted(() => ({
-  getOnboardingStep: vi.fn(),
-  getDefaultLocale: vi.fn(),
+  getRouting: vi.fn(),
   createI18nMiddleware: vi.fn(),
 }));
 
-vi.mock("@homarr/db/proxy-reader", () => ({
-  getDefaultLocaleForProxyAsync: mocks.getDefaultLocale,
-  getOnboardingStepForProxyAsync: mocks.getOnboardingStep,
+vi.mock("@trpc/client", () => ({
+  createTRPCClient: () => ({ frontend: { routing: { query: mocks.getRouting } } }),
+  httpLink: vi.fn(),
 }));
+
+vi.mock("@homarr/api/shared", () => ({ getTrpcUrl: () => "http://backend:3002/api/trpc" }));
 
 vi.mock("@homarr/translation/middleware", () => ({
   createI18nMiddleware: mocks.createI18nMiddleware,
@@ -32,8 +33,7 @@ const createRequest = (pathname: string, locale?: string) => {
 describe("locale and onboarding proxy", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.getOnboardingStep.mockResolvedValue("finish");
-    mocks.getDefaultLocale.mockResolvedValue("en");
+    mocks.getRouting.mockResolvedValue({ step: "finish", defaultLocale: "en" });
     mocks.createI18nMiddleware.mockImplementation((defaultLocale: string) => (request: NextRequest) => {
       request.headers.set("x-test-default-locale", defaultLocale);
       return NextResponse.next();
@@ -41,103 +41,79 @@ describe("locale and onboarding proxy", () => {
   });
 
   it("redirects unfinished onboarding to /init", async () => {
-    mocks.getOnboardingStep.mockResolvedValue("integrations");
+    mocks.getRouting.mockResolvedValue({ step: "setup", defaultLocale: "en" });
     const { proxy } = await loadProxy();
-
     const response = await proxy(createRequest("/en/dashboard"));
-
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe("http://localhost/init");
-    expect(mocks.getOnboardingStep).toHaveBeenCalledOnce();
+    expect(mocks.getRouting).toHaveBeenCalledOnce();
   });
 
   it("allows /init while onboarding is unfinished", async () => {
-    mocks.getOnboardingStep.mockResolvedValue("start");
+    mocks.getRouting.mockResolvedValue({ step: "start", defaultLocale: "en" });
     const { proxy } = await loadProxy();
-
     const response = await proxy(createRequest("/en/init"));
-
     expect(response.status).toBe(200);
-    expect(mocks.getOnboardingStep).not.toHaveBeenCalled();
-    expect(mocks.getDefaultLocale).toHaveBeenCalledOnce();
+    expect(mocks.getRouting).toHaveBeenCalledOnce();
   });
 
   it("allows administrator sign-in while onboarding is unfinished", async () => {
-    mocks.getOnboardingStep.mockResolvedValue("setup");
+    mocks.getRouting.mockResolvedValue({ step: "setup", defaultLocale: "en" });
     const { proxy } = await loadProxy();
-
     const response = await proxy(createRequest("/en/auth/login"));
-
     expect(response.status).toBe(200);
-    expect(mocks.getOnboardingStep).not.toHaveBeenCalled();
   });
 
   it("does not treat nested routes ending in init or auth/login as onboarding access routes", async () => {
-    mocks.getOnboardingStep.mockResolvedValue("setup");
+    mocks.getRouting.mockResolvedValue({ step: "setup", defaultLocale: "en" });
     const { proxy } = await loadProxy();
-
     const initResponse = await proxy(createRequest("/en/boards/init"));
     const loginResponse = await proxy(createRequest("/en/settings/auth/login"));
-
     expect(initResponse.headers.get("location")).toBe("http://localhost/init");
     expect(loginResponse.headers.get("location")).toBe("http://localhost/init");
   });
 
   it("uses the configured default locale for a missing or invalid locale cookie", async () => {
-    mocks.getDefaultLocale.mockResolvedValue("de");
+    mocks.getRouting.mockResolvedValue({ step: "finish", defaultLocale: "de" });
     const { proxy } = await loadProxy();
-
     await proxy(createRequest("/en/dashboard", "not-a-locale"));
-
-    expect(mocks.getDefaultLocale).toHaveBeenCalledOnce();
+    expect(mocks.getRouting).toHaveBeenCalledOnce();
     expect(mocks.createI18nMiddleware).toHaveBeenCalledWith("de");
   });
 
-  it("keeps a valid locale cookie and does not query the configured default", async () => {
+  it("keeps a valid locale cookie and avoids routing reads once onboarding has finished", async () => {
     const { proxy } = await loadProxy();
-
+    await proxy(createRequest("/fr/dashboard", "fr"));
     const response = await proxy(createRequest("/fr/dashboard", "fr"));
-
     expect(response.status).toBe(200);
-    expect(mocks.getDefaultLocale).not.toHaveBeenCalled();
+    expect(mocks.getRouting).toHaveBeenCalledOnce();
     expect(mocks.createI18nMiddleware).toHaveBeenCalledWith("en");
   });
 
-  it("deduplicates concurrent cold-start database reads", async () => {
-    let finishOnboarding!: (step: string) => void;
-    let finishLocale!: (locale: string) => void;
-    mocks.getOnboardingStep.mockImplementation(
+  it("deduplicates concurrent cold-start backend reads", async () => {
+    let finishRouting!: (routing: { step: string; defaultLocale: string }) => void;
+    mocks.getRouting.mockImplementation(
       () =>
-        new Promise<string>((resolve) => {
-          finishOnboarding = resolve;
-        }),
-    );
-    mocks.getDefaultLocale.mockImplementation(
-      () =>
-        new Promise<string>((resolve) => {
-          finishLocale = resolve;
+        new Promise((resolve) => {
+          finishRouting = resolve;
         }),
     );
     const { proxy } = await loadProxy();
     const responses = Array.from({ length: 50 }, () => proxy(createRequest("/en/dashboard", "not-a-locale")));
-
-    await vi.waitFor(() => expect(mocks.getOnboardingStep).toHaveBeenCalledOnce());
-    finishOnboarding("finish");
-    await vi.waitFor(() => expect(mocks.getDefaultLocale).toHaveBeenCalledOnce());
-    finishLocale("de");
-
+    await vi.waitFor(() => expect(mocks.getRouting).toHaveBeenCalledOnce());
+    finishRouting({ step: "finish", defaultLocale: "de" });
     await expect(Promise.all(responses)).resolves.toHaveLength(50);
-    expect(mocks.getOnboardingStep).toHaveBeenCalledOnce();
-    expect(mocks.getDefaultLocale).toHaveBeenCalledOnce();
+    expect(mocks.getRouting).toHaveBeenCalledOnce();
+    expect(mocks.createI18nMiddleware).toHaveBeenCalledWith("de");
   });
 
   it("clears failed in-flight reads so the next request can recover", async () => {
-    mocks.getOnboardingStep.mockRejectedValueOnce(new Error("temporary database failure")).mockResolvedValue("finish");
+    mocks.getRouting
+      .mockRejectedValueOnce(new Error("temporary backend failure"))
+      .mockResolvedValue({ step: "finish", defaultLocale: "en" });
     const { proxy } = await loadProxy();
-
-    await expect(proxy(createRequest("/en/dashboard", "en"))).rejects.toThrow("temporary database failure");
+    await expect(proxy(createRequest("/en/dashboard", "en"))).rejects.toThrow("temporary backend failure");
     await expect(proxy(createRequest("/en/dashboard", "en"))).resolves.toMatchObject({ status: 200 });
-
-    expect(mocks.getOnboardingStep).toHaveBeenCalledTimes(2);
+    expect(mocks.getRouting).toHaveBeenCalledTimes(2);
   });
 });

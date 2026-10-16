@@ -46,7 +46,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useIntegrationConnected } from "@homarr/common";
+import { useIntegrationConnected } from "@homarr/common/hooks";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";

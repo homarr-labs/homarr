@@ -15,7 +15,7 @@ import {
   createOneWidgetIntegrationMiddleware,
 } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
 interface IntegrationQueryResult<TData> {
   integration: { id: string; name: string; kind: IntegrationKindByCategory<"mediaRequest"> };
@@ -23,7 +23,7 @@ interface IntegrationQueryResult<TData> {
   error?: string;
 }
 
-export const mediaRequestsRouter = createTRPCRouter({
+export const mediaRequestsRouter = createApiRouter({
   getLatestRequests: publicProcedure
     .meta({
       mcp: {
@@ -34,9 +34,9 @@ export const mediaRequestsRouter = createTRPCRouter({
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "mediaRequests-requestList"))
     .input(mediaRequestListInputSchema)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const results: IntegrationQueryResult<MediaRequest[]>[] = await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const { data } = await mediaRequestListRequestHandler.handler(integration, input).getDataAsync();
           return {
@@ -88,12 +88,12 @@ export const mediaRequestsRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "mediaRequests-requestStats"))
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       const results: IntegrationQueryResult<{
         stats: MediaRequestStats["stats"] | null;
         users: MediaRequestStats["users"];
       }>[] = await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
           return {
@@ -143,7 +143,7 @@ export const mediaRequestsRouter = createTRPCRouter({
         answer: z.enum(["approve", "decline"]),
       }),
     )
-    .mutation(async ({ ctx: { integration }, input }) => {
+    .mutation(async ({ context: { integration }, input }) => {
       const integrationInstance = await createIntegrationAsync(integration);
 
       const answerActions = {

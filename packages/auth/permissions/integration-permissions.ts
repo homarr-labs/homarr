@@ -1,4 +1,4 @@
-import type { Session } from "next-auth";
+import type { Session } from "../types";
 
 import type { IntegrationPermission } from "@homarr/definitions";
 

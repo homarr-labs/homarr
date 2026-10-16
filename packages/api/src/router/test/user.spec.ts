@@ -8,6 +8,7 @@ import { invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
+import { createCallerFactory } from "../../procedure";
 import { claimOnboardingAsync } from "../../onboarding-claim";
 import { userRouter } from "../user";
 
@@ -42,7 +43,7 @@ describe("initUser should initialize the first user", () => {
   it("should create a user if none exists", async () => {
     const db = createDb();
     const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -67,7 +68,7 @@ describe("initUser should initialize the first user", () => {
   it("should not create a user if the password and confirmPassword do not match", async () => {
     const db = createDb();
     const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -81,13 +82,23 @@ describe("initUser should initialize the first user", () => {
         confirmPassword: "456ABCdef+/-",
       });
 
-    await expect(actAsync()).rejects.toThrow("passwordsDoNotMatch");
+    await expect(actAsync()).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: {
+        issues: [
+          expect.objectContaining({
+            path: ["confirmPassword"],
+            params: { i18n: { key: "passwordsDoNotMatch", params: {} } },
+          }),
+        ],
+      },
+    });
   });
 
   it.each([["aB2%"], ["short"]])("should reject passwords shorter than 8 characters for '%s'", async (password) => {
     const db = createDb();
     const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -107,7 +118,7 @@ describe("initUser should initialize the first user", () => {
   it("should accept passwords without complexity requirements", async () => {
     const db = createDb();
     const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -132,7 +143,7 @@ describe("initUser should initialize the first user", () => {
   it("should accept passwords with special characters like LoveHomarr<3", async () => {
     const db = createDb();
     const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -159,7 +170,7 @@ describe("register should create a user with valid invitation", () => {
   test("register should create a user with valid invitation", async () => {
     // Arrange
     const db = createDb();
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -215,7 +226,7 @@ describe("register should create a user with valid invitation", () => {
     async (partialInput, systemTime) => {
       // Arrange
       const db = createDb();
-      const caller = userRouter.createCaller({
+      const caller = createCallerFactory(userRouter)({
         db,
         deviceType: undefined,
         session: null,
@@ -258,7 +269,7 @@ describe("editProfile shoud update user", () => {
   test("editProfile should update users and not update emailVerified when email not dirty", async () => {
     // arrange
     const db = createDb();
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -295,7 +306,7 @@ describe("editProfile shoud update user", () => {
   test("editProfile should update users and update emailVerified when email dirty", async () => {
     // arrange
     const db = createDb();
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -331,7 +342,7 @@ describe("editProfile shoud update user", () => {
 describe("delete should delete user", () => {
   test("delete should delete user", async () => {
     const db = createDb();
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -366,7 +377,7 @@ describe("delete should delete user", () => {
 describe("changeEnableRightClickOnWidgets should toggle the right-click preference", () => {
   test("non-admin can toggle their own preference", async () => {
     const db = createDb();
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -396,7 +407,7 @@ describe("changeEnableRightClickOnWidgets should toggle the right-click preferen
 
   test("non-admin cannot toggle another user's preference", async () => {
     const db = createDb();
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -420,7 +431,7 @@ describe("changeEnableRightClickOnWidgets should toggle the right-click preferen
   test("admin can toggle another user's preference", async () => {
     const db = createDb();
     const adminSession = createSession(["admin"]);
-    const caller = userRouter.createCaller({
+    const caller = createCallerFactory(userRouter)({
       db,
       deviceType: undefined,
       session: adminSession,

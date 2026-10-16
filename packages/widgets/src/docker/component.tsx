@@ -36,7 +36,7 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";

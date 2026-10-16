@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -13,13 +13,13 @@ import {
 
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 import { BoundedAsyncQueue } from "./bounded-async-queue";
 
 const logger = createLogger({ module: "beszelRouter" });
 const MAX_PENDING_LIVE_EVENTS = 4;
 
-export const beszelRouter = createTRPCRouter({
+export const beszelRouter = createApiRouter({
   getSystems: publicProcedure
     .meta({
       mcp: {
@@ -29,11 +29,11 @@ export const beszelRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemGrid"))
-    .query(async ({ ctx }) => {
-      const integrationIds = ctx.integrations.map((i) => i.id);
-      logger.debug("getSystems called", { userId: ctx.session?.user?.id, integrationIds });
+    .query(async ({ context }) => {
+      const integrationIds = context.integrations.map((i) => i.id);
+      logger.debug("getSystems called", { userId: context.session?.user?.id, integrationIds });
       const results = await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const innerHandler = beszelSystemsRequestHandler.handler(integration, {});
           const { data, timestamp } = await innerHandler.getDataAsync();
@@ -56,7 +56,7 @@ export const beszelRouter = createTRPCRouter({
         },
       );
       logger.debug("getSystems completed", {
-        userId: ctx.session?.user?.id,
+        userId: context.session?.user?.id,
         integrationIds,
         resultCount: results.length,
         errorCount: results.filter((r) => "error" in r).length,
@@ -79,16 +79,16 @@ export const beszelRouter = createTRPCRouter({
         maxHistoryItems: z.number().min(1).max(100).default(10),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const integrationIds = ctx.integrations.map((i) => i.id);
+    .query(async ({ context, input }) => {
+      const integrationIds = context.integrations.map((i) => i.id);
       logger.debug("getAlerts called", {
-        userId: ctx.session?.user?.id,
+        userId: context.session?.user?.id,
         integrationIds,
         includeHistory: input.includeHistory,
         maxHistoryItems: input.maxHistoryItems,
       });
       const results = await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const alertsHandler = beszelAlertsRequestHandler.handler(integration, {
             includeHistory: input.includeHistory,
@@ -130,7 +130,7 @@ export const beszelRouter = createTRPCRouter({
         },
       );
       logger.debug("getAlerts completed", {
-        userId: ctx.session?.user?.id,
+        userId: context.session?.user?.id,
         integrationIds,
         resultCount: results.length,
         errorCount: results.filter((r) => "error" in r).length,
@@ -154,13 +154,13 @@ export const beszelRouter = createTRPCRouter({
         includeDocker: z.boolean().default(true),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const integration = ctx.integrations[0];
+    .query(async ({ context, input }) => {
+      const integration = context.integrations[0];
       if (!integration) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
       }
       logger.debug("getSystemStats called", {
-        userId: ctx.session?.user?.id,
+        userId: context.session?.user?.id,
         integrationId: integration.id,
         systemId: input.systemId,
         timePeriod: input.timePeriod,
@@ -174,14 +174,14 @@ export const beszelRouter = createTRPCRouter({
         });
         const { data, timestamp } = await innerHandler.getDataAsync();
         logger.debug("getSystemStats completed", {
-          userId: ctx.session?.user?.id,
+          userId: context.session?.user?.id,
           integrationId: integration.id,
           systemId: input.systemId,
         });
         return { integrationId: integration.id, ...data, updatedAt: timestamp };
       } catch (error) {
         logger.warn("getSystemStats failed", {
-          userId: ctx.session?.user?.id,
+          userId: context.session?.user?.id,
           integrationId: integration.id,
           systemId: input.systemId,
           error,
@@ -203,10 +203,10 @@ export const beszelRouter = createTRPCRouter({
         systemId: z.string(),
       }),
     )
-    .subscription(async function* ({ ctx, input, signal }) {
-      const integration = ctx.integrations[0];
+    .subscription(async function* ({ context, input, signal }) {
+      const integration = context.integrations[0];
       if (!integration) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "At least one Beszel integrationId is required" });
       }
 
       const queue = new BoundedAsyncQueue<LiveStatsEvent>(MAX_PENDING_LIVE_EVENTS);
@@ -221,8 +221,8 @@ export const beszelRouter = createTRPCRouter({
       signal?.addEventListener("abort", stop, { once: true });
 
       logger.debug("Beszel realtime subscription started", {
-        userId: ctx.session?.user?.id,
-        integrationIds: ctx.integrations.map((candidate) => candidate.id),
+        userId: context.session?.user?.id,
+        integrationIds: context.integrations.map((candidate) => candidate.id),
         systemId: input.systemId,
       });
 
@@ -232,7 +232,7 @@ export const beszelRouter = createTRPCRouter({
         void (async () => {
           try {
             if (typeof instance.subscribeRealtimeMetrics !== "function") {
-              throw new TRPCError({
+              throw new ApiError({
                 code: "METHOD_NOT_SUPPORTED",
                 message: `Integration ${integration.kind} does not support realtime metrics`,
               });
@@ -244,7 +244,7 @@ export const beszelRouter = createTRPCRouter({
                 emittedEventCount += 1;
                 if (emittedEventCount <= 2 || emittedEventCount % 60 === 0) {
                   logger.debug("Forwarding Beszel realtime events", {
-                    userId: ctx.session?.user?.id,
+                    userId: context.session?.user?.id,
                     integrationId: integration.id,
                     systemId: input.systemId,
                     eventType: event.type,
@@ -264,14 +264,14 @@ export const beszelRouter = createTRPCRouter({
             }
 
             logger.warn("Beszel realtime subscription failed", {
-              userId: ctx.session?.user?.id,
+              userId: context.session?.user?.id,
               integrationId: integration.id,
               systemId: input.systemId,
               emittedEventCount,
               error,
             });
             queue.fail(
-              new TRPCError({
+              new ApiError({
                 code: "BAD_GATEWAY",
                 message: "Live integration request failed",
                 cause: error,
@@ -285,7 +285,7 @@ export const beszelRouter = createTRPCRouter({
         stop();
         signal?.removeEventListener("abort", stop);
         logger.debug("Beszel realtime subscription stopped", {
-          userId: ctx.session?.user?.id,
+          userId: context.session?.user?.id,
           integrationId: integration.id,
           systemId: input.systemId,
           emittedEventCount,

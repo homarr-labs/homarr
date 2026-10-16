@@ -5,6 +5,7 @@ import { users } from "@homarr/db/schema";
 import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
+import { createCallerFactory } from "../../../procedure";
 import { configurePreviewSessionSource } from "../../custom-widget/preview-sessions";
 
 const mocks = vi.hoisted(() => ({
@@ -38,7 +39,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
 
     const first = await caller.validateTemplate({ template: "<Text>Ready</Text>" });
     const equivalent = await caller.validateTemplate({ template: "<Text>Ready</Text>\u200B" });
@@ -61,7 +62,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template, ...definition } = CUSTOM_WIDGET_STARTER;
     const preview = await caller.previewCreate({
       definition: {
@@ -109,7 +110,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template, ...definition } = CUSTOM_WIDGET_STARTER;
     const defaultSource = definition.sources.default;
     if (!defaultSource || defaultSource.type === "integration") throw new Error("Starter HTTP source is missing");
@@ -139,7 +140,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template: _template, ...definition } = CUSTOM_WIDGET_STARTER;
 
     const preview = await caller.previewCreate({
@@ -167,7 +168,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template, ...definition } = CUSTOM_WIDGET_STARTER;
     const preview = await caller.previewCreate({
       definition: {
@@ -199,7 +200,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template: _template, ...definition } = CUSTOM_WIDGET_STARTER;
     const preview = await caller.previewCreate({
       definition: {
@@ -251,7 +252,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template: _template, ...definition } = CUSTOM_WIDGET_STARTER;
     const preview = await caller.previewCreate({
       definition: {
@@ -311,7 +312,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template: _template, ...definition } = CUSTOM_WIDGET_STARTER;
 
     const error = await caller
@@ -339,7 +340,7 @@ describe("custom widget agent preview workflow", () => {
       user: { id: userId, permissions: ["admin"], colorScheme: "light" },
       expires: new Date(Date.now() + 60_000).toISOString(),
     } satisfies Session;
-    const caller = customWidgetRouter.createCaller({ db, deviceType: undefined, session });
+    const caller = createCallerFactory(customWidgetRouter)({ db, deviceType: undefined, session });
     const { template, ...definition } = CUSTOM_WIDGET_STARTER;
     const preview = await caller.previewCreate({
       definition: {

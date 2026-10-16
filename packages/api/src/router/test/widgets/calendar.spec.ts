@@ -7,6 +7,7 @@ import { createId } from "@homarr/common";
 import { integrations, integrationUserPermissions, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../../procedure";
 import { calendarRouter } from "../../widgets/calendar";
 
 const { getDataAsync, handler } = vi.hoisted(() => {
@@ -34,7 +35,7 @@ const createCallerAsync = async () => {
     user: { id: userId, permissions: [], colorScheme: "light" },
     expires: new Date().toISOString(),
   } satisfies Session;
-  return { caller: calendarRouter.createCaller({ db, deviceType: undefined, session }), integrationId };
+  return { caller: createCallerFactory(calendarRouter)({ db, deviceType: undefined, session }), integrationId };
 };
 
 const createEvent = (title: string, releaseType?: "digitalRelease" | "physicalRelease") => ({

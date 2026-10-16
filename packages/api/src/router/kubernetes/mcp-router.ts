@@ -1,10 +1,11 @@
+import { createApiCaller } from "../../procedure";
 import { z } from "zod/v4";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../procedure";
 
 const kubernetesContextInput = z.object({ contextId: z.string().min(1) });
 
-const contextsRouter = createTRPCRouter({
+const contextsRouter = createApiRouter({
   getContexts: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -14,13 +15,13 @@ const contextsRouter = createTRPCRouter({
           "List configured Kubernetes contexts with availability, metrics status, and default-context metadata. Requires admin permission.",
       },
     })
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       const { contextsRouter: router } = await import("./router/contexts");
-      return await router.createCaller(ctx).getContexts();
+      return await createApiCaller(router, context).getContexts();
     }),
 });
 
-const ingressesRouter = createTRPCRouter({
+const ingressesRouter = createApiRouter({
   getIngresses: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -31,13 +32,13 @@ const ingressesRouter = createTRPCRouter({
       },
     })
     .input(kubernetesContextInput)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const { ingressesRouter: router } = await import("./router/ingresses");
-      return await router.createCaller(ctx).getIngresses(input);
+      return await createApiCaller(router, context).getIngresses(input);
     }),
 });
 
-const podsRouter = createTRPCRouter({
+const podsRouter = createApiRouter({
   getPods: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -48,13 +49,13 @@ const podsRouter = createTRPCRouter({
       },
     })
     .input(kubernetesContextInput)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const { podsRouter: router } = await import("./router/pods");
-      return await router.createCaller(ctx).getPods(input);
+      return await createApiCaller(router, context).getPods(input);
     }),
 });
 
-export const kubernetesMcpRouter = createTRPCRouter({
+export const kubernetesMcpRouter = createApiRouter({
   contexts: contextsRouter,
   ingresses: ingressesRouter,
   pods: podsRouter,

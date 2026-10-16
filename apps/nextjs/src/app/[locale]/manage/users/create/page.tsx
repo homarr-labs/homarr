@@ -1,17 +1,14 @@
 import { notFound } from "next/navigation";
 
+import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
-import { db, inArray } from "@homarr/db";
-import { groups } from "@homarr/db/schema";
-import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { UserCreateStepperComponent } from "./_components/create-user-stepper";
 
 export async function generateMetadata() {
-  if (!isProviderEnabled("credentials")) return {};
+  if (!(await getBackendRuntimeAsync()).credentialsEnabled) return {};
 
   const session = await auth();
   if (!session?.user.permissions.includes("admin")) {
@@ -26,7 +23,7 @@ export async function generateMetadata() {
 }
 
 export default async function CreateUserPage() {
-  if (!isProviderEnabled("credentials")) {
+  if (!(await getBackendRuntimeAsync()).credentialsEnabled) {
     notFound();
   }
 
@@ -35,12 +32,7 @@ export default async function CreateUserPage() {
     return notFound();
   }
 
-  const initialGroups = await db.query.groups.findMany({
-    where: inArray(groups.name, [everyoneGroup]),
-    with: {
-      permissions: true,
-    },
-  });
+  const initialGroups = await api.frontend.defaultGroups.query();
 
   return (
     <>

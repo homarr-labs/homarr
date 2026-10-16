@@ -6,7 +6,7 @@ import { openApiDocument } from "../packages/api/src/open-api";
 const baseUrl = "http://localhost:3000";
 const schemaPath = "apps/docs/public/api/open-api-schema.json";
 const writeMode = process.argv.slice(2).includes("--write");
-const serialized = `${JSON.stringify(openApiDocument(baseUrl), null, 2)}\n`;
+const serialized = `${JSON.stringify(await openApiDocument(baseUrl), null, 2)}\n`;
 const generated = JSON.parse(serialized) as unknown;
 
 function assertOpenApiDocument(value: unknown): asserts value is { openapi: string; paths: Record<string, unknown> } {

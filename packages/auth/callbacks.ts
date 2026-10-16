@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import type { NextAuthConfig } from "next-auth";
+import type { AuthConfig } from "@auth/core";
 
-import type { Session } from "@homarr/auth";
+import type { Session } from "./types";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { groupMembers, groupPermissions, users } from "@homarr/db/schema";
@@ -60,7 +60,7 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
   };
 };
 
-type NextAuthCallbackRecord = Exclude<NextAuthConfig["callbacks"], undefined>;
+type NextAuthCallbackRecord = Exclude<AuthConfig["callbacks"], undefined>;
 export type NextAuthCallbackOf<TKey extends keyof NextAuthCallbackRecord> = Exclude<
   NextAuthCallbackRecord[TKey],
   undefined

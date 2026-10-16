@@ -4,12 +4,10 @@ export * from "./cookie";
 export * from "./array";
 export * from "./date";
 export * from "./stopwatch";
-export * from "./hooks";
 export * from "./id";
 export * from "./url";
 export * from "./number";
 export * from "./error";
-export * from "./theme";
 export * from "./function";
 export * from "./grid-algorithm";
 

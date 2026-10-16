@@ -22,7 +22,7 @@ export default async function GroupPermissionsPage(props: GroupSettingsPageProps
     notFound();
   }
 
-  const group = await api.group.getById({ id: params.id });
+  const group = await api.group.getById.query({ id: params.id });
   const t = await getI18n("management.page.group.setting.setting");
   const tEntities = await getI18n("common.entity");
 

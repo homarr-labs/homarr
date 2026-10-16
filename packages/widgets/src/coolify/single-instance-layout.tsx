@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import { useI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";

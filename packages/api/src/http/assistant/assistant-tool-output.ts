@@ -1,0 +1,128 @@
+import { serialize } from "superjson";
+
+import { isRecord } from "@homarr/common";
+
+export const customWidgetPreviewQueryOutputMaxCharacters = 8_000;
+export const assistantToolOutputMaxCharacters = 24_000;
+const customWidgetAuthoringResourceOutputMaxCharacters = 60_000;
+
+const customWidgetAuthoringResourceToolNames = new Set([
+  "customWidget_schema",
+  "customWidget_getSkill",
+  "customWidget_getReference",
+  "customWidget_getComponentCatalog",
+  "customWidget_getComponent",
+  "customWidget_getComponents",
+  "customWidget_getSharedProps",
+  "customWidget_getExample",
+  "customWidget_get",
+]);
+
+export const getAssistantToolOutputMaxCharacters = (toolName: string) => {
+  if (toolName === "customWidget_previewQuery") return customWidgetPreviewQueryOutputMaxCharacters;
+  if (customWidgetAuthoringResourceToolNames.has(toolName)) return customWidgetAuthoringResourceOutputMaxCharacters;
+  return assistantToolOutputMaxCharacters;
+};
+
+type AssistantToolOutputOptions = {
+  maxCharacters?: number;
+  compactArray?: {
+    itemProperties: readonly string[];
+    outputProperty: string;
+  };
+};
+
+export const getAssistantToolOutputOptions = (toolName: string): AssistantToolOutputOptions => {
+  const maxCharacters = getAssistantToolOutputMaxCharacters(toolName);
+  if (toolName === "board_getAllBoards") {
+    return {
+      maxCharacters,
+      compactArray: {
+        itemProperties: ["id", "name"],
+        outputProperty: "boards",
+      },
+    };
+  }
+  return { maxCharacters };
+};
+
+const compactArrayItems = (items: unknown[], itemProperties: readonly string[]) =>
+  items.map((item) => {
+    if (!isRecord(item)) return item;
+    return Object.fromEntries(
+      itemProperties.flatMap((property) => (item[property] === undefined ? [] : [[property, item[property]]])),
+    );
+  });
+
+const createBoundedArrayOutput = (
+  items: unknown[],
+  outputProperty: string,
+  originalCharacters: number,
+  maxCharacters: number,
+) => {
+  const createOutput = (itemCount: number) => ({
+    truncated: true as const,
+    originalCharacters,
+    totalItems: items.length,
+    [outputProperty]: items.slice(0, itemCount),
+    note: "Only the entries required for the next assistant action are included.",
+  });
+  let lowerBound = 0;
+  let upperBound = items.length;
+  while (lowerBound < upperBound) {
+    const candidate = Math.ceil((lowerBound + upperBound) / 2);
+    if (JSON.stringify(createOutput(candidate)).length <= maxCharacters) lowerBound = candidate;
+    else upperBound = candidate - 1;
+  }
+  return createOutput(lowerBound);
+};
+
+/**
+ * AI SDK model messages only accept JSON-compatible tool results. Homarr's tRPC callers can
+ * return richer values such as Date, bigint, Map, Set, NaN, and nested undefined values.
+ * SuperJSON's transport representation normalizes those values without restoring their runtime
+ * types, keeping subsequent agent steps valid while preserving the useful data.
+ */
+export const toAssistantToolOutput = (value: unknown, options: AssistantToolOutputOptions = {}) => {
+  const output = serialize(value as Parameters<typeof serialize>[0]).json;
+  if (options.maxCharacters === undefined) return output;
+
+  const serialized = JSON.stringify(output);
+  if (serialized === undefined || serialized.length <= options.maxCharacters) return output;
+
+  if (Array.isArray(output) && options.compactArray) {
+    const compactItems = compactArrayItems(output, options.compactArray.itemProperties);
+    const compactSerialized = JSON.stringify(compactItems);
+    if (compactSerialized.length <= options.maxCharacters) return compactItems;
+    return createBoundedArrayOutput(
+      compactItems,
+      options.compactArray.outputProperty,
+      serialized.length,
+      options.maxCharacters,
+    );
+  }
+
+  const outputRecord = isRecord(output) ? output : undefined;
+  const metadata = outputRecord
+    ? Object.fromEntries(
+        ["sessionId", "requestId", "sourceId", "ok", "status", "statusText", "error", "simulated"].flatMap((key) =>
+          outputRecord[key] === undefined ? [] : [[key, outputRecord[key]]],
+        ),
+      )
+    : {};
+  const createPreview = (previewCharacters: number) => ({
+    ...metadata,
+    truncated: true as const,
+    originalCharacters: serialized.length,
+    preview: serialized.slice(0, previewCharacters),
+    note: "The tool result was truncated to protect the conversation context. Use a narrower search or more specific tool when more detail is needed.",
+  });
+  let lowerBound = 0;
+  let upperBound = serialized.length;
+  while (lowerBound < upperBound) {
+    const candidate = Math.ceil((lowerBound + upperBound) / 2);
+    if (JSON.stringify(createPreview(candidate)).length <= options.maxCharacters) lowerBound = candidate;
+    else upperBound = candidate - 1;
+  }
+  return createPreview(lowerBound);
+};

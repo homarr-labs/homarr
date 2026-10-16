@@ -1,6 +1,6 @@
 import type { inferRouterOutputs } from "@trpc/server";
 
-import type { AppRouter } from "@homarr/api";
+import type { AppRouter } from "@homarr/api/legacy";
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;

@@ -10,6 +10,7 @@ import { eq } from "@homarr/db";
 import { boards, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../../procedure";
 import { boardRouter } from "../../board";
 import { optionsRouter } from "../../widgets/options";
 import { timetableRouter } from "../../widgets/timetable";
@@ -48,7 +49,7 @@ const createSession = (userId: string): Session => ({
 });
 
 const createCaller = (db: Database, session: Session | null) =>
-  timetableRouter.createCaller({ db, deviceType: undefined, session });
+  createCallerFactory(timetableRouter)({ db, deviceType: undefined, session });
 
 const createTimetableItemAsync = async (
   db: Database,
@@ -232,7 +233,7 @@ describe("timetableRouter source authorization", () => {
       baseUrl: "https://search.ch",
       isPublic: false,
     });
-    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+    const caller = createCallerFactory(optionsRouter)({ db, deviceType: undefined, session: createSession(ownerId) });
 
     await expect(
       caller.saveItemOptions({ boardId, itemId, newOptions: { baseUrl: "http://127.0.0.1:8080" } }),
@@ -248,7 +249,7 @@ describe("timetableRouter source authorization", () => {
       baseUrl: "https://search.ch",
       isPublic: false,
     });
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: createSession(ownerId) });
 
     await expect(
       caller.saveBoard({
@@ -274,7 +275,7 @@ describe("timetableRouter source authorization", () => {
       baseUrl: "https://search.ch",
       isPublic: false,
     });
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+    const caller = createCallerFactory(boardRouter)({ db, deviceType: undefined, session: createSession(ownerId) });
 
     await expect(
       caller.addItem({

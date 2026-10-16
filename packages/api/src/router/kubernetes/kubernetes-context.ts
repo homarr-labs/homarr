@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { KubernetesClient, KubernetesContextNotFoundError } from "./kubernetes-client";
@@ -10,7 +10,7 @@ export const getKubernetesClient = (contextId: string) => {
     return KubernetesClient.getInstance(contextId);
   } catch (error) {
     if (error instanceof KubernetesContextNotFoundError) {
-      throw new TRPCError({ code: "NOT_FOUND", message: error.message });
+      throw new ApiError({ code: "NOT_FOUND", message: error.message });
     }
     throw error;
   }

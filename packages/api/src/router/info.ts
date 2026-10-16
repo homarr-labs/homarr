@@ -1,9 +1,9 @@
 import z from "zod/v4";
 
 import packageJson from "../../../../package.json";
-import { createTRPCRouter, isDemoMode, isDemoReadOnly, publicProcedure, protectedProcedure } from "../trpc";
+import { createApiRouter, isDemoMode, isDemoReadOnly, publicProcedure, protectedProcedure } from "../procedure";
 
-export const infoRouter = createTRPCRouter({
+export const infoRouter = createApiRouter({
   getInfo: protectedProcedure
     .input(z.void())
     .output(z.object({ version: z.string() }))

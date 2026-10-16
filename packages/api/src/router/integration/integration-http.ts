@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import type { Session } from "@homarr/auth";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
@@ -23,10 +23,10 @@ export interface IntegrationHttpContext {
   session: Session | null;
 }
 
-export async function getIntegrationForHttpRequest(ctx: IntegrationHttpContext, integrationId: string) {
-  const userId = ctx.session?.user.id ?? "";
-  const groups = await ctx.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
-  const integration = await ctx.db.query.integrations.findFirst({
+export async function getIntegrationForHttpRequest(context: IntegrationHttpContext, integrationId: string) {
+  const userId = context.session?.user.id ?? "";
+  const groups = await context.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
+  const integration = await context.db.query.integrations.findFirst({
     where: eq(integrations.id, integrationId),
     with: {
       secrets: true,
@@ -38,29 +38,29 @@ export async function getIntegrationForHttpRequest(ctx: IntegrationHttpContext, 
   });
   // Arbitrary reads can expose credentials or mutate state; bounded native
   // integration operations have a different permission contract.
-  if (!integration || !constructIntegrationPermissions(integration, ctx.session).hasFullAccess) {
-    throw new TRPCError({
+  if (!integration || !constructIntegrationPermissions(integration, context.session).hasFullAccess) {
+    throw new ApiError({
       code: "FORBIDDEN",
       message: "Arbitrary integration requests require full integration access",
     });
   }
   const unavailableReason = getIntegrationHttpUnavailableReason(integration.kind);
-  if (unavailableReason) throw new TRPCError({ code: "BAD_REQUEST", message: unavailableReason });
+  if (unavailableReason) throw new ApiError({ code: "BAD_REQUEST", message: unavailableReason });
   return integration;
 }
 
 export async function selectIntegrationForHttpRequest(
-  ctx: IntegrationHttpContext,
+  context: IntegrationHttpContext,
   selector: { integrationId?: string; integrationName?: string; integrationKind?: IntegrationKind },
 ) {
-  if (selector.integrationId) return getIntegrationForHttpRequest(ctx, selector.integrationId);
-  const userId = ctx.session?.user.id ?? "";
-  const groups = await ctx.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
+  if (selector.integrationId) return getIntegrationForHttpRequest(context, selector.integrationId);
+  const userId = context.session?.user.id ?? "";
+  const groups = await context.db.query.groupMembers.findMany({ where: eq(groupMembers.userId, userId) });
   let where;
   if (selector.integrationName) where = eq(integrations.name, selector.integrationName);
   else if (selector.integrationKind) where = eq(integrations.kind, selector.integrationKind);
-  else throw new TRPCError({ code: "BAD_REQUEST", message: "An integration selector is required" });
-  const matches = await ctx.db.query.integrations.findMany({
+  else throw new ApiError({ code: "BAD_REQUEST", message: "An integration selector is required" });
+  const matches = await context.db.query.integrations.findMany({
     where,
     orderBy: [asc(integrations.name), asc(integrations.id)],
     with: {
@@ -71,10 +71,10 @@ export async function selectIntegrationForHttpRequest(
       },
     },
   });
-  const integration = matches.find((entry) => constructIntegrationPermissions(entry, ctx.session).hasFullAccess);
-  if (!integration) throw new TRPCError({ code: "FORBIDDEN", message: "No matching integration with full access" });
+  const integration = matches.find((entry) => constructIntegrationPermissions(entry, context.session).hasFullAccess);
+  if (!integration) throw new ApiError({ code: "FORBIDDEN", message: "No matching integration with full access" });
   const unavailableReason = getIntegrationHttpUnavailableReason(integration.kind);
-  if (unavailableReason) throw new TRPCError({ code: "BAD_REQUEST", message: unavailableReason });
+  if (unavailableReason) throw new ApiError({ code: "BAD_REQUEST", message: unavailableReason });
   return integration;
 }
 
@@ -154,6 +154,6 @@ export async function getIntegrationHttpConnection(integration: HttpIntegration,
       },
     };
   } catch {
-    throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Integration connection could not be resolved" });
+    throw new ApiError({ code: "PRECONDITION_FAILED", message: "Integration connection could not be resolved" });
   }
 }

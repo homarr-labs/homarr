@@ -21,7 +21,7 @@ export default async function GroupsListPage() {
 
   const tCommon = await getI18n("common");
   const tGroup = await getI18n("group");
-  const groups = await api.group.getAll();
+  const groups = await api.group.getAll.query();
   const dbEveryoneGroup = groups.find((group) => group.name === everyoneGroup);
   const groupsWithoutEveryone = groups.filter((group) => group.name !== everyoneGroup);
 

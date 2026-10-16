@@ -5,8 +5,8 @@ import { encryptSecret } from "@homarr/common/server";
 import { integrations, integrationSecrets } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory, createApiRouter } from "../../../procedure";
 import { integrationTestStoredConnectionProcedure } from "../../integration/integration-test-stored-connection";
-import { createTRPCRouter } from "../../../trpc";
 
 const { factory, upstreamTest } = vi.hoisted(() => ({ factory: vi.fn(), upstreamTest: vi.fn() }));
 vi.mock("@homarr/integrations/factory", () => ({ createIntegrationAsync: factory }));
@@ -26,8 +26,8 @@ const setup = async (permissions: Session["user"]["permissions"] = ["integration
     user: { id: "owner", permissions, colorScheme: "light" },
     expires: new Date().toISOString(),
   };
-  const router = createTRPCRouter({ testConnection: integrationTestStoredConnectionProcedure });
-  return { db, router, caller: router.createCaller({ db, session, deviceType: undefined }) };
+  const router = createApiRouter({ testConnection: integrationTestStoredConnectionProcedure });
+  return { db, router, caller: createCallerFactory(router)({ db, session, deviceType: undefined }) };
 };
 
 test("tests stored credentials without modifying saved configuration", async () => {
@@ -52,7 +52,7 @@ test("denies use-only access and hides missing integrations before loading secre
 
 test("requires authentication", async () => {
   const { db, router } = await setup();
-  const caller = router.createCaller({ db, session: null, deviceType: undefined });
+  const caller = createCallerFactory(router)({ db, session: null, deviceType: undefined });
   await expect(caller.testConnection({ id: "saved" })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   expect(factory).not.toHaveBeenCalled();
 });
@@ -73,8 +73,8 @@ test("returns only safe categories for upstream failures and thrown errors", asy
   expect(await caller.testConnection({ id: "saved" })).toEqual({ success: false, error: "unknown" });
   const { db } = await setup();
   await db.delete(integrationSecrets);
-  const router = createTRPCRouter({ testConnection: integrationTestStoredConnectionProcedure });
-  const noSecretsCaller = router.createCaller({
+  const router = createApiRouter({ testConnection: integrationTestStoredConnectionProcedure });
+  const noSecretsCaller = createCallerFactory(router)({
     db,
     session: {
       user: { id: "owner", permissions: ["integration-full-all"], colorScheme: "light" },

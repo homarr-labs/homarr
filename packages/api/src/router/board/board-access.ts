@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
@@ -9,16 +9,16 @@ import type { BoardPermission } from "@homarr/definitions";
 
 /**
  * Throws NOT_FOUND if user is not allowed to perform action on board
- * @param ctx trpc router context
+ * @param context API request context
  * @param boardWhere where clause for the board
  * @param permission permission required to perform action on board
  */
 export const throwIfActionForbiddenAsync = async (
-  ctx: { db: Database; session: Session | null },
+  context: { db: Database; session: Session | null },
   boardWhere: SQL<unknown>,
   permission: BoardPermission,
 ) => {
-  const { db, session } = ctx;
+  const { db, session } = context;
   const groupPermissionWhere = session
     ? inArray(
         boardGroupPermissions.groupId,
@@ -68,7 +68,7 @@ export const throwIfActionForbiddenAsync = async (
  * A function is used to use the method without return statement
  */
 function notAllowed(): never {
-  throw new TRPCError({
+  throw new ApiError({
     code: "NOT_FOUND",
     message: "Board not found",
   });

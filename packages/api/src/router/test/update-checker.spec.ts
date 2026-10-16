@@ -4,6 +4,7 @@ import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
+import { createCallerFactory } from "../../procedure";
 import { updateCheckerRouter } from "../update-checker";
 
 const mocks = vi.hoisted(() => ({
@@ -29,7 +30,7 @@ const createSession = (permissions: GroupPermissionKey[]): Session => ({
 });
 
 const createCaller = (session: Session | null) =>
-  updateCheckerRouter.createCaller({
+  createCallerFactory(updateCheckerRouter)({
     db: null as unknown as Database,
     deviceType: undefined,
     session,
@@ -47,7 +48,7 @@ describe("update checker authorization", () => {
   });
 
   test("rejects anonymous users", async () => {
-    await expect(createCaller(null).getAvailableUpdates()).rejects.toThrow("UNAUTHORIZED");
+    await expect(createCaller(null).getAvailableUpdates()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
 
   test("returns an empty result when the cache reader fails", async () => {

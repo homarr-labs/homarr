@@ -8,6 +8,7 @@ import { boards, serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
+import { createCallerFactory } from "../../procedure";
 import { serverSettingsRouter } from "../serverSettings";
 
 // Mock the auth module to return an empty session
@@ -25,7 +26,7 @@ const defaultSession = {
 describe("getAll server settings", () => {
   test("getAll should throw error when unauthorized", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -44,7 +45,7 @@ describe("getAll server settings", () => {
   });
   test("getAll should return default server settings when nothing in database", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -59,7 +60,7 @@ describe("getAll server settings", () => {
 describe("saveSettings", () => {
   test("saveSettings should update settings and return true when it updated only one", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -94,7 +95,7 @@ describe("saveSettings", () => {
 
   test("analytics settings cannot overwrite the installation ID or snapshot timestamp", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const caller = createCallerFactory(serverSettingsRouter)({ db, deviceType: undefined, session: defaultSession });
     const analyticsSettings = {
       enableGeneral: true,
       instanceId: createId(),
@@ -118,7 +119,7 @@ describe("saveSettings", () => {
 describe("board settings API", () => {
   test("getBoardSettings should return board defaults", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -129,7 +130,7 @@ describe("board settings API", () => {
 
   test("updateBoardSettings should insert settings when defaults are not persisted", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -158,7 +159,7 @@ describe("board settings API", () => {
 
   test("updateBoardSettings should update existing settings", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,
@@ -189,7 +190,7 @@ describe("board settings API", () => {
 
   test("updateBoardSettings should reject private home boards", async () => {
     const db = createDb();
-    const caller = serverSettingsRouter.createCaller({
+    const caller = createCallerFactory(serverSettingsRouter)({
       db,
       deviceType: undefined,
       session: defaultSession,

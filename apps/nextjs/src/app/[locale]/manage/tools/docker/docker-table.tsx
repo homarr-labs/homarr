@@ -19,7 +19,7 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";

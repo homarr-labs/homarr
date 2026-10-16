@@ -9,14 +9,14 @@ export default async function CustomWidgetPreviewPage({ params }: { params: Prom
   const session = await auth();
   if (!session?.user.permissions.includes("admin")) redirect("/");
   const { id } = await params;
-  const preview = await api.customWidget.previewGet({ sessionId: id }).catch(() => null);
+  const preview = await api.customWidget.previewGet.query({ sessionId: id }).catch(() => null);
   if (!preview) notFound();
 
   const loadRequests = preview.requests.filter((request) => request.kind === "query" && request.trigger === "load");
   const results = await Promise.all(
     loadRequests.map(async (request) => {
       const result = await api.customWidget
-        .previewQuery({ sessionId: id, requestId: request.id, params: {} })
+        .previewQuery.query({ sessionId: id, requestId: request.id, params: {} })
         .catch((cause: unknown) => ({
           ok: false,
           status: 0,

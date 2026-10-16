@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import {
@@ -8,9 +8,9 @@ import {
 } from "@homarr/request-handler/smart-home-entity-state";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
-export const smartHomeRouter = createTRPCRouter({
+export const smartHomeRouter = createApiRouter({
   entityState: publicProcedure
     .meta({
       mcp: {
@@ -21,7 +21,7 @@ export const smartHomeRouter = createTRPCRouter({
     })
     .input(z.object({ entityId: z.string() }))
     .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
-    .query(async ({ ctx: { integration }, input }) => {
+    .query(async ({ context: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
       const { data } = await innerHandler.getDataAsync();
       return data.state;
@@ -36,7 +36,7 @@ export const smartHomeRouter = createTRPCRouter({
     })
     .input(z.object({ entityId: z.string() }))
     .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
-    .query(async ({ ctx: { integration }, input }) => {
+    .query(async ({ context: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
       const { data } = await innerHandler.getDataAsync();
       return toSafeEntityDetails(data);
@@ -51,11 +51,11 @@ export const smartHomeRouter = createTRPCRouter({
     })
     .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-entityState"))
     .input(z.object({ entityId: z.string() }))
-    .mutation(async ({ ctx: { integration }, input }) => {
+    .mutation(async ({ context: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       const success = await client.triggerToggleAsync(input.entityId);
       if (!success) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not toggle the entity" });
+        throw new ApiError({ code: "BAD_GATEWAY", message: "Home Assistant did not toggle the entity" });
       }
       await smartHomeEntityStateRequestHandler.invalidateCacheAsync([integration.id]);
       return true;
@@ -70,11 +70,11 @@ export const smartHomeRouter = createTRPCRouter({
     })
     .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-executeAutomation"))
     .input(z.object({ automationId: z.string() }))
-    .mutation(async ({ ctx: { integration }, input }) => {
+    .mutation(async ({ context: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       const success = await client.triggerAutomationAsync(input.automationId);
       if (!success) {
-        throw new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not execute the automation" });
+        throw new ApiError({ code: "BAD_GATEWAY", message: "Home Assistant did not execute the automation" });
       }
       await smartHomeEntityStateRequestHandler.invalidateCacheAsync([integration.id]);
       return true;

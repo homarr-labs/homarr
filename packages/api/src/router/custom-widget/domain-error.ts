@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { FlattenError } from "@homarr/common";
 import { CustomWidgetDomainError } from "@homarr/custom-widgets/server";
@@ -10,7 +10,7 @@ export function toTrpcError(error: unknown): never {
     const cause = error.retryAfterMs
       ? new RequestLimitTransportError(error.message, { retryAfterMs: error.retryAfterMs })
       : error;
-    throw new TRPCError({ code: error.code, message: error.message, cause });
+    throw new ApiError({ code: error.code, message: error.message, cause });
   }
   throw error;
 }

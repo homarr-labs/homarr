@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../../procedure";
 import { describe, expect, test } from "vitest";
 
 import { throwIfDockerOperationsFailed } from "../../docker/docker-operation-results";
@@ -17,7 +17,7 @@ describe("Docker operation results", () => {
     ]);
 
     expect(() => throwIfDockerOperationsFailed(results)).toThrow(
-      new TRPCError({
+      new ApiError({
         code: "INTERNAL_SERVER_ERROR",
         message: "One or more Docker container operations failed",
       }),

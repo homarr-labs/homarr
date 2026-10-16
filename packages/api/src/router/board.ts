@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
@@ -73,7 +73,7 @@ import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../procedure";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfIntegrationActionsForbiddenAsync } from "./integration/integration-access";
 import {
@@ -154,7 +154,7 @@ const haveSameIntegrationIds = (left: readonly string[], right: readonly string[
 };
 
 const validateWidgetConfigurationsAsync = async (
-  ctx: Parameters<typeof throwIfIntegrationActionsForbiddenAsync>[0],
+  context: Parameters<typeof throwIfIntegrationActionsForbiddenAsync>[0],
   submittedItems: readonly WidgetConfiguration[],
   storedItems: readonly WidgetConfiguration[] = [],
 ) => {
@@ -169,7 +169,7 @@ const validateWidgetConfigurationsAsync = async (
   const selectedIntegrationIds = [...new Set(changedItems.flatMap(({ integrationIds }) => integrationIds))];
   let integrationRecords: { id: string; kind: IntegrationKind }[] = [];
   if (selectedIntegrationIds.length > 0) {
-    integrationRecords = await ctx.db.query.integrations.findMany({
+    integrationRecords = await context.db.query.integrations.findMany({
       columns: { id: true, kind: true },
       where: inArray(integrations.id, selectedIntegrationIds),
     });
@@ -179,7 +179,7 @@ const validateWidgetConfigurationsAsync = async (
     (integrationId) => !integrationRecordsById.has(integrationId),
   );
   if (invalidIntegrationIds.length > 0) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "NOT_FOUND",
       message: "Integration not found",
     });
@@ -194,7 +194,7 @@ const validateWidgetConfigurationsAsync = async (
       }),
     ),
   ];
-  await throwIfIntegrationActionsForbiddenAsync(ctx, addedOrReconfiguredIntegrationIds, "use");
+  await throwIfIntegrationActionsForbiddenAsync(context, addedOrReconfiguredIntegrationIds, "use");
 
   for (const item of changedItems) {
     const selectedIntegrationKinds = item.integrationIds.flatMap(
@@ -203,7 +203,7 @@ const validateWidgetConfigurationsAsync = async (
     const integrationIssue = getWidgetIntegrationIssue(item.kind, selectedIntegrationKinds);
     if (!integrationIssue) continue;
 
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: getWidgetIntegrationIssueMessage(item.kind, integrationIssue),
     });
@@ -211,16 +211,16 @@ const validateWidgetConfigurationsAsync = async (
 };
 
 const searchAccessibleBoardsAsync = async (
-  ctx: { db: Database; session: Session | null },
+  context: { db: Database; session: Session | null },
   query: string,
   limit?: number,
 ) => {
-  const userId = ctx.session?.user.id;
-  const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
+  const userId = context.session?.user.id;
+  const permissionsOfCurrentUserWhenPresent = await context.db.query.boardUserPermissions.findMany({
     where: eq(boardUserPermissions.userId, userId ?? ""),
   });
 
-  const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
+  const permissionsOfCurrentUserGroupsWhenPresent = await context.db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, userId ?? ""),
     with: {
       group: {
@@ -239,16 +239,20 @@ const searchAccessibleBoardsAsync = async (
         .flat(),
     );
 
-  const currentUserWhenPresent = await ctx.db.query.users.findFirst({
+  const currentUserWhenPresent = await context.db.query.users.findFirst({
     where: eq(users.id, userId ?? ""),
   });
 
-  const foundBoards = await ctx.db.query.boards.findMany({
+  const foundBoards = await context.db.query.boards.findMany({
     where: and(
       like(boards.name, `%${query}%`),
-      ctx.session?.user.permissions.includes("board-view-all")
+      context.session?.user.permissions.includes("board-view-all")
         ? undefined
-        : or(eq(boards.isPublic, true), eq(boards.creatorId, ctx.session?.user.id ?? ""), inArray(boards.id, boardIds)),
+        : or(
+            eq(boards.isPublic, true),
+            eq(boards.creatorId, context.session?.user.id ?? ""),
+            inArray(boards.id, boardIds),
+          ),
     ),
     limit,
     orderBy: asc(boards.name),
@@ -261,7 +265,7 @@ const searchAccessibleBoardsAsync = async (
     },
     with: {
       userPermissions: {
-        where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+        where: eq(boardUserPermissions.userId, context.session?.user.id ?? ""),
       },
       groupPermissions: {
         where: getBoardGroupPermissionWhere(permissionsOfCurrentUserGroupsWhenPresent),
@@ -273,29 +277,29 @@ const searchAccessibleBoardsAsync = async (
     id: board.id,
     name: board.name,
     logoImageUrl: board.logoImageUrl,
-    permissions: constructBoardPermissions(board, ctx.session),
+    permissions: constructBoardPermissions(board, context.session),
     isHome: currentUserWhenPresent?.homeBoardId === board.id,
     isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
   }));
 };
 
-export const boardRouter = createTRPCRouter({
+export const boardRouter = createApiRouter({
   exists: permissionRequiredProcedure
     .requiresPermission("board-create")
     .input(z.string())
-    .query(async ({ ctx, input: name }) => {
+    .query(async ({ context, input: name }) => {
       try {
-        await noBoardWithSimilarNameAsync(ctx.db, name);
+        await noBoardWithSimilarNameAsync(context.db, name);
         return false;
       } catch (error) {
-        if (error instanceof TRPCError && error.code === "CONFLICT") {
+        if (error instanceof ApiError && error.code === "CONFLICT") {
           return true;
         }
         throw error;
       }
     }),
-  getPublicBoards: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.boards.findMany({
+  getPublicBoards: publicProcedure.query(async ({ context }) => {
+    return await context.db.query.boards.findMany({
       columns: {
         id: true,
         name: true,
@@ -307,8 +311,8 @@ export const boardRouter = createTRPCRouter({
   getBoardsForGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ groupId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const dbEveryoneAndCurrentGroup = await ctx.db.query.groups.findMany({
+    .query(async ({ context, input }) => {
+      const dbEveryoneAndCurrentGroup = await context.db.query.groups.findMany({
         where: or(eq(groups.name, everyoneGroup), eq(groups.id, input.groupId)),
         with: {
           boardPermissions: true,
@@ -326,7 +330,7 @@ export const boardRouter = createTRPCRouter({
       );
       const boardWhere = canViewAllBoards ? undefined : or(eq(boards.isPublic, true), inArray(boards.id, boardIds));
 
-      return await ctx.db.query.boards.findMany({
+      return await context.db.query.boards.findMany({
         columns: {
           id: true,
           name: true,
@@ -354,12 +358,12 @@ export const boardRouter = createTRPCRouter({
           "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags",
       },
     })
-    .query(async ({ ctx }) => {
-      const userId = ctx.session?.user.id;
-      const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
+    .query(async ({ context }) => {
+      const userId = context.session?.user.id;
+      const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(context.db, userId);
       const groupPermissionWhere = getBoardGroupPermissionWhere(groupMemberships);
 
-      const dbBoards = await ctx.db.query.boards.findMany({
+      const dbBoards = await context.db.query.boards.findMany({
         columns: {
           id: true,
           name: true,
@@ -375,13 +379,13 @@ export const boardRouter = createTRPCRouter({
             },
           },
           userPermissions: {
-            where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+            where: eq(boardUserPermissions.userId, context.session?.user.id ?? ""),
           },
           groupPermissions: {
             where: groupPermissionWhere,
           },
         },
-        where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
+        where: getAccessibleBoardsWhere(context.session?.user.permissions.includes("board-view-all"), userId, boardIds),
       });
       return dbBoards.map((board) => ({
         ...board,
@@ -389,19 +393,19 @@ export const boardRouter = createTRPCRouter({
         isMobileHome: currentUser?.mobileHomeBoardId === board.id,
       }));
     }),
-  getManageOverview: publicProcedure.input(manageOverviewInputSchema).query(async ({ ctx, input }) => {
-    const sessionUserId = ctx.session?.user.id;
+  getManageOverview: publicProcedure.input(manageOverviewInputSchema).query(async ({ context, input }) => {
+    const sessionUserId = context.session?.user.id;
     const userId = input?.userId ?? sessionUserId;
-    if (userId !== sessionUserId && !ctx.session?.user.permissions.includes("admin")) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to view boards for this user" });
+    if (userId !== sessionUserId && !context.session?.user.permissions.includes("admin")) {
+      throw new ApiError({ code: "FORBIDDEN", message: "You are not allowed to view boards for this user" });
     }
-    const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
+    const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(context.db, userId);
     const groupPermissionWhere = getBoardGroupPermissionWhere(groupMemberships);
     const canViewAllBoards = getCanViewAllBoards(groupMemberships);
     let previewRowLimit = input?.previewRowLimit ?? defaultManageOverviewPreviewRows;
     if (input?.fullPreview) previewRowLimit = maxManageOverviewPreviewRows;
 
-    const dbBoards = await ctx.db.query.boards.findMany({
+    const dbBoards = await context.db.query.boards.findMany({
       columns: {
         id: true,
         name: true,
@@ -457,7 +461,7 @@ export const boardRouter = createTRPCRouter({
     const [rootPreviewItemLayouts, previewSectionLayouts] =
       previewLayoutIds.length > 0 && rootSectionIds.length > 0
         ? await Promise.all([
-            ctx.db.query.itemLayouts.findMany({
+            context.db.query.itemLayouts.findMany({
               columns: {
                 itemId: true,
                 layoutId: true,
@@ -482,7 +486,7 @@ export const boardRouter = createTRPCRouter({
                 gt(itemLayouts.height, 0),
               ),
             }),
-            ctx.db.query.sectionLayouts.findMany({
+            context.db.query.sectionLayouts.findMany({
               columns: {
                 sectionId: true,
                 layoutId: true,
@@ -517,7 +521,7 @@ export const boardRouter = createTRPCRouter({
     ];
     const nestedPreviewItemLayouts =
       previewLayoutIds.length > 0 && previewContainerSectionIds.length > 0
-        ? await ctx.db.query.itemLayouts.findMany({
+        ? await context.db.query.itemLayouts.findMany({
             columns: {
               itemId: true,
               layoutId: true,
@@ -559,7 +563,7 @@ export const boardRouter = createTRPCRouter({
     const previewAppIds = [...new Set(appIdByItemId.values())];
     const previewApps =
       previewAppIds.length > 0
-        ? await ctx.db.query.apps.findMany({
+        ? await context.db.query.apps.findMany({
             columns: { id: true, iconUrl: true },
             where: inArray(apps.id, previewAppIds),
           })
@@ -654,7 +658,7 @@ export const boardRouter = createTRPCRouter({
   }),
   catalog: publicProcedure
     .meta({ mcp: { enabled: true, description: "List every board the current user can access." } })
-    .query(async ({ ctx }) => searchAccessibleBoardsAsync(ctx, "")),
+    .query(async ({ context }) => searchAccessibleBoardsAsync(context, "")),
   search: publicProcedure
     .meta({
       mcp: {
@@ -663,7 +667,7 @@ export const boardRouter = createTRPCRouter({
       },
     })
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
-    .query(async ({ ctx, input }) => searchAccessibleBoardsAsync(ctx, input.query, input.limit)),
+    .query(async ({ context, input }) => searchAccessibleBoardsAsync(context, input.query, input.limit)),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
     .meta({
@@ -685,13 +689,13 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardCreateSchema)
     .output(z.object({ boardId: z.string(), name: z.string(), layoutId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const boardId = createId();
       const mobileLayoutId = createId();
       const baseLayoutId = createId();
 
-      const user = await ctx.db.query.users.findFirst({
-        where: eq(users.id, ctx.session.user.id),
+      const user = await context.db.query.users.findFirst({
+        where: eq(users.id, context.session.user.id),
         columns: {
           homeBoardId: true,
         },
@@ -703,7 +707,7 @@ export const boardRouter = createTRPCRouter({
         id: boardId,
         name: input.name,
         isPublic: input.isPublic,
-        creatorId: ctx.session.user.id,
+        creatorId: context.session.user.id,
       });
       createBoardCollection.sections.push({
         id: createId(),
@@ -735,10 +739,10 @@ export const boardRouter = createTRPCRouter({
         },
       );
 
-      await createBoardCollection.insertAllAsync(ctx.db);
+      await createBoardCollection.insertAllAsync(context.db);
 
       if (!user?.homeBoardId) {
-        await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
+        await context.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, context.session.user.id));
       }
 
       return { boardId, name: input.name, layoutId: baseLayoutId };
@@ -764,11 +768,11 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardDuplicateSchema)
     .output(z.object({ boardId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
-      await noBoardWithSimilarNameAsync(ctx.db, input.name);
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "view");
+      await noBoardWithSimilarNameAsync(context.db, input.name);
 
-      const board = await ctx.db.query.boards.findFirst({
+      const board = await context.db.query.boards.findFirst({
         where: eq(boards.id, input.id),
         with: {
           layouts: true,
@@ -788,16 +792,16 @@ export const boardRouter = createTRPCRouter({
       });
 
       if (!board) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Board not found",
         });
       }
 
       const { sections: boardSections, items: boardItems, layouts: boardLayouts, ...boardProps } = board;
-      throwIfCustomWidgetBoardDuplicationForbidden(ctx.session.user.permissions.includes("admin"), boardItems);
+      throwIfCustomWidgetBoardDuplicationForbidden(context.session.user.permissions.includes("admin"), boardItems);
       await validateWidgetConfigurationsAsync(
-        ctx,
+        context,
         boardItems.map((item) => ({
           id: item.id,
           kind: item.kind,
@@ -967,14 +971,14 @@ export const boardRouter = createTRPCRouter({
         })),
       );
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             await transaction.insert(schema.boards).values({
               ...boardProps,
               id: newBoardId,
               name: input.name,
-              creatorId: ctx.session.user.id,
+              creatorId: context.session.user.id,
             });
 
             if (layoutsToInsert.length > 0) {
@@ -1014,7 +1018,7 @@ export const boardRouter = createTRPCRouter({
                 ...boardProps,
                 id: newBoardId,
                 name: input.name,
-                creatorId: ctx.session.user.id,
+                creatorId: context.session.user.id,
               })
               .run();
 
@@ -1069,12 +1073,12 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardRenameSchema)
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "full");
 
-      await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
+      await noBoardWithSimilarNameAsync(context.db, input.name, [input.id]);
 
-      await ctx.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
+      await context.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
     }),
   changeBoardVisibility: protectedProcedure
     .meta({
@@ -1095,21 +1099,21 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardChangeVisibilitySchema)
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
-      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "full");
+      const boardSettings = await getServerSettingByKeyAsync(context.db, "board");
 
       if (
         input.visibility !== "public" &&
         (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)
       ) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "Cannot make home board private",
         });
       }
 
-      await ctx.db
+      await context.db
         .update(boards)
         .set({ isPublic: input.visibility === "public" })
         .where(eq(boards.id, input.id));
@@ -1133,10 +1137,10 @@ export const boardRouter = createTRPCRouter({
     })
     .input(z.object({ id: z.string() }))
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "full");
 
-      await ctx.db.delete(boards).where(eq(boards.id, input.id));
+      await context.db.delete(boards).where(eq(boards.id, input.id));
     }),
   setHomeBoard: protectedProcedure
     .meta({
@@ -1156,10 +1160,10 @@ export const boardRouter = createTRPCRouter({
     })
     .input(z.object({ id: z.string() }))
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "view");
 
-      await ctx.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+      await context.db.update(users).set({ homeBoardId: input.id }).where(eq(users.id, context.session.user.id));
     }),
   setMobileHomeBoard: protectedProcedure
     .meta({
@@ -1179,23 +1183,23 @@ export const boardRouter = createTRPCRouter({
     })
     .input(z.object({ id: z.string() }))
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "view");
 
-      await ctx.db.update(users).set({ mobileHomeBoardId: input.id }).where(eq(users.id, ctx.session.user.id));
+      await context.db.update(users).set({ mobileHomeBoardId: input.id }).where(eq(users.id, context.session.user.id));
     }),
-  getHomeBoard: publicProcedure.query(async ({ ctx }) => {
-    const userId = ctx.session?.user.id;
+  getHomeBoard: publicProcedure.query(async ({ context }) => {
+    const userId = context.session?.user.id;
     const user = userId
-      ? ((await ctx.db.query.users.findFirst({
+      ? ((await context.db.query.users.findFirst({
           where: eq(users.id, userId),
         })) ?? null)
       : null;
 
-    const homeBoardId = await getHomeIdBoardAsync(ctx.db, user, ctx.deviceType);
+    const homeBoardId = await getHomeIdBoardAsync(context.db, user, context.deviceType);
 
     if (!homeBoardId) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "NOT_FOUND",
         message: "No home board found",
       });
@@ -1203,9 +1207,9 @@ export const boardRouter = createTRPCRouter({
 
     const boardWhere = eq(boards.id, homeBoardId);
 
-    await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
+    await throwIfActionForbiddenAsync(context, boardWhere, "view");
 
-    return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
+    return await getFullBoardWithWhereAsync(context.db, boardWhere, context.session?.user.id ?? null);
   }),
   getBoardByName: publicProcedure
     .meta({
@@ -1216,11 +1220,11 @@ export const boardRouter = createTRPCRouter({
       },
     })
     .input(boardByNameSchema)
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input, context }) => {
       const boardWhere = eq(sql`UPPER(${boards.name})`, input.name.toUpperCase());
-      await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
+      await throwIfActionForbiddenAsync(context, boardWhere, "view");
 
-      return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
+      return await getFullBoardWithWhereAsync(context.db, boardWhere, context.session?.user.id ?? null);
     }),
   getBoardSettings: protectedProcedure
     .meta({
@@ -1240,11 +1244,11 @@ export const boardRouter = createTRPCRouter({
     })
     .input(z.object({ id: z.string() }))
     .output(boardSettingsSchema)
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input, context }) => {
       const boardWhere = eq(boards.id, input.id);
-      await throwIfActionForbiddenAsync(ctx, boardWhere, "modify");
+      await throwIfActionForbiddenAsync(context, boardWhere, "modify");
 
-      const board = await ctx.db.query.boards.findFirst({
+      const board = await context.db.query.boards.findFirst({
         columns: {
           id: true,
           name: true,
@@ -1267,7 +1271,7 @@ export const boardRouter = createTRPCRouter({
         where: boardWhere,
       });
       if (!board) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+        throw new ApiError({ code: "NOT_FOUND", message: "Board not found" });
       }
 
       return {
@@ -1299,25 +1303,25 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardSaveLayoutsSchema)
     .output(boardSaveLayoutsSchema.shape.layouts)
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "modify");
 
       const requiredGutterRoots = (["left", "right"] as const).filter((lane) =>
         input.layouts.some((layout) => getBoardLaneColumnCount(layout, lane) > 0),
       );
-      await ensureGutterRootSectionsAsync(ctx.db, input.id, requiredGutterRoots);
+      await ensureGutterRootSectionsAsync(context.db, input.id, requiredGutterRoots);
 
-      const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+      const board = await getFullBoardWithWhereAsync(context.db, eq(boards.id, input.id), context.session.user.id);
       const existingLayoutsById = new Map(board.layouts.map((layout) => [layout.id, layout]));
       const submittedLayoutIds = new Set(input.layouts.map(({ id }) => id));
       const addedLayouts = input.layouts.filter(({ id }) => !existingLayoutsById.has(id));
       const removedLayouts = board.layouts.filter(({ id }) => !submittedLayoutIds.has(id));
 
       if (addedLayouts.some((layout) => layout.role !== "custom")) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "New layouts must use the custom role" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "New layouts must use the custom role" });
       }
       if (removedLayouts.some((layout) => layout.role !== "custom")) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Mobile and Base layouts cannot be removed" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "Mobile and Base layouts cannot be removed" });
       }
       if (
         input.layouts.some((layout) => {
@@ -1325,12 +1329,12 @@ export const boardRouter = createTRPCRouter({
           return existingLayout && existingLayout.role !== layout.role;
         })
       ) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Layout roles cannot be changed" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "Layout roles cannot be changed" });
       }
 
       const baseLayout = board.layouts.find((layout) => layout.role === "base");
       if (!baseLayout) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
+        throw new ApiError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
       }
 
       const layoutsToInsert: InferInsertModel<typeof layouts>[] = [];
@@ -1435,7 +1439,7 @@ export const boardRouter = createTRPCRouter({
 
       const removedLayoutIds = removedLayouts.map((layout) => layout.id);
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             if (layoutsToInsert.length > 0) await transaction.insert(schema.layouts).values(layoutsToInsert);
@@ -1586,19 +1590,19 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardResetLayoutSchema)
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
 
-      const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.boardId), ctx.session.user.id);
+      const board = await getFullBoardWithWhereAsync(context.db, eq(boards.id, input.boardId), context.session.user.id);
       const targetLayout = board.layouts.find((layout) => layout.id === input.layoutId);
       const baseLayout = board.layouts.find((layout) => layout.role === "base");
 
-      if (!targetLayout) throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
+      if (!targetLayout) throw new ApiError({ code: "NOT_FOUND", message: "Layout not found" });
       if (!baseLayout) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
+        throw new ApiError({ code: "INTERNAL_SERVER_ERROR", message: "Board must have a Base layout" });
       }
       if (targetLayout.role === "base") {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "The Base layout cannot be reset" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "The Base layout cannot be reset" });
       }
 
       const projectedLayout = getUpdatedBoardLayout(board, {
@@ -1616,7 +1620,7 @@ export const boardRouter = createTRPCRouter({
         },
       });
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             await transaction
@@ -1667,10 +1671,10 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardSavePartialSettingsSchema.extend({ id: z.string() }))
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "modify");
 
-      await ctx.db
+      await context.db
         .update(boards)
         .set({
           // general settings
@@ -1719,13 +1723,13 @@ export const boardRouter = createTRPCRouter({
     })
     .input(boardSaveSchema)
     .output(z.void())
-    .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
+    .mutation(async ({ input, context }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "modify");
 
-      const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
-      await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
+      const dbBoard = await getFullBoardWithWhereAsync(context.db, eq(boards.id, input.id), context.session.user.id);
+      await validateWidgetConfigurationsAsync(context, input.items, dbBoard.items);
       throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: ctx.session.user.permissions.includes("admin"),
+        isAdmin: context.session.user.permissions.includes("admin"),
         submittedItems: input.items,
         storedItems: dbBoard.items,
       });
@@ -1749,7 +1753,7 @@ export const boardRouter = createTRPCRouter({
       const removedItems = dbBoard.items.filter(({ id }) => !submittedItemIds.has(id));
       const removedSections = dbBoard.sections.filter(({ id }) => !submittedSectionIds.has(id));
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             if (addedSections.length > 0) {
@@ -2133,10 +2137,10 @@ export const boardRouter = createTRPCRouter({
         },
       });
     }),
-  getBoardPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+  getBoardPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, context }) => {
+    await throwIfActionForbiddenAsync(context, eq(boards.id, input.id), "full");
 
-    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+    const dbGroupPermissions = await context.db.query.groupPermissions.findMany({
       where: inArray(
         groupPermissions.permission,
         getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-all"]),
@@ -2154,7 +2158,7 @@ export const boardRouter = createTRPCRouter({
       },
     });
 
-    const userPermissions = await ctx.db.query.boardUserPermissions.findMany({
+    const userPermissions = await context.db.query.boardUserPermissions.findMany({
       where: eq(boardUserPermissions.boardId, input.id),
       with: {
         user: {
@@ -2168,7 +2172,7 @@ export const boardRouter = createTRPCRouter({
       },
     });
 
-    const dbGroupBoardPermission = await ctx.db.query.boardGroupPermissions.findMany({
+    const dbGroupBoardPermission = await context.db.query.boardGroupPermissions.findMany({
       where: eq(boardGroupPermissions.boardId, input.id),
       with: {
         group: {
@@ -2205,86 +2209,92 @@ export const boardRouter = createTRPCRouter({
         }),
     };
   }),
-  saveUserBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+  saveUserBoardPermissions: protectedProcedure
+    .input(boardSavePermissionsSchema)
+    .mutation(async ({ input, context }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.entityId), "full");
 
-    await handleTransactionsAsync(ctx.db, {
-      async handleAsync(db, schema) {
-        await db.transaction(async (transaction) => {
-          await transaction.delete(schema.boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId));
-          if (input.permissions.length === 0) {
-            return;
-          }
-          await transaction.insert(schema.boardUserPermissions).values(
-            input.permissions.map((permission) => ({
-              userId: permission.principalId,
-              permission: permission.permission,
-              boardId: input.entityId,
-            })),
-          );
-        });
-      },
-      handleSync(db) {
-        db.transaction((transaction) => {
-          transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
-          if (input.permissions.length === 0) {
-            return;
-          }
-          transaction
-            .insert(boardUserPermissions)
-            .values(
+      await handleTransactionsAsync(context.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.boardUserPermissions)
+              .where(eq(boardUserPermissions.boardId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.boardUserPermissions).values(
               input.permissions.map((permission) => ({
                 userId: permission.principalId,
                 permission: permission.permission,
                 boardId: input.entityId,
               })),
-            )
-            .run();
-        });
-      },
-    });
-  }),
-  saveGroupBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(boardUserPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  userId: permission.principalId,
+                  permission: permission.permission,
+                  boardId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
+      });
+    }),
+  saveGroupBoardPermissions: protectedProcedure
+    .input(boardSavePermissionsSchema)
+    .mutation(async ({ input, context }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.entityId), "full");
 
-    await handleTransactionsAsync(ctx.db, {
-      async handleAsync(db, schema) {
-        await db.transaction(async (transaction) => {
-          await transaction
-            .delete(schema.boardGroupPermissions)
-            .where(eq(boardGroupPermissions.boardId, input.entityId));
-          if (input.permissions.length === 0) {
-            return;
-          }
-          await transaction.insert(schema.boardGroupPermissions).values(
-            input.permissions.map((permission) => ({
-              groupId: permission.principalId,
-              permission: permission.permission,
-              boardId: input.entityId,
-            })),
-          );
-        });
-      },
-      handleSync(db) {
-        db.transaction((transaction) => {
-          transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
-          if (input.permissions.length === 0) {
-            return;
-          }
-          transaction
-            .insert(boardGroupPermissions)
-            .values(
+      await handleTransactionsAsync(context.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.boardGroupPermissions)
+              .where(eq(boardGroupPermissions.boardId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.boardGroupPermissions).values(
               input.permissions.map((permission) => ({
                 groupId: permission.principalId,
                 permission: permission.permission,
                 boardId: input.entityId,
               })),
-            )
-            .run();
-        });
-      },
-    });
-  }),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
+            if (input.permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(boardGroupPermissions)
+              .values(
+                input.permissions.map((permission) => ({
+                  groupId: permission.principalId,
+                  permission: permission.permission,
+                  boardId: input.entityId,
+                })),
+              )
+              .run();
+          });
+        },
+      });
+    }),
   addItem: protectedProcedure
     .meta({
       openapi: {
@@ -2305,14 +2315,14 @@ export const boardRouter = createTRPCRouter({
     })
     .input(addItemToBoardSchema)
     .output(z.object({ itemId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
 
-      await validateWidgetConfigurationsAsync(ctx, [
+      await validateWidgetConfigurationsAsync(context, [
         { id: "", kind: input.kind, integrationIds: input.integrationIds },
       ]);
       throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: ctx.session.user.permissions.includes("admin"),
+        isAdmin: context.session.user.permissions.includes("admin"),
         submittedItems: [{ id: "", kind: input.kind, options: input.options }],
         storedItems: [],
       });
@@ -2322,7 +2332,7 @@ export const boardRouter = createTRPCRouter({
       }
 
       return await serializeBoardItemPlacementAsync(input.boardId, async () => {
-        const board = await ctx.db.query.boards.findFirst({
+        const board = await context.db.query.boards.findFirst({
           where: eq(boards.id, input.boardId),
           with: {
             sections: { with: { layouts: true } },
@@ -2332,7 +2342,7 @@ export const boardRouter = createTRPCRouter({
         });
 
         if (!board) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+          throw new ApiError({ code: "NOT_FOUND", message: "Board not found" });
         }
 
         const emptySection = board.sections
@@ -2343,7 +2353,7 @@ export const boardRouter = createTRPCRouter({
           )[0];
 
         if (!emptySection) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
+          throw new ApiError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
         }
 
         const itemId = createId();
@@ -2368,7 +2378,7 @@ export const boardRouter = createTRPCRouter({
           );
 
           if (!position) {
-            throw new TRPCError({
+            throw new ApiError({
               code: "BAD_REQUEST",
               message: "Board section is full, no free grid position available",
             });
@@ -2384,16 +2394,16 @@ export const boardRouter = createTRPCRouter({
           };
         });
 
-        await ctx.db.insert(items).values({
+        await context.db.insert(items).values({
           id: itemId,
           boardId: input.boardId,
           kind: input.kind,
           options: superjson.stringify(input.options),
           advancedOptions: emptySuperJSON,
         });
-        if (layoutRows.length > 0) await ctx.db.insert(itemLayouts).values(layoutRows);
+        if (layoutRows.length > 0) await context.db.insert(itemLayouts).values(layoutRows);
         if (input.integrationIds.length > 0) {
-          await ctx.db
+          await context.db
             .insert(integrationItems)
             .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
         }
@@ -2420,11 +2430,11 @@ export const boardRouter = createTRPCRouter({
     })
     .input(updateBoardItemLayoutSchema)
     .output(updateBoardItemLayoutSchema)
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
 
       return await serializeBoardItemPlacementAsync(input.boardId, async () => {
-        const board = await ctx.db.query.boards.findFirst({
+        const board = await context.db.query.boards.findFirst({
           where: eq(boards.id, input.boardId),
           with: {
             layouts: true,
@@ -2433,19 +2443,19 @@ export const boardRouter = createTRPCRouter({
           },
         });
         if (!board) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+          throw new ApiError({ code: "NOT_FOUND", message: "Board not found" });
         }
 
         const layout = board.layouts.find((candidate) => candidate.id === input.layoutId);
         const item = board.items.find((candidate) => candidate.id === input.itemId);
         const itemLayout = item?.layouts.find((candidate) => candidate.layoutId === input.layoutId);
         if (!layout || !item || !itemLayout) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Item layout not found on this board" });
+          throw new ApiError({ code: "NOT_FOUND", message: "Item layout not found on this board" });
         }
 
         const section = board.sections.find((candidate) => candidate.id === itemLayout.sectionId);
         if (!section) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Item section not found on this board" });
+          throw new ApiError({ code: "NOT_FOUND", message: "Item section not found on this board" });
         }
 
         let columnCount: number;
@@ -2454,13 +2464,13 @@ export const boardRouter = createTRPCRouter({
         } else {
           const sectionLayout = section.layouts.find((candidate) => candidate.layoutId === layout.id);
           if (!sectionLayout) {
-            throw new TRPCError({ code: "BAD_REQUEST", message: "Item section has no layout at this breakpoint" });
+            throw new ApiError({ code: "BAD_REQUEST", message: "Item section has no layout at this breakpoint" });
           }
           columnCount = sectionLayout.width;
         }
 
         if (input.xOffset + input.width > columnCount || input.yOffset + input.height > 32767) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Item layout exceeds its section bounds" });
+          throw new ApiError({ code: "BAD_REQUEST", message: "Item layout exceeds its section bounds" });
         }
 
         const otherItemPlacements = board.items
@@ -2475,10 +2485,10 @@ export const boardRouter = createTRPCRouter({
             doBoardItemPlacementsOverlap(input, placement),
           )
         ) {
-          throw new TRPCError({ code: "CONFLICT", message: "Item layout overlaps another item or section" });
+          throw new ApiError({ code: "CONFLICT", message: "Item layout overlaps another item or section" });
         }
 
-        await ctx.db
+        await context.db
           .update(itemLayouts)
           .set({
             xOffset: input.xOffset,
@@ -2573,7 +2583,7 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
   );
 
   if (board) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "CONFLICT",
       message: "Board with similar name already exists",
     });
@@ -3006,7 +3016,7 @@ const getFullBoardWithWhereAsync = async (
   });
 
   if (!board) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "NOT_FOUND",
       message: "Board not found",
     });

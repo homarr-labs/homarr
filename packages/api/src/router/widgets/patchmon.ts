@@ -2,9 +2,9 @@ import { patchmonStatsRequestHandler } from "@homarr/request-handler/patchmon";
 import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure } from "../../procedure";
 
-export const patchmonRouter = createTRPCRouter({
+export const patchmonRouter = createApiRouter({
   getStats: protectedProcedure
     .meta({
       mcp: {
@@ -14,9 +14,9 @@ export const patchmonRouter = createTRPCRouter({
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "patchmon"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.patchmon;
-      const innerHandler = patchmonStatsRequestHandler.handler({ ...ctx.integration, kind: "patchmon" }, {});
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.patchmon;
+      const innerHandler = patchmonStatsRequestHandler.handler({ ...context.integration, kind: "patchmon" }, {});
       const { data } = await innerHandler.getDataAsync();
       return data;
     }),

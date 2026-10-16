@@ -1,6 +1,6 @@
 import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
@@ -11,7 +11,7 @@ import { customWidgetDefinitions, customWidgetSecrets, legacyCustomWidgetDefinit
 import { customWidgetImportSchema, customWidgetSecretsInputSchema } from "@homarr/custom-widgets/core";
 
 import { insertCustomWidgetDefinition } from "./definition-insert";
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import { assertSecretSources, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition, serializeCustomWidgetDefinition } from "./stored-definition";
 
@@ -21,23 +21,23 @@ export const transferProcedures = {
   export: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .query(async ({ context, input }) => {
+      const definition = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-      if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!definition) throw new ApiError({ code: "NOT_FOUND" });
       return exportCustomWidgetDefinition(parseStoredCustomWidgetDefinition(definition));
     }),
 
   exportLegacy: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const definition = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+    .query(async ({ context, input }) => {
+      const definition = await context.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.id),
         with: { secrets: true },
       });
-      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
+      if (!definition) throw new ApiError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
 
       return {
         $schema: "homarr-custom-widget-v1" as const,
@@ -58,10 +58,10 @@ export const transferProcedures = {
   import: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ widget: customWidgetImportSchema, secrets: customWidgetSecretsInputSchema.default([]) }))
-    .mutation(async ({ ctx, input }) => {
-      await assertCustomWidgetIntegrationBindings(ctx, input.widget.sources);
+    .mutation(async ({ context, input }) => {
+      await assertCustomWidgetIntegrationBindings(context, input.widget.sources);
       assertSecretSources(input.widget.sources, input.secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, input.widget, ctx.session.user.id, input.secrets);
+      const id = await insertCustomWidgetDefinition(context.db, input.widget, context.session.user.id, input.secrets);
       logger.info("Imported custom widget definition", { id, name: input.widget.name });
       return { id };
     }),
@@ -82,18 +82,18 @@ export const transferProcedures = {
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      await assertCustomWidgetIntegrationBindings(ctx, input.widget.sources);
+    .mutation(async ({ context, input }) => {
+      await assertCustomWidgetIntegrationBindings(context, input.widget.sources);
       assertSecretSources(input.widget.sources, input.secrets);
       const [legacy, current] = await Promise.all([
-        ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+        context.db.query.legacyCustomWidgetDefinitions.findFirst({
           where: eq(legacyCustomWidgetDefinitions.id, input.id),
           with: { secrets: true },
         }),
-        ctx.db.query.customWidgetDefinitions.findFirst({ where: eq(customWidgetDefinitions.id, input.id) }),
+        context.db.query.customWidgetDefinitions.findFirst({ where: eq(customWidgetDefinitions.id, input.id) }),
       ]);
-      if (!legacy) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
-      if (current) throw new TRPCError({ code: "CONFLICT", message: "A v2 widget already uses this identifier" });
+      if (!legacy) throw new ApiError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
+      if (current) throw new ApiError({ code: "CONFLICT", message: "A v2 widget already uses this identifier" });
 
       const explicitKeys = new Set(input.secrets.map(({ sourceId, kind }) => `${sourceId}:${kind}`));
       const preservableKinds = new Set<string>(requiredSecretKinds(getAuthType(input.widget.sources.default?.auth)));
@@ -126,7 +126,7 @@ export const transferProcedures = {
         })),
       ];
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(database, schema) {
           await database.transaction(async (transaction) => {
             await transaction.insert(schema.customWidgetDefinitions).values(definitionRow);

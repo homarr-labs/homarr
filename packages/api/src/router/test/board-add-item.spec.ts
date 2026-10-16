@@ -18,6 +18,7 @@ import {
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../procedure";
 import { boardRouter } from "../board";
 
 const createBoardCallerAsync = async () => {
@@ -46,7 +47,7 @@ const createBoardCallerAsync = async () => {
     boardId,
     layoutId,
     sectionId,
-    caller: boardRouter.createCaller({ db, deviceType: undefined, session }),
+    caller: createCallerFactory(boardRouter)({ db, deviceType: undefined, session }),
   };
 };
 

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Accordion, Anchor, Card, Stack, Text } from "@mantine/core";
 import { IconSubtask } from "@tabler/icons-react";
 
-import { getMantineColor } from "@homarr/common";
+import { getMantineColor } from "@homarr/common/theme";
 import { useI18n } from "@homarr/translation/client";
 
 import { CertificateErrorDetails } from "./test-connection-certificate";

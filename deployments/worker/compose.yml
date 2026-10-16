@@ -1,0 +1,24 @@
+services:
+  worker:
+    image: homarr:worker
+    build:
+      context: ../..
+      target: worker
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${HOMARR_WORKER_PORT:-3002}:3002"
+    environment:
+      WORKER_PUBLIC_URL: ${WORKER_PUBLIC_URL:-http://localhost:3002}
+      WORKER_PLATFORM_URL: ${WORKER_PLATFORM_URL:-https://homarr.dev/remote/}
+      WORKER_RELAY_URL: ${WORKER_RELAY_URL:-}
+      WORKER_ALLOWED_ORIGINS: ${WORKER_ALLOWED_ORIGINS:-https://homarr.dev}
+      WORKER_RELAY_REGISTRATION_TOKEN: ${WORKER_RELAY_REGISTRATION_TOKEN:-}
+      WORKER_RUN_OPTIONAL_JOBS: ${WORKER_RUN_OPTIONAL_JOBS:-false}
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY:-}
+      AUTH_SECRET: ${AUTH_SECRET:-}
+      HOMARR_STATE_BACKEND: memory
+    volumes:
+      - appdata:/appdata
+
+volumes:
+  appdata:

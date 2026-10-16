@@ -1,4 +1,4 @@
-import type { Session } from "next-auth";
+import type { Session } from "../types";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";

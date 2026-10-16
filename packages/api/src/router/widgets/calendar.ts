@@ -5,9 +5,9 @@ import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const calendarRouter = createTRPCRouter({
+export const calendarRouter = createApiRouter({
   findAllEvents: publicProcedure
     .meta({
       mcp: {
@@ -25,9 +25,9 @@ export const calendarRouter = createTRPCRouter({
       }),
     )
     .concat(createManyWidgetIntegrationMiddleware("query", "calendar"))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const { integrationIds: _integrationIds, ...handlerInput } = input;
           const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);

@@ -3,7 +3,7 @@ import { Alert, Code, Text } from "@mantine/core";
 import { IconLogin } from "@tabler/icons-react";
 
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { env } from "@homarr/auth/env";
+import { getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { OnboardingAuthShell } from "@homarr/onboarding";
 import { getBrandingColorOverrides } from "@homarr/server-settings";
@@ -29,7 +29,11 @@ export default async function Login(props: LoginProps) {
     redirect(redirectUrl);
   }
 
-  const [t, serverSettings] = await Promise.all([getI18n("user.page.login"), getRscServerSettingsAsync()]);
+  const [t, serverSettings, runtime] = await Promise.all([
+    getI18n("user.page.login"),
+    getRscServerSettingsAsync(),
+    getBackendRuntimeAsync(),
+  ]);
   const branding = serverSettings.branding;
   const wordmarkColors = getBrandingColorOverrides(branding);
   const showCustomGreeting = branding.authBranding.showGreeting && branding.greeting.length > 0;
@@ -60,9 +64,9 @@ export default async function Login(props: LoginProps) {
         </Alert>
       ) : null}
       <LoginForm
-        providers={env.AUTH_PROVIDERS}
-        oidcClientName={env.AUTH_OIDC_CLIENT_NAME}
-        isOidcAutoLoginEnabled={env.AUTH_OIDC_AUTO_LOGIN}
+        providers={runtime.authProviders}
+        oidcClientName={runtime.oidcClientName}
+        isOidcAutoLoginEnabled={runtime.oidcAutoLogin}
         callbackUrl={redirectUrl}
       />
     </OnboardingAuthShell>

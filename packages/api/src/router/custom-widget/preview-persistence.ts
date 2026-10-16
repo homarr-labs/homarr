@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -30,7 +30,7 @@ export function assertCurrentPreviewEvidence(
 ) {
   const unverifiedQueryIds = getUnverifiedRequestIds(session, evidence, "query");
   if (unverifiedQueryIds.length > 0) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: `Test every final preview query successfully before ${action} the widget: ${unverifiedQueryIds.join(", ")}`,
     });
@@ -38,7 +38,7 @@ export function assertCurrentPreviewEvidence(
 
   const unverifiedActionIds = getUnverifiedRequestIds(session, evidence, "action");
   if (unverifiedActionIds.length > 0) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: `Test every final preview action before ${action} the widget: ${unverifiedActionIds.join(", ")}`,
     });

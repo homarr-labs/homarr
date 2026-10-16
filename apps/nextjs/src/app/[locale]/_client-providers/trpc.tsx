@@ -20,7 +20,7 @@ import type { SuperJSONResult } from "superjson";
 
 import { TRPCClientError } from "@trpc/client";
 
-import type { AppRouter } from "@homarr/api";
+import type { AppRouter } from "@homarr/api/legacy";
 import { clientApi } from "@homarr/api/client";
 import {
   dashboardSupportingQueryPolicies,
@@ -32,7 +32,6 @@ import {
 } from "@homarr/api/query-cache";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { useSession } from "@homarr/auth/client";
-import { env } from "@homarr/common/env";
 import { showWarningNotification } from "@homarr/notifications";
 import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
 import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
@@ -60,7 +59,7 @@ const constructWebsocketUrl = () => {
     return fallback;
   }
 
-  if (env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development") {
     return fallback;
   }
 
@@ -132,7 +131,7 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,
           gcTime: queryCacheDefaultGcTimeMs,
-          retry: createQueryRetry(env.NODE_ENV === "development" ? 1 : 3),
+          retry: createQueryRetry(process.env.NODE_ENV === "development" ? 1 : 3),
         },
         mutations: {
           onError(error) {

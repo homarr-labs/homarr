@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import type { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
@@ -23,10 +23,10 @@ interface PreferencesContext {
 const definedFields = <TValue extends object>(value: TValue): TValue =>
   Object.fromEntries(Object.entries(value).filter(([, entry]) => entry !== undefined)) as TValue;
 
-export async function getUserPreferencesAsync(ctx: PreferencesContext, userId: string) {
-  if (ctx.session.user.id !== userId && !ctx.session.user.permissions.includes("admin"))
-    throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
-  const row = await ctx.db.query.users.findFirst({
+export async function getUserPreferencesAsync(context: PreferencesContext, userId: string) {
+  if (context.session.user.id !== userId && !context.session.user.permissions.includes("admin"))
+    throw new ApiError({ code: "NOT_FOUND", message: "User not found" });
+  const row = await context.db.query.users.findFirst({
     where: eq(users.id, userId),
     columns: {
       colorScheme: true,
@@ -42,18 +42,18 @@ export async function getUserPreferencesAsync(ctx: PreferencesContext, userId: s
       headerPreferences: true,
     },
   });
-  if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+  if (!row) throw new ApiError({ code: "NOT_FOUND", message: "User not found" });
   return { userId, ...row, headerPreferences: parseHeaderPreferences(row.headerPreferences) };
 }
 
 export async function updateUserPreferencesAsync(
-  ctx: PreferencesContext,
+  context: PreferencesContext,
   userId: string,
   input: z.infer<typeof userPreferencesPatchSchema>,
 ) {
-  const current = await getUserPreferencesAsync(ctx, userId);
+  const current = await getUserPreferencesAsync(context, userId);
   const parsed = userPreferencesPatchSchema.safeParse(definedFields(input));
-  if (!parsed.success) throw new TRPCError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
+  if (!parsed.success) throw new ApiError({ code: "BAD_REQUEST", message: parsed.error.message, cause: parsed.error });
   const patch = parsed.data;
   const { headerPreferences, ...fields } = patch;
   const mergedHeader = {
@@ -64,18 +64,18 @@ export async function updateUserPreferencesAsync(
   const { userId: _userId, ...preferences } = current;
   const mergedResult = userPreferencesSchema.safeParse({ ...preferences, ...fields, headerPreferences: mergedHeader });
   if (!mergedResult.success)
-    throw new TRPCError({ code: "BAD_REQUEST", message: mergedResult.error.message, cause: mergedResult.error });
+    throw new ApiError({ code: "BAD_REQUEST", message: mergedResult.error.message, cause: mergedResult.error });
   const merged = mergedResult.data;
 
   for (const boardId of [fields.homeBoardId, fields.mobileHomeBoardId]) {
-    if (boardId) await throwIfActionForbiddenAsync(ctx, eq(boards.id, boardId), "view");
+    if (boardId) await throwIfActionForbiddenAsync(context, eq(boards.id, boardId), "view");
   }
   if (fields.defaultSearchEngineId) {
-    const engine = await ctx.db.query.searchEngines.findFirst({
+    const engine = await context.db.query.searchEngines.findFirst({
       columns: { id: true },
       where: eq(searchEngines.id, fields.defaultSearchEngineId),
     });
-    if (!engine) throw new TRPCError({ code: "BAD_REQUEST", message: "Search engine not found" });
+    if (!engine) throw new ApiError({ code: "BAD_REQUEST", message: "Search engine not found" });
   }
   if (headerPreferences) {
     const existingBoardIds = new Set(
@@ -86,9 +86,9 @@ export async function updateUserPreferencesAsync(
       return [item.boardId];
     });
     if (newBoardIds.length > 0) {
-      const accessible = await getAccessibleBoardIdsForUserAsync(ctx.db, userId);
+      const accessible = await getAccessibleBoardIdsForUserAsync(context.db, userId);
       if (newBoardIds.some((boardId) => !accessible.has(boardId)))
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "One or more board shortcuts are unavailable to this user",
         });
@@ -98,6 +98,6 @@ export async function updateUserPreferencesAsync(
   // All references and the merged header are validated before the single preference write.
   const values: Partial<InferInsertModel<typeof users>> = { ...fields };
   if (headerPreferences) values.headerPreferences = serializeHeaderPreferences(merged.headerPreferences);
-  await ctx.db.update(users).set(values).where(eq(users.id, userId));
+  await context.db.update(users).set(values).where(eq(users.id, userId));
   return { userId, ...merged };
 }

@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
@@ -8,6 +7,7 @@ import { boards, integrationItems, integrations, integrationUserPermissions, ite
 import { createDb } from "@homarr/db/test";
 import type { PatchMonStats } from "@homarr/integrations";
 
+import { createCallerFactory, ApiError } from "../../../procedure";
 import { patchmonRouter } from "../../widgets/patchmon";
 
 const samplePatchMonStats = {
@@ -44,7 +44,7 @@ const createSession = (userId: string): Session => ({
 });
 
 const createCaller = (db: Database, session: Session | null) =>
-  patchmonRouter.createCaller({
+  createCallerFactory(patchmonRouter)({
     db,
     deviceType: undefined,
     session,
@@ -101,7 +101,7 @@ describe("patchmonRouter.getStats access control", () => {
     });
     const caller = createCaller(db, null);
 
-    await expect(caller.getStats({ integrationId })).rejects.toThrow(new TRPCError({ code: "UNAUTHORIZED" }));
+    await expect(caller.getStats({ integrationId })).rejects.toThrow(new ApiError({ code: "UNAUTHORIZED" }));
   });
 
   test("should throw FORBIDDEN for authenticated users without board or integration access", async () => {
@@ -116,7 +116,7 @@ describe("patchmonRouter.getStats access control", () => {
     const caller = createCaller(db, createSession(sessionUserId));
 
     await expect(caller.getStats({ integrationId })).rejects.toThrow(
-      new TRPCError({
+      new ApiError({
         code: "FORBIDDEN",
         message: "User does not have permission to query at least one of the specified integration",
       }),

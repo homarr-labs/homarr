@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { Box, Group } from "@mantine/core";
-import { TRPCError } from "@trpc/server";
+import { TRPCClientError } from "@trpc/client";
 
-import { api } from "@homarr/api/server";
+import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { env } from "@homarr/docker/env";
 
 import "@xterm/xterm/css/xterm.css";
 
@@ -19,7 +18,7 @@ interface DockerContainerLogsPageProps {
 
 export default async function DockerContainerLogsPage({ params, searchParams }: DockerContainerLogsPageProps) {
   const session = await auth();
-  if (!(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER)) {
+  if (!(session?.user.permissions.includes("admin") && (await getBackendRuntimeAsync()).dockerEnabled)) {
     notFound();
   }
 
@@ -29,9 +28,9 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
   if (!resolvedEndpointId) notFound();
 
   try {
-    await api.docker.logs({ endpointId: resolvedEndpointId, id: containerId, tail: 1 });
+    await api.docker.logs.query({ endpointId: resolvedEndpointId, id: containerId, tail: 1 });
   } catch (error) {
-    if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+    if (error instanceof TRPCClientError && error.data?.code === "NOT_FOUND") {
       notFound();
     }
     throw error;
@@ -54,7 +53,7 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
 
 const getOnlyDockerEndpointIdAsync = async () => {
   try {
-    const endpoints = await api.docker.getEndpoints();
+    const endpoints = await api.docker.getEndpoints.query();
     return endpoints.length === 1 ? endpoints[0]?.id : undefined;
   } catch {
     return undefined;

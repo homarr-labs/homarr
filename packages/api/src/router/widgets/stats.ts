@@ -5,11 +5,11 @@ import { getStatsMetrics } from "@homarr/integrations/stats";
 import { getStatsSnapshotAsync, refreshStatsAsync } from "@homarr/request-handler/stats";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const access = createOneIntegrationMiddleware("query", ...integrationKinds);
 
-export const statsRouter = createTRPCRouter({
+export const statsRouter = createApiRouter({
   catalog: publicProcedure
     .meta({
       mcp: {
@@ -19,10 +19,10 @@ export const statsRouter = createTRPCRouter({
       },
     })
     .concat(access)
-    .query(({ ctx }) => ({
-      name: ctx.integration.name,
-      iconUrl: integrationDefs[ctx.integration.kind].iconUrl,
-      metrics: getStatsMetrics(ctx.integration.kind),
+    .query(({ context }) => ({
+      name: context.integration.name,
+      iconUrl: integrationDefs[context.integration.kind].iconUrl,
+      metrics: getStatsMetrics(context.integration.kind),
     })),
   snapshot: publicProcedure
     .meta({
@@ -33,7 +33,13 @@ export const statsRouter = createTRPCRouter({
       },
     })
     .concat(access)
-    .query(async ({ ctx }) => await getStatsSnapshotAsync(ctx.integration)),
+    .query(async ({ context }) => await getStatsSnapshotAsync(context.integration)),
+  // Display reads may populate the bounded statistics cache, without forcing
+  // refreshes or exposing the mutation API to a board viewer.
+  displaySnapshot: publicProcedure.concat(access).query(async ({ context }) => {
+    await refreshStatsAsync(context.integration, false);
+    return await getStatsSnapshotAsync(context.integration);
+  }),
   refresh: publicProcedure
     .meta({
       mcp: {
@@ -45,8 +51,8 @@ export const statsRouter = createTRPCRouter({
     })
     .concat(access)
     .input(z.object({ force: z.boolean().default(false) }))
-    .mutation(async ({ ctx, input }) => {
-      await refreshStatsAsync(ctx.integration, input.force);
-      return await getStatsSnapshotAsync(ctx.integration);
+    .mutation(async ({ context, input }) => {
+      await refreshStatsAsync(context.integration, input.force);
+      return await getStatsSnapshotAsync(context.integration);
     }),
 });

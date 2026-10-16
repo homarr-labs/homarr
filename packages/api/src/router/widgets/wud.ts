@@ -2,9 +2,9 @@ import { wudStatsRequestHandler } from "@homarr/request-handler/wud";
 import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const wudRouter = createTRPCRouter({
+export const wudRouter = createApiRouter({
   getStats: publicProcedure
     .meta({
       mcp: {
@@ -14,11 +14,11 @@ export const wudRouter = createTRPCRouter({
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "wud"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") {
         return { stats: mockWidgetData.wud, updatedAt: new Date(mockWidgetData.timestamp) };
       }
-      const handler = wudStatsRequestHandler.handler({ ...ctx.integration, kind: "wud" }, {});
+      const handler = wudStatsRequestHandler.handler({ ...context.integration, kind: "wud" }, {});
       const { data, timestamp } = await handler.getDataAsync();
 
       return {

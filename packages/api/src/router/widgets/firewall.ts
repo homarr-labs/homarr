@@ -8,7 +8,7 @@ import {
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const firewallMiddleware = createManyWidgetIntegrationMiddleware("query", "firewall");
 
@@ -33,9 +33,9 @@ interface FirewallQueryResult<TData> {
 }
 
 const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: () => TData, getMockData: () => TData) =>
-  publicProcedure.concat(firewallMiddleware).query(async ({ ctx }) =>
+  publicProcedure.concat(firewallMiddleware).query(async ({ context }) =>
     settleIntegrationQueries(
-      ctx.integrations,
+      context.integrations,
       async (integration): Promise<FirewallQueryResult<TData>> => {
         if (integration.kind === "mock") {
           return {
@@ -67,7 +67,7 @@ const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: (
     ),
   );
 
-export const firewallRouter = createTRPCRouter({
+export const firewallRouter = createApiRouter({
   getFirewallCpuStatus: queryFirewall(
     firewallCpuRequestHandler,
     () => ({ total: 0 }),

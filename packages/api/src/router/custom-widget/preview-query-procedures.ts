@@ -1,7 +1,7 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import {
   getPreviewRequestSource,
   getPreviewRequestSourceConfigurationFailure,
@@ -23,8 +23,8 @@ export const previewQueryProcedures = {
         requestIds: z.array(z.string().min(1).max(128)).max(128).optional(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+    .mutation(async ({ context, input }) => {
+      const session = await getPreviewSession(input.sessionId, context.session.user.id);
       if (input.requestIds) {
         const prefixes = input.requestIds
           .filter((id) => Object.hasOwn(session.requests, id))
@@ -45,11 +45,11 @@ export const previewQueryProcedures = {
       },
     })
     .input(previewSessionRequestSchema)
-    .query(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+    .query(async ({ context, input }) => {
+      const session = await getPreviewSession(input.sessionId, context.session.user.id);
       const definition = session.requests[input.requestId];
       if (definition?.kind !== "query")
-        throw new TRPCError({ code: "NOT_FOUND", message: "Preview query was not found" });
+        throw new ApiError({ code: "NOT_FOUND", message: "Preview query was not found" });
       const request = { id: input.requestId, ...definition };
       const sourceConfigurationFailure = getPreviewRequestSourceConfigurationFailure(session, request);
       if (sourceConfigurationFailure) return sourceConfigurationFailure;
@@ -57,14 +57,14 @@ export const previewQueryProcedures = {
       const body = renderRequestBody(request, params);
       const release = await acquireCustomWidgetRequestLimit({
         category: "query",
-        userId: ctx.session.user.id,
+        userId: context.session.user.id,
         itemId: `preview:${session.id}`,
         definitionId: session.definitionId ?? `preview:${session.id}`,
       });
       const startedAt = Date.now();
       try {
-        const resolved = await getPreviewRequestSource(ctx, session, request);
-        if (!resolved) throw new TRPCError({ code: "NOT_FOUND", message: "Preview source was not found" });
+        const resolved = await getPreviewRequestSource(context, session, request);
+        if (!resolved) throw new ApiError({ code: "NOT_FOUND", message: "Preview source was not found" });
         const targetUrl = renderRequestTarget(resolved.baseUrl, request, params);
         const response = await executeCustomWidgetRequest({
           ...resolved,
@@ -104,8 +104,8 @@ export const previewQueryProcedures = {
   setPreviewLiveActions: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ sessionId: z.string().min(1), enabled: z.boolean() }))
-    .mutation(async ({ ctx, input }) =>
-      setPreviewSessionLiveActions(input.sessionId, ctx.session.user.id, input.enabled),
+    .mutation(async ({ context, input }) =>
+      setPreviewSessionLiveActions(input.sessionId, context.session.user.id, input.enabled),
     ),
 
   previewJournal: permissionRequiredProcedure
@@ -117,5 +117,5 @@ export const previewQueryProcedures = {
       },
     })
     .input(z.object({ sessionId: z.string().min(1) }))
-    .query(async ({ ctx, input }) => getPreviewJournal(input.sessionId, ctx.session.user.id)),
+    .query(async ({ context, input }) => getPreviewJournal(input.sessionId, context.session.user.id)),
 };

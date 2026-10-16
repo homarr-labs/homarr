@@ -1,5 +1,5 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
@@ -12,7 +12,7 @@ import {
   normalizeCustomWidgetAuthoringUpdate,
 } from "@homarr/custom-widgets/core";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../procedure";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { creationProcedures } from "./creation-procedures";
 import { updateCustomWidgetDefinition } from "./definition-update";
@@ -34,7 +34,7 @@ import { workshopProcedures } from "./workshop-procedures";
 
 const logger = createLogger({ module: "custom-widget" });
 
-export const customWidgetRouter = createTRPCRouter({
+export const customWidgetRouter = createApiRouter({
   ...metadataProcedures,
   ...managementQueryProcedures,
   ...creationProcedures,
@@ -49,11 +49,11 @@ export const customWidgetRouter = createTRPCRouter({
       },
     })
     .input(customWidgetUpdateSchema)
-    .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .mutation(async ({ context, input }) => {
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!existing) throw new ApiError({ code: "NOT_FOUND" });
 
       const current = parseStoredCustomWidgetDefinition(existing);
       const { id, secrets, ...authoringChanges } = input;
@@ -61,9 +61,9 @@ export const customWidgetRouter = createTRPCRouter({
         const changes = normalizeCustomWidgetAuthoringUpdate(authoringChanges);
         return customWidgetDefinitionSchema.parse({ ...current, ...changes });
       });
-      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
+      await assertCustomWidgetIntegrationBindings(context, definition.sources);
       if (secrets) assertSecretSources(definition.sources, secrets);
-      await updateCustomWidgetDefinition(ctx.db, { id, definition, secrets });
+      await updateCustomWidgetDefinition(context.db, { id, definition, secrets });
       logger.info("Updated custom widget definition", { id });
       return { id, managementPath: `/manage/custom-widgets/edit/${id}` };
     }),
@@ -74,21 +74,21 @@ export const customWidgetRouter = createTRPCRouter({
   toggleEnabled: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ id: z.string(), enabled: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       if (input.enabled) {
-        const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+        const definition = await context.db.query.customWidgetDefinitions.findFirst({
           where: eq(customWidgetDefinitions.id, input.id),
         });
-        if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!definition) throw new ApiError({ code: "NOT_FOUND" });
         if (!safeParseStoredCustomWidgetDefinition(definition).success) {
-          throw new TRPCError({
+          throw new ApiError({
             code: "BAD_REQUEST",
             message: "Invalid custom widget definition cannot be enabled",
           });
         }
       }
 
-      await ctx.db
+      await context.db
         .update(customWidgetDefinitions)
         .set({ enabled: input.enabled, updatedAt: new Date() })
         .where(eq(customWidgetDefinitions.id, input.id));
@@ -98,25 +98,25 @@ export const customWidgetRouter = createTRPCRouter({
     .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Delete one Custom JSX widget." } })
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(customWidgetDefinitions).where(eq(customWidgetDefinitions.id, input.id));
+    .mutation(async ({ context, input }) => {
+      await context.db.delete(customWidgetDefinitions).where(eq(customWidgetDefinitions.id, input.id));
       logger.info("Deleted custom widget definition", { id: input.id });
     }),
 
   duplicate: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .mutation(async ({ context, input }) => {
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!existing) throw new ApiError({ code: "NOT_FOUND" });
       const current = parseStoredCustomWidgetDefinition(existing);
       const id = createId();
-      await ctx.db.insert(customWidgetDefinitions).values({
+      await context.db.insert(customWidgetDefinitions).values({
         id,
         ...serializeCustomWidgetDefinition({ ...current, name: `${current.name} (copy)` }),
-        creatorId: ctx.session.user.id,
+        creatorId: context.session.user.id,
       });
       return { id, name: `${current.name} (copy)` };
     }),

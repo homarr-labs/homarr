@@ -1,9 +1,9 @@
 import { z } from "zod/v4";
 
 import { searchDuckDuckGoBangsAsync } from "../../services/duckduckgo-bangs";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const bangsRouter = createTRPCRouter({
+export const bangsRouter = createApiRouter({
   search: publicProcedure
     .input(
       z.object({

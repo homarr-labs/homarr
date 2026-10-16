@@ -27,7 +27,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
     notFound();
   }
 
-  const group = await api.group.getById({ id: params.id });
+  const group = await api.group.getById.query({ id: params.id });
   const tGeneral = await getI18n("management.page.group.setting.general");
   const tGroupAction = await getI18n("group.action");
   const isReserved = group.name === everyoneGroup;

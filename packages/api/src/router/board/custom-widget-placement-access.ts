@@ -1,6 +1,6 @@
 import { isDeepStrictEqual } from "node:util";
 
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { isRecord } from "@homarr/common";
 
@@ -17,7 +17,7 @@ interface CustomWidgetPlacementGuardInput {
 }
 
 const throwAdminRequired = () => {
-  throw new TRPCError({
+  throw new ApiError({
     code: "FORBIDDEN",
     message: "Only administrators can add or configure Custom Widgets",
   });

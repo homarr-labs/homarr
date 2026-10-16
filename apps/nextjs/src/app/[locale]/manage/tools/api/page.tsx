@@ -54,7 +54,7 @@ export default async function ApiPage() {
   }
   const [requestHeaders, apiKeys, t, toolGroups] = await Promise.all([
     headers(),
-    api.apiKeys.getAll(),
+    api.apiKeys.getAll.query(),
     getI18n("management.page.tool.api.tab"),
     getMcpToolGroups(),
   ]);

@@ -23,9 +23,11 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     mkdir -p /appdata/db /appdata/redis /appdata/trusted-certificates
     chown "${PUID}:${PGID}" /appdata
     chown -R "${PUID}:${PGID}" /appdata/db /appdata/redis /appdata/trusted-certificates
-    # Next.js runtime cache (image optimization, fetch cache, ...)
-    mkdir -p /app/apps/nextjs/.next/cache
-    chown -R "${PUID}:${PGID}" /app/apps/nextjs/.next/cache
+    if [ "${HOMARR_FRONTEND_ENABLED:-true}" = "true" ]; then
+        # Next.js runtime cache (image optimization, fetch cache, ...)
+        mkdir -p /app/apps/nextjs/.next/cache
+        chown -R "${PUID}:${PGID}" /app/apps/nextjs/.next/cache
+    fi
     # nginx runtime directories and the rendered configuration
     chown -R "${PUID}:${PGID}" /var/cache/nginx
     chown -R "${PUID}:${PGID}" /var/log/nginx

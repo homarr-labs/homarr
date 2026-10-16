@@ -22,7 +22,7 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
   if (!session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-  const definition = await api.customWidget.get({ id: params.id }).catch(catchTrpcNotFound);
+  const definition = await api.customWidget.get.query({ id: params.id }).catch(catchTrpcNotFound);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
@@ -40,7 +40,7 @@ import {
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
@@ -50,7 +50,7 @@ import { mapTestConnectionError } from "./map-test-connection-error";
 const logger = createLogger({ module: "integrationRouter" });
 const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
 
-export const integrationRouter = createTRPCRouter({
+export const integrationRouter = createApiRouter({
   request: integrationRequestProcedure,
   testConnection: integrationTestStoredConnectionProcedure,
   getKinds: publicProcedure
@@ -77,12 +77,12 @@ export const integrationRouter = createTRPCRouter({
           "List accessible configured integrations with id, name, kind, url, and permissions. Use id as integrationId. Native read tools require permissions.hasUseAccess; native action tools require permissions.hasInteractAccess. Custom Widget integration sources and arbitrary HTTP requests require permissions.hasFullAccess, including GET. False means the API key owner lacks that permission level; never bypass it.",
       },
     })
-    .query(async ({ ctx }) => {
-      return await getAccessibleIntegrationsAsync(ctx);
+    .query(async ({ context }) => {
+      return await getAccessibleIntegrationsAsync(context);
     }),
-  allThatSupportSearch: protectedProcedure.query(async ({ ctx }) => {
+  allThatSupportSearch: protectedProcedure.query(async ({ context }) => {
     return await getAccessibleIntegrationsAsync(
-      ctx,
+      context,
       inArray(
         integrations.kind,
         objectEntries(integrationDefs)
@@ -97,9 +97,9 @@ export const integrationRouter = createTRPCRouter({
         category: z.enum(integrationCategories),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       return await getAccessibleIntegrationsAsync(
-        ctx,
+        context,
         inArray(integrations.kind, getIntegrationKindsByCategory(input.category)),
       );
     }),
@@ -117,22 +117,22 @@ export const integrationRouter = createTRPCRouter({
         limit: z.number().min(1).max(100).default(10),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session.user.id),
+    .query(async ({ context, input }) => {
+      const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, context.session.user.id),
       });
 
-      const integrationsFromDb = await ctx.db.query.integrations.findMany({
+      const integrationsFromDb = await context.db.query.integrations.findMany({
         where: like(integrations.name, `%${input.query}%`),
         orderBy: asc(integrations.name),
         with: getIntegrationAccessRelationsAsync(
-          ctx.session.user.id,
+          context.session.user.id,
           groupsOfCurrentUser.map((group) => group.groupId),
         ),
       });
 
       return integrationsFromDb
-        .filter((integration) => hasIntegrationQueryAccess(ctx.session, integration))
+        .filter((integration) => hasIntegrationQueryAccess(context.session, integration))
         .toSorted(
           (integrationA, integrationB) =>
             integrationA.name.localeCompare(integrationB.name) || integrationA.id.localeCompare(integrationB.id),
@@ -143,8 +143,8 @@ export const integrationRouter = createTRPCRouter({
         );
     }),
   // This is used to get the integrations by their ids it's public because it's needed to get integrations data in the boards
-  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
-    return await ctx.db.query.integrations.findMany({
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ context, input }) => {
+    return await context.db.query.integrations.findMany({
       where: inArray(integrations.id, input),
       columns: {
         id: true,
@@ -161,11 +161,11 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(byIdSchema)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const integrationWhere = eq(integrations.id, input.id);
 
-      await throwIfActionForbiddenAsync(ctx, integrationWhere, "full").catch((error) => {
-        if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+      await throwIfActionForbiddenAsync(context, integrationWhere, "full").catch((error) => {
+        if (error instanceof ApiError && error.code === "NOT_FOUND") {
           logger.warn("Integration lookup refused", {
             integrationId: input.id,
             errorCode: error.code,
@@ -175,7 +175,7 @@ export const integrationRouter = createTRPCRouter({
         throw error;
       });
 
-      const integration = await ctx.db.query.integrations.findFirst({
+      const integration = await context.db.query.integrations.findFirst({
         where: integrationWhere,
         with: {
           secrets: {
@@ -202,7 +202,7 @@ export const integrationRouter = createTRPCRouter({
           errorCode: "NOT_FOUND",
           reason: "integration-not-found",
         });
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Integration not found",
         });
@@ -233,15 +233,15 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(integrationCreateSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       logger.info("Creating integration", {
         name: input.name,
         kind: input.kind,
         url: input.url,
       });
 
-      if (input.app && "name" in input.app && !ctx.session.user.permissions.includes("app-create")) {
-        throw new TRPCError({
+      if (input.app && "name" in input.app && !context.session.user.permissions.includes("app-create")) {
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Permission denied",
         });
@@ -256,7 +256,7 @@ export const integrationRouter = createTRPCRouter({
       }).catch((error) => {
         if (!(error instanceof MissingSecretError)) throw error;
 
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: error.message,
         });
@@ -269,10 +269,10 @@ export const integrationRouter = createTRPCRouter({
         };
       }
 
-      const appId = await createAppIfNecessaryAsync(ctx.db, input.app);
+      const appId = await createAppIfNecessaryAsync(context.db, input.app);
 
       const integrationId = createId();
-      await ctx.db.insert(integrations).values({
+      await context.db.insert(integrations).values({
         id: integrationId,
         name: input.name,
         url: input.url,
@@ -281,7 +281,7 @@ export const integrationRouter = createTRPCRouter({
       });
 
       if (input.secrets.length >= 1) {
-        await ctx.db.insert(integrationSecrets).values(
+        await context.db.insert(integrationSecrets).values(
           input.secrets.map((secret) => ({
             kind: secret.kind,
             value: encryptSecret(secret.value),
@@ -307,14 +307,14 @@ export const integrationRouter = createTRPCRouter({
         appId,
       };
     }),
-  update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+  update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ context, input }) => {
+    await throwIfActionForbiddenAsync(context, eq(integrations.id, input.id), "full");
 
     logger.info("Updating integration", {
       id: input.id,
     });
 
-    const integration = await ctx.db.query.integrations.findFirst({
+    const integration = await context.db.query.integrations.findFirst({
       where: eq(integrations.id, input.id),
       with: {
         secrets: true,
@@ -322,7 +322,7 @@ export const integrationRouter = createTRPCRouter({
     });
 
     if (!integration) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "NOT_FOUND",
         message: "Integration not found",
       });
@@ -340,7 +340,7 @@ export const integrationRouter = createTRPCRouter({
     ).catch((error) => {
       if (!(error instanceof MissingSecretError)) throw error;
 
-      throw new TRPCError({
+      throw new ApiError({
         code: "BAD_REQUEST",
         message: error.message,
       });
@@ -353,7 +353,7 @@ export const integrationRouter = createTRPCRouter({
       };
     }
 
-    await ctx.db
+    await context.db
       .update(integrations)
       .set({
         name: input.name,
@@ -380,9 +380,9 @@ export const integrationRouter = createTRPCRouter({
           kind: changedSecret.kind,
         };
         if (!integration.secrets.some((secret) => secret.kind === changedSecret.kind)) {
-          await addSecretAsync(ctx.db, secretInput);
+          await addSecretAsync(context.db, secretInput);
         } else {
-          await updateSecretAsync(ctx.db, secretInput);
+          await updateSecretAsync(context.db, secretInput);
         }
       }
     }
@@ -391,7 +391,7 @@ export const integrationRouter = createTRPCRouter({
       (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
     );
     if (removedSecrets.length >= 1) {
-      await ctx.db
+      await context.db
         .delete(integrationSecrets)
         .where(
           or(
@@ -422,29 +422,29 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .input(byIdSchema)
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(integrations.id, input.id), "full");
 
-      const integration = await ctx.db.query.integrations.findFirst({
+      const integration = await context.db.query.integrations.findFirst({
         where: eq(integrations.id, input.id),
       });
 
       if (!integration) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Integration not found",
         });
       }
 
-      await ctx.db.delete(integrations).where(eq(integrations.id, input.id));
+      await context.db.delete(integrations).where(eq(integrations.id, input.id));
 
       // Clean up any cached data left behind by the deleted integration.
       await invalidateIntegrationCacheAsync(input.id);
     }),
-  getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
-    await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+  getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, context }) => {
+    await throwIfActionForbiddenAsync(context, eq(integrations.id, input.id), "full");
 
-    const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
+    const dbGroupPermissions = await context.db.query.groupPermissions.findMany({
       where: inArray(
         groupPermissions.permission,
         getPermissionsWithParents(["integration-use-all", "integration-interact-all", "integration-full-all"]),
@@ -462,7 +462,7 @@ export const integrationRouter = createTRPCRouter({
       },
     });
 
-    const userPermissions = await ctx.db.query.integrationUserPermissions.findMany({
+    const userPermissions = await context.db.query.integrationUserPermissions.findMany({
       where: eq(integrationUserPermissions.integrationId, input.id),
       with: {
         user: {
@@ -476,7 +476,7 @@ export const integrationRouter = createTRPCRouter({
       },
     });
 
-    const dbGroupIntegrationPermission = await ctx.db.query.integrationGroupPermissions.findMany({
+    const dbGroupIntegrationPermission = await context.db.query.integrationGroupPermissions.findMany({
       where: eq(integrationGroupPermissions.integrationId, input.id),
       with: {
         group: {
@@ -515,12 +515,12 @@ export const integrationRouter = createTRPCRouter({
   }),
   saveUserIntegrationPermissions: protectedProcedure
     .input(integrationSavePermissionsSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
+    .mutation(async ({ input, context }) => {
+      await throwIfActionForbiddenAsync(context, eq(integrations.id, input.entityId), "full");
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
-          await ctx.db.transaction(async (transaction) => {
+          await context.db.transaction(async (transaction) => {
             await transaction
               .delete(schema.integrationUserPermissions)
               .where(eq(schema.integrationUserPermissions.integrationId, input.entityId));
@@ -561,10 +561,10 @@ export const integrationRouter = createTRPCRouter({
     }),
   saveGroupIntegrationPermissions: protectedProcedure
     .input(integrationSavePermissionsSchema)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
+    .mutation(async ({ input, context }) => {
+      await throwIfActionForbiddenAsync(context, eq(integrations.id, input.entityId), "full");
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             await transaction
@@ -615,8 +615,8 @@ export const integrationRouter = createTRPCRouter({
     })
     .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const integrationInstance = await createIntegrationAsync(ctx.integration);
+    .query(async ({ context, input }) => {
+      const integrationInstance = await createIntegrationAsync(context.integration);
       return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
   mediaRequestSearchTargets: protectedProcedure
@@ -626,11 +626,11 @@ export const integrationRouter = createTRPCRouter({
         description: "List integrations that support media request search (Overseerr, Jellyseerr, Seerr)",
       },
     })
-    .query(async ({ ctx }) => {
-      const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(ctx);
+    .query(async ({ context }) => {
+      const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(context);
 
       return integrationsWithAccess.map((integration) => {
-        const permissions = constructIntegrationPermissions(integration, ctx.session);
+        const permissions = constructIntegrationPermissions(integration, context.session);
 
         return {
           id: integration.id,
@@ -657,11 +657,14 @@ export const integrationRouter = createTRPCRouter({
         integrationIds: z.array(z.string()).optional(),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const query = input.query.trim();
       if (query.length === 0) return [];
 
-      const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(ctx, input.integrationIds);
+      const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(
+        context,
+        input.integrationIds,
+      );
 
       const results = await Promise.all(
         integrationsWithAccess.map(async (integration) => {
@@ -676,7 +679,7 @@ export const integrationRouter = createTRPCRouter({
               value: decryptSecret(secret.value),
             })),
           });
-          const permissions = constructIntegrationPermissions(integration, ctx.session);
+          const permissions = constructIntegrationPermissions(integration, context.session);
 
           return await integrationInstance.searchAsync(encodeURI(query)).then((searchResults) =>
             searchResults.map((result) => ({
@@ -707,8 +710,8 @@ export const integrationRouter = createTRPCRouter({
     })
     .concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr", "seerr"))
     .input(mediaRequestOptionsSchema)
-    .query(async ({ ctx, input }) => {
-      const integration = await createIntegrationAsync(ctx.integration);
+    .query(async ({ context, input }) => {
+      const integration = await createIntegrationAsync(context.integration);
       return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
     }),
   requestMedia: protectedProcedure
@@ -722,15 +725,15 @@ export const integrationRouter = createTRPCRouter({
     })
     .concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr", "seerr"))
     .input(mediaRequestRequestSchema)
-    .mutation(async ({ ctx, input }) => {
-      const integration = await createIntegrationAsync(ctx.integration);
+    .mutation(async ({ context, input }) => {
+      const integration = await createIntegrationAsync(context.integration);
       const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
       try {
         mediaRequestListRequestHandler.invalidateCache();
-        await mediaRequestStatsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+        await mediaRequestStatsRequestHandler.invalidateCacheAsync([context.integration.id]);
       } catch (error) {
         logger.warn("Failed to invalidate media request caches after a successful request", {
-          integrationId: ctx.integration.id,
+          integrationId: context.integration.id,
           error: String(error),
         });
       }
@@ -764,23 +767,23 @@ const getIntegrationAccessRelationsAsync = (userId: string, groupIds: string[]) 
   },
 });
 
-const getAccessibleIntegrationsAsync = async (ctx: { db: Database; session: Session }, where?: SQL) => {
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session.user.id),
+const getAccessibleIntegrationsAsync = async (context: { db: Database; session: Session }, where?: SQL) => {
+  const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, context.session.user.id),
   });
 
-  const integrationsFromDb = await ctx.db.query.integrations.findMany({
+  const integrationsFromDb = await context.db.query.integrations.findMany({
     where,
     with: getIntegrationAccessRelationsAsync(
-      ctx.session.user.id,
+      context.session.user.id,
       groupsOfCurrentUser.map((group) => group.groupId),
     ),
   });
 
   return integrationsFromDb
-    .filter((integration) => hasIntegrationQueryAccess(ctx.session, integration))
+    .filter((integration) => hasIntegrationQueryAccess(context.session, integration))
     .map((integration) => {
-      const permissions = constructIntegrationPermissions(integration, ctx.session);
+      const permissions = constructIntegrationPermissions(integration, context.session);
 
       return {
         id: integration.id,
@@ -804,14 +807,14 @@ interface IntegrationRouterContext {
 }
 
 const getAccessibleMediaRequestSearchIntegrationsAsync = async (
-  ctx: IntegrationRouterContext,
+  context: IntegrationRouterContext,
   integrationIds?: string[],
 ) => {
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+  const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, context.session?.user.id ?? ""),
   });
 
-  const integrationsFromDb = await ctx.db.query.integrations.findMany({
+  const integrationsFromDb = await context.db.query.integrations.findMany({
     where:
       integrationIds && integrationIds.length > 0
         ? and(inArray(integrations.id, integrationIds), inArray(integrations.kind, mediaRequestSearchKinds))
@@ -828,7 +831,7 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
         },
       },
       userPermissions: {
-        where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+        where: eq(integrationUserPermissions.userId, context.session?.user.id ?? ""),
       },
       groupPermissions: {
         where: inArray(
@@ -840,7 +843,7 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
   });
 
   if (integrationIds && integrationsFromDb.length !== integrationIds.length) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "NOT_FOUND",
       message: "One or more media request search integrations were not found",
     });
@@ -849,12 +852,12 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
   const integrationsWithAccess = await Promise.all(
     integrationsFromDb.map(async (integration) => ({
       integration,
-      hasAccess: await hasQueryAccessToIntegrationsAsync(ctx.db, [integration], ctx.session),
+      hasAccess: await hasQueryAccessToIntegrationsAsync(context.db, [integration], context.session),
     })),
   );
 
   if (integrationIds && integrationsWithAccess.some(({ hasAccess }) => !hasAccess)) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "FORBIDDEN",
       message: "User does not have permission to query one or more media request search integrations",
     });

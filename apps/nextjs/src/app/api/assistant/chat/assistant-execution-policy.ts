@@ -1,5 +1,1 @@
-export {
-  appendActiveCustomWidgetToolInstruction,
-  assistantExecutionPolicy,
-  createCustomWidgetToolStepGate,
-} from "@homarr/custom-widgets/core";
+export * from "@homarr/api/http/assistant/assistant-execution-policy";

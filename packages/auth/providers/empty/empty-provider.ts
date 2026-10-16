@@ -1,4 +1,4 @@
-import type { OAuthConfig } from "next-auth/providers";
+import type { OAuthConfig } from "@auth/core/providers";
 
 export function EmptyNextAuthProvider(): OAuthConfig<unknown> {
   return {

@@ -19,7 +19,8 @@ import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { getMantineColor, toValidDate } from "@homarr/common";
+import { toValidDate } from "@homarr/common";
+import { getMantineColor } from "@homarr/common/theme";
 import { getIconUrl } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";

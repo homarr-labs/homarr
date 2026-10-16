@@ -1,6 +1,6 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
 import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { eq } from "@homarr/db";
@@ -12,7 +12,7 @@ import {
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import {
   createCustomWidgetConfigurationRequest,
   getCustomWidgetConfigurationRequestForUser,
@@ -43,17 +43,17 @@ const secretRequestInputSchema = z
       .optional()
       .describe("Source key from sourceConfigurations, used only when creating a configuration request."),
   })
-  .superRefine((input, ctx) => {
+  .superRefine((input, context) => {
     if (input.requestId) {
       if (input.definitionId || input.previewSessionId || input.sourceId) {
-        ctx.addIssue({ code: "custom", message: "Status checks only accept requestId" });
+        context.addIssue({ code: "custom", message: "Status checks only accept requestId" });
       }
       return;
     }
     if (Boolean(input.definitionId) === Boolean(input.previewSessionId)) {
-      ctx.addIssue({ code: "custom", message: "Provide exactly one definitionId or previewSessionId" });
+      context.addIssue({ code: "custom", message: "Provide exactly one definitionId or previewSessionId" });
     }
-    if (!input.sourceId) ctx.addIssue({ code: "custom", message: "sourceId is required" });
+    if (!input.sourceId) context.addIssue({ code: "custom", message: "sourceId is required" });
   });
 
 export const secretProcedures = {
@@ -67,14 +67,14 @@ export const secretProcedures = {
       },
     })
     .input(z.object({ definitionId: z.string(), secret: customWidgetSecretInputSchema }))
-    .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .mutation(async ({ context, input }) => {
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!existing) throw new ApiError({ code: "NOT_FOUND" });
       const definition = parseStoredCustomWidgetDefinition(existing);
       assertSecretSources(definition.sources, [input.secret]);
-      await setCustomWidgetSecret(ctx.db, input.definitionId, input.secret);
+      await setCustomWidgetSecret(context.db, input.definitionId, input.secret);
       return { sourceId: input.secret.sourceId, kind: input.secret.kind, isSet: true };
     }),
 
@@ -98,14 +98,14 @@ export const secretProcedures = {
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .mutation(async ({ context, input }) => {
+      const stored = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
       });
-      if (!stored) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!stored) throw new ApiError({ code: "NOT_FOUND" });
       const definition = parseStoredCustomWidgetDefinition(stored);
       const current = definition.sources[input.sourceId];
-      if (!current) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
+      if (!current) throw new ApiError({ code: "NOT_FOUND", message: "Widget source not found" });
       let configuration: unknown;
       if (current.type === "integration") {
         if (
@@ -114,12 +114,12 @@ export const secretProcedures = {
           input.networkScope !== undefined ||
           input.secrets.length > 0
         ) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Integration sources require only an integrationId" });
+          throw new ApiError({ code: "BAD_REQUEST", message: "Integration sources require only an integrationId" });
         }
         configuration = { ...current, integrationId: input.integrationId };
       } else {
         if (input.integrationId)
-          throw new TRPCError({ code: "BAD_REQUEST", message: "HTTP sources cannot bind an integration" });
+          throw new ApiError({ code: "BAD_REQUEST", message: "HTTP sources cannot bind an integration" });
         configuration = {
           ...current,
           baseUrl: input.baseUrl,
@@ -127,9 +127,9 @@ export const secretProcedures = {
         };
       }
       const source = customWidgetSourceSchema.parse(configuration);
-      await assertCustomWidgetIntegrationBindings(ctx, { [input.sourceId]: source });
+      await assertCustomWidgetIntegrationBindings(context, { [input.sourceId]: source });
       assertSecretSources({ [input.sourceId]: source }, input.secrets);
-      const configuredSource = await configureCustomWidgetSource(ctx.db, { ...input, expectedSource: current });
+      const configuredSource = await configureCustomWidgetSource(context.db, { ...input, expectedSource: current });
       return {
         definitionId: input.definitionId,
         sourceId: input.sourceId,
@@ -151,10 +151,10 @@ export const secretProcedures = {
       },
     })
     .input(secretRequestInputSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       if (input.requestId) {
-        const request = await getCustomWidgetConfigurationRequestForUser(input.requestId, ctx.session.user.id);
-        if (!request) throw new TRPCError({ code: "NOT_FOUND" });
+        const request = await getCustomWidgetConfigurationRequestForUser(input.requestId, context.session.user.id);
+        if (!request) throw new ApiError({ code: "NOT_FOUND" });
         return {
           requestId: request.id,
           status: request.status,
@@ -168,10 +168,10 @@ export const secretProcedures = {
       let source: { id: string; name: string; auth: CustomWidgetSource["auth"]; value: CustomWidgetSource } | undefined;
       let target: { type: "definition"; id: string } | { type: "preview"; id: string };
       if (input.definitionId) {
-        const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
+        const stored = await context.db.query.customWidgetDefinitions.findFirst({
           where: eq(customWidgetDefinitions.id, input.definitionId),
         });
-        if (!stored) throw new TRPCError({ code: "NOT_FOUND" });
+        if (!stored) throw new ApiError({ code: "NOT_FOUND" });
         const definition = parseStoredCustomWidgetDefinition(stored);
         widgetName = definition.name;
         const candidate = definition.sources[input.sourceId ?? ""];
@@ -185,7 +185,7 @@ export const secretProcedures = {
           : undefined;
         target = { type: "definition", id: input.definitionId };
       } else {
-        const preview = await getPreviewSession(input.previewSessionId ?? "", ctx.session.user.id);
+        const preview = await getPreviewSession(input.previewSessionId ?? "", context.session.user.id);
         widgetName = preview.name;
         const candidate = preview.sources[input.sourceId ?? ""];
         source = candidate
@@ -198,10 +198,10 @@ export const secretProcedures = {
           : undefined;
         target = { type: "preview", id: preview.id };
       }
-      if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
+      if (!source) throw new ApiError({ code: "NOT_FOUND", message: "Widget source not found" });
       const kinds = [...requiredSecretKinds(getCustomWidgetSourceAuthType(source))];
       const request = await createCustomWidgetConfigurationRequest({
-        userId: ctx.session.user.id,
+        userId: context.session.user.id,
         target,
         widgetName,
         sourceId: source.id,
@@ -215,7 +215,7 @@ export const secretProcedures = {
         expiresAt: request.expiresAt,
         sourceId: request.sourceId,
         ...(request.target.type === "preview" ? { previewSessionId: request.target.id } : {}),
-        url: new URL(`/custom-widget-configuration/${request.id}`, ctx.baseUrl ?? "http://localhost").toString(),
+        url: new URL(`/custom-widget-configuration/${request.id}`, context.baseUrl ?? "http://localhost").toString(),
       };
     }),
 
@@ -224,12 +224,12 @@ export const secretProcedures = {
     .input(
       z.object({ definitionId: z.string(), sourceId: z.string(), kind: z.enum(["apiKey", "username", "password"]) }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .mutation(async ({ context, input }) => {
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
-      await clearCustomWidgetSecret(ctx.db, input);
+      if (!existing) throw new ApiError({ code: "NOT_FOUND" });
+      await clearCustomWidgetSecret(context.db, input);
       return { sourceId: input.sourceId, kind: input.kind, isSet: false };
     }),
 };

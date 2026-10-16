@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../procedure";
 import { locationRouter } from "../location";
 
 const mocks = vi.hoisted(() => ({ fetch: vi.fn() }));
@@ -24,7 +25,7 @@ beforeEach(() => {
 
 describe("locationRouter", () => {
   test("encodes the complete search text as one name parameter", async () => {
-    const caller = locationRouter.createCaller({ db: createDb(), deviceType: undefined, session: null });
+    const caller = createCallerFactory(locationRouter)({ db: createDb(), deviceType: undefined, session: null });
 
     await caller.searchCity({ query: "Paris&language=xx&token=secret" });
 

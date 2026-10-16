@@ -1,4 +1,4 @@
-import type { Session } from "next-auth";
+import type { Session } from "../types";
 
 import { db, eq, inArray } from "@homarr/db";
 import { groupMembers, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";

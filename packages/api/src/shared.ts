@@ -43,10 +43,11 @@ async function importCookiesAsync() {
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
-  return "http://127.0.0.1:3000";
+  return process.env.HOMARR_BACKEND_URL ?? "http://127.0.0.1:3002";
 }
 
-export const trpcPath = "/api/trpc";
+import { trpcPath } from "./paths";
+export { trpcPath } from "./paths";
 
 /**
  * Creates the full url for the trpc api endpoint

@@ -3,9 +3,9 @@ import { mockWidgetData } from "@homarr/integrations";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const traefikRouter = createTRPCRouter({
+export const traefikRouter = createApiRouter({
   getDashboard: publicProcedure
     .meta({
       mcp: {
@@ -15,9 +15,9 @@ export const traefikRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "traefik"))
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           if (integration.kind === "mock") {
             return {

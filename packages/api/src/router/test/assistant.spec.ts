@@ -19,6 +19,7 @@ import {
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../procedure";
 import { assistantRouter } from "../assistant";
 
 vi.mock("@homarr/auth", () => ({}));
@@ -61,7 +62,11 @@ const createConfiguredAssistantAsync = async () => {
 
 describe("assistantRouter.getAdminConfiguration", () => {
   test("defaults an unconfigured Assistant to the Homarr provider", async () => {
-    const caller = assistantRouter.createCaller({ db: createDb(), deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({
+      db: createDb(),
+      deviceType: undefined,
+      session: adminSession,
+    });
 
     await expect(caller.getAdminConfiguration()).resolves.toMatchObject({
       connectionConfigured: false,
@@ -74,7 +79,7 @@ describe("assistantRouter.getAdminConfiguration", () => {
 describe("assistantRouter.updateConnection", () => {
   test("clears the persisted model when the discovery path changes without clearing credentials", async () => {
     const db = await createConfiguredAssistantAsync();
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     await caller.updateConnection({
       provider: "openrouter",
@@ -100,7 +105,7 @@ describe("assistantRouter.updateConnection", () => {
       .update(assistantConfigurations)
       .set({ webSearchEnabled: true })
       .where(eq(assistantConfigurations.id, "default"));
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     await caller.updateConnection({
       provider: "openai",
@@ -116,7 +121,7 @@ describe("assistantRouter.updateConnection", () => {
 
   test("preserves the persisted model when the saved connection is unchanged", async () => {
     const db = await createConfiguredAssistantAsync();
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     await caller.updateConnection({
       provider: "openrouter",
@@ -136,7 +141,7 @@ describe("assistantRouter.updateConnection", () => {
 
   test("never stores administrator credentials for the Homarr provider", async () => {
     const db = await createConfiguredAssistantAsync();
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     await caller.updateConnection({
       provider: "homarr",
@@ -168,7 +173,7 @@ describe("assistantRouter.updateConfiguration", () => {
       .update(assistantConfigurations)
       .set({ encryptedHeaders: null })
       .where(eq(assistantConfigurations.id, "default"));
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
@@ -200,7 +205,7 @@ describe("assistantRouter.updateConfiguration", () => {
 
   test("persists the OpenRouter web-search server tool option", async () => {
     const db = await createConfiguredAssistantAsync();
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     await caller.updateConfiguration({ enabled: true, modelId: "example/model", webSearchEnabled: true });
 
@@ -220,7 +225,7 @@ describe("assistantRouter.updateConfiguration", () => {
         modelId: "homarr/model",
       })
       .where(eq(assistantConfigurations.id, "default"));
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
@@ -257,7 +262,7 @@ describe("assistantRouter.updateConfiguration", () => {
       .update(assistantConfigurations)
       .set({ provider: "openai", baseUrl: "https://api.openai.com/v1" })
       .where(eq(assistantConfigurations.id, "default"));
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     await expect(
       caller.updateConfiguration({ enabled: true, modelId: "gpt-5", webSearchEnabled: true }),
@@ -276,7 +281,7 @@ describe("assistant conversation features", () => {
         updatedAt: new Date("2026-07-30T14:00:00.000Z"),
       })
       .where(eq(assistantConfigurations.id, "default"));
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
@@ -346,7 +351,7 @@ describe("assistant conversation features", () => {
       userId: adminSession.user.id,
       permission: "use",
     });
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
 
     const entities = await caller.getContextEntities();
 
@@ -381,7 +386,7 @@ describe("assistant conversation features", () => {
         updatedAt: new Date("2026-07-30T15:00:00.000Z"),
       })
       .where(eq(assistantConfigurations.id, "default"));
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
     const thread = await caller.createThread();
     vi.stubGlobal(
       "fetch",
@@ -420,7 +425,7 @@ describe("assistant conversation features", () => {
   test("persists feedback on an owned assistant message", async () => {
     const db = await createConfiguredAssistantAsync();
     await db.insert(users).values({ id: adminSession.user.id });
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
     const thread = await caller.createThread();
     await caller.appendMessage({
       threadId: thread.id,
@@ -442,7 +447,7 @@ describe("assistant conversation features", () => {
   test("returns complete stored tool messages for conversation debugging exports", async () => {
     const db = await createConfiguredAssistantAsync();
     await db.insert(users).values({ id: adminSession.user.id });
-    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(assistantRouter)({ db, deviceType: undefined, session: adminSession });
     const thread = await caller.createThread();
     const content = {
       role: "assistant",

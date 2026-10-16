@@ -1,7 +1,8 @@
 import { Ajv2020 } from "ajv/dist/2020.js";
 import type { ToolAnnotations } from "@modelcontextprotocol/server";
 import { addFormats, AjvJsonSchemaValidator } from "@modelcontextprotocol/server/validators/ajv";
-import type { AnyProcedure, AnyRootTypes, Router, RouterRecord } from "@trpc/server/unstable-core-do-not-import";
+import { Procedure, walkProcedureContractsSync } from "@orpc/server";
+import type { AnyRouter, AnyProcedure } from "@orpc/server";
 import { z } from "zod/v4";
 
 export interface McpMeta {
@@ -44,7 +45,6 @@ const schemaEngine = new Ajv2020({
 });
 addFormats(schemaEngine);
 const schemaValidator = new AjvJsonSchemaValidator(schemaEngine);
-const isProcedure = (value: AnyProcedure | RouterRecord): value is AnyProcedure => typeof value === "function";
 
 const getObjectInput = (input: unknown): z.ZodObject | null => {
   if (input instanceof z.ZodObject) return input;
@@ -70,17 +70,20 @@ const getMcpMetadata = (meta: unknown): McpMeta["mcp"] => {
   return result;
 };
 
-export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecord extends RouterRecord>(
-  router: Router<TRoot, TRecord>,
-): McpToolCatalog {
+export function extractMcpToolsFromProcedures(router: AnyRouter): McpToolCatalog {
   const tools: McpTool[] = [];
   const diagnostics: McpToolDiagnostic[] = [];
   const names = new Map<string, string[]>();
 
-  for (const [path, procedure] of Object.entries(router["_def"].procedures)) {
-    if (!isProcedure(procedure)) continue;
-    const definition = procedure["_def"];
-    if (definition.type === "subscription") continue;
+  const procedures: [string, AnyProcedure][] = [];
+  const lazyRouters = walkProcedureContractsSync(router, (procedure, path) => {
+    if (procedure instanceof Procedure) procedures.push([path.join("."), procedure]);
+  });
+  if (lazyRouters.length) throw new Error("MCP catalogs require an explicitly eager router");
+  for (const [path, procedure] of procedures) {
+    const definition = procedure["~orpc"];
+    const operationType = definition.meta.operationType;
+    if (operationType !== "query" && operationType !== "mutation") continue;
     const metadata = getMcpMetadata(definition.meta);
     if (!metadata?.enabled) continue;
 
@@ -93,7 +96,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
       continue;
     }
 
-    const inputs = definition.inputs;
+    const inputs = definition.inputSchemas ?? [];
     let inputMode: McpTool["inputMode"] = "object";
     if (inputs.every((input) => input instanceof z.ZodUndefined || input instanceof z.ZodVoid)) inputMode = "none";
     const objectInputs = inputs.map(getObjectInput);
@@ -114,7 +117,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
         override: ({ zodSchema, jsonSchema }) => {
           if (zodSchema["_zod"].def.type !== "string") return;
           if (zodSchema["_zod"].def.checks?.some((check) => check["_zod"].def.check === "overwrite")) {
-            // trim/case normalization runs before these checks in tRPC. They cannot constrain raw JSON.
+            // trim/case normalization runs before these checks in oRPC. They cannot constrain raw JSON.
             delete jsonSchema.minLength;
             delete jsonSchema.maxLength;
             delete jsonSchema.pattern;
@@ -127,7 +130,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
           }
         },
       });
-      // Chained tRPC object inputs produce allOf; MCP requires an explicit object root.
+      // Chained object inputs produce allOf; MCP requires an explicit object root.
       if (inputSchema.type !== undefined && inputSchema.type !== "object") throw new Error("Invalid root");
       inputSchema.type = "object";
       // Zod and the SDK disagree on JSON Schema vocabulary types; compilation checks the actual schema.
@@ -135,10 +138,10 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
       tools.push({
         name,
         description: metadata.description ?? "",
-        type: definition.type,
+        type: operationType,
         annotations: {
-          readOnlyHint: definition.type === "query",
-          destructiveHint: definition.type === "mutation" && metadata.effect !== "additive",
+          readOnlyHint: operationType === "query",
+          destructiveHint: operationType === "mutation" && metadata.effect !== "additive",
         },
         pathInRouter: path.split("."),
         inputMode,
@@ -166,7 +169,7 @@ export function extractMcpToolsFromProcedures<TRoot extends AnyRootTypes, TRecor
   };
 }
 
-/** Dispatch raw JSON through the caller so tRPC owns parsing, transforms, and authorization. */
+/** Dispatch raw JSON through the caller so oRPC owns parsing, transforms, and authorization. */
 export async function callMcpTool(caller: unknown, tool: McpTool, input: unknown) {
   let procedure = caller;
   for (const segment of tool.pathInRouter) {

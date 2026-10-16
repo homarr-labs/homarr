@@ -19,7 +19,7 @@ export default async function AppEditPage(props: AppEditPageProps) {
   if (!session?.user.permissions.includes("app-modify-all")) {
     notFound();
   }
-  const app = await api.app.byId({ id: params.id });
+  const app = await api.app.byId.query({ id: params.id });
   const t = await getI18n();
 
   return (

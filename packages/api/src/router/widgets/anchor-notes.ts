@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { isRecord } from "@homarr/common";
@@ -10,7 +10,7 @@ import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { anchorNoteRequestHandler, anchorNotesListRequestHandler } from "@homarr/request-handler/anchor-notes";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
 const noteIdInput = z.object({
   noteId: z.string(),
@@ -21,7 +21,7 @@ const logger = createLogger({ module: "anchorNotesRouter" });
 const assertMockNoteExists = (noteId: string) => {
   if (noteId === mockWidgetData.anchorNote.id) return;
 
-  throw new TRPCError({ code: "NOT_FOUND", message: "Note not found" });
+  throw new ApiError({ code: "NOT_FOUND", message: "Note not found" });
 };
 
 const isJsonDeltaString = (value: string) => {
@@ -47,19 +47,19 @@ const normalizeAnchorContent = (content: string | undefined) => {
   return JSON.stringify({ ops: [{ insert: normalizedText }] });
 };
 
-export const anchorNotesRouter = createTRPCRouter({
+export const anchorNotesRouter = createApiRouter({
   listNotes: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "anchorNote"))
     .input(anchorNotesListInputSchema)
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") {
         const search = input.search?.toLowerCase();
         const notes = mockWidgetData.anchorNotes.filter((note) => !search || note.title.toLowerCase().includes(search));
         return notes.slice(0, input.limit ?? 50);
       }
 
       const handler = anchorNotesListRequestHandler.handler(
-        { ...ctx.integration, kind: "anchor" },
+        { ...context.integration, kind: "anchor" },
         {
           ...input,
           limit: input.limit ?? 50,
@@ -73,14 +73,14 @@ export const anchorNotesRouter = createTRPCRouter({
   getNote: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "anchorNote"))
     .input(noteIdInput)
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") {
         assertMockNoteExists(input.noteId);
         return mockWidgetData.anchorNote;
       }
 
       const handler = anchorNoteRequestHandler.handler(
-        { ...ctx.integration, kind: "anchor" },
+        { ...context.integration, kind: "anchor" },
         { noteId: input.noteId },
       );
 
@@ -91,12 +91,12 @@ export const anchorNotesRouter = createTRPCRouter({
   updateNote: protectedProcedure
     .concat(createOneWidgetIntegrationMiddleware("interact", "anchorNote"))
     .input(anchorNoteUpdateInputSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const normalizedContent = normalizeAnchorContent(input.content);
       const isContentNormalized =
         input.content !== undefined && normalizedContent !== undefined && input.content !== normalizedContent;
 
-      if (ctx.integration.kind === "mock") {
+      if (context.integration.kind === "mock") {
         assertMockNoteExists(input.noteId);
         return {
           ...mockWidgetData.anchorNote,
@@ -105,7 +105,7 @@ export const anchorNotesRouter = createTRPCRouter({
         };
       }
 
-      const integrationInstance = await createIntegrationAsync({ ...ctx.integration, kind: "anchor" });
+      const integrationInstance = await createIntegrationAsync({ ...context.integration, kind: "anchor" });
 
       try {
         const updatedNote = await integrationInstance.updateNoteAsync({
@@ -114,14 +114,14 @@ export const anchorNotesRouter = createTRPCRouter({
           ...(normalizedContent !== undefined ? { content: normalizedContent } : {}),
         });
         anchorNotesListRequestHandler.invalidateCache();
-        await anchorNoteRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+        await anchorNoteRequestHandler.invalidateCacheAsync([context.integration.id]);
 
         return updatedNote;
       } catch (error) {
         if (error instanceof ResponseError && error.statusCode === 400) {
           logger.warn("Anchor update note failed validation", {
             noteId: input.noteId,
-            integrationId: ctx.integration.id,
+            integrationId: context.integration.id,
             contentLength: input.content?.length ?? 0,
             contentIsJsonDelta: input.content ? isJsonDeltaString(input.content) : false,
             contentNormalized: isContentNormalized,
@@ -129,14 +129,14 @@ export const anchorNotesRouter = createTRPCRouter({
         }
 
         if (error instanceof ResponseError && error.statusCode === 403) {
-          throw new TRPCError({
+          throw new ApiError({
             code: "FORBIDDEN",
             message: "You do not have permission to edit this note",
           });
         }
 
         if (error instanceof ResponseError && error.statusCode === 404) {
-          throw new TRPCError({
+          throw new ApiError({
             code: "NOT_FOUND",
             message: "Note not found",
           });

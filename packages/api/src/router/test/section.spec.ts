@@ -7,6 +7,7 @@ import { eq } from "@homarr/db";
 import { boards, sectionCollapseStates, sections, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../procedure";
 import { sectionRouter } from "../section/section-router";
 
 const userId = createId();
@@ -33,7 +34,7 @@ const createCallerAsync = async () => {
   return {
     boardId,
     db,
-    caller: sectionRouter.createCaller({
+    caller: createCallerFactory(sectionRouter)({
       db,
       deviceType: undefined,
       session,

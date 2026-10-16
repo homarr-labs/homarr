@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ManagementPage() {
-  const statistics = await api.home.getStats();
+  const statistics = await api.home.getStats.query();
   const t = await getI18n("management.page.home");
   const tEntities = await getI18n("common.entity");
   const statisticEntities = {

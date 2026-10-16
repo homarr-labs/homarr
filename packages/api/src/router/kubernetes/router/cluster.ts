@@ -1,17 +1,17 @@
 import type { V1NodeList, VersionInfo } from "@kubernetes/client-node";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../../procedure";
 
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { ClusterResourceCount, KubernetesCluster } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
-import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../../procedure";
 import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 import { calculateResourcePercentage } from "../resource-percentage";
 import { CpuResourceParser } from "../resource-parser/cpu-resource-parser";
 import { MemoryResourceParser } from "../resource-parser/memory-resource-parser";
 
-export const clusterRouter = createTRPCRouter({
+export const clusterRouter = createApiRouter({
   getCluster: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
@@ -141,7 +141,7 @@ export const clusterRouter = createTRPCRouter({
           ],
         };
       } catch (error) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes cluster",
           cause: error,
@@ -178,7 +178,7 @@ export const clusterRouter = createTRPCRouter({
           { label: "volumes", count: volumes.items.length },
         ];
       } catch (error) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes resources count",
           cause: error,

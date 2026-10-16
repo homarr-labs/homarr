@@ -7,6 +7,7 @@ import { apps } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import * as ping from "@homarr/ping";
 
+import { createCallerFactory } from "../../../procedure";
 import { appRouter } from "../../widgets/app";
 
 // Mock the auth module to return an empty session
@@ -29,7 +30,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
     const db = createDb();
     const app = createApp({ url });
     await db.insert(apps).values(app);
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -52,7 +53,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
     const db = createDb();
     const app = createApp({ url });
     await db.insert(apps).values(app);
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: null,

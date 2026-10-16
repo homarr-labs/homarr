@@ -1,0 +1,18 @@
+{
+  "name": "@homarr/remote-protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/protocol.test.ts"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}

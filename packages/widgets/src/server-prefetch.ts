@@ -108,7 +108,7 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
       if (!selected || selected.systemId !== input.systemId || selected.integrationId !== input.integrationIds[0]) {
         throw new Error("The selected Beszel system is no longer available");
       }
-      return await api.widget.beszel.getSystemStats(input);
+      return await api.widget.beszel.getSystemStats.query(input);
     },
   });
 };

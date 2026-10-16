@@ -11,7 +11,6 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
 import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -262,7 +261,7 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
     };
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (env.NODE_ENV === "development") return;
+      if (process.env.NODE_ENV === "development") return;
 
       event.preventDefault();
       event.returnValue = true;

@@ -8,7 +8,7 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ScopedTranslationFunction } from "@homarr/translation";

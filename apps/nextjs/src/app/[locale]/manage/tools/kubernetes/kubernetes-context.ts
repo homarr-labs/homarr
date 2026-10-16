@@ -5,7 +5,7 @@ export interface KubernetesContextSearchParams {
 }
 
 export const getSelectedKubernetesContextAsync = async (searchParams: Promise<KubernetesContextSearchParams>) => {
-  const [{ context }, result] = await Promise.all([searchParams, api.kubernetes.contexts.getContexts()]);
+  const [{ context }, result] = await Promise.all([searchParams, api.kubernetes.contexts.getContexts.query()]);
   const requestedContextId = Array.isArray(context) ? context[0] : context;
   const selected =
     result.contexts.find(({ contextId }) => contextId === requestedContextId) ??

@@ -4,6 +4,7 @@ import type { Session } from "@homarr/auth";
 import { groups, groupPermissions, onboarding } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../procedure";
 import { groupRouter } from "../group";
 
 const adminSession = {
@@ -15,7 +16,7 @@ describe("group.createInitialExternalGroup", () => {
   it("commits exactly one concurrent group-to-setup transition", async () => {
     const db = createDb();
     await db.insert(onboarding).values({ id: "onboarding", step: "group", previousStep: "start" });
-    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const caller = createCallerFactory(groupRouter)({ db, deviceType: undefined, session: adminSession });
 
     const results = await Promise.allSettled([
       caller.createInitialExternalGroup({ name: "LDAP admins" }),

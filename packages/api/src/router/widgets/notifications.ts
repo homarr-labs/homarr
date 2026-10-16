@@ -5,9 +5,9 @@ import { notificationsRequestHandler } from "@homarr/request-handler/notificatio
 
 import { createManyWidgetIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
-export const notificationsRouter = createTRPCRouter({
+export const notificationsRouter = createApiRouter({
   deleteNotification: protectedProcedure
     .concat(createOneIntegrationMiddleware("interact", "gotify"))
     .input(
@@ -18,16 +18,16 @@ export const notificationsRouter = createTRPCRouter({
           .max(20),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const integration = await createIntegrationAsync(ctx.integration);
+    .mutation(async ({ context, input }) => {
+      const integration = await createIntegrationAsync(context.integration);
       await integration.deleteNotificationAsync(input.notificationId);
-      await notificationsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+      await notificationsRequestHandler.invalidateCacheAsync([context.integration.id]);
     }),
   getNotifications: publicProcedure
-    .unstable_concat(createManyWidgetIntegrationMiddleware("query", "notifications"))
-    .query(async ({ ctx }) => {
+    .concat(createManyWidgetIntegrationMiddleware("query", "notifications"))
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const innerHandler = notificationsRequestHandler.handler(integration, {});
           const { data, timestamp } = await innerHandler.getDataAsync();

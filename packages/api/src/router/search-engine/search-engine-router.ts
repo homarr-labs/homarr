@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
@@ -9,16 +9,16 @@ import { searchEngines, users } from "@homarr/db/schema";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
 import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../procedure";
 
 const logger = createLogger({ module: "searchEngineRouter" });
 
-export const searchEngineRouter = createTRPCRouter({
-  getPaginated: protectedProcedure.input(paginatedSchema).query(async ({ input, ctx }) => {
+export const searchEngineRouter = createApiRouter({
+  getPaginated: protectedProcedure.input(paginatedSchema).query(async ({ input, context }) => {
     const whereQuery = input.search ? like(searchEngines.name, `%${input.search.trim()}%`) : undefined;
-    const searchEngineCount = await ctx.db.$count(searchEngines, whereQuery);
+    const searchEngineCount = await context.db.$count(searchEngines, whereQuery);
 
-    const dbSearachEngines = await ctx.db.query.searchEngines.findMany({
+    const dbSearachEngines = await context.db.query.searchEngines.findMany({
       limit: input.pageSize,
       offset: (input.page - 1) * input.pageSize,
       where: whereQuery,
@@ -31,8 +31,8 @@ export const searchEngineRouter = createTRPCRouter({
   }),
   getSelectable: protectedProcedure
     .input(z.object({ withIntegrations: z.boolean() }).default({ withIntegrations: true }))
-    .query(async ({ ctx, input }) => {
-      return await ctx.db.query.searchEngines
+    .query(async ({ context, input }) => {
+      return await context.db.query.searchEngines
         .findMany({
           orderBy: asc(searchEngines.name),
           where: input.withIntegrations ? undefined : eq(searchEngines.type, "generic"),
@@ -44,13 +44,13 @@ export const searchEngineRouter = createTRPCRouter({
         .then((engines) => engines.map((engine) => ({ value: engine.id, label: engine.name })));
     }),
 
-  byId: protectedProcedure.input(byIdSchema).query(async ({ ctx, input }) => {
-    const searchEngine = await ctx.db.query.searchEngines.findFirst({
+  byId: protectedProcedure.input(byIdSchema).query(async ({ context, input }) => {
+    const searchEngine = await context.db.query.searchEngines.findFirst({
       where: eq(searchEngines.id, input.id),
     });
 
     if (!searchEngine) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "NOT_FOUND",
         message: "Search engine not found",
       });
@@ -70,11 +70,11 @@ export const searchEngineRouter = createTRPCRouter({
           urlTemplate: searchEngine.urlTemplate!,
         };
   }),
-  getDefaultSearchEngine: publicProcedure.query(async ({ ctx }) => {
-    const userDefaultId = ctx.session?.user.id
-      ? ((await ctx.db.query.users
+  getDefaultSearchEngine: publicProcedure.query(async ({ context }) => {
+    const userDefaultId = context.session?.user.id
+      ? ((await context.db.query.users
           .findFirst({
-            where: eq(users.id, ctx.session.user.id),
+            where: eq(users.id, context.session.user.id),
             columns: {
               defaultSearchEngineId: true,
             },
@@ -83,7 +83,7 @@ export const searchEngineRouter = createTRPCRouter({
       : null;
 
     if (userDefaultId) {
-      return await ctx.db.query.searchEngines.findFirst({
+      return await context.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, userDefaultId),
         with: {
           integration: {
@@ -97,11 +97,11 @@ export const searchEngineRouter = createTRPCRouter({
       });
     }
 
-    const searchSettings = await getServerSettingByKeyAsync(ctx.db, "search");
+    const searchSettings = await getServerSettingByKeyAsync(context.db, "search");
 
     if (!searchSettings.defaultSearchEngineId) return null;
 
-    const serverDefault = await ctx.db.query.searchEngines.findFirst({
+    const serverDefault = await context.db.query.searchEngines.findFirst({
       where: eq(searchEngines.id, searchSettings.defaultSearchEngineId),
       with: {
         integration: {
@@ -118,7 +118,7 @@ export const searchEngineRouter = createTRPCRouter({
 
     // Remove the default search engine ID from settings if it does not longer exist
     try {
-      await updateServerSettingByKeyAsync(ctx.db, "search", {
+      await updateServerSettingByKeyAsync(context.db, "search", {
         ...searchSettings,
         defaultSearchEngineId: null,
       });
@@ -137,9 +137,9 @@ export const searchEngineRouter = createTRPCRouter({
         description: "List search engines available to the current user.",
       },
     })
-    .query(async ({ ctx }) => {
-      return await ctx.db.query.searchEngines.findMany({
-        where: ctx.session?.user ? undefined : eq(searchEngines.type, "generic"),
+    .query(async ({ context }) => {
+      return await context.db.query.searchEngines.findMany({
+        where: context.session?.user ? undefined : eq(searchEngines.type, "generic"),
         orderBy: asc(searchEngines.name),
         with: {
           integration: {
@@ -152,14 +152,14 @@ export const searchEngineRouter = createTRPCRouter({
         },
       });
     }),
-  search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
-    return await ctx.db.query.searchEngines.findMany({
+  search: publicProcedure.input(searchSchema).query(async ({ context, input }) => {
+    return await context.db.query.searchEngines.findMany({
       // Public dashboards have no session: restrict anonymous users to generic
       // (non-integration) engines so custom search engines work there too (#4132),
       // while integration-backed engines stay available only when signed in.
       where: and(
         like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
-        ctx.session?.user ? undefined : eq(searchEngines.type, "generic"),
+        context.session?.user ? undefined : eq(searchEngines.type, "generic"),
       ),
       with: {
         integration: {
@@ -176,8 +176,8 @@ export const searchEngineRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("search-engine-create")
     .input(searchEngineManageSchema)
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(searchEngines).values({
+    .mutation(async ({ context, input }) => {
+      await context.db.insert(searchEngines).values({
         id: createId(),
         name: input.name,
         short: input.short.toLowerCase(),
@@ -191,19 +191,19 @@ export const searchEngineRouter = createTRPCRouter({
   update: permissionRequiredProcedure
     .requiresPermission("search-engine-modify-all")
     .input(searchEngineEditSchema)
-    .mutation(async ({ ctx, input }) => {
-      const searchEngine = await ctx.db.query.searchEngines.findFirst({
+    .mutation(async ({ context, input }) => {
+      const searchEngine = await context.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, input.id),
       });
 
       if (!searchEngine) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Search engine not found",
         });
       }
 
-      await ctx.db
+      await context.db
         .update(searchEngines)
         .set({
           name: input.name,
@@ -218,13 +218,13 @@ export const searchEngineRouter = createTRPCRouter({
   delete: permissionRequiredProcedure
     .requiresPermission("search-engine-full-all")
     .input(byIdSchema)
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db
+    .mutation(async ({ context, input }) => {
+      await context.db
         .update(users)
         .set({
           defaultSearchEngineId: null,
         })
         .where(eq(users.defaultSearchEngineId, input.id));
-      await ctx.db.delete(searchEngines).where(eq(searchEngines.id, input.id));
+      await context.db.delete(searchEngines).where(eq(searchEngines.id, input.id));
     }),
 });

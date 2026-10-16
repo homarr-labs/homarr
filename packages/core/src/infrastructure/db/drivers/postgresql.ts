@@ -17,7 +17,8 @@ const createPostgresDbConnection = () => {
   const defaultOptions = {
     max: 0,
     idleTimeoutMillis: 60000,
-    allowExitOnIdle: false,
+    // Short operational commands should finish once every query has returned.
+    allowExitOnIdle: process.env.HOMARR_CLI === "true",
   } satisfies Partial<PostgresPoolOptions>;
 
   if (!dbEnv.HOST) {

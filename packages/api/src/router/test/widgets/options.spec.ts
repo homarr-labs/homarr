@@ -7,6 +7,7 @@ import { eq } from "@homarr/db";
 import { boards, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
+import { createCallerFactory } from "../../../procedure";
 import { optionsRouter } from "../../widgets/options";
 
 const createSession = (userId: string, isAdmin = false): Session => ({
@@ -41,7 +42,7 @@ async function setup(kind: "customApi" | "weather") {
 describe("saveItemOptions Custom Widget access", () => {
   test("rejects direct Custom Widget reconfiguration by a non-admin board modifier", async () => {
     const { db, userId, boardId, itemId } = await setup("customApi");
-    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(userId) });
+    const caller = createCallerFactory(optionsRouter)({ db, deviceType: undefined, session: createSession(userId) });
 
     await expect(
       caller.saveItemOptions({
@@ -65,7 +66,11 @@ describe("saveItemOptions Custom Widget access", () => {
 
   test("allows a Homarr admin to reconfigure a Custom Widget placement", async () => {
     const { db, userId, boardId, itemId } = await setup("customApi");
-    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(userId, true) });
+    const caller = createCallerFactory(optionsRouter)({
+      db,
+      deviceType: undefined,
+      session: createSession(userId, true),
+    });
 
     await expect(
       caller.saveItemOptions({ boardId, itemId, newOptions: { refreshInterval: 60 } }),
@@ -85,7 +90,7 @@ describe("saveItemOptions Custom Widget access", () => {
       .update(items)
       .set({ options: SuperJSON.stringify(options) })
       .where(eq(items.id, itemId));
-    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(userId) });
+    const caller = createCallerFactory(optionsRouter)({ db, deviceType: undefined, session: createSession(userId) });
 
     await expect(
       caller.saveItemOptions({
@@ -98,7 +103,7 @@ describe("saveItemOptions Custom Widget access", () => {
 
   test("preserves ordinary board-modifier option updates for other widgets", async () => {
     const { db, userId, boardId, itemId } = await setup("weather");
-    const caller = optionsRouter.createCaller({ db, deviceType: undefined, session: createSession(userId) });
+    const caller = createCallerFactory(optionsRouter)({ db, deviceType: undefined, session: createSession(userId) });
 
     await expect(
       caller.saveItemOptions({ boardId, itemId, newOptions: { location: "Lyon" } }),

@@ -3,13 +3,9 @@ import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableT
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
+import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import {
-  getGroupMemberManagementType,
-  getLocallyManageableProviders,
-  isGroupMembershipManagedLocally,
-} from "@homarr/auth/server";
+
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
@@ -38,7 +34,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
 
   const tGroup = await getI18n("group");
   const tMembers = await getI18n("management.page.group.setting.members");
-  const group = await api.group.getById({ id: params.id });
+  const group = await api.group.getById.query({ id: params.id });
   const isReserved = group.name === everyoneGroup;
 
   const searchTerm = searchParams.search?.trim().toLowerCase();
@@ -47,9 +43,10 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
   );
 
   // "local" = every enabled provider managed locally, "external" = none, "mixed" = some.
-  const managementType = getGroupMemberManagementType();
+  const runtime = await getBackendRuntimeAsync();
+  const managementType = runtime.groupMemberManagementType;
   const canManageMembers = managementType !== "external";
-  const allowedProviders = getLocallyManageableProviders();
+  const allowedProviders = runtime.locallyManageableProviders;
 
   return (
     <Stack>
@@ -89,7 +86,13 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       <Table striped highlightOnHover>
         <TableTbody>
           {filteredMembers.map((member) => (
-            <Row key={group.id} member={member} groupId={group.id} disabled={isReserved} />
+            <Row
+              key={group.id}
+              member={member}
+              groupId={group.id}
+              disabled={isReserved}
+              canBeRemoved={allowedProviders.includes(member.provider)}
+            />
           ))}
         </TableTbody>
       </Table>
@@ -101,11 +104,10 @@ interface RowProps {
   member: RouterOutputs["group"]["getById"]["members"][number];
   groupId: string;
   disabled?: boolean;
+  canBeRemoved: boolean;
 }
 
-const Row = ({ member, groupId, disabled }: RowProps) => {
-  const canBeRemoved = isGroupMembershipManagedLocally(member.provider);
-
+const Row = ({ member, groupId, disabled, canBeRemoved }: RowProps) => {
   return (
     <TableTr>
       <TableTd>

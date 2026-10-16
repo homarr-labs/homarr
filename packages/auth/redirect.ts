@@ -1,5 +1,3 @@
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
-
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 
 /**
@@ -9,7 +7,7 @@ import { extractBaseUrlFromHeaders } from "@homarr/common";
  * @returns
  */
 export const createRedirectUri = (
-  headers: ReadonlyHeaders | null,
+  headers: Pick<Headers, "get"> | null,
   pathname: string,
   fallbackProtocol: "http" | "https" = "http",
 ) => {

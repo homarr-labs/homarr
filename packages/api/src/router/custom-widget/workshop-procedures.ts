@@ -1,6 +1,6 @@
 import { exportCustomWidgetDefinition } from "@homarr/custom-widgets/core";
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import {
@@ -17,7 +17,7 @@ import { WorkshopBackend } from "@homarr/workshop/backend";
 import { resolveHomarrUrlConfig, validateWorkshopWidget } from "@homarr/workshop/schema";
 
 import { env } from "../../env";
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { assertSecretSources } from "./secret-policy";
 
@@ -39,7 +39,7 @@ function throwWorkshopUnavailable(
     event,
     errorName: "WorkshopBackendError",
   });
-  throw new TRPCError({
+  throw new ApiError({
     code: "BAD_GATEWAY",
     message: "Workshop is unavailable",
   });
@@ -49,18 +49,18 @@ async function getWorkshopWidget(submissionId: string) {
   try {
     const submission = await workshop.get(submissionId);
     if (submission.type !== "customWidget" || submission.widgetSchema !== CUSTOM_WIDGET_SCHEMA) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "BAD_REQUEST",
         message: "Workshop submission is not a compatible Custom JSX widget",
       });
     }
     const validation = validateWorkshopWidget(submission.content);
     if (!validation.success) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: validation.error });
+      throw new ApiError({ code: "BAD_REQUEST", message: validation.error });
     }
     return { submission, widget: exportCustomWidgetDefinition(validation.data) };
   } catch (error) {
-    if (error instanceof TRPCError) throw error;
+    if (error instanceof ApiError) throw error;
     throwWorkshopUnavailable("Workshop widget lookup failed", "workshop_widget_lookup_failed");
   }
 }
@@ -154,11 +154,11 @@ export const workshopProcedures = {
         secrets: customWidgetSecretsInputSchema.default([]),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const { widget } = await getWorkshopWidget(input.submissionId);
       const unknownSource = Object.keys(input.sources).find((sourceId) => !widget.sources[sourceId]);
       if (unknownSource) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown Workshop widget source '${unknownSource}'` });
+        throw new ApiError({ code: "BAD_REQUEST", message: `Unknown Workshop widget source '${unknownSource}'` });
       }
       const configured = customWidgetDefinitionSchema.parse({
         ...widget,
@@ -177,9 +177,9 @@ export const workshopProcedures = {
           ),
         ),
       });
-      await assertCustomWidgetIntegrationBindings(ctx, configured.sources);
+      await assertCustomWidgetIntegrationBindings(context, configured.sources);
       assertSecretSources(configured.sources, input.secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, configured, ctx.session.user.id, input.secrets);
+      const id = await insertCustomWidgetDefinition(context.db, configured, context.session.user.id, input.secrets);
       const configuredSecrets = new Set(input.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
       return {
         status: "installed" as const,

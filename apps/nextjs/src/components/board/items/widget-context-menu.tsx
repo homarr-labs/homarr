@@ -12,7 +12,7 @@ import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/clie
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { usePersistBoard } from "@homarr/boards/updater";
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { isRecord } from "@homarr/common";
@@ -9,7 +9,7 @@ import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { and, eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
 const logger = createLogger({ module: "custom-widget" });
@@ -18,11 +18,11 @@ const getTemplateRevision = (template: string) => createHash("sha256").update(te
 
 const validateTemplate = (definition: ReturnType<typeof parseStoredCustomWidgetDefinition>, template: string) => {
   if (template.trim().length === 0) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Template must not be empty" });
+    throw new ApiError({ code: "BAD_REQUEST", message: "Template must not be empty" });
   }
   const result = customWidgetDefinitionSchema.safeParse({ ...definition, template });
   if (!result.success) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: result.error.issues
         .map((issue) => `${issue.path.map(String).join(".") || "template"}: ${issue.message}`)
@@ -36,11 +36,11 @@ export const templateProcedures = {
   readTemplate: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .query(async ({ context, input }) => {
+      const definition = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      if (!definition) throw new ApiError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       const template = parseStoredCustomWidgetDefinition(definition).template;
       return {
         id: definition.id,
@@ -63,14 +63,14 @@ export const templateProcedures = {
           message: "Provide template or templateLines, not both",
         }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const resolved = input.templateLines?.join("\n") ?? input.template ?? "";
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      if (!existing) throw new ApiError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       const template = validateTemplate(parseStoredCustomWidgetDefinition(existing), resolved);
-      await ctx.db
+      await context.db
         .update(customWidgetDefinitions)
         .set({ template, updatedAt: new Date() })
         .where(eq(customWidgetDefinitions.id, input.id));
@@ -97,14 +97,14 @@ export const templateProcedures = {
           .max(100),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .mutation(async ({ context, input }) => {
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      if (!existing) throw new ApiError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       const definition = parseStoredCustomWidgetDefinition(existing);
       if (getTemplateRevision(definition.template) !== input.expectedRevision) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "CONFLICT",
           message: "Template changed since it was read. Read it again and retry.",
         });
@@ -115,24 +115,24 @@ export const templateProcedures = {
       let nextHigherStart = lines.length + 2;
       for (const edit of edits) {
         if (edit.startLine > lines.length + 1 || edit.startLine + edit.deleteCount - 1 > lines.length) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: `Edit at line ${edit.startLine} is out of range` });
+          throw new ApiError({ code: "BAD_REQUEST", message: `Edit at line ${edit.startLine} is out of range` });
         }
         if (edit.startLine + Math.max(edit.deleteCount, 1) > nextHigherStart) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Template patch edits must not overlap" });
+          throw new ApiError({ code: "BAD_REQUEST", message: "Template patch edits must not overlap" });
         }
         nextHigherStart = edit.startLine;
         lines.splice(edit.startLine - 1, edit.deleteCount, ...edit.replacementLines);
       }
 
       const template = validateTemplate(definition, lines.join("\n"));
-      const updateResult = (await ctx.db
+      const updateResult = (await context.db
         .update(customWidgetDefinitions)
         .set({ template, updatedAt: new Date() })
         .where(
           and(eq(customWidgetDefinitions.id, input.id), eq(customWidgetDefinitions.template, definition.template)),
         )) as unknown;
       if (getAffectedRowCount(updateResult) === 0) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "CONFLICT",
           message: "Template changed since it was read. Read it again and retry.",
         });

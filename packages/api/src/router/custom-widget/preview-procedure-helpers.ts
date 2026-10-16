@@ -37,13 +37,13 @@ export const recordPreviewJournal = async (...args: Parameters<typeof appendPrev
 };
 
 export async function getPreviewRequestSource(
-  ctx: Parameters<typeof resolveCustomWidgetSource>[0],
+  context: Parameters<typeof resolveCustomWidgetSource>[0],
   session: CustomWidgetPreviewSession,
   request: CustomJsxRequest,
 ) {
   const source = session.sources[request.source];
   if (!source) return null;
-  return resolveCustomWidgetSource(ctx, source, request, () => getPreviewSessionSecrets(session, request.source));
+  return resolveCustomWidgetSource(context, source, request, () => getPreviewSessionSecrets(session, request.source));
 }
 
 export function getPreviewRequestSourceConfigurationFailure(

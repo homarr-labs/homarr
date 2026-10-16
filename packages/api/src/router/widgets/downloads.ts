@@ -8,7 +8,7 @@ import { downloadClientRequestHandler } from "@homarr/request-handler/downloads"
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
 interface DownloadClientQueryResultBase {
   integrationId: string;
@@ -46,7 +46,7 @@ const runDownloadMutationsAsync = async (mutations: Promise<void>[], integration
   if (failure) throw failure.reason;
 };
 
-export const downloadsRouter = createTRPCRouter({
+export const downloadsRouter = createApiRouter({
   getJobsAndStatuses: publicProcedure
     .meta({
       mcp: {
@@ -63,9 +63,9 @@ export const downloadsRouter = createTRPCRouter({
         historyWindowDays: z.number().int().min(1).default(7),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries<(typeof ctx.integrations)[number], DownloadClientQueryResult>(
-        ctx.integrations,
+    .query(async ({ context, input }) => {
+      return await settleIntegrationQueries<(typeof context.integrations)[number], DownloadClientQueryResult>(
+        context.integrations,
         async (integration) => {
           const innerHandler = downloadClientRequestHandler.handler(integration, {
             limit: input.limitPerIntegration,
@@ -101,25 +101,25 @@ export const downloadsRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
-    .mutation(async ({ ctx }) => {
+    .mutation(async ({ context }) => {
       await runDownloadMutationsAsync(
-        ctx.integrations.map(async (integration) => {
+        context.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.pauseQueueAsync();
         }),
-        ctx.integrations.map(({ id }) => id),
+        context.integrations.map(({ id }) => id),
       );
     }),
   pauseItem: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       await runDownloadMutationsAsync(
-        ctx.integrations.map(async (integration) => {
+        context.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.pauseItemAsync(input.item);
         }),
-        ctx.integrations.map(({ id }) => id),
+        context.integrations.map(({ id }) => id),
       );
     }),
   resume: protectedProcedure
@@ -131,37 +131,37 @@ export const downloadsRouter = createTRPCRouter({
       },
     })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
-    .mutation(async ({ ctx }) => {
+    .mutation(async ({ context }) => {
       await runDownloadMutationsAsync(
-        ctx.integrations.map(async (integration) => {
+        context.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.resumeQueueAsync();
         }),
-        ctx.integrations.map(({ id }) => id),
+        context.integrations.map(({ id }) => id),
       );
     }),
   resumeItem: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       await runDownloadMutationsAsync(
-        ctx.integrations.map(async (integration) => {
+        context.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.resumeItemAsync(input.item);
         }),
-        ctx.integrations.map(({ id }) => id),
+        context.integrations.map(({ id }) => id),
       );
     }),
   deleteItem: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       await runDownloadMutationsAsync(
-        ctx.integrations.map(async (integration) => {
+        context.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
-        ctx.integrations.map(({ id }) => id),
+        context.integrations.map(({ id }) => id),
       );
     }),
 });

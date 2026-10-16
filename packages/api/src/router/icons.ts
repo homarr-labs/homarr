@@ -2,9 +2,9 @@ import { getImageMatchRank, normalizeImageName } from "@homarr/common";
 import { icons } from "@homarr/db/schema";
 import { iconsFindSchema } from "@homarr/validation/icons";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createApiRouter, publicProcedure } from "../procedure";
 
-export const iconsRouter = createTRPCRouter({
+export const iconsRouter = createApiRouter({
   findIcons: publicProcedure
     .meta({
       mcp: {
@@ -14,10 +14,10 @@ export const iconsRouter = createTRPCRouter({
       },
     })
     .input(iconsFindSchema)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const term = normalizeImageName(input.searchText ?? "");
       const [repositories, countIcons] = await Promise.all([
-        ctx.db.query.iconRepositories.findMany({
+        context.db.query.iconRepositories.findMany({
           orderBy: (table, { asc, sql }) => [sql`CASE WHEN ${table.slug} = 'local' THEN 0 ELSE 1 END`, asc(table.slug)],
           with: {
             icons: {
@@ -30,7 +30,7 @@ export const iconsRouter = createTRPCRouter({
             },
           },
         }),
-        ctx.db.$count(icons),
+        context.db.$count(icons),
       ]);
 
       const matchedRepositories = repositories.map((repository) => ({

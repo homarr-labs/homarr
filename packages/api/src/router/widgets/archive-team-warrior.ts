@@ -2,17 +2,20 @@ import { archiveTeamWarriorRequestHandler } from "@homarr/request-handler/archiv
 import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const archiveTeamWarriorRouter = createTRPCRouter({
+export const archiveTeamWarriorRouter = createApiRouter({
   getStatus: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "archiveTeamWarrior"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") {
         return { status: mockWidgetData.archiveTeamWarrior, updatedAt: new Date(mockWidgetData.timestamp) };
       }
 
-      const handler = archiveTeamWarriorRequestHandler.handler({ ...ctx.integration, kind: "archiveTeamWarrior" }, {});
+      const handler = archiveTeamWarriorRequestHandler.handler(
+        { ...context.integration, kind: "archiveTeamWarrior" },
+        {},
+      );
       const { data, timestamp } = await handler.getDataAsync();
 
       return {

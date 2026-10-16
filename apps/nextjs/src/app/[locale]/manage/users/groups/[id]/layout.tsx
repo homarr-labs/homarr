@@ -21,7 +21,7 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
 
   const tGroupRoot = await getI18n("group");
   const tGroup = await getI18n("management.page.group");
-  const group = await api.group.getById({ id: params.id });
+  const group = await api.group.getById.query({ id: params.id });
 
   return (
     <ManageContainer size="xl">

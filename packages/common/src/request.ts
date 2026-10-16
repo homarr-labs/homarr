@@ -1,10 +1,10 @@
-import { userAgent as userAgentNextServer } from "next/server";
+import UAParser from "ua-parser-js";
 
 import type { Modify } from "./types";
 
 export const userAgent = (headers: Headers) => {
-  return userAgentNextServer({ headers }) as Omit<ReturnType<typeof userAgentNextServer>, "device"> & {
-    device: Modify<ReturnType<typeof userAgentNextServer>["device"], { type: DeviceType }>;
+  return new UAParser(headers.get("user-agent") ?? "").getResult() as Omit<UAParser.IResult, "device"> & {
+    device: Modify<UAParser.IDevice, { type: DeviceType }>;
   };
 };
 

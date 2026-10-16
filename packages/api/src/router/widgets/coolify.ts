@@ -4,7 +4,7 @@ import { coolifyRequestHandler } from "@homarr/request-handler/coolify";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 interface CoolifyInstanceResult {
   integrationId: string;
@@ -15,12 +15,12 @@ interface CoolifyInstanceResult {
   error?: string;
 }
 
-export const coolifyRouter = createTRPCRouter({
+export const coolifyRouter = createApiRouter({
   getInstancesInfo: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "coolify"))
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration): Promise<CoolifyInstanceResult> => {
           if (integration.kind === "mock") {
             return {

@@ -72,7 +72,7 @@ export default async function MediaListPage(props: MediaListPageProps) {
   const [tCommon, tEntities] = await Promise.all([getI18n("common"), getI18n("common.entity")]);
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const [{ items: medias, totalCount }, userSettings] = await Promise.all([
-    api.media.getPaginated(searchParams),
+    api.media.getPaginated.query(searchParams),
     getRscUserSettingsAsync(session.user.id),
   ]);
   const totalPages = Math.ceil(totalCount / searchParams.pageSize);

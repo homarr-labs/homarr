@@ -1,7 +1,6 @@
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import type { OIDCConfig } from "@auth/core/providers";
 import type { Profile } from "@auth/core/types";
-import { customFetch } from "next-auth";
+import { customFetch } from "@auth/core";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
@@ -10,7 +9,7 @@ import { createRedirectUri } from "../../redirect";
 import { extractProfileName } from "./profile";
 import { assertVerifiedEmailForCredentialsLinking } from "./verified-email";
 
-export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profile> => ({
+export const OidcProvider = (headers: Pick<Headers, "get"> | null): OIDCConfig<Profile> => ({
   id: "oidc",
   name: env.AUTH_OIDC_CLIENT_NAME,
   type: "oidc",
@@ -38,9 +37,9 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
 
       const newHeaders = Array.from(response.headers.entries())
         .filter(([key]) => key.toLowerCase() !== "www-authenticate")
-        .reduce((headers, [key, value]) => {
-          headers.append(key, value);
-          return headers;
+        .reduce((responseHeaders, [key, value]) => {
+          responseHeaders.append(key, value);
+          return responseHeaders;
         }, new Headers());
 
       return new Response(response.body, {

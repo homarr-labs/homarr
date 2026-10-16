@@ -1,6 +1,6 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
 import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
@@ -20,7 +20,7 @@ import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widget
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { getCustomWidgetDefinitionStateFingerprint } from "./definition-update";
 import { createPreviewSession, getPreviewSession, revisePreviewSessionTemplate } from "./preview-sessions";
@@ -41,12 +41,12 @@ const previewReviseTemplateInputSchema = z
     template: customJsxTemplateSchema.optional(),
     templateLines: customWidgetTemplateLinesSchema.optional(),
   })
-  .superRefine((input, ctx) => {
+  .superRefine((input, context) => {
     if (input.template === undefined && input.templateLines === undefined) {
-      ctx.addIssue({ code: "custom", path: ["template"], message: "Provide template or templateLines" });
+      context.addIssue({ code: "custom", path: ["template"], message: "Provide template or templateLines" });
     }
     if (input.template !== undefined && input.templateLines !== undefined) {
-      ctx.addIssue({
+      context.addIssue({
         code: "custom",
         path: ["templateLines"],
         message: "Provide template or templateLines, not both",
@@ -119,16 +119,16 @@ const previewCreateProcedure = permissionRequiredProcedure
     },
   })
   .input(previewCreateInputSchema)
-  .mutation(async ({ ctx, input }) => {
+  .mutation(async ({ context, input }) => {
     const definition = parseCustomWidgetAuthoringInput(() =>
       normalizeCustomWidgetAuthoringDefinition(input.definition),
     );
-    await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
+    await assertCustomWidgetIntegrationBindings(context, definition.sources);
     const options = input.options ?? getCustomWidgetDefaultOptions(definition.options);
     const optionIssues = validateCustomWidgetOptions(definition.options, options);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
-      throw new TRPCError({
+      throw new ApiError({
         code: "BAD_REQUEST",
         message: issue ? `${issue.path}: ${issue.message}` : "Preview options are invalid",
       });
@@ -139,11 +139,11 @@ const previewCreateProcedure = permissionRequiredProcedure
     let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
       "customWidget_createFromPreview";
     if (input.definitionId) {
-      const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
+      const existing = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
         with: { secrets: true },
       });
-      if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      if (!existing) throw new ApiError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       definitionStateFingerprint = getCustomWidgetDefinitionStateFingerprint(existing, existing.secrets);
       persistenceTool = "customWidget_updateFromPreview";
       const existingDefinition = parseStoredCustomWidgetDefinition(existing);
@@ -157,7 +157,7 @@ const previewCreateProcedure = permissionRequiredProcedure
           (kind) => !secrets.some((secret) => secret.sourceId === sourceId && secret.kind === kind),
         );
         if (missingReplacement) {
-          throw new TRPCError({
+          throw new ApiError({
             code: "BAD_REQUEST",
             message: "Source security settings changed; re-enter its credentials to preview this definition",
           });
@@ -189,11 +189,11 @@ const previewCreateProcedure = permissionRequiredProcedure
       return !source || !kinds.includes(secret.kind);
     });
     if (invalid) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: `Unknown secret source '${invalid.sourceId}'` });
+      throw new ApiError({ code: "BAD_REQUEST", message: `Unknown secret source '${invalid.sourceId}'` });
     }
 
     const previewSession = await createPreviewSession({
-      userId: ctx.session.user.id,
+      userId: context.session.user.id,
       sources: definition.sources,
       requests: definition.requests,
       name: definition.name,
@@ -216,7 +216,7 @@ const previewCreateProcedure = permissionRequiredProcedure
         liveActions: previewSession.liveActions,
       },
       previewPath,
-      previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+      previewUrl: new URL(previewPath, context.baseUrl ?? "http://localhost").toString(),
       persistenceTool,
       sourceConfigurations: getRequiredSourceConfigurations(
         definition.sources,
@@ -241,18 +241,18 @@ export const previewBaseProcedures = {
       },
     })
     .input(previewReviseTemplateInputSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const template = input.template ?? input.templateLines?.join("\n");
       if (template === undefined) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Provide template or templateLines" });
+        throw new ApiError({ code: "BAD_REQUEST", message: "Provide template or templateLines" });
       }
       const revised = await revisePreviewSessionTemplate(
         input.sessionId,
-        ctx.session.user.id,
+        context.session.user.id,
         template,
         input.expectedRevision,
       );
-      const session = await getPreviewSession(revised.id, ctx.session.user.id);
+      const session = await getPreviewSession(revised.id, context.session.user.id);
       let persistenceTool: "customWidget_createFromPreview" | "customWidget_updateFromPreview" =
         "customWidget_createFromPreview";
       if (session.definitionId) persistenceTool = "customWidget_updateFromPreview";
@@ -267,7 +267,7 @@ export const previewBaseProcedures = {
           liveActions: session.liveActions,
         },
         previewPath,
-        previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+        previewUrl: new URL(previewPath, context.baseUrl ?? "http://localhost").toString(),
         persistenceTool,
         ...getPreviewEvidenceChecklist(session.requests, session.id),
       };
@@ -275,8 +275,8 @@ export const previewBaseProcedures = {
   previewGet: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ sessionId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+    .query(async ({ context, input }) => {
+      const session = await getPreviewSession(input.sessionId, context.session.user.id);
       return {
         id: session.id,
         revision: session.revision,

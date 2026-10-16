@@ -1,45 +1,36 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { getDefaultLocaleForProxyAsync, getOnboardingStepForProxyAsync } from "@homarr/db/proxy-reader";
+import { createTRPCClient, httpLink } from "@trpc/client";
+import SuperJSON from "superjson";
+
+import type { AppRouter } from "@homarr/api/legacy";
+import { getTrpcUrl } from "@homarr/api/shared";
 import { localeCookieKey } from "@homarr/definitions/cookie";
 import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
+const backend = createTRPCClient<AppRouter>({
+  links: [httpLink({ url: getTrpcUrl(), transformer: SuperJSON, headers: { "x-trpc-source": "next-proxy" } })],
+});
+
 let isOnboardingFinished = false;
-let onboardingStepPromise: Promise<string> | null = null;
-let defaultLocalePromise: Promise<string> | null = null;
+let routingPromise: ReturnType<typeof backend.frontend.routing.query> | null = null;
 
-const getOnboardingStepDedupedAsync = () => {
-  onboardingStepPromise ??= getOnboardingStepForProxyAsync().then(
-    (step) => {
-      onboardingStepPromise = null;
-      return step;
-    },
-    (error: unknown) => {
-      onboardingStepPromise = null;
-      throw error;
-    },
-  );
-  return onboardingStepPromise;
-};
-
-const getDefaultLocaleDedupedAsync = () => {
-  defaultLocalePromise ??= getDefaultLocaleForProxyAsync().then(
-    (locale) => {
-      defaultLocalePromise = null;
-      return locale;
-    },
-    (error: unknown) => {
-      defaultLocalePromise = null;
-      throw error;
-    },
-  );
-  return defaultLocalePromise;
+const getRoutingDedupedAsync = () => {
+  routingPromise ??= backend.frontend.routing.query().finally(() => {
+    routingPromise = null;
+  });
+  return routingPromise;
 };
 
 export async function proxy(request: NextRequest) {
+  let requestRouting: ReturnType<typeof backend.frontend.routing.query> | undefined;
+  const getRequestRoutingAsync = () => {
+    requestRouting ??= getRoutingDedupedAsync();
+    return requestRouting;
+  };
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split("/").filter(Boolean);
@@ -49,7 +40,7 @@ export async function proxy(request: NextRequest) {
     (routeSegments.length === 2 && routeSegments[0] === "auth" && routeSegments[1] === "login");
 
   if (!isOnboardingFinished && !isOnboardingAccessRoute) {
-    const currentOnboardingStep = await getOnboardingStepDedupedAsync();
+    const { step: currentOnboardingStep } = await getRequestRoutingAsync();
     if (currentOnboardingStep !== "finish") {
       return NextResponse.redirect(new URL("/init", request.url));
     }
@@ -61,7 +52,7 @@ export async function proxy(request: NextRequest) {
   const currentLocale = request.cookies.get(localeCookieKey)?.value;
   let defaultLocale: SupportedLanguage = "en";
   if (!currentLocale || !supportedLanguages.includes(currentLocale as SupportedLanguage)) {
-    const configuredLocale = await getDefaultLocaleDedupedAsync();
+    const { defaultLocale: configuredLocale } = await getRequestRoutingAsync();
     if (supportedLanguages.includes(configuredLocale as SupportedLanguage)) {
       defaultLocale = configuredLocale as SupportedLanguage;
     }
@@ -75,5 +66,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
+  matcher: ["/((?!api|rpc|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
 };

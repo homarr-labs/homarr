@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation";
 import { IconUserPlus } from "@tabler/icons-react";
 
+import { api } from "@homarr/api/server";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
-import { and, db, eq } from "@homarr/db";
-import { invites } from "@homarr/db/schema";
 import { OnboardingAuthShell } from "@homarr/onboarding";
 import { defaultBrandingSettings, getBrandingColorOverrides } from "@homarr/server-settings";
 import { getI18n } from "@homarr/translation/server";
@@ -22,26 +20,10 @@ interface InviteUsagePageProps {
 }
 
 export default async function InviteUsagePage(props: InviteUsagePageProps) {
-  if (!isProviderEnabled("credentials")) notFound();
-
   const [searchParams, params, session] = await Promise.all([props.searchParams, props.params, auth()]);
   if (session) notFound();
 
-  const invite = await db.query.invites.findFirst({
-    where: and(eq(invites.id, params.id), eq(invites.token, searchParams.token)),
-    columns: {
-      id: true,
-      token: true,
-      expirationDate: true,
-    },
-    with: {
-      creator: {
-        columns: {
-          name: true,
-        },
-      },
-    },
-  });
+  const invite = await api.frontend.invitation.query({ id: params.id, token: searchParams.token });
 
   if (!invite || invite.expirationDate < new Date()) notFound();
 

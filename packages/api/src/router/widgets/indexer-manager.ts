@@ -1,18 +1,18 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 
-export const indexerManagerRouter = createTRPCRouter({
+export const indexerManagerRouter = createApiRouter({
   getIndexersStatus: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "indexerManager"))
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const innerHandler = indexerManagerRequestHandler.handler(integration, {});
           const { data: indexers } = await innerHandler.getDataAsync();
@@ -37,12 +37,12 @@ export const indexerManagerRouter = createTRPCRouter({
     }),
   testAllIndexers: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "indexerManager"))
-    .mutation(async ({ ctx }) => {
+    .mutation(async ({ context }) => {
       const results = await Promise.allSettled(
-        ctx.integrations.map(async (integration) => {
+        context.integrations.map(async (integration) => {
           const client = await createIntegrationAsync(integration);
           await client.testAllAsync().catch((err) => {
-            throw new TRPCError({
+            throw new ApiError({
               code: "INTERNAL_SERVER_ERROR",
               message: `Failed to test all indexers for ${integration.name} (${integration.id})`,
               cause: err,
@@ -50,7 +50,7 @@ export const indexerManagerRouter = createTRPCRouter({
           });
         }),
       );
-      await indexerManagerRequestHandler.invalidateCacheAsync(ctx.integrations.map(({ id }) => id));
+      await indexerManagerRequestHandler.invalidateCacheAsync(context.integrations.map(({ id }) => id));
 
       const firstFailure = results.find((result) => result.status === "rejected");
       if (firstFailure?.status === "rejected") throw firstFailure.reason;

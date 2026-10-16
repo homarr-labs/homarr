@@ -18,21 +18,23 @@ import {
   createOneWidgetIntegrationMiddleware,
 } from "../../middlewares/integration";
 import { settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const logger = createLogger({ module: "umami-router" });
 
-export const umamiRouter = createTRPCRouter({
-  getWebsites: publicProcedure.concat(createOneWidgetIntegrationMiddleware("query", "umami")).query(async ({ ctx }) => {
-    if (ctx.integration.kind === "mock") return mockWidgetData.umamiWebsites;
-    try {
-      const instance = await createIntegrationAsync({ ...ctx.integration, kind: "umami" });
-      return await instance.getWebsitesAsync();
-    } catch (error) {
-      logger.warn(new Error("Failed to load websites", { cause: error }));
-      return [];
-    }
-  }),
+export const umamiRouter = createApiRouter({
+  getWebsites: publicProcedure
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.umamiWebsites;
+      try {
+        const instance = await createIntegrationAsync({ ...context.integration, kind: "umami" });
+        return await instance.getWebsitesAsync();
+      } catch (error) {
+        logger.warn(new Error("Failed to load websites", { cause: error }));
+        return [];
+      }
+    }),
 
   getVisitorStats: publicProcedure
     .input(
@@ -43,8 +45,8 @@ export const umamiRouter = createTRPCRouter({
       }),
     )
     .concat(createManyWidgetIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
+    .query(async ({ context, input }) => {
+      return await settleIntegrationQueries(context.integrations, async (integration) => {
         if (integration.kind === "mock") {
           return {
             integrationId: integration.id,
@@ -77,11 +79,11 @@ export const umamiRouter = createTRPCRouter({
   getEventNames: publicProcedure
     .input(z.object({ websiteId: z.string() }))
     .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.umamiEventNames;
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.umamiEventNames;
       try {
         const innerHandler = umamiEventNamesRequestHandler.handler(
-          { ...ctx.integration, kind: "umami" },
+          { ...context.integration, kind: "umami" },
           {
             websiteId: input.websiteId,
           },
@@ -105,11 +107,11 @@ export const umamiRouter = createTRPCRouter({
       }),
     )
     .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.umamiTopPages.slice(0, input.limit);
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.umamiTopPages.slice(0, input.limit);
       try {
         const innerHandler = umamiTopPagesRequestHandler.handler(
-          { ...ctx.integration, kind: "umami" },
+          { ...context.integration, kind: "umami" },
           {
             websiteId: input.websiteId,
             timeFrame: input.timeFrame,
@@ -139,11 +141,11 @@ export const umamiRouter = createTRPCRouter({
       }),
     )
     .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.umamiTopReferrers.slice(0, input.limit);
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.umamiTopReferrers.slice(0, input.limit);
       try {
         const innerHandler = umamiTopReferrersRequestHandler.handler(
-          { ...ctx.integration, kind: "umami" },
+          { ...context.integration, kind: "umami" },
           {
             websiteId: input.websiteId,
             timeFrame: input.timeFrame,
@@ -173,14 +175,14 @@ export const umamiRouter = createTRPCRouter({
       }),
     )
     .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") {
         return mockWidgetData.umamiEventSeries.filter((series) => input.eventNames.includes(series.eventName));
       }
       try {
         const sortedNames = [...input.eventNames].toSorted();
         const innerHandler = umamiMultiEventRequestHandler.handler(
-          { ...ctx.integration, kind: "umami" },
+          { ...context.integration, kind: "umami" },
           {
             websiteId: input.websiteId,
             timeFrame: input.timeFrame,
@@ -204,11 +206,11 @@ export const umamiRouter = createTRPCRouter({
   getActiveVisitors: publicProcedure
     .input(z.object({ websiteId: z.string() }))
     .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return 7;
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return 7;
       try {
         const innerHandler = umamiActiveVisitorsRequestHandler.handler(
-          { ...ctx.integration, kind: "umami" },
+          { ...context.integration, kind: "umami" },
           {
             websiteId: input.websiteId,
           },

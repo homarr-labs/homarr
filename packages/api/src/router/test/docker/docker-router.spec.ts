@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
@@ -8,6 +7,7 @@ import type { GroupPermissionKey } from "@homarr/definitions";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 import type { DockerEndpointStatus } from "@homarr/docker";
 
+import { createCallerFactory, ApiError } from "../../../procedure";
 import type { RouterInputs, RouterOutputs } from "../../..";
 import { dockerRouter } from "../../docker/docker-router";
 
@@ -101,7 +101,7 @@ const createSessionWithPermissions = (...permissions: GroupPermissionKey[]) =>
     expires: new Date().toISOString(),
   }) satisfies Session;
 
-const procedureKeys = objectKeys(dockerRouter._def.procedures);
+const procedureKeys = objectKeys(dockerRouter);
 
 const validInputs: {
   [key in (typeof procedureKeys)[number]]: RouterInputs["docker"][key];
@@ -134,7 +134,7 @@ const createDockerContainer = () => ({
 });
 
 const createAdminCaller = () =>
-  dockerRouter.createCaller({
+  createCallerFactory(dockerRouter)({
     db: database,
     deviceType: undefined,
     session: createSessionWithPermissions("admin"),
@@ -143,7 +143,7 @@ const createAdminCaller = () =>
 describe("All procedures should only be accessible for users with admin permission", () => {
   test.each(procedureKeys)("Procedure %s should be accessible for users with admin permission", async (procedure) => {
     // Arrange
-    const caller = dockerRouter.createCaller({
+    const caller = createCallerFactory(dockerRouter)({
       db: database,
       deviceType: undefined,
       session: createSessionWithPermissions("admin"),
@@ -160,7 +160,7 @@ describe("All procedures should only be accessible for users with admin permissi
     const groupPermissionsWithoutAdmin = getPermissionsWithChildren(["admin"]).filter(
       (permission) => permission !== "admin",
     );
-    const caller = dockerRouter.createCaller({
+    const caller = createCallerFactory(dockerRouter)({
       db: null as unknown as Database,
       deviceType: undefined,
       session: createSessionWithPermissions(...groupPermissionsWithoutAdmin),
@@ -169,12 +169,12 @@ describe("All procedures should only be accessible for users with admin permissi
     // Act
     const act = () => caller[procedure](validInputs[procedure] as never);
 
-    await expect(act()).rejects.toThrow(new TRPCError({ code: "FORBIDDEN", message: "Permission denied" }));
+    await expect(act()).rejects.toThrow(new ApiError({ code: "FORBIDDEN", message: "Permission denied" }));
   });
 
   test.each(procedureKeys)("Procedure %s should not be accessible without session", async (procedure) => {
     // Arrange
-    const caller = dockerRouter.createCaller({
+    const caller = createCallerFactory(dockerRouter)({
       db: null as unknown as Database,
       deviceType: undefined,
       session: null,
@@ -183,7 +183,7 @@ describe("All procedures should only be accessible for users with admin permissi
     // Act
     const act = () => caller[procedure](validInputs[procedure] as never);
 
-    await expect(act()).rejects.toThrow(new TRPCError({ code: "UNAUTHORIZED" }));
+    await expect(act()).rejects.toThrow(new ApiError({ code: "UNAUTHORIZED" }));
   });
 });
 

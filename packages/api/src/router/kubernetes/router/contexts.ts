@@ -1,8 +1,8 @@
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
-import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../../procedure";
 import { KubernetesClient } from "../kubernetes-client";
 
-export const contextsRouter = createTRPCRouter({
+export const contextsRouter = createApiRouter({
   getContexts: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({

@@ -1,7 +1,3 @@
-export async function register() {
-  if (process.env.NEXT_RUNTIME !== "nodejs") return;
-  if (process.env.NODE_ENV !== "production") return;
-
-  const { registerNodeInstrumentation } = await import("./instrumentation-node");
-  await registerNodeInstrumentation();
-}
+// Background work and subscriptions belong to the independently managed
+// backend runtime. Starting the dashboard must not start either service.
+export function register() {}

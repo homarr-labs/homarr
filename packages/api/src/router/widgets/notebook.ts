@@ -1,14 +1,14 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
 import { eq } from "@homarr/db";
 import { boards, items } from "@homarr/db/schema";
 
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
-export const notebookRouter = createTRPCRouter({
+export const notebookRouter = createApiRouter({
   updateContent: protectedProcedure
     .input(
       z.object({
@@ -17,15 +17,15 @@ export const notebookRouter = createTRPCRouter({
         boardId: z.string(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
 
-      const item = await ctx.db.query.items.findFirst({
+      const item = await context.db.query.items.findFirst({
         where: eq(items.id, input.itemId),
       });
 
       if (item?.boardId !== input.boardId) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Specified item was not found",
         });
@@ -33,7 +33,7 @@ export const notebookRouter = createTRPCRouter({
 
       const options = SuperJSON.parse<{ content: string }>(item.options);
       options.content = input.content;
-      await ctx.db
+      await context.db
         .update(items)
         .set({ options: SuperJSON.stringify(options) })
         .where(eq(items.id, input.itemId));

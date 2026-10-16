@@ -22,6 +22,7 @@ vi.mock("../../custom-widget/request-limits", () => ({
   acquireCustomWidgetRequestLimit: vi.fn(async () => async () => undefined),
 }));
 
+import { createCallerFactory } from "../../../procedure";
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
 import { customApiRouter } from "../../widgets/custom-api";
 
@@ -117,9 +118,60 @@ describe("Custom JSX v2 board router", () => {
     mocks.invalidateResponseCache.mockClear();
   });
 
+  test("shares only view load queries even when called by the board owner", async () => {
+    const loadRequest = definition.requests["load-status"];
+    if (!loadRequest) throw new Error("Missing fixture load query");
+    const sharedDefinition: HomarrCustomWidgetV2 = {
+      ...definition,
+      requests: {
+        ...definition.requests,
+        "modify-load": { ...loadRequest, path: "/private-modify", permission: "modify" },
+        "full-load": { ...loadRequest, path: "/private-full", permission: "full" },
+      },
+    };
+    const { db, itemId, ownerId } = await setup(false, sharedDefinition);
+    const caller = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: createSession(ownerId) });
+
+    const result = await caller.getShareData({ itemId });
+
+    expect(result).toEqual({
+      data: { "load-status": { value: 42 } },
+      status: { "load-status": { ok: true, status: 200 } },
+    });
+    expect(mocks.executeRequest).toHaveBeenCalledOnce();
+    expect(mocks.executeRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: "GET",
+        targetUrl: new URL("https://example.com/status"),
+      }),
+    );
+    expect(Object.keys(result).toSorted()).toEqual(["data", "status"]);
+  });
+
+  test("honors a private board view grant and hides upstream errors from shared display data", async () => {
+    const { db, itemId, boardId } = await setup(false);
+    const viewerId = createId();
+    await db.insert(users).values({ id: viewerId });
+    await db.insert(boardUserPermissions).values({ boardId, userId: viewerId, permission: "view" });
+    const viewer = createCallerFactory(customApiRouter)({
+      db,
+      deviceType: undefined,
+      session: createSession(viewerId),
+    });
+    mocks.executeRequest.mockRejectedValueOnce(new Error("credential=private https://user:password@example.com"));
+
+    await expect(viewer.getShareData({ itemId })).resolves.toEqual({
+      data: { "load-status": null },
+      status: { "load-status": { ok: false, status: 0 } },
+    });
+    const anonymous = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: null });
+    await expect(anonymous.getShareData({ itemId })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mocks.executeRequest).toHaveBeenCalledOnce();
+  });
+
   test("refreshes the server response cache for a placed widget", async () => {
     const { db, itemId } = await setup();
-    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: null });
 
     await caller.refresh({ itemId });
 
@@ -130,7 +182,7 @@ describe("Custom JSX v2 board router", () => {
 
   test("loads placed widgets and public queries for anonymous visitors on public boards", async () => {
     const { db, itemId } = await setup();
-    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: null });
 
     await expect(caller.getData({ itemId })).resolves.toMatchObject({
       template: definition.template,
@@ -155,14 +207,14 @@ describe("Custom JSX v2 board router", () => {
       template: "<Text>{options.limit}</Text>",
     };
     const { db, itemId } = await setup(true, updatedDefinition, { limit: "5", removed: true });
-    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: null });
 
     await expect(caller.getData({ itemId })).resolves.toMatchObject({ options: { limit: 5 } });
   });
 
   test("hides private boards and disabled definitions before executing a request", async () => {
     const privateSetup = await setup(false);
-    const anonymous = customApiRouter.createCaller({
+    const anonymous = createCallerFactory(customApiRouter)({
       db: privateSetup.db,
       deviceType: undefined,
       session: null,
@@ -177,12 +229,16 @@ describe("Custom JSX v2 board router", () => {
       .update(customWidgetDefinitions)
       .set({ enabled: false })
       .where(eq(customWidgetDefinitions.id, enabledSetup.definitionId));
-    const publicCaller = customApiRouter.createCaller({ db: enabledSetup.db, deviceType: undefined, session: null });
+    const publicCaller = createCallerFactory(customApiRouter)({
+      db: enabledSetup.db,
+      deviceType: undefined,
+      session: null,
+    });
     await expect(publicCaller.getData({ itemId: enabledSetup.itemId })).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(
       publicCaller.queryRequest({ itemId: enabledSetup.itemId, requestId: "status", params: { name: "homarr" } }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
-    const ownerCaller = customApiRouter.createCaller({
+    const ownerCaller = createCallerFactory(customApiRouter)({
       db: enabledSetup.db,
       deviceType: undefined,
       session: createSession(enabledSetup.ownerId),
@@ -195,7 +251,7 @@ describe("Custom JSX v2 board router", () => {
 
   test("rejects request-kind and parameter mismatches", async () => {
     const { db, itemId, ownerId } = await setup();
-    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+    const caller = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: createSession(ownerId) });
 
     await expect(caller.queryRequest({ itemId, requestId: "toggle", params: { enabled: true } })).rejects.toMatchObject(
       { code: "NOT_FOUND" },
@@ -208,7 +264,11 @@ describe("Custom JSX v2 board router", () => {
     const { db, itemId, boardId } = await setup(false);
     const editorId = createId();
     await db.insert(users).values({ id: editorId });
-    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: createSession(editorId) });
+    const caller = createCallerFactory(customApiRouter)({
+      db,
+      deviceType: undefined,
+      session: createSession(editorId),
+    });
 
     await expect(
       caller.executeAction({ itemId, requestId: "toggle", params: { enabled: true } }),
@@ -224,7 +284,7 @@ describe("Custom JSX v2 board router", () => {
 
   test("requires confirmation and full permission for DELETE actions", async () => {
     const { db, itemId, boardId, ownerId } = await setup(false);
-    const owner = customApiRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
+    const owner = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session: createSession(ownerId) });
     await expect(owner.executeAction({ itemId, requestId: "delete", params: {} })).rejects.toMatchObject({
       code: "PRECONDITION_FAILED",
     });
@@ -232,7 +292,11 @@ describe("Custom JSX v2 board router", () => {
     const editorId = createId();
     await db.insert(users).values({ id: editorId });
     await db.insert(boardUserPermissions).values({ boardId, userId: editorId, permission: "modify" });
-    const editor = customApiRouter.createCaller({ db, deviceType: undefined, session: createSession(editorId) });
+    const editor = createCallerFactory(customApiRouter)({
+      db,
+      deviceType: undefined,
+      session: createSession(editorId),
+    });
     await expect(
       editor.executeAction({ itemId, requestId: "delete", params: {}, confirmed: true }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });

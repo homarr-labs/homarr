@@ -5,7 +5,7 @@ import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/req
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 interface SystemHealthQueryResult {
   integrationId: string;
@@ -15,7 +15,7 @@ interface SystemHealthQueryResult {
   error?: string;
 }
 
-export const healthMonitoringRouter = createTRPCRouter({
+export const healthMonitoringRouter = createApiRouter({
   getSystemHealthStatus: publicProcedure
     .meta({
       mcp: {
@@ -25,9 +25,9 @@ export const healthMonitoringRouter = createTRPCRouter({
       },
     })
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringSystemIntegrationKinds))
-    .query(async ({ ctx }) => {
-      return await settleIntegrationQueries<(typeof ctx.integrations)[number], SystemHealthQueryResult>(
-        ctx.integrations,
+    .query(async ({ context }) => {
+      return await settleIntegrationQueries<(typeof context.integrations)[number], SystemHealthQueryResult>(
+        context.integrations,
         async (integration) => {
           const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
           return {
@@ -57,8 +57,8 @@ export const healthMonitoringRouter = createTRPCRouter({
       },
     })
     .concat(createOneIntegrationMiddleware("query", "synology", "openmediavault"))
-    .query(async ({ ctx }) => {
-      const integrationInstance = await createIntegrationAsync(ctx.integration);
+    .query(async ({ context }) => {
+      const integrationInstance = await createIntegrationAsync(context.integration);
       return await integrationInstance.listStorageVolumesAsync();
     }),
   getClusterHealthStatus: publicProcedure
@@ -70,8 +70,8 @@ export const healthMonitoringRouter = createTRPCRouter({
       },
     })
     .concat(createOneIntegrationMiddleware("query", ...healthMonitoringClusterIntegrationKinds))
-    .query(async ({ ctx }) => {
-      const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
+    .query(async ({ context }) => {
+      const innerHandler = clusterInfoRequestHandler.handler(context.integration, {});
       const { data } = await innerHandler.getDataAsync();
       return data;
     }),

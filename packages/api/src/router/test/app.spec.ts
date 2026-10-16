@@ -7,6 +7,7 @@ import { apps } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
+import { createCallerFactory } from "../../procedure";
 import { appRouter } from "../app";
 import * as appAccessControl from "../app/app-access-control";
 
@@ -30,7 +31,7 @@ describe("all should return all apps", () => {
   test("should return all apps with session", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-modify-all"]),
@@ -62,7 +63,7 @@ describe("all should return all apps", () => {
   });
   test("should throw UNAUTHORIZED if the user is not authenticated", async () => {
     // Arrange
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db: createDb(),
       deviceType: undefined,
       session: null,
@@ -72,11 +73,11 @@ describe("all should return all apps", () => {
     const actAsync = async () => await caller.all();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow("UNAUTHORIZED");
+    await expect(actAsync()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
   test("should throw FORBIDDEN without app-modify-all permission", async () => {
     // Arrange
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db: createDb(),
       deviceType: undefined,
       session: createDefaultSession(),
@@ -92,18 +93,18 @@ describe("all should return all apps", () => {
 
 describe("getPaginated should return apps to authenticated users", () => {
   test("should throw UNAUTHORIZED without a session", async () => {
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db: createDb(),
       deviceType: undefined,
       session: null,
     });
 
-    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toThrow("UNAUTHORIZED");
+    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
 
   test("should return apps with app-modify-all permission", async () => {
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-modify-all"]),
@@ -117,7 +118,7 @@ describe("getPaginated should return apps to authenticated users", () => {
   });
 
   test("should throw FORBIDDEN without app-modify-all permission", async () => {
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db: createDb(),
       deviceType: undefined,
       session: createDefaultSession(),
@@ -129,7 +130,7 @@ describe("getPaginated should return apps to authenticated users", () => {
 
 describe("search should require app-modify-all or board-modify-all permission", () => {
   test("should throw FORBIDDEN without app-modify-all or board-modify-all permission", async () => {
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db: createDb(),
       deviceType: undefined,
       session: createDefaultSession(),
@@ -140,7 +141,7 @@ describe("search should require app-modify-all or board-modify-all permission", 
 
   test("should return apps with board-modify-all permission", async () => {
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["board-modify-all"]),
@@ -158,7 +159,7 @@ describe("byId should return an app by id", () => {
   test("should return an app by id when canUserSeeAppAsync returns true", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -190,7 +191,7 @@ describe("byId should return an app by id", () => {
   test("should throw NOT_FOUND error when canUserSeeAppAsync returns false", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -216,7 +217,7 @@ describe("byId should return an app by id", () => {
   test("should throw an error if the app does not exist", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: null,
@@ -234,7 +235,7 @@ describe("create should create a new app with all arguments", () => {
   test("should create a new app", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-create"]),
@@ -263,7 +264,7 @@ describe("create should create a new app with all arguments", () => {
   test("should create a new app only with required arguments", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-create"]),
@@ -294,7 +295,7 @@ describe("update should update an app", () => {
   test("should update an app", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-modify-all"]),
@@ -334,7 +335,7 @@ describe("update should update an app", () => {
   test("should throw an error if the app does not exist", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-modify-all"]),
@@ -360,7 +361,7 @@ describe("delete should delete an app", () => {
   test("should delete an app", async () => {
     // Arrange
     const db = createDb();
-    const caller = appRouter.createCaller({
+    const caller = createCallerFactory(appRouter)({
       db,
       deviceType: undefined,
       session: createDefaultSession(["app-full-all"]),

@@ -51,8 +51,8 @@ export default async function EditUserPage(props: Props) {
     notFound();
   }
 
-  const boards = await api.board.getManageOverview({ fullPreview: false, userId: user.id });
-  const searchEngines = await api.searchEngine.getSelectable();
+  const boards = await api.board.getManageOverview.query({ fullPreview: false, userId: user.id });
+  const searchEngines = await api.searchEngine.getSelectable.query();
   const isSelf = session?.user.id === user.id;
   const isCredentialsUser = user.provider === "credentials";
 

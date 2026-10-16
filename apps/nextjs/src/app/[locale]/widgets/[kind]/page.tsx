@@ -5,7 +5,7 @@ import { Center, Loader } from "@mantine/core";
 import { getHomeBoardAsync } from "@homarr/api/board-server";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
-import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
+import { api } from "@homarr/api/server";
 import { BoardPreviewProvider } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
 import { ModalProvider } from "@homarr/modals";
@@ -27,7 +27,7 @@ export default async function WidgetPreview(props: Props) {
     redirect(`/auth/login?callbackUrl=${encodeURIComponent(`/widgets/${kind}`)}`);
   }
 
-  const [integrations, board] = await Promise.all([getIntegrationsWithPermissionsAsync(session), getHomeBoardAsync()]);
+  const [integrations, board] = await Promise.all([api.frontend.integrationPermissions.query(), getHomeBoardAsync()]);
 
   return (
     <IntegrationProvider integrations={integrations}>

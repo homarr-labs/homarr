@@ -29,7 +29,7 @@ import {
   IconPhoto,
 } from "@tabler/icons-react";
 
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import { assistantReasoningModes } from "@homarr/definitions";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 

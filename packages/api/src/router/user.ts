@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
@@ -36,13 +36,13 @@ import {
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
-  createTRPCRouter,
+  createApiRouter,
   isDemoMode,
   onboardingProcedure,
   permissionRequiredProcedure,
   protectedProcedure,
   publicProcedure,
-} from "../trpc";
+} from "../procedure";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
 
@@ -66,15 +66,15 @@ const userPreferencesResponseSchema = userPreferencesSchema.extend({ userId: z.s
   },
 });
 
-export const userRouter = createTRPCRouter({
+export const userRouter = createApiRouter({
   initUser: onboardingProcedure
     .requiresStep("user")
     .input(userInitSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       throwIfCredentialsDisabled();
-      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
+      await checkUsernameAlreadyTakenAndThrowAsync(context.db, "credentials", input.username);
 
-      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+      const maxPosition = await getMaxGroupPositionAsync(context.db);
       const hashedPassword = await hashPasswordAsync(input.password);
       const userId = createId();
       const groupId = createId();
@@ -92,7 +92,7 @@ export const userRouter = createTRPCRouter({
       };
       const nextStep = isProviderEnabled("ldap") || isProviderEnabled("oidc") ? "group" : "setup";
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             const transitionResult = await transaction
@@ -101,7 +101,7 @@ export const userRouter = createTRPCRouter({
               .where(eq(schema.onboarding.step, "user"));
             const transitionedRows = transitionResult.rowCount ?? 0;
             if (transitionedRows !== 1) {
-              throw new TRPCError({ code: "CONFLICT", message: "The initial administrator was already created." });
+              throw new ApiError({ code: "CONFLICT", message: "The initial administrator was already created." });
             }
             await transaction.insert(schema.users).values(userRow);
             await transaction.insert(schema.groups).values(groupRow);
@@ -117,7 +117,7 @@ export const userRouter = createTRPCRouter({
               .where(eq(onboarding.step, "user"))
               .run();
             if (transitionResult.changes !== 1) {
-              throw new TRPCError({ code: "CONFLICT", message: "The initial administrator was already created." });
+              throw new ApiError({ code: "CONFLICT", message: "The initial administrator was already created." });
             }
             transaction.insert(users).values(userRow).run();
             transaction.insert(groups).values(groupRow).run();
@@ -130,10 +130,10 @@ export const userRouter = createTRPCRouter({
   register: publicProcedure
     .input(userRegistrationApiSchema)
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       throwIfCredentialsDisabled();
       const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
-      const dbInvite = await ctx.db.query.invites.findFirst({
+      const dbInvite = await context.db.query.invites.findFirst({
         columns: {
           id: true,
           expirationDate: true,
@@ -142,13 +142,13 @@ export const userRouter = createTRPCRouter({
       });
 
       if (!dbInvite || dbInvite.expirationDate < new Date()) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Invalid invite",
         });
       }
 
-      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
+      await checkUsernameAlreadyTakenAndThrowAsync(context.db, "credentials", input.username);
 
       const hashedPassword = await hashPasswordAsync(input.password);
 
@@ -159,7 +159,7 @@ export const userRouter = createTRPCRouter({
         password: hashedPassword,
       };
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (trx) => {
             await trx.insert(schema.users).values(user);
@@ -168,7 +168,7 @@ export const userRouter = createTRPCRouter({
             const queryResult = await trx.delete(schema.invites).where(inviteWhere);
             const count = queryResult.rowCount ?? 0;
             if (count === 0) {
-              throw new TRPCError({
+              throw new ApiError({
                 code: "FORBIDDEN",
                 message: "Invalid invite",
               });
@@ -182,7 +182,7 @@ export const userRouter = createTRPCRouter({
             const result = trx.delete(invites).where(inviteWhere).run();
 
             if (result.changes === 0) {
-              throw new TRPCError({
+              throw new ApiError({
                 code: "FORBIDDEN",
                 message: "Invalid invite",
               });
@@ -212,14 +212,14 @@ export const userRouter = createTRPCRouter({
     })
     .input(convertIntersectionToZodObject(userCreateSchema))
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       throwIfCredentialsDisabled();
-      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
+      await checkUsernameAlreadyTakenAndThrowAsync(context.db, "credentials", input.username);
 
-      const userId = await createUserAsync(ctx.db, input);
+      const userId = await createUserAsync(context.db, input);
 
       if (input.groupIds.length >= 1) {
-        await ctx.db.insert(groupMembers).values(input.groupIds.map((groupId) => ({ groupId, userId })));
+        await context.db.insert(groupMembers).values(input.groupIds.map((groupId) => ({ groupId, userId })));
       }
     }),
   setProfileImage: protectedProcedure
@@ -245,16 +245,16 @@ export const userRouter = createTRPCRouter({
           .nullable(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input, context }) => {
       // Only admins can change other users profile images
-      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
-        throw new TRPCError({
+      if (context.session.user.id !== input.userId && !context.session.user.permissions.includes("admin")) {
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "You are not allowed to change other users profile images",
         });
       }
 
-      const user = await ctx.db.query.users.findFirst({
+      const user = await context.db.query.users.findFirst({
         columns: {
           id: true,
           image: true,
@@ -264,13 +264,13 @@ export const userRouter = createTRPCRouter({
       });
 
       if (!user) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
 
-      await ctx.db
+      await context.db
         .update(users)
         .set({
           image: input.image,
@@ -303,8 +303,8 @@ export const userRouter = createTRPCRouter({
       },
       mcp: { enabled: true, description: "List all users (admin only)" },
     })
-    .query(({ ctx }) => {
-      return ctx.db.query.users.findMany({
+    .query(({ context }) => {
+      return context.db.query.users.findMany({
         columns: {
           id: true,
           name: true,
@@ -338,8 +338,8 @@ export const userRouter = createTRPCRouter({
           "Return user IDs, names, profile images, and email addresses for selection controls, optionally filtered by authentication provider. Requires authentication.",
       },
     })
-    .query(({ ctx, input }) => {
-      return ctx.db.query.users.findMany({
+    .query(({ context, input }) => {
+      return context.db.query.users.findMany({
         columns: {
           id: true,
           name: true,
@@ -378,8 +378,8 @@ export const userRouter = createTRPCRouter({
           "Find users whose names contain the query. Returns IDs, names, profile images, and email addresses, with up to 100 results. Requires admin permission.",
       },
     })
-    .query(async ({ input, ctx }) => {
-      const dbUsers = await ctx.db.query.users.findMany({
+    .query(async ({ input, context }) => {
+      const dbUsers = await context.db.query.users.findMany({
         columns: {
           id: true,
           name: true,
@@ -415,7 +415,7 @@ export const userRouter = createTRPCRouter({
     })
     .input(z.object({ userId: z.string().min(1).optional() }))
     .output(userPreferencesResponseSchema)
-    .query(({ ctx, input }) => getUserPreferencesAsync(ctx, input.userId ?? ctx.session.user.id)),
+    .query(({ context, input }) => getUserPreferencesAsync(context, input.userId ?? context.session.user.id)),
   getById: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .output(
@@ -453,15 +453,15 @@ export const userRouter = createTRPCRouter({
       },
       mcp: { enabled: true, description: "Get user details by user ID. REQUIRED: userId (string)" },
     })
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input, context }) => {
       // Only admins can view other users details
-      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
-        throw new TRPCError({
+      if (context.session.user.id !== input.userId && !context.session.user.permissions.includes("admin")) {
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "You are not allowed to view other users details",
         });
       }
-      const user = await ctx.db.query.users.findFirst({
+      const user = await context.db.query.users.findFirst({
         columns: {
           id: true,
           name: true,
@@ -487,7 +487,7 @@ export const userRouter = createTRPCRouter({
       });
 
       if (!user) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "User not found",
         });
@@ -509,45 +509,45 @@ export const userRouter = createTRPCRouter({
           "Update a credentials account's username and email. Users can update themselves; updating another user requires admin permission. External-provider profiles cannot be edited, and username changes are disabled in demo mode.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input, context }) => {
       // Only admins can view other users details
-      if (ctx.session.user.id !== input.id && !ctx.session.user.permissions.includes("admin")) {
-        throw new TRPCError({
+      if (context.session.user.id !== input.id && !context.session.user.permissions.includes("admin")) {
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "You are not allowed to edit other users details",
         });
       }
 
-      const user = await ctx.db.query.users.findFirst({
+      const user = await context.db.query.users.findFirst({
         columns: { name: true, email: true, provider: true },
         where: eq(users.id, input.id),
       });
 
       if (!user) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
 
       if (user.provider !== "credentials") {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Username and email can not be changed for users with external providers",
         });
       }
 
       if (isDemoMode && input.name !== user.name) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Username changes are disabled in demo mode",
         });
       }
 
-      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.name, input.id);
+      await checkUsernameAlreadyTakenAndThrowAsync(context.db, "credentials", input.name, input.id);
 
       const emailDirty = input.email && user.email !== input.email;
-      await ctx.db
+      await context.db
         .update(users)
         .set({
           name: input.name,
@@ -571,23 +571,23 @@ export const userRouter = createTRPCRouter({
       },
       mcp: { enabled: true, effect: "destructive", description: "Delete a user by ID. REQUIRED: userId (string)" },
     })
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input, context }) => {
       if (isDemoMode) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "User deletion is disabled in demo mode",
         });
       }
 
       // Only admins and user itself can delete a user
-      if (ctx.session.user.id !== input.userId && !ctx.session.user.permissions.includes("admin")) {
-        throw new TRPCError({
+      if (context.session.user.id !== input.userId && !context.session.user.permissions.includes("admin")) {
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "You are not allowed to delete other users",
         });
       }
 
-      await ctx.db.delete(users).where(eq(users.id, input.userId));
+      await context.db.delete(users).where(eq(users.id, input.userId));
     }),
   changePassword: protectedProcedure
     .input(convertIntersectionToZodObject(userChangePasswordApiSchema))
@@ -603,24 +603,24 @@ export const userRouter = createTRPCRouter({
           "Change a credentials account's password. Changing your own password requires the previous password, including for admins. Admins can reset another user's password without verifying their previous password. Disabled in demo mode.",
       },
     })
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       if (isDemoMode) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Password changes are disabled in demo mode",
         });
       }
 
-      const user = ctx.session.user;
+      const user = context.session.user;
       // Only admins can change other users' passwords
       if (!user.permissions.includes("admin") && user.id !== input.userId) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
 
-      const dbUser = await ctx.db.query.users.findFirst({
+      const dbUser = await context.db.query.users.findFirst({
         columns: {
           id: true,
           password: true,
@@ -630,24 +630,24 @@ export const userRouter = createTRPCRouter({
       });
 
       if (!dbUser) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
 
       if (dbUser.provider !== "credentials") {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Password can not be changed for users with external providers",
         });
       }
 
       // Admins can change the password of other users without providing the previous password
-      const isPreviousPasswordRequired = ctx.session.user.id === input.userId;
+      const isPreviousPasswordRequired = context.session.user.id === input.userId;
 
       logger.info("Changing user password", {
-        actorId: ctx.session.user.id,
+        actorId: context.session.user.id,
         targetUserId: input.userId,
         previousPasswordRequired: isPreviousPasswordRequired,
       });
@@ -656,7 +656,7 @@ export const userRouter = createTRPCRouter({
         const isValid = await comparePasswordsAsync(input.previousPassword, dbUser.password ?? "");
 
         if (!isValid) {
-          throw new TRPCError({
+          throw new ApiError({
             code: "FORBIDDEN",
             message: "Invalid password",
           });
@@ -664,7 +664,7 @@ export const userRouter = createTRPCRouter({
       }
 
       const hashedPassword = await hashPasswordAsync(input.password);
-      await ctx.db
+      await context.db
         .update(users)
         .set({
           password: hashedPassword,
@@ -698,9 +698,9 @@ export const userRouter = createTRPCRouter({
         }),
     )
     .output(userPreferencesResponseSchema)
-    .mutation(({ ctx, input }) => {
+    .mutation(({ context, input }) => {
       const { userId, ...patch } = input;
-      return updateUserPreferencesAsync(ctx, userId ?? ctx.session.user.id, patch);
+      return updateUserPreferencesAsync(context, userId ?? context.session.user.id, patch);
     }),
   changeHomeBoards: protectedProcedure
     .input(convertIntersectionToZodObject(userChangeHomeBoardsSchema.and(z.object({ userId: z.string() }))))
@@ -716,8 +716,8 @@ export const userRouter = createTRPCRouter({
           "Set or clear a user's desktop and mobile home boards. The caller must be able to view each selected board. Users can update themselves; updating another user requires admin permission.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.userId, {
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.userId, {
         homeBoardId: input.homeBoardId,
         mobileHomeBoardId: input.mobileHomeBoardId,
       });
@@ -741,8 +741,8 @@ export const userRouter = createTRPCRouter({
           "Deprecated: use PATCH /api/users/search-preferences instead. Updates the default search engine and supplied DuckDuckGo bang preference while preserving the new-tab preference. Users can update themselves; updating another user requires admin permission.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.userId, {
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.userId, {
         defaultSearchEngineId: input.defaultSearchEngineId,
         ddgBangs: input.ddgBangsEnabled,
       });
@@ -761,8 +761,8 @@ export const userRouter = createTRPCRouter({
           "Set a user's default search engine, new-tab behavior, and DuckDuckGo bang preference. Users can update themselves; updating another user requires admin permission.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.userId, {
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.userId, {
         defaultSearchEngineId: input.defaultSearchEngineId,
         openSearchInNewTab: input.openInNewTab,
         ddgBangs: input.ddgBangsEnabled,
@@ -781,14 +781,14 @@ export const userRouter = createTRPCRouter({
         description: "Set the current user's preferred color scheme. Requires authentication.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, ctx.session.user.id, { colorScheme: input.colorScheme });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, context.session.user.id, { colorScheme: input.colorScheme });
     }),
   changeByteUnitSystem: protectedProcedure
     .input(userByteUnitSystemSchema.and(byIdSchema))
     .output(z.void())
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.id, { byteUnitSystem: input.byteUnitSystem });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.id, { byteUnitSystem: input.byteUnitSystem });
     }),
   changeEnableRightClickOnWidgets: protectedProcedure
     .meta({
@@ -804,13 +804,15 @@ export const userRouter = createTRPCRouter({
     })
     .input(convertIntersectionToZodObject(userEnableRightClickOnWidgetsSchema.and(byIdSchema)))
     .output(z.void())
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.id, { enableRightClickOnWidgets: input.enableRightClickOnWidgets });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.id, {
+        enableRightClickOnWidgets: input.enableRightClickOnWidgets,
+      });
     }),
   changePingIconsEnabled: protectedProcedure
     .input(userPingIconsEnabledSchema.and(byIdSchema))
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.id, { pingIconsEnabled: input.pingIconsEnabled });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.id, { pingIconsEnabled: input.pingIconsEnabled });
     }),
   changeHeaderPreferences: protectedProcedure
     .meta({
@@ -826,8 +828,8 @@ export const userRouter = createTRPCRouter({
     })
     .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
     .output(z.void())
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.id, { headerPreferences: input.headerPreferences });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.id, { headerPreferences: input.headerPreferences });
     }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
@@ -844,8 +846,8 @@ export const userRouter = createTRPCRouter({
           "Deprecated: use PATCH /api/users/search-preferences instead. Enable or disable DuckDuckGo bangs for a user. Users can update themselves; updating another user requires admin permission.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.id, { ddgBangs: input.ddgBangs });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.id, { ddgBangs: input.ddgBangs });
     }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))
@@ -861,29 +863,29 @@ export const userRouter = createTRPCRouter({
           "Set a user's preferred first day of the week. Users can update themselves; updating another user requires admin permission.",
       },
     })
-    .mutation(async ({ input, ctx }) => {
-      await updateUserPreferencesAsync(ctx, input.id, { firstDayOfWeek: input.firstDayOfWeek });
+    .mutation(async ({ input, context }) => {
+      await updateUserPreferencesAsync(context, input.id, { firstDayOfWeek: input.firstDayOfWeek });
     }),
   completeTour: protectedProcedure
     .input(z.object({ tour: z.enum(["manage", "board"]) }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input, context }) => {
       const columnByTour = {
         manage: { completedManageTour: true },
         board: { completedBoardTour: true },
       } as const;
 
-      await ctx.db.update(users).set(columnByTour[input.tour]).where(eq(users.id, ctx.session.user.id));
+      await context.db.update(users).set(columnByTour[input.tour]).where(eq(users.id, context.session.user.id));
     }),
-  resetTours: protectedProcedure.mutation(async ({ ctx }) => {
-    await ctx.db
+  resetTours: protectedProcedure.mutation(async ({ context }) => {
+    await context.db
       .update(users)
       .set({
         completedManageTour: false,
         completedBoardTour: false,
       })
-      .where(eq(users.id, ctx.session.user.id));
+      .where(eq(users.id, context.session.user.id));
   }),
-  getTourStatus: protectedProcedure.query(async ({ ctx }) => {
+  getTourStatus: protectedProcedure.query(async ({ context }) => {
     if (isDemoMode) {
       return {
         completedManageTour: true,
@@ -891,12 +893,12 @@ export const userRouter = createTRPCRouter({
       };
     }
 
-    const user = await ctx.db.query.users.findFirst({
+    const user = await context.db.query.users.findFirst({
       columns: {
         completedManageTour: true,
         completedBoardTour: true,
       },
-      where: eq(users.id, ctx.session.user.id),
+      where: eq(users.id, context.session.user.id),
     });
 
     return {
@@ -932,7 +934,7 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
   if (!user) return;
   if (ignoreId && user.id === ignoreId) return;
 
-  throw new TRPCError({
+  throw new ApiError({
     code: "CONFLICT",
     message: "Username already taken",
   });

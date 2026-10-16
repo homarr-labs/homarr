@@ -7,7 +7,7 @@ import { generateSecureRandomToken } from "@homarr/common/server";
 import { and, db, eq, isNotNull } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure } from "../procedure";
 
 const oauthKeyColumns = {
   id: true,
@@ -17,23 +17,23 @@ const oauthKeyColumns = {
   oauthIssuedAt: true,
 } as const;
 
-export const apiKeysRouter = createTRPCRouter({
-  getOwnOAuth: protectedProcedure.meta({ mcp: { enabled: false } }).query(({ ctx }) => {
-    return ctx.db.query.apiKeys.findMany({
+export const apiKeysRouter = createApiRouter({
+  getOwnOAuth: protectedProcedure.meta({ mcp: { enabled: false } }).query(({ context }) => {
+    return context.db.query.apiKeys.findMany({
       columns: oauthKeyColumns,
-      where: and(eq(apiKeys.userId, ctx.session.user.id), isNotNull(apiKeys.oauthClientId)),
+      where: and(eq(apiKeys.userId, context.session.user.id), isNotNull(apiKeys.oauthClientId)),
     });
   }),
   revokeOwnOAuth: protectedProcedure
     .meta({ mcp: { enabled: false } })
     .input(z.object({ apiKeyId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db
+    .mutation(async ({ context, input }) => {
+      await context.db
         .delete(apiKeys)
         .where(
           and(
             eq(apiKeys.id, input.apiKeyId),
-            eq(apiKeys.userId, ctx.session.user.id),
+            eq(apiKeys.userId, context.session.user.id),
             isNotNull(apiKeys.oauthClientId),
           ),
         );
@@ -43,8 +43,8 @@ export const apiKeysRouter = createTRPCRouter({
     .meta({
       mcp: { enabled: true, description: "List all API keys (admin only)" },
     })
-    .query(({ ctx }) => {
-      return ctx.db.query.apiKeys.findMany({
+    .query(({ context }) => {
+      return context.db.query.apiKeys.findMany({
         columns: oauthKeyColumns,
         with: {
           user: {
@@ -66,14 +66,14 @@ export const apiKeysRouter = createTRPCRouter({
         description: "Create a new API key for the current user (admin only)",
       },
     })
-    .mutation(async ({ ctx }) => {
+    .mutation(async ({ context }) => {
       const id = randomBytes(4).toString("hex");
       const token = generateSecureRandomToken(24);
       const hashedToken = await hashPasswordAsync(token);
       await db.insert(apiKeys).values({
         id,
         apiKey: hashedToken,
-        userId: ctx.session.user.id,
+        userId: context.session.user.id,
       });
       return {
         apiKey: `${id}.${token}`,
@@ -88,7 +88,7 @@ export const apiKeysRouter = createTRPCRouter({
       },
     })
     .input(z.object({ apiKeyId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(apiKeys).where(eq(apiKeys.id, input.apiKeyId));
+    .mutation(async ({ context, input }) => {
+      await context.db.delete(apiKeys).where(eq(apiKeys.id, input.apiKeyId));
     }),
 });

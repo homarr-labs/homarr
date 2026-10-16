@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import type { Session } from "@homarr/auth";
 import type { IntegrationPermissionsProps } from "@homarr/auth/shared";
@@ -21,12 +21,12 @@ const hasIntegrationPermission = (
 };
 
 const throwIfActionsForbiddenAsync = async (
-  ctx: { db: Database; session: Session | null },
+  context: { db: Database; session: Session | null },
   integrationWhere: SQL<unknown>,
   expectedCount: number,
   permission: IntegrationPermission,
 ) => {
-  const { db, session } = ctx;
+  const { db, session } = context;
   const groupsOfCurrentUser = await db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, session?.user.id ?? ""),
   });
@@ -56,20 +56,20 @@ const throwIfActionsForbiddenAsync = async (
 
 /**
  * Throws NOT_FOUND if user is not allowed to perform action on integration
- * @param ctx trpc router context
+ * @param context API request context
  * @param integrationWhere where clause for the integration
  * @param permission permission required to perform action on integration
  */
 export const throwIfActionForbiddenAsync = async (
-  ctx: { db: Database; session: Session | null },
+  context: { db: Database; session: Session | null },
   integrationWhere: SQL<unknown>,
   permission: IntegrationPermission,
 ) => {
-  await throwIfActionsForbiddenAsync(ctx, integrationWhere, 1, permission);
+  await throwIfActionsForbiddenAsync(context, integrationWhere, 1, permission);
 };
 
 export const throwIfIntegrationActionsForbiddenAsync = async (
-  ctx: { db: Database; session: Session | null },
+  context: { db: Database; session: Session | null },
   integrationIds: readonly string[],
   permission: IntegrationPermission,
 ) => {
@@ -77,7 +77,7 @@ export const throwIfIntegrationActionsForbiddenAsync = async (
   if (uniqueIntegrationIds.length === 0) return;
 
   await throwIfActionsForbiddenAsync(
-    ctx,
+    context,
     inArray(integrations.id, uniqueIntegrationIds),
     uniqueIntegrationIds.length,
     permission,
@@ -89,7 +89,7 @@ export const throwIfIntegrationActionsForbiddenAsync = async (
  * A function is used to use the method without return statement
  */
 function notAllowed(): never {
-  throw new TRPCError({
+  throw new ApiError({
     code: "NOT_FOUND",
     message: "Integration not found",
   });

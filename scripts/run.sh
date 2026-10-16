@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 MIGRATION_PID=""
+BACKEND_PID=""
 NEXTJS_PID=""
 NGINX_PID=""
 REDIS_PID=""
@@ -18,8 +19,9 @@ terminate() {
     SHUTTING_DOWN=true
     echo "Shutting down..."
     stop_process "$MIGRATION_PID"
-    stop_process "$NEXTJS_PID"
     stop_process "$NGINX_PID"
+    stop_process "$NEXTJS_PID"
+    stop_process "$BACKEND_PID"
     stop_process "$REDIS_PID"
     echo "Shutdown complete."
     exit 0
@@ -61,13 +63,22 @@ else
     fi
 fi
 
-# Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
-export AUTH_SECRET=$(openssl rand -base64 32)
+# Keep an explicitly configured secret stable across independent backend replicas.
+if [ -z "${AUTH_SECRET:-}" ]; then
+    AUTH_SECRET=$(openssl rand -base64 32) || exit 1
+    export AUTH_SECRET
+fi
 
 HOMARR_REQUEST_IDENTITY_SECRET=$(openssl rand -hex 32) || exit 1
 export HOMARR_REQUEST_IDENTITY_SECRET
 NGINX_TRUSTED_PROXIES=$(node ./scripts/trusted-proxies.mjs) || exit 1
 export NGINX_TRUSTED_PROXIES
+export HOMARR_FRONTEND_ENABLED=${HOMARR_FRONTEND_ENABLED:-true}
+if [ "$HOMARR_FRONTEND_ENABLED" = "true" ]; then
+    export NGINX_FRONTEND_UPSTREAM=${NGINX_FRONTEND_UPSTREAM:-http://127.0.0.1:3000}
+else
+    export NGINX_FRONTEND_UPSTREAM=${NGINX_FRONTEND_UPSTREAM:-http://127.0.0.1:3002}
+fi
 
 # Start nginx proxy
 # 1. Create the nginx configuration file from the template
@@ -81,7 +92,7 @@ export NGINX_LISTEN_IPV6=''
 if [ "${HOMARR_DISABLE_IPV6:-false}" != "true" ] && grep -q . /proc/net/if_inet6 2>/dev/null; then
     NGINX_LISTEN_IPV6='listen [::]:7575;'
 fi
-envsubst '${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+envsubst '${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET} ${NGINX_FRONTEND_UPSTREAM}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 nginx -t || exit 1
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
@@ -96,23 +107,44 @@ else
     REDIS_PID=$!
 fi
 
-# Next.js standalone uses HOSTNAME as its bind address. Docker's generated
-# hostname can be unresolvable, so bind explicitly while nginx uses loopback.
-export HOSTNAME=0.0.0.0
-export NODE_OPTIONS="--max-semi-space-size=4 ${NODE_OPTIONS:-}"
-node apps/nextjs/server.js &
-NEXTJS_PID=$!
+# The HTTP backend owns initialization, scheduled tasks and subscriptions.
+bun apps/backend/index.js &
+BACKEND_PID=$!
 
+if [ "$HOMARR_FRONTEND_ENABLED" = "true" ]; then
+    # Next.js standalone uses HOSTNAME as its bind address. Docker's generated
+    # hostname can be unresolvable, so bind explicitly behind nginx.
+    export HOSTNAME=0.0.0.0
+    export NODE_OPTIONS="--max-semi-space-size=4 ${NODE_OPTIONS:-}"
+    node apps/nextjs/server.js &
+    NEXTJS_PID=$!
+fi
+
+# Backup restore exits the backend cleanly so it can reopen the replaced DB.
+# Unexpected failures stop the group for the container restart policy.
 while true; do
-    wait $NEXTJS_PID
+    EXITED_PID=""
+    wait -n -p EXITED_PID "$BACKEND_PID" "$NGINX_PID" ${NEXTJS_PID:+"$NEXTJS_PID"} ${REDIS_PID:+"$REDIS_PID"}
     EXIT_CODE=$?
 
     if [ "$SHUTTING_DOWN" = true ]; then
         break
     fi
 
-    echo "Next.js exited with code $EXIT_CODE, restarting in 1s..."
-    sleep 1
-    node apps/nextjs/server.js &
-    NEXTJS_PID=$!
+    if [ "$EXIT_CODE" -eq 0 ] && [ "$EXITED_PID" = "$BACKEND_PID" ]; then
+        echo "Backend requested a restart, reopening the database..."
+        bun apps/backend/index.js &
+        BACKEND_PID=$!
+        continue
+    fi
+
+    echo "A required service exited with code $EXIT_CODE, shutting down..."
+    stop_process "$NGINX_PID"
+    stop_process "$NEXTJS_PID"
+    stop_process "$BACKEND_PID"
+    stop_process "$REDIS_PID"
+    if [ "$EXIT_CODE" -eq 0 ]; then
+        EXIT_CODE=1
+    fi
+    exit "$EXIT_CODE"
 done

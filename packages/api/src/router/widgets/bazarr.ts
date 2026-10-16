@@ -2,9 +2,9 @@ import { bazarrBadgesRequestHandler } from "@homarr/request-handler/bazarr";
 import { mockWidgetData } from "@homarr/integrations";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const bazarrRouter = createTRPCRouter({
+export const bazarrRouter = createApiRouter({
   getBadges: publicProcedure
     .meta({
       mcp: {
@@ -14,10 +14,10 @@ export const bazarrRouter = createTRPCRouter({
       },
     })
     .concat(createOneWidgetIntegrationMiddleware("query", "bazarr"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.bazarr;
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.bazarr;
 
-      const innerHandler = bazarrBadgesRequestHandler.handler({ ...ctx.integration, kind: "bazarr" }, {});
+      const innerHandler = bazarrBadgesRequestHandler.handler({ ...context.integration, kind: "bazarr" }, {});
       const data = await innerHandler.getDataAsync();
       return data.data;
     }),

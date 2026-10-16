@@ -39,8 +39,7 @@ export class RedisTransport extends Transport {
       .then(() => {
         // Is only initialized here because it did not work when initialized in the constructor or outside the class
         if (!this.redis) {
-          this.redis = createRedisClient();
-          this.redis.options.maxRetriesPerRequest = 1;
+          this.redis = createRedisClient({ maxRetriesPerRequest: 1 });
           this.redis.on("error", () => undefined);
         }
 

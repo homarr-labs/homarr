@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import type { LoggerMessage } from "@homarr/redis";
 
+import { createCallerFactory } from "../../procedure";
 import { logRouter } from "../log";
 
 const mocks = vi.hoisted(() => ({
@@ -45,18 +46,19 @@ describe("log.subscribe", () => {
     });
     mocks.getRecentAsync.mockReturnValue(historyDeferred.promise);
 
-    const caller = logRouter.createCaller({
+    const caller = createCallerFactory(logRouter)({
       db: null as never,
       deviceType: undefined,
       session,
     });
     const subscription = await caller.subscribe({ levels: ["info"] });
     const events: object[] = [];
-    const observer = subscription.subscribe({
-      next(event) {
+    const received = (async () => {
+      for await (const event of subscription) {
         events.push(event);
-      },
-    });
+        if (events.length === 2) break;
+      }
+    })();
 
     await vi.waitFor(() => expect(mocks.getRecentAsync).toHaveBeenCalledOnce());
 
@@ -66,14 +68,12 @@ describe("log.subscribe", () => {
     onMessage?.(liveMessage);
     historyDeferred.resolve([retainedMessage]);
 
-    await vi.waitFor(() =>
-      expect(events).toEqual([
-        { type: "history", messages: [retainedMessage] },
-        { type: "message", message: liveMessage },
-      ]),
-    );
+    await received;
+    expect(events).toEqual([
+      { type: "history", messages: [retainedMessage] },
+      { type: "message", message: liveMessage },
+    ]);
 
-    observer.unsubscribe();
     expect(unsubscribe).toHaveBeenCalledOnce();
   });
 });

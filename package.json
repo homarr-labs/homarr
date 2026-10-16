@@ -251,7 +251,17 @@
       "zod-form-data": "3.0.2",
       "zod-validation-error": "5.0.0",
       "better-sqlite3": "12.11.1",
-      "@types/better-sqlite3": "7.6.13"
+      "@types/better-sqlite3": "7.6.13",
+      "hono": "4.13.13",
+      "@types/bun": "1.4.3",
+      "ua-parser-js": "1.0.41",
+      "@types/ua-parser-js": "0.7.39",
+      "@orpc/client": "2.0.0-beta.44",
+      "@orpc/server": "2.0.0-beta.44",
+      "@orpc/openapi": "2.0.0-beta.44",
+      "@orpc/trpc": "2.0.0-beta.44",
+      "@orpc/json-schema": "2.0.0-beta.44",
+      "@orpc/zod": "2.0.0-beta.44"
     }
   },
   "scripts": {
@@ -309,7 +319,10 @@
     "test:workshop-image": "sh apps/workshop/test-image.sh",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\" --ui",
     "typecheck": "turbo typecheck",
-    "with-env": "dotenv -e .env --"
+    "with-env": "dotenv -e .env --",
+    "dev:backend": "bun run --filter @homarr/backend dev",
+    "start:backend": "bun run --filter @homarr/backend start",
+    "build:backend": "bun run --filter @homarr/backend build"
   },
   "dependencies": {
     "jsonpath-plus": "catalog:"
@@ -403,7 +416,8 @@
     "dns-caching@0.2.9": "patches/dns-caching.patch",
     "@types/node-unifi@2.5.1": "patches/@types__node-unifi.patch",
     "mantine-datatable@9.3.1": "patches/mantine-datatable@9.3.1.patch",
-    "trpc-to-openapi@3.3.0": "patches/trpc-to-openapi.patch"
+    "trpc-to-openapi@3.3.0": "patches/trpc-to-openapi.patch",
+    "ssh2@1.16.0": "patches/ssh2@1.16.0.patch"
   },
   "trustedDependencies": [
     "@tree-sitter-grammars/tree-sitter-yaml",

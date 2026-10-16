@@ -1,5 +1,5 @@
 import { resolveCustomWidgetSource } from "./source-resolver";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
@@ -7,7 +7,7 @@ import { eq, or } from "@homarr/db";
 import { boards, customWidgetDefinitions, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
 import { collectCustomWidgetRequestReferences } from "@homarr/custom-widgets/core";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 import { executeCustomWidgetRequest } from "./request-executor";
@@ -31,13 +31,13 @@ export const managementQueryProcedures = {
   list: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "List all Custom JSX widgets." } })
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       const [definitions, legacyDefinitions] = await Promise.all([
-        ctx.db.query.customWidgetDefinitions.findMany({
+        context.db.query.customWidgetDefinitions.findMany({
           orderBy: (table, { asc }) => asc(table.name),
           with: { secrets: true },
         }),
-        ctx.db.query.legacyCustomWidgetDefinitions.findMany({
+        context.db.query.legacyCustomWidgetDefinitions.findMany({
           orderBy: (table, { asc }) => asc(table.name),
           with: { secrets: true },
         }),
@@ -58,12 +58,12 @@ export const managementQueryProcedures = {
       },
     })
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const definition = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+    .query(async ({ context, input }) => {
+      const definition = await context.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.id),
         with: { secrets: true },
       });
-      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
+      if (!definition) throw new ApiError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
       return {
         id: definition.id,
         managementPath: "/manage/custom-widgets",
@@ -79,12 +79,12 @@ export const managementQueryProcedures = {
     .requiresPermission("admin")
     .meta({ mcp: { enabled: true, description: "Get one Custom JSX widget without secret values." } })
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const definition = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .query(async ({ context, input }) => {
+      const definition = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.id),
         with: { secrets: true },
       });
-      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
+      if (!definition) throw new ApiError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       return {
         id: definition.id,
         managementPath: `/manage/custom-widgets/edit/${definition.id}`,
@@ -104,9 +104,9 @@ export const managementQueryProcedures = {
   available: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ boardId: z.string(), currentId: z.string().optional() }))
-    .query(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
-      const definitions = await ctx.db.query.customWidgetDefinitions.findMany({
+    .query(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
+      const definitions = await context.db.query.customWidgetDefinitions.findMany({
         where: input.currentId
           ? or(eq(customWidgetDefinitions.enabled, true), eq(customWidgetDefinitions.id, input.currentId))
           : eq(customWidgetDefinitions.enabled, true),
@@ -114,7 +114,7 @@ export const managementQueryProcedures = {
       });
       const available = definitions.flatMap(mapAvailableCustomWidget);
       if (!input.currentId || available.some(({ id }) => id === input.currentId)) return available;
-      const legacy = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+      const legacy = await context.db.query.legacyCustomWidgetDefinitions.findFirst({
         where: eq(legacyCustomWidgetDefinitions.id, input.currentId),
       });
       if (!legacy) return available;
@@ -131,30 +131,30 @@ export const managementQueryProcedures = {
         params: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
-      const stored = await ctx.db.query.customWidgetDefinitions.findFirst({
+    .query(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
+      const stored = await context.db.query.customWidgetDefinitions.findFirst({
         where: eq(customWidgetDefinitions.id, input.definitionId),
         with: { secrets: true },
       });
-      if (!stored || !stored.enabled) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget not found" });
+      if (!stored || !stored.enabled) throw new ApiError({ code: "NOT_FOUND", message: "Custom widget not found" });
       const definition = parseStoredCustomWidgetDefinition(stored);
       const requestDefinition = definition.requests[input.requestId];
       if (requestDefinition?.kind !== "query")
-        throw new TRPCError({ code: "NOT_FOUND", message: "Option query not found" });
+        throw new ApiError({ code: "NOT_FOUND", message: "Option query not found" });
       const request = { id: input.requestId, ...requestDefinition };
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), request.permission);
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), request.permission);
       const source = definition.sources[request.source];
-      if (!source) throw new TRPCError({ code: "NOT_FOUND", message: "Option query source not found" });
+      if (!source) throw new ApiError({ code: "NOT_FOUND", message: "Option query source not found" });
       const release = await acquireCustomWidgetRequestLimit({
         category: "query",
-        userId: ctx.session.user.id,
+        userId: context.session.user.id,
         itemId: `configuration:${input.boardId}`,
         definitionId: input.definitionId,
       });
       try {
         const values = resolveOptionRequestValues(request, input.params);
-        const connection = await resolveCustomWidgetSource(ctx, source, request, () =>
+        const connection = await resolveCustomWidgetSource(context, source, request, () =>
           stored.secrets
             .filter((secret) => secret.sourceId === request.source)
             .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),

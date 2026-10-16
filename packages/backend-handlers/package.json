@@ -1,0 +1,40 @@
+{
+  "name": "@homarr/backend-handlers",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "oxfmt .",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit",
+    "prepare-assets": "bun scripts/prepare-assets.ts"
+  },
+  "dependencies": {
+    "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
+    "@homarr/custom-widgets": "workspace:^0.1.0",
+    "@homarr/db": "workspace:^0.1.0",
+    "@homarr/image-proxy": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
+    "adm-zip": "catalog:",
+    "better-sqlite3": "catalog:",
+    "drizzle-orm": "catalog:",
+    "isomorphic-dompurify": "catalog:",
+    "sql.js": "catalog:",
+    "zod": "catalog:",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/adm-zip": "catalog:",
+    "@types/better-sqlite3": "catalog:",
+    "typescript": "catalog:"
+  }
+}

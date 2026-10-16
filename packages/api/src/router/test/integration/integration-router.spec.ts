@@ -8,6 +8,7 @@ import { apps, integrations, integrationSecrets, integrationUserPermissions, use
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
+import { createCallerFactory } from "../../../procedure";
 import { integrationRouter } from "../../integration/integration-router";
 import { expectToBeDefined } from "../helper";
 
@@ -31,7 +32,7 @@ vi.mock("../../integration/integration-test-connection", () => ({
 describe("all should return all integrations", () => {
   test("with integration full access should return all integrations", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -61,7 +62,7 @@ describe("all should return all integrations", () => {
 
   test("with integration full access and no per-integration rows should return all integrations with full access", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -91,7 +92,7 @@ describe("all should return all integrations", () => {
 
   test("with integration use access should return all integrations", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-use-all"]),
@@ -118,7 +119,7 @@ describe("all should return all integrations", () => {
 
   test("without global integration access should only return integrations with use access", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(),
@@ -153,7 +154,7 @@ describe("all should return all integrations", () => {
 
   test("with a per-integration interact grant should return the integration with use access", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(),
@@ -190,7 +191,7 @@ describe("all should return all integrations", () => {
 describe("search should return accessible integrations", () => {
   test("without global integration access should only return integrations with use access as plain rows", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(),
@@ -228,7 +229,7 @@ describe("search should return accessible integrations", () => {
 describe("mediaRequestSearchTargets should return accessible media search integrations", () => {
   test("with integration use access should only return media request search integrations", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-use-all"]),
@@ -258,7 +259,7 @@ describe("mediaRequestSearchTargets should return accessible media search integr
 
   test("without access should not return media request search integrations", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(),
@@ -278,7 +279,7 @@ describe("mediaRequestSearchTargets should return accessible media search integr
 
   test("with direct integration use access should return media request search integrations", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(),
@@ -307,7 +308,7 @@ describe("mediaRequestSearchTargets should return accessible media search integr
 describe("searchMediaRequests should validate scoped integrations", () => {
   test("with a non media search integration should throw not found", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-use-all"]),
@@ -327,7 +328,7 @@ describe("searchMediaRequests should validate scoped integrations", () => {
 
   test("without query access to a scoped media search integration should throw forbidden", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(),
@@ -349,7 +350,7 @@ describe("searchMediaRequests should validate scoped integrations", () => {
 describe("byId should return an integration by id", () => {
   test("with full access should return an integration by id", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -376,7 +377,7 @@ describe("byId should return an integration by id", () => {
 
   test("with full access should throw an error if the integration does not exist", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -388,7 +389,7 @@ describe("byId should return an integration by id", () => {
 
   test("with full access should only return the public secret values", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -436,7 +437,7 @@ describe("byId should return an integration by id", () => {
   test("without full access should throw integration not found error", async () => {
     // Arrange
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
@@ -462,7 +463,7 @@ describe("byId should return an integration by id", () => {
 describe("create should create a new integration", () => {
   test("with create integration access should create a new integration", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
@@ -506,7 +507,7 @@ describe("create should create a new integration", () => {
 
   test("with create integration access should not create a search engine for media request search integrations", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
@@ -545,7 +546,7 @@ describe("create should create a new integration", () => {
 
   test("with create integration access should create a new integration with new linked app", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create", "app-create"]),
@@ -602,7 +603,7 @@ describe("create should create a new integration", () => {
       iconUrl: "logo.png",
     });
 
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
@@ -642,7 +643,7 @@ describe("create should create a new integration", () => {
   test("without create integration access should throw permission error", async () => {
     // Arrange
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
@@ -665,7 +666,7 @@ describe("create should create a new integration", () => {
   test("without create app access should throw permission error with new linked app", async () => {
     // Arrange
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-create"]),
@@ -696,7 +697,7 @@ describe("create should create a new integration", () => {
 describe("update should update an integration", () => {
   test("with full access should update an integration", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -779,7 +780,7 @@ describe("update should update an integration", () => {
 
   test("with full access should throw an error if the integration does not exist", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -799,7 +800,7 @@ describe("update should update an integration", () => {
   test("without full access should throw permission error", async () => {
     // Arrange
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),
@@ -823,7 +824,7 @@ describe("update should update an integration", () => {
 describe("delete should delete an integration", () => {
   test("with full access should delete an integration", async () => {
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-full-all"]),
@@ -857,7 +858,7 @@ describe("delete should delete an integration", () => {
   test("without full access should throw permission error", async () => {
     // Arrange
     const db = createDb();
-    const caller = integrationRouter.createCaller({
+    const caller = createCallerFactory(integrationRouter)({
       db,
       deviceType: undefined,
       session: defaultSessionWithPermissions(["integration-interact-all"]),

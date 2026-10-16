@@ -20,6 +20,7 @@ import type {
 } from "@homarr/integrations/types";
 import type * as MediaRequestListHandlerModule from "@homarr/request-handler/media-request-list";
 
+import { createCallerFactory } from "../../../procedure";
 import { calendarRouter } from "../../widgets/calendar";
 import { dnsHoleRouter } from "../../widgets/dns-hole";
 import { downloadsRouter } from "../../widgets/downloads";
@@ -322,54 +323,66 @@ const dashboardPartialFailureCases = [
     payloadKey: "dashboard",
     fallbackValue: null,
     run: async (setup: IntegrationSetup) =>
-      await tracearrRouter
-        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getDashboard({ integrationIds: setup.integrationIds }),
+      await createCallerFactory(tracearrRouter)({
+        db: setup.db,
+        deviceType: undefined,
+        session: setup.session,
+      }).getDashboard({ integrationIds: setup.integrationIds }),
   },
   {
     kind: "speedtestTracker" as const,
     payloadKey: "dashboard",
     fallbackValue: null,
     run: async (setup: IntegrationSetup) =>
-      await speedtestTrackerRouter
-        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getDashboard({ integrationIds: setup.integrationIds }),
+      await createCallerFactory(speedtestTrackerRouter)({
+        db: setup.db,
+        deviceType: undefined,
+        session: setup.session,
+      }).getDashboard({ integrationIds: setup.integrationIds }),
   },
   {
     kind: "peaNut" as const,
     payloadKey: "summaries",
     fallbackValue: [],
     run: async (setup: IntegrationSetup) =>
-      await upsRouter
-        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getSummaries({ integrationIds: setup.integrationIds }),
+      await createCallerFactory(upsRouter)({
+        db: setup.db,
+        deviceType: undefined,
+        session: setup.session,
+      }).getSummaries({ integrationIds: setup.integrationIds }),
   },
   {
     kind: "sonarr" as const,
     payloadKey: "version",
     fallbackValue: null,
     run: async (setup: IntegrationSetup) =>
-      await releasesRouter
-        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getServiceVersions({ integrationIds: setup.integrationIds }),
+      await createCallerFactory(releasesRouter)({
+        db: setup.db,
+        deviceType: undefined,
+        session: setup.session,
+      }).getServiceVersions({ integrationIds: setup.integrationIds }),
   },
   {
     kind: "traefik" as const,
     payloadKey: "dashboard",
     fallbackValue: null,
     run: async (setup: IntegrationSetup) =>
-      await traefikRouter
-        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getDashboard({ integrationIds: setup.integrationIds }),
+      await createCallerFactory(traefikRouter)({
+        db: setup.db,
+        deviceType: undefined,
+        session: setup.session,
+      }).getDashboard({ integrationIds: setup.integrationIds }),
   },
   {
     kind: "uptimeKuma" as const,
     payloadKey: "dashboard",
     fallbackValue: null,
     run: async (setup: IntegrationSetup) =>
-      await uptimeKumaRouter
-        .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getDashboard({ integrationIds: setup.integrationIds }),
+      await createCallerFactory(uptimeKumaRouter)({
+        db: setup.db,
+        deviceType: undefined,
+        session: setup.session,
+      }).getDashboard({ integrationIds: setup.integrationIds }),
   },
 ] as const;
 
@@ -378,15 +391,17 @@ beforeEach(() => vi.clearAllMocks());
 describe("partial integration failures", () => {
   test("calendar and media server retain a failed integration record", async () => {
     const calendar = await setupAsync("sonarr");
-    const calendarResults = await calendarRouter
-      .createCaller({ db: calendar.db, deviceType: undefined, session: calendar.session })
-      .findAllEvents({
-        integrationIds: calendar.integrationIds,
-        year: 2026,
-        month: 7,
-        releaseType: [],
-        showUnmonitored: false,
-      });
+    const calendarResults = await createCallerFactory(calendarRouter)({
+      db: calendar.db,
+      deviceType: undefined,
+      session: calendar.session,
+    }).findAllEvents({
+      integrationIds: calendar.integrationIds,
+      year: 2026,
+      month: 7,
+      releaseType: [],
+      showUnmonitored: false,
+    });
     expect(calendarResults).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -398,9 +413,11 @@ describe("partial integration failures", () => {
     expect(JSON.stringify(calendarResults)).not.toContain("secret");
 
     const mediaServer = await setupAsync("plex");
-    const streamResults = await mediaServerRouter
-      .createCaller({ db: mediaServer.db, deviceType: undefined, session: mediaServer.session })
-      .getCurrentStreams({ integrationIds: mediaServer.integrationIds, showOnlyPlaying: false });
+    const streamResults = await createCallerFactory(mediaServerRouter)({
+      db: mediaServer.db,
+      deviceType: undefined,
+      session: mediaServer.session,
+    }).getCurrentStreams({ integrationIds: mediaServer.integrationIds, showOnlyPlaying: false });
     expect(streamResults).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -415,9 +432,11 @@ describe("partial integration failures", () => {
 
   test("DNS widgets retain source ownership for partial failures", async () => {
     const dnsHole = await setupAsync("piHole");
-    const results = await dnsHoleRouter
-      .createCaller({ db: dnsHole.db, deviceType: undefined, session: dnsHole.session })
-      .summary({ integrationIds: dnsHole.integrationIds });
+    const results = await createCallerFactory(dnsHoleRouter)({
+      db: dnsHole.db,
+      deviceType: undefined,
+      session: dnsHole.session,
+    }).summary({ integrationIds: dnsHole.integrationIds });
 
     expect(results).toEqual(
       expect.arrayContaining([
@@ -438,9 +457,11 @@ describe("partial integration failures", () => {
 
   test("downloads retain source ownership for partial failures", async () => {
     const downloads = await setupAsync("qBittorrent");
-    const results = await downloadsRouter
-      .createCaller({ db: downloads.db, deviceType: undefined, session: downloads.session })
-      .getJobsAndStatuses({ integrationIds: downloads.integrationIds, limitPerIntegration: 50 });
+    const results = await createCallerFactory(downloadsRouter)({
+      db: downloads.db,
+      deviceType: undefined,
+      session: downloads.session,
+    }).getJobsAndStatuses({ integrationIds: downloads.integrationIds, limitPerIntegration: 50 });
 
     expect(results).toEqual(
       expect.arrayContaining([
@@ -458,9 +479,11 @@ describe("partial integration failures", () => {
 
   test("system health retains source ownership for partial failures", async () => {
     const health = await setupAsync("glances");
-    const results = await healthMonitoringRouter
-      .createCaller({ db: health.db, deviceType: undefined, session: health.session })
-      .getSystemHealthStatus({ integrationIds: health.integrationIds });
+    const results = await createCallerFactory(healthMonitoringRouter)({
+      db: health.db,
+      deviceType: undefined,
+      session: health.session,
+    }).getSystemHealthStatus({ integrationIds: health.integrationIds });
 
     expect(results).toEqual(
       expect.arrayContaining([
@@ -481,9 +504,11 @@ describe("partial integration failures", () => {
 
   test("network controllers retain source ownership for partial failures", async () => {
     const network = await setupAsync("unifiController");
-    const results = await networkControllerRouter
-      .createCaller({ db: network.db, deviceType: undefined, session: network.session })
-      .summary({ integrationIds: network.integrationIds });
+    const results = await createCallerFactory(networkControllerRouter)({
+      db: network.db,
+      deviceType: undefined,
+      session: network.session,
+    }).summary({ integrationIds: network.integrationIds });
 
     expect(results).toEqual(
       expect.arrayContaining([
@@ -539,7 +564,7 @@ describe("partial integration failures", () => {
 
   test("media request responses expose failed integrations without dropping successful data", async () => {
     const mediaRequests = await setupAsync("overseerr");
-    const caller = mediaRequestsRouter.createCaller({
+    const caller = createCallerFactory(mediaRequestsRouter)({
       db: mediaRequests.db,
       deviceType: undefined,
       session: mediaRequests.session,
@@ -583,44 +608,56 @@ describe("partial integration failures", () => {
       {
         kind: "sonarr" as const,
         run: async (setup: Awaited<ReturnType<typeof setupAsync>>) =>
-          await mediaOrganizerRouter
-            .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-            .getData({ integrationIds: setup.integrationIds, pageSize: 10 }),
+          await createCallerFactory(mediaOrganizerRouter)({
+            db: setup.db,
+            deviceType: undefined,
+            session: setup.session,
+          }).getData({ integrationIds: setup.integrationIds, pageSize: 10 }),
       },
       {
         kind: "beszel" as const,
         run: async (setup: Awaited<ReturnType<typeof setupAsync>>) =>
-          await beszelRouter
-            .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-            .getSystems({ integrationIds: setup.integrationIds }),
+          await createCallerFactory(beszelRouter)({
+            db: setup.db,
+            deviceType: undefined,
+            session: setup.session,
+          }).getSystems({ integrationIds: setup.integrationIds }),
       },
       {
         kind: "opnsense" as const,
         run: async (setup: Awaited<ReturnType<typeof setupAsync>>) =>
-          await firewallRouter
-            .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-            .getFirewallCpuStatus({ integrationIds: setup.integrationIds }),
+          await createCallerFactory(firewallRouter)({
+            db: setup.db,
+            deviceType: undefined,
+            session: setup.session,
+          }).getFirewallCpuStatus({ integrationIds: setup.integrationIds }),
       },
       {
         kind: "prowlarr" as const,
         run: async (setup: Awaited<ReturnType<typeof setupAsync>>) =>
-          await indexerManagerRouter
-            .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-            .getIndexersStatus({ integrationIds: setup.integrationIds }),
+          await createCallerFactory(indexerManagerRouter)({
+            db: setup.db,
+            deviceType: undefined,
+            session: setup.session,
+          }).getIndexersStatus({ integrationIds: setup.integrationIds }),
       },
       {
         kind: "ntfy" as const,
         run: async (setup: Awaited<ReturnType<typeof setupAsync>>) =>
-          await notificationsRouter
-            .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-            .getNotifications({ integrationIds: setup.integrationIds }),
+          await createCallerFactory(notificationsRouter)({
+            db: setup.db,
+            deviceType: undefined,
+            session: setup.session,
+          }).getNotifications({ integrationIds: setup.integrationIds }),
       },
       {
         kind: "gluetun" as const,
         run: async (setup: Awaited<ReturnType<typeof setupAsync>>) =>
-          await vpnRouter
-            .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-            .getSummaries({ integrationIds: setup.integrationIds }),
+          await createCallerFactory(vpnRouter)({
+            db: setup.db,
+            deviceType: undefined,
+            session: setup.session,
+          }).getSummaries({ integrationIds: setup.integrationIds }),
       },
     ];
 

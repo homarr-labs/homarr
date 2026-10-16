@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ORPCError } from "@orpc/server";
 import { describe, expect, test } from "vitest";
 
 import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError } from "./assistant-tool-error";
@@ -6,7 +6,7 @@ import { getCustomWidgetConfigurationStatusRecovery, getSafeAssistantToolError }
 describe("getSafeAssistantToolError", () => {
   test("explains integration connection failures without leaking upstream details or inviting write retries", () => {
     const message = getSafeAssistantToolError(
-      new TRPCError({ code: "BAD_GATEWAY", message: "https://private.test/path token=secret" }),
+      new ORPCError("BAD_GATEWAY", { message: "https://private.test/path token=secret" }),
       { toolName: "integration_request" },
     );
     expect(message).toContain("service reachability");
@@ -36,10 +36,10 @@ describe("getSafeAssistantToolError", () => {
   });
 
   test("keeps authorization and compatibility failures actionable", () => {
-    expect(getSafeAssistantToolError(new TRPCError({ code: "FORBIDDEN" }))).toBe(
+    expect(getSafeAssistantToolError(new ORPCError("FORBIDDEN", {}))).toBe(
       "You do not have permission to perform this action.",
     );
-    expect(getSafeAssistantToolError(new TRPCError({ code: "NOT_FOUND" }))).toBe(
+    expect(getSafeAssistantToolError(new ORPCError("NOT_FOUND", {}))).toBe(
       "The requested resource was not found or is not compatible with this tool.",
     );
   });
@@ -66,7 +66,7 @@ describe("getSafeAssistantToolError", () => {
         { path: ["template"], message: "Use Image instead of img (line 8, column 3)" },
       ],
     });
-    const error = new TRPCError({ code: "BAD_REQUEST", cause });
+    const error = new ORPCError("BAD_REQUEST", { cause });
 
     expect(getSafeAssistantToolError(error, { toolName: "customWidget_create" })).toBe(
       "The custom widget input was invalid: requests.fixtures.path: Required; template: Use Image instead of img (line 8, column 3)",
@@ -77,8 +77,7 @@ describe("getSafeAssistantToolError", () => {
     const cause = Object.assign(new Error("validation failed"), {
       issues: [{ path: ["template"], message: "Element 'img' is not supported; use Image instead" }],
     });
-    const error = new TRPCError({
-      code: "BAD_REQUEST",
+    const error = new ORPCError("BAD_REQUEST", {
       message: "The custom widget authoring input is invalid",
       cause,
     });
@@ -89,8 +88,7 @@ describe("getSafeAssistantToolError", () => {
   });
 
   test("does not expose custom-widget credentials in validation details", () => {
-    const error = new TRPCError({
-      code: "BAD_REQUEST",
+    const error = new ORPCError("BAD_REQUEST", {
       message: "headers.Authorization: Bearer sk-secret-123456 at https://private.example/api",
     });
 
@@ -103,7 +101,7 @@ describe("getSafeAssistantToolError", () => {
 
   test("keeps non-custom-widget bad requests generic", () => {
     expect(
-      getSafeAssistantToolError(new TRPCError({ code: "BAD_REQUEST", message: "sensitive validation" }), {
+      getSafeAssistantToolError(new ORPCError("BAD_REQUEST", { message: "sensitive validation" }), {
         toolName: "integration_create",
       }),
     ).toBe("The tool input was not valid.");
@@ -114,7 +112,7 @@ describe("getSafeAssistantToolError", () => {
     ["PAYLOAD_TOO_LARGE", "exceeded a safety limit", "Response exceeds the 1 MiB limit"],
     ["CONFLICT", "changed while this request was running", "Preview session changed; retry"],
   ] as const)("keeps custom-widget %s preview failures actionable and redacted", (code, expected, message) => {
-    const error = new TRPCError({ code, message });
+    const error = new ORPCError(code, { message });
 
     const result = getSafeAssistantToolError(error, { toolName: "customWidget_previewQuery" });
 
@@ -125,7 +123,7 @@ describe("getSafeAssistantToolError", () => {
   test("keeps unrelated gateway, payload, and conflict failures generic", () => {
     for (const code of ["BAD_GATEWAY", "PAYLOAD_TOO_LARGE", "CONFLICT"] as const) {
       expect(
-        getSafeAssistantToolError(new TRPCError({ code, message: "private upstream detail" }), {
+        getSafeAssistantToolError(new ORPCError(code, { message: "private upstream detail" }), {
           toolName: "integration_create",
         }),
       ).toBe("The Homarr tool could not complete this request.");

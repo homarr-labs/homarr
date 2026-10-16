@@ -23,7 +23,7 @@ export default async function CustomWidgetsPage() {
   if (!session.user.permissions.includes("admin")) {
     redirect("/");
   }
-  const definitions = await api.customWidget.list();
+  const definitions = await api.customWidget.list.query();
   const t = await getI18n("customWidget");
   const [tCommon, tEntities] = await Promise.all([getI18n("common"), getI18n("common.entity")]);
 

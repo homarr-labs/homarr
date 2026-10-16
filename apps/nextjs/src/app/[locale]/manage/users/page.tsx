@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 
-import { api } from "@homarr/api/server";
+import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
@@ -31,8 +30,8 @@ export default async function UsersPage() {
 
   const t = await getI18n("management.page.user");
   const tCommon = await getI18n("common.entity");
-  const userList = await api.user.getAll();
-  const credentialsProviderEnabled = isProviderEnabled("credentials");
+  const userList = await api.user.getAll.query();
+  const credentialsProviderEnabled = (await getBackendRuntimeAsync()).credentialsEnabled;
 
   return (
     <ManagePageLayout

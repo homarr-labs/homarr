@@ -26,7 +26,7 @@ export default async function TasksPage() {
     notFound();
   }
 
-  const jobs = await api.cronJobs.getJobs();
+  const jobs = await api.cronJobs.getJobs.query();
   const tEntities = await getI18n("common.entity");
 
   return (

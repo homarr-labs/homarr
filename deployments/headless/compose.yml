@@ -1,0 +1,19 @@
+services:
+  backend:
+    image: homarr:backend
+    build:
+      context: ../..
+      target: backend
+    restart: unless-stopped
+    ports:
+      - "7575:7575"
+    environment:
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY:?Set SECRET_ENCRYPTION_KEY to a persistent 64-character hex value}
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET to a persistent random secret}
+      BASE_URL: ${BASE_URL:-http://localhost:7575}
+      BACKEND_CORS_ORIGINS: ${BACKEND_CORS_ORIGINS:-}
+    volumes:
+      - appdata:/appdata
+
+volumes:
+  appdata:

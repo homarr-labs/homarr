@@ -9,14 +9,14 @@ import {
 } from "@homarr/request-handler/immich";
 
 import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const immichRouter = createTRPCRouter({
+export const immichRouter = createApiRouter({
   getServerStats: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "immich-serverStats"))
-    .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.immichStats;
-      const innerHandler = immichStatsRequestHandler.handler({ ...ctx.integration, kind: "immich" }, {});
+    .query(async ({ context }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.immichStats;
+      const innerHandler = immichStatsRequestHandler.handler({ ...context.integration, kind: "immich" }, {});
       const data = await innerHandler.getDataAsync();
       return data.data;
     }),
@@ -28,10 +28,10 @@ export const immichRouter = createTRPCRouter({
         albumId: z.string().optional(),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.immichAlbum;
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") return mockWidgetData.immichAlbum;
       const innerHandler = immichAlbumRequestHandler.handler(
-        { ...ctx.integration, kind: "immich" },
+        { ...context.integration, kind: "immich" },
         {
           albumId: input.albumId,
         },
@@ -43,12 +43,12 @@ export const immichRouter = createTRPCRouter({
   getAlbumPreview: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "immich-albumCarousel"))
     .input(z.object({ albumId: z.string().min(1), randomizePhotos: z.boolean() }))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") {
         return { ...mockWidgetData.immichAlbum, assets: mockWidgetData.immichAlbum.assets.slice(0, 1) };
       }
       const innerHandler = immichAlbumPreviewRequestHandler.handler(
-        { ...ctx.integration, kind: "immich" },
+        { ...context.integration, kind: "immich" },
         { albumId: input.albumId, randomizePhotos: input.randomizePhotos },
       );
       const data = await innerHandler.getDataAsync();
@@ -62,13 +62,13 @@ export const immichRouter = createTRPCRouter({
       }),
     )
     .concat(createOneWidgetIntegrationMiddleware("query", "immich-albumCarousel"))
-    .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") {
+    .query(async ({ context, input }) => {
+      if (context.integration.kind === "mock") {
         if (input.limit === undefined) return [...mockWidgetData.immichAlbums];
         return mockWidgetData.immichAlbums.slice(0, input.limit);
       }
       const innerHandler = immichAlbumsRequestHandler.handler(
-        { ...ctx.integration, kind: "immich" },
+        { ...context.integration, kind: "immich" },
         {
           limit: input.limit,
         },

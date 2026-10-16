@@ -1,3 +1,4 @@
+import { getBackendRuntimeAsync } from "@homarr/api/server";
 import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
 import {
@@ -30,11 +31,8 @@ import {
 
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDocumentationLink } from "@homarr/definitions";
-import { dbEnv } from "@homarr/core/infrastructure/db/env";
-import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
@@ -139,7 +137,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: tEntities("invites"),
           icon: IconMailForward,
           href: "/manage/users/invites",
-          hidden: !isProviderEnabled("credentials"),
+          hidden: !(await getBackendRuntimeAsync()).credentialsEnabled,
         },
         {
           label: tEntities("groups"),
@@ -158,13 +156,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.docker"),
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
-          hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER),
+          hidden: !(session?.user.permissions.includes("admin") && (await getBackendRuntimeAsync()).dockerEnabled),
         },
         {
           label: t("items.tools.items.kubernetes"),
           icon: IconBox,
           href: "/manage/tools/kubernetes",
-          hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES),
+          hidden: !(session?.user.permissions.includes("admin") && (await getBackendRuntimeAsync()).kubernetesEnabled),
         },
         {
           label: t("items.tools.items.api"),
@@ -194,7 +192,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.backup"),
           icon: IconDatabaseExport,
           href: "/manage/tools/backup",
-          hidden: !session?.user.permissions.includes("admin") || dbEnv.DRIVER !== "better-sqlite3",
+          hidden: !session?.user.permissions.includes("admin") || (await getBackendRuntimeAsync()).databaseDriver !== "better-sqlite3",
         },
       ],
     },

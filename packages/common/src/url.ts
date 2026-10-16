@@ -1,5 +1,3 @@
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
-
 export const removeTrailingSlash = (path: string) => {
   let end = path.length;
   while (end > 0 && path.charAt(end - 1) === "/") {
@@ -9,7 +7,7 @@ export const removeTrailingSlash = (path: string) => {
 };
 
 export const extractBaseUrlFromHeaders = (
-  headers: ReadonlyHeaders,
+  headers: Pick<Headers, "get">,
   fallbackProtocol: "http" | "https" = "http",
 ): `${string}://${string}` => {
   // For empty string we also use the fallback protocol

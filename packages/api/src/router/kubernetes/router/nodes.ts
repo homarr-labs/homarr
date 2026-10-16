@@ -1,15 +1,15 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../../procedure";
 
 import type { KubernetesNode, KubernetesNodeState } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
-import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../../procedure";
 import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 import { calculateResourcePercentage } from "../resource-percentage";
 import { CpuResourceParser } from "../resource-parser/cpu-resource-parser";
 import { MemoryResourceParser } from "../resource-parser/memory-resource-parser";
 
-export const nodesRouter = createTRPCRouter({
+export const nodesRouter = createApiRouter({
   getNodes: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
@@ -67,7 +67,7 @@ export const nodesRouter = createTRPCRouter({
           };
         });
       } catch (error) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes nodes",
           cause: error,

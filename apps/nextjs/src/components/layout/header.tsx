@@ -1,6 +1,6 @@
+import { getBackendRuntimeAsync } from "@homarr/api/server";
 import type { ReactNode } from "react";
 import { auth } from "@homarr/auth/next";
-import { env } from "@homarr/docker/env";
 
 import { CurrentUserAvatar } from "~/components/user-avatar";
 import { appShellLogoHeight } from "./constants";
@@ -26,7 +26,7 @@ export const MainHeader = async ({
 }: Props) => {
   const session = await auth();
   const isAdmin = Boolean(session?.user.permissions.includes("admin"));
-  const isDockerEnabled = isAdmin && env.ENABLE_DOCKER;
+  const isDockerEnabled = isAdmin && (await getBackendRuntimeAsync()).dockerEnabled;
   const resolvedLogoWithTitle = logoWithTitle ?? <HomarrLogoWithTitle size="md" />;
 
   return (

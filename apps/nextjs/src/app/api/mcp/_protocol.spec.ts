@@ -1,15 +1,26 @@
 // @vitest-environment node
 
-import { initTRPC, TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
 import { appManageSchema } from "@homarr/validation/app";
 import { extractMcpToolsFromProcedures } from "@homarr/api/mcp";
-import type { McpMeta } from "../../../../../../packages/api/src/mcp-tools";
+import type { ApiContext } from "../../../../../../packages/api/src/procedure";
+import {
+  ApiError,
+  createApiRouter,
+  createCallerFactory,
+  internalProcedure,
+} from "../../../../../../packages/api/src/procedure";
 
 import { createMcpProtocolHandler } from "./_protocol";
+
+vi.hoisted(() => {
+  process.env.DB_DRIVER ??= "better-sqlite3";
+  process.env.DB_URL ??= ":memory:";
+  process.env.SECRET_ENCRYPTION_KEY ??= "0".repeat(64);
+});
 
 vi.mock("@homarr/api/mcp", async () => import("../../../../../../packages/api/src/mcp-tools"));
 
@@ -170,9 +181,14 @@ describe("MCP v2 protocol", () => {
   });
 });
 
+const testContext = (user: string): ApiContext => ({
+  db: null as never,
+  deviceType: undefined,
+  session: { user: { id: user, permissions: [], colorScheme: "dark" }, expires: "2099-01-01T00:00:00.000Z" },
+});
+
 describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
-  const trpc = initTRPC.context<{ user: string }>().meta<McpMeta>().create();
-  const exposed = trpc.procedure.meta({ mcp: { enabled: true } });
+  const exposed = internalProcedure.meta({ mcp: { enabled: true } });
 
   const call = async (
     handler: ReturnType<typeof createMcpProtocolHandler>,
@@ -197,10 +213,10 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     return (await parseResponse(response)).result;
   };
 
-  test("transforms once and does not coerce, insert defaults, or remove properties before tRPC", async () => {
+  test("transforms once and does not coerce, insert defaults, or remove properties before oRPC", async () => {
     const transform = vi.fn((value: string) => `${value}!`);
     const execution = vi.fn((input: unknown) => input);
-    const router = trpc.router({
+    const router = createApiRouter({
       update: exposed
         .input(
           z.looseObject({
@@ -212,7 +228,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     });
     const catalog = extractMcpToolsFromProcedures(router);
     expect(catalog.diagnostics).toEqual([]);
-    const realCaller = router.createCaller({ user: "one" });
+    const realCaller = createCallerFactory(router)(testContext("one"));
     const dispatch = vi.fn(realCaller.update);
     const handler = createMcpProtocolHandler({
       caller: { update: dispatch },
@@ -234,7 +250,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
 
   test("retains overlapping chained constraints, refinements, and empty object defaults", async () => {
     const execution = vi.fn((input: unknown) => input);
-    const router = trpc.router({
+    const router = createApiRouter({
       bounded: exposed
         .input(z.object({ count: z.number().min(2) }))
         .input(z.object({ count: z.number().max(5) }))
@@ -248,7 +264,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     const catalog = extractMcpToolsFromProcedures(router);
     expect(catalog.diagnostics).toEqual([]);
     const handler = createMcpProtocolHandler({
-      caller: router.createCaller({ user: "one" }),
+      caller: createCallerFactory(router)(testContext("one")),
       tools: catalog.tools,
       version: "test",
       instructions: "test",
@@ -263,13 +279,13 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     expect((await call(handler, "none", {})).content).toEqual([{ type: "text", text: '{"absent":true}' }]);
   });
 
-  test("accepts app inputs that tRPC normalizes before checking constraints", async () => {
+  test("accepts app inputs that oRPC normalizes before checking constraints", async () => {
     const mutation = vi.fn((input: unknown) => input);
-    const router = trpc.router({ create: exposed.input(appManageSchema).mutation(({ input }) => mutation(input)) });
+    const router = createApiRouter({ create: exposed.input(appManageSchema).mutation(({ input }) => mutation(input)) });
     const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
     expect(diagnostics).toEqual([]);
     const handler = createMcpProtocolHandler({
-      caller: router.createCaller({ user: "admin" }),
+      caller: createCallerFactory(router)(testContext("admin")),
       tools,
       version: "test",
       instructions: "test",
@@ -296,7 +312,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
 
   test("accepts Zod ISO timestamps without seconds while rejecting invalid dates", async () => {
     const mutation = vi.fn((input: unknown) => input);
-    const router = trpc.router({
+    const router = createApiRouter({
       invite: exposed
         .input(z.object({ expirationDate: z.iso.datetime({ offset: true }) }))
         .mutation(({ input }) => mutation(input)),
@@ -304,7 +320,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
     expect(diagnostics).toEqual([]);
     const handler = createMcpProtocolHandler({
-      caller: router.createCaller({ user: "admin" }),
+      caller: createCallerFactory(router)(testContext("admin")),
       tools,
       version: "test",
       instructions: "test",
@@ -320,12 +336,12 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     expect(mutation).toHaveBeenCalledTimes(2);
   });
 
-  test("enforces tRPC permissions before executing mutations", async () => {
+  test("enforces oRPC permissions before executing mutations", async () => {
     const mutation = vi.fn(() => "changed");
-    const router = trpc.router({
+    const router = createApiRouter({
       restricted: exposed
-        .use(({ ctx, next }) => {
-          if (ctx.user !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        .use(({ context, next }) => {
+          if (context.session?.user.id !== "admin") throw new ApiError({ code: "FORBIDDEN" });
           return next();
         })
         .input(z.object({}))
@@ -334,7 +350,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     const { tools, diagnostics } = extractMcpToolsFromProcedures(router);
     expect(diagnostics).toEqual([]);
     const handler = createMcpProtocolHandler({
-      caller: router.createCaller({ user: "guest" }),
+      caller: createCallerFactory(router)(testContext("guest")),
       tools,
       version: "test",
       instructions: "test",
@@ -345,11 +361,11 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
   });
 
   test("isolates authenticated callers when reusing catalog schemas", async () => {
-    const router = trpc.router({ who: exposed.query(({ ctx }) => ctx.user) });
+    const router = createApiRouter({ who: exposed.query(({ context }) => context.session?.user.id) });
     const { tools } = extractMcpToolsFromProcedures(router);
     const handlers = ["alice", "bob"].map((user) =>
       createMcpProtocolHandler({
-        caller: router.createCaller({ user }),
+        caller: createCallerFactory(router)(testContext(user)),
         tools,
         version: "test",
         instructions: "test",

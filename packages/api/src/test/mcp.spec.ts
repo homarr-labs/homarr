@@ -1,11 +1,11 @@
-import { initTRPC } from "@trpc/server";
-import type { TRPCError } from "@trpc/server";
+import { walkProcedureContractsSync } from "@orpc/server";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
+import type { ApiError } from "../procedure";
+import { createCallerFactory, createApiRouter, internalProcedure } from "../procedure";
 import { mcpRouter } from "../mcp";
-import type { McpMeta } from "../mcp-tools";
-import { createMcpProtocolHandler } from "../../../../apps/nextjs/src/app/api/mcp/_protocol";
+import { createMcpProtocolHandler } from "../http/mcp/_protocol";
 import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
 
 vi.mock("@homarr/auth", () => ({}));
@@ -164,14 +164,14 @@ function expectedToolInventory() {
 
 function actualToolInventory() {
   const secretTools = new Set<string>(MCP_TOOL_ALLOWLIST.secret);
-  const procedures = mcpRouter["_def"].procedures as unknown as Record<
-    string,
-    { _def?: { type?: "query" | "mutation" } }
-  >;
+  const procedures = new Map<string, "query" | "mutation" | undefined>();
+  walkProcedureContractsSync(mcpRouter, (procedure, path) => {
+    const type = procedure["~orpc"].meta.operationType;
+    if (type === "query" || type === "mutation") procedures.set(path.join("."), type);
+  });
   return extractMcpToolsFromProcedures(mcpRouter)
     .tools.map((tool) => {
-      const procedure = procedures[tool.pathInRouter.join(".")];
-      const type = procedure?.["_def"]?.type;
+      const type = procedures.get(tool.pathInRouter.join("."));
       if (type !== "query" && type !== "mutation") throw new Error(`Unable to classify MCP tool '${tool.name}'`);
       return {
         name: tool.name,
@@ -188,15 +188,15 @@ describe("production MCP router", () => {
 
   test("keeps every secret-bearing tool behind a mutation procedure", () => {
     const tools = extractMcpToolsFromProcedures(mcpRouter).tools;
-    const procedures = mcpRouter["_def"].procedures as unknown as Record<
-      string,
-      { _def?: { type?: "query" | "mutation" } }
-    >;
+    const procedures = new Map<string, unknown>();
+    walkProcedureContractsSync(mcpRouter, (procedure, path) => {
+      procedures.set(path.join("."), procedure["~orpc"].meta.operationType);
+    });
     for (const name of MCP_TOOL_ALLOWLIST.secret) {
       const tool = tools.find((candidate) => candidate.name === name);
       expect(tool, `Missing reviewed secret tool '${name}'`).toBeDefined();
-      const procedure = tool ? procedures[tool.pathInRouter.join(".")] : undefined;
-      expect(procedure?.["_def"]?.type, `Secret tool '${name}' must remain a mutation`).toBe("mutation");
+      const type = tool && procedures.get(tool.pathInRouter.join("."));
+      expect(type, `Secret tool '${name}' must remain a mutation`).toBe("mutation");
     }
   });
 
@@ -230,7 +230,7 @@ test("publishes both Custom Widget template input formats", () => {
 });
 
 describe("custom widget authoring procedure access", () => {
-  const unauthenticatedCaller = mcpRouter.createCaller({
+  const unauthenticatedCaller = createCallerFactory(mcpRouter)({
     db: null as never,
     deviceType: undefined,
     session: null,
@@ -262,12 +262,12 @@ describe("custom widget authoring procedure access", () => {
       }),
     ];
     for (const call of calls) {
-      await expect(call).rejects.toEqual(expect.objectContaining<Partial<TRPCError>>({ code: "UNAUTHORIZED" }));
+      await expect(call).rejects.toEqual(expect.objectContaining<Partial<ApiError>>({ code: "UNAUTHORIZED" }));
     }
   });
 
   test("rejects authoring and secret tools for authenticated non-admins", async () => {
-    const nonAdminCaller = mcpRouter.createCaller({
+    const nonAdminCaller = createCallerFactory(mcpRouter)({
       db: null as never,
       deviceType: undefined,
       session: { user: { id: "user-1", permissions: ["board-modify-all"] } } as never,
@@ -295,12 +295,12 @@ describe("custom widget authoring procedure access", () => {
       }),
     ];
     for (const call of calls) {
-      await expect(call).rejects.toEqual(expect.objectContaining<Partial<TRPCError>>({ code: "FORBIDDEN" }));
+      await expect(call).rejects.toEqual(expect.objectContaining<Partial<ApiError>>({ code: "FORBIDDEN" }));
     }
   });
 
   test("allows admins to read authoring resources", async () => {
-    const adminCaller = mcpRouter.createCaller({
+    const adminCaller = createCallerFactory(mcpRouter)({
       db: null as never,
       deviceType: undefined,
       session: { user: { id: "admin-1", permissions: ["admin"] } } as never,
@@ -363,24 +363,25 @@ describe("custom widget authoring procedure access", () => {
       notFound: [],
     });
     await expect(adminCaller.customWidget.getComponent({ name: "NotAComponent" })).rejects.toEqual(
-      expect.objectContaining<Partial<TRPCError>>({ code: "NOT_FOUND" }),
+      expect.objectContaining<Partial<ApiError>>({ code: "NOT_FOUND" }),
     );
     await expect(adminCaller.customWidget.getExample({ name: "not-an-example" })).rejects.toEqual(
-      expect.objectContaining<Partial<TRPCError>>({ code: "NOT_FOUND" }),
+      expect.objectContaining<Partial<ApiError>>({ code: "NOT_FOUND" }),
     );
   });
 });
 
 describe("MCP catalog diagnostics", () => {
-  const trpc = initTRPC.meta<McpMeta>().create();
-  const exposed = trpc.procedure.meta({ mcp: { enabled: true } });
+  const exposed = internalProcedure.meta({ mcp: { enabled: true } });
 
   test("omits unsupported parsers and malformed schemas without losing valid tools", () => {
-    const router = trpc.router({
+    const router = createApiRouter({
       good: exposed.input(z.object({ name: z.string() })).query(() => "ok"),
       date: exposed.input(z.object({ date: z.date() })).query(() => "unused"),
       scalar: exposed.input(z.string()).query(() => "unused"),
-      parser: exposed.input({ parse: (value: unknown) => value }).query(() => "unused"),
+      parser: exposed
+        .input({ "~standard": { version: 1, vendor: "custom", validate: (value: unknown) => ({ value }) } })
+        .query(() => "unused"),
       malformed: exposed
         .input(z.object({ value: z.string().meta({ type: "invalid-json-type" }) }))
         .query(() => "unused"),
@@ -396,13 +397,13 @@ describe("MCP catalog diagnostics", () => {
   });
 
   test("omits all duplicate names even when one procedure has an invalid schema", () => {
-    const shared = trpc.procedure.meta({ mcp: { enabled: true, name: "shared" } });
+    const shared = internalProcedure.meta({ mcp: { enabled: true, name: "shared" } });
     const catalog = extractMcpToolsFromProcedures(
-      trpc.router({
+      createApiRouter({
         first: shared.query(() => "first"),
         second: shared.input(z.object({ date: z.date() })).query(() => "second"),
         good: exposed.query(() => "good"),
-        invalidName: trpc.procedure.meta({ mcp: { enabled: true, name: "bad name" } }).query(() => "unused"),
+        invalidName: internalProcedure.meta({ mcp: { enabled: true, name: "bad name" } }).query(() => "unused"),
       }),
     );
     expect(catalog.tools.map((tool) => tool.name)).toEqual(["good"]);
@@ -414,7 +415,7 @@ describe("MCP catalog diagnostics", () => {
   });
 
   test("distinguishes empty object input from no input for shared Assistant dispatch", async () => {
-    const router = trpc.router({
+    const router = createApiRouter({
       none: exposed.query(({ input }) => input),
       explicitNone: exposed.input(z.undefined()).query(({ input }) => input),
       object: exposed.input(z.object({ value: z.string().default("default") })).query(({ input }) => input),
@@ -425,7 +426,11 @@ describe("MCP catalog diagnostics", () => {
     const catalog = extractMcpToolsFromProcedures(router);
     expect(catalog.diagnostics).toEqual([]);
     for (const tool of catalog.tools) {
-      const result = await callMcpTool(router.createCaller({}), tool, {});
+      const result = await callMcpTool(
+        createCallerFactory(router)({ db: null as never, session: null, deviceType: undefined }),
+        tool,
+        {},
+      );
       if (tool.inputMode === "none") expect(result).toBeUndefined();
       else expect(result).toEqual({ value: "default" });
     }

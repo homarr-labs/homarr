@@ -1,5 +1,5 @@
-import { TRPCError } from "@trpc/server";
-import { observable } from "@trpc/server/observable";
+import { ApiError } from "../../procedure";
+import { observable } from "../../subscription";
 import { z } from "zod/v4";
 
 import type { ContainerState, DockerContainerTarget, Port } from "@homarr/docker";
@@ -14,7 +14,8 @@ import {
 } from "@homarr/request-handler/docker";
 
 import { dockerMiddleware } from "../../middlewares/docker";
-import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { subscriptionEvents } from "../../subscription";
+import { createApiRouter, permissionRequiredProcedure } from "../../procedure";
 import { getDockerReconciliationAsync, getDockerServiceHealthAsync } from "./docker-reconciliation";
 
 const dockerContainerTargetSchema = z.object({
@@ -28,7 +29,7 @@ const normalizeGetContainersInput = (input: { endpointIds?: string[] } | undefin
   return input;
 };
 
-export const dockerRouter = createTRPCRouter({
+export const dockerRouter = createApiRouter({
   reconcileServices: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -39,7 +40,7 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .query(async ({ ctx }) => await getDockerReconciliationAsync(ctx.db)),
+    .query(async ({ context }) => await getDockerReconciliationAsync(context.db)),
   getServiceHealth: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -50,7 +51,7 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .query(async ({ ctx }) => await getDockerServiceHealthAsync(ctx.db)),
+    .query(async ({ context }) => await getDockerServiceHealthAsync(context.db)),
   refreshInventory: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -177,7 +178,7 @@ export const dockerRouter = createTRPCRouter({
       const logs = await getContainerLogsAsync(input, input.tail ?? 200);
 
       if (!logs) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Container not found",
         });
@@ -196,9 +197,9 @@ export const dockerRouter = createTRPCRouter({
         tail: z.number().min(1).max(1000).optional(),
       }),
     )
-    .subscription(({ input }) => {
+    .subscription(({ input, signal }) => {
       assertDockerEndpointCapability(input.endpointId, "logs");
-      return observable<string>((emit) => {
+      const events = observable<string>((emit) => {
         let cleanupFn: (() => void) | undefined;
         let isSubscribed = true;
 
@@ -215,7 +216,7 @@ export const dockerRouter = createTRPCRouter({
               (err) => {
                 if (isSubscribed) {
                   emit.error(
-                    new TRPCError({
+                    new ApiError({
                       code: "INTERNAL_SERVER_ERROR",
                       message: err.message,
                     }),
@@ -223,10 +224,11 @@ export const dockerRouter = createTRPCRouter({
                 }
               },
             );
+            if (!isSubscribed) cleanupFn();
           } catch (err) {
             if (isSubscribed) {
               emit.error(
-                new TRPCError({
+                new ApiError({
                   code: "NOT_FOUND",
                   message: err instanceof Error ? err.message : "Container not found",
                 }),
@@ -242,6 +244,7 @@ export const dockerRouter = createTRPCRouter({
           cleanupFn?.();
         };
       });
+      return subscriptionEvents(events, signal);
     }),
 });
 
@@ -288,7 +291,7 @@ const assertDockerEndpointCapability = (
   capability: "inventory" | "logs" | "lifecycle" | "remove",
 ) => {
   if (hasDockerEndpointCapability(endpointId, capability)) return;
-  throw new TRPCError({ code: "FORBIDDEN", message: `Docker endpoint does not permit ${capability} access` });
+  throw new ApiError({ code: "FORBIDDEN", message: `Docker endpoint does not permit ${capability} access` });
 };
 
 interface DockerContainer {

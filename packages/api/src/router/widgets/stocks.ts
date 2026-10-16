@@ -1,9 +1,9 @@
 import { z } from "zod/v4";
 
+import { stockPriceTimeFrames } from "@homarr/definitions/stocks";
 import { fetchStockPriceHandler } from "@homarr/request-handler/stock-price";
 
-import { stockPriceTimeFrames } from "../../../../widgets/src/stocks";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const stockPriceInputSchema = z.object({
   stock: z.string().nonempty(),
@@ -11,7 +11,7 @@ const stockPriceInputSchema = z.object({
   timeInterval: z.enum(stockPriceTimeFrames.interval),
 });
 
-export const stockPriceRouter = createTRPCRouter({
+export const stockPriceRouter = createApiRouter({
   getPriceHistory: publicProcedure.input(stockPriceInputSchema).query(async ({ input }) => {
     const innerHandler = fetchStockPriceHandler.handler({
       stock: input.stock,

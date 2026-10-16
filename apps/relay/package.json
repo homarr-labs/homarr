@@ -1,0 +1,25 @@
+{
+  "name": "@homarr/relay",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "build": "bun build src/index.ts --target=bun --minify --outfile=build/relay.js",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/relay.test.ts",
+    "format": "oxfmt .",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@homarr/remote-protocol": "workspace:^0.1.0",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}

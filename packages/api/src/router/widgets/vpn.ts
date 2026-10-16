@@ -5,7 +5,7 @@ import { vpnSummaryHandler } from "@homarr/request-handler/vpn";
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 interface VpnResult {
   integration: { id: string; name: string; kind: IntegrationKind; updatedAt: Date };
@@ -13,12 +13,12 @@ interface VpnResult {
   error?: string;
 }
 
-export const vpnRouter = createTRPCRouter({
+export const vpnRouter = createApiRouter({
   getSummaries: publicProcedure
-    .unstable_concat(createManyWidgetIntegrationMiddleware("query", "vpn"))
-    .query(async ({ ctx }) => {
+    .concat(createManyWidgetIntegrationMiddleware("query", "vpn"))
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration): Promise<VpnResult> => {
           if (integration.kind === "mock") {
             return {

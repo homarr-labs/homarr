@@ -4,7 +4,7 @@ import { createServer as createHttpsServer } from "node:https";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { brotliCompressSync, deflateSync, gzipSync } from "node:zlib";
-import { createOpenApiFetchHandler } from "trpc-to-openapi";
+import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import type { z } from "zod/v4";
 
@@ -18,9 +18,9 @@ import type { IntegrationPermission } from "@homarr/definitions";
 
 import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
 
+import { createCallerFactory, createApiRouter } from "../procedure";
 import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
 import { openApiRouter } from "../open-api";
-import { createTRPCRouter } from "../trpc";
 import {
   integrationRequestProcedure,
   integrationRequestSchema,
@@ -38,7 +38,7 @@ vi.mock("@homarr/core/infrastructure/certificates", () => ({
   getTrustedCertificateHostnamesAsync: trust.hostnames,
 }));
 
-const router = createTRPCRouter({ request: integrationRequestProcedure });
+const router = createApiRouter({ request: integrationRequestProcedure });
 const secret = "test-credential-not-for-output";
 const calls: { method: string | undefined; path: string | undefined; auth: string | undefined; body: string }[] = [];
 const server = createServer(async (req, res) => {
@@ -151,7 +151,7 @@ async function fixtureContext(
 }
 
 async function fixture(permission?: IntegrationPermission, setup?: (db: ReturnType<typeof createDb>) => Promise<void>) {
-  return router.createCaller(await fixtureContext(permission, setup));
+  return createCallerFactory(router)(await fixtureContext(permission, setup));
 }
 
 const get = { integrationId: "sonarr", method: "GET", path: "/api/v3/series" } as const;
@@ -538,12 +538,11 @@ describe("integration proxy public contract", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...get, path: "/echo" }),
       });
-    const response = await createOpenApiFetchHandler({
-      req: request(),
-      endpoint: "/",
-      router: openApiRouter,
-      createContext: () => context,
-    });
+    const handler = new OpenAPIHandler(openApiRouter);
+    const handled = await handler.handle(request(), { context });
+    expect(handled.matched).toBe(true);
+    if (!handled.matched) throw new Error("Missing REST integration route");
+    const response = handled.response;
     expect(response.status).toBe(200);
     const result = await response.json();
     expect(result).toMatchObject({ ok: false, status: 400, integration: { id: "sonarr" } });
@@ -551,17 +550,17 @@ describe("integration proxy public contract", () => {
     const tool = extractMcpToolsFromProcedures(router).tools.find((entry) => entry.name === "request");
     expect(tool).toBeDefined();
     if (!tool) throw new Error("Missing request MCP tool");
-    await expect(callMcpTool(router.createCaller(context), tool, { ...get, path: "/echo" })).resolves.toEqual(result);
+    await expect(callMcpTool(createCallerFactory(router)(context), tool, { ...get, path: "/echo" })).resolves.toEqual(
+      result,
+    );
     const deniedContext = { ...context, session: null };
     const count = calls.length;
-    const denied = await createOpenApiFetchHandler({
-      req: request(),
-      endpoint: "/",
-      router: openApiRouter,
-      createContext: () => deniedContext,
-    });
+    const deniedResult = await handler.handle(request(), { context: deniedContext });
+    expect(deniedResult.matched).toBe(true);
+    if (!deniedResult.matched) throw new Error("Missing REST integration route");
+    const denied = deniedResult.response;
     expect(denied.status).toBe(401);
-    await expect(callMcpTool(router.createCaller(deniedContext), tool, get)).rejects.toMatchObject({
+    await expect(callMcpTool(createCallerFactory(router)(deniedContext), tool, get)).rejects.toMatchObject({
       code: "UNAUTHORIZED",
     });
     expect(calls).toHaveLength(count);

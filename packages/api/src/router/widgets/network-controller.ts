@@ -4,7 +4,7 @@ import { networkControllerRequestHandler } from "@homarr/request-handler/network
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 interface NetworkControllerQueryResult {
   integrationId: string;
@@ -19,12 +19,12 @@ interface NetworkControllerQueryResult {
   error?: string;
 }
 
-export const networkControllerRouter = createTRPCRouter({
+export const networkControllerRouter = createApiRouter({
   summary: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "networkControllerSummary"))
-    .query(async ({ ctx }) => {
-      return await settleIntegrationQueries<(typeof ctx.integrations)[number], NetworkControllerQueryResult>(
-        ctx.integrations,
+    .query(async ({ context }) => {
+      return await settleIntegrationQueries<(typeof context.integrations)[number], NetworkControllerQueryResult>(
+        context.integrations,
         async (integration) => {
           const innerHandler = networkControllerRequestHandler.handler(integration, {});
           const { data, timestamp } = await innerHandler.getDataAsync();

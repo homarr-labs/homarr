@@ -1,5 +1,5 @@
 import { X509Certificate } from "node:crypto";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { zfd } from "zod-form-data";
 import { z } from "zod/v4";
 
@@ -20,7 +20,7 @@ import {
   rootCertificateMetadataSchema,
 } from "@homarr/validation/certificates";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../../procedure";
 
 const logger = createLogger({ module: "certificateRouter" });
 
@@ -29,7 +29,7 @@ const withCertificateErrorsAsync = async <T>(operation: () => Promise<T>) => {
     return await operation();
   } catch (error) {
     if (error instanceof RootCertificateError) {
-      throw new TRPCError({ code: error.code, message: error.message });
+      throw new ApiError({ code: error.code, message: error.message });
     }
     throw error;
   }
@@ -79,7 +79,7 @@ export const ensureRootCertificateProcedure = permissionRequiredProcedure
     withCertificateErrorsAsync(() => ensureCustomRootCertificateAsync(input.fileName, input.certificate)),
   );
 
-export const certificateRouter = createTRPCRouter({
+export const certificateRouter = createApiRouter({
   getCertificate: getCertificateProcedure,
   ensureRootCertificate: ensureRootCertificateProcedure,
   addCertificate: permissionRequiredProcedure
@@ -101,7 +101,7 @@ export const certificateRouter = createTRPCRouter({
           issuer: x509Certificate.issuer,
         });
       } catch {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "Invalid certificate",
         });
@@ -117,7 +117,7 @@ export const certificateRouter = createTRPCRouter({
   trustHostnameMismatch: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ hostname: z.string(), certificate: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       // Validate the certificate
       let x509Certificate: X509Certificate;
       try {
@@ -129,13 +129,13 @@ export const certificateRouter = createTRPCRouter({
           hostname: input.hostname,
         });
       } catch {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "Invalid certificate",
         });
       }
 
-      await ctx.db.insert(trustedCertificateHostnames).values({
+      await context.db.insert(trustedCertificateHostnames).values({
         hostname: input.hostname,
         thumbprint: x509Certificate.fingerprint256,
         certificate: input.certificate,
@@ -151,12 +151,12 @@ export const certificateRouter = createTRPCRouter({
   removeTrustedHostname: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ hostname: z.string(), thumbprint: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       logger.info("Removing trusted hostname", {
         hostname: input.hostname,
         thumbprint: input.thumbprint,
       });
-      const dbResult = await ctx.db
+      const dbResult = await context.db
         .delete(trustedCertificateHostnames)
         .where(
           and(
@@ -174,7 +174,7 @@ export const certificateRouter = createTRPCRouter({
   removeCertificate: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ fileName: certificateValidFileNameSchema }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input, context }) => {
       logger.info("Removing trusted certificate", {
         fileName: input.fileName,
       });
@@ -183,7 +183,7 @@ export const certificateRouter = createTRPCRouter({
       if (!certificate) return;
 
       // Delete all trusted hostnames for this certificate
-      await ctx.db
+      await context.db
         .delete(trustedCertificateHostnames)
         .where(eq(trustedCertificateHostnames.thumbprint, certificate.fingerprint256));
 

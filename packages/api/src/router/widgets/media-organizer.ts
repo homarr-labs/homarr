@@ -4,9 +4,9 @@ import { mediaOrganizerRequestHandler } from "@homarr/request-handler/media-orga
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const mediaOrganizerRouter = createTRPCRouter({
+export const mediaOrganizerRouter = createApiRouter({
   getData: publicProcedure
     .meta({
       mcp: {
@@ -17,9 +17,9 @@ export const mediaOrganizerRouter = createTRPCRouter({
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "mediaMissing"))
     .input(z.object({ pageSize: z.number().min(1).max(50).default(10) }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const innerHandler = mediaOrganizerRequestHandler.handler(integration, { pageSize: input.pageSize });
           const { data } = await innerHandler.getDataAsync();

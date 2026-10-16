@@ -1,11 +1,11 @@
 import { assertCustomWidgetIntegrationBindings } from "./source-resolver";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { customWidgetCreateSchema, normalizeCustomWidgetAuthoringDefinition } from "@homarr/custom-widgets/core";
 
-import { permissionRequiredProcedure } from "../../trpc";
+import { permissionRequiredProcedure } from "../../procedure";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { updateCustomWidgetDefinition } from "./definition-update";
@@ -41,12 +41,12 @@ export const creationProcedures = {
       },
     })
     .input(customWidgetCreateSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const { secrets, ...candidate } = input;
       const definition = parseCustomWidgetAuthoringInput(() => normalizeCustomWidgetAuthoringDefinition(candidate));
-      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
+      await assertCustomWidgetIntegrationBindings(context, definition.sources);
       assertSecretSources(definition.sources, secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
+      const id = await insertCustomWidgetDefinition(context.db, definition, context.session.user.id, secrets);
       logger.info("Created custom widget definition", { id, name: definition.name });
       return getCreatedCustomWidgetResult(id);
     }),
@@ -73,21 +73,21 @@ export const creationProcedures = {
           ),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
+    .mutation(async ({ context, input }) => {
+      const session = await getPreviewSession(input.previewSessionId, context.session.user.id);
       if (session.definitionId) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "This edit preview must update its existing custom widget with customWidget_updateFromPreview",
         });
       }
-      const evidence = await getPreviewEvidence(session.id, ctx.session.user.id);
+      const evidence = await getPreviewEvidence(session.id, context.session.user.id);
       assertCurrentPreviewEvidence(session, evidence, "creating");
       const definition = parsePreviewDefinition(session);
       const secrets = getPersistedPreviewSecrets(session);
-      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
+      await assertCustomWidgetIntegrationBindings(context, definition.sources);
       assertSecretSources(definition.sources, secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
+      const id = await insertCustomWidgetDefinition(context.db, definition, context.session.user.id, secrets);
       logger.info("Created custom widget definition from tested preview", {
         id,
         name: definition.name,
@@ -107,27 +107,27 @@ export const creationProcedures = {
       },
     })
     .input(z.object({ previewSessionId: z.string().min(1) }))
-    .mutation(async ({ ctx, input }) => {
-      const session = await getPreviewSession(input.previewSessionId, ctx.session.user.id);
+    .mutation(async ({ context, input }) => {
+      const session = await getPreviewSession(input.previewSessionId, context.session.user.id);
       if (!session.definitionId) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "This preview is not associated with an existing custom widget definition",
         });
       }
       if (!session.definitionStateFingerprint) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "CONFLICT",
           message: "This edit preview predates safe update persistence. Create a new preview and retry.",
         });
       }
-      const evidence = await getPreviewEvidence(session.id, ctx.session.user.id);
+      const evidence = await getPreviewEvidence(session.id, context.session.user.id);
       assertCurrentPreviewEvidence(session, evidence, "updating");
       const definition = parsePreviewDefinition(session);
       const secrets = getPersistedPreviewSecrets(session);
-      await assertCustomWidgetIntegrationBindings(ctx, definition.sources);
+      await assertCustomWidgetIntegrationBindings(context, definition.sources);
       assertSecretSources(definition.sources, secrets);
-      await updateCustomWidgetDefinition(ctx.db, {
+      await updateCustomWidgetDefinition(context.db, {
         id: session.definitionId,
         definition,
         secrets,

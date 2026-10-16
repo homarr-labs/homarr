@@ -1,4 +1,5 @@
-import { TRPCError } from "@trpc/server";
+import { createApiCaller } from "../procedure";
+import { ApiError } from "../procedure";
 import { parse, stringify } from "superjson";
 import { z } from "zod/v4";
 
@@ -28,20 +29,20 @@ import {
   resolveAssistantModelId,
 } from "@homarr/definitions";
 
-import type { createTRPCContext } from "../trpc";
-import { getAssistantAvailabilityAsync } from "../assistant-availability-server";
+import type { createApiContext } from "../procedure";
+import { getAssistantAvailabilityAsync } from "../assistant-availability";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
 import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
 import {
-  createTRPCRouter,
+  createApiRouter,
   demoWritableProtectedProcedure,
   isDemoMode,
   isDemoReadOnly,
   permissionRequiredProcedure,
   protectedProcedure,
-} from "../trpc";
+} from "../procedure";
 import { boardRouter, getHomeIdBoardAsync } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
@@ -77,7 +78,7 @@ type CompatibleModel = {
 };
 
 type AssistantConfiguration = typeof assistantConfigurations.$inferSelect;
-type AssistantContext = Awaited<ReturnType<typeof createTRPCContext>>;
+type AssistantContext = Awaited<ReturnType<typeof createApiContext>>;
 
 export type AssistantContextEntity = {
   id: string;
@@ -119,10 +120,10 @@ const normalizeBaseUrl = (value: string) => {
   try {
     url = new URL(value);
   } catch {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Enter a valid provider URL." });
+    throw new ApiError({ code: "BAD_REQUEST", message: "Enter a valid provider URL." });
   }
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: "The provider URL must use HTTP or HTTPS without credentials, query parameters, or fragments.",
     });
@@ -134,7 +135,7 @@ const normalizeDiscoveryPath = (value: string | null) => {
   if (value === null || value.trim() === "") return null;
   const path = value.trim();
   if (!path.startsWith("/") || path.startsWith("//") || path.includes("?") || path.includes("#")) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_REQUEST",
       message: "The model discovery path must be an absolute path such as /models.",
     });
@@ -158,7 +159,7 @@ const decryptCustomHeaders = (encryptedHeaders: `${string}.${string}` | null) =>
   try {
     return customHeadersSchema.parse(JSON.parse(decryptSecret(encryptedHeaders)));
   } catch {
-    throw new TRPCError({
+    throw new ApiError({
       code: "INTERNAL_SERVER_ERROR",
       message: "The stored provider headers could not be decrypted.",
     });
@@ -210,7 +211,7 @@ const getGenerationIdsFromMessageContent = (content: unknown) => {
 
 const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   if (!configuration.modelDiscoveryPath) {
-    throw new TRPCError({
+    throw new ApiError({
       code: "PRECONDITION_FAILED",
       message: "Model discovery is disabled for this provider. Enter a model ID manually.",
     });
@@ -224,7 +225,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
       signal: AbortSignal.timeout(15_000),
     });
   } catch {
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_GATEWAY",
       message: "The model endpoint could not be reached from the Homarr server.",
     });
@@ -232,9 +233,9 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
 
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: "The provider rejected the configured credentials." });
+      throw new ApiError({ code: "UNAUTHORIZED", message: "The provider rejected the configured credentials." });
     }
-    throw new TRPCError({
+    throw new ApiError({
       code: "BAD_GATEWAY",
       message: `Model discovery failed with status ${response.status}.`,
     });
@@ -244,7 +245,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   try {
     body = (await response.json()) as typeof body;
   } catch {
-    throw new TRPCError({ code: "BAD_GATEWAY", message: "The model endpoint returned invalid JSON." });
+    throw new ApiError({ code: "BAD_GATEWAY", message: "The model endpoint returned invalid JSON." });
   }
   const models = (Array.isArray(body) ? body : (body.data ?? body.models ?? [])).slice(0, 1_000);
   return models
@@ -337,19 +338,21 @@ export const getSelectedModelDetailsAsync = async (
   return models.find((model) => model.id === resolvedModelId) ?? null;
 };
 
-export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): Promise<AssistantContextEntity[]> => {
-  if (!ctx.session) return [];
+export const getAssistantContextEntitiesAsync = async (
+  context: AssistantContext,
+): Promise<AssistantContextEntity[]> => {
+  if (!context.session) return [];
 
-  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, ctx.session.user.id),
+  const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, context.session.user.id),
   });
   const [availableBoards, availableIntegrations, availableApps, currentUser] = await Promise.all([
-    boardRouter.createCaller(ctx).getAllBoards(),
-    ctx.db.query.integrations.findMany({
+    createApiCaller(boardRouter, context).getAllBoards(),
+    context.db.query.integrations.findMany({
       columns: { id: true, name: true, kind: true },
       with: {
         userPermissions: {
-          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
+          where: eq(integrationUserPermissions.userId, context.session.user.id),
         },
         groupPermissions: {
           where: inArray(
@@ -361,19 +364,19 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
       orderBy: asc(integrations.name),
       limit: 250,
     }),
-    ctx.db.query.apps.findMany({
+    context.db.query.apps.findMany({
       columns: { id: true, name: true, description: true, iconUrl: true },
       orderBy: asc(apps.name),
       limit: 250,
     }),
-    ctx.db.query.users.findFirst({ where: eq(users.id, ctx.session.user.id) }),
+    context.db.query.users.findFirst({ where: eq(users.id, context.session.user.id) }),
   ]);
-  const homeBoardId = await getHomeIdBoardAsync(ctx.db, currentUser ?? null, ctx.deviceType);
+  const homeBoardId = await getHomeIdBoardAsync(context.db, currentUser ?? null, context.deviceType);
   const boardsById = new Map(availableBoards.map((board) => [board.id, board]));
   const availableItems =
     availableBoards.length === 0
       ? []
-      : await ctx.db.query.items.findMany({
+      : await context.db.query.items.findMany({
           columns: { id: true, boardId: true, kind: true },
           where: inArray(
             items.boardId,
@@ -394,7 +397,7 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
       }),
     ),
     ...availableIntegrations
-      .filter((integration) => constructIntegrationPermissions(integration, ctx.session).hasUseAccess)
+      .filter((integration) => constructIntegrationPermissions(integration, context.session).hasUseAccess)
       .map(
         (integration): AssistantContextEntity => ({
           id: integration.id,
@@ -430,10 +433,10 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
 };
 
 export const getAssistantRequestContextEntitiesAsync = async (
-  ctx: AssistantContext,
+  context: AssistantContext,
   references: readonly AssistantContextReference[],
 ): Promise<AssistantContextEntity[]> => {
-  const session = ctx.session;
+  const session = context.session;
   if (!session) return [];
 
   const referenceIds = (type: AssistantContextEntity["type"]) =>
@@ -442,13 +445,13 @@ export const getAssistantRequestContextEntitiesAsync = async (
   const integrationIds = referenceIds("integration");
   const itemIds = referenceIds("widget");
   const [availableBoards, currentUser] = await Promise.all([
-    boardRouter.createCaller(ctx).getAllBoards(),
-    ctx.db.query.users.findFirst({ where: eq(users.id, session.user.id) }),
+    createApiCaller(boardRouter, context).getAllBoards(),
+    context.db.query.users.findFirst({ where: eq(users.id, session.user.id) }),
   ]);
   const boardIds = availableBoards.map((board) => board.id);
   const [availableApps, availableIntegrations, availableItems] = await Promise.all([
     appIds.length > 0
-      ? ctx.db.query.apps.findMany({
+      ? context.db.query.apps.findMany({
           columns: { id: true, name: true, description: true, iconUrl: true },
           where: inArray(apps.id, appIds),
           limit: 30,
@@ -456,10 +459,10 @@ export const getAssistantRequestContextEntitiesAsync = async (
       : [],
     (async () => {
       if (integrationIds.length === 0) return [];
-      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+      const groupsOfCurrentUser = await context.db.query.groupMembers.findMany({
         where: eq(groupMembers.userId, session.user.id),
       });
-      return ctx.db.query.integrations.findMany({
+      return context.db.query.integrations.findMany({
         columns: { id: true, name: true, kind: true },
         where: inArray(integrations.id, integrationIds),
         with: {
@@ -477,14 +480,14 @@ export const getAssistantRequestContextEntitiesAsync = async (
       });
     })(),
     itemIds.length > 0 && boardIds.length > 0
-      ? ctx.db.query.items.findMany({
+      ? context.db.query.items.findMany({
           columns: { id: true, boardId: true, kind: true },
           where: and(inArray(items.id, itemIds), inArray(items.boardId, boardIds)),
           limit: 30,
         })
       : [],
   ]);
-  const homeBoardId = await getHomeIdBoardAsync(ctx.db, currentUser ?? null, ctx.deviceType);
+  const homeBoardId = await getHomeIdBoardAsync(context.db, currentUser ?? null, context.deviceType);
   const boardsById = new Map(availableBoards.map((board) => [board.id, board]));
 
   return [
@@ -538,7 +541,7 @@ const ownedThreadAsync = async (db: Database, threadId: string, userId: string) 
     where: and(eq(assistantThreads.id, threadId), eq(assistantThreads.userId, userId)),
   });
   if (!thread) {
-    throw new TRPCError({ code: "NOT_FOUND", message: "Conversation not found." });
+    throw new ApiError({ code: "NOT_FOUND", message: "Conversation not found." });
   }
   return thread;
 };
@@ -548,10 +551,10 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
   try {
     content = parse(serializedContent);
   } catch {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
+    throw new ApiError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
   }
   if (!isRecord(content)) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
+    throw new ApiError({ code: "INTERNAL_SERVER_ERROR", message: "The stored message is invalid." });
   }
   const metadata = isRecord(content.metadata) ? content.metadata : {};
   return stringify({
@@ -560,19 +563,19 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
   });
 };
 
-export const assistantRouter = createTRPCRouter({
-  getAvailability: protectedProcedure.query(async ({ ctx }) => {
-    return { enabled: await getAssistantAvailabilityAsync(ctx.db) };
+export const assistantRouter = createApiRouter({
+  getAvailability: protectedProcedure.query(async ({ context }) => {
+    return { enabled: await getAssistantAvailabilityAsync(context.db) };
   }),
 
-  getContextEntities: protectedProcedure.query(async ({ ctx }) => {
-    return await getAssistantContextEntitiesAsync(ctx);
+  getContextEntities: protectedProcedure.query(async ({ context }) => {
+    return await getAssistantContextEntitiesAsync(context);
   }),
 
   getModelCapabilities: protectedProcedure
     .input(z.object({ modelId: z.string().trim().min(1).max(256).optional() }).optional())
-    .query(async ({ ctx, input }) => {
-      const configuration = await getConfigurationAsync(ctx.db);
+    .query(async ({ context, input }) => {
+      const configuration = await getConfigurationAsync(context.db);
       if (!configuration?.enabled || !configuration.modelId) {
         return { imageInput: "unsupported" as const, inputModalities: [] as string[] };
       }
@@ -586,8 +589,8 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  getRuntimeOptions: protectedProcedure.query(async ({ ctx }) => {
-    const configuration = await getConfigurationAsync(ctx.db);
+  getRuntimeOptions: protectedProcedure.query(async ({ context }) => {
+    const configuration = await getConfigurationAsync(context.db);
     if (isDemoMode) {
       return {
         provider: "custom" as const,
@@ -607,7 +610,7 @@ export const assistantRouter = createTRPCRouter({
       };
     }
     if (!configuration?.enabled || !configuration.modelId) {
-      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
+      throw new ApiError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
     }
     const discoveredModels = await getAssistantModelsAsync(configuration).catch(() => []);
     const resolvedDefaultId = resolveAssistantModelId(discoveredModels, configuration.modelId) ?? configuration.modelId;
@@ -628,8 +631,8 @@ export const assistantRouter = createTRPCRouter({
     };
   }),
 
-  getAdminConfiguration: adminProcedure.query(async ({ ctx }) => {
-    const configuration = await getConfigurationAsync(ctx.db);
+  getAdminConfiguration: adminProcedure.query(async ({ context }) => {
+    const configuration = await getConfigurationAsync(context.db);
     return {
       connectionConfigured: Boolean(configuration),
       enabled: configuration?.enabled ?? false,
@@ -656,11 +659,11 @@ export const assistantRouter = createTRPCRouter({
         clearCustomHeaders: z.boolean().default(false),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const baseUrl = input.provider === "homarr" ? getHomarrProviderBaseUrl() : normalizeBaseUrl(input.baseUrl);
       const modelDiscoveryPath =
         input.provider === "homarr" ? "/models" : normalizeDiscoveryPath(input.modelDiscoveryPath);
-      const existing = await getConfigurationAsync(ctx.db);
+      const existing = await getConfigurationAsync(context.db);
       const destinationChanged =
         existing !== undefined && (existing.provider !== input.provider || existing.baseUrl !== baseUrl);
       const connectionChanged =
@@ -683,7 +686,7 @@ export const assistantRouter = createTRPCRouter({
               : (existing?.encryptedHeaders ?? null);
 
       if (existing) {
-        await ctx.db
+        await context.db
           .update(assistantConfigurations)
           .set({
             provider: input.provider,
@@ -701,7 +704,7 @@ export const assistantRouter = createTRPCRouter({
           })
           .where(eq(assistantConfigurations.id, configurationId));
       } else {
-        await ctx.db.insert(assistantConfigurations).values({
+        await context.db.insert(assistantConfigurations).values({
           id: configurationId,
           provider: input.provider,
           baseUrl,
@@ -718,10 +721,10 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  clearCredentials: adminProcedure.mutation(async ({ ctx }) => {
-    const existing = await getConfigurationAsync(ctx.db);
+  clearCredentials: adminProcedure.mutation(async ({ context }) => {
+    const existing = await getConfigurationAsync(context.db);
     if (!existing) return;
-    await ctx.db
+    await context.db
       .update(assistantConfigurations)
       .set({
         encryptedApiKey: null,
@@ -733,10 +736,10 @@ export const assistantRouter = createTRPCRouter({
       .where(eq(assistantConfigurations.id, configurationId));
   }),
 
-  discoverModels: adminProcedure.output(z.array(modelSchema)).query(async ({ ctx }) => {
-    const configuration = await getConfigurationAsync(ctx.db);
+  discoverModels: adminProcedure.output(z.array(modelSchema)).query(async ({ context }) => {
+    const configuration = await getConfigurationAsync(context.db);
     if (!configuration) {
-      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
+      throw new ApiError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
     }
     return await getAssistantModelsAsync(configuration, true);
   }),
@@ -749,17 +752,17 @@ export const assistantRouter = createTRPCRouter({
         webSearchEnabled: z.boolean().default(false),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const configuration = await getConfigurationAsync(ctx.db);
+    .mutation(async ({ context, input }) => {
+      const configuration = await getConfigurationAsync(context.db);
       if (!configuration) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
+        throw new ApiError({ code: "PRECONDITION_FAILED", message: "Save a provider connection first." });
       }
       const requiresApiKey = assistantProviderRequiresApiKey(configuration.provider);
       if (input.enabled && requiresApiKey && !configuration.encryptedApiKey) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "This provider requires an API key." });
+        throw new ApiError({ code: "PRECONDITION_FAILED", message: "This provider requires an API key." });
       }
       if (input.webSearchEnabled && !assistantProviderCanUseOpenRouterServerTools(configuration.provider)) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "Web search requires OpenRouter or an OpenRouter-compatible proxy endpoint.",
         });
@@ -770,15 +773,15 @@ export const assistantRouter = createTRPCRouter({
       const modelId = discoveredModels
         ? (resolveAssistantModelId(discoveredModels, input.modelId) ?? input.modelId)
         : input.modelId;
-      await ctx.db
+      await context.db
         .update(assistantConfigurations)
         .set({ enabled: input.enabled, modelId, webSearchEnabled: input.webSearchEnabled, updatedAt: new Date() })
         .where(eq(assistantConfigurations.id, configurationId));
     }),
 
-  listThreads: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.assistantThreads.findMany({
-      where: eq(assistantThreads.userId, ctx.session.user.id),
+  listThreads: protectedProcedure.query(async ({ context }) => {
+    return await context.db.query.assistantThreads.findMany({
+      where: eq(assistantThreads.userId, context.session.user.id),
       orderBy: desc(assistantThreads.updatedAt),
       limit: 100,
     });
@@ -786,13 +789,13 @@ export const assistantRouter = createTRPCRouter({
 
   createThread: conversationProcedure
     .input(z.object({ localId: z.string().max(128).optional() }).optional())
-    .mutation(async ({ ctx }) => {
-      const configuration = await getConfigurationAsync(ctx.db);
+    .mutation(async ({ context }) => {
+      const configuration = await getConfigurationAsync(context.db);
       const id = createId();
       const now = new Date();
-      await ctx.db.insert(assistantThreads).values({
+      await context.db.insert(assistantThreads).values({
         id,
-        userId: ctx.session.user.id,
+        userId: context.session.user.id,
         modelId: configuration?.modelId ?? null,
         createdAt: now,
         updatedAt: now,
@@ -802,39 +805,39 @@ export const assistantRouter = createTRPCRouter({
 
   updateThreadModel: conversationProcedure
     .input(z.object({ threadId: z.string().max(64), modelId: z.string().trim().min(1).max(256) }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const [thread, configuration] = await Promise.all([
-        ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id),
-        getConfigurationAsync(ctx.db),
+        ownedThreadAsync(context.db, input.threadId, context.session.user.id),
+        getConfigurationAsync(context.db),
       ]);
       if (isDemoMode) {
-        await ctx.db
+        await context.db
           .update(assistantThreads)
           .set({ modelId: input.modelId, updatedAt: new Date() })
           .where(eq(assistantThreads.id, thread.id));
         return { modelId: input.modelId };
       }
       if (!configuration?.enabled || !configuration.modelId) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
+        throw new ApiError({ code: "PRECONDITION_FAILED", message: "Assistant is not configured." });
       }
       const selectedModel = await getSelectedModelDetailsAsync(configuration, input.modelId).catch(() => null);
       if (input.modelId !== configuration.modelId && !selectedModel) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "The selected model is not available from the configured provider.",
         });
       }
       const modelId = selectedModel?.id ?? configuration.modelId;
-      await ctx.db
+      await context.db
         .update(assistantThreads)
         .set({ modelId, updatedAt: new Date() })
         .where(eq(assistantThreads.id, thread.id));
       return { modelId };
     }),
 
-  getThread: protectedProcedure.input(z.object({ threadId: z.string().max(64) })).query(async ({ ctx, input }) => {
-    const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-    const messages = await ctx.db.query.assistantMessages.findMany({
+  getThread: protectedProcedure.input(z.object({ threadId: z.string().max(64) })).query(async ({ context, input }) => {
+    const thread = await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
+    const messages = await context.db.query.assistantMessages.findMany({
       where: eq(assistantMessages.threadId, thread.id),
       // `created_at` is only second-granular on SQLite, so sibling messages written in the
       // same second tie. The id tiebreaker makes the database order at least deterministic.
@@ -859,13 +862,13 @@ export const assistantRouter = createTRPCRouter({
         messageId: z.string().min(1).max(128),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
+    .query(async ({ context, input }) => {
+      const thread = await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
       const [message, configuration] = await Promise.all([
-        ctx.db.query.assistantMessages.findFirst({
+        context.db.query.assistantMessages.findFirst({
           where: and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)),
         }),
-        getConfigurationAsync(ctx.db),
+        getConfigurationAsync(context.db),
       ]);
       if (!message) return { complete: true, generations: [] };
       if (configuration?.provider !== "openrouter" || !configuration.encryptedApiKey) {
@@ -875,7 +878,7 @@ export const assistantRouter = createTRPCRouter({
       const generationReferences = getGenerationIdsFromMessageContent(parse(message.content)).filter((reference) =>
         verifyAssistantGenerationAccessToken(
           {
-            userId: ctx.session.user.id,
+            userId: context.session.user.id,
             threadId: thread.id,
             generationId: reference.generationId,
           },
@@ -900,9 +903,9 @@ export const assistantRouter = createTRPCRouter({
 
   renameThread: conversationProcedure
     .input(z.object({ threadId: z.string().max(64), title: z.string().trim().min(1).max(120) }))
-    .mutation(async ({ ctx, input }) => {
-      await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-      await ctx.db
+    .mutation(async ({ context, input }) => {
+      await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
+      await context.db
         .update(assistantThreads)
         .set({ title: input.title, updatedAt: new Date() })
         .where(eq(assistantThreads.id, input.threadId));
@@ -910,9 +913,9 @@ export const assistantRouter = createTRPCRouter({
 
   deleteThread: conversationProcedure
     .input(z.object({ threadId: z.string().max(64) }))
-    .mutation(async ({ ctx, input }) => {
-      await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-      await ctx.db.delete(assistantThreads).where(eq(assistantThreads.id, input.threadId));
+    .mutation(async ({ context, input }) => {
+      await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
+      await context.db.delete(assistantThreads).where(eq(assistantThreads.id, input.threadId));
     }),
 
   appendMessage: conversationProcedure
@@ -926,18 +929,18 @@ export const assistantRouter = createTRPCRouter({
         content: z.unknown(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-      const existing = await ctx.db.query.assistantMessages.findFirst({
+    .mutation(async ({ context, input }) => {
+      const thread = await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
+      const existing = await context.db.query.assistantMessages.findFirst({
         where: and(eq(assistantMessages.id, input.id), eq(assistantMessages.threadId, thread.id)),
       });
       if (existing) {
-        await ctx.db
+        await context.db
           .update(assistantMessages)
           .set({ parentId: input.parentId, format: input.format, content: stringify(input.content) })
           .where(eq(assistantMessages.id, input.id));
       } else {
-        await ctx.db.insert(assistantMessages).values({
+        await context.db.insert(assistantMessages).values({
           id: input.id,
           threadId: thread.id,
           parentId: input.parentId,
@@ -970,7 +973,7 @@ export const assistantRouter = createTRPCRouter({
               .slice(0, 80) || null
           : null);
 
-      await ctx.db
+      await context.db
         .update(assistantThreads)
         .set({ title, updatedAt: new Date() })
         .where(eq(assistantThreads.id, thread.id));
@@ -984,9 +987,9 @@ export const assistantRouter = createTRPCRouter({
         type: z.enum(["positive", "negative"]),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      const thread = await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
-      await handleTransactionsAsync(ctx.db, {
+    .mutation(async ({ context, input }) => {
+      const thread = await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
+      await handleTransactionsAsync(context.db, {
         handleAsync: async (db, schema) => {
           await db.transaction(async (transaction) => {
             const table = schema.assistantMessages;
@@ -995,7 +998,7 @@ export const assistantRouter = createTRPCRouter({
               .from(table)
               .where(and(eq(table.id, input.messageId), eq(table.threadId, thread.id)))
               .for("update");
-            if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+            if (!message) throw new ApiError({ code: "NOT_FOUND", message: "Message not found." });
             await transaction
               .update(table)
               .set({ content: addFeedbackToMessageContent(message.content, input.type) })
@@ -1009,7 +1012,7 @@ export const assistantRouter = createTRPCRouter({
               .from(assistantMessages)
               .where(and(eq(assistantMessages.id, input.messageId), eq(assistantMessages.threadId, thread.id)))
               .get();
-            if (!message) throw new TRPCError({ code: "NOT_FOUND", message: "Message not found." });
+            if (!message) throw new ApiError({ code: "NOT_FOUND", message: "Message not found." });
             transaction
               .update(assistantMessages)
               .set({ content: addFeedbackToMessageContent(message.content, input.type) })
@@ -1022,13 +1025,13 @@ export const assistantRouter = createTRPCRouter({
 
   deleteMessages: conversationProcedure
     .input(z.object({ threadId: z.string().max(64), ids: z.array(z.string().max(128)).max(100) }))
-    .mutation(async ({ ctx, input }) => {
-      await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
+    .mutation(async ({ context, input }) => {
+      await ownedThreadAsync(context.db, input.threadId, context.session.user.id);
       if (input.ids.length === 0) return;
-      await ctx.db
+      await context.db
         .delete(assistantMessages)
         .where(and(eq(assistantMessages.threadId, input.threadId), inArray(assistantMessages.id, input.ids)));
-      await ctx.db
+      await context.db
         .update(assistantThreads)
         .set({ updatedAt: new Date() })
         .where(eq(assistantThreads.id, input.threadId));

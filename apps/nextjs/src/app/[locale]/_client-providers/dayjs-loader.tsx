@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 
-import { DayJsLocaleContext } from "@homarr/common";
+import { DayJsLocaleContext } from "@homarr/common/hooks";
 import { useSuspenseDayJsLocalization } from "@homarr/translation/dayjs";
 
 export const DayJsLoader = ({ children }: PropsWithChildren) => {

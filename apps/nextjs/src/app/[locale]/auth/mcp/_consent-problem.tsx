@@ -3,7 +3,7 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { getI18n } from "@homarr/translation/server";
 
-import type { McpConsentNativeErrorReason, McpConsentResult } from "~/app/api/mcp/oauth/_grant";
+import type { McpConsentNativeErrorReason, McpConsentResult } from "@homarr/api/http/mcp/oauth/_grant";
 
 type ConsentProblemReason =
   | Exclude<Extract<McpConsentResult, { ok: false }>["error"], "login_required">

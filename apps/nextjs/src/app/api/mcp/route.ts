@@ -1,1 +1,1 @@
-export { handleMcpRequest as POST } from "./_handler";
+export { forwardBackendRequestAsync as POST } from "~/server/backend-proxy";

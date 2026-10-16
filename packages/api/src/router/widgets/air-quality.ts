@@ -3,14 +3,14 @@ import { z } from "zod/v4";
 import { env } from "@homarr/common/env";
 import { airQualityRequestHandler } from "@homarr/request-handler/air-quality";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
 const atLocationInput = z.object({
   longitude: z.number().min(-180).max(180),
   latitude: z.number().min(-90).max(90),
 });
 
-export const airQualityRouter = createTRPCRouter({
+export const airQualityRouter = createApiRouter({
   atLocation: publicProcedure
     .meta({
       mcp: {

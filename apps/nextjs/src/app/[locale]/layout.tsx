@@ -16,7 +16,7 @@ import { ColorSchemeScript } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
-import { env as authEnv } from "@homarr/auth/env";
+import { getBackendRuntimeAsync } from "@homarr/api/server";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
@@ -123,12 +123,13 @@ export default async function Layout(props: {
         })
       : null,
   );
-  const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
+  const [session, user, serverSettings, colorScheme, assistantAvailability, runtime] = await Promise.all([
     sessionPromise,
     userPromise,
     serverSettingsPromise,
     getCurrentColorSchemeAsync(),
     assistantAvailabilityPromise,
+    getBackendRuntimeAsync(),
   ]);
   const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
   const publicUrls = resolveHomarrUrlConfig({
@@ -139,7 +140,7 @@ export default async function Layout(props: {
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
-      return <AuthProvider session={session} logoutUrl={authEnv.AUTH_LOGOUT_REDIRECT_URL} {...innerProps} />;
+      return <AuthProvider session={session} logoutUrl={runtime.logoutRedirectUrl} {...innerProps} />;
     },
     (innerProps) => (
       <SettingsProvider

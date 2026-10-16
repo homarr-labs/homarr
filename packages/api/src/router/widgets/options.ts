@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
@@ -7,14 +7,14 @@ import { getServerSettingsAsync } from "@homarr/db/queries";
 import { boards, items } from "@homarr/db/schema";
 
 import type { WidgetOptionsSettings } from "../../../../widgets/src";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, protectedProcedure, publicProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import { validateTimetableOptionsChangeAsync } from "./timetable";
 import { throwIfCustomWidgetPlacementChangeForbidden } from "../board/custom-widget-placement-access";
 
-export const optionsRouter = createTRPCRouter({
-  getWidgetOptionSettings: publicProcedure.query(async ({ ctx }): Promise<WidgetOptionsSettings> => {
-    const serverSettings = await getServerSettingsAsync(ctx.db);
+export const optionsRouter = createApiRouter({
+  getWidgetOptionSettings: publicProcedure.query(async ({ context }): Promise<WidgetOptionsSettings> => {
+    const serverSettings = await getServerSettingsAsync(context.db);
 
     return {
       server: {
@@ -33,15 +33,15 @@ export const optionsRouter = createTRPCRouter({
         newOptions: z.record(z.string(), z.unknown()),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+    .mutation(async ({ context, input }) => {
+      await throwIfActionForbiddenAsync(context, eq(boards.id, input.boardId), "modify");
 
-      const item = await ctx.db.query.items.findFirst({
+      const item = await context.db.query.items.findFirst({
         where: eq(items.id, input.itemId),
       });
 
       if (item?.boardId !== input.boardId) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Specified item was not found",
         });
@@ -53,11 +53,11 @@ export const optionsRouter = createTRPCRouter({
         await validateTimetableOptionsChangeAsync(updatedOptions, previousOptions);
       }
       throwIfCustomWidgetPlacementChangeForbidden({
-        isAdmin: ctx.session.user.permissions.includes("admin"),
+        isAdmin: context.session.user.permissions.includes("admin"),
         submittedItems: [{ id: item.id, kind: item.kind, options: updatedOptions }],
         storedItems: [{ id: item.id, kind: item.kind, options: previousOptions }],
       });
-      await ctx.db
+      await context.db
         .update(items)
         .set({ options: SuperJSON.stringify(updatedOptions) })
         .where(eq(items.id, input.itemId));

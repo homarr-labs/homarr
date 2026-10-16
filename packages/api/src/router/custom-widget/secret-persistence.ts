@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 
 import { encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
@@ -87,11 +87,11 @@ export async function configureCustomWidgetSource(db: Database, input: Configure
     return await persistCustomWidgetSourceConfiguration(db, input);
   } catch (error) {
     if (!(error instanceof SourceConfigurationError)) throw error;
-    if (error.issue === "definition-not-found") throw new TRPCError({ code: "NOT_FOUND" });
+    if (error.issue === "definition-not-found") throw new ApiError({ code: "NOT_FOUND" });
     if (error.issue === "source-not-found") {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Widget source not found" });
+      throw new ApiError({ code: "NOT_FOUND", message: "Widget source not found" });
     }
-    throw new TRPCError({
+    throw new ApiError({
       code: "CONFLICT",
       message: "Widget source authentication changed while it was being configured",
     });
@@ -206,7 +206,7 @@ async function persistCustomWidgetSourceConfiguration(db: Database, input: Confi
       );
     },
   });
-  if (!configuredSource) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  if (!configuredSource) throw new ApiError({ code: "INTERNAL_SERVER_ERROR" });
   return configuredSource;
 }
 

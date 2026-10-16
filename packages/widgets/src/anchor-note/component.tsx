@@ -7,7 +7,7 @@ import { IconEdit } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
-import { useTimeAgo } from "@homarr/common";
+import { useTimeAgo } from "@homarr/common/hooks";
 import type { AnchorNotePermission } from "@homarr/integrations";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 

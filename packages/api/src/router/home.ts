@@ -17,7 +17,7 @@ import {
   users,
 } from "@homarr/db/schema";
 import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/definitions";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createApiRouter, publicProcedure } from "../procedure";
 
 const getFullAccessIntegrationIdsAsync = async (db: Database, userId: string) => {
   const groupsOfCurrentUser = await db.query.groupMembers.findMany({
@@ -53,21 +53,21 @@ interface HomeStatistic {
   path: string;
 }
 
-export const homeRouter = createTRPCRouter({
-  getStats: publicProcedure.query(async ({ ctx }) => {
-    const isAdmin = ctx.session?.user.permissions.includes("admin") ?? false;
+export const homeRouter = createApiRouter({
+  getStats: publicProcedure.query(async ({ context }) => {
+    const isAdmin = context.session?.user.permissions.includes("admin") ?? false;
     const isCredentialsEnabled = isProviderEnabled("credentials");
 
     const statistics: HomeStatistic[] = [];
 
     const boardIds: string[] = [];
-    if (ctx.session?.user && !ctx.session.user.permissions.includes("board-view-all")) {
-      const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
-        where: eq(boardUserPermissions.userId, ctx.session.user.id),
+    if (context.session?.user && !context.session.user.permissions.includes("board-view-all")) {
+      const permissionsOfCurrentUserWhenPresent = await context.db.query.boardUserPermissions.findMany({
+        where: eq(boardUserPermissions.userId, context.session.user.id),
       });
 
-      const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session.user.id),
+      const permissionsOfCurrentUserGroupsWhenPresent = await context.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, context.session.user.id),
         with: {
           group: {
             with: {
@@ -93,11 +93,11 @@ export const homeRouter = createTRPCRouter({
       subtitleKey: "boards",
       count: await db.$count(
         boards,
-        ctx.session?.user.permissions.includes("board-view-all")
+        context.session?.user.permissions.includes("board-view-all")
           ? undefined
           : or(
               eq(boards.isPublic, true),
-              eq(boards.creatorId, ctx.session?.user.id ?? ""),
+              eq(boards.creatorId, context.session?.user.id ?? ""),
               boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
             ),
       ),
@@ -124,12 +124,12 @@ export const homeRouter = createTRPCRouter({
 
     // A card is only shown when the page behind it is reachable, and it counts only what the user is
     // allowed to see. The rules come from @homarr/definitions so this cannot drift from the pages.
-    const permissions = ctx.session?.user.permissions ?? [];
+    const permissions = context.session?.user.permissions ?? [];
     const hasGlobalFullIntegrationAccess = permissions.includes("integration-full-all");
     const fullAccessIntegrationIds =
-      hasGlobalFullIntegrationAccess || !ctx.session?.user
+      hasGlobalFullIntegrationAccess || !context.session?.user
         ? []
-        : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session.user.id);
+        : await getFullAccessIntegrationIdsAsync(context.db, context.session.user.id);
     const integrationAccess = getIntegrationManagementAccess(permissions, fullAccessIntegrationIds.length > 0);
     if (integrationAccess.canAccess) {
       statistics.push({
@@ -159,7 +159,7 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user.permissions.includes("search-engine-create")) {
+    if (context.session?.user.permissions.includes("search-engine-create")) {
       statistics.push({
         titleKey: "searchEngine",
         subtitleKey: "resources",
@@ -168,15 +168,15 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user.permissions.includes("media-upload")) {
+    if (context.session?.user.permissions.includes("media-upload")) {
       statistics.push({
         titleKey: "media",
         subtitleKey: "resources",
         count: await db.$count(
           medias,
-          ctx.session.user.permissions.includes("media-view-all")
+          context.session.user.permissions.includes("media-view-all")
             ? undefined
-            : eq(medias.creatorId, ctx.session.user.id),
+            : eq(medias.creatorId, context.session.user.id),
         ),
         path: "/manage/medias",
       });

@@ -1,5 +1,5 @@
 import { randomBytes } from "crypto";
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
@@ -7,10 +7,10 @@ import { asc, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { selectInviteSchema } from "@homarr/db/validationSchemas";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../procedure";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 
-export const inviteRouter = createTRPCRouter({
+export const inviteRouter = createApiRouter({
   getAll: permissionRequiredProcedure
     .requiresPermission("admin")
     .output(
@@ -38,9 +38,9 @@ export const inviteRouter = createTRPCRouter({
       },
       mcp: { enabled: true, description: "List all user invites" },
     })
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       throwIfCredentialsDisabled();
-      return await ctx.db.query.invites.findMany({
+      return await context.db.query.invites.findMany({
         orderBy: asc(invites.expirationDate),
         columns: {
           token: false,
@@ -80,15 +80,15 @@ export const inviteRouter = createTRPCRouter({
           "Create a new user invite link. REQUIRED: expirationDate (ISO date string for when the invite expires). Returns the invite ID and token",
       },
     })
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       throwIfCredentialsDisabled();
       const id = createId();
       const token = randomBytes(20).toString("hex");
 
-      await ctx.db.insert(invites).values({
+      await context.db.insert(invites).values({
         id,
         expirationDate: new Date(input.expirationDate),
-        creatorId: ctx.session.user.id,
+        creatorId: context.session.user.id,
         token,
       });
 
@@ -121,19 +121,19 @@ export const inviteRouter = createTRPCRouter({
         description: "Delete an invite by ID. REQUIRED: id (invite ID string)",
       },
     })
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       throwIfCredentialsDisabled();
-      const dbInvite = await ctx.db.query.invites.findFirst({
+      const dbInvite = await context.db.query.invites.findFirst({
         where: eq(invites.id, input.id),
       });
 
       if (!dbInvite) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "Invite not found",
         });
       }
 
-      await ctx.db.delete(invites).where(eq(invites.id, input.id));
+      await context.db.delete(invites).where(eq(invites.id, input.id));
     }),
 });

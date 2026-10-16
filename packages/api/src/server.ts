@@ -1,24 +1,29 @@
 import { cache } from "react";
+import { createTRPCClient, httpLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import SuperJSON from "superjson";
 
-import { appRouter, createCaller } from "@homarr/api";
+import type { AppRouter } from "./legacy";
+import { createRscRequestHeadersAsync } from "./rsc-context";
+import { getTrpcUrl, makeQueryClient } from "./shared";
 
-import { createRscTrpcContext } from "./rsc-context";
-import { makeQueryClient } from "./shared";
+// Server rendering uses the same authenticated HTTP boundary as other clients.
+// Import AppRouter only as a type so the frontend does not load backend routers.
+export const api = createTRPCClient<AppRouter>({
+  links: [
+    httpLink({
+      url: getTrpcUrl(),
+      transformer: SuperJSON,
+      headers: createRscRequestHeadersAsync,
+      fetch: (url, options) => fetch(url, { ...options, cache: "no-store" }),
+    }),
+  ],
+});
 
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
- */
-const createContext = () => createRscTrpcContext();
-
-export const api = createCaller(createContext);
-
-// IMPORTANT: Create a stable getter for the query client that
-//            will return the same client during the same request.
 export const getQueryClient = cache(makeQueryClient);
 export const trpc = createTRPCOptionsProxy({
-  ctx: createContext,
-  router: appRouter,
+  client: api,
   queryClient: getQueryClient,
 });
+
+export const getBackendRuntimeAsync = cache(async () => await api.frontend.runtime.query());

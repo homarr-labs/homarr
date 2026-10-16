@@ -2,10 +2,15 @@
 
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import type * as CatalogModule from "../_extract-tools";
+import type * as CatalogModule from "@homarr/api/http/mcp/_extract-tools";
+import type { Session } from "@homarr/auth/types";
+import { bindWorkerRequestSession, getTrustedWorkerRequestSession } from "@homarr/auth/request-session";
+
+import packageJson from "../../../../../../../package.json";
 
 const mocks = vi.hoisted(() => ({
   authenticate: vi.fn(),
+  createContext: vi.fn(({ session }: { session: unknown }) => ({ session })),
   extractCatalog: vi.fn(),
   ipAddress: vi.fn(() => "127.0.0.1"),
   toolProcedure: vi.fn(),
@@ -16,13 +21,22 @@ const mocks = vi.hoisted(() => ({
   getComponent: vi.fn((name: string) => (name === "Text Input" ? { name, safety: "allowed" } : null)),
 }));
 
-vi.mock("next/server", () => ({ userAgent: () => ({ ua: "MCP route test" }) }));
-vi.mock("@homarr/api/mcp", async () => ({
-  callMcpTool: (await import("../../../../../../../packages/api/src/mcp-tools")).callMcpTool,
-  extractMcpToolsFromProcedures: mocks.extractCatalog,
-  createTRPCContext: vi.fn(() => ({})),
-  mcpRouter: { createCaller: vi.fn(() => ({ board: { getAllBoards: mocks.toolProcedure } })) },
-}));
+vi.mock("@homarr/api/mcp", async () => {
+  const { os } = await import("@orpc/server");
+  return {
+    callMcpTool: (await import("../../../../../../../packages/api/src/mcp-tools")).callMcpTool,
+    extractMcpToolsFromProcedures: mocks.extractCatalog,
+    createApiContext: mocks.createContext,
+    mcpRouter: { board: { getAllBoards: os.handler(() => mocks.toolProcedure()) } },
+  };
+});
+vi.mock("../../../../../../../packages/api/src/procedure", async () => {
+  const { createRouterClient } = await import("@orpc/server");
+  return {
+    createApiCaller: (router: Parameters<typeof createRouterClient>[0], context: object) =>
+      createRouterClient(router, { context }),
+  };
+});
 vi.mock("@homarr/auth/api-key", () => ({
   API_KEY_HEADER_NAME: "ApiKey",
   getSessionFromApiKeyAsync: mocks.authenticate,
@@ -50,9 +64,8 @@ vi.mock("@homarr/custom-widgets/core", () => ({
   getCustomWidgetJsonSchema: () => ({ type: "object", title: "Custom Widget" }),
 }));
 vi.mock("@homarr/db", () => ({ db: {} }));
-vi.mock("~/env", () => ({ env: { BASE_URL: undefined } }));
-vi.mock("~/versions/package-reader", () => ({ getPackageVersion: () => "test-version" }));
-vi.mock("../_extract-tools", () => ({
+vi.mock("@homarr/api/http/env", () => ({ env: { BASE_URL: undefined } }));
+vi.mock("@homarr/api/http/mcp/_extract-tools", () => ({
   extractMcpTools: () => [
     {
       name: "board_getAllBoards",
@@ -81,7 +94,7 @@ vi.mock("../_extract-tools", () => ({
   ],
 }));
 
-import { POST } from "./route";
+import { handleMcpRequest } from "@homarr/api/http/mcp/_handler";
 
 interface JsonRpcResponse {
   jsonrpc: "2.0";
@@ -91,6 +104,8 @@ interface JsonRpcResponse {
 }
 
 beforeEach(() => {
+  mocks.authenticate.mockReset();
+  mocks.createContext.mockClear();
   mocks.authenticate.mockResolvedValue({ user: { id: "user-1", permissions: ["admin"] } });
   mocks.buildPrompt.mockClear();
   mocks.getComponent.mockClear();
@@ -108,12 +123,13 @@ async function callMcp(method: string, params: Record<string, unknown> = {}, id 
       Accept: "application/json, text/event-stream",
       ApiKey: "key.secret",
       "Content-Type": "application/json",
+      "User-Agent": "MCP route test",
       "X-Forwarded-For": "198.51.100.10",
       "X-Real-IP": "127.0.0.1",
     },
     body: JSON.stringify({ jsonrpc: "2.0", id, method, params }),
   });
-  const response = await POST(request as never);
+  const response = await handleMcpRequest(request);
   const text = await response.text();
   const data = response.headers.get("content-type")?.includes("text/event-stream")
     ? text
@@ -138,7 +154,7 @@ describe("authenticated MCP prompt protocol", () => {
     expect(body.result).toMatchObject({
       protocolVersion: expect.any(String),
       capabilities: { prompts: {}, resources: {} },
-      serverInfo: { name: "homarr", version: "test-version" },
+      serverInfo: { name: "homarr", version: packageJson.version },
     });
     expect(mocks.authenticate).toHaveBeenCalledWith({}, "key.secret", "127.0.0.1", "MCP route test");
     expect(mocks.ipAddress).toHaveBeenCalledWith(expect.any(Headers));
@@ -318,7 +334,7 @@ test("logs catalog omissions only when the shared catalog is first built", async
   const diagnostic = { name: "broken", path: "broken", reason: "invalid_schema" };
   const tools = [{ name: "valid" }];
   mocks.extractCatalog.mockReturnValue({ tools, diagnostics: [diagnostic] });
-  const { extractMcpTools } = await vi.importActual<typeof CatalogModule>("../_extract-tools");
+  const { extractMcpTools } = await vi.importActual<typeof CatalogModule>("@homarr/api/http/mcp/_extract-tools");
   expect(extractMcpTools()).toBe(tools);
   expect(extractMcpTools()).toBe(tools);
   expect(mocks.extractCatalog).toHaveBeenCalledTimes(1);
@@ -330,4 +346,64 @@ test("rejects unauthenticated tool calls before execution", async () => {
   const { response } = await callMcp("tools/call", { name: "board_getAllBoards", arguments: {} });
   expect(response.status).toBe(401);
   expect(mocks.toolProcedure).not.toHaveBeenCalled();
+});
+
+const workerSession = {
+  user: { id: "worker-member", permissions: ["board-view-all"], colorScheme: "dark" },
+  expires: "2099-01-01T00:00:00.000Z",
+} satisfies Session;
+
+const workerMcpRequest = (headers: HeadersInit = {}) =>
+  new Request("http://localhost/api/mcp", {
+    method: "POST",
+    headers: {
+      Accept: "application/json, text/event-stream",
+      "Content-Type": "application/json",
+      ...headers,
+    },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} }),
+  });
+
+describe("trusted worker MCP sessions", () => {
+  test("uses the session bound by the authenticated worker without an API key", async () => {
+    const request = workerMcpRequest();
+    bindWorkerRequestSession(request, workerSession);
+
+    const response = await handleMcpRequest(request);
+
+    expect(response.status).toBe(200);
+    expect(mocks.authenticate).not.toHaveBeenCalled();
+    expect(mocks.createContext).toHaveBeenCalledWith({ session: workerSession, headers: request.headers });
+    expect(await response.text()).toContain("board_getAllBoards");
+  });
+
+  test("rejects forged session headers and cookies on an unbound HTTP request", async () => {
+    const request = workerMcpRequest({
+      "X-Homarr-Worker-Session": JSON.stringify(workerSession),
+      "X-Homarr-User-Id": workerSession.user.id,
+      Cookie: "authjs.session-token=forged-worker-session",
+    });
+
+    expect(getTrustedWorkerRequestSession(request)).toBeUndefined();
+    const response = await handleMcpRequest(request);
+
+    expect(response.status).toBe(401);
+    expect(mocks.authenticate).not.toHaveBeenCalled();
+    expect(mocks.createContext).not.toHaveBeenCalled();
+    expect(mocks.toolProcedure).not.toHaveBeenCalled();
+  });
+
+  test("does not transfer trust to a copied request with identical HTTP contents", async () => {
+    const trusted = workerMcpRequest();
+    bindWorkerRequestSession(trusted, workerSession);
+    const copied = new Request(trusted);
+
+    expect(getTrustedWorkerRequestSession(trusted)).toBe(workerSession);
+    expect(getTrustedWorkerRequestSession(copied)).toBeUndefined();
+    const response = await handleMcpRequest(copied);
+
+    expect(response.status).toBe(401);
+    expect(mocks.authenticate).not.toHaveBeenCalled();
+    expect(mocks.createContext).not.toHaveBeenCalled();
+  });
 });

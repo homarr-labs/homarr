@@ -1,4 +1,4 @@
-import { observable } from "@trpc/server/observable";
+import { observable } from "../subscription";
 import z from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -7,31 +7,32 @@ import { createCronJobStatusChannel } from "@homarr/cron-job-status";
 import { jobGroup } from "@homarr/cron-jobs";
 import { JobManager } from "@homarr/cron-jobs/job-manager";
 
-import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure } from "../procedure";
+import { subscriptionEvents } from "../subscription";
 
 const jobGroupKeys = jobGroup.getKeys();
 const jobNameSchema = z.enum(jobGroup.getKeys());
 
 const logger = createLogger({ module: "cronJobsRouter" });
 
-export const cronJobsRouter = createTRPCRouter({
+export const cronJobsRouter = createApiRouter({
   triggerJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input, ctx }) => {
-      await new JobManager(ctx.db, jobGroup).triggerAsync(input);
+    .mutation(async ({ input, context }) => {
+      await new JobManager(context.db, jobGroup).triggerAsync(input);
     }),
   startJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input, ctx }) => {
-      await new JobManager(ctx.db, jobGroup).startAsync(input);
+    .mutation(async ({ input, context }) => {
+      await new JobManager(context.db, jobGroup).startAsync(input);
     }),
   stopJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(({ input, ctx }) => {
-      new JobManager(ctx.db, jobGroup).stop(input);
+    .mutation(({ input, context }) => {
+      new JobManager(context.db, jobGroup).stop(input);
     }),
   updateJobInterval: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -41,26 +42,26 @@ export const cronJobsRouter = createTRPCRouter({
         cron: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      await new JobManager(ctx.db, jobGroup).updateIntervalAsync(input.name, input.cron);
+    .mutation(async ({ input, context }) => {
+      await new JobManager(context.db, jobGroup).updateIntervalAsync(input.name, input.cron);
     }),
   disableJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input, ctx }) => {
-      await new JobManager(ctx.db, jobGroup).disableAsync(input);
+    .mutation(async ({ input, context }) => {
+      await new JobManager(context.db, jobGroup).disableAsync(input);
     }),
   enableJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input, ctx }) => {
-      await new JobManager(ctx.db, jobGroup).enableAsync(input);
+    .mutation(async ({ input, context }) => {
+      await new JobManager(context.db, jobGroup).enableAsync(input);
     }),
-  getJobs: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    return await new JobManager(ctx.db, jobGroup).getAllAsync();
+  getJobs: permissionRequiredProcedure.requiresPermission("admin").query(async ({ context }) => {
+    return await new JobManager(context.db, jobGroup).getAllAsync();
   }),
-  subscribeToStatusUpdates: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
-    return observable<TaskStatus>((emit) => {
+  subscribeToStatusUpdates: permissionRequiredProcedure.requiresPermission("admin").subscription(({ signal }) => {
+    const events = observable<TaskStatus>((emit) => {
       const unsubscribes: (() => void)[] = [];
 
       for (const name of jobGroupKeys) {
@@ -71,7 +72,7 @@ export const cronJobsRouter = createTRPCRouter({
         unsubscribes.push(unsubscribe);
       }
 
-      logger.info("A tRPC client has connected to the cron job status updates procedure");
+      logger.info("A oRPC client has connected to the cron job status updates procedure");
 
       return () => {
         unsubscribes.forEach((unsubscribe) => {
@@ -79,5 +80,6 @@ export const cronJobsRouter = createTRPCRouter({
         });
       };
     });
+    return subscriptionEvents(events, signal);
   }),
 });

@@ -1,3 +1,5 @@
-import { handleMcpRequest } from "../_handler";
-
-export { handleMcpRequest as DELETE, handleMcpRequest as GET, handleMcpRequest as POST };
+export {
+  forwardBackendRequestAsync as DELETE,
+  forwardBackendRequestAsync as GET,
+  forwardBackendRequestAsync as POST,
+} from "~/server/backend-proxy";

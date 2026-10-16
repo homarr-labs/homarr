@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
@@ -9,23 +9,24 @@ import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from 
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { mediaUploadSchema } from "@homarr/validation/media";
 
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure } from "../../procedure";
 
-export const mediaRouter = createTRPCRouter({
+export const mediaRouter = createApiRouter({
   getPaginated: protectedProcedure
     .input(
       paginatedSchema.and(
         z.object({ includeFromAllUsers: z.boolean().default(false), search: z.string().trim().default("") }),
       ),
     )
-    .query(async ({ ctx, input }) => {
-      const includeFromAllUsers = ctx.session.user.permissions.includes("media-view-all") && input.includeFromAllUsers;
+    .query(async ({ context, input }) => {
+      const includeFromAllUsers =
+        context.session.user.permissions.includes("media-view-all") && input.includeFromAllUsers;
 
       const where = and(
         input.search.length >= 1 ? like(medias.name, `%${input.search}%`) : undefined,
-        includeFromAllUsers ? undefined : eq(medias.creatorId, ctx.session.user.id),
+        includeFromAllUsers ? undefined : eq(medias.creatorId, context.session.user.id),
       );
-      const dbMedias = await ctx.db.query.medias.findMany({
+      const dbMedias = await context.db.query.medias.findMany({
         where,
         orderBy: desc(medias.createdAt),
         limit: input.pageSize,
@@ -45,7 +46,7 @@ export const mediaRouter = createTRPCRouter({
         },
       });
 
-      const totalCount = await ctx.db.$count(medias, where);
+      const totalCount = await context.db.$count(medias, where);
 
       return {
         items: dbMedias,
@@ -55,7 +56,7 @@ export const mediaRouter = createTRPCRouter({
   uploadMedia: permissionRequiredProcedure
     .requiresPermission("media-upload")
     .input(mediaUploadSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const files = await Promise.all(
         input.files.map(async (file) => ({
           id: createId(),
@@ -66,23 +67,23 @@ export const mediaRouter = createTRPCRouter({
       const insertMedias = files.map(
         (file): InferInsertModel<typeof medias> => ({
           id: file.id,
-          creatorId: ctx.session.user.id,
+          creatorId: context.session.user.id,
           content: file.content,
           size: file.meta.size,
           contentType: file.meta.type,
           name: file.meta.name,
         }),
       );
-      await ctx.db.insert(medias).values(insertMedias);
+      await context.db.insert(medias).values(insertMedias);
 
-      const localIconRepository = await ctx.db.query.iconRepositories.findFirst({
+      const localIconRepository = await context.db.query.iconRepositories.findFirst({
         where: eq(iconRepositories.slug, LOCAL_ICON_REPOSITORY_SLUG),
       });
 
       const ids = files.map((file) => file.id);
       if (!localIconRepository) return ids;
 
-      await ctx.db.insert(icons).values(
+      await context.db.insert(icons).values(
         insertMedias.map((media) => {
           const icon = mapMediaToIcon(media);
 
@@ -98,8 +99,8 @@ export const mediaRouter = createTRPCRouter({
 
       return ids;
     }),
-  deleteMedia: protectedProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
-    const dbMedia = await ctx.db.query.medias.findFirst({
+  deleteMedia: protectedProcedure.input(byIdSchema).mutation(async ({ context, input }) => {
+    const dbMedia = await context.db.query.medias.findFirst({
       where: eq(medias.id, input.id),
       columns: {
         id: true,
@@ -108,21 +109,21 @@ export const mediaRouter = createTRPCRouter({
     });
 
     if (!dbMedia) {
-      throw new TRPCError({
+      throw new ApiError({
         code: "NOT_FOUND",
         message: "Media not found",
       });
     }
 
     // Only allow users with media-full-all permission and the creator of the media to delete it
-    if (!ctx.session.user.permissions.includes("media-full-all") && ctx.session.user.id !== dbMedia.creatorId) {
-      throw new TRPCError({
+    if (!context.session.user.permissions.includes("media-full-all") && context.session.user.id !== dbMedia.creatorId) {
+      throw new ApiError({
         code: "FORBIDDEN",
         message: "You don't have permission to delete this media",
       });
     }
 
-    await ctx.db.delete(medias).where(eq(medias.id, input.id));
-    await ctx.db.delete(icons).where(eq(icons.url, createLocalImageUrl(input.id)));
+    await context.db.delete(medias).where(eq(medias.id, input.id));
+    await context.db.delete(icons).where(eq(icons.url, createLocalImageUrl(input.id)));
   }),
 });

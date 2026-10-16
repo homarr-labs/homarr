@@ -1,11 +1,11 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import { eq } from "@homarr/db";
 import { integrations } from "@homarr/db/schema";
 import { byIdSchema } from "@homarr/validation/common";
 
-import { protectedProcedure } from "../../trpc";
+import { protectedProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 
@@ -31,13 +31,13 @@ export const integrationTestStoredConnectionProcedure = protectedProcedure
       }),
     ]),
   )
-  .query(async ({ ctx, input }) => {
+  .query(async ({ context, input }) => {
     const where = eq(integrations.id, input.id);
-    await throwIfActionForbiddenAsync(ctx, where, "full");
+    await throwIfActionForbiddenAsync(context, where, "full");
 
-    const integration = await ctx.db.query.integrations.findFirst({ where, with: { secrets: true } });
+    const integration = await context.db.query.integrations.findFirst({ where, with: { secrets: true } });
     if (!integration) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Integration not found" });
+      throw new ApiError({ code: "NOT_FOUND", message: "Integration not found" });
     }
 
     try {

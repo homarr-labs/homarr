@@ -11,7 +11,7 @@ import { serviceVersionRequestHandler } from "@homarr/request-handler/service-ve
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "releasesRouter" });
@@ -34,7 +34,7 @@ const releaseVersionFilterSchema = z.object({
   suffix: z.string().optional(),
 });
 
-export const releasesRouter = createTRPCRouter({
+export const releasesRouter = createApiRouter({
   getLatest: publicProcedure
     .input(
       z.object({
@@ -50,15 +50,15 @@ export const releasesRouter = createTRPCRouter({
         ),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       const tokensByProvider = new Map<string, string>();
       const savedRepos = new Map<string, { providerUrl?: string }>();
 
       if (input.itemId) {
         try {
-          const item = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
+          const item = await context.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
           if (item && item.kind === "releases") {
-            await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
+            await throwIfActionForbiddenAsync(context, eq(boards.id, item.boardId), "view");
 
             const options = SuperJSON.parse<Record<string, unknown>>(item.options);
             const repos = options.repositories as
@@ -72,7 +72,7 @@ export const releasesRouter = createTRPCRouter({
               }
             }
 
-            const secrets = await ctx.db.query.widgetSecrets.findMany({
+            const secrets = await context.db.query.widgetSecrets.findMany({
               where: eq(widgetSecrets.itemId, input.itemId),
             });
             for (const secret of secrets) {
@@ -143,9 +143,9 @@ export const releasesRouter = createTRPCRouter({
     }),
   getServiceVersions: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "releases"))
-    .query(async ({ ctx }) => {
+    .query(async ({ context }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const innerHandler = serviceVersionRequestHandler.handler(integration, {});
           const { data, timestamp } = await innerHandler.getDataAsync();

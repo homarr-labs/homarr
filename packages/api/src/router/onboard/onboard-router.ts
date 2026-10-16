@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../../procedure";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
@@ -45,7 +45,7 @@ import { onboardingCompleteSetupSchema, onboardingIntegrationDraftSchema } from 
 
 import { onboardingClaimSettingKey } from "../../onboarding-claim";
 import { env } from "../../env";
-import { createTRPCRouter, onboardingClaimedProcedure, onboardingProcedure, publicProcedure } from "../../trpc";
+import { createApiRouter, onboardingClaimedProcedure, onboardingProcedure, publicProcedure } from "../../procedure";
 import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
 import { getOnboardingOrFallbackAsync, nextOnboardingStepAsync } from "./onboard-queries";
 import { probeRuntimeCapabilitiesAsync } from "./capability-probes";
@@ -136,15 +136,15 @@ const runtimeCapabilitiesSchema = z.object({
   workshop: runtimeCapabilitySchema,
 });
 
-export const onboardRouter = createTRPCRouter({
-  currentStep: publicProcedure.query(async ({ ctx }) => await getOnboardingOrFallbackAsync(ctx.db)),
+export const onboardRouter = createApiRouter({
+  currentStep: publicProcedure.query(async ({ context }) => await getOnboardingOrFallbackAsync(context.db)),
 
-  nextStep: onboardingClaimedProcedure.mutation(async ({ ctx }) => {
-    const { current } = await getOnboardingOrFallbackAsync(ctx.db);
+  nextStep: onboardingClaimedProcedure.mutation(async ({ context }) => {
+    const { current } = await getOnboardingOrFallbackAsync(context.db);
     if (current !== "start") {
-      throw new TRPCError({ code: "PRECONDITION_FAILED", message: "The welcome step is already complete." });
+      throw new ApiError({ code: "PRECONDITION_FAILED", message: "The welcome step is already complete." });
     }
-    await nextOnboardingStepAsync(ctx.db);
+    await nextOnboardingStepAsync(context.db);
   }),
 
   testIntegration: onboardingProcedure
@@ -159,7 +159,7 @@ export const onboardRouter = createTRPCRouter({
         secrets: input.secrets,
       }).catch((error) => {
         if (!(error instanceof MissingSecretError)) throw error;
-        throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+        throw new ApiError({ code: "BAD_REQUEST", message: error.message });
       });
 
       return { success: result.success };
@@ -176,7 +176,7 @@ export const onboardRouter = createTRPCRouter({
       });
     }),
 
-  discoverDockerServices: onboardingProcedure.requiresStep("setup").query(async ({ ctx }) => {
+  discoverDockerServices: onboardingProcedure.requiresStep("setup").query(async ({ context }) => {
     const empty = { integrations: [] as DiscoveredIntegration[], apps: [] as DiscoveredApp[] };
 
     try {
@@ -199,7 +199,8 @@ export const onboardRouter = createTRPCRouter({
         ...new Set(imageCandidates.map((container) => extractContainerImageName(container.Image)).filter(Boolean)),
       ].slice(0, 64);
       const likeQueries = candidateImageNames.map((imageName) => like(icons.name, `%${imageName}%`));
-      const dbIcons = likeQueries.length > 0 ? await ctx.db.query.icons.findMany({ where: or(...likeQueries) }) : [];
+      const dbIcons =
+        likeQueries.length > 0 ? await context.db.query.icons.findMany({ where: or(...likeQueries) }) : [];
       const cdnIconUrl = (slug: string) =>
         `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/${slug}.svg`;
       const strictIconMatch = (imageName: string) => {
@@ -318,8 +319,8 @@ export const onboardRouter = createTRPCRouter({
   completeSetup: onboardingProcedure
     .requiresStep("setup")
     .input(onboardingCompleteSetupSchema)
-    .mutation(async ({ ctx, input }) => {
-      const boardList = await ctx.db.query.boards.findMany({
+    .mutation(async ({ context, input }) => {
+      const boardList = await context.db.query.boards.findMany({
         with: {
           sections: { with: { layouts: true } },
           layouts: true,
@@ -332,14 +333,14 @@ export const onboardRouter = createTRPCRouter({
           ? boardList[0]
           : undefined;
       if (input.board.id !== undefined && !existingTargetBoard) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "The selected board no longer exists." });
+        throw new ApiError({ code: "NOT_FOUND", message: "The selected board no longer exists." });
       }
       const pendingBoardRow =
         boardList.length === 0 && input.board.id === undefined
           ? {
               id: createId(),
               name: input.board.name,
-              creatorId: ctx.session?.user.id ?? null,
+              creatorId: context.session?.user.id ?? null,
             }
           : undefined;
       const pendingLayouts = pendingBoardRow
@@ -395,7 +396,7 @@ export const onboardRouter = createTRPCRouter({
             } satisfies (typeof boardList)[number])
           : undefined);
       if (!targetBoard) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "BAD_REQUEST",
           message: "Select the exact board to configure when more than one board exists.",
         });
@@ -411,7 +412,7 @@ export const onboardRouter = createTRPCRouter({
             secrets: integration.secrets,
           }).catch((error) => {
             if (!(error instanceof MissingSecretError)) throw error;
-            throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+            throw new ApiError({ code: "BAD_REQUEST", message: error.message });
           });
           if (!result.success) {
             logger.warn("Creating onboarding integration after its connection test failed", {
@@ -428,7 +429,7 @@ export const onboardRouter = createTRPCRouter({
       );
       const existingPlannedIntegrations =
         plannedIntegrationIds.length > 0
-          ? await ctx.db.query.integrations.findMany({ where: inArray(integrations.id, plannedIntegrationIds) })
+          ? await context.db.query.integrations.findMany({ where: inArray(integrations.id, plannedIntegrationIds) })
           : [];
       const existingIntegrationById = new Map(
         existingPlannedIntegrations.map((integration) => [integration.id, integration]),
@@ -478,34 +479,38 @@ export const onboardRouter = createTRPCRouter({
       ];
       const plannedAppIds = plannedAppRows.map((app) => app.id);
       if (new Set(plannedAppIds).size !== plannedAppIds.length) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Onboarding app source IDs resolve to the same app." });
+        throw new ApiError({ code: "BAD_REQUEST", message: "Onboarding app source IDs resolve to the same app." });
       }
       const existingPlannedApps =
-        plannedAppIds.length > 0 ? await ctx.db.query.apps.findMany({ where: inArray(apps.id, plannedAppIds) }) : [];
+        plannedAppIds.length > 0
+          ? await context.db.query.apps.findMany({ where: inArray(apps.id, plannedAppIds) })
+          : [];
       const existingPlannedAppIds = new Set(existingPlannedApps.map((app) => app.id));
       const appPlans = plannedAppRows.map((row) => ({ id: row.id, existing: existingPlannedAppIds.has(row.id), row }));
 
       const plannedIntegrationIdSet = new Set(plannedIntegrationIds);
       const plannedAppIdSet = new Set(plannedAppIds);
       if (input.selectedIntegrationIds.some((id) => plannedIntegrationIdSet.has(id))) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "A new integration cannot also be selected by ID." });
+        throw new ApiError({ code: "BAD_REQUEST", message: "A new integration cannot also be selected by ID." });
       }
       if (input.selectedAppIds.some((id) => plannedAppIdSet.has(id))) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "A new app cannot also be selected by ID." });
+        throw new ApiError({ code: "BAD_REQUEST", message: "A new app cannot also be selected by ID." });
       }
       const persistedSelectedIntegrations =
         input.selectedIntegrationIds.length > 0
-          ? await ctx.db.query.integrations.findMany({ where: inArray(integrations.id, input.selectedIntegrationIds) })
+          ? await context.db.query.integrations.findMany({
+              where: inArray(integrations.id, input.selectedIntegrationIds),
+            })
           : [];
       const persistedSelectedApps =
         input.selectedAppIds.length > 0
-          ? await ctx.db.query.apps.findMany({ where: inArray(apps.id, input.selectedAppIds) })
+          ? await context.db.query.apps.findMany({ where: inArray(apps.id, input.selectedAppIds) })
           : [];
       if (persistedSelectedIntegrations.length !== input.selectedIntegrationIds.length) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "One or more selected integrations no longer exist." });
+        throw new ApiError({ code: "BAD_REQUEST", message: "One or more selected integrations no longer exist." });
       }
       if (persistedSelectedApps.length !== input.selectedAppIds.length) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "One or more selected apps no longer exist." });
+        throw new ApiError({ code: "BAD_REQUEST", message: "One or more selected apps no longer exist." });
       }
       const selectedIntegrations = [...persistedSelectedIntegrations, ...integrationPlans.map((plan) => plan.row)];
       const selectedApps = [...persistedSelectedApps, ...plannedAppRows];
@@ -541,7 +546,7 @@ export const onboardRouter = createTRPCRouter({
         const normalizedLabelBoardName = normalizeLabelBoardName(selectedLabelBoardName);
         const parsedName = onboardingCompleteSetupSchema.shape.board.shape.name.safeParse(normalizedLabelBoardName);
         if (!parsedName.success) {
-          throw new TRPCError({
+          throw new ApiError({
             code: "BAD_REQUEST",
             message: "The selected homarr.board label is not a valid board name.",
           });
@@ -553,7 +558,7 @@ export const onboardRouter = createTRPCRouter({
           (board) => board.id !== targetBoard.id && board.name.toLowerCase() === targetBoardName.toLowerCase(),
         )
       ) {
-        throw new TRPCError({ code: "CONFLICT", message: "A board with this name already exists." });
+        throw new ApiError({ code: "CONFLICT", message: "A board with this name already exists." });
       }
       const targetBoardNames = new Set([targetBoard.name, targetBoardName]);
       const ignoredDockerSources = selectedDockerSources.filter(
@@ -573,7 +578,7 @@ export const onboardRouter = createTRPCRouter({
       const sectionId = emptySection?.id ?? createId();
       const baseLayout = targetBoard.layouts.find((layout) => layout.role === "base") ?? targetBoard.layouts.at(-1);
       if (!baseLayout || targetBoard.layouts.length === 0) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "The target board has no layouts." });
+        throw new ApiError({ code: "PRECONDITION_FAILED", message: "The target board has no layouts." });
       }
 
       const requestedGutters = {
@@ -696,14 +701,14 @@ export const onboardRouter = createTRPCRouter({
       ) => {
         const id = createId();
         newItems.push({ id, boardId: targetBoard.id, kind, options, advancedOptions: emptySuperJSON });
-        for (const context of contexts) {
-          const sectionForLayout = sectionIdsByLayout?.get(context.layoutId);
-          const position = positionsByLayout?.get(context.layoutId);
+        for (const layoutContext of contexts) {
+          const sectionForLayout = sectionIdsByLayout?.get(layoutContext.layoutId);
+          const position = positionsByLayout?.get(layoutContext.layoutId);
           if (sectionForLayout && position) {
             newItemLayouts.push({
               itemId: id,
               sectionId: sectionForLayout,
-              layoutId: context.layoutId,
+              layoutId: layoutContext.layoutId,
               xOffset: position.xOffset,
               yOffset: position.yOffset,
               width: position.width,
@@ -711,23 +716,23 @@ export const onboardRouter = createTRPCRouter({
             });
             continue;
           }
-          const itemWidth = Math.min(context.columnCount, width);
-          if (context.xOffset + itemWidth > context.columnCount) {
-            context.xOffset = 0;
-            context.yOffset += context.rowMaxHeight;
-            context.rowMaxHeight = 0;
+          const itemWidth = Math.min(layoutContext.columnCount, width);
+          if (layoutContext.xOffset + itemWidth > layoutContext.columnCount) {
+            layoutContext.xOffset = 0;
+            layoutContext.yOffset += layoutContext.rowMaxHeight;
+            layoutContext.rowMaxHeight = 0;
           }
           newItemLayouts.push({
             itemId: id,
             sectionId,
-            layoutId: context.layoutId,
-            xOffset: context.xOffset,
-            yOffset: context.yOffset,
+            layoutId: layoutContext.layoutId,
+            xOffset: layoutContext.xOffset,
+            yOffset: layoutContext.yOffset,
             width: itemWidth,
             height,
           });
-          context.xOffset += itemWidth;
-          context.rowMaxHeight = Math.max(context.rowMaxHeight, height);
+          layoutContext.xOffset += itemWidth;
+          layoutContext.rowMaxHeight = Math.max(layoutContext.rowMaxHeight, height);
         }
         return id;
       };
@@ -926,12 +931,13 @@ export const onboardRouter = createTRPCRouter({
           string,
           { columns: number; xOffset: number; yOffset: number; rowMaxHeight: number; maxBottom: number }
         >();
-        for (const context of contexts) {
-          if (context.xOffset > 0 || context.rowMaxHeight > 0) context.yOffset += context.rowMaxHeight;
-          context.xOffset = 0;
-          context.rowMaxHeight = 0;
-          packingByLayout.set(context.layoutId, {
-            columns: context.columnCount,
+        for (const layoutContext of contexts) {
+          if (layoutContext.xOffset > 0 || layoutContext.rowMaxHeight > 0)
+            layoutContext.yOffset += layoutContext.rowMaxHeight;
+          layoutContext.xOffset = 0;
+          layoutContext.rowMaxHeight = 0;
+          packingByLayout.set(layoutContext.layoutId, {
+            columns: layoutContext.columnCount,
             xOffset: 0,
             yOffset: 0,
             rowMaxHeight: 0,
@@ -941,8 +947,8 @@ export const onboardRouter = createTRPCRouter({
 
         const placeGroupedItem = (kind: WidgetKind, options: string, width: number, height: number) => {
           const positions = new Map<string, { xOffset: number; yOffset: number; width: number }>();
-          for (const context of contexts) {
-            const packing = packingByLayout.get(context.layoutId);
+          for (const layoutContext of contexts) {
+            const packing = packingByLayout.get(layoutContext.layoutId);
             if (!packing) continue;
             const itemWidth = Math.min(packing.columns, width);
             if (packing.xOffset + itemWidth > packing.columns) {
@@ -950,7 +956,7 @@ export const onboardRouter = createTRPCRouter({
               packing.yOffset += packing.rowMaxHeight;
               packing.rowMaxHeight = 0;
             }
-            positions.set(context.layoutId, {
+            positions.set(layoutContext.layoutId, {
               xOffset: packing.xOffset,
               yOffset: packing.yOffset,
               width: itemWidth,
@@ -968,28 +974,28 @@ export const onboardRouter = createTRPCRouter({
             newIntegrationItems.push({ itemId: groupedItemId, integrationId: plan.integrationId });
           }
         }
-        for (const context of contexts) {
-          const packing = packingByLayout.get(context.layoutId);
+        for (const layoutContext of contexts) {
+          const packing = packingByLayout.get(layoutContext.layoutId);
           if (!packing) continue;
           const height = Math.max(1, packing.maxBottom);
           newSectionLayouts.push({
             sectionId: containerSectionId,
             parentSectionId: sectionId,
-            layoutId: context.layoutId,
+            layoutId: layoutContext.layoutId,
             xOffset: 0,
-            yOffset: context.yOffset,
-            width: context.columnCount,
+            yOffset: layoutContext.yOffset,
+            width: layoutContext.columnCount,
             height,
           });
-          context.yOffset += height;
+          layoutContext.yOffset += height;
         }
       }
 
       const [currentAppearance, currentCulture, currentAnalytics, currentBoardSettings] = await Promise.all([
-        getServerSettingByKeyAsync(ctx.db, "appearance"),
-        getServerSettingByKeyAsync(ctx.db, "culture"),
-        getServerSettingByKeyAsync(ctx.db, "analytics"),
-        getServerSettingByKeyAsync(ctx.db, "board"),
+        getServerSettingByKeyAsync(context.db, "appearance"),
+        getServerSettingByKeyAsync(context.db, "culture"),
+        getServerSettingByKeyAsync(context.db, "analytics"),
+        getServerSettingByKeyAsync(context.db, "board"),
       ]);
       const settingValues = {
         appearance: SuperJSON.stringify({ ...currentAppearance, defaultColorScheme: input.server.defaultColorScheme }),
@@ -1005,7 +1011,7 @@ export const onboardRouter = createTRPCRouter({
         }),
       };
 
-      await handleTransactionsAsync(ctx.db, {
+      await handleTransactionsAsync(context.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
             const transitionResult = await transaction
@@ -1014,7 +1020,7 @@ export const onboardRouter = createTRPCRouter({
               .where(eq(schema.onboarding.step, "setup"));
             const transitionedRows = transitionResult.rowCount ?? 0;
             if (transitionedRows !== 1) {
-              throw new TRPCError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
+              throw new ApiError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
             }
             for (const plan of appPlans) {
               if (plan.existing) {
@@ -1106,7 +1112,7 @@ export const onboardRouter = createTRPCRouter({
               .where(eq(onboarding.step, "setup"))
               .run();
             if (transitionResult.changes !== 1) {
-              throw new TRPCError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
+              throw new ApiError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
             }
             for (const plan of appPlans) {
               if (plan.existing) {

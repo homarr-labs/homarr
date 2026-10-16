@@ -7,8 +7,8 @@ import { apiKeys, groupMembers, groupPermissions, groups, sessions, users } from
 import { createDb } from "@homarr/db/test";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 
+import { createCallerFactory, createApiRouter } from "../../procedure";
 import { extractMcpToolsFromProcedures } from "../../mcp-tools";
-import { createTRPCRouter } from "../../trpc";
 import { apiKeysRouter } from "../apiKeys";
 
 vi.mock("@homarr/auth", async () => {
@@ -59,7 +59,7 @@ const setupAsync = async (provider: SupportedAuthProvider = "credentials") => {
     );
   const session = await getSessionFromToken(db, ownerSessionToken);
   if (!session) throw new Error("Expected a persisted owner session");
-  const caller = apiKeysRouter.createCaller({ db, deviceType: undefined, session });
+  const caller = createCallerFactory(apiKeysRouter)({ db, deviceType: undefined, session });
   const authenticateAsync = (id: string) =>
     getSessionFromApiKeyAsync(db, `${id}.token-${id}`, null, "oauth-key-router-test");
 
@@ -109,7 +109,7 @@ describe("owner OAuth API keys", () => {
 
   test("requires authentication for both owner procedures", async () => {
     const { db } = await setupAsync();
-    const caller = apiKeysRouter.createCaller({ db, deviceType: undefined, session: null });
+    const caller = createCallerFactory(apiKeysRouter)({ db, deviceType: undefined, session: null });
 
     await expect(caller.getOwnOAuth()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
     await expect(caller.revokeOwnOAuth({ apiKeyId: "own-oauth" })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
@@ -123,7 +123,7 @@ test("keeps global key management admin-only and projects only safe metadata and
   await expect(caller.delete({ apiKeyId: "foreign-oauth" })).rejects.toMatchObject({ code: "FORBIDDEN" });
   const adminSession = await getSessionFromToken(db, adminSessionToken);
   if (!adminSession) throw new Error("Expected a persisted administrator session");
-  const adminCaller = apiKeysRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+  const adminCaller = createCallerFactory(apiKeysRouter)({ db, deviceType: undefined, session: adminSession });
   const allKeys = await adminCaller.getAll();
 
   expect(allKeys).toHaveLength(5);
@@ -150,9 +150,9 @@ test("keeps global key management admin-only and projects only safe metadata and
 });
 
 test("explicitly disables owner OAuth procedures in the MCP tool catalog", () => {
-  expect(apiKeysRouter.getOwnOAuth["_def"].meta).toMatchObject({ mcp: { enabled: false } });
-  expect(apiKeysRouter.revokeOwnOAuth["_def"].meta).toMatchObject({ mcp: { enabled: false } });
-  const router = createTRPCRouter({ apiKeys: apiKeysRouter });
+  expect(apiKeysRouter.getOwnOAuth["~orpc"].meta).toMatchObject({ mcp: { enabled: false } });
+  expect(apiKeysRouter.revokeOwnOAuth["~orpc"].meta).toMatchObject({ mcp: { enabled: false } });
+  const router = createApiRouter({ apiKeys: apiKeysRouter });
   const catalog = extractMcpToolsFromProcedures(router);
 
   expect(catalog.diagnostics).toEqual([]);

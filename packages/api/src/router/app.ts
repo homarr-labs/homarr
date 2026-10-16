@@ -1,4 +1,4 @@
-import { TRPCError } from "@trpc/server";
+import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
@@ -13,12 +13,12 @@ import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/val
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
-import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../procedure";
 import { AppAccessControl } from "./app/app-access-control";
 
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
-export const appRouter = createTRPCRouter({
+export const appRouter = createApiRouter({
   getPaginated: permissionRequiredProcedure
     .requiresPermission("app-modify-all")
     .meta({
@@ -39,11 +39,11 @@ export const appRouter = createTRPCRouter({
     })
     .input(paginatedSchema)
     .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input, context }) => {
       const whereQuery = input.search ? like(apps.name, `%${input.search.trim()}%`) : undefined;
-      const totalCount = await ctx.db.$count(apps, whereQuery);
+      const totalCount = await context.db.$count(apps, whereQuery);
 
-      const dbApps = await ctx.db.query.apps.findMany({
+      const dbApps = await context.db.query.apps.findMany({
         limit: input.pageSize,
         offset: (input.page - 1) * input.pageSize,
         where: whereQuery,
@@ -70,8 +70,8 @@ export const appRouter = createTRPCRouter({
       },
       mcp: { enabled: true, description: "List all apps" },
     })
-    .query(({ ctx }) => {
-      return ctx.db.query.apps.findMany({
+    .query(({ context }) => {
+      return context.db.query.apps.findMany({
         orderBy: asc(apps.name),
       });
     }),
@@ -98,18 +98,18 @@ export const appRouter = createTRPCRouter({
         description: "Search apps by name. REQUIRED: query (search string). OPTIONAL: limit (number, default 10)",
       },
     })
-    .query(({ ctx, input }) => {
+    .query(({ context, input }) => {
       if (
-        !ctx.session.user.permissions.includes("app-modify-all") &&
-        !ctx.session.user.permissions.includes("board-modify-all")
+        !context.session.user.permissions.includes("app-modify-all") &&
+        !context.session.user.permissions.includes("board-modify-all")
       ) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "FORBIDDEN",
           message: "Permission denied",
         });
       }
 
-      return ctx.db.query.apps.findMany({
+      return context.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
         orderBy: asc(apps.name),
         limit: input.limit,
@@ -140,8 +140,8 @@ export const appRouter = createTRPCRouter({
           "Return app IDs, names, icons, descriptions, destination URLs, and ping URLs for selection controls. Requires authentication.",
       },
     })
-    .query(({ ctx }) => {
-      return ctx.db.query.apps.findMany({
+    .query(({ context }) => {
+      return context.db.query.apps.findMany({
         columns: {
           id: true,
           name: true,
@@ -168,12 +168,12 @@ export const appRouter = createTRPCRouter({
       },
       mcp: { enabled: true, description: "Get a single app by its ID. REQUIRED: id (app ID string)" },
     })
-    .query(async ({ ctx, input }) => {
-      const repository = new AppRepository(ctx.db, ctx.session?.user ?? null);
+    .query(async ({ context, input }) => {
+      const repository = new AppRepository(context.db, context.session?.user ?? null);
       const app = await repository.getByIdAsync(input.id);
 
       if (!app) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "App not found",
         });
@@ -181,8 +181,8 @@ export const appRouter = createTRPCRouter({
 
       return app;
     }),
-  byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
-    const repository = new AppRepository(ctx.db, ctx.session?.user ?? null);
+  byIds: publicProcedure.input(z.array(z.string())).query(async ({ context, input }) => {
+    const repository = new AppRepository(context.db, context.session?.user ?? null);
     return await repository.getByIdsAsync(input);
   }),
   create: permissionRequiredProcedure
@@ -206,7 +206,7 @@ export const appRouter = createTRPCRouter({
           "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL or custom URI scheme such as vscode://, or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
       },
     })
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ context, input }) => {
       const id = createId();
       const insertValues = {
         id,
@@ -216,7 +216,7 @@ export const appRouter = createTRPCRouter({
         href: input.href,
         pingUrl: input.pingUrl === "" ? null : input.pingUrl,
       };
-      await ctx.db.insert(apps).values(insertValues);
+      await context.db.insert(apps).values(insertValues);
 
       // TODO: breaking change necessary for removing appId property
       return { appId: id, ...insertValues };
@@ -225,13 +225,13 @@ export const appRouter = createTRPCRouter({
     .requiresPermission("app-create")
     .input(appCreateManySchema)
     .output(z.void())
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(apps).values(
+    .mutation(async ({ context, input }) => {
+      await context.db.insert(apps).values(
         input.map((app) => ({
           id: createId(),
           name: app.name,
           description: app.description,
-          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
+          iconUrl: app.iconUrl ?? getIconForName(context.db, app.name).sync()?.url ?? defaultIcon,
           href: app.href,
         })),
       );
@@ -256,19 +256,19 @@ export const appRouter = createTRPCRouter({
           "Update an existing app. REQUIRED: id (app ID), name, iconUrl, href. OPTIONAL: description (string or null), pingUrl (URL or empty string)",
       },
     })
-    .mutation(async ({ ctx, input }) => {
-      const app = await ctx.db.query.apps.findFirst({
+    .mutation(async ({ context, input }) => {
+      const app = await context.db.query.apps.findFirst({
         where: eq(apps.id, input.id),
       });
 
       if (!app) {
-        throw new TRPCError({
+        throw new ApiError({
           code: "NOT_FOUND",
           message: "App not found",
         });
       }
 
-      await ctx.db
+      await context.db
         .update(apps)
         .set({
           name: input.name,
@@ -280,7 +280,7 @@ export const appRouter = createTRPCRouter({
         .where(eq(apps.id, input.id));
 
       if (app.href !== input.href) {
-        const linkedIntegrations = await ctx.db.query.integrations.findMany({
+        const linkedIntegrations = await context.db.query.integrations.findMany({
           columns: { id: true },
           where: eq(integrations.appId, input.id),
         });
@@ -302,12 +302,12 @@ export const appRouter = createTRPCRouter({
       mcp: { enabled: true, effect: "destructive", description: "Delete an app by ID. REQUIRED: id (app ID string)" },
     })
     .input(byIdSchema)
-    .mutation(async ({ ctx, input }) => {
-      const linkedIntegrations = await ctx.db.query.integrations.findMany({
+    .mutation(async ({ context, input }) => {
+      const linkedIntegrations = await context.db.query.integrations.findMany({
         columns: { id: true },
         where: eq(integrations.appId, input.id),
       });
-      await ctx.db.delete(apps).where(eq(apps.id, input.id));
+      await context.db.delete(apps).where(eq(apps.id, input.id));
       await Promise.all(linkedIntegrations.map(({ id }) => invalidateIntegrationResponseCacheAsync(id)));
     }),
 });

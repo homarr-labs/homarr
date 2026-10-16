@@ -4,9 +4,9 @@ import { mediaServerRequestHandler } from "@homarr/request-handler/media-server"
 
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createApiRouter, publicProcedure } from "../../procedure";
 
-export const mediaServerRouter = createTRPCRouter({
+export const mediaServerRouter = createApiRouter({
   getCurrentStreams: publicProcedure
     .meta({
       mcp: {
@@ -17,9 +17,9 @@ export const mediaServerRouter = createTRPCRouter({
     })
     .concat(createManyWidgetIntegrationMiddleware("query", "mediaServer"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ context, input }) => {
       return await settleIntegrationQueries(
-        ctx.integrations,
+        context.integrations,
         async (integration) => {
           const { data } = await mediaServerRequestHandler
             .handler(integration, { showOnlyPlaying: input.showOnlyPlaying })

@@ -1,0 +1,23 @@
+{
+  "name": "@homarr/worker-access",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/access.test.ts",
+    "format": "oxfmt .",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@homarr/remote-protocol": "workspace:^0.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}
