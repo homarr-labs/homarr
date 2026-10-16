@@ -191,7 +191,7 @@ export class ImmichIntegration extends Integration {
   }
 
   private async createAssetsAsync(assets: AssetResponseDto[]): Promise<ImmichAsset[]> {
-    const imageProxy = new ImageProxy();
+    const imageProxy = new ImageProxy(this.integration.id);
     const publicLinks = await imageProxy.createImagesAsync(
       assets.map((asset) => this.url(`/api/assets/${asset.id}/thumbnail`, { size: AssetMediaSize.Preview }).toString()),
       { "x-api-key": this.getSecretValue("apiKey") },

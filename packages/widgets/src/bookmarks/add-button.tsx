@@ -1,18 +1,8 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Avatar,
-  Combobox,
-  Group,
-  Loader,
-  PillsInput,
-  ScrollArea,
-  Stack,
-  Text,
-  ThemeIcon,
-  useCombobox,
-} from "@mantine/core";
+import { Combobox, Group, Loader, PillsInput, ScrollArea, Stack, Text, ThemeIcon, useCombobox } from "@mantine/core";
 import { IconCheck, IconLink, IconPlus } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";

@@ -1,9 +1,9 @@
-import { Image } from "@mantine/core";
 import type { MantineColor } from "@mantine/core";
 import combineClasses from "clsx";
 import type { Property } from "csstype";
 
 import { MaskedImage } from "./masked-image";
+import { ResourceImage as Image } from "./resource-image";
 
 interface MaskedOrNormalImageProps {
   imageUrl?: string;

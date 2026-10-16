@@ -6,12 +6,13 @@ import type { Session } from "@homarr/auth";
 import { env } from "@homarr/common/env";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { items, users } from "@homarr/db/schema";
+import { boards, items, users } from "@homarr/db/schema";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createApiRouter, publicProcedure } from "../../procedure";
+import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "rssFeed" });
 
@@ -26,6 +27,7 @@ const safeFeedLogContext = (url: string, feedIndex: number) => {
 const redactFeedFailureMessage = (message: string) => message.replace(/https?:\/\/\S+/gi, "[redacted URL]");
 
 const feedsInput = z.object({
+  itemId: z.string().min(1).optional(),
   urls: z.array(z.string()).max(100),
   maximumAmountPosts: z.number(),
   descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
@@ -35,9 +37,23 @@ export const rssFeedRouter = createApiRouter({
   getFeeds: publicProcedure.input(feedsInput).query(async ({ context, input }) => {
     if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
 
-    const urls = (await canAccessAllFeedsAsync(context.db, context.session))
-      ? input.urls
-      : await restrictUrlsAsync(context.db, input.urls);
+    let publishedUrls: string[] | undefined;
+    if (context.workerAccess?.role === "viewer") {
+      if (!input.itemId) throw new ApiError({ code: "FORBIDDEN", message: "Published feed item required" });
+      const item = await context.db.query.items.findFirst({
+        where: eq(items.id, input.itemId),
+        columns: { boardId: true, kind: true, options: true },
+      });
+      if (!item || item.kind !== "rssFeed") throw new ApiError({ code: "NOT_FOUND", message: "Feed item not found" });
+      await throwIfActionForbiddenAsync(context, eq(boards.id, item.boardId), "view");
+      const options = SuperJSON.parse<Record<string, unknown>>(item.options);
+      publishedUrls = z.array(z.string()).max(100).parse(options.feedUrls);
+    }
+    const urls =
+      publishedUrls ??
+      ((await canAccessAllFeedsAsync(context.db, context.session))
+        ? input.urls
+        : await restrictUrlsAsync(context.db, input.urls));
 
     const settled = await Promise.allSettled(
       urls.map(async (url) => {

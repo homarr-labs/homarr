@@ -38,6 +38,7 @@ import classes from "./assistant-panel.module.css";
 import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
 import { AssistantDotMatrix } from "./assistant-dot-matrix";
 import { AssistantImage } from "./assistant-image";
+import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
 import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
@@ -67,6 +68,7 @@ export const ContextDirectiveChip = ({
   const t = useI18n("assistant");
   const Icon = contextIcons[directiveType as keyof typeof contextIcons] ?? IconAt;
   const safeIconUrl = getSafeAssistantMarkdownImageSource(iconUrl);
+  const resolvedIconUrl = useWorkerResourceUrl(safeIconUrl ?? undefined);
   const translationKey = getAssistantDirectiveTranslationKey(directiveType);
   const typeLabel = t(`mentions.${translationKey}`);
 
@@ -78,7 +80,13 @@ export const ContextDirectiveChip = ({
       title={`${typeLabel}: ${label}`}
     >
       {safeIconUrl ? (
-        <img className={classes.directiveChipImage} src={safeIconUrl} alt="" aria-hidden referrerPolicy="no-referrer" />
+        <img
+          className={classes.directiveChipImage}
+          src={resolvedIconUrl}
+          alt=""
+          aria-hidden
+          referrerPolicy="no-referrer"
+        />
       ) : (
         <Icon size={12} aria-hidden />
       )}
@@ -394,7 +402,7 @@ const AttachmentPreview = () => {
     };
   }, [attachment.file, isImage, persistedPreview]);
 
-  const source = persistedPreview ?? filePreview;
+  const source = useWorkerResourceUrl(persistedPreview ?? filePreview ?? undefined);
   if (source) {
     return <Box component="img" className={classes.attachmentImage} src={source} alt="" aria-hidden />;
   }

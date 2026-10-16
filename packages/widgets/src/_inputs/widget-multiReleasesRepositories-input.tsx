@@ -1,5 +1,6 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   Accordion,
@@ -10,7 +11,6 @@ import {
   Divider,
   Fieldset,
   Group,
-  Image,
   Input,
   Loader,
   PasswordInput,

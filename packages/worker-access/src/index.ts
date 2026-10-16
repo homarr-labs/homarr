@@ -12,6 +12,7 @@ import type {
   GrantScope,
   IssuedGrant,
   ProcedureAccess,
+  ServiceScope,
   VerifiedDevice,
   WorkerSigningIdentity,
 } from "./types";
@@ -29,6 +30,19 @@ type OpenOptions = {
 
 const defaultBoardReads = ["board.read", "board.widgetData", "remote.board", "remote.widgetData"];
 const maximumInvitationLifetime = 7 * 24 * 60 * 60 * 1000;
+const maximumServiceLifetime = 30 * 24 * 60 * 60 * 1000;
+const serviceIdentifiers = (ids: unknown, maximum: number): ids is string[] =>
+  Array.isArray(ids) &&
+  ids.length > 0 &&
+  ids.length <= maximum &&
+  ids.every((id) => typeof id === "string" && id.length > 0 && id.length <= 256);
+const serviceDiscoveryProcedures = new Set([
+  "integration.all",
+  "integration.getKinds",
+  "integration.search",
+  "integration.allThatSupportSearch",
+  "integration.allOfGivenCategory",
+]);
 
 /** Authorization is local to the worker. Platform identity and request headers confer no permissions. */
 export class WorkerAccess {
@@ -149,6 +163,8 @@ export class WorkerAccess {
 
   async createInvitation(owner: AccessPrincipal, scope: GrantScope) {
     const authority = this.requireOwner(owner);
+    if (scope.role === "service")
+      throw new WorkerAccessError("INVALID_INPUT", "Services require an approved device public key");
     if (
       scope.expiresAt === null ||
       scope.expiresAt === undefined ||
@@ -277,6 +293,7 @@ export class WorkerAccess {
           id: invitation.id,
           role: invitation.role,
           boardIds: invitation.boardIds,
+          userId: invitation.userId,
           issuedAt: invitation.issuedAt,
           expiresAt: invitation.expiresAt,
           used: Boolean(row.used),
@@ -349,6 +366,25 @@ export class WorkerAccess {
   authorizeProcedure(principal: AccessPrincipal, procedure: ProcedureAccess) {
     const grant = this.requirePrincipal(principal);
     if (grant.role === "owner") return;
+    // The native API derives this identity's current permissions from the worker database.
+    // This role confers no worker control permissions.
+    if (grant.role === "user") return;
+    if (grant.role === "service") {
+      const scope = grant.service;
+      if (!scope || !scope.procedurePaths.includes(procedure.path))
+        throw new WorkerAccessError("FORBIDDEN", "Service capability does not permit this procedure");
+      if (procedure.kind === "mutation" && scope.access === "query")
+        throw new WorkerAccessError("FORBIDDEN", "Service capability permits reads only");
+      if (["integration.request", "federation.executeSource"].includes(procedure.path) && scope.access !== "full")
+        throw new WorkerAccessError("FORBIDDEN", "This operation requires full integration access");
+      const ids = procedure.integrationIds ?? [];
+      if (
+        (!ids.length && !serviceDiscoveryProcedures.has(procedure.path)) ||
+        ids.some((id) => !scope.integrationIds.includes(id))
+      )
+        throw new WorkerAccessError("FORBIDDEN", "Service capability does not permit these integrations");
+      return;
+    }
     if (
       procedure.kind === "mutation" ||
       !this.safeBoardProcedures.has(procedure.path) ||
@@ -408,6 +444,8 @@ export class WorkerAccess {
       role: grant.role,
       boardIds: Object.freeze([...effectiveGrant.boardIds]),
       accountId: device?.account_id ?? null,
+      ...(effectiveGrant.userId ? { userId: effectiveGrant.userId } : {}),
+      ...(effectiveGrant.service ? { service: Object.freeze({ ...effectiveGrant.service }) } : {}),
     });
     this.principals.set(principal, { grantId: grant.id, membershipGrantId });
     this.requirePrincipal(principal);
@@ -420,11 +458,29 @@ export class WorkerAccess {
     parentId: string | null = null,
     authority: AccessGrant | null = null,
   ): AccessGrant {
-    if (scope.role !== "owner" && scope.role !== "viewer")
+    if (scope.role !== "owner" && scope.role !== "viewer" && scope.role !== "service" && scope.role !== "user")
       throw new WorkerAccessError("INVALID_INPUT", "Unknown grant role");
+    if (scope.role === "user") {
+      if (
+        typeof scope.userId !== "string" ||
+        !scope.userId.length ||
+        scope.userId.length > 256 ||
+        /^worker[:-]/.test(scope.userId)
+      )
+        throw new WorkerAccessError("INVALID_INPUT", "A native Homarr user ID is required");
+    } else if (scope.userId !== undefined)
+      throw new WorkerAccessError("INVALID_INPUT", "Only user grants accept a native user ID");
     let expiresAt = scope.expiresAt ?? null;
     if (expiresAt !== null && (!Number.isSafeInteger(expiresAt) || expiresAt <= this.now())) {
       throw new WorkerAccessError("INVALID_INPUT", "Expiry must be a future integer timestamp");
+    }
+    let service: ServiceScope | undefined;
+    if (scope.role === "service") {
+      if (expiresAt === null || expiresAt > this.now() + maximumServiceLifetime)
+        throw new WorkerAccessError("INVALID_INPUT", "Service expiry must be within thirty days");
+      service = this.validateServiceScope(scope.service);
+    } else if (scope.service !== undefined) {
+      throw new WorkerAccessError("INVALID_INPUT", "Only service grants accept service scope");
     }
     if (authority) {
       if (this.requireGrantChain(authority) >= 32)
@@ -433,6 +489,8 @@ export class WorkerAccess {
         expiresAt = authority.expiresAt;
     }
     const boardIds = [...new Set(scope.boardIds ?? [])];
+    if (scope.role === "service" && boardIds.length)
+      throw new WorkerAccessError("INVALID_INPUT", "Integration services cannot receive dashboard membership");
     if (
       boardIds.length > 100 ||
       boardIds.some((id) => typeof id !== "string" || !id.length || id.length > 256) ||
@@ -446,6 +504,8 @@ export class WorkerAccess {
       subject,
       role: scope.role,
       boardIds,
+      ...(service ? { service } : {}),
+      ...(scope.role === "user" ? { userId: scope.userId } : {}),
       issuedAt: this.now(),
       expiresAt,
       parentId,
@@ -461,13 +521,55 @@ export class WorkerAccess {
       grant.workerId === this.workerId &&
       typeof grant.id === "string" &&
       typeof grant.subject === "string" &&
-      (grant.role === "owner" || grant.role === "viewer") &&
+      (grant.role === "owner" || grant.role === "viewer" || grant.role === "service" || grant.role === "user") &&
+      (grant.role !== "user" || typeof grant.userId === "string") &&
       Array.isArray(grant.boardIds) &&
       grant.boardIds.every((id) => typeof id === "string") &&
       Number.isSafeInteger(grant.issuedAt) &&
       (grant.parentGrantId === null || typeof grant.parentGrantId === "string") &&
       (grant.expiresAt === null || Number.isSafeInteger(grant.expiresAt))
     );
+  }
+
+  private validateServiceScope(value: unknown): ServiceScope {
+    if (!value || typeof value !== "object")
+      throw new WorkerAccessError("INVALID_INPUT", "Explicit service scope required");
+    const scope = value as ServiceScope;
+    if (
+      !serviceIdentifiers(scope.integrationIds, 1000) ||
+      !serviceIdentifiers(scope.procedurePaths, 500) ||
+      scope.procedurePaths.some((path) => !/^[A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)+$/.test(path)) ||
+      !["query", "interact", "full"].includes(scope.access) ||
+      (scope.purpose !== undefined && scope.purpose !== "mcp" && scope.purpose !== "federation") ||
+      typeof scope.principalId !== "string" ||
+      !/^(?:account|organization):[^\s:]{1,256}$/.test(scope.principalId)
+    )
+      throw new WorkerAccessError("INVALID_INPUT", "Invalid service scope");
+    if (
+      scope.organizationId !== undefined &&
+      (typeof scope.organizationId !== "string" || scope.principalId !== `organization:${scope.organizationId}`)
+    )
+      throw new WorkerAccessError("INVALID_INPUT", "Service organization binding does not match");
+    if (scope.organizationId === undefined && !scope.principalId.startsWith("account:"))
+      throw new WorkerAccessError("INVALID_INPUT", "Organization service requires its organization ID");
+    let audience: URL;
+    try {
+      audience = new URL(scope.audience);
+    } catch {
+      throw new WorkerAccessError("INVALID_INPUT", "Invalid service audience");
+    }
+    const localHttp = audience.protocol === "http:" && ["localhost", "127.0.0.1"].includes(audience.hostname);
+    if ((audience.protocol !== "https:" && !localHttp) || audience.username || audience.password || audience.hash)
+      throw new WorkerAccessError("INVALID_INPUT", "Service audience requires HTTPS");
+    return {
+      purpose: scope.purpose ?? "federation",
+      integrationIds: [...new Set(scope.integrationIds)],
+      access: scope.access,
+      procedurePaths: [...new Set(scope.procedurePaths)],
+      audience: audience.href,
+      principalId: scope.principalId,
+      ...(scope.organizationId ? { organizationId: scope.organizationId } : {}),
+    };
   }
 
   private requireCurrent(grant: AccessGrant) {

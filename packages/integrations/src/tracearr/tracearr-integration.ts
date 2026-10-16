@@ -79,7 +79,7 @@ export class TracearrIntegration extends Integration {
     }
 
     const json = (await response.json()) as TracearrStreamsResponse;
-    const imageProxy = new ImageProxy();
+    const imageProxy = new ImageProxy(this.integration.id);
 
     return {
       ...json,
@@ -115,7 +115,7 @@ export class TracearrIntegration extends Integration {
     }
 
     const json = (await response.json()) as TracearrViolationsResponse;
-    const imageProxy = new ImageProxy();
+    const imageProxy = new ImageProxy(this.integration.id);
 
     return {
       ...json,
@@ -146,7 +146,7 @@ export class TracearrIntegration extends Integration {
     }
 
     const json = (await response.json()) as TracearrHistoryResponse;
-    const imageProxy = new ImageProxy();
+    const imageProxy = new ImageProxy(this.integration.id);
 
     return {
       ...json,

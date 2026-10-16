@@ -1,4 +1,5 @@
-import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+import { Badge, Group, Paper, Stack, Text } from "@mantine/core";
 
 import type { TracearrHistorySession } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";

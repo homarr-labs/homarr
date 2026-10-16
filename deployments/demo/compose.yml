@@ -1,0 +1,91 @@
+services:
+  platform:
+    image: ${HOMARR_DEMO_PLATFORM_IMAGE:-homarr:remote-demo-local}
+    restart: unless-stopped
+    environment:
+      REMOTE_PUBLIC_URL: ${DEMO_PUBLIC_URL}/remote
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:-https://homarr.dev}
+      REMOTE_PLATFORM_DB: /appdata/platform.sqlite
+    volumes:
+      - platform-data:/appdata
+
+  relay:
+    image: ${HOMARR_DEMO_RELAY_IMAGE:-homarr:relay-v2}
+    restart: unless-stopped
+    environment:
+      RELAY_ALLOWED_ORIGINS: ${DEMO_PUBLIC_URL}
+      RELAY_MAX_WORKERS: 10
+      RELAY_MAX_CONNECTIONS: 64
+      RELAY_MAX_CONNECTIONS_PER_IP: 32
+    healthcheck:
+      test:
+        [
+          CMD,
+          /usr/local/bin/bun,
+          -e,
+          "const response=await fetch('http://127.0.0.1:8787/health/ready');if(!response.ok)process.exit(1)",
+        ]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  gateway:
+    image: ${HOMARR_DEMO_GATEWAY_IMAGE:-nginx:1.30.6-alpine}
+    restart: unless-stopped
+    depends_on:
+      platform:
+        condition: service_healthy
+      relay:
+        condition: service_healthy
+    environment:
+      HOMARR_DEMO_PORT: ${HOMARR_DEMO_PORT:-43100}
+    ports:
+      - "127.0.0.1:${HOMARR_DEMO_PORT:-43100}:${HOMARR_DEMO_PORT:-43100}"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./gateway.conf.template:/etc/nginx/templates/default.conf.template:ro
+    healthcheck:
+      test: [CMD-SHELL, "wget -q -O /dev/null http://127.0.0.1:$$HOMARR_DEMO_PORT/demo-health"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  worker:
+    image: ${HOMARR_DEMO_WORKER_IMAGE:-homarr:worker-demo-local}
+    restart: unless-stopped
+    # The browser and worker can both use ws://localhost:<port>/relay in the
+    # plain HTTP loopback demo. HTTPS deployments use their public relay URL.
+    network_mode: service:gateway
+    depends_on:
+      gateway:
+        condition: service_healthy
+    environment:
+      WORKER_PUBLIC_URL: ${DEMO_PUBLIC_URL}/worker
+      WORKER_PLATFORM_URL: ${DEMO_PUBLIC_URL}/remote/
+      WORKER_RELAY_URL: ${DEMO_RELAY_URL}/relay
+      WORKER_ALLOWED_ORIGINS: ${DEMO_PUBLIC_URL}
+      WORKER_RUN_OPTIONAL_JOBS: "false"
+      HOMARR_STATE_BACKEND: memory
+      DEMO_MODE: "true"
+      DEMO_READ_ONLY: "false"
+      UNSAFE_ENABLE_MOCK_INTEGRATION: "true"
+      NO_EXTERNAL_CONNECTION: "true"
+    volumes:
+      - worker-data:/appdata
+      - ./prepare-demo.ts:/demo/prepare-demo.ts:ro
+    healthcheck:
+      test:
+        [
+          CMD,
+          bun,
+          -e,
+          "const response=await fetch('http://127.0.0.1:3002/api/health/ready');if(!response.ok)process.exit(1)",
+        ]
+      interval: 3s
+      timeout: 3s
+      start_period: 20s
+      retries: 30
+
+volumes:
+  worker-data:
+  platform-data:

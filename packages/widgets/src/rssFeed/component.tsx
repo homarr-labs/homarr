@@ -1,6 +1,7 @@
 "use client";
 
-import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { ResourceImage as Image } from "@homarr/ui";
+import { Alert, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconClock, IconServerOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -43,12 +44,12 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   };
 };
 
-export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ itemId, options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
   const feed = useLiveFeed({
+    itemId,
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
-    descriptionMaxLength:
-      typeof options.descriptionMaxLength === "number" ? options.descriptionMaxLength : 250,
+    descriptionMaxLength: typeof options.descriptionMaxLength === "number" ? options.descriptionMaxLength : 250,
   });
 
   const board = useRequiredBoard();

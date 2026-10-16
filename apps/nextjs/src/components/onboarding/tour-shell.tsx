@@ -1,11 +1,12 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { OnboardingTourController, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
-import { Button, Center, Group, Image, Kbd, Text } from "@mantine/core";
+import { Button, Center, Group, Kbd, Text } from "@mantine/core";
 import type { FloatingPosition } from "@mantine/core";
 
 import { useSettings } from "@homarr/settings";

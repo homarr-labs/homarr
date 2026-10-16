@@ -20,7 +20,18 @@ const createUrlByIdChannel = (id: string) =>
   createGetSetChannel<{
     url: `${string}.${string}`;
     headers: `${string}.${string}`;
+    integrationId?: string | null;
   }>(`image-proxy:url:${id}`);
+
+export async function getImageIntegrationIdAsync(id: string): Promise<string | null> {
+  const value = await createUrlByIdChannel(id).getAsync();
+  return value?.integrationId ?? null;
+}
+
+export async function isImageFromIntegrationsAsync(id: string, integrationIds: readonly string[]): Promise<boolean> {
+  const integrationId = await getImageIntegrationIdAsync(id);
+  return integrationId !== null && integrationIds.includes(integrationId);
+}
 
 export type ForwardImageResult =
   | { image: ArrayBuffer; contentType: string | null }
@@ -29,6 +40,7 @@ export type ForwardImageResult =
   | { error: "fetch-error" };
 
 export class ImageProxy {
+  constructor(private readonly integrationId?: string) {}
   private static hmacKey: Buffer<ArrayBuffer> | null = null;
 
   /**
@@ -72,7 +84,7 @@ export class ImageProxy {
           if (existingId) return this.createImageUrl(existingId);
           const id = randomUUID();
           await createUrlByIdChannel(id).setAsync(
-            { url: encryptSecret(url), headers: encryptedHeaders },
+            { url: encryptSecret(url), headers: encryptedHeaders, integrationId: this.integrationId ?? null },
             { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS },
           );
           await hashChannel.setAsync(id, { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS });
@@ -186,6 +198,7 @@ export class ImageProxy {
       {
         url: encryptSecret(url),
         headers: encryptSecret(JSON.stringify(headers ?? null)),
+        integrationId: this.integrationId ?? null,
       },
       { ttlSeconds: IMAGE_PROXY_REDIS_TTL_SECONDS },
     );
@@ -199,7 +212,9 @@ export class ImageProxy {
   }
 
   private hashSecret(value: string): string {
-    return createHmac("sha256", ImageProxy.getHmacKey()).update(value).digest("hex");
+    let identity = value;
+    if (this.integrationId) identity = JSON.stringify([this.integrationId, value]);
+    return createHmac("sha256", ImageProxy.getHmacKey()).update(identity).digest("hex");
   }
 
   private redactUrl(url: string): string {

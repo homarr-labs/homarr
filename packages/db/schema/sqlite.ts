@@ -3,7 +3,7 @@ import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { blob, foreignKey, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, foreignKey, index, int, primaryKey, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
 import {
   backgroundImageAttachments,
@@ -204,6 +204,43 @@ export const integrations = sqliteTable(
   },
   (table) => ({
     kindIdx: index("integration__kind_idx").on(table.kind),
+  }),
+);
+
+export const federationConnections = sqliteTable("federation_connection", {
+  id: text().notNull().primaryKey(),
+  workerId: text().notNull().unique(),
+  name: text().notNull(),
+  publicKey: text().notNull(),
+  encryptedConfiguration: text().notNull(),
+  enabled: int({ mode: "boolean" }).notNull().default(true),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$onUpdateFn(() => new Date()),
+});
+
+export const integrationOrigins = sqliteTable(
+  "integration_origin",
+  {
+    integrationId: text()
+      .notNull()
+      .primaryKey()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+    connectionId: text()
+      .notNull()
+      .references(() => federationConnections.id, { onDelete: "restrict" }),
+    remoteIntegrationId: text().notNull(),
+    remoteRevision: text(),
+  },
+  (table) => ({
+    sourceIntegrationUnique: unique("integration_origin__connection_remote_id_unique").on(
+      table.connectionId,
+      table.remoteIntegrationId,
+    ),
   }),
 );
 
@@ -807,6 +844,7 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
 }));
 
 export const integrationRelations = relations(integrations, ({ one, many }) => ({
+  origin: one(integrationOrigins),
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
@@ -814,6 +852,21 @@ export const integrationRelations = relations(integrations, ({ one, many }) => (
   app: one(apps, {
     fields: [integrations.appId],
     references: [apps.id],
+  }),
+}));
+
+export const federationConnectionRelations = relations(federationConnections, ({ many }) => ({
+  origins: many(integrationOrigins),
+}));
+
+export const integrationOriginRelations = relations(integrationOrigins, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [integrationOrigins.integrationId],
+    references: [integrations.id],
+  }),
+  connection: one(federationConnections, {
+    fields: [integrationOrigins.connectionId],
+    references: [federationConnections.id],
   }),
 }));
 

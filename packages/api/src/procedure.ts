@@ -34,6 +34,27 @@ export interface ApiContext {
   onboardingClaimToken?: string;
   requestIdentity?: RequestIdentity;
   db: typeof db;
+  workerAccess?: {
+    role: "owner" | "viewer" | "service" | "user";
+    grantId: string;
+    workerId?: string;
+    service?: {
+      integrationIds: readonly string[];
+      access: "query" | "interact" | "full";
+      procedurePaths: readonly string[];
+      audience: string;
+      principalId: string;
+      organizationId?: string;
+      purpose?: "mcp" | "federation";
+    };
+    authorizeProcedure: (input: {
+      path: string;
+      kind: ApiOperation;
+      integrationIds?: string[];
+      input?: unknown;
+    }) => void | Promise<void>;
+    projectResult?: (input: { path: string; input: unknown; result: unknown }) => unknown | Promise<unknown>;
+  };
 }
 
 export const createApiContext = (opts: { headers: Headers; session: Session | null }): ApiContext => ({
@@ -54,6 +75,7 @@ export class ApiError extends ORPCError<ORPCErrorCode, unknown> {
 
 export type ApiOperation = "query" | "mutation" | "subscription";
 export interface ApiMeta extends McpMeta {
+  integration?: { action: "query" | "interact" | "full"; cardinality: "one" | "many" };
   operationType?: ApiOperation;
   openapi?: {
     method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
@@ -166,9 +188,48 @@ export class ApiProcedureBuilder<
   ): DecoratedProcedure<ApiContext, TContext, InputSchema<TInput>, FinalOutput<TOutput, Awaited<T>>, EmptyErrors> & {
     readonly __operationType?: TType;
   } {
-    return this.meta({ operationType: type }).native.handler(
-      handler as Parameters<NativeBuilder["handler"]>[0],
-    ) as unknown as DecoratedProcedure<
+    const guardedHandler: Parameters<NativeBuilder["handler"]>[0] = async (options) => {
+      const context = options.context as ApiContext;
+      const input = options.input as unknown;
+      const selectedIds: string[] = [];
+      if (Array.isArray(input)) {
+        for (const id of input) if (typeof id === "string") selectedIds.push(id);
+      } else if (input && typeof input === "object") {
+        const selectors = input as Record<string, unknown>;
+        if (typeof selectors.integrationId === "string") selectedIds.push(selectors.integrationId);
+        if (Array.isArray(selectors.integrationIds))
+          for (const id of selectors.integrationIds) if (typeof id === "string") selectedIds.push(id);
+        if (options.path[0] === "integration" && typeof selectors.id === "string") selectedIds.push(selectors.id);
+      }
+      await context.workerAccess?.authorizeProcedure({
+        path: options.path.join("."),
+        kind: type,
+        integrationIds: selectedIds,
+        input,
+      });
+      const execute = (overrides?: { context?: object; input?: unknown }) =>
+        handler(
+          { ...options, ...overrides } as unknown as Parameters<typeof handler>[0],
+          (overrides?.input ?? options.input) as InferSchemaOutput<InputSchema<TInput>>,
+        );
+      let result: unknown;
+      if (options.procedure["~orpc"].meta.integration) {
+        const { executeFederatedOperation } = await import("./federation/dispatch");
+        result = await executeFederatedOperation({ ...options, context, execute });
+      } else result = await execute();
+      if (
+        context.workerAccess?.role === "service" &&
+        selectedIds.length > 0 &&
+        options.procedure["~orpc"].meta.integration
+      ) {
+        const { signSourceMediaResult } = await import("./federation/source-media");
+        result = await signSourceMediaResult(context, selectedIds, result);
+      }
+      if (context.workerAccess?.projectResult)
+        return context.workerAccess.projectResult({ path: options.path.join("."), input, result });
+      return result;
+    };
+    return this.meta({ operationType: type }).native.handler(guardedHandler) as unknown as DecoratedProcedure<
       ApiContext,
       TContext,
       InputSchema<TInput>,

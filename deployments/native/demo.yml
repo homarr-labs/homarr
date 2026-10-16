@@ -1,0 +1,14 @@
+# Isolated sample data. Production deployments should use compose.yml alone.
+services:
+  worker-primary:
+    environment:
+      DEMO_MODE: "true"
+      DEMO_READ_ONLY: "false"
+      UNSAFE_ENABLE_MOCK_INTEGRATION: "true"
+      NO_EXTERNAL_CONNECTION: "true"
+  worker-integrations:
+    environment:
+      DEMO_MODE: "true"
+      DEMO_READ_ONLY: "false"
+      UNSAFE_ENABLE_MOCK_INTEGRATION: "true"
+      NO_EXTERNAL_CONNECTION: "true"

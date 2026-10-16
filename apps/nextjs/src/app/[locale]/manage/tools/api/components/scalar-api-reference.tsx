@@ -5,14 +5,18 @@ import type { ComponentProps } from "react";
 import { useComputedColorScheme } from "@mantine/core";
 import { ApiReferenceReact } from "@scalar/api-reference-react";
 
+import { useResourceFetch } from "@homarr/worker-client/resources";
+
 import "@scalar/api-reference-react/style.css";
 import "./scalar-theme.css";
 
 export function ScalarApiReference() {
+  const resourceFetch = useResourceFetch();
   const colorScheme = useComputedColorScheme("light");
   const configuration = useMemo<ComponentProps<typeof ApiReferenceReact>["configuration"]>(
     () => ({
       url: "/api/openapi?format=scalar",
+      fetch: resourceFetch,
       layout: "classic",
       theme: "alternate",
       showSidebar: false,
@@ -26,7 +30,7 @@ export function ScalarApiReference() {
         preferredSecurityScheme: "apikey",
       },
     }),
-    [colorScheme],
+    [colorScheme, resourceFetch],
   );
 
   return <ApiReferenceReact configuration={configuration} />;

@@ -42,6 +42,39 @@ const createSession = (permissions: GroupPermissionKey[] = []): Session => ({
 
 describe("rssFeedRouter", () => {
   describe("getFeeds", () => {
+    test("worker shared feeds resolve their stored source without accepting arbitrary caller URLs", async () => {
+      const db = createDb();
+      const session = createSession();
+      const boardId = "shared-feed-board";
+      const itemId = "shared-feed-item";
+      const savedUrl = "https://user:private-password@example.com/feed?token=private-token";
+      await db.insert(users).values({ id: session.user.id });
+      await db.insert(boards).values({ id: boardId, name: boardId, isPublic: false });
+      await db.insert(boardUserPermissions).values({ boardId, userId: session.user.id, permission: "view" });
+      await db
+        .insert(items)
+        .values({ id: itemId, boardId, kind: "rssFeed", options: SuperJSON.stringify({ feedUrls: [savedUrl] }) });
+      mocks.getFeed.mockResolvedValue({ data: { entries: [{ id: "published-entry" }] } });
+      const caller = createCallerFactory(rssFeedRouter)({
+        db,
+        deviceType: undefined,
+        session,
+        workerAccess: { role: "viewer", grantId: "shared-feed-grant", authorizeProcedure: () => undefined },
+      });
+      expect(await caller.getFeeds({ itemId, urls: ["https://arbitrary.invalid"], maximumAmountPosts: 5 })).toEqual({
+        entries: [{ id: "published-entry" }],
+        failedFeedCount: 0,
+      });
+      expect(mocks.getFeed).toHaveBeenCalledWith({ url: savedUrl, count: 5, descriptionMaxLength: 250 });
+      expect(mocks.getFeed).toHaveBeenCalledOnce();
+      await expect(caller.getFeeds({ urls: [savedUrl], maximumAmountPosts: 5 })).rejects.toMatchObject({
+        code: "FORBIDDEN",
+      });
+      await expect(
+        caller.getFeeds({ itemId: "other-item", urls: [savedUrl], maximumAmountPosts: 5 }),
+      ).rejects.toMatchObject({ code: "NOT_FOUND" });
+      expect(mocks.getFeed).toHaveBeenCalledOnce();
+    });
     test("redacts feed secrets from logs and returns a generic error when every feed fails", async () => {
       const feedUrl = "https://user:password@example.com/feed?token=secret";
       mocks.getFeed.mockRejectedValue(new Error(`Failed to fetch ${feedUrl}`));

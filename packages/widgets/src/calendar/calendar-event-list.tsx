@@ -1,3 +1,4 @@
+import { ResourceImage as Image } from "@homarr/ui";
 import { useId } from "react";
 import {
   Badge,
@@ -5,7 +6,6 @@ import {
   Button,
   darken,
   Group,
-  Image,
   lighten,
   ScrollArea,
   Stack,

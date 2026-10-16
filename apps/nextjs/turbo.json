@@ -3,6 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["build:dependencies"],
+      "env": ["$TURBO_EXTENDS$", "HOMARR_FRONTEND_MODE", "HOMARR_PLATFORM_PATH"],
       "cache": false,
       "outputs": [".output/standalone/**"],
       "inputs": [
@@ -37,11 +38,12 @@
       ],
       "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "!.next/standalone/**", "next-env.d.ts"],
       "dependsOn": ["^build"],
-      "env": ["TURBO_PLATFORM"]
+      "env": ["TURBO_PLATFORM", "HOMARR_FRONTEND_MODE", "HOMARR_PLATFORM_PATH"],
+      "passThroughEnv": ["NEXT_TELEMETRY_DISABLED"]
     },
     "build:dependencies": {
       "dependsOn": ["build:compiled"],
-      "env": ["TURBO_PLATFORM"],
+      "env": ["TURBO_PLATFORM", "HOMARR_FRONTEND_MODE", "HOMARR_PLATFORM_PATH"],
       "inputs": ["package.json", "scripts/**"],
       "outputs": [".output/dependencies/**"]
     }

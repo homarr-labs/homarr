@@ -6,6 +6,8 @@ import { MessagePartPrimitive } from "@assistant-ui/react";
 import { Box, Button, Center, Loader, Stack, Text } from "@mantine/core";
 import { IconPhotoOff, IconRefresh } from "@tabler/icons-react";
 
+import { useWorkerResource } from "@homarr/worker-client/resources";
+
 import classes from "./assistant-image.module.css";
 
 interface AssistantImageProps extends Omit<ComponentPropsWithoutRef<"img">, "src"> {
@@ -34,6 +36,7 @@ export const AssistantImage = ({
   ...imageProps
 }: AssistantImageProps) => {
   const [attempt, setAttempt] = useState(0);
+  const resource = useWorkerResource(source, { retry: attempt });
   const [state, setState] = useState<"loading" | "loaded" | "failed">("loading");
 
   useEffect(() => {
@@ -41,9 +44,11 @@ export const AssistantImage = ({
     setAttempt(0);
   }, [source]);
 
+  const displayState = resource.error ? "failed" : state;
+
   const sharedProps = {
     ...imageProps,
-    src: source,
+    src: resource.url,
     className,
     loading: "lazy" as const,
     decoding: "async" as const,
@@ -53,19 +58,19 @@ export const AssistantImage = ({
   };
 
   return (
-    <Box component="figure" className={classes.assistantImage} data-image-state={state}>
+    <Box component="figure" className={classes.assistantImage} data-image-state={displayState}>
       <Box className={classes.assistantImageViewport}>
         {messagePart ? (
           <MessagePartPrimitive.Image key={attempt} {...sharedProps} alt={alt} />
         ) : (
           <img key={attempt} {...sharedProps} alt={alt} />
         )}
-        {state === "loading" && (
+        {displayState === "loading" && (
           <Center component="output" className={classes.assistantImageStatus} aria-label={loadingLabel}>
             <Loader type="bars" size="sm" />
           </Center>
         )}
-        {state === "failed" && (
+        {displayState === "failed" && (
           <Center className={classes.assistantImageStatus} role="alert">
             <Stack align="center" gap={6} p="sm">
               <IconPhotoOff size={22} aria-hidden />
@@ -87,7 +92,7 @@ export const AssistantImage = ({
           </Center>
         )}
       </Box>
-      {caption && state === "loaded" && (
+      {caption && displayState === "loaded" && (
         <Text component="figcaption" className={classes.assistantImageCaption} size="xs" c="dimmed">
           {caption}
         </Text>

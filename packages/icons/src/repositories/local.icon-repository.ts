@@ -5,9 +5,10 @@ import { db } from "@homarr/db";
 import type { medias } from "@homarr/db/schema";
 
 import type { RepositoryIcon, RepositoryIconGroup } from "../types";
+import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG } from "../local";
 import { IconRepository } from "./icon-repository";
 
-export const LOCAL_ICON_REPOSITORY_SLUG = "local";
+export { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG } from "../local";
 
 export class LocalIconRepository extends IconRepository {
   constructor() {
@@ -22,8 +23,6 @@ export class LocalIconRepository extends IconRepository {
     };
   }
 }
-
-export const createLocalImageUrl = (id: string) => `/api/user-medias/${id}`;
 
 export const mapMediaToIcon = (
   media: Pick<InferSelectModel<typeof medias>, "name" | "id" | "content" | "size">,

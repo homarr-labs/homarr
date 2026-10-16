@@ -33,6 +33,8 @@ export const {
   integrationSecrets,
   integrationUserPermissions,
   integrations,
+  federationConnections,
+  integrationOrigins,
   invites,
   items,
   medias,
@@ -65,6 +67,8 @@ export type Session = InferSelectModel<typeof schema.sessions>;
 export type VerificationToken = InferSelectModel<typeof schema.verificationTokens>;
 export type Integration = InferSelectModel<typeof schema.integrations>;
 export type IntegrationSecret = InferSelectModel<typeof schema.integrationSecrets>;
+export type FederationConnection = InferSelectModel<typeof schema.federationConnections>;
+export type IntegrationOrigin = InferSelectModel<typeof schema.integrationOrigins>;
 export type CustomWidgetDefinition = InferSelectModel<typeof schema.customWidgetDefinitions>;
 export type CustomWidgetSecret = InferSelectModel<typeof schema.customWidgetSecrets>;
 export type LegacyCustomWidgetDefinition = InferSelectModel<typeof schema.legacyCustomWidgetDefinitions>;

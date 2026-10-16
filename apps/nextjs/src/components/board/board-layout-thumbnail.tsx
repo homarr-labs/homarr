@@ -1,4 +1,5 @@
-import { Box, Center, Image } from "@mantine/core";
+import { ResourceImage as Image } from "@homarr/ui";
+import { Box, Center } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
 
 import type { BoardPreviewData, BoardPreviewLayout } from "@homarr/boards/layout-preview";

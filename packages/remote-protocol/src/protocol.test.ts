@@ -9,6 +9,7 @@ import {
   exportWorkerIdentity,
   generateDeviceIdentity,
   generateWorkerIdentity,
+  getRemoteResponseCompletion,
   getWorkerId,
   importWorkerIdentity,
   randomSecret,
@@ -207,6 +208,37 @@ describe("encryption, replay and reconnection", () => {
 });
 
 describe("encrypted HTTP streaming and authorization", () => {
+  test.each(["abort", "close", "cancel"])("rejects response completion on %s", async (action) => {
+    const { browser, worker } = await connections(async () => new Response(new ReadableStream()));
+    try {
+      const abort = new AbortController();
+      const response = await browser.fetch("/stream", { signal: abort.signal });
+      const completion = getRemoteResponseCompletion(response);
+      expect(completion).toBeDefined();
+      if (action === "abort") abort.abort();
+      else if (action === "close") browser.close();
+      else await response.body?.cancel();
+      await expect(completion).rejects.toBeDefined();
+    } finally {
+      browser.close();
+      worker.close();
+    }
+  });
+
+  test("resolves response completion only after its streamed body ends", async () => {
+    const { browser, worker } = await connections(async () => new Response("complete response"));
+    try {
+      const response = await browser.fetch("/stream");
+      const completion = getRemoteResponseCompletion(response);
+      expect(completion).toBeDefined();
+      expect(await response.text()).toBe("complete response");
+      await expect(completion).resolves.toBeUndefined();
+    } finally {
+      browser.close();
+      worker.close();
+    }
+  });
+
   test("browsers without Request.body send GET and JSON POST without losing or inventing a body", async () => {
     const restore = omitRequestBodyApi();
     try {

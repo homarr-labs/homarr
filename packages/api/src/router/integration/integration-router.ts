@@ -2,7 +2,7 @@ import { ApiError } from "../../procedure";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { hasQueryAccessToIntegrationsAsync, intersectFederationPermissions } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -40,6 +40,8 @@ import {
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { callFederatedProcedure, getFederationOrigin } from "../../federation/client";
+import { remapIntegrationResult } from "../../federation/operations";
 import { createApiRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../procedure";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { integrationRequestProcedure } from "./integration-request";
@@ -49,6 +51,23 @@ import { mapTestConnectionError } from "./map-test-connection-error";
 
 const logger = createLogger({ module: "integrationRouter" });
 const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
+const originRelation = {
+  columns: { connectionId: true, remoteIntegrationId: true },
+  with: {
+    connection: { columns: { id: true, workerId: true, name: true, enabled: true, encryptedConfiguration: true } },
+  },
+} as const;
+function publicOrigin(
+  origin: { connectionId: string; remoteIntegrationId: string; connection: { workerId: string; name: string } } | null,
+) {
+  if (!origin) return null;
+  return {
+    workerId: origin.connection.workerId,
+    workerName: origin.connection.name,
+    connectionId: origin.connectionId,
+    integrationId: origin.remoteIntegrationId,
+  };
+}
 
 export const integrationRouter = createApiRouter({
   request: integrationRequestProcedure,
@@ -138,9 +157,17 @@ export const integrationRouter = createApiRouter({
             integrationA.name.localeCompare(integrationB.name) || integrationA.id.localeCompare(integrationB.id),
         )
         .slice(0, input.limit)
-        .map(
-          ({ userPermissions: _userPermissions, groupPermissions: _groupPermissions, ...integration }) => integration,
-        );
+        .map(({ userPermissions, groupPermissions: currentGroupPermissions, origin, ...integration }) => ({
+          ...integration,
+          origin: publicOrigin(origin),
+          permissions: intersectFederationPermissions(
+            constructIntegrationPermissions(
+              { userPermissions, groupPermissions: currentGroupPermissions },
+              context.session,
+            ),
+            origin,
+          ),
+        }));
     }),
   // This is used to get the integrations by their ids it's public because it's needed to get integrations data in the boards
   byIds: publicProcedure.input(z.array(z.string())).query(async ({ context, input }) => {
@@ -178,6 +205,7 @@ export const integrationRouter = createApiRouter({
       const integration = await context.db.query.integrations.findFirst({
         where: integrationWhere,
         with: {
+          origin: originRelation,
           secrets: {
             columns: {
               kind: true,
@@ -220,6 +248,7 @@ export const integrationRouter = createApiRouter({
           updatedAt: secret.updatedAt,
         })),
         app: integration.app,
+        origin: publicOrigin(integration.origin),
       };
     }),
   create: permissionRequiredProcedure
@@ -309,6 +338,11 @@ export const integrationRouter = createApiRouter({
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ context, input }) => {
     await throwIfActionForbiddenAsync(context, eq(integrations.id, input.id), "full");
+    if (await getFederationOrigin(context, input.id))
+      throw new ApiError({
+        code: "FORBIDDEN",
+        message: "Manage this integration on its source worker; credentials stay there",
+      });
 
     logger.info("Updating integration", {
       id: input.id,
@@ -630,7 +664,10 @@ export const integrationRouter = createApiRouter({
       const integrationsWithAccess = await getAccessibleMediaRequestSearchIntegrationsAsync(context);
 
       return integrationsWithAccess.map((integration) => {
-        const permissions = constructIntegrationPermissions(integration, context.session);
+        const permissions = intersectFederationPermissions(
+          constructIntegrationPermissions(integration, context.session),
+          integration.origin,
+        );
 
         return {
           id: integration.id,
@@ -668,33 +705,53 @@ export const integrationRouter = createApiRouter({
 
       const results = await Promise.all(
         integrationsWithAccess.map(async (integration) => {
-          const integrationInstance = await createIntegrationAsync({
-            id: integration.id,
-            name: integration.name,
-            url: integration.url,
-            kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
-            externalUrl: integration.app?.href ?? null,
-            decryptedSecrets: integration.secrets.map((secret) => ({
-              ...secret,
-              value: decryptSecret(secret.value),
-            })),
-          });
-          const permissions = constructIntegrationPermissions(integration, context.session);
+          const executeLocal = async () => {
+            const integrationInstance = await createIntegrationAsync({
+              id: integration.id,
+              name: integration.name,
+              url: integration.url,
+              kind: integration.kind as (typeof mediaRequestSearchKinds)[number],
+              externalUrl: integration.app?.href ?? null,
+              decryptedSecrets: integration.secrets.map((secret) => ({
+                ...secret,
+                value: decryptSecret(secret.value),
+              })),
+            });
+            const permissions = intersectFederationPermissions(
+              constructIntegrationPermissions(integration, context.session),
+              integration.origin,
+            );
 
-          return await integrationInstance.searchAsync(encodeURI(query)).then((searchResults) =>
-            searchResults.map((result) => ({
-              ...result,
-              integration: {
-                id: integration.id,
-                name: integration.name,
-                kind: integration.kind,
-                url: integration.url,
-                permissions: {
-                  hasInteractAccess: permissions.hasInteractAccess,
+            return integrationInstance.searchAsync(encodeURI(query)).then((searchResults) =>
+              searchResults.map((result) => ({
+                ...result,
+                integration: {
+                  id: integration.id,
+                  name: integration.name,
+                  kind: integration.kind,
+                  url: integration.url,
+                  permissions: {
+                    hasInteractAccess: permissions.hasInteractAccess,
+                  },
                 },
-              },
-            })),
-          );
+              })),
+            );
+          };
+          const origin = await getFederationOrigin(context, integration.id);
+          if (origin) {
+            const result = await callFederatedProcedure(
+              context,
+              origin.connectionId,
+              ["integration", "searchMediaRequests"],
+              { query: input.query, integrationIds: [origin.remoteIntegrationId] },
+            );
+            return remapIntegrationResult(
+              result,
+              new Map([[origin.remoteIntegrationId, integration.id]]),
+              "array",
+            ) as Awaited<ReturnType<typeof executeLocal>>;
+          }
+          return executeLocal();
         }),
       );
 
@@ -759,6 +816,7 @@ const hasIntegrationQueryAccess = (
 ) => hasGlobalIntegrationAccess(session) || constructIntegrationPermissions(integration, session).hasUseAccess;
 
 const getIntegrationAccessRelationsAsync = (userId: string, groupIds: string[]) => ({
+  origin: originRelation,
   userPermissions: {
     where: eq(integrationUserPermissions.userId, userId),
   },
@@ -783,7 +841,10 @@ const getAccessibleIntegrationsAsync = async (context: { db: Database; session: 
   return integrationsFromDb
     .filter((integration) => hasIntegrationQueryAccess(context.session, integration))
     .map((integration) => {
-      const permissions = constructIntegrationPermissions(integration, context.session);
+      const permissions = intersectFederationPermissions(
+        constructIntegrationPermissions(integration, context.session),
+        integration.origin,
+      );
 
       return {
         id: integration.id,
@@ -791,6 +852,7 @@ const getAccessibleIntegrationsAsync = async (context: { db: Database; session: 
         kind: integration.kind,
         url: integration.url,
         permissions,
+        origin: publicOrigin(integration.origin),
       };
     })
     .toSorted(
@@ -821,6 +883,7 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
         : inArray(integrations.kind, mediaRequestSearchKinds),
     orderBy: asc(integrations.name),
     with: {
+      origin: originRelation,
       app: true,
       secrets: true,
       items: {

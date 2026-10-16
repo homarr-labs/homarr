@@ -1,5 +1,6 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import type { FocusEventHandler, KeyboardEventHandler, ReactNode } from "react";
 import { startTransition, useEffect, useMemo, useState } from "react";
 import {
@@ -9,7 +10,6 @@ import {
   CloseButton,
   Combobox,
   Group,
-  Image,
   InputBase,
   Loader,
   Paper,

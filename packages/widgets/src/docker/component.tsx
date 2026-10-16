@@ -1,11 +1,11 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import "./styles.css";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActionIcon,
-  Avatar,
   Badge,
   Box,
   Center,

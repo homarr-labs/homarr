@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { fetchApi, clientApi } from "@homarr/api/client";
+import { useScopedFetchApi, clientApi } from "@homarr/api/client";
 import type {
   CustomWidgetPublishedQueryState,
   CustomJsxRequestCapability,
@@ -77,6 +77,7 @@ export function InactiveWidgetDefinitionProvider({
 }
 
 export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
+  const fetchApi = useScopedFetchApi();
   const utils = clientApi.useUtils();
   const queryClient = useQueryClient();
   const { openConfirmModal } = useConfirmModal();

@@ -1,6 +1,6 @@
 import type { WorkerRequestContext } from "@homarr/remote-protocol";
 import { WorkerAccessError } from "@homarr/worker-access";
-import type { AuthenticatedEnvelope, GrantScope } from "@homarr/worker-access";
+import type { AuthenticatedEnvelope, GrantScope, ServiceScope } from "@homarr/worker-access";
 import type { EnrollmentChallenge } from "@homarr/remote-protocol";
 
 import type { WorkerChannels } from "./transport";
@@ -39,6 +39,10 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
     try {
       const { principal } = context.authorization as AuthenticatedEnvelope;
       const currentGrant = state.access.assertActive(principal);
+      if (principal.role === "user") {
+        const { getNativeUserSession } = await import("./native-user");
+        await getNativeUserSession(state, principal);
+      }
       const url = new URL(request.url);
       const path = url.pathname;
       let response: Response | undefined;
@@ -50,6 +54,21 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
           role: principal.role,
           grantId: principal.grantId,
         });
+      } else if (path === "/remote/frontend/bootstrap" && request.method === "GET") {
+        const { getFrontendBootstrap } = await import("./api");
+        response = Response.json(await getFrontendBootstrap(state, principal, request.headers));
+      } else if (path === "/remote/mcp/catalog" && request.method === "GET") {
+        const { getServiceCatalog } = await import("./service");
+        response = Response.json(await getServiceCatalog(state, principal));
+      } else if (path === "/remote/mcp/integrations" && request.method === "GET") {
+        const { getServiceIntegrations } = await import("./service");
+        response = Response.json(await getServiceIntegrations(state, principal));
+      } else if (path === "/remote/mcp/call" && request.method === "POST") {
+        const { callServiceTool } = await import("./service");
+        const body = await readBody(request);
+        response = Response.json(
+          await callServiceTool(state, principal, { name: body.name, input: body.input }, request),
+        );
       } else if (path === "/remote/boards" && request.method === "GET") {
         const { listBoards } = await import("./boards");
         response = Response.json(await listBoards(state, principal));
@@ -90,8 +109,24 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
             response = Response.json({ share }, { status: 201 });
           }
           if (resource === "invitations") {
+            if (body.role === "user") {
+              const { requireNativeUser } = await import("./native-user");
+              await requireNativeUser(body.userId);
+            }
             const invitation = await state.access.createInvitation(principal, body as GrantScope);
             response = Response.json({ invitation }, { status: 201 });
+          }
+          if (resource === "services") {
+            const { validateServiceApproval } = await import("./service");
+            const service = body.service as ServiceScope;
+            await validateServiceApproval(service);
+            const grant = await state.access.grantAccess(principal, {
+              role: "service",
+              service,
+              devicePublicJwk: body.devicePublicJwk as JsonWebKey,
+              expiresAt: body.expiresAt as number,
+            });
+            response = Response.json({ grant }, { status: 201 });
           }
         } else if (request.method === "DELETE" && id && parts.length === 2) {
           if (resource === "invitations") state.access.revokeInvitation(principal, id);
@@ -105,9 +140,19 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
         const body = await readBody(request);
         response = Response.json(await state.access.signEnrollment(principal, body.challenge as EnrollmentChallenge));
       } else if (path.startsWith("/rpc/") || path.startsWith("/api/")) {
-        state.access.requireOwner(principal);
+        if (principal.role === "viewer") {
+          if (path.startsWith("/rpc/")) {
+            if (request.method !== "POST")
+              throw new WorkerAccessError("FORBIDDEN", "Encrypted native reads require POST");
+          } else {
+            const { hasNativeViewerResourceAccess } = await import("./native-viewer");
+            if (request.method !== "GET" || !(await hasNativeViewerResourceAccess(state, principal, path)))
+              throw new WorkerAccessError("FORBIDDEN", "This resource is outside the published dashboard");
+          }
+        } else if (principal.role !== "user" && (principal.role !== "service" || !path.startsWith("/rpc/")))
+          state.access.requireOwner(principal);
         const { executeOwnerRequest } = await import("./api");
-        response = await executeOwnerRequest(request, state);
+        response = await executeOwnerRequest(request, state, principal);
       }
       if (!response) return Response.json({ error: "Not found" }, { status: 404 });
       state.access.assertActive(principal);

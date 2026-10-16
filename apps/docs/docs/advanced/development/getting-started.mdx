@@ -26,7 +26,7 @@ are shared across packages. Catalog versions, patches and overrides live in the 
 bun install --frozen-lockfile
 ```
 
-Next.js, operational commands and SQLite run on Node.js. Bun installs dependencies and dispatches package scripts.
+Next.js and operational commands run on Node.js. The Hono/oRPC backend runs on Bun, using Bun-native SQLite or PostgreSQL. Bun also installs workspace dependencies.
 
 ### Run the Homarr application
 
@@ -37,7 +37,7 @@ Next.js, operational commands and SQLite run on Node.js. Bun installs dependenci
 3. Set `DB_URL` to an absolute writable SQLite file path. Migration and application commands run from different
    workspace directories, so a relative path can point them at different databases.
 4. Keep Redis and the optional local databases running in one terminal.
-5. Apply migrations and start Next.js in another terminal.
+5. Apply migrations, then start the backend and dashboard in separate terminals.
 
 ```sh
 cp .env.example .env
@@ -53,27 +53,21 @@ Terminal 2:
 
 ```sh
 bun run db:migration:sqlite:run
+bun run dev:backend
+```
+
+Terminal 3:
+
+```sh
 bun run dev
 ```
 
-The infrastructure command remains in the foreground. Open `http://127.0.0.1:3000`; the first user created through
+The infrastructure command remains in the foreground. Open `http://localhost:3000`; the first user created through
 Homarr becomes the instance administrator.
 Use `bun run docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
 default data; use `bun run db:seed` to seed it explicitly later.
 
-`bun run dev` starts only Next.js. When your work needs scheduled tasks or live subscriptions, run the relevant service
-in a separate terminal alongside it:
-
-```sh
-bun run --filter @homarr/tasks dev
-```
-
-```sh
-bun run --filter @homarr/websocket dev
-```
-
-The WebSocket service listens on port 3001. Production startup embeds both services, so these extra commands are
-only needed for development.
+`bun run dev` starts only Next.js. `bun run dev:backend` starts HTTP on port 3002, scheduled tasks, and WebSocket subscriptions on port 3001. Do not start the standalone tasks or WebSocket scripts alongside it. For a different backend origin, set `HOMARR_BACKEND_URL` in the dashboard environment. See [headless deployment](/docs/advanced/development/headless) to run without the dashboard.
 
 Workshop contributors can set up PocketBase and Fumadocs with the dedicated
 [Workshop development guide](/docs/advanced/development/workshop).
@@ -81,6 +75,7 @@ Workshop contributors can set up PocketBase and Fumadocs with the dedicated
 ### Useful commands
 
 - `bun run dev` — Next.js on port 3000.
+- `bun run dev:backend` — backend HTTP on port 3002, tasks and subscriptions.
 - `bun run dev:benchmark` — authenticated-board benchmark; readiness-only `--smoke` runs are not performance claims.
 - `bun run dev:cli -- dev` — browse and run local images and remote pull-request images.
 - `bun run dev:cli -- build <name>` — build the current checkout as `homarr:<name>`.

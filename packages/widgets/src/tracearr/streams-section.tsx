@@ -4,6 +4,7 @@ import { IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
 import { formatDuration } from "@homarr/common";
 import type { TracearrStream } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
+import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
 
 import type { SourcedTracearrItem } from "./source";
 
@@ -57,6 +58,7 @@ function StreamCard({
   transparent: boolean;
 }) {
   const t = useI18n("widget.tracearr");
+  const posterUrl = useWorkerResourceUrl(stream.posterUrl ?? undefined);
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
 
@@ -89,7 +91,7 @@ function StreamCard({
             right: 0,
             bottom: 0,
             width: "50%",
-            backgroundImage: `url(${stream.posterUrl})`,
+            backgroundImage: posterUrl ? `url(${posterUrl})` : undefined,
             backgroundSize: "cover",
             backgroundPosition: "center right",
             opacity: 0.25,

@@ -1,29 +1,41 @@
 import { dehydrate } from "@tanstack/react-query";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { serialize } from "superjson";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { makeQueryClient } from "@homarr/api/shared";
 
 import { prefetchForKind } from "./prefetch";
 import { createTrpcQueryKey } from "./trpc-query-key";
 
-const mocks = vi.hoisted(() => ({
-  findMany: vi.fn(),
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers({ cookie: "session=board-reader" }),
 }));
 
-vi.mock("@homarr/db", () => ({
-  db: { query: { apps: { findMany: mocks.findMany } } },
-  inArray: vi.fn(),
-}));
-vi.mock("@homarr/db/schema", () => ({ apps: { id: "id" } }));
-vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => ({ error: vi.fn() }) }));
+const backendFetch = vi.fn<typeof fetch>();
 
 describe("board app data prefetch", () => {
-  beforeEach(() => mocks.findMany.mockReset());
+  beforeEach(() => {
+    backendFetch.mockReset();
+    vi.stubGlobal("fetch", backendFetch);
+  });
 
-  it("hydrates pending app and bookmark queries before the batched database reads finish", async () => {
-    const appResult = Promise.withResolvers<{ id: string; name: string }[]>();
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("hydrates pending app and bookmark queries before the backend HTTP responses finish", async () => {
+    const appResult = Promise.withResolvers<{ id: string; name: string }>();
     const bookmarkResult = Promise.withResolvers<{ id: string; name: string }[]>();
-    mocks.findMany.mockReturnValueOnce(appResult.promise).mockReturnValueOnce(bookmarkResult.promise);
+    backendFetch.mockImplementation((input) => {
+      const url = new URL(String(input));
+      if (url.pathname.endsWith("/app.byId")) {
+        return appResult.promise.then((app) => Response.json({ result: { data: serialize(app) } }));
+      }
+      if (url.pathname.endsWith("/app.byIds")) {
+        return bookmarkResult.promise.then((apps) => Response.json({ result: { data: serialize(apps) } }));
+      }
+      throw new Error(`Unexpected backend request: ${url.pathname}`);
+    });
     const queryClient = makeQueryClient();
     const appKey = createTrpcQueryKey("app.byId", { id: "app-1" });
     const bookmarkKey = createTrpcQueryKey("app.byIds", ["app-1"]);
@@ -39,13 +51,19 @@ describe("board app data prefetch", () => {
       ]),
     );
     expect(dehydrated.queries.every((query) => query.promise instanceof Promise)).toBe(true);
+    await vi.waitFor(() => expect(backendFetch).toHaveBeenCalledTimes(2));
+    for (const [url, init] of backendFetch.mock.calls) {
+      expect(new URL(String(url)).pathname).toContain("/api/trpc/app.byId");
+      expect(new Headers(init?.headers).get("cookie")).toBe("session=board-reader");
+      expect(new Headers(init?.headers).get("x-trpc-source")).toBe("rsc");
+    }
 
-    appResult.resolve([{ id: "app-1", name: "App" }]);
+    appResult.resolve({ id: "app-1", name: "App" });
     bookmarkResult.resolve([{ id: "app-1", name: "App" }]);
     await vi.waitFor(() => {
       expect(queryClient.getQueryData(appKey)).toEqual({ id: "app-1", name: "App" });
       expect(queryClient.getQueryData(bookmarkKey)).toEqual([{ id: "app-1", name: "App" }]);
     });
-    expect(mocks.findMany).toHaveBeenCalledTimes(2);
+    queryClient.clear();
   });
 });

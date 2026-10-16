@@ -2,6 +2,7 @@ import { usePathname } from "next/navigation";
 import type { AppShellProps } from "@mantine/core";
 
 import { useOptionalBoard } from "@homarr/boards/context";
+import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
 const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLowerCase().endsWith(`.${format}`));
@@ -9,6 +10,7 @@ const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLo
 export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   const board = useOptionalBoard();
   const pathname = usePathname();
+  const backgroundUrl = useWorkerResourceUrl(board?.backgroundImageUrl ?? undefined);
 
   if (!board?.backgroundImageUrl) return {};
 
@@ -20,7 +22,7 @@ export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   }
 
   return {
-    bg: `url(${board.backgroundImageUrl})`,
+    bg: backgroundUrl ? `url(${backgroundUrl})` : undefined,
     bgp: "center center",
     bgsz: board.backgroundImageSize,
     bgr: board.backgroundImageRepeat,
@@ -30,6 +32,7 @@ export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
 
 export const BoardBackgroundVideo = () => {
   const board = useOptionalBoard();
+  const backgroundUrl = useWorkerResourceUrl(board?.backgroundImageUrl ?? undefined, { kind: "video" });
 
   if (!board?.backgroundImageUrl) return null;
   if (!isVideo(board.backgroundImageUrl)) return null;
@@ -54,7 +57,7 @@ export const BoardBackgroundVideo = () => {
         objectFit: board.backgroundImageSize,
       }}
     >
-      <source src={board.backgroundImageUrl} type={`video/${videoFormat}`} />
+      <source src={backgroundUrl} type={`video/${videoFormat}`} />
     </video>
   );
 };

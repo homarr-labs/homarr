@@ -39,6 +39,8 @@ import { SearchEngineOptimization } from "~/components/layout/search-engine-opti
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { ViewportHint } from "~/components/layout/viewport-hint";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
+import { WorkerFrontendDocument } from "~/worker/document";
+import { isWorkerFrontend } from "~/worker/mode";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
@@ -54,6 +56,9 @@ const fontSans = Inter({
 const logger = createLogger({ module: "rootLayout" });
 
 export const generateMetadata = async (): Promise<Metadata> => {
+  if (isWorkerFrontend()) {
+    return { title: "Homarr", description: "Your dashboards and workers", robots: { index: false, follow: false } };
+  }
   const [serverSettings, colorScheme, t] = await Promise.all([
     getRscServerSettingsAsync(),
     getCurrentColorSchemeAsync(),
@@ -90,6 +95,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 export const generateViewport = async (): Promise<Viewport> => {
+  if (isWorkerFrontend()) return { themeColor: "#fa5252" };
   const serverSettings = await getRscServerSettingsAsync();
   return { themeColor: serverSettings.branding.primaryColor };
 };
@@ -101,6 +107,10 @@ export default async function Layout(props: {
   const { locale } = await props.params;
   if (!isLocaleSupported(locale)) {
     notFound();
+  }
+
+  if (isWorkerFrontend()) {
+    return <WorkerFrontendDocument locale={locale} className={[fontSans.className, fontSans.variable].join(" ")} />;
   }
 
   const sessionPromise = auth();

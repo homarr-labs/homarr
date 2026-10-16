@@ -12,6 +12,7 @@ import type { CustomWidgetAuthConfig } from "@homarr/custom-widgets/server";
 import { integrationKinds } from "@homarr/definitions";
 
 import { protectedProcedure } from "../../procedure";
+import { callFederatedProcedure, getFederationOrigin } from "../../federation/client";
 import { getIntegrationHttpConnection, selectIntegrationForHttpRequest } from "./integration-http";
 
 export const integrationRequestSchema = z.object({
@@ -123,6 +124,7 @@ export function redactIntegrationResponse(data: unknown, secrets: CustomWidgetAu
 
 export const integrationRequestProcedure = protectedProcedure
   .meta({
+    integration: { action: "full", cardinality: "one" },
     openapi: {
       method: "POST",
       path: "/api/integrations/request",
@@ -167,6 +169,28 @@ export const integrationRequestProcedure = protectedProcedure
     if (Buffer.byteLength(JSON.stringify(input.headers ?? {})) > 16 * 1024)
       throw new ApiError({ code: "PAYLOAD_TOO_LARGE", message: "Headers exceed the 16 KiB limit" });
     const integration = await selectIntegrationForHttpRequest(context, input);
+    const origin = await getFederationOrigin(context, integration.id);
+    if (origin) {
+      if (context.workerAccess?.role === "service" && context.workerAccess.service?.purpose !== "mcp")
+        throw new ApiError({
+          code: "FORBIDDEN",
+          message: "Integration service grants cannot delegate to another worker",
+        });
+      const result = await callFederatedProcedure(context, origin.connectionId, ["integration", "request"], {
+        ...input,
+        integrationId: origin.remoteIntegrationId,
+        integrationName: undefined,
+        integrationKind: undefined,
+      });
+      const response = result as {
+        integration: { id: string; name: string; kind: (typeof integrationKinds)[number] };
+        ok: boolean;
+        status: number;
+        statusText: string;
+        data: z.infer<ReturnType<typeof z.json>>;
+      };
+      return { ...response, integration: { ...response.integration, id: integration.id, name: integration.name } };
+    }
     const targetUrl = resolveIntegrationRequestUrl(integration.url, input.path);
     // Decrypt only after authorization, from the same snapshot as URL and permissions.
     // Never log upstream data or retain secret-bearing error causes.

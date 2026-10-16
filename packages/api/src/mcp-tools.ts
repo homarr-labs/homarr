@@ -170,7 +170,7 @@ export function extractMcpToolsFromProcedures(router: AnyRouter): McpToolCatalog
 }
 
 /** Dispatch raw JSON through the caller so oRPC owns parsing, transforms, and authorization. */
-export async function callMcpTool(caller: unknown, tool: McpTool, input: unknown) {
+export async function callMcpTool(caller: unknown, tool: McpTool, input: unknown, options?: { signal?: AbortSignal }) {
   let procedure = caller;
   for (const segment of tool.pathInRouter) {
     if ((typeof procedure !== "object" && typeof procedure !== "function") || procedure === null) {
@@ -182,5 +182,8 @@ export async function callMcpTool(caller: unknown, tool: McpTool, input: unknown
   let procedureInput = input;
   if (tool.inputMode === "none") procedureInput = undefined;
   else if (input === undefined) procedureInput = {};
-  return await (procedure as (value: unknown) => Promise<unknown>)(procedureInput);
+  return await (procedure as (value: unknown, options?: { signal?: AbortSignal }) => Promise<unknown>)(
+    procedureInput,
+    options,
+  );
 }

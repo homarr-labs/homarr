@@ -1,4 +1,5 @@
-import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+import { ActionIcon, Group, Stack, Text } from "@mantine/core";
 import { IconBookmark, IconLink, IconX } from "@tabler/icons-react";
 import { z } from "zod/v4";
 

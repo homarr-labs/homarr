@@ -1,6 +1,6 @@
 import type { RemoteTransport, WorkerConnection, WorkerRequestContext } from "@homarr/remote-protocol";
 import { createWorkerConnection, signIdentity, toBase64Url, utf8 } from "@homarr/remote-protocol";
-import type { AccessCredential, AuthenticatedEnvelope } from "@homarr/worker-access";
+import type { AccessCredential, AccessPrincipal, AuthenticatedEnvelope } from "@homarr/worker-access";
 
 import { writePairingFile } from "./state";
 import type { WorkerState } from "./state";
@@ -37,10 +37,37 @@ export type IngressTransport = ReturnType<typeof createTransport>;
 
 export class WorkerChannels {
   private readonly connections = new Map<WorkerConnection, AuthenticatedEnvelope>();
+  private readonly nativeUsers = new WeakMap<
+    AccessPrincipal,
+    { revision: string; checkedAt: number; pending?: Promise<void> }
+  >();
   constructor(
     readonly state: WorkerState,
     readonly onRequest: (request: Request, context: WorkerRequestContext) => Promise<Response>,
   ) {}
+
+  private async assertAuthorization(authorization: AuthenticatedEnvelope) {
+    const principal = authorization.principal;
+    this.state.access.assertActive(principal);
+    if (principal.role !== "user") return;
+    const { nativeUserAuthorizationRevision } = await import("./native-user");
+    const current = this.nativeUsers.get(principal);
+    if (!current) {
+      const revision = await nativeUserAuthorizationRevision(this.state, principal);
+      this.nativeUsers.set(principal, { revision, checkedAt: Date.now() });
+      return;
+    }
+    if (current.pending) return current.pending;
+    if (Date.now() - current.checkedAt < 1000) return;
+    current.pending = (async () => {
+      const revision = await nativeUserAuthorizationRevision(this.state, principal);
+      if (revision !== current.revision) throw new Error("Native Homarr permissions changed; reconnect required");
+      current.checkedAt = Date.now();
+    })().finally(() => {
+      delete current.pending;
+    });
+    return current.pending;
+  }
 
   async accept(transport: RemoteTransport) {
     const connection = await createWorkerConnection({
@@ -48,22 +75,23 @@ export class WorkerChannels {
       identity: this.state.identity,
       authorize: async (credential, device) => {
         const authorization = await this.state.access.authenticateEnvelope(device, credential as AccessCredential);
+        await this.assertAuthorization(authorization);
         if ((credential as AccessCredential).kind === "claim") await writePairingFile(this.state);
         return authorization;
       },
       publicAuthorization: (authorization) => ({ grant: (authorization as AuthenticatedEnvelope).grant }),
       onRequest: async (request, context) => {
         const authorization = context.authorization as AuthenticatedEnvelope;
-        this.state.access.assertActive(authorization.principal);
+        await this.assertAuthorization(authorization);
         const response = await this.onRequest(request, context);
         if (!response.body) return response;
         const reader = response.body.getReader();
         const body = new ReadableStream<Uint8Array>({
           pull: async (controller) => {
             try {
-              this.state.access.assertActive(authorization.principal);
+              await this.assertAuthorization(authorization);
               const chunk = await reader.read();
-              this.state.access.assertActive(authorization.principal);
+              await this.assertAuthorization(authorization);
               if (chunk.done) controller.close();
               else controller.enqueue(chunk.value);
             } catch {
@@ -106,15 +134,13 @@ export class WorkerChannels {
         cleanup?.();
         return;
       }
-      try {
-        this.state.access.assertActive(authorization.principal);
-      } catch {
+      void this.assertAuthorization(authorization).catch(() => {
         connection.close();
         this.connections.delete(connection);
         clearInterval(interval);
         clearTimeout(expiryTimer);
         cleanup?.();
-      }
+      });
     }, 1000);
     interval.unref();
     return connection;
@@ -161,12 +187,14 @@ export function connectRelay(state: WorkerState, channels: WorkerChannels) {
   };
   const open = () => {
     if (stopped) return;
-    const address = new URL(state.relayUrl);
+    // A private container-network address may differ from the public invitation URL.
+    const connectUrl = process.env.WORKER_RELAY_CONNECT_URL;
+    const address = new URL(connectUrl ?? state.relayUrl);
     if (address.protocol === "https:") address.protocol = "wss:";
     if (address.protocol === "http:") address.protocol = "ws:";
     const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(address.hostname);
     if (
-      (address.protocol !== "wss:" && !(loopback && address.protocol === "ws:")) ||
+      (address.protocol !== "wss:" && !((loopback || connectUrl !== undefined) && address.protocol === "ws:")) ||
       address.search ||
       address.hash ||
       address.username ||

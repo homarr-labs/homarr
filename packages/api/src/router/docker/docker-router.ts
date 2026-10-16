@@ -15,7 +15,7 @@ import {
 
 import { dockerMiddleware } from "../../middlewares/docker";
 import { subscriptionEvents } from "../../subscription";
-import { createApiRouter, permissionRequiredProcedure } from "../../procedure";
+import { createApiRouter, permissionRequiredProcedure, protectedProcedure } from "../../procedure";
 import { getDockerReconciliationAsync, getDockerServiceHealthAsync } from "./docker-reconciliation";
 
 const dockerContainerTargetSchema = z.object({
@@ -67,8 +67,13 @@ export const dockerRouter = createApiRouter({
       DockerSingleton.reset();
       dockerContainersRequestHandler.invalidateCache();
     }),
-  getContainers: permissionRequiredProcedure
-    .requiresPermission("admin")
+  getContainers: protectedProcedure
+    .use(({ context, next }) => {
+      // The worker's native viewer guard validates the saved endpoint selection
+      // and filters its published containers before any result is returned.
+      if (context.session?.user.permissions.includes("admin") || context.workerAccess?.role === "viewer") return next();
+      throw new ApiError({ code: "FORBIDDEN", message: "Permission denied" });
+    })
     .meta({
       mcp: {
         enabled: true,

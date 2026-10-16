@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
 
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { defaultServerSettings } from "@homarr/server-settings";
+
+import { isWorkerFrontend } from "~/worker/mode";
 
 export const dynamic = "force-dynamic";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
-  const serverSettings = await getRscServerSettingsAsync();
+  const serverSettings = isWorkerFrontend() ? defaultServerSettings : await getRscServerSettingsAsync();
   const branding = serverSettings.branding;
   const appIcon = branding.logoImageUrl ?? branding.faviconImageUrl;
   const icons: NonNullable<MetadataRoute.Manifest["icons"]> = [

@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
-import { boardUserPermissions, boards, customWidgetDefinitions, items, users } from "@homarr/db/schema";
+import { boardUserPermissions, boards, customWidgetDefinitions, integrations, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
@@ -116,6 +116,47 @@ describe("Custom JSX v2 board router", () => {
   beforeEach(() => {
     mocks.executeRequest.mockClear();
     mocks.invalidateResponseCache.mockClear();
+  });
+
+  test("worker viewers can execute only published view queries against their stored integration source", async () => {
+    const integratedDefinition: HomarrCustomWidgetV2 = {
+      ...definition,
+      sources: {
+        default: { type: "integration", integrationId: "published-integration", integrationKind: "jellyfin" },
+      },
+    };
+    const { db, itemId, boardId } = await setup(false, integratedDefinition);
+    await db.insert(integrations).values({
+      id: "published-integration",
+      name: "Published source",
+      kind: "jellyfin",
+      url: "https://jellyfin.example.com",
+    });
+    await db.insert(users).values({ id: "shared-viewer" });
+    await db.insert(boardUserPermissions).values({ boardId, userId: "shared-viewer", permission: "view" });
+    const session = createSession("shared-viewer");
+    const regular = createCallerFactory(customApiRouter)({ db, deviceType: undefined, session });
+    // Ordinary callers still need full integration permission for arbitrary HTTP sources.
+    expect((await regular.getData({ itemId })).status["load-status"]).toMatchObject({ ok: false });
+    expect(mocks.executeRequest).not.toHaveBeenCalled();
+
+    const shared = createCallerFactory(customApiRouter)({
+      db,
+      deviceType: undefined,
+      session,
+      workerAccess: { role: "viewer", grantId: "published-grant", authorizeProcedure: () => undefined },
+    });
+    const published = await shared.getData({ itemId });
+    expect(published.template).toBe(definition.template);
+    expect(published.data["load-status"]).toEqual({ value: 42 });
+    expect(mocks.executeRequest).toHaveBeenCalledOnce();
+    expect(mocks.executeRequest).toHaveBeenCalledWith(
+      expect.objectContaining({ method: "GET", targetUrl: new URL("https://jellyfin.example.com/status") }),
+    );
+    await expect(
+      shared.executeAction({ itemId, requestId: "toggle", params: { enabled: true } }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(mocks.executeRequest).toHaveBeenCalledOnce();
   });
 
   test("shares only view load queries even when called by the board owner", async () => {

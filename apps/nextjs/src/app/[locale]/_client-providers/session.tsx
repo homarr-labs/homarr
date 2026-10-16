@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useRef } from "react";
 import type { PropsWithChildren } from "react";
 import dayjs from "dayjs";
+import { SessionContext } from "next-auth/react";
 
 import type { Session } from "@homarr/auth";
 import { SessionProvider, signIn } from "@homarr/auth/client";
@@ -10,15 +11,42 @@ import { SessionProvider, signIn } from "@homarr/auth/client";
 interface AuthProviderProps {
   logoutUrl: string | undefined;
   session: Session | null;
+  onSignOut?: () => void;
+  workerSession?: boolean;
 }
 
-export const AuthProvider = ({ children, session, logoutUrl }: PropsWithChildren<AuthProviderProps>) => {
-  useLoginRedirectOnSessionExpiry(session);
+export const AuthProvider = ({
+  children,
+  session,
+  logoutUrl,
+  onSignOut,
+  workerSession = false,
+}: PropsWithChildren<AuthProviderProps>) => {
+  useLoginRedirectOnSessionExpiry(workerSession ? null : session);
   const logoutRedirectInProgress = useRef(false);
+  const content = (
+    <AuthContext.Provider value={{ logoutUrl, logoutRedirectInProgress, onSignOut }}>{children}</AuthContext.Provider>
+  );
+
+  if (workerSession) {
+    if (!session)
+      return (
+        <SessionContext.Provider value={{ data: null, status: "unauthenticated", update: async () => null }}>
+          {content}
+        </SessionContext.Provider>
+      );
+    // Worker sessions are already authorized by the encrypted channel. Never ask
+    // the hosted frontend's cookie endpoint to replace this worker's identity.
+    return (
+      <SessionContext.Provider value={{ data: session, status: "authenticated", update: async () => session }}>
+        {content}
+      </SessionContext.Provider>
+    );
+  }
 
   return (
-    <SessionProvider session={session}>
-      <AuthContext.Provider value={{ logoutUrl, logoutRedirectInProgress }}>{children}</AuthContext.Provider>
+    <SessionProvider session={session} refetchOnWindowFocus={!workerSession} refetchInterval={0}>
+      {content}
     </SessionProvider>
   );
 };
@@ -26,6 +54,7 @@ export const AuthProvider = ({ children, session, logoutUrl }: PropsWithChildren
 interface AuthContextProps {
   logoutRedirectInProgress: { current: boolean };
   logoutUrl: string | undefined;
+  onSignOut?: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);

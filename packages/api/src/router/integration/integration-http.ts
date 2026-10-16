@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { ApiError } from "../../procedure";
 
 import type { Session } from "@homarr/auth";
+import { intersectFederationPermissions } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common/server";
 import {
@@ -21,6 +22,8 @@ import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/fact
 export interface IntegrationHttpContext {
   db: Database;
   session: Session | null;
+  /** Server-created only after authorizing a stored Custom JSX view query on a shared board. */
+  publishedIntegrationRead?: { readonly integrationId: string };
 }
 
 export async function getIntegrationForHttpRequest(context: IntegrationHttpContext, integrationId: string) {
@@ -29,6 +32,7 @@ export async function getIntegrationForHttpRequest(context: IntegrationHttpConte
   const integration = await context.db.query.integrations.findFirst({
     where: eq(integrations.id, integrationId),
     with: {
+      origin: { with: { connection: true } },
       secrets: true,
       userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
       groupPermissions: {
@@ -38,7 +42,19 @@ export async function getIntegrationForHttpRequest(context: IntegrationHttpConte
   });
   // Arbitrary reads can expose credentials or mutate state; bounded native
   // integration operations have a different permission contract.
-  if (!integration || !constructIntegrationPermissions(integration, context.session).hasFullAccess) {
+  const publishedRead = context.publishedIntegrationRead?.integrationId === integrationId;
+  const sourceAllowsFull =
+    !integration?.origin ||
+    intersectFederationPermissions(
+      { hasUseAccess: true, hasInteractAccess: true, hasFullAccess: true },
+      integration.origin,
+      publishedRead,
+    ).hasFullAccess;
+  if (
+    !integration ||
+    !sourceAllowsFull ||
+    (!publishedRead && !constructIntegrationPermissions(integration, context.session).hasFullAccess)
+  ) {
     throw new ApiError({
       code: "FORBIDDEN",
       message: "Arbitrary integration requests require full integration access",
@@ -64,6 +80,7 @@ export async function selectIntegrationForHttpRequest(
     where,
     orderBy: [asc(integrations.name), asc(integrations.id)],
     with: {
+      origin: { with: { connection: true } },
       secrets: true,
       userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
       groupPermissions: {
@@ -71,7 +88,11 @@ export async function selectIntegrationForHttpRequest(
       },
     },
   });
-  const integration = matches.find((entry) => constructIntegrationPermissions(entry, context.session).hasFullAccess);
+  const integration = matches.find(
+    (entry) =>
+      intersectFederationPermissions(constructIntegrationPermissions(entry, context.session), entry.origin)
+        .hasFullAccess,
+  );
   if (!integration) throw new ApiError({ code: "FORBIDDEN", message: "No matching integration with full access" });
   const unavailableReason = getIntegrationHttpUnavailableReason(integration.kind);
   if (unavailableReason) throw new ApiError({ code: "BAD_REQUEST", message: unavailableReason });

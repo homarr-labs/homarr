@@ -1,7 +1,8 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "./resource-avatar";
 import type { AvatarProps } from "@mantine/core";
-import { Avatar } from "@mantine/core";
+
 import { enc, MD5 } from "crypto-js";
 
 import { useSettings } from "@homarr/settings";

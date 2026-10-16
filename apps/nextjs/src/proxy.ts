@@ -11,6 +11,8 @@ import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
+import { isWorkerFrontend } from "./worker/mode";
+
 const backend = createTRPCClient<AppRouter>({
   links: [httpLink({ url: getTrpcUrl(), transformer: SuperJSON, headers: { "x-trpc-source": "next-proxy" } })],
 });
@@ -26,6 +28,9 @@ const getRoutingDedupedAsync = () => {
 };
 
 export async function proxy(request: NextRequest) {
+  if (isWorkerFrontend()) return proxyWorkerFrontend(request);
+  if (/^\/(api|rpc)(\/|$)/.test(request.nextUrl.pathname)) return NextResponse.next();
+  if (request.nextUrl.pathname.includes(".")) return NextResponse.next();
   let requestRouting: ReturnType<typeof backend.frontend.routing.query> | undefined;
   const getRequestRoutingAsync = () => {
     requestRouting ??= getRoutingDedupedAsync();
@@ -65,6 +70,42 @@ export async function proxy(request: NextRequest) {
   return next(request);
 }
 
+function proxyWorkerFrontend(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  if (pathname === "/api/frontend/health") return NextResponse.next();
+  if (
+    /^\/(images|logo)\//.test(pathname) ||
+    pathname === "/sw.js" ||
+    pathname === "/sql-wasm.wasm" ||
+    pathname === "/manifest.webmanifest"
+  )
+    return NextResponse.next();
+  const platformPath = process.env.HOMARR_PLATFORM_PATH ?? "/platform";
+  if (pathname === platformPath || pathname.startsWith(`${platformPath}/`)) return NextResponse.next();
+  // Browser requests must use the selected worker transport, never a host-local API.
+  if (/^\/(api|rpc|well-known|\.well-known)(\/|$)/.test(pathname)) {
+    return NextResponse.json({ error: "Connect a worker to access its API." }, { status: 404 });
+  }
+  const segments = pathname.split("/").filter(Boolean);
+  const firstSegment = segments[0] as SupportedLanguage | undefined;
+  let locale: SupportedLanguage = "en";
+  if (firstSegment && supportedLanguages.includes(firstSegment)) {
+    locale = firstSegment;
+    segments.shift();
+  } else {
+    const cookieLocale = request.cookies.get(localeCookieKey)?.value as SupportedLanguage | undefined;
+    if (cookieLocale && supportedLanguages.includes(cookieLocale)) locale = cookieLocale;
+  }
+  const destination = new URL(request.url);
+  if (segments[0] === "worker-shell") return NextResponse.next();
+  let route = `/${locale}/worker-shell`;
+  if (segments.length) route += `/${segments.join("/")}`;
+  destination.pathname = route;
+  // Keep Next's normalized origin. Substituting the public reverse-proxy Host
+  // would turn this into an outbound proxy request to the public frontend.
+  return NextResponse.rewrite(destination);
+}
+
 export const config = {
-  matcher: ["/((?!api|rpc|static|.*\\..*|_next|favicon.ico|robots.txt).*)"],
+  matcher: ["/((?!static|_next|favicon.ico|robots.txt).*)"],
 };

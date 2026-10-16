@@ -1,5 +1,6 @@
 import { ApiError } from "../procedure";
 import { z } from "zod/v4";
+import { X509Certificate } from "node:crypto";
 
 import {
   getGroupMemberManagementType,
@@ -9,6 +10,10 @@ import {
 } from "@homarr/auth/server";
 import { env as authEnv } from "@homarr/auth/env";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
+import {
+  getTrustedCertificateHostnamesAsync,
+  loadCustomRootCertificatesAsync,
+} from "@homarr/core/infrastructure/certificates";
 import { and, eq } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
 import { boards, groups, invites, users } from "@homarr/db/schema";
@@ -24,6 +29,50 @@ import { normalizeOnboardingStep } from "./onboard/onboard-queries";
 // Small presentation reads formerly performed directly by Next.js. Permissions
 // are enforced here so any frontend can consume these without database access.
 export const frontendRouter = createApiRouter({
+  certificates: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
+    const certificates = await loadCustomRootCertificatesAsync();
+    return certificates
+      .map(({ fileName, content }) => {
+        try {
+          const certificate = new X509Certificate(content);
+          return {
+            fileName,
+            isError: false,
+            subject: certificate.subject,
+            validTo: certificate.validToDate.toISOString(),
+          };
+        } catch {
+          return { fileName, isError: true, subject: null, validTo: null };
+        }
+      })
+      .toSorted((a, b) => {
+        if (a.isError !== b.isError) return Number(b.isError) - Number(a.isError);
+        return (a.validTo ?? "").localeCompare(b.validTo ?? "");
+      });
+  }),
+  trustedCertificateHostnames: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
+    const rows = await getTrustedCertificateHostnamesAsync();
+    return rows.map(({ hostname, thumbprint, certificate }) => {
+      let subject: string | null = null;
+      try {
+        subject = new X509Certificate(certificate).subject;
+      } catch {
+        /* Invalid certificates remain removable. */
+      }
+      return { hostname, thumbprint, subject };
+    });
+  }),
+  mcpToolGroups: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
+    const { extractMcpTools } = await import("../http/mcp/_extract-tools");
+    const namespaces = new Map<string, { name: string; description: string; type: "query" | "mutation" }[]>();
+    for (const tool of extractMcpTools()) {
+      const namespace = tool.pathInRouter[0] ?? "other";
+      const tools = namespaces.get(namespace) ?? [];
+      tools.push({ name: tool.name, description: tool.description, type: tool.type });
+      namespaces.set(namespace, tools);
+    }
+    return [...namespaces].map(([namespace, tools]) => ({ namespace, tools }));
+  }),
   settings: publicProcedure.query(async ({ context }) => {
     const { analytics: _analytics, ...settings } = await getServerSettingsAsync(context.db);
     return settings;

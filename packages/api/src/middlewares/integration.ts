@@ -2,13 +2,13 @@ import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
-import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { hasQueryAccessToIntegrationsAsync, intersectFederationPermissions } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
-import { integrations } from "@homarr/db/schema";
+import { groupMembers, integrationGroupPermissions, integrationUserPermissions, integrations } from "@homarr/db/schema";
 import type { IntegrationKind, WidgetIntegrationKind, WidgetKindWithIntegration } from "@homarr/definitions";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -44,66 +44,89 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   kinds: readonly TKind[],
 ) => {
-  return publicProcedure.input(z.object({ integrationId: z.string() })).use(async ({ context, next }, input) => {
-    const accessMetadata: IntegrationAccessMetadata = {
-      action,
-      cardinality: "one",
-      userId: context.session?.user.id,
-      requestedIntegrationIds: [input.integrationId],
-      allowedIntegrationKinds: kinds,
-    };
-    logger.debug("Resolving integration access", accessMetadata);
+  return publicProcedure
+    .meta({ integration: { action, cardinality: "one" } })
+    .input(z.object({ integrationId: z.string() }))
+    .use(async ({ context, next }, input) => {
+      const userId = context.session?.user.id ?? "";
+      const groups = await context.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, userId),
+        columns: { groupId: true },
+      });
+      const accessMetadata: IntegrationAccessMetadata = {
+        action,
+        cardinality: "one",
+        userId: context.session?.user.id,
+        requestedIntegrationIds: [input.integrationId],
+        allowedIntegrationKinds: kinds,
+      };
+      logger.debug("Resolving integration access", accessMetadata);
 
-    const integration = await context.db.query.integrations.findFirst({
-      where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
-      with: {
-        app: true,
-        secrets: true,
-        groupPermissions: true,
-        userPermissions: true,
-        items: {
-          with: {
-            item: true,
+      const integration = await context.db.query.integrations.findFirst({
+        where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
+        with: {
+          app: true,
+          secrets: true,
+          origin: { with: { connection: true } },
+          groupPermissions: {
+            where: inArray(
+              integrationGroupPermissions.groupId,
+              groups.map(({ groupId }) => groupId),
+            ),
+          },
+          userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
+          items: {
+            with: {
+              item: true,
+            },
           },
         },
-      },
-    });
-
-    if (!integration) {
-      logger.warn("Integration access target was not found", accessMetadata);
-      throw new ApiError({
-        code: "NOT_FOUND",
-        message: `Integration with id ${input.integrationId} not found or not of kinds ${kinds.join(",")}`,
       });
-    }
 
-    await throwIfActionIsNotAllowedAsync(action, context.db, [integration], context.session);
-    logger.debug("Integration access granted", {
-      ...accessMetadata,
-      resolvedIntegrationKinds: [integration.kind],
-    });
+      if (!integration) {
+        logger.warn("Integration access target was not found", accessMetadata);
+        throw new ApiError({
+          code: "NOT_FOUND",
+          message: `Integration with id ${input.integrationId} not found or not of kinds ${kinds.join(",")}`,
+        });
+      }
 
-    const narrowedKind = kinds.find((kind) => kind === integration.kind);
-    if (!narrowedKind) {
-      return throwUnexpectedIntegrationKind(integration.kind, kinds);
-    }
+      await throwIfActionIsNotAllowedAsync(action, context.db, [integration], context.session);
+      assertFederationCeiling(action, integration.origin);
+      logger.debug("Integration access granted", {
+        ...accessMetadata,
+        resolvedIntegrationKinds: [integration.kind],
+      });
 
-    const { secrets, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest } = integration;
+      const narrowedKind = kinds.find((kind) => kind === integration.kind);
+      if (!narrowedKind) {
+        return throwUnexpectedIntegrationKind(integration.kind, kinds);
+      }
 
-    return next({
-      context: {
-        integration: {
-          ...rest,
-          externalUrl: rest.app?.href ?? null,
-          kind: narrowedKind,
-          decryptedSecrets: secrets.map((secret) => ({
-            ...secret,
-            value: decryptSecret(secret.value),
-          })),
+      const {
+        secrets,
+        origin,
+        items: _ignore1,
+        groupPermissions: _ignore2,
+        userPermissions: _ignore3,
+        ...rest
+      } = integration;
+
+      return next({
+        context: {
+          federationTargets: [{ id: integration.id, name: integration.name, kind: integration.kind, origin }],
+          integration: {
+            ...rest,
+            externalUrl: rest.app?.href ?? null,
+            kind: narrowedKind,
+            decryptedSecrets: secrets.map((secret) => ({
+              ...secret,
+              value: decryptSecret(secret.value),
+            })),
+          },
         },
-      },
+      });
     });
-  });
 };
 
 /**
@@ -127,8 +150,14 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
   kinds: readonly TKind[],
 ) => {
   return publicProcedure
+    .meta({ integration: { action, cardinality: "many" } })
     .input(z.object({ integrationIds: z.array(z.string()) }))
     .use(async ({ context, next }, input) => {
+      const userId = context.session?.user.id ?? "";
+      const groups = await context.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, userId),
+        columns: { groupId: true },
+      });
       const accessMetadata: IntegrationAccessMetadata = {
         action,
         cardinality: "many",
@@ -151,8 +180,14 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
                 item: true,
               },
             },
-            userPermissions: true,
-            groupPermissions: true,
+            origin: { with: { connection: true } },
+            userPermissions: { where: eq(integrationUserPermissions.userId, userId) },
+            groupPermissions: {
+              where: inArray(
+                integrationGroupPermissions.groupId,
+                groups.map(({ groupId }) => groupId),
+              ),
+            },
           },
         });
       };
@@ -174,6 +209,7 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
 
       if (dbIntegrations.length >= 1) {
         await throwIfActionIsNotAllowedAsync(action, context.db, dbIntegrations, context.session);
+        for (const integration of dbIntegrations) assertFederationCeiling(action, integration.origin);
       }
 
       logger.debug("Integration access granted", {
@@ -183,8 +219,17 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
 
       return next({
         context: {
+          federationTargets: dbIntegrations.map(({ id, name, kind, origin }) => ({ id, name, kind, origin })),
           integrations: dbIntegrations.map(
-            ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => {
+            ({
+              secrets,
+              kind,
+              origin: _origin,
+              items: _ignore1,
+              groupPermissions: _ignore2,
+              userPermissions: _ignore3,
+              ...rest
+            }) => {
               const narrowedKind = kinds.find((allowedKind) => allowedKind === kind);
               if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
               return {
@@ -287,3 +332,19 @@ const throwIfActionIsNotAllowedAsync = async (
     message: "User does not have permission to query at least one of the specified integration",
   });
 };
+
+function assertFederationCeiling(
+  action: IntegrationAction,
+  origin: Parameters<typeof intersectFederationPermissions>[1],
+) {
+  const ceiling = intersectFederationPermissions(
+    { hasUseAccess: true, hasInteractAccess: true, hasFullAccess: true },
+    origin,
+    action === "query",
+  );
+  if ((action === "query" && !ceiling.hasUseAccess) || (action === "interact" && !ceiling.hasInteractAccess))
+    throw new ApiError({
+      code: "FORBIDDEN",
+      message: "The source worker has not approved this operation or its access has expired",
+    });
+}

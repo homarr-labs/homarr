@@ -1,4 +1,4 @@
 {
   "title": "Developer guides",
-  "pages": ["getting-started", "widgets-and-integrations", "kubernetes", "workshop", "workshop-operator"]
+  "pages": ["getting-started", "headless", "widgets-and-integrations", "kubernetes", "workshop", "workshop-operator"]
 }

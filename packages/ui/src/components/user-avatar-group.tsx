@@ -1,5 +1,6 @@
+import { ResourceAvatar as Avatar } from "./resource-avatar";
 import type { MantineSize } from "@mantine/core";
-import { Avatar, AvatarGroup, Tooltip, TooltipGroup } from "@mantine/core";
+import { AvatarGroup, Tooltip, TooltipGroup } from "@mantine/core";
 
 import type { UserProps } from "./user-avatar";
 import { UserAvatar } from "./user-avatar";

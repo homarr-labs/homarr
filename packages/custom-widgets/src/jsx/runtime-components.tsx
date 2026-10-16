@@ -11,7 +11,7 @@ import {
 } from "../core/component-registry";
 import type { CustomJsxBindingType } from "../core/component-registry";
 import { ActionButton, ToggleSwitch } from "../runtime/actions";
-import { SubData } from "../runtime/data";
+import { CustomWidgetImageContext, SubData } from "../runtime/data";
 import { RefreshButton } from "../runtime/refresh-button";
 import { SubFetch } from "../runtime/sub-fetch";
 import { createCopyButton } from "./copy-button";
@@ -221,6 +221,9 @@ function SafeLink({ component, props }: { component: ComponentType<never>; props
 
 export interface CustomJsxComponentAdapters {
   TablerIcon: ComponentType<never>;
+  Image?: ComponentType<Core.ImageProps & { alt?: string }>;
+  Avatar?: ComponentType<Core.AvatarProps>;
+  BackgroundImage?: ComponentType<Core.BackgroundImageProps>;
   copyLabels: { copy: string; copied: string };
 }
 
@@ -277,10 +280,18 @@ export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters):
     TypeBadge,
     TablerIcon: adapters.TablerIcon,
     SubFetch,
-    SubData,
+    SubData: (props: Parameters<typeof SubData>[0]) => (
+      <CustomWidgetImageContext.Provider value={adapters.Image ?? Core.Image}>
+        <SubData {...props} />
+      </CustomWidgetImageContext.Provider>
+    ),
     ActionButton,
     ToggleSwitch,
     RefreshButton,
   });
+  if (adapters.Image) components.Image = wrap("Image", adapters.Image as ComponentType<never>);
+  if (adapters.Avatar) components.Avatar = wrap("Avatar", adapters.Avatar as ComponentType<never>);
+  if (adapters.BackgroundImage)
+    components.BackgroundImage = wrap("BackgroundImage", adapters.BackgroundImage as ComponentType<never>);
   return components;
 }

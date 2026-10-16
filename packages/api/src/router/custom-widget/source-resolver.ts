@@ -4,6 +4,10 @@ import { splitToChunksWithNItems } from "@homarr/common";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
+import { assertJsonBudget, CustomWidgetDomainError, MAX_RESPONSE_BODY_BYTES } from "@homarr/custom-widgets/server";
+import { z } from "zod/v4";
+
+import { callFederatedProcedure, getFederationOrigin } from "../../federation/client";
 
 import type { IntegrationHttpContext } from "../integration/integration-http";
 import {
@@ -64,7 +68,14 @@ export async function resolveCustomWidgetSource(
 ): Promise<
   Pick<
     CustomWidgetHttpRequest,
-    "baseUrl" | "networkScope" | "auth" | "tls" | "pathPrefix" | "redactSecrets" | "resolveConnectionAsync"
+    | "baseUrl"
+    | "networkScope"
+    | "auth"
+    | "tls"
+    | "pathPrefix"
+    | "redactSecrets"
+    | "resolveConnectionAsync"
+    | "executeDelegatedRequest"
   > & {
     cacheVersion: string;
   }
@@ -79,5 +90,53 @@ export async function resolveCustomWidgetSource(
     return { baseUrl: source.baseUrl, networkScope: source.networkScope, auth, cacheVersion: "" };
   }
   const integration = await resolveIntegration(context, source);
+  const origin = await getFederationOrigin(context, integration.id);
+  if (origin) {
+    return {
+      // Render only a relative operation; the private URL is resolved on the source.
+      baseUrl: "https://federated.invalid/",
+      networkScope: "loopback",
+      cacheVersion: getIntegrationHttpCacheVersion(integration),
+      executeDelegatedRequest: async (operation, signal) => {
+        try {
+          const response = await callFederatedProcedure(
+            context,
+            origin.connectionId,
+            ["federation", "executeSource"],
+            {
+              integrationId: origin.remoteIntegrationId,
+              operation: { ...operation, authenticate: request.auth !== "none" },
+            },
+            { signal },
+          );
+          const parsed = delegatedResponseSchema.parse(response);
+          assertJsonBudget(parsed.data);
+          if (new TextEncoder().encode(JSON.stringify(parsed.data)).byteLength > MAX_RESPONSE_BODY_BYTES) {
+            throw new CustomWidgetDomainError({
+              code: "PAYLOAD_TOO_LARGE",
+              message: "Response exceeds the 1 MiB limit",
+            });
+          }
+          return parsed;
+        } catch (error) {
+          if (error instanceof CustomWidgetDomainError) throw error;
+          if (typeof error === "object" && error !== null && "code" in error && error.code === "FORBIDDEN") {
+            throw new CustomWidgetDomainError({
+              code: "FORBIDDEN",
+              message: "Worker access to the integration was denied",
+            });
+          }
+          throw new CustomWidgetDomainError({ code: "BAD_GATEWAY", message: "Integration worker request failed" });
+        }
+      },
+    };
+  }
   return getIntegrationHttpConnection(integration, request.auth !== "none");
 }
+
+const delegatedResponseSchema = z.object({
+  ok: z.boolean(),
+  status: z.number().int().min(100).max(599),
+  statusText: z.string().max(512),
+  data: z.json(),
+});

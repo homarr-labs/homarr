@@ -1,22 +1,11 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import type { ReactNode } from "react";
 import { createContext, useContext, useId, useState } from "react";
 import type { ToolCallMessagePartProps } from "@assistant-ui/react";
 import { ChainOfThoughtPrimitive } from "@assistant-ui/react";
-import {
-  Badge,
-  Box,
-  Button,
-  Collapse,
-  Group,
-  Image,
-  Loader,
-  Stack,
-  Text,
-  ThemeIcon,
-  UnstyledButton,
-} from "@mantine/core";
+import { Badge, Box, Button, Collapse, Group, Loader, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { IconCheck, IconChevronDown, IconLink, IconRobot, IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 

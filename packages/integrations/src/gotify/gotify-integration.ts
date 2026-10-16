@@ -87,7 +87,7 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     const messagesResult = await gotifyMessagesResponseSchema.safeParseAsync(await messagesResponse.json());
     if (!messagesResult.success) throw new Error(`Failed to parse Gotify response: ${messagesResult.error.message}`);
 
-    const imageProxy = new ImageProxy();
+    const imageProxy = new ImageProxy(this.integration.id);
     const iconUrlsByApplicationId = new Map<number, string | undefined>();
     await Promise.all(
       [...new Set(messagesResult.data.messages.map((message) => message.appid))].map(async (applicationId) => {

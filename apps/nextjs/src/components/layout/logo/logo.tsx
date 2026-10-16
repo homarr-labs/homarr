@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import type { TitleOrder } from "@mantine/core";
 import { Group, Title } from "@mantine/core";
+
+import { useResourceWorkerId, useWorkerResourceUrl } from "@homarr/worker-client/resources";
 
 interface LogoProps {
   size: number;
@@ -10,15 +14,17 @@ interface LogoProps {
 }
 
 export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoProps) => {
+  const workerId = useResourceWorkerId();
   const normalizedSrc = src.trim();
+  const resolvedSrc = useWorkerResourceUrl(normalizedSrc);
   if (normalizedSrc.length === 0) return null;
 
-  return shouldUseNextImage ? (
+  return shouldUseNextImage && !workerId ? (
     <Image className="logo" src={normalizedSrc} alt={alt} width={size} height={size} />
   ) : (
     // we only want to use next/image for logos that we are sure will be preloaded and are allowed
     // eslint-disable-next-line @next/next/no-img-element
-    <img className="logo" src={normalizedSrc} alt={alt} width={size} height={size} />
+    <img className="logo" src={resolvedSrc} alt={alt} width={size} height={size} />
   );
 };
 

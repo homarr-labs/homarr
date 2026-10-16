@@ -1,10 +1,10 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 import {
   Accordion,
-  Avatar,
   Box,
   Card,
   Center,

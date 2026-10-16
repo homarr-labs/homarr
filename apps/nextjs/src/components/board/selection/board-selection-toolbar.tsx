@@ -1,8 +1,8 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import {
   ActionBar,
-  Avatar,
   Button,
   Group,
   HoverCard,

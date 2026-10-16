@@ -1,0 +1,8 @@
+{
+  "extends": "@homarr/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["bun", "react"],
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": ["index.ts", "resources.tsx", "src/**/*.ts"]
+}

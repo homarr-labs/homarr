@@ -1,5 +1,6 @@
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import { useCallback, useMemo, useState } from "react";
-import { Avatar, Group, ScrollArea, Text } from "@mantine/core";
+import { Group, ScrollArea, Text } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 
 import type { DataTableColumn, DataTableProps } from "mantine-datatable";

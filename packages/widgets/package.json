@@ -67,6 +67,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/worker-client": "workspace:^0.1.0",
     "@mantine/charts": "catalog:",
     "@mantine/core": "catalog:",
     "@mantine/dates": "catalog:",

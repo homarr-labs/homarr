@@ -10,6 +10,7 @@ import "@mantine/dropzone/styles.css"; // oxlint-disable-line import/no-unassign
 
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { useResourceFetch, useResourceWorkerId } from "@homarr/worker-client/resources";
 
 import type { RestoreStep } from "./types";
 import { BackupPreviewPanel } from "./backup-preview-panel";
@@ -105,6 +106,8 @@ export const waitForServerReadinessAsync = async ({
 };
 
 export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: DatabaseRestoreFlowProps) => {
+  const resourceFetch = useResourceFetch();
+  const resourceWorkerId = useResourceWorkerId();
   const t = useI18n("management.page.tool.backup.restore");
   const tCommon = useI18n("common");
   const { formatBytes } = useByteFormatter();
@@ -152,30 +155,37 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     reset();
   }, [reset]);
 
-  const startReadinessCheck = useCallback((restartAfterMs: number, destination = restoreDestinationRef.current) => {
-    restartControllerRef.current?.abort();
-    restoreDestinationRef.current = destination;
-    const restartController = new AbortController();
-    restartControllerRef.current = restartController;
-    setRestoreStatus("restarting");
+  const startReadinessCheck = useCallback(
+    (restartAfterMs: number, destination = restoreDestinationRef.current) => {
+      restartControllerRef.current?.abort();
+      restoreDestinationRef.current = destination;
+      const restartController = new AbortController();
+      restartControllerRef.current = restartController;
+      setRestoreStatus("restarting");
 
-    void waitForServerReadinessAsync({ restartAfterMs, signal: restartController.signal }).then((result) => {
-      if (restartControllerRef.current !== restartController || result === "aborted") return;
-      if (result === "ready") {
-        if (destination === "/auth/login") {
-          setStep("complete");
-          redirectTimerRef.current = window.setTimeout(() => window.location.assign(destination), 2000);
-        } else if (destination) {
-          window.location.assign(destination);
-        } else {
-          window.location.reload();
+      void waitForServerReadinessAsync({
+        restartAfterMs,
+        signal: restartController.signal,
+        requestReady: async (signal) => (await resourceFetch("/api/health/ready", { cache: "no-store", signal })).ok,
+      }).then((result) => {
+        if (restartControllerRef.current !== restartController || result === "aborted") return;
+        if (result === "ready") {
+          if (destination === "/auth/login") {
+            setStep("complete");
+            redirectTimerRef.current = window.setTimeout(() => window.location.assign(destination), 2000);
+          } else if (destination) {
+            window.location.assign(destination);
+          } else {
+            window.location.reload();
+          }
+          return;
         }
-        return;
-      }
-      restartControllerRef.current = null;
-      setRestoreStatus("timedOut");
-    });
-  }, []);
+        restartControllerRef.current = null;
+        setRestoreStatus("timedOut");
+      });
+    },
+    [resourceFetch],
+  );
 
   const handleSignInAgain = useCallback(() => {
     if (redirectTimerRef.current !== null) {
@@ -198,7 +208,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch("/api/backup/import", { method: "POST", body: formData });
+      const response = await resourceFetch("/api/backup/import", { method: "POST", body: formData });
       const data = (await response.json().catch(() => null)) as {
         error?: unknown;
         homeBoardName?: unknown;
@@ -228,6 +238,10 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     }
 
     onRestoreComplete?.();
+    if (resourceWorkerId) {
+      window.setTimeout(() => window.location.assign("/boards"), restartAfterMs + 1500);
+      return;
+    }
     let destination: string | null = null;
     if (variant === "standalone" && homeBoardName) {
       destination = `/boards/${encodeURIComponent(homeBoardName)}`;
@@ -235,7 +249,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
       destination = "/auth/login";
     }
     startReadinessCheck(restartAfterMs, destination);
-  }, [file, onRestoreComplete, startReadinessCheck, t, variant]);
+  }, [file, onRestoreComplete, startReadinessCheck, t, variant, resourceFetch, resourceWorkerId]);
 
   if (step === "upload") {
     return (

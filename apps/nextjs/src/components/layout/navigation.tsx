@@ -1,5 +1,6 @@
+import { ResourceImage as Image } from "@homarr/ui";
 import type { JSX } from "react";
-import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
+import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
 
 import type { TablerIcon, TablerIconProps } from "@homarr/ui";
 

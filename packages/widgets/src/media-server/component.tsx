@@ -1,9 +1,9 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import {
-  Avatar,
   Badge,
   Divider,
   Group,

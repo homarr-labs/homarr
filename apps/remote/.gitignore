@@ -1,0 +1,3 @@
+dist/
+.tanstack/
+node_modules/

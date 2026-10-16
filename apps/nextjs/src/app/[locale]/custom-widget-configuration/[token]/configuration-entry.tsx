@@ -21,6 +21,7 @@ import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
 
 import { useI18n } from "@homarr/translation/client";
+import { useResourceFetch } from "@homarr/worker-client/resources";
 
 interface RequestDetails {
   widgetName: string;
@@ -32,6 +33,7 @@ interface RequestDetails {
 }
 
 export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
+  const resourceFetch = useResourceFetch();
   const t = useI18n("customWidget.secretEntry");
   const tSecret = useI18n("customWidget.secret");
   const [details, setDetails] = useState<RequestDetails | null>(null);
@@ -44,7 +46,10 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    void fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`)
+    const controller = new AbortController();
+    void resourceFetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
+      signal: controller.signal,
+    })
       .then(async (response) => {
         const body = (await response.json()) as RequestDetails | { error: string };
         if (!response.ok || "error" in body) throw new Error("error" in body ? body.error : t("unavailable"));
@@ -54,9 +59,14 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
         setNetworkScope(body.source.networkScope ?? "public");
         setIntegrationId(body.source.integrationId);
       })
-      .catch((cause: unknown) => setError(cause instanceof Error ? cause.message : t("unavailable")))
-      .finally(() => setLoading(false));
-  }, [t, token]);
+      .catch((cause: unknown) => {
+        if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : t("unavailable"));
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [t, token, resourceFetch]);
 
   const submit = async () => {
     setSaving(true);
@@ -64,7 +74,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
     try {
       let configuration: unknown = { baseUrl, networkScope, secrets: values };
       if (details?.source.type === "integration") configuration = { integrationId, secrets: {} };
-      const response = await fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
+      const response = await resourceFetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(configuration),

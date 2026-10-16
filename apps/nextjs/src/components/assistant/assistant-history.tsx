@@ -15,7 +15,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-import { fetchApi } from "@homarr/api/client";
+import { useScopedFetchApi } from "@homarr/api/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmActionIcon } from "@homarr/ui";
@@ -41,6 +41,7 @@ export const downloadAssistantMarkdown = (markdown: string, filename: string) =>
 const HistorySelectContext = createContext<() => void>(() => undefined);
 
 const ThreadListItem = () => {
+  const fetchApi = useScopedFetchApi();
   const t = useI18n("assistant");
   const actionT = useI18n("common.action");
   const aui = useAui();

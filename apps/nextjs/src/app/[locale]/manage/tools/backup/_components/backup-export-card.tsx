@@ -5,10 +5,12 @@ import { Alert, Button, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconDatabaseExport, IconDownload } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { useResourceFetch } from "@homarr/worker-client/resources";
 
 import { DangerousActionConfirmation } from "~/components/backup/dangerous-action-confirmation";
 
 export const BackupExportCard = () => {
+  const resourceFetch = useResourceFetch();
   const t = useI18n("management.page.tool.backup.export");
   const tBackup = useI18n("management.page.tool.backup");
   const tCommon = useI18n("common");
@@ -20,7 +22,7 @@ export const BackupExportCard = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/backup/export");
+      const response = await resourceFetch("/api/backup/export");
       if (!response.ok) {
         const errorMessage = await response.json().then(
           (data) => data.error,

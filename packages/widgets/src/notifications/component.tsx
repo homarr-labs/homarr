@@ -1,7 +1,8 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import { useMemo } from "react";
-import { ActionIcon, Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { ActionIcon, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconClock, IconExternalLink, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";

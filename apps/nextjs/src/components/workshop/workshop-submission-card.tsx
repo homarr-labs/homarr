@@ -1,7 +1,8 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import type { ReactNode } from "react";
-import { Badge, Box, Card, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Box, Card, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { IconAlertTriangle, IconFlag, IconPhoto } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";

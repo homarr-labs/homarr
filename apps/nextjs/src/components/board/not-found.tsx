@@ -1,4 +1,5 @@
-import { Anchor, AppShellMain, Center, Flex, Group, Image, Text, Title } from "@mantine/core";
+import { ResourceImage as Image } from "@homarr/ui";
+import { Anchor, AppShellMain, Center, Flex, Group, Text, Title } from "@mantine/core";
 
 import type { TablerIcon } from "@homarr/ui";
 

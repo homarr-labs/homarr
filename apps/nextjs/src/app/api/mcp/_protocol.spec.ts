@@ -113,7 +113,7 @@ describe("MCP v2 protocol", () => {
       await handler.fetch(createRequest("tools/call", { name: "echo", arguments: { message: "hello" } }, "echo")),
     );
 
-    expect(echo).toHaveBeenCalledWith({ message: "hello" });
+    expect(echo).toHaveBeenCalledWith({ message: "hello" }, undefined);
     expect(response.result.content).toEqual([{ type: "text", text: '{"message":"hello"}' }]);
   });
 
@@ -240,7 +240,7 @@ describe.each([false, true])("MCP argument dispatch (modern=%s)", (modern) => {
     const argumentsValue = { name: "hello", extra: "preserved" };
     const result = await call(handler, "update", argumentsValue);
     expect(result.isError).not.toBe(true);
-    expect(dispatch).toHaveBeenCalledWith(argumentsValue);
+    expect(dispatch).toHaveBeenCalledWith(argumentsValue, undefined);
     expect(transform).toHaveBeenCalledTimes(1);
     expect(execution).toHaveBeenCalledWith({ name: "hello!", limit: 7, extra: "preserved" });
     await call(handler, "update", { name: "hello", limit: "7" });

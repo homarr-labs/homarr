@@ -1,0 +1,45 @@
+services:
+  platform:
+    image: homarr:remote-platform
+    build:
+      context: ../..
+      dockerfile: Dockerfile.remote
+      target: remote-platform
+      args:
+        VITE_REMOTE_BASE_PATH: /remote
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${HOMARR_REMOTE_PORT:-3104}:3104"
+    environment:
+      REMOTE_PUBLIC_URL: ${REMOTE_PUBLIC_URL:-https://homarr.dev/remote}
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:-https://homarr.dev}
+      REMOTE_PLATFORM_DB: /appdata/platform.sqlite
+    volumes:
+      - platform-directory:/appdata
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  relay:
+    image: homarr:opaque-relay
+    profiles: [relay]
+    build:
+      context: ../..
+      dockerfile: apps/relay/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${HOMARR_RELAY_PORT:-8787}:8787"
+    environment:
+      RELAY_ALLOWED_ORIGINS: ${REMOTE_SITE_ORIGIN:-https://homarr.dev}
+      RELAY_REGISTRATION_TOKEN: ${RELAY_REGISTRATION_TOKEN:-}
+      RELAY_MAX_WORKERS: ${RELAY_MAX_WORKERS:-1000}
+      RELAY_MAX_CONNECTIONS: ${RELAY_MAX_CONNECTIONS:-4096}
+      RELAY_MAX_CONNECTIONS_PER_IP: ${RELAY_MAX_CONNECTIONS_PER_IP:-128}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  platform-directory:

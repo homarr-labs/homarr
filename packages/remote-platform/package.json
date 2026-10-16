@@ -1,0 +1,34 @@
+{
+  "name": "@homarr/remote-platform",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/app.ts",
+    "./store": "./src/store.ts",
+    "./types": "./src/types.ts",
+    "./auth": "./src/auth.ts",
+    "./enrollment": "./src/enrollment.ts",
+    "./mcp": "./src/mcp/app.ts",
+    "./mcp-store": "./src/mcp/store.ts"
+  },
+  "scripts": {
+    "start": "bun src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/platform.test.ts",
+    "format": "oxfmt .",
+    "lint": "oxlint"
+  },
+  "dependencies": {
+    "@homarr/remote-protocol": "workspace:^0.1.0",
+    "@modelcontextprotocol/server": "catalog:",
+    "hono": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  }
+}

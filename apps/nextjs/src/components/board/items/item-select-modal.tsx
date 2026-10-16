@@ -1,3 +1,4 @@
+import { ResourceImage as Image } from "@homarr/ui";
 import { useMemo, useRef, useState } from "react";
 import {
   Avatar,
@@ -7,7 +8,6 @@ import {
   Center,
   Divider,
   Group,
-  Image,
   Input,
   Select,
   SimpleGrid,

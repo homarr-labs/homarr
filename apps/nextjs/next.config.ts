@@ -21,7 +21,7 @@ const contentSecurityPolicy = `
   frame-ancestors *;
   frame-src *;
   form-action 'self';
-  img-src * data:;
+  img-src * data: blob:;
   font-src * data:;
   media-src * data: blob:;
 `
@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
   },
   output: "standalone",
   reactStrictMode: true,
+  // The worker shell rewrites within the listener behind a TLS proxy. Preserve
+  // its raw origin instead of normalizing 127.0.0.1/0.0.0.0 to localhost.
+  skipProxyUrlNormalize: process.env.HOMARR_FRONTEND_MODE === "workers",
   // react compiler breaks mantine-react-table, so disabled for now
   //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */

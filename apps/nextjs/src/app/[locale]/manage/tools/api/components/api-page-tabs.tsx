@@ -19,6 +19,7 @@ interface ApiPageTabsProps {
   apiKeyLabel: string;
   mcpLabel: string;
   documentationPanel: ReactNode;
+  mcpPanel?: ReactNode;
   apiKeys: RouterOutputs["apiKeys"]["getAll"];
   baseUrl: string;
   toolGroups: McpToolGroup[];
@@ -29,12 +30,24 @@ export function ApiPageTabs({
   apiKeyLabel,
   mcpLabel,
   documentationPanel,
+  mcpPanel,
   apiKeys,
   baseUrl,
   toolGroups,
 }: ApiPageTabsProps) {
   const [activeTab, setActiveTab] = useState<string | null>("documentation");
   const [hasApiKeys, setHasApiKeys] = useState(apiKeys.length > 0);
+  let mcpContent = mcpPanel;
+  if (mcpContent === undefined) {
+    mcpContent = (
+      <McpInstructions
+        baseUrl={baseUrl}
+        hasApiKeys={hasApiKeys}
+        toolGroups={toolGroups}
+        onApiKeyCreated={() => setHasApiKeys(true)}
+      />
+    );
+  }
 
   return (
     <Tabs value={activeTab} onChange={setActiveTab}>
@@ -53,14 +66,7 @@ export function ApiPageTabs({
         <ApiKeysManagement apiKeys={apiKeys} onCreated={() => setHasApiKeys(true)} />
       </TabsPanel>
       <TabsPanel value="documentation">{activeTab === "documentation" && documentationPanel}</TabsPanel>
-      <TabsPanel value="mcp">
-        <McpInstructions
-          baseUrl={baseUrl}
-          hasApiKeys={hasApiKeys}
-          toolGroups={toolGroups}
-          onApiKeyCreated={() => setHasApiKeys(true)}
-        />
-      </TabsPanel>
+      <TabsPanel value="mcp">{mcpContent}</TabsPanel>
     </Tabs>
   );
 }

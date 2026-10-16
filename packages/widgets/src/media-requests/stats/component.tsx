@@ -1,6 +1,7 @@
 "use client";
 
-import { ActionIcon, Avatar, Badge, Box, Card, Grid, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+import { ActionIcon, Badge, Box, Card, Grid, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 import {
   IconDeviceTv,

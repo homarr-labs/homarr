@@ -24,6 +24,9 @@ export type {
 export * from "./floating-tip";
 export { MaskedImage } from "./masked-image";
 export { MaskedOrNormalImage } from "./masked-or-normal-image";
+export { ResourceImage } from "./resource-image";
+export { ResourceAvatar } from "./resource-avatar";
+export { ResourceBackgroundImage } from "./resource-background-image";
 export { LanguageIcon } from "./language-icon";
 export { LanguageCombobox } from "./language-combobox";
 export { ColorSchemeCombobox } from "./color-scheme-combobox";

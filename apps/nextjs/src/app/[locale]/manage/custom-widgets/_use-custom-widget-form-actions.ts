@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
-import { clientApi } from "@homarr/api/client";
+import { clientApi, useScopedFetchApi } from "@homarr/api/client";
 import { formatCustomWidgetImportIssues } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
@@ -42,6 +42,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const tCommon = useI18n("common");
   const w = useI18n("customWidget.workbench");
   const utils = clientApi.useUtils();
+  const scopedApi = useScopedFetchApi();
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
@@ -186,7 +187,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         secrets: secretsAtStart,
       });
       if (!isCurrent()) return;
-      const snapshot = await loadPreviewQueries(candidateAtStart.data, created.previewSession.id);
+      const snapshot = await loadPreviewQueries(candidateAtStart.data, created.previewSession.id, scopedApi);
       if (!isCurrent()) return;
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
       input.setPreview({

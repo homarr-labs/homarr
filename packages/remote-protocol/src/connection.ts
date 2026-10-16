@@ -32,6 +32,12 @@ const noop = () => {};
 const MAX_CONCURRENT_REQUESTS = 16;
 const MAX_QUEUED_BYTES = 4 * MAX_FRAME_BYTES;
 const MAX_QUEUED_FRAMES = 64;
+const responseCompletions = new WeakMap<Response, Promise<void>>();
+
+/** The encrypted request ends after its final frame, including bodyless HTTP replies. */
+export function getRemoteResponseCompletion(response: Response): Promise<void> | undefined {
+  return responseCompletions.get(response);
+}
 
 function deferred<T>() {
   let resolve!: (value: T | PromiseLike<T>) => void;
@@ -123,6 +129,7 @@ export async function createBrowserConnection(options: {
   const ready = deferred<RemoteConnection>();
   type Pending = {
     result: ReturnType<typeof deferred<Response>>;
+    completion: ReturnType<typeof deferred<void>>;
     controller?: ReadableStreamDefaultController<Uint8Array>;
     removeAbort: () => void;
     method: string;
@@ -157,6 +164,7 @@ export async function createBrowserConnection(options: {
       request.uploadCredit?.reject(error);
       void request.uploadReader?.cancel().catch(() => {});
       request.result.reject(error);
+      request.completion.reject(error);
       request.controller?.error(error);
     }
     requests.clear();
@@ -188,6 +196,7 @@ export async function createBrowserConnection(options: {
       const result = deferred<Response>();
       const pending: Pending = {
         result,
+        completion: deferred<void>(),
         method: source.method,
         started: false,
         credits: 0,
@@ -195,12 +204,16 @@ export async function createBrowserConnection(options: {
         uploadStopped: false,
         removeAbort: () => source.signal.removeEventListener("abort", cancel),
       };
+      // Most consumers finish through Response.body; the scheduler also observes
+      // this promise for HEAD/204 responses. An abandoned response must not leak a rejection.
+      void pending.completion.promise.catch(() => {});
       function cancel() {
         if (!requests.delete(id)) return;
         pending.removeAbort();
         pending.uploadCredit?.reject(abortError());
         void pending.uploadReader?.cancel().catch(() => {});
         pending.result.reject(abortError());
+        pending.completion.reject(abortError());
         pending.controller?.error(abortError());
         sendBackground({ type: "request-cancel", id });
       }
@@ -251,6 +264,7 @@ export async function createBrowserConnection(options: {
         if (requests.delete(id)) {
           pending.removeAbort();
           result.reject(error);
+          pending.completion.reject(error);
           pending.controller?.error(error);
           sendBackground({ type: "request-cancel", id });
         }
@@ -320,11 +334,14 @@ export async function createBrowserConnection(options: {
           cancel() {
             pending.removeAbort();
             requests.delete(id);
+            pending.completion.reject(abortError());
             sendBackground({ type: "request-cancel", id });
           },
         });
       }
-      pending.result.resolve(new Response(body, { status, headers: headers(message.headers) }));
+      const response = new Response(body, { status, headers: headers(message.headers) });
+      responseCompletions.set(response, pending.completion.promise);
+      pending.result.resolve(response);
       if (body === null) sendBackground({ type: "response-credit", id });
     } else if (message.type === "response-chunk") {
       if (!pending.started || !pending.controller || pending.credits <= 0 || typeof message.data !== "string")
@@ -339,6 +356,7 @@ export async function createBrowserConnection(options: {
       pending.uploadCredit?.reject(abortError());
       void pending.uploadReader?.cancel().catch(() => {});
       pending.controller?.close();
+      pending.completion.resolve();
     } else if (message.type === "response-error") {
       const error = new Error("Worker request failed");
       pending.removeAbort();
@@ -347,6 +365,7 @@ export async function createBrowserConnection(options: {
       pending.uploadCredit?.reject(error);
       void pending.uploadReader?.cancel().catch(() => {});
       pending.result.reject(error);
+      pending.completion.reject(error);
       pending.controller?.error(error);
     } else throw new Error("Unexpected encrypted response");
   }

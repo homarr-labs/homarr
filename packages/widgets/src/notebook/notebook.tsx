@@ -48,7 +48,8 @@ import { TableRow } from "@tiptap/extension-table-row";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
-import { useEditor } from "@tiptap/react";
+import { NodeViewWrapper, ReactNodeViewRenderer, useEditor } from "@tiptap/react";
+import type { NodeViewProps } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
 
@@ -57,6 +58,7 @@ import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { InlineConfirmActionIcon } from "@homarr/ui";
+import { useResourceWorkerId, useWorkerResourceUrl } from "@homarr/worker-client/resources";
 
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
@@ -82,6 +84,22 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
+function NotebookImage({ node }: NodeViewProps) {
+  const source = useWorkerResourceUrl(node.attrs.src as string | undefined);
+  return (
+    <NodeViewWrapper as="span" contentEditable={false} style={{ display: "inline-block" }}>
+      <img
+        src={source}
+        alt={node.attrs.alt ?? ""}
+        title={node.attrs.title ?? undefined}
+        width={node.attrs.width ?? undefined}
+        height={node.attrs.height ?? undefined}
+        data-drag-handle
+      />
+    </NodeViewWrapper>
+  );
+}
+
 export function Notebook({
   options,
   setOptions,
@@ -93,6 +111,7 @@ export function Notebook({
   displayScale = 1,
   displayMode = "compact",
 }: WidgetComponentProps<"notebook">) {
+  const resourceWorkerId = useResourceWorkerId();
   const [content, setContent] = useState(options.content);
   const previousContentRef = useRef(options.content);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -165,6 +184,10 @@ export function Notebook({
         DetailsContent,
         Highlight.configure({ multicolor: true }),
         Image.extend({
+          addNodeView() {
+            if (!resourceWorkerId) return this.parent?.() ?? null;
+            return ReactNodeViewRenderer(NotebookImage);
+          },
           addAttributes() {
             return {
               ...this.parent?.(),

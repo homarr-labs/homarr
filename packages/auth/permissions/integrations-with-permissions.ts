@@ -4,6 +4,7 @@ import { db, eq, inArray } from "@homarr/db";
 import { groupMembers, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
 
 import { constructIntegrationPermissions } from "./integration-permissions";
+import { intersectFederationPermissions } from "./federation-permissions";
 
 export const getIntegrationsWithPermissionsAsync = async (session: Session | null) => {
   const groupPermissionWhere = session
@@ -17,6 +18,10 @@ export const getIntegrationsWithPermissionsAsync = async (session: Session | nul
       id: true,
     },
     with: {
+      origin: {
+        columns: { remoteIntegrationId: true },
+        with: { connection: { columns: { id: true, enabled: true, encryptedConfiguration: true } } },
+      },
       userPermissions: {
         where: eq(integrationUserPermissions.userId, session?.user.id ?? ""),
       },
@@ -26,8 +31,11 @@ export const getIntegrationsWithPermissionsAsync = async (session: Session | nul
     },
   });
 
-  return integrationRows.map(({ id, userPermissions, groupPermissions }) => ({
+  return integrationRows.map(({ id, userPermissions, groupPermissions, origin }) => ({
     id,
-    permissions: constructIntegrationPermissions({ userPermissions, groupPermissions }, session),
+    permissions: intersectFederationPermissions(
+      constructIntegrationPermissions({ userPermissions, groupPermissions }, session),
+      origin,
+    ),
   }));
 };

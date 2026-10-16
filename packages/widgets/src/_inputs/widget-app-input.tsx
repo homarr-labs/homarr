@@ -11,7 +11,7 @@ import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { QuickAddAppModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { Link, ResourceImage } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -97,7 +97,7 @@ const iconProps = {
 const renderSelectOption: SelectProps["renderOption"] = ({ option, checked }) => (
   <Group flex="1" gap="xs">
     {"iconUrl" in option && typeof option.iconUrl === "string" ? (
-      <img width={20} height={20} src={option.iconUrl} alt={option.label} />
+      <ResourceImage width={20} height={20} src={option.iconUrl} alt={option.label} />
     ) : null}
     {option.label}
     {checked && <IconCheck style={{ marginInlineStart: "auto" }} {...iconProps} />}
@@ -116,7 +116,7 @@ const LeftSection = ({ isPending, currentApp }: LeftSectionProps) => {
   }
 
   if (currentApp) {
-    return <img width={size} height={size} src={currentApp.iconUrl} alt={currentApp.name} />;
+    return <ResourceImage width={size} height={size} src={currentApp.iconUrl} alt={currentApp.name} />;
   }
 
   return null;

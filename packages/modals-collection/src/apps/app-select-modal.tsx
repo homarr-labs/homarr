@@ -1,17 +1,6 @@
+import { ResourceImage as Image } from "@homarr/ui";
 import { useMemo, useState } from "react";
-import {
-  Button,
-  Center,
-  Group,
-  Image,
-  Input,
-  Paper,
-  ScrollArea,
-  SimpleGrid,
-  Stack,
-  Text,
-  ThemeIcon,
-} from "@mantine/core";
+import { Button, Center, Group, Input, Paper, ScrollArea, SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconArrowLeft, IconPlus, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";

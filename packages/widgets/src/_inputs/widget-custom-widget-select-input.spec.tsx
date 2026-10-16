@@ -81,7 +81,10 @@ vi.mock("@homarr/translation/client", () => ({
     })[key] ?? key,
 }));
 
-vi.mock("@homarr/ui", () => ({ Link: "a" }));
+vi.mock("@homarr/ui", () => ({
+  Link: "a",
+  ResourceAvatar: ({ children }: { children?: ReactNode }) => <div>{children}</div>,
+}));
 
 vi.mock("./form", () => ({
   useFormContext: () => ({

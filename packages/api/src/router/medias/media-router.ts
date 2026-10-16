@@ -5,7 +5,8 @@ import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { and, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
-import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
+import { mapMediaToIcon } from "@homarr/icons";
+import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG } from "@homarr/icons/local";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { mediaUploadSchema } from "@homarr/validation/media";
 

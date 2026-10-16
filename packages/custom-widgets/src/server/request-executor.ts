@@ -3,8 +3,13 @@ import { STATUS_CODES } from "node:http";
 import { Headers, Response } from "undici";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
-export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
-import { applyAuth, applyBodyAuth, performAuthenticatedRequest } from "./auth";
+export type {
+  CustomWidgetAuthConfig,
+  CustomWidgetDelegatedOperation,
+  CustomWidgetHttpRequest,
+  CustomWidgetHttpResponse,
+} from "./request-types";
+import { applyAuth, applyBodyAuth, performAuthenticatedRequest, withinDeadline } from "./auth";
 import { CustomWidgetDomainError } from "./errors";
 import {
   assertSafeStaticHeaders,
@@ -53,9 +58,31 @@ async function performRequest(input: CustomWidgetHttpRequest): Promise<CustomWid
     () => controller.abort(),
     Math.min(input.timeoutMs ?? MAX_REQUEST_DURATION_MS, MAX_REQUEST_DURATION_MS),
   );
+  const signal = AbortSignal.any([controller.signal, ...(input.signal ? [input.signal] : [])]);
   try {
+    signal.throwIfAborted();
     assertRequest(input);
-    return await performAuthenticatedRequest(input, controller.signal, performRequestWithinDeadline);
+    const executeDelegatedRequest = input.executeDelegatedRequest;
+    if (executeDelegatedRequest) {
+      const target = resolveSameOriginTarget(input.baseUrl, input.targetUrl);
+      if (input.pathPrefix !== undefined) assertCustomWidgetPathScope(target, input.pathPrefix);
+      return await withinDeadline(
+        () =>
+          executeDelegatedRequest(
+            {
+              path: `${target.pathname}${target.search}`,
+              method: input.method,
+              kind: input.kind,
+              ...(input.body === undefined ? {} : { body: input.body }),
+              ...(input.staticHeaders === undefined ? {} : { staticHeaders: input.staticHeaders }),
+              ...(input.textFallback === undefined ? {} : { textFallback: input.textFallback }),
+            },
+            signal,
+          ),
+        signal,
+      );
+    }
+    return await performAuthenticatedRequest(input, signal, performRequestWithinDeadline);
   } catch (error) {
     if (controller.signal.aborted) {
       throw new CustomWidgetDomainError({
@@ -257,6 +284,9 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
 }
 
 export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
+  // The source worker rechecks the private grant on each call. A primary cache
+  // must not disclose an old response after that grant is revoked or expires.
+  if (input.executeDelegatedRequest) return performRequest(input);
   const key = input.kind === "query" ? input.cacheKey : undefined;
   if (!key) return performRequest(input);
   const cached = cache.get(key);

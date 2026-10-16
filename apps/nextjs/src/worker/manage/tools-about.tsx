@@ -1,0 +1,249 @@
+"use client";
+
+import Image from "next/image";
+import {
+  Accordion,
+  AccordionControl,
+  AccordionItem,
+  AccordionPanel,
+  AspectRatio,
+  Card,
+  Center,
+  Flex,
+  Group,
+  Kbd,
+  SimpleGrid,
+  Stack,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+  ThemeIcon,
+  Title,
+  UnstyledButton,
+} from "@mantine/core";
+import {
+  IconKeyboard,
+  IconLanguage,
+  IconLibrary,
+  IconMoneybagHeart,
+  IconPackage,
+  IconUsers,
+} from "@tabler/icons-react";
+
+import { capitalize, objectEntries } from "@homarr/common";
+import { hotkeys } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+
+import { homarrLogoPath } from "~/components/layout/logo/constants";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import packageJson from "../../../../../package.json";
+import githubContributors from "@static-data/contributors.json";
+import openCollectiveContributors from "@static-data/opencollective-contributors.json";
+import crowdinContributors from "@static-data/translators.json";
+import classes from "~/app/[locale]/manage/about/about.module.css";
+
+export function WorkerAboutPage() {
+  const t = useI18n("management.page.about");
+  const version = packageJson.version;
+  const dependencies: Record<string, string> = packageJson.workspaces.catalog;
+
+  return (
+    <div>
+      <DynamicBreadcrumb />
+      <Center w="100%">
+        <Group py="lg">
+          <Image src={homarrLogoPath} width={100} height={100} alt="" />
+          <Stack gap={0}>
+            <Title order={1}>Homarr</Title>
+            <Title order={2}>{t("version", { version })}</Title>
+          </Stack>
+        </Group>
+      </Center>
+      <Text mb="xl">{t("text")}</Text>
+
+      <Accordion defaultValue="contributors" variant="filled" radius="md">
+        <AccordionItem value="contributors">
+          <AccordionControl icon={<IconUsers size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.contributors.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.contributors.subtitle", {
+                  count: String(githubContributors.length),
+                })}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Flex wrap="wrap" gap="xs">
+              {githubContributors.map((contributor) => (
+                <GenericContributorLinkCard
+                  key={contributor.login}
+                  link={`https://github.com/${contributor.login}`}
+                  image={contributor.avatar_url}
+                  name={contributor.login}
+                />
+              ))}
+            </Flex>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="translators">
+          <AccordionControl icon={<IconLanguage size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.translators.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.translators.subtitle", {
+                  count: String(crowdinContributors.length),
+                })}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Flex wrap="wrap" gap="xs">
+              {crowdinContributors.map((translator) => (
+                <GenericContributorLinkCard
+                  key={translator.username}
+                  link={`https://crowdin.com/profile/${translator.username}`}
+                  image={translator.avatarUrl}
+                  name={translator.username}
+                />
+              ))}
+            </Flex>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="sponsors">
+          <AccordionControl icon={<IconMoneybagHeart size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.sponsors.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.sponsors.subtitle", {
+                  count: String(openCollectiveContributors.length),
+                })}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Flex wrap="wrap" gap="xs">
+              {openCollectiveContributors.map((sponsor) => (
+                <GenericContributorLinkCard
+                  key={sponsor.slug}
+                  link={`https://opencollective.com/${sponsor.slug}`}
+                  image={sponsor.imageUrl}
+                  name={sponsor.name}
+                />
+              ))}
+            </Flex>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="libraries">
+          <AccordionControl icon={<IconLibrary size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.libraries.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.libraries.subtitle", {
+                  count: String(Object.keys(dependencies).length),
+                })}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <SimpleGrid cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="md">
+              {Object.entries(dependencies)
+                .filter(([, value]) => !value.includes("workspace:"))
+                .toSorted(([key1], [key2]) => key1.localeCompare(key2))
+                .map(([name, dependencyVersion]) => (
+                  <UnstyledButton
+                    key={name}
+                    component="a"
+                    href={`https://www.npmjs.com/package/${name}`}
+                    target="_blank"
+                  >
+                    <Card radius="md" p="xs" className={classes.dependencyCard}>
+                      <Group gap="sm" wrap="nowrap">
+                        <ThemeIcon variant="light" size="lg">
+                          <IconPackage size="1.5rem" stroke={1.5} />
+                        </ThemeIcon>
+
+                        <Stack gap={0}>
+                          <Text size="sm" fw="bold" lineClamp={1} title={name}>
+                            {name}
+                          </Text>
+                          <Text size="sm" c="dimmed">
+                            v{dependencyVersion.replace("^", "").replace("~", "")}
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Card>
+                  </UnstyledButton>
+                ))}
+            </SimpleGrid>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="hotkeys">
+          <AccordionControl icon={<IconKeyboard size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.hotkeys.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.hotkeys.subtitle")}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Table>
+              <TableThead>
+                <TableTr>
+                  <TableTh>{t("accordion.hotkeys.field.shortcut")}</TableTh>
+                  <TableTh>{t("accordion.hotkeys.field.action")}</TableTh>
+                </TableTr>
+              </TableThead>
+              <TableTbody>
+                {objectEntries(hotkeys).map(([key, shortcut]) => (
+                  <TableTr key={key}>
+                    <TableTd>
+                      <Kbd size="md">
+                        {shortcut
+                          .split("+")
+                          .map((part) => capitalize(part.trim()))
+                          .join(" + ")}
+                      </Kbd>
+                    </TableTd>
+                    <TableTd>{t(`accordion.hotkeys.action.${key}`)}</TableTd>
+                  </TableTr>
+                ))}
+              </TableTbody>
+            </Table>
+
+            <Text size="sm" c="dimmed">
+              {t("accordion.hotkeys.note")}
+            </Text>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  );
+}
+
+interface GenericContributorLinkCardProps {
+  name: string;
+  link: string;
+  image: string;
+}
+
+const GenericContributorLinkCard = ({ name, image, link }: GenericContributorLinkCardProps) => {
+  return (
+    <AspectRatio ratio={1}>
+      <Card className={classes.contributorCard} component="a" href={link} target="_blank" w={100}>
+        <Stack align="center">
+          <Avatar src={image} alt={name} size={40} display="block" />
+          <Text lineClamp={1} size="sm">
+            {name}
+          </Text>
+        </Stack>
+      </Card>
+    </AspectRatio>
+  );
+};

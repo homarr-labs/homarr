@@ -14,6 +14,7 @@ import {
   smallint,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -218,6 +219,41 @@ export const integrations = pgTable(
   },
   (table) => ({
     kindIdx: index("integration__kind_idx").on(table.kind),
+  }),
+);
+
+export const federationConnections = pgTable("federation_connection", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  workerId: text().notNull().unique(),
+  name: text().notNull(),
+  publicKey: text().notNull(),
+  encryptedConfiguration: text().notNull(),
+  enabled: boolean().notNull().default(true),
+  createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
+});
+
+export const integrationOrigins = pgTable(
+  "integration_origin",
+  {
+    integrationId: varchar({ length: 64 })
+      .notNull()
+      .primaryKey()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+    connectionId: varchar({ length: 64 })
+      .notNull()
+      .references(() => federationConnections.id, { onDelete: "restrict" }),
+    remoteIntegrationId: text().notNull(),
+    remoteRevision: text(),
+  },
+  (table) => ({
+    sourceIntegrationUnique: unique("integration_origin__connection_remote_id_unique").on(
+      table.connectionId,
+      table.remoteIntegrationId,
+    ),
   }),
 );
 
@@ -806,6 +842,7 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
 }));
 
 export const integrationRelations = relations(integrations, ({ one, many }) => ({
+  origin: one(integrationOrigins),
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
@@ -813,6 +850,21 @@ export const integrationRelations = relations(integrations, ({ one, many }) => (
   app: one(apps, {
     fields: [integrations.appId],
     references: [apps.id],
+  }),
+}));
+
+export const federationConnectionRelations = relations(federationConnections, ({ many }) => ({
+  origins: many(integrationOrigins),
+}));
+
+export const integrationOriginRelations = relations(integrationOrigins, ({ one }) => ({
+  integration: one(integrations, {
+    fields: [integrationOrigins.integrationId],
+    references: [integrations.id],
+  }),
+  connection: one(federationConnections, {
+    fields: [integrationOrigins.connectionId],
+    references: [federationConnections.id],
   }),
 }));
 

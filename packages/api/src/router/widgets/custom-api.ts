@@ -163,6 +163,18 @@ const executeRequest = async (
     request.permission as BoardPermission,
   );
   const source = findSource(resolved, request.source);
+  // A worker share publishes this exact stored read, not arbitrary integration access.
+  // Input may select declared request parameters, but cannot choose the source or method.
+  let sourceContext: typeof context & { publishedIntegrationRead?: { readonly integrationId: string } } = context;
+  if (
+    context.workerAccess?.role === "viewer" &&
+    request.kind === "query" &&
+    request.permission === "view" &&
+    source.type === "integration" &&
+    source.integrationId
+  ) {
+    sourceContext = { ...context, publishedIntegrationRead: { integrationId: source.integrationId } };
+  }
   const values = resolveCustomWidgetRequestValues(request, resolved.configuration, params);
   let category: RequestLimitInput["category"] = "query";
   if (request.kind === "action") category = request.method === "DELETE" ? "delete" : "action";
@@ -171,7 +183,7 @@ const executeRequest = async (
     resolved,
     category,
     async () => {
-      const connection = await resolveCustomWidgetSource(context, source, request, () =>
+      const connection = await resolveCustomWidgetSource(sourceContext, source, request, () =>
         resolved.stored.secrets
           .filter((secret) => secret.sourceId === source.id)
           .map((secret) => ({ kind: secret.kind, value: decryptSecret(secret.encryptedValue) })),

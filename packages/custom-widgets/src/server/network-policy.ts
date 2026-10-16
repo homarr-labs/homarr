@@ -217,7 +217,7 @@ export function createPinnedAgent(
   });
 }
 
-export function assertCustomWidgetPathScope(url: URL, pathPrefix: string) {
+export function assertCustomWidgetPathScope(url: Pick<URL, "pathname">, pathPrefix: string) {
   const decodedPrefix = decodePath(pathPrefix);
   let prefixEnd = decodedPrefix.length;
   while (prefixEnd > 0 && decodedPrefix.charAt(prefixEnd - 1) === "/") {

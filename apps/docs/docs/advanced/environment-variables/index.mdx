@@ -21,6 +21,37 @@ This is especially useful for [docker secrets](https://docs.docker.com/engine/sw
 
 </Alert>
 
+## Backend and frontend
+
+| Environment variable   | Purpose                                                                                                    | Default                        |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| `HOMARR_BACKEND_URL`   | Internal backend HTTP origin used by a separately launched Next.js dashboard. Read at runtime.             | `http://127.0.0.1:3002`        |
+| `BACKEND_CORS_ORIGINS` | Comma-separated exact frontend origins allowed to send authenticated browser requests to the backend.      | Same-origin access             |
+| `BACKEND_HOST`         | Direct HTTP bind address in source deployments. The Docker image binds the backend privately behind Nginx. | `0.0.0.0`; Docker: `127.0.0.1` |
+| `BACKEND_PORT`         | Direct HTTP port in source deployments.                                                                    | `3002`                         |
+
+See [headless deployment](/docs/advanced/development/headless) for the backend-only Docker target and separate frontend operation.
+
+### Encrypted worker and remote frontend
+
+The separate `worker` image generates persistent secrets on first startup and uses local in-process state instead of Redis. Its `PUID`/`PGID` defaults are `1000`. Keep the original `SECRET_ENCRYPTION_KEY` when attaching existing data.
+
+| Variable                          | Purpose                                               | Default                                                                         |
+| --------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `WORKER_PLATFORM_URL`             | Frontend destination for local pairing links          | `https://homarr.dev/remote/`                                                    |
+| `WORKER_PUBLIC_URL`               | Browser-reachable direct worker URL                   | `http://localhost:3002`                                                         |
+| `WORKER_RELAY_URL`                | Optional HTTPS/WSS blind relay URL                    | Disabled                                                                        |
+| `WORKER_ALLOWED_ORIGINS`          | Exact browser origins accepted by the direct socket   | Platform origin; supplied Compose uses `https://homarr.dev`                     |
+| `WORKER_RELAY_REGISTRATION_TOKEN` | Optional relay socket registration token              | Unset                                                                           |
+| `WORKER_RUN_OPTIONAL_JOBS`        | Enable analytics and icon-catalog startup jobs        | `false`                                                                         |
+| `HOMARR_WORKER_STATE_DIRECTORY`   | Private identity, grants and local pairing directory  | `/appdata/worker`                                                               |
+| `HOMARR_STATE_BACKEND`            | Worker cache/PubSub implementation                    | Worker image: `memory`                                                          |
+| `REMOTE_PUBLIC_URL`               | Public account service URL, including its path        | Source: `http://localhost:3104/remote`; deployment: `https://homarr.dev/remote` |
+| `REMOTE_PLATFORM_DB`              | Persistent connection-directory SQLite file           | Source: `./data/platform.sqlite`; deployment: `/appdata/platform.sqlite`        |
+| `WORKSHOP_API_URL`                | Existing Workshop PocketBase for remote account login | `https://homarr.dev`                                                            |
+
+`VITE_REMOTE_BASE_PATH` is a frontend build argument; it must match the path in `REMOTE_PUBLIC_URL` (default `/remote`). See [headless deployment](/docs/advanced/development/headless) for pairing, HTTPS/Tailscale and share-access requirements.
+
 ## General
 
 <Alert type="warning">
@@ -34,7 +65,7 @@ Using the `PUID` and `PGID` will require you to set the correct permissions on t
 | `PUID`                           | User ID to run the container as                                                                                                                                                                                                                             | Any valid user ID                   | `0`                           |
 | `PGID`                           | Group ID to run the container as                                                                                                                                                                                                                            | Any valid group ID                  | `0`                           |
 | `LOG_LEVEL`                      | Log level to use                                                                                                                                                                                                                                            | `debug` / `info` / `warn` / `error` | `info`                        |
-| `BASE_URL`                       | Canonical public Homarr origin for MCP OAuth metadata, origin checks and secure cookies. An HTTPS origin is required behind TLS-terminating proxies, even when they forward the public host and scheme.                                                     | HTTP(S) origin without a path       | -                             |
+| `BASE_URL`                       | Canonical public Homarr origin for MCP OAuth metadata, origin checks and secure cookies. Set this to the HTTPS public origin when deploying behind a TLS-terminating proxy.                                                                                 | HTTP(S) origin without a path       | -                             |
 | `NO_EXTERNAL_CONNECTION`         | Disables Homarr's internet-backed requests, including update checks, weather, location search, and RSS feeds                                                                                                                                                | `true` or `false`                   | `false`                       |
 | `ENABLE_DNS_CACHING`             | Opt-in DNS cache. Keep disabled for Docker service names and `extra_hosts`; cached addresses can survive container recreation and DNS-first lookup can override hosts-file entries.                                                                         | `true` or `false`                   | `false`                       |
 | `HOMARR_DISABLE_IPV6`            | Disables the IPv6 listener of the internal nginx proxy, even when the host supports IPv6. IPv6 is normally disabled automatically when the host has no IPv6 configured. See [#4596](https://github.com/homarr-labs/homarr/issues/4596)                      | `true` or `false`                   | `false`                       |

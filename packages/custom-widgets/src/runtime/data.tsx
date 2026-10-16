@@ -1,9 +1,12 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import type { ComponentType } from "react";
 import { Badge, Code, Image, Text, Title } from "@mantine/core";
+import type { ImageProps } from "@mantine/core";
 
 export const SubFetchDataContext = createContext<unknown>(undefined);
+export const CustomWidgetImageContext = createContext<ComponentType<ImageProps & { alt?: string }>>(Image);
 
 const BLOCKED_KEYS = new Set(["constructor", "prototype", "__proto__"]);
 
@@ -50,6 +53,7 @@ export interface SubDataProps {
 }
 
 export function SubData({ path, as = "Text", ...props }: SubDataProps) {
+  const DisplayImage = useContext(CustomWidgetImageContext);
   const value = getByPath(useContext(SubFetchDataContext), path);
   if (value === undefined && path) return <Text c="dimmed">—</Text>;
   const displayValue = as === "Code" ? JSON.stringify(value, null, 2) : formatDisplayValue(value);
@@ -68,7 +72,14 @@ export function SubData({ path, as = "Text", ...props }: SubDataProps) {
     const src = safeDisplayImageUrl(value);
     if (!src) return null;
     return (
-      <Image src={src} alt={props.alt ?? ""} fit={props.fit as never} w={props.w} h={props.h} radius={props.radius} />
+      <DisplayImage
+        src={src}
+        alt={props.alt ?? ""}
+        fit={props.fit as never}
+        w={props.w}
+        h={props.h}
+        radius={props.radius}
+      />
     );
   }
   return (

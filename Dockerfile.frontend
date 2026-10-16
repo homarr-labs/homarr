@@ -1,0 +1,80 @@
+# syntax=docker/dockerfile:1.25
+
+# Share dependency installation with the backend Dockerfile.
+FROM oven/bun:1.4.2-alpine AS bun-tool
+
+FROM node:24.18.0-alpine AS base
+
+FROM base AS sources
+ARG TARGETPLATFORM
+WORKDIR /app
+COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
+RUN apk add --no-cache libstdc++ python3 make g++
+COPY bun.lock bunfig.toml package.json ./
+COPY patches ./patches
+COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
+RUN --mount=type=cache,id=homarr-bun-cache,target=/root/.bun/install/cache,sharing=locked \
+    npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
+COPY . .
+ARG SKIP_ENV_VALIDATION='true'
+ARG CI='true'
+ARG DISABLE_REDIS_LOGS='true'
+
+FROM sources AS frontend-builder
+ARG TARGETPLATFORM
+ENV HOMARR_FRONTEND_MODE='workers' \
+    HOMARR_PLATFORM_PATH='/platform' \
+    NEXT_TELEMETRY_DISABLED='1'
+RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
+    --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
+    --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
+    --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
+    --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
+    --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
+    bun run turbo run build --filter=@homarr/nextjs...
+
+# The normal Homarr dashboard runs independently, without a local worker,
+# database, Redis service or background integration jobs.
+FROM node:24.18.0-alpine AS frontend
+WORKDIR /app
+COPY --from=frontend-builder --chown=node:node /app/apps/nextjs/.output/standalone ./
+USER node
+ENV NODE_ENV='production' \
+    HOSTNAME='0.0.0.0' \
+    PORT='3000' \
+    HOMARR_FRONTEND_MODE='workers' \
+    HOMARR_PLATFORM_PATH='/platform' \
+    NEXT_TELEMETRY_DISABLED='1'
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD ["node", "-e", "fetch('http://127.0.0.1:3000/api/frontend/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+CMD ["node", "apps/nextjs/server.js"]
+
+FROM sources AS platform-builder
+RUN mkdir -p /app/native-platform-data /app/native-platform-secrets && \
+    bun build packages/remote-platform/src/index.ts --target=bun --minify \
+      --metafile=/app/native-platform-meta.json --outfile=/app/native-platform.js && \
+    bun deployments/native/verify-platform-build.ts /app/native-platform-meta.json
+
+# Account directory and approved MCP broker state have their own persistence.
+# This target intentionally contains no frontend assets.
+FROM oven/bun:1.4.2-distroless AS platform
+WORKDIR /app
+COPY --from=platform-builder --chown=65532:65532 /app/native-platform.js ./server.js
+COPY --from=platform-builder --chown=65532:65532 /app/native-platform-data/ /appdata/
+COPY --from=platform-builder --chown=65532:65532 /app/native-platform-secrets/ /secrets/
+USER 65532:65532
+ENV NODE_ENV='production' \
+    HOSTNAME='0.0.0.0' \
+    PORT='3104' \
+    REMOTE_PUBLIC_URL='https://homarr.dev/platform' \
+    WORKSHOP_API_URL='https://homarr.dev' \
+    REMOTE_PLATFORM_DB='/appdata/platform.sqlite' \
+    REMOTE_MCP_DB='/appdata/mcp.sqlite' \
+    REMOTE_BROKER_KEY_FILE='/secrets/broker.key'
+VOLUME ["/appdata", "/secrets"]
+EXPOSE 3104
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["/usr/local/bin/bun", "-e", "const path=new URL(process.env.REMOTE_PUBLIC_URL).pathname.replace(/\\/$/,'');const response=await fetch('http://127.0.0.1:'+process.env.PORT+path+'/api/health');process.exit(response.ok?0:1)"]
+ENTRYPOINT ["/usr/local/bin/bun", "/app/server.js"]

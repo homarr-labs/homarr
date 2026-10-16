@@ -1,0 +1,46 @@
+# Worker integration evidence
+
+The final security suite lives in `apps/worker/src/worker.test.ts`. It runs the actual `startWorkerServer`, `openWorkerState`, `WorkerChannels`, worker access store, native oRPC router, image proxy, and `createRelay` service. Browser-side clients use real Bun WebSockets and the shared encrypted protocol. No production data or credentials are used.
+
+The suite creates a temporary SQLite database, runs the real migrations and seed in a child Bun process, and only then dynamically imports database-dependent code. Worker state is private temporary filesystem state. Cache/PubSub use the bounded process-local memory backend; no Redis service, dashboard server, Docker build, or third-party integration service is required.
+
+## Commands and result
+
+Run from the Homarr checkout with its pinned Bun 1.4.2:
+
+```sh
+/home/habs/.local/share/mise/installs/bun/1.4.2/bin/bun test apps/worker/src/worker.test.ts
+bunx tsc --noEmit -p apps/worker/tsconfig.json
+bunx oxlint apps/worker/src/worker.test.ts --tsconfig apps/worker/tsconfig.json
+bunx oxfmt --check apps/worker/src/worker.test.ts
+```
+
+Latest focused run: **17 passed, 0 failed, 116 assertions, 6.19 seconds**. Worker package TypeScript checking and focused lint pass. The expected oversized-image and canceled-image cases produce image proxy error logs while their assertions pass; these logs contain local fixture URLs and no worker grants or private keys.
+
+## Verified behavior
+
+| Boundary                   | Live evidence                                                                                                                                                                                                                                                                                                                                   |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| First claim                | Claim through the actual encrypted relay channel succeeds once. Reusing the claim fails. Browser authorization contains only a grant projection. The local identity file is mode 0600, and the updated pairing URL omits the consumed claim secret.                                                                                             |
+| Locked raw listener        | Health probes work. Dashboard, worker metadata, access management, OpenAPI, MCP, onboarding, image proxy, and RPC paths return 404 over ordinary HTTP, including forged cookies and identity headers.                                                                                                                                           |
+| Transport gates            | Foreign Origin and wrong capability fail for direct and relay WebSockets. Direct query-string capabilities are rejected. Missing relay registration bearer authorization is rejected; the actual outbound worker registers with the configured token.                                                                                           |
+| Frame bound                | An actual direct WebSocket carrying a frame above 1 MiB is closed. Shared protocol tests separately verify pending queue and output buffer limits.                                                                                                                                                                                              |
+| Native backend             | An owner creates an app through the actual native oRPC `app.create`, reads it through `app.byId`, and verifies its persisted SQLite row. Authenticated `info.getInfo` also works.                                                                                                                                                               |
+| Encrypted native REST      | Headerless parameterless GETs to `/api/info`, `/api/apps`, and `/api/apps/paginated` succeed through the actual worker. Pagination converts numeric URL query strings into validated numbers. Non-numeric page values, zero pages, and page sizes above the schema maximum return 400.                                                          |
+| Repeated relay challenge   | A deliberately malicious real WebSocket server sends two registration challenges back-to-back. The actual outbound worker closes the connection and emits at most one registration. The source sets its single-use challenge guard before awaiting the signing operation, preventing parallel challenge handlers from racing through the check. |
+| Anonymous share            | Only the explicitly shared board is listed/read. Another board, owner RPC, raw image proxy, access management, and OpenAPI are denied, including forged owner headers.                                                                                                                                                                          |
+| Private share              | An unapproved device is denied. A device admitted by a one-use worker invitation can use the private share only within its membership board scope. Revoking that membership ends its live share session.                                                                                                                                        |
+| Invitation                 | A second redemption fails. Revoking a redeemed invitation ends its existing session.                                                                                                                                                                                                                                                            |
+| Permanent share revocation | An existing encrypted relay session closes, and reconnecting with that share fails.                                                                                                                                                                                                                                                             |
+| Signed board media         | A real local PNG flows through the native image proxy and encrypted channel. Exact grant and board binding, signature modification, expired signed capability, and revoked-share reads are checked. Another grant, including the owner grant, cannot replay the capability. Successful responses use `no-store` and `nosniff`.                  |
+| Image bounds/cancellation  | A real 33 MiB upstream stream is rejected with 502. HTML content is rejected with 415. Canceling a pending encrypted image request reaches the real upstream request.                                                                                                                                                                           |
+| Expiry during a read       | The actual WorkerChannels wrapper refuses a delayed chunk when its access clock expires while awaiting the source read. Only this deliberately delayed response source is synthetic; access, WebSockets, encryption and authorization wrapping are real.                                                                                        |
+| Exact idle expiry          | A temporary grant's idle encrypted stream closes at its real deadline before the one-second fallback revalidation interval.                                                                                                                                                                                                                     |
+| Blind relay                | Captured browser/relay boundary frames contain encrypted messages and do not contain the local claim secret, issued owner token, registration token, or known private app payload. Metadata confidentiality is not claimed.                                                                                                                     |
+| Reconnect                  | Stopping/restarting the actual relay makes the actual worker reconnect. A new browser connection resumes authorized access with a new cryptographic session ID.                                                                                                                                                                                 |
+
+## Limits of this evidence
+
+This suite verifies actual worker and relay services locally, with a native client exercising the browser protocol. Real browser UI behavior, hosted GitHub OAuth enrollment, public DNS/TLS deployment, real external integration providers, and image/RAM benchmarks need their separate evidence. The suite does not claim an independent cryptographic audit or deployment to a public Homarr domain.
+
+The shared protocol's dedicated tests independently cover a 256 MiB streamed upload, bidirectional backpressure, replay/reflection/tampering, pinned-identity MITM rejection, invalid points, cancellation, queue overflow, and output buffer limits. See `encryption.md` for that protocol's design and limits.

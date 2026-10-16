@@ -1,19 +1,8 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import { useMemo, useState } from "react";
-import {
-  Alert,
-  Anchor,
-  Avatar,
-  Badge,
-  Combobox,
-  Group,
-  InputBase,
-  Loader,
-  Stack,
-  Text,
-  useCombobox,
-} from "@mantine/core";
+import { Alert, Anchor, Badge, Combobox, Group, InputBase, Loader, Stack, Text, useCombobox } from "@mantine/core";
 import { IconAlertTriangle, IconApi } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";

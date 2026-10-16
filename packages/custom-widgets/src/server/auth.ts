@@ -110,7 +110,7 @@ export async function performAuthenticatedRequest(
   return perform(input, signal);
 }
 
-async function withinDeadline<T>(callback: () => Promise<T>, signal: AbortSignal): Promise<T> {
+export async function withinDeadline<T>(callback: () => Promise<T>, signal: AbortSignal): Promise<T> {
   signal.throwIfAborted();
   let abort: (() => void) | undefined;
   const aborted = new Promise<never>((_resolve, reject) => {

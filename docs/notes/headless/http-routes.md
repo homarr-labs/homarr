@@ -1,0 +1,43 @@
+# HTTP resource migration scratchpad
+
+The Hono resource router exports `resourcesRoutes` from `apps/backend/src/routes/resources.ts`. It mounts absolute `/api/...` routes. Runtime logic now belongs to `@homarr/backend-handlers`; the Next.js route files delegate to those exports while the dashboard remains supported.
+
+| Endpoint                                                | Extracted handler                            | Compatibility and access                                                                                                                                              |
+| ------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/about/contributors/crowdin`                   | `about/contributors`                         | Same static translator dataset, bundled JSON                                                                                                                          |
+| `GET /api/about/contributors/github`                    | `about/contributors`                         | Same static GitHub contributor dataset                                                                                                                                |
+| `GET /api/about/contributors/opencollective`            | `about/contributors`                         | Same static Open Collective dataset                                                                                                                                   |
+| `GET /api/about/dependencies`                           | `about/dependencies`                         | Dependency catalog resolved into a generated build asset instead of scanning the packaged application at runtime                                                      |
+| `GET /api/backup/export`                                | `backup/export`                              | Administrator session, SQLite only, ZIP metadata and encryption key retained                                                                                          |
+| `POST /api/backup/import`                               | `backup/import`                              | Administrator or valid first-user onboarding claim, streamed 256 MiB upload limit, archive limits, migration, secret re-encryption, restore lock and restart retained |
+| `GET /api/backup/migrations`                            | `backup/migrations`                          | Same SQL journal format and cache policy                                                                                                                              |
+| `GET /api/backup/sql-wasm`                              | `backup/sql-wasm`                            | Same WASM response, immutable cache policy; runtime asset independent of Next public directory                                                                        |
+| `GET /api/custom-widgets/:resource`                     | `custom-widgets/resources`                   | Administrator session required; schema/catalog/authoring prompt and references retained                                                                               |
+| `GET /api/custom-widgets/configuration-request/:token`  | `custom-widgets/configuration-request/route` | Administrator session and requesting-user ownership, expiry and no-store policy retained                                                                              |
+| `POST /api/custom-widgets/configuration-request/:token` | `custom-widgets/configuration-request/route` | Ownership, bounded request parsing, source validation, credential checks, claim lock, preview/persisted configuration and invalidation retained                       |
+| `GET /api/health/live`                                  | `health/live`                                | Existing database and Redis checks, status body and no-store policy                                                                                                   |
+| `GET /api/health/ready`                                 | `health/ready`                               | Existing empty 200 response                                                                                                                                           |
+| `GET /api/image-proxy/:id`                              | `image-proxy`                                | Cancellation signal, upstream errors, type and immutable cache policy retained                                                                                        |
+| `POST /api/onboarding/claim`                            | `onboarding-claim`                           | Existing fetch-site check and administrator override, same claim cookie with HttpOnly/SameSite/expiry/security attributes                                             |
+| `GET /api/user-medias/:id`                              | `user-medias`                                | Existing SVG sanitization, content hash ETag, conditional requests, CSP and private cache policy; missing media returns HTTP 404                                      |
+
+## Runtime assets
+
+Run `node --experimental-strip-types packages/backend-handlers/scripts/prepare-assets.ts` before bundling the backend. The initial generated dependency JSON is checked in for direct source execution. The backend assembly copies `sql.js/dist/sql-wasm.wasm` into `assets/sql-wasm.wasm` beside the compiled server bundle; source execution also supports `public/sql-wasm.wasm` and the installed `sql.js` package. Retain `db/migrations/sqlite` for backup migration/download operations.
+
+No production handler imports `next/server`, `next/navigation`, or `apps/nextjs`. Authentication uses the shared request-based session lookup from `@homarr/auth/http`; authorization conditions match the old endpoints. API keys remain available through the RPC/API-key surface; these previously session-only administrative resource endpoints remain session-only.
+
+## Focused validation
+
+- Source scan confirms the extracted handlers contain no Next framework imports.
+- Focused oxlint check passes for the extracted handlers, asset generator and Hono resource router.
+- Dependency asset generator ran successfully with Node's built-in TypeScript stripping.
+- Direct Bun request smokes passed: three contributor endpoints and generated dependency JSON returned HTTP 200 with JSON bodies; readiness returned 200; SQL WASM returned 200 with `application/wasm`, 659730 bytes and the expected WASM magic bytes.
+- On pinned Bun 1.4.2 with an isolated migrated SQLite fixture, five administrator resource methods reject anonymous requests with 403. Administrator access to the widget schema returns 200; unknown authoring resources and configuration tokens return 404.
+- The media endpoint sanitizes malicious SVG, retains the safe shape, emits CSP, returns 404 for absent media, and returns 304 for a matching weak ETag.
+- The onboarding claim endpoint rejects cross-site requests with 403, issues a secure HttpOnly SameSite=Strict cookie, blocks a rival claimant with 423, and accepts the existing owner with 200.
+- Administrator backup export returns a ZIP containing a valid SQLite database and expected synthetic encryption-key metadata; an oversized import is rejected with 413 before restoring anything. Backup import/export use the shared Bun-native SQLite driver in Bun and preserve the Node driver elsewhere.
+- Against the isolated shared SQLite/Redis fixture, the health endpoint returns 200 with both checks healthy and a no-store cache policy. The image proxy returns the expected image bytes/type on success, preserves upstream 503/error headers, and returns 404/no-store for an unknown registration.
+- `bun run typecheck` in `packages/backend-handlers` passes; focused formatting and lint pass. No new test files or broad test suites were introduced.
+- After the Next routes became HTTP proxies, the existing administrator helper, configuration-request route and backup-import route specs were retargeted to the extracted handlers and request-based auth mocks. The exact three existing files passed, 23 tests total. The administrator assertion retains the session check and includes the forwarded Request; the backup cleanup assertion now follows the existing structured warning logger.
+- These request smokes exercise the source Hono router and handlers. Packaged-server and Docker verification are separate integration checks.

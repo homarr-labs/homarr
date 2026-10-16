@@ -1,0 +1,143 @@
+services:
+  frontend:
+    image: ${HOMARR_NATIVE_FRONTEND_IMAGE:-homarr:native-frontend-local}
+    build:
+      context: ../..
+      dockerfile: Dockerfile.frontend
+      target: frontend
+    restart: unless-stopped
+    environment:
+      HOMARR_FRONTEND_MODE: workers
+      HOMARR_PLATFORM_PATH: /platform
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  platform:
+    image: ${HOMARR_NATIVE_PLATFORM_IMAGE:-homarr:native-platform-local}
+    build:
+      context: ../..
+      dockerfile: Dockerfile.frontend
+      target: platform
+    restart: unless-stopped
+    environment:
+      REMOTE_PUBLIC_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/platform
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:-https://homarr.dev}
+      REMOTE_PLATFORM_DB: /appdata/platform.sqlite
+      REMOTE_MCP_DB: /appdata/mcp.sqlite
+      REMOTE_BROKER_KEY_FILE: /secrets/broker.key
+      REMOTE_MCP_RELAY_URLS: ${HOMARR_PUBLIC_RELAY_URL:-ws://localhost:43105/relay}
+      REMOTE_MCP_RELAY_CONNECT_URL: ws://relay:8787
+    volumes:
+      - platform-data:/appdata
+      - broker-secrets:/secrets
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  relay:
+    image: ${HOMARR_NATIVE_RELAY_IMAGE:-homarr:native-relay-local}
+    build:
+      context: ../..
+      dockerfile: apps/relay/Dockerfile
+    restart: unless-stopped
+    environment:
+      RELAY_ALLOWED_ORIGINS: ${HOMARR_PUBLIC_URL:-http://localhost:43105}
+      RELAY_MAX_WORKERS: 100
+      RELAY_MAX_CONNECTIONS: 256
+      RELAY_MAX_CONNECTIONS_PER_IP: 64
+    healthcheck:
+      test:
+        [
+          CMD,
+          /usr/local/bin/bun,
+          -e,
+          "const response=await fetch('http://127.0.0.1:8787/health/ready');process.exit(response.ok?0:1)",
+        ]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  worker-primary:
+    image: ${HOMARR_NATIVE_WORKER_IMAGE:-homarr:native-worker-local}
+    build:
+      context: ../..
+      target: worker
+    restart: unless-stopped
+    depends_on:
+      relay:
+        condition: service_healthy
+    environment: &worker-environment
+      WORKER_NAME: Primary worker
+      WORKER_PUBLIC_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/workers/primary
+      WORKER_PLATFORM_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/
+      WORKER_RELAY_URL: ${HOMARR_PUBLIC_RELAY_URL:-ws://localhost:43105/relay}
+      WORKER_RELAY_CONNECT_URL: ws://relay:8787
+      WORKER_ALLOWED_ORIGINS: ${HOMARR_PUBLIC_URL:-http://localhost:43105}
+      WORKER_RUN_OPTIONAL_JOBS: "false"
+      HOMARR_STATE_BACKEND: memory
+    volumes:
+      - worker-primary-data:/appdata
+    healthcheck: &worker-healthcheck
+      test:
+        [
+          CMD,
+          bun,
+          -e,
+          "const response=await fetch('http://127.0.0.1:3002/api/health/ready');process.exit(response.ok?0:1)",
+        ]
+      interval: 3s
+      timeout: 3s
+      start_period: 20s
+      retries: 30
+
+  worker-integrations:
+    image: ${HOMARR_NATIVE_WORKER_IMAGE:-homarr:native-worker-local}
+    restart: unless-stopped
+    depends_on:
+      relay:
+        condition: service_healthy
+    environment:
+      <<: *worker-environment
+      WORKER_NAME: Integration worker
+      WORKER_PUBLIC_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/workers/integrations
+    volumes:
+      - worker-integrations-data:/appdata
+    healthcheck: *worker-healthcheck
+
+  gateway:
+    image: ${HOMARR_NATIVE_GATEWAY_IMAGE:-nginx:1.30.6-alpine}
+    restart: unless-stopped
+    depends_on:
+      frontend:
+        condition: service_healthy
+      platform:
+        condition: service_healthy
+      relay:
+        condition: service_healthy
+      worker-primary:
+        condition: service_healthy
+      worker-integrations:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${HOMARR_NATIVE_PORT:-43105}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./gateway.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: [CMD-SHELL, "wget -q -O /dev/null http://127.0.0.1/native-health"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  worker-primary-data:
+  worker-integrations-data:
+  platform-data:
+  broker-secrets:

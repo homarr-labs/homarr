@@ -40,6 +40,103 @@ async function setup() {
 }
 
 describe("worker-owned pairing and grants", () => {
+  test("native user invitations bind a local identity without granting worker ownership", async () => {
+    const { access, owner, clock } = await setup();
+    await expect(
+      access.createInvitation(owner.principal, { role: "user", expiresAt: clock.value + 60_000 }),
+    ).rejects.toThrow();
+    const invitation = await access.createInvitation(owner.principal, {
+      role: "user",
+      userId: "local-user",
+      expiresAt: clock.value + 60_000,
+    });
+    const invitedDevice = await device();
+    const { principal, grant } = await access.authenticateEnvelope(invitedDevice, {
+      kind: "invite",
+      token: invitation.token,
+    });
+    expect(grant.userId).toBe("local-user");
+    expect(principal.userId).toBe("local-user");
+    access.authorizeProcedure(principal, { path: "board.getAllBoards", kind: "query" });
+    expect(() => access.requireOwner(principal)).toThrow();
+    await expect(
+      access.createInvitation(principal, { role: "owner", expiresAt: clock.value + 60_000 }),
+    ).rejects.toThrow();
+    access.revokeInvitation(owner.principal, invitation.id);
+    expect(() => access.assertActive(principal)).toThrow();
+  });
+  test("service capabilities bind one device, explicit integrations and procedure effects", async () => {
+    const { access, owner, clock } = await setup();
+    const serviceDevice = await device();
+    const grant = await access.grantAccess(owner.principal, {
+      role: "service",
+      devicePublicJwk: serviceDevice.devicePublicJwk,
+      expiresAt: clock.value + 60_000,
+      service: {
+        integrationIds: ["selected"],
+        access: "query",
+        procedurePaths: ["systemHealth.get", "systemHealth.restart", "integration.all"],
+        audience: "https://homarr.dev/mcp",
+        principalId: "account:alice",
+      },
+    });
+    const { principal } = await access.authenticateEnvelope(serviceDevice, { kind: "grant", token: grant.token });
+    expect(principal.role).toBe("service");
+    expect(principal.service?.principalId).toBe("account:alice");
+    access.authorizeProcedure(principal, { path: "systemHealth.get", kind: "query", integrationIds: ["selected"] });
+    access.authorizeProcedure(principal, { path: "integration.all", kind: "query" });
+    for (const request of [
+      { path: "systemHealth.get", kind: "query" as const, integrationIds: ["other"] },
+      { path: "systemHealth.get", kind: "query" as const },
+      { path: "systemHealth.restart", kind: "mutation" as const, integrationIds: ["selected"] },
+      { path: "board.remove", kind: "mutation" as const, integrationIds: ["selected"] },
+    ])
+      expect(() => access.authorizeProcedure(principal, request)).toThrow();
+    expect(() => access.requireOwner(principal)).toThrow();
+    await expect(access.authenticateEnvelope(await device(), { kind: "grant", token: grant.token })).rejects.toThrow();
+    access.revokeGrant(owner.principal, grant.id);
+    expect(() => access.authorizeProcedure(principal, { path: "integration.all", kind: "query" })).toThrow();
+  });
+
+  test("service approval requires finite bounded expiry and a matching organization binding", async () => {
+    const { access, owner, clock } = await setup();
+    const serviceDevice = await device();
+    const scope = {
+      role: "service" as const,
+      devicePublicJwk: serviceDevice.devicePublicJwk,
+      service: {
+        integrationIds: ["selected"],
+        access: "full" as const,
+        procedurePaths: ["integration.request"],
+        audience: "https://homarr.dev/mcp",
+        principalId: "organization:team",
+        organizationId: "team",
+      },
+    };
+    for (const expiresAt of [undefined, null, clock.value + 31 * 86_400_000]) {
+      await expect(access.grantAccess(owner.principal, { ...scope, expiresAt })).rejects.toThrow();
+    }
+    await expect(
+      access.grantAccess(owner.principal, { ...scope, boardIds: ["private-board"], expiresAt: clock.value + 60_000 }),
+    ).rejects.toThrow();
+    await expect(
+      access.grantAccess(owner.principal, {
+        ...scope,
+        expiresAt: clock.value + 60_000,
+        service: { ...scope.service, principalId: "organization:other" },
+      }),
+    ).rejects.toThrow();
+    const grant = await access.grantAccess(owner.principal, { ...scope, expiresAt: clock.value + 60_000 });
+    const { principal } = await access.authenticateEnvelope(serviceDevice, { kind: "grant", token: grant.token });
+    access.authorizeProcedure(principal, {
+      path: "integration.request",
+      kind: "mutation",
+      integrationIds: ["selected"],
+    });
+    clock.value += 60_001;
+    expect(() => access.assertActive(principal)).toThrow();
+  });
+
   test("atomic claim race grants only one owner and permanently consumes the local secret", async () => {
     const directory = mkdtempSync(join(tmpdir(), "homarr-worker-access-"));
     directories.push(directory);

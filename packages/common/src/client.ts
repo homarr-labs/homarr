@@ -1,1 +1,1 @@
-export * from "./revalidate-path-action";
+export { registerWorkerRevalidation, revalidatePathActionAsync } from "./revalidate-path-client";

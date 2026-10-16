@@ -1,8 +1,9 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AppShellHeader, Avatar, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { AppShellHeader, Group, Indicator, Loader, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { IconBrandDocker, IconHome, IconReplace, IconRobot, IconSettings, IconSunMoon } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";

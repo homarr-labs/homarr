@@ -1,4 +1,5 @@
-import { Avatar, Group, Text } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+import { Group, Text } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";

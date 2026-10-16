@@ -1,0 +1,27 @@
+{
+  "name": "@homarr/worker-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./connection": "./src/connection.ts",
+    "./vault": "./src/vault.ts",
+    "./pending-connection": "./src/pending-connection.ts",
+    "./resources": "./resources.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src/pool.test.ts src/scheduler.test.ts resources.test.ts"
+  },
+  "dependencies": {
+    "@homarr/remote-protocol": "workspace:^0.1.0",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bun": "catalog:",
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  }
+}

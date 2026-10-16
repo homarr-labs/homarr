@@ -1,5 +1,6 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -7,7 +8,6 @@ import {
   Box,
   Center,
   Group,
-  Image,
   Paper,
   RingProgress,
   ScrollArea,

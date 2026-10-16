@@ -4,6 +4,8 @@ import { useCallback, useRef, useState } from "react";
 import { useTiks } from "@rexa-developer/tiks/react";
 
 import { useI18n } from "@homarr/translation/client";
+import { useResourceFetch } from "@homarr/worker-client/resources";
+import type { ResourceFetch } from "@homarr/worker-client/resources";
 
 import type { BackupAnalysis, MigrationFile, MigrationStatus } from "./types";
 import { PREVIEW_TABLE_KEYS } from "./types";
@@ -23,8 +25,8 @@ const getAppliedMigrationCount = (db: any): number => {
   }
 };
 
-const fetchMigrations = async (): Promise<MigrationFile[]> => {
-  const res = await fetch("/api/backup/migrations");
+const fetchMigrations = async (resourceFetch: ResourceFetch): Promise<MigrationFile[]> => {
+  const res = await resourceFetch("/api/backup/migrations");
   if (!res.ok) throw new Error("Failed to fetch migration files from server");
   const data = await res.json();
   return data.migrations ?? [];
@@ -60,6 +62,7 @@ export interface MigrationProgress {
 }
 
 export const useBackupAnalysis = () => {
+  const resourceFetch = useResourceFetch();
   const t = useI18n("management.page.tool.backup.restore");
   const sounds = useTiks({ theme: "soft", volume: 0.12, respectReducedMotion: true });
   const [analysis, setAnalysis] = useState<BackupAnalysis | null>(null);
@@ -80,8 +83,8 @@ export const useBackupAnalysis = () => {
           import("jszip").then((m) => m.default),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           import("sql.js").then((m: any) => m.default),
-          fetchMigrations(),
-          fetch("/api/backup/sql-wasm").then((r) => {
+          fetchMigrations(resourceFetch),
+          resourceFetch("/api/backup/sql-wasm").then((r) => {
             if (!r.ok) throw new Error("Failed to load SQL WASM binary");
             return r.arrayBuffer();
           }),
@@ -180,7 +183,7 @@ export const useBackupAnalysis = () => {
         setLoading(false);
       }
     },
-    [sounds, t],
+    [sounds, t, resourceFetch],
   );
 
   const reset = useCallback(() => {

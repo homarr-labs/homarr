@@ -6,11 +6,13 @@ import { integrations } from "@homarr/db/schema";
 import { byIdSchema } from "@homarr/validation/common";
 
 import { protectedProcedure } from "../../procedure";
+import { callFederatedProcedure, getFederationOrigin } from "../../federation/client";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 
 export const integrationTestStoredConnectionProcedure = protectedProcedure
   .meta({
+    integration: { action: "full", cardinality: "one" },
     openapi: {
       method: "GET",
       path: "/api/integrations/{id}/test-connection",
@@ -34,6 +36,22 @@ export const integrationTestStoredConnectionProcedure = protectedProcedure
   .query(async ({ context, input }) => {
     const where = eq(integrations.id, input.id);
     await throwIfActionForbiddenAsync(context, where, "full");
+    const origin = await getFederationOrigin(context, input.id);
+    if (origin) {
+      if (context.workerAccess?.role === "service" && context.workerAccess.service?.purpose !== "mcp")
+        throw new ApiError({
+          code: "FORBIDDEN",
+          message: "Integration service grants cannot delegate to another worker",
+        });
+      return (await callFederatedProcedure(context, origin.connectionId, ["integration", "testConnection"], {
+        id: origin.remoteIntegrationId,
+      })) as
+        | { success: true }
+        | {
+            success: false;
+            error: "missingSecret" | "authorization" | "certificate" | "request" | "statusCode" | "parse" | "unknown";
+          };
+    }
 
     const integration = await context.db.query.integrations.findFirst({ where, with: { secrets: true } });
     if (!integration) {

@@ -5,16 +5,20 @@ import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";
+import { useResourceWorkerId } from "@homarr/worker-client/resources";
 
 interface CopyMediaProps {
   media: RouterOutputs["media"]["getPaginated"]["items"][number];
 }
 
 export const CopyMedia = ({ media }: CopyMediaProps) => {
+  const workerId = useResourceWorkerId();
   const t = useI18n("media");
   const label = t("action.copy.labelNamed", { name: media.name });
 
-  const url = typeof window !== "undefined" ? `${window.location.origin}/api/user-medias/${media.id}` : "";
+  let url = "";
+  if (workerId) url = `/api/user-medias/${media.id}`;
+  else if (typeof window !== "undefined") url = `${window.location.origin}/api/user-medias/${media.id}`;
 
   // Clipboard only works on localhost or secure connections (https)
   if (url.startsWith("http://") && !url.startsWith("http://localhost")) {

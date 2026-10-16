@@ -1,0 +1,9 @@
+{
+  "extends": "../../tooling/typescript/base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vite/client", "node"],
+    "incremental": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"]
+}

@@ -1,0 +1,51 @@
+# syntax=docker/dockerfile:1.25
+
+# Keep these source stages aligned with Dockerfile so BuildKit shares its
+# existing workspace install instead of storing a second dependency tree.
+FROM oven/bun:1.4.2-alpine AS bun-tool
+
+FROM node:24.18.0-alpine AS base
+
+FROM base AS sources
+ARG TARGETPLATFORM
+WORKDIR /app
+COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
+# Native Node bindings remain available for the migration and administration CLI.
+RUN apk add --no-cache libstdc++ python3 make g++
+COPY bun.lock bunfig.toml package.json ./
+COPY patches ./patches
+COPY --parents ./apps/*/package.json ./packages/*/package.json ./tooling/*/package.json ./
+RUN --mount=type=cache,id=homarr-bun-cache,target=/root/.bun/install/cache,sharing=locked \
+    npm_config_nodedir=/usr/local bun install --frozen-lockfile --concurrent-scripts=1
+COPY . .
+ARG SKIP_ENV_VALIDATION='true'
+ARG CI='true'
+ARG DISABLE_REDIS_LOGS='true'
+
+FROM sources AS remote-builder
+ARG VITE_REMOTE_BASE_PATH='/remote'
+ENV VITE_REMOTE_BASE_PATH=${VITE_REMOTE_BASE_PATH}
+RUN bun run --filter @homarr/remote build && \
+    mkdir -p /app/remote-runtime-data && \
+    bun build packages/remote-platform/src/index.ts --target=bun --minify --outfile=/app/remote-platform.js
+
+# Node and workspace dependencies are build-only. Runtime is one Bun process
+# serving static SPA files plus the small account/directory service.
+FROM oven/bun:1.4.2-distroless AS remote-platform
+WORKDIR /app
+COPY --from=remote-builder --chown=65532:65532 /app/remote-platform.js ./server.js
+COPY --from=remote-builder --chown=65532:65532 /app/apps/remote/dist/client/ ./frontend/
+COPY --from=remote-builder --chown=65532:65532 /app/remote-runtime-data/ /appdata/
+USER 65532:65532
+ENV NODE_ENV='production' \
+    HOSTNAME='0.0.0.0' \
+    PORT='3104' \
+    REMOTE_PUBLIC_URL='https://homarr.dev/remote' \
+    WORKSHOP_API_URL='https://homarr.dev' \
+    REMOTE_PLATFORM_DB='/appdata/platform.sqlite' \
+    REMOTE_FRONTEND_DIR='/app/frontend'
+VOLUME ["/appdata"]
+EXPOSE 3104
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["/usr/local/bin/bun", "-e", "const path=new URL(process.env.REMOTE_PUBLIC_URL).pathname.replace(/\\/$/,'');const response=await fetch('http://127.0.0.1:'+process.env.PORT+path+'/api/health');process.exit(response.ok?0:1)"]
+ENTRYPOINT ["/usr/local/bin/bun", "/app/server.js"]

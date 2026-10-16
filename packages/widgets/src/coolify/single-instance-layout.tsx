@@ -1,7 +1,8 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import { useState } from "react";
-import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
+import { Accordion, Anchor, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common/hooks";

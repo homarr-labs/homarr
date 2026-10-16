@@ -4,6 +4,8 @@ import type { MantineColor } from "@mantine/core";
 import combineClasses from "clsx";
 import type { Property } from "csstype";
 
+import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
+
 import classes from "./masked-image.module.css";
 
 interface MaskedImageProps {
@@ -28,6 +30,7 @@ export const MaskedImage = ({
   maskPosition = "center",
 }: MaskedImageProps) => {
   const theme = useMantineTheme();
+  const resolvedImageUrl = useWorkerResourceUrl(imageUrl);
 
   return (
     <div
@@ -41,7 +44,7 @@ export const MaskedImage = ({
           maskSize,
           maskRepeat,
           maskPosition,
-          maskImage: imageUrl ? `url(${imageUrl})` : undefined,
+          maskImage: resolvedImageUrl ? `url(${resolvedImageUrl})` : undefined,
         } as React.CSSProperties
       }
     />

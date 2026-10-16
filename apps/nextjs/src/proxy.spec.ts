@@ -32,12 +32,55 @@ const createRequest = (pathname: string, locale?: string) => {
 
 describe("locale and onboarding proxy", () => {
   beforeEach(() => {
+    vi.stubEnv("HOMARR_FRONTEND_MODE", undefined);
     vi.clearAllMocks();
     mocks.getRouting.mockResolvedValue({ step: "finish", defaultLocale: "en" });
     mocks.createI18nMiddleware.mockImplementation((defaultLocale: string) => (request: NextRequest) => {
       request.headers.set("x-test-default-locale", defaultLocale);
       return NextResponse.next();
     });
+  });
+
+  it("renders the worker shell without reading a host backend or adding a root trailing slash", async () => {
+    vi.stubEnv("HOMARR_FRONTEND_MODE", "workers");
+    const { proxy } = await loadProxy();
+    const response = await proxy(createRequest("/"));
+    expect(response.headers.get("x-middleware-rewrite")).toBe("http://localhost/en/worker-shell");
+    expect(mocks.getRouting).not.toHaveBeenCalled();
+  });
+
+  it("keeps normal localized Homarr routes inside the browser workspace", async () => {
+    vi.stubEnv("HOMARR_FRONTEND_MODE", "workers");
+    const { proxy } = await loadProxy();
+    const response = await proxy(createRequest("/fr/boards/My-dashboard/settings"));
+    expect(response.headers.get("x-middleware-rewrite")).toBe(
+      "http://localhost/fr/worker-shell/boards/My-dashboard/settings",
+    );
+    const internal = await proxy(createRequest("/fr/worker-shell/boards/My-dashboard/settings"));
+    expect(internal.headers.get("x-middleware-rewrite")).toBeNull();
+    expect(mocks.getRouting).not.toHaveBeenCalled();
+  });
+
+  it("keeps TLS-terminated rewrites on the internal listener instead of the public host", async () => {
+    vi.stubEnv("HOMARR_FRONTEND_MODE", "workers");
+    vi.stubEnv("__NEXT_NO_MIDDLEWARE_URL_NORMALIZE", "1");
+    const { proxy } = await loadProxy();
+    const request = new NextRequest("https://0.0.0.0:3000/manage/boards", {
+      headers: { Host: "homarr.example", "X-Forwarded-Proto": "https" },
+    });
+    const response = await proxy(request);
+    expect(response.headers.get("x-middleware-rewrite")).toBe("https://0.0.0.0:3000/en/worker-shell/manage/boards");
+    expect(mocks.getRouting).not.toHaveBeenCalled();
+  });
+
+  it("blocks host-local API access while allowing the static frontend health check", async () => {
+    vi.stubEnv("HOMARR_FRONTEND_MODE", "workers");
+    const { proxy } = await loadProxy();
+    const response = await proxy(createRequest("/api/trpc/board.getHomeBoard"));
+    expect(response.status).toBe(404);
+    const health = await proxy(createRequest("/api/frontend/health"));
+    expect(health.status).toBe(200);
+    expect(mocks.getRouting).not.toHaveBeenCalled();
   });
 
   it("redirects unfinished onboarding to /init", async () => {

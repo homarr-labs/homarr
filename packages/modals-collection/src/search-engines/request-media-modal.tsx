@@ -1,5 +1,6 @@
+import { ResourceImage as Image } from "@homarr/ui";
 import { useMemo } from "react";
-import { Badge, Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
+import { Badge, Button, Group, LoadingOverlay, Stack, Text } from "@mantine/core";
 import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
 import { MRT_Table } from "mantine-react-table";
 

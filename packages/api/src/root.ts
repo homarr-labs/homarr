@@ -3,6 +3,7 @@ import { createLazyRouter } from "./procedure";
 import { createApiRouter } from "./procedure";
 
 export const appRouter = createApiRouter({
+  federation: createLazyRouter(() => import("./router/federation").then((mod) => mod.federationRouter)),
   frontend: createLazyRouter(() => import("./router/frontend").then((mod) => mod.frontendRouter)),
   assistant: createLazyRouter(() => import("./router/assistant").then((mod) => mod.assistantRouter)),
   user: createLazyRouter(() => import("./router/user").then((mod) => mod.userRouter)),

@@ -25,7 +25,9 @@ import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-
 import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
-import { clientApi, fetchApi } from "@homarr/api/client";
+import { clientApi, useScopedFetchApi } from "@homarr/api/client";
+import type { fetchApi as defaultFetchApi } from "@homarr/api/client";
+import { useResourceFetch } from "@homarr/worker-client/resources";
 import { createId } from "@homarr/common";
 import { assistantHomarrProviderTokenHeader, hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
@@ -325,7 +327,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   return <AssistantPreferencesContext.Provider value={value}>{children}</AssistantPreferencesContext.Provider>;
 };
 
-const threadAdapter: RemoteThreadListAdapter = {
+const createThreadAdapter = (fetchApi: typeof defaultFetchApi): RemoteThreadListAdapter => ({
   async list() {
     const threads = await fetchApi.assistant.listThreads.query();
     return {
@@ -377,9 +379,12 @@ const threadAdapter: RemoteThreadListAdapter = {
         .slice(0, 72) || "New conversation";
     return createAssistantStream((controller) => controller.appendText(text));
   },
-};
+});
 
-const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapter => ({
+const createHistoryAdapter = (
+  threadId: string | undefined,
+  fetchApi: typeof defaultFetchApi,
+): ThreadHistoryAdapter => ({
   async load() {
     return { messages: [] };
   },
@@ -460,6 +465,8 @@ const AssistantThreadRuntime = () => {
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
   const preferences = useAssistantPreferences();
   const { getRequestBody, getRequestHeaders, refreshQuota } = preferences;
+  const fetchApi = useScopedFetchApi();
+  const resourceFetch = useResourceFetch();
   const transport = useMemo(
     () =>
       new AssistantChatTransport({
@@ -468,12 +475,12 @@ const AssistantThreadRuntime = () => {
         fetch: (input, init) => {
           const headers = new Headers(init?.headers);
           for (const [name, value] of Object.entries(getRequestHeaders())) headers.set(name, value);
-          return globalThis.fetch(input, { ...init, headers, body: prepareAssistantRequestBody(init?.body) });
+          return resourceFetch(input, { ...init, headers, body: prepareAssistantRequestBody(init?.body) });
         },
       }),
-    [getRequestBody, getRequestHeaders],
+    [getRequestBody, getRequestHeaders, resourceFetch],
   );
-  const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
+  const history = useMemo(() => createHistoryAdapter(threadId, fetchApi), [threadId, fetchApi]);
   const selectedModel = preferences.models.find((model) => model.id === preferences.modelId);
   const attachments = useMemo(
     () =>
@@ -499,7 +506,7 @@ const AssistantThreadRuntime = () => {
           .catch(() => showErrorNotification({ title: t("responseError.title"), message: t("feedbackError") }));
       },
     }),
-    [t, threadId],
+    [t, threadId, fetchApi],
   );
   const onError = useCallback(() => {
     void refreshQuota();
@@ -537,6 +544,8 @@ const AssistantThreadRuntime = () => {
 };
 
 const AssistantRuntime = ({ children }: PropsWithChildren) => {
+  const fetchApi = useScopedFetchApi();
+  const threadAdapter = useMemo(() => createThreadAdapter(fetchApi), [fetchApi]);
   const router = useRouter();
   const { refreshCurrentView } = useAssistantViewRefresh();
   const runtime = useRemoteThreadListRuntime({

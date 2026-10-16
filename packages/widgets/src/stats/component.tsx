@@ -1,20 +1,9 @@
 "use client";
 
+import { ResourceAvatar as Avatar } from "@homarr/ui";
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  ActionIcon,
-  Avatar,
-  Button,
-  Checkbox,
-  Group,
-  Popover,
-  ScrollArea,
-  Stack,
-  Switch,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { ActionIcon, Button, Checkbox, Group, Popover, ScrollArea, Stack, Switch, Text, Tooltip } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconRefresh, IconAdjustments } from "@tabler/icons-react";
 
 import { useRequiredBoard } from "@homarr/boards/context";

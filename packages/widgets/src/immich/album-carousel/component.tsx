@@ -1,8 +1,9 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActionIcon, Box, Center, Group, Image, ScrollArea, Stack, Text, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Box, Center, Group, ScrollArea, Stack, Text, UnstyledButton } from "@mantine/core";
 import { useReducedMotion } from "@mantine/hooks";
 import {
   IconAlertCircle,

@@ -34,6 +34,7 @@
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/backend-handlers": "workspace:^0.1.0",
     "@homarr/boards": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
@@ -52,6 +53,7 @@
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/onboarding": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/remote-platform": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/settings": "workspace:^0.1.0",
     "@homarr/spotlight": "workspace:^0.1.0",
@@ -59,6 +61,7 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
+    "@homarr/worker-client": "workspace:^0.1.0",
     "@homarr/workshop": "workspace:^0.1.0",
     "@mantine/colors-generator": "catalog:",
     "@mantine/core": "catalog:",
@@ -105,6 +108,7 @@
     "mantine-react-table": "catalog:",
     "mermaid": "catalog:",
     "next": "catalog:",
+    "pocketbase": "catalog:",
     "postcss-preset-mantine": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -118,8 +122,7 @@
     "superjson": "catalog:",
     "use-deep-compare-effect": "catalog:",
     "yaml": "catalog:",
-    "zod": "catalog:",
-    "@homarr/backend-handlers": "workspace:^0.1.0"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

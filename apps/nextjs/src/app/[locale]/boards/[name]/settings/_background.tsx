@@ -14,6 +14,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
+import { useWorkerResourceUrl } from "@homarr/worker-client/resources";
 
 import type { FormValues } from "./_settings-form";
 
@@ -150,12 +151,13 @@ interface ImagePreviewProps {
 }
 
 const ImagePreview = ({ src, w, h }: ImagePreviewProps) => {
+  const resolvedSource = useWorkerResourceUrl(src);
   if (!["/", "http://", "https://"].some((prefix) => src.startsWith(prefix))) {
     return <IconPhotoOff size={w} />;
   }
 
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt="preview image" style={{ width: w, height: h, objectFit: "contain" }} />;
+  return <img src={resolvedSource} alt="preview image" style={{ width: w, height: h, objectFit: "contain" }} />;
 };
 
 type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";

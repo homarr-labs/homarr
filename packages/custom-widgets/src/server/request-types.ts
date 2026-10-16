@@ -13,6 +13,12 @@ export interface CustomWidgetAuthConfig {
 }
 
 export interface CustomWidgetHttpRequest {
+  /** Execute on the owning worker without exposing its connection or credentials. */
+  executeDelegatedRequest?(
+    operation: CustomWidgetDelegatedOperation,
+    signal: AbortSignal,
+  ): Promise<CustomWidgetHttpResponse>;
+  signal?: AbortSignal;
   resolveConnectionAsync?(): Promise<
     Pick<CustomWidgetHttpRequest, "baseUrl" | "auth" | "tls" | "pathPrefix" | "redactSecrets">
   >;
@@ -37,6 +43,15 @@ export interface CustomWidgetHttpRequest {
     errorName: string;
     reason?: "timeout";
   }) => void;
+}
+
+export interface CustomWidgetDelegatedOperation {
+  path: string;
+  method: CustomWidgetHttpRequest["method"];
+  kind: CustomWidgetHttpRequest["kind"];
+  body?: string;
+  staticHeaders?: Record<string, string>;
+  textFallback?: boolean;
 }
 
 export interface CustomWidgetHttpResponse {

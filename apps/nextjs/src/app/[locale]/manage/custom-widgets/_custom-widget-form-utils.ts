@@ -103,7 +103,7 @@ export function isRuntimeParams(
   );
 }
 
-export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessionId: string) {
+export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessionId: string, api = fetchApi) {
   const requests = Object.entries(definition.requests).filter(
     ([, entry]) => entry.kind === "query" && entry.trigger === "load",
   );
@@ -121,7 +121,7 @@ export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessi
       if (!request) return;
       const [requestId] = request;
       try {
-        const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
+        const result = await api.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
         results[index] = { requestId, data: result.data, status: { loading: false, ...result } };
       } catch (error) {
         results[index] = {

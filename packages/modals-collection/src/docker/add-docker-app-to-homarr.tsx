@@ -1,4 +1,5 @@
-import { Avatar, Button, Group, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+import { Button, Group, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";

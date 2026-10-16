@@ -1,4 +1,5 @@
-import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
+import { ResourceAvatar as Avatar } from "@homarr/ui";
+import { Badge, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { TracearrViolation } from "@homarr/integrations/types";

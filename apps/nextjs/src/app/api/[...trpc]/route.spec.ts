@@ -1,15 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Hono } from "hono";
 
-const { sessionFromKey, handle } = vi.hoisted(() => ({
+const { sessionFromKey, sessionFromCookie, handle } = vi.hoisted(() => ({
   sessionFromKey: vi.fn().mockResolvedValue(null),
+  sessionFromCookie: vi.fn().mockResolvedValue(null),
   handle: vi.fn(),
 }));
 vi.mock("../../../../../backend/src/env", () => ({ env: { BACKEND_CORS_ORIGINS: [] } }));
-vi.mock("trpc-to-openapi", () => ({ createOpenApiFetchHandler: handle }));
-vi.mock("@homarr/api", () => ({ appRouter: {}, createTRPCContext: vi.fn() }));
+vi.mock("@orpc/openapi/fetch", () => ({
+  OpenAPIHandler: class {
+    handle = handle;
+  },
+}));
+vi.mock("@homarr/api", () => ({ appRouter: {}, createApiContext: vi.fn((options) => options) }));
 vi.mock("@homarr/api/orpc", () => ({ orpcRouter: {} }));
-vi.mock("@homarr/auth/http", () => ({ getSessionFromRequestAsync: vi.fn() }));
+vi.mock("@homarr/auth/http", () => ({ getSessionFromRequestAsync: sessionFromCookie }));
 vi.mock("@homarr/api/open-api", () => ({ openApiRouter: {} }));
 vi.mock("@homarr/auth/api-key", () => ({ API_KEY_HEADER_NAME: "ApiKey", getSessionFromApiKeyAsync: sessionFromKey }));
 vi.mock("@homarr/common/server", () => ({
@@ -36,11 +41,12 @@ describe("REST API browser access", () => {
     expect(response.headers.get("access-control-allow-methods")).toContain("PATCH");
     expect(response.headers.has("access-control-allow-credentials")).toBe(false);
     expect(sessionFromKey).not.toHaveBeenCalled();
+    expect(sessionFromCookie).not.toHaveBeenCalled();
     expect(handle).not.toHaveBeenCalled();
   });
 
   it.each([200, 401, 403, 500])("exposes a %s API response to the calling browser", async (status) => {
-    handle.mockResolvedValueOnce(Response.json({ status }, { status }));
+    handle.mockResolvedValueOnce({ matched: true, response: Response.json({ status }, { status }) });
     const request = new Request("https://homarr.example/api/info", {
       headers: { Origin: "https://homarr.dev", ApiKey: "test-id.test-token" },
     });
@@ -53,10 +59,14 @@ describe("REST API browser access", () => {
   });
 
   it("does not substitute a session cookie for an API key", async () => {
-    handle.mockResolvedValueOnce(Response.json({ message: "Unauthorized" }, { status: 401 }));
+    handle.mockResolvedValueOnce({
+      matched: true,
+      response: Response.json({ message: "Unauthorized" }, { status: 401 }),
+    });
     await app.request(
       new Request("https://homarr.example/api/info", { headers: { Cookie: "authjs.session-token=test" } }),
     );
     expect(sessionFromKey).toHaveBeenCalledWith({}, null, "127.0.0.1", expect.any(String));
+    expect(sessionFromCookie).not.toHaveBeenCalled();
   });
 });

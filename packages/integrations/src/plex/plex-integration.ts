@@ -288,7 +288,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
     const recentlyAddedItems = mergeRecentlyAddedEpisodes(data.MediaContainer.Metadata ?? [], episodes)
       .filter((item) => item.Image)
       .slice(0, MEDIA_RELEASES_LIMIT);
-    const imageProxy = new ImageProxy();
+    const imageProxy = new ImageProxy(this.integration.id);
 
     const images =
       recentlyAddedItems

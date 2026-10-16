@@ -1,7 +1,8 @@
 "use client";
 
+import { ResourceImage as Image } from "@homarr/ui";
 import { useState } from "react";
-import { ActionIcon, Box, Group, Image, Paper, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Box, Group, Paper, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Lightbox } from "@mantine/lightbox";
 import { IconChevronLeft, IconChevronRight, IconZoomIn } from "@tabler/icons-react";
