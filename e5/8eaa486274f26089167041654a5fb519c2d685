@@ -1,0 +1,14 @@
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  h_d6e478ca18e517 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e58eaa486274f26089167041654a5fb519c2d685",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
