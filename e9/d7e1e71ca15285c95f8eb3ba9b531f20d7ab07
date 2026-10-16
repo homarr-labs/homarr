@@ -1,0 +1,124 @@
+apps/nextjs/src/app/[locale]/auth/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 4,50,69-78
+apps/nextjs/src/app/[locale]/boards/(content)/_ready-context.tsx
+  h_d6e478ca18e517 4,6-7,10,12-14,18-20
+apps/nextjs/src/app/[locale]/boards/[name]/layout.tsx
+  h_d6e478ca18e517 1,4-5,9,16-23
+apps/nextjs/src/app/[locale]/boards/[name]/settings/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/boards/_layout-creator.tsx
+  h_d6e478ca18e517 108-125
+apps/nextjs/src/app/[locale]/custom-widget-configuration/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/init/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/layout.tsx
+  h_d6e478ca18e517 49,179
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  h_d6e478ca18e517 1,42,53,269-276
+apps/nextjs/src/app/[locale]/manage/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/reference/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/app/[locale]/widgets/loading.tsx
+  h_d6e478ca18e517 1
+apps/nextjs/src/board-preparation/capture.ts
+  h_d6e478ca18e517 5,8-9,41-51,55,61-84,86-96,116-122
+apps/nextjs/src/board-preparation/proxy.ts
+  h_d6e478ca18e517 177-183
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  h_d6e478ca18e517 865,867
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  h_d6e478ca18e517 4,6,45,53,414-428
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 2-13,25,40,45,97-133,156,163-165,167-169,196-198,206,277,461,582-583,601-608,619
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  h_d6e478ca18e517 4,6,13,112-113,151-152,155,161,164,355-376,380,382-383
+apps/nextjs/src/components/board/layout/use-hydration-safe-element-size.ts
+  h_d6e478ca18e517 1-2
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  h_d6e478ca18e517 4,9,23-25
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  h_d6e478ca18e517 4-13,420-424
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  h_d6e478ca18e517 42,45
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 64-67
+apps/nextjs/src/components/layout/loading.tsx
+  h_d6e478ca18e517 3-7
+bun.lock
+  h_d6e478ca18e517 865,1009,1064,1066,1158,1394,1853,1855,1857,1859,1861,1863,1865,1867,1869,1871,1873,1875,1877,1879,1881,1883,1885,1887,1889,1891,1893,1895,1897,1899,1901,1903,2105,2107,2109,2111,2113,2115,2117,2119,2121,4445,4923
+package.json
+  h_d6e478ca18e517 194,379,404
+packages/boards/src/context.tsx
+  h_d6e478ca18e517 4-13,33-178
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 709
+packages/spotlight/package.json
+  h_d6e478ca18e517 30
+packages/spotlight/src/lib/catalog.ts
+  h_d6e478ca18e517 3,8,39-40,54-67,80
+packages/ui/src/hooks/index.ts
+  h_d6e478ca18e517 1
+packages/ui/src/hooks/use-hydration-safe-element-size.ts
+  h_d6e478ca18e517 1-84
+packages/widgets/package.json
+  h_d6e478ca18e517 100
+packages/widgets/src/anchor-note/component.tsx
+  h_d6e478ca18e517 3,10,99-102,143,153,165-169,174-206,215-220,261,264,269,280,297
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 4,126
+packages/widgets/src/dns-hole/controls/component.tsx
+  h_d6e478ca18e517 8,30,74-89,105-114,116-136,152,155-156,162,223,258
+packages/widgets/src/dns-hole/summary/component.tsx
+  h_d6e478ca18e517 12,18,24,33,41-71,93-109,128-132,242-245,247-274,285,288
+packages/widgets/src/manifest.ts
+  h_d6e478ca18e517 117-155
+packages/widgets/src/media-missing/component.module.css
+  h_d6e478ca18e517 42-182
+packages/widgets/src/media-missing/component.tsx
+  h_d6e478ca18e517 127-133,135,160-166,170,177-183,187,200,213,217,221-222,241-246,251-254,257,259,263-264,274,280-281,285-292,303-307,309,312-328,332,359,361,363,367-369,376
+packages/widgets/src/notebook/canonical-task.ts
+  h_d6e478ca18e517 1-13
+packages/widgets/src/notebook/component.tsx
+  h_d6e478ca18e517 3,5,7-9,12-50
+packages/widgets/src/notebook/notebook.css
+  h_d6e478ca18e517 47,63,135-161
+packages/widgets/src/notebook/notebook.tsx
+  h_d6e478ca18e517 65,86-103,114-115,125,187
+packages/widgets/src/notebook/read-mode.tsx
+  h_d6e478ca18e517 1-292
+packages/widgets/src/notebook/sanitize-content.ts
+  h_d6e478ca18e517 1-212
+packages/widgets/src/releases/component.tsx
+  h_d6e478ca18e517 33-35,41,56,58-61,89-91,112,116-119,122,133,167-176,206,210,658-660
+packages/widgets/src/releases/index.ts
+  h_d6e478ca18e517 55
+packages/widgets/src/releases/query-input.ts
+  h_d6e478ca18e517 1-72
+packages/widgets/src/rssFeed/component.tsx
+  h_d6e478ca18e517 3-4,11,52-54,70-80,83-90
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 3,8,11,13,19,22-34,39,41,46,54,56,87-88,105-117,130-142,144-145,164,186,329-629
+packages/widgets/src/speedtest-tracker/latest-result.tsx
+  h_d6e478ca18e517 6,25,31
+packages/widgets/src/stats/component.tsx
+  h_d6e478ca18e517 20,45,115,129
+packages/widgets/src/timetable/component.tsx
+  h_d6e478ca18e517 5,60-61,66-68,117,131,146-156,173
+patches/@mantine__hooks@9.6.0.patch
+  h_d6e478ca18e517 1-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e9d7e1e71ca15285c95f8eb3ba9b531f20d7ab07",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
