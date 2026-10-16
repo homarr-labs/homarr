@@ -1,0 +1,292 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  h_d6e478ca18e517 60,158
+apps/nextjs/src/board-preparation/capture.ts
+  h_d6e478ca18e517 6,50-52,56-58
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 26,169,576-596
+packages/api/src/router/app/app-access-control.ts
+  h_d6e478ca18e517 37,41
+packages/api/src/router/widgets/rssFeed.ts
+  h_d6e478ca18e517 141
+packages/widgets/package.json
+  h_d6e478ca18e517 26
+packages/widgets/src/air-quality/component.tsx
+  h_d6e478ca18e517 2,32-34
+packages/widgets/src/air-quality/index.ts
+  h_d6e478ca18e517 5,44-54
+packages/widgets/src/anchor-note/component.tsx
+  h_d6e478ca18e517 2,93-95
+packages/widgets/src/anchor-note/index.ts
+  h_d6e478ca18e517 6,25-36
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 2,31-33
+packages/widgets/src/app/index.ts
+  h_d6e478ca18e517 15,107-115
+packages/widgets/src/archive-team-warrior/component.tsx
+  h_d6e478ca18e517 2,54-56
+packages/widgets/src/archive-team-warrior/index.ts
+  h_d6e478ca18e517 6,20-28
+packages/widgets/src/assistant/index.ts
+  h_d6e478ca18e517 11-13
+packages/widgets/src/audio-stats/component.tsx
+  h_d6e478ca18e517 2,28
+packages/widgets/src/audio-stats/index.ts
+  h_d6e478ca18e517 6,55-62
+packages/widgets/src/bazarr/component.tsx
+  h_d6e478ca18e517 2,69
+packages/widgets/src/bazarr/index.ts
+  h_d6e478ca18e517 6,39-46
+packages/widgets/src/beszel-alerts/component.tsx
+  h_d6e478ca18e517 2,51-52
+packages/widgets/src/beszel-alerts/index.ts
+  h_d6e478ca18e517 8-9,40-50
+packages/widgets/src/beszel-system-grid/component.tsx
+  h_d6e478ca18e517 2,459-461
+packages/widgets/src/beszel-system-grid/index.ts
+  h_d6e478ca18e517 8,29-35
+packages/widgets/src/beszel-system-stats/component.tsx
+  h_d6e478ca18e517 2,58-60
+packages/widgets/src/beszel-system-stats/index.ts
+  h_d6e478ca18e517 10-11,77-102
+packages/widgets/src/beszel-system-table/component.tsx
+  h_d6e478ca18e517 2,131-133
+packages/widgets/src/beszel-system-table/index.ts
+  h_d6e478ca18e517 9,66-72
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  h_d6e478ca18e517 2,54
+packages/widgets/src/bookmarks/index.tsx
+  h_d6e478ca18e517 9,116-128
+packages/widgets/src/calendar/component.tsx
+  h_d6e478ca18e517 2,37,76
+packages/widgets/src/calendar/index.ts
+  h_d6e478ca18e517 9-10,40-54
+packages/widgets/src/calendar/query-input.ts
+  h_d6e478ca18e517 1-24
+packages/widgets/src/clock/index.ts
+  h_d6e478ca18e517 6,176-187
+packages/widgets/src/coolify/component.tsx
+  h_d6e478ca18e517 2,55-57
+packages/widgets/src/coolify/index.ts
+  h_d6e478ca18e517 6,32-37
+packages/widgets/src/countdown/index.ts
+  h_d6e478ca18e517 24-26
+packages/widgets/src/custom-api/index.ts
+  h_d6e478ca18e517 22-24
+packages/widgets/src/data.ts
+  h_d6e478ca18e517 1-66
+packages/widgets/src/definition.ts
+  h_d6e478ca18e517 14,105,109-113,117
+packages/widgets/src/dns-hole/controls/component.tsx
+  h_d6e478ca18e517 2,71-73
+packages/widgets/src/dns-hole/controls/index.ts
+  h_d6e478ca18e517 6,30-36
+packages/widgets/src/dns-hole/summary/component.tsx
+  h_d6e478ca18e517 2,80-82
+packages/widgets/src/dns-hole/summary/index.ts
+  h_d6e478ca18e517 6,41-47
+packages/widgets/src/docker/component.tsx
+  h_d6e478ca18e517 2,262-264
+packages/widgets/src/docker/index.ts
+  h_d6e478ca18e517 10,103-114
+packages/widgets/src/downloads/component.tsx
+  h_d6e478ca18e517 2,322
+packages/widgets/src/downloads/index.ts
+  h_d6e478ca18e517 9,137-145
+packages/widgets/src/firewall/component.tsx
+  h_d6e478ca18e517 2,69,94-98
+packages/widgets/src/firewall/index.ts
+  h_d6e478ca18e517 6,23-33
+packages/widgets/src/health-monitoring/component.tsx
+  h_d6e478ca18e517 2,21
+packages/widgets/src/health-monitoring/index.ts
+  h_d6e478ca18e517 10-11,145-166
+packages/widgets/src/iframe/index.ts
+  h_d6e478ca18e517 38-40
+packages/widgets/src/immich/album-carousel/component.tsx
+  h_d6e478ca18e517 2,38-39,41-46
+packages/widgets/src/immich/album-carousel/index.ts
+  h_d6e478ca18e517 10,98-115
+packages/widgets/src/immich/server-stats/component.tsx
+  h_d6e478ca18e517 2,34
+packages/widgets/src/immich/server-stats/index.ts
+  h_d6e478ca18e517 6,36-44
+packages/widgets/src/indexer-manager/component.tsx
+  h_d6e478ca18e517 2,57-59
+packages/widgets/src/indexer-manager/index.ts
+  h_d6e478ca18e517 6,41-49
+packages/widgets/src/llama-cpp/component.tsx
+  h_d6e478ca18e517 2,75-77
+packages/widgets/src/llama-cpp/index.ts
+  h_d6e478ca18e517 6,25-32
+packages/widgets/src/media-missing/component.tsx
+  h_d6e478ca18e517 2,69
+packages/widgets/src/media-missing/index.ts
+  h_d6e478ca18e517 6,30-40
+packages/widgets/src/media-releases/component.tsx
+  h_d6e478ca18e517 2,50-52
+packages/widgets/src/media-releases/index.ts
+  h_d6e478ca18e517 6,41-49
+packages/widgets/src/media-requests/list/component.tsx
+  h_d6e478ca18e517 2,40-42
+packages/widgets/src/media-requests/list/index.ts
+  h_d6e478ca18e517 9,55-70
+packages/widgets/src/media-requests/stats/component.tsx
+  h_d6e478ca18e517 2,40,48-50
+packages/widgets/src/media-requests/stats/index.ts
+  h_d6e478ca18e517 7,27-32
+packages/widgets/src/media-server/component.tsx
+  h_d6e478ca18e517 2,178-180
+packages/widgets/src/media-server/index.ts
+  h_d6e478ca18e517 7,27-38
+packages/widgets/src/media-transcoding/index.ts
+  h_d6e478ca18e517 29-31
+packages/widgets/src/minecraft/server-status/component.tsx
+  h_d6e478ca18e517 2,21-27
+packages/widgets/src/minecraft/server-status/index.ts
+  h_d6e478ca18e517 6,26-31
+packages/widgets/src/network-controller/network-status/component.tsx
+  h_d6e478ca18e517 2,26-28
+packages/widgets/src/network-controller/network-status/index.ts
+  h_d6e478ca18e517 6,32-37
+packages/widgets/src/network-controller/summary/component.tsx
+  h_d6e478ca18e517 2,29,36-38
+packages/widgets/src/network-controller/summary/index.ts
+  h_d6e478ca18e517 6,24-29
+packages/widgets/src/notebook/index.ts
+  h_d6e478ca18e517 29-31
+packages/widgets/src/notifications/component.tsx
+  h_d6e478ca18e517 2,31-33
+packages/widgets/src/notifications/index.ts
+  h_d6e478ca18e517 7,31-38
+packages/widgets/src/paperless-ngx/component.tsx
+  h_d6e478ca18e517 2,120
+packages/widgets/src/paperless-ngx/index.ts
+  h_d6e478ca18e517 6,52-59
+packages/widgets/src/patchmon/component.tsx
+  h_d6e478ca18e517 2,79-82
+packages/widgets/src/patchmon/index.ts
+  h_d6e478ca18e517 7,261-269
+packages/widgets/src/releases/component.tsx
+  h_d6e478ca18e517 2,59,117-119,121,134-135
+packages/widgets/src/releases/index.ts
+  h_d6e478ca18e517 9-10,86-104
+packages/widgets/src/rssFeed/component.tsx
+  h_d6e478ca18e517 2,63
+packages/widgets/src/rssFeed/index.ts
+  h_d6e478ca18e517 6,60-72
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 4,6-8,10-11,46-60,64-78,80-86,88-90,92-106,110-118,120-126,128,132,134-140,142-158,162-165
+packages/widgets/src/smart-home/entity-state/component.tsx
+  h_d6e478ca18e517 2,34
+packages/widgets/src/smart-home/entity-state/index.ts
+  h_d6e478ca18e517 6,32-42
+packages/widgets/src/smart-home/execute-automation/index.ts
+  h_d6e478ca18e517 18-20
+packages/widgets/src/speedtest-tracker/component.tsx
+  h_d6e478ca18e517 2,27-29
+packages/widgets/src/speedtest-tracker/index.ts
+  h_d6e478ca18e517 6,42-49
+packages/widgets/src/stats/component.tsx
+  h_d6e478ca18e517 2,79-86,88,91-98
+packages/widgets/src/stats/index.ts
+  h_d6e478ca18e517 7,39-55
+packages/widgets/src/stocks/component.tsx
+  h_d6e478ca18e517 2,87-89
+packages/widgets/src/stocks/index.ts
+  h_d6e478ca18e517 5,51-56
+packages/widgets/src/system-disks/component.tsx
+  h_d6e478ca18e517 2,242
+packages/widgets/src/system-disks/index.ts
+  h_d6e478ca18e517 6,40-47
+packages/widgets/src/system-resources/component.tsx
+  h_d6e478ca18e517 2,96-98
+packages/widgets/src/system-resources/index.ts
+  h_d6e478ca18e517 7,50-57
+packages/widgets/src/timer/index.ts
+  h_d6e478ca18e517 54-56
+packages/widgets/src/timetable/component.tsx
+  h_d6e478ca18e517 5,29,40,47,52-54
+packages/widgets/src/timetable/index.ts
+  h_d6e478ca18e517 9,55-71
+packages/widgets/src/tracearr/component.tsx
+  h_d6e478ca18e517 2,58-60
+packages/widgets/src/tracearr/index.ts
+  h_d6e478ca18e517 6,37-42
+packages/widgets/src/traefik/component.tsx
+  h_d6e478ca18e517 2,110-112
+packages/widgets/src/traefik/index.ts
+  h_d6e478ca18e517 6,32-37
+packages/widgets/src/umami/component.tsx
+  h_d6e478ca18e517 4,9,27,29,35
+packages/widgets/src/umami/index.ts
+  h_d6e478ca18e517 8,101-131
+packages/widgets/src/umami/umami-content.tsx
+  h_d6e478ca18e517 17,22,34,48,50,53-56,59-62,113,115,152-153
+packages/widgets/src/umami/umami-top-list.tsx
+  h_d6e478ca18e517 12,15,18,21,25,29
+packages/widgets/src/ups/component.tsx
+  h_d6e478ca18e517 2,83-85
+packages/widgets/src/ups/index.ts
+  h_d6e478ca18e517 6,32-37
+packages/widgets/src/uptime-kuma/component.tsx
+  h_d6e478ca18e517 2,125-127
+packages/widgets/src/uptime-kuma/index.ts
+  h_d6e478ca18e517 6,47-52
+packages/widgets/src/video/index.ts
+  h_d6e478ca18e517 23-25
+packages/widgets/src/vpn/component.tsx
+  h_d6e478ca18e517 2,14-16
+packages/widgets/src/vpn/index.ts
+  h_d6e478ca18e517 6,17-24
+packages/widgets/src/wazuh-agents/component.tsx
+  h_d6e478ca18e517 2,133
+packages/widgets/src/wazuh-agents/index.ts
+  h_d6e478ca18e517 6,44-51
+packages/widgets/src/wazuh-alerts/component.tsx
+  h_d6e478ca18e517 2,28
+packages/widgets/src/wazuh-alerts/index.ts
+  h_d6e478ca18e517 7,43-55
+packages/widgets/src/wazuh-auth-failures/component.tsx
+  h_d6e478ca18e517 2,33
+packages/widgets/src/wazuh-auth-failures/index.ts
+  h_d6e478ca18e517 7,26-37
+packages/widgets/src/wazuh-fim/component.tsx
+  h_d6e478ca18e517 2,47
+packages/widgets/src/wazuh-fim/index.ts
+  h_d6e478ca18e517 7,36-49
+packages/widgets/src/wazuh-summary/component.tsx
+  h_d6e478ca18e517 2,81
+packages/widgets/src/wazuh-summary/index.ts
+  h_d6e478ca18e517 6,26-33
+packages/widgets/src/wazuh-timeline/component.tsx
+  h_d6e478ca18e517 2,58
+packages/widgets/src/wazuh-timeline/index.ts
+  h_d6e478ca18e517 7,57-69
+packages/widgets/src/wazuh-top-list/component.tsx
+  h_d6e478ca18e517 2,68
+packages/widgets/src/wazuh-top-list/index.ts
+  h_d6e478ca18e517 7,38-51
+packages/widgets/src/wazuh-vulnerabilities/component.tsx
+  h_d6e478ca18e517 2,166
+packages/widgets/src/wazuh-vulnerabilities/index.ts
+  h_d6e478ca18e517 7,42-55
+packages/widgets/src/weather/component.tsx
+  h_d6e478ca18e517 2,24
+packages/widgets/src/weather/index.ts
+  h_d6e478ca18e517 7,72-83
+packages/widgets/src/wud/component.tsx
+  h_d6e478ca18e517 2,45-47
+packages/widgets/src/wud/index.ts
+  h_d6e478ca18e517 6,28-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "61ee628e66b908be4cf702e574846058f5e95f39",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
