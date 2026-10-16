@@ -149,8 +149,12 @@ const sanitizeFragment = (html: string) =>
 
 export const sanitizeNotebookHtml = (html: string, disableTasks = false) => {
   const fragment = sanitizeFragment(html);
-  if (disableTasks) {
-    for (const input of fragment.querySelectorAll("input")) input.disabled = true;
+  for (const input of fragment.querySelectorAll("input")) {
+    const task = input.closest('li[data-type="taskItem"]')?.cloneNode(true) as Element | undefined;
+    task?.querySelectorAll('label, ul[data-type="taskList"]').forEach((element) => element.remove());
+    const label = task?.textContent?.replace(/\s+/g, " ").trim() || "Task item";
+    input.setAttribute("aria-label", label);
+    if (disableTasks) input.disabled = true;
   }
   const holder = fragment.ownerDocument.createElement("div");
   holder.append(fragment);

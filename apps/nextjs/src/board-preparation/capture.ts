@@ -95,7 +95,13 @@ export const settleCapturedQueriesAsync = async (
     clearTimeout(timer);
   }
   // Cancellation reverts a slow query to its last cached value and original age.
-  if (timedOut) await queryClient.cancelQueries({ fetchStatus: "fetching" });
+  const cancelledQueryHashes = new Set<string>();
+  if (timedOut) {
+    for (const query of queryClient.getQueryCache().findAll({ fetchStatus: "fetching" })) {
+      cancelledQueryHashes.add(query.queryHash);
+    }
+    await queryClient.cancelQueries({ fetchStatus: "fetching" });
+  }
 
   const queries = dehydrate(queryClient, {
     shouldDehydrateMutation: () => false,
@@ -104,7 +110,15 @@ export const settleCapturedQueriesAsync = async (
   // A failed refresh with retained data is still useful presentation data.
   // Never serialize a rejected promise or an upstream error into the document.
   for (const query of queries.queries) {
-    query.state = { ...query.state, status: "success", fetchStatus: "idle", error: null, fetchFailureReason: null };
+    query.state = {
+      ...query.state,
+      isInvalidated:
+        query.state.isInvalidated || query.state.status === "error" || cancelledQueryHashes.has(query.queryHash),
+      status: "success",
+      fetchStatus: "idle",
+      error: null,
+      fetchFailureReason: null,
+    };
   }
   const queryCount = queryClient.getQueryCache().getAll().length;
   logger.info("Board view queries captured", {
