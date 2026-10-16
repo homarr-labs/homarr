@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Box, Paper, px, rem, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Box, Paper, px, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
@@ -71,8 +71,7 @@ export const ClientBoard = () => {
   const isPreview = representativeWidth !== null;
   const previewWidth = Math.max(1, Math.min(representativeWidth ?? 1, initialViewportWidth - Number(px("2rem"))));
   let inlinePadding = 0;
-  if (isPreview) inlinePadding = 2 * Number(px(rem(1)));
-  else if (!belowSmallViewport) {
+  if (!isPreview && !belowSmallViewport) {
     if (leftColumnCount === 0) inlinePadding += shellPadding;
     if (rightColumnCount === 0) inlinePadding += shellPadding;
   }

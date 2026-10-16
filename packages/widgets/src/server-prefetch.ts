@@ -71,6 +71,23 @@ export const prefetchInitialWidgetData = async (
   const definitions = await Promise.all(items.map((item) => loadWidgetDefinition(item.kind)));
   const jobs: QueryJob[] = [];
   const identities = new Map<string, QueryJob>();
+  const drained = Promise.withResolvers<void>();
+  const limit = capture ? 8 : Infinity;
+  let next = 0;
+  let active = 0;
+  let started = false;
+  const schedule = (): void => {
+    while (started && active < limit && next < jobs.length) {
+      const job = jobs[next++];
+      if (!job) continue;
+      active++;
+      void run(job).finally(() => {
+        active--;
+        schedule();
+      });
+    }
+    if (started && active === 0 && next >= jobs.length) drained.resolve();
+  };
   const enqueue = (queries: WidgetDataQueries, dependent = false) => {
     for (const query of getWidgetDataQueries(queries)) {
       if (!capture && query.stream === false) continue;
@@ -105,6 +122,7 @@ export const prefetchInitialWidgetData = async (
       identities.set(identity, job);
       jobs.push(job);
       if (outcome) outcome.registered++;
+      if (started) schedule();
     }
   };
 
@@ -132,38 +150,34 @@ export const prefetchInitialWidgetData = async (
     }
   }
 
-  let next = 0;
-  const worker = async () => {
-    while (next < jobs.length) {
-      const job = jobs[next++];
-      if (!job) continue;
-      try {
-        if (Date.now() >= deadline) {
-          if (outcome) outcome.timedOut++;
-          continue;
-        }
-        const queryFn = job.options.queryFn;
-        if (typeof queryFn !== "function") continue;
-        const data = await queryClient.fetchQuery({
-          ...job.options,
-          queryFn: async (context) => {
-            await setImmediate();
-            if (Date.now() >= deadline) throw new Error("Board capture deadline exceeded");
-            return queryFn(context);
-          },
-        });
-        job.result = { status: "success", data };
-        for (const after of job.after) enqueue(after(data), true);
-      } catch {
-        job.result = { status: "error" };
-        if (outcome) outcome.failed++;
-      } finally {
-        job.finish();
+  const run = async (job: QueryJob) => {
+    try {
+      if (Date.now() >= deadline) {
+        if (outcome) outcome.timedOut++;
+        return;
       }
+      const queryFn = job.options.queryFn;
+      if (typeof queryFn !== "function") return;
+      const data = await queryClient.fetchQuery({
+        ...job.options,
+        queryFn: async (context) => {
+          await setImmediate();
+          if (Date.now() >= deadline) throw new Error("Board capture deadline exceeded");
+          return queryFn(context);
+        },
+      });
+      job.result = { status: "success", data };
+      for (const after of job.after) enqueue(after(data), true);
+    } catch {
+      job.result = { status: "error" };
+      if (outcome) outcome.failed++;
+    } finally {
+      job.finish();
     }
   };
   const discovery = jobs.filter((job) => job.after.length > 0).map((job) => job.settled);
-  const workers = Array.from({ length: capture ? Math.min(8, jobs.length) : jobs.length }, () => worker());
-  if (capture) return workers;
+  started = true;
+  schedule();
+  if (capture) return [drained.promise];
   return discovery;
 };
