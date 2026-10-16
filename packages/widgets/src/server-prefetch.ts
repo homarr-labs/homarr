@@ -245,6 +245,7 @@ export const prefetchInitialWidgetData = (
             trpc.widget.rssFeed.getFeeds.queryOptions({
               urls: options.feedUrls,
               maximumAmountPosts: Number(options.maximumAmountPosts ?? 100),
+              descriptionMaxLength: Number(options.descriptionMaxLength ?? 250),
             }),
           );
         break;
