@@ -15,6 +15,7 @@ import {
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
+import { lookupWithFallback } from "../dns/lookup";
 import { getHttpRequestSignal } from "./request-signal";
 import { withTimeoutAsync } from "./timeout";
 
@@ -83,6 +84,7 @@ export const createCertificateAgentAsync = async (
 export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" | "checkServerIdentity">) => {
   const ca = override?.ca ?? (await getAllTrustedCertificatesAsync());
   return new HttpsAgent({
+    lookup: lookupWithFallback,
     ca,
     secureContext: getTlsContext(ca),
     checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),

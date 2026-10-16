@@ -7,6 +7,8 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 // The below import statement initializes dns-caching
 import "@homarr/core/infrastructure/dns/init";
 
+import { lookupWithFallback } from "../dns/lookup";
+
 interface HttpAgentOptions extends EnvHttpProxyAgent.Options {
   logger?: ILogger;
 }
@@ -15,7 +17,17 @@ export class UndiciHttpAgent extends EnvHttpProxyAgent {
   private logger: ILogger;
 
   constructor(props?: HttpAgentOptions) {
-    super(props);
+    let options = props;
+    if (typeof props?.connect !== "function") {
+      options = {
+        ...props,
+        connect: {
+          lookup: lookupWithFallback,
+          ...props?.connect,
+        },
+      };
+    }
+    super(options);
     this.logger = props?.logger ?? createLogger({ module: "httpAgent" });
   }
 
