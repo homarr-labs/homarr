@@ -70,14 +70,11 @@ const loadSpecContextAsync = async (spec: BoardPreparationSpec, session: Session
       layout: { layoutId: spec.layoutId },
     });
   } catch (cause) {
-    // A renamed, deleted or no longer accessible Board stays on the ordinary route.
     if (cause instanceof TRPCError) return null;
     throw cause;
   }
 };
 
-// The capture renders the ordinary route as this viewer, through the same
-// session check as any visit. The token never leaves this process.
 const withCaptureSessionAsync = async <T>(
   spec: BoardPreparationSpec,
   callback: (token: string | null) => Promise<T>,
@@ -96,7 +93,6 @@ const withCaptureSessionAsync = async <T>(
   }
 };
 
-// A crash between insert and delete must not leave a usable session behind.
 const removeAbandonedCaptureSessionsAsync = async () => {
   const rows = await db.query.sessions.findMany({
     where: like(sessions.sessionToken, `${captureSessionPrefix}%`),
@@ -108,7 +104,12 @@ const removeAbandonedCaptureSessionsAsync = async () => {
   for (const sessionToken of abandoned) await db.delete(sessions).where(eq(sessions.sessionToken, sessionToken));
 };
 
-const captureDocumentAsync = async (id: string, spec: BoardPreparationSpec, viewportWidth: number) =>
+const captureDocumentAsync = async (
+  id: string,
+  spec: BoardPreparationSpec,
+  viewportWidth: number,
+  signal?: AbortSignal,
+) =>
   await withCaptureSessionAsync(spec, async (sessionToken) => {
     const cookies = [
       `${localeCookieKey}=${spec.locale}`,
@@ -127,24 +128,21 @@ const captureDocumentAsync = async (id: string, spec: BoardPreparationSpec, view
       },
       redirect: "manual",
       cache: "no-store",
-      signal: AbortSignal.timeout(90_000),
+      signal: AbortSignal.any([AbortSignal.timeout(90_000), ...(signal ? [signal] : [])]),
     });
     const html = await response.text();
     if (response.status !== 200 || !response.headers.get("content-type")?.includes("text/html")) {
       throw new Error(`Board capture returned HTTP ${response.status}`);
     }
     if (!html.includes('data-testid="board-canvas"')) throw new Error("Board capture did not render the Board");
-    // React throttles each Suspense reveal batch to 300ms after the previous
-    // one, timed from $RT. The stored document is complete, so every batch
-    // reveals on the next frame, before hydration can claim a pending boundary.
     return html.replaceAll(revealThrottleTimestamp, "");
   });
 
 const revealThrottleTimestamp = "$RT=performance.now()";
-// Each streamed Suspense reveal is painted in a later batch; few is better.
 const countStreamedReveals = (html: string) => html.split("$RC(").length - 1;
 
-export const prepareBoardAsync = async (id: string, runId?: string) => {
+export const prepareBoardAsync = async (id: string, runId?: string, signal?: AbortSignal) => {
+  signal?.throwIfAborted();
   const log = logger.child({ runId, viewId: id.slice(0, 12) });
   const stopwatch = new Stopwatch();
   log.debug("Starting Board view preparation");
@@ -180,8 +178,6 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
     try {
       session = await resolveViewerAsync(spec);
     } catch {
-      // Logged out, extended or deleted sessions are expected; the next visit
-      // registers the current session as a new view.
       await forgetBoardPreparationAsync(id);
       log.debug("Board preparation skipped", { reason: "viewer_session_ended" });
       return;
@@ -192,14 +188,14 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
       return;
     }
     const fingerprint = getBoardPreparationFingerprint(context);
+    signal?.throwIfAborted();
     log.debug("Capturing Board view", { boardId: spec.boardId, locale: spec.locale, layoutId: spec.layoutId });
     const captureStopwatch = new Stopwatch();
-    const html = await captureDocumentAsync(id, spec, variant.viewportWidth ?? context.viewportWidth);
+    const html = await captureDocumentAsync(id, spec, variant.viewportWidth ?? context.viewportWidth, signal);
     const captureDurationMs = Math.round(captureStopwatch.getElapsedInMilliseconds());
 
-    // A mutation may finish while slow Integrations render. Retry with the new
-    // inputs rather than publishing a superseded document.
     const latest = await loadSpecContextAsync(spec, await resolveViewerAsync(spec));
+    signal?.throwIfAborted();
     if (!latest || getBoardPreparationFingerprint(latest) !== fingerprint) {
       log.debug("Board preparation needs retry", { reason: "inputs_changed", boardId: spec.boardId });
       return "changed" as const;
@@ -232,7 +228,7 @@ export const prepareBoardAsync = async (id: string, runId?: string) => {
   }
 };
 
-const discoverHomeBoardsAsync = async () => {
+const discoverHomeBoardsAsync = async (signal: AbortSignal) => {
   const settings = await getServerSettingsAsync(db);
   const activeSessions = await db.query.sessions.findMany({
     columns: { userId: true, expires: true },
@@ -242,6 +238,7 @@ const discoverHomeBoardsAsync = async () => {
   });
   const viewers = new Map<string | null, Session | null>([[null, null]]);
   for (const row of activeSessions) {
+    if (signal.aborted) return;
     if (viewers.has(row.userId)) continue;
     try {
       viewers.set(
@@ -249,10 +246,11 @@ const discoverHomeBoardsAsync = async () => {
         await resolveViewerAsync({ viewerId: row.userId, sessionExpires: row.expires.toISOString() }),
       );
     } catch {
-      /* Deleted or expiring sessions remain on the ordinary route. */
+      continue;
     }
   }
   for (const session of viewers.values()) {
+    if (signal.aborted) return;
     for (const deviceType of [undefined, "mobile"] as const) {
       try {
         const context = await loadBoardPreparationContextAsync({
@@ -263,13 +261,14 @@ const discoverHomeBoardsAsync = async () => {
         });
         if (!context) continue;
         for (const { id: layoutId } of context.board.layouts) {
+          if (signal.aborted) return;
           const layoutContext = withPreparedLayout(context, layoutId);
           if (!layoutContext) continue;
           const spec = getBoardPreparationSpec(layoutContext, { pathname: "/", deviceType: deviceType ?? null });
           await rememberBoardPreparationAsync(getBoardPreparationId(spec), spec);
         }
       } catch {
-        /* No accessible home Board is a normal first-run condition. */
+        continue;
       }
     }
   }
@@ -287,29 +286,30 @@ export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string
   if (boardId) scope = "board";
   if (id) scope = "view";
   log.info("Board preparation run started", { scope });
-  // Stays inside the five minute preparation request timeout.
   const deadline = Date.now() + 4 * 60_000;
+  const runSignal = AbortSignal.any([AbortSignal.timeout(4 * 60_000), ...(signal ? [signal] : [])]);
   await removeAbandonedCaptureSessionsAsync();
-  if (!id && !boardId) await discoverHomeBoardsAsync();
+  if (!id && !boardId) await discoverHomeBoardsAsync(runSignal);
   let ids = [id];
   if (!id) {
     const registry = await readBoardPreparationRegistryAsync();
     ids = Object.entries(registry)
       .filter(([, variant]) => variant.lastSeenAt > Date.now() - preparationMaxAgeMs)
       .filter(([, variant]) => boardId === undefined || variant.spec.boardId === boardId)
-      .toSorted((a, b) => b[1].lastSeenAt - a[1].lastSeenAt)
+      .toSorted((leftEntry, rightEntry) => rightEntry[1].lastSeenAt - leftEntry[1].lastSeenAt)
       .map(([key]) => key);
     const versions = new Map(
       await Promise.all(ids.map(async (key) => [key, key ? await readPreparedVersionAsync(key) : null] as const)),
     );
-    ids = ids.toSorted((a, b) => (versions.get(a)?.preparedAt ?? 0) - (versions.get(b)?.preparedAt ?? 0));
+    ids = ids.toSorted(
+      (leftId, rightId) => (versions.get(leftId)?.preparedAt ?? 0) - (versions.get(rightId)?.preparedAt ?? 0),
+    );
   }
-  // One render at a time keeps the burst from monopolizing the dashboard process.
   const failures: unknown[] = [];
   let preparedCount = 0;
   let skippedCount = 0;
   for (const viewId of ids) {
-    if (signal?.aborted || Date.now() >= deadline) {
+    if (runSignal.aborted || Date.now() >= deadline) {
       let reason = "time_budget";
       if (signal?.aborted) reason = "request_aborted";
       log.debug("Board preparation run stopped early", { reason });
@@ -317,12 +317,14 @@ export const prepareRegisteredBoardsAsync = async (id?: string, boardId?: string
     }
     if (!viewId) continue;
     try {
-      let result = await prepareBoardAsync(viewId, runId);
-      if (result === "changed") result = await prepareBoardAsync(viewId, runId);
+      let result = await prepareBoardAsync(viewId, runId, runSignal);
+      if (runSignal.aborted) break;
+      if (result === "changed") result = await prepareBoardAsync(viewId, runId, runSignal);
       if (result === "changed") throw new Error("Board inputs changed during both preparation attempts");
       if (result === "prepared") preparedCount++;
       else skippedCount++;
     } catch (cause) {
+      if (runSignal.aborted) break;
       failures.push(cause);
       log
         .child({ viewId: viewId.slice(0, 12) })

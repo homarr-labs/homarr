@@ -18,11 +18,8 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { env as authEnv } from "@homarr/auth/env";
 import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
-import { getRscAssistantAvailabilityAsync } from "@homarr/api/assistant-availability-server";
-import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { InitialRenderTimeProvider } from "@homarr/common";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SettingsProvider } from "@homarr/settings";
@@ -48,13 +45,12 @@ import { AuthProvider } from "./_client-providers/session";
 import { TRPCReactProvider } from "./_client-providers/trpc";
 import { BoardReadyProvider } from "./boards/(content)/_ready-context";
 import { composeWrappers } from "./compose";
+import { loadRootLayoutDataAsync } from "./_root-layout-data";
 
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
-
-const logger = createLogger({ module: "rootLayout" });
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const [serverSettings, colorScheme, t] = await Promise.all([
@@ -106,36 +102,11 @@ export default async function Layout(props: {
     notFound();
   }
 
-  const sessionPromise = auth();
-  const serverSettingsPromise = getRscServerSettingsAsync();
-  const assistantAvailabilityPromise = sessionPromise.then(async (session) => {
-    if (!session) return "unauthenticated" as const;
-
-    try {
-      const enabled = await getRscAssistantAvailabilityAsync();
-      return enabled ? ("enabled" as const) : ("unconfigured" as const);
-    } catch {
-      return "error" as const;
-    }
-  });
-  const userPromise = sessionPromise.then((session) =>
-    session
-      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
-          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
-          return null;
-        })
-      : null,
-  );
-  const [session, user, serverSettings, colorScheme, assistantAvailability, capturedViewId] = await Promise.all([
-    sessionPromise,
-    userPromise,
-    serverSettingsPromise,
+  const [{ session, user, serverSettings, assistantAvailability }, colorScheme, capturedViewId] = await Promise.all([
+    loadRootLayoutDataAsync(auth()),
     getCurrentColorSchemeAsync(),
-    assistantAvailabilityPromise,
     getCapturedViewIdAsync(),
   ]);
-  // A captured document hydrates later; its first client render must use the
-  // capture clock, and Widgets render into the document instead of deferring.
   let initialRenderTime: number | undefined;
   if (capturedViewId) initialRenderTime = Date.now();
   const direction = isLocaleRTL(locale) ? "rtl" : "ltr";

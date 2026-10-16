@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -174,6 +175,24 @@ export const useWhenBoardRestored = () => {
     if (lifetime.cancelled) return "cancelled";
     return result;
   }, [lifetime, whenRestored]);
+};
+
+export const useBoardRestoredAction = (action: () => unknown | Promise<unknown>) => {
+  const whenRestored = useWhenBoardRestored();
+  const pendingRef = useRef(false);
+  const [isPending, setPending] = useState(false);
+  const run = useCallback(async () => {
+    if (pendingRef.current) return;
+    pendingRef.current = true;
+    setPending(true);
+    try {
+      if ((await whenRestored()) === "restored") await action();
+    } finally {
+      pendingRef.current = false;
+      setPending(false);
+    }
+  }, [action, whenRestored]);
+  return { run, isPending };
 };
 
 const subscribeToViewport = (onStoreChange: () => void) => {

@@ -1,5 +1,6 @@
 "use client";
 import { definition } from ".";
+import { useWidgetNow } from "../common/use-widget-now";
 
 import { useMemo } from "react";
 import { Box, Group, Stack, Text } from "@mantine/core";
@@ -24,6 +25,7 @@ export default function SpeedtestTrackerWidget({
   width,
 }: WidgetComponentProps<"speedtestTracker">) {
   const t = useI18n("widget.speedtestTracker");
+  const now = useWidgetNow();
   const dashboardQuery = clientApi.widget.speedtestTracker.getDashboard.useQuery(
     definition.data.queries({ options, integrationIds }).main.input,
   );
@@ -35,7 +37,7 @@ export default function SpeedtestTrackerWidget({
     [successfulDashboards],
   );
 
-  const cutoff = Date.now() - 12 * 60 * 60 * 1000;
+  const cutoff = (now?.getTime() ?? Date.now()) - 12 * 60 * 60 * 1000;
   const recentFiltered = combined.recentResults.filter((result) => result.created_at.getTime() > cutoff);
 
   const showLatestResult = options.showLatestResult;

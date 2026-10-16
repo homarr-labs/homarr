@@ -110,6 +110,11 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
     stream: true,
     queries: ({ options }) => ({
       main: widgetQuery("app.byId", { id: options.appId }, { enabled: Boolean(options.appId) }),
+      ping: widgetQuery(
+        "widget.app.ping",
+        { id: options.appId },
+        { enabled: Boolean(options.appId) && options.pingEnabled, stream: false },
+      ),
     }),
   })
   .withDynamicImport(() => import("./component"));

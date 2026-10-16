@@ -44,7 +44,6 @@ export default function MediaReleasesWidget({
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
   const locale = useCurrentIntlLocale();
-  // The server cannot know the browser's time zone, so hydrate with UTC first.
   const timeZone = useIsHydrated() ? undefined : "UTC";
   const formatDate = useMemo(() => createReleaseDateFormatter(locale, timeZone), [locale, timeZone]);
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery(

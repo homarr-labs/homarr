@@ -83,8 +83,6 @@ export const AssistantLauncher = ({ children }: PropsWithChildren) => {
   const runtimeRef = useRef<AssistantContextValue | null>(null);
   const [widgets, setWidgets] = useState<Set<string>>(() => new Set());
   const [renderWidget, setRenderWidget] = useState<AssistantWidgetRender | null>(null);
-  // Widgets register while the board may still be hydrating. Urgent context
-  // updates would client-render every Widget boundary that is not yet hydrated.
   const onWidgetRender = useCallback(
     (render: AssistantWidgetRender) => startTransition(() => setRenderWidget(() => render)),
     [],

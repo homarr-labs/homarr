@@ -30,6 +30,7 @@ export interface WidgetDataQuery<TInput = unknown> {
   path: QueryPath;
   input: TInput;
   enabled: boolean;
+  stream?: boolean;
   after?: (data: unknown) => WidgetDataQueries;
 }
 
@@ -50,11 +51,16 @@ export type WidgetDataDefinition<TOptions = Record<string, unknown>> =
 export const widgetQuery = <TPath extends QueryPath>(
   path: TPath,
   input: QueryInput<TPath>,
-  { enabled = true, after }: { enabled?: boolean; after?: (data: QueryOutput<TPath>) => WidgetDataQueries } = {},
+  {
+    enabled = true,
+    stream,
+    after,
+  }: { enabled?: boolean; stream?: boolean; after?: (data: QueryOutput<TPath>) => WidgetDataQueries } = {},
 ): WidgetDataQuery<QueryInput<TPath>> => ({
   path,
   input,
   enabled,
+  stream,
   ...(after ? { after: (data: unknown) => after(data as QueryOutput<TPath>) } : {}),
 });
 

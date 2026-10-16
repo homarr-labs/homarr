@@ -1,5 +1,6 @@
 "use client";
 import { definition } from ".";
+import { useWidgetTimeZone } from "../common/use-widget-now";
 
 import { Center, Flex, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
@@ -19,6 +20,7 @@ export default function VpnWidget({ options, integrationIds, width, height }: Wi
   const t = useI18n("widget.vpn");
   const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
+  const timeZone = useWidgetTimeZone();
   const dense = width < 240 || height < 120;
 
   if (isPending || integrations.length === 0) {
@@ -58,7 +60,7 @@ export default function VpnWidget({ options, integrationIds, width, height }: Wi
             />
             {height >= 180 && !result.error && new Date(result.integration.updatedAt).getTime() > 0 && (
               <Text size="xs" c="dimmed" ta="right">
-                {new Date(result.integration.updatedAt).toLocaleString(locale)}
+                {new Date(result.integration.updatedAt).toLocaleString(locale, { timeZone })}
               </Text>
             )}
           </Stack>

@@ -266,9 +266,6 @@ const StatCard = ({
   const boxWidth = measuredWidth || initialSize.width;
   const boxHeight = measuredHeight || initialSize.height;
 
-  // The observed element is measured as a border box; the size dependent
-  // branches keep comparing the content box, using the normal padding so the
-  // decision does not feed back into the card's own padding.
   const contentWidth = Math.max(0, boxWidth - 2 * (normalPadding + border));
   const contentHeight = Math.max(0, boxHeight - 2 * (normalPadding + border));
   const displayedWidth = contentWidth * layoutScale;

@@ -74,7 +74,6 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   const response = next(request);
   if (!event) return response;
   const { readCaptureViewId } = await import("@homarr/cron-jobs/board-preparation");
-  // A capture renders the ordinary route; it must never be answered by a capture.
   if (readCaptureViewId(request.headers)) return response;
   const { getPreparedBoardResponseAsync } = await import("./board-preparation/proxy");
   const prepared = await getPreparedBoardResponseAsync(request, event, response);

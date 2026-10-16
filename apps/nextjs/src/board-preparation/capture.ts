@@ -13,7 +13,6 @@ const queryBudgetMs = 30_000;
 
 const settleQueriesAsync = async (client: QueryClient, dependentQueries: Promise<void>[]) => {
   await Promise.allSettled(dependentQueries);
-  // Discovery can register another query. Read again after each settled group.
   while (true) {
     const pending = client
       .getQueryCache()
@@ -27,10 +26,6 @@ const settleQueriesAsync = async (client: QueryClient, dependentQueries: Promise
   }
 };
 
-/**
- * Waits for every initial Widget query, within a budget, so the captured
- * document renders Widget content instead of streaming it after hydration.
- */
 export const settleCapturedQueriesAsync = async (
   queryClient: QueryClient,
   { board, layoutId, isAuthenticated }: { board: Board; layoutId: string; isAuthenticated: boolean },
@@ -73,7 +68,6 @@ export const settleCapturedQueriesAsync = async (
   } finally {
     clearTimeout(timer);
   }
-  // Cancellation reverts a slow query to its last cached value and original age.
   const cancelledQueryHashes = new Set<string>();
   if (timedOut) {
     for (const query of queryClient.getQueryCache().findAll({ fetchStatus: "fetching" })) {
@@ -86,8 +80,6 @@ export const settleCapturedQueriesAsync = async (
     shouldDehydrateMutation: () => false,
     shouldDehydrateQuery: (query) => query.state.data !== undefined && query.state.fetchStatus !== "fetching",
   });
-  // A failed refresh with retained data is still useful presentation data.
-  // Never serialize a rejected promise or an upstream error into the document.
   for (const query of queries.queries) {
     query.state = {
       ...query.state,

@@ -28,7 +28,8 @@ export default function AppWidget({
 }: WidgetComponentProps<"app">) {
   const settings = useSettings();
   const board = useRequiredBoard();
-  const appQuery = clientApi.app.byId.useQuery(definition.data.queries({ options, integrationIds: [] }).main.input, {
+  const queries = definition.data.queries({ options, integrationIds: [] });
+  const appQuery = clientApi.app.byId.useQuery(queries.main.input, {
     enabled: Boolean(options.appId),
   });
   const app = getUsableWidgetQueryData(appQuery);
@@ -126,7 +127,7 @@ export default function AppWidget({
         !settings.forceDisableStatus &&
         !board.disableStatus &&
         Boolean(app.pingUrl ?? app.href) ? (
-          <PingIndicator appId={app.id} />
+          <PingIndicator input={queries.ping.input} />
         ) : null}
       </AppLink>
     </Box>

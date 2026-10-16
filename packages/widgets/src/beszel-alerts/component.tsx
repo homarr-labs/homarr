@@ -1,5 +1,6 @@
 "use client";
 import { definition } from ".";
+import { useWidgetNow } from "../common/use-widget-now";
 
 import { useMemo } from "react";
 import { Badge, Box, Divider, Group, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
@@ -46,6 +47,7 @@ export default function BeszelAlertsWidget({
   widgetRuntimeRef,
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useI18n("widget.beszelAlerts");
+  const now = useWidgetNow();
   const isAdvanced = displayMode === "advanced";
   const alertsInput = useMemo(
     () => definition.data.queries({ options, integrationIds, displayMode }).main.input,
@@ -205,7 +207,7 @@ export default function BeszelAlertsWidget({
                           {isResolved ? t("resolved") : t("status.triggered")}
                         </Badge>
                         <Text size="xs" c="dimmed">
-                          {dayjs(entry.created).fromNow()}
+                          {dayjs(entry.created).from(dayjs(now ?? undefined))}
                         </Text>
                       </Stack>
                     </Group>

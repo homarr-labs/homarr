@@ -70,11 +70,12 @@ export const ClientBoard = () => {
   const belowSmallViewport = initialViewportWidth > 0 && initialViewportWidth < Number(px(theme.breakpoints.sm));
   const isPreview = representativeWidth !== null;
   const previewWidth = Math.max(1, Math.min(representativeWidth ?? 1, initialViewportWidth - Number(px("2rem"))));
-  const inlinePadding = isPreview
-    ? 2 * Number(px(rem(1)))
-    : belowSmallViewport
-      ? 0
-      : (leftColumnCount === 0 ? shellPadding : 0) + (rightColumnCount === 0 ? shellPadding : 0);
+  let inlinePadding = 0;
+  if (isPreview) inlinePadding = 2 * Number(px(rem(1)));
+  else if (!belowSmallViewport) {
+    if (leftColumnCount === 0) inlinePadding += shellPadding;
+    if (rightColumnCount === 0) inlinePadding += shellPadding;
+  }
   const initialAvailableWidth = Math.max(1, (isPreview ? previewWidth : initialViewportWidth) - inlinePadding);
   const gridTemplateColumns = [
     leftColumnCount > 0 ? `${getLogicalGridSize(leftColumnCount)}px` : null,

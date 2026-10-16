@@ -38,8 +38,6 @@ const createSpotlightContext = (displayName: string) => {
   const Provider = ({ children }: PropsWithChildren) => {
     const [itemsMap, setItemsMap] = useState<Map<string, { items: ContextSpecificItem[]; count: number }>>(new Map());
 
-    // Registrations run while server-rendered content may still be hydrating.
-    // An urgent update here would client-render every dehydrated boundary below.
     const registerItems = useCallback((key: string, newItems: ContextSpecificItem[]) => {
       startTransition(() =>
         setItemsMap((prevItems) => {

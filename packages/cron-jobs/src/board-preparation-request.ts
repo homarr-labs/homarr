@@ -32,7 +32,6 @@ export const isPreparationRequest = (request: Request) => {
   return verifyKeyedFingerprint(signedValue(request.method, url.pathname + url.search, timestamp), fingerprint);
 };
 
-/** Marks a loopback render whose document will be stored as a Prepared Board view. */
 export const createCaptureHeaders = (viewId: string) => {
   if (!env.SECRET_ENCRYPTION_KEY) throw new Error("Board preparation requires a configured encryption key");
   const timestamp = Date.now();

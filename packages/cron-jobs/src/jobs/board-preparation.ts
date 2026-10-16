@@ -7,8 +7,6 @@ export const boardPreparationJob = createCronJob("boardPreparation", "0 */3 * * 
   runOnStart: true,
   expectedMaximumDurationInMillis: 5 * 60_000,
 }).withCallback(async () => {
-  // Tasks start during instrumentation, before Next necessarily accepts HTTP.
-  // Waiting here does not hold dashboard readiness or the application's listener.
   let ready = false;
   for (let attempt = 0; attempt < 30; attempt++) {
     try {
@@ -21,9 +19,7 @@ export const boardPreparationJob = createCronJob("boardPreparation", "0 */3 * * 
         ready = true;
         break;
       }
-    } catch {
-      // Retry local application readiness.
-    }
+    } catch {}
     await setTimeout(1_000);
   }
   if (!ready) throw new Error("Application did not become ready for Board preparation");

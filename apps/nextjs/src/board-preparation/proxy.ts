@@ -114,8 +114,6 @@ const resolvePreparedResponseAsync = async (
     const registered = await rememberBoardPreparationAsync(id, spec, viewportWidth);
     if (!registered && !usable) return { hit: false, reason: "registration_unavailable" };
   }
-  // A view captured at another width reflows size-dependent Widgets after
-  // hydration. Serve it, and capture this width for the next visit.
   if (usable && stale && variant && viewportWidth !== undefined && variant.viewportWidth !== viewportWidth) {
     requestPreparation(id, backgroundWork);
   }
@@ -126,19 +124,14 @@ const resolvePreparedResponseAsync = async (
       if (ready.fingerprint !== fingerprint) reason = "inputs_changed";
     }
     logger.debug("Prepared Board cache miss", { reason, viewId: id.slice(0, 12), boardId: spec.boardId });
-    // The current request keeps its existing SSR path; preparation is independent.
     requestPreparation(id, backgroundWork);
     return { hit: false, reason };
   }
-  // A concurrent publication can replace the document after the marker read.
   const html = await readPreparedDocumentAsync(id, ready.token);
   if (!html) return { hit: false, reason: "document_unavailable" };
   return { hit: true, html, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
 };
 
-// Client navigations, prefetches and Server Actions need RSC payloads. Next
-// strips their RSC headers and _rsc parameter before the proxy runs, so accept
-// only what browsers send for a document load: an HTML Accept header.
 const isDocumentRequest = (request: NextRequest) => {
   if (request.method !== "GET" && request.method !== "HEAD") return false;
   if (!request.headers.get("accept")?.includes("text/html")) return false;
@@ -150,11 +143,6 @@ const isDocumentRequest = (request: NextRequest) => {
   return destination === null || destination === "document";
 };
 
-/**
- * Serves a Prepared Board view for a plain document request, after checking
- * the visitor's session, Board access and render inputs. Otherwise annotates
- * the ordinary response with the reason and lets SSR continue.
- */
 export const getPreparedBoardResponseAsync = async (
   request: NextRequest,
   event: NextFetchEvent,
@@ -163,7 +151,6 @@ export const getPreparedBoardResponseAsync = async (
   const rewrite = localizedResponse.headers.get("x-middleware-rewrite");
   if (!rewrite || localizedResponse.status !== 200) return null;
   const path = new URL(rewrite).pathname.split("/").filter(Boolean);
-  // This includes the locale middleware's rewritten home route, /{locale}.
   if (path.length !== 1 && !(path.length === 3 && path[1] === "boards")) return null;
   const bypass = (reason: string) => {
     localizedResponse.headers.set(cacheHeader, `BYPASS; reason=${reason}`);
@@ -186,19 +173,15 @@ export const getPreparedBoardResponseAsync = async (
   const pending = resolvePreparedResponseAsync(request, locale, name, backgroundWork).catch(
     (cause: unknown): Lookup => {
       if (cause instanceof TRPCError) return { hit: false, reason: "no_board_access" };
-      // Database errors can include query parameters such as session tokens.
       let errorType: string = typeof cause;
       if (cause instanceof Error) errorType = cause.name;
       logger.debug("Prepared Board cache lookup failed; using ordinary SSR", { errorType });
       return { hit: false, reason: "lookup_failed" };
     },
   );
-  // Register the whole lifetime now: a slow lookup can schedule preparation
-  // after the response budget, when Next has already captured waitUntil work.
   event.waitUntil(pending.then(() => Promise.all(backgroundWork)).then(() => undefined));
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
-    // A cache outage or a cold preparation must not hold up ordinary SSR.
     const result = await Promise.race([
       pending,
       new Promise<Lookup>((resolve) => {

@@ -264,8 +264,6 @@ export default function DockerWidget({
   );
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
-  // A stale retained query reports its mount refetch on the hydration render,
-  // which the server-rendered button does not have.
   const isRefreshing = useIsHydrated() && isFetching;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
     async onSuccess() {

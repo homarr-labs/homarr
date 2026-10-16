@@ -8,10 +8,6 @@ import type { WidgetKind } from "@homarr/definitions";
 
 const NoStyles = () => null;
 
-// next/dynamic is the only import Next maps to its CSS during SSR. Rendering one
-// of these emits the Widget's stylesheet in the document head, so server-rendered
-// Widgets paint with their styles instead of restyling after hydration. Keep the
-// imports literal: the compiler records each module from the call site.
 const widgetStyles = {
   clock: dynamic(() => import("./clock/component").then(() => NoStyles)),
   airQuality: dynamic(() => import("./air-quality/component").then(() => NoStyles)),
@@ -86,8 +82,6 @@ const widgetStyles = {
   wazuhAuthFailures: dynamic(() => import("./wazuh-auth-failures/component").then(() => NoStyles)),
 } satisfies Record<WidgetKind, ComponentType>;
 
-// Its own boundary: these modules load lazily in the browser, and suspending
-// the Board's boundary during hydration would make React render it again.
 export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => (
   <Suspense fallback={null}>
     {kinds.map((kind) => {

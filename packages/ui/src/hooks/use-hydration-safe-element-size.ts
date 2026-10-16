@@ -47,12 +47,6 @@ const readBorderBoxSize = (entry: ResizeObserverEntry, element: HTMLElement) => 
   };
 };
 
-/**
- * Measures an element like Mantine's useElementSize, but applies each size as
- * a Transition. A Widget's Suspense boundary may still be hydrating when the
- * first size arrives; an urgent update would make React discard its server HTML
- * and show the pending card, while a Transition waits for hydration instead.
- */
 export const useHydrationSafeElementSize = <TElement extends HTMLElement>(
   options: HydrationSafeElementSizeOptions = {},
 ) => {

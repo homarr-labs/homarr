@@ -34,7 +34,6 @@ export const loadBoardPreparationContextAsync = async ({
     loadRootLayoutDataAsync(Promise.resolve(session)),
     getIntegrationsWithPermissionsAsync(session),
   ]);
-  // First-time setup stays on the existing route, including its interactive tour.
   if (session && (!root.user || !root.user.completedBoardTour)) {
     logger.debug("Board preparation context unavailable", { boardId: board.id, reason: "user_setup_incomplete" });
     return null;
@@ -79,8 +78,6 @@ export const loadBoardPreparationContextAsync = async ({
   return context;
 };
 
-// One prepared view serves every width of a layout. The canvas fits itself to
-// the browser before first paint, so the render width is only a placeholder.
 export const withPreparedLayout = (
   context: BoardPreparationContext,
   layoutId: string,

@@ -1,5 +1,6 @@
 "use client";
 import { definition } from ".";
+import { useWidgetNow } from "../common/use-widget-now";
 
 import type { CSSProperties } from "react";
 import { RingProgress, ScrollArea, Text, Tooltip } from "@mantine/core";
@@ -81,6 +82,7 @@ export default function PatchMonWidget({
     { staleTime: 60 * 1000 },
   );
   const stats = getUsableWidgetQueryData(statsQuery);
+  const now = useWidgetNow();
 
   if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;
   if (!stats) return <WidgetEmptyState />;
@@ -142,8 +144,8 @@ export default function PatchMonWidget({
   const complianceSeverity = resolveStatColor("upToDateHosts", stats.upToDateHosts, colorContext, options);
   const complianceColor = complianceSeverity === "neutral" ? "blue" : complianceSeverity;
 
-  const timeAgo = dayjs(stats.lastUpdated).fromNow();
-  const compactTimeAgo = getCompactTimeAgo(stats.lastUpdated);
+  const timeAgo = dayjs(stats.lastUpdated).from(dayjs(now ?? undefined));
+  const compactTimeAgo = getCompactTimeAgo(stats.lastUpdated, now);
   const footerText = isNarrow ? compactTimeAgo : t("lastUpdated", { time: timeAgo });
 
   if (isCompactSurface) {
@@ -407,8 +409,8 @@ function getCompactPrimaryContent({
   return visibleStatKeys.length > 0 ? "stats" : null;
 }
 
-function getCompactTimeAgo(lastUpdated: string): string {
-  const minutes = Math.max(0, dayjs().diff(dayjs(lastUpdated), "minute"));
+function getCompactTimeAgo(lastUpdated: string, now: Date | null): string {
+  const minutes = Math.max(0, dayjs(now ?? undefined).diff(dayjs(lastUpdated), "minute"));
 
   if (minutes < 1) return "now";
   if (minutes < 60) return `${minutes}m ago`;

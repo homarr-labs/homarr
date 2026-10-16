@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useInitialRenderTime, useIsHydrated } from "@homarr/common";
 
 export type WidgetClockPrecision = "second" | "minute" | "day";
 
@@ -20,7 +21,8 @@ export const getNextWidgetTickDelay = (now: Date, precision: WidgetClockPrecisio
 };
 
 export const useWidgetNow = (precision: WidgetClockPrecision = "minute"): Date | null => {
-  const [now, setNow] = useState<Date | null>(null);
+  const initialTime = useInitialRenderTime();
+  const [now, setNow] = useState<Date | null>(() => (initialTime === undefined ? null : new Date(initialTime)));
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const cancelTick = useCallback(() => {
@@ -52,3 +54,5 @@ export const useWidgetNow = (precision: WidgetClockPrecision = "minute"): Date |
 
   return now;
 };
+
+export const useWidgetTimeZone = () => (useIsHydrated() ? undefined : "UTC");

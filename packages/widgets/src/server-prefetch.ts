@@ -73,6 +73,7 @@ export const prefetchInitialWidgetData = async (
   const identities = new Map<string, QueryJob>();
   const enqueue = (queries: WidgetDataQueries, dependent = false) => {
     for (const query of getWidgetDataQueries(queries)) {
+      if (!capture && query.stream === false) continue;
       if (Date.now() >= deadline) {
         if (outcome) outcome.timedOut++;
         continue;

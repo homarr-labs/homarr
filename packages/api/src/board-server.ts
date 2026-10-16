@@ -9,8 +9,6 @@ import { boardRouter } from "./router/board";
 
 const createBoardCallerAsync = async () => boardRouter.createCaller(await createRscTrpcContext());
 
-// Background preparation uses the same authorized reads without request cookies.
-// Callers supply a currently resolved session; this never grants extra access.
 export const getBoardForSessionAsync = async ({
   session,
   deviceType,

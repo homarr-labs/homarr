@@ -133,8 +133,6 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           isAuthenticated: Boolean(session),
         });
         await snapshot.saveAsync(queryClient).catch(() => undefined);
-        // Rendered without Suspense so the whole Board is in the stored document,
-        // and its pre-paint canvas script runs in place.
         return (
           <>
             <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />

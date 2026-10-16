@@ -2,7 +2,7 @@
 
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { ActionIcon, Box, Group, ScrollArea, Stack, Text, Tooltip, Typography, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Box, ScrollArea, Stack, Typography, useMantineTheme } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -15,6 +15,7 @@ import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { updateNotebookTaskChecked } from "./canonical-task";
 import { getNotebookDisplay } from "./display";
+import { getNotebookSurface, NotebookSurface, NotebookFooter } from "./surface";
 import { getNotebookText, sanitizeNotebookHtml } from "./sanitize-content";
 import "./notebook.css";
 
@@ -171,11 +172,12 @@ export const NotebookReadMode = ({
     [canChange, handleRequestEdit],
   );
 
-  let layoutScale = 1;
-  if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) layoutScale = displayScale;
-  const renderedWidth = width * layoutScale;
-  const renderedHeight = height * layoutScale;
-  const compactSurface = renderedWidth < 280 || renderedHeight < 240;
+  const { renderedWidth, renderedHeight, compactSurface, compact } = getNotebookSurface({
+    width,
+    height,
+    displayMode,
+    displayScale,
+  });
   const display = getNotebookDisplay({
     height: renderedHeight,
     isAdvanced: displayMode === "advanced",
@@ -184,19 +186,8 @@ export const NotebookReadMode = ({
     showToolbar: options.showToolbar,
   });
   const showDocumentStats = display.showDocumentStats && (displayMode === "advanced" || renderedWidth >= 280);
-  const documentStats = {
-    characters: notebookText.length,
-    words: notebookText.length === 0 ? 0 : notebookText.split(/\s+/).length,
-  };
-
   return (
-    <Box
-      className="homarr-notebook"
-      data-notebook-compact={(displayMode === "compact" && compactSurface) || undefined}
-      h="100%"
-      onDoubleClick={handleDoubleClick}
-      style={{ display: "flex", flexDirection: "column", minHeight: 0, position: "relative" }}
-    >
+    <NotebookSurface compact={compact} onDoubleClick={handleDoubleClick}>
       <Box
         style={{
           backgroundColor: "transparent",
@@ -240,36 +231,7 @@ export const NotebookReadMode = ({
           </Typography>
         </ScrollArea>
       </Box>
-      {(saveError || showDocumentStats) && (
-        <Group
-          w="100%"
-          justify="flex-end"
-          gap="xs"
-          px={8}
-          pb={4}
-          style={{ flex: "0 0 auto", pointerEvents: saveError ? undefined : "none" }}
-        >
-          {saveError && (
-            <Tooltip label={saveError} multiline>
-              <Text
-                size="xs"
-                c="red"
-                lineClamp={1}
-                maw={320}
-                tabIndex={0}
-                aria-label={`${t("saveFailed")}. ${saveError}`}
-              >
-                {t("saveFailed")}
-              </Text>
-            </Tooltip>
-          )}
-          {showDocumentStats && (
-            <Text size="xs" c="dimmed">
-              {t("documentStats", documentStats)}
-            </Text>
-          )}
-        </Group>
-      )}
+      <NotebookFooter saveError={saveError} showDocumentStats={showDocumentStats} text={notebookText} />
       {canChange && (
         <Stack pos="absolute" top={7} right={7} gap={7} style={{ zIndex: 1 }}>
           <ActionIcon
@@ -287,6 +249,6 @@ export const NotebookReadMode = ({
           </ActionIcon>
         </Stack>
       )}
-    </Box>
+    </NotebookSurface>
   );
 };

@@ -21,7 +21,12 @@ import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { useBoardRestoration, useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
+import {
+  useBoardRestoration,
+  useRequiredBoard,
+  useWhenBoardRestored,
+  useBoardRestoredAction,
+} from "@homarr/boards/context";
 import { useInitialRenderTime } from "@homarr/common";
 import { getWidgetDataQueries, getWidgetDataQueryKey } from "@homarr/widgets/data";
 import { useEditMode } from "@homarr/boards/edit-mode";
@@ -105,20 +110,7 @@ const WidgetDefinitionLoadError = ({
 };
 
 const GuardedWidgetError = ({ resetErrorBoundary, ...props }: Parameters<typeof WidgetError>[0]) => {
-  const whenRestored = useWhenBoardRestored();
-  const retryPending = useRef(false);
-  const [retrying, setRetrying] = useState(false);
-  const retry = async () => {
-    if (retryPending.current) return;
-    retryPending.current = true;
-    setRetrying(true);
-    try {
-      if ((await whenRestored()) === "restored") resetErrorBoundary();
-    } finally {
-      retryPending.current = false;
-      setRetrying(false);
-    }
-  };
+  const { run: retry, isPending: retrying } = useBoardRestoredAction(resetErrorBoundary);
   return (
     <Box component="fieldset" disabled={retrying} aria-busy={retrying} bd={0} p={0} m={0} miw={0} h="100%">
       <WidgetError {...props} resetErrorBoundary={() => void retry()} />
@@ -143,7 +135,6 @@ const BoardItemPendingCard = ({ item, innerRef }: Pick<BoardItemCardProps, "item
   );
 };
 
-// Matches .staticItem[data-type="item"] > .contentMount in section-grid.module.css.
 const itemInsetPixels = 10;
 
 const subscribeToHydration = () => () => undefined;
@@ -157,18 +148,12 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
-  // Until measured, match the content box: the grid footprint minus the card
-  // inset, which stays 10 screen pixels per side at any canvas scale, and the
-  // card border, which Mantine scales by the board UI scale. Size dependent
-  // Widget layouts then keep their server-rendered branch.
   const inset = (2 * itemInsetPixels) / canvasScale;
   const border = 2 * calculateBoardUiScale(canvasScale);
   const width = measuredWidth || getLogicalGridSize(item.width) - inset - border;
   const height = measuredHeight || getLogicalGridSize(item.height) - inset - border;
 
   const deferred = !prepared && item.kind !== "app" && item.kind !== "bookmarks";
-  // A hydration-time switch would be an urgent update to every dehydrated
-  // Widget boundary, so Widgets rendered on the server never switch.
   const hydrated = useSyncExternalStore(
     subscribeToHydration,
     getHydratedSnapshot,
@@ -309,8 +294,6 @@ const ResolvedBoardItemContent = ({
   useIsomorphicEffect(() => {
     if (!prepared) return;
     return () => {
-      // Restore the React-owned host before React removes its original parent.
-      // Moving this host keeps the same Widget instance in compact/focus modes.
       const host = compactHostRef.current;
       const surface = preparedSurfaceRef.current;
       if (host && surface && surface.parentNode !== host) host.append(surface);

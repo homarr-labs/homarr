@@ -24,9 +24,7 @@ export interface BoardPreparationSpec {
   locale: SupportedLanguage;
   layoutId: string;
   colorScheme: RootLayoutData["colorScheme"];
-  /** Public path the view answers, e.g. "/" or "/boards/home". */
   pathname: string;
-  /** Selects the mobile home Board when capturing "/". */
   deviceType: "mobile" | null;
 }
 
@@ -55,7 +53,6 @@ interface PreparedVersion {
 interface BoardPreparationVariant {
   spec: BoardPreparationSpec;
   lastSeenAt: number;
-  /** The visitor's last browser width, so size-dependent Widgets capture their final branch. */
   viewportWidth?: number;
 }
 
@@ -68,7 +65,6 @@ export const getPreparationNamespaceAsync = () => {
     try {
       const buildId = (await readFile(resolve(process.cwd(), ".next/BUILD_ID"), "utf8")).trim();
       if (!buildId) return null;
-      // Captured documents reference this build's assets only.
       return `board-preparation-v3:${createKeyedFingerprint(buildId)}`;
     } catch {
       return null;
@@ -77,8 +73,6 @@ export const getPreparationNamespaceAsync = () => {
   return namespacePromise;
 };
 
-// The document embeds the session expiry, which drives the client's login
-// redirect, so each session keeps its own view.
 export const getBoardPreparationId = (spec: BoardPreparationSpec) =>
   createKeyedFingerprint(
     JSON.stringify([
@@ -101,8 +95,6 @@ export const getBoardPreparationFingerprint = (context: BoardPreparationContext)
       user: { ...input.root.session.user, permissions: input.root.session.user.permissions.toSorted() },
     };
   }
-  // Session readers construct equivalent objects in different property orders.
-  // Reuse the shared canonical hash before applying the server-keyed fingerprint.
   return createKeyedFingerprint(hashObjectBase64(serialize(input)));
 };
 
@@ -116,7 +108,7 @@ const latestVariants = (registry: Registry, limit: number): Registry =>
         if (lastSeenAt <= Date.now() - preparationMaxAgeMs) return false;
         return spec.sessionExpires === null || Date.parse(spec.sessionExpires) > Date.now() + 30_000;
       })
-      .toSorted((a, b) => b[1].lastSeenAt - a[1].lastSeenAt)
+      .toSorted((leftEntry, rightEntry) => rightEntry[1].lastSeenAt - leftEntry[1].lastSeenAt)
       .slice(0, limit),
   );
 
@@ -143,8 +135,6 @@ const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
       const stored = await registryChannel(namespace).getAsync();
       const registry = latestVariants(stored ?? catalog, stored ? maxVariants : 96);
       if (!update(registry)) return false;
-      // Retire expired viewers and unused widths. IDs still bind each pathname
-      // to its original viewer; retired process namespaces also expire in Redis.
       if (!(await lock.setIfOwnedAsync(token, `${namespace}:registry`, registry, preparationMaxAgeMs))) return false;
       await lock.setIfOwnedAsync(
         token,
@@ -162,9 +152,10 @@ const updateRegistryAsync = async (update: (registry: Registry) => boolean) => {
 
 export const rememberBoardPreparationAsync = async (id: string, spec: BoardPreparationSpec, viewportWidth?: number) => {
   return await updateRegistryAsync((registry) => {
-    // A full registry makes room for the visit instead of locking out new views.
     if (!registry[id] && Object.keys(registry).length >= maxVariants) {
-      const oldest = Object.entries(registry).toSorted((a, b) => a[1].lastSeenAt - b[1].lastSeenAt)[0];
+      const oldest = Object.entries(registry).toSorted(
+        (leftEntry, rightEntry) => leftEntry[1].lastSeenAt - rightEntry[1].lastSeenAt,
+      )[0];
       if (oldest) delete registry[oldest[0]];
     }
     registry[id] = { spec, lastSeenAt: Date.now(), viewportWidth: viewportWidth ?? registry[id]?.viewportWidth };
@@ -172,7 +163,6 @@ export const rememberBoardPreparationAsync = async (id: string, spec: BoardPrepa
   });
 };
 
-/** Retires a view whose viewer session has ended, so later runs stop retrying it. */
 export const forgetBoardPreparationAsync = async (id: string) => {
   return await updateRegistryAsync((registry) => {
     const existing = registry[id];
@@ -208,7 +198,6 @@ export const writePreparedDocumentAsync = async (
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
   if (Buffer.byteLength(document.html) > maxDocumentBytes) throw new Error("Prepared Board exceeds its size budget");
-  // The marker carries the document token; readers reject a mismatched pair.
   if (!(await lock.setIfOwnedAsync(lease, `${namespace}:document:${id}`, document, preparationMaxAgeMs))) return false;
   return await lock.setIfOwnedAsync(lease, `${namespace}:ready:${id}`, ready, preparationMaxAgeMs);
 };
