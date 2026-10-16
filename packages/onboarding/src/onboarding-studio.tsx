@@ -104,7 +104,7 @@ export const OnboardingStudio = (props: OnboardingStudioProps) => {
 
     return (
       <Center mih="100dvh" p="md">
-        <Paper withBorder radius="lg" p="xl" maw="32rem" w="100%">
+        <Paper radius="lg" p="xl" maw="32rem" w="100%">
           <Stack align="center">
             <Title order={1} size="h2" ta="center">
               {title}

@@ -22,7 +22,7 @@ export function useCustomWidgetEditorMessages(formatDiagnostic?: CustomWidgetEdi
       insertStarter: t("action.insertStarter"),
       format: t("action.format"),
       copy: tCommon("action.copy"),
-      copied: t("action.copied"),
+      copied: tCommon("action.copied"),
       schema: t("action.schema"),
       schemaTab: invariantTechnicalLabels.jsonSchema,
       minimalTab: t("reference.minimal"),

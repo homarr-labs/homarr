@@ -12,6 +12,7 @@ import type { WidgetComponentProps } from "../definition";
 import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
 import { WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { wazuhMinuteQueryOptions } from "../wazuh/_shared/options";
 import { getWazuhSeverityForLevel, wazuhSeverities, wazuhSeverityColors } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
@@ -26,7 +27,7 @@ export default function WazuhAlertsWidget({
   const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getAlerts.useQuery(
     { integrationId, minLevel: options.minLevel, limit: options.limit, hours: options.hours },
-    { staleTime: 60_000, refetchInterval: 60_000 },
+    wazuhMinuteQueryOptions,
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);

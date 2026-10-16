@@ -46,7 +46,7 @@ export const CreateBoardButton = () => {
         </Button>
       </Group>
       <Collapse expanded={isOpen}>
-        <Card withBorder>
+        <Card>
           <BoardCreateForm key={formKey} onCancel={close} />
         </Card>
       </Collapse>

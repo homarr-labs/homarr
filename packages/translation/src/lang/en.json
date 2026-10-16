@@ -142,13 +142,6 @@
         "secondaryColor": "Secondary color",
         "resetColors": "Reset colors",
         "radius": "Widget corner radius",
-        "radiusOptions": {
-          "xs": "Tight",
-          "sm": "Subtle",
-          "md": "Balanced",
-          "lg": "Rounded",
-          "xl": "Soft"
-        },
         "columns": "Board columns",
         "columnsDescription": "Columns define the horizontal grid used to size and position items. 12 is plenty for most people.",
         "columnCount": "{count, plural, one {# column} other {# columns}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Sign in as an administrator after setup to create an API key.",
           "configuration": "Client configuration",
           "copy": "Copy configuration",
-          "copied": "Copied",
           "advanced": "Open MCP tools, permissions, and setup details"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Description"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Use different URL for ping",
@@ -853,7 +842,6 @@
       "source": "API source: {name}",
       "baseUrl": "Server URL",
       "networkScope": "Network access",
-      "save": "Save API configuration",
       "expires": "This one-time request expires at {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Paste a full custom widget JSON with Ctrl+V or Command+V",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
-      "export": "Export",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
-      "menu": "Actions",
       "downloadSkill": "View Custom Widget Skill",
       "publishWorkshop": "Publish to Workshop",
       "migrate": "Migrate Custom Widget",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Configure widget sources",
       "description": "Review where this widget connects and add or replace its encrypted credentials.",
-      "credentialsRequired": "Requests will fail until the required credentials are added.",
-      "save": "Save configuration"
-    },
-    "field": {
-      "description": "Description"
+      "credentialsRequired": "Requests will fail until the required credentials are added."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "redo": "Redo",
-        "copied": "Copied",
         "schema": "Schema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Request {count, number}",
         "requestId": "Request ID",
-        "type": "Type",
         "method": "Method",
         "source": "API source",
         "run": "Run",
@@ -1037,7 +1017,6 @@
         "optionName": "Option name",
         "label": "Label",
         "control": "Control",
-        "description": "Description",
         "default": "Default",
         "optionDetails": "Constraints and dynamic choices",
         "minimum": "Minimum",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "The stored value was deleted.",
         "primary": "Primary API",
         "id": "Source ID",
-        "name": "Name",
         "baseUrl": "Base URL",
         "baseUrlError": {
           "invalid": "Enter a complete URL.",
@@ -1091,7 +1069,6 @@
         "remove": "Remove source and its requests",
         "advanced": "Advanced",
         "add": "Add another API source",
-        "sourceType": "Source",
         "manualSource": "HTTP API",
         "existingIntegration": "Existing integration",
         "integrationType": "Integration type",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Review migrated v2 replacement",
       "migrationDescription": "Review and confirm this generated v2 definition. Confirming atomically replaces the preserved v1 record while keeping existing board placements linked to the same widget ID.",
       "fileLabel": "Choose a custom widget JSON file",
-      "name": "Name",
       "origin": "Base origin",
       "authentication": "Authentication",
       "networkScope": "Network scope",
@@ -1245,8 +1221,6 @@
         "title": "This widget can change remote data",
         "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
       },
-      "cancel": "Cancel import",
-      "confirm": "Import widget",
       "confirmMigration": "Confirm v2 replacement"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Close screenshot viewer",
     "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",
-    "export": "Export",
     "report": "Report",
     "reportTitle": "Report submission",
     "reportReason": "Reason",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "View and manage submission",
       "done": "Done",
       "signInHint": "Sign in to publish under your Workshop identity.",
-      "titleField": "Title",
-      "descriptionField": "Description",
       "screenshots": "Screenshots",
       "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
       "screenshotsPlaceholder": "Choose screenshots",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Trusted certificate",
                 "message": "Added certificate to trusted certificate list"
               },
               "error": {
-                "title": "Failed to trust certificate",
                 "message": "Failed to add certificate to trusted certificate list"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Find a media",
     "field": {
       "preview": "Preview",
-      "size": "Size",
-      "creator": "Creator",
-      "actions": "Actions"
+      "creator": "Creator"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Tight",
+        "sm": "Subtle",
+        "md": "Balanced",
+        "lg": "Rounded",
+        "xl": "Soft"
+      }
+    },
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Clear search",
       "copy": "Copy",
       "copied": "Copied",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "export": "Export"
     },
     "pagination": {
       "pageOf": "Page {page} of {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
     "field": {
-      "name": "Name"
+      "name": "Name",
+      "description": "Description",
+      "title": "Title",
+      "actions": "Actions",
+      "type": "Type",
+      "status": "Status",
+      "state": "State",
+      "size": "Size",
+      "source": "Source",
+      "namespace": "Namespace",
+      "created": "Created",
+      "architecture": "Architecture"
     },
     "label": {
       "new": "New"
@@ -2109,9 +2097,6 @@
         "collapse": "Collapse"
       },
       "option": {
-        "title": {
-          "label": "Title"
-        },
         "customCssClasses": {
           "label": "Custom css classes"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Settings",
         "settingsFor": "Settings for {name}",
-        "options": "Options",
-        "actions": "Actions"
+        "options": "Options"
       },
       "status": {
         "success": "OK",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# selected item} other {# selected items}}",
       "selected": "{count, plural, one {# selected} other {# selected}}",
-      "copy": "Copy",
       "copied": "{count, plural, one {# item copied to the clipboard} other {# items copied to the clipboard}}",
       "copyError": "The selected items could not be copied. Your browser may not allow clipboard access.",
       "paste": "Paste",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# item removed} other {# items removed}}",
       "move": "Move",
       "moveTo": "Move selected items",
-      "delete": "Delete",
       "clear": "Clear selection",
       "clearShortcut": "Clear selection (Escape)",
       "saveErrorTitle": "Unable to update items",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integrations",
           "removeLabel": "Remove {name} integration"
-        },
-        "title": {
-          "label": "Title"
         },
         "customCssClasses": {
           "label": "Custom css classes"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Name",
             "node": "Node"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Name",
-            "state": "State",
             "cpuUsage": "CPU usage",
             "memoryUsage": "Memory usage"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
-        "name": "Name",
         "id": "Id",
-        "status": "Status",
         "directPlay": "Direct play",
         "directStream": "Direct stream",
         "transcodeVideo": "Transcoding video",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Actions"
         },
         "added": {
-          "columnTitle": "Added",
-          "detailsTitle": "Added"
+          "columnTitle": "Added"
         },
         "category": {
-          "columnTitle": "Category",
-          "detailsTitle": "Category"
+          "columnTitle": "Category"
         },
         "downSpeed": {
-          "columnTitle": "Down",
-          "detailsTitle": "Down"
+          "columnTitle": "Down"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Index"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
-        },
-        "integration": {
-          "columnTitle": "Source"
-        },
-        "name": {
-          "columnTitle": "Name"
+          "columnTitle": "ID"
         },
         "progress": {
           "columnTitle": "Progress",
           "detailsTitle": "Progress"
         },
         "ratio": {
-          "columnTitle": "Ratio",
-          "detailsTitle": "Ratio"
+          "columnTitle": "Ratio"
         },
         "received": {
           "columnTitle": "Down",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Up",
           "detailsTitle": "Uploaded"
         },
-        "size": {
-          "columnTitle": "Size",
-          "detailsTitle": "Size"
-        },
-        "state": {
-          "columnTitle": "State",
-          "detailsTitle": "State"
-        },
         "time": {
-          "columnTitle": "ETA",
-          "detailsTitle": "ETA",
-          "eta": "ETA"
+          "columnTitle": "ETA"
         },
         "type": {
-          "columnTitle": "Type",
           "detailsTitle": "Type"
         },
         "upSpeed": {
-          "columnTitle": "Up",
-          "detailsTitle": "Up"
+          "columnTitle": "Up"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Progress"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Size"
-          }
-        },
         "common": {
           "empty": "Empty",
           "file": "File",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
-          },
-          "name": {
-            "label": "Name"
           },
           "versionFilter": {
             "label": "Version Filter",
@@ -4891,7 +4834,6 @@
       "download": "Download",
       "upload": "Upload",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Avg Download",
       "avgUpload": "Avg Upload",
       "avgPing": "Avg Ping",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
         "widgetItemUnavailable": "This widget item is not available.",
         "toggle": "Toggle",
-        "copied": "Copied",
         "confirmDelete": "Confirm this destructive action."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "System",
-        "source": "Source",
         "hostname": "Hostname",
         "cpuModel": "CPU model",
         "cores": "Cores",
@@ -5639,8 +5579,6 @@
       "noDisconnected": "All agents are connected",
       "empty": "No agents match this filter",
       "column": {
-        "status": "Status",
-        "name": "Name",
         "ip": "IP",
         "os": "OS",
         "version": "Version",
@@ -6091,14 +6029,7 @@
       },
       "itemRadius": {
         "label": "Item radius",
-        "description": "Changes the roundness of tiles on your board",
-        "option": {
-          "xs": "Very small",
-          "sm": "Small",
-          "md": "Medium",
-          "lg": "Large",
-          "xl": "Very large"
-        }
+        "description": "Changes the roundness of tiles on your board"
       },
       "isPublic": {
         "label": "Public",
@@ -6725,14 +6656,7 @@
               "label": "Background overlay"
             },
             "defaultRadius": {
-              "label": "Corner style",
-              "options": {
-                "xs": "Tight",
-                "sm": "Subtle",
-                "md": "Balanced",
-                "lg": "Rounded",
-                "xl": "Soft"
-              }
+              "label": "Corner style"
             },
             "customCss": {
               "label": "Global custom CSS",
@@ -6754,7 +6678,6 @@
               "greetingDefault": "Default greeting",
               "boardColorLocked": "Board color locked",
               "boardColorFlexible": "Board colors allowed",
-              "appName": "Name",
               "logo": "Logo",
               "greeting": "Greeting",
               "on": "On",
@@ -6980,9 +6903,6 @@
             },
             "lastExecution": {
               "label": "Last Execution"
-            },
-            "actions": {
-              "label": "Actions"
             }
           },
           "table": {
@@ -7047,9 +6967,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Created by",
-                  "source": "Source",
-                  "actions": "Actions"
+                  "createdBy": "Created by"
                 }
               },
               "provenance": {
@@ -7342,7 +7260,6 @@
     },
     "field": {
       "state": {
-        "label": "State",
         "option": {
           "created": "Created",
           "running": "Running",
@@ -7369,7 +7286,6 @@
       }
     },
     "action": {
-      "title": "Actions",
       "logs": {
         "label": "View logs",
         "page": {
@@ -7605,29 +7521,6 @@
     },
     "error": {
       "internalServerError": "Failed to fetch Kubernetes data"
-    },
-    "field": {
-      "name": {
-        "label": "Name"
-      },
-      "namespace": {
-        "label": "Namespace"
-      },
-      "creationTimestamp": {
-        "label": "Created"
-      },
-      "state": {
-        "label": "State"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Type"
-      },
-      "architecture": {
-        "label": "Architecture"
-      }
     }
   },
   "permission": {
@@ -7653,10 +7546,6 @@
       "permission": {
         "label": "Permission"
       }
-    },
-    "action": {
-      "saveUser": "Save user permission",
-      "saveGroup": "Save group permission"
     }
   },
   "navigationStructure": {
@@ -7768,8 +7657,7 @@
       "resultsAriaLabel": "{mode} results",
       "footer": {
         "navigate": "Navigate",
-        "open": "Open",
-        "close": "Close"
+        "open": "Open"
       }
     },
     "error": {
@@ -8198,9 +8086,6 @@
         },
         "urlTemplate": {
           "label": "URL search template"
-        },
-        "description": {
-          "label": "Description"
         }
       },
       "page": {
@@ -8270,8 +8155,7 @@
             "table": {
               "header": {
                 "season": "Season",
-                "episodes": "Episodes",
-                "status": "Status"
+                "episodes": "Episodes"
               },
               "status": {
                 "requested": "Requested"
@@ -8767,7 +8651,6 @@
       "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
       "cssCharacters": "{count} of 16384 characters",
       "copyCss": "Copy CSS",
-      "copied": "Copied",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "This CSS loads a remote resource",
       "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."

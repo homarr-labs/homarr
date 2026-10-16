@@ -24,6 +24,7 @@ export const GroupAccessForm = <TPermission extends string>({
     () => new Map(accessQueryData.groups.map(({ group }) => [group.id, group])),
   );
   const tPermissions = useI18n("permission");
+  const tCommon = useI18n("common");
   const form = useForm({
     initialValues: {
       items: accessQueryData.groups.map(({ group, permission }) => ({
@@ -75,7 +76,7 @@ export const GroupAccessForm = <TPermission extends string>({
               triggerProps={{ rightSection: <IconPlus size="1rem" />, variant: "light" }}
             />
             <Button type="submit" loading={isPending}>
-              {tPermissions("action.saveGroup")}
+              {tCommon("action.save")}
             </Button>
           </Group>
         </Stack>

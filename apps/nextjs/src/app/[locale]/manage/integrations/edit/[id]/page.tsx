@@ -1,10 +1,11 @@
-import { Container, Fieldset, Group, Stack, Title } from "@mantine/core";
+import { Fieldset, Group, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { getIntegrationName } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { IntegrationAccessSettings } from "../../_components/integration-access-settings";
@@ -22,22 +23,25 @@ export default async function EditIntegrationPage(props: EditIntegrationPageProp
   const integrationPermissions = await api.integration.getIntegrationPermissions({ id: integration.id });
 
   return (
-    <>
-      <DynamicBreadcrumb dynamicMappings={new Map([[params.id, integration.name]])} nonInteractable={["edit"]} />
-      <Container>
-        <Stack>
-          <Group align="center">
-            <IntegrationAvatar kind={integration.kind} size="md" />
-            <Title>{editT("title", { name: getIntegrationName(integration.kind) })}</Title>
-          </Group>
-          <EditIntegrationForm integration={integration} />
+    <ManagePageLayout
+      title={
+        <Group align="center">
+          <IntegrationAvatar kind={integration.kind} size="md" />
+          <Title>{editT("title", { name: getIntegrationName(integration.kind) })}</Title>
+        </Group>
+      }
+      container="default"
+      breadcrumbPlacement="outside"
+      breadcrumb={
+        <DynamicBreadcrumb dynamicMappings={new Map([[params.id, integration.name]])} nonInteractable={["edit"]} />
+      }
+    >
+      <EditIntegrationForm integration={integration} />
 
-          <Title order={2}>{t("permission.title")}</Title>
-          <Fieldset>
-            <IntegrationAccessSettings integration={integration} initialPermissions={integrationPermissions} />
-          </Fieldset>
-        </Stack>
-      </Container>
-    </>
+      <Title order={2}>{t("permission.title")}</Title>
+      <Fieldset>
+        <IntegrationAccessSettings integration={integration} initialPermissions={integrationPermissions} />
+      </Fieldset>
+    </ManagePageLayout>
   );
 }

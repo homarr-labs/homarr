@@ -92,7 +92,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
           )}
         </Fieldset>
 
-        <Textarea {...form.getInputProps("description")} label={t("field.description.label")} />
+        <Textarea {...form.getInputProps("description")} label={tCommon("field.description")} />
 
         <Group justify="end">
           <Button variant="default" component={Link} href="/manage/search-engines">

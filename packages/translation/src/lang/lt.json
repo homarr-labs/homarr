@@ -142,13 +142,6 @@
         "secondaryColor": "Antrinė spalva",
         "resetColors": "Atkurti spalvas",
         "radius": "Valdiklio kampų spindulys",
-        "radiusOptions": {
-          "xs": "Labai mažas",
-          "sm": "Subtilus",
-          "md": "Subalansuotas",
-          "lg": "Suapvalintas",
-          "xl": "Švelnus"
-        },
         "columns": "Lentos stulpeliai",
         "columnsDescription": "Stulpeliai apibrėžia horizontalų tinklelį, naudojamą elementų dydžiui ir padėčiai nustatyti. Daugumai naudotojų pakanka 12.",
         "columnCount": "{count, plural, one {# stulpelis} few {# stulpeliai} many {# stulpelių} other {# stulpelio}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Po sąrankos prisijunkite kaip administratorius, kad sukurtumėte API raktą.",
           "configuration": "Kliento konfigūracija",
           "copy": "Kopijuoti konfigūraciją",
-          "copied": "Nukopijuota",
           "advanced": "Atidaryti MCP įrankius, leidimus ir sąrankos informaciją"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Aprašymas"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Naudoti kitą URL būsenai tikrinti",
@@ -853,7 +842,6 @@
       "source": "API šaltinis: {name}",
       "baseUrl": "Serverio URL",
       "networkScope": "Tinklo prieiga",
-      "save": "Išsaugoti API konfigūraciją",
       "expires": "Šis vienkartinis prašymas baigs galioti {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Įklijuokite visą pasirinktinio valdiklio JSON naudodami Ctrl+V arba Command+V",
       "delete": "Ištrinti pasirinktinį valdiklį",
       "deleteConfirm": "Ar tikrai norite ištrinti „{name}“? Šio veiksmo neįmanoma atšaukti.",
-      "export": "Eksportuoti",
       "duplicate": "Dubliuoti",
       "aiPrompt": "Kurti naudojant DI",
       "copyAiPrompt": "Kopijuoti DI užklausą",
       "enable": "Įjungti",
       "disable": "Išjungti",
-      "menu": "Veiksmai",
       "downloadSkill": "Peržiūrėti pasirinktinio valdiklio įgūdžius",
       "publishWorkshop": "Skelbti dirbtuvėse",
       "migrate": "Migruoti pasirinktinį valdiklį",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Konfigūruoti valdiklio šaltinius",
       "description": "Peržiūrėkite, prie ko jungiasi šis valdiklis, ir pridėkite arba pakeiskite jo užšifruotus kredencialus.",
-      "credentialsRequired": "Prašymai nepavyks, kol nebus pridėti reikiami kredencialai.",
-      "save": "Išsaugoti konfigūraciją"
-    },
-    "field": {
-      "description": "Aprašymas"
+      "credentialsRequired": "Prašymai nepavyks, kol nebus pridėti reikiami kredencialai."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Formatuoti",
         "insertStarter": "Įterpti pradinį šabloną",
         "redo": "Perdaryti",
-        "copied": "Nukopijuota",
         "schema": "Schema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Užklausa {count, number}",
         "requestId": "Užklausos ID",
-        "type": "Tipas",
         "method": "Metodas",
         "source": "API šaltinis",
         "run": "Paleisti",
@@ -1008,7 +988,7 @@
         "runManual": "Iš „SubFetch“",
         "permission": "Leidimas",
         "path": "Kelias",
-        "pathDescription": "Valdiklio parinktims naudokite „{option:name}“, o iškvietimo reikšmėms – „{param:name}“.",
+        "pathDescription": "Valdiklio parinktims naudokite „'{option:name}'“, o iškvietimo reikšmėms – „'{param:name}'“.",
         "requestDetails": "Užklausa, turinys ir veikimas",
         "queryValues": "Užklausos reikšmės",
         "queryKey": "Užklausos raktas",
@@ -1037,7 +1017,6 @@
         "optionName": "Parinkties pavadinimas",
         "label": "Etiketė",
         "control": "Valdiklis",
-        "description": "Aprašas",
         "default": "Numatytoji reikšmė",
         "optionDetails": "Apribojimai ir dinaminiai pasirinkimai",
         "minimum": "Mažiausia reikšmė",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Išsaugota reikšmė ištrinta.",
         "primary": "Pagrindinė API",
         "id": "Šaltinio ID",
-        "name": "Pavadinimas",
         "baseUrl": "Bazinis URL",
         "baseUrlError": {
           "invalid": "Įveskite visą URL.",
@@ -1091,7 +1069,6 @@
         "remove": "Pašalinti šaltinį ir jo užklausas",
         "advanced": "Išplėstiniai",
         "add": "Pridėti kitą API šaltinį",
-        "sourceType": "Integracija",
         "manualSource": "HTTP API",
         "existingIntegration": "Esama integracija",
         "integrationType": "Integracijos tipas",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Perkelto v2 pakaitalo peržiūra",
       "migrationDescription": "Peržiūrėkite ir patvirtinkite šią sugeneruotą v2 apibrėžtį. Patvirtinus atomiškai pakeičiamas išsaugotas v1 įrašas, o esamos lentos vietos lieka susietos su tuo pačiu valdiklio ID.",
       "fileLabel": "Pasirinkite pasirinktinio valdiklio JSON failą",
-      "name": "Užduoties pavadinimas",
       "origin": "Pagrindinė kilmė",
       "authentication": "Autentifikavimas",
       "networkScope": "Tinklo aprėptis",
@@ -1245,8 +1221,6 @@
         "title": "Šis valdiklis gali keisti nuotolinius duomenis",
         "description": "Po importo peržiūrėkite kiekvieną įvardytą veiksmą, paveldėtą kredencialą ir naikinamojo veiksmo patvirtinimą. Slapti duomenys į failą neįtraukiami."
       },
-      "cancel": "Atšaukti importą",
-      "confirm": "Importuoti valdiklį",
       "confirmMigration": "Patvirtinti v2 pakeitimą"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Uždaryti ekrano kopijų peržiūros priemonę",
     "technicalDetails": "Techninė informacija",
     "sourceCode": "Dirbtuvių įrašas",
-    "export": "Eksportuoti",
     "report": "Pranešti",
     "reportTitle": "Pranešti apie pateiktą elementą",
     "reportReason": "Priežastis",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Peržiūrėti ir valdyti pateiktą elementą",
       "done": "Atlikta",
       "signInHint": "Prisijunkite, kad skelbtumėte naudodami savo dirbtuvių tapatybę.",
-      "titleField": "Pavadinimas",
-      "descriptionField": "Aprašas",
       "screenshots": "Ekrano kopijos",
       "screenshotsDescription": "Iki penkių PNG, JPEG arba WebP vaizdų",
       "screenshotsPlaceholder": "Pasirinkite ekrano kopijas",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Patikimas sertifikatas",
                 "message": "Sertifikatas įtrauktas į patikimų sertifikatų sąrašą"
               },
               "error": {
-                "title": "Nepavyko patikėti sertifikatu",
                 "message": "Nepavyko įtraukti sertifikato į patikimų sertifikatų sąrašą"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Ieškoti medijos",
     "field": {
       "preview": "Peržiūra",
-      "size": "Dydis",
-      "creator": "Kūrėjas",
-      "actions": "Valdymas"
+      "creator": "Kūrėjas"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Glaudus",
+        "sm": "Subtilus",
+        "md": "Subalansuotas",
+        "lg": "Suapvalintas",
+        "xl": "Švelnus"
+      }
+    },
     "success": "Sėkmingai",
     "beta": "Beta",
     "error": "Klaida",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Išvalyti paiešką",
       "copy": "Kopijuoti",
       "copied": "Nukopijuota",
-      "refresh": "Atnaujinti"
+      "refresh": "Atnaujinti",
+      "export": "Eksportuoti"
     },
     "pagination": {
       "pageOf": "{page} puslapis iš {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Iš viso",
     "filesystemUsage": "{count, plural, one {Rodyti # failų sistemos naudojimą} few {Rodyti # failų sistemų naudojimą} many {Rodyti # failų sistemų naudojimą} other {Rodyti # failų sistemų naudojimą}}",
     "field": {
-      "name": "Užduoties pavadinimas"
+      "name": "Vardas",
+      "description": "Aprašymas",
+      "title": "Antraštė",
+      "actions": "Veiksmai",
+      "type": "Tipas",
+      "status": "Būsena",
+      "state": "Būsena",
+      "size": "Dydis",
+      "source": "Šaltinis",
+      "namespace": "Vardų sritis",
+      "created": "Sukurta",
+      "architecture": "Architektūra"
     },
     "label": {
       "new": "Naujas"
@@ -2109,9 +2097,6 @@
         "collapse": "Sutraukti"
       },
       "option": {
-        "title": {
-          "label": "Pavadinimas"
-        },
         "customCssClasses": {
           "label": "Pasirinktinės CSS klasės"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Nustatymai",
         "settingsFor": "„{name}“ nustatymai",
-        "options": "Parinktys",
-        "actions": "Veiksmai"
+        "options": "Parinktys"
       },
       "status": {
         "success": "Gerai",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {Pasirinktas # elementas} few {Pasirinkti # elementai} many {Pasirinkta # elementų} other {Pasirinkta # elementų}}",
       "selected": "{count, plural, one {Pasirinktas #} few {Pasirinkti #} many {Pasirinkta #} other {Pasirinkta #}}",
-      "copy": "Kopijuoti",
       "copied": "{count, plural, one {# elementas nukopijuotas į iškarpinę} few {# elementai nukopijuoti į iškarpinę} many {# elementų nukopijuota į iškarpinę} other {# elementų nukopijuota į iškarpinę}}",
       "copyError": "Nepavyko nukopijuoti pasirinktų elementų. Jūsų naršyklė gali neleisti pasiekti iškarpinės.",
       "paste": "Įklijuoti",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {Pašalintas # elementas} few {Pašalinti # elementai} many {Pašalinta # elementų} other {Pašalinta # elementų}}",
       "move": "Perkelti",
       "moveTo": "Perkelti pasirinktus elementus",
-      "delete": "Ištrinti",
       "clear": "Išvalyti pasirinkimą",
       "clearShortcut": "Išvalyti pasirinkimą (Escape)",
       "saveErrorTitle": "Nepavyko atnaujinti elementų",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integracijos",
           "removeLabel": "Pašalinti „{name}“ integraciją"
-        },
-        "title": {
-          "label": "Antraštė"
         },
         "customCssClasses": {
           "label": "Individualios CSS klasės"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Vardas",
             "node": "Mazgas"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Vardas",
-            "state": "Būsena",
             "cpuUsage": "CPU naudojimas",
             "memoryUsage": "Atminties naudojimas"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "Šiuo metu leidžiama",
         "user": "",
-        "name": "Vardas",
         "id": "ID",
-        "status": "Būsena",
         "directPlay": "Tiesioginis atkūrimas",
         "directStream": "Tiesioginis srautas",
         "transcodeVideo": "Perkoduojamas vaizdas",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Valdymas"
         },
         "added": {
-          "columnTitle": "Pridėta",
-          "detailsTitle": "Pridėjimo data"
+          "columnTitle": "Pridėta"
         },
         "category": {
-          "columnTitle": "Papildomai",
-          "detailsTitle": "Kategorijos (arba papildoma informacija)"
+          "columnTitle": "Papildomai"
         },
         "downSpeed": {
-          "columnTitle": "Žemyn",
-          "detailsTitle": "Atsisiuntimo greitis"
+          "columnTitle": "Žemyn"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Dabartinis indeksas kliente"
         },
         "id": {
-          "columnTitle": "Elemento ID",
-          "detailsTitle": "Elemento ID"
-        },
-        "integration": {
-          "columnTitle": "Integracija"
-        },
-        "name": {
-          "columnTitle": "Užduoties pavadinimas"
+          "columnTitle": "Elemento ID"
         },
         "progress": {
           "columnTitle": "Progresas",
           "detailsTitle": "Atsisiuntimo progresas"
         },
         "ratio": {
-          "columnTitle": "Santykis",
-          "detailsTitle": "Torrent santykis (gauta/išsiųsta)"
+          "columnTitle": "Santykis"
         },
         "received": {
           "columnTitle": "Viso atsisiųsta",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Viso įkelta",
           "detailsTitle": "Viso įkelta"
         },
-        "size": {
-          "columnTitle": "Failo dydis",
-          "detailsTitle": "Bendras pasirinkimo / failų dydis"
-        },
-        "state": {
-          "columnTitle": "Būsena",
-          "detailsTitle": "Užduoties būsena"
-        },
         "time": {
-          "columnTitle": "Pabaigos laikas",
-          "detailsTitle": "Laikas iki / nuo užbaigimo",
-          "eta": "Numatomas laikas"
+          "columnTitle": "Pabaigos laikas"
         },
         "type": {
-          "columnTitle": "Tipas",
           "detailsTitle": "Atsisiuntimo kliento tipas"
         },
         "upSpeed": {
-          "columnTitle": "Aukštyn",
-          "detailsTitle": "Įkėlimo greitis"
+          "columnTitle": "Aukštyn"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Eiga"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Dydis"
-          }
-        },
         "common": {
           "empty": "Tuščia",
           "file": "Failas",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identifikatorius",
             "placeholder": "Vardas arba savininkas / vardas"
-          },
-          "name": {
-            "label": "Vardas"
           },
           "versionFilter": {
             "label": "Versijos filtras",
@@ -4891,7 +4834,6 @@
       "download": "Atsisiuntimas",
       "upload": "Įkėlimas",
       "ping": "Delsa",
-      "status": "Būsena",
       "avgDownload": "Vidutinis atsisiuntimas",
       "avgUpload": "Vidutinis įkėlimas",
       "avgPing": "Vidutinė delsa",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Veiksmai išjungti, kol lenta veikia redagavimo režimu.",
         "widgetItemUnavailable": "Šis valdiklio elementas nepasiekiamas.",
         "toggle": "Perjungti",
-        "copied": "Nukopijuota",
         "confirmDelete": "Patvirtinkite šį negrįžtamą veiksmą."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "Sistema",
-        "source": "Integracija",
         "hostname": "Pagrindinio kompiuterio vardas",
         "cpuModel": "CPU modelis",
         "cores": "Branduoliai",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Visi agentai prisijungę",
       "empty": "Šio filtro neatitinka nė vienas agentas",
       "column": {
-        "status": "Būsena",
-        "name": "Užduoties pavadinimas",
         "ip": "IP",
         "os": "OS",
         "version": "Versija",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Elemento spindulys",
-        "description": "Keičia išklotinių kampų apvalumą jūsų suvestinėje",
-        "option": {
-          "xs": "Labai mažas",
-          "sm": "Mažas",
-          "md": "Vidutinis",
-          "lg": "Didelis",
-          "xl": "Labai didelis"
-        }
+        "description": "Keičia išklotinių kampų apvalumą jūsų suvestinėje"
       },
       "isPublic": {
         "label": "Vieša",
@@ -6730,14 +6661,7 @@
               "label": "Fono perdanga"
             },
             "defaultRadius": {
-              "label": "Kampų stilius",
-              "options": {
-                "xs": "Glaudus",
-                "sm": "Subtilus",
-                "md": "Subalansuotas",
-                "lg": "Suapvalintas",
-                "xl": "Švelnus"
-              }
+              "label": "Kampų stilius"
             },
             "customCss": {
               "label": "Visuotinis pasirinktinis CSS",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Numatytasis pasisveikinimas",
               "boardColorLocked": "Lentos spalva užrakinta",
               "boardColorFlexible": "Lentos spalvas galima keisti",
-              "appName": "Užduoties pavadinimas",
               "logo": "Logotipas",
               "greeting": "Pasisveikinimas",
               "on": "Įjungta",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Paskutinis vykdymas"
-            },
-            "actions": {
-              "label": "Veiksmai"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Sukūrė",
-                  "source": "Integracija",
-                  "actions": "Veiksmai"
+                  "createdBy": "Sukūrė"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Būsena",
         "option": {
           "created": "Sukurta",
           "running": "Veikia",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Veiksmai",
       "logs": {
         "label": "Peržiūrėti žurnalus",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Nepavyko gauti Kubernetes duomenų"
-    },
-    "field": {
-      "name": {
-        "label": "Užduoties pavadinimas"
-      },
-      "namespace": {
-        "label": "Vardų sritis"
-      },
-      "creationTimestamp": {
-        "label": "Sukurta"
-      },
-      "state": {
-        "label": "Užduoties būsena"
-      },
-      "status": {
-        "label": "Būsena"
-      },
-      "type": {
-        "label": "Atsisiuntimo kliento tipas"
-      },
-      "architecture": {
-        "label": "Architektūra"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Leidimas"
       }
-    },
-    "action": {
-      "saveUser": "Išsaugoti naudotojo leidimą",
-      "saveGroup": "Išsaugoti grupės leidimą"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "{mode} rezultatai",
       "footer": {
         "navigate": "Naršyti",
-        "open": "Atidaryti",
-        "close": "Uždaryti"
+        "open": "Atidaryti"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "URL paieškos šablonas"
-        },
-        "description": {
-          "label": "Aprašymas"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "Sezonas",
-                "episodes": "Epizodai",
-                "status": "Būsena"
+                "episodes": "Epizodai"
               },
               "status": {
                 "requested": "Užklausta"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Redaguokite visą stilių lentelę. Esamos taisyklės išsaugomos, nebent jas čia pašalinsite.",
       "cssCharacters": "{count} iš 16384 simbolių",
       "copyCss": "Kopijuoti CSS",
-      "copied": "Nukopijuota",
       "restoreCss": "Atkurti dabartinį CSS",
       "remoteCssTitle": "Šis CSS įkelia nuotolinį išteklių",
       "remoteCssDescription": "Importuoti stilių lapai ir nuotoliniai URL lentai įkeliant susisiekia su kitu serveriu. Prieš tęsdami juos peržiūrėkite."

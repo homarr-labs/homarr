@@ -24,20 +24,20 @@ interface VolumesTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.volumes">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesVolume>[] => [
   {
     accessorKey: "status",
-    header: tField("status.label"),
+    header: tField("status"),
   },
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: tField("namespace.label"),
+    header: tField("namespace"),
     enableClickToCopy: true,
   },
   {
@@ -67,14 +67,14 @@ const createColumns = (
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function VolumesTable({ contextId, initialVolumes }: VolumesTableComponentProps) {
   const tVolumes = useI18n("kubernetes.volumes");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data } = clientApi.kubernetes.volumes.getVolumes.useQuery(
     { contextId },

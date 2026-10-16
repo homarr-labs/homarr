@@ -63,7 +63,7 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         <Button onClick={toggleCreate}>{tGroup("action.create.label")}</Button>
       </Group>
       <Collapse expanded={isCreateOpen}>
-        <Card withBorder>
+        <Card>
           <GroupCreateForm
             key={formKey}
             onCancel={closeCreate}

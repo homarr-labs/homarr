@@ -40,6 +40,7 @@ export const UsersAccessForm = <TPermission extends string>({
     () => new Map(accessQueryData.users.map(({ user }) => [user.id, user])),
   );
   const tPermissions = useI18n("permission");
+  const tCommon = useI18n("common");
   const form = useForm({
     initialValues: {
       items: accessQueryData.users.map(({ user, permission }) => ({
@@ -96,7 +97,7 @@ export const UsersAccessForm = <TPermission extends string>({
               triggerProps={{ rightSection: <IconPlus size="1rem" />, variant: "light" }}
             />
             <Button type="submit" loading={isPending}>
-              {tPermissions("action.saveUser")}
+              {tCommon("action.save")}
             </Button>
           </Group>
         </Stack>

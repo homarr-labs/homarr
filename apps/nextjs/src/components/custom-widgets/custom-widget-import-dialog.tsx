@@ -38,6 +38,7 @@ export function CustomWidgetImportDialog({
   onImported,
 }: CustomWidgetImportDialogProps) {
   const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   const importer = useCustomWidgetImport({
     widget,
     legacyId,
@@ -64,8 +65,8 @@ export function CustomWidgetImportDialog({
           ? t("importReview.migrationDescription")
           : (labels?.description ?? importer.reviewMessages.description),
         title: legacyId ? t("importReview.migrationTitle") : (labels?.title ?? t("importReview.title")),
-        cancel: labels?.cancel ?? t("importReview.cancel"),
-        confirm: legacyId ? t("importReview.confirmMigration") : (labels?.confirm ?? t("importReview.confirm")),
+        cancel: labels?.cancel ?? tCommon("action.cancel"),
+        confirm: legacyId ? t("importReview.confirmMigration") : (labels?.confirm ?? tCommon("action.import")),
       }}
     >
       <SourceSetupPanel

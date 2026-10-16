@@ -42,7 +42,7 @@ export function WorkshopScreenshots({ client, submissionId, title, screenshots }
 
   return (
     <>
-      <Paper withBorder radius="md" p={0} style={{ overflow: "hidden", position: "relative" }}>
+      <Paper radius="md" p={0} style={{ overflow: "hidden", position: "relative" }}>
         <UnstyledButton onClick={zoomControls.open} w="100%" aria-label={t("zoomScreenshot")}>
           <Image
             src={client.fileUrl(submissionId, active, "1200x800")}

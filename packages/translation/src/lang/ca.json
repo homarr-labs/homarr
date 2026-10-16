@@ -142,13 +142,6 @@
         "secondaryColor": "Color secundari",
         "resetColors": "Restableix els colors",
         "radius": "Radi de les cantonades dels ginys",
-        "radiusOptions": {
-          "xs": "Estret",
-          "sm": "Subtil",
-          "md": "Equilibrat",
-          "lg": "Arrodonit",
-          "xl": "Suau"
-        },
         "columns": "Columnes del tauler",
         "columnsDescription": "Les columnes defineixen la graella horitzontal que s'utilitza per dimensionar i posicionar els elements. 12 són suficients per a la majoria de persones.",
         "columnCount": "{count, plural, one {# columna} other {# columnes}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Inicieu sessió com a administrador després de la configuració per crear una clau d'API.",
           "configuration": "Configuració del client",
           "copy": "Copia la configuració",
-          "copied": "Copiat",
           "advanced": "Obre les eines MCP, els permisos i els detalls de configuració"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Descripció"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Utilitza una URL diferent per al ping",
@@ -853,7 +842,6 @@
       "source": "Font de l'API: {name}",
       "baseUrl": "URL del servidor",
       "networkScope": "Accés a la xarxa",
-      "save": "Desa la configuració de l'API",
       "expires": "Aquesta sol·licitud d'un sol ús caduca a les {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Enganxeu un JSON complet de giny personalitzat amb Ctrl+V o Command+V",
       "delete": "Elimina el widget personalitzat",
       "deleteConfirm": "Segur que vols eliminar «{name}»? Aquesta acció no es pot desfer.",
-      "export": "Exporta",
       "duplicate": "Duplica",
       "aiPrompt": "Dissenya amb IA",
       "copyAiPrompt": "Copia la indicació per a la IA",
       "enable": "Activa",
       "disable": "Desactiva",
-      "menu": "Accions",
       "downloadSkill": "Visualitza les capacitats dels ginys personalitzats",
       "publishWorkshop": "Publica al Workshop",
       "migrate": "Migra el giny personalitzat",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Configura les fonts del giny",
       "description": "Reviseu a què es connecta aquest giny i afegiu o substituïu les seves credencials xifrades.",
-      "credentialsRequired": "Les sol·licituds fallaran fins que s'afegeixin les credencials necessàries.",
-      "save": "Desa la configuració"
-    },
-    "field": {
-      "description": "Descripció"
+      "credentialsRequired": "Les sol·licituds fallaran fins que s'afegeixin les credencials necessàries."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Format",
         "insertStarter": "Insereix una plantilla inicial",
         "redo": "Refés",
-        "copied": "Copiat",
         "schema": "Esquema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Sol·licitud {count, number}",
         "requestId": "ID de la sol·licitud",
-        "type": "Tipus de client de descàrregues",
         "method": "Mètode",
         "source": "Font de l'API",
         "run": "Executa",
@@ -1008,7 +988,7 @@
         "runManual": "Des de SubFetch",
         "permission": "Permís",
         "path": "Camí",
-        "pathDescription": "Utilitzeu «{option:name}» per a les opcions del giny i «{param:name}» per als valors d'invocació.",
+        "pathDescription": "Utilitzeu «'{option:name}'» per a les opcions del giny i «'{param:name}'» per als valors d'invocació.",
         "requestDetails": "Consulta, cos i comportament",
         "queryValues": "Valors de consulta",
         "queryKey": "Clau de consulta",
@@ -1037,7 +1017,6 @@
         "optionName": "Nom de l'opció",
         "label": "Etiqueta",
         "control": "Control",
-        "description": "Descripció",
         "default": "Per defecte",
         "optionDetails": "Restriccions i opcions dinàmiques",
         "minimum": "Mínim",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "S'ha suprimit el valor emmagatzemat.",
         "primary": "API principal",
         "id": "ID de la font",
-        "name": "Nom de la feina",
         "baseUrl": "URL base",
         "baseUrlError": {
           "invalid": "Introduïu una URL completa.",
@@ -1091,7 +1069,6 @@
         "remove": "Elimina la font i les seves sol·licituds",
         "advanced": "Avançat",
         "add": "Afegeix una altra font de l'API",
-        "sourceType": "Integració",
         "manualSource": "API HTTP",
         "existingIntegration": "Integració existent",
         "integrationType": "Tipus d'integració",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Revisa el reemplaçament v2 migrat",
       "migrationDescription": "Reviseu i confirmeu aquesta definició v2 generada. En confirmar-la, es reemplaçarà atòmicament el registre v1 conservat, mantenint les ubicacions existents del tauler enllaçades al mateix ID de giny.",
       "fileLabel": "Trieu un fitxer JSON de giny personalitzat",
-      "name": "Nom de la feina",
       "origin": "Origen base",
       "authentication": "Autenticació",
       "networkScope": "Àmbit de xarxa",
@@ -1245,8 +1221,6 @@
         "title": "Aquest giny pot canviar dades remotes",
         "description": "Reviseu cada acció amb nom, cada credencial heretada i cada confirmació destructiva després de la importació. Els secrets no s'inclouen al fitxer."
       },
-      "cancel": "Cancel·la la importació",
-      "confirm": "Importa el giny",
       "confirmMigration": "Confirma el reemplaçament v2"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Tanca el visor de captures de pantalla",
     "technicalDetails": "Detalls tècnics",
     "sourceCode": "Entrada del taller",
-    "export": "Exporta",
     "report": "Informa",
     "reportTitle": "Informa de l'enviament",
     "reportReason": "Motiu",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Visualitza i gestiona l'enviament",
       "done": "Fet",
       "signInHint": "Inicieu la sessió per publicar amb la vostra identitat del taller.",
-      "titleField": "Títol",
-      "descriptionField": "Descripció",
       "screenshots": "Captures de pantalla",
       "screenshotsDescription": "Fins a cinc imatges PNG, JPEG o WebP",
       "screenshotsPlaceholder": "Trieu captures de pantalla",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Certificat de confiança",
                 "message": "Certificat afegit a la llista de certificats de confiança"
               },
               "error": {
-                "title": "No s'ha pogut confiar en el certificat",
                 "message": "No s'ha pogut afegir el certificat a la llista de certificats de confiança"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Cerca un element multimèdia",
     "field": {
       "preview": "Previsualització",
-      "size": "Mida",
-      "creator": "Creador",
-      "actions": "Controls"
+      "creator": "Creador"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Estret",
+        "sm": "Subtil",
+        "md": "Equilibrat",
+        "lg": "Arrodonit",
+        "xl": "Suau"
+      }
+    },
     "success": "Correcte",
     "beta": "Beta",
     "error": "Error",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Esborra la cerca",
       "copy": "Copia",
       "copied": "Copiat",
-      "refresh": "Actualitza"
+      "refresh": "Actualitza",
+      "export": "Exporta"
     },
     "pagination": {
       "pageOf": "Pàgina {page} de {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Mostra l'ús de # sistema de fitxers} other {Mostra l'ús de # sistemes de fitxers}}",
     "field": {
-      "name": "Nom de la feina"
+      "name": "Nom",
+      "description": "Descripció",
+      "title": "Títol",
+      "actions": "Accions",
+      "type": "Tipus",
+      "status": "Estat",
+      "state": "Estat",
+      "size": "Mida",
+      "source": "Font",
+      "namespace": "Espai de noms",
+      "created": "Creat",
+      "architecture": "Arquitectura"
     },
     "label": {
       "new": "Nou"
@@ -2109,9 +2097,6 @@
         "collapse": "Contrau"
       },
       "option": {
-        "title": {
-          "label": "Títol"
-        },
         "customCssClasses": {
           "label": "Classes css personalitzades"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Configuració",
         "settingsFor": "Configuració de {name}",
-        "options": "Opcions",
-        "actions": "Accions"
+        "options": "Opcions"
       },
       "status": {
         "success": "D'acord",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# element seleccionat} other {# elements seleccionats}}",
       "selected": "{count, plural, one {# seleccionat} other {# seleccionats}}",
-      "copy": "Copia",
       "copied": "{count, plural, one {S'ha copiat # element al porta-retalls} other {S'han copiat # elements al porta-retalls}}",
       "copyError": "No s'han pogut copiar els elements seleccionats. És possible que el navegador no permeti accedir al porta-retalls.",
       "paste": "Enganxa",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {S'ha eliminat # element} other {S'han eliminat # elements}}",
       "move": "Mou",
       "moveTo": "Mou els elements seleccionats",
-      "delete": "Elimina",
       "clear": "Esborra la selecció",
       "clearShortcut": "Esborra la selecció (Escapada)",
       "saveErrorTitle": "No s'han pogut actualitzar els elements",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integracions",
           "removeLabel": "Elimina la integració de {name}"
-        },
-        "title": {
-          "label": "Títol"
         },
         "customCssClasses": {
           "label": "Classes css personalitzades"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Nom",
             "node": "Node"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Nom",
-            "state": "Estat",
             "cpuUsage": "Ús de la CPU",
             "memoryUsage": "Ús de la memòria"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "S'està reproduint",
         "user": "Usuari",
-        "name": "Nom",
         "id": "ID",
-        "status": "Estat",
         "directPlay": "Reproducció directa",
         "directStream": "Transmissió directa",
         "transcodeVideo": "Transcodificació de vídeo",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Controls"
         },
         "added": {
-          "columnTitle": "Afegit",
-          "detailsTitle": "Data d'addició"
+          "columnTitle": "Afegit"
         },
         "category": {
-          "columnTitle": "Extres",
-          "detailsTitle": "Categories (o informació extra)"
+          "columnTitle": "Extres"
         },
         "downSpeed": {
-          "columnTitle": "Baixada",
-          "detailsTitle": "Velocitat de descàrrega"
+          "columnTitle": "Baixada"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Índex actual dins del client"
         },
         "id": {
-          "columnTitle": "ID de l'element",
-          "detailsTitle": "ID de l'element"
-        },
-        "integration": {
-          "columnTitle": "Integració"
-        },
-        "name": {
-          "columnTitle": "Nom de la feina"
+          "columnTitle": "ID de l'element"
         },
         "progress": {
           "columnTitle": "Progrés",
           "detailsTitle": "Progrés de la descàrrega"
         },
         "ratio": {
-          "columnTitle": "Ràtio",
-          "detailsTitle": "Ràtio del torrent (rebut/enviat)"
+          "columnTitle": "Ràtio"
         },
         "received": {
           "columnTitle": "Total baixat",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Total pujat",
           "detailsTitle": "Total penjat"
         },
-        "size": {
-          "columnTitle": "Mida del fitxer",
-          "detailsTitle": "Mida total de la selecció/fitxers"
-        },
-        "state": {
-          "columnTitle": "Estat",
-          "detailsTitle": "Estat de la feina"
-        },
         "time": {
-          "columnTitle": "Hora de finalització",
-          "detailsTitle": "Temps fins/des de la finalització",
-          "eta": "Temps estimat"
+          "columnTitle": "Hora de finalització"
         },
         "type": {
-          "columnTitle": "Tipus",
           "detailsTitle": "Tipus de client de descàrregues"
         },
         "upSpeed": {
-          "columnTitle": "Pujada",
-          "detailsTitle": "Velocitat de pujada"
+          "columnTitle": "Pujada"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Progrés"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Mida"
-          }
-        },
         "common": {
           "empty": "Buit",
           "file": "Fitxer",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nom o propietari/nom"
-          },
-          "name": {
-            "label": "Nom"
           },
           "versionFilter": {
             "label": "Filtre de versions",
@@ -4891,7 +4834,6 @@
       "download": "Baixada",
       "upload": "Pujada",
       "ping": "Ping",
-      "status": "Estat",
       "avgDownload": "Mitjana de baixada",
       "avgUpload": "Mitjana de pujada",
       "avgPing": "Ping mitjà",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Les accions estan desactivades mentre el tauler es troba en mode d'edició.",
         "widgetItemUnavailable": "Aquest element del giny no està disponible.",
         "toggle": "Commuta",
-        "copied": "Copiat",
         "confirmDelete": "Confirma aquesta acció destructiva."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "Sistema",
-        "source": "Integració",
         "hostname": "Nom de l'amfitrió",
         "cpuModel": "Model de CPU",
         "cores": "Nuclis",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Tots els agents estan connectats",
       "empty": "Cap agent coincideix amb aquest filtre",
       "column": {
-        "status": "Estat",
-        "name": "Nom de la feina",
         "ip": "IP",
         "os": "SO",
         "version": "Versió",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Radi de l'element",
-        "description": "Canvia l'arrodoniment de les rajoles del teu tauler",
-        "option": {
-          "xs": "Molt petit",
-          "sm": "Petit",
-          "md": "Mitjà",
-          "lg": "Gran",
-          "xl": "Molt gran"
-        }
+        "description": "Canvia l'arrodoniment de les rajoles del teu tauler"
       },
       "isPublic": {
         "label": "Públic",
@@ -6730,14 +6661,7 @@
               "label": "Superposició del fons"
             },
             "defaultRadius": {
-              "label": "Estil de les cantonades",
-              "options": {
-                "xs": "Estret",
-                "sm": "Subtil",
-                "md": "Equilibrat",
-                "lg": "Arrodonit",
-                "xl": "Suau"
-              }
+              "label": "Estil de les cantonades"
             },
             "customCss": {
               "label": "CSS personalitzat global",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Salutació predeterminada",
               "boardColorLocked": "Color del tauler bloquejat",
               "boardColorFlexible": "Colors del tauler permesos",
-              "appName": "Nom de la feina",
               "logo": "Logotip",
               "greeting": "Salutació",
               "on": "Activat",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Última execució"
-            },
-            "actions": {
-              "label": "Accions"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Creat per",
-                  "source": "Integració",
-                  "actions": "Accions"
+                  "createdBy": "Creat per"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Estat",
         "option": {
           "created": "Creat",
           "running": "En execució",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Accions",
       "logs": {
         "label": "Mostra els registres",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "No s'han pogut obtenir les dades de Kubernetes"
-    },
-    "field": {
-      "name": {
-        "label": "Nom de la feina"
-      },
-      "namespace": {
-        "label": "Espai de noms"
-      },
-      "creationTimestamp": {
-        "label": "Creat"
-      },
-      "state": {
-        "label": "Estat de la feina"
-      },
-      "status": {
-        "label": "Estat"
-      },
-      "type": {
-        "label": "Tipus de client de descàrregues"
-      },
-      "architecture": {
-        "label": "Arquitectura"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Permís"
       }
-    },
-    "action": {
-      "saveUser": "Desa el permís d'usuari",
-      "saveGroup": "Desa el permís de grup"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "Resultats de {mode}",
       "footer": {
         "navigate": "Navega",
-        "open": "Obre",
-        "close": "Tanca"
+        "open": "Obre"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "Plantilla d'URL de cerca"
-        },
-        "description": {
-          "label": "Descripció"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "Temporada",
-                "episodes": "Episodis",
-                "status": "Estat"
+                "episodes": "Episodis"
               },
               "status": {
                 "requested": "Sol·licitat"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Edita el full d'estils complet. Les regles existents es conserven tret que s'eliminin aquí.",
       "cssCharacters": "{count} de 16384 caràcters",
       "copyCss": "Copia el CSS",
-      "copied": "Copiat",
       "restoreCss": "Restaura el CSS actual",
       "remoteCssTitle": "Aquest CSS carrega un recurs remot",
       "remoteCssDescription": "Els fulls d'estils importats i els URL remots contacten amb un altre servidor quan es carrega el tauler. Revisa'ls abans de continuar."

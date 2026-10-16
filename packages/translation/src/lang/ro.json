@@ -142,13 +142,6 @@
         "secondaryColor": "Culoare secundară",
         "resetColors": "Resetare culori",
         "radius": "Raza de colț widget",
-        "radiusOptions": {
-          "xs": "Strâns",
-          "sm": "Subtil",
-          "md": "Echilibru",
-          "lg": "Rotunjit",
-          "xl": "Moale"
-        },
         "columns": "Coloane tablă",
         "columnsDescription": "Coloanele definesc grila orizontală folosită la mărimea și poziționarea elementelor. 12 este suficientă pentru majoritatea oamenilor.",
         "columnCount": "{count, plural, one {# coloana} other {# coloane}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Conectați-vă ca administrator după configurare pentru a crea o cheie API.",
           "configuration": "Configurare client",
           "copy": "Copiază configurația",
-          "copied": "Copiat",
           "advanced": "Deschide instrumente, permisiuni și detalii de configurare"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Descriere"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Folosiți un URL diferit pentru ping-uri",
@@ -839,7 +828,7 @@
   },
   "tips": {
     "dismiss": "Renunțați la sfat",
-    "multiSelectApps": "Sfat: Țineți apăsat Ctrl / <unk> pentru a selecta mai multe aplicații dintr-o dată"
+    "multiSelectApps": "Sfat: Țineți apăsat Ctrl / ⌘ pentru a selecta mai multe aplicații dintr-o dată"
   },
   "customWidget": {
     "secretEntry": {
@@ -853,7 +842,6 @@
       "source": "Sursă API: {name}",
       "baseUrl": "URL Server",
       "networkScope": "Acces la rețea",
-      "save": "Salvează configurația API",
       "expires": "Această solicitare unică expiră la {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Lipește un widget complet personalizat JSON cu Ctrl+V sau Comandă+V",
       "delete": "Ștergere widget personalizat",
       "deleteConfirm": "Sunteţi sigur că doriţi să ştergeţi \"{name}\"? Această acţiune nu poate fi anulată.",
-      "export": "Exportă",
       "duplicate": "Duplicate",
       "aiPrompt": "Proiectare cu AI",
       "copyAiPrompt": "Copiază solicitarea AI",
       "enable": "Activare",
       "disable": "Dezactivează",
-      "menu": "Acțiuni",
       "downloadSkill": "Vezi Abilitatea Personalizată a Widgetului",
       "publishWorkshop": "Publică în Atelier",
       "migrate": "Migrează widget personalizat",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Configurare surse widget",
       "description": "Revizuiește unde acest widget se conectează și adaugă sau înlocuiește credențialele sale criptate.",
-      "credentialsRequired": "Cererile vor eşua până când nu vor fi adăugate acreditările necesare.",
-      "save": "Salvează configurația"
-    },
-    "field": {
-      "description": "Descriere"
+      "credentialsRequired": "Cererile vor eşua până când nu vor fi adăugate acreditările necesare."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "redo": "Reface",
-        "copied": "Copiat",
         "schema": "Schema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Cere {count, number}",
         "requestId": "ID cerere",
-        "type": "Descarcă tipul de client",
         "method": "Metodă",
         "source": "Sursă API",
         "run": "Rulează",
@@ -1037,7 +1017,6 @@
         "optionName": "Numele opţiunii",
         "label": "Etichetă",
         "control": "Control",
-        "description": "Descriere",
         "default": "Implicit",
         "optionDetails": "Constrângeri și opțiuni dinamice",
         "minimum": "Minim",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Valoarea stocată a fost ștearsă.",
         "primary": "API principal",
         "id": "ID sursă",
-        "name": "Numele postului",
         "baseUrl": "URL de bază",
         "baseUrlError": {
           "invalid": "Introduceți un URL complet.",
@@ -1091,7 +1069,6 @@
         "remove": "Șterge sursa și cererile sale",
         "advanced": "Avansat",
         "add": "Adăugați o altă sursă API",
-        "sourceType": "Integrare",
         "manualSource": "HTTP API",
         "existingIntegration": "Integrare existentă",
         "integrationType": "Tip de integrare",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Revizuiește înlocuitorul v2 migrat",
       "migrationDescription": "Examinați și confirmați această definiție generată v2. Confirmând înlocuirea atomică a înregistrărilor v1 conservate, păstrând în același timp plasările de bord existente legate de același ID widget.",
       "fileLabel": "Alegeți un fișier JSON pentru widget personalizat",
-      "name": "Numele postului",
       "origin": "Originea de bază",
       "authentication": "Autentificare",
       "networkScope": "Domeniul de aplicare al rețelei",
@@ -1245,8 +1221,6 @@
         "title": "Acest widget poate schimba datele de la distanță",
         "description": "Examinați fiecare acțiune numită, acreditare moștenită și confirmare distructivă după import. Secretele nu sunt incluse în fișier."
       },
-      "cancel": "Anulare import",
-      "confirm": "Importă widget",
       "confirmMigration": "Confirmați înlocuirea v2"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Închideți vizualizatorul de captură ecran",
     "technicalDetails": "Detalii tehnice",
     "sourceCode": "Intrare atelier",
-    "export": "Exportă",
     "report": "Raport",
     "reportTitle": "Trimitere raport",
     "reportReason": "Motiv",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Vizualizați și gestionați trimiterea",
       "done": "Terminat",
       "signInHint": "Conectați-vă pentru a publica sub identitatea Atelierului dvs.",
-      "titleField": "Titlu",
-      "descriptionField": "Descriere",
       "screenshots": "Capturi ecran",
       "screenshotsDescription": "Până la cinci imagini PNG, JPEG sau WebP",
       "screenshotsPlaceholder": "Alege capturi de ecran",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Certificat de încredere",
                 "message": "Certificat adăugat la lista de certificate acreditate"
               },
               "error": {
-                "title": "Eșuare încredere în certificat",
                 "message": "Nu s-a reușit adăugarea certificatului la lista de certificate acreditate"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Găsește un fișier media",
     "field": {
       "preview": "Previzualizare",
-      "size": "Mărime",
-      "creator": "Creator",
-      "actions": "Controale"
+      "creator": "Creator"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Strâns",
+        "sm": "Subtil",
+        "md": "Echilibru",
+        "lg": "Rotunjit",
+        "xl": "Moale"
+      }
+    },
     "success": "Succes",
     "beta": "Beta",
     "error": "Eroare",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Ștergeți căutarea",
       "copy": "Copiază",
       "copied": "Copiat",
-      "refresh": "Împrospătează"
+      "refresh": "Împrospătează",
+      "export": "Exportă"
     },
     "pagination": {
       "pageOf": "Pagina {page} {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Arată utilizarea pentru # fișiere} other {Arată utilizarea pentru # de fișiere}}",
     "field": {
-      "name": "Numele postului"
+      "name": "Nume",
+      "description": "Descriere",
+      "title": "Titlu",
+      "actions": "Acțiuni",
+      "type": "Tip",
+      "status": "Status",
+      "state": "Stare",
+      "size": "Mărime",
+      "source": "Sursă",
+      "namespace": "Numespace",
+      "created": "Creat",
+      "architecture": "Arhitectură"
     },
     "label": {
       "new": "Nou"
@@ -2109,9 +2097,6 @@
         "collapse": "Restrânge"
       },
       "option": {
-        "title": {
-          "label": "Titlu"
-        },
         "customCssClasses": {
           "label": "Clase css personalizate"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Setări",
         "settingsFor": "Setări pentru {name}",
-        "options": "Opţiuni",
-        "actions": "Acțiuni"
+        "options": "Opţiuni"
       },
       "status": {
         "success": "Ok",
@@ -2189,11 +2173,10 @@
     "selection": {
       "summary": "{count, plural, one {# element selectat} other {# articole selectate}}",
       "selected": "{count, plural, one {# a selectat} other {# a selectat}}",
-      "copy": "Copiază",
       "copied": "{count, plural, one {# element copiat în clipboard} other {# elemente copiate în clipboard}}",
       "copyError": "Elementele selectate nu au putut fi copiate. Este posibil ca browserul să nu permită accesul în clipboard.",
       "paste": "Lipește",
-      "pasteShortcut": "Lipiți elementele copiate aici (Ctrl / <unk> + V)",
+      "pasteShortcut": "Lipiți elementele copiate aici (Ctrl / ⌘ + V)",
       "pasted": "{count, plural, one {# element lipsit} other {# articole lipite}}",
       "pasteError": "Clipboard-ul nu a putut fi citit. Este posibil ca browserul să nu permită accesul în clipboard.",
       "pasteInvalid": "Clipboard-ul nu conține elemente de bord valide Homarr.",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# articol eliminat} other {# articole șterse}}",
       "move": "Mutare",
       "moveTo": "Mută elementele selectate",
-      "delete": "Șterge",
       "clear": "Ștergeți selecția",
       "clearShortcut": "Șterge selecția (Escape)",
       "saveErrorTitle": "Imposibil de actualizat elementele",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integrări",
           "removeLabel": "Eliminați integrarea {name}"
-        },
-        "title": {
-          "label": "Titlu"
         },
         "customCssClasses": {
           "label": "Clase css personalizate"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Nume",
             "node": "Nod"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Nume",
-            "state": "Județ",
             "cpuUsage": "Utilizare CPU",
             "memoryUsage": "Utilizare memorie"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "Se redă în prezent",
         "user": "Utilizator",
-        "name": "Nume",
         "id": "Id",
-        "status": "Status",
         "directPlay": "Redare directă",
         "directStream": "Flux direct",
         "transcodeVideo": "Transcodare video",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Controale"
         },
         "added": {
-          "columnTitle": "Adăugat",
-          "detailsTitle": "Data adăugării"
+          "columnTitle": "Adăugat"
         },
         "category": {
-          "columnTitle": "Extras",
-          "detailsTitle": "Categorii (Informații suplimentare)"
+          "columnTitle": "Extras"
         },
         "downSpeed": {
-          "columnTitle": "În jos",
-          "detailsTitle": "Viteza de descărcare"
+          "columnTitle": "În jos"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Indicele curent din interiorul clientului"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Item ID"
-        },
-        "integration": {
-          "columnTitle": "Integrare"
-        },
-        "name": {
-          "columnTitle": "Numele postului"
+          "columnTitle": "Id"
         },
         "progress": {
           "columnTitle": "Progres",
           "detailsTitle": "Progres descărcare"
         },
         "ratio": {
-          "columnTitle": "Raport",
-          "detailsTitle": "Raport torrent (primit/trimis)"
+          "columnTitle": "Raport"
         },
         "received": {
           "columnTitle": "Total în scădere",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Total în creștere",
           "detailsTitle": "Total încărcat"
         },
-        "size": {
-          "columnTitle": "Dimensiune fișier",
-          "detailsTitle": "Dimensiunea totală a selecţiei/fişierelor"
-        },
-        "state": {
-          "columnTitle": "Stare",
-          "detailsTitle": "Stare Job"
-        },
         "time": {
-          "columnTitle": "Timp de finalizare",
-          "detailsTitle": "Timp de la /până la finalizare",
-          "eta": "ETA"
+          "columnTitle": "Timp de finalizare"
         },
         "type": {
-          "columnTitle": "Tip",
           "detailsTitle": "Descarcă tipul de client"
         },
         "upSpeed": {
-          "columnTitle": "În sus",
-          "detailsTitle": "Viteza de Încărcare"
+          "columnTitle": "În sus"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Progres"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Mărime"
-          }
-        },
         "common": {
           "empty": "Gol",
           "file": "Fișier",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identifier",
             "placeholder": "Nume sau proprietar/nume"
-          },
-          "name": {
-            "label": "Nume"
           },
           "versionFilter": {
             "label": "Filtru versiune",
@@ -4891,7 +4834,6 @@
       "download": "Descărcare",
       "upload": "Incarca",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Descărcare medie",
       "avgUpload": "Încărcare medie",
       "avgPing": "Ping mediu",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Acţiunile sunt dezactivate în timp ce secţiunea este în modul de editare.",
         "widgetItemUnavailable": "Acest element de widget nu este disponibil.",
         "toggle": "Comutare",
-        "copied": "Copiat",
         "confirmDelete": "Confirmați această acțiune distructivă."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "Sistem",
-        "source": "Integrare",
         "hostname": "Hostname",
         "cpuModel": "Model CPU",
         "cores": "Cores",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Toți agenții sunt conectați",
       "empty": "Niciun agent nu se potrivește cu acest filtru",
       "column": {
-        "status": "Status",
-        "name": "Numele postului",
         "ip": "IP",
         "os": "SG",
         "version": "Versiune",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Raza elementului",
-        "description": "Modifică rotunjirea plăcilor de pe tablă",
-        "option": {
-          "xs": "Foarte mic",
-          "sm": "Mică",
-          "md": "Medie",
-          "lg": "Mare",
-          "xl": "Foarte mare"
-        }
+        "description": "Modifică rotunjirea plăcilor de pe tablă"
       },
       "isPublic": {
         "label": "Publice",
@@ -6730,14 +6661,7 @@
               "label": "Suprapunere de fundal"
             },
             "defaultRadius": {
-              "label": "Stilul colţului",
-              "options": {
-                "xs": "Strâns",
-                "sm": "Subtil",
-                "md": "Echilibru",
-                "lg": "Rotunjit",
-                "xl": "Moale"
-              }
+              "label": "Stilul colţului"
             },
             "customCss": {
               "label": "CSS personalizat global",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Salutare implicită",
               "boardColorLocked": "Culoarea tablei blocată",
               "boardColorFlexible": "Permis culorile tablei",
-              "appName": "Numele postului",
               "logo": "Logo",
               "greeting": "Salutare",
               "on": "Activat",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Ultima execuție"
-            },
-            "actions": {
-              "label": "Acțiuni"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Creat de",
-                  "source": "Integrare",
-                  "actions": "Acțiuni"
+                  "createdBy": "Creat de"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Stare",
         "option": {
           "created": "Creat",
           "running": "Rulează",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Acțiuni",
       "logs": {
         "label": "Vezi jurnalele",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Nu s-a reușit preluarea datelor Kubernetes"
-    },
-    "field": {
-      "name": {
-        "label": "Numele postului"
-      },
-      "namespace": {
-        "label": "Numespace"
-      },
-      "creationTimestamp": {
-        "label": "Creat"
-      },
-      "state": {
-        "label": "Stare Job"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Descarcă tipul de client"
-      },
-      "architecture": {
-        "label": "Arhitectură"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Permisiune"
       }
-    },
-    "action": {
-      "saveUser": "Salvează permisiunile utilizatorului",
-      "saveGroup": "Salvează permisiune de grup"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "{mode} rezultate",
       "footer": {
         "navigate": "Navigate",
-        "open": "Deschideți",
-        "close": "Inchide"
+        "open": "Deschideți"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "Șablon de căutare URL"
-        },
-        "description": {
-          "label": "Descriere"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "Sezon",
-                "episodes": "Episoade",
-                "status": "Stare"
+                "episodes": "Episoade"
               },
               "status": {
                 "requested": "Solicitat"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Editați stilul complet. Regulile existente sunt păstrate dacă nu sunt eliminate aici.",
       "cssCharacters": "{count} de 16384 de caractere",
       "copyCss": "Copy CSS",
-      "copied": "Copiat",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "Acest CSS încarcă o resursă de la distanță",
       "remoteCssDescription": "Foi de stil importate și URL-uri la distanță contactați un alt server atunci când se încarcă tabla. Examinați-le înainte de a continua."

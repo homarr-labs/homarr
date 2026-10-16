@@ -334,3 +334,62 @@ Exact final image extraction also passes native Node 24.18.0 amd64 execution for
 Final source assertions include root manifest SHA256 `453c80b8e71f97f4fd7426e019947a06d8b7649cbce84edfc47a7cd0d87d15cc`, corrected Next Turbo config `9f7214898367c5fb5345fef4f0acc6f5f3839ac2c1a925a4774cc5d41d1dfb7a`, and restored backup hook `b7d8a4ddaafca0bec175a6f6c910fa18c266669d61839788e71e6c9e7042b20c`. The hook byte-matches `40cda745e`. All changed source hashes and deleted paths are saved in `final-source-manifest.json`; no test sources changed.
 
 The live report now has 10 plain-language TLDR rows, 23 technical before/after pairs and a six-node diagram. Actual Chromium at 1440px and 390px verifies readable grids, no horizontal overflow, working anchors and the intentional backup pacing/sounds note. The same HTTP server remains running at `http://100.111.30.70:41816/architecture-review.html`. Durable evidence is `evidence-wave3.tar.gz` in the served report directory; final local commit/worktree checks are stored in its completion manifest. Original checkout remains `dc2662d9f2eaabf9b7ba14693f8ddda8a56aeeff` with only its pre-existing untracked `.codex/` directory. No push, PR, workflow dispatch, upload or production deployment occurred.
+
+## Wave 4: shared UI architecture and translation ownership
+
+Implemented the user-selected architecture improvements from the read-only audit at `ca3d6d62a`, on the same isolated branch. The user explicitly authorized implementation across candidates and common translation consolidation, overriding the architecture skill's interactive selection pause. The root glossary and ADR0001 were read; no persistence/permission decision was changed. No new dependencies, test files, workflows, Docker builds or production deployments were added.
+
+### Shared modules and real adapters
+
+| Area                | Before                                                                                                | Implemented result                                                                                                                                                                                                                               |
+| ------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Board appearance    | Board settings and Assistant independently assemble colors, corners and opacity                       | One `BoardAppearanceFields` module in forms-collection, two adapters. It owns translated fields, swatches, clearing and opacity presentation; form state, lock policy, preview and saving remain explicit.                                       |
+| Corner styles       | Five independent value declarations, a further Assistant option list and three translated choice maps | One definitions-owned tuple/type; four validators share it. Picker owns one common namespace. UI/branding exports remain compatible aliases. Board invalid-input issue arrays, optional behavior, JSON schema and inferred types match baseline. |
+| Color scheme        | Server settings rebuild icons/options already owned by shared UI                                      | Server settings use `ColorSchemeCombobox`, alongside onboarding/user preferences. Shared field supports form metadata and merges caller helper IDs with Mantine-generated error/description IDs.                                                 |
+| Management layout   | 14 pages repeat title/breadcrumb/container assembly                                                   | All 14 pages / 15 render branches adopt `ManagePageLayout`. Three existing frame variants, widths, custom titles, breadcrumb mappings and the Kubernetes context selector are preserved.                                                         |
+| Unsaved changes     | Existing shared bar plus two group-management copies                                                  | One bar serves four flows. Optional visibility preserves the group slide-up animations; callbacks/permissions/dirty state stay in their adapters. Default markup/dimensions match baseline under Homarr's theme.                                 |
+| Password fields     | Invite registration duplicates the existing password pair                                             | Invite and create-user use `UserCreatePasswordFields`; ids/names/autocomplete/requirements/validation and md/lg spacing are preserved.                                                                                                           |
+| Widget presentation | Six contextual empty views plus duplicated Tdarr panel tables                                         | Six views use the existing `WidgetEmptyState` with a message; its 43 default sites remain unchanged. One local Tdarr table module owns empty/scroll/header/cell presentation; columns, ETA/progress and tiny mode remain specific.               |
+| Wazuh query policy  | Five identical minute freshness/polling objects                                                       | One feature-owned options constant; all 11 inspected queries retain their previous effective settings.                                                                                                                                           |
+| Theme adoption      | 95 native Card/Paper props repeat the current border default                                          | 69 props removed across 41 files; 26 explicit contracts retained. Warning/selection/preview/accent borders and the five portable Custom Widget workbench borders remain explicit. Card.Section and authored JSX are untouched.                   |
+
+Shared defaults continue to live in the theme; shared presentation and field behavior live in their deepest owning modules. Authentication, mutations, navigation and feature state remain in their adapters. No universal form/table engine or artificial common abstraction was introduced.
+
+### Translation audit and consolidation
+
+| Measurement                    |     Before |      After |
+| ------------------------------ | ---------: | ---------: |
+| English leaf keys              |      4,686 |      4,615 |
+| Keys per locale (36 catalogs)  |      4,686 |      4,615 |
+| Stored locale entries          |    168,696 |    166,140 |
+| English source bytes           |    314,196 |    311,258 |
+| All locale source bytes        | 12,312,887 | 12,191,072 |
+| Extra identical English copies |        620 |        557 |
+| Strict ICU parser errors       |         28 |          0 |
+
+88 retired leaves are replaced by 17 canonical leaves, removing 71 keys per locale and 2,556 stored entries overall. The catalogs shrink 121,815 bytes. The English serialized dictionary shrinks 221,549 → 219,898 bytes. These are source/dictionary measurements, not measured page transfer, process RAM or whole-app speed improvements.
+
+Standalone field headings and ordinary actions now use common namespaces; downloads and Docker use explicit typed label maps for dynamic column/sort choices. All 15 download columns and 12 sort options are preserved. Caller titles, warning bodies, named accessibility actions and destructive migration confirmations remain contextual.
+
+Examples: `Save user permission`, `Save group permission`, `Save configuration` and `Save API configuration` use common `Save`; `Cancel import` uses `Cancel`; ordinary `Import widget` uses `Import`. The legacy replacement confirmation remains explicit.
+
+The semantic audit corrected generic Name labels that said Job name in 33 human locale catalogs, generic Source labels previously copied as Integration, and the Swiss German operational State wording. Existing same-locale translations provide provenance; two Finnish corrections are explicitly reviewed localized copy (Lähde/Tuo). Existing Crowdin live-translation tokens are preserved.
+
+28 malformed/corrupted messages in 18 locales are repaired: eight path-help messages escape literal option/parameter tokens, 16 shortcut messages replace corrupt unknown tokens with the command symbol, three Japanese labels are restored, and a Korean action loses trailing garbage. The original no-argument production path returned raw strings without error callbacks; forced formatting exposed28 errors. Repaired plain and forced-format output both match expected text with zero errors. 159,464 final nonblank messages pass the actual ICU parser; retained argument/plural/tag signatures are unchanged.
+
+No keys were removed merely because grep found no use. The audit records static calls, typed namespace helpers and dynamic label maps; all retained and retired keys are checked against the final catalogs. 684 provenance records document canonical values and repairs. All 69 widget kinds have corresponding catalog namespaces; the five additional widget namespaces are used shared family/common namespaces, not deletion candidates.
+
+### Validation and limits
+
+- Six relevant TypeScript projects pass with no diagnostics: definitions, translation, UI, forms-collection, widgets and combined Next.js source. No app production build or generated-route-validator acceptance is claimed.
+- Changed-source formatting, lint and whitespace checks pass. Existing unrelated lint warnings remain; new unused hooks and memo dependencies from the migration were fixed.
+- Existing focused run: 226 passed, 8 failed across 10 explicit files. The eight failures require bundled integration seed IDs absent from the unchanged baseline fixture list; test and bundled fixture sources byte-match `ca3d6d62a`. Evidence: `baseline-test-failures.json`. No test sources are added, changed or disabled in the final diff.
+- Manual checks cover 14 page contracts, eight layout/bar SSR cases, appearance/radius/schema contracts, all 36 catalogs, and real Chromium controls with actual Homarr theme and real Mantine form state. Browser ports for transport/router/notifications are local fixtures, not full server or persistence acceptance.
+- Chromium verifies pointer/keyboard color/corner/scheme/opacity behavior, primary lock, icon clearing, focus/blur, linked errors/helper IDs, invite mismatch/submission/pending state, exact default save-bar DOM/layout and optional 250ms transitions. A theme override proves newly inherited borders follow the central default.
+- Independent Standards and Spec reviews find no remaining actionable findings. Final localized copy, explicit dynamic maps and ARIA helper-ID handling were rechecked.
+- The first translation codemod used an unsafe inherited-key lookup and touched unrelated literals. Review rejected it before delivery. All 12 affected files and three specs were restored byte-for-byte; the codemod now uses Map and resolved translation calls with a negative-literal probe. Failed-pass evidence and repair hashes are retained outside the repository.
+- Backup preview's intentional 250ms+100ms pacing and per-step success sound remain byte-identical to the prior reference. No application runtime security policy or integration error handling changed.
+
+The architecture grade is an editorial assessment of shared UI ownership/adoption, not a runtime or security score: 7.5 → 8.5/10 for this scope. The remaining distinctions between management tables, compact widget tables, field descriptions and feature workflows are intentional. No claim of eliminating every similar-looking line is made.
+
+Wave 4 evidence: `/tmp/homarr-perf-wave4`. Durable report/evidence is served at `http://100.111.30.70:41816/architecture-improvements.html`. Its report metadata identifies the fresh absolute temporary HTML path. The original checkout remains untouched; source hashes, local commit and final state are captured in the completion manifest. The prior Docker image acceptance belongs to `ca3d6d62a`; this UI/translation pass has source, focused-check and component-browser evidence only.

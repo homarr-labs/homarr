@@ -142,13 +142,6 @@
         "secondaryColor": "Toissijainen väri",
         "resetColors": "Nollaa värit",
         "radius": "Widgetin kulman säde",
-        "radiusOptions": {
-          "xs": "Tiukka",
-          "sm": "Hieno",
-          "md": "Tasapainotettu",
-          "lg": "Pyöristetty",
-          "xl": "Pehmeä"
-        },
         "columns": "Laudan sarakkeet",
         "columnsDescription": "Sarakkeet määrittelevät vaakasuoran ruudukon, jota käytetään kokoon ja sijoitukseen. 12 on monille ihmisille.",
         "columnCount": "{count, plural, one {# saraketta} other {# saraketta}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Kirjaudu sisään järjestelmänvalvojana asennuksen jälkeen luodaksesi API-avaimen.",
           "configuration": "Asiakkaan asetukset",
           "copy": "Kopioi määritys",
-          "copied": "Kopioitu",
           "advanced": "Avaa MCP-työkalut, käyttöoikeudet ja asetukset"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Kuvaus"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Käytä erillistä ping-osoitetta",
@@ -853,7 +842,6 @@
       "source": "API-lähde: {name}",
       "baseUrl": "Palvelimen URL",
       "networkScope": "Verkon käyttö",
-      "save": "Tallenna API-asetukset",
       "expires": "Tämä kertapyyntö päättyy klo {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Liitä täysi mukautettu widget JSON Ctrl+V tai Command+V",
       "delete": "Poista mukautettu widget",
       "deleteConfirm": "Haluatko varmasti poistaa \"{name}\"? Tätä toimintoa ei voi peruuttaa.",
-      "export": "Vie",
       "duplicate": "Monista",
       "aiPrompt": "Suunnittelu tekoälyn kanssa",
       "copyAiPrompt": "Kopioi AI-kehoteprompt",
       "enable": "Ota käyttöön",
       "disable": "Poista käytöstä",
-      "menu": "Toiminnot",
       "downloadSkill": "Näytä Mukautettu Pienoisohjelman Taito",
       "publishWorkshop": "Julkaise työpajaan",
       "migrate": "Siirrä Mukautettu Widget",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Määritä widgetin lähteet",
       "description": "Tarkista, missä tämä widget yhdistää ja korvaa sen salatut käyttäjätunnukset.",
-      "credentialsRequired": "Pyynnöt epäonnistuvat, kunnes vaaditut tiedot on lisätty.",
-      "save": "Tallenna asetukset"
-    },
-    "field": {
-      "description": "Kuvaus"
+      "credentialsRequired": "Pyynnöt epäonnistuvat, kunnes vaaditut tiedot on lisätty."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Muoto",
         "insertStarter": "Insert starter",
         "redo": "Toista",
-        "copied": "Kopioitu",
         "schema": "Skeema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Pyydä {count, number}",
         "requestId": "Pyydä ID",
-        "type": "Tyyppi",
         "method": "Menetelmä",
         "source": "API lähde",
         "run": "Suorita",
@@ -1037,7 +1017,6 @@
         "optionName": "Valinnan nimi",
         "label": "Tunniste",
         "control": "Ohjaus",
-        "description": "Kuvaus",
         "default": "Oletus",
         "optionDetails": "Rajoitukset ja dynaamiset valinnat",
         "minimum": "Minimi",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Tallennettu arvo poistettiin.",
         "primary": "Ensisijainen API",
         "id": "Lähteen Tunnus",
-        "name": "Työn nimi",
         "baseUrl": "Perus-URL",
         "baseUrlError": {
           "invalid": "Anna täydellinen URL-osoite.",
@@ -1091,7 +1069,6 @@
         "remove": "Poista lähde ja sen pyynnöt",
         "advanced": "Lisäasetukset",
         "add": "Lisää toinen API-lähde",
-        "sourceType": "Integraatio",
         "manualSource": "HTTP API",
         "existingIntegration": "Nykyinen integraatio",
         "integrationType": "Integraation tyyppi",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Siirretyn v2:n vaihtaminen uudelleen",
       "migrationDescription": "Tarkista ja vahvista tämä luotu v2 määritelmä. Vahvistaminen atomisesti korvaa säilötty v1 tietueen pitäen olemassa hallituksen sijainnit liittyvät samaan widget ID.",
       "fileLabel": "Valitse mukautettu widget JSON tiedosto",
-      "name": "Työn nimi",
       "origin": "Perus alkuperä",
       "authentication": "Tunnistautuminen",
       "networkScope": "Verkon soveltamisala",
@@ -1245,8 +1221,6 @@
         "title": "Tämä widget voi muuttaa etätietoja",
         "description": "Tarkista kaikki nimetyt toimet, perityt tunnistetiedot ja tuhoisa vahvistus tuonnin jälkeen. Salaisuudet eivät sisälly tiedostoon."
       },
-      "cancel": "Peruuta tuonti",
-      "confirm": "Tuo widgetti",
       "confirmMigration": "Vahvista v2:n korvaaminen"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Sulje kuvakaappauksen katsoja",
     "technicalDetails": "Tekniset tiedot",
     "sourceCode": "Huoltopisteen merkintä",
-    "export": "Vie",
     "report": "Raportoi",
     "reportTitle": "Raportin toimittaminen",
     "reportReason": "Syy",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Näytä ja hallitse lähetystä",
       "done": "Valmis",
       "signInHint": "Kirjaudu sisään julkaistaksesi oman Workshop identiteetti.",
-      "titleField": "Otsikko",
-      "descriptionField": "Kuvaus",
       "screenshots": "Kuvakaappaukset",
       "screenshotsDescription": "Enintään viisi PNG-, JPEG- tai WebP-kuvaa",
       "screenshotsPlaceholder": "Valitse kuvakaappaukset",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "",
                 "message": ""
               },
               "error": {
-                "title": "",
                 "message": ""
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Suodata mediatiedostoja",
     "field": {
       "preview": "Esikatselu",
-      "size": "Koko",
-      "creator": "Lisääjä",
-      "actions": "Toiminnot"
+      "creator": "Lisääjä"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Tiukka",
+        "sm": "Hieno",
+        "md": "Tasapainotettu",
+        "lg": "Pyöristetty",
+        "xl": "Pehmeä"
+      }
+    },
     "success": "",
     "beta": "",
     "error": "",
@@ -1886,7 +1862,7 @@
       "create": "Luo",
       "createAnother": "Luo ja aloita uudelleen",
       "edit": "Muokkaa",
-      "import": "",
+      "import": "Tuo",
       "insert": "",
       "remove": "Poista",
       "save": "Tallenna",
@@ -1894,7 +1870,7 @@
       "cancel": "Peru",
       "delete": "Poista",
       "discard": "Hylkää",
-      "close": "",
+      "close": "Sulje",
       "confirm": "Vahvista",
       "continue": "",
       "previous": "Edellinen",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Tyhjennä haku",
       "copy": "Kopioi",
       "copied": "Kopioitu",
-      "refresh": "Päivitä"
+      "refresh": "Päivitä",
+      "export": "Vie"
     },
     "pagination": {
       "pageOf": "Sivu {page} / {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Yhteensä",
     "filesystemUsage": "{count, plural, one {Näytä käyttö # tiedostojärjestelmälle} other {Näytä käyttö # tiedostojärjestelmälle}}",
     "field": {
-      "name": "Työn nimi"
+      "name": "Nimi",
+      "description": "Kuvaus",
+      "title": "Otsikko",
+      "actions": "Toiminnot",
+      "type": "Tyyppi",
+      "status": "Tila",
+      "state": "Tila",
+      "size": "Koko",
+      "source": "Lähde",
+      "namespace": "Nimiavaruus",
+      "created": "Luotu",
+      "architecture": "Arkkitehtuuri"
     },
     "label": {
       "new": "Uusi"
@@ -2109,9 +2097,6 @@
         "collapse": "Kutista"
       },
       "option": {
-        "title": {
-          "label": "Otsikko"
-        },
         "customCssClasses": {
           "label": "Omat CSS-luokat"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Asetukset",
         "settingsFor": "{name} asetukset",
-        "options": "Asetukset",
-        "actions": "Toiminnot"
+        "options": "Asetukset"
       },
       "status": {
         "success": "OK",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# valittu tuote} other {# valittua tuotetta}}",
       "selected": "{count, plural, one {# valittu} other {# valittu}}",
-      "copy": "Kopioi",
       "copied": "{count, plural, one {# kohde kopioitu leikepöydälle} other {# kohdetta kopioitu leikepöydälle}}",
       "copyError": "Valittuja kohteita ei voitu kopioida. Selaimesi ei ehkä salli leikepöydälle pääsyä.",
       "paste": "Liitä",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# kohde poistettu} other {# kohdetta poistettu}}",
       "move": "Siirrä",
       "moveTo": "Siirrä valitut kohteet",
-      "delete": "Poista",
       "clear": "Tyhjennä valinta",
       "clearShortcut": "Tyhjennä valinta (kuva)",
       "saveErrorTitle": "Kohdetta ei voi päivittää",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integraatiot",
           "removeLabel": "Poista {name} integraatio"
-        },
-        "title": {
-          "label": "Otsikko"
         },
         "customCssClasses": {
           "label": "Omat CSS-luokat"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "",
             "node": ""
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Nimi",
-            "state": "Tila",
             "cpuUsage": "Suorittimen kuormitus",
             "memoryUsage": "Muistin varaus"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "",
         "user": "",
-        "name": "",
         "id": "",
-        "status": "Tila",
         "directPlay": "Muuntamaton toisto",
         "directStream": "Suora suoratoisto",
         "transcodeVideo": "Videon transkoodaus",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Toiminnot"
         },
         "added": {
-          "columnTitle": "Lisätty",
-          "detailsTitle": "Lisätty"
+          "columnTitle": "Lisätty"
         },
         "category": {
-          "columnTitle": "Kategoria",
-          "detailsTitle": "Kategoria"
+          "columnTitle": "Kategoria"
         },
         "downSpeed": {
-          "columnTitle": "Lataus",
-          "detailsTitle": "Ladattu kaikkiaan"
+          "columnTitle": "Lataus"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Indeksi"
         },
         "id": {
-          "columnTitle": "Tunniste",
-          "detailsTitle": "Kohteen ID"
-        },
-        "integration": {
-          "columnTitle": "Integraatio"
-        },
-        "name": {
-          "columnTitle": "Työn nimi"
+          "columnTitle": "Tunniste"
         },
         "progress": {
           "columnTitle": "Edistyminen",
           "detailsTitle": "Edistyminen"
         },
         "ratio": {
-          "columnTitle": "Suhde",
-          "detailsTitle": "Suhde"
+          "columnTitle": "Suhde"
         },
         "received": {
           "columnTitle": "Ladattu kaikkiaan",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Lähetty kaikkiaan",
           "detailsTitle": "Ladattu"
         },
-        "size": {
-          "columnTitle": "Tiedostokoko",
-          "detailsTitle": "Tiedostokoko"
-        },
-        "state": {
-          "columnTitle": "Tila",
-          "detailsTitle": "Tila"
-        },
         "time": {
-          "columnTitle": "Valmistumisaika",
-          "detailsTitle": "Valmistumisaika",
-          "eta": "Arvioitu aika"
+          "columnTitle": "Valmistumisaika"
         },
         "type": {
-          "columnTitle": "Tyyppi",
           "detailsTitle": "Tyyppi"
         },
         "upSpeed": {
-          "columnTitle": "Lähetys",
-          "detailsTitle": "Lähetty kaikkiaan"
+          "columnTitle": "Lähetys"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": ""
           }
         },
-        "queue": {
-          "table": {
-            "size": ""
-          }
-        },
         "common": {
           "empty": "Tyhjä",
           "file": "Tiedosto",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "",
             "placeholder": ""
-          },
-          "name": {
-            "label": ""
           },
           "versionFilter": {
             "label": "",
@@ -4891,7 +4834,6 @@
       "download": "Lataus",
       "upload": "Lähetys",
       "ping": "Viive",
-      "status": "",
       "avgDownload": "Latauskeskiarvo",
       "avgUpload": "Lähetyskeskiarvo",
       "avgPing": "Viivekeskiarvo",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Toiminnot eivät ole käytössä, kun taulu on muokkaustilassa.",
         "widgetItemUnavailable": "Tämä widgetin kohde ei ole käytettävissä.",
         "toggle": "Vaihda",
-        "copied": "Kopioitu",
         "confirmDelete": "Vahvista tämä tuhoisa toiminta."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "Järjestelmä",
-        "source": "Integraatio",
         "hostname": "Hostname",
         "cpuModel": "Suorittimen malli",
         "cores": "Cores",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Kaikki agentit ovat yhteydessä",
       "empty": "Suodatinta ei vastaa agentteja",
       "column": {
-        "status": "Tila",
-        "name": "Työn nimi",
         "ip": "IP",
         "os": "Käyttöjärjestelmä",
         "version": "Versio",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Kohteen säde",
-        "description": "Muuttaa paneelin korttien pyöreyttä",
-        "option": {
-          "xs": "Erittäin pieni",
-          "sm": "Pieni",
-          "md": "Keskikokoinen",
-          "lg": "Suuri",
-          "xl": "Erittäin suuri"
-        }
+        "description": "Muuttaa paneelin korttien pyöreyttä"
       },
       "isPublic": {
         "label": "Julkinen",
@@ -6730,14 +6661,7 @@
               "label": "Taustan peitto"
             },
             "defaultRadius": {
-              "label": "Kulman tyyli",
-              "options": {
-                "xs": "Tiukka",
-                "sm": "Hieno",
-                "md": "Tasapainotettu",
-                "lg": "Pyöristetty",
-                "xl": "Pehmeä"
-              }
+              "label": "Kulman tyyli"
             },
             "customCss": {
               "label": "Globaalit mukautetut CSS",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Tervehdyksen oletus",
               "boardColorLocked": "Laudan väri lukittu",
               "boardColorFlexible": "Hallituksen värit sallittu",
-              "appName": "Työn nimi",
               "logo": "Logo",
               "greeting": "Tervehdys",
               "on": "Päällä",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Viimeksi suoritettu"
-            },
-            "actions": {
-              "label": "Toiminnot"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "",
-                  "source": "Integraatio",
-                  "actions": ""
+                  "createdBy": ""
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Tila",
         "option": {
           "created": "Luotu",
           "running": "Käynnissä",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Toiminnot",
       "logs": {
         "label": "Tarkastele lokeja",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Kubernetesin tietojen nouto epäonnistui"
-    },
-    "field": {
-      "name": {
-        "label": "Työn nimi"
-      },
-      "namespace": {
-        "label": "Nimiavaruus"
-      },
-      "creationTimestamp": {
-        "label": "Luotu"
-      },
-      "state": {
-        "label": "Tila"
-      },
-      "status": {
-        "label": "Tila"
-      },
-      "type": {
-        "label": "Tyyppi"
-      },
-      "architecture": {
-        "label": "Arkkitehtuuri"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Käyttöoikeus"
       }
-    },
-    "action": {
-      "saveUser": "Tallenna käyttöoikeudet",
-      "saveGroup": "Tallenna ryhmän käyttöoikeus"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "{mode} tulosta",
       "footer": {
         "navigate": "Navigate",
-        "open": "Avaa",
-        "close": "Sulje"
+        "open": "Avaa"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "URL-hakujen pohja"
-        },
-        "description": {
-          "label": "Kuvaus"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "",
-                "episodes": "",
-                "status": "Tila"
+                "episodes": ""
               },
               "status": {
                 "requested": "Pyydetty"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Muokkaa kokonaista tyyliä. Olemassa olevat säännöt säilytetään, ellei niitä poisteta täältä.",
       "cssCharacters": "{count} / 16384 merkkiä",
       "copyCss": "Copy CSS",
-      "copied": "Kopioitu",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "Tämä CSS lataa etäresurssin",
       "remoteCssDescription": "Tuodut tyylitiedostot ja etäosoitteet ottavat yhteyttä toiseen palvelimeen, kun latautuu. Tarkista ne ennen jatkamista."

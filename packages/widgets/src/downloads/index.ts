@@ -9,6 +9,24 @@ import { optionsBuilder } from "../options";
 import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
 import { resolveDownloadsQueryInput } from "./query-input";
 
+const columnTranslationKeys = {
+  name: "common.field.name",
+  progress: "widget.downloads.items.progress.columnTitle",
+  size: "common.field.size",
+  downSpeed: "widget.downloads.items.downSpeed.columnTitle",
+  upSpeed: "widget.downloads.items.upSpeed.columnTitle",
+  time: "widget.downloads.items.time.columnTitle",
+  state: "common.field.state",
+  added: "widget.downloads.items.added.columnTitle",
+  ratio: "widget.downloads.items.ratio.columnTitle",
+  received: "widget.downloads.items.received.columnTitle",
+  sent: "widget.downloads.items.sent.columnTitle",
+  category: "widget.downloads.items.category.columnTitle",
+  integration: "common.field.source",
+  index: "widget.downloads.items.index.columnTitle",
+  type: "common.field.type",
+} as const satisfies Record<(typeof DOWNLOAD_COLUMN_ACCESSORS)[number], string>;
+
 const sortColumns = [
   "name",
   "progress",
@@ -42,7 +60,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           defaultValue: ["name", "progress", "downSpeed", "time", "state"],
           options: DOWNLOAD_COLUMN_ACCESSORS.map((value) => ({
             value,
-            label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
+            label: (t) => t(columnTranslationKeys[value]),
           })),
           searchable: true,
         }),
@@ -50,7 +68,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           defaultValue: "progress",
           options: sortColumns.map((value) => ({
             value,
-            label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
+            label: (t) => t(columnTranslationKeys[value]),
           })),
         }),
         descendingDefaultSort: factory.switch({

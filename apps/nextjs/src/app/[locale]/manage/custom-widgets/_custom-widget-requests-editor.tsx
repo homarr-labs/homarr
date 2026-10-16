@@ -21,6 +21,7 @@ export function CustomWidgetRequestsEditor({
   onRename(currentId: string, nextId: string): void;
 }) {
   const t = useI18n("customWidget.workbench.builder");
+  const tCommon = useI18n("common");
   const parsed = parseJson(form.values.requests);
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const sources = parseJson(form.values.sources);
@@ -63,7 +64,7 @@ export function CustomWidgetRequestsEditor({
                   onCommit={(value) => onRename(id, value)}
                 />
                 <Select
-                  label={t("type")}
+                  label={tCommon("field.type")}
                   data={["query", "action"]}
                   value={kind}
                   allowDeselect={false}

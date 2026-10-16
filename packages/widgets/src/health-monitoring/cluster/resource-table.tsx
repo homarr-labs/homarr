@@ -25,12 +25,13 @@ interface ResourceTableProps {
 
 export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
   const t = useI18n("widget.healthMonitoring");
+  const tCommon = useI18n("common");
   return (
     <Table highlightOnHover>
       <TableThead>
         <TableTr fz="xs">
           <TableTh ta="start" p={0}>
-            {t("cluster.table.header.name")}
+            {tCommon("field.name")}
           </TableTh>
           {!isTiny && type !== "storage" ? (
             <TableTh ta="start" p={0}>

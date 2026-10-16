@@ -70,6 +70,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type {
   ColorScheme,
+  CornerStyle,
   IntegrationKind,
   IntegrationSecretKind,
   UrlTemplateMode,
@@ -90,12 +91,10 @@ import {
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
-import type { CornerStyle } from "@homarr/ui";
 import {
   BoardColorInput,
   ColorSchemeCombobox,
   CornerStylePicker,
-  cornerStyleValues,
   IntegrationAvatar,
   LanguageCombobox,
   Link,
@@ -1461,16 +1460,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
               </Button>
             ) : null}
           </Stack>
-          <CornerStylePicker
-            label={t("radius")}
-            value={props.itemRadius}
-            labels={
-              Object.fromEntries(
-                cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`radiusOptions.${cornerStyle}`)]),
-              ) as Record<CornerStyle, string>
-            }
-            onChange={props.setItemRadius}
-          />
+          <CornerStylePicker label={t("radius")} value={props.itemRadius} onChange={props.setItemRadius} />
         </Stack>
 
         <Stack gap="lg">
@@ -1711,6 +1701,7 @@ const WorkshopFeature = ({ title, description }: { title: string; description: s
 
 const McpSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
   const t = useI18n("init.studio.extend.mcpSetup");
+  const tCommon = useI18n("common");
   const [apiKey, setApiKey] = useState<string | null>(null);
   const sounds = useOnboardingSounds();
   const createKey = clientApi.apiKeys.create.useMutation({
@@ -1801,7 +1792,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
                 }}
                 leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
               >
-                {copied ? t("copied") : t("copy")}
+                {copied ? tCommon("action.copied") : t("copy")}
               </Button>
             )}
           </CopyButton>
@@ -1900,7 +1891,7 @@ const Review = (props: StudioSectionProps) => {
         {t("automaticDescription")}
       </Alert>
       {props.applyProgress > 0 ? (
-        <Paper withBorder radius="lg" p="md">
+        <Paper radius="lg" p="md">
           <Stack gap="xs">
             <Group justify="space-between">
               <Text size="sm" fw={650}>

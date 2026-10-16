@@ -46,6 +46,7 @@ const installedHref = "/manage/custom-widgets";
 
 export function WorkshopDetail({ id }: { id: string }) {
   const t = useI18n("workshop");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const session = useWorkshopSession();
   const [reportOpened, reportControls] = useDisclosure(false);
@@ -149,7 +150,7 @@ export function WorkshopDetail({ id }: { id: string }) {
               {t("reportWarning", { count: submission.reportCount })}
             </Alert>
             {reportSummaries.data?.map((summary) => (
-              <Card key={summary.id} withBorder radius="md" p="sm">
+              <Card key={summary.id} radius="md" p="sm">
                 <Badge color="red" variant="light" mb="xs">
                   {t(`reportCategory.${summary.category}`)}
                 </Badge>
@@ -182,7 +183,7 @@ export function WorkshopDetail({ id }: { id: string }) {
         />
 
         {compatible && importer.review && (
-          <Paper withBorder radius="md" p="md">
+          <Paper radius="md" p="md">
             <Stack gap="md">
               <Box>
                 <Text fw={600}>{t("installReviewTitle")}</Text>
@@ -237,7 +238,7 @@ export function WorkshopDetail({ id }: { id: string }) {
                 leftSection={<IconDownload size={16} />}
                 onClick={() => downloadSubmission(submission)}
               >
-                {t("export")}
+                {tCommon("action.export")}
               </Button>
               {/* Wrapped: a tooltip on the disabled button itself would never fire. */}
               <Tooltip label={session.user ? t("report") : t("signInHint")}>

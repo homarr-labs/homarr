@@ -23,7 +23,7 @@ export function WorkshopSubmissionCard({ client, item, actions }: WorkshopSubmis
   const screenshot = item.screenshots[0];
 
   return (
-    <Card component="li" withBorder radius="md" padding="md" h="100%">
+    <Card component="li" radius="md" padding="md" h="100%">
       <Card.Section>
         {screenshot ? (
           <Image

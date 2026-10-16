@@ -26,7 +26,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
   const diagnosticsT = useI18n("customWidget.editor.diagnostics");
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
   const copyLabel = actionT("copy");
-  const copiedLabel = t("copied");
+  const copiedLabel = actionT("copied");
   const components = useMemo(
     () => createCustomWidgetComponents({ copy: copyLabel, copied: copiedLabel }),
     [copiedLabel, copyLabel],

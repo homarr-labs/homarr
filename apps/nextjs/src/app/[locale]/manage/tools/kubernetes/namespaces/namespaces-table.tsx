@@ -26,11 +26,11 @@ interface NamespacesTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.namespaces">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesNamespace>[] => [
   {
     accessorKey: "status",
-    header: tField("state.label"),
+    header: tField("state"),
 
     Cell({ cell }) {
       const checkIcon = <IconCircleDashedCheck style={{ width: rem(12), height: rem(12) }} />;
@@ -52,19 +52,19 @@ const createColumns = (
   },
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function NamespacesTable({ contextId, initialNamespaces }: NamespacesTableComponentProps) {
   const tNamespaces = useI18n("kubernetes.namespaces");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data } = clientApi.kubernetes.namespaces.getNamespaces.useQuery(
     { contextId },

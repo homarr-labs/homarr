@@ -18,7 +18,7 @@ import {
 import { IconPicker } from "@homarr/forms-collection";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { BoardColorInput, CornerStylePicker, cornerStyleValues, SectionCard } from "@homarr/ui";
+import { BoardColorInput, CornerStylePicker, SectionCard } from "@homarr/ui";
 
 import { CustomCssEditor } from "~/components/custom-css/custom-css-editor";
 
@@ -92,13 +92,8 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
             <CornerStylePicker
               compact
               label={t("defaultRadius.label")}
+              {...form.getInputProps("branding.defaultRadius")}
               value={branding.defaultRadius}
-              labels={
-                Object.fromEntries(
-                  cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`defaultRadius.options.${cornerStyle}`)]),
-                ) as Record<(typeof cornerStyleValues)[number], string>
-              }
-              onChange={(cornerStyle) => form.setFieldValue("branding.defaultRadius", cornerStyle)}
             />
           </SimpleGrid>
         </Fieldset>
@@ -189,6 +184,8 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
 
 const BrandingSummary = ({ form }: BrandingSettingsFormProps) => {
   const t = useI18n("management.page.settings.section.branding");
+  const tCommon = useI18n("common");
+  const tCornerStyle = useI18n("common.cornerStyle.options");
   const branding = form.values.branding;
   const appName = branding.appName.trim() || "Homarr";
   const logoImageUrl = branding.logoImageUrl || "/logo/logo.png";
@@ -204,7 +201,7 @@ const BrandingSummary = ({ form }: BrandingSettingsFormProps) => {
         <Group justify="space-between" gap="xs" wrap="wrap">
           <Text fw={650}>{t("summary.title")}</Text>
           <Badge variant="light">
-            {t("summary.cornerStyle")}: {t(`defaultRadius.options.${branding.defaultRadius}`)}
+            {t("summary.cornerStyle")}: {tCornerStyle(branding.defaultRadius)}
           </Badge>
         </Group>
         <SimpleGrid cols={{ base: 1, sm: 2, xl: 3 }} spacing="md" verticalSpacing="sm">
@@ -250,7 +247,7 @@ const BrandingSummary = ({ form }: BrandingSettingsFormProps) => {
               {backgroundStatus} · {greetingStatus}
             </Text>
             <Group gap={4}>
-              <VisibilityBadge label={t("summary.appName")} visible={branding.authBranding.showAppName} />
+              <VisibilityBadge label={tCommon("field.name")} visible={branding.authBranding.showAppName} />
               <VisibilityBadge label={t("summary.logo")} visible={branding.authBranding.showLogo} />
               <VisibilityBadge label={t("summary.greeting")} visible={branding.authBranding.showGreeting} />
             </Group>

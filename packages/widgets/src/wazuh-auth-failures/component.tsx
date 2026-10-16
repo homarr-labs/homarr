@@ -13,6 +13,7 @@ import type { WidgetComponentProps } from "../definition";
 import { isPrivateIp, WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
 import { WazuhRelativeTime, WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { wazuhMinuteQueryOptions } from "../wazuh/_shared/options";
 import { formatWazuhCount } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
@@ -31,7 +32,7 @@ export default function WazuhAuthFailuresWidget({
   const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getAuthFailures.useQuery(
     { integrationId, hours: options.hours, limit: options.limit },
-    { staleTime: 60_000, refetchInterval: 60_000 },
+    wazuhMinuteQueryOptions,
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);

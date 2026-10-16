@@ -1,6 +1,6 @@
 "use client";
 
-import { Anchor, Badge, Box, Center, Group, Progress, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import { Anchor, Badge, Box, Group, Progress, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconBug } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -211,11 +211,7 @@ export default function WazuhVulnerabilitiesWidget({
       }
     >
       {data.total === 0 ? (
-        <Center h="100%">
-          <Text size="sm" c="dimmed">
-            {t("empty")}
-          </Text>
-        </Center>
+        <WidgetEmptyState message={t("empty")} />
       ) : (
         <Stack h="100%" gap={8}>
           <Group gap={6} wrap="nowrap" grow>

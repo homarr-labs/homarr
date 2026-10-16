@@ -216,7 +216,7 @@ export default function BeszelSystemTableWidget({
         accessor: "integrationName",
         width: 140,
         ellipsis: true,
-        title: tBeszel("metric.source"),
+        title: tCommon("field.source"),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.integrationName}</Text>,
       },

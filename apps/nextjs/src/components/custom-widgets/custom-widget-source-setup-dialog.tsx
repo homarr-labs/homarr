@@ -131,7 +131,7 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
               loading={saving}
               disabled={!isCustomWidgetSourceSetupReady(setups, values)}
             >
-              {t("sourceSetupDialog.save")}
+              {tCommon("action.save")}
             </Button>
           </Group>
         </Stack>

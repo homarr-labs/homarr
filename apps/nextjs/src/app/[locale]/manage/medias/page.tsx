@@ -119,10 +119,10 @@ export default async function MediaListPage(props: MediaListPageProps) {
                   <VisuallyHidden>{tMedia("field.preview")}</VisuallyHidden>
                 </TableTh>
                 <TableTh>{tCommon("field.name")}</TableTh>
-                <TableTh>{tMedia("field.size")}</TableTh>
+                <TableTh>{tCommon("field.size")}</TableTh>
                 <TableTh>{tMedia("field.creator")}</TableTh>
                 <TableTh>
-                  <VisuallyHidden>{tMedia("field.actions")}</VisuallyHidden>
+                  <VisuallyHidden>{tCommon("field.actions")}</VisuallyHidden>
                 </TableTh>
               </TableTr>
             </TableThead>

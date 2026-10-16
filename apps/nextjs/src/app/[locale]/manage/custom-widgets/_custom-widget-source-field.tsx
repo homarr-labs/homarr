@@ -58,6 +58,7 @@ export function CustomWidgetSourceField({
   onRemove,
 }: CustomWidgetSourceFieldProps) {
   const t = useI18n("customWidget.workbench.sources");
+  const tCommon = useI18n("common");
 
   return (
     <Fieldset legend={index === 0 ? t("primary") : source.name}>
@@ -71,13 +72,13 @@ export function CustomWidgetSourceField({
             onCommit={(value) => onUpdate(index, { id: value })}
           />
           <TextInput
-            label={t("name")}
+            label={tCommon("field.name")}
             value={source.name}
             onChange={(event) => onUpdate(index, { name: event.currentTarget.value })}
           />
         </Group>
         <Select
-          label={t("sourceType")}
+          label={tCommon("field.source")}
           data={[
             { value: "http", label: t("manualSource") },
             { value: "integration", label: t("existingIntegration") },
