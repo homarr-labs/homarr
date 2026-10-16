@@ -9,7 +9,7 @@
     "dev": "node scripts/prepare-tabler-icons.mjs && bun run with-env node ../../node_modules/next/dist/bin/next dev",
     "format": "oxfmt .",
     "lint": "oxlint",
-    "snapshot:fields": "node scripts/generate-snapshot-fields.mjs",
+    "snapshot:fields": "node scripts/generate-snapshot-fields.mjs && oxfmt src/components/board/debug/public-fields.ts",
     "start": "bun run with-env node ../../node_modules/next/dist/bin/next start",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
