@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconRefresh, IconAdjustments } from "@tabler/icons-react";
 
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
@@ -42,6 +42,7 @@ export default function StatsWidget({
   displayScale = 1,
 }: WidgetComponentProps<"stats">) {
   const board = useRequiredBoard();
+  const whenRestored = useWhenBoardRestored();
   const demoReadOnly = useDemoReadOnly();
   const advanced = displayMode === "advanced";
   const t = useI18n("widget.stats");
@@ -111,6 +112,7 @@ export default function StatsWidget({
       refreshErrors.current.delete(integrationId);
       setRefreshing((value) => value + 1);
       try {
+        if ((await whenRestored()) !== "restored") return;
         const result = await utils.client.widget.stats.refresh.mutate({ integrationId, force });
         await utils.widget.stats.snapshot.cancel({ integrationId });
         utils.widget.stats.snapshot.setData({ integrationId }, result);
@@ -124,7 +126,7 @@ export default function StatsWidget({
         setRefreshing((value) => value - 1);
       }
     },
-    [utils],
+    [utils, whenRestored],
   );
 
   const refreshSources = async () => {

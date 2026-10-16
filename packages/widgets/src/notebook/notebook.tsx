@@ -62,6 +62,7 @@ import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
 import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
 import { getNotebookDisplay } from "./display";
+import { isSupportedAspectRatioValue } from "./sanitize-content";
 import { NotebookTextDirection, setTextDirection } from "./text-direction";
 
 import "@mantine/tiptap/styles.css";
@@ -82,6 +83,24 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
+export const notebookImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: { default: null },
+      aspectRatio: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.aspectRatio || null,
+        renderHTML: (attributes: Record<string, unknown>) => {
+          const aspectRatio = attributes.aspectRatio;
+          if (typeof aspectRatio !== "string" || !isSupportedAspectRatioValue(aspectRatio)) return {};
+          return { style: `aspect-ratio: ${aspectRatio}` };
+        },
+      },
+    };
+  },
+}).configure({ inline: true });
+
 export function Notebook({
   options,
   setOptions,
@@ -92,7 +111,8 @@ export function Notebook({
   height,
   displayScale = 1,
   displayMode = "compact",
-}: WidgetComponentProps<"notebook">) {
+  autoEdit = false,
+}: WidgetComponentProps<"notebook"> & { autoEdit?: boolean }) {
   const [content, setContent] = useState(options.content);
   const previousContentRef = useRef(options.content);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -102,7 +122,7 @@ export function Notebook({
   const { hasChangeAccess } = constructBoardPermissions(board, session);
 
   const canChange = !isEditMode && hasChangeAccess;
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(autoEdit);
   const canChangeRef = useRef(canChange);
   const allowReadOnlyCheckRef = useRef(options.allowReadOnlyCheck);
   const savingRef = useRef(false);
@@ -164,14 +184,7 @@ export function Notebook({
         DetailsSummary,
         DetailsContent,
         Highlight.configure({ multicolor: true }),
-        Image.extend({
-          addAttributes() {
-            return {
-              ...this.parent?.(),
-              width: { default: null },
-            };
-          },
-        }).configure({ inline: true }),
+        notebookImage,
         Link.configure({
           openOnClick: true,
           validate(url) {

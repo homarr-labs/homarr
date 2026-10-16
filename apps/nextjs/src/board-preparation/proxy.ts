@@ -174,7 +174,13 @@ export const getPreparedBoardResponseAsync = async (
   if (request.nextUrl.search) return bypass("query_parameters");
   const locale = path[0] as SupportedLanguage;
   let name: string | undefined;
-  if (path.length === 3 && path[2]) name = decodeURIComponent(path[2]);
+  if (path.length === 3 && path[2]) {
+    try {
+      name = decodeURIComponent(path[2]);
+    } catch {
+      return bypass("invalid_path");
+    }
+  }
   const stopwatch = new Stopwatch();
   const backgroundWork: Promise<void>[] = [];
   const pending = resolvePreparedResponseAsync(request, locale, name, backgroundWork).catch(

@@ -114,8 +114,45 @@ const loadRegisteredWidgetResources = createRetryableLoader(
   ),
 );
 
-export const loadWidgetResources = <TKind extends WidgetKind>(kind: TKind) =>
-  correlateWidgetPromise(kind, "resources", loadRegisteredWidgetResources(kind));
+type ClientWidgetResourcePromise = Promise<RegisteredWidgetResources> & {
+  status?: "pending" | "fulfilled" | "rejected";
+};
+
+const clientResourcePromises = new Map<WidgetKind, ClientWidgetResourcePromise>();
+
+export const loadWidgetResources = <TKind extends WidgetKind>(kind: TKind) => {
+  if (typeof window === "undefined") {
+    return correlateWidgetPromise(kind, "resources", loadRegisteredWidgetResources(kind));
+  }
+  const existing = clientResourcePromises.get(kind);
+  if (existing) return correlateWidgetPromise(kind, "resources", existing);
+  let timeout: ReturnType<typeof setTimeout>;
+  const promise: ClientWidgetResourcePromise = new Promise<RegisteredWidgetResources>((resolve, reject) => {
+    timeout = setTimeout(
+      () => reject(new Error(`Widget resources for ${kind} did not load within 30 seconds`)),
+      30_000,
+    );
+    loadRegisteredWidgetResources(kind).then(resolve, reject);
+  });
+  clientResourcePromises.set(kind, promise);
+  void promise.then(
+    (value) => {
+      clearTimeout(timeout);
+      Object.assign(promise, { status: "fulfilled", value });
+    },
+    (reason: unknown) => {
+      clearTimeout(timeout);
+      Object.assign(promise, { status: "rejected", reason });
+    },
+  );
+  return correlateWidgetPromise(kind, "resources", promise);
+};
+
+export const resetWidgetResources = (kind: WidgetKind) => {
+  if (typeof window !== "undefined" && clientResourcePromises.get(kind)?.status === "rejected") {
+    clientResourcePromises.delete(kind);
+  }
+};
 
 export const loadWidgetDefinition = <TKind extends WidgetKind>(kind: TKind) => {
   const existing = definitionPromises.get(kind);

@@ -23,7 +23,6 @@ import type { Board } from "./_types";
 import { BoardProviders } from "./_providers";
 import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
-import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
 
 const logger = createLogger({ module: "createBoardLayout" });
@@ -106,26 +105,24 @@ export const createBoardLayout = <TParams extends Params>({
         initialViewportWidth={initialViewportWidth}
         canModify={hasChangeAccess}
       >
-        <BoardReadyProvider>
-          <BoardMantineProvider defaultColorScheme={colorScheme}>
-            <ModalProvider>
-              {withCustomCss && <CustomCss />}
-              <BoardTourGate enabled={shouldRunBoardTour}>
-                <ClientShell hasNavigation={false}>
-                  <MainHeader
-                    logo={<BoardLogo size={appShellLogoHeight} />}
-                    logoWithTitle={<BoardLogoWithTitle size="md" />}
-                    actions={headerActions}
-                    boardEditAction={headerBoardEditAction}
-                    boardSettingsAction={headerBoardSettingsAction}
-                    hasNavigation={false}
-                  />
-                  <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
-                </ClientShell>
-              </BoardTourGate>
-            </ModalProvider>
-          </BoardMantineProvider>
-        </BoardReadyProvider>
+        <BoardMantineProvider defaultColorScheme={colorScheme}>
+          <ModalProvider>
+            {withCustomCss && <CustomCss />}
+            <BoardTourGate enabled={shouldRunBoardTour}>
+              <ClientShell hasNavigation={false}>
+                <MainHeader
+                  logo={<BoardLogo size={appShellLogoHeight} />}
+                  logoWithTitle={<BoardLogoWithTitle size="md" />}
+                  actions={headerActions}
+                  boardEditAction={headerBoardEditAction}
+                  boardSettingsAction={headerBoardSettingsAction}
+                  hasNavigation={false}
+                />
+                <AppShellMain data-advanced-focus-background>{children}</AppShellMain>
+              </ClientShell>
+            </BoardTourGate>
+          </ModalProvider>
+        </BoardMantineProvider>
       </BoardProviders>
     );
   };

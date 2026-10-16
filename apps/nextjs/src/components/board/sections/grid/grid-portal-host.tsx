@@ -1,12 +1,12 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useBoardRestoration, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import classes from "./section-grid.module.css";
 
@@ -20,6 +20,9 @@ const GridPortalHostContext = createContext<GridPortalHostContextValue | null>(n
 
 /** Shared board-grid services for editor announcements and integration data. */
 export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
+  const { seal } = useBoardRestoration();
+  const restorationHost = useRef({});
+  useLayoutEffect(() => seal(restorationHost.current), [seal]);
   const board = useRequiredBoard();
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();

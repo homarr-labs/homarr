@@ -1,13 +1,14 @@
 "use client";
 
-import { Alert, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useRef, useState } from "react";
+import { Alert, Box, Card, Flex, Group, Image, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconClock, IconServerOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
 import { useHydrationTime } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
@@ -48,6 +49,9 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
 };
 
 export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
+  const whenRestored = useWhenBoardRestored();
+  const retryPending = useRef(false);
+  const [retrying, setRetrying] = useState(false);
   const initialTime = useHydrationTime();
   const now = dayjs(initialTime);
   const formatTimestamp = (value: string) => {
@@ -63,14 +67,27 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
 
   const board = useRequiredBoard();
   const t = useI18n("widget.rssFeed");
+  const retry = async () => {
+    if (!feed.hasError || retryPending.current) return;
+    retryPending.current = true;
+    setRetrying(true);
+    try {
+      if ((await whenRestored()) === "restored") await feed.refetch();
+    } finally {
+      retryPending.current = false;
+      setRetrying(false);
+    }
+  };
   if (feed.hasError) {
     return (
-      <BaseWidgetError
-        icon={IconServerOff}
-        message={t("error.allFeedsFailed")}
-        showLogsLink
-        onRetry={() => void feed.refetch()}
-      />
+      <Box component="fieldset" disabled={retrying} aria-busy={retrying} bd={0} p={0} m={0} miw={0} h="100%">
+        <BaseWidgetError
+          icon={IconServerOff}
+          message={t("error.allFeedsFailed")}
+          showLogsLink
+          onRetry={() => void retry()}
+        />
+      </Box>
     );
   }
   if (feed.isPending) return <WidgetQueryLoadingState />;

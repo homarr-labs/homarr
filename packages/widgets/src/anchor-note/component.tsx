@@ -1,12 +1,13 @@
 "use client";
 
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Button, Center, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { useWhenBoardRestored } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
@@ -95,6 +96,10 @@ const AnchorNoteWidgetContent = ({
   const note = getUsableWidgetQueryData(noteQuery);
   const { refetch } = noteQuery;
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
+  const whenRestored = useWhenBoardRestored();
+  const savePending = useRef(false);
+  const [saving, setSaving] = useState(false);
+  const actionPending = isUpdating || saving;
 
   const [isEditing, setIsEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(note?.title ?? "");
@@ -135,7 +140,7 @@ const AnchorNoteWidgetContent = ({
   }, [canEdit, note]);
 
   const handleCancel = useCallback(() => {
-    if (!note) return;
+    if (!note || savePending.current) return;
     startTransition(() => {
       setDraftTitle(note.title);
       setDraftContent(note.content ?? "");
@@ -145,7 +150,7 @@ const AnchorNoteWidgetContent = ({
   }, [note]);
 
   const handleSave = useCallback(async () => {
-    if (!canEdit || !note) return;
+    if (!canEdit || !note || savePending.current) return;
 
     const normalizedTitle = draftTitle.trim() || note.title || t("untitled");
 
@@ -157,42 +162,48 @@ const AnchorNoteWidgetContent = ({
       return;
     }
 
-    await updateNoteAsync(
-      {
+    savePending.current = true;
+    setSaving(true);
+    try {
+      if ((await whenRestored()) !== "restored") return;
+      await updateNoteAsync({
         integrationId,
         noteId,
         title: normalizedTitle,
         content: draftContent,
-      },
-      {
-        onSuccess() {
-          void (async () => {
-            await refetch();
-            startTransition(() => {
-              setSaveError(null);
-              setIsEditing(false);
-            });
-          })();
-        },
-        onError(error) {
-          if (isForbiddenError(error)) {
-            void (async () => {
-              await refetch();
-              startTransition(() => {
-                setSaveError(t("saveForbidden"));
-                setIsEditing(false);
-              });
-            })();
-            return;
-          }
-
-          startTransition(() => {
-            setSaveError(t("saveFailed"));
-          });
-        },
-      },
-    );
-  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, t, updateNoteAsync]);
+      });
+      await refetch();
+      startTransition(() => {
+        setSaveError(null);
+        setIsEditing(false);
+      });
+    } catch (error: unknown) {
+      if (isForbiddenError(error)) {
+        await refetch();
+        startTransition(() => {
+          setSaveError(t("saveForbidden"));
+          setIsEditing(false);
+        });
+      } else {
+        startTransition(() => setSaveError(t("saveFailed")));
+      }
+    } finally {
+      savePending.current = false;
+      setSaving(false);
+    }
+  }, [
+    canEdit,
+    draftContent,
+    draftTitle,
+    hasChanges,
+    integrationId,
+    note,
+    noteId,
+    refetch,
+    t,
+    updateNoteAsync,
+    whenRestored,
+  ]);
 
   if (!note) return <WidgetEmptyState />;
 
@@ -201,7 +212,12 @@ const AnchorNoteWidgetContent = ({
       <Group justify="space-between" align="flex-start">
         <Stack gap={2} style={{ flex: 1 }}>
           {isEditing ? (
-            <TextInput value={draftTitle} onChange={(event) => setDraftTitle(event.currentTarget.value)} size="sm" />
+            <TextInput
+              value={draftTitle}
+              onChange={(event) => setDraftTitle(event.currentTarget.value)}
+              size="sm"
+              disabled={actionPending}
+            />
           ) : (
             (isAdvanced || options.showTitle) && <Text fw={600}>{note.title || t("untitled")}</Text>
           )}
@@ -242,15 +258,15 @@ const AnchorNoteWidgetContent = ({
             <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
               {isEditing ? (
                 <>
-                  <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
+                  <Button size="xs" onClick={handleSave} loading={actionPending} disabled={!hasChanges || !canEdit}>
                     {actionT("save")}
                   </Button>
-                  <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
+                  <Button size="xs" variant="subtle" onClick={handleCancel} disabled={actionPending}>
                     {actionT("cancel")}
                   </Button>
                 </>
               ) : isAdvanced ? (
-                <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                <Button size="xs" variant="light" onClick={handleEdit} disabled={actionPending}>
                   {actionT("edit")}
                 </Button>
               ) : (
@@ -261,7 +277,7 @@ const AnchorNoteWidgetContent = ({
                     size="md"
                     variant="light"
                     onClick={handleEdit}
-                    disabled={isUpdating}
+                    disabled={actionPending}
                   >
                     <IconEdit size="var(--mantine-font-size-md)" />
                   </ActionIcon>
@@ -278,7 +294,7 @@ const AnchorNoteWidgetContent = ({
         >
           <AnchorNoteEditor
             content={isEditing ? draftContent : note.content}
-            readOnly={!isEditing}
+            readOnly={!isEditing || actionPending}
             onChange={setDraftContent}
             placeholder={t("emptyContent")}
           />

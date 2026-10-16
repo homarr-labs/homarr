@@ -30,13 +30,15 @@ import {
 } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 import combineClasses from "clsx";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import utc from "dayjs/plugin/utc";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
-import type { ReleaseProviderKind } from "@homarr/definitions";
+import { isNullOrWhitespace, useHydrationTime } from "@homarr/common";
 import { getIconUrl, getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
@@ -51,8 +53,12 @@ import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import classes from "./component.module.scss";
 import { selectReleaseRepositoriesForDisplay } from "./display";
 import { getFailedServiceVersionIntegrations, getRowIntegrationVersions, truncateVersion } from "./integration-version";
-import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
+import type { ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
+import { getReleasesLatestInputs, getReleasesLinkedIntegrationIds, normalizeReleasesRepositories } from "./query-input";
+
+dayjs.extend(isBetween);
+dayjs.extend(utc);
 
 const integrationStatusColors = {
   upToDate: "green",
@@ -80,7 +86,9 @@ export default function ReleasesWidget({
   widgetRuntimeRef,
 }: WidgetComponentProps<"releases">) {
   const t = useI18n("widget.releases");
-  const now = useNow();
+  const liveNow = useNow();
+  const initialTime = useHydrationTime();
+  const now = useMemo(() => (initialTime !== undefined ? new Date(initialTime) : liveNow), [initialTime, liveNow]);
   const formatter = useFormatter();
   const board = useRequiredBoard();
   const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
@@ -101,57 +109,17 @@ export default function ReleasesWidget({
   );
 
   const normalizedRepositories = useMemo(
-    () =>
-      options.repositories.map((repo) => ({
-        ...repo,
-        id: repo.id ? repo.id : createId(),
-        integrationIds: repo.integrationIds ?? [],
-      })),
+    () => normalizeReleasesRepositories(options.repositories),
     [options.repositories],
   );
 
-  // Group repositories by provider
-  const groupedRepositories = useMemo(() => {
-    return normalizedRepositories.reduce(
-      (acc, repo) => {
-        const key = repo.provider;
-        if (!key) return acc;
-
-        acc[key] ??= [];
-        acc[key].push(repo);
-
-        return acc;
-      },
-      {} as Partial<Record<ReleaseProviderKind, ReleasesRepository[]>>,
-    );
-  }, [normalizedRepositories]);
-
-  // For each group, split into chunks of 5
-  const batchedRepositories = useMemo(() => {
-    return Object.entries(groupedRepositories).flatMap(([provider, group]) =>
-      splitToChunksWithNItems(group, 5).map((chunk) => ({
-        provider: provider as ReleaseProviderKind,
-        repositories: chunk,
-      })),
-    );
-  }, [groupedRepositories]);
+  const latestInputs = useMemo(
+    () => getReleasesLatestInputs(itemId, normalizedRepositories),
+    [itemId, normalizedRepositories],
+  );
 
   const queryResults = clientApi.useQueries((trpc) =>
-    batchedRepositories.flatMap(({ provider, repositories }) =>
-      trpc.widget.releases.getLatest(
-        {
-          itemId,
-          repositories: repositories.map((repository) => ({
-            id: repository.id,
-            provider,
-            identifier: repository.identifier,
-            versionFilter: repository.versionFilter,
-            providerUrl: repository.providerUrl,
-          })),
-        },
-        { staleTime: getReleasesQueryStaleTimeMs },
-      ),
-    ),
+    latestInputs.map((input) => trpc.widget.releases.getLatest(input, { staleTime: getReleasesQueryStaleTimeMs })),
   );
 
   const results = useMemo(
@@ -162,10 +130,7 @@ export default function ReleasesWidget({
 
   // Only integrations linked by a repository are queried; attaching alone shows nothing.
   const linkedIntegrationIds = useMemo(
-    () =>
-      integrationIds.filter((integrationId) =>
-        normalizedRepositories.some((repository) => repository.integrationIds.includes(integrationId)),
-      ),
+    () => getReleasesLinkedIntegrationIds(integrationIds, normalizedRepositories),
     [integrationIds, normalizedRepositories],
   );
   const serviceVersionsInput = useMemo(() => ({ integrationIds: linkedIntegrationIds }), [linkedIntegrationIds]);
@@ -199,7 +164,16 @@ export default function ReleasesWidget({
         const { data: release, provider } = repositoryResult;
 
         const isReleaseWithin = (relativeDate: string) =>
-          Boolean(relativeDate) && isDateWithin(release.latestReleaseAt, relativeDate);
+          Boolean(relativeDate) &&
+          dayjs(release.latestReleaseAt).isBetween(
+            (initialTime !== undefined ? dayjs.utc(now) : dayjs(now)).subtract(
+              parseInt(relativeDate.slice(0, -1), 10),
+              relativeDate.slice(-1) as dayjs.UnitTypeShort,
+            ),
+            now,
+            null,
+            "[]",
+          );
 
         return {
           ...repository,
@@ -229,9 +203,11 @@ export default function ReleasesWidget({
     });
   }, [
     displayMode,
+    initialTime,
     integrationIds,
     results,
     normalizedRepositories,
+    now,
     options.showOnlyHighlighted,
     options.topReleases,
     relativeDateOptions.newReleaseWithin,
@@ -679,7 +655,9 @@ const ExpandedDisplay = ({
   toggleExpandedDisplay,
 }: ExtendedDisplayProps) => {
   const t = useI18n("widget.releases");
-  const now = useNow();
+  const liveNow = useNow();
+  const initialTime = useHydrationTime();
+  const now = useMemo(() => (initialTime !== undefined ? new Date(initialTime) : liveNow), [initialTime, liveNow]);
   const formatter = useFormatter();
   const releaseUrl = getSafeApplicationUrl(repository.releaseUrl);
   const repositoryUrl = releaseUrl ?? getSafeApplicationUrl(repository.projectUrl);

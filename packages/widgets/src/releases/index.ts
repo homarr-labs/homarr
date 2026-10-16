@@ -52,7 +52,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       repositories: factory.multiReleasesRepositories({
         defaultValue: [
           {
-            id: createId(),
+            id: "homarr-labs-homarr",
             provider: "github" as const,
             identifier: "homarr-labs/homarr",
             name: "Homarr",

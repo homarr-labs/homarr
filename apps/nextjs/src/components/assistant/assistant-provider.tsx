@@ -862,9 +862,9 @@ const EnabledAssistantProvider = ({
 
   useEffect(() => {
     if (pendingPrompt === null || isLoading || preferences.isLoading) return;
-    sendPrompt(pendingPrompt);
+    if (!sendPrompt(pendingPrompt)) open();
     onPromptHandled();
-  }, [isLoading, onPromptHandled, pendingPrompt, preferences.isLoading, sendPrompt]);
+  }, [isLoading, onPromptHandled, open, pendingPrompt, preferences.isLoading, sendPrompt]);
 
   useEffect(() => {
     if (assistantIsRunning) setActivityDismissed(false);

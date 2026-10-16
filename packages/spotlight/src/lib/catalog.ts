@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { queryCacheDefaultStaleTimeMs } from "@homarr/api/query-cache";
 import { useSession } from "@homarr/auth/client";
+import { useWhenBoardRestored } from "@homarr/boards/context";
 
 import { spotlightOpenEvent } from "../open";
 
@@ -35,6 +36,8 @@ export const useSearchEnginesCatalogQuery = () => {
 };
 
 export const useSpotlightCatalogs = () => {
+  const whenRestored = useWhenBoardRestored();
+  const refreshPending = useRef(false);
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const isSessionResolved = status !== "loading";
@@ -48,11 +51,20 @@ export const useSpotlightCatalogs = () => {
   const searchEnginesQuery = useSearchEnginesCatalogQuery();
 
   useEffect(() => {
-    const refreshCatalogs = () => {
-      if (canBrowseApps) void appsQuery.refetch();
-      if (isSessionResolved) void boardsQuery.refetch();
-      if (isAuthenticated) void integrationsQuery.refetch();
-      if (isSessionResolved) void searchEnginesQuery.refetch();
+    const refreshCatalogs = async () => {
+      if (refreshPending.current) return;
+      refreshPending.current = true;
+      try {
+        if ((await whenRestored()) !== "restored") return;
+        const refreshes: Promise<unknown>[] = [];
+        if (canBrowseApps) refreshes.push(appsQuery.refetch());
+        if (isSessionResolved) refreshes.push(boardsQuery.refetch());
+        if (isAuthenticated) refreshes.push(integrationsQuery.refetch());
+        if (isSessionResolved) refreshes.push(searchEnginesQuery.refetch());
+        await Promise.all(refreshes);
+      } finally {
+        refreshPending.current = false;
+      }
     };
 
     window.addEventListener(spotlightOpenEvent, refreshCatalogs);
@@ -65,6 +77,7 @@ export const useSpotlightCatalogs = () => {
     isAuthenticated,
     isSessionResolved,
     searchEnginesQuery,
+    whenRestored,
   ]);
 };
 

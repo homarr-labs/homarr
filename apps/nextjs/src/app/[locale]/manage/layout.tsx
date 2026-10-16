@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
 import {
@@ -38,6 +39,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
+import { CommonLoading } from "~/components/layout/loading";
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
@@ -48,7 +50,7 @@ import { getAppsSectionAccess, getIntegrationsSectionAccessAsync } from "./_acce
 
 const logger = createLogger({ module: "manageLayout" });
 
-export default async function ManageLayout({ children }: PropsWithChildren) {
+async function ManageLayoutContent({ children }: PropsWithChildren) {
   const sessionPromise = auth();
   const integrationsAccessPromise = sessionPromise.then(getIntegrationsSectionAccessAsync);
   const shouldRunManageTourPromise = sessionPromise.then(async (session) => {
@@ -262,5 +264,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     <ManageTourGate enabled={shouldRunManageTour} isAdmin={isAdmin}>
       {shell}
     </ManageTourGate>
+  );
+}
+
+export default function ManageLayout({ children }: PropsWithChildren) {
+  return (
+    <Suspense fallback={<CommonLoading />}>
+      <ManageLayoutContent>{children}</ManageLayoutContent>
+    </Suspense>
   );
 }

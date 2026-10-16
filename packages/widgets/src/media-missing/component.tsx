@@ -24,7 +24,6 @@ import { getQueryKey } from "@trpc/react-query";
 import { clientApi } from "@homarr/api/client";
 import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -35,8 +34,6 @@ import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import type { MediaMissingTab } from "./tabs";
 import { resolveMediaMissingTab } from "./tabs";
-
-type Density = "thin" | "compact" | "comfortable";
 
 const MIN_CARD_WIDTH = 280;
 const MAX_COLUMNS = 4;
@@ -55,12 +52,6 @@ const getMediaMissingGridLayout = (panelWidth: number) => {
   const contentWidth = Math.max(0, panelWidth - GRID_HORIZONTAL_PADDING);
   const breakpoint = columnBreakpoints.find((candidate) => contentWidth >= candidate.minimumWidth);
   return { columns: breakpoint?.columns ?? 1, contentWidth };
-};
-
-const getMediaMissingDensity = (contentWidth: number, columns: number, isThin: boolean): Density => {
-  if (isThin) return "thin";
-  if (contentWidth > 0 && contentWidth / columns < 180) return "compact";
-  return "comfortable";
 };
 
 export default function MediaMissingWidget({
@@ -96,9 +87,7 @@ export default function MediaMissingWidget({
 
   const enabledPanelCount = Number(showMissing) + Number(showQueued);
   const panelWidth = isAdvanced && enabledPanelCount > 1 ? width / enabledPanelCount : width;
-  const isThin = !isAdvanced && panelWidth > 0 && panelWidth < 160;
   const gridLayout = useMemo(() => getMediaMissingGridLayout(panelWidth), [panelWidth]);
-  const density = getMediaMissingDensity(gridLayout.contentWidth, gridLayout.columns, isThin);
 
   if (!data) return <WidgetEmptyState />;
   if (data.length === 0) throw new NoIntegrationDataError();
@@ -116,8 +105,6 @@ export default function MediaMissingWidget({
   const missingCount = data.reduce((sum, entry) => sum + entry.missingCount, 0);
   const queuedCount = data.reduce((sum, entry) => sum + entry.queuedCount, 0);
   const failedIntegrations = data.filter((entry): entry is typeof entry & { error: string } => Boolean(entry.error));
-
-  const tabLabel = (label: string, shown: number, total: number) => (isThin ? total : `${label} (${shown}/${total})`);
 
   const renderPanel = (
     tab: MediaMissingTab,
@@ -137,14 +124,15 @@ export default function MediaMissingWidget({
             {emptyLabel}
           </Text>
         ) : (
-          <SimpleGrid cols={Math.min(gridLayout.columns, entries.length)} spacing="xs" verticalSpacing="xs">
+          <SimpleGrid
+            className={classes.grid}
+            style={{ "--mm-entries": Math.min(MAX_COLUMNS, entries.length) } as CSSProperties}
+            cols={Math.min(gridLayout.columns, entries.length)}
+            spacing="xs"
+            verticalSpacing="xs"
+          >
             {entries.map(({ item, integrationId }) => (
-              <MediaCard
-                key={`${integrationId}-${item.type}-${item.id}`}
-                item={item}
-                density={density}
-                showQueueDetails={isAdvanced}
-              />
+              <MediaCard key={`${integrationId}-${item.type}-${item.id}`} item={item} showQueueDetails={isAdvanced} />
             ))}
           </SimpleGrid>
         )}
@@ -169,22 +157,34 @@ export default function MediaMissingWidget({
         {partialFailures}
         <SimpleGrid cols={enabledPanelCount} spacing="sm" p="sm" style={{ flex: 1, minHeight: 0 }}>
           {showMissing && (
-            <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
+            <Paper
+              className={classes.panel}
+              data-mm-advanced=""
+              withBorder
+              radius="sm"
+              style={{ minHeight: 0, overflow: "hidden" }}
+            >
               <Group p="xs" gap="xs">
                 <IconQuestionMark size="var(--mantine-font-size-md)" />
                 <Text size="sm" fw={600}>
-                  {tabLabel(t("tab.missing"), missing.length, missingCount)}
+                  <TabTitle label={t("tab.missing")} shown={missing.length} total={missingCount} />
                 </Text>
               </Group>
               <Box h="calc(100% - 40px)">{renderPanel("missing", missing, t("empty.missing"))}</Box>
             </Paper>
           )}
           {showQueued && (
-            <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
+            <Paper
+              className={classes.panel}
+              data-mm-advanced=""
+              withBorder
+              radius="sm"
+              style={{ minHeight: 0, overflow: "hidden" }}
+            >
               <Group p="xs" gap="xs">
                 <IconDownload size="var(--mantine-font-size-md)" />
                 <Text size="sm" fw={600}>
-                  {tabLabel(t("tab.queued"), queued.length, queuedCount)}
+                  <TabTitle label={t("tab.queued")} shown={queued.length} total={queuedCount} />
                 </Text>
               </Group>
               <Box h="calc(100% - 40px)">{renderPanel("queued", queued, t("empty.queued"))}</Box>
@@ -197,6 +197,7 @@ export default function MediaMissingWidget({
 
   return (
     <Tabs
+      className={classes.panel}
       value={activeTab}
       keepMounted={false}
       onChange={(value) => {
@@ -209,20 +210,16 @@ export default function MediaMissingWidget({
       <Tabs.List grow>
         {showMissing && (
           <Tabs.Tab
+            data-mm-tab=""
             value="missing"
-            px={isThin ? 6 : undefined}
             leftSection={<IconQuestionMark size="var(--mantine-font-size-sm)" />}
           >
-            {tabLabel(t("tab.missing"), missing.length, missingCount)}
+            <TabTitle label={t("tab.missing")} shown={missing.length} total={missingCount} />
           </Tabs.Tab>
         )}
         {showQueued && (
-          <Tabs.Tab
-            value="queued"
-            px={isThin ? 6 : undefined}
-            leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}
-          >
-            {tabLabel(t("tab.queued"), queued.length, queuedCount)}
+          <Tabs.Tab data-mm-tab="" value="queued" leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}>
+            <TabTitle label={t("tab.queued")} shown={queued.length} total={queuedCount} />
           </Tabs.Tab>
         )}
       </Tabs.List>
@@ -241,38 +238,30 @@ export default function MediaMissingWidget({
   );
 }
 
-const CARD_HEIGHT: Record<Density, number> = { thin: 52, compact: 56, comfortable: 68 };
-
-const posterSizes: Record<Density, number> = { thin: 34, compact: 40, comfortable: 52 };
+const TabTitle = ({ label, shown, total }: { label: string; shown: number; total: number }) => (
+  <>
+    <span className={classes.tabLabelFull}>{`${label} (${shown}/${total})`}</span>
+    <span className={classes.tabLabelThin}>{total}</span>
+  </>
+);
 
 const posterColor = (type: "movie" | "episode" | "book") =>
   type === "movie" ? "yellow" : type === "book" ? "grape" : "blue";
 
-const PosterIcon = ({ type, style }: { type: "movie" | "episode" | "book"; style: CSSProperties }) => {
-  if (type === "movie") return <IconMovie style={style} />;
-  if (type === "book") return <IconBook style={style} />;
-  return <IconVideo style={style} />;
+const PosterIcon = ({ type, className }: { type: "movie" | "episode" | "book"; className: string | undefined }) => {
+  if (type === "movie") return <IconMovie className={className} />;
+  if (type === "book") return <IconBook className={className} />;
+  return <IconVideo className={className} />;
 };
 
-const Poster = ({
-  src,
-  type,
-  density,
-}: {
-  src?: string | null;
-  type: "movie" | "episode" | "book";
-  density: Density;
-}) => {
-  const size = posterSizes[density];
-  const w = Math.round(size * 0.68);
-
+const Poster = ({ src, type }: { src?: string | null; type: "movie" | "episode" | "book" }) => {
   if (src) {
-    return <Image className={classes.poster} src={src} h={size} w={w} radius="sm" alt="" />;
+    return <Image className={classes.poster} src={src} radius="sm" alt="" />;
   }
 
   return (
-    <ThemeIcon className={classes.poster} h={size} w={w} radius="sm" variant="light" color={posterColor(type)}>
-      <PosterIcon type={type} style={zoomCompensatedSize(size * 0.5)} />
+    <ThemeIcon className={classes.poster} radius="sm" variant="light" color={posterColor(type)}>
+      <PosterIcon type={type} className={classes.posterIcon} />
     </ThemeIcon>
   );
 };
@@ -282,28 +271,25 @@ const episodeCode = (item: MissingMediaItem | QueuedMediaItem) =>
     ? `S${String(item.seasonNumber).padStart(2, "0")}E${String(item.episodeNumber).padStart(2, "0")}`
     : null;
 
-const TypeBadge = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => {
+const TypeBadge = ({ item }: { item: MissingMediaItem | QueuedMediaItem }) => {
   const t = useI18n("widget.mediaMissing");
   const color = posterColor(item.type);
   const code = episodeCode(item);
 
-  if (density !== "comfortable") {
-    return (
-      <Badge size="xs" variant="light" color={color}>
-        {code ?? t(`type.${item.type}`)}
-      </Badge>
-    );
-  }
-
   return (
-    <Group gap={4} wrap="nowrap">
-      <Badge size="xs" variant="light" color={color}>
+    <Group data-mm-badges="" data-has-code={code ? "" : undefined} gap={4} wrap="nowrap">
+      <Badge data-mm-badge="type" size="xs" variant="light" color={color}>
         {t(`type.${item.type}`)}
       </Badge>
       {code && (
-        <Badge size="xs" variant="outline" color="gray">
-          {code}
-        </Badge>
+        <>
+          <Badge data-mm-badge="compactCode" size="xs" variant="light" color={color}>
+            {code}
+          </Badge>
+          <Badge data-mm-badge="comfortableCode" size="xs" variant="outline" color="gray">
+            {code}
+          </Badge>
+        </>
       )}
     </Group>
   );
@@ -314,39 +300,36 @@ const primaryTitle = (item: MissingMediaItem | QueuedMediaItem) =>
 
 const progressColor = (percent: number) => (percent >= 90 ? "green" : percent >= 40 ? "cyan" : "orange");
 
-const ringSizes: Record<Density, { size: number; thickness: number; fz: string }> = {
-  thin: { size: 30, thickness: 3, fz: "8px" },
-  compact: { size: 34, thickness: 3, fz: "9px" },
-  comfortable: { size: 40, thickness: 4, fz: "10px" },
-};
+const ringVariants = [
+  { size: 30, thickness: 3, fz: "8px" },
+  { size: 34, thickness: 3, fz: "9px" },
+  { size: 40, thickness: 4, fz: "10px" },
+] as const;
 
-const ProgressRing = ({ percent, density }: { percent: number; density: Density }) => {
+const ProgressRing = ({ percent }: { percent: number }) => {
   const color = progressColor(percent);
-  const ring = ringSizes[density];
   return (
-    <RingProgress
-      size={ring.size}
-      thickness={ring.thickness}
-      roundCaps
-      sections={[{ value: percent, color }]}
-      label={
-        <Text ta="center" fw={700} fz={ring.fz} lh={1}>
-          {percent}
-        </Text>
-      }
-    />
+    <>
+      {ringVariants.map((ring, index) => (
+        <div key={ring.size} className={classes.ring} data-ring={index}>
+          <RingProgress
+            size={ring.size}
+            thickness={ring.thickness}
+            roundCaps
+            sections={[{ value: percent, color }]}
+            label={
+              <Text ta="center" fw={700} fz={ring.fz} lh={1}>
+                {percent}
+              </Text>
+            }
+          />
+        </div>
+      ))}
+    </>
   );
 };
 
-const CardShell = ({
-  item,
-  density,
-  children,
-}: {
-  item: MissingMediaItem | QueuedMediaItem;
-  density: Density;
-  children: ReactNode;
-}) => {
+const CardShell = ({ item, children }: { item: MissingMediaItem | QueuedMediaItem; children: ReactNode }) => {
   const href = getSafeApplicationUrl(item.link);
   return (
     <Paper
@@ -357,7 +340,6 @@ const CardShell = ({
       rel={href ? SAFE_NEW_TAB_REL : undefined}
       radius="sm"
       p="xs"
-      h={CARD_HEIGHT[density]}
     >
       <div className={classes.content}>{children}</div>
     </Paper>
@@ -366,36 +348,32 @@ const CardShell = ({
 
 const MediaCard = ({
   item,
-  density,
   showQueueDetails,
 }: {
   item: MissingMediaItem | QueuedMediaItem;
-  density: Density;
   showQueueDetails: boolean;
 }) => {
   const isQueued = "percentComplete" in item;
 
   return (
-    <CardShell item={item} density={density}>
+    <CardShell item={item}>
       <Group gap="xs" wrap="nowrap" align="center" h="100%">
-        <Poster src={item.imageUrl} type={item.type} density={density} />
+        <Poster src={item.imageUrl} type={item.type} />
         <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
-          <TypeBadge item={item} density={density} />
+          <TypeBadge item={item} />
           <Text fz="xs" fw={600} lineClamp={1} lh={1.25}>
             {primaryTitle(item)}
           </Text>
-          {density === "comfortable" && (
-            <Text fz="xs" c="dimmed" lineClamp={1} lh={1.1}>
-              {item.type === "episode" ? item.title : item.type === "book" ? item.seriesTitle : item.year}
-            </Text>
-          )}
+          <Text className={classes.extra} fz="xs" c="dimmed" lineClamp={1} lh={1.1}>
+            {item.type === "episode" ? item.title : item.type === "book" ? item.seriesTitle : item.year}
+          </Text>
           {isQueued && showQueueDetails && (
             <Text fz="10px" c="dimmed" lineClamp={1} lh={1.1}>
               {[item.status, item.timeLeft].filter(Boolean).join(" · ")}
             </Text>
           )}
         </Stack>
-        {isQueued && <ProgressRing percent={Math.min(100, Math.max(0, item.percentComplete))} density={density} />}
+        {isQueued && <ProgressRing percent={Math.min(100, Math.max(0, item.percentComplete))} />}
       </Group>
     </CardShell>
   );

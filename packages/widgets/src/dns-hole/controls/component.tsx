@@ -5,7 +5,7 @@
 
 import "../../widgets-common.css";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ActionIcon,
   Badge,
@@ -27,7 +27,7 @@ import combineClasses from "clsx";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
 import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
@@ -71,6 +71,22 @@ export default function DnsHoleControlsWidget({
   const summaryResults = getUsableWidgetQueryData(summaryQuery) ?? [];
   const summaries = summaryResults.filter(isAvailableDnsSummaryResult);
   const utils = clientApi.useUtils();
+  const whenRestored = useWhenBoardRestored();
+  const pendingActions = useRef(new Set<string>());
+  const [pendingActionCount, setPendingActionCount] = useState(0);
+  const bulkInProgress = useRef(false);
+  const runDnsAction = async (integrationId: string, action: () => Promise<unknown>) => {
+    if (pendingActions.current.has(integrationId)) return;
+    pendingActions.current.add(integrationId);
+    setPendingActionCount(pendingActions.current.size);
+    try {
+      if ((await whenRestored()) !== "restored") return;
+      await action();
+    } finally {
+      pendingActions.current.delete(integrationId);
+      setPendingActionCount(pendingActions.current.size);
+    }
+  };
 
   const {
     mutateAsync: enableDns,
@@ -86,34 +102,38 @@ export default function DnsHoleControlsWidget({
   } = clientApi.widget.dnsHole.disable.useMutation({
     onSettled: () => void utils.widget.dnsHole.summary.invalidate(),
   });
-  const toggleDns = async (integrationId: string) => {
-    const integrationStatus = summaries.find(({ integration }) => integration.id === integrationId);
-    if (!integrationStatus?.summary.status) return;
-    utils.widget.dnsHole.summary.setData(
-      {
-        integrationIds,
-      },
-      (prevData) => {
-        if (!prevData) return [];
+  const toggleDns = (integrationId: string) =>
+    runDnsAction(integrationId, async () => {
+      const integrationStatus = summaries.find(({ integration }) => integration.id === integrationId);
+      if (!integrationStatus?.summary.status) return;
+      utils.widget.dnsHole.summary.setData(
+        {
+          integrationIds,
+        },
+        (prevData) => {
+          if (!prevData) return [];
 
-        return prevData.map((item) =>
-          item.integration.id === integrationId && item.summary
-            ? {
-                ...item,
-                summary: {
-                  ...item.summary,
-                  status: undefined,
-                },
-              }
-            : item,
-        );
-      },
-    );
-    if (integrationStatus.summary.status === "enabled") {
-      await disableDns({ integrationId, duration: 0 });
-    } else {
-      await enableDns({ integrationId });
-    }
+          return prevData.map((item) =>
+            item.integration.id === integrationId && item.summary
+              ? {
+                  ...item,
+                  summary: {
+                    ...item.summary,
+                    status: undefined,
+                  },
+                }
+              : item,
+          );
+        },
+      );
+      if (integrationStatus.summary.status === "enabled") {
+        await disableDns({ integrationId, duration: 0 });
+      } else {
+        await enableDns({ integrationId });
+      }
+    });
+  const disableDnsWithTimer = (input: { integrationId: string; duration: number }) => {
+    void runDnsAction(input.integrationId, () => disableDns(input)).catch(() => undefined);
   };
 
   // make lists of enabled and disabled interactable integrations (with permissions, not disconnected and not processing)
@@ -129,14 +149,17 @@ export default function DnsHoleControlsWidget({
   const [bulkFailureCount, setBulkFailureCount] = useState(0);
 
   const controlAllButtonsVisible = options.showToggleAllButtons && integrationsWithInteractions.length > 0;
-  const actionsPending = bulkPending || isEnabling || isDisabling;
+  const actionsPending = bulkPending || pendingActionCount > 0 || isEnabling || isDisabling;
   const actionError = enableError ?? disableError;
   const runBulkToggle = async (integrationIdsToToggle: string[]) => {
+    if (bulkInProgress.current) return;
+    bulkInProgress.current = true;
     setBulkPending(true);
     setBulkFailureCount(0);
     const results = await Promise.allSettled(integrationIdsToToggle.map(toggleDns));
     setBulkFailureCount(results.filter(({ status }) => status === "rejected").length);
     setBulkPending(false);
+    bulkInProgress.current = false;
   };
 
   if (isInitialWidgetQueryPending(summaryQuery)) return <WidgetQueryLoadingState />;
@@ -197,7 +220,7 @@ export default function DnsHoleControlsWidget({
               </Tooltip>
             )}
             selectedIntegrationIds={integrationsSummaries.enabled}
-            disableDns={(input) => void disableDns(input).catch(() => undefined)}
+            disableDns={disableDnsWithTimer}
           />
 
           <Tooltip label={t("controls.disableAll")}>
@@ -232,7 +255,7 @@ export default function DnsHoleControlsWidget({
               key={summary.integration.id}
               integrationsWithInteractions={integrationsWithInteractions}
               toggleDns={toggleDns}
-              disableDns={(input) => void disableDns(input).catch(() => undefined)}
+              disableDns={disableDnsWithTimer}
               data={summary}
               t={t}
               hasIconColor={board.iconColor !== null}
