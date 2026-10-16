@@ -13,6 +13,7 @@ import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./wi
 export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
 const EMPTY_QUERY_STATE: Record<string, CustomWidgetPublishedQueryState> = {};
+const EMPTY_RECORD: Record<string, never> = {};
 
 interface ScopedQueryState {
   key: string;
@@ -67,17 +68,24 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
     },
     [queryScopeKey],
   );
-  const baseData = isRecord(data.data) ? data.data : {};
-  const baseStatus = isRecord(data.status) ? data.status : {};
+  const baseData = isRecord(data.data) ? data.data : EMPTY_RECORD;
+  const baseStatus = isRecord(data.status) ? data.status : EMPTY_RECORD;
+  const rendererData = useMemo(() => {
+    const entries = Object.entries(queryState);
+    if (entries.length === 0) return baseData;
+    return { ...baseData, ...Object.fromEntries(entries.map(([id, value]) => [id, value.data])) };
+  }, [baseData, queryState]);
+  const rendererStatus = useMemo(() => {
+    const entries = Object.entries(queryState);
+    if (entries.length === 0) return baseStatus;
+    return { ...baseStatus, ...Object.fromEntries(entries.map(([id, value]) => [id, value.status])) };
+  }, [baseStatus, queryState]);
   const renderer = (
     <CustomJsxRenderer
       template={String(data.template ?? "")}
-      data={{ ...baseData, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.data])) }}
-      status={{
-        ...baseStatus,
-        ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
-      }}
-      options={isRecord(data.options) ? data.options : {}}
+      data={rendererData}
+      status={rendererStatus}
+      options={isRecord(data.options) ? data.options : EMPTY_RECORD}
       components={components}
       createBindings={SAFE_BINDINGS}
       messages={{

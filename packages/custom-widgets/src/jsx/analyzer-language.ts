@@ -59,12 +59,16 @@ const callableRootMembers: Readonly<Record<string, ReadonlySet<string>>> = {
 const enabledComponentNames = enabledCustomJsxComponents.map((component) => component.name);
 
 export function closestCustomJsxComponentName(value: string): string | undefined {
+  const normalizedValue = value.toLowerCase();
+  const maximumDistance = Math.max(2, Math.floor(value.length / 3));
   let closest: { name: string; distance: number } | undefined;
   for (const name of enabledComponentNames) {
-    const distance = editDistance(value.toLowerCase(), name.toLowerCase());
+    const normalizedName = name.toLowerCase();
+    if (Math.abs(normalizedValue.length - normalizedName.length) > maximumDistance) continue;
+    const distance = editDistance(normalizedValue, normalizedName);
     if (!closest || distance < closest.distance) closest = { name, distance };
   }
-  return closest && closest.distance <= Math.max(2, Math.floor(value.length / 3)) ? closest.name : undefined;
+  return closest && closest.distance <= maximumDistance ? closest.name : undefined;
 }
 
 export function customJsxTagName(node: AstNode): string | null {

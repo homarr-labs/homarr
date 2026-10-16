@@ -1,58 +1,53 @@
 ---
 name: homarr-custom-widget
-description: Author, validate, preview, test, install, or configure API-backed Homarr Custom JSX v2 widgets.
+description: Author, repair, preview, install, or configure Homarr Custom JSX v2 widgets through tools or an importable definition.
 ---
 
 # Homarr Custom Widget
 
-Author requested widgets with release context; validate, test, persist, and return artifacts.
+Build the requested widget from verified API contracts and samples. Preserve working behavior during repairs and migrations.
+Use shipped examples for matching services; research only missing or changed contracts. Keep credentials in Homarr.
 
-- Read primary API docs when missing/changed. Samples and successful previews are binding; load only needed schema, runtime,
-  security, or component context.
-- Batch unknown component searches/details. `contextAlreadyLoaded` reuses context; `phaseComplete` advances. Stop only for
-  genuine provider/model, lifecycle-service, or workbench-closure failure.
-- Community widgets use `customWidget_workshopSearch`, `customWidget_workshopGet`, and
-  `customWidget_workshopInstall`; configure and persist.
+## Context
 
-Return one fenced `json` block with the complete definition; keep evidence prose outside it. The definition has keyed
-`sources`, `requests`, `template`, and optional `options`; actions are requests with `kind: "action"`.
+Reuse context already supplied by the host. Load only the missing reference:
 
-- `sources.default` is required. HTTP has `baseUrl`, `networkScope`, and credential-free `auth`; localhost/loopback requires
-  `networkScope: "loopback"`; never widen an explicit scope. Saved sources use `type: "integration"`/`integrationKind`;
-  Homarr holds credentials.
-- Saved integrations: discover kinds/full-access entries with `integration_getKinds`/`integration_all`, bind `integrationId`
-  before preview, omit URL/auth, and keep non-GET requests as actions.
-- Paths are slash-prefixed: strings use `{option:name}`/`{param:name}`; query/body uses `{"$option":"name"}`/`{"$param":"name"}`.
-  Loads use `trigger: "load"`; manual helpers use `trigger: "manual"`.
-- Actions stay manual; preserve `confirmation`, `permission`, and `invalidates`; DELETE requires full permission/confirmation.
-  `$param` is manual-only; `$option` may drive loads.
-- Load data.requestId/status.requestId with RefreshButton; status.requestId?.ok === false is error. Manual SubFetch never
-  populates data/status; its child receives (result, metadata) and renders its fields.
-- Options have `label`, `control`, `default`; installation config is `options.name`, never `inputs`. Request-bound TextInput,
-  Select, NumberInput, Pagination use literal `bind` + default and manual `SubFetch params` map `inputs.<name>` to `$param`.
-  Dependent pagination uses `defaultValue={1}`/`resetKey={inputs.query}`. Remove controls without an option/request/helper; guard arrays/nested with `??`;
-  preserve documented timezone values; use UTC only when the contract says UTC.
-- Templates are one expression: no imports, hooks, refs, raw HTML/events, browser requests, eval, recursion, IIFEs,
-  statement blocks, or arbitrary functions. Use registered component names; `Icon` may alias `TablerIcon`. Keep hierarchy,
-  theme tokens, useful states, and narrow/wide layouts purposeful.
+- [schema](references/schema.md): new manifests, sources, requests, option bindings, or migration contracts.
+- [runtime](references/runtime.md): response paths, manual interactions, input bindings, and safe formatting helpers.
+- [security](references/security.md): authentication, network access, and mutations.
 
-## Bounded lifecycle
+Use registered components. Batch unknown names with `customWidget_getComponents`; search with `customWidget_findComponents`
+when the component name is unknown. Fetch a full component document only for an unresolved prop or concrete diagnostic.
+`contextAlreadyLoaded` reuses earlier context; `phaseComplete` advances to the visible next phase.
 
-1. Build a credential-free definition from request, verified context, and sample. Preserve a migration's API path, method,
-   body, options, and behavior; omit unknown requests rather than guessing.
-2. Send the coherent complete definition directly to `customWidget_previewCreate`; it validates both manifest and JSX.
-   Use `customWidget_validateTemplate` only for isolated JSX diagnostics, never as a preview prerequisite. Use
-   `customWidget_previewReviseTemplate` for JSX-only corrections after a preview exists. In the Assistant wrapper, multiline
-   JSX uses `templateLines` and preview creation receives the complete definition.
-3. Test every returned query/simulated action once, batching independent queries. On a concrete schema/preview error, fix only
-   that field and retry `customWidget_previewCreate` with the corrected definition; use `customWidget_previewReviseTemplate`
-   only for JSX errors after a preview exists. Stop only for genuine provider/model, lifecycle-service, or
-   workbench-closure failure.
-4. If `previewCreate` used `definitionId`, persist with `customWidget_updateFromPreview`; otherwise use
-   `customWidget_createFromPreview`. Follow create `nextAction` once. Configure credentials in Homarr; never repeat plaintext
-   secrets.
+## Author
 
-## Delivery
+- Include `$schema: "homarr-custom-widget-v2"`, `name`, keyed `sources`/`requests`, and one JSX `template`; `options` is optional.
+  `sources.default` is required even for static widgets. HTTP sources use `baseUrl`, `networkScope`, and credential-free `auth`.
+  Saved integration sources use `type: "integration"`/`integrationKind`; bind a matching full-access `integrationId` before preview.
+- Load requests render `data.requestId`/`status.requestId`, with a RefreshButton and useful loading/error/empty/success states.
+  Preserve response envelopes and guard nullable fields. Manual SubFetch renders its result inside its child callback.
+- Options are installation config via `options.name`; temporary controls use literal `bind` plus a default and pass
+  `inputs.name` through manual request `params`. Every control must affect a request or visible selection.
+- Use one JSX expression, registered names, concise expression callbacks, theme tokens, and wrapping tile layouts.
+  Imports, hooks, raw HTML/events, browser requests, arbitrary functions, statements, IIFEs, and recursion are unavailable.
 
-Report actual lifecycle results. If unavailable, add one post-artifact `Unverified:` line naming missing validation, preview,
-renderer, or persistence. Never claim rendering/persistence from schema checks.
+## Preview and save
+
+When lifecycle tools are available and creation/editing is requested:
+
+1. Send the complete candidate directly to `customWidget_previewCreate`; it validates manifest and JSX together. Pass
+   `definitionId` for an edit. Multiline JSX in the Assistant wrapper uses `templateLines`.
+2. Follow source configuration requests in Homarr, then test every returned query and simulated action once; batch independent
+   reads. Match response paths and parameter names to the JSX. Simulate mutations unless live execution is explicitly requested.
+3. Correct concrete diagnostics while preserving accepted behavior. Manifest changes require fresh `previewCreate`; JSX-only
+   corrections use `customWidget_previewReviseTemplate`, which resets evidence. Retest the corrected candidate.
+4. Save the exact tested preview with `customWidget_updateFromPreview` for edits or `customWidget_createFromPreview` for new
+   widgets. Follow its `nextAction` once. Report the actual saved result briefly.
+
+For isolated JSX diagnostics, use `customWidget_validateTemplate`; it is not a preview prerequisite. If a tool is unavailable
+or repeated attempts make no progress, stop that path and report the missing step. Never claim renderer or persistence proof
+from schema validation. Community installs use Workshop search/get/install, then source configuration.
+
+When tools are unavailable or the user requests an artifact, return one complete fenced `json` definition. Add one
+`Unverified:` line for missing preview, renderer, or persistence evidence. A successful tool save needs no duplicate manifest.
