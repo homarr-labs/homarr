@@ -4,6 +4,7 @@ import { customJsxTablerIconNames } from "@homarr/custom-widgets/core";
 import { redactSnapshotCss } from "./css";
 
 import { integrationKinds, widgetKinds } from "@homarr/definitions";
+import { defaultBrandingSettings } from "@homarr/server-settings";
 import { normalizeBookmarkUrl } from "@homarr/widgets/bookmarks/bookmark-item";
 import {
   headerBuiltinItemIds,
@@ -104,6 +105,7 @@ export const createSnapshotRedactor = () => {
     if (key === "customUrls") return bookmarkUrl(value);
     if (key === "requestId" || key === "invalidates") return field(value);
     if (key === "columnOrder" || key === "columnWidths") return tableLayout(value, key);
+    if (key === "appName" && value === defaultBrandingSettings.appName) return value;
     if (displayTextKey.test(key) && !/^redacted[_-]\d+$/.test(value)) return replace(value);
     if (key === "systemId" && value.split(":").length === 2 && !value.includes("/"))
       return value
