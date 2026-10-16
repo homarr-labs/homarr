@@ -1,0 +1,60 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 73-78
+apps/nextjs/src/app/[locale]/layout.tsx
+  h_d6e478ca18e517 48,105-106
+apps/nextjs/src/board-preparation/prepare.ts
+  h_d6e478ca18e517 107-112,131,144-145,191,194,198,231,241,249,253,264,271,290,292,299,304-306,312,320-322,327
+apps/nextjs/src/board-preparation/store.ts
+  h_d6e478ca18e517 111,156-158
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 24-29,113
+packages/boards/src/context.tsx
+  h_d6e478ca18e517 11,180-197
+packages/cron-jobs/src/jobs/board-preparation.ts
+  h_d6e478ca18e517 22
+packages/widgets/src/app/component.tsx
+  h_d6e478ca18e517 31-32,130
+packages/widgets/src/app/index.ts
+  h_d6e478ca18e517 113-117
+packages/widgets/src/app/ping/ping-indicator.tsx
+  h_d6e478ca18e517 4,10,13,15
+packages/widgets/src/beszel-alerts/component.tsx
+  h_d6e478ca18e517 3,50,210
+packages/widgets/src/common/use-widget-now.ts
+  h_d6e478ca18e517 4,24-25,57-58
+packages/widgets/src/data.ts
+  h_d6e478ca18e517 33,54-58,63
+packages/widgets/src/notebook/notebook.tsx
+  h_d6e478ca18e517 62,337-342,356,548,585
+packages/widgets/src/notebook/read-mode.tsx
+  h_d6e478ca18e517 5,18,175-180,190,234,252
+packages/widgets/src/notebook/surface.tsx
+  h_d6e478ca18e517 1-80
+packages/widgets/src/patchmon/component.tsx
+  h_d6e478ca18e517 3,85,147-148,412-413
+packages/widgets/src/rssFeed/component.tsx
+  h_d6e478ca18e517 11,63-65
+packages/widgets/src/server-prefetch.ts
+  h_d6e478ca18e517 76
+packages/widgets/src/speedtest-tracker/component.tsx
+  h_d6e478ca18e517 3,28,40
+packages/widgets/src/tracearr/recent-activity-section.tsx
+  h_d6e478ca18e517 7,22,61
+packages/widgets/src/tracearr/violations-section.tsx
+  h_d6e478ca18e517 8,23,72
+packages/widgets/src/vpn/component.tsx
+  h_d6e478ca18e517 3,23,63
+packages/widgets/src/wazuh/_shared/frame.tsx
+  h_d6e478ca18e517 13,92-93,102,104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b62f11f6c1c12bc4565ba61316c712fa6ce85d32",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
