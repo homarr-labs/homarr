@@ -410,8 +410,11 @@ describe("setGroups should replace the groups of a user", () => {
     const actAsync = async () => await caller.setGroups({ userId, groupIds: [] });
 
     // Assert
-    await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
-    spy.mockRestore();
+    try {
+      await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
+    } finally {
+      spy.mockRestore();
+    }
   });
 });
 

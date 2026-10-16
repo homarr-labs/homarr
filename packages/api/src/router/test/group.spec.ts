@@ -141,7 +141,7 @@ describe("paginated should return a list of groups with pagination", () => {
     expect(item?.members.length).toBe(1);
     const userKeys = Object.keys(item?.members[0] ?? {});
     expect(userKeys.length).toBe(4);
-    expect(["id", "name", "email", "image"].some((key) => userKeys.includes(key)));
+    expect(userKeys).toEqual(expect.arrayContaining(["id", "name", "email", "image"]));
   });
 
   test.each([
@@ -229,8 +229,8 @@ describe("byId should return group by id including members and permissions", () 
 
     const userKeys = Object.keys(result.members[0] ?? {});
     expect(userKeys.length).toBe(6);
-    expect(
-      ["id", "name", "email", "image", "provider", "isMembershipManagedLocally"].some((key) => userKeys.includes(key)),
+    expect(userKeys).toEqual(
+      expect.arrayContaining(["id", "name", "email", "image", "provider", "isMembershipManagedLocally"]),
     );
     expect(result.permissions.length).toBe(1);
     expect(result.permissions[0]).toBe("admin");
