@@ -1,0 +1,21 @@
+apps/nextjs/public/images/board-snapshot-background.svg
+  s_36aa6ef3c65862::t_196d9b3291eeaf 1
+apps/nextjs/src/components/board/debug/redact.ts
+  s_36aa6ef3c65862::t_ba779c1db991b5 6-8,23,57-65,135,146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3a9eb2f93c98365f09774c75c0773b02e3baceb1",
+  "prompts": {},
+  "sessions": {
+    "s_36aa6ef3c65862": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3fdde12f-a6e9-4ed8-b41c-6dae15a66b86",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
