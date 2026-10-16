@@ -36,6 +36,7 @@ import { useDemoReadOnly } from "../../demo-read-only";
 const CHART_HEIGHT = 180;
 const MEBIBYTE = 1024 * 1024;
 const GIBIBYTE = 1024 * MEBIBYTE;
+const dockerAreaChartProps = { reverseStackOrder: true };
 
 export interface BeszelStatsVisibility {
   cpu: boolean;
@@ -474,7 +475,7 @@ export function BeszelStatsView({
                 data: dockerCpuData,
                 type: "stacked",
                 series: containerCpuSeries,
-                areaChartProps: { reverseStackOrder: true },
+                areaChartProps: dockerAreaChartProps,
                 yAxisFormatter: formatPercent,
                 tooltipProps: tooltips.percentTotal,
               }}
@@ -490,7 +491,7 @@ export function BeszelStatsView({
                 data: dockerMemoryData,
                 type: "stacked",
                 series: containerMemorySeries,
-                areaChartProps: { reverseStackOrder: true },
+                areaChartProps: dockerAreaChartProps,
                 yAxisFormatter: formatters.memoryAxis,
                 tooltipProps: tooltips.memory,
               }}
@@ -506,7 +507,7 @@ export function BeszelStatsView({
                 data: dockerNetworkData,
                 series: containerNetworkSeries,
                 type: "stacked",
-                areaChartProps: { reverseStackOrder: true },
+                areaChartProps: dockerAreaChartProps,
                 yAxisFormatter: formatters.rateAxis,
                 tooltipProps: tooltips.rate,
               }}

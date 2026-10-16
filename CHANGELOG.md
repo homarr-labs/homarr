@@ -1,4 +1,26 @@
 ## What's Changed
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7169
+* feat(releases): show running versions from linked integrations by @hasier in https://github.com/homarr-labs/homarr/pull/7149
+* ci: don't fail integration list workflow when readme is unchanged by @ajnart in https://github.com/homarr-labs/homarr/pull/7171
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7179
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7190
+* revert: restore previous ping behavior by @ajnart in https://github.com/homarr-labs/homarr/pull/7189
+* docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7184
+* fix(prowlarr): use POST to test all indexers by @bmarden in https://github.com/homarr-labs/homarr/pull/7183
+* fix(custom-widgets): support all Tabler icons with local SVG sprites by @ajnart in https://github.com/homarr-labs/homarr/pull/7198
+* fix(board): keep widget UI density consistent by @ajnart in https://github.com/homarr-labs/homarr/pull/7192
+* fix(board): avoid extra scrolling on short boards by @ajnart in https://github.com/homarr-labs/homarr/pull/7199
+* perf(dashboard): prioritize cached startup and parallel refreshes by @ajnart in https://github.com/homarr-labs/homarr/pull/7176
+* fix: group recent Jellyfin episode batches by series by @ajnart in https://github.com/homarr-labs/homarr/pull/7103
+* chore(release): automatic release v2.6.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7201
+
+## New Contributors
+* @hasier made their first contribution in https://github.com/homarr-labs/homarr/pull/7149
+* @bmarden made their first contribution in https://github.com/homarr-labs/homarr/pull/7183
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.5.2...v2.6.0
+
+## What's Changed
 * fix: preserve widget backgrounds in Beszel charts by @ajnart in https://github.com/homarr-labs/homarr/pull/7172
 
 

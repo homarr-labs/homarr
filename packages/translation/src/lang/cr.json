@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "crwdns4981:0crwdne4981:0",
       "beszel": "crwdns7571:0crwdne7571:0",
       "systemMonitoring": "crwdns7573:0crwdne7573:0",
-      "security": "crwdns7575:0crwdne7575:0"
+      "security": "crwdns7575:0crwdne7575:0",
+      "serviceVersion": "crwdns11127:0crwdne11127:0"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "crwdns5723:0crwdne5723:0"
           },
+          "integrations": {
+            "label": "crwdns11129:0crwdne11129:0"
+          },
           "identifier": {
             "label": "crwdns3206:0crwdne3206:0",
             "placeholder": "crwdns3208:0crwdne3208:0"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "crwdns3250:0crwdne3250:0",
       "releaseDescription": "crwdns3252:0crwdne3252:0",
       "projectDescription": "crwdns3522:0crwdne3522:0",
+      "runningVersions": "crwdns11131:0crwdne11131:0",
+      "upToDate": "crwdns11133:0crwdne11133:0",
+      "updateAvailable": "crwdns11135:0crwdne11135:0",
+      "unknownStatus": "crwdns11137:0crwdne11137:0",
       "created": "crwdns3254:0crwdne3254:0",
       "error": {
         "label": "crwdns3262:0crwdne3262:0",

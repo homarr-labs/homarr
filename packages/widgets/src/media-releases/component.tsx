@@ -151,19 +151,20 @@ const Item = ({ item, options, isAdvanced, formatDate }: ItemProps) => {
             : undefined
         }
       >
-        {!isAdvanced && options.layout === "backdrop" && (
-          <Box
+        {!isAdvanced && options.layout === "backdrop" && item.imageUrls.backdrop && (
+          <Image
+            src={item.imageUrls.backdrop}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
             w="100%"
             h="100%"
             pos="absolute"
             top={0}
             left={0}
             style={{
-              backgroundImage: `url(${item.imageUrls.backdrop})`,
               borderRadius: 8,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
               opacity: 0.2,
             }}
           />

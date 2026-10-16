@@ -88,7 +88,7 @@ describe("authoring resources", () => {
     });
     expect(stack?.props.some(({ source }) => source === "global")).toBe(false);
     expect(Buffer.byteLength(JSON.stringify(stack), "utf8")).toBeLessThan(20_000);
-    expect(getCustomWidgetComponent("Icon")?.knownValues?.name.length).toBeGreaterThan(100);
+    expect(getCustomWidgetComponent("Icon")?.iconNaming?.availableCount).toBeGreaterThan(100);
 
     const largestComponentPayload = Math.max(
       ...catalog.components.map(({ name }) =>

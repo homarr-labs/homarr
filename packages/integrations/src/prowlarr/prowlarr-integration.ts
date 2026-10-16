@@ -77,6 +77,7 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
   public async testAllAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/indexer/testall"), {
+      method: "POST",
       headers: {
         "X-Api-Key": apiKey,
       },

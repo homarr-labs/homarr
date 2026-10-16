@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Uppetidsövervakning",
       "beszel": "Beszel",
       "systemMonitoring": "Systemövervakning",
-      "security": "Säkerhet"
+      "security": "Säkerhet",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Leverantörs-URL"
           },
+          "integrations": {
+            "label": "Länkade integrationer"
+          },
           "identifier": {
             "label": "Identifierare",
             "placeholder": "Namn eller Ägare/Namn"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "Öppna versionssida",
       "releaseDescription": "Versionsbeskrivning",
       "projectDescription": "Projektbeskrivning",
+      "runningVersions": "Löpande versioner",
+      "upToDate": "Senast uppdaterad",
+      "updateAvailable": "Uppdatering tillgänglig",
+      "unknownStatus": "Okänt",
       "created": "Skapad",
       "error": {
         "label": "Fel",

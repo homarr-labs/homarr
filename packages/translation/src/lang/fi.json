@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Käytettävyysvalvonta",
       "beszel": "Beszel",
       "systemMonitoring": "Järjestelmän Valvonta",
-      "security": "Suojaus"
+      "security": "Suojaus",
+      "serviceVersion": "Versio"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": "Palveluntarjoajan URL"
           },
+          "integrations": {
+            "label": "Linkitetyt Integraatiot"
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -4713,6 +4717,10 @@
       "openReleasePage": "",
       "releaseDescription": "",
       "projectDescription": "",
+      "runningVersions": "Käynnissä Olevat Versiot",
+      "upToDate": "Ajan tasalla",
+      "updateAvailable": "Päivitys saatavilla",
+      "unknownStatus": "Tuntematon",
       "created": "",
       "error": {
         "label": "",

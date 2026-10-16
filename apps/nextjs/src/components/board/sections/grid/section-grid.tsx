@@ -162,7 +162,7 @@ export const SectionGrid = ({
   const viewportRef = useRef<HTMLDivElement>(null);
   const isRail = railPlacement !== "main";
   const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
-  const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
+  const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty" && isEditMode, canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);

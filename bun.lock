@@ -202,6 +202,7 @@
       },
       "devDependencies": {
         "@homarr/tsconfig": "workspace:^0.1.0",
+        "@tabler/icons-sprite": "catalog:",
         "@types/adm-zip": "catalog:",
         "@types/better-sqlite3": "catalog:",
         "@types/chroma-js": "catalog:",
@@ -1267,6 +1268,7 @@
     "@shadcn/react": "^0.2.1",
     "@t3-oss/env-nextjs": "0.13.11",
     "@tabler/icons-react": "3.44.0",
+    "@tabler/icons-sprite": "3.44.0",
     "@tanstack/query-async-storage-persister": "5.101.2",
     "@tanstack/react-devtools": "0.10.9",
     "@tanstack/react-query": "5.101.2",
@@ -2666,6 +2668,8 @@
     "@tabler/icons": ["@tabler/icons@3.44.0", "", {}, "sha512-Wn0AOZG9sg0L+bjfMqq4eNhC6pQjIrk94LvvWYNYkY8KH8wC3YILRzQlrnVJc4FUeMxH/AK97QsYCX35H3LndA=="],
 
     "@tabler/icons-react": ["@tabler/icons-react@3.44.0", "", { "dependencies": { "@tabler/icons": "3.44.0" }, "peerDependencies": { "react": ">= 16" } }, "sha512-8+rvzBbVm/1Z3sG3x7GUNAaxIKxwgz8xaMhRs23nrCnMTKRFAhEC+82zAIFeAA0seXdrAGX5HFCkaLpGK2rVHg=="],
+
+    "@tabler/icons-sprite": ["@tabler/icons-sprite@3.44.0", "", { "dependencies": { "@tabler/icons": "3.44.0" } }, "sha512-+6eag3is1gOW8II/1iYad7ZLLXrBO4skNuDDI/vNTKr4WmiDCpLf8d9OBRTve95TXYkjJrClJuFMrOsgmI+HKA=="],
 
     "@tailwindcss/node": ["@tailwindcss/node@4.3.2", "", { "dependencies": { "@jridgewell/remapping": "2.3.5", "enhanced-resolve": "5.21.6", "jiti": "2.7.0", "lightningcss": "1.32.0", "magic-string": "0.30.21", "source-map-js": "1.2.1", "tailwindcss": "4.3.2" } }, "sha512-yWP/sqEcBLaD8JuA6zNwxoYKr75qxTioYwlRwekj5Jr/I5GXnoJfjetH/psLUIv74cYTH2lBUEzBkinthoYcBg=="],
 

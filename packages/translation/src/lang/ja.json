@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "",
       "beszel": "Beszel",
       "systemMonitoring": "システム監視",
-      "security": "セキュリティ"
+      "security": "セキュリティ",
+      "serviceVersion": "バージョン"
     },
     "testConnection": {
       "action": {
@@ -4654,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "連携連携"
+          },
           "identifier": {
             "label": "識別名",
             "placeholder": "名前、または所有者名"
@@ -4713,6 +4717,10 @@
       "openReleasePage": "リリースページを開く",
       "releaseDescription": "リリースの説明",
       "projectDescription": "プロジェクトの説明",
+      "runningVersions": "実行中のバージョン",
+      "upToDate": "最新です",
+      "updateAvailable": "アップデートがあります",
+      "unknownStatus": "不明",
       "created": "作成日",
       "error": {
         "label": "エラー",
