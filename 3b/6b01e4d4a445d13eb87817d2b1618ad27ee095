@@ -1,0 +1,21 @@
+apps/docs/docs/widgets/uptime-kuma/index.ts
+  s_99767f175fdcb8::t_ab04938dd90bc4 12,18,30,63
+packages/translation/src/lang/en.json
+  s_99767f175fdcb8::t_5bb64480a0a709 4903-4904,4907-4908,4915-4916,4938-4939
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3b6b01e4d4a445d13eb87817d2b1618ad27ee095",
+  "prompts": {},
+  "sessions": {
+    "s_99767f175fdcb8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d20eff31-f9ac-4e73-940a-d0b708581f56",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
