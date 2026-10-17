@@ -63,7 +63,9 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
         userPermissions: true,
         items: {
           with: {
-            item: true,
+            item: {
+              columns: { boardId: true },
+            },
           },
         },
       },
@@ -146,7 +148,9 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
           secrets: true,
           items: {
             with: {
-              item: true,
+              item: {
+                columns: { boardId: true },
+              },
             },
           },
           userPermissions: true,
