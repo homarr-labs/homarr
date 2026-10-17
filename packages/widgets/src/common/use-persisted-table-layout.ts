@@ -231,5 +231,5 @@ export const usePersistedTableLayout = <T>({
     visibleAccessorSet,
   ]);
 
-  return { effectiveColumns, storeKey };
+  return { effectiveColumns, storeKey, setMultipleColumnWidths };
 };
