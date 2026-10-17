@@ -88,10 +88,14 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
   private async getRatioItemsAsync(client: QBittorrent, limit: number) {
     // Preserve the original unfiltered limited population without retaining full provider objects.
     const ratioItems: NonNullable<DownloadClientJobsAndStatus["ratioItems"]> = [];
+    const seen = new Set<string>();
     for (let page = 0; page < 100 && ratioItems.length < limit; page++) {
       const pageSize = Math.min(limit - ratioItems.length, 100);
       const batch = await client.listTorrents({ limit: pageSize, offset: page * 100 });
+      const previousCount = ratioItems.length;
       for (const torrent of batch) {
+        if (seen.has(torrent.hash)) continue;
+        seen.add(torrent.hash);
         ratioItems.push({
           sent: torrent.uploaded,
           size: torrent.size,
@@ -100,7 +104,8 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
         });
         if (ratioItems.length >= limit) break;
       }
-      if (batch.length < pageSize) break;
+      // qBittorrent 4 wraps out-of-range offsets back to the first page.
+      if (batch.length < pageSize || ratioItems.length === previousCount) break;
     }
     return ratioItems;
   }
