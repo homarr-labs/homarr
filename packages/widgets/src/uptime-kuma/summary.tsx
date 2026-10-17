@@ -43,11 +43,11 @@ export const OverallStatus = ({
   summary,
   short = false,
   size = "md",
-}: SummaryProps & { short?: boolean; size?: "sm" | "md" | "lg" }) => {
+}: SummaryProps & { short?: boolean; size?: "sm" | "md" }) => {
   const t = useI18n("widget.uptimeKuma");
   const Icon = overallStatusIcons[summary.overallStatus];
   const color = overallStatusColors[summary.overallStatus];
-  const label = short ? getShortLabel(summary, t) : t(`overall.${summary.overallStatus}`);
+  const label = short ? getShortStatusLabel(summary, t) : t(`overall.${summary.overallStatus}`);
 
   return (
     <div className={classes.overallStatus} data-size={size}>
@@ -139,7 +139,7 @@ export const DistributionBar = ({ summary }: SummaryProps) => {
   );
 };
 
-const getShortLabel = (summary: UptimeKumaSummary, t: ReturnType<typeof useI18n<"widget.uptimeKuma">>) => {
+export const getShortStatusLabel = (summary: UptimeKumaSummary, t: ReturnType<typeof useI18n<"widget.uptimeKuma">>) => {
   if (summary.counts.down > 0) return t("short.down", { count: summary.counts.down });
   if (summary.counts.pending > 0) return t("short.pending", { count: summary.counts.pending });
   if (summary.overallStatus === "maintenance") return t("short.maintenance");

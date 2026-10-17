@@ -107,11 +107,6 @@
   height: var(--mantine-font-size-md);
 }
 
-.overallStatus[data-size="lg"] .overallStatusIcon {
-  width: var(--mantine-font-size-xl);
-  height: var(--mantine-font-size-xl);
-}
-
 .breakdown {
   display: flex;
   align-items: center;
@@ -235,12 +230,6 @@
   gap: rem(8px);
   min-width: 0;
   padding-right: rem(20px);
-}
-
-.chipUptime {
-  color: var(--mantine-color-dimmed);
-  font-size: var(--mantine-font-size-xs);
-  font-variant-numeric: tabular-nums;
 }
 
 .list {

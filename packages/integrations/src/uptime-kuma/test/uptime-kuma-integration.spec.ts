@@ -209,7 +209,7 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
       { name: "Pending", status: "pending", uptime24h: 50 },
       { name: "Maintenance", status: "maintenance", uptime24h: null },
       { name: "Never checked", status: "unknown", uptime24h: null },
-      { name: "Paused last week", status: "up", uptime24h: null },
+      { name: "Paused last week", status: "paused", uptime24h: null },
     ]);
   });
 
@@ -227,8 +227,9 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
             monitorList: [
               { id: 1, name: "Active" },
               { id: 2, name: "Stopped 35 minutes ago" },
-              { id: 3, name: "Single old check" },
+              { id: 3, name: "Single check an hour ago" },
               { id: 4, name: "Checked every two hours" },
+              { id: 5, name: "Single check two days ago" },
             ],
           },
         ],
@@ -239,8 +240,9 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
           "2": everyMinuteUntil(8, 30),
           "3": [beat(0, "2026-10-17 08:00:00")],
           "4": [beat(1, "2026-10-17 06:00:00"), beat(1, "2026-10-17 08:00:00")],
+          "5": [beat(1, "2026-10-15 09:00:00")],
         },
-        uptimeList: { "1_24": 1, "2_24": 0.99, "3_24": 0, "4_24": 1 },
+        uptimeList: { "1_24": 1, "2_24": 0.99, "3_24": 0, "4_24": 1, "5_24": 1 },
       },
     );
 
@@ -249,8 +251,9 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
     expect(statusPage.groups[0]?.monitors.map(({ name, status, uptime24h }) => ({ name, status, uptime24h }))).toEqual([
       { name: "Active", status: "up", uptime24h: 100 },
       { name: "Stopped 35 minutes ago", status: "paused", uptime24h: 99 },
-      { name: "Single old check", status: "paused", uptime24h: 0 },
+      { name: "Single check an hour ago", status: "down", uptime24h: 0 },
       { name: "Checked every two hours", status: "up", uptime24h: 100 },
+      { name: "Single check two days ago", status: "paused", uptime24h: null },
     ]);
   });
 

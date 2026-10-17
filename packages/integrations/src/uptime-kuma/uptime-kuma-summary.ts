@@ -13,6 +13,8 @@ type SummarizableMonitor = Pick<UptimeKumaMonitor, "status" | "uptime24h">;
 
 const inactiveStatuses = new Set<UptimeKumaMonitorStatus>(["paused", "unknown"]);
 
+export const isInactiveUptimeKumaStatus = (status: UptimeKumaMonitorStatus) => inactiveStatuses.has(status);
+
 export const getUniqueUptimeKumaMonitors = (groups: readonly UptimeKumaGroup[]): UptimeKumaMonitor[] => [
   ...new Map(groups.flatMap((group) => group.monitors).map((monitor) => [monitor.id, monitor])).values(),
 ];
@@ -27,7 +29,7 @@ export const summarizeUptimeKumaMonitors = (monitors: readonly SummarizableMonit
     unknown: 0,
   };
   for (const monitor of monitors) counts[monitor.status] += 1;
-  const activeMonitors = monitors.filter((monitor) => !inactiveStatuses.has(monitor.status));
+  const activeMonitors = monitors.filter((monitor) => !isInactiveUptimeKumaStatus(monitor.status));
 
   return {
     total: monitors.length,
