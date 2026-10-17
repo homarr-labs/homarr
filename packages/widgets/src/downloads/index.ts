@@ -28,12 +28,20 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
   icon: IconDownload,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
-  queryMatcher: ({ input }, scope) =>
-    isRecord(input) &&
-    widgetQueryInputMatches(
-      { ...resolveDownloadsQueryInput(scope.integrationIds, input), integrationIds: input.integrationIds },
-      resolveDownloadsQueryInput(scope.integrationIds, scope.options),
-    ),
+  queryMatcher: ({ input }, scope) => {
+    if (!isRecord(input)) return false;
+    const expected = resolveDownloadsQueryInput(scope.integrationIds, scope.options);
+    return widgetQueryInputMatches(
+      {
+        ...resolveDownloadsQueryInput(scope.integrationIds, input),
+        integrationIds: input.integrationIds,
+        // Existing board snapshots can contain the query shape from before provider selection.
+        selection: expected.selection,
+        ...("selection" in input && { selection: input.selection }),
+      },
+      expected,
+    );
+  },
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(

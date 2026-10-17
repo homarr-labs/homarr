@@ -11,7 +11,10 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type {
+  DownloadClientSelection,
+  IDownloadClientIntegration,
+} from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 
@@ -27,10 +30,13 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
     };
   }
 
-  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: {
+    limit: number;
+    selection?: DownloadClientSelection;
+  }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
-    const torrents = await client.listTorrents({ limit: input.limit });
+    const torrents = await this.getSelectedTorrentsAsync(client, input);
     const rates = torrents.reduce(
       ({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }),
       { down: 0, up: 0 },
@@ -61,7 +67,109 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
         category: torrent.category,
       };
     });
-    return { status, items };
+    if (!input.selection) return { status, items };
+
+    const [transferInfo, runningTorrents, ratioItems] = await Promise.all([
+      client.request<{ dl_info_speed: number; up_info_speed: number }>("/transfer/info", "GET"),
+      client.listTorrents({ filter: "running", limit: 1 }),
+      this.getRatioItemsAsync(client, input.limit),
+    ]);
+    return {
+      items,
+      ratioItems,
+      status: {
+        paused: runningTorrents.length === 0,
+        rates: { down: transferInfo.dl_info_speed, up: transferInfo.up_info_speed },
+        types: [type],
+      },
+    };
+  }
+
+  private async getRatioItemsAsync(client: QBittorrent, limit: number) {
+    // Preserve the original unfiltered limited population without retaining full provider objects.
+    const ratioItems: NonNullable<DownloadClientJobsAndStatus["ratioItems"]> = [];
+    const seen = new Set<string>();
+    for (let page = 0; page < 100 && ratioItems.length < limit; page++) {
+      const pageSize = Math.min(limit - ratioItems.length, 100);
+      const batch = await client.listTorrents({ limit: pageSize, offset: page * 100 });
+      const previousCount = ratioItems.length;
+      for (const torrent of batch) {
+        if (seen.has(torrent.hash)) continue;
+        seen.add(torrent.hash);
+        ratioItems.push({
+          sent: torrent.uploaded,
+          size: torrent.size,
+          progress: torrent.progress,
+          category: torrent.category,
+        });
+        if (ratioItems.length >= limit) break;
+      }
+      // qBittorrent 4 wraps out-of-range offsets back to the first page.
+      if (batch.length < pageSize || ratioItems.length === previousCount) break;
+    }
+    return ratioItems;
+  }
+
+  private async getSelectedTorrentsAsync(
+    client: QBittorrent,
+    { limit, selection }: { limit: number; selection?: DownloadClientSelection },
+  ) {
+    if (!selection) return await client.listTorrents({ limit });
+
+    // Only fields with the same meaning in the provider and widget can select the remote window.
+    const sortFields: Record<string, string> = {
+      name: "name",
+      progress: "progress",
+      size: "size",
+      added: "added_on",
+      index: "priority",
+      upSpeed: "upspeed",
+      downSpeed: "dlspeed",
+      sent: "uploaded",
+    };
+    let category: string | undefined;
+    if (selection.filterIsWhitelist && selection.categoryFilter.length === 1) {
+      category = selection.categoryFilter[0];
+    }
+
+    // Bound every response, retained items, and total work even when nearly the whole queue is hidden.
+    let pageSize = Math.min(limit, 100);
+    if (
+      selection.categoryFilter.length > 0 ||
+      !selection.showCompletedTorrent ||
+      selection.activeTorrentThreshold > 0
+    ) {
+      pageSize = 100;
+    }
+    const torrents: Awaited<ReturnType<QBittorrent["listTorrents"]>> = [];
+    const seen = new Set<string>();
+    for (let page = 0; page < 100 && torrents.length < limit; page++) {
+      const previousSeenCount = seen.size;
+      const batch = await client.listTorrents({
+        limit: pageSize,
+        offset: page * pageSize,
+        sort: sortFields[selection.sort],
+        reverse: selection.descending,
+        category,
+      });
+      for (const torrent of batch) {
+        if (seen.has(torrent.hash)) continue;
+        seen.add(torrent.hash);
+        if (selection.categoryFilter.length > 0) {
+          const matches = selection.categoryFilter.includes(torrent.category);
+          if (selection.filterIsWhitelist !== matches) continue;
+        }
+        if (torrent.progress >= 1) {
+          if (!selection.showCompletedTorrent) continue;
+          if (torrent.upspeed < selection.activeTorrentThreshold * 1024) continue;
+        }
+        torrents.push(torrent);
+        if (torrents.length >= limit) break;
+      }
+      // qBittorrent 4 wraps out-of-range offsets back to the first page.
+      if (batch.length < pageSize || seen.size === previousSeenCount) break;
+    }
+    return torrents;
   }
 
   public async pauseQueueAsync() {
