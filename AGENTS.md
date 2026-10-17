@@ -112,6 +112,20 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
 
+### Issue tracker
+
+Use GitHub Issues and pull requests in `homarr-labs/homarr` for agent work.
+Read `docs/agents/issue-tracker.md` before reading or updating reports.
+
+### Triage labels
+
+Use the exact GitHub label mappings, size weights and reporter testing states in
+`docs/agents/triage-labels.md` when triaging issues or PRs.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` + `docs/adr/`. See `docs/agents/domain.md`.
+
 <!-- BEGIN:turborepo-agent-rules -->
 
 # This is NOT the Turborepo you know

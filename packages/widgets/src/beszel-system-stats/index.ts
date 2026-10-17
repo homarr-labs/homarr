@@ -2,19 +2,12 @@ import { IconChartAreaLine, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
+import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 
+import { beszelTimePeriodOptions } from "../beszel/_shared/options";
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 import { createBeszelSystemChoices, resolveStoredBeszelQuerySelection } from "./selection";
-
-const timePeriodOptions = [
-  { value: "1m", label: "Live" },
-  { value: "1h", label: "1 Hour" },
-  { value: "12h", label: "12 Hours" },
-  { value: "24h", label: "24 Hours" },
-  { value: "1w", label: "1 Week" },
-  { value: "30d", label: "30 Days" },
-];
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
@@ -58,8 +51,8 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
         },
       }),
       timePeriod: factory.select({
-        defaultValue: "1h",
-        options: timePeriodOptions,
+        defaultValue: defaultBeszelTimePeriod,
+        options: beszelTimePeriodOptions,
       }),
       showCpu: factory.switch({ defaultValue: true }),
       showMemory: factory.switch({ defaultValue: true }),

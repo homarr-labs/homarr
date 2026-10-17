@@ -21,6 +21,7 @@
     "./jsx/analyzer": "./src/jsx/analyzer.ts",
     "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server/index.ts",
+    "./tabler-icons": "./src/core/tabler-icons.ts",
     "./workbench": "./src/workbench/index.ts"
   },
   "scripts": {

@@ -1,8 +1,9 @@
-import { useState } from "react";
 import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
@@ -36,6 +37,8 @@ const running = (total: number, current: Resource) => {
 
 export const ClusterHealthMonitoring = ({
   integrationId,
+  boardId,
+  itemId,
   options,
   width,
   displayMode,
@@ -46,8 +49,16 @@ export const ClusterHealthMonitoring = ({
   const visibleSections = getClusterVisibleSections(displayMode, options.visibleClusterSections);
   const accordionScope = `${displayMode}:${visibleSections.join(",")}`;
   const accordionDefault = getClusterAccordionDefault(displayMode, visibleSections);
-  const [accordionValues, setAccordionValues] = useState<Record<string, string[]>>({});
-  const accordionValue = accordionValues[accordionScope] ?? accordionDefault;
+  const { data: session } = useSession();
+  const [accordionValues, setAccordionValues] = useLocalStorage<Record<string, string[]>>({
+    key: `homarr-${session?.user.id ?? "anonymous"}-${boardId ?? "preview"}-${itemId}-${integrationId}-health-accordion`,
+    defaultValue: {},
+  });
+  const savedValue = accordionValues?.[accordionScope];
+  let accordionValue = accordionDefault;
+  if (Array.isArray(savedValue)) {
+    accordionValue = savedValue.filter((value) => visibleSections.some((section) => section === value));
+  }
 
   if (!healthData) return <WidgetEmptyState />;
 

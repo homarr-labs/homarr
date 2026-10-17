@@ -247,6 +247,82 @@
         "title": "Conecteaza-te la contul tau",
         "subtitle": "Bine ai revenit! Introdu datele de autentificare"
       },
+      "mcpConsent": {
+        "title": "Examinați accesul clientului",
+        "description": "Revizuiește accesul acestui client înainte de conectare.",
+        "viewingHint": "Vizualizarea acestei pagini nu permite accesul.",
+        "identityTitle": "Cont și client",
+        "loading": "Se încarcă solicitarea de acces",
+        "allow": "Permiteți accesul",
+        "deny": "Interzice accesul",
+        "decisionHint": "Permiteți accesul numai dacă aveți încredere în acest client și retroapeluri.",
+        "requestExpires": "Solicitarea expiră (UTC):",
+        "details": "Detalii tehnice",
+        "returnHome": "Revenire la Homarr",
+        "reload": "Reîncărcați pagina de consimțământ",
+        "account": {
+          "name": "Conectat ca",
+          "id": "ID Utilizator",
+          "nameNotRecorded": "Numele de utilizator nu este înregistrat"
+        },
+        "client": {
+          "name": "Client",
+          "nameNotSupplied": "Numele clientului nu este furnizat",
+          "id": "ID client",
+          "callbackHost": "Gazda de apel",
+          "callbackUrl": "URL callback complet",
+          "hostUnavailable": "Gazda de apel indisponibilă",
+          "unverifiedHint": "Numele clienților sunt autoraportate, nu sunt verificate de Homarr.",
+          "destinationHint": "Decizia dvs. se va întoarce la acest callback. Dacă permiteți accesul, clientul poate schimba codul de autorizare pentru o acreditare API."
+        },
+        "access": {
+          "title": "Acces la cont",
+          "description": "Foloseşte permisiunile curente, inclusiv resursele partajate.",
+          "details": "Vizualizare permisiuni ({count})",
+          "noGlobalPermissions": "Utilizează contul tău și accesul partajat la resurse, fără permisiuni globale."
+        },
+        "admin": {
+          "title": "Acces complet la administrator",
+          "description": "Poți gestiona servicii de homarr și conectate, inclusiv acțiuni distructive."
+        },
+        "credential": {
+          "title": "Domeniul de aplicare și durata de viață",
+          "breadth": "Funcționează cu HTTP API și MCP Homarr, inclusiv în afara acestui client.",
+          "lifetime": "Fără expirare automată. Deconectarea nu revocă accesul.",
+          "manageConnections": "Revocă în setările generale"
+        },
+        "error": {
+          "freshStart": "Începe o nouă cerere de autorizare de la client. Homarr îți va cere să revizuiești accesul din nou.",
+          "unavailable": {
+            "title": "Solicitare de acces indisponibilă",
+            "description": "Această cerere a expirat, a fost deja gestionată sau nu mai este disponibilă. Nu poate fi aprobată de pe această pagină."
+          },
+          "invalid_browser": {
+            "title": "Solicitarea de acces aparține unui alt browser",
+            "description": "Acest browser nu poate verifica solicitarea originală. Utilizați browserul unde ați început autorizarea, sau porniți o cerere nouă din partea clientului."
+          },
+          "session_changed": {
+            "title": "Sesiunea de autentificare s-a schimbat",
+            "description": "Această solicitare a fost legată de un utilizator diferit sau o sesiune de conectare. Nu poate fi aprobată cu sesiunea curentă."
+          },
+          "invalid_request": {
+            "title": "Cererea de acces nu a putut fi verificată",
+            "description": "Cererea este invalidă, expirată sau nu mai este verificabilă. Accesul nu a fost acordat prin această încercare."
+          },
+          "access_denied": {
+            "title": "Accesul nu a fost acordat",
+            "description": "Încercarea de autorizare a fost refuzată. Această încercare nu a permis accesul."
+          },
+          "server_error": {
+            "title": "Cererea de acces nu a putut fi finalizată",
+            "description": "Homarr nu a putut finaliza această încercare de autorizare. Verificați conexiunile OAuth înainte de a începe din nou."
+          },
+          "unknown": {
+            "title": "Solicitare de acces indisponibilă",
+            "description": "Această pagină nu poate confirma rezultatul autorizării. Verificați conexiunile OAuth înainte de a începe din nou."
+          }
+        }
+      },
       "invite": {
         "title": "Alătură-te Homarr",
         "titleWithAppName": "Alătură-te {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Selectează mai multe",
         "cancelMultiple": "Ieșiți din multi-selectare",
         "customApplication": "Aplicație personalizată",
-        "application": "Cerere"
+        "application": "Cerere",
+        "backToApps": "Înapoi la aplicații",
+        "createAndAdd": "Creează și adaugă",
+        "createAnother": "Creează și continuă"
       },
       "create": {
         "title": "Creează o aplicație nouă",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Monitorizare uptime",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorizare sistem",
-      "security": "Securitate"
+      "security": "Securitate",
+      "serviceVersion": "Versiune"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Pagina {page} {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Comutare navigare"
     },
     "here": "aici",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Adăugați un URL sau o aplicație în setările widget-ului"
+      "empty": "Adăugați un URL sau o aplicație în setările widget-ului",
+      "groups": {
+        "label": "Categorii",
+        "placeholder": "Categorie nouă",
+        "add": "Adaugă categorie",
+        "remove": "Elimină categoria {name}",
+        "rename": "Numele categoriei pentru {name}",
+        "assign": "Categorie pentru {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "Războinic de arhivă",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Default tab"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Sistem apoi cluster",
+          "clusterFirst": "Cluster apoi Sistem"
+        },
         "visibleClusterSections": {
           "label": "Secţiuni vizibile de cluster"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Containere de filtrat"
+        },
+        "filterCaseSensitive": {
+          "label": "Sensibil la caz"
+        },
+        "filterAllowWildcards": {
+          "label": "Permite metacaractere",
+          "description": "Folosește * pentru zero sau mai multe caractere."
         },
         "filterIsWhitelist": {
           "label": "Filtrare ca whitelist"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Nicio aplicație găsită",
         "description": "Apăsați <here></here> pentru a crea o aplicație nouă",
-        "quickCreate": "Creează o aplicație pe zbor"
+        "quickCreate": "Creează o aplicație pe zbor",
+        "create": "Creare aplicație"
       },
       "error": {
         "noIntegration": "Nicio integrare selectată",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "URL furnizor"
           },
+          "integrations": {
+            "label": "Integrări legate"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Nume sau proprietar/nume"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "Deschide pagina de lansare",
       "releaseDescription": "Descriere lansare",
       "projectDescription": "Descriere proiect",
+      "runningVersions": "Versiuni care rulează",
+      "upToDate": "Actualizare actualizată",
+      "updateAvailable": "Actualizare disponibilă",
+      "unknownStatus": "Necunoscut",
       "created": "Creat",
       "error": {
         "label": "Eroare",
@@ -6364,6 +6476,31 @@
               "search": "Caută",
               "firstDayOfWeek": "Prima zi a săptămâni",
               "accessibility": "Accesibilitate",
+              "oauthConnections": {
+                "title": "Conexiuni OAuth",
+                "description": "Acești clienți au obținut acreditări API pentru contul tău prin OAuth. Acreditările funcționează cu HTTP API HTTP și MCP, nu expiră automat și rămân valide după ce te deconectezi.",
+                "revocationHint": "Revocarea unei conexiuni elimină acreditarea sa API. Pentru a reconecta, porniți din nou autorizarea de la client.",
+                "loading": "Se încarcă conexiunile OAuth",
+                "retry": "Reîncarcă conexiunile",
+                "revoke": "Revocă conexiunea",
+                "confirmRevoke": "Confirmați revocarea",
+                "empty": {
+                  "title": "Nicio conexiune OAuth înregistrată",
+                  "description": "Noi conexiuni OAuth apar aici. Acreditările mai vechi fără detalii ale clientului înregistrate pot avea nevoie de un administrator pentru a le revoca în chei API."
+                },
+                "loadError": {
+                  "title": "Conexiunile OAuth nu au putut fi încărcate",
+                  "description": "Încearcă să încarci din nou lista. Acest lucru nu revocă credențialele."
+                },
+                "success": {
+                  "title": "Conexiune revocată",
+                  "description": "Acreditările API salvate au fost eliminate. Reconectați din partea clientului pentru a acorda din nou accesul."
+                },
+                "error": {
+                  "title": "Conexiunea nu a putut fi revocată",
+                  "description": "Acreditările pot fi încă active. Încercați să le revocați din nou."
+                }
+              },
               "onboardingTours": {
                 "title": "Tururi de inițiere",
                 "description": "Resetați tururile de inițiere pentru a le revedea la următoarea vizită în zona de administrare sau pe planșă.",
@@ -6904,7 +7041,8 @@
               "label": "Autentificare",
               "title": "Chei API",
               "button": {
-                "createApiToken": "Creare simbol API"
+                "createApiToken": "Creare simbol API",
+                "confirmDeletion": "Confirmă ștergerea"
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Creat de",
+                  "source": "Integrare",
                   "actions": "Acțiuni"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Cheie API manuală sau moștenită",
+                "unnamedClient": "Numele clientului nu este înregistrat",
+                "clientNameHint": "Numele clienților sunt autoraportate și nu sunt verificate.",
+                "details": "Detalii conexiune",
+                "credentialId": "ID de acreditare",
+                "clientId": "ID client",
+                "callbackHost": "Gazda de apel",
+                "callbackUrl": "URL callback complet",
+                "issuedAt": "S-a emis (UTC)",
+                "unknown": "Nu sunt înregistrate"
+              },
+              "empty": {
+                "title": "Nu există chei API de afișat",
+                "description": "Creați un token API sau ajustați filtrele de tabel pentru a găsi chei existente."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "Cheia API nu a putut fi creată",
+                  "description": "Nu a fost primită nicio acreditare nouă. Verificați lista de taste înainte de a încerca din nou."
+                },
+                "deleteError": {
+                  "title": "Cheia API nu a putut fi ștearsă",
+                  "description": "Acreditările pot fi încă active. Încercați să le ștergeți din nou."
+                },
+                "deleteSuccess": {
+                  "title": "API key ştearsă",
+                  "description": "Acreditările API salvate au fost eliminate."
+                },
+                "refreshError": {
+                  "title": "Cheie API ștearsă, dar lista nu a putut fi reîmprospătată",
+                  "description": "Reîncărcați această pagină pentru a vedea cheile API curente."
                 }
               }
             },

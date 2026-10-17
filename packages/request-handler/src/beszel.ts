@@ -1,4 +1,6 @@
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { BeszelTimePeriod } from "@homarr/definitions/beszel";
+import { beszelTimePeriodSchema } from "@homarr/definitions/beszel";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type {
   BeszelAlert,
@@ -107,7 +109,7 @@ export const beszelAlertsRequestHandler = createIntegrationRequestHandler<
   },
 });
 
-const timePeriodConfig: Record<string, { type: string; perPage: number }> = {
+const timePeriodConfig: Record<BeszelTimePeriod, { type: string; perPage: number }> = {
   "1m": { type: "1m", perPage: 60 },
   "1h": { type: "1m", perPage: 60 },
   "12h": { type: "10m", perPage: 72 },
@@ -124,7 +126,7 @@ export interface BeszelStatsData {
 export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   BeszelStatsData,
   "beszel" | "mock",
-  { systemId: string; timePeriod: string; includeDocker: boolean }
+  { systemId: string; timePeriod: BeszelTimePeriod; includeDocker: boolean }
 >({
   cacheNamespace: "beszel:stats",
   // No cache — the widget polls every 5s for live updates;
@@ -132,7 +134,7 @@ export const beszelStatsRequestHandler = createIntegrationRequestHandler<
   cacheTtlMs: 0,
   async requestAsync(integration, input) {
     const start = performance.now();
-    const config = timePeriodConfig[input.timePeriod] ?? { type: "1m", perPage: 60 };
+    const config = timePeriodConfig[beszelTimePeriodSchema.parse(input.timePeriod)];
     const instance = await createIntegrationAsync(integration);
     const systemStatsPromise = instance.getSystemStatsAsync(input.systemId, config.type, config.perPage);
     let containerStatsPromise: Promise<BeszelContainerStatsRecord[]> = Promise.resolve([]);

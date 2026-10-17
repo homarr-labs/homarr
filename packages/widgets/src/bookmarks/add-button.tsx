@@ -22,6 +22,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { SortableItemListInput } from "../options";
 import { createDirectBookmark, getBookmarkFaviconUrl, splitBookmarkUrls } from "./bookmark-item";
 import type { BookmarkItem } from "./bookmark-item";
+import { BookmarkGroupsEditor } from "./groups";
 
 type SelectableApp = RouterOutputs["app"]["selectable"][number];
 export type BookmarkSelectionItem = SelectableApp | BookmarkItem;
@@ -110,89 +111,92 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
   ));
 
   return (
-    <Combobox
-      store={combobox}
-      onOptionSubmit={handleOptionSubmit}
-      position="bottom-start"
-      middlewares={{ flip: true, shift: true }}
-      styles={{
-        dropdown: { overflow: "hidden" },
-        option: { borderRadius: "var(--mantine-radius-sm)" },
-      }}
-    >
-      <Combobox.DropdownTarget>
-        <PillsInput
-          label={t("label")}
-          description={t("description")}
-          error={error ? tCommon("error") : undefined}
-          onClick={() => combobox.openDropdown()}
-          leftSection={
-            <ThemeIcon variant="light" size="sm" radius="xl">
-              <IconLink size={14} />
-            </ThemeIcon>
-          }
-          rightSection={isPending ? <Loader size="xs" /> : undefined}
-          styles={{ input: { minHeight: 44 } }}
-        >
-          <Combobox.EventsTarget>
-            <PillsInput.Field
-              value={search}
-              placeholder={t("placeholder")}
-              onFocus={() => combobox.openDropdown()}
-              onBlur={() => combobox.closeDropdown()}
-              onChange={(event) => {
-                setSearch(event.currentTarget.value);
-                combobox.openDropdown();
-                combobox.updateSelectedOptionIndex();
-              }}
-              onPaste={(event) => {
-                const pastedValue = event.clipboardData.getData("text");
-                if (splitBookmarkUrls(pastedValue).length < 2) return;
-                event.preventDefault();
-                addUrls(pastedValue);
-              }}
-              onKeyDown={(event) => {
-                if (event.key !== "Enter") return;
-                if (!pendingUrl) return;
-                event.preventDefault();
-                addUrls(search);
-              }}
-            />
-          </Combobox.EventsTarget>
-        </PillsInput>
-      </Combobox.DropdownTarget>
+    <Stack gap="sm">
+      <Combobox
+        store={combobox}
+        onOptionSubmit={handleOptionSubmit}
+        position="bottom-start"
+        middlewares={{ flip: true, shift: true }}
+        styles={{
+          dropdown: { overflow: "hidden" },
+          option: { borderRadius: "var(--mantine-radius-sm)" },
+        }}
+      >
+        <Combobox.DropdownTarget>
+          <PillsInput
+            label={t("label")}
+            description={t("description")}
+            error={error ? tCommon("error") : undefined}
+            onClick={() => combobox.openDropdown()}
+            leftSection={
+              <ThemeIcon variant="light" size="sm" radius="xl">
+                <IconLink size={14} />
+              </ThemeIcon>
+            }
+            rightSection={isPending ? <Loader size="xs" /> : undefined}
+            styles={{ input: { minHeight: 44 } }}
+          >
+            <Combobox.EventsTarget>
+              <PillsInput.Field
+                value={search}
+                placeholder={t("placeholder")}
+                onFocus={() => combobox.openDropdown()}
+                onBlur={() => combobox.closeDropdown()}
+                onChange={(event) => {
+                  setSearch(event.currentTarget.value);
+                  combobox.openDropdown();
+                  combobox.updateSelectedOptionIndex();
+                }}
+                onPaste={(event) => {
+                  const pastedValue = event.clipboardData.getData("text");
+                  if (splitBookmarkUrls(pastedValue).length < 2) return;
+                  event.preventDefault();
+                  addUrls(pastedValue);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter") return;
+                  if (!pendingUrl) return;
+                  event.preventDefault();
+                  addUrls(search);
+                }}
+              />
+            </Combobox.EventsTarget>
+          </PillsInput>
+        </Combobox.DropdownTarget>
 
-      <Combobox.Dropdown>
-        <ScrollArea.Autosize mah={280}>
-          <Combobox.Options>
-            {pendingUrl && !selectedValues.has(pendingUrl.id) ? (
-              <Combobox.Option value={createOptionValue}>
-                <Group gap="sm" wrap="nowrap">
-                  <Avatar src={getBookmarkFaviconUrl(pendingUrl.href)} size={28} radius="sm" color="gray">
-                    <IconLink size={16} />
-                  </Avatar>
-                  <Stack gap={0} miw={0} flex={1}>
-                    <Text size="sm" fw={600} truncate>
-                      {t("addUrl")}
-                    </Text>
-                    <Text size="xs" c="dimmed" truncate>
-                      {pendingUrl.href}
-                    </Text>
-                  </Stack>
-                  <IconCheck size={16} aria-hidden />
-                </Group>
-              </Combobox.Option>
-            ) : null}
-            {options}
-            {!pendingUrl && options.length === 0 ? <Combobox.Empty>{tSelect("notFound")}</Combobox.Empty> : null}
-          </Combobox.Options>
-        </ScrollArea.Autosize>
-        <Combobox.Footer>
-          <Text size="xs" c="dimmed">
-            {t("hint")}
-          </Text>
-        </Combobox.Footer>
-      </Combobox.Dropdown>
-    </Combobox>
+        <Combobox.Dropdown>
+          <ScrollArea.Autosize mah={280}>
+            <Combobox.Options>
+              {pendingUrl && !selectedValues.has(pendingUrl.id) ? (
+                <Combobox.Option value={createOptionValue}>
+                  <Group gap="sm" wrap="nowrap">
+                    <Avatar src={getBookmarkFaviconUrl(pendingUrl.href)} size={28} radius="sm" color="gray">
+                      <IconLink size={16} />
+                    </Avatar>
+                    <Stack gap={0} miw={0} flex={1}>
+                      <Text size="sm" fw={600} truncate>
+                        {t("addUrl")}
+                      </Text>
+                      <Text size="xs" c="dimmed" truncate>
+                        {pendingUrl.href}
+                      </Text>
+                    </Stack>
+                    <IconCheck size={16} aria-hidden />
+                  </Group>
+                </Combobox.Option>
+              ) : null}
+              {options}
+              {!pendingUrl && options.length === 0 ? <Combobox.Empty>{tSelect("notFound")}</Combobox.Empty> : null}
+            </Combobox.Options>
+          </ScrollArea.Autosize>
+          <Combobox.Footer>
+            <Text size="xs" c="dimmed">
+              {t("hint")}
+            </Text>
+          </Combobox.Footer>
+        </Combobox.Dropdown>
+      </Combobox>
+      <BookmarkGroupsEditor />
+    </Stack>
   );
 };

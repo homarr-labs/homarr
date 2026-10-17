@@ -53,8 +53,9 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
   const tCommon = useI18n("common");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [groupIds, setGroupIds] = useState(groups.map((group) => group.id));
+  const groupsById = useMemo(() => new Map(groups.map((group) => [group.id, group])), [groups]);
   const isDirty = useMemo(
-    () => initialGroupIds.some((groupId, index) => groupIds.indexOf(groupId) !== index),
+    () => initialGroupIds.some((groupId, index) => groupIds[index] !== groupId),
     [groupIds, initialGroupIds],
   );
   const { mutateAsync, isPending } = clientApi.group.savePositions.useMutation({
@@ -107,11 +108,11 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
   const selectedRow = useMemo(() => {
     if (!activeId) return null;
 
-    const current = groups.find((group) => group.id === activeId);
+    const current = groupsById.get(activeId);
     if (!current) return null;
 
     return <Row group={current} handle={<DragHandle attributes={undefined} listeners={undefined} active />} />;
-  }, [activeId, groups]);
+  }, [activeId, groupsById]);
 
   return (
     <>
@@ -134,7 +135,7 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
           <TableTbody>
             <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
               {groupIds.map((groupId) => {
-                const group = groups.find(({ id }) => id === groupId);
+                const group = groupsById.get(groupId);
                 if (!group) return null;
 
                 return <DraggableRow key={group.id} group={group} disabled={hasFilter} />;

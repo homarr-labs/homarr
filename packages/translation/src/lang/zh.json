@@ -247,6 +247,82 @@
         "title": "登入帳戶",
         "subtitle": "歡迎回來！請輸入憑證"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "加入 Homarr",
         "titleWithAppName": "加入 {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "選取多個",
         "cancelMultiple": "退出多重選取",
         "customApplication": "自訂應用程式",
-        "application": "應用程式"
+        "application": "應用程式",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "建立新應用程式",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "運作時間監控",
       "beszel": "Beszel",
       "systemMonitoring": "系統監控",
-      "security": "安全"
+      "security": "安全",
+      "serviceVersion": "版本"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "第 {page} 頁，共 {totalPages} 頁"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "此處",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "在小工具設定中新增 URL 或應用程式"
+      "empty": "在小工具設定中新增 URL 或應用程式",
+      "groups": {
+        "label": "",
+        "placeholder": "創建分類",
+        "add": "創建分類",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "預設頁面"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "顯示的叢集區段"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "要篩選的容器"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "以白名單篩選"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "未找到應用程式",
         "description": "點擊 <here></here> 創建新的應用程式",
-        "quickCreate": "快速建立應用程式"
+        "quickCreate": "快速建立應用程式",
+        "create": "創建應用程式"
       },
       "error": {
         "noIntegration": "未選擇集成",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "提供者網址"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "識別碼",
             "placeholder": "名稱或擁有者/名稱"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "開啟發布葉面",
       "releaseDescription": "版本描述",
       "projectDescription": "專案說明",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "未知",
       "created": "已創建",
       "error": {
         "label": "錯誤",
@@ -6364,6 +6476,31 @@
               "search": "搜尋",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "入門導覽",
                 "description": "重設入門導覽，以便在下次造訪管理區域或儀表板時再次看到它們。",
@@ -6904,7 +7041,8 @@
               "label": "認證",
               "title": "API 密鑰\n",
               "button": {
-                "createApiToken": "創建 API 密鑰"
+                "createApiToken": "創建 API 密鑰",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "創建者",
+                  "source": "集成",
                   "actions": "動作"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

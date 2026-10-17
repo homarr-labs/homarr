@@ -16,6 +16,7 @@ export {
   handshakeAsync,
   prepareIntegrationResponseCacheAsync,
   createSubPubChannel,
+  createChannelEventHistoryOld,
   createGetSetChannel,
   getIntegrationSessionStoreKey,
   createLockChannel,

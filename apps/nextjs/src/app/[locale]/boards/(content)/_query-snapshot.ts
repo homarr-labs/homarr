@@ -56,10 +56,12 @@ const getQueryIntegrationIds = (queryKey: QueryKey, board: Board) => {
   if (path.join(".") === "widget.rssFeed.getFeeds") {
     if (!("urls" in input) || !Array.isArray(input.urls)) return null;
     if (!("maximumAmountPosts" in input) || typeof input.maximumAmountPosts !== "number") return null;
+    if (!("descriptionMaxLength" in input) || typeof input.descriptionMaxLength !== "number") return null;
     const urls: unknown[] = input.urls;
     const matchesBoardItem = board.items.some((item) => {
       if (item.kind !== "rssFeed" || !Array.isArray(item.options.feedUrls)) return false;
       if (Number(item.options.maximumAmountPosts ?? 100) !== input.maximumAmountPosts) return false;
+      if (Number(item.options.descriptionMaxLength ?? 250) !== input.descriptionMaxLength) return false;
       return (
         item.options.feedUrls.length === urls.length && item.options.feedUrls.every((url, index) => url === urls[index])
       );

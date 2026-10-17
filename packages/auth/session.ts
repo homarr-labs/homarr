@@ -41,7 +41,7 @@ export const getSessionFromTokenAsync = async (db: Database, token: string | und
     },
   });
 
-  if (!session) {
+  if (!session || session.expires.getTime() <= Date.now()) {
     return null;
   }
 

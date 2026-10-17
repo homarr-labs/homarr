@@ -6,8 +6,11 @@ import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
+import { fetchServarrServiceVersionAsync } from "../../base/servarr-service-version";
 import type { IMediaOrganizerIntegration } from "../../interfaces/media-organizer/media-organizer-integration";
 import type { MissingMediaItem, QueuedMediaItem } from "../../interfaces/media-organizer/media-organizer-types";
+import type { IServiceVersionIntegration } from "../../interfaces/service-version/service-version-integration";
+import type { ServiceVersion } from "../../interfaces/service-version/service-version-types";
 
 /**
  * Bindery (https://github.com/vavallee/bindery) is a Sonarr/Radarr-style
@@ -15,7 +18,7 @@ import type { MissingMediaItem, QueuedMediaItem } from "../../interfaces/media-o
  * server-side pagination on its missing/queue endpoints, so both methods below
  * fetch the full response and page it client-side.
  */
-export class BinderyIntegration extends Integration implements IMediaOrganizerIntegration {
+export class BinderyIntegration extends Integration implements IMediaOrganizerIntegration, IServiceVersionIntegration {
   async getMissingAsync(pageSize = 10): Promise<{ items: MissingMediaItem[]; totalCount: number }> {
     const url = this.url("/api/v1/wanted/missing");
 
@@ -87,6 +90,12 @@ export class BinderyIntegration extends Integration implements IMediaOrganizerIn
         };
       }),
     };
+  }
+
+  async getServiceVersionAsync(): Promise<ServiceVersion> {
+    return await fetchServarrServiceVersionAsync(this.url("/api/v1/system/status"), {
+      "X-Api-Key": super.getSecretValue("apiKey"),
+    });
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

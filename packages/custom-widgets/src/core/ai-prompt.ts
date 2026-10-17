@@ -1,5 +1,6 @@
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { customJsxAuthoringCatalog } from "./component-catalog";
+import { CUSTOM_WIDGET_SCHEMA } from "./custom-jsx-schema";
 import {
   redactCustomWidgetAiContext,
   redactCustomWidgetAiResponse,
@@ -39,7 +40,7 @@ const CUSTOM_WIDGET_CONTEXT_BOUNDARY_INSTRUCTION = `Context security boundary:
 
 const LEGACY_MIGRATION_AUTHORING_GUIDANCE = `Convert the supplied legacy widget to Homarr Custom JSX v2 for Mantine ${CUSTOM_WIDGET_MANTINE_VERSION}. This is a migration, not a redesign: reuse the original JSX hierarchy, labels, interactions, and known component props. Change only what v2 compatibility, safe manual actions, null handling, and tile-width readability require. Do not inventory unrelated components or rediscover the supplied API.
 
-The importable manifest has "$schema":"homarr-custom-widget-v2", name, optional description/iconUrl, keyed sources/requests/options, and a template string containing one JSX expression. Omit absent optional fields: iconUrl must be a valid URL string or omitted, never null. Use sources.default with baseUrl, networkScope (public/private/loopback), and credential-free auth: "none", "basic", "bearer", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Map legacy authType and headerName to that auth declaration, including authType:"none" to auth:"none". For authenticated sources, empty configuredSecretKinds means credentials need configuration, not removal of authentication; Homarr configures secrets separately.
+The importable manifest has "$schema":"${CUSTOM_WIDGET_SCHEMA}", name, optional description/iconUrl, keyed sources/requests/options, and a template string containing one JSX expression. Omit absent optional fields: iconUrl must be a valid URL string or omitted, never null. Use sources.default with baseUrl, networkScope (public/private/loopback), and credential-free auth: "none", "basic", "bearer", {"type":"apiKeyHeader","name":"X-Api-Key"}, or {"type":"apiKeyQuery","name":"api_key"}. Map legacy authType and headerName to that auth declaration, including authType:"none" to auth:"none". For authenticated sources, empty configuredSecretKinds means credentials need configuration, not removal of authentication; Homarr configures secrets separately.
 
 Each request has source:"default", slash-prefixed path, method, query, optional body, kind, trigger, and permission. For GET use "kind":"query", "trigger":"load", "permission":"view". For non-GET use "kind":"action", "trigger":"manual", "permission":"modify" (DELETE: "full") with an appropriate confirmation string or {title,message,confirmLabel,destructive}. "load" is a trigger, never a kind; "auto" and "automatic" are not valid triggers. Preserve original path, query values, and body. Do not invent a replacement GET for a legacy POST. Legacy actionButton also preserves buttonLabel, buttonColor, confirmText, and successMessage using ActionButton label/children, color, request confirmation, and successMessage props; keep failure feedback.
 
@@ -48,7 +49,7 @@ For request r, the untouched response body is data.r; status.r contains loading/
 Templates cannot use imports, hooks, raw HTML/events, fetch, eval, statements, or arbitrary functions. Keep registered components and safe helpers. Resolve only genuinely unknown components through the available component tools. Send the complete migrated candidate directly to previewCreate (templateLines for multiline tool input), never an empty placeholder to probe the lifecycle. It validates manifest and JSX together. Follow concrete diagnostics and source-configuration/evidence steps; do not prevalidate every draft or speculate about future tool availability. Return the exact tested definition in the final JSON, joining tool-only templateLines into the template string; do not add legacy fields or wrap it in a definition property.`;
 
 const leanShape = `{
-  "$schema": "homarr-custom-widget-v2",
+  "$schema": "${CUSTOM_WIDGET_SCHEMA}",
   "name": "Widget name",
   "description": "Optional summary",
   "sources": {
@@ -73,7 +74,7 @@ const CUSTOM_WIDGET_AUTHORING_COMMUNICATION_RULE =
   "Use tools without a planning preamble; ask one blocker question; report success in 1-2 sentences.";
 
 const COMPACT_LOAD_EXAMPLE = {
-  $schema: "homarr-custom-widget-v2",
+  $schema: CUSTOM_WIDGET_SCHEMA,
   name: "Status",
   sources: { default: { baseUrl: "https://example.test", networkScope: "public", auth: "none" } },
   requests: { status: { path: "/status" } },
@@ -82,7 +83,7 @@ const COMPACT_LOAD_EXAMPLE = {
 };
 
 const COMPACT_MANUAL_EXAMPLE = {
-  $schema: "homarr-custom-widget-v2",
+  $schema: CUSTOM_WIDGET_SCHEMA,
   name: "Search",
   sources: { default: { baseUrl: "https://example.test", networkScope: "public", auth: "none" } },
   requests: {

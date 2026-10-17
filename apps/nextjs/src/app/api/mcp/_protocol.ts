@@ -45,6 +45,7 @@ export const createMcpProtocolHandler = ({
           tool.name,
           {
             description: tool.description,
+            annotations: tool.annotations,
             inputSchema: fromJsonSchema(tool.inputSchema as Parameters<typeof fromJsonSchema>[0]),
           },
           async (args) => {

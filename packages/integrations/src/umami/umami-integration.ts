@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { isRecord } from "@homarr/common";
+import { isRecord, splitToChunksWithNItems } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -34,6 +34,7 @@ const UMAMI_CUSTOM_EVENT_TYPE = 2;
 const UMAMI_EVENT_NAME_LIMIT = 5_000;
 const UMAMI_EVENT_PAGE_SIZE = 5_000;
 const UMAMI_EVENT_PAGE_MAX = 20;
+const UMAMI_EVENT_SERIES_CONCURRENCY = 3;
 
 const logger = createLogger({ module: "umami-integration" });
 
@@ -266,16 +267,21 @@ export class UmamiIntegration extends Integration {
     const authHeaders = await this.getAuthHeadersAsync();
     const { startAt, endAt, unit } = this.computeTimeRange(timeFrame);
     const results: UmamiEventSeries[] = [];
-    for (const eventName of eventNames) {
-      const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
-        websiteId,
-        startAt,
-        endAt,
-        unit,
-        eventName,
-        authHeaders,
+    for (const eventBatch of splitToChunksWithNItems(eventNames, UMAMI_EVENT_SERIES_CONCURRENCY)) {
+      const series = await Promise.all(
+        eventBatch.map(async (eventName) => {
+          const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
+            websiteId,
+            startAt,
+            endAt,
+            unit,
+            eventName,
+            authHeaders,
+          );
+          return { eventName, dataPoints: dataPoints ?? [] };
+        }),
       );
-      results.push({ eventName, dataPoints: dataPoints ?? [] });
+      results.push(...series);
     }
     return results;
   }

@@ -5,9 +5,9 @@ export interface VpnProviderDetails {
 
 export interface VpnSummary {
   vpnStatus: string;
-  dnsStatus: string;
+  dnsStatus?: string;
   publicIp: string;
-  country: string;
-  city: string;
-  vpnProvider: VpnProviderDetails;
+  country?: string;
+  city?: string;
+  vpnProvider?: VpnProviderDetails;
 }

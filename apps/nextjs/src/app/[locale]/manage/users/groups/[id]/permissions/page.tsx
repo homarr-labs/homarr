@@ -31,10 +31,11 @@ export default async function GroupPermissionsPage(props: GroupPermissionsPagePr
     notFound();
   }
 
-  const group = await api.group.getById({ id: params.id });
-  const tPermissionsPage = await getI18n("management.page.group.setting.permissions");
-
-  const { permissionLabels, permissionDescriptions } = await buildPermissionTextsAsync();
+  const [group, tPermissionsPage, { permissionLabels, permissionDescriptions }] = await Promise.all([
+    api.group.getById({ id: params.id }),
+    getI18n("management.page.group.setting.permissions"),
+    buildPermissionTextsAsync(),
+  ]);
 
   return (
     <Stack>
@@ -59,8 +60,12 @@ const buildPermissionTextsAsync = async () => {
   const permissionLabels: PermissionLabels = {};
   const permissionDescriptions: PermissionLabels = {};
 
-  for (const category of objectKeys(groupPermissions)) {
-    const tItem = await getI18n(`group.permission.${category}.item`);
+  const categories = objectKeys(groupPermissions);
+  const translators = await Promise.all(
+    categories.map(async (category) => ({ category, tItem: await getI18n(`group.permission.${category}.item`) })),
+  );
+
+  translators.forEach(({ category, tItem }) => {
     const item = groupPermissions[category];
     const suffixes = typeof item !== "boolean" ? item : (["admin"] as const);
 
@@ -69,7 +74,7 @@ const buildPermissionTextsAsync = async () => {
       permissionLabels[key] = tItem(`${suffix}.label`);
       permissionDescriptions[key] = tItem(`${suffix}.description`);
     });
-  }
+  });
 
   return { permissionLabels, permissionDescriptions };
 };

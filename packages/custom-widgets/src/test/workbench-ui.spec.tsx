@@ -101,8 +101,8 @@ describe("Custom Widget workbench UI", () => {
     );
     expect(host.querySelector('[role="tree"]')).not.toBeNull();
     expect(host.textContent).toContain("service");
-    expect(host.querySelector('button[aria-label="Copy path"]')).not.toBeNull();
-    expect(host.querySelector('button[aria-label="Insert path"]')).not.toBeNull();
+    expect(host.querySelector('button[aria-label="Copy path: data.service"]')).not.toBeNull();
+    expect(host.querySelector('button[aria-label="Insert path: data.service"]')).not.toBeNull();
   });
 
   test("keeps mutation preview execution disabled without a network-capability badge", async () => {

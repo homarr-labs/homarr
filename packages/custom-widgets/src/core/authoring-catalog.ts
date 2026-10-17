@@ -5,7 +5,7 @@ import {
 } from "./component-catalog";
 import { BUNDLED_CUSTOM_WIDGETS } from "./bundled-widgets";
 import { customJsxExamples } from "./examples";
-import { customJsxTablerIconNames } from "./tabler-icons";
+import { customJsxTablerIconExamples, customJsxTablerIconNames } from "./tabler-icons";
 
 type BundledCustomWidget = (typeof BUNDLED_CUSTOM_WIDGETS)[number];
 
@@ -115,7 +115,15 @@ export function getCustomWidgetComponent(name: string) {
             maxPerRequest: 64,
             appliesExceptBlockedProps: true as const,
           },
-    knownValues: component.name === "TablerIcon" ? { name: customJsxTablerIconNames } : undefined,
+    ...(component.name === "TablerIcon" && {
+      knownValues: { name: customJsxTablerIconExamples },
+      iconNaming: {
+        availableCount: customJsxTablerIconNames.length,
+        knownValuesAreExamples: true,
+        filledSuffix: "-filled",
+        browseUrl: "https://tabler.io/icons",
+      },
+    }),
     deniedReason: component.deniedReason,
   };
 }
