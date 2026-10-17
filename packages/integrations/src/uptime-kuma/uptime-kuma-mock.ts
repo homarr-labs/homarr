@@ -1,3 +1,4 @@
+import { uptimeKumaMaxHeartbeats as heartbeatCount } from "./uptime-kuma-types";
 import type {
   UptimeKumaHeartbeat,
   UptimeKumaMonitor,
@@ -6,7 +7,6 @@ import type {
 } from "./uptime-kuma-types";
 
 const heartbeatIntervalMs = 60_000;
-const heartbeatCount = 50;
 
 interface MockMonitor {
   id: number;
@@ -88,7 +88,6 @@ const groups: { id: number; name: string; monitors: MockMonitor[] }[] = [
 ];
 
 export const createUptimeKumaMockStatusPage = (now: number): UptimeKumaStatusPage => ({
-  slug: "homelab",
   title: "Homelab",
   url: "https://status.homarr.dev/status/homelab",
   incidents: [

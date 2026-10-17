@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-export const uptimeKumaMonitorStatuses = ["down", "pending", "maintenance", "unknown", "up"] as const;
-export type UptimeKumaMonitorStatus = (typeof uptimeKumaMonitorStatuses)[number];
+export type UptimeKumaMonitorStatus = "up" | "down" | "pending" | "maintenance" | "paused" | "unknown";
+
+export const uptimeKumaMaxHeartbeats = 50;
 
 const monitorStatusByHeartbeatCode: Record<number, UptimeKumaMonitorStatus> = {
   0: "down",
@@ -54,7 +55,7 @@ const maintenanceSchema = z.object({
 });
 
 export const uptimeKumaStatusPageResponseSchema = z.object({
-  config: z.object({ slug: z.string().nullish(), title: z.string().nullish() }).nullish(),
+  config: z.object({ title: z.string().nullish() }).nullish(),
   incident: incidentSchema.nullish(),
   incidents: z.array(incidentSchema).nullish(),
   maintenanceList: z.array(maintenanceSchema).nullish(),
@@ -122,7 +123,6 @@ export interface UptimeKumaMaintenance {
 }
 
 export interface UptimeKumaStatusPage {
-  slug: string;
   title: string;
   url: string;
   groups: UptimeKumaGroup[];

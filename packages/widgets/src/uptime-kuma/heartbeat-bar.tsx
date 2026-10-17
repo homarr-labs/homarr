@@ -6,11 +6,10 @@ import { Tooltip, VisuallyHidden } from "@mantine/core";
 import { useFormatter } from "next-intl";
 
 import type { UptimeKumaHeartbeat } from "@homarr/integrations/types";
+import { uptimeKumaMaxHeartbeats } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
-
-const slotCount = 50;
 
 interface HeartbeatBarProps {
   heartbeats: readonly UptimeKumaHeartbeat[];
@@ -22,7 +21,7 @@ export const HeartbeatBar = ({ heartbeats, size = "md" }: HeartbeatBarProps) => 
   const formatter = useFormatter();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const hovered = hoveredIndex === null ? undefined : heartbeats[hoveredIndex];
-  const placeholderCount = Math.max(0, slotCount - heartbeats.length);
+  const placeholderCount = Math.max(0, uptimeKumaMaxHeartbeats - heartbeats.length);
   const downCount = heartbeats.filter((heartbeat) => heartbeat.status === "down").length;
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
@@ -56,7 +55,7 @@ export const HeartbeatBar = ({ heartbeats, size = "md" }: HeartbeatBarProps) => 
             <span key={`placeholder-${index}`} className={classes.beat} data-status="empty" />
           ))}
           {heartbeats.map((heartbeat, index) => (
-            <span key={heartbeat.time} className={classes.beat} data-status={heartbeat.status} data-index={index} />
+            <span key={index} className={classes.beat} data-status={heartbeat.status} data-index={index} />
           ))}
         </span>
       </div>

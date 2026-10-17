@@ -17,7 +17,7 @@ export const SummaryRing = ({ summary, size }: SummaryProps & { size: number }) 
   const sections = presentStatuses(summary).map((status) => ({
     value: (summary.counts[status] / summary.total) * 100,
     color: monitorStatusColors[status],
-    tooltip: `${summary.counts[status]} ${t(`status.${status}`)}`,
+    tooltip: t("summary.statusCount", { count: summary.counts[status], status: t(`status.${status}`) }),
   }));
 
   return (
@@ -79,7 +79,11 @@ export const DistributionBar = ({ summary }: SummaryProps) => {
   return (
     <Progress.Root size="sm" className={classes.distribution}>
       {presentStatuses(summary).map((status) => (
-        <Tooltip key={status} label={`${summary.counts[status]} ${t(`status.${status}`)}`} withArrow>
+        <Tooltip
+          key={status}
+          label={t("summary.statusCount", { count: summary.counts[status], status: t(`status.${status}`) })}
+          withArrow
+        >
           <Progress.Section
             value={(summary.counts[status] / summary.total) * 100}
             color={monitorStatusColors[status]}
@@ -97,18 +101,17 @@ export const SummaryMetrics = ({
   compact = false,
 }: SummaryProps & { showUptime: boolean; showResponseTime: boolean; compact?: boolean }) => {
   const t = useI18n("widget.uptimeKuma");
-  const metrics = [
-    showUptime && summary.averageUptime24h !== null
-      ? { key: "uptime", label: t("summary.averageUptime"), value: formatUptime(summary.averageUptime24h) }
-      : null,
-    showResponseTime && summary.averagePing !== null
-      ? {
-          key: "ping",
-          label: t("summary.averageResponseTime"),
-          value: t("unit.milliseconds", { value: Math.round(summary.averagePing) }),
-        }
-      : null,
-  ].filter((metric) => metric !== null);
+  const metrics: { key: string; label: string; value: string }[] = [];
+  if (showUptime && summary.averageUptime24h !== null) {
+    metrics.push({ key: "uptime", label: t("summary.averageUptime"), value: formatUptime(summary.averageUptime24h) });
+  }
+  if (showResponseTime && summary.averagePing !== null) {
+    metrics.push({
+      key: "ping",
+      label: t("summary.averageResponseTime"),
+      value: t("unit.milliseconds", { value: Math.round(summary.averagePing) }),
+    });
+  }
 
   if (metrics.length === 0) return null;
 
@@ -129,5 +132,6 @@ const getShortLabel = (summary: UptimeKumaSummary, t: ReturnType<typeof useI18n<
   if (summary.counts.pending > 0) return t("short.pending", { count: summary.counts.pending });
   if (summary.overallStatus === "maintenance") return t("short.maintenance");
   if (summary.overallStatus === "operational") return t("short.operational");
+  if (summary.overallStatus === "paused") return t("short.paused");
   return t("short.unknown");
 };

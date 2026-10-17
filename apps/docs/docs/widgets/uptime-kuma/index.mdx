@@ -15,13 +15,13 @@ import { uptimeKumaIntegration } from "@site/docs/integrations/uptime-kuma";
 
 <WidgetHeader widget={uptimeKumaWidget} categories={["Monitoring"]} />
 
-This widget shows the monitors of an Uptime Kuma status page: the overall status, each monitor's recent heartbeats, its 24-hour uptime and response time, and pinned incidents or active maintenance. Small widgets show a status summary; larger widgets list every monitor. The advanced view always lists every monitor with all details, regardless of the visibility options.
+This widget shows the monitors of an Uptime Kuma status page: the overall status, each monitor's recent heartbeats, its 24-hour uptime and response time, and pinned incidents or active maintenance.
 
 The widget only sees what the status page publishes:
 
 - Only monitors in the status page's groups are shown.
 - Certificate expiry is only available when **Show Certificate Expiry** is enabled on the status page.
-- A paused monitor keeps showing its last result, because the status page does not publish whether a monitor is paused. Remove it from the status page to hide it.
+- The status page does not publish whether a monitor is paused. A monitor that has missed about five checks, and at least 10 minutes, is shown as paused and left out of the averages. Remove paused monitors from the status page to hide them.
 
 When multiple Uptime Kuma integrations are selected, monitors from healthy sources remain visible if another source fails. A warning indicator identifies each unavailable integration. If every selected integration fails, the widget reports an error.
 

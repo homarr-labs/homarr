@@ -226,7 +226,6 @@ vi.mock("@homarr/request-handler/uptime-kuma", () => ({
   uptimeKumaRequestHandler: {
     handler: (integration: { name: string }) =>
       createHandler(integration, {
-        slug: "default",
         title: "Healthy status page",
         url: "https://kuma.example.com/status/default",
         incidents: [],

@@ -9,6 +9,7 @@ import {
   toUptimeKumaMonitorStatus,
   uptimeKumaHeartbeatResponseSchema,
   uptimeKumaIncidentStyles,
+  uptimeKumaMaxHeartbeats,
   uptimeKumaStatusPageResponseSchema,
 } from "./uptime-kuma-types";
 import type {
@@ -17,12 +18,14 @@ import type {
   UptimeKumaIncident,
   UptimeKumaIncidentStyle,
   UptimeKumaMonitor,
+  UptimeKumaMonitorStatus,
   UptimeKumaStatusPage,
   UptimeKumaStatusPageResponse,
 } from "./uptime-kuma-types";
 
-const maxHeartbeatsPerMonitor = 50;
 const uptimeWindowMs = 24 * 60 * 60 * 1000;
+const minimumPausedAgeMs = 10 * 60 * 1000;
+const missedChecksUntilPaused = 5;
 
 type StatusPageMonitor = UptimeKumaStatusPageResponse["publicGroupList"][number]["monitorList"][number];
 type StatusPageIncident = NonNullable<UptimeKumaStatusPageResponse["incident"]>;
@@ -66,19 +69,37 @@ export class UptimeKumaIntegration extends Integration {
     const statusPage = uptimeKumaStatusPageResponseSchema.parse(await statusPageResponse.json());
     const heartbeat = uptimeKumaHeartbeatResponseSchema.parse(await heartbeatResponse.json());
     const slug = this.getSlug();
+    const heartbeatsByMonitor = new Map(
+      Object.entries(heartbeat.heartbeatList).map(([monitorId, heartbeats]) => [
+        Number(monitorId),
+        heartbeats
+          .flatMap(mapHeartbeat)
+          .toSorted((left, right) => left.time - right.time)
+          .slice(-uptimeKumaMaxHeartbeats),
+      ]),
+    );
+    const typicalCheckInterval = median(
+      [...heartbeatsByMonitor.values()].flatMap((heartbeats) => {
+        const interval = getCheckInterval(heartbeats);
+        return interval === null ? [] : [interval];
+      }),
+    );
 
     return {
-      slug,
       title: statusPage.config?.title?.trim() || slug,
       url: this.externalUrl(`/status/${encodeURIComponent(slug)}`).toString(),
       groups: statusPage.publicGroupList.map((group) => ({
         id: group.id,
         name: group.name,
-        monitors: group.monitorList.map((monitor) => mapMonitor(monitor, heartbeat)),
+        monitors: group.monitorList.map((monitor) =>
+          mapMonitor(monitor, {
+            heartbeats: heartbeatsByMonitor.get(monitor.id) ?? [],
+            uptimeRatio: heartbeat.uptimeList[`${monitor.id}_24`],
+            typicalCheckInterval,
+          }),
+        ),
       })),
-      incidents: [...(statusPage.incidents ?? []), ...(statusPage.incident ? [statusPage.incident] : [])].map(
-        mapIncident,
-      ),
+      incidents: uniqueById([statusPage.incidents ?? [], statusPage.incident ?? []].flat()).map(mapIncident),
       maintenances: (statusPage.maintenanceList ?? []).map((maintenance) => ({
         id: maintenance.id,
         title: maintenance.title?.trim() || "",
@@ -112,21 +133,26 @@ export class UptimeKumaIntegration extends Integration {
   }
 }
 
-const mapMonitor = (monitor: StatusPageMonitor, response: UptimeKumaHeartbeatResponse): UptimeKumaMonitor => {
-  const heartbeats = (response.heartbeatList[String(monitor.id)] ?? [])
-    .flatMap(mapHeartbeat)
-    .toSorted((left, right) => left.time - right.time)
-    .slice(-maxHeartbeatsPerMonitor);
+interface MonitorHeartbeatData {
+  heartbeats: UptimeKumaHeartbeat[];
+  uptimeRatio: number | undefined;
+  typicalCheckInterval: number | null;
+}
+
+const mapMonitor = (
+  monitor: StatusPageMonitor,
+  { heartbeats, uptimeRatio, typicalCheckInterval }: MonitorHeartbeatData,
+): UptimeKumaMonitor => {
   const latest = heartbeats.at(-1);
-  const uptimeRatio = response.uptimeList[`${monitor.id}_24`];
   const checkedWithinUptimeWindow = latest !== undefined && Date.now() - latest.time <= uptimeWindowMs;
+  const checkInterval = getCheckInterval(heartbeats) ?? typicalCheckInterval;
 
   return {
     id: monitor.id,
     name: monitor.name,
     type: monitor.type ?? null,
     url: monitor.url?.trim() || null,
-    status: latest?.status ?? "unknown",
+    status: getMonitorStatus(latest, checkInterval),
     uptime24h:
       checkedWithinUptimeWindow && typeof uptimeRatio === "number"
         ? Math.min(100, Math.max(0, uptimeRatio * 100))
@@ -144,6 +170,30 @@ const mapMonitor = (monitor: StatusPageMonitor, response: UptimeKumaHeartbeatRes
     heartbeats,
   };
 };
+
+const getMonitorStatus = (
+  latest: UptimeKumaHeartbeat | undefined,
+  checkInterval: number | null,
+): UptimeKumaMonitorStatus => {
+  if (!latest) return "unknown";
+  if (checkInterval === null) return latest.status;
+  const pausedAfter = Math.max(minimumPausedAgeMs, checkInterval * missedChecksUntilPaused);
+  if (Date.now() - latest.time > pausedAfter) return "paused";
+  return latest.status;
+};
+
+const getCheckInterval = (heartbeats: readonly UptimeKumaHeartbeat[]) =>
+  median(heartbeats.slice(1).map((heartbeat, index) => heartbeat.time - (heartbeats[index]?.time ?? heartbeat.time)));
+
+const median = (values: readonly number[]) => {
+  if (values.length === 0) return null;
+  const sorted = values.toSorted((left, right) => left - right);
+  return sorted[Math.floor(sorted.length / 2)] ?? null;
+};
+
+const uniqueById = <TItem extends { id: number }>(items: readonly TItem[]) => [
+  ...new Map(items.map((item) => [item.id, item])).values(),
+];
 
 const mapHeartbeat = (heartbeat: RawHeartbeat): UptimeKumaHeartbeat[] => {
   const time = parseUptimeKumaDate(heartbeat.time);

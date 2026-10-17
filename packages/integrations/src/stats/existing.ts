@@ -296,6 +296,7 @@ existingStatsProviders.uptimeKuma = adapter(
     metric("downCount", "Down"),
     metric("pendingCount", "Pending"),
     metric("maintenanceCount", "Maintenance"),
+    metric("pausedCount", "Paused"),
     metric("averageUptimePercent", "Average uptime", "percent"),
   ],
   (client) => client.getStatusPageAsync(),
@@ -307,6 +308,7 @@ existingStatsProviders.uptimeKuma = adapter(
       downCount: summary.counts.down,
       pendingCount: summary.counts.pending,
       maintenanceCount: summary.counts.maintenance,
+      pausedCount: summary.counts.paused,
       averageUptimePercent: summary.averageUptime24h,
     };
   },

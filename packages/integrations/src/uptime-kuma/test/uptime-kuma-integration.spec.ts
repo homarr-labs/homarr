@@ -102,7 +102,6 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
       "http://kuma.internal:3001/api/status-page/heartbeat/homelab",
     ]);
     expect(statusPage).toEqual({
-      slug: "homelab",
       title: "Homelab",
       url: "https://status.example.com/status/homelab",
       incidents: [
@@ -213,6 +212,47 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
       { name: "Maintenance", status: "maintenance", uptime24h: null },
       { name: "Never checked", status: "unknown", uptime24h: null },
       { name: "Paused last week", status: "up", uptime24h: null },
+    ]);
+  });
+
+  test("marks monitors that stopped reporting as paused", async () => {
+    const everyMinuteUntil = (hour: number, minute: number) =>
+      Array.from({ length: 5 }, (_, index) =>
+        beat(1, new Date(Date.UTC(2026, 9, 17, hour, minute - 4 + index)).toISOString()),
+      );
+    respondWith(
+      {
+        publicGroupList: [
+          {
+            id: 1,
+            name: "Group",
+            monitorList: [
+              { id: 1, name: "Active" },
+              { id: 2, name: "Stopped 35 minutes ago" },
+              { id: 3, name: "Single old check" },
+              { id: 4, name: "Checked every two hours" },
+            ],
+          },
+        ],
+      },
+      {
+        heartbeatList: {
+          "1": everyMinuteUntil(9, 4),
+          "2": everyMinuteUntil(8, 30),
+          "3": [beat(0, "2026-10-17 08:00:00")],
+          "4": [beat(1, "2026-10-17 06:00:00"), beat(1, "2026-10-17 08:00:00")],
+        },
+        uptimeList: { "1_24": 1, "2_24": 0.99, "3_24": 0, "4_24": 1 },
+      },
+    );
+
+    const statusPage = await createIntegration().getStatusPageAsync();
+
+    expect(statusPage.groups[0]?.monitors.map(({ name, status, uptime24h }) => ({ name, status, uptime24h }))).toEqual([
+      { name: "Active", status: "up", uptime24h: 100 },
+      { name: "Stopped 35 minutes ago", status: "paused", uptime24h: 99 },
+      { name: "Single old check", status: "paused", uptime24h: 0 },
+      { name: "Checked every two hours", status: "up", uptime24h: 100 },
     ]);
   });
 

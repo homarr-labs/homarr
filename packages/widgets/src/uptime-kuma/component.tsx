@@ -1,7 +1,8 @@
 "use client";
 
 import type { CSSProperties, ReactNode } from "react";
-import { Anchor, OverflowList, ScrollArea, Text } from "@mantine/core";
+import { Anchor, Badge, OverflowList, ScrollArea, Text } from "@mantine/core";
+import { clamp } from "@mantine/hooks";
 import { IconCircleCheck, IconExternalLink, IconHeartbeat } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -23,11 +24,11 @@ import { getMonitorColumnCount, getUptimeKumaLayout, usesInlineRows } from "./la
 import type { UptimeKumaLayout } from "./layout";
 import { getMonitorRowTemplate, MonitorRow } from "./monitor-row";
 import type { MonitorRowVisibility } from "./monitor-row";
-import { getAllMonitors, getMonitorSections, sortMonitors } from "./monitors";
+import { filterProblems, getAllMonitors, getMonitorSections, sortMonitors } from "./monitors";
 import type { LoadedStatusPage, MonitorEntry } from "./monitors";
 import type { Notice } from "./notices";
-import { NoticeIndicator, NoticeList, toNotices } from "./notices";
-import { formatUptime } from "./status";
+import { getNotices, NoticeIndicator, NoticeList } from "./notices";
+import { formatUptime, monitorStatusColors } from "./status";
 import { DistributionBar, OverallStatus, StatusBreakdown, SummaryMetrics, SummaryRing } from "./summary";
 
 type Options = WidgetComponentProps<"uptimeKuma">["options"];
@@ -80,27 +81,14 @@ function UptimeKumaContent({
 
   if (!results) return <WidgetQueryLoadingState />;
 
-  const pages: LoadedStatusPage[] = results.flatMap((result) =>
-    result.statusPage === null
-      ? []
-      : [
-          {
-            integrationId: result.integrationId,
-            integrationName: result.integrationName,
-            statusPage: result.statusPage,
-          },
-        ],
+  const pages: LoadedStatusPage[] = results.flatMap(({ integrationId, statusPage }) =>
+    statusPage === null ? [] : [{ integrationId, statusPage }],
   );
   const uiScale = isAdvanced ? 1 : calculateBoardUiScale(displayScale);
   const size = { width: width / uiScale, height: height / uiScale };
   const layout = getUptimeKumaLayout(size.width, size.height, isAdvanced);
   const summary = summarizeUptimeKumaMonitors(getAllMonitors(pages));
-  const notices =
-    isAdvanced || options.showIncidents
-      ? pages.flatMap((page) =>
-          toNotices(page.statusPage.incidents, page.statusPage.maintenances, t("notice.untitled")),
-        )
-      : [];
+  const notices = isAdvanced || options.showIncidents ? getNotices(pages, t("notice.untitled")) : [];
   const errorIndicator = <IntegrationErrorIndicator results={results} />;
 
   if (summary.total === 0) {
@@ -221,10 +209,7 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
   const showMetricsLine = bodyWidth < 420;
   const reservedHeight = 88 + (showMetricsLine ? 20 : 0);
   const chipRows = bodyWidth >= 200 ? clamp(Math.floor((size.height - reservedHeight) / chipRowHeight), 0, 4) : 0;
-  const chipMonitors = sortMonitors(
-    getAllMonitors(pages).filter((monitor) => !options.showOnlyProblems || monitor.status !== "up"),
-    options.sortBy,
-  );
+  const chipMonitors = sortMonitors(filterProblems(getAllMonitors(pages), options.showOnlyProblems), options.sortBy);
 
   return (
     <div className={classes.strip}>
@@ -256,7 +241,11 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
             gap={6}
             getItemKey={(monitor) => monitor.key}
             renderItem={(monitor) => <MonitorChip monitor={monitor} showUptime={options.showUptime} />}
-            renderOverflow={(hidden) => <span className={classes.chip}>+{hidden.length}</span>}
+            renderOverflow={(hidden) => (
+              <Badge variant="light" color="gray" size="lg" radius="xl" tt="none" fw={500}>
+                +{hidden.length}
+              </Badge>
+            )}
           />
         )}
       </div>
@@ -264,17 +253,27 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
   );
 };
 
+const chipColors = { ...monitorStatusColors, up: "gray" };
+
 const MonitorChip = ({ monitor, showUptime }: { monitor: MonitorEntry; showUptime: boolean }) => {
   const t = useI18n("widget.uptimeKuma");
   const uptime = monitor.uptime24h === null ? null : formatUptime(monitor.uptime24h);
-  const title = [monitor.name, t(`status.${monitor.status}`), uptime].filter(Boolean).join(" · ");
 
   return (
-    <span className={classes.chip} data-status={monitor.status} title={title}>
-      <span className={classes.dot} data-status={monitor.status} />
-      <span className={classes.chipName}>{monitor.name}</span>
-      {showUptime && uptime && <span className={classes.chipUptime}>{uptime}</span>}
-    </span>
+    <Badge
+      variant="light"
+      color={chipColors[monitor.status]}
+      size="lg"
+      radius="xl"
+      tt="none"
+      fw={500}
+      maw={180}
+      title={[monitor.name, t(`status.${monitor.status}`), uptime].filter(Boolean).join(" · ")}
+      leftSection={<span className={classes.dot} data-status={monitor.status} />}
+      rightSection={showUptime && uptime && <span className={classes.chipUptime}>{uptime}</span>}
+    >
+      {monitor.name}
+    </Badge>
   );
 };
 
@@ -311,6 +310,7 @@ const ListLayout = ({
     uptime: isAdvanced || options.showUptime,
     responseTime: (isAdvanced || options.showResponseTime) && !isNarrow,
     certificateExpiry: isAdvanced || options.showCertificateExpiry,
+    statusDetail: !isColumn,
   };
   const sections = getMonitorSections(pages, {
     groupByStatusPageGroup: options.groupByStatusPageGroup,
@@ -366,10 +366,10 @@ const ListLayout = ({
           )}
         </header>
       )}
-      <ScrollArea className={classes.scroll} type="hover" scrollbarSize={6} offsetScrollbars="y">
+      <ScrollArea className={classes.scroll} type="hover" scrollbarSize={6} offsetScrollbars={!isColumn && "y"}>
         <div className={classes.scrollContent}>
           {notices.length > 0 && !(isColumn && showSummary) && (
-            <NoticeList notices={notices} compact={isColumn || size.height < 400} />
+            <NoticeList notices={notices} compact={isColumn || size.height < 400} now={now} />
           )}
           {sections.length === 0 && (
             <CenteredState
@@ -404,5 +404,3 @@ const ListLayout = ({
     </div>
   );
 };
-
-const clamp = (value: number, minimum: number, maximum: number) => Math.min(maximum, Math.max(minimum, value));

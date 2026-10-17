@@ -4,42 +4,41 @@ import { Anchor, Badge, Text, VisuallyHidden } from "@mantine/core";
 import { useFormatter } from "next-intl";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "@homarr/common";
+import type { UptimeKumaTag } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 import { HeartbeatBar } from "./heartbeat-bar";
 import type { MonitorEntry } from "./monitors";
-import { certificateWarningDays, formatUptime, getUptimeColor, monitorStatusColors } from "./status";
+import {
+  certificateWarningDays,
+  formatUptime,
+  getMonitorTypeTranslationKey,
+  getUptimeColor,
+  monitorStatusColors,
+} from "./status";
 
 export interface MonitorRowVisibility {
   heartbeatBar: boolean;
   uptime: boolean;
   responseTime: boolean;
   certificateExpiry: boolean;
+  statusDetail: boolean;
 }
+
+type MonitorRowVariant = "inline" | "stacked";
 
 interface MonitorRowProps {
   monitor: MonitorEntry;
-  variant: "inline" | "stacked";
+  variant: MonitorRowVariant;
   visibility: MonitorRowVisibility;
   showDetails: boolean;
   now: Date | null;
 }
 
-const monitorTypeLabels: Record<string, string> = {
-  http: "HTTP",
-  keyword: "HTTP keyword",
-  "json-query": "HTTP JSON",
-  port: "TCP",
-  ping: "Ping",
-  dns: "DNS",
-  docker: "Docker",
-  push: "Push",
-  group: "Group",
-  "real-browser": "Browser",
-};
+type Translate = ReturnType<typeof useI18n<"widget.uptimeKuma">>;
 
-export const getMonitorRowTemplate = (variant: MonitorRowProps["variant"], visibility: MonitorRowVisibility) => {
+export const getMonitorRowTemplate = (variant: MonitorRowVariant, visibility: MonitorRowVisibility) => {
   if (variant === "stacked") return "auto minmax(0, 1fr)";
   return [
     "auto",
@@ -56,26 +55,18 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
   const t = useI18n("widget.uptimeKuma");
   const formatter = useFormatter();
   const href = getSafeApplicationUrl(monitor.url);
+  const isStacked = variant === "stacked";
   const relative = (time: number | null) =>
     time !== null && now ? formatter.relativeTime(time, { now, style: "narrow" }) : null;
 
-  const statusDetail =
-    monitor.status === "up"
-      ? null
-      : [t(`status.${monitor.status}`), relative(monitor.statusSince)].filter(Boolean).join(" · ");
-  const certificateDetail = getCertificateDetail(monitor.certificateDaysRemaining, visibility, showDetails, t);
-  const extraDetails = showDetails
-    ? [
-        monitor.type ? (monitorTypeLabels[monitor.type] ?? monitor.type) : null,
-        monitor.lastCheckAt !== null ? t("detail.checked", { time: relative(monitor.lastCheckAt) ?? "" }) : null,
-        monitor.averagePing !== null
-          ? t("detail.averagePing", { value: t("unit.milliseconds", { value: Math.round(monitor.averagePing) }) })
-          : null,
-      ]
-    : [];
-  const details = [certificateDetail?.text, ...extraDetails].filter(Boolean).join(" · ");
-
-  const isStacked = variant === "stacked";
+  const statusDetail = getStatusDetail(monitor, visibility.statusDetail, relative(monitor.statusSince), t);
+  const certificate = getCertificateDetail(monitor.certificateDaysRemaining, visibility, showDetails, t);
+  const details = [
+    certificate?.text,
+    ...(showDetails ? getExtraDetails(monitor, relative(monitor.lastCheckAt), t) : []),
+  ]
+    .filter(Boolean)
+    .join(" · ");
   const metrics = (
     <>
       {visibility.responseTime && !(isStacked && monitor.ping === null) && (
@@ -86,23 +77,23 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
       {visibility.uptime && <UptimeValue uptime={monitor.uptime24h} plain={isStacked} />}
     </>
   );
-  const hasStackedFooter = visibility.heartbeatBar || visibility.responseTime || visibility.uptime;
-
-  const name = href ? (
-    <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" truncate className={classes.monitorName}>
-      {monitor.name}
-    </Anchor>
-  ) : (
-    <Text component="span" truncate className={classes.monitorName}>
-      {monitor.name}
-    </Text>
-  );
 
   return (
     <div className={classes.monitorRow} data-variant={variant} data-status={monitor.status}>
       <span className={classes.dot} data-status={monitor.status} aria-hidden />
       <div className={classes.monitorMain}>
-        {name}
+        <div className={classes.monitorTitle}>
+          {href ? (
+            <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" className={classes.monitorName}>
+              {monitor.name}
+            </Anchor>
+          ) : (
+            <Text component="span" className={classes.monitorName}>
+              {monitor.name}
+            </Text>
+          )}
+          {(!isStacked || showDetails) && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
+        </div>
         {!statusDetail && <VisuallyHidden>{t(`status.${monitor.status}`)}</VisuallyHidden>}
         {(statusDetail || details) && (
           <div className={classes.monitorDetails}>
@@ -112,29 +103,37 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
               </Text>
             )}
             {details && (
-              <Text component="span" c={certificateDetail?.isWarning ? "orange.6" : "dimmed"} inherit truncate>
+              <Text component="span" c={certificate?.isWarning ? "orange.6" : "dimmed"} inherit truncate>
                 {statusDetail ? ` · ${details}` : details}
               </Text>
             )}
           </div>
         )}
       </div>
-      {variant === "inline" ? (
-        <>
-          {visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} />}
+      {!isStacked && visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} />}
+      {!isStacked && metrics}
+      {isStacked && (visibility.heartbeatBar || visibility.responseTime || visibility.uptime) && (
+        <div className={classes.stackedFooter}>
+          {visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} size="sm" />}
           {metrics}
-        </>
-      ) : (
-        hasStackedFooter && (
-          <div className={classes.stackedFooter}>
-            {visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} size="sm" />}
-            {metrics}
-          </div>
-        )
+        </div>
       )}
     </div>
   );
 };
+
+const MonitorTags = ({ tags }: { tags: readonly UptimeKumaTag[] }) => (
+  <span className={classes.tags}>
+    {tags.map((tag) => {
+      const label = [tag.name, tag.value].filter(Boolean).join(": ");
+      return (
+        <Badge key={label} size="xs" variant="light" radius="sm" color={tag.color ?? "gray"} tt="none">
+          {label}
+        </Badge>
+      );
+    })}
+  </span>
+);
 
 const UptimeValue = ({ uptime, plain }: { uptime: number | null; plain: boolean }) => {
   if (uptime === null) {
@@ -162,11 +161,26 @@ const UptimeValue = ({ uptime, plain }: { uptime: number | null; plain: boolean 
   );
 };
 
+const getStatusDetail = (monitor: MonitorEntry, visible: boolean, since: string | null, t: Translate) => {
+  if (!visible || monitor.status === "up") return null;
+  return [t(`status.${monitor.status}`), since].filter(Boolean).join(" · ");
+};
+
+const getExtraDetails = (monitor: MonitorEntry, lastChecked: string | null, t: Translate) => {
+  const typeKey = monitor.type === null ? null : getMonitorTypeTranslationKey(monitor.type);
+  return [
+    typeKey ? t(`monitorType.${typeKey}`) : monitor.type,
+    lastChecked && t("detail.checked", { time: lastChecked }),
+    monitor.averagePing !== null &&
+      t("detail.averagePing", { value: t("unit.milliseconds", { value: Math.round(monitor.averagePing) }) }),
+  ];
+};
+
 const getCertificateDetail = (
   daysRemaining: number | null,
   visibility: MonitorRowVisibility,
   showDetails: boolean,
-  t: ReturnType<typeof useI18n<"widget.uptimeKuma">>,
+  t: Translate,
 ) => {
   if (daysRemaining === null) return null;
   const isWarning = daysRemaining <= certificateWarningDays;

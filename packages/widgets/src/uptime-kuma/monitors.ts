@@ -1,10 +1,10 @@
 import type { UptimeKumaMonitor, UptimeKumaMonitorStatus, UptimeKumaStatusPage } from "@homarr/integrations/types";
+import { getUniqueUptimeKumaMonitors } from "@homarr/integrations/types";
 
 export type UptimeKumaSortBy = "status" | "statusPage" | "name" | "uptime";
 
 export interface LoadedStatusPage {
   integrationId: string;
-  integrationName: string;
   statusPage: UptimeKumaStatusPage;
 }
 
@@ -29,39 +29,34 @@ const statusRank: Record<UptimeKumaMonitorStatus, number> = {
   down: 0,
   pending: 1,
   maintenance: 2,
-  unknown: 3,
-  up: 4,
+  paused: 3,
+  unknown: 4,
+  up: 5,
 };
 
 export const getAllMonitors = (pages: readonly LoadedStatusPage[]): MonitorEntry[] =>
-  dedupe(pages.flatMap((page) => pageMonitors(page, page.statusPage.groups)));
+  pages.flatMap((page) => toEntries(page, getUniqueUptimeKumaMonitors(page.statusPage.groups)));
 
 export const getMonitorSections = (
   pages: readonly LoadedStatusPage[],
   { groupByStatusPageGroup, showOnlyProblems, sortBy }: MonitorSectionOptions,
 ): MonitorSection[] => {
-  const prepare = (monitors: MonitorEntry[]) =>
-    sortMonitors(
-      monitors.filter((monitor) => !showOnlyProblems || monitor.status !== "up"),
-      sortBy,
-    );
+  const prepare = (monitors: MonitorEntry[]) => sortMonitors(filterProblems(monitors, showOnlyProblems), sortBy);
+  const sections = groupByStatusPageGroup
+    ? pages.flatMap((page) =>
+        page.statusPage.groups.map((group) => ({
+          key: `${page.integrationId}:${group.id}`,
+          title: pages.length > 1 ? `${page.statusPage.title} · ${group.name}` : group.name,
+          monitors: prepare(toEntries(page, group.monitors)),
+        })),
+      )
+    : [{ key: "all", title: null, monitors: prepare(getAllMonitors(pages)) }];
 
-  if (!groupByStatusPageGroup) {
-    return [{ key: "all", title: null, monitors: prepare(getAllMonitors(pages)) }].filter(
-      (section) => section.monitors.length > 0,
-    );
-  }
-
-  return pages
-    .flatMap((page) =>
-      page.statusPage.groups.map((group) => ({
-        key: `${page.integrationId}:${group.id}`,
-        title: pages.length > 1 ? `${page.statusPage.title} · ${group.name}` : group.name,
-        monitors: prepare(dedupe(pageMonitors(page, [group]))),
-      })),
-    )
-    .filter((section) => section.monitors.length > 0);
+  return sections.filter((section) => section.monitors.length > 0);
 };
+
+export const filterProblems = (monitors: readonly MonitorEntry[], showOnlyProblems: boolean) =>
+  monitors.filter((monitor) => !showOnlyProblems || monitor.status !== "up");
 
 export const sortMonitors = (monitors: readonly MonitorEntry[], sortBy: UptimeKumaSortBy): MonitorEntry[] =>
   monitors.toSorted((left, right) => compareMonitors(left, right, sortBy) || left.order - right.order);
@@ -79,15 +74,5 @@ const compareMonitors = (left: MonitorEntry, right: MonitorEntry, sortBy: Uptime
   }
 };
 
-const pageMonitors = (page: LoadedStatusPage, groups: UptimeKumaStatusPage["groups"]) =>
-  groups
-    .flatMap((group) => group.monitors)
-    .map((monitor) => ({ ...monitor, key: `${page.integrationId}:${monitor.id}` }));
-
-const dedupe = (monitors: readonly Omit<MonitorEntry, "order">[]): MonitorEntry[] => {
-  const byKey = new Map<string, MonitorEntry>();
-  for (const monitor of monitors) {
-    if (!byKey.has(monitor.key)) byKey.set(monitor.key, { ...monitor, order: byKey.size });
-  }
-  return [...byKey.values()];
-};
+const toEntries = (page: LoadedStatusPage, monitors: readonly UptimeKumaMonitor[]): MonitorEntry[] =>
+  monitors.map((monitor, order) => ({ ...monitor, key: `${page.integrationId}:${monitor.id}`, order }));
