@@ -65,6 +65,30 @@ describe("dashboard layout reflow", () => {
     ]);
   });
 
+  test("preserves collapsed order and spacing when a container outgrows its saved height", () => {
+    const placements = [
+      { id: "weather", x: 0, y: 0, w: 3, h: 4 },
+      { id: "ac", x: 0, y: 4, w: 3, h: 4 },
+      // Cats is saved at h2; SectionGrid uses h3 to fit its three-row widget.
+      { id: "cats", x: 0, y: 8, w: 3, h: 3 },
+      { id: "new-media", x: 0, y: 10, w: 3, h: 6 },
+      { id: "stats", x: 0, y: 16, w: 3, h: 10 },
+      { id: "web", x: 0, y: 26, w: 3, h: 4 },
+      { id: "alpha-ess", x: 0, y: 30, w: 3, h: 3 },
+      { id: "nas", x: 0, y: 33, w: 3, h: 4 },
+    ];
+    const result = sortGridPlacementsForReadingOrder(
+      getCollapsedDisplayLayout(placements, {
+        columnCount: 3,
+        collapsedItemIds: new Set(placements.map((placement) => placement.id)),
+      }),
+    );
+
+    expect(result.map((placement) => placement.id)).toEqual(placements.map((placement) => placement.id));
+    expect(result.map((placement) => placement.y)).toEqual([0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]);
+    expect(hasOverlap(result)).toBe(false);
+  });
+
   test("does not double-count side-by-side collapsed space", () => {
     const result = getCollapsedDisplayLayout(
       [
