@@ -8,16 +8,16 @@ import type { WazuhTopListEntry, WazuhTopListKind } from "@homarr/integrations/t
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../wazuh/_shared/badges";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
-import type { WazuhDashboardLinks } from "../wazuh/_shared/links";
-import { formatWazuhCount, getWazuhSeverityForLevel, wazuhSeverityChartColors } from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
-import classes from "../wazuh/_shared/wazuh.module.css";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import type { WazuhViewProps } from "../view-props";
+import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../_shared/badges";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhPendingState, WazuhWidgetFrame } from "../_shared/frame";
+import type { WazuhDashboardLinks } from "../_shared/links";
+import { formatWazuhCount, getWazuhSeverityForLevel, wazuhSeverityChartColors } from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
+import classes from "../_shared/wazuh.module.css";
 
 const kindIcons: Record<WazuhTopListKind, TablerIcon> = {
   rules: IconListNumbers,
@@ -54,29 +54,24 @@ const getEntryHref = (
   }
 };
 
-export default function WazuhTopListWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-}: WidgetComponentProps<"wazuhTopList">) {
-  const t = useI18n("widget.wazuhTopList");
+export function WazuhTopView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.top");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
   const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getTopList.useQuery(
-    { integrationId, kind: options.kind, range: options.range, limit: options.limit, minLevel: options.minLevel },
+    { integrationId, kind: options.topKind, range: options.range, limit: options.topLimit, minLevel: options.minLevel },
     { staleTime: 60_000, refetchInterval: 2 * 60_000 },
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);
   const compact = height < 170 || width < 240;
-  const title = t(`title.${options.kind}`, { range: tShared(`range.${options.range}`) });
-  const Icon = kindIcons[options.kind];
+  const title = t(`title.${options.topKind}`, { range: tShared(`range.${options.range}`) });
+  const Icon = kindIcons[options.topKind];
 
   if (isInitialWidgetQueryPending(query)) {
     return (
-      <WazuhWidgetFrame icon={Icon} title={title} compact={compact} iconColor={kindColors[options.kind]}>
+      <WazuhWidgetFrame icon={Icon} title={title} compact={compact} iconColor={kindColors[options.topKind]}>
         <WazuhPendingState />
       </WazuhWidgetFrame>
     );
@@ -87,13 +82,13 @@ export default function WazuhTopListWidget({
   const list = result.data;
   const max = Math.max(1, ...list.entries.map((entry) => entry.count));
   const headerHref =
-    options.kind === "mitreTactics" || options.kind === "mitreTechniques"
+    options.topKind === "mitreTactics" || options.topKind === "mitreTechniques"
       ? links?.mitre
-      : options.kind === "agents"
+      : options.topKind === "agents"
         ? links?.agents
         : links?.events({ from: `now-${options.range}` });
   const showDetailColumn = width >= 300;
-  const showAgentsColumn = width >= 380 && options.kind !== "agents";
+  const showAgentsColumn = width >= 380 && options.topKind !== "agents";
 
   return (
     <WazuhWidgetFrame
@@ -101,7 +96,7 @@ export default function WazuhTopListWidget({
       title={title}
       href={headerHref}
       compact={compact}
-      iconColor={kindColors[options.kind]}
+      iconColor={kindColors[options.topKind]}
       headerRight={
         <Tooltip label={t("totalTooltip", { count: list.total.toLocaleString(locale) })} withArrow>
           <Badge size="sm" variant="light" color="gray" radius="sm">
@@ -113,17 +108,17 @@ export default function WazuhTopListWidget({
       {list.entries.length === 0 ? (
         <Center h="100%">
           <Text size="sm" c="dimmed" ta="center">
-            {t(`empty.${options.kind}`)}
+            {t(`empty.${options.topKind}`)}
           </Text>
         </Center>
       ) : (
         <ScrollArea h="100%" type="auto" scrollbarSize={6} offsetScrollbars="y">
           <Stack gap={1}>
             {list.entries.map((entry, index) => {
-              const href = getEntryHref(options.kind, entry, links, options.range);
+              const href = getEntryHref(options.topKind, entry, links, options.range);
               const severity = entry.maxLevel !== null ? getWazuhSeverityForLevel(entry.maxLevel) : "low";
               const share = entry.count / max;
-              const isIp = options.kind === "sourceIps";
+              const isIp = options.topKind === "sourceIps";
               return (
                 <Box
                   key={entry.key}
@@ -136,7 +131,9 @@ export default function WazuhTopListWidget({
                     <Text size="xs" c="dimmed" w={14} ta="right" className={classes.numeric}>
                       {index + 1}
                     </Text>
-                    {options.kind === "rules" && entry.maxLevel !== null && <WazuhLevelBadge level={entry.maxLevel} />}
+                    {options.topKind === "rules" && entry.maxLevel !== null && (
+                      <WazuhLevelBadge level={entry.maxLevel} />
+                    )}
                     <Text
                       size="xs"
                       fw={500}
@@ -152,9 +149,9 @@ export default function WazuhTopListWidget({
                         {isPrivateIp(entry.key) ? t("private") : t("public")}
                       </WazuhChip>
                     )}
-                    {showDetailColumn && entry.detail && options.kind !== "agents" && (
+                    {showDetailColumn && entry.detail && options.topKind !== "agents" && (
                       <Text size="xs" c="dimmed" className={`${classes.mono} ${classes.nowrap}`}>
-                        {options.kind === "rules" ? `#${entry.detail}` : entry.detail}
+                        {options.topKind === "rules" ? `#${entry.detail}` : entry.detail}
                       </Text>
                     )}
                     {showAgentsColumn && entry.agents !== null && (
@@ -177,7 +174,7 @@ export default function WazuhTopListWidget({
                           style={{
                             width: `${Math.max(share * 100, 1)}%`,
                             background:
-                              options.kind === "mitreTactics" || options.kind === "mitreTechniques"
+                              options.topKind === "mitreTactics" || options.topKind === "mitreTechniques"
                                 ? "var(--mantine-color-violet-5)"
                                 : `var(--mantine-color-${wazuhSeverityChartColors[severity].replace(".", "-")})`,
                           }}

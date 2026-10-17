@@ -1,0 +1,63 @@
+---
+title: "Wazuh"
+description: "Wazuh security overview with tabs for severity, alerts, timeline, top lists, agents, vulnerabilities, file integrity and authentication failures."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { wazuhWidget } from ".";
+import { wazuhIntegration } from "@site/docs/integrations/wazuh";
+
+<WidgetHeader widget={wazuhWidget} categories={["Security", "Monitoring"]} />
+
+One widget for a Wazuh deployment. Hover the widget to show the tab switcher at the top; on touch devices it stays visible. The selected tab is saved with the widget, so the board opens on the same tab next time. Use **Visible tabs** to offer only some tabs, or pick a single tab to pin the widget to one view and hide the switcher.
+
+| Tab             | Shows                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| Severity        | Alerts in the time range split by severity, with the change against the previous period of equal length |
+| Alerts          | Recent alerts at or above a rule level with rule IDs, MITRE ATT&CK techniques, agent and source IP      |
+| Timeline        | Stacked chart of alerts over time by severity                                                           |
+| Top lists       | Top rules, agents, source IPs or MITRE ATT&CK tactics and techniques by alert count                     |
+| Agents          | Agent status tiles and a sortable, reorderable and resizable agent table                                |
+| Vulnerabilities | Vulnerability counts by severity, top CVEs and the most vulnerable agents                               |
+| File integrity  | Recent file integrity monitoring (syscheck) events                                                      |
+| Auth failures   | Failed logins and brute-force alerts per agent with sparklines and top source IPs                       |
+
+Wazuh rule levels are grouped into four severities: **low** (0-6), **medium** (7-11), **high** (12-14) and **critical** (15 and above).
+
+The Wazuh integration also feeds other widgets:
+
+- [Notifications](/docs/widgets/notifications) lists recent high and critical alerts.
+- [Stats](/docs/widgets/stats) offers agent counts and 24-hour alert counts as metrics.
+
+### Supported Integrations
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: wazuhIntegration,
+      note: "Agents use the server API or the indexer; every other tab reads from the indexer",
+    },
+  ]}
+/>
+
+### Requirements
+
+Alerts, vulnerabilities and file integrity events come from the Wazuh **indexer** (`wazuh-alerts-*`, `wazuh-states-vulnerabilities-*`). The agents tab works with server API credentials alone, or with indexer credentials using the latest `wazuh-monitoring-*` snapshot. See the [Wazuh integration](/docs/integrations/wazuh) for the credential options, certificates and the optional dashboard URL used for links.
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+Options that only affect one tab name that tab in their description.
+
+<WidgetConfig configuration={wazuhWidget.configuration} />

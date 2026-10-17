@@ -60,14 +60,7 @@ export const widgetKinds = [
   "assistant",
   "wud",
   "llamacpp",
-  "wazuhAgents",
-  "wazuhAlerts",
-  "wazuhSummary",
-  "wazuhTimeline",
-  "wazuhTopList",
-  "wazuhVulnerabilities",
-  "wazuhFim",
-  "wazuhAuthFailures",
+  "wazuh",
 ] as const;
 
 export type WidgetKind = (typeof widgetKinds)[number];
@@ -93,12 +86,5 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   mediaMissing: { width: 2, height: 2 },
   bazarr: { width: 2, height: 2 },
   assistant: { width: 10, height: 4 },
-  wazuhAgents: { width: 6, height: 4 },
-  wazuhAlerts: { width: 4, height: 4 },
-  wazuhSummary: { width: 3, height: 3 },
-  wazuhTimeline: { width: 6, height: 3 },
-  wazuhTopList: { width: 3, height: 3 },
-  wazuhVulnerabilities: { width: 4, height: 4 },
-  wazuhFim: { width: 4, height: 3 },
-  wazuhAuthFailures: { width: 4, height: 3 },
+  wazuh: { width: 4, height: 3 },
 };
