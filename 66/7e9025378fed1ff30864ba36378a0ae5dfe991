@@ -1,0 +1,31 @@
+packages/widgets/src/uptime-kuma/component.module.css
+  s_99767f175fdcb8::t_45f9ab3540ff21 16,21,26,31,36,291,296-299,305,309,332,389,424,431,451,453,456-461,474-475,480-492
+packages/widgets/src/uptime-kuma/component.tsx
+  s_99767f175fdcb8::t_a56ef28548ff6d 381-387,395
+packages/widgets/src/uptime-kuma/layout.ts
+  s_99767f175fdcb8::t_43e41459b3a070 5
+packages/widgets/src/uptime-kuma/monitor-row.tsx
+  s_99767f175fdcb8::t_e362c892dd4b05 13,67-72,93,100,102
+packages/widgets/src/uptime-kuma/monitors.ts
+  s_99767f175fdcb8::t_31fda96296b441 61,70,76-80,82
+packages/widgets/src/uptime-kuma/status.ts
+  s_99767f175fdcb8::t_51e8ffec7b007e 87,89-96
+packages/widgets/src/uptime-kuma/summary.tsx
+  s_99767f175fdcb8::t_69eb0425fd10d0 21,55,134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "667e9025378fed1ff30864ba36378a0ae5dfe991",
+  "prompts": {},
+  "sessions": {
+    "s_99767f175fdcb8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d20eff31-f9ac-4e73-940a-d0b708581f56",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
