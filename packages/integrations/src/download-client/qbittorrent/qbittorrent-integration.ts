@@ -144,6 +144,7 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
     const torrents: Awaited<ReturnType<QBittorrent["listTorrents"]>> = [];
     const seen = new Set<string>();
     for (let page = 0; page < 100 && torrents.length < limit; page++) {
+      const previousSeenCount = seen.size;
       const batch = await client.listTorrents({
         limit: pageSize,
         offset: page * pageSize,
@@ -165,7 +166,8 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
         torrents.push(torrent);
         if (torrents.length >= limit) break;
       }
-      if (batch.length < pageSize) break;
+      // qBittorrent 4 wraps out-of-range offsets back to the first page.
+      if (batch.length < pageSize || seen.size === previousSeenCount) break;
     }
     return torrents;
   }
