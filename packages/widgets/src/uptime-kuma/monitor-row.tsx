@@ -10,13 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import classes from "./component.module.css";
 import { HeartbeatBar } from "./heartbeat-bar";
 import type { MonitorEntry } from "./monitors";
-import {
-  certificateWarningDays,
-  formatUptime,
-  getMonitorTypeTranslationKey,
-  getUptimeColor,
-  monitorStatusColors,
-} from "./status";
+import { certificateWarningDays, formatUptime, getMonitorTypeTranslationKey, getUptimeTone } from "./status";
 
 export interface MonitorRowVisibility {
   heartbeatBar: boolean;
@@ -70,10 +64,14 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
     <>
       {visibility.responseTime && !(isStacked && monitor.ping === null) && (
         <span className={classes.ping}>
-          {monitor.ping === null ? "–" : t("unit.milliseconds", { value: Math.round(monitor.ping) })}
+          {monitor.ping !== null && t("unit.milliseconds", { value: Math.round(monitor.ping) })}
         </span>
       )}
-      {visibility.uptime && <UptimeValue uptime={monitor.uptime24h} />}
+      {visibility.uptime && (
+        <span className={classes.uptime} data-tone={getUptimeTone(monitor.status, monitor.uptime24h)}>
+          {monitor.uptime24h !== null && formatUptime(monitor.uptime24h)}
+        </span>
+      )}
     </>
   );
 
@@ -92,23 +90,16 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
             </Text>
           )}
           {statusDetail ? (
-            <Text component="span" c={`${monitorStatusColors[monitor.status]}.6`} className={classes.monitorStatus}>
-              {statusDetail}
-            </Text>
+            <span className={classes.monitorStatus}>{statusDetail}</span>
           ) : (
             <VisuallyHidden>{t(`status.${monitor.status}`)}</VisuallyHidden>
           )}
           {visibility.tags && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
         </div>
         {details && (
-          <Text
-            component="span"
-            c={certificate?.isWarning ? "orange.6" : "dimmed"}
-            truncate
-            className={classes.monitorDetails}
-          >
+          <span className={classes.monitorDetails} data-warning={certificate?.isWarning}>
             {details}
-          </Text>
+          </span>
         )}
       </div>
       {!isStacked && visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} />}
@@ -136,22 +127,6 @@ const MonitorTags = ({ tags }: { tags: readonly UptimeKumaTag[] }) => (
   </span>
 );
 
-const UptimeValue = ({ uptime }: { uptime: number | null }) => {
-  if (uptime === null) {
-    return (
-      <Text component="span" c="dimmed" className={classes.uptime}>
-        –
-      </Text>
-    );
-  }
-
-  return (
-    <Text component="span" fw={600} c={`${getUptimeColor(uptime)}.6`} className={classes.uptime}>
-      {formatUptime(uptime)}
-    </Text>
-  );
-};
-
 const getStatusDetail = (monitor: MonitorEntry, visible: boolean, since: string | null, t: Translate) => {
   if (!visible || monitor.status === "up") return null;
   return [t(`status.${monitor.status}`), since].filter(Boolean).join(" · ");
@@ -162,8 +137,6 @@ const getExtraDetails = (monitor: MonitorEntry, lastChecked: string | null, t: T
   return [
     typeKey ? t(`monitorType.${typeKey}`) : monitor.type,
     lastChecked && t("detail.checked", { time: lastChecked }),
-    monitor.averagePing !== null &&
-      t("detail.averagePing", { value: t("unit.milliseconds", { value: Math.round(monitor.averagePing) }) }),
   ];
 };
 

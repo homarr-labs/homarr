@@ -119,7 +119,6 @@ const createMockMonitor = (monitor: MockMonitor, now: number): UptimeKumaMonitor
   });
   const latest = heartbeats.at(-1);
   const firstOfStreak = heartbeats.findLastIndex((heartbeat) => heartbeat.status !== latest?.status) + 1;
-  const pings = heartbeats.flatMap((heartbeat) => (heartbeat.ping === null ? [] : [heartbeat.ping]));
 
   return {
     id: monitor.id,
@@ -129,7 +128,6 @@ const createMockMonitor = (monitor: MockMonitor, now: number): UptimeKumaMonitor
     status: latest?.status ?? "unknown",
     uptime24h: monitor.uptime24h,
     ping: latest?.ping ?? null,
-    averagePing: pings.reduce((sum, ping) => sum + ping, 0) / Math.max(pings.length, 1),
     lastCheckAt: latest?.time ?? null,
     statusSince: firstOfStreak === 0 ? null : (heartbeats[firstOfStreak]?.time ?? null),
     certificateDaysRemaining: monitor.certificateDaysRemaining ?? null,

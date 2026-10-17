@@ -4978,7 +4978,6 @@
       },
       "detail": {
         "checked": "checked {time}",
-        "averagePing": "avg {value}",
         "certificate": "{count, plural, one {certificate expires in # day} other {certificate expires in # days}}"
       },
       "notice": {
