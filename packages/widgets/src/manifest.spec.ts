@@ -1,7 +1,9 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 
+import { objectEntries } from "@homarr/common";
 import { widgetIntegrationSupport, widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
+import { widgetOptionsSchemas } from "@homarr/validation/widgets/options";
 
 import {
   createRetryableLoader,
@@ -107,6 +109,28 @@ describe("widget manifest promise stability", () => {
         definition && "supportedIntegrations" in definition ? (definition.supportedIntegrations ?? []) : [];
       const expectedIntegrations = widgetIntegrationSupport[kind] ?? [];
       expect(expectedIntegrations.toSorted()).toEqual([...supportedIntegrations].toSorted());
+    }
+  });
+
+  it("keeps the server-side option schemas aligned with widget definitions", async () => {
+    for (const kind of widgetKinds) {
+      const createOptionsSchema = widgetOptionsSchemas[kind];
+      if (!createOptionsSchema) continue;
+      const definition = await loadWidgetDefinition(kind);
+
+      for (const enableStatusByDefault of [true, false]) {
+        const settings = { enableStatusByDefault, forceDisableStatus: false };
+        const optionsSchema = createOptionsSchema(settings);
+        expect(optionsSchema.parse({})).toEqual(reduceWidgetOptionsWithDefinition(definition, settings));
+
+        for (const [key, option] of objectEntries(definition.createOptions(settings))) {
+          if (option.type !== "select") continue;
+          for (const selectOption of option.options) {
+            const value = typeof selectOption === "string" ? selectOption : selectOption.value;
+            expect(optionsSchema.safeParse({ [key]: value }).success).toBe(true);
+          }
+        }
+      }
     }
   });
 

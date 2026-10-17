@@ -16,6 +16,7 @@ import {
   onboarding,
   sectionLayouts,
   sections,
+  serverSettings,
   users,
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
@@ -225,6 +226,31 @@ describe("onboard.completeSetup", () => {
     expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "finish", previousStep: "setup" });
     expect(await isOnboardingClaimValidAsync(db, claimToken)).toBe(false);
   });
+
+  it.each([
+    { isPublic: false, expectedHomeBoardId: null },
+    { isPublic: true, expectedHomeBoardId: "target" },
+  ])(
+    "selects the target board as instance home board only when it is public ($isPublic)",
+    async ({ isPublic, expectedHomeBoardId }) => {
+      const db = createDb();
+      const claimToken = await seedOnboardingAsync(db);
+      await seedBoardAsync(db, { boardId: "target" });
+      await db.update(boards).set({ isPublic }).where(eq(boards.id, "target"));
+      await db.insert(serverSettings).values({
+        settingKey: "board",
+        value: SuperJSON.stringify({ homeBoardId: null, mobileHomeBoardId: null }),
+      });
+
+      await createCaller(db, claimToken).completeSetup(completionInput("target"));
+
+      const boardSettings = await db.query.serverSettings.findFirst({ where: eq(serverSettings.settingKey, "board") });
+      expect(SuperJSON.parse(boardSettings?.value ?? "null")).toMatchObject({
+        homeBoardId: expectedHomeBoardId,
+        mobileHomeBoardId: expectedHomeBoardId,
+      });
+    },
+  );
 
   it("rejects a stale completion after another submission claims the setup transition", async () => {
     const db = createDb();

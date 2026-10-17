@@ -8,7 +8,8 @@ import { boardGroupPermissions, boardUserPermissions, groupMembers } from "@homa
 import type { BoardPermission } from "@homarr/definitions";
 
 /**
- * Throws NOT_FOUND if user is not allowed to perform action on board
+ * Throws NOT_FOUND if user is not allowed to view board
+ * Throws FORBIDDEN if user can view board but is not allowed to perform action on it
  * @param ctx trpc router context
  * @param boardWhere where clause for the board
  * @param permission permission required to perform action on board
@@ -58,6 +59,14 @@ export const throwIfActionForbiddenAsync = async (
 
   if (permission === "view" && hasViewAccess) {
     return; // As view access is required and user has view access, allow
+  }
+
+  if (hasViewAccess || hasChangeAccess) {
+    // User can already see the board, so revealing its existence does not allow snooping
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Permission denied",
+    });
   }
 
   notAllowed();

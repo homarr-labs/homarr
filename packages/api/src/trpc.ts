@@ -44,10 +44,16 @@ interface ApiContext {
   baseUrl?: `${string}://${string}`;
   onboardingClaimToken?: string;
   requestIdentity?: RequestIdentity;
+  /** Set for REST requests served through the OpenAPI router */
+  isOpenApiRequest?: boolean;
   db: typeof db;
 }
 
-export const createTRPCContext = (opts: { headers: Headers; session: Session | null }): ApiContext => {
+export const createTRPCContext = (opts: {
+  headers: Headers;
+  session: Session | null;
+  isOpenApiRequest?: boolean;
+}): ApiContext => {
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
@@ -63,6 +69,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
     baseUrl: extractBaseUrlFromHeaders(opts.headers),
     onboardingClaimToken: getOnboardingClaimTokenFromCookieHeader(opts.headers.get("cookie")),
     requestIdentity: resolveRequestIdentity(opts.headers),
+    isOpenApiRequest: opts.isOpenApiRequest,
     db,
   };
 };

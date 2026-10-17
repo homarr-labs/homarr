@@ -6,8 +6,8 @@ import { API_KEY_HEADER_NAME } from "@homarr/auth/api-key";
 import { appRouter } from "./router/app";
 import { boardRouter } from "./router/board";
 import { ensureRootCertificateProcedure, getCertificateProcedure } from "./router/certificates/certificate-router";
-import { integrationRequestProcedure } from "./router/integration/integration-request";
-import { integrationTestStoredConnectionProcedure } from "./router/integration/integration-test-stored-connection";
+import { groupRouter } from "./router/group";
+import { integrationRouter } from "./router/integration/integration-router";
 import { infoRouter } from "./router/info";
 import { inviteRouter } from "./router/invite";
 import { serverSettingsRouter } from "./router/serverSettings";
@@ -19,6 +19,7 @@ export { normalizeRecursiveJsonSchemasForScalar } from "./open-api-scalar";
 export const openApiRouter = createTRPCRouter({
   appRouter,
   boardRouter,
+  groupRouter,
   infoRouter,
   inviteRouter,
   serverSettingsRouter,
@@ -27,10 +28,7 @@ export const openApiRouter = createTRPCRouter({
     getCertificate: getCertificateProcedure,
     ensureRootCertificate: ensureRootCertificateProcedure,
   }),
-  integration: createTRPCRouter({
-    request: integrationRequestProcedure,
-    testConnection: integrationTestStoredConnectionProcedure,
-  }),
+  integration: integrationRouter,
 });
 
 export const openApiDocument = (base: string) => {
@@ -50,7 +48,7 @@ export const openApiDocument = (base: string) => {
   });
   // These reads support anonymous public resources and API-key-scoped private resources.
   // The generator's boolean `protect` cannot express optional authentication.
-  for (const path of ["/api/boards", "/api/apps/{id}"]) {
+  for (const path of ["/api/boards", "/api/apps/{id}", "/api/integrations/kinds"]) {
     const operation = document.paths?.[path]?.get;
     if (operation) operation.security = [{}, { apikey: [] }];
   }
@@ -78,6 +76,7 @@ export const openApiDocument = (base: string) => {
       ["boards", "Build dashboards"],
       ["apps", "Manage apps"],
       ["users", "Manage users and preferences"],
+      ["groups", "Manage groups and permissions"],
       ["settings", "Configure the instance"],
       ["integrations", "Connect integrations"],
       ["invites", "Manage invitations"],

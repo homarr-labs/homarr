@@ -1,12 +1,14 @@
 import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
+import * as env from "@homarr/auth/env";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
-import { invites, onboarding, users } from "@homarr/db/schema";
+import { groupMembers, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
+import { everyoneGroup } from "@homarr/definitions";
 
 import { claimOnboardingAsync } from "../../onboarding-claim";
 import { userRouter } from "../user";
@@ -254,6 +256,168 @@ describe("register should create a user with valid invitation", () => {
   );
 });
 
+describe("create should create a user with groups", () => {
+  test("create should return the user id and add the user to each group once", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+    const groupId = createId();
+    await db.insert(groups).values({ id: groupId, name: "Group", position: 1 });
+
+    // Act
+    const result = await caller.create({
+      username: "test",
+      password: "123ABCdef+/-",
+      confirmPassword: "123ABCdef+/-",
+      groupIds: [groupId, groupId],
+    });
+
+    // Assert
+    const members = await db.query.groupMembers.findMany();
+    expect(members).toEqual([{ groupId, userId: result.id }]);
+  });
+
+  test("create with a non existing group should throw not found error and not create the user", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+
+    // Act
+    const actAsync = async () =>
+      await caller.create({
+        username: "test",
+        password: "123ABCdef+/-",
+        confirmPassword: "123ABCdef+/-",
+        groupIds: [createId()],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Group not found");
+    const usersInDb = await db.query.users.findMany();
+    expect(usersInDb).toHaveLength(0);
+  });
+});
+
+describe("setGroups should replace the groups of a user", () => {
+  test("setGroups should replace the groups, keep the everyone membership and return the resulting groups", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+    const userId = createId();
+    const everyoneGroupId = createId();
+    const removedGroupId = createId();
+    const keptGroupId = createId();
+    const addedGroupId = createId();
+    await db.insert(users).values({ id: userId, name: "user" });
+    await db.insert(groups).values([
+      { id: everyoneGroupId, name: everyoneGroup, position: -1 },
+      { id: removedGroupId, name: "Removed", position: 1 },
+      { id: keptGroupId, name: "Kept", position: 2 },
+      { id: addedGroupId, name: "Added", position: 3 },
+    ]);
+    await db.insert(groupMembers).values([
+      { groupId: everyoneGroupId, userId },
+      { groupId: removedGroupId, userId },
+      { groupId: keptGroupId, userId },
+    ]);
+
+    // Act
+    const result = await caller.setGroups({ userId, groupIds: [keptGroupId, addedGroupId] });
+
+    // Assert
+    const expectedGroupIds = [everyoneGroupId, keptGroupId, addedGroupId].toSorted();
+    expect(result.groupIds.toSorted()).toEqual(expectedGroupIds);
+    const user = await caller.getById({ userId });
+    expect(user.groupIds.toSorted()).toEqual(expectedGroupIds);
+  });
+
+  test("setGroups without admin permissions should throw permission denied error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    await db.insert(users).values({ id: defaultOwnerId, name: "user" });
+
+    // Act
+    const actAsync = async () => await caller.setGroups({ userId: defaultOwnerId, groupIds: [] });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Permission denied");
+  });
+
+  test("setGroups with a user from an externally managed provider should throw forbidden error", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+    const userId = createId();
+    await db.insert(users).values({ id: userId, name: "user", provider: "ldap" });
+
+    // Act
+    const actAsync = async () => await caller.setGroups({ userId, groupIds: [] });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("User's provider is not managed locally");
+  });
+
+  test("setGroups should not add the user to the everyone group when its id is supplied", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+    const userId = createId();
+    const everyoneGroupId = createId();
+    const groupId = createId();
+    await db.insert(users).values({ id: userId, name: "user" });
+    await db.insert(groups).values([
+      { id: everyoneGroupId, name: everyoneGroup, position: -1 },
+      { id: groupId, name: "Group", position: 1 },
+    ]);
+
+    // Act
+    const result = await caller.setGroups({ userId, groupIds: [everyoneGroupId, groupId] });
+
+    // Assert
+    expect(result.groupIds).toEqual([groupId]);
+  });
+
+  test("setGroups with a non existing group should throw not found error and keep the groups", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+    const userId = createId();
+    const existingGroupId = createId();
+    await db.insert(users).values({ id: userId, name: "user" });
+    await db.insert(groups).values({ id: existingGroupId, name: "Existing", position: 1 });
+    await db.insert(groupMembers).values({ groupId: existingGroupId, userId });
+
+    // Act
+    const actAsync = async () => await caller.setGroups({ userId, groupIds: [createId()] });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Group not found");
+    const members = await db.query.groupMembers.findMany();
+    expect(members).toEqual([{ groupId: existingGroupId, userId }]);
+  });
+
+  test("setGroups without a locally managed provider enabled should throw forbidden error", async () => {
+    // Arrange
+    const db = createDb();
+    const spy = vi.spyOn(env, "env", "get");
+    spy.mockReturnValue({ AUTH_PROVIDERS: ["ldap"] } as never);
+    const caller = userRouter.createCaller({ db, deviceType: undefined, session: createSession(["admin"]) });
+    const userId = createId();
+    await db.insert(users).values({ id: userId, name: "user" });
+
+    // Act
+    const actAsync = async () => await caller.setGroups({ userId, groupIds: [] });
+
+    // Assert
+    try {
+      await expect(actAsync()).rejects.toThrow("Group members cannot be managed locally");
+    } finally {
+      spy.mockRestore();
+    }
+  });
+});
+
 describe("editProfile shoud update user", () => {
   test("editProfile should update users and not update emailVerified when email not dirty", async () => {
     // arrange
@@ -277,7 +441,6 @@ describe("editProfile shoud update user", () => {
     await caller.editProfile({
       id: defaultOwnerId,
       name: "ABC",
-      email: "",
     });
 
     // assert
@@ -323,6 +486,41 @@ describe("editProfile shoud update user", () => {
       id: defaultOwnerId,
       name: "abc",
       email: "myNewEmail@gmail.com",
+      emailVerified: null,
+    });
+  });
+
+  test.each([[null], [""]])("editProfile should remove email and emailVerified when email is %j", async (email) => {
+    // arrange
+    const db = createDb();
+    const caller = userRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
+
+    await db.insert(users).values({
+      id: defaultOwnerId,
+      name: "TEST 1",
+      email: "abc@gmail.com",
+      emailVerified: new Date(2024, 0, 5),
+    });
+
+    // act
+    await caller.editProfile({
+      id: defaultOwnerId,
+      name: "ABC",
+      email,
+    });
+
+    // assert
+    const user = await db.select().from(users).where(eq(users.id, defaultOwnerId));
+
+    expect(user).toHaveLength(1);
+    expect(user[0]).containSubset({
+      id: defaultOwnerId,
+      name: "abc",
+      email: null,
       emailVerified: null,
     });
   });

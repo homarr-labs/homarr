@@ -51,7 +51,11 @@ const saveBoardSettingsAsync = async (db: Database, input: unknown) => {
     throw new TRPCError({ code: "BAD_REQUEST", cause: parsedSettings.error, message: parsedSettings.error.message });
   }
   const next = parsedSettings.data;
-  const boardIds = [next.homeBoardId, next.mobileHomeBoardId].filter((id) => id !== null);
+  // Only validate changed home boards, so a stored board that is deleted or private does not block other changes
+  const boardIds = (["homeBoardId", "mobileHomeBoardId"] as const)
+    .filter((settingKey) => next[settingKey] !== current[settingKey])
+    .map((settingKey) => next[settingKey])
+    .filter((id) => id !== null);
 
   if (boardIds.length > 0) {
     const publicBoards = await db.query.boards.findMany({
@@ -127,12 +131,12 @@ export const serverSettingsRouter = createTRPCRouter({
         protect: true,
         summary: "Update global board settings",
         description:
-          "Update supplied instance board defaults and return the resulting settings. Home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
+          "Update supplied instance board defaults and return the resulting settings. Changed home board IDs must reference public boards, or be null to clear the default. Requires admin permission.",
       },
       mcp: {
         enabled: true,
         description:
-          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Home board IDs must reference public boards or be null",
+          "Update global board defaults. Requires admin permission. Optional fields: homeBoardId, mobileHomeBoardId, enableStatusByDefault, forceDisableStatus. Changed home board IDs must reference public boards or be null",
       },
     })
     .input(boardServerSettingsUpdateSchema)
