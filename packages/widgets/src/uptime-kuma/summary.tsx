@@ -18,7 +18,7 @@ export const SummaryRing = ({ summary, size }: SummaryProps & { size: number }) 
   const t = useI18n("widget.uptimeKuma");
   const sections = presentStatuses(summary).map((status) => ({
     value: (summary.counts[status] / summary.total) * 100,
-    color: monitorStatusColors[status],
+    color: `${monitorStatusColors[status]}.6`,
     tooltip: t("summary.statusCount", { count: summary.counts[status], status: t(`status.${status}`) }),
   }));
 
@@ -52,7 +52,7 @@ export const OverallStatus = ({
   return (
     <div className={classes.overallStatus} data-size={size}>
       <Icon className={classes.overallStatusIcon} color={`var(--mantine-color-${color}-6)`} aria-hidden />
-      <Text component="span" fw={700} size={size} truncate title={label} c={`${color}.6`}>
+      <Text component="span" fw={700} size={size} truncate title={label}>
         {label}
       </Text>
     </div>
@@ -131,7 +131,7 @@ export const DistributionBar = ({ summary }: SummaryProps) => {
         >
           <Progress.Section
             value={(summary.counts[status] / summary.total) * 100}
-            color={monitorStatusColors[status]}
+            color={`${monitorStatusColors[status]}.6`}
           />
         </Tooltip>
       ))}

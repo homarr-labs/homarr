@@ -93,7 +93,6 @@ export interface UptimeKumaMonitor {
   status: UptimeKumaMonitorStatus;
   uptime24h: number | null;
   ping: number | null;
-  averagePing: number | null;
   lastCheckAt: number | null;
   statusSince: number | null;
   certificateDaysRemaining: number | null;

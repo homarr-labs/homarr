@@ -84,14 +84,16 @@ const displayedStatusOrder = ["up", "down", "pending", "maintenance", "paused", 
 export const presentStatuses = (summary: UptimeKumaSummary) =>
   displayedStatusOrder.filter((status) => summary.counts[status] > 0);
 
-const uptimeColorThresholds = [
-  { minimum: 99, color: "green" },
-  { minimum: 95, color: "yellow" },
-  { minimum: 0, color: "red" },
-] as const satisfies { minimum: number; color: MantineColor }[];
+type UptimeTone = "healthy" | "warning" | "critical" | "inactive";
 
-export const getUptimeColor = (uptime: number): MantineColor =>
-  uptimeColorThresholds.find(({ minimum }) => uptime >= minimum)?.color ?? "red";
+const inactiveStatuses = new Set<UptimeKumaMonitorStatus>(["paused", "unknown"]);
+
+export const getUptimeTone = (status: UptimeKumaMonitorStatus, uptime: number | null): UptimeTone => {
+  if (uptime === null || inactiveStatuses.has(status)) return "inactive";
+  if (uptime >= 99) return "healthy";
+  if (uptime >= 95) return "warning";
+  return "critical";
+};
 
 export const formatUptime = (uptime: number) => {
   if (uptime >= 100) return "100%";

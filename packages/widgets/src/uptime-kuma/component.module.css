@@ -13,22 +13,27 @@
 
 :is(.dot, .beat, .monitorRow)[data-status="up"] {
   --status-color: var(--mantine-color-green-6);
+  --status-text-color: light-dark(var(--mantine-color-green-8), var(--mantine-color-green-6));
 }
 
 :is(.dot, .beat, .monitorRow)[data-status="down"] {
   --status-color: var(--mantine-color-red-6);
+  --status-text-color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-6));
 }
 
 :is(.dot, .beat, .monitorRow)[data-status="pending"] {
   --status-color: var(--mantine-color-orange-6);
+  --status-text-color: light-dark(var(--mantine-color-orange-9), var(--mantine-color-orange-6));
 }
 
 :is(.dot, .beat, .monitorRow)[data-status="maintenance"] {
   --status-color: var(--mantine-color-blue-6);
+  --status-text-color: light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-5));
 }
 
 :is(.dot, .beat, .monitorRow):is([data-status="paused"], [data-status="unknown"], [data-status="empty"]) {
   --status-color: var(--mantine-color-gray-6);
+  --status-text-color: var(--mantine-color-dimmed);
 }
 
 .dot[data-status="unknown"] {
@@ -42,10 +47,6 @@
   height: rem(9px);
   border-radius: 50%;
   background-color: var(--status-color);
-}
-
-.monitorRow .dot[data-status="down"] {
-  box-shadow: 0 0 0 rem(2px) color-mix(in srgb, var(--status-color) 30%, transparent);
 }
 
 .centeredState {
@@ -287,8 +288,13 @@
 }
 
 .scroll {
+  --scroll-fade: rem(14px);
   flex: 1;
   min-height: 0;
+}
+
+.scrollViewport {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--scroll-fade)), transparent);
 }
 
 .scrollContent {
@@ -296,16 +302,15 @@
   flex-direction: column;
   gap: var(--mantine-spacing-xs);
   min-height: 100%;
-  padding: rem(2px) var(--mantine-spacing-md) var(--mantine-spacing-sm);
+  padding: rem(2px) calc(var(--mantine-spacing-md) - rem(6px)) var(--scroll-fade) var(--mantine-spacing-md);
 }
 
 .list[data-layout="column"] .scrollContent {
-  padding: rem(2px) rem(6px) var(--mantine-spacing-xs);
+  padding: rem(2px) var(--mantine-spacing-sm) var(--scroll-fade);
 }
 
 .list[data-layout="column"] .monitorRow {
   --title-gap: rem(6px);
-  padding-inline: rem(2px);
 }
 
 .scrollContent > .centeredState {
@@ -324,7 +329,7 @@
   gap: rem(8px);
   padding: rem(6px) rem(10px);
   border-radius: var(--mantine-radius-sm);
-  background-color: color-mix(in srgb, var(--notice-color) 12%, transparent);
+  background-color: color-mix(in srgb, var(--mantine-color-text) 5%, transparent);
 }
 
 .noticeIcon {
@@ -381,7 +386,7 @@
   column-gap: rem(12px);
   row-gap: rem(4px);
   min-width: 0;
-  padding: rem(7px) rem(4px);
+  padding: rem(7px) 0;
   border-top: rem(1px) solid var(--mantine-color-default-border);
   font-size: var(--mantine-font-size-sm);
 }
@@ -416,13 +421,14 @@
   flex-shrink: 1;
   min-width: 0;
   overflow: hidden;
-  font-weight: 600;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .monitorStatus {
   flex-shrink: 0;
+  color: var(--status-text-color);
   font-size: var(--mantine-font-size-xs);
   font-weight: 500;
   white-space: nowrap;
@@ -442,9 +448,17 @@
 }
 
 .monitorDetails {
+  overflow: hidden;
   padding-left: calc(var(--dot-size) + var(--title-gap));
+  color: var(--mantine-color-dimmed);
   font-size: var(--mantine-font-size-xs);
   line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitorDetails[data-warning] {
+  color: light-dark(var(--mantine-color-orange-9), var(--mantine-color-orange-6));
 }
 
 .ping {
@@ -456,11 +470,24 @@
 }
 
 .uptime {
-  display: flex;
-  justify-content: flex-end;
   font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  text-align: right;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+.uptime[data-tone="warning"] {
+  color: light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-6));
+}
+
+.uptime[data-tone="critical"] {
+  color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-6));
+}
+
+.uptime[data-tone="inactive"] {
+  color: var(--mantine-color-dimmed);
+  font-weight: 500;
 }
 
 .stackedFooter {

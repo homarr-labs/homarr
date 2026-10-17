@@ -378,7 +378,13 @@ const ListLayout = ({
           <SummaryLine summary={summary} showUptime={visibility.uptime && !isColumn} width={headerWidth} />
         </header>
       )}
-      <ScrollArea className={classes.scroll} type="hover" scrollbarSize={6} offsetScrollbars={!isColumn && "y"}>
+      <ScrollArea
+        className={classes.scroll}
+        classNames={{ viewport: classes.scrollViewport }}
+        type="hover"
+        scrollbarSize={6}
+        offsetScrollbars={!isColumn && "y"}
+      >
         <div className={classes.scrollContent}>
           {notices.length > 0 && !(isColumn && showSummary) && (
             <NoticeList notices={notices} compact={isColumn || size.height < 400} now={now} />
@@ -386,8 +392,7 @@ const ListLayout = ({
           {sections.length === 0 && (
             <CenteredState
               icon={<IconCircleCheck className={classes.stateIcon} data-tone="success" aria-hidden />}
-              title={t("overall.operational")}
-              description={t("allClear", { count: summary.total })}
+              title={t("allClear", { count: summary.total })}
             />
           )}
           {sections.map((section) => (

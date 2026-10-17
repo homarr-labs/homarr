@@ -2,7 +2,7 @@ export type UptimeKumaLayout = "tile" | "strip" | "column" | "board";
 
 const compactBreakpoint = 230;
 const minimumColumnWidth = 430;
-const minimumInlineRowWidth = 430;
+const minimumInlineRowWidth = 400;
 const minimumTaggedRowWidth = 600;
 const maximumColumns = 3;
 

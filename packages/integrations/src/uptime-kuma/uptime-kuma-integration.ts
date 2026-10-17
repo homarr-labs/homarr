@@ -157,7 +157,6 @@ const mapMonitor = (
         ? Math.min(100, Math.max(0, uptimeRatio * 100))
         : null,
     ping: latest?.ping ?? null,
-    averagePing: averagePing(heartbeats),
     lastCheckAt: latest?.time ?? null,
     statusSince: getStatusSince(heartbeats),
     certificateDaysRemaining: getCertificateDaysRemaining(monitor),
@@ -211,12 +210,6 @@ const mapIncident = (incident: StatusPageIncident): UptimeKumaIncident => ({
 
 const isIncidentStyle = (style: string | null | undefined): style is UptimeKumaIncidentStyle =>
   uptimeKumaIncidentStyles.some((value) => value === style);
-
-const averagePing = (heartbeats: readonly UptimeKumaHeartbeat[]) => {
-  const pings = heartbeats.flatMap((heartbeat) => (heartbeat.ping === null ? [] : [heartbeat.ping]));
-  if (pings.length === 0) return null;
-  return pings.reduce((sum, ping) => sum + ping, 0) / pings.length;
-};
 
 const getStatusSince = (heartbeats: readonly UptimeKumaHeartbeat[]) => {
   const latest = heartbeats.at(-1);

@@ -10,7 +10,6 @@ export interface LoadedStatusPage {
 
 export interface MonitorEntry extends UptimeKumaMonitor {
   key: string;
-  order: number;
 }
 
 export interface MonitorSection {
@@ -59,7 +58,7 @@ export const filterProblems = (monitors: readonly MonitorEntry[], showOnlyProble
   monitors.filter((monitor) => !showOnlyProblems || monitor.status !== "up");
 
 export const sortMonitors = (monitors: readonly MonitorEntry[], sortBy: UptimeKumaSortBy): MonitorEntry[] =>
-  monitors.toSorted((left, right) => compareMonitors(left, right, sortBy) || left.order - right.order);
+  monitors.toSorted((left, right) => compareMonitors(left, right, sortBy));
 
 const compareMonitors = (left: MonitorEntry, right: MonitorEntry, sortBy: UptimeKumaSortBy) => {
   switch (sortBy) {
@@ -68,11 +67,16 @@ const compareMonitors = (left: MonitorEntry, right: MonitorEntry, sortBy: Uptime
     case "name":
       return left.name.localeCompare(right.name, undefined, { sensitivity: "base", numeric: true });
     case "uptime":
-      return (left.uptime24h ?? Number.POSITIVE_INFINITY) - (right.uptime24h ?? Number.POSITIVE_INFINITY);
+      return compareNullsLast(left.uptime24h, right.uptime24h);
     case "statusPage":
       return 0;
   }
 };
 
+const compareNullsLast = (left: number | null, right: number | null) => {
+  if (left === null || right === null) return Number(left === null) - Number(right === null);
+  return left - right;
+};
+
 const toEntries = (page: LoadedStatusPage, monitors: readonly UptimeKumaMonitor[]): MonitorEntry[] =>
-  monitors.map((monitor, order) => ({ ...monitor, key: `${page.integrationId}:${monitor.id}`, order }));
+  monitors.map((monitor) => ({ ...monitor, key: `${page.integrationId}:${monitor.id}` }));
