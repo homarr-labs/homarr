@@ -13,6 +13,7 @@ export const fixUsernames = command({
     }
 
     const credentialUsers = await db.query.users.findMany({
+      columns: { id: true, name: true },
       where: eq(users.provider, "credentials"),
     });
 

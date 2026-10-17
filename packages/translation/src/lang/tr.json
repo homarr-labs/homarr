@@ -247,6 +247,82 @@
         "title": "Hesabınıza Giriş Yapın",
         "subtitle": "Tekrar hoş geldiniz! Lütfen kimlik bilgilerinizi girin"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Homarr'a Katıl",
         "titleWithAppName": "{appName} uygulamasına katıl",
@@ -749,7 +825,10 @@
         "selectMultiple": "Birden fazla seç",
         "cancelMultiple": "Çoklu seçimden çık",
         "customApplication": "Özel uygulama",
-        "application": "Uygulama"
+        "application": "Uygulama",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Yeni uygulama oluştur",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Çalışma Süresi İzleme",
       "beszel": "Beszel",
       "systemMonitoring": "Sistem İzleme",
-      "security": "Güvenlik"
+      "security": "Güvenlik",
+      "serviceVersion": "Sürüm"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "{totalPages} sayfanın {page}. sayfası"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "buraya",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Widget ayarlarından bir URL veya uygulama ekleyin"
+      "empty": "Widget ayarlarından bir URL veya uygulama ekleyin",
+      "groups": {
+        "label": "",
+        "placeholder": "Yeni Kategori",
+        "add": "Kategori ekle",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Varsayılan sekme"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Görünür küme alanları"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Filtrelenecek konteynerler"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "Beyaz liste olarak filtrele"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Uygulama bulunamadı",
         "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın",
-        "quickCreate": "Anında uygulama oluştur"
+        "quickCreate": "Anında uygulama oluştur",
+        "create": "Uygulama oluştur"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "Sağlayıcı URL'si"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Tanımlayıcı",
             "placeholder": "Ad veya Sahip/Ad"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
       "projectDescription": "Proje Açıklaması",
+      "runningVersions": "",
+      "upToDate": "Güncel",
+      "updateAvailable": "",
+      "unknownStatus": "Bilinmeyen",
       "created": "Oluşturuldu",
       "error": {
         "label": "Hata",
@@ -6364,6 +6476,31 @@
               "search": "Ara",
               "firstDayOfWeek": "Haftanın ilk günü",
               "accessibility": "Erişilebilirlik",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Kurulum Turları",
                 "description": "Yönetim alanına veya panoya bir sonraki ziyaretinizde bunları tekrar görmek için kurulum turlarını sıfırlayın.",
@@ -6904,7 +7041,8 @@
               "label": "Kimlik doğrulama",
               "title": "API Anahtarları",
               "button": {
-                "createApiToken": "API anahtarı oluştur"
+                "createApiToken": "API anahtarı oluştur",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Tarafından oluşturuldu",
+                  "source": "Entegrasyon",
                   "actions": "Eylemler"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

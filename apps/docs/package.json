@@ -13,6 +13,7 @@
     "format": "oxfmt .",
     "clean": "git clean -xdf .next out node_modules",
     "api-dump-contributors": "node ./scripts/dump-contributors.mjs",
+    "test:links": "node ./scripts/validate-links.test.ts",
     "validate:coverage": "tsx ./scripts/validate-docs-coverage.ts",
     "validate:links": "tsx ./scripts/validate-links.ts",
     "verify:search": "tsx ./scripts/verify-search.ts",

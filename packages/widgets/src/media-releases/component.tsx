@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import {
   Avatar,
   Badge,
@@ -42,6 +42,8 @@ export default function MediaReleasesWidget({
   width,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
+  const locale = useCurrentIntlLocale();
+  const formatDate = useMemo(() => createReleaseDateFormatter(locale), [locale]);
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
   const response = getUsableWidgetQueryData(releasesQuery);
 
@@ -62,7 +64,7 @@ export default function MediaReleasesWidget({
             {releases.map((item, index) => (
               <Fragment key={`${item.integration.id}:${item.id}`}>
                 {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
-                <Item item={item} options={options} isAdvanced={isAdvanced} />
+                <Item item={item} options={options} isAdvanced={isAdvanced} formatDate={formatDate} />
               </Fragment>
             ))}
           </SimpleGrid>
@@ -81,27 +83,35 @@ interface ItemProps {
   item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"]["releases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
   isAdvanced: boolean;
+  formatDate: ReturnType<typeof createReleaseDateFormatter>;
 }
 
-const formatReleaseDate = (value: unknown, locale: string, isDateOnly?: boolean) => {
-  const date = toValidDate(value);
-  if (!date) return "—";
-  const options: Intl.DateTimeFormatOptions = {
+const createReleaseDateFormatter = (locale: string) => {
+  const dateOptions: Intl.DateTimeFormatOptions = {
     month: "2-digit",
     year: "numeric",
     day: "2-digit",
   };
-  if (isDateOnly) options.timeZone = "UTC";
-  else {
-    options.hour = "2-digit";
-    options.minute = "2-digit";
-    options.hour12 = false;
-  }
-  return Intl.DateTimeFormat(locale, options).format(date);
+  let dateOnlyFormatter: Intl.DateTimeFormat | undefined;
+  let dateTimeFormatter: Intl.DateTimeFormat | undefined;
+  return (value: unknown, isDateOnly?: boolean) => {
+    const date = toValidDate(value);
+    if (!date) return "—";
+    if (isDateOnly) {
+      dateOnlyFormatter ??= Intl.DateTimeFormat(locale, { ...dateOptions, timeZone: "UTC" });
+      return dateOnlyFormatter.format(date);
+    }
+    dateTimeFormatter ??= Intl.DateTimeFormat(locale, {
+      ...dateOptions,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    return dateTimeFormatter.format(date);
+  };
 };
 
-const Item = ({ item, options, isAdvanced }: ItemProps) => {
-  const locale = useCurrentIntlLocale();
+const Item = ({ item, options, isAdvanced, formatDate }: ItemProps) => {
   const t = useI18n("widget.mediaReleases");
   const length = formatLength(item.length, item.type, t);
   const showPoster = isAdvanced || options.layout === "poster";
@@ -141,19 +151,20 @@ const Item = ({ item, options, isAdvanced }: ItemProps) => {
             : undefined
         }
       >
-        {!isAdvanced && options.layout === "backdrop" && (
-          <Box
+        {!isAdvanced && options.layout === "backdrop" && item.imageUrls.backdrop && (
+          <Image
+            src={item.imageUrls.backdrop}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
             w="100%"
             h="100%"
             pos="absolute"
             top={0}
             left={0}
             style={{
-              backgroundImage: `url(${item.imageUrls.backdrop})`,
               borderRadius: 8,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
               opacity: 0.2,
             }}
           />
@@ -186,10 +197,7 @@ const Item = ({ item, options, isAdvanced }: ItemProps) => {
                 wrap={isAdvanced ? "nowrap" : "wrap"}
                 style={isAdvanced ? { minWidth: 0 } : { minWidth: 0, rowGap: 0 }}
               >
-                <Info
-                  icon={IconCalendar}
-                  label={formatReleaseDate(item.releaseDate, locale, item.releaseDateIsDateOnly)}
-                />
+                <Info icon={IconCalendar} label={formatDate(item.releaseDate, item.releaseDateIsDateOnly)} />
                 {length !== undefined && (
                   <>
                     <InfoDivider />

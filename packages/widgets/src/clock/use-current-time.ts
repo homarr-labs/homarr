@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 
 export const useCurrentTime = ({ showSeconds }: { showSeconds: boolean }) => {
   const [time, setTime] = useState<Date | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
-  const intervalMultiplier = useMemo(() => (showSeconds ? 1 : 60), [showSeconds]);
+  const intervalMultiplier = showSeconds ? 1 : 60;
 
   useEffect(() => {
     setTime(new Date());

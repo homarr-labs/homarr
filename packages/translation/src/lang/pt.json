@@ -247,6 +247,82 @@
         "title": "Acesse a sua conta",
         "subtitle": "Bem-vindo(a) de volta! Por favor, insira suas credenciais"
       },
+      "mcpConsent": {
+        "title": "Rever acesso ao cliente",
+        "description": "Revise o acesso deste cliente antes de conectar.",
+        "viewingHint": "A visualização desta página não permite acesso.",
+        "identityTitle": "Conta e cliente",
+        "loading": "Carregando o pedido de acesso",
+        "allow": "Permitir acesso",
+        "deny": "Negar acesso",
+        "decisionHint": "Só permitir acesso se você confia neste cliente e no callback.",
+        "requestExpires": "Pedido expira (UTC):",
+        "details": "Detalhes técnicos",
+        "returnHome": "Voltar ao Homarr",
+        "reload": "Recarregar página de consentimento",
+        "account": {
+          "name": "Sessão iniciada como",
+          "id": "ID de usuário",
+          "nameNotRecorded": "Nome de usuário não gravado"
+        },
+        "client": {
+          "name": "Cliente",
+          "nameNotSupplied": "Nome do cliente não fornecido",
+          "id": "ID do Cliente",
+          "callbackHost": "Host de retorno",
+          "callbackUrl": "URL de callback completo",
+          "hostUnavailable": "Host de retorno indisponível",
+          "unverifiedHint": "Nomes de clientes são auto-reportados, não verificados pelo Homarr.",
+          "destinationHint": "Sua decisão retornará a este callback. Se você permitir acesso, o cliente pode trocar o código de autorização por uma credencial API."
+        },
+        "access": {
+          "title": "Acesso à conta",
+          "description": "Usa suas permissões atuais, incluindo recursos compartilhados.",
+          "details": "Visualizar permissões ({count})",
+          "noGlobalPermissions": "Usa a sua conta e o acesso a recursos compartilhados, sem permissões globais."
+        },
+        "admin": {
+          "title": "Acesso total de administrador",
+          "description": "Pode administrar Homarr e serviços conectados, incluindo ações destrutivas."
+        },
+        "credential": {
+          "title": "Âmbito de credenciais e tempo de vida",
+          "breadth": "Funciona com API HTTP e MCP do Homarr, incluindo fora deste cliente.",
+          "lifetime": "Sem expiração automática. A saída não revoga o acesso.",
+          "manageConnections": "Revogar nas configurações gerais"
+        },
+        "error": {
+          "freshStart": "Inicie uma nova solicitação de autorização do cliente. A Homarr vai pedir para revisar o acesso novamente.",
+          "unavailable": {
+            "title": "Pedido de acesso indisponível",
+            "description": "Este pedido expirou, já foi tratado ou não está mais disponível. Não pode ser aprovado a partir desta página."
+          },
+          "invalid_browser": {
+            "title": "A solicitação de acesso pertence a um navegador diferente",
+            "description": "Este navegador não pode verificar a solicitação original. Use o navegador onde você começou a autorização, ou inicie uma nova solicitação do cliente."
+          },
+          "session_changed": {
+            "title": "Sua sessão de login foi alterada",
+            "description": "Este pedido foi vinculado a um usuário diferente ou sessão de login. Não pode ser aprovado com a sessão atual."
+          },
+          "invalid_request": {
+            "title": "A solicitação de acesso não pôde ser verificada",
+            "description": "A solicitação é inválida, expirada ou não mais verificável. Nenhum acesso foi concedido por esta tentativa."
+          },
+          "access_denied": {
+            "title": "O acesso não foi concedido",
+            "description": "A tentativa de autorização foi recusada. Nenhum acesso foi concedido por esta tentativa."
+          },
+          "server_error": {
+            "title": "A solicitação de acesso não pôde ser concluída",
+            "description": "Homarr não pôde concluir esta tentativa de autorização. Verifique as conexões OAuth antes de começar novamente."
+          },
+          "unknown": {
+            "title": "Pedido de acesso indisponível",
+            "description": "Esta página não pode confirmar o resultado de autorização. Verifique as conexões OAuth antes de começar novamente."
+          }
+        }
+      },
       "invite": {
         "title": "Junte-se ao Homarr",
         "titleWithAppName": "Entrar em {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Selecionar múltiplos",
         "cancelMultiple": "Sair multi-seleção",
         "customApplication": "Aplicativo personalizado",
-        "application": "Solicitação"
+        "application": "Solicitação",
+        "backToApps": "Voltar para apps",
+        "createAndAdd": "Criar e adicionar",
+        "createAnother": "Criar e continuar"
       },
       "create": {
         "title": "Criar aplicativo",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Monitoramento de Uptime",
       "beszel": "Beszel",
       "systemMonitoring": "Sistema de Monitoramento",
-      "security": "Segurança"
+      "security": "Segurança",
+      "serviceVersion": "Versão"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Página {page} de {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Menu de navegação"
     },
     "here": "aqui",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Adicione uma URL ou um aplicativo nas configurações do widget"
+      "empty": "Adicione uma URL ou um aplicativo nas configurações do widget",
+      "groups": {
+        "label": "categorias",
+        "placeholder": "Nova categoria",
+        "add": "Adicionar categoria",
+        "remove": "Remover categoria {name}",
+        "rename": "Nome da categoria {name}",
+        "assign": "Categoria para {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Aba padrão"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Sistema depois de Cluster",
+          "clusterFirst": "Agrupamento e sistema"
+        },
         "visibleClusterSections": {
           "label": "Seções de cluster visíveis"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Contêineres para filtrar"
+        },
+        "filterCaseSensitive": {
+          "label": "Sensível ao caso"
+        },
+        "filterAllowWildcards": {
+          "label": "Permitir caracteres curinga",
+          "description": "Use * para zero ou mais caracteres."
         },
         "filterIsWhitelist": {
           "label": "Filtrar como lista de permissões"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Nenhum aplicativo encontrado",
         "description": "Clique <here></here> para criar um novo aplicativo",
-        "quickCreate": "Criar aplicativo em tempo real"
+        "quickCreate": "Criar aplicativo em tempo real",
+        "create": "Criar aplicativo"
       },
       "error": {
         "noIntegration": "Nenhuma integração selecionada",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "URL do provedor"
           },
+          "integrations": {
+            "label": "Integrações ligadas"
+          },
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nome ou Proprietário/Nome"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "Abrir página do lançamento",
       "releaseDescription": "Descrição do lançamento",
       "projectDescription": "Descrição do projeto",
+      "runningVersions": "Versões em execução",
+      "upToDate": "Até a data",
+      "updateAvailable": "Atualização disponível",
+      "unknownStatus": "Desconhecido",
       "created": "Criado",
       "error": {
         "label": "Erro",
@@ -6364,6 +6476,31 @@
               "search": "Buscar",
               "firstDayOfWeek": "Primeiro dia da semana",
               "accessibility": "Acessibilidade",
+              "oauthConnections": {
+                "title": "Conexões OAuth",
+                "description": "Esses clientes obtiveram credenciais API para sua conta através do OAuth. As credenciais trabalham com a API HTTP do Homarr, bem como com o MCP, não expiram automaticamente, e permanecem válidas depois de sair do sistema.",
+                "revocationHint": "Revogar uma conexão remove sua credencial de API. Para reconectar, inicie a autorização novamente a partir do cliente.",
+                "loading": "Carregando conexões OAuth",
+                "retry": "Recarregar conexões",
+                "revoke": "Revogar conexão",
+                "confirmRevoke": "Confirmar revogação",
+                "empty": {
+                  "title": "Nenhuma conexão OAuth gravada",
+                  "description": "Novas conexões OAuth aparecem aqui. Credenciais antigas sem detalhes de cliente gravados podem precisar de um administrador para revogá-las nas Chaves da API."
+                },
+                "loadError": {
+                  "title": "Conexões OAuth não puderam ser carregadas",
+                  "description": "Tente carregar a lista novamente. Isso não revoga nenhuma credencial."
+                },
+                "success": {
+                  "title": "Conexão revogada",
+                  "description": "A credencial de API salva foi removida. Reconecte do cliente para conceder acesso novamente."
+                },
+                "error": {
+                  "title": "A conexão não pôde ser revogada",
+                  "description": "A credencial ainda pode estar ativa. Tente revogá-la novamente."
+                }
+              },
               "onboardingTours": {
                 "title": "Tours de Integração",
                 "description": "Redefina os tours de integração para vê-los novamente na sua próxima visita à área de gerenciamento ou ao painel.",
@@ -6904,7 +7041,8 @@
               "label": "Autenticação",
               "title": "Chaves de API",
               "button": {
-                "createApiToken": "Criar token de API"
+                "createApiToken": "Criar token de API",
+                "confirmDeletion": "Confirmar exclusão"
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Criado por",
+                  "source": "Integração",
                   "actions": "Ações"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Chave manual ou legada da API",
+                "unnamedClient": "Nome do cliente não gravado",
+                "clientNameHint": "Os nomes dos clientes são auto-reportados e não são verificados.",
+                "details": "Detalhes da conexão",
+                "credentialId": "ID de credenciais",
+                "clientId": "ID do Cliente",
+                "callbackHost": "Host de retorno",
+                "callbackUrl": "URL de callback completo",
+                "issuedAt": "Transmitido (UTC)",
+                "unknown": "Não registrado"
+              },
+              "empty": {
+                "title": "Não há chaves de API para mostrar",
+                "description": "Crie um token de API ou ajuste os filtros de tabela para encontrar chaves existentes."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "Chave da API não pôde ser criada",
+                  "description": "Nenhuma nova credencial foi recebida. Verifique a lista de chaves antes de tentar novamente."
+                },
+                "deleteError": {
+                  "title": "Chave da API não pôde ser excluída",
+                  "description": "A credencial ainda pode estar ativa. Tente excluí-la novamente."
+                },
+                "deleteSuccess": {
+                  "title": "Chave da API excluída",
+                  "description": "A credencial de API salva foi removida."
+                },
+                "refreshError": {
+                  "title": "Chave da API excluída, mas a lista não pôde ser atualizada",
+                  "description": "Recarregue esta página para ver as chaves de API atuais."
                 }
               }
             },

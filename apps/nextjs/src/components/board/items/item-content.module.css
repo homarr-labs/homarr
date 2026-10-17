@@ -52,6 +52,12 @@
 
 @media (max-width: 768px) {
   .settingsButton {
+    width: calc(44px * var(--board-canvas-inverse-scale, 1));
+    min-width: 0;
+    max-width: calc(100% - var(--mantine-spacing-sm) / 2);
+    height: calc(44px * var(--board-canvas-inverse-scale, 1));
+    min-height: 0;
+    max-height: calc(100% - var(--mantine-spacing-sm) / 2);
     opacity: 1;
     pointer-events: auto;
   }

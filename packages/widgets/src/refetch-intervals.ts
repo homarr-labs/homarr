@@ -33,6 +33,7 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "networkController"]], intervalSeconds: null },
   { queryKey: [["widget", "paperlessNgx"]], intervalSeconds: null },
   { queryKey: [["widget", "releases", "getLatest"]], intervalSeconds: null },
+  { queryKey: [["widget", "releases", "getServiceVersions"]], intervalSeconds: null },
   { queryKey: [["widget", "rssFeed", "getFeeds"]], intervalSeconds: null },
   { queryKey: [["widget", "speedtestTracker"]], intervalSeconds: null },
   { queryKey: [["widget", "stats"]], intervalSeconds: null },

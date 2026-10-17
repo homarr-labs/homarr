@@ -71,6 +71,15 @@ than one variable quantifier are rejected.
   queries can refetch. Set `requestId` inside a successful manual `SubFetch` result to rerun only that named query with the
   same parameters. A targeted rerun respects an explicit request `cacheSeconds`; an untargeted button also clears the
   widget&apos;s server cache. It is disabled when there is no active item/preview or while the board is in edit mode.
-- `Icon`/`TablerIcon` resolves installed safe icons.
+- `Icon`/`TablerIcon` uses icon names from Homarr's installed Tabler package. Use kebab-case names such as
+  `brand-github`, not React component names such as `IconBrandGithub`. Filled icons use the `-filled` suffix, such as
+  `star-filled`. Since **v2.6.0**, the full installed icon set is available; earlier v2 releases expose a smaller subset.
+
+```jsx
+<Group>
+  <Icon name="brand-github" size={24} />
+  <TablerIcon name="star-filled" size={24} />
+</Group>
+```
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

@@ -15,7 +15,6 @@ interface QuickAddAppModalProps {
 export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, innerProps }) => {
   const tScoped = useI18n("app.page.create.notification");
   const tCommon = useI18n("common");
-  const tBoard = useI18n("board");
   const utils = clientApi.useUtils();
 
   const { mutate, isPending } = clientApi.app.create.useMutation({
@@ -45,7 +44,7 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
   return (
     <AppForm
       buttonLabels={{
-        submit: tBoard("action.quickCreateApp.modal.createAndUse"),
+        submit: tCommon("action.create"),
         submitAndCreateAnother: undefined,
       }}
       showBackToOverview={false}
@@ -55,7 +54,7 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
   );
 }).withOptions({
   defaultTitle(t) {
-    return t("board.action.quickCreateApp.modal.title");
+    return t("app.action.create.title");
   },
   size: modalSizeForm,
 });

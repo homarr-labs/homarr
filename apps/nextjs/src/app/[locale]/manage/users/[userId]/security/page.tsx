@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 import { Stack, Title } from "@mantine/core";
 
-import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { catchTrpcNotFound, catchTrpcUnauthorized } from "~/errors/trpc-catch-error";
 import { canAccessUserEditPage } from "../access";
+import { getUserEditDataAsync } from "../_data";
 import { ChangePasswordForm } from "./_components/_change-password-form";
 
 interface Props {
@@ -19,12 +19,7 @@ export default async function UserSecurityPage(props: Props) {
   const params = await props.params;
   const session = await auth();
   const tSecurity = await getI18n("management.page.user.setting.security");
-  const user = await api.user
-    .getById({
-      userId: params.userId,
-    })
-    .catch(catchTrpcNotFound)
-    .catch(catchTrpcUnauthorized);
+  const user = await getUserEditDataAsync(params.userId).catch(catchTrpcNotFound).catch(catchTrpcUnauthorized);
 
   if (!canAccessUserEditPage(session, user.id)) {
     notFound();

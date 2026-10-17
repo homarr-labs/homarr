@@ -247,6 +247,82 @@
         "title": "내 계정에 로그인",
         "subtitle": "돌아오신 것을 환영합니다! 계정 정보를 입력해주세요"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Homarr 참여하기",
         "titleWithAppName": "{appName} 참여",
@@ -749,7 +825,10 @@
         "selectMultiple": "여러 항목 선택",
         "cancelMultiple": "다중 선택 종료",
         "customApplication": "사용자 지정 애플리케이션",
-        "application": "애플리케이션"
+        "application": "애플리케이션",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "새 앱 생성",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "업타임 모니터링",
       "beszel": "Beszel",
       "systemMonitoring": "시스템 모니터링",
-      "security": "보안"
+      "security": "보안",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "{totalPages}페이지 중 {page}페이지"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "여기",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "위젯 설정에서 URL 또는 앱을 추가하세요"
+      "empty": "위젯 설정에서 URL 또는 앱을 추가하세요",
+      "groups": {
+        "label": "",
+        "placeholder": "새 카테고리",
+        "add": "카테고리 추가",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "기본 탭"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "클러스터 섹션 시각화"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "필터링할 컨테이너"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "화이트리스트로 필터링"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "앱 없음",
         "description": "새 앱을 생성하려면 <here></here> 클릭",
-        "quickCreate": "즉석 앱 생성"
+        "quickCreate": "즉석 앱 생성",
+        "create": "앱 생성"
       },
       "error": {
         "noIntegration": "선택한 통합 없음",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "공급자 URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "식별자",
             "placeholder": "이름 또는 소유자/이름"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "릴리스 페이지 열기",
       "releaseDescription": "릴리스 설명",
       "projectDescription": "프로젝트 설명",
+      "runningVersions": "",
+      "upToDate": "최신",
+      "updateAvailable": "",
+      "unknownStatus": "알 수 없음",
       "created": "생성됨",
       "error": {
         "label": "오류",
@@ -6364,6 +6476,31 @@
               "search": "검색",
               "firstDayOfWeek": "요일별 요일",
               "accessibility": "접근성",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "온보딩 투어",
                 "description": "관리 에리어 또는 대시보드를 다음에 방문할 때 다시 볼 수 있도록 온보딩 투어를 재설정합니다.",
@@ -6904,7 +7041,8 @@
               "label": "인증",
               "title": "API 키",
               "button": {
-                "createApiToken": "API 토큰 생성"
+                "createApiToken": "API 토큰 생성",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "생성자",
+                  "source": "통합",
                   "actions": "동작"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

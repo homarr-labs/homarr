@@ -519,37 +519,44 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     setActiveIntegrationId(integrationId);
   };
 
-  const handleSubmit = form.onSubmit(async (values) => {
-    setIsSubmitting(true);
-    try {
-      const appSaved = showAppTab ? await (appEditRef.current?.submitIfDirty() ?? true) : true;
+  const handleSubmit = form.onSubmit(
+    async (values) => {
+      setIsSubmitting(true);
+      try {
+        let appSaved = true;
+        if (showAppTab) appSaved = await (appEditRef.current?.submitIfDirty() ?? false);
 
-      if (!appSaved) {
-        return;
-      }
-
-      for (const integrationEditHandle of integrationEditHandles.current.values()) {
-        const integrationSaved = await integrationEditHandle.submitIfDirty();
-        if (!integrationSaved) {
+        if (!appSaved) {
+          setActiveTab("app");
           return;
         }
-      }
 
-      innerProps.onSuccessfulEdit(
-        {
-          ...values,
-          advancedOptions: {
-            ...values.advancedOptions,
-            title: values.advancedOptions.title?.trim() || null,
+        for (const [integrationId, integrationEditHandle] of integrationEditHandles.current.entries()) {
+          const integrationSaved = await integrationEditHandle.submitIfDirty();
+          if (!integrationSaved) {
+            beginEditingIntegration(integrationId);
+            setActiveTab("integration");
+            return;
+          }
+        }
+
+        innerProps.onSuccessfulEdit(
+          {
+            ...values,
+            advancedOptions: {
+              ...values.advancedOptions,
+              title: values.advancedOptions.title?.trim() || null,
+            },
           },
-        },
-        previewSize ?? undefined,
-      );
-      actions.closeModal();
-    } finally {
-      setIsSubmitting(false);
-    }
-  });
+          previewSize ?? undefined,
+        );
+        actions.closeModal();
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    () => setActiveTab("widget"),
+  );
 
   const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     handleSubmit(event);
@@ -754,7 +761,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     <FormProvider form={form}>
       <Stack gap="sm">
         {showResourceTabs ? (
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs value={activeTab} onChange={setActiveTab} keepMounted keepMountedMode="display-none">
             <Tabs.List grow>
               <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
               {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}

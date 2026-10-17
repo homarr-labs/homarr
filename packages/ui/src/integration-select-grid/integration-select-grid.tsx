@@ -35,6 +35,13 @@ export const IntegrationSelectGrid = ({
     [allowedKinds, enableMockIntegration],
   );
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
+  const connectedCounts = useMemo(() => {
+    const counts = new Map<IntegrationKind, number>();
+    for (const integration of integrationData ?? []) {
+      counts.set(integration.kind, (counts.get(integration.kind) ?? 0) + 1);
+    }
+    return counts;
+  }, [integrationData]);
 
   return (
     <Stack gap="md">
@@ -62,7 +69,7 @@ export const IntegrationSelectGrid = ({
                 key={integration.kind}
                 integration={integration}
                 onSelect={onSelect}
-                connectedCount={(integrationData ?? []).filter((i) => i.kind === integration.kind).length}
+                connectedCount={connectedCounts.get(integration.kind) ?? 0}
               />
             ))}
           </SimpleGrid>

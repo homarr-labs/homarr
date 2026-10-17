@@ -365,13 +365,19 @@ const sumReportedStepMetric = (
  * A newly-created or streaming message can temporarily have no usage metadata. Keeping
  * the latest complete context reading from earlier turns avoids flashing the composer
  * meter back to zero while the next request starts or when its popover is reopened.
+ * onTelemetry shares each normalized record in message order before request ID deduplication.
  */
-export const getAssistantConversationUsage = (messageMetadata: unknown[]): AssistantConversationUsage => {
+export const getAssistantConversationUsage = (
+  messageMetadata: unknown[],
+  onTelemetry?: (telemetry: AssistantRequestTelemetry, index: number) => void,
+): AssistantConversationUsage => {
   const turnsByRequestId = new Map<string, AssistantConversationTurnUsage>();
 
-  for (const metadata of messageMetadata) {
+  for (let index = 0; index < messageMetadata.length; index++) {
+    const metadata = messageMetadata[index];
     const telemetry = getAssistantTelemetry(metadata);
     if (!telemetry) continue;
+    onTelemetry?.(telemetry, index);
 
     const usage = getAssistantUsage(metadata);
     const inputTokens = usage?.inputTokens ?? sumReportedStepMetric(telemetry.steps, (step) => step.inputTokens);

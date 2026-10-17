@@ -71,14 +71,21 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       stats.data.time_units === "days"
         ? (stats.data.dns_queries[stats.data.dns_queries.length - 1] ?? 0)
         : stats.data.dns_queries.reduce((prev, sum) => prev + sum, 0);
-    const countFilteredDomains = filteringStatus.data.filters
-      .filter((filter) => filter.enabled)
-      .reduce((sum, filter) => filter.rules_count + sum, 0);
+    let countFilteredDomains = 0;
+    if (filteringStatus.data.filters !== null) {
+      countFilteredDomains = filteringStatus.data.filters
+        .filter((filter) => filter.enabled)
+        .reduce((sum, filter) => filter.rules_count + sum, 0);
+    }
+    let adsBlockedTodayPercentage = 0;
+    if (queriesToday > 0) {
+      adsBlockedTodayPercentage = (blockedQueriesToday / queriesToday) * 100;
+    }
 
     return {
       status: status.data.protection_enabled ? ("enabled" as const) : ("disabled" as const),
       adsBlockedToday: blockedQueriesToday,
-      adsBlockedTodayPercentage: blockedQueriesToday > 0 ? (queriesToday / blockedQueriesToday) * 100 : 0,
+      adsBlockedTodayPercentage,
       domainsBeingBlocked: countFilteredDomains,
       dnsQueriesToday: queriesToday,
     };

@@ -67,6 +67,7 @@ import {
   getDownloadColumnAccessors,
   getDownloadsStatsDisplay,
 } from "./helpers";
+import { resolveDownloadsQueryInput } from "./query-input";
 
 dayjs.extend(relativeTime);
 
@@ -316,20 +317,9 @@ export default function DownloadClientsWidget({
     [allInteractAccess, integrationIds],
   );
 
-  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
-    integrationIds,
-    limitPerIntegration: options.limitPerIntegration,
-    selection: {
-      sort: options.defaultSort,
-      descending: options.descendingDefaultSort,
-      categoryFilter: options.categoryFilter,
-      filterIsWhitelist: options.filterIsWhitelist,
-      showCompletedTorrent: options.showCompletedTorrent,
-      activeTorrentThreshold: Number(options.activeTorrentThreshold),
-    },
-    includeArchivedHistory: options.includeArchivedHistory,
-    historyWindowDays: options.historyWindowDays,
-  });
+  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
+    resolveDownloadsQueryInput(integrationIds, options),
+  );
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;

@@ -100,7 +100,7 @@ export class Aria2Integration extends Integration implements IDownloadClientInte
     const client = this.getClient();
     // Note: Remove download file is not support by aria2, replace with forceremove
 
-    if (item.state in ["downloading", "leeching", "paused"]) {
+    if (["downloading", "leeching", "seeding", "queued", "paused"].includes(item.state)) {
       await (fromDisk ? client.remove(item.id) : client.forceRemove(item.id));
     } else {
       await client.removeDownloadResult(item.id);

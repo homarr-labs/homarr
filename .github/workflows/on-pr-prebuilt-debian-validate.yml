@@ -6,40 +6,33 @@ permissions:
 on:
   pull_request:
     branches: ["**"]
-    paths: [".github/actions/prebuilt-debian/**", "deployments/prebuilt-debian/**"]
+    paths:
+      - ".github/actions/prebuilt-debian/**"
+      - ".github/actions/extract-build-artifact/**"
+      - "deployments/prebuilt-debian/**"
+      - ".github/workflows/on-pr-prebuilt-debian-validate.yml"
 
 jobs:
-  prebuilt-debian-validate-amd64:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+  prebuilt-debian-validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: amd64
+            runner: ubuntu-latest
+          - architecture: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - name: Validate prebuilt dependencies for amd64
-        id: validate-amd64
-        uses: ./.github/actions/prebuilt-debian
+      - name: Validate Debian archive for ${{ matrix.architecture }}
+        uses: ./.github/actions/extract-build-artifact
         with:
-          architecture: amd64
-
-      - name: Check extracted files for amd64
-        run: |
-          if [ ! -f "${{ steps.validate-amd64.outputs.path }}/better_sqlite3.node" ]; then
-            echo "better_sqlite3.node not found for amd64!"
-            exit 1
-          fi
-  prebuilt-debian-validate-arm64:
-    runs-on: ubuntu-24.04-arm
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v7
-      - name: Validate prebuilt dependencies for arm64
-        id: validate-arm64
-        uses: ./.github/actions/prebuilt-debian
-        with:
-          architecture: arm64
-
-      - name: Check extracted files for arm64
-        run: |
-          if [ ! -f "${{ steps.validate-arm64.outputs.path }}/better_sqlite3.node" ]; then
-            echo "better_sqlite3.node not found for arm64!"
-            exit 1
-          fi
+          # This Alpine release image reproduces #7097 without the Debian replacement.
+          digest: ghcr.io/homarr-labs/homarr:v2.3.0
+          architecture: ${{ matrix.architecture }}
+          release-tag: v2.3.0
+          repository: ${{ github.repository }}
+          token: ${{ github.token }}
+          upload: "false"
