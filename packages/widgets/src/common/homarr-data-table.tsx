@@ -49,6 +49,8 @@ export function HomarrDataTable<T>({
 }: HomarrDataTableProps<T>) {
   const [resizePreviewWidths, setResizePreviewWidths] = useState<Record<string, number>>();
   const removeResizeListeners = useRef<() => void>(() => undefined);
+  const internalScrollViewportRef = useRef<HTMLDivElement>(null);
+  const scrollViewportRef = props.scrollViewportRef ?? internalScrollViewportRef;
   useEffect(() => () => removeResizeListeners.current(), []);
 
   const handleMouseDownCapture = useCallback(
@@ -96,14 +98,25 @@ export function HomarrDataTable<T>({
       const previousUserSelect = document.body.style.userSelect;
       if (usesDisplayedWidths) {
         // Fill widths use displayed pixels; original widths keep compact columns resizable.
-        currentMinimumWidth = Math.min(
-          fallbackColumnWidth,
-          getColumnWidth(defaultColumnWidths?.find(({ accessor }) => String(accessor) === currentAccessor)?.width),
+        currentMinimumWidth = getColumnWidth(
+          defaultColumnWidths?.find(({ accessor }) => String(accessor) === currentAccessor)?.width,
         );
-        nextMinimumWidth = Math.min(
-          fallbackColumnWidth,
-          getColumnWidth(defaultColumnWidths?.find(({ accessor }) => String(accessor) === nextAccessor)?.width),
+        nextMinimumWidth = getColumnWidth(
+          defaultColumnWidths?.find(({ accessor }) => String(accessor) === nextAccessor)?.width,
         );
+        if (currentAccessor !== fillColumnAccessor)
+          currentMinimumWidth = Math.min(fallbackColumnWidth, currentMinimumWidth);
+        if (nextAccessor !== fillColumnAccessor) nextMinimumWidth = Math.min(fallbackColumnWidth, nextMinimumWidth);
+        const viewport = scrollViewportRef.current;
+        if (
+          (currentAccessor === fillColumnAccessor || nextAccessor === fillColumnAccessor) &&
+          viewport &&
+          viewport.scrollWidth > viewport.clientWidth
+        ) {
+          // An overflowing table leaves no spare width for its fill column.
+          currentMinimumWidth = currentWidth;
+          nextMinimumWidth = nextWidth;
+        }
         // The native resize handler saves logical widths; fill mode stores displayed pixels.
         event.preventDefault();
         event.stopPropagation();
@@ -126,7 +139,12 @@ export function HomarrDataTable<T>({
       const handleResizeEnd = (endEvent: Event) => {
         removeResizeListeners.current();
         if (usesDisplayedWidths && previewWidths && endEvent.type === "mouseup") {
-          onColumnWidthsChange?.(Object.entries(previewWidths).map(([accessor, width]) => ({ accessor, width })));
+          const resizedWidths = [currentAccessor, nextAccessor].flatMap((accessor) => {
+            const width = previewWidths?.[accessor];
+            if (accessor === fillColumnAccessor || width === undefined) return [];
+            return [{ accessor, width }];
+          });
+          if (resizedWidths.length > 0) onColumnWidthsChange?.(resizedWidths);
         }
         requestAnimationFrame(() => requestAnimationFrame(() => setResizePreviewWidths(undefined)));
       };
@@ -144,7 +162,15 @@ export function HomarrDataTable<T>({
       window.addEventListener("mouseup", handleResizeEnd);
       window.addEventListener("blur", handleResizeEnd);
     },
-    [columns, defaultColumnWidths, fillColumnAccessor, onColumnWidthsChange, onMouseDownCapture, preserveColumnWidths],
+    [
+      columns,
+      defaultColumnWidths,
+      fillColumnAccessor,
+      onColumnWidthsChange,
+      onMouseDownCapture,
+      preserveColumnWidths,
+      scrollViewportRef,
+    ],
   );
 
   const mergedClassName = [
@@ -198,10 +224,17 @@ export function HomarrDataTable<T>({
     if (!preserveColumnWidths) return undefined;
     const totalWidth = columns
       .filter(({ hidden }) => !hidden)
-      .reduce((total, column) => total + getColumnWidth(column.width), 0);
+      .reduce((total, column) => {
+        if (String(column.accessor) === fillColumnAccessor) {
+          // Saved fill widths may include spare space from a wider board.
+          const defaultWidth = defaultColumnWidths?.find(({ accessor }) => accessor === column.accessor)?.width;
+          return total + getColumnWidth(defaultWidth);
+        }
+        return total + getColumnWidth(column.width);
+      }, 0);
     // Keep the minimum readable in displayed pixels when the board canvas is zoomed.
     return `calc(${totalWidth}px * var(--board-canvas-inverse-scale, 1))`;
-  }, [columns, preserveColumnWidths]);
+  }, [columns, defaultColumnWidths, fillColumnAccessor, preserveColumnWidths]);
 
   return (
     <DataTable<T>
@@ -214,6 +247,7 @@ export function HomarrDataTable<T>({
       textSelectionDisabled
       height="100%"
       {...props}
+      scrollViewportRef={scrollViewportRef}
       striped={false}
       columns={fittedColumns}
       onMouseDownCapture={handleMouseDownCapture}
