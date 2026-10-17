@@ -11,6 +11,7 @@ import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetImports } from "./registry";
+import type { WidgetDataDefinition } from "./data";
 import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";
 
 export interface WidgetContextMenuAction {
@@ -101,14 +102,19 @@ export type Prefetch = (
   }[],
 ) => Promise<void>;
 
-export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition extends WidgetDefinition>(
+export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition extends Omit<WidgetDefinition, "data">>(
   kind: TKind,
   definition: TDefinition,
 ) => ({
-  withDynamicImport: createWithDynamicImport(kind, definition),
+  withData: <TData extends WidgetDataDefinition<inferOptionsFromCreator<TDefinition["createOptions"]>>>(
+    data: TData,
+  ) => ({
+    withDynamicImport: createWithDynamicImport(kind, { ...definition, data }),
+  }),
 });
 
 export interface WidgetDefinition {
+  data: WidgetDataDefinition;
   icon: TablerIcon;
   supportsAdvancedFocus?: boolean;
   queryKey?: QueryKey;

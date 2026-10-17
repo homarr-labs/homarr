@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { ReactNode } from "react";
 import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
@@ -106,7 +107,9 @@ function TraefikWidgetContent({
 }: WidgetComponentProps<"traefik">) {
   const t = useI18n("widget.traefik");
   const tCommon = useI18n("common");
-  const dashboardQuery = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });
+  const dashboardQuery = clientApi.widget.traefik.getDashboard.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const data = getUsableWidgetQueryData(dashboardQuery);
 
   if (!data) return <WidgetEmptyState />;

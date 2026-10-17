@@ -6,6 +6,7 @@ import { openMediaRequestSearch } from "@homarr/spotlight";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
 import { optionsBuilder } from "../../options";
+import { widgetQuery } from "../../data";
 
 const mediaRequestStatusValues = ["pending", "approved", "declined", "failed", "completed"] as const;
 const createOptions = () =>
@@ -51,4 +52,19 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
     },
   ],
   ...getWidgetIntegrationConfig("mediaRequests-requestList"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.mediaRequests.getLatestRequests", {
+        integrationIds,
+        statuses:
+          options.statusFilter.length > 0
+            ? options.statusFilter
+            : ["pending", "approved", "declined", "failed", "completed"],
+        recentDays: options.recentDays,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

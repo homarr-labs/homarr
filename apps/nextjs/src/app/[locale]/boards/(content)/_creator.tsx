@@ -18,6 +18,8 @@ import { getI18n } from "@homarr/translation/server";
 import { prefetchForKind } from "@homarr/widgets/prefetch";
 import { getInitiallyVisibleWidgetKinds, prefetchInitialWidgetData } from "@homarr/widgets/server-prefetch";
 
+import { settleCapturedQueriesAsync } from "~/board-preparation/capture";
+import { getCapturedViewIdAsync } from "~/board-preparation/captured-view";
 import { env } from "~/env";
 import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
@@ -55,7 +57,7 @@ const DeferredWidgetHydration = async ({
     <HydrationBoundary
       state={dehydrate(queryClient, {
         shouldDehydrateQuery: (query) =>
-          query.meta?.streamedBeszelSelection === true &&
+          query.meta?.rscWidgetDependent === true &&
           (query.state.status === "pending" || query.state.status === "success"),
       })}
     />
@@ -117,7 +119,31 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       for (const [kind, items] of itemsMap) prefetchForKind(kind, queryClient, items);
 
       const layoutId = getLayoutIdForViewportWidth(board.layouts, await viewportWidthPromise);
-      const [session, integrations] = await Promise.all([sessionPromise, integrationsPromise]);
+      const [session, integrations, capturedViewId] = await Promise.all([
+        sessionPromise,
+        integrationsPromise,
+        getCapturedViewIdAsync(),
+      ]);
+      if (capturedViewId) {
+        const snapshot = createBoardQuerySnapshot(board, integrations);
+        await snapshot.restoreAsync(queryClient).catch(() => undefined);
+        const queries = await settleCapturedQueriesAsync(queryClient, {
+          board,
+          layoutId,
+          isAuthenticated: Boolean(session),
+        });
+        await snapshot.saveAsync(queryClient).catch(() => undefined);
+        return (
+          <>
+            <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
+            <HydrationBoundary state={queries}>
+              <IntegrationProvider integrations={integrations}>
+                <ClientBoard />
+              </IntegrationProvider>
+            </HydrationBoundary>
+          </>
+        );
+      }
       const snapshot = createBoardQuerySnapshot(board, integrations);
       await snapshot.restoreAsync(queryClient).catch(() => undefined);
       const restoredQueryHashes = new Set(
@@ -127,7 +153,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           .filter((query) => query.meta?.rscWidgetPrefetch === true && query.state.status === "success")
           .map((query) => query.queryHash),
       );
-      const dependentQueries = prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(session));
+      const dependentQueries = await prefetchInitialWidgetData(queryClient, board, layoutId, Boolean(session));
       const refreshingQueries = queryClient
         .getQueryCache()
         .getAll()

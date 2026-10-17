@@ -1,16 +1,34 @@
 import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren } from "react";
-import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  memo,
+  Suspense,
+  use,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Box, Button, Center, Portal, Text } from "@mantine/core";
-import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
+import { useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { useRequiredBoard } from "@homarr/boards/context";
+import {
+  useBoardRestoration,
+  useRequiredBoard,
+  useWhenBoardRestored,
+  useBoardRestoredAction,
+} from "@homarr/boards/context";
+import { useInitialRenderTime } from "@homarr/common";
+import { getWidgetDataQueries, getWidgetDataQueryKey } from "@homarr/widgets/data";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
@@ -23,12 +41,13 @@ import {
 } from "@homarr/widgets/definition";
 import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { initialWidgetResources } from "@homarr/widgets/initial-widget-resources";
-import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { loadWidgetResources, reduceWidgetOptionsWithDefinition, resetWidgetResources } from "@homarr/widgets/manifest";
 import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-shell";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { getLogicalTrackSize } from "~/components/board/layout";
-import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { getLogicalGridSize } from "~/components/board/layout";
+import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
+import { useHydrationSafeElementSize } from "~/components/board/layout/use-hydration-safe-element-size";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
@@ -79,13 +98,30 @@ const WidgetDefinitionLoadError = ({
   resetErrorBoundary,
   item,
   innerRef,
-}: FallbackProps & Pick<BoardItemCardProps, "item" | "innerRef">) => (
-  <BoardItemCard item={item} innerRef={innerRef}>
-    <Center h="100%">
-      <WidgetError error={error} resetErrorBoundary={resetErrorBoundary} />
-    </Center>
-  </BoardItemCard>
-);
+}: FallbackProps & Pick<BoardItemCardProps, "item" | "innerRef">) => {
+  useMarkWidgetRestored(item.id);
+  return (
+    <BoardItemCard item={item} innerRef={innerRef}>
+      <Center h="100%">
+        <GuardedWidgetError error={error} resetErrorBoundary={resetErrorBoundary} />
+      </Center>
+    </BoardItemCard>
+  );
+};
+
+const GuardedWidgetError = ({ resetErrorBoundary, ...props }: Parameters<typeof WidgetError>[0]) => {
+  const { run: retry, isPending: retrying } = useBoardRestoredAction(resetErrorBoundary);
+  return (
+    <Box component="fieldset" disabled={retrying} aria-busy={retrying} bd={0} p={0} m={0} miw={0} h="100%">
+      <WidgetError {...props} resetErrorBoundary={() => void retry()} />
+    </Box>
+  );
+};
+
+const useMarkWidgetRestored = (id: string) => {
+  const { settle } = useBoardRestoration();
+  useLayoutEffect(() => settle(id), [id, settle]);
+};
 
 const BoardItemPendingCard = ({ item, innerRef }: Pick<BoardItemCardProps, "item" | "innerRef">) => {
   const t = useI18n();
@@ -99,27 +135,41 @@ const BoardItemPendingCard = ({ item, innerRef }: Pick<BoardItemCardProps, "item
   );
 };
 
+const itemInsetPixels = 10;
+
 const subscribeToHydration = () => () => undefined;
 const getHydratedSnapshot = () => true;
 const getServerHydratedSnapshot = () => false;
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
-  const hydrated = useSyncExternalStore(subscribeToHydration, getHydratedSnapshot, getServerHydratedSnapshot);
-  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
+  const prepared = useInitialRenderTime() !== undefined;
+  const { register } = useBoardRestoration();
+  const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
+  const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
   const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
-  const width = measuredWidth || getLogicalTrackSize(item.width);
-  const height = measuredHeight || getLogicalTrackSize(item.height);
+  const inset = (2 * itemInsetPixels) / canvasScale;
+  const border = 2 * calculateBoardUiScale(canvasScale);
+  const width = measuredWidth || getLogicalGridSize(item.width) - inset - border;
+  const height = measuredHeight || getLogicalGridSize(item.height) - inset - border;
 
-  // App and bookmark HTML is already in the initial document. Other widget
-  // modules render after hydration while their server queries already run.
-  if (!hydrated && item.kind !== "app" && item.kind !== "bookmarks") {
+  const deferred = !prepared && item.kind !== "app" && item.kind !== "bookmarks";
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getHydratedSnapshot,
+    deferred ? getServerHydratedSnapshot : getHydratedSnapshot,
+  );
+  useLayoutEffect(() => {
+    if (prepared && !deferred) return register(item.id);
+  }, [deferred, item.id, prepared, register]);
+  if (!hydrated) {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
 
   return (
     <ErrorBoundary
       resetKeys={[item.kind]}
+      onReset={() => resetWidgetResources(item.kind)}
       fallbackRender={(fallbackProps) => <WidgetDefinitionLoadError {...fallbackProps} item={item} innerRef={ref} />}
     >
       <Suspense fallback={<BoardItemPendingCard item={item} innerRef={ref} />}>
@@ -190,7 +240,11 @@ const ResolvedBoardItemContent = ({
   definition: WidgetDefinition;
   Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
 }) => {
+  useMarkWidgetRestored(item.id);
+  const prepared = useInitialRenderTime() !== undefined;
   const sourceRef = useRef<HTMLDivElement>(null);
+  const compactHostRef = useRef<HTMLDivElement | null>(null);
+  const preparedSurfaceRef = useRef<HTMLDivElement | null>(null);
   const advancedFocusTriggerRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const previewEntranceFrameRef = useRef<number | null>(null);
@@ -225,12 +279,26 @@ const ResolvedBoardItemContent = ({
   const isManual = activeFocus?.activation === "manual";
 
   useIsomorphicEffect(() => {
-    if (!supportsAdvancedFocus) return;
+    if (!supportsAdvancedFocus || prepared) return;
     const target = document.createElement("div");
     target.className = advancedFocusClasses.surfacePortalTarget ?? "";
     setSurfacePortalTarget(target);
     return () => target.remove();
-  }, [supportsAdvancedFocus]);
+  }, [supportsAdvancedFocus, prepared]);
+
+  const mountPreparedSurface = useCallback((host: HTMLDivElement | null) => {
+    preparedSurfaceRef.current = host;
+    if (host) setSurfacePortalTarget(host);
+  }, []);
+
+  useIsomorphicEffect(() => {
+    if (!prepared) return;
+    return () => {
+      const host = compactHostRef.current;
+      const surface = preparedSurfaceRef.current;
+      if (host && surface && surface.parentNode !== host) host.append(surface);
+    };
+  }, [prepared]);
 
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
 
@@ -268,6 +336,7 @@ const ResolvedBoardItemContent = ({
 
   const mountCompactHost = useCallback(
     (host: HTMLDivElement | null) => {
+      compactHostRef.current = host;
       if (!host || !surfacePortalTarget || isAdvanced) return;
       cancelPreviewEntrance();
       if (host.childNodes.length !== 1 || host.firstChild !== surfacePortalTarget) {
@@ -353,7 +422,7 @@ const ResolvedBoardItemContent = ({
               data-board-grid-inert-content={isEditMode ? "true" : undefined}
               inert={isEditMode}
             >
-              <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+              <GuardedWidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
             </div>
           )}
         >
@@ -419,8 +488,13 @@ const ResolvedBoardItemContent = ({
           )}
           <div ref={mountCompactHost} className={advancedFocusClasses.surfaceHost}>
             {!supportsAdvancedFocus && widgetCard}
+            {supportsAdvancedFocus && prepared && (
+              <div ref={mountPreparedSurface} className={advancedFocusClasses.surfacePortalTarget}>
+                {widgetCard}
+              </div>
+            )}
           </div>
-          {surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
+          {!prepared && surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
           {isPreview && (
             <Portal reuseTargetNode={false}>
               <div ref={mountPreviewHost} className={advancedFocusClasses.surfaceHostAdvanced} />
@@ -469,6 +543,8 @@ interface InnerContentProps {
 }
 
 const InnerContent = memo(function InnerContent({ item, definition, Component, ...dimensions }: InnerContentProps) {
+  const { isRestoring } = useBoardRestoration();
+  const whenRestored = useWhenBoardRestored();
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
@@ -480,12 +556,41 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) >= 1;
   const queryClient = useQueryClient();
   const widgetQueryKeys = getWidgetQueryKeys(definition, item.kind);
+  const t = useI18n();
+  const data = definition.data;
+  const needsBrowser =
+    data.mode === "browser" ||
+    (data.mode === "queries" &&
+      data.requiresData === true &&
+      getWidgetDataQueries(data.queries({ options, integrationIds: item.integrationIds, itemId: item.id })).some(
+        (query) => queryClient.getQueryData(getWidgetDataQueryKey(query)) === undefined,
+      ));
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getHydratedSnapshot,
+    needsBrowser ? getServerHydratedSnapshot : getHydratedSnapshot,
+  );
+
+  if (!hydrated)
+    return (
+      <Text c="dimmed" size="sm" p="sm">
+        {getWidgetName(item.kind, t)}
+      </Text>
+    );
 
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary
           onReset={() => {
+            if (isRestoring) {
+              void whenRestored().then((result) => {
+                if (result !== "restored") return;
+                removeWidgetDataQueries(queryClient, widgetQueryKeys);
+                reset();
+              });
+              return;
+            }
             removeWidgetDataQueries(queryClient, widgetQueryKeys);
             reset();
           }}
@@ -496,7 +601,7 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
               data-board-grid-inert-content={isEditMode ? "true" : undefined}
               inert={isEditMode}
             >
-              <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+              <GuardedWidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
             </div>
           )}
         >

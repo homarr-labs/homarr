@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
@@ -116,9 +117,7 @@ export default function PaperlessNgxWidget({
     data: stats,
     error,
     isPending,
-  } = clientApi.widget.paperlessNgx.getStats.useQuery({
-    integrationId: integrationIds[0] ?? "",
-  });
+  } = clientApi.widget.paperlessNgx.getStats.useQuery(definition.data.queries({ options, integrationIds }).main.input);
 
   if (isPending) {
     return (

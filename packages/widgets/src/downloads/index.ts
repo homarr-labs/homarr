@@ -6,6 +6,7 @@ import { getIntegrationKindsByCategory, getWidgetIntegrationConfig } from "@homa
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
 import { resolveDownloadsQueryInput } from "./query-input";
 
@@ -133,4 +134,12 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
     );
   },
   ...getWidgetIntegrationConfig("downloads"),
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ options, integrationIds }) => ({
+      main: widgetQuery("widget.downloads.getJobsAndStatuses", resolveDownloadsQueryInput(integrationIds, options)),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

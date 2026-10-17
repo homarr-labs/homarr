@@ -10,7 +10,6 @@ import { items, users } from "@homarr/db/schema";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
-import type { WidgetComponentProps } from "../../../../widgets/src";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "rssFeed" });
@@ -139,7 +138,7 @@ export async function restrictUrlsAsync(db: Database, urls: string[]) {
   });
 
   const configuredUrls = new Set(
-    rssFeedItems.flatMap((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls),
+    rssFeedItems.flatMap((item) => SuperJSON.parse<{ feedUrls: string[] }>(item.options).feedUrls),
   );
   return urls.filter((url) => configuredUrls.has(url));
 }

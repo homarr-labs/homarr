@@ -1,7 +1,17 @@
 "use client";
 
 import type { PropsWithChildren, ReactNode } from "react";
-import { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  startTransition,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import dynamic from "next/dynamic";
 import { useHotkeys } from "@mantine/hooks";
 
@@ -73,7 +83,10 @@ export const AssistantLauncher = ({ children }: PropsWithChildren) => {
   const runtimeRef = useRef<AssistantContextValue | null>(null);
   const [widgets, setWidgets] = useState<Set<string>>(() => new Set());
   const [renderWidget, setRenderWidget] = useState<AssistantWidgetRender | null>(null);
-  const onWidgetRender = useCallback((render: AssistantWidgetRender) => setRenderWidget(() => render), []);
+  const onWidgetRender = useCallback(
+    (render: AssistantWidgetRender) => startTransition(() => setRenderWidget(() => render)),
+    [],
+  );
   const onOpen = useCallback(() => setOpened(true), []);
   const close = useCallback(() => setOpened(false), []);
   const open = useCallback(() => {
@@ -106,22 +119,26 @@ export const AssistantLauncher = ({ children }: PropsWithChildren) => {
   }, []);
   const onStateChange = useCallback((value: AssistantContextValue) => {
     runtimeRef.current = value;
-    setRuntimeValue(value);
+    startTransition(() => setRuntimeValue(value));
   }, []);
   const register = useCallback((id: string) => {
-    setActivated(true);
-    setWidgets((current) => {
-      if (current.has(id)) return current;
-      return new Set([...current, id]);
+    startTransition(() => {
+      setActivated(true);
+      setWidgets((current) => {
+        if (current.has(id)) return current;
+        return new Set([...current, id]);
+      });
     });
   }, []);
   const unregister = useCallback((id: string) => {
-    setWidgets((current) => {
-      if (!current.has(id)) return current;
-      const next = new Set(current);
-      next.delete(id);
-      return next;
-    });
+    startTransition(() =>
+      setWidgets((current) => {
+        if (!current.has(id)) return current;
+        const next = new Set(current);
+        next.delete(id);
+        return next;
+      }),
+    );
   }, []);
   const mounts = useMemo(() => ({ register, unregister, render: renderWidget }), [register, renderWidget, unregister]);
   useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);

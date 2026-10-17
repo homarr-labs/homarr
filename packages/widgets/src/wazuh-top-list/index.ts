@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 import { wazuhTimeRangeOptions } from "../wazuh/_shared/options";
 
@@ -34,4 +35,17 @@ export const { definition, componentLoader } = createWidgetDefinition("wazuhTopL
       message: (t) => t("widget.wazuh.error.unknown.title", { target: "Wazuh" }),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.wazuh.getTopList", {
+        integrationId: integrationIds[0] ?? "",
+        kind: options.kind,
+        range: options.range,
+        limit: options.limit,
+        minLevel: options.minLevel,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

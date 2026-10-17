@@ -3,6 +3,7 @@ import { IconWall, IconWallOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
@@ -19,4 +20,14 @@ export const { definition, componentLoader } = createWidgetDefinition("firewall"
       message: (t) => t("widget.firewall.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      cpu: widgetQuery("widget.firewall.getFirewallCpuStatus", { integrationIds }),
+      memory: widgetQuery("widget.firewall.getFirewallMemoryStatus", { integrationIds }),
+      version: widgetQuery("widget.firewall.getFirewallVersionStatus", { integrationIds }),
+      interfaces: widgetQuery("widget.firewall.getFirewallInterfacesStatus", { integrationIds }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

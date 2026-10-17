@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useMemo } from "react";
 import { ActionIcon, Avatar, Badge, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
@@ -27,10 +28,9 @@ export default function NotificationsWidget({
   displayMode,
   displayScale = 1,
 }: WidgetComponentProps<"notifications">) {
-  const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery({
-    ...options,
-    integrationIds,
-  });
+  const notificationsQuery = clientApi.widget.notifications.getNotifications.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const notificationData = getUsableWidgetQueryData(notificationsQuery);
   const notificationIntegrations = useMemo(() => notificationData ?? [], [notificationData]);
   const { isPending } = notificationsQuery;

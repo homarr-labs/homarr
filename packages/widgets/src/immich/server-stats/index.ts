@@ -3,6 +3,7 @@ import { IconGraphFilled } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../../definition";
+import { widgetQuery } from "../../data";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-serverStats", {
@@ -32,4 +33,12 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-se
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.immich.getServerStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

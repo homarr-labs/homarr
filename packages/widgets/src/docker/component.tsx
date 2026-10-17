@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import "./styles.css";
 
@@ -36,7 +37,7 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useTimeAgo } from "@homarr/common";
+import { useIsHydrated, useTimeAgo } from "@homarr/common";
 import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
@@ -90,11 +91,6 @@ const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" |
   `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}&endpointId=${encodeURIComponent(container.endpointId)}`;
 
 const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
-
-const getContainersQueryInput = (endpointIds: string[]) => {
-  if (endpointIds.length === 0) return undefined;
-  return { endpointIds };
-};
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useI18n("docker.field.state.option");
@@ -263,9 +259,12 @@ export default function DockerWidget({
   const responsiveWidth = width * displayScale;
 
   const utils = clientApi.useUtils();
-  const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
+  const containersQuery = clientApi.docker.getContainers.useQuery(
+    definition.data.queries({ options, integrationIds: [] }).main.input,
+  );
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
+  const isRefreshing = useIsHydrated() && isFetching;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
     async onSuccess() {
       await Promise.all([
@@ -392,7 +391,7 @@ export default function DockerWidget({
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
   }, [actionHandlers, columnVisibility, formatBytes, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, onColumnLayoutChange } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -442,6 +441,7 @@ export default function DockerWidget({
           noRecordsText={tWidget("empty.noContainers")}
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
+          onColumnLayoutChange={onColumnLayoutChange}
           sortStatus={sortStatus}
           onSortStatusChange={(isAdvanced || options.enableRowSorting) && !isEditMode ? setSortStatus : undefined}
           idAccessor="resourceId"
@@ -486,7 +486,7 @@ export default function DockerWidget({
                 size={footerRefreshButtonSize}
                 variant="transparent"
                 c="var(--mantine-color-text)"
-                loading={isFetching || refreshInventory.isPending}
+                loading={isRefreshing || refreshInventory.isPending}
                 onClick={() => refreshInventory.mutate()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
                 style={{ position: "relative", overflow: "visible" }}

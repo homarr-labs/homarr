@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Anchor, Box, Center, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { Sparkline } from "@mantine/charts";
@@ -28,9 +29,8 @@ export default function WazuhAuthFailuresWidget({
 }: WidgetComponentProps<"wazuhAuthFailures">) {
   const t = useI18n("widget.wazuhAuthFailures");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getAuthFailures.useQuery(
-    { integrationId, hours: options.hours, limit: options.limit },
+    definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

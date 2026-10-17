@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useHydrationTime } from "./initial-render-time";
 
 dayjs.extend(relativeTime);
 
@@ -10,6 +11,7 @@ export const DayJsLocaleContext = createContext<string | null>(null);
 
 export const useTimeAgo = (timestamp: Date, updateFrequency = 1000) => {
   const locale = useContext(DayJsLocaleContext);
+  const initialTime = useHydrationTime();
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -18,13 +20,14 @@ export const useTimeAgo = (timestamp: Date, updateFrequency = 1000) => {
     return () => clearInterval(intervalId);
   }, [updateFrequency]);
 
-  return dayjs()
+  return dayjs(initialTime)
     .locale(locale ?? dayjs.locale())
     .to(timestamp);
 };
 
 export const useIntegrationConnected = (updatedAt: Date, { timeout = 30000 }) => {
-  const [connected, setConnected] = useState(Math.abs(dayjs(updatedAt).diff()) < timeout);
+  const initialTime = useHydrationTime();
+  const [connected, setConnected] = useState(Math.abs(dayjs(updatedAt).diff(dayjs(initialTime))) < timeout);
 
   useEffect(() => {
     setConnected(Math.abs(dayjs(updatedAt).diff()) < timeout);

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { Box, Card, Center, Group, List, ScrollArea, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
@@ -25,15 +26,16 @@ dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
 export default function NetworkControllerSummaryWidget({
+  options,
   integrationIds,
   width,
   height,
   displayScale = 1,
   displayMode,
 }: WidgetComponentProps<"networkControllerSummary">) {
-  const summaryQuery = clientApi.widget.networkController.summary.useQuery({
-    integrationIds,
-  });
+  const summaryQuery = clientApi.widget.networkController.summary.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const isAdvanced = displayMode === "advanced";
   let results = summaryQuery.data ?? [];
   if (isAdvanced) {

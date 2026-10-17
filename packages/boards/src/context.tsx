@@ -1,7 +1,17 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
+import {
+  createContext,
+  startTransition,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -20,6 +30,170 @@ interface BoardContextValue {
 }
 
 const BoardContext = createContext<BoardContextValue | null>(null);
+
+type BoardRestorationResult = "restored" | "cancelled";
+
+interface BoardRestoration {
+  isRestoring: boolean;
+  register: (id: string) => () => void;
+  settle: (id: string) => void;
+  seal: (host: object) => () => void;
+  whenRestored: () => Promise<BoardRestorationResult>;
+}
+
+const restored = Promise.resolve<BoardRestorationResult>("restored");
+const noop = () => undefined;
+const BoardRestorationContext = createContext<BoardRestoration>({
+  isRestoring: false,
+  register: () => noop,
+  settle: noop,
+  seal: () => noop,
+  whenRestored: () => restored,
+});
+
+export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWithChildren<{ prepared: boolean }>) => {
+  const pathname = usePathname();
+  const [isRestoring, setIsRestoring] = useState(prepared);
+  const [restoration] = useState(() => {
+    let phase: "pending" | "committing" | BoardRestorationResult = "restored";
+    if (prepared) phase = "pending";
+    let resumed = !prepared;
+    const pending = new Map<string, object>();
+    const settled = new Set<string>();
+    let host: object | undefined;
+    let hostGeneration: object;
+    let providerGeneration: object;
+    let initialPath: string | null | undefined;
+    let resolveRestored: (result: BoardRestorationResult) => void = noop;
+    const completion = new Promise<BoardRestorationResult>((resolve) => {
+      resolveRestored = resolve;
+    });
+    if (!prepared) resolveRestored("restored");
+    const cancel = (update = true) => {
+      if (phase === "restored" || phase === "cancelled") return;
+      phase = "cancelled";
+      pending.clear();
+      settled.clear();
+      resolveRestored("cancelled");
+      if (update) startTransition(() => setIsRestoring(false));
+    };
+    const check = () => {
+      if (phase !== "pending" || !host || pending.size !== 0) return;
+      phase = "committing";
+      startTransition(() => setIsRestoring(false));
+    };
+    return {
+      whenRestored: () => {
+        if (resumed) return restored;
+        return completion;
+      },
+      register: (id: string) => {
+        if (phase !== "pending" || settled.has(id)) return noop;
+        const token = {};
+        pending.set(id, token);
+        return () =>
+          queueMicrotask(() => {
+            if (pending.get(id) !== token) return;
+            pending.delete(id);
+            settled.add(id);
+            check();
+          });
+      },
+      settle: (id: string) => {
+        if (phase !== "pending") return;
+        settled.add(id);
+        pending.delete(id);
+        check();
+      },
+      seal: (owner: object) => {
+        if (host && host !== owner) cancel();
+        if (phase !== "pending" && phase !== "committing") return noop;
+        host = owner;
+        const token = {};
+        hostGeneration = token;
+        check();
+        return () =>
+          queueMicrotask(() => {
+            if (hostGeneration === token) cancel();
+          });
+      },
+      mount: () => {
+        const token = {};
+        providerGeneration = token;
+        return () =>
+          queueMicrotask(() => {
+            if (providerGeneration === token) cancel(false);
+          });
+      },
+      commit: () => {
+        if (phase === "cancelled") resumed = true;
+        if (phase !== "committing") return;
+        resumed = true;
+        phase = "restored";
+        pending.clear();
+        settled.clear();
+        resolveRestored("restored");
+      },
+      navigate: (path: string | null) => {
+        if (initialPath !== undefined && initialPath !== path) cancel();
+        initialPath = path;
+      },
+    };
+  });
+  useEffect(() => restoration.mount(), [restoration]);
+  useEffect(() => restoration.navigate(pathname), [pathname, restoration]);
+  useEffect(() => {
+    if (!isRestoring) restoration.commit();
+  }, [isRestoring, restoration]);
+  const value = useMemo(() => ({ ...restoration, isRestoring }), [isRestoring, restoration]);
+  return <BoardRestorationContext.Provider value={value}>{children}</BoardRestorationContext.Provider>;
+};
+
+export const useBoardRestoration = () => useContext(BoardRestorationContext);
+
+export const useWhenBoardRestored = () => {
+  const { whenRestored } = useBoardRestoration();
+  const [lifetime] = useState(() => {
+    let resolveCancelled: (result: BoardRestorationResult) => void = noop;
+    const cancellation = new Promise<BoardRestorationResult>((resolve) => {
+      resolveCancelled = resolve;
+    });
+    return { token: {}, cancelled: false, cancellation, resolveCancelled };
+  });
+  useEffect(() => {
+    const token = {};
+    lifetime.token = token;
+    return () =>
+      queueMicrotask(() => {
+        if (lifetime.token !== token) return;
+        lifetime.cancelled = true;
+        lifetime.resolveCancelled("cancelled");
+      });
+  }, [lifetime]);
+  return useCallback(async () => {
+    const result = await Promise.race([whenRestored(), lifetime.cancellation]);
+    if (lifetime.cancelled) return "cancelled";
+    return result;
+  }, [lifetime, whenRestored]);
+};
+
+export const useBoardRestoredAction = (action: () => unknown | Promise<unknown>) => {
+  const whenRestored = useWhenBoardRestored();
+  const pendingRef = useRef(false);
+  const [isPending, setPending] = useState(false);
+  const run = useCallback(async () => {
+    if (pendingRef.current) return;
+    pendingRef.current = true;
+    setPending(true);
+    try {
+      if ((await whenRestored()) === "restored") await action();
+    } finally {
+      pendingRef.current = false;
+      setPending(false);
+    }
+  }, [action, whenRestored]);
+  return { run, isPending };
+};
 
 const subscribeToViewport = (onStoreChange: () => void) => {
   if (typeof window === "undefined") return () => undefined;

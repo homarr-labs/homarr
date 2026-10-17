@@ -5,6 +5,7 @@ import type { TracearrViolation } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { SourcedTracearrItem } from "./source";
+import { useWidgetTimeZone } from "../common/use-widget-now";
 
 type SourcedTracearrViolation = SourcedTracearrItem<TracearrViolation>;
 
@@ -19,6 +20,7 @@ export function ViolationsList({
 }) {
   const t = useI18n("widget.tracearr");
   const locale = useCurrentIntlLocale();
+  const timeZone = useWidgetTimeZone();
 
   return (
     <Stack gap={4}>
@@ -67,7 +69,7 @@ export function ViolationsList({
                     {violation.severity}
                   </Badge>
                   <Text size="xs" c="dimmed" lineClamp={1}>
-                    {new Date(violation.createdAt).toLocaleDateString(locale)}
+                    {new Date(violation.createdAt).toLocaleDateString(locale, { timeZone })}
                   </Text>
                 </Stack>
               </Group>

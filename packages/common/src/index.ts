@@ -14,3 +14,4 @@ export * from "./function";
 export * from "./grid-algorithm";
 
 export * from "./layout-resize-source";
+export * from "./initial-render-time";

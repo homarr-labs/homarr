@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Sparkline } from "@mantine/charts";
 import { Badge, Box, Flex, Group, Paper, SimpleGrid, Stack, Text, Title, useMantineTheme } from "@mantine/core";
@@ -83,7 +84,9 @@ export default function StockPriceWidget({
   const locale = useCurrentIntlLocale();
   const numberFormatter = new Intl.NumberFormat(locale);
   const theme = useMantineTheme();
-  const stockQuery = clientApi.widget.stockPrice.getPriceHistory.useQuery(options);
+  const stockQuery = clientApi.widget.stockPrice.getPriceHistory.useQuery(
+    definition.data.queries({ options, integrationIds: [] }).main.input,
+  );
   const result = getUsableWidgetQueryData(stockQuery);
 
   if (isInitialWidgetQueryPending(stockQuery)) return <WidgetQueryLoadingState />;

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
@@ -50,7 +51,7 @@ export default function BookmarksWidget({
   const t = useI18n("widget.bookmarks");
   const board = useRequiredBoard();
   const advanced = displayMode === "advanced";
-  const appIds = useMemo(() => options.items.filter((value) => !getDirectBookmarkUrl(value)), [options.items]);
+  const appIds = useMemo(() => definition.data.queries({ options, integrationIds: [] }).main.input, [options]);
   const appsQuery = clientApi.app.byIds.useQuery(appIds, {
     select(selectedApps) {
       return selectedApps;

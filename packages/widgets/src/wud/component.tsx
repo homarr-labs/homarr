@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { ActionIcon, Avatar, Badge, Card, Center, Group, RingProgress, Stack, Text, Tooltip } from "@mantine/core";
 import { IconBrandDocker, IconExternalLink, IconServer } from "@tabler/icons-react";
@@ -41,7 +42,9 @@ const WudWidgetContent = ({
   isAdvanced: boolean;
 }) => {
   const t = useI18n("widget.wud");
-  const [data] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
+  const [data] = clientApi.widget.wud.getStats.useSuspenseQuery(
+    definition.data.queries({ options, integrationIds: [integrationId] }).main.input,
+  );
   const board = useRequiredBoard();
 
   const isTiny = !isAdvanced && width < 256;

@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useCallback, useMemo } from "react";
 import {
@@ -53,7 +54,9 @@ export default function IndexerManagerWidget({
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n("widget.indexerManager");
   const tCommon = useI18n("common");
-  const indexersQuery = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
+  const indexersQuery = clientApi.widget.indexerManager.getIndexersStatus.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const isInitialPending = isInitialWidgetQueryPending(indexersQuery);
   const indexersData = getUsableWidgetQueryData(indexersQuery) ?? [];
 

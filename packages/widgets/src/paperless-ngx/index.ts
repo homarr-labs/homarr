@@ -3,6 +3,7 @@ import { IconFileText, IconServerOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("paperlessNgx", {
@@ -48,4 +49,11 @@ export const { definition, componentLoader } = createWidgetDefinition("paperless
       message: (t) => t("widget.paperlessNgx.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.paperlessNgx.getStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

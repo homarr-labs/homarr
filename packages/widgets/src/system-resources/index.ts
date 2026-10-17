@@ -4,6 +4,7 @@ import { objectEntries } from "@homarr/common";
 import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 const labelDisplayModeOptions = {
@@ -46,7 +47,14 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.healthMonitoring.getSystemHealthStatus", { integrationIds }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));
 
 export type LabelDisplayModeOption = ReturnType<
   (typeof definition)["createOptions"]

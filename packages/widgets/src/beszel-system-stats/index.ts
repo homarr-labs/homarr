@@ -7,7 +7,8 @@ import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { beszelTimePeriodOptions } from "../beszel/_shared/options";
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
-import { createBeszelSystemChoices, resolveStoredBeszelQuerySelection } from "./selection";
+import { widgetQuery } from "../data";
+import { createBeszelSystemChoices, resolveStoredBeszelQuerySelection, resolveBeszelSystemChoice } from "./selection";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
@@ -73,4 +74,29 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       message: (t) => t("widget.beszel.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery(
+        "widget.beszel.getSystems",
+        { integrationIds },
+        {
+          after: (systems) => {
+            const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), options.systemId);
+            if (!selected || options.timePeriod === "1m") return { stats: null };
+            return {
+              stats: widgetQuery("widget.beszel.getSystemStats", {
+                integrationIds: [selected.integrationId],
+                systemId: selected.systemId,
+                timePeriod: options.timePeriod,
+                includeDocker: options.showDockerCpu || options.showDockerMemory || options.showDockerNetwork,
+              }),
+            };
+          },
+        },
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

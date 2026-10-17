@@ -1,4 +1,6 @@
 "use client";
+import { definition } from ".";
+import { useWidgetNow } from "../common/use-widget-now";
 
 import { useMemo } from "react";
 import { Badge, Box, Divider, Group, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
@@ -18,7 +20,6 @@ import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
-import { getBeszelAlertsQueryInput } from "./display";
 import { buildBeszelSystemNameMap, getBeszelSystemName } from "./system-name-map";
 
 const alertIconMap: Record<string, LucideIcon> = {
@@ -46,15 +47,11 @@ export default function BeszelAlertsWidget({
   widgetRuntimeRef,
 }: WidgetComponentProps<"beszelAlerts">) {
   const t = useI18n("widget.beszelAlerts");
+  const now = useWidgetNow();
   const isAdvanced = displayMode === "advanced";
   const alertsInput = useMemo(
-    () =>
-      getBeszelAlertsQueryInput(
-        integrationIds,
-        { showHistory: options.showHistory, maxHistoryItems: options.maxHistoryItems },
-        isAdvanced,
-      ),
-    [integrationIds, options.showHistory, options.maxHistoryItems, isAdvanced],
+    () => definition.data.queries({ options, integrationIds, displayMode }).main.input,
+    [integrationIds, options, displayMode],
   );
   const alertsQuery = clientApi.widget.beszel.getAlerts.useQuery(alertsInput);
   const runtimeQueries = useMemo(
@@ -210,7 +207,7 @@ export default function BeszelAlertsWidget({
                           {isResolved ? t("resolved") : t("status.triggered")}
                         </Badge>
                         <Text size="xs" c="dimmed">
-                          {dayjs(entry.created).fromNow()}
+                          {dayjs(entry.created).from(dayjs(now ?? undefined))}
                         </Text>
                       </Stack>
                     </Group>

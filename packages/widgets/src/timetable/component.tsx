@@ -2,6 +2,8 @@ import { Alert, Badge, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { definition } from ".";
+import { useHydrationTime } from "@homarr/common";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { DynamicSelectOption } from "../_inputs/widget-dynamic-select-input";
@@ -24,7 +26,7 @@ export default function TimetableWidget({
   return (
     <TimetableWidgetInner
       station={options.station}
-      baseUrl={options.baseUrl}
+      options={options}
       itemId={itemId}
       displayMode={displayMode}
       width={width}
@@ -35,32 +37,33 @@ export default function TimetableWidget({
 
 interface TimetableWidgetInnerProps {
   station: DynamicSelectOption;
-  baseUrl: string;
+  options: WidgetComponentProps<"timetable">["options"];
   itemId?: string;
   displayMode: "compact" | "advanced";
   width: number;
   height: number;
 }
 
-const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, height }: TimetableWidgetInnerProps) => {
+const TimetableWidgetInner = ({ station, options, itemId, displayMode, width, height }: TimetableWidgetInnerProps) => {
   const {
     data: timetable,
     error,
     isPending,
-  } = clientApi.widget.timetable.getTimetable.useQuery({
-    baseUrl,
-    itemId,
-    stationId: station.value,
-    limit: displayMode === "advanced" ? 50 : 10,
-  });
+  } = clientApi.widget.timetable.getTimetable.useQuery(
+    definition.data.queries({ options, itemId, displayMode, integrationIds: [] }).main.input,
+  );
   const t = useI18n("widget.timetable");
   const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
+  const initialTime = useHydrationTime();
+  const timeZone = initialTime !== undefined ? "UTC" : undefined;
 
   if (error && timetable === undefined) throw error;
 
   const entries = timetable?.entries ?? [];
-  const staleTime = timetable ? formatLocalizedTime(timetable.timestamp, locale, { includeSeconds: true }) : undefined;
+  const staleTime = timetable
+    ? formatLocalizedTime(timetable.timestamp, locale, { includeSeconds: true, timeZone })
+    : undefined;
   const staleWarning = error && staleTime ? t("warning.stale", { time: staleTime }) : undefined;
   const compactStaleWarning = error && staleTime ? t("warning.staleCompact") : undefined;
   const isAdvanced = displayMode === "advanced";
@@ -109,6 +112,7 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
                 entry={entry}
                 dense={isDense}
                 locale={locale}
+                timeZone={timeZone}
               />
             ))
           ) : (
@@ -122,7 +126,7 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
       </ScrollArea>
       {displayMode === "advanced" && timetable && (
         <Text size="xs" c="dimmed" ta="right">
-          {formatLocalizedTime(timetable.timestamp, locale, { includeSeconds: true })}
+          {staleTime}
         </Text>
       )}
     </Stack>
@@ -137,7 +141,17 @@ interface TimetableEntryView {
   platform: { name: string; hasChanged: boolean } | null;
 }
 
-function DepartureRow({ entry, dense, locale }: { entry: TimetableEntryView; dense: boolean; locale: string }) {
+function DepartureRow({
+  entry,
+  dense,
+  locale,
+  timeZone,
+}: {
+  entry: TimetableEntryView;
+  dense: boolean;
+  locale: string;
+  timeZone?: string;
+}) {
   return (
     <Group justify="space-between" w="100%" wrap="nowrap">
       <Group gap={dense ? 6 : "sm"} wrap="nowrap" style={{ minWidth: 0 }}>
@@ -154,7 +168,7 @@ function DepartureRow({ entry, dense, locale }: { entry: TimetableEntryView; den
           </Badge>
         )}
         <Text size={dense ? "xs" : "sm"} fw={dense ? 600 : undefined} style={{ whiteSpace: "nowrap" }}>
-          {formatLocalizedTime(entry.timestamp, locale)}{" "}
+          {formatLocalizedTime(entry.timestamp, locale, { timeZone })}{" "}
           {entry.delay >= 1 && (
             <Text size={dense ? "xs" : "sm"} span c="red">
               +{entry.delay}&apos;

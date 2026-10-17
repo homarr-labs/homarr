@@ -4,6 +4,7 @@ import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
 import { statsEntriesSchema } from "./config";
 
 export const { definition, componentLoader } = createWidgetDefinition("stats", {
@@ -35,4 +36,20 @@ export const { definition, componentLoader } = createWidgetDefinition("stats", {
       },
     );
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options, displayMode }) => {
+      const entries = statsEntriesSchema.safeParse(options.entries).data ?? [];
+      const ids = [...new Set(integrationIds)];
+      return {
+        catalogs: ids.map((integrationId) => widgetQuery("widget.stats.catalog", { integrationId })),
+        snapshots: ids
+          .filter(
+            (id) => displayMode === "advanced" || entries.some((entry) => !entry.hidden && entry.integrationId === id),
+          )
+          .map((integrationId) => widgetQuery("widget.stats.snapshot", { integrationId })),
+      };
+    },
+  })
+  .withDynamicImport(() => import("./component"));

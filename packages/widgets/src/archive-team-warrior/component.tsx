@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Avatar, Badge, Card, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
@@ -50,7 +51,9 @@ const ArchiveTeamWarriorWidgetContent = ({
   const tWidgetCommon = useI18n("widget.common");
   const locale = useCurrentIntlLocale();
   const { formatBytes, formatByteRate } = useByteFormatter();
-  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
+  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery(
+    definition.data.queries({ options, integrationIds: [integrationId] }).main.input,
+  );
 
   const status = data.status;
   const projectName = status.project?.title ?? status.selectedProject ?? t("noProjectSelected");

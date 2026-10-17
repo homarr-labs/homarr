@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Badge, Box, Center, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconDeviceDesktop, IconListNumbers, IconTarget, IconWorld } from "@tabler/icons-react";
@@ -63,9 +64,8 @@ export default function WazuhTopListWidget({
   const t = useI18n("widget.wazuhTopList");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getTopList.useQuery(
-    { integrationId, kind: options.kind, range: options.range, limit: options.limit, minLevel: options.minLevel },
+    definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 60_000, refetchInterval: 2 * 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

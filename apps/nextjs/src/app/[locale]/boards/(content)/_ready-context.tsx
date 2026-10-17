@@ -1,33 +1,21 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext } from "react";
+import { IsRestoringProvider } from "@tanstack/react-query";
 
-const BoardReadyContext = createContext<{
-  markAsReady: (id: string) => void;
-} | null>(null);
+import { PreparedBoardRestorationProvider, useBoardRestoration } from "@homarr/boards/context";
+import { useInitialRenderTime } from "@homarr/common";
 
 export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const markAsReady = useCallback((_id: string) => {}, []);
-
+  const prepared = useInitialRenderTime() !== undefined;
   return (
-    <BoardReadyContext.Provider
-      value={{
-        markAsReady,
-      }}
-    >
-      {children}
-    </BoardReadyContext.Provider>
+    <PreparedBoardRestorationProvider prepared={prepared}>
+      <BoardQueryRestoration>{children}</BoardQueryRestoration>
+    </PreparedBoardRestorationProvider>
   );
 };
 
-export const useMarkSectionAsReady = () => {
-  const context = useContext(BoardReadyContext);
-
-  if (!context) {
-    throw new Error("BoardReadyProvider is required");
-  }
-
-  return context.markAsReady;
+const BoardQueryRestoration = ({ children }: PropsWithChildren) => {
+  const { isRestoring } = useBoardRestoration();
+  return <IsRestoringProvider value={isRestoring}>{children}</IsRestoringProvider>;
 };

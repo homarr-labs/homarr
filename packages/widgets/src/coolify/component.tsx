@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
@@ -51,9 +52,9 @@ interface CoolifyContentProps {
 
 function CoolifyContent({ integrationIds, options, width, isAdvanced }: CoolifyContentProps) {
   const t = useI18n("common");
-  const instancesQuery = clientApi.widget.coolify.getInstancesInfo.useQuery({
-    integrationIds,
-  });
+  const instancesQuery = clientApi.widget.coolify.getInstancesInfo.useQuery(
+    definition.data.queries({ options, integrationIds }).main.input,
+  );
   const instancesData = getUsableWidgetQueryData(instancesQuery) ?? [];
   const { isPending } = instancesQuery;
   const successfulInstances = instancesData.filter(

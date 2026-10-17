@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Anchor, Button, Stack, Text } from "@mantine/core";
 
 import { useSession } from "@homarr/auth/client";
+import { useHydrationTime } from "@homarr/common";
 import type { stringOrTranslation } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
@@ -19,7 +20,8 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
   const t = useI18n();
   const tCommon = useI18n("common");
   const { data: session } = useSession();
-  const [errorTimestamp] = useState(Date.now);
+  const initialTime = useHydrationTime();
+  const [errorTimestamp] = useState(() => initialTime ?? Date.now());
 
   return (
     <Stack h="100%" align="center" justify="center" gap="md" data-homarr-widget-error>

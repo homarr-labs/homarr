@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { getDefaultLocaleForProxyAsync, getOnboardingStepForProxyAsync } from "@homarr/db/proxy-reader";
@@ -39,7 +39,7 @@ const getDefaultLocaleDedupedAsync = () => {
   return defaultLocalePromise;
 };
 
-export async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest, event?: NextFetchEvent) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split("/").filter(Boolean);
@@ -71,7 +71,14 @@ export async function proxy(request: NextRequest) {
   request.headers.set("accept-language", "");
 
   const next = createI18nMiddleware(defaultLocale);
-  return next(request);
+  const response = next(request);
+  if (!event) return response;
+  const { readCaptureViewId } = await import("@homarr/cron-jobs/board-preparation");
+  if (readCaptureViewId(request.headers)) return response;
+  const { getPreparedBoardResponseAsync } = await import("./board-preparation/proxy");
+  const prepared = await getPreparedBoardResponseAsync(request, event, response);
+  if (prepared) return prepared;
+  return response;
 }
 
 export const config = {

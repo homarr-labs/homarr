@@ -3,6 +3,7 @@ import { IconActivityHeartbeat, IconServerOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("tracearr", {
@@ -33,4 +34,9 @@ export const { definition, componentLoader } = createWidgetDefinition("tracearr"
       message: (t) => t("widget.tracearr.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.tracearr.getDashboard", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

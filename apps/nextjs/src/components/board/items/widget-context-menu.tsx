@@ -1,15 +1,16 @@
 "use client";
 
 import type { MutableRefObject, ReactNode, RefObject } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Drawer, Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
+import { useFocusReturn } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess, useSession } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { usePersistBoard } from "@homarr/boards/updater";
 import { useTimeAgo } from "@homarr/common";
@@ -108,6 +109,8 @@ const WidgetContextMenuInner = ({
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
   const [menuOpened, setMenuOpened] = useState(false);
   const [isRefreshingSources, setRefreshingSources] = useState(false);
+  const refreshPending = useRef(false);
+  const whenRestored = useWhenBoardRestored();
 
   const persistBoard = useCallback(
     (updater: (previous: typeof board) => typeof board) => {
@@ -145,16 +148,20 @@ const WidgetContextMenuInner = ({
     [board.id, definition.queryMatcher, item.id, item.integrationIds, options, widgetQueryKeys, widgetRuntimeRef],
   );
   const handleRefetch = useCallback(async () => {
+    if (refreshPending.current) return;
+    refreshPending.current = true;
     setRefreshingSources(true);
     try {
+      if ((await whenRestored()) !== "restored") return;
       const refresh = widgetRuntimeRef.current.actions.refresh;
       if (refresh) await refresh();
       else
         await queryClient.refetchQueries({ type: "active", predicate: (query) => matchesWidgetQuery(query.queryKey) });
     } finally {
+      refreshPending.current = false;
       setRefreshingSources(false);
     }
-  }, [matchesWidgetQuery, queryClient, widgetRuntimeRef]);
+  }, [matchesWidgetQuery, queryClient, whenRestored, widgetRuntimeRef]);
 
   const canInteractWithSelectedIntegrations = useMemo(() => {
     const allowedIds = new Set(integrationsWithInteractAccess.map(({ id }) => id));
@@ -345,12 +352,35 @@ interface WidgetContextMenuDropdownProps {
 const WidgetContextMenuDropdown = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
   const isMobile = useIsMobile();
 
-  if (!isMobile) return <Menu.Dropdown>{children}</Menu.Dropdown>;
+  return (
+    <>
+      {(!isMobile || !opened) && <Menu.Dropdown>{children}</Menu.Dropdown>}
+      {isMobile && (
+        <WidgetContextMenuDrawer opened={opened} onClose={onClose} title={title}>
+          {children}
+        </WidgetContextMenuDrawer>
+      )}
+    </>
+  );
+};
+
+const WidgetContextMenuDrawer = ({ opened, onClose, title, children }: WidgetContextMenuDropdownProps) => {
+  const [mounted, setMounted] = useState(false);
+  const drawerOpened = opened && mounted;
+  useFocusReturn({ opened: drawerOpened });
+
+  useEffect(() => {
+    if (opened) setMounted(true);
+  }, [opened]);
+
+  if (!opened && !mounted) return null;
 
   return (
     <Drawer
-      opened={opened}
+      opened={drawerOpened}
       onClose={onClose}
+      onExitTransitionEnd={() => setMounted(false)}
+      returnFocus={false}
       position="bottom"
       size="min(80dvh, 40rem)"
       title={title}

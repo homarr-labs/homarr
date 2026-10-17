@@ -3,6 +3,7 @@ import { IconBrandDocker } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("wud", {
@@ -24,4 +25,12 @@ export const { definition, componentLoader } = createWidgetDefinition("wud", {
       showUpdateList: factory.switch({ defaultValue: false, withDescription: true }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    requiresData: true,
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.wud.getStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

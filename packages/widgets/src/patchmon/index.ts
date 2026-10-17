@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 import { PATCHMON_STAT_COLOR_PRESETS } from "./stat-colors";
 import { patchmonOptionsSuperRefine } from "./threshold-validation";
@@ -257,4 +258,12 @@ export const { definition, componentLoader } = createWidgetDefinition("patchmon"
       message: (t) => t("widget.patchmon.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    authenticated: true,
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.patchmon.getStats", { integrationId: integrationIds[0] ?? "" }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("wazuhAuthFailures", {
@@ -22,4 +23,15 @@ export const { definition, componentLoader } = createWidgetDefinition("wazuhAuth
       message: (t) => t("widget.wazuh.error.unknown.title", { target: "Wazuh" }),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.wazuh.getAuthFailures", {
+        integrationId: integrationIds[0] ?? "",
+        hours: options.hours,
+        limit: options.limit,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

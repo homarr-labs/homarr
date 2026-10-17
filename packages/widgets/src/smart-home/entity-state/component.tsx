@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { useCallback } from "react";
 import { Badge, Center, Group, Stack, Text, UnstyledButton } from "@mantine/core";
@@ -30,10 +31,7 @@ export default function SmartHomeEntityStateWidget({
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const integrationId = integrationIds[0]!;
 
-  const input = {
-    entityId: options.entityId,
-    integrationId,
-  };
+  const input = definition.data.queries({ options, integrationIds }).main.input;
   const {
     data: entity,
     isPending: isEntityPending,

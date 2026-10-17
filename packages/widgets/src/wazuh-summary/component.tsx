@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Box, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
@@ -76,9 +77,8 @@ export default function WazuhSummaryWidget({
   const t = useI18n("widget.wazuhSummary");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getSummary.useQuery(
-    { integrationId, range: options.range },
+    definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

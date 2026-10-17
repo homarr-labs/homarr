@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("wazuhVulnerabilities", {
@@ -38,4 +39,17 @@ export const { definition, componentLoader } = createWidgetDefinition("wazuhVuln
       message: (t) => t("widget.wazuh.error.unknown.title", { target: "Wazuh" }),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.wazuh.getVulnerabilities", {
+        integrationId: integrationIds[0] ?? "",
+        cveLimit: options.cveLimit,
+        agentLimit: options.agentLimit,
+        cveOrder: options.cveOrder,
+        minSeverity: options.minSeverity,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

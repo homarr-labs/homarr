@@ -3,6 +3,7 @@ import { IconNotes } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("anchorNote", {
@@ -21,4 +22,15 @@ export const { definition, componentLoader } = createWidgetDefinition("anchorNot
       }),
     }));
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery(
+        "widget.anchorNotes.getNote",
+        { integrationId: integrationIds[0] ?? "", noteId: options.noteId.trim() },
+        { enabled: Boolean(options.noteId.trim()) },
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

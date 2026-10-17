@@ -14,34 +14,29 @@ import { getUmamiLayout } from "./umami-layout";
 import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list";
 import { formatTimeFrameLabel, formatXLabel, useUmamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
+import type { definition } from ".";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 
 interface UmamiContentProps {
-  integrationIds: string[];
-  websiteId: string;
+  queries: ReturnType<typeof definition.data.queries>;
   timeFrame: TimeFrame;
-  eventName?: string;
   eventNames: string[];
   chartStyle: string;
   chartType: string;
   viewMode: string;
-  topCount: number;
   width: number;
   height: number;
   displayMode: "compact" | "advanced";
 }
 
 export function UmamiContent({
-  integrationIds,
-  websiteId,
+  queries,
   timeFrame,
-  eventName,
   eventNames,
   chartStyle,
   chartType,
   viewMode,
-  topCount,
   width,
   height,
   displayMode,
@@ -50,21 +45,21 @@ export function UmamiContent({
   const locale = useCurrentIntlLocale();
   const umamiQueryOptions = useUmamiQueryOptions();
   const tickColor = "var(--mantine-color-dimmed)";
+  const eventName = queries.visitors.input.eventName;
 
-  const statsQuery = clientApi.widget.umami.getVisitorStats.useQuery(
-    { integrationIds, websiteId, timeFrame, eventName },
-    umamiQueryOptions,
-  );
+  const statsQuery = clientApi.widget.umami.getVisitorStats.useQuery(queries.visitors.input, umamiQueryOptions);
   const results = getUsableWidgetQueryData(statsQuery);
 
-  const activeVisitorsInput = { integrationId: integrationIds[0] ?? "", websiteId };
-  const activeVisitorsQuery = clientApi.widget.umami.getActiveVisitors.useQuery(activeVisitorsInput, umamiQueryOptions);
+  const activeVisitorsQuery = clientApi.widget.umami.getActiveVisitors.useQuery(
+    queries.active.input,
+    umamiQueryOptions,
+  );
   const activeVisitors = activeVisitorsQuery.data;
 
-  const multiEventQuery = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
-    { enabled: viewMode === "events" && eventNames.length > 0, ...umamiQueryOptions },
-  );
+  const multiEventQuery = clientApi.widget.umami.getMultiEventTimeSeries.useQuery(queries.events.input, {
+    enabled: queries.events.enabled,
+    ...umamiQueryOptions,
+  });
   const multiEventSeries = getUsableWidgetQueryData(multiEventQuery);
 
   const multiEventTotal = multiEventSeries
@@ -115,19 +110,9 @@ export function UmamiContent({
         showXAxis={showXAxis}
       />
     ) : viewMode === "topPages" ? (
-      <UmamiTopPagesContent
-        integrationIds={integrationIds}
-        websiteId={websiteId}
-        timeFrame={timeFrame}
-        limit={topCount}
-      />
+      <UmamiTopPagesContent input={queries.pages.input} />
     ) : viewMode === "topReferrers" ? (
-      <UmamiTopReferrersContent
-        integrationIds={integrationIds}
-        websiteId={websiteId}
-        timeFrame={timeFrame}
-        limit={topCount}
-      />
+      <UmamiTopReferrersContent input={queries.referrers.input} />
     ) : chartType === "sparkline" ? (
       <LineChart
         h="100%"
@@ -164,22 +149,8 @@ export function UmamiContent({
 
   const advancedLists = (
     <SimpleGrid cols={viewMode === "topPages" || viewMode === "topReferrers" ? 1 : 2} spacing="xs" mih={180}>
-      {viewMode !== "topPages" && (
-        <UmamiTopPagesContent
-          integrationIds={integrationIds}
-          websiteId={websiteId}
-          timeFrame={timeFrame}
-          limit={topCount}
-        />
-      )}
-      {viewMode !== "topReferrers" && (
-        <UmamiTopReferrersContent
-          integrationIds={integrationIds}
-          websiteId={websiteId}
-          timeFrame={timeFrame}
-          limit={topCount}
-        />
-      )}
+      {viewMode !== "topPages" && <UmamiTopPagesContent input={queries.pages.input} />}
+      {viewMode !== "topReferrers" && <UmamiTopReferrersContent input={queries.referrers.input} />}
     </SimpleGrid>
   );
 

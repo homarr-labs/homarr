@@ -3,6 +3,7 @@ import { IconServer2 } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { supportsStorageVolumeSelection } from "../filter-storage-volumes";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
@@ -36,4 +37,11 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
       },
     );
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({
+      main: widgetQuery("widget.healthMonitoring.getSystemHealthStatus", { integrationIds }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

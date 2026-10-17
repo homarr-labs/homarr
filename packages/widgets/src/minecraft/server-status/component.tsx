@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Badge, Box, Flex, Group, Progress, Stack, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { IconCube, IconUsersGroup } from "@tabler/icons-react";
@@ -17,7 +18,13 @@ export default function MinecraftServerStatusWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"minecraftServerStatus">) {
-  const { data: result, isPending, error } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
+  const {
+    data: result,
+    isPending,
+    error,
+  } = clientApi.widget.minecraft.getServerStatus.useQuery(
+    definition.data.queries({ options, integrationIds: [] }).main.input,
+  );
   const t = useI18n("widget.minecraftServerStatus");
   const tCommon = useI18n("common");
 

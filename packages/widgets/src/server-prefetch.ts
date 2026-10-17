@@ -1,46 +1,18 @@
 import { setImmediate } from "node:timers/promises";
 
-import type { FetchQueryOptions, QueryClient, QueryKey } from "@tanstack/react-query";
+import { hashKey } from "@tanstack/react-query";
+import type { FetchQueryOptions, QueryClient } from "@tanstack/react-query";
 
-import type { RouterInputs, RouterOutputs } from "@homarr/api";
-import { api, trpc } from "@homarr/api/server";
-import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
-import { radarrReleaseTypes } from "@homarr/integrations/types";
+import type { RouterOutputs } from "@homarr/api";
+import { trpc } from "@homarr/api/server";
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 
-import {
-  createBeszelSystemChoices,
-  resolveBeszelSystemChoice,
-  resolveStoredBeszelQuerySelection,
-} from "./beszel-system-stats/selection";
-import { resolveDownloadsQueryInput } from "./downloads/query-input";
-import { ALL_PHOTOS_ALBUM_ID } from "./immich/album-carousel/constants";
-
-const prefetchQuery = <TQueryFnData, TError, TData, TQueryKey extends QueryKey>(
-  queryClient: QueryClient,
-  options: FetchQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
-) => {
-  const queryFn = options.queryFn;
-  if (typeof queryFn !== "function") return;
-  // Register every pending promise now, and let React flush the shell before
-  // query middleware and integration initialization consume the server thread.
-  void queryClient.prefetchQuery({
-    ...options,
-    meta: { ...options.meta, rscWidgetPrefetch: true },
-    // A restored board snapshot supplies the first paint while this request
-    // refreshes the value on the server for the current navigation.
-    staleTime: 0,
-    queryFn: async (context) => {
-      await setImmediate();
-      await setImmediate();
-      return await queryFn(context);
-    },
-  });
-};
+import { getWidgetDataQueries } from "./data";
+import type { WidgetDataQueries, WidgetDataQuery } from "./data";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "./manifest";
 
 type Board = RouterOutputs["board"]["getHomeBoard"];
 type Item = Board["items"][number];
-type BeszelStatsInput = RouterInputs["widget"]["beszel"]["getSystemStats"];
-const mediaRequestStatuses = ["pending", "approved", "declined", "failed", "completed"] as const;
 
 const isInitiallyVisible = (board: Board, item: Item, layoutId: string) => {
   const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
@@ -62,234 +34,150 @@ export const getInitiallyVisibleWidgetKinds = (board: Board, layoutId: string) =
   ...new Set(board.items.filter((item) => isInitiallyVisible(board, item, layoutId)).map((item) => item.kind)),
 ];
 
-const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
-  const { integrationIds, options } = item;
-  const storedValue = String(options.systemId ?? "");
-  const selection = resolveStoredBeszelQuerySelection(storedValue, integrationIds);
-  const period = beszelTimePeriodSchema.safeParse(options.timePeriod ?? defaultBeszelTimePeriod);
-  if (!period.success || period.data === "1m") return;
-  const timePeriod = period.data;
-  const includeDocker = ["showDockerCpu", "showDockerMemory", "showDockerNetwork"].some(
-    (key) => (options[key] ?? true) === true,
-  );
-  if (!selection) {
-    // An unset system or an ambiguous legacy ID needs discovery first. Stream
-    // its exact stats query from a separate boundary as soon as discovery ends.
-    return queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
-      (systems) => {
-        const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
-        if (!selected) return;
-        prefetchQuery(queryClient, {
-          ...trpc.widget.beszel.getSystemStats.queryOptions({
-            integrationIds: [selected.integrationId],
-            systemId: selected.systemId,
-            timePeriod,
-            includeDocker,
-          }),
-          meta: { streamedBeszelSelection: true },
-        });
-      },
-      () => undefined,
-    );
-  }
-  const input: BeszelStatsInput = {
-    ...selection,
-    timePeriod,
-    includeDocker,
-  };
-  const query = trpc.widget.beszel.getSystemStats.queryOptions(input);
-  // Register the dependent promise before dehydration. Resolve the selection on
-  // the server rather than waiting for a client discovery/render round trip.
-  prefetchQuery(queryClient, {
-    ...query,
-    queryFn: async () => {
-      const systems = await queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
-      const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
-      if (!selected || selected.systemId !== input.systemId || selected.integrationId !== input.integrationIds[0]) {
-        throw new Error("The selected Beszel system is no longer available");
-      }
-      return await api.widget.beszel.getSystemStats(input);
-    },
-  });
+export interface CapturePrefetchOutcome {
+  eligibleItems: number;
+  registered: number;
+  capped: number;
+  timedOut: number;
+  failed: number;
+  preparationFailed: number;
+}
+
+interface QueryJob {
+  options: FetchQueryOptions;
+  after: NonNullable<WidgetDataQuery["after"]>[];
+  result: { status: "pending" } | { status: "success"; data: unknown } | { status: "error" };
+  settled: Promise<void>;
+  finish: () => void;
+}
+
+const getQueryOptions = ({ path, input }: WidgetDataQuery) => {
+  let procedure: unknown = trpc;
+  for (const segment of path.split(".")) procedure = Reflect.get(procedure as object, segment);
+  return (procedure as { queryOptions: (input: unknown) => FetchQueryOptions }).queryOptions(input);
 };
 
-// A browser's local month can differ from the server around a month boundary.
-// Only prefetch when every supported timezone resolves to the same month.
-const getUnambiguousCalendarMonth = () => {
-  const now = Date.now();
-  const earliest = new Date(now - 14 * 60 * 60 * 1000);
-  const latest = new Date(now + 14 * 60 * 60 * 1000);
-  if (earliest.getUTCMonth() !== latest.getUTCMonth() || earliest.getUTCFullYear() !== latest.getUTCFullYear())
-    return null;
-  return { month: earliest.getUTCMonth() + 1, year: earliest.getUTCFullYear() };
-};
-
-export const prefetchInitialWidgetData = (
+export const prefetchInitialWidgetData = async (
   queryClient: QueryClient,
   board: Board,
   layoutId: string,
   isAuthenticated: boolean,
-) => {
-  const dependentQueries: Promise<void>[] = [];
-  const calendarMonth = getUnambiguousCalendarMonth();
-  if (isAuthenticated) prefetchQuery(queryClient, trpc.integration.all.queryOptions());
-  for (const item of board.items) {
-    if (!isInitiallyVisible(board, item, layoutId)) continue;
-    const { integrationIds, options } = item;
-    // These are the consumers' exact inputs, including order and defaults. Calls
-    // go through the API middleware and share its request-scoped auth/context.
-    switch (item.kind) {
-      case "dnsHoleSummary":
-      case "dnsHoleControls":
-        if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.dnsHole.summary.queryOptions({ integrationIds }));
-        break;
-      case "beszelSystemStats":
-      case "beszelSystemTable":
-      case "beszelSystemGrid":
-        if (!integrationIds.length) break;
-        prefetchQuery(queryClient, trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
-        if (item.kind === "beszelSystemStats") {
-          const discovery = prefetchBeszelStats(queryClient, item);
-          if (discovery) dependentQueries.push(discovery);
-        }
-        break;
-      case "downloads":
-        if (integrationIds.length)
-          prefetchQuery(
-            queryClient,
-            trpc.widget.downloads.getJobsAndStatuses.queryOptions(resolveDownloadsQueryInput(integrationIds, options)),
-          );
-        break;
-      case "indexerManager":
-        if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.indexerManager.getIndexersStatus.queryOptions({ integrationIds }));
-        break;
-      case "mediaReleases":
-        if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.mediaRelease.getMediaReleases.queryOptions({ integrationIds }));
-        break;
-      case "mediaServer":
-        if (integrationIds.length)
-          prefetchQuery(
-            queryClient,
-            trpc.widget.mediaServer.getCurrentStreams.queryOptions({
-              integrationIds,
-              showOnlyPlaying: (options.showOnlyPlaying ?? true) === true,
-            }),
-          );
-        break;
-      case "mediaRequests-requestList": {
-        if (!integrationIds.length) break;
-        let statuses: RouterInputs["widget"]["mediaRequests"]["getLatestRequests"]["statuses"] = [
-          ...mediaRequestStatuses,
-        ];
-        if (Array.isArray(options.statusFilter) && options.statusFilter.length > 0) {
-          statuses = options.statusFilter.filter((value): value is (typeof mediaRequestStatuses)[number] =>
-            mediaRequestStatuses.some((status) => status === value),
-          );
-          if (statuses.length !== options.statusFilter.length) break;
-        }
-        prefetchQuery(
-          queryClient,
-          trpc.widget.mediaRequests.getLatestRequests.queryOptions({
-            integrationIds,
-            statuses,
-            recentDays: Number(options.recentDays ?? 0),
-          }),
-        );
-        break;
+  capture?: { deadline: number; outcome: CapturePrefetchOutcome },
+): Promise<Promise<void>[]> => {
+  const deadline = capture?.deadline ?? Infinity;
+  const outcome = capture?.outcome;
+  const settings = await getRscServerSettingsAsync();
+  const items = board.items.filter((item) => isInitiallyVisible(board, item, layoutId));
+  const definitions = await Promise.all(items.map((item) => loadWidgetDefinition(item.kind)));
+  const jobs: QueryJob[] = [];
+  const identities = new Map<string, QueryJob>();
+  const drained = Promise.withResolvers<void>();
+  const limit = capture ? 8 : Infinity;
+  let next = 0;
+  let active = 0;
+  let started = false;
+  const schedule = (): void => {
+    while (started && active < limit && next < jobs.length) {
+      const job = jobs[next++];
+      if (!job) continue;
+      active++;
+      void run(job).finally(() => {
+        active--;
+        schedule();
+      });
+    }
+    if (started && active === 0 && next >= jobs.length) drained.resolve();
+  };
+  const enqueue = (queries: WidgetDataQueries, dependent = false) => {
+    for (const query of getWidgetDataQueries(queries)) {
+      if (!capture && query.stream === false) continue;
+      if (Date.now() >= deadline) {
+        if (outcome) outcome.timedOut++;
+        continue;
       }
-      case "immich-serverStats":
-        if (integrationIds[0])
-          prefetchQuery(
-            queryClient,
-            trpc.widget.immich.getServerStats.queryOptions({ integrationId: integrationIds[0] }),
-          );
-        break;
-      case "immich-albumCarousel": {
-        if (!integrationIds[0]) break;
-        let albumId: string | undefined;
-        if (typeof options.albumId === "string" && options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID)
-          albumId = options.albumId;
-        if (albumId)
-          prefetchQuery(
-            queryClient,
-            trpc.widget.immich.getAlbumPreview.queryOptions({
-              integrationId: integrationIds[0],
-              albumId,
-              randomizePhotos: options.randomizePhotos === true,
-            }),
-          );
-        prefetchQuery(
-          queryClient,
-          trpc.widget.immich.getAlbum.queryOptions({ integrationId: integrationIds[0], albumId }),
-        );
-        break;
+      const options = getQueryOptions(query);
+      const identity = hashKey(options.queryKey);
+      const existing = identities.get(identity);
+      if (existing) {
+        if (query.after && existing.result.status === "success") enqueue(query.after(existing.result.data), true);
+        else if (query.after) existing.after.push(query.after);
+        continue;
       }
-      case "dockerContainers": {
-        let input: RouterInputs["docker"]["getContainers"];
-        if (
-          Array.isArray(options.endpointIds) &&
-          options.endpointIds.length > 0 &&
-          options.endpointIds.every((id) => typeof id === "string")
-        )
-          input = { endpointIds: options.endpointIds };
-        prefetchQuery(queryClient, trpc.docker.getContainers.queryOptions(input));
-        break;
+      if (capture && identities.size >= 128) {
+        if (outcome) outcome.capped++;
+        continue;
       }
-      case "rssFeed":
-        if (Array.isArray(options.feedUrls) && options.feedUrls.every((url) => typeof url === "string"))
-          prefetchQuery(
-            queryClient,
-            trpc.widget.rssFeed.getFeeds.queryOptions({
-              urls: options.feedUrls,
-              maximumAmountPosts: Number(options.maximumAmountPosts ?? 100),
-              descriptionMaxLength: Number(options.descriptionMaxLength ?? 250),
-            }),
-          );
-        break;
-      case "weather": {
-        const location = options.location;
-        if (
-          location &&
-          typeof location === "object" &&
-          "latitude" in location &&
-          "longitude" in location &&
-          typeof location.latitude === "number" &&
-          typeof location.longitude === "number"
-        ) {
-          prefetchQuery(
-            queryClient,
-            trpc.widget.weather.atLocation.queryOptions({ latitude: location.latitude, longitude: location.longitude }),
-          );
-        }
-        break;
-      }
-      case "calendar": {
-        if (!integrationIds.length || !calendarMonth) break;
-        let releaseType: RouterInputs["widget"]["calendar"]["findAllEvents"]["releaseType"] = [
-          "inCinemas",
-          "digitalRelease",
-        ];
-        if (Array.isArray(options.releaseType)) {
-          releaseType = options.releaseType.filter((value): value is (typeof radarrReleaseTypes)[number] =>
-            radarrReleaseTypes.some((type) => type === value),
-          );
-          if (releaseType.length !== options.releaseType.length) break;
-        }
-        prefetchQuery(
-          queryClient,
-          trpc.widget.calendar.findAllEvents.queryOptions({
-            integrationIds,
-            ...calendarMonth,
-            releaseType,
-            showUnmonitored: (options.showUnmonitored ?? false) === true,
-          }),
-        );
-        break;
-      }
+      const { promise: settled, resolve: finish } = Promise.withResolvers<void>();
+      const job: QueryJob = {
+        options: {
+          ...options,
+          meta: { ...options.meta, rscWidgetPrefetch: true, rscWidgetDependent: dependent },
+          staleTime: 0,
+        },
+        after: query.after ? [query.after] : [],
+        result: { status: "pending" },
+        settled,
+        finish,
+      };
+      identities.set(identity, job);
+      jobs.push(job);
+      if (outcome) outcome.registered++;
+      if (started) schedule();
+    }
+  };
+
+  if (isAuthenticated) enqueue({ integrations: { path: "integration.all", input: undefined, enabled: true } });
+  for (const [index, item] of items.entries()) {
+    const definition = definitions[index];
+    if (!definition) continue;
+    const data = definition.data;
+    if (data.mode === "static" || !data.queries || (!capture && !data.stream)) continue;
+    if (data.authenticated && !isAuthenticated) continue;
+    if (definition.integrationsRequired && item.integrationIds.length === 0) continue;
+    if (outcome) outcome.eligibleItems++;
+    try {
+      enqueue(
+        data.queries({
+          integrationIds: item.integrationIds,
+          itemId: item.id,
+          board,
+          settings: settings.board,
+          options: reduceWidgetOptionsWithDefinition(definition, settings.board, item.options),
+        }),
+      );
+    } catch {
+      if (outcome) outcome.failed++;
     }
   }
-  return dependentQueries;
+
+  const run = async (job: QueryJob) => {
+    try {
+      if (Date.now() >= deadline) {
+        if (outcome) outcome.timedOut++;
+        return;
+      }
+      const queryFn = job.options.queryFn;
+      if (typeof queryFn !== "function") return;
+      const data = await queryClient.fetchQuery({
+        ...job.options,
+        queryFn: async (context) => {
+          await setImmediate();
+          if (Date.now() >= deadline) throw new Error("Board capture deadline exceeded");
+          return queryFn(context);
+        },
+      });
+      job.result = { status: "success", data };
+      for (const after of job.after) enqueue(after(data), true);
+    } catch {
+      job.result = { status: "error" };
+      if (outcome) outcome.failed++;
+    } finally {
+      job.finish();
+    }
+  };
+  const discovery = jobs.filter((job) => job.after.length > 0).map((job) => job.settled);
+  started = true;
+  schedule();
+  if (capture) return [drained.promise];
+  return discovery;
 };

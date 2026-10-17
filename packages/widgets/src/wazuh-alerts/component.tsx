@@ -1,4 +1,5 @@
 "use client";
+import { definition } from ".";
 
 import { Badge, Box, Center, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconDeviceDesktop, IconShieldBolt, IconShieldCheck, IconWorld } from "@tabler/icons-react";
@@ -23,9 +24,8 @@ export default function WazuhAlertsWidget({
   height,
 }: WidgetComponentProps<"wazuhAlerts">) {
   const t = useI18n("widget.wazuhAlerts");
-  const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getAlerts.useQuery(
-    { integrationId, minLevel: options.minLevel, limit: options.limit, hours: options.hours },
+    definition.data.queries({ options, integrationIds }).main.input,
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);

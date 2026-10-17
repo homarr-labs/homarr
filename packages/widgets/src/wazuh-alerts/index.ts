@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
+import { widgetQuery } from "../data";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("wazuhAlerts", {
@@ -39,4 +40,16 @@ export const { definition, componentLoader } = createWidgetDefinition("wazuhAler
       message: (t) => t("widget.wazuh.error.unknown.title", { target: "Wazuh" }),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.wazuh.getAlerts", {
+        integrationId: integrationIds[0] ?? "",
+        minLevel: options.minLevel,
+        limit: options.limit,
+        hours: options.hours,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

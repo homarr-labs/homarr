@@ -3,6 +3,7 @@ import { IconBinaryTree, IconServerOff } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
+import { widgetQuery } from "../../data";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
@@ -28,4 +29,14 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
       message: (t) => t("widget.smartHome-entityState.error.loadFailed"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds, options }) => ({
+      main: widgetQuery("widget.smartHome.entityDetails", {
+        integrationId: integrationIds[0] ?? "",
+        entityId: options.entityId,
+      }),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));

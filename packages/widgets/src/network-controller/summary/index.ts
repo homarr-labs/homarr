@@ -3,6 +3,7 @@ import { IconServerOff, IconTopologyFull } from "@tabler/icons-react";
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
+import { widgetQuery } from "../../data";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("networkControllerSummary", {
@@ -20,4 +21,9 @@ export const { definition, componentLoader } = createWidgetDefinition("networkCo
       message: (t) => t("widget.networkController.error.internalServerError"),
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    queries: ({ integrationIds }) => ({ main: widgetQuery("widget.networkController.summary", { integrationIds }) }),
+  })
+  .withDynamicImport(() => import("./component"));

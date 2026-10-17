@@ -12,6 +12,26 @@ import {
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+import { widgetQuery } from "../data";
+import type { WidgetDataContext } from "../data";
+import type { RouterOutputs } from "@homarr/api";
+
+export const getAppPingQuery = (
+  app: RouterOutputs["app"]["byId"],
+  context: WidgetDataContext<{ pingEnabled: boolean }>,
+) =>
+  widgetQuery(
+    "widget.app.ping",
+    { id: app.id },
+    {
+      enabled:
+        context.options.pingEnabled &&
+        !context.settings?.forceDisableStatus &&
+        !context.board?.disableStatus &&
+        Boolean(app.pingUrl ?? app.href),
+      stream: false,
+    },
+  );
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
@@ -103,4 +123,19 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
       hideLogsLink: true,
     },
   },
-}).withDynamicImport(() => import("./component"));
+})
+  .withData({
+    mode: "queries",
+    stream: true,
+    queries: (context) => ({
+      main: widgetQuery(
+        "app.byId",
+        { id: context.options.appId },
+        {
+          enabled: Boolean(context.options.appId),
+          after: (app) => ({ ping: getAppPingQuery(app, context) }),
+        },
+      ),
+    }),
+  })
+  .withDynamicImport(() => import("./component"));
