@@ -55,8 +55,8 @@ export const env = createEnv({
     ...(authProviders.includes("ldap")
       ? {
           AUTH_LDAP_URI: z.string().url(),
-          AUTH_LDAP_BIND_DN: z.string(),
-          AUTH_LDAP_BIND_PASSWORD: z.string(),
+          AUTH_LDAP_BIND_DN: z.string().default(""),
+          AUTH_LDAP_BIND_PASSWORD: z.string().default(""),
           AUTH_LDAP_BASE: z.string(),
           AUTH_LDAP_SEARCH_SCOPE: z.enum(["base", "one", "sub"]).default("base"),
           AUTH_LDAP_USERNAME_ATTRIBUTE: z.string().default("uid"),
@@ -71,3 +71,7 @@ export const env = createEnv({
   },
   experimental__runtimeEnv: process.env,
 });
+
+if (authProviders.includes("ldap") && Boolean(env.AUTH_LDAP_BIND_DN) !== Boolean(env.AUTH_LDAP_BIND_PASSWORD)) {
+  throw new Error("AUTH_LDAP_BIND_DN and AUTH_LDAP_BIND_PASSWORD must both be set or both be omitted.");
+}
