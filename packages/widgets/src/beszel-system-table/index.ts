@@ -6,6 +6,8 @@ import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatc
 import type { SelectOption } from "../_inputs/widget-select-input";
 import { createBeszelMetricOptions, statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
+import { beszelOptionsSuperRefine } from "../beszel/_shared/threshold-colors";
+import { createBeszelThresholdOptions, beszelThresholdFieldConfiguration } from "../beszel/_shared/threshold-options";
 
 const sortOptions = [
   { value: "name", label: (t) => t("widget.beszel.metric.system") },
@@ -46,14 +48,17 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
           defaultValue: "asc",
           options: sortDirectionOptions,
         }),
+        ...createBeszelThresholdOptions(factory),
         ...createBeszelMetricOptions(() => factory.switch({ defaultValue: true })),
         columnOrder: factory.text({ defaultValue: "" }),
         columnWidths: factory.text({ defaultValue: "" }),
       }),
       {
+        ...beszelThresholdFieldConfiguration,
         columnOrder: { shouldHide: () => true },
         columnWidths: { shouldHide: () => true },
       },
+      beszelOptionsSuperRefine,
     );
   },
   errors: {

@@ -1,7 +1,23 @@
 import type { WidgetKind } from "@homarr/definitions";
 import { beszelMetricOptionKeys } from "@homarr/definitions/beszel";
 
-const BESZEL_OPTION_PROPERTIES = new Set<string>(["statusFilter", ...beszelMetricOptionKeys]);
+const BESZEL_OPTION_PROPERTIES = new Set<string>([
+  "statusFilter",
+  "thresholdMode",
+  "cpuWarningAt",
+  "cpuCriticalAt",
+  "memoryWarningAt",
+  "memoryCriticalAt",
+  "diskWarningAt",
+  "diskCriticalAt",
+  "gpuWarningAt",
+  "gpuCriticalAt",
+  "tempWarningAt",
+  "tempCriticalAt",
+  "batteryWarningAt",
+  "batteryCriticalAt",
+  ...beszelMetricOptionKeys,
+]);
 
 const TABLE_OPTION_PROPERTIES = new Set(["columnOrder", "columnWidths", "columns"]);
 
@@ -46,7 +62,10 @@ const getSharedOptionProperty = (kind: WidgetKind, property: string): string => 
 };
 
 const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | undefined => {
-  if ((kind === "beszelSystemTable" || kind === "beszelSystemGrid") && BESZEL_OPTION_PROPERTIES.has(property)) {
+  if (
+    ["beszelSystemTable", "beszelSystemGrid", "beszelSystemStats"].includes(kind) &&
+    BESZEL_OPTION_PROPERTIES.has(property)
+  ) {
     return "widget.beszel.options";
   }
 

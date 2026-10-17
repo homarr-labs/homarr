@@ -2038,7 +2038,9 @@
           "invalidFileName": "Ungültiger Dateiname",
           "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
           "invalidConfiguration": "Ungültige Konfiguration",
-          "groupNameTaken": "Gruppenname bereits vergeben"
+          "groupNameTaken": "Gruppenname bereits vergeben",
+          "criticalThresholdMustExceedWarning": "Die kritische Schwelle muss größer als die Warnschwelle sein",
+          "criticalThresholdMustBeLessThanWarning": "Die kritische Akkuschwelle muss kleiner als die Warnschwelle sein"
         }
       }
     },
@@ -5393,6 +5395,49 @@
         },
         "showAgent": {
           "label": "Agent-Version anzeigen"
+        },
+        "thresholdMode": {
+          "label": "Farbschwellen",
+          "description": "Standard: CPU, RAM, Datenträger und GPU 50/80 %; Temperatur 70/85 °C; Akku-Warnung bei höchstens 20 % und kritisch bei höchstens 10 %. Eigene Schwellen gelten in der angezeigten Einheit.",
+          "off": "Aus",
+          "standard": "Standard",
+          "custom": "Benutzerdefiniert"
+        },
+        "cpuWarningAt": {
+          "label": "CPU: Warnung ab (%)"
+        },
+        "cpuCriticalAt": {
+          "label": "CPU: Kritisch ab (%)"
+        },
+        "memoryWarningAt": {
+          "label": "RAM: Warnung ab (%)"
+        },
+        "memoryCriticalAt": {
+          "label": "RAM: Kritisch ab (%)"
+        },
+        "diskWarningAt": {
+          "label": "Datenträger: Warnung ab (%)"
+        },
+        "diskCriticalAt": {
+          "label": "Datenträger: Kritisch ab (%)"
+        },
+        "gpuWarningAt": {
+          "label": "GPU: Warnung ab (%)"
+        },
+        "gpuCriticalAt": {
+          "label": "GPU: Kritisch ab (%)"
+        },
+        "tempWarningAt": {
+          "label": "Temperatur: Warnung ab (°C)"
+        },
+        "tempCriticalAt": {
+          "label": "Temperatur: Kritisch ab (°C)"
+        },
+        "batteryWarningAt": {
+          "label": "Akku: Warnung bei höchstens (%)"
+        },
+        "batteryCriticalAt": {
+          "label": "Akku: Kritisch bei höchstens (%)"
         }
       },
       "metric": {

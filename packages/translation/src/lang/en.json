@@ -2038,7 +2038,9 @@
           "invalidFileName": "Invalid file name",
           "fileTooLarge": "File is too large, maximum size is {maxSize}",
           "invalidConfiguration": "Invalid configuration",
-          "groupNameTaken": "Group name already taken"
+          "groupNameTaken": "Group name already taken",
+          "criticalThresholdMustExceedWarning": "Critical threshold must be greater than warning threshold",
+          "criticalThresholdMustBeLessThanWarning": "Battery critical threshold must be lower than warning threshold"
         }
       }
     },
@@ -5393,6 +5395,49 @@
         },
         "showAgent": {
           "label": "Show agent version"
+        },
+        "thresholdMode": {
+          "label": "Color thresholds",
+          "description": "Standard: CPU, RAM, disk and GPU 50/80%; temperature 70/85 °C; battery warns at or below 20% and is critical at or below 10%. Custom thresholds use the displayed units.",
+          "off": "Off",
+          "standard": "Standard",
+          "custom": "Custom"
+        },
+        "cpuWarningAt": {
+          "label": "CPU: Warning at (%)"
+        },
+        "cpuCriticalAt": {
+          "label": "CPU: Critical at (%)"
+        },
+        "memoryWarningAt": {
+          "label": "RAM: Warning at (%)"
+        },
+        "memoryCriticalAt": {
+          "label": "RAM: Critical at (%)"
+        },
+        "diskWarningAt": {
+          "label": "Disk: Warning at (%)"
+        },
+        "diskCriticalAt": {
+          "label": "Disk: Critical at (%)"
+        },
+        "gpuWarningAt": {
+          "label": "GPU: Warning at (%)"
+        },
+        "gpuCriticalAt": {
+          "label": "GPU: Critical at (%)"
+        },
+        "tempWarningAt": {
+          "label": "Temperature: Warning at (°C)"
+        },
+        "tempCriticalAt": {
+          "label": "Temperature: Critical at (°C)"
+        },
+        "batteryWarningAt": {
+          "label": "Battery: Warning at or below (%)"
+        },
+        "batteryCriticalAt": {
+          "label": "Battery: Critical at or below (%)"
         }
       },
       "metric": {
