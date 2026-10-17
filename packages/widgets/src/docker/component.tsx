@@ -433,6 +433,7 @@ export default function DockerWidget({
         <HomarrDataTable
           preserveColumnWidths
           fillColumnAccessor="name"
+          defaultColumnWidths={columns}
           onColumnWidthsChange={setMultipleColumnWidths}
           isEditMode={isEditMode}
           cellPadding={isAdvanced || width < 400 ? "2px 8px" : "4px 8px"}

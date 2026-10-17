@@ -27,6 +27,7 @@ type HomarrDataTableProps<T> = DataTableProps<T> & {
   rowCursor?: "auto" | "default";
   preserveColumnWidths?: boolean;
   fillColumnAccessor?: string;
+  defaultColumnWidths?: readonly Pick<DataTableColumn<T>, "accessor" | "width">[];
   onColumnWidthsChange?: (widths: { accessor: string; width: number }[]) => void;
 };
 
@@ -36,6 +37,7 @@ export function HomarrDataTable<T>({
   rowCursor = "auto",
   preserveColumnWidths = false,
   fillColumnAccessor,
+  defaultColumnWidths,
   onColumnWidthsChange,
   className,
   columns,
@@ -79,7 +81,8 @@ export function HomarrDataTable<T>({
       if (currentWidth === undefined || nextWidth === undefined) return;
 
       const visualScale = currentCell.getBoundingClientRect().width / currentCell.offsetWidth;
-      const minimumWidth = fallbackColumnWidth * visualScale;
+      let currentMinimumWidth = fallbackColumnWidth * visualScale;
+      let nextMinimumWidth = currentMinimumWidth;
       const startX = event.clientX;
 
       removeResizeListeners.current();
@@ -92,6 +95,15 @@ export function HomarrDataTable<T>({
       const previousCursor = document.body.style.cursor;
       const previousUserSelect = document.body.style.userSelect;
       if (usesDisplayedWidths) {
+        // Fill widths use displayed pixels; original widths keep compact columns resizable.
+        currentMinimumWidth = Math.min(
+          fallbackColumnWidth,
+          getColumnWidth(defaultColumnWidths?.find(({ accessor }) => String(accessor) === currentAccessor)?.width),
+        );
+        nextMinimumWidth = Math.min(
+          fallbackColumnWidth,
+          getColumnWidth(defaultColumnWidths?.find(({ accessor }) => String(accessor) === nextAccessor)?.width),
+        );
         // The native resize handler saves logical widths; fill mode stores displayed pixels.
         event.preventDefault();
         event.stopPropagation();
@@ -101,8 +113,8 @@ export function HomarrDataTable<T>({
       let previewWidths: Record<string, number> | undefined;
       const handleMouseMove = (moveEvent: MouseEvent) => {
         const delta = Math.min(
-          nextWidth - minimumWidth,
-          Math.max(minimumWidth - currentWidth, moveEvent.clientX - startX),
+          nextWidth - nextMinimumWidth,
+          Math.max(currentMinimumWidth - currentWidth, moveEvent.clientX - startX),
         );
         previewWidths = {
           ...widths,
@@ -132,7 +144,7 @@ export function HomarrDataTable<T>({
       window.addEventListener("mouseup", handleResizeEnd);
       window.addEventListener("blur", handleResizeEnd);
     },
-    [columns, fillColumnAccessor, onColumnWidthsChange, onMouseDownCapture, preserveColumnWidths],
+    [columns, defaultColumnWidths, fillColumnAccessor, onColumnWidthsChange, onMouseDownCapture, preserveColumnWidths],
   );
 
   const mergedClassName = [
