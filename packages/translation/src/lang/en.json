@@ -4973,8 +4973,8 @@
       },
       "summary": {
         "upRatio": "{up} of {total} monitors up",
+        "upRatioShort": "{up}/{total} up",
         "averageUptime": "uptime 24h",
-        "averageResponseTime": "avg response",
         "uptimeShort": "{value} uptime",
         "statusCount": "{count} {status}"
       },

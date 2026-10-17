@@ -6,6 +6,8 @@ import type { UptimeKumaSummary } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
+import type { BreakdownLayout } from "./layout";
+import { estimateSmallTextWidth, getBreakdownLayout, summaryGap } from "./layout";
 import { formatUptime, monitorStatusColors, overallStatusColors, overallStatusIcons, presentStatuses } from "./status";
 
 interface SummaryProps {
@@ -57,11 +59,17 @@ export const OverallStatus = ({
   );
 };
 
-export const StatusBreakdown = ({ summary }: SummaryProps) => {
+export const useBreakdownLayout = (summary: UptimeKumaSummary, availableWidth: number) => {
+  const t = useI18n("widget.uptimeKuma");
+  const items = presentStatuses(summary).map((status) => `${summary.counts[status]} ${t(`status.${status}`)}`);
+  return getBreakdownLayout(items, availableWidth);
+};
+
+export const StatusBreakdown = ({ summary, layout }: SummaryProps & { layout: BreakdownLayout["kind"] }) => {
   const t = useI18n("widget.uptimeKuma");
 
   return (
-    <div className={classes.breakdown}>
+    <div className={classes.breakdown} data-layout={layout}>
       {presentStatuses(summary).map((status) => (
         <span key={status} className={classes.breakdownItem}>
           <span className={classes.dot} data-status={status} />
@@ -73,11 +81,48 @@ export const StatusBreakdown = ({ summary }: SummaryProps) => {
   );
 };
 
+export const SummaryLine = ({ summary, showUptime, width }: SummaryProps & { showUptime: boolean; width: number }) => {
+  const t = useI18n("widget.uptimeKuma");
+  const uptime = showUptime ? getAverageUptimeText(summary) : null;
+  const uptimeWidth = uptime ? estimateSmallTextWidth(`${uptime} ${t("summary.averageUptime")}`) + summaryGap : 0;
+  const breakdown = useBreakdownLayout(summary, width - uptimeWidth);
+  const counts = { up: summary.counts.up, total: summary.total };
+  const ratio = t("summary.upRatio", counts);
+  const fittingRatio = estimateSmallTextWidth(ratio) + uptimeWidth <= width ? ratio : t("summary.upRatioShort", counts);
+
+  return (
+    <div className={classes.summaryLine}>
+      {breakdown.kind === "inline" ? (
+        <StatusBreakdown summary={summary} layout="inline" />
+      ) : (
+        <Text component="span" size="xs" c="dimmed" truncate title={ratio} className={classes.summaryRatio}>
+          {fittingRatio}
+        </Text>
+      )}
+      {uptime && <AverageUptime value={uptime} />}
+    </div>
+  );
+};
+
+export const AverageUptime = ({ value }: { value: string }) => {
+  const t = useI18n("widget.uptimeKuma");
+
+  return (
+    <span className={classes.metric}>
+      <span className={classes.metricValue}>{value}</span>
+      <span className={classes.metricLabel}>{t("summary.averageUptime")}</span>
+    </span>
+  );
+};
+
+export const getAverageUptimeText = (summary: UptimeKumaSummary) =>
+  summary.averageUptime24h === null ? null : formatUptime(summary.averageUptime24h);
+
 export const DistributionBar = ({ summary }: SummaryProps) => {
   const t = useI18n("widget.uptimeKuma");
 
   return (
-    <Progress.Root size="sm" className={classes.distribution}>
+    <Progress.Root size="sm" radius="xs" className={classes.distribution}>
       {presentStatuses(summary).map((status) => (
         <Tooltip
           key={status}
@@ -91,39 +136,6 @@ export const DistributionBar = ({ summary }: SummaryProps) => {
         </Tooltip>
       ))}
     </Progress.Root>
-  );
-};
-
-export const SummaryMetrics = ({
-  summary,
-  showUptime,
-  showResponseTime,
-  compact = false,
-}: SummaryProps & { showUptime: boolean; showResponseTime: boolean; compact?: boolean }) => {
-  const t = useI18n("widget.uptimeKuma");
-  const metrics: { key: string; label: string; value: string }[] = [];
-  if (showUptime && summary.averageUptime24h !== null) {
-    metrics.push({ key: "uptime", label: t("summary.averageUptime"), value: formatUptime(summary.averageUptime24h) });
-  }
-  if (showResponseTime && summary.averagePing !== null) {
-    metrics.push({
-      key: "ping",
-      label: t("summary.averageResponseTime"),
-      value: t("unit.milliseconds", { value: Math.round(summary.averagePing) }),
-    });
-  }
-
-  if (metrics.length === 0) return null;
-
-  return (
-    <div className={classes.metrics}>
-      {metrics.map((metric) => (
-        <span key={metric.key} className={classes.metric} title={compact ? metric.label : undefined}>
-          <span className={classes.metricValue}>{metric.value}</span>
-          {!compact && <span className={classes.metricLabel}>{metric.label}</span>}
-        </span>
-      ))}
-    </div>
   );
 };
 

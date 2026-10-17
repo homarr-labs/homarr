@@ -20,7 +20,14 @@ import { useWidgetNow } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
-import { getMonitorColumnCount, getUptimeKumaLayout, showsInlineTags, usesInlineRows } from "./layout";
+import {
+  estimateSmallTextWidth,
+  fitsHeadline,
+  getMonitorColumnCount,
+  getUptimeKumaLayout,
+  showsInlineTags,
+  usesInlineRows,
+} from "./layout";
 import type { UptimeKumaLayout } from "./layout";
 import { getMonitorRowTemplate, MonitorRow } from "./monitor-row";
 import type { MonitorRowVisibility } from "./monitor-row";
@@ -29,7 +36,16 @@ import type { LoadedStatusPage, MonitorEntry } from "./monitors";
 import type { Notice } from "./notices";
 import { getNotices, NoticeIndicator, NoticeList } from "./notices";
 import { formatUptime, monitorStatusColors } from "./status";
-import { DistributionBar, OverallStatus, StatusBreakdown, SummaryMetrics, SummaryRing } from "./summary";
+import {
+  AverageUptime,
+  DistributionBar,
+  getAverageUptimeText,
+  OverallStatus,
+  StatusBreakdown,
+  SummaryLine,
+  SummaryRing,
+  useBreakdownLayout,
+} from "./summary";
 
 type Options = WidgetComponentProps<"uptimeKuma">["options"];
 
@@ -201,42 +217,43 @@ interface StripLayoutProps {
   options: Options;
 }
 
-const chipRowHeight = 30;
+const stripChromeHeight = 54;
+const stripHeaderReservedWidth = 20;
+const stripLineHeight = 22;
+const chipRowHeight = 32;
 
 const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProps) => {
-  const ringSize = clamp(Math.min(size.height - 24, size.width * 0.32), 56, 150);
-  const bodyWidth = size.width - ringSize - 40;
-  const metricsInHeader = bodyWidth >= 420;
-  const showMetricsLine = !metricsInHeader && size.height >= 150;
-  const breakdownHeight = bodyWidth < 300 ? 40 : 20;
-  const reservedHeight = 68 + breakdownHeight + (showMetricsLine ? 20 : 0);
-  const chipRows = bodyWidth >= 200 ? clamp(Math.floor((size.height - reservedHeight) / chipRowHeight), 0, 3) : 0;
+  const t = useI18n("widget.uptimeKuma");
+  const ringSize = clamp(Math.min(size.height - 24, size.width * 0.3), 56, 150);
+  const bodyWidth = size.width - ringSize - 48;
+  const breakdown = useBreakdownLayout(summary, bodyWidth);
+  const breakdownHeight = breakdown.rows * stripLineHeight;
+  const showBreakdown = stripChromeHeight + breakdownHeight <= size.height;
+  const baseHeight = stripChromeHeight + (showBreakdown ? breakdownHeight : 0);
+  const uptime = options.showUptime ? getAverageUptimeText(summary) : null;
+  const uptimeLine = baseHeight + stripLineHeight <= size.height ? uptime : null;
+  const freeHeight = size.height - baseHeight - (uptimeLine ? stripLineHeight : 0);
+  const chipRows = bodyWidth >= 200 ? clamp(Math.floor(freeHeight / chipRowHeight), 0, 3) : 0;
   const chipMonitors = sortMonitors(filterProblems(getAllMonitors(pages), options.showOnlyProblems), options.sortBy);
+  const headlineWidth = bodyWidth - stripHeaderReservedWidth;
 
   return (
     <div className={classes.strip}>
+      {notices.length > 0 && (
+        <div className={classes.tileNotice}>
+          <NoticeIndicator notices={notices} />
+        </div>
+      )}
       <SummaryRing summary={summary} size={ringSize} />
       <div className={classes.stripBody}>
         <div className={classes.stripHeader}>
-          <OverallStatus summary={summary} short={bodyWidth < 220} />
-          {notices.length > 0 && <NoticeIndicator notices={notices} />}
-          {metricsInHeader && (
-            <SummaryMetrics
-              summary={summary}
-              showUptime={options.showUptime}
-              showResponseTime={options.showResponseTime}
-            />
-          )}
-        </div>
-        <StatusBreakdown summary={summary} />
-        {showMetricsLine && (
-          <SummaryMetrics
+          <OverallStatus
             summary={summary}
-            showUptime={options.showUptime}
-            showResponseTime={options.showResponseTime}
-            compact
+            short={!fitsHeadline(t(`overall.${summary.overallStatus}`), headlineWidth)}
           />
-        )}
+        </div>
+        {showBreakdown && <StatusBreakdown summary={summary} layout={breakdown.kind} />}
+        {uptimeLine && <AverageUptime value={uptimeLine} />}
         {chipRows > 0 && chipMonitors.length > 0 && (
           <OverflowList
             data={chipMonitors}
@@ -245,7 +262,7 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
             getItemKey={(monitor) => monitor.key}
             renderItem={(monitor) => <MonitorChip monitor={monitor} showUptime={options.showUptime} />}
             renderOverflow={(hidden) => (
-              <Badge variant="light" color="gray" size="lg" radius="xl" tt="none" fw={500}>
+              <Badge variant="light" color="gray" size="lg" radius="sm" tt="none" fw={500}>
                 +{hidden.length}
               </Badge>
             )}
@@ -267,7 +284,7 @@ const MonitorChip = ({ monitor, showUptime }: { monitor: MonitorEntry; showUptim
       variant="light"
       color={chipColors[monitor.status]}
       size="lg"
-      radius="xl"
+      radius="sm"
       tt="none"
       fw={500}
       maw={180}
@@ -322,8 +339,13 @@ const ListLayout = ({
     sortBy: options.sortBy,
   });
   const showSummary = isAdvanced || options.showSummary;
+  const headerWidth = size.width - (isColumn ? 16 : 32);
   const singlePage = pages.length === 1 ? pages[0]?.statusPage : undefined;
   const statusPageHref = getSafeApplicationUrl(singlePage?.url);
+  const statusPageLink = singlePage && statusPageHref && size.width >= 340 ? singlePage : null;
+  const statusPageLinkWidth = statusPageLink ? estimateSmallTextWidth(statusPageLink.title) + 28 : 0;
+  const shortHeadline =
+    isColumn || !fitsHeadline(t(`overall.${summary.overallStatus}`), headerWidth - statusPageLinkWidth);
   const gridStyle = {
     "--monitor-columns": columnCount,
     "--monitor-row-template": getMonitorRowTemplate(variant, visibility),
@@ -335,9 +357,9 @@ const ListLayout = ({
       {showSummary && (
         <header className={classes.header}>
           <div className={classes.headerTop}>
-            <OverallStatus summary={summary} short={isColumn} size={isColumn ? "sm" : "md"} />
+            <OverallStatus summary={summary} short={shortHeadline} size={isColumn ? "sm" : "md"} />
             {isColumn && !isNarrow && notices.length > 0 && <NoticeIndicator notices={notices} />}
-            {singlePage && statusPageHref && size.width >= 340 && (
+            {statusPageLink && statusPageHref && (
               <Anchor
                 href={statusPageHref}
                 target="_blank"
@@ -346,28 +368,14 @@ const ListLayout = ({
                 c="dimmed"
                 className={classes.statusPageLink}
               >
-                <span className={classes.statusPageTitle}>{singlePage.title}</span>
+                <span className={classes.statusPageTitle}>{statusPageLink.title}</span>
                 <IconExternalLink style={iconSizes.xs} aria-hidden />
               </Anchor>
             )}
             {errorIndicator}
           </div>
           <DistributionBar summary={summary} />
-          {isColumn ? (
-            <Text size="xs" c="dimmed" truncate>
-              {t("summary.upRatio", { up: summary.counts.up, total: summary.total })}
-            </Text>
-          ) : (
-            <div className={classes.headerBottom}>
-              <StatusBreakdown summary={summary} />
-              <SummaryMetrics
-                summary={summary}
-                showUptime={visibility.uptime}
-                showResponseTime={isAdvanced || options.showResponseTime}
-                compact={size.width < 520}
-              />
-            </div>
-          )}
+          <SummaryLine summary={summary} showUptime={visibility.uptime && !isColumn} width={headerWidth} />
         </header>
       )}
       <ScrollArea className={classes.scroll} type="hover" scrollbarSize={6} offsetScrollbars={!isColumn && "y"}>
@@ -389,7 +397,7 @@ const ListLayout = ({
                   {section.title}
                 </Text>
               )}
-              <div className={classes.monitorGrid} style={gridStyle}>
+              <div className={classes.monitorGrid} style={gridStyle} data-columns={columnCount}>
                 {section.monitors.map((monitor) => (
                   <MonitorRow
                     key={monitor.key}

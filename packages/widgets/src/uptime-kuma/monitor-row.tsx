@@ -40,13 +40,12 @@ interface MonitorRowProps {
 type Translate = ReturnType<typeof useI18n<"widget.uptimeKuma">>;
 
 export const getMonitorRowTemplate = (variant: MonitorRowVariant, visibility: MonitorRowVisibility) => {
-  if (variant === "stacked") return "auto minmax(0, 1fr)";
+  if (variant === "stacked") return "minmax(0, 1fr)";
   return [
-    "auto",
-    "minmax(0, 1fr)",
+    "minmax(0, 2fr)",
     visibility.heartbeatBar && "minmax(0, 1fr)",
     visibility.responseTime && "4.25em",
-    visibility.uptime && "4.75em",
+    visibility.uptime && "3.75em",
   ]
     .filter(Boolean)
     .join(" ");
@@ -62,12 +61,11 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
 
   const statusDetail = getStatusDetail(monitor, visibility.statusDetail, relative(monitor.statusSince), t);
   const certificate = getCertificateDetail(monitor.certificateDaysRemaining, visibility, showDetails, t);
-  const details = [
-    certificate?.text,
-    ...(showDetails ? getExtraDetails(monitor, relative(monitor.lastCheckAt), t) : []),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const extraDetails = showDetails ? getExtraDetails(monitor, relative(monitor.lastCheckAt), t) : [];
+  const orderedDetails = certificate?.isWarning
+    ? [certificate.text, ...extraDetails]
+    : [...extraDetails, certificate?.text];
+  const details = orderedDetails.filter(Boolean).join(" · ");
   const metrics = (
     <>
       {visibility.responseTime && !(isStacked && monitor.ping === null) && (
@@ -75,15 +73,15 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
           {monitor.ping === null ? "–" : t("unit.milliseconds", { value: Math.round(monitor.ping) })}
         </span>
       )}
-      {visibility.uptime && <UptimeValue uptime={monitor.uptime24h} plain={isStacked} />}
+      {visibility.uptime && <UptimeValue uptime={monitor.uptime24h} />}
     </>
   );
 
   return (
     <div className={classes.monitorRow} data-variant={variant} data-status={monitor.status}>
-      <span className={classes.dot} data-status={monitor.status} aria-hidden />
       <div className={classes.monitorMain}>
         <div className={classes.monitorTitle}>
+          <span className={classes.dot} data-status={monitor.status} aria-hidden />
           {href ? (
             <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" className={classes.monitorName}>
               {monitor.name}
@@ -93,23 +91,24 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
               {monitor.name}
             </Text>
           )}
+          {statusDetail ? (
+            <Text component="span" c={`${monitorStatusColors[monitor.status]}.6`} className={classes.monitorStatus}>
+              {statusDetail}
+            </Text>
+          ) : (
+            <VisuallyHidden>{t(`status.${monitor.status}`)}</VisuallyHidden>
+          )}
           {visibility.tags && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
         </div>
-        {!statusDetail && <VisuallyHidden>{t(`status.${monitor.status}`)}</VisuallyHidden>}
-        {(statusDetail || details) && (
-          <div className={classes.monitorDetails}>
-            {statusDetail && (
-              <Text component="span" c={`${monitorStatusColors[monitor.status]}.6`} inherit>
-                {statusDetail}
-              </Text>
-            )}
-            {statusDetail && details && <span aria-hidden>·</span>}
-            {details && (
-              <Text component="span" c={certificate?.isWarning ? "orange.6" : "dimmed"} inherit truncate>
-                {details}
-              </Text>
-            )}
-          </div>
+        {details && (
+          <Text
+            component="span"
+            c={certificate?.isWarning ? "orange.6" : "dimmed"}
+            truncate
+            className={classes.monitorDetails}
+          >
+            {details}
+          </Text>
         )}
       </div>
       {!isStacked && visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} />}
@@ -137,7 +136,7 @@ const MonitorTags = ({ tags }: { tags: readonly UptimeKumaTag[] }) => (
   </span>
 );
 
-const UptimeValue = ({ uptime, plain }: { uptime: number | null; plain: boolean }) => {
+const UptimeValue = ({ uptime }: { uptime: number | null }) => {
   if (uptime === null) {
     return (
       <Text component="span" c="dimmed" className={classes.uptime}>
@@ -146,20 +145,10 @@ const UptimeValue = ({ uptime, plain }: { uptime: number | null; plain: boolean 
     );
   }
 
-  if (plain) {
-    return (
-      <Text component="span" fw={600} c={`${getUptimeColor(uptime)}.6`} className={classes.uptime}>
-        {formatUptime(uptime)}
-      </Text>
-    );
-  }
-
   return (
-    <span className={classes.uptime}>
-      <Badge variant="light" size="sm" radius="xl" color={getUptimeColor(uptime)} className={classes.uptimeBadge}>
-        {formatUptime(uptime)}
-      </Badge>
-    </span>
+    <Text component="span" fw={600} c={`${getUptimeColor(uptime)}.6`} className={classes.uptime}>
+      {formatUptime(uptime)}
+    </Text>
   );
 };
 

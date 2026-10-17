@@ -6,11 +6,10 @@ export interface UptimeKumaSummary {
   total: number;
   counts: Record<UptimeKumaMonitorStatus, number>;
   averageUptime24h: number | null;
-  averagePing: number | null;
   overallStatus: UptimeKumaOverallStatus;
 }
 
-type SummarizableMonitor = Pick<UptimeKumaMonitor, "status" | "uptime24h" | "ping">;
+type SummarizableMonitor = Pick<UptimeKumaMonitor, "status" | "uptime24h">;
 
 const inactiveStatuses = new Set<UptimeKumaMonitorStatus>(["paused", "unknown"]);
 
@@ -34,7 +33,6 @@ export const summarizeUptimeKumaMonitors = (monitors: readonly SummarizableMonit
     total: monitors.length,
     counts,
     averageUptime24h: average(activeMonitors.map((monitor) => monitor.uptime24h)),
-    averagePing: average(activeMonitors.map((monitor) => monitor.ping)),
     overallStatus: getOverallStatus(counts, activeMonitors.length),
   };
 };
