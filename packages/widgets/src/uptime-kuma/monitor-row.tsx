@@ -1,0 +1,191 @@
+"use client";
+
+import { Anchor, Badge, Text, VisuallyHidden } from "@mantine/core";
+import { useFormatter } from "next-intl";
+
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "@homarr/common";
+import type { UptimeKumaTag } from "@homarr/integrations/types";
+import { useI18n } from "@homarr/translation/client";
+
+import classes from "./component.module.css";
+import { HeartbeatBar } from "./heartbeat-bar";
+import type { MonitorEntry } from "./monitors";
+import {
+  certificateWarningDays,
+  formatUptime,
+  getMonitorTypeTranslationKey,
+  getUptimeColor,
+  monitorStatusColors,
+} from "./status";
+
+export interface MonitorRowVisibility {
+  heartbeatBar: boolean;
+  uptime: boolean;
+  responseTime: boolean;
+  certificateExpiry: boolean;
+  statusDetail: boolean;
+  tags: boolean;
+}
+
+type MonitorRowVariant = "inline" | "stacked";
+
+interface MonitorRowProps {
+  monitor: MonitorEntry;
+  variant: MonitorRowVariant;
+  visibility: MonitorRowVisibility;
+  showDetails: boolean;
+  now: Date | null;
+}
+
+type Translate = ReturnType<typeof useI18n<"widget.uptimeKuma">>;
+
+export const getMonitorRowTemplate = (variant: MonitorRowVariant, visibility: MonitorRowVisibility) => {
+  if (variant === "stacked") return "auto minmax(0, 1fr)";
+  return [
+    "auto",
+    "minmax(0, 1fr)",
+    visibility.heartbeatBar && "minmax(0, 1fr)",
+    visibility.responseTime && "4.25em",
+    visibility.uptime && "4.75em",
+  ]
+    .filter(Boolean)
+    .join(" ");
+};
+
+export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: MonitorRowProps) => {
+  const t = useI18n("widget.uptimeKuma");
+  const formatter = useFormatter();
+  const href = getSafeApplicationUrl(monitor.url);
+  const isStacked = variant === "stacked";
+  const relative = (time: number | null) =>
+    time !== null && now ? formatter.relativeTime(time, { now, style: "narrow" }) : null;
+
+  const statusDetail = getStatusDetail(monitor, visibility.statusDetail, relative(monitor.statusSince), t);
+  const certificate = getCertificateDetail(monitor.certificateDaysRemaining, visibility, showDetails, t);
+  const details = [
+    certificate?.text,
+    ...(showDetails ? getExtraDetails(monitor, relative(monitor.lastCheckAt), t) : []),
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const metrics = (
+    <>
+      {visibility.responseTime && !(isStacked && monitor.ping === null) && (
+        <span className={classes.ping}>
+          {monitor.ping === null ? "–" : t("unit.milliseconds", { value: Math.round(monitor.ping) })}
+        </span>
+      )}
+      {visibility.uptime && <UptimeValue uptime={monitor.uptime24h} plain={isStacked} />}
+    </>
+  );
+
+  return (
+    <div className={classes.monitorRow} data-variant={variant} data-status={monitor.status}>
+      <span className={classes.dot} data-status={monitor.status} aria-hidden />
+      <div className={classes.monitorMain}>
+        <div className={classes.monitorTitle}>
+          {href ? (
+            <Anchor href={href} target="_blank" rel={SAFE_NEW_TAB_REL} c="inherit" className={classes.monitorName}>
+              {monitor.name}
+            </Anchor>
+          ) : (
+            <Text component="span" className={classes.monitorName}>
+              {monitor.name}
+            </Text>
+          )}
+          {visibility.tags && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
+        </div>
+        {!statusDetail && <VisuallyHidden>{t(`status.${monitor.status}`)}</VisuallyHidden>}
+        {(statusDetail || details) && (
+          <div className={classes.monitorDetails}>
+            {statusDetail && (
+              <Text component="span" c={`${monitorStatusColors[monitor.status]}.6`} inherit>
+                {statusDetail}
+              </Text>
+            )}
+            {statusDetail && details && <span aria-hidden>·</span>}
+            {details && (
+              <Text component="span" c={certificate?.isWarning ? "orange.6" : "dimmed"} inherit truncate>
+                {details}
+              </Text>
+            )}
+          </div>
+        )}
+      </div>
+      {!isStacked && visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} />}
+      {!isStacked && metrics}
+      {isStacked && (visibility.heartbeatBar || visibility.responseTime || visibility.uptime) && (
+        <div className={classes.stackedFooter}>
+          {visibility.heartbeatBar && <HeartbeatBar heartbeats={monitor.heartbeats} size="sm" />}
+          {metrics}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MonitorTags = ({ tags }: { tags: readonly UptimeKumaTag[] }) => (
+  <span className={classes.tags}>
+    {tags.map((tag) => {
+      const label = [tag.name, tag.value].filter(Boolean).join(": ");
+      return (
+        <Badge key={label} size="xs" variant="light" radius="sm" color={tag.color ?? "gray"} tt="none">
+          {label}
+        </Badge>
+      );
+    })}
+  </span>
+);
+
+const UptimeValue = ({ uptime, plain }: { uptime: number | null; plain: boolean }) => {
+  if (uptime === null) {
+    return (
+      <Text component="span" c="dimmed" className={classes.uptime}>
+        –
+      </Text>
+    );
+  }
+
+  if (plain) {
+    return (
+      <Text component="span" fw={600} c={`${getUptimeColor(uptime)}.6`} className={classes.uptime}>
+        {formatUptime(uptime)}
+      </Text>
+    );
+  }
+
+  return (
+    <span className={classes.uptime}>
+      <Badge variant="light" size="sm" radius="xl" color={getUptimeColor(uptime)} className={classes.uptimeBadge}>
+        {formatUptime(uptime)}
+      </Badge>
+    </span>
+  );
+};
+
+const getStatusDetail = (monitor: MonitorEntry, visible: boolean, since: string | null, t: Translate) => {
+  if (!visible || monitor.status === "up") return null;
+  return [t(`status.${monitor.status}`), since].filter(Boolean).join(" · ");
+};
+
+const getExtraDetails = (monitor: MonitorEntry, lastChecked: string | null, t: Translate) => {
+  const typeKey = monitor.type === null ? null : getMonitorTypeTranslationKey(monitor.type);
+  return [
+    typeKey ? t(`monitorType.${typeKey}`) : monitor.type,
+    lastChecked && t("detail.checked", { time: lastChecked }),
+    monitor.averagePing !== null &&
+      t("detail.averagePing", { value: t("unit.milliseconds", { value: Math.round(monitor.averagePing) }) }),
+  ];
+};
+
+const getCertificateDetail = (
+  daysRemaining: number | null,
+  visibility: MonitorRowVisibility,
+  showDetails: boolean,
+  t: Translate,
+) => {
+  if (daysRemaining === null) return null;
+  const isWarning = daysRemaining <= certificateWarningDays;
+  if (!showDetails && !(visibility.certificateExpiry && isWarning)) return null;
+  return { text: t("detail.certificate", { count: daysRemaining }), isWarning };
+};

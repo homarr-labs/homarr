@@ -4905,47 +4905,113 @@
       }
     },
     "uptimeKuma": {
-      "description": "Monitor uptime statistics from your Uptime Kuma status page",
+      "description": "Live status, heartbeats and uptime of the monitors on an Uptime Kuma status page",
       "option": {
-        "showAverageUptime": {
-          "label": "Show average uptime",
-          "description": "Display the combined 24-hour average uptime percentage"
+        "showSummary": {
+          "label": "Show summary",
+          "description": "Overall status, counts and averages"
         },
-        "showUptimeRing": {
-          "label": "Show uptime ring",
-          "description": "Display a progress ring alongside the average uptime value"
+        "showIncidents": {
+          "label": "Show incidents",
+          "description": "Incidents and active maintenance"
         },
-        "showTotalMonitors": {
-          "label": "Show total monitors",
-          "description": "Display the total number of configured monitors"
+        "groupByStatusPageGroup": {
+          "label": "Group monitors",
+          "description": "Use the groups defined on the status page"
         },
-        "showUpCount": {
-          "label": "Show up count",
-          "description": "Display how many monitors are currently up"
+        "showOnlyProblems": {
+          "label": "Only show issues",
+          "description": "Hide monitors that are up, except in the advanced view"
         },
-        "showDownCount": {
-          "label": "Show down count",
-          "description": "Display how many monitors are currently down"
+        "sortBy": {
+          "label": "Sort monitors by",
+          "option": {
+            "status": "Status, issues first",
+            "statusPage": "Status page order",
+            "name": "Name",
+            "uptime": "Uptime, lowest first"
+          }
         },
-        "showPausedCount": {
-          "label": "Show paused count",
-          "description": "Display how many monitors are currently paused"
+        "showHeartbeatBar": {
+          "label": "Show heartbeat bar",
+          "description": "Recent checks as colored bars, newest on the right"
+        },
+        "showUptime": {
+          "label": "Show 24-hour uptime"
+        },
+        "showResponseTime": {
+          "label": "Show response time"
+        },
+        "showCertificateExpiry": {
+          "label": "Certificate warnings",
+          "description": "Flag certificates expiring within 14 days"
         }
-      },
-      "averageUptime": "Average uptime (24h)",
-      "stats": {
-        "totalMonitors": "Total monitors",
-        "upCount": "Up",
-        "downCount": "Down",
-        "pausedCount": "Paused"
-      },
-      "error": {
-        "internalServerError": "Failed to fetch uptime data"
       },
       "status": {
         "up": "Up",
         "down": "Down",
-        "paused": "Paused"
+        "pending": "Pending",
+        "maintenance": "Maintenance",
+        "paused": "Paused",
+        "unknown": "No data"
+      },
+      "overall": {
+        "operational": "All systems operational",
+        "degraded": "Partially degraded service",
+        "outage": "Major outage",
+        "maintenance": "Under maintenance",
+        "paused": "All monitors paused",
+        "unknown": "Waiting for first checks"
+      },
+      "short": {
+        "operational": "All up",
+        "down": "{count} down",
+        "pending": "{count} pending",
+        "maintenance": "Maintenance",
+        "paused": "Paused",
+        "unknown": "No data"
+      },
+      "summary": {
+        "upRatio": "{up} of {total} monitors up",
+        "averageUptime": "uptime 24h",
+        "averageResponseTime": "avg response",
+        "uptimeShort": "{value} uptime",
+        "statusCount": "{count} {status}"
+      },
+      "unit": {
+        "milliseconds": "{value} ms"
+      },
+      "heartbeatBar": {
+        "label": "{count, plural, one {# recent check} other {# recent checks}}, {down} down"
+      },
+      "detail": {
+        "checked": "checked {time}",
+        "averagePing": "avg {value}",
+        "certificate": "{count, plural, one {certificate expires in # day} other {certificate expires in # days}}"
+      },
+      "notice": {
+        "label": "{count, plural, one {# incident or maintenance} other {# incidents or maintenances}}",
+        "untitled": "Untitled"
+      },
+      "empty": {
+        "title": "No monitors",
+        "description": "Add monitors to the status page to see them here"
+      },
+      "allClear": "{count, plural, one {The monitor is up} other {All # monitors are up}}",
+      "error": {
+        "internalServerError": "Failed to fetch the Uptime Kuma status page"
+      },
+      "monitorType": {
+        "http": "HTTP",
+        "keyword": "HTTP keyword",
+        "jsonQuery": "HTTP JSON query",
+        "port": "TCP port",
+        "ping": "Ping",
+        "dns": "DNS",
+        "docker": "Docker container",
+        "push": "Push",
+        "group": "Group",
+        "realBrowser": "Browser"
       }
     },
     "traefik": {
