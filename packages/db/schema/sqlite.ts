@@ -463,6 +463,11 @@ export const icons = sqliteTable("icon", {
   iconRepositoryId: text()
     .notNull()
     .references(() => iconRepositories.id, { onDelete: "cascade" }),
+  /**
+   * `compactImageName(name || url)`, used to narrow icon search candidates in SQL.
+   * Null while a row has not been backfilled yet; such rows are always candidates.
+   */
+  searchName: text(),
 });
 
 export const iconRepositories = sqliteTable("iconRepository", {
