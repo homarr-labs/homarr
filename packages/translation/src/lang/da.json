@@ -5458,123 +5458,92 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Regel niveau {level} ({severity})",
-      "summary": {
-        "title": "Advarsel sværhedsgrad · {range}",
-        "alerts": "advarsler",
-        "none": "Ingen advarsler",
-        "trend": {
-          "new": "ny",
-          "tooltip": "Forrige periode: {previous}"
+      "levelTooltip": "Regel niveau {level} ({severity})"
+    },
+    "wazuhAgents": {
+      "name": "Wazuh agenser",
+      "description": "Sorterbar liste over Wazuh agenter med status, OS, version og last keepalive",
+      "option": {
+        "statusFilter": {
+          "label": "Vis agenter"
         },
-        "previous": "Forrige {range}: {count}",
-        "maxLevel": "Maks niveau {level}",
-        "health": "Indekserings sundhed: {status}",
-        "manager": "Direktør {version}"
-      },
-      "alerts": {
-        "title": "Advarsler · niveau {level}+ · {hours}h",
-        "empty": "Ingen advarsler på dette niveau. Alt roligt.",
-        "rule": "Regel {id}",
-        "openInDashboard": "Åbn denne advarsel i Wazuh dashboard"
-      },
-      "timeline": {
-        "title": "Advarsler tidslinje · {range}",
-        "total": "{count} advarsler",
-        "interval": "pr. {interval}"
-      },
-      "top": {
-        "title": {
-          "rules": "Øverste regler · {range}",
-          "agents": "Top agenter · {range}",
-          "sourceIps": "Top kilde-IP'er · {range}",
-          "mitreTactics": "MITRE taktik · {range}",
-          "mitreTechniques": "MITRE techniques · {range}"
+        "sortBy": {
+          "label": "Sorter efter"
         },
-        "empty": {
-          "rules": "Ingen advarsler i denne periode",
-          "agents": "Ingen advarsler i denne periode",
-          "sourceIps": "Ingen indberetninger med kilde- IP i denne periode",
-          "mitreTactics": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode",
-          "mitreTechniques": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode"
+        "showVersion": {
+          "label": "Vis Wazuh versionskolonne"
         },
-        "totalTooltip": "{count} matchende advarsler",
-        "private": "LAN",
-        "public": "Offentlig",
-        "agents": "Set på {count} agenser",
-        "others": "{count} flere advarsler i andre poster"
+        "showGroups": {
+          "label": "Vis gruppe kolonne"
+        }
       },
-      "agents": {
-        "title": "Agenter",
-        "total": "{count} agenser",
-        "status": {
-          "active": "Aktiv",
-          "disconnected": "Afbrudt",
-          "neverConnected": "Aldrig tilsluttet",
-          "pending": "Afventende"
+      "title": "Agenter",
+      "total": "{count} agenser",
+      "status": {
+        "active": "Aktiv",
+        "disconnected": "Afbrudt",
+        "neverConnected": "Aldrig tilsluttet",
+        "pending": "Afventende"
+      },
+      "statusLabel": {
+        "active": "Aktiv",
+        "disconnected": "Afbrudt",
+        "never_connected": "Aldrig tilsluttet",
+        "pending": "Afventende",
+        "unknown": "Ukendt"
+      },
+      "live": "Levende",
+      "snapshot": "Snapshot {age} gammel",
+      "snapshotHint": "Læs fra Wazuh dashboard agent snapshot (wazuh-monitoring) taget på {time}. Tilføj server API legitimationsoplysninger for live data.",
+      "staleSnapshot": "Agent snapshot fra {time} er forældet. Tjek at Wazuh dashboard overvågning job kører, eller tilføj server API legitimationsoplysninger.",
+      "noDisconnected": "Alle agenter er forbundet",
+      "empty": "Ingen agenter matcher dette filter",
+      "column": {
+        "status": "Status",
+        "name": "Jobnavn",
+        "ip": "IP",
+        "os": "OS",
+        "version": "Version",
+        "lastKeepAlive": "Holde",
+        "groups": "Grupper"
+      },
+      "outdated": "Ældre end den nyeste agent version ({version})"
+    },
+    "wazuhAlerts": {
+      "name": "Wazuh advarer feed",
+      "description": "Seneste Wazuh advarsler med niveau, MITRE ATT & CK teknikker, agent og kilde IP",
+      "option": {
+        "minLevel": {
+          "label": "Mindste regelniveau",
+          "description": "Wazuh niveauer: 0-6 lav, 7-11 medium, 12-14 høj, 15+ kritisk"
         },
-        "statusLabel": {
-          "active": "Aktiv",
-          "disconnected": "Afbrudt",
-          "never_connected": "Aldrig tilsluttet",
-          "pending": "Afventende",
-          "unknown": "Ukendt"
+        "hours": {
+          "label": "Tidsvindue (timer)"
         },
-        "live": "Levende",
-        "snapshot": "Snapshot {age} gammel",
-        "snapshotHint": "Læs fra Wazuh dashboard agent snapshot (wazuh-monitoring) taget på {time}. Tilføj server API legitimationsoplysninger for live data.",
-        "staleSnapshot": "Agent snapshot fra {time} er forældet. Tjek at Wazuh dashboard overvågning job kører, eller tilføj server API legitimationsoplysninger.",
-        "noDisconnected": "Alle agenter er forbundet",
-        "empty": "Ingen agenter matcher dette filter",
-        "column": {
-          "status": "Status",
-          "name": "Jobnavn",
-          "ip": "IP",
-          "os": "OS",
-          "version": "Version",
-          "lastKeepAlive": "Holde",
-          "groups": "Grupper"
+        "limit": {
+          "label": "Antal indberetninger"
         },
-        "outdated": "Ældre end den nyeste agent version ({version})"
-      },
-      "vulnerabilities": {
-        "title": "Sårbarheder",
-        "topCves": "Top CVE'er",
-        "score": "Score",
-        "agentsShort": "Agenter",
-        "topAgents": "Mest sårbare agenser",
-        "criticalHigh": "Crit / Høj",
-        "totalTooltip": "{count} fund på {agents} midler",
-        "affected": "{count} agenser",
-        "empty": "Ingen sårbarheder fundet",
-        "distribution": "Fordeling af sværhedsgrad. {unscored} resultater uden en score vises ikke.",
-        "worst": "Værst: {id} ({score}) på {agents} agenter"
-      },
-      "fim": {
-        "title": "Filintegritet · {range}",
-        "event": {
-          "added": "Dato tilføjet",
-          "modified": "Ændret",
-          "deleted": "Slettet",
-          "unknown": "Ændret"
+        "showMitre": {
+          "label": "Show MITRE ATT&CK techniques"
         },
-        "empty": "Ingen fil integritet begivenheder i denne periode",
-        "user": "af {user}",
-        "registry": "Registreringsdatabase"
+        "showAgent": {
+          "label": "Vis agent"
+        },
+        "showSourceIp": {
+          "label": "Vis kilde- IP"
+        },
+        "showRuleId": {
+          "label": "Vis regel ID"
+        }
       },
-      "authFailures": {
-        "title": "Auth fejl · {hours}h",
-        "seriesTooltip": "Alle agenter over den sidste {hours}h",
-        "peak": "Peak {count}/spand",
-        "empty": "Ingen mislykkede logins i denne periode",
-        "failed": "Mislykkede logins",
-        "failedHint": "Enkelt godkendelsesfejl (sshd, PAM, Windows-logon, ugyldige brugere)",
-        "bruteForce": "Brute kraft",
-        "bruteForceHint": "Korrelerede brute-force regler (flere fejl i en kort periode, MITRE T1110)",
-        "sourceIps": "Kilde Ip'er",
-        "ipTooltip": "{ip}: {count} fejl",
-        "bruteForceCount": "{count} brute force"
-      },
+      "title": "Advarsler · niveau {level}+ · {hours}h",
+      "empty": "Ingen advarsler på dette niveau. Alt roligt.",
+      "rule": "Regel {id}",
+      "openInDashboard": "Åbn denne advarsel i Wazuh dashboard"
+    },
+    "wazuhSummary": {
+      "name": "Wazuh advarselssværhedsgrad",
+      "description": "Advarsel sværhedsgrad opdeling med en tendens mod den foregående periode",
       "option": {
         "range": {
           "label": "Tidsinterval"
@@ -5584,6 +5553,26 @@
         },
         "showFooter": {
           "label": "Vis sidefod"
+        }
+      },
+      "title": "Advarsel sværhedsgrad · {range}",
+      "alerts": "advarsler",
+      "none": "Ingen advarsler",
+      "trend": {
+        "new": "ny",
+        "tooltip": "Forrige periode: {previous}"
+      },
+      "previous": "Forrige {range}: {count}",
+      "maxLevel": "Maks niveau {level}",
+      "health": "Indekserings sundhed: {status}",
+      "manager": "Direktør {version}"
+    },
+    "wazuhTimeline": {
+      "name": "Wazuh alerts timeline",
+      "description": "Stablet diagram over Wazuh advarsler over tid af sværhedsgrad",
+      "option": {
+        "range": {
+          "label": "Tidsinterval"
         },
         "interval": {
           "label": "Interval"
@@ -5600,28 +5589,56 @@
         },
         "showLegend": {
           "label": "Vis forklaring med totaler"
-        },
-        "topKind": {
+        }
+      },
+      "title": "Advarsler tidslinje · {range}",
+      "total": "{count} advarsler",
+      "interval": "pr. {interval}"
+    },
+    "wazuhTopList": {
+      "name": "Topliste over Wazuh",
+      "description": "Top regler, agenter, kilde-IP'er eller MITRE ATT&CK taktik og teknikker ved tælling af alarm",
+      "option": {
+        "kind": {
           "label": "Rang"
         },
-        "topLimit": {
+        "range": {
+          "label": "Tidsinterval"
+        },
+        "limit": {
           "label": "Antal poster"
+        },
+        "minLevel": {
+          "label": "Mindste regelniveau"
         },
         "showBars": {
           "label": "Vis bjælker"
-        },
-        "agentStatusFilter": {
-          "label": "Vis agenter"
-        },
-        "agentSortBy": {
-          "label": "Sorter efter"
-        },
-        "showVersion": {
-          "label": "Vis Wazuh versionskolonne"
-        },
-        "showGroups": {
-          "label": "Vis gruppe kolonne"
-        },
+        }
+      },
+      "title": {
+        "rules": "Øverste regler · {range}",
+        "agents": "Top agenter · {range}",
+        "sourceIps": "Top kilde-IP'er · {range}",
+        "mitreTactics": "MITRE taktik · {range}",
+        "mitreTechniques": "MITRE techniques · {range}"
+      },
+      "empty": {
+        "rules": "Ingen advarsler i denne periode",
+        "agents": "Ingen advarsler i denne periode",
+        "sourceIps": "Ingen indberetninger med kilde- IP i denne periode",
+        "mitreTactics": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode",
+        "mitreTechniques": "Ingen indberetninger kortlagt til MITRE ATT&CK i denne periode"
+      },
+      "totalTooltip": "{count} matchende advarsler",
+      "private": "LAN",
+      "public": "Offentlig",
+      "agents": "Set på {count} agenser",
+      "others": "{count} flere advarsler i andre poster"
+    },
+    "wazuhVulnerabilities": {
+      "name": "Wazuh sårbarheder",
+      "description": "Sårbarhed tæller, top CVE'er og de mest sårbare agenter",
+      "option": {
         "cveOrder": {
           "label": "Rang CVE'er af"
         },
@@ -5636,42 +5653,73 @@
         },
         "showAgents": {
           "label": "Vis mest sårbare agenter"
+        }
+      },
+      "title": "Sårbarheder",
+      "topCves": "Top CVE'er",
+      "score": "Score",
+      "agentsShort": "Agenter",
+      "topAgents": "Mest sårbare agenser",
+      "criticalHigh": "Crit / Høj",
+      "totalTooltip": "{count} fund på {agents} midler",
+      "affected": "{count} agenser",
+      "empty": "Ingen sårbarheder fundet",
+      "distribution": "Fordeling af sværhedsgrad. {unscored} resultater uden en score vises ikke.",
+      "worst": "Værst: {id} ({score}) på {agents} agenter"
+    },
+    "wazuhFim": {
+      "name": "Wazuh fil integritet",
+      "description": "Nylige fil integritet overvågning (syscheck) begivenheder",
+      "option": {
+        "range": {
+          "label": "Tidsinterval"
         },
-        "fimEvent": {
+        "event": {
           "label": "Begivenheder"
         },
-        "fimLimit": {
+        "limit": {
           "label": "Antal hændelser"
         },
         "includeRegistry": {
           "label": "Inkluder Windows registreringsdatabasen begivenheder"
+        }
+      },
+      "title": "Filintegritet · {range}",
+      "event": {
+        "added": "Dato tilføjet",
+        "modified": "Ændret",
+        "deleted": "Slettet",
+        "unknown": "Ændret"
+      },
+      "empty": "Ingen fil integritet begivenheder i denne periode",
+      "user": "af {user}",
+      "registry": "Registreringsdatabase"
+    },
+    "wazuhAuthFailures": {
+      "name": "Fejl i Wazuh autentificering",
+      "description": "Mislykkede logins og brute-force advarsler pr. agent med timesparkliner",
+      "option": {
+        "hours": {
+          "label": "Tidsvindue (timer)"
         },
-        "authLimit": {
+        "limit": {
           "label": "Antal agenter"
         },
         "showSourceIps": {
           "label": "Vis top kilde-IP'er"
-        },
-        "alertsMinLevel": {
-          "label": "Mindste regelniveau",
-          "description": "Wazuh niveauer: 0-6 lav, 7-11 medium, 12-14 høj, 15+ kritisk"
-        },
-        "alertsLimit": {
-          "label": "Antal indberetninger"
-        },
-        "showMitre": {
-          "label": "Show MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Vis agent"
-        },
-        "showSourceIp": {
-          "label": "Vis kilde- IP"
-        },
-        "showRuleId": {
-          "label": "Vis regel ID"
         }
-      }
+      },
+      "title": "Auth fejl · {hours}h",
+      "seriesTooltip": "Alle agenter over den sidste {hours}h",
+      "peak": "Peak {count}/spand",
+      "empty": "Ingen mislykkede logins i denne periode",
+      "failed": "Mislykkede logins",
+      "failedHint": "Enkelt godkendelsesfejl (sshd, PAM, Windows-logon, ugyldige brugere)",
+      "bruteForce": "Brute kraft",
+      "bruteForceHint": "Korrelerede brute-force regler (flere fejl i en kort periode, MITRE T1110)",
+      "sourceIps": "Kilde Ip'er",
+      "ipTooltip": "{ip}: {count} fejl",
+      "bruteForceCount": "{count} brute force"
     }
   },
   "widgetPreview": {

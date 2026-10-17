@@ -5458,123 +5458,92 @@
         "7d": "7 ימים",
         "30d": "30 ימים"
       },
-      "levelTooltip": "רמת כלל {level} ({severity})",
-      "summary": {
-        "title": "חומרת התראות · {range}",
-        "alerts": "התראות",
-        "none": "אין התראות",
-        "trend": {
-          "new": "חדש",
-          "tooltip": "תקופה קודמת: {previous}"
+      "levelTooltip": "רמת כלל {level} ({severity})"
+    },
+    "wazuhAgents": {
+      "name": "סוכני Wazuh",
+      "description": "רשימה ניתנת למיון של סוכני Wazuh עם מצב, מערכת הפעלה, גרסה וחיבור אחרון",
+      "option": {
+        "statusFilter": {
+          "label": "הצג סוכנים"
         },
-        "previous": "{range} קודמים: {count}",
-        "maxLevel": "רמה מרבית {level}",
-        "health": "תקינות האינדקסר: {status}",
-        "manager": "מנהל {version}"
-      },
-      "alerts": {
-        "title": "התראות · רמה {level}+ · {hours} שעות",
-        "empty": "אין התראות ברמה זו. הכול שקט.",
-        "rule": "כלל {id}",
-        "openInDashboard": "פתח התראה זו בלוח המחוונים של Wazuh"
-      },
-      "timeline": {
-        "title": "ציר זמן של התראות · {range}",
-        "total": "{count} התראות",
-        "interval": "לכל {interval}"
-      },
-      "top": {
-        "title": {
-          "rules": "כללים מובילים · {range}",
-          "agents": "סוכנים מובילים · {range}",
-          "sourceIps": "כתובות IP מקוריות מובילות · {range}",
-          "mitreTactics": "טקטיקות MITRE · {range}",
-          "mitreTechniques": "טכניקות MITRE · {range}"
+        "sortBy": {
+          "label": "מיין לפי"
         },
-        "empty": {
-          "rules": "אין התראות בתקופה זו",
-          "agents": "אין התראות בתקופה זו",
-          "sourceIps": "אין התראות עם כתובת IP מקורית בתקופה זו",
-          "mitreTactics": "אין התראות שמופו ל-MITRE ATT&CK בתקופה זו",
-          "mitreTechniques": "אין התראות שמופו ל-MITRE ATT&CK בתקופה זו"
+        "showVersion": {
+          "label": "הצג עמודת גרסת Wazuh"
         },
-        "totalTooltip": "{count} התראות תואמות",
-        "private": "רשת LAN",
-        "public": "ציבורי",
-        "agents": "נראה אצל {count} סוכנים",
-        "others": "עוד {count} התראות ברשומות אחרות"
+        "showGroups": {
+          "label": "הצג עמודת קבוצות"
+        }
       },
-      "agents": {
-        "title": "סוכנים",
-        "total": "{count} סוכנים",
-        "status": {
-          "active": "פעיל",
-          "disconnected": "מנותק",
-          "neverConnected": "מעולם לא התחבר",
-          "pending": "ממתין"
+      "title": "סוכנים",
+      "total": "{count} סוכנים",
+      "status": {
+        "active": "פעיל",
+        "disconnected": "מנותק",
+        "neverConnected": "מעולם לא התחבר",
+        "pending": "ממתין"
+      },
+      "statusLabel": {
+        "active": "פעיל",
+        "disconnected": "מנותק",
+        "never_connected": "מעולם לא התחבר",
+        "pending": "ממתין",
+        "unknown": "לא ידוע"
+      },
+      "live": "חי",
+      "snapshot": "תמונת מצב בת {age}",
+      "snapshotHint": "נקרא מתמונת מצב של סוכני לוח המחוונים של Wazuh (wazuh-monitoring) שנוצרה ב-{time}. הוסף פרטי API של השרת לקבלת נתונים חיים.",
+      "staleSnapshot": "תמונת המצב של הסוכן מ-{time} אינה עדכנית. בדוק שמשימת ניטור לוח המחוונים של Wazuh פועלת, או הוסף פרטי API של השרת.",
+      "noDisconnected": "כל הסוכנים מחוברים",
+      "empty": "אין סוכנים התואמים למסנן זה",
+      "column": {
+        "status": "מצב",
+        "name": "שם המשימה",
+        "ip": "כתובת IP",
+        "os": "מערכת הפעלה",
+        "version": "גרסה",
+        "lastKeepAlive": "חיבור פעיל",
+        "groups": "קבוצות"
+      },
+      "outdated": "ישן יותר מגרסת הסוכן החדשה ביותר ({version})"
+    },
+    "wazuhAlerts": {
+      "name": "הזנת התראות Wazuh",
+      "description": "התראות Wazuh אחרונות עם רמה, טכניקות MITRE ATT&CK, סוכן וכתובת IP מקורית",
+      "option": {
+        "minLevel": {
+          "label": "רמת כלל מינימלית",
+          "description": "רמות Wazuh: 0–6 נמוכה, 7–11 בינונית, 12–14 גבוהה, 15+ קריטית"
         },
-        "statusLabel": {
-          "active": "פעיל",
-          "disconnected": "מנותק",
-          "never_connected": "מעולם לא התחבר",
-          "pending": "ממתין",
-          "unknown": "לא ידוע"
+        "hours": {
+          "label": "חלון זמן (שעות)"
         },
-        "live": "חי",
-        "snapshot": "תמונת מצב בת {age}",
-        "snapshotHint": "נקרא מתמונת מצב של סוכני לוח המחוונים של Wazuh (wazuh-monitoring) שנוצרה ב-{time}. הוסף פרטי API של השרת לקבלת נתונים חיים.",
-        "staleSnapshot": "תמונת המצב של הסוכן מ-{time} אינה עדכנית. בדוק שמשימת ניטור לוח המחוונים של Wazuh פועלת, או הוסף פרטי API של השרת.",
-        "noDisconnected": "כל הסוכנים מחוברים",
-        "empty": "אין סוכנים התואמים למסנן זה",
-        "column": {
-          "status": "מצב",
-          "name": "שם המשימה",
-          "ip": "כתובת IP",
-          "os": "מערכת הפעלה",
-          "version": "גרסה",
-          "lastKeepAlive": "חיבור פעיל",
-          "groups": "קבוצות"
+        "limit": {
+          "label": "מספר התראות"
         },
-        "outdated": "ישן יותר מגרסת הסוכן החדשה ביותר ({version})"
-      },
-      "vulnerabilities": {
-        "title": "נקודות תורפה",
-        "topCves": "CVE מובילים",
-        "score": "ציון",
-        "agentsShort": "סוכנים",
-        "topAgents": "הסוכנים הפגיעים ביותר",
-        "criticalHigh": "קריטי / גבוה",
-        "totalTooltip": "{count} ממצאים אצל {agents} סוכנים",
-        "affected": "{count} סוכנים",
-        "empty": "לא זוהו נקודות תורפה",
-        "distribution": "התפלגות חומרה. {unscored} ממצאים ללא ציון אינם מוצגים.",
-        "worst": "החמור ביותר: {id} ({score}) אצל {agents} סוכנים"
-      },
-      "fim": {
-        "title": "שלמות קבצים · {range}",
-        "event": {
-          "added": "נוסף בתאריך",
-          "modified": "שונה",
-          "deleted": "נמחק",
-          "unknown": "השתנה"
+        "showMitre": {
+          "label": "הצג טכניקות MITRE ATT&CK"
         },
-        "empty": "אין אירועי שלמות קבצים בתקופה זו",
-        "user": "על ידי {user}",
-        "registry": "רישום"
+        "showAgent": {
+          "label": "הצג סוכן"
+        },
+        "showSourceIp": {
+          "label": "הצג כתובת IP מקורית"
+        },
+        "showRuleId": {
+          "label": "הצג מזהה כלל"
+        }
       },
-      "authFailures": {
-        "title": "כשלי אימות · {hours} שעות",
-        "seriesTooltip": "כל הסוכנים במהלך {hours} השעות האחרונות",
-        "peak": "שיא {count}/מקטע",
-        "empty": "אין כניסות כושלות בתקופה זו",
-        "failed": "כניסות כושלות",
-        "failedHint": "כשלי אימות יחידים (sshd, PAM, כניסת Windows, משתמשים לא חוקיים)",
-        "bruteForce": "כוח גס",
-        "bruteForceHint": "כללי כוח גס מתואמים (מספר כשלים בפרק זמן קצר, MITRE T1110)",
-        "sourceIps": "כתובות IP מקוריות",
-        "ipTooltip": "{ip}: {count} כשלים",
-        "bruteForceCount": "{count} מתקפות כוח גס"
-      },
+      "title": "התראות · רמה {level}+ · {hours} שעות",
+      "empty": "אין התראות ברמה זו. הכול שקט.",
+      "rule": "כלל {id}",
+      "openInDashboard": "פתח התראה זו בלוח המחוונים של Wazuh"
+    },
+    "wazuhSummary": {
+      "name": "חומרת התראות Wazuh",
+      "description": "פירוט חומרת התראות עם מגמה לעומת התקופה הקודמת",
       "option": {
         "range": {
           "label": "טווח זמן"
@@ -5584,6 +5553,26 @@
         },
         "showFooter": {
           "label": "הצג כותרת תחתונה"
+        }
+      },
+      "title": "חומרת התראות · {range}",
+      "alerts": "התראות",
+      "none": "אין התראות",
+      "trend": {
+        "new": "חדש",
+        "tooltip": "תקופה קודמת: {previous}"
+      },
+      "previous": "{range} קודמים: {count}",
+      "maxLevel": "רמה מרבית {level}",
+      "health": "תקינות האינדקסר: {status}",
+      "manager": "מנהל {version}"
+    },
+    "wazuhTimeline": {
+      "name": "ציר זמן של התראות Wazuh",
+      "description": "תרשים מוערם של התראות Wazuh לאורך זמן לפי חומרה",
+      "option": {
+        "range": {
+          "label": "טווח זמן"
         },
         "interval": {
           "label": "מרווח"
@@ -5600,28 +5589,56 @@
         },
         "showLegend": {
           "label": "הצג מקרא עם סיכומים"
-        },
-        "topKind": {
+        }
+      },
+      "title": "ציר זמן של התראות · {range}",
+      "total": "{count} התראות",
+      "interval": "לכל {interval}"
+    },
+    "wazuhTopList": {
+      "name": "רשימה מובילה של Wazuh",
+      "description": "כללים, סוכנים, כתובות IP מקוריות או טקטיקות וטכניקות MITRE ATT&CK מובילים לפי מספר התראות",
+      "option": {
+        "kind": {
           "label": "דירוג"
         },
-        "topLimit": {
+        "range": {
+          "label": "טווח זמן"
+        },
+        "limit": {
           "label": "מספר רשומות"
+        },
+        "minLevel": {
+          "label": "רמת כלל מינימלית"
         },
         "showBars": {
           "label": "הצג עמודות"
-        },
-        "agentStatusFilter": {
-          "label": "הצג סוכנים"
-        },
-        "agentSortBy": {
-          "label": "מיין לפי"
-        },
-        "showVersion": {
-          "label": "הצג עמודת גרסת Wazuh"
-        },
-        "showGroups": {
-          "label": "הצג עמודת קבוצות"
-        },
+        }
+      },
+      "title": {
+        "rules": "כללים מובילים · {range}",
+        "agents": "סוכנים מובילים · {range}",
+        "sourceIps": "כתובות IP מקוריות מובילות · {range}",
+        "mitreTactics": "טקטיקות MITRE · {range}",
+        "mitreTechniques": "טכניקות MITRE · {range}"
+      },
+      "empty": {
+        "rules": "אין התראות בתקופה זו",
+        "agents": "אין התראות בתקופה זו",
+        "sourceIps": "אין התראות עם כתובת IP מקורית בתקופה זו",
+        "mitreTactics": "אין התראות שמופו ל-MITRE ATT&CK בתקופה זו",
+        "mitreTechniques": "אין התראות שמופו ל-MITRE ATT&CK בתקופה זו"
+      },
+      "totalTooltip": "{count} התראות תואמות",
+      "private": "רשת LAN",
+      "public": "ציבורי",
+      "agents": "נראה אצל {count} סוכנים",
+      "others": "עוד {count} התראות ברשומות אחרות"
+    },
+    "wazuhVulnerabilities": {
+      "name": "נקודות תורפה ב-Wazuh",
+      "description": "ספירות נקודות תורפה, CVE מובילים והסוכנים הפגיעים ביותר",
+      "option": {
         "cveOrder": {
           "label": "דרג CVE לפי"
         },
@@ -5636,42 +5653,73 @@
         },
         "showAgents": {
           "label": "הצג את הסוכנים הפגיעים ביותר"
+        }
+      },
+      "title": "נקודות תורפה",
+      "topCves": "CVE מובילים",
+      "score": "ציון",
+      "agentsShort": "סוכנים",
+      "topAgents": "הסוכנים הפגיעים ביותר",
+      "criticalHigh": "קריטי / גבוה",
+      "totalTooltip": "{count} ממצאים אצל {agents} סוכנים",
+      "affected": "{count} סוכנים",
+      "empty": "לא זוהו נקודות תורפה",
+      "distribution": "התפלגות חומרה. {unscored} ממצאים ללא ציון אינם מוצגים.",
+      "worst": "החמור ביותר: {id} ({score}) אצל {agents} סוכנים"
+    },
+    "wazuhFim": {
+      "name": "שלמות קבצים ב-Wazuh",
+      "description": "אירועי ניטור שלמות קבצים אחרונים (syscheck)",
+      "option": {
+        "range": {
+          "label": "טווח זמן"
         },
-        "fimEvent": {
+        "event": {
           "label": "אירועים"
         },
-        "fimLimit": {
+        "limit": {
           "label": "מספר אירועים"
         },
         "includeRegistry": {
           "label": "כלול אירועי רישום Windows"
+        }
+      },
+      "title": "שלמות קבצים · {range}",
+      "event": {
+        "added": "נוסף בתאריך",
+        "modified": "שונה",
+        "deleted": "נמחק",
+        "unknown": "השתנה"
+      },
+      "empty": "אין אירועי שלמות קבצים בתקופה זו",
+      "user": "על ידי {user}",
+      "registry": "רישום"
+    },
+    "wazuhAuthFailures": {
+      "name": "כשלי אימות ב-Wazuh",
+      "description": "כניסות כושלות והתראות של מתקפות כוח גס לכל סוכן, עם תרשימי מגמה לפי שעה",
+      "option": {
+        "hours": {
+          "label": "חלון זמן (שעות)"
         },
-        "authLimit": {
+        "limit": {
           "label": "מספר סוכנים"
         },
         "showSourceIps": {
           "label": "הצג כתובות IP מקוריות מובילות"
-        },
-        "alertsMinLevel": {
-          "label": "רמת כלל מינימלית",
-          "description": "רמות Wazuh: 0–6 נמוכה, 7–11 בינונית, 12–14 גבוהה, 15+ קריטית"
-        },
-        "alertsLimit": {
-          "label": "מספר התראות"
-        },
-        "showMitre": {
-          "label": "הצג טכניקות MITRE ATT&CK"
-        },
-        "showAgent": {
-          "label": "הצג סוכן"
-        },
-        "showSourceIp": {
-          "label": "הצג כתובת IP מקורית"
-        },
-        "showRuleId": {
-          "label": "הצג מזהה כלל"
         }
-      }
+      },
+      "title": "כשלי אימות · {hours} שעות",
+      "seriesTooltip": "כל הסוכנים במהלך {hours} השעות האחרונות",
+      "peak": "שיא {count}/מקטע",
+      "empty": "אין כניסות כושלות בתקופה זו",
+      "failed": "כניסות כושלות",
+      "failedHint": "כשלי אימות יחידים (sshd, PAM, כניסת Windows, משתמשים לא חוקיים)",
+      "bruteForce": "כוח גס",
+      "bruteForceHint": "כללי כוח גס מתואמים (מספר כשלים בפרק זמן קצר, MITRE T1110)",
+      "sourceIps": "כתובות IP מקוריות",
+      "ipTooltip": "{ip}: {count} כשלים",
+      "bruteForceCount": "{count} מתקפות כוח גס"
     }
   },
   "widgetPreview": {
