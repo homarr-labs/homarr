@@ -24,6 +24,7 @@ export interface MonitorRowVisibility {
   responseTime: boolean;
   certificateExpiry: boolean;
   statusDetail: boolean;
+  tags: boolean;
 }
 
 type MonitorRowVariant = "inline" | "stacked";
@@ -43,7 +44,7 @@ export const getMonitorRowTemplate = (variant: MonitorRowVariant, visibility: Mo
   return [
     "auto",
     "minmax(0, 1fr)",
-    visibility.heartbeatBar && "minmax(0, 1.25fr)",
+    visibility.heartbeatBar && "minmax(0, 1fr)",
     visibility.responseTime && "4.25em",
     visibility.uptime && "4.75em",
   ]
@@ -92,7 +93,7 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
               {monitor.name}
             </Text>
           )}
-          {(!isStacked || showDetails) && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
+          {visibility.tags && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
         </div>
         {!statusDetail && <VisuallyHidden>{t(`status.${monitor.status}`)}</VisuallyHidden>}
         {(statusDetail || details) && (
@@ -102,9 +103,10 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
                 {statusDetail}
               </Text>
             )}
+            {statusDetail && details && <span aria-hidden>·</span>}
             {details && (
               <Text component="span" c={certificate?.isWarning ? "orange.6" : "dimmed"} inherit truncate>
-                {statusDetail ? ` · ${details}` : details}
+                {details}
               </Text>
             )}
           </div>

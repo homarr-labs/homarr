@@ -44,24 +44,8 @@
   background-color: var(--status-color);
 }
 
-.monitorRow .dot[data-status="down"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background-color: var(--status-color);
-  animation: pulse 2s ease-out infinite;
-}
-
-@keyframes pulse {
-  from {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  to {
-    transform: scale(2.2);
-    opacity: 0;
-  }
+.monitorRow .dot[data-status="down"] {
+  box-shadow: 0 0 0 rem(3px) color-mix(in srgb, var(--status-color) 30%, transparent);
 }
 
 .centeredState {
@@ -220,8 +204,11 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  justify-content: safe center;
   gap: rem(6px);
+  align-self: stretch;
   min-width: 0;
+  overflow: hidden;
 }
 
 .stripBody .metrics {
@@ -444,10 +431,16 @@
   gap: rem(4px);
   min-width: 0;
   overflow: hidden;
+  mask-image: linear-gradient(to left, transparent, #000 rem(12px));
+}
+
+.tags > * {
+  flex-shrink: 0;
 }
 
 .monitorDetails {
   display: flex;
+  gap: 0.35em;
   min-width: 0;
   font-size: var(--mantine-font-size-xs);
   line-height: 1.3;
@@ -527,10 +520,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .monitorRow .dot[data-status="down"]::after {
-    animation: none;
-  }
-
   .beat {
     transition: none;
   }

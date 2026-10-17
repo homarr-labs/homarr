@@ -79,10 +79,9 @@ export class UptimeKumaIntegration extends Integration {
       ]),
     );
     const typicalCheckInterval = median(
-      [...heartbeatsByMonitor.values()].flatMap((heartbeats) => {
-        const interval = getCheckInterval(heartbeats);
-        return interval === null ? [] : [interval];
-      }),
+      [...heartbeatsByMonitor.values()]
+        .map(getCheckInterval)
+        .filter((interval): interval is number => interval !== null),
     );
 
     return {

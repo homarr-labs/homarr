@@ -20,7 +20,7 @@ import { useWidgetNow } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
-import { getMonitorColumnCount, getUptimeKumaLayout, usesInlineRows } from "./layout";
+import { getMonitorColumnCount, getUptimeKumaLayout, showsInlineTags, usesInlineRows } from "./layout";
 import type { UptimeKumaLayout } from "./layout";
 import { getMonitorRowTemplate, MonitorRow } from "./monitor-row";
 import type { MonitorRowVisibility } from "./monitor-row";
@@ -206,9 +206,11 @@ const chipRowHeight = 30;
 const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProps) => {
   const ringSize = clamp(Math.min(size.height - 24, size.width * 0.32), 56, 150);
   const bodyWidth = size.width - ringSize - 40;
-  const showMetricsLine = bodyWidth < 420;
-  const reservedHeight = 88 + (showMetricsLine ? 20 : 0);
-  const chipRows = bodyWidth >= 200 ? clamp(Math.floor((size.height - reservedHeight) / chipRowHeight), 0, 4) : 0;
+  const metricsInHeader = bodyWidth >= 420;
+  const showMetricsLine = !metricsInHeader && size.height >= 150;
+  const breakdownHeight = bodyWidth < 300 ? 40 : 20;
+  const reservedHeight = 68 + breakdownHeight + (showMetricsLine ? 20 : 0);
+  const chipRows = bodyWidth >= 200 ? clamp(Math.floor((size.height - reservedHeight) / chipRowHeight), 0, 3) : 0;
   const chipMonitors = sortMonitors(filterProblems(getAllMonitors(pages), options.showOnlyProblems), options.sortBy);
 
   return (
@@ -218,7 +220,7 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
         <div className={classes.stripHeader}>
           <OverallStatus summary={summary} short={bodyWidth < 220} />
           {notices.length > 0 && <NoticeIndicator notices={notices} />}
-          {!showMetricsLine && (
+          {metricsInHeader && (
             <SummaryMetrics
               summary={summary}
               showUptime={options.showUptime}
@@ -232,6 +234,7 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
             summary={summary}
             showUptime={options.showUptime}
             showResponseTime={options.showResponseTime}
+            compact
           />
         )}
         {chipRows > 0 && chipMonitors.length > 0 && (
@@ -311,6 +314,7 @@ const ListLayout = ({
     responseTime: (isAdvanced || options.showResponseTime) && !isNarrow,
     certificateExpiry: isAdvanced || options.showCertificateExpiry,
     statusDetail: !isColumn,
+    tags: isAdvanced || (variant === "inline" && showsInlineTags(size.width, columnCount)),
   };
   const sections = getMonitorSections(pages, {
     groupByStatusPageGroup: options.groupByStatusPageGroup,
@@ -332,7 +336,7 @@ const ListLayout = ({
         <header className={classes.header}>
           <div className={classes.headerTop}>
             <OverallStatus summary={summary} short={isColumn} size={isColumn ? "sm" : "md"} />
-            {isColumn && notices.length > 0 && <NoticeIndicator notices={notices} />}
+            {isColumn && !isNarrow && notices.length > 0 && <NoticeIndicator notices={notices} />}
             {singlePage && statusPageHref && size.width >= 340 && (
               <Anchor
                 href={statusPageHref}
