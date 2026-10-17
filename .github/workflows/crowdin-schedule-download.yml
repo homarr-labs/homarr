@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Obtain token
         id: obtainToken
@@ -28,7 +30,7 @@ jobs:
 
       - name: Download Crowdin translations
         id: crowdin-download
-        uses: crowdin/github-action@v2
+        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1
         with:
           upload_sources: false
           upload_translations: false
