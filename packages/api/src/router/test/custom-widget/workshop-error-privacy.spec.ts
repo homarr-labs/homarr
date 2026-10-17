@@ -36,6 +36,7 @@ const session = {
   user: {
     id: createId(),
     permissions: ["admin"],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date(Date.now() + 60_000).toISOString(),

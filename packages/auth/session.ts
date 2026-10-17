@@ -3,7 +3,7 @@ import type { Session } from "next-auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 
-import { getCurrentUserPermissionsAsync } from "./callbacks";
+import { getCurrentUserGroupsAsync, getCurrentUserPermissionsAsync } from "./callbacks";
 import { env } from "./env";
 
 // Prefixed (AUTH_COOKIE_PREFIX, default "homarr") to avoid cookie collisions
@@ -45,10 +45,16 @@ export const getSessionFromTokenAsync = async (db: Database, token: string | und
     return null;
   }
 
+  const [permissions, groupNames] = await Promise.all([
+    getCurrentUserPermissionsAsync(db, session.user.id),
+    getCurrentUserGroupsAsync(db, session.user.id),
+  ]);
+
   return {
     user: {
       ...session.user,
-      permissions: await getCurrentUserPermissionsAsync(db, session.user.id),
+      permissions,
+      groups: groupNames,
     },
     expires: session.expires.toISOString(),
   };

@@ -7,7 +7,7 @@ import { createDb } from "@homarr/db/test";
 import { groupRouter } from "../group";
 
 const adminSession = {
-  user: { id: "admin", permissions: ["admin"], colorScheme: "light" },
+  user: { id: "admin", permissions: ["admin"], groups: [], colorScheme: "light" },
   expires: new Date().toISOString(),
 } satisfies Session;
 

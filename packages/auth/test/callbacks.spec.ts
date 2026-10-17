@@ -124,6 +124,7 @@ describe("session callback", () => {
           email: "no-email",
           emailVerified: new Date("2023-01-13"),
           permissions: [],
+          groups: [],
           colorScheme: "dark",
         },
         expires: "2023-01-13" as Date & string,

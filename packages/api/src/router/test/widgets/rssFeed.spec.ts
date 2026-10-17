@@ -33,6 +33,7 @@ beforeEach(() => vi.clearAllMocks());
 const createSession = (permissions: GroupPermissionKey[] = []): Session => ({
   user: {
     id: "user-id",
+    groups: [],
     colorScheme: "light",
     permissions,
   },

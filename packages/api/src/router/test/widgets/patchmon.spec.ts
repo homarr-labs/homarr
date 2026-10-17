@@ -38,6 +38,7 @@ const createSession = (userId: string): Session => ({
   user: {
     id: userId,
     permissions: [],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),

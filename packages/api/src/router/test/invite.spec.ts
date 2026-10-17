@@ -12,6 +12,7 @@ const defaultSession = {
   user: {
     id: createId(),
     permissions: ["admin"],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),

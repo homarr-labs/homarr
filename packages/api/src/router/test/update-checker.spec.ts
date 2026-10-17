@@ -23,6 +23,7 @@ const createSession = (permissions: GroupPermissionKey[]): Session => ({
   user: {
     id: "user",
     permissions,
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),

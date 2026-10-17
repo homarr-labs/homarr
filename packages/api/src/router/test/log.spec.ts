@@ -21,6 +21,7 @@ const session = {
   user: {
     id: "log-viewer",
     permissions: ["other-view-logs"],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date(0).toISOString(),

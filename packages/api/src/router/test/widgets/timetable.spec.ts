@@ -43,7 +43,7 @@ beforeEach(() => {
 });
 
 const createSession = (userId: string): Session => ({
-  user: { id: userId, permissions: [], colorScheme: "light" },
+  user: { id: userId, permissions: [], groups: [], colorScheme: "light" },
   expires: new Date().toISOString(),
 });
 

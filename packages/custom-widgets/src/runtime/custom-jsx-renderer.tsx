@@ -11,6 +11,7 @@ import { sameInputRecord, sameStringArray, sameTypeRecord } from "./input-state-
 export { CUSTOM_JSX_METHOD_COLORS, parseRequestCapabilities } from "./request-capabilities";
 
 const EMPTY_RECORD: Record<string, never> = {};
+const EMPTY_ARRAY: readonly string[] = [];
 
 export interface CustomJsxRendererMessages {
   noTemplate: string;
@@ -18,11 +19,18 @@ export interface CustomJsxRendererMessages {
   bindingTypeConflict(name: string, firstType: WidgetInputType, secondType: WidgetInputType): string;
 }
 
+export interface CustomWidgetUserContext {
+  name?: string | null;
+  permissions?: readonly string[];
+  groups?: readonly string[];
+}
+
 export interface CustomJsxRendererProps {
   template: string;
   data: unknown;
   status?: Record<string, unknown>;
   options?: Record<string, unknown>;
+  user?: CustomWidgetUserContext;
   components: Readonly<Record<string, ComponentType<never>>>;
   createBindings(data: unknown): Readonly<Record<string, unknown>>;
   messages: CustomJsxRendererMessages;
@@ -90,10 +98,19 @@ function CustomJsxRendererSession({
   data,
   status = EMPTY_RECORD,
   options = EMPTY_RECORD,
+  user,
   components,
   createBindings,
   messages,
 }: CustomJsxRendererProps) {
+  const userBinding = useMemo(
+    () => ({
+      name: user?.name ?? null,
+      permissions: user?.permissions ?? EMPTY_ARRAY,
+      groups: user?.groups ?? EMPTY_ARRAY,
+    }),
+    [user],
+  );
   const inputScopeId = useId();
   const [parseErrors, setParseErrors] = useState<string[]>([]);
   const [bindingErrors, setBindingErrors] = useState<string[]>([]);
@@ -187,7 +204,7 @@ function CustomJsxRendererSession({
   }, []);
   const rendered = useMemo(() => {
     try {
-      const bindings = { ...createBindings(data), status, options, inputs };
+      const bindings = { ...createBindings(data), status, options, inputs, user: userBinding };
       return {
         ...renderSafeJsx({ template, components, bindings }),
         boundaryKey: createBoundaryKey(template, bindings),
@@ -201,7 +218,7 @@ function CustomJsxRendererSession({
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }, [components, createBindings, data, inputs, options, status, template]);
+  }, [components, createBindings, data, inputs, options, status, template, userBinding]);
   useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>

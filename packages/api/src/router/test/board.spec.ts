@@ -36,6 +36,7 @@ const defaultSession = {
   user: {
     id: defaultCreatorId,
     permissions: [],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date().toISOString(),
@@ -103,6 +104,7 @@ describe("getAllBoards should return all boards accessable to the current user",
         user: {
           id: defaultCreatorId,
           permissions: ["board-view-all"],
+          groups: [],
           colorScheme: "light",
         },
         expires: new Date().toISOString(),

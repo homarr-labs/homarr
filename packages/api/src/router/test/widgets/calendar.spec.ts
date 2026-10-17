@@ -31,7 +31,7 @@ const createCallerAsync = async () => {
   });
   await db.insert(integrationUserPermissions).values({ integrationId, userId, permission: "use" });
   const session = {
-    user: { id: userId, permissions: [], colorScheme: "light" },
+    user: { id: userId, permissions: [], groups: [], colorScheme: "light" },
     expires: new Date().toISOString(),
   } satisfies Session;
   return { caller: calendarRouter.createCaller({ db, deviceType: undefined, session }), integrationId };

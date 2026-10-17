@@ -13,6 +13,7 @@ const createSession = (user: Partial<Session["user"]>): Session => ({
   user: {
     id: "1",
     permissions: [],
+    groups: [],
     colorScheme: "light",
     ...user,
   },

@@ -13,6 +13,7 @@ const createSession = (userId: string, isAdmin = false): Session => ({
   user: {
     id: userId,
     permissions: isAdmin ? ["admin"] : [],
+    groups: [],
     colorScheme: "light",
   },
   expires: new Date(Date.now() + 60_000).toISOString(),

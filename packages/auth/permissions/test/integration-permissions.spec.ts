@@ -16,6 +16,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["integration-full-all"]),
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -34,7 +35,7 @@ describe("constructIntegrationPermissions", () => {
     const result = constructIntegrationPermissions(
       { userPermissions: [], groupPermissions: [] },
       {
-        user: { id: "2", permissions: ["integration-full-all"], colorScheme: "light" },
+        user: { id: "2", permissions: ["integration-full-all"], groups: [], colorScheme: "light" },
         expires: new Date().toISOString(),
       },
     );
@@ -52,6 +53,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["integration-interact-all"]),
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -76,6 +78,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -100,6 +103,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -124,6 +128,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: getPermissionsWithChildren(["integration-use-all"]),
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -148,6 +153,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -172,6 +178,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
@@ -196,6 +203,7 @@ describe("constructIntegrationPermissions", () => {
       user: {
         id: "2",
         permissions: [],
+        groups: [],
         colorScheme: "light",
       },
       expires: new Date().toISOString(),
