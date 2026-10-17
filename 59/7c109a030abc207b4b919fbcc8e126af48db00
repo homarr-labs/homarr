@@ -1,0 +1,33 @@
+apps/docs/docs/widgets/uptime-kuma/index.ts
+  s_99767f175fdcb8::t_46095921a9e6a4 58
+packages/integrations/src/uptime-kuma/uptime-kuma-summary.ts
+  s_99767f175fdcb8::t_db553d3a6f6597 12
+packages/translation/src/lang/en.json
+  s_99767f175fdcb8::t_a05fe04bcafa0e 4968
+packages/widgets/src/uptime-kuma/component.module.css
+  s_99767f175fdcb8::t_bb3fbc7dd7b08e 48,118,121-131,154,156-159,161-166,171,174,307,326,363,365,372,376-377,381,384-385,389-392,398,405,407-412,416-417,424-430,433,445,471,482,485,499-500
+packages/widgets/src/uptime-kuma/component.tsx
+  s_99767f175fdcb8::t_b5f4459d15322a 23-30,39-48,220-223,226-236,238,242-246,250,252,254-256,265,287,342,345-348,360,362,371,378,400
+packages/widgets/src/uptime-kuma/layout.ts
+  s_99767f175fdcb8::t_34f1876e5008e8 25-52
+packages/widgets/src/uptime-kuma/monitor-row.tsx
+  s_99767f175fdcb8::t_5ada09ef0594d0 43,45,48,64-68,76,84,94-100,103-111,139,149-151
+packages/widgets/src/uptime-kuma/summary.tsx
+  s_99767f175fdcb8::t_b60bd76df123c1 9-10,62-68,72,84-120,125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "597c109a030abc207b4b919fbcc8e126af48db00",
+  "prompts": {},
+  "sessions": {
+    "s_99767f175fdcb8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d20eff31-f9ac-4e73-940a-d0b708581f56",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
