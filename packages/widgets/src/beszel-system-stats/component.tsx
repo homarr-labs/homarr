@@ -307,6 +307,7 @@ export default function BeszelSystemStatsWidget({
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
             timePeriod={options.timePeriod}
+            thresholdOptions={options}
             columns={responsiveWidth > 600 ? 2 : 1}
             availableHeight={Math.floor(viewportHeight || height)}
             visibility={{

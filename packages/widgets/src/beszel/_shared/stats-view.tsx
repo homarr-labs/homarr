@@ -32,6 +32,8 @@ import { createBeszelChartFormatters, formatPercent } from "./format";
 import { makeTooltipProps } from "./tooltip";
 import { useLiveStats } from "./use-live-stats";
 import { useDemoReadOnly } from "../../demo-read-only";
+import type { BeszelThresholdMetric, BeszelThresholdOptions } from "./threshold-colors";
+import { getBeszelMetricColor } from "./threshold-colors";
 
 const CHART_HEIGHT = 180;
 const MEBIBYTE = 1024 * 1024;
@@ -61,6 +63,7 @@ interface BeszelStatsViewProps {
   availableHeight?: number;
   showXAxis?: boolean;
   onSwitchToHistorical?: () => void;
+  thresholdOptions?: BeszelThresholdOptions;
 }
 
 const whenVisible = <T,>(visible: boolean, data: T | undefined) => (visible ? data : undefined);
@@ -74,6 +77,7 @@ export function BeszelStatsView({
   availableHeight,
   showXAxis = true,
   onSwitchToHistorical,
+  thresholdOptions,
 }: BeszelStatsViewProps) {
   const t = useI18n("widget.beszelSystemStats");
   const tBeszel = useI18n("widget.beszel");
@@ -183,6 +187,24 @@ export function BeszelStatsView({
     timePeriod,
     locale,
   );
+  const withLatestThresholdColors = <T extends { name: string; color: string }>(
+    inputSeries: T[],
+    data: Record<string, unknown>[],
+    metric: BeszelThresholdMetric,
+  ) => {
+    const configuredThresholds = thresholdOptions;
+    if (!configuredThresholds) return inputSeries;
+
+    return inputSeries.map((item) => {
+      const latestValue = data
+        .toReversed()
+        .map((point) => point[item.name])
+        .find((value): value is number => typeof value === "number" && Number.isFinite(value));
+      return latestValue === undefined
+        ? item
+        : { ...item, color: getBeszelMetricColor(configuredThresholds, metric, latestValue) };
+    });
+  };
   const gpuMemoryData = useGpuChartData(
     whenVisible(visibility.gpuMemory, systemStats),
     gpuDevices,
@@ -346,7 +368,7 @@ export function BeszelStatsView({
             h: CHART_HEIGHT,
             withXAxis: showXAxis,
             data: cpuData,
-            series: series.cpu,
+            series: withLatestThresholdColors(series.cpu, cpuData, "cpu"),
             yAxisFormatter: formatPercent,
             yAxisDomain: CPU_Y_AXIS_DOMAIN,
             tooltipProps: tooltips.percent,
@@ -423,7 +445,7 @@ export function BeszelStatsView({
                 h: CHART_HEIGHT,
                 withXAxis: showXAxis,
                 data: gpuUsageData,
-                series: gpuUsageSeries,
+                series: withLatestThresholdColors(gpuUsageSeries, gpuUsageData, "gpu"),
                 fillOpacity: 0.35,
                 yAxisFormatter: formatPercent,
                 yAxisDomain: CPU_Y_AXIS_DOMAIN,
@@ -474,7 +496,7 @@ export function BeszelStatsView({
                 withXAxis: showXAxis,
                 data: dockerCpuData,
                 type: "stacked",
-                series: containerCpuSeries,
+                series: withLatestThresholdColors(containerCpuSeries, dockerCpuData, "cpu"),
                 areaChartProps: dockerAreaChartProps,
                 yAxisFormatter: formatPercent,
                 tooltipProps: tooltips.percentTotal,

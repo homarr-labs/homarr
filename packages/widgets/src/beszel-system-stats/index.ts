@@ -7,6 +7,8 @@ import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { beszelTimePeriodOptions } from "../beszel/_shared/options";
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
+import { beszelOptionsSuperRefine } from "../beszel/_shared/threshold-colors";
+import { createBeszelThresholdOptions, beszelThresholdFieldConfiguration } from "../beszel/_shared/threshold-options";
 import { createBeszelSystemChoices, resolveStoredBeszelQuerySelection } from "./selection";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
@@ -36,36 +38,41 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
   },
   ...getWidgetIntegrationConfig("beszelSystemStats"),
   createOptions() {
-    return optionsBuilder.from((factory) => ({
-      systemId: factory.integrationSelect({
-        withDescription: true,
-        clearable: true,
-        useOptions: (integrationIds: string[]) => {
-          const {
-            data = [],
-            isPending,
-            isError,
-          } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { enabled: integrationIds.length > 0 });
-          const selectData = createBeszelSystemChoices(data).map(({ value, label }) => ({ value, label }));
-          return { data: selectData, isPending, isError };
-        },
+    return optionsBuilder.from(
+      (factory) => ({
+        systemId: factory.integrationSelect({
+          withDescription: true,
+          clearable: true,
+          useOptions: (integrationIds: string[]) => {
+            const {
+              data = [],
+              isPending,
+              isError,
+            } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds }, { enabled: integrationIds.length > 0 });
+            const selectData = createBeszelSystemChoices(data).map(({ value, label }) => ({ value, label }));
+            return { data: selectData, isPending, isError };
+          },
+        }),
+        timePeriod: factory.select({
+          defaultValue: defaultBeszelTimePeriod,
+          options: beszelTimePeriodOptions,
+        }),
+        showCpu: factory.switch({ defaultValue: true }),
+        showMemory: factory.switch({ defaultValue: true }),
+        showDisk: factory.switch({ defaultValue: true }),
+        showDiskIO: factory.switch({ defaultValue: true }),
+        showNetwork: factory.switch({ defaultValue: true }),
+        showGpuUsage: factory.switch({ defaultValue: true }),
+        showGpuMemory: factory.switch({ defaultValue: true }),
+        showGpuPower: factory.switch({ defaultValue: true }),
+        showDockerCpu: factory.switch({ defaultValue: true }),
+        showDockerMemory: factory.switch({ defaultValue: true }),
+        showDockerNetwork: factory.switch({ defaultValue: true }),
+        ...createBeszelThresholdOptions(factory),
       }),
-      timePeriod: factory.select({
-        defaultValue: defaultBeszelTimePeriod,
-        options: beszelTimePeriodOptions,
-      }),
-      showCpu: factory.switch({ defaultValue: true }),
-      showMemory: factory.switch({ defaultValue: true }),
-      showDisk: factory.switch({ defaultValue: true }),
-      showDiskIO: factory.switch({ defaultValue: true }),
-      showNetwork: factory.switch({ defaultValue: true }),
-      showGpuUsage: factory.switch({ defaultValue: true }),
-      showGpuMemory: factory.switch({ defaultValue: true }),
-      showGpuPower: factory.switch({ defaultValue: true }),
-      showDockerCpu: factory.switch({ defaultValue: true }),
-      showDockerMemory: factory.switch({ defaultValue: true }),
-      showDockerNetwork: factory.switch({ defaultValue: true }),
-    }));
+      beszelThresholdFieldConfiguration,
+      beszelOptionsSuperRefine,
+    );
   },
   errors: {
     INTERNAL_SERVER_ERROR: {
