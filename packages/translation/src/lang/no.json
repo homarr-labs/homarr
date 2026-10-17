@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Eksempler på URL-formater",
+        "examples": "Eksempler på støttede lenker",
+        "requiresHandler": "Egendefinerte protokoller krever en tilknyttet app på enheten din."
+      },
       "description": {
         "label": "Beskrivelse"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Velg app"
+        },
+        "openIn": {
+          "label": "Åpne app i",
+          "description": "Velg hvor denne appen skal åpnes. Nettleserinnstillingene dine kan overstyre åpning i et eget vindu.",
+          "option": {
+            "currentTab": "Gjeldende fane",
+            "newTab": "Ny fane",
+            "newWindow": "Nytt vindu"
+          }
         },
         "showTitle": {
           "label": "Vis app navn"

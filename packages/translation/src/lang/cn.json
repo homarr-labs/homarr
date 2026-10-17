@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL 格式示例",
+        "examples": "支持的链接示例",
+        "requiresHandler": "自定义协议需要在您的设备上关联相应的应用程序。"
+      },
       "description": {
         "label": "描述"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "选择应用"
+        },
+        "openIn": {
+          "label": "打开应用的位置",
+          "description": "选择此应用的打开位置。浏览器设置可能会更改在独立窗口中打开的行为。",
+          "option": {
+            "currentTab": "当前标签页",
+            "newTab": "新标签页",
+            "newWindow": "新窗口"
+          }
         },
         "showTitle": {
           "label": "显示应用名称"

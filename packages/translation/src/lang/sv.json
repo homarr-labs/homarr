@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exempel på URL-format",
+        "examples": "Exempel på länkar som stöds",
+        "requiresHandler": "Anpassade protokoll kräver en associerad app på din enhet."
+      },
       "description": {
         "label": "Beskrivning"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Välj applikation"
+        },
+        "openIn": {
+          "label": "Öppna app i",
+          "description": "Välj var den här appen ska öppnas. Dina webbläsarinställningar kan åsidosätta öppning i ett separat fönster.",
+          "option": {
+            "currentTab": "Aktuell flik",
+            "newTab": "Ny flik",
+            "newWindow": "Nytt fönster"
+          }
         },
         "showTitle": {
           "label": "Visa applikationsnamn"

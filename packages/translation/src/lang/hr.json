@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Primjeri formata URL-a",
+        "examples": "Primjeri podržanih poveznica",
+        "requiresHandler": "Prilagođeni protokoli zahtijevaju povezanu aplikaciju na vašem uređaju."
+      },
       "description": {
         "label": "Opis"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Odaberi aplikaciju"
+        },
+        "openIn": {
+          "label": "Otvori aplikaciju u",
+          "description": "Odaberite gdje se ova aplikacija otvara. Postavke preglednika mogu promijeniti otvaranje u zasebnom prozoru.",
+          "option": {
+            "currentTab": "Trenutačnoj kartici",
+            "newTab": "Novoj kartici",
+            "newWindow": "Novom prozoru"
+          }
         },
         "showTitle": {
           "label": "Prikaži naziv aplikacije"

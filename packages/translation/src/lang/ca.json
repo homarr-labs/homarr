@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemples de formats d'URL",
+        "examples": "Exemples d'enllaços admesos",
+        "requiresHandler": "Els protocols personalitzats requereixen una aplicació associada al vostre dispositiu."
+      },
       "description": {
         "label": "Descripció"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Trieu l'aplicació"
+        },
+        "openIn": {
+          "label": "Obre l'aplicació a",
+          "description": "Trieu on s'obre aquesta aplicació. La configuració del navegador pot modificar l'obertura en una finestra separada.",
+          "option": {
+            "currentTab": "La pestanya actual",
+            "newTab": "Una pestanya nova",
+            "newWindow": "Una finestra nova"
+          }
         },
         "showTitle": {
           "label": "Mostra el nom de l'aplicació"

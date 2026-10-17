@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "URL formātu piemēri",
+        "examples": "Atbalstīto saišu piemēri",
+        "requiresHandler": "Pielāgotiem protokoliem ir nepieciešama saistīta lietotne jūsu ierīcē."
+      },
       "description": {
         "label": "Apraksts"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Izvēlēties lietotni"
+        },
+        "openIn": {
+          "label": "Atvērt lietotni",
+          "description": "Izvēlieties, kur atvērt šo lietotni. Pārlūkprogrammas iestatījumi var mainīt atvēršanu atsevišķā logā.",
+          "option": {
+            "currentTab": "Pašreizējā cilnē",
+            "newTab": "Jaunā cilnē",
+            "newWindow": "Jaunā logā"
+          }
         },
         "showTitle": {
           "label": "Rādīt lietotnes nosaukumu"

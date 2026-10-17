@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemple de formate URL",
+        "examples": "Exemple de linkuri acceptate",
+        "requiresHandler": "Protocoalele personalizate necesită o aplicație asociată pe dispozitivul tău."
+      },
       "description": {
         "label": "Descriere"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Alegeți aplicația"
+        },
+        "openIn": {
+          "label": "Deschide aplicația în",
+          "description": "Alege unde se deschide această aplicație. Setările browserului pot modifica deschiderea într-o fereastră separată.",
+          "option": {
+            "currentTab": "Fila curentă",
+            "newTab": "O filă nouă",
+            "newWindow": "O fereastră nouă"
+          }
         },
         "showTitle": {
           "label": "Arată numele aplicației"

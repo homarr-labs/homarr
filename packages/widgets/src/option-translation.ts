@@ -70,7 +70,6 @@ const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | 
     (kind === "bookmarks" && property === "title") ||
     (kind === "clock" && property === "customTitle") ||
     (kind === "minecraftServerStatus" && property === "title") ||
-    (kind === "app" && property === "openInNewTab") ||
     (kind === "bookmarks" && property === "openNewTab") ||
     (kind === "wud" && property === "showTitle") ||
     (kind === "anchorNote" && property === "showTitle") ||

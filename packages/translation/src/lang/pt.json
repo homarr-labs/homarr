@@ -799,6 +799,11 @@
       }
     },
     "field": {
+      "url": {
+        "helpLabel": "Exemplos de formatos de URL",
+        "examples": "Exemplos de ligações suportadas",
+        "requiresHandler": "Os protocolos personalizados requerem uma aplicação associada no seu dispositivo."
+      },
       "description": {
         "label": "Descrição"
       },
@@ -2308,6 +2313,15 @@
       "option": {
         "appId": {
           "label": "Escolher aplicativo"
+        },
+        "openIn": {
+          "label": "Abrir a aplicação em",
+          "description": "Escolha onde abrir esta aplicação. As definições do navegador podem alterar a abertura numa janela separada.",
+          "option": {
+            "currentTab": "Separador atual",
+            "newTab": "Novo separador",
+            "newWindow": "Nova janela"
+          }
         },
         "showTitle": {
           "label": "Exibir o nome do aplicativo"
