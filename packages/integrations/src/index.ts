@@ -90,7 +90,7 @@ export type { TracearrDashboardData } from "./tracearr/tracearr-types";
 export type { SpeedtestTrackerDashboardData } from "./speedtest-tracker/speedtest-tracker-types";
 export type { AudiobookshelfDashboardData } from "./audiobookshelf/audiobookshelf-types";
 export type { NavidromeDashboardData } from "./navidrome/navidrome-types";
-export type { UptimeKumaDashboardData } from "./uptime-kuma/uptime-kuma-types";
+export type { UptimeKumaStatusPage } from "./uptime-kuma/uptime-kuma-types";
 export type { UmamiVisitorStats } from "./umami/umami-types";
 export type { BazarrBadges } from "./bazarr/bazarr-types";
 export type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSummary } from "./traefik/traefik-types";

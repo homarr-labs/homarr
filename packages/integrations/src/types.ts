@@ -20,6 +20,7 @@ export * from "./anchor/anchor-types";
 export * from "./tracearr/tracearr-types";
 export * from "./speedtest-tracker/speedtest-tracker-types";
 export * from "./uptime-kuma/uptime-kuma-types";
+export * from "./uptime-kuma/uptime-kuma-summary";
 export * from "./audiobookshelf/audiobookshelf-types";
 export * from "./navidrome/navidrome-types";
 export * from "./paperless-ngx/paperless-ngx-types";
