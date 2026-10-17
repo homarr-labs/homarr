@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { IconBook, IconPackage } from "@tabler/icons-react";
 
 import { Carbon } from "@/components/carbon";
@@ -10,7 +10,7 @@ import { DetailSkeleton } from "./DetailSections";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 
-import MarketplaceDetailPage from "./DetailPage";
+const MarketplaceDetailPage = lazy(() => import("./DetailPage"));
 
 export function WorkshopNotFoundRouter({ configuredWorkshopUrl }: { configuredWorkshopUrl: string }) {
   const routerPathname = usePathname();
@@ -24,7 +24,11 @@ export function WorkshopNotFoundRouter({ configuredWorkshopUrl }: { configuredWo
   const submissionId = /^\/workshop\/([^/]+)\/?$/.exec(pathname)?.[1];
 
   if (submissionId && submissionId !== "admin") {
-    return <MarketplaceDetailPage configuredWorkshopUrl={configuredWorkshopUrl} submissionId={submissionId} />;
+    return (
+      <Suspense fallback={<DetailSkeleton />}>
+        <MarketplaceDetailPage configuredWorkshopUrl={configuredWorkshopUrl} submissionId={submissionId} />
+      </Suspense>
+    );
   }
 
   return (

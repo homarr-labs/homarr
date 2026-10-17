@@ -142,13 +142,6 @@
         "secondaryColor": "Sekundärfarbe",
         "resetColors": "Farben zurücksetzen",
         "radius": "Widget-Eckradius",
-        "radiusOptions": {
-          "xs": "Klein",
-          "sm": "Dezent",
-          "md": "Ausgewogen",
-          "lg": "Abgerundet",
-          "xl": "Weich"
-        },
         "columns": "Brettspalten",
         "columnsDescription": "Spalten definieren das horizontale Raster für die Größe und Positionierung von Elementen. 12 ist für die meisten Leute reichlich.",
         "columnCount": "{count, plural, one {# Spalte} other {# Spalten}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Melden Sie sich nach dem Einrichten als Administrator an, um einen API-Schlüssel zu erstellen.",
           "configuration": "Client-Konfiguration",
           "copy": "Konfiguration kopieren",
-          "copied": "Kopiert",
           "advanced": "MCP-Werkzeuge, Berechtigungen und Einrichtungsdetails öffnen"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Beschreibung"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Eine andere URL für Ping verwenden",
@@ -839,7 +828,7 @@
   },
   "tips": {
     "dismiss": "Tipp verwerfen",
-    "multiSelectApps": "Tipp: Strg / <unk> halten um mehrere Apps gleichzeitig auszuwählen"
+    "multiSelectApps": "Tipp: Strg / ⌘ halten um mehrere Apps gleichzeitig auszuwählen"
   },
   "customWidget": {
     "secretEntry": {
@@ -853,7 +842,6 @@
       "source": "API-Quelle: {name}",
       "baseUrl": "Server-URL",
       "networkScope": "Netzwerkzugriff",
-      "save": "API-Konfiguration speichern",
       "expires": "Diese einmalige Anfrage läuft unter {time} ab."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Füge ein komplettes benutzerdefiniertes Widget JSON mit Strg+V oder Command+V ein",
       "delete": "Benutzerdefiniertes Widget löschen",
       "deleteConfirm": "Möchtest du „{name}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-      "export": "Exportieren",
       "duplicate": "Duplizieren",
       "aiPrompt": "Design mit KI",
       "copyAiPrompt": "KI Prompt kopieren",
       "enable": "Aktivieren",
       "disable": "Deaktivieren",
-      "menu": "Aktionen",
       "downloadSkill": "Eigene Widget-Fähigkeit anzeigen",
       "publishWorkshop": "Im Workshop veröffentlichen",
       "migrate": "Benutzerdefiniertes Widget migrieren",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Widget-Quellen konfigurieren",
       "description": "Überprüfen Sie, wo sich dieses Widget verbindet, und fügen oder ersetzen Sie seine verschlüsselten Anmeldeinformationen.",
-      "credentialsRequired": "Anfragen werden fehlschlagen, bis die erforderlichen Anmeldedaten hinzugefügt wurden.",
-      "save": "Konfiguration speichern"
-    },
-    "field": {
-      "description": "Beschreibung"
+      "credentialsRequired": "Anfragen werden fehlschlagen, bis die erforderlichen Anmeldedaten hinzugefügt wurden."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Format",
         "insertStarter": "Insert starter",
         "redo": "Wiederholen",
-        "copied": "Kopiert",
         "schema": "Schema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Anfrage {count, number}",
         "requestId": "Anfrage-ID",
-        "type": "Download Client",
         "method": "Methode",
         "source": "API-Quelle",
         "run": "Ausführen",
@@ -1037,7 +1017,6 @@
         "optionName": "Optionsname",
         "label": "Kategorie",
         "control": "Steuerung",
-        "description": "Beschreibung",
         "default": "Standard",
         "optionDetails": "Beschränkungen und dynamische Optionen",
         "minimum": "Minimal",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Der gespeicherte Wert wurde gelöscht.",
         "primary": "Primäre API",
         "id": "Quell-ID",
-        "name": "Job Name",
         "baseUrl": "Basis URL",
         "baseUrlError": {
           "invalid": "Geben Sie eine vollständige URL ein.",
@@ -1091,7 +1069,6 @@
         "remove": "Quelle und ihre Anfragen entfernen",
         "advanced": "Erweitert",
         "add": "Weitere API-Quelle hinzufügen",
-        "sourceType": "Integration",
         "manualSource": "HTTP API",
         "existingIntegration": "Vorhandene Integration",
         "integrationType": "Integrationstyp",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Migrierte v2 ersetzen überprüfen",
       "migrationDescription": "Überprüfen und bestätigen Sie diese generierte v2-Definition. Die Bestätigung der atomaren Ersetzung des erhaltenen v1-Datensatzes, während bestehende Platzierungen mit der gleichen Widget-ID verknüpft bleiben.",
       "fileLabel": "Wähle eine benutzerdefinierte Widget-JSON-Datei",
-      "name": "Job Name",
       "origin": "Basis-Ursprung",
       "authentication": "Authentifizierung",
       "networkScope": "Netzwerkbereich",
@@ -1245,8 +1221,6 @@
         "title": "Dieses Widget kann entfernte Daten ändern",
         "description": "Überprüfen Sie jede benannte Aktion, vererbte Referenzen und zerstörerische Bestätigung nach dem Import. Geheimnisse sind nicht in der Datei enthalten."
       },
-      "cancel": "Import abbrechen",
-      "confirm": "Widget importieren",
       "confirmMigration": "v2 Ersatz bestätigen"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Screenshot-Betrachter schließen",
     "technicalDetails": "Technische Details",
     "sourceCode": "Workshop-Eintrag",
-    "export": "Exportieren",
     "report": "Bericht",
     "reportTitle": "Berichtsvorlage",
     "reportReason": "Grund",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Einreichung ansehen und verwalten",
       "done": "Fertig",
       "signInHint": "Melden Sie sich an, um unter Ihrer Workshop-Identität zu veröffentlichen.",
-      "titleField": "Titel",
-      "descriptionField": "Beschreibung",
       "screenshots": "Screenshots",
       "screenshotsDescription": "Bis zu fünf PNG-, JPEG- oder WebP-Bilder",
       "screenshotsPlaceholder": "Screenshots auswählen",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Vertrauenswürdige Zertifikate",
                 "message": "Zertifikat zur vertrauenswürdigen Zertifikatsliste hinzugefügt"
               },
               "error": {
-                "title": "Ein Fehler ist beim vertrauen des Zertifikats aufgetreten",
                 "message": "Das Zertifikat konnte nicht zur vertrauenswürdigen Zertifikatsliste hinzugefügt werden"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Medien suchen",
     "field": {
       "preview": "Vorschau",
-      "size": "Größe",
-      "creator": "Ersteller",
-      "actions": "Steuerung"
+      "creator": "Ersteller"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Klein",
+        "sm": "Dezent",
+        "md": "Ausgewogen",
+        "lg": "Abgerundet",
+        "xl": "Weich"
+      }
+    },
     "success": "Erfolgreich",
     "beta": "Beta",
     "error": "Fehler",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Suche löschen",
       "copy": "Kopieren",
       "copied": "Kopiert",
-      "refresh": "Neu laden"
+      "refresh": "Neu laden",
+      "export": "Exportieren"
     },
     "pagination": {
       "pageOf": "Seite {page} von {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Gesamt",
     "filesystemUsage": "{count, plural, one {Zeige Nutzung für # Dateisystem} other {Zeige Nutzung für # Dateisysteme}}",
     "field": {
-      "name": "Job Name"
+      "name": "Name",
+      "description": "Beschreibung",
+      "title": "Titel",
+      "actions": "Aktionen",
+      "type": "Typ",
+      "status": "Status",
+      "state": "Status",
+      "size": "Größe",
+      "source": "Quelle",
+      "namespace": "Namensraum",
+      "created": "Erstellt",
+      "architecture": "Architektur"
     },
     "label": {
       "new": "Neu"
@@ -2109,9 +2097,6 @@
         "collapse": "Einklappen"
       },
       "option": {
-        "title": {
-          "label": "Titel"
-        },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Einstellungen",
         "settingsFor": "Einstellungen für {name}",
-        "options": "Optionen",
-        "actions": "Aktionen"
+        "options": "Optionen"
       },
       "status": {
         "success": "Ok",
@@ -2189,11 +2173,10 @@
     "selection": {
       "summary": "{count, plural, one {# ausgewählten Eintrag} other {# ausgewählte Elemente}}",
       "selected": "{count, plural, one {# ausgewählt} other {# ausgewählt}}",
-      "copy": "Kopieren",
       "copied": "{count, plural, one {# Element in die Zwischenablage kopiert!} other {# Elemente in die Zwischenablage kopiert}}",
       "copyError": "Die ausgewählten Elemente konnten nicht kopiert werden. Ihr Browser erlaubt möglicherweise keinen Zugriff auf die Zwischenablage.",
       "paste": "Einfügen",
-      "pasteShortcut": "Kopierte Elemente hier einfügen (Strg / <unk> + V)",
+      "pasteShortcut": "Kopierte Elemente hier einfügen (Strg / ⌘ + V)",
       "pasted": "{count, plural, one {# Eintrag eingefügt} other {# Einträge eingefügt}}",
       "pasteError": "Die Zwischenablage konnte nicht gelesen werden. Ihr Browser erlaubt möglicherweise keinen Zugriff auf die Zwischenablage.",
       "pasteInvalid": "Die Zwischenablage enthält keine gültigen Homarr-Board-Elemente.",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# Element entfernt} other {# Elemente entfernt!}}",
       "move": "Bewegen",
       "moveTo": "Ausgewählte Elemente verschieben",
-      "delete": "Löschen",
       "clear": "Auswahl löschen",
       "clearShortcut": "Auswahl löschen (Escape)",
       "saveErrorTitle": "Artikel konnten nicht aktualisiert werden",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integrationen",
           "removeLabel": "{name} Integration entfernen"
-        },
-        "title": {
-          "label": "Titel"
         },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Name",
             "node": "Node"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Name",
-            "state": "Status",
             "cpuUsage": "CPU-Auslastung",
             "memoryUsage": "Speichernutzung"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
-        "name": "Name",
         "id": "Id",
-        "status": "Status",
         "directPlay": "Direkte Wiedergabe",
         "directStream": "Direkter Stream",
         "transcodeVideo": "Video wird transkodiert",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Steuerung"
         },
         "added": {
-          "columnTitle": "Hinzugefügt",
-          "detailsTitle": "Hinzugefügt am"
+          "columnTitle": "Hinzugefügt"
         },
         "category": {
-          "columnTitle": "Extras",
-          "detailsTitle": "Kategorien (Oder zusätzliche Informationen)"
+          "columnTitle": "Extras"
         },
         "downSpeed": {
-          "columnTitle": "Download",
-          "detailsTitle": "Download Geschwindigkeit"
+          "columnTitle": "Download"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
-        },
-        "integration": {
-          "columnTitle": "Integration"
-        },
-        "name": {
-          "columnTitle": "Job Name"
+          "columnTitle": "ID"
         },
         "progress": {
           "columnTitle": "Fortschritt",
           "detailsTitle": "Download Fortschritt"
         },
         "ratio": {
-          "columnTitle": "Verhältnis",
-          "detailsTitle": "Torrent Verhältnis (Empfangen/Gesendet)"
+          "columnTitle": "Verhältnis"
         },
         "received": {
           "columnTitle": "Download gesamt",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Upload gesamt",
           "detailsTitle": "Insgesamt hochgeladen"
         },
-        "size": {
-          "columnTitle": "Dateigröße",
-          "detailsTitle": "Gesamtgröße der Auswahl/Dateien"
-        },
-        "state": {
-          "columnTitle": "Staat",
-          "detailsTitle": "Jobstatus"
-        },
         "time": {
-          "columnTitle": "Endzeit",
-          "detailsTitle": "Zeit danach/zur Fertigstellung",
-          "eta": ""
+          "columnTitle": "Endzeit"
         },
         "type": {
-          "columnTitle": "Typ",
           "detailsTitle": "Download Client"
         },
         "upSpeed": {
-          "columnTitle": "Upload",
-          "detailsTitle": "Upload Geschwindigkeit"
+          "columnTitle": "Upload"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Fortschritt"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Größe"
-          }
-        },
         "common": {
           "empty": "Leer",
           "file": "Datei",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name oder Eigentümer/Name"
-          },
-          "name": {
-            "label": "Name"
           },
           "versionFilter": {
             "label": "Versionsfilter",
@@ -4891,7 +4834,6 @@
       "download": "Download",
       "upload": "Upload",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Durchschnittlicher Download",
       "avgUpload": "Durchschnittlicher Upload",
       "avgPing": "Durchschnittlicher Ping",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Aktionen sind deaktiviert, während das Board im Bearbeitungsmodus ist.",
         "widgetItemUnavailable": "Dieses Widget-Element ist nicht verfügbar.",
         "toggle": "Umschalten",
-        "copied": "Kopiert",
         "confirmDelete": "Bestätigen Sie diese zerstörerische Aktion."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "System",
-        "source": "Integration",
         "hostname": "Hostname",
         "cpuModel": "CPU-Modell",
         "cores": "Kerne",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Alle Agenten sind verbunden",
       "empty": "Keine Agenten entsprechen diesem Filter",
       "column": {
-        "status": "Status",
-        "name": "Job Name",
         "ip": "IP",
         "os": "OS",
         "version": "Version",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Elementradius",
-        "description": "Ändert den Grad der Rundung ihrer Kacheln auf dem Board",
-        "option": {
-          "xs": "Sehr klein",
-          "sm": "Klein",
-          "md": "Mittel",
-          "lg": "Groß",
-          "xl": "Sehr groß"
-        }
+        "description": "Ändert den Grad der Rundung ihrer Kacheln auf dem Board"
       },
       "isPublic": {
         "label": "Öffentlich",
@@ -6730,14 +6661,7 @@
               "label": "Hintergrund-Overlay"
             },
             "defaultRadius": {
-              "label": "Eckenstil",
-              "options": {
-                "xs": "Klein",
-                "sm": "Dezent",
-                "md": "Ausgewogen",
-                "lg": "Abgerundet",
-                "xl": "Weich"
-              }
+              "label": "Eckenstil"
             },
             "customCss": {
               "label": "Global benutzerdefiniertes CSS",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Standardgrüße",
               "boardColorLocked": "Brettfarbe gesperrt",
               "boardColorFlexible": "Boardfarben erlaubt",
-              "appName": "Job Name",
               "logo": "Logo",
               "greeting": "Gruß",
               "on": "An",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Letzte Ausführung"
-            },
-            "actions": {
-              "label": "Aktionen"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Erstellt von",
-                  "source": "Integration",
-                  "actions": "Aktionen"
+                  "createdBy": "Erstellt von"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Status",
         "option": {
           "created": "Erstellt",
           "running": "Aktiv",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Aktionen",
       "logs": {
         "label": "Logs anzeigen",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Fehler beim Abrufen der Kubernetes Daten"
-    },
-    "field": {
-      "name": {
-        "label": "Job Name"
-      },
-      "namespace": {
-        "label": "Namensraum"
-      },
-      "creationTimestamp": {
-        "label": "Erstellt"
-      },
-      "state": {
-        "label": "Jobstatus"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Download Client"
-      },
-      "architecture": {
-        "label": "Architektur"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Berechtigung"
       }
-    },
-    "action": {
-      "saveUser": "Benutzerberechtigung hinzufügen",
-      "saveGroup": "Gruppenberechtigung speichern"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "{mode} Ergebnisse",
       "footer": {
         "navigate": "Navigate",
-        "open": "Öffnen",
-        "close": "Schließen"
+        "open": "Öffnen"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "URL Suchvorlage"
-        },
-        "description": {
-          "label": "Beschreibung"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "Staffel",
-                "episodes": "Episoden",
-                "status": "Status"
+                "episodes": "Episoden"
               },
               "status": {
                 "requested": "Angefragt"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Bearbeite das komplette Stylesheet. Bestehende Regeln werden beibehalten, es sei denn, sie werden hier entfernt.",
       "cssCharacters": "{count} von 16384 Zeichen",
       "copyCss": "Copy CSS",
-      "copied": "Kopiert",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "Dieses CSS lädt eine entfernte Ressource",
       "remoteCssDescription": "Importierte Stylesheets und Remote-URLs kontaktieren einen anderen Server, wenn das Board geladen wird. Überprüfen Sie diese, bevor Sie fortfahren."

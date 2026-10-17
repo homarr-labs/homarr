@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 
 import type { PublicServerSettings, SettingsContextProps, UserSettings } from "./creator";
 import { createSettings } from "./creator";
@@ -13,9 +13,9 @@ export const SettingsProvider = ({
   serverSettings,
   children,
 }: PropsWithChildren<{ user: UserSettings | null; serverSettings: PublicServerSettings }>) => {
-  return (
-    <SettingsContext.Provider value={createSettings({ user, serverSettings })}>{children}</SettingsContext.Provider>
-  );
+  const settings = useMemo(() => createSettings({ user, serverSettings }), [user, serverSettings]);
+
+  return <SettingsContext.Provider value={settings}>{children}</SettingsContext.Provider>;
 };
 
 export const useSettings = () => {

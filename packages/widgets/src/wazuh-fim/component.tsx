@@ -20,6 +20,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import type { WidgetComponentProps } from "../definition";
 import { WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
+import { wazuhMinuteQueryOptions } from "../wazuh/_shared/options";
 import { WazuhLegendChip, WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
 import { formatWazuhCount } from "../wazuh/_shared/severity";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
@@ -51,7 +52,7 @@ export default function WazuhFimWidget({ integrationIds, options, width, height 
       limit: options.limit,
       includeRegistry: options.includeRegistry,
     },
-    { staleTime: 60_000, refetchInterval: 60_000 },
+    wazuhMinuteQueryOptions,
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);

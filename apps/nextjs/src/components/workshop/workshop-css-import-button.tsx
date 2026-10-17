@@ -13,7 +13,7 @@ import { useWorkshopQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 import { validateWorkshopContent } from "@homarr/workshop/schema";
 
-import { NoResults } from "~/components/no-results";
+import { NoResults } from "@homarr/ui";
 import { getWorkshopWebUrl } from "./workshop-client";
 import { useWorkshopSession } from "./workshop-session";
 import { WorkshopSubmissionGrid } from "./workshop-submission-grid";

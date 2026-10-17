@@ -18,7 +18,7 @@ import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
 import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
-import { IntegrationSourceSelect } from "~/components/custom-widgets/integration-source-select";
+import { IntegrationSourceSelect } from "@homarr/forms-collection/custom-widgets";
 
 import { useI18n } from "@homarr/translation/client";
 
@@ -33,6 +33,7 @@ interface RequestDetails {
 
 export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const t = useI18n("customWidget.secretEntry");
+  const tCommon = useI18n("common");
   const tSecret = useI18n("customWidget.secret");
   const [details, setDetails] = useState<RequestDetails | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
@@ -82,7 +83,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
 
   return (
     <Center mih="100dvh" p="md">
-      <Card withBorder shadow="md" radius="lg" p="xl" w="100%" maw={480}>
+      <Card shadow="md" radius="lg" p="xl" w="100%" maw={480}>
         <Stack gap="lg">
           <ThemeIcon size={48} radius="xl" variant="light">
             <IconLock size={24} />
@@ -103,7 +104,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
           {details?.status === "applying" && <Alert color="blue">{t("applying")}</Alert>}
           {details?.status === "pending" && (
             <Stack gap="md">
-              <Card withBorder bg="var(--mantine-color-default-hover)">
+              <Card bg="var(--mantine-color-default-hover)">
                 <Text fw={600}>{details.widgetName}</Text>
                 <Text size="sm" c="dimmed">
                   {t("source", { name: details.sourceName })}
@@ -162,7 +163,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                 }
                 onClick={() => void submit()}
               >
-                {t("save")}
+                {tCommon("action.save")}
               </Button>
               <Text size="xs" c="dimmed">
                 {t("expires", { time: new Date(details.expiresAt).toLocaleTimeString() })}

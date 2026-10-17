@@ -1,19 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import type { ComponentProps } from "react";
 
-import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-type SharedEditorProps = ComponentProps<typeof CustomWidgetCodeEditor>;
-type CodeEditorProps = Omit<SharedEditorProps, "messages">;
-
-export function CodeEditor(props: CodeEditorProps) {
+export function useCustomWidgetEditorMessages(formatDiagnostic?: CustomWidgetEditorMessages["diagnostic"]) {
   const t = useI18n("customWidget.editor");
   const tCommon = useI18n("common");
-  const messages = useMemo<SharedEditorProps["messages"]>(
+  const messages = useMemo<CustomWidgetEditorMessages>(
     () => ({
       languageJsx: invariantTechnicalLabels.jsx,
       languageJson: invariantTechnicalLabels.json,
@@ -26,7 +22,7 @@ export function CodeEditor(props: CodeEditorProps) {
       insertStarter: t("action.insertStarter"),
       format: t("action.format"),
       copy: tCommon("action.copy"),
-      copied: t("action.copied"),
+      copied: tCommon("action.copied"),
       schema: t("action.schema"),
       schemaTab: invariantTechnicalLabels.jsonSchema,
       minimalTab: t("reference.minimal"),
@@ -38,13 +34,15 @@ export function CodeEditor(props: CodeEditorProps) {
       characters: (count, limit) =>
         limit ? t("status.charactersWithLimit", { count, limit }) : t("status.characters", { count }),
       diagnosticsTitle: t("diagnostics.title"),
-      diagnostic: (diagnostic) =>
-        `${diagnostic.line ? `${t("diagnostics.line", { line: diagnostic.line })}: ` : ""}${t(
-          `diagnostics.${diagnostic.code}` as never,
-          { value: diagnostic.value ?? "" } as never,
-        )}`,
+      diagnostic:
+        formatDiagnostic ??
+        ((diagnostic) =>
+          `${diagnostic.line ? `${t("diagnostics.line", { line: diagnostic.line })}: ` : ""}${t(
+            `diagnostics.${diagnostic.code}` as never,
+            { value: diagnostic.value ?? "" } as never,
+          )}`),
     }),
-    [t, tCommon],
+    [formatDiagnostic, t, tCommon],
   );
-  return <CustomWidgetCodeEditor {...props} messages={messages} />;
+  return messages;
 }

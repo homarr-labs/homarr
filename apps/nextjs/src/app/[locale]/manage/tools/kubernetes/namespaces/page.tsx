@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -7,7 +6,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { NamespacesTable } from "~/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
@@ -28,12 +27,8 @@ export default async function NamespacesPage({
       ? []
       : await api.kubernetes.namespaces.getNamespaces({ contextId: context.contextId });
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tResource("namespaces")}</Title>
-        <NamespacesTable contextId={context.contextId} initialNamespaces={namespaces} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tResource("namespaces")} container={false}>
+      <NamespacesTable contextId={context.contextId} initialNamespaces={namespaces} />
+    </ManagePageLayout>
   );
 }

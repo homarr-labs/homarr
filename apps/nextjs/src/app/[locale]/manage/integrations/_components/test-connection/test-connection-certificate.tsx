@@ -70,14 +70,14 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
     await addCertificateAsync(formData, {
       onSuccess() {
         showSuccessNotification({
-          title: tError("certificate.selfSigned.notification.success.title"),
+          title: tError("certificate.hostnameMismatch.notification.success.title"),
           message: tError("certificate.selfSigned.notification.success.message"),
         });
         setShowRetryButton(true);
       },
       onError() {
         showErrorNotification({
-          title: tError("certificate.selfSigned.notification.error.title"),
+          title: tError("certificate.hostnameMismatch.notification.error.title"),
           message: tError("certificate.selfSigned.notification.error.message"),
         });
       },
@@ -140,7 +140,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
             </Button>
           )}
           {showUploadForm && (
-            <Card withBorder>
+            <Card>
               <CertificateUploadForm
                 embedded
                 onCancel={() => setShowUploadForm(false)}

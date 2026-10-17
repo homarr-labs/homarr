@@ -1,10 +1,10 @@
 "use client";
 
-import { SourceSetupPanel } from "~/components/custom-widgets/integration-source-select";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Center, Group, Loader, Modal, Stack, Text } from "@mantine/core";
 
+import { SourceSetupPanel } from "@homarr/forms-collection/custom-widgets";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getCustomWidgetSourceSetups } from "@homarr/custom-widgets/core";
@@ -85,10 +85,12 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
         title: t("action.configureSources"),
         message: t("notification.sourcesConfigured"),
       });
-      await utils.customWidget.get.invalidate({ id: definitionId });
-      await utils.customWidget.list.invalidate();
-      await utils.customWidget.available.invalidate();
-      await utils.widget.customApi.getData.invalidate();
+      await Promise.all([
+        utils.customWidget.get.invalidate({ id: definitionId }),
+        utils.customWidget.list.invalidate(),
+        utils.customWidget.available.invalidate(),
+        utils.widget.customApi.getData.invalidate(),
+      ]);
       await revalidatePathActionAsync("/manage/custom-widgets");
       router.refresh();
       onClose();
@@ -129,7 +131,7 @@ export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }:
               loading={saving}
               disabled={!isCustomWidgetSourceSetupReady(setups, values)}
             >
-              {t("sourceSetupDialog.save")}
+              {tCommon("action.save")}
             </Button>
           </Group>
         </Stack>

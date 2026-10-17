@@ -381,7 +381,7 @@ const WidgetContextMenuActions = ({
   onRefresh,
   t,
 }: WidgetContextMenuActionsProps) => {
-  const tMenu = useI18n("item.menu.label");
+  const tFields = useI18n("common.field");
   const tCommon = useI18n("common.action");
   const isQueryFetching =
     useIsFetching({
@@ -397,7 +397,7 @@ const WidgetContextMenuActions = ({
       {visibleWidgetActions.length > 0 && (
         <>
           {hasToggleOptions && <Menu.Divider />}
-          <Menu.Label>{tMenu("actions")}</Menu.Label>
+          <Menu.Label>{tFields("actions")}</Menu.Label>
           {visibleWidgetActions.map((action) => {
             const Icon = action.icon;
             return (

@@ -28,12 +28,12 @@ interface NodesListComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.nodes">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
   tResource: ScopedTranslationFunction<"kubernetes.cluster.resources">,
 ): MRT_ColumnDef<KubernetesNode>[] => [
   {
     accessorKey: "status",
-    header: tField("state.label"),
+    header: tField("state"),
 
     Cell({ cell }) {
       const checkIcon = <IconCircleDashedCheck style={{ width: rem(12), height: rem(12) }} />;
@@ -51,7 +51,7 @@ const createColumns = (
   },
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
@@ -78,7 +78,7 @@ const createColumns = (
   },
   {
     accessorKey: "architecture",
-    header: tField("architecture.label"),
+    header: tField("architecture"),
   },
   {
     accessorKey: "kubernetesVersion",
@@ -86,14 +86,14 @@ const createColumns = (
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function NodesTable({ contextId, initialNodes }: NodesListComponentProps) {
   const tNodes = useI18n("kubernetes.nodes");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
   const tResource = useI18n("kubernetes.cluster.resources");
 
   const { data, isError } = clientApi.kubernetes.nodes.getNodes.useQuery(

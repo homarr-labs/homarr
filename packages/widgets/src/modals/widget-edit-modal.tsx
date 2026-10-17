@@ -715,7 +715,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
               <Accordion.Panel>
                 <Stack gap="sm">
                   <TextInput
-                    label={tItem("field.title.label")}
+                    label={tCommon("field.title")}
                     rightSection={
                       <MantineInput.ClearButton
                         onClick={() => form.setFieldValue("advancedOptions.title", "")}

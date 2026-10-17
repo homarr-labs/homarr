@@ -1,39 +1,59 @@
-name: Prebuilt dependencies for debian
-description: Provides prebuilt dependencies for debian based docker images
+name: Prebuilt SQLite binding
+description: Provides a native SQLite binding for the archive's target libc
 inputs:
   architecture:
-    description: Name of architecture, will be used to build docker image (e.g. amd64, arm64)
+    description: Native architecture (amd64 or arm64)
     required: true
+  libc:
+    description: Target libc distribution (debian or alpine)
+    default: debian
 outputs:
   path:
-    description: Path to extracted prebuilt dependencies
-    value: ${{ runner.temp }}/prebuilts
+    description: Path to the native binding
+    value: ${{ runner.temp }}/prebuilts/${{ inputs.libc }}
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v4
-
-    - name: Build docker image for ${{ inputs.architecture }}
-      id: build
+    - name: Select native build images
+      id: images
+      shell: bash
+      env:
+        LIBC: ${{ inputs.libc }}
+      run: |
+        case "$LIBC" in
+          debian)
+            echo 'node=node:24.18.0-trixie-slim' >> "$GITHUB_OUTPUT"
+            echo 'bun=oven/bun:1.4.3-debian' >> "$GITHUB_OUTPUT"
+            ;;
+          alpine)
+            echo 'node=node:24.18.0-alpine' >> "$GITHUB_OUTPUT"
+            echo 'bun=oven/bun:1.4.3-alpine' >> "$GITHUB_OUTPUT"
+            ;;
+          *) echo "Unsupported libc: $LIBC" >&2; exit 1 ;;
+        esac
+    - uses: docker/setup-buildx-action@v4
+    - name: Build the native binding
       uses: docker/build-push-action@v7
       with:
         push: false
         load: true
         context: ./deployments/prebuilt-debian
         platforms: linux/${{ inputs.architecture }}
-        tags: prebuilt-debian
-    - name: Start docker container for ${{ inputs.architecture }}
+        build-args: |
+          NODE_IMAGE=${{ steps.images.outputs.node }}
+          BUN_IMAGE=${{ steps.images.outputs.bun }}
+        tags: homarr-prebuilt-${{ inputs.architecture }}-${{ inputs.libc }}
+        cache-from: type=gha,scope=homarr-prebuilt-${{ inputs.architecture }}-${{ inputs.libc }}
+        cache-to: type=gha,scope=homarr-prebuilt-${{ inputs.architecture }}-${{ inputs.libc }},mode=max
+    - name: Extract the native binding
+      shell: bash
+      env:
+        ARCHITECTURE: ${{ inputs.architecture }}
+        LIBC: ${{ inputs.libc }}
       run: |
-        docker run --name prebuilt-debian \
-          --detach --rm prebuilt-debian
-      shell: bash
-    - name: Extract prebuilt dependencies from ${{ inputs.architecture }} container
-      run: |
-        mkdir -p ${{ runner.temp }}/prebuilts && \
-        docker cp prebuilt-debian:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node ${{ runner.temp }}/prebuilts/better_sqlite3.node
-      shell: bash
-    - name: Stop ${{ inputs.architecture }} container
-      if: always()
-      run: docker container remove --force --volumes prebuilt-debian
-      shell: bash
+        container="homarr-prebuilt-${ARCHITECTURE}-${LIBC}"
+        trap 'docker rm -f "$container" >/dev/null' EXIT
+        docker create --name "$container" "$container" node --version >/dev/null
+        mkdir -p "$RUNNER_TEMP/prebuilts/$LIBC"
+        docker cp "$container:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node" \
+          "$RUNNER_TEMP/prebuilts/$LIBC/better_sqlite3.node"

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Anchor, Card, Stack, Text } from "@mantine/core";
 
-import type { TablerIcon } from "@homarr/ui";
+import type { TablerIcon } from "../../index";
 
 interface NoResultsProps {
   icon: TablerIcon;

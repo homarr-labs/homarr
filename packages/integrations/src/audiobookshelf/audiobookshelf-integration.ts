@@ -51,19 +51,20 @@ export class AudiobookshelfIntegration extends Integration {
   }
 
   public async getDashboardDataAsync(): Promise<AudiobookshelfDashboardData> {
-    const [libraries, listeningStats, activeSessions] = await Promise.all([
-      this.getLibrariesAsync(),
+    const [statsByLibrary, listeningStats, activeSessions] = await Promise.all([
+      this.getLibrariesAsync().then(
+        async (libraries) =>
+          await Promise.all(
+            libraries.map(async (library) => ({
+              library,
+              mediaType: library.mediaType,
+              stats: await this.getLibraryStatsAsync(library.id),
+            })),
+          ),
+      ),
       this.getListeningStatsAsync(),
       this.getActiveSessionsCountAsync(),
     ]);
-
-    const statsByLibrary = await Promise.all(
-      libraries.map(async (library) => ({
-        library,
-        mediaType: library.mediaType,
-        stats: await this.getLibraryStatsAsync(library.id),
-      })),
-    );
 
     const counts = {
       totalAudiobooks: 0,
@@ -76,7 +77,7 @@ export class AudiobookshelfIntegration extends Integration {
     }
 
     return {
-      libraryCount: libraries.length,
+      libraryCount: statsByLibrary.length,
       totalAudiobooks: counts.totalAudiobooks,
       totalPodcasts: counts.totalPodcasts,
       totalListeningTimeSeconds: listeningStats.totalTime,

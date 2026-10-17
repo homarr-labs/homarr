@@ -19,7 +19,7 @@ import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 import { optionalEmailSchema } from "@homarr/validation/email";
 import { userPasswordSchema } from "@homarr/validation/user";
 
-import { GroupSelect } from "~/components/access/group-select";
+import { GroupSelect } from "@homarr/forms-collection/access";
 import { StepperNavigationComponent } from "./stepper-navigation";
 
 interface GroupWithPermissions {

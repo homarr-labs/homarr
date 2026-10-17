@@ -142,13 +142,6 @@
         "secondaryColor": "Sekundaarne värv",
         "resetColors": "Lähtesta värvid",
         "radius": "Vidina nurga raadius",
-        "radiusOptions": {
-          "xs": "Tihe",
-          "sm": "Tagasihoidlik",
-          "md": "Tasakaalustatud",
-          "lg": "Ümar",
-          "xl": "Pehme"
-        },
         "columns": "Paneeli veerud",
         "columnsDescription": "Veerud määravad horisontaalse ruudustiku, mida kasutatakse elementide suuruse ja asukoha määramiseks. Enamiku kasutajate jaoks piisab 12-st.",
         "columnCount": "{count, plural, one {# veerg} other {# veergu}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Pärast seadistamist logige administraatorina sisse, et luua API-võti.",
           "configuration": "Kliendi konfiguratsioon",
           "copy": "Kopeeri konfiguratsioon",
-          "copied": "Kopeeritud",
           "advanced": "Ava MCP tööriistad, õigused ja seadistuse üksikasjad"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Kirjeldus"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Kasuta pingi jaoks teist URL-i",
@@ -853,7 +842,6 @@
       "source": "API allikas: {name}",
       "baseUrl": "Serveri URL",
       "networkScope": "Võrgule juurdepääs",
-      "save": "Salvesta API konfiguratsioon",
       "expires": "See ühekordne päring aegub ajal {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Kleepige täielik kohandatud vidina JSON klahvikombinatsiooniga Ctrl+V või Command+V",
       "delete": "Kustuta kohandatud vidin",
       "deleteConfirm": "Kas oled kindel, et soovid „{name}“ kustutada? Seda toimingut ei saa tagasi võtta.",
-      "export": "Ekspordi",
       "duplicate": "Dubleeri",
       "aiPrompt": "Kujunda tehisintellekti abil",
       "copyAiPrompt": "Kopeeri tehisintellekti viip",
       "enable": "Luba",
       "disable": "Keela",
-      "menu": "Toimingud",
       "downloadSkill": "Vaata kohandatud vidina oskust",
       "publishWorkshop": "Avalda töötoas",
       "migrate": "Migreeri kohandatud vidin",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Vidina allikate seadistamine",
       "description": "Vaata üle, millega see vidin ühendub, ning lisa või asenda selle krüptitud mandaadid.",
-      "credentialsRequired": "Päringud nurjuvad, kuni nõutud mandaadid on lisatud.",
-      "save": "Salvesta konfiguratsioon"
-    },
-    "field": {
-      "description": "Kirjeldus"
+      "credentialsRequired": "Päringud nurjuvad, kuni nõutud mandaadid on lisatud."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Vorminda",
         "insertStarter": "Lisa algmall",
         "redo": "Tee uuesti",
-        "copied": "Kopeeritud",
         "schema": "Skeem"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Päring {count, number}",
         "requestId": "Päringu ID",
-        "type": "Allalaadimishalduri tüüp",
         "method": "Meetod",
         "source": "API-allikas",
         "run": "Käivita",
@@ -1008,7 +988,7 @@
         "runManual": "SubFetchist",
         "permission": "Õigus",
         "path": "Tee",
-        "pathDescription": "Kasuta vidina suvandite jaoks „{option:name}“ ja väljakutse väärtuste jaoks „{param:name}“.",
+        "pathDescription": "Kasuta vidina suvandite jaoks „'{option:name}'“ ja väljakutse väärtuste jaoks „'{param:name}'“.",
         "requestDetails": "Päring, keha ja käitumine",
         "queryValues": "Päringu väärtused",
         "queryKey": "Päringu võti",
@@ -1037,7 +1017,6 @@
         "optionName": "Suvandi nimi",
         "label": "Silt",
         "control": "Juhtelement",
-        "description": "Kirjeldus",
         "default": "Vaikeväärtus",
         "optionDetails": "Piirangud ja dünaamilised valikud",
         "minimum": "Miinimum",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Salvestatud väärtus kustutati.",
         "primary": "Esmane API",
         "id": "Allika ID",
-        "name": "Töö nimetus",
         "baseUrl": "Baas-URL",
         "baseUrlError": {
           "invalid": "Sisesta täielik URL.",
@@ -1091,7 +1069,6 @@
         "remove": "Eemalda allikas ja selle päringud",
         "advanced": "Täpsemad seaded",
         "add": "Lisa veel üks API-allikas",
-        "sourceType": "Integratsioon",
         "manualSource": "HTTP-liides",
         "existingIntegration": "Olemasolev integratsioon",
         "integrationType": "Integratsiooni tüüp",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Vaata üle migreeritud v2 asendus",
       "migrationDescription": "Vaata üle ja kinnita see loodud v2 määratlus. Kinnitamine asendab säilitatud v1 kirje aatomiliselt, jättes olemasolevad tahvlipaigutused sama vidina ID-ga seotuks.",
       "fileLabel": "Vali kohandatud vidina JSON-fail",
-      "name": "Töö nimetus",
       "origin": "Baaspäritolu",
       "authentication": "Autentimine",
       "networkScope": "Võrguskoop",
@@ -1245,8 +1221,6 @@
         "title": "See vidin võib muuta kaugandmeid",
         "description": "Vaata pärast importimist üle kõik nimega toimingud, päritud mandaadid ja hävitava toimingu kinnitused. Saladusi failis ei sisaldu."
       },
-      "cancel": "Tühista import",
-      "confirm": "Impordi vidin",
       "confirmMigration": "Kinnita v2 asendus"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Sulge ekraanipiltide vaatur",
     "technicalDetails": "Tehnilised üksikasjad",
     "sourceCode": "Töötoa kirje",
-    "export": "Ekspordi",
     "report": "Raporteeri",
     "reportTitle": "Raporteeri esildisest",
     "reportReason": "Põhjus",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Vaata ja halda esildist",
       "done": "Tehtud",
       "signInHint": "Avaldamiseks oma töötoa identiteediga logi sisse.",
-      "titleField": "Pealkiri",
-      "descriptionField": "Kirjeldus",
       "screenshots": "Ekraanipildid",
       "screenshotsDescription": "Kuni viis PNG-, JPEG- või WebP-pilti",
       "screenshotsPlaceholder": "Vali ekraanipildid",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Usaldatud sertifikaat",
                 "message": "Sertifikaat lisati usaldatud sertifikaatide loendisse"
               },
               "error": {
-                "title": "Sertifikaadi usaldamine ebaõnnestus",
                 "message": "Sertifikaadi lisamine usaldatud sertifikaatide loendisse ebaõnnestus"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Otsi meediat",
     "field": {
       "preview": "Eelvaade",
-      "size": "Suurus",
-      "creator": "Looja",
-      "actions": "Juhtelemendid"
+      "creator": "Looja"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Tihe",
+        "sm": "Tagasihoidlik",
+        "md": "Tasakaalus",
+        "lg": "Ümar",
+        "xl": "Pehme"
+      }
+    },
     "success": "Õnnestus",
     "beta": "Beeta",
     "error": "Viga",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Tühjenda otsing",
       "copy": "Kopeeri",
       "copied": "Kopeeritud",
-      "refresh": "Värskenda"
+      "refresh": "Värskenda",
+      "export": "Ekspordi"
     },
     "pagination": {
       "pageOf": "Lehekülg {page} / {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Kokku",
     "filesystemUsage": "{count, plural, one {Kuva # failisüsteemi kasutus} other {Kuva # failisüsteemi kasutus}}",
     "field": {
-      "name": "Töö nimetus"
+      "name": "Nimi",
+      "description": "Kirjeldus",
+      "title": "Pealkiri",
+      "actions": "Toimingud",
+      "type": "Tüüp",
+      "status": "Olek",
+      "state": "Olek",
+      "size": "Suurus",
+      "source": "Allikas",
+      "namespace": "Nimeruum",
+      "created": "Loodud",
+      "architecture": "Arhitektuur"
     },
     "label": {
       "new": "Uus"
@@ -2109,9 +2097,6 @@
         "collapse": "Ahenda"
       },
       "option": {
-        "title": {
-          "label": "Pealkiri"
-        },
         "customCssClasses": {
           "label": "Kohandatud css-klassid"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Seaded",
         "settingsFor": "{name} seaded",
-        "options": "Suvandid",
-        "actions": "Toimingud"
+        "options": "Suvandid"
       },
       "status": {
         "success": "Korras",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# valitud üksus} other {# valitud üksust}}",
       "selected": "{count, plural, one {# valitud} other {# valitud}}",
-      "copy": "Kopeeri",
       "copied": "{count, plural, one {# üksus kopeeriti lõikelauale} other {# üksust kopeeriti lõikelauale}}",
       "copyError": "Valitud üksusi ei saanud kopeerida. Sinu brauser ei pruugi lubada lõikelauale juurdepääsu.",
       "paste": "Kleebi",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# üksus eemaldati} other {# üksust eemaldati}}",
       "move": "Liiguta",
       "moveTo": "Liiguta valitud üksusi",
-      "delete": "Kustuta",
       "clear": "Tühjenda valik",
       "clearShortcut": "Tühjenda valik (Escape)",
       "saveErrorTitle": "Üksusi ei saanud uuendada",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integratsioonid",
           "removeLabel": "Eemalda integratsioon {name}"
-        },
-        "title": {
-          "label": "Pealkiri"
         },
         "customCssClasses": {
           "label": "Kohandatud css klassid"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Nimi",
             "node": "Sõlm"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Nimi",
-            "state": "Olek",
             "cpuUsage": "CPU kasutus",
             "memoryUsage": "Mälukasutus"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "Praegu esitatakse",
         "user": "",
-        "name": "Nimi",
         "id": "Id",
-        "status": "Olek",
         "directPlay": "Otseesitus",
         "directStream": "Otsevoog",
         "transcodeVideo": "Video transkodeerimine",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Juhtelemendid"
         },
         "added": {
-          "columnTitle": "Lisatud",
-          "detailsTitle": "Lisamise kuupäev"
+          "columnTitle": "Lisatud"
         },
         "category": {
-          "columnTitle": "Lisad",
-          "detailsTitle": "Kategooriad (või lisateave)"
+          "columnTitle": "Lisad"
         },
         "downSpeed": {
-          "columnTitle": "Alla",
-          "detailsTitle": "Allalaadimiskiirus"
+          "columnTitle": "Alla"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Praegune indeks kliendi sees"
         },
         "id": {
-          "columnTitle": "Üksuse ID",
-          "detailsTitle": "Üksuse ID"
-        },
-        "integration": {
-          "columnTitle": "Integratsioon"
-        },
-        "name": {
-          "columnTitle": "Töö nimetus"
+          "columnTitle": "Üksuse ID"
         },
         "progress": {
           "columnTitle": "Edenemine",
           "detailsTitle": "Allalaadimise edenemine"
         },
         "ratio": {
-          "columnTitle": "Suhe",
-          "detailsTitle": "Torrenti suhe (vastuvõetud/saadetud)"
+          "columnTitle": "Suhe"
         },
         "received": {
           "columnTitle": "Kokku alla",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Kokku üles",
           "detailsTitle": "Kokku üles laetud"
         },
-        "size": {
-          "columnTitle": "Faili suurus",
-          "detailsTitle": "Valiku/failide kogusuurus"
-        },
-        "state": {
-          "columnTitle": "Olek",
-          "detailsTitle": "Töö olek"
-        },
         "time": {
-          "columnTitle": "Lõpuaeg",
-          "detailsTitle": "Aeg lõpetamisest/kuni lõpetamiseni",
-          "eta": "Eeldatav aeg"
+          "columnTitle": "Lõpuaeg"
         },
         "type": {
-          "columnTitle": "Tüüp",
           "detailsTitle": "Allalaadimishalduri tüüp"
         },
         "upSpeed": {
-          "columnTitle": "Üles",
-          "detailsTitle": "Üleslaadimiskiirus"
+          "columnTitle": "Üles"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Edenemine"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Suurus"
-          }
-        },
         "common": {
           "empty": "Tühi",
           "file": "Fail",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identifikaator",
             "placeholder": "Nimi või omanik/nimi"
-          },
-          "name": {
-            "label": "Nimi"
           },
           "versionFilter": {
             "label": "Versioonifilter",
@@ -4891,7 +4834,6 @@
       "download": "Allalaadimine",
       "upload": "Üleslaadimine",
       "ping": "Ping",
-      "status": "Olek",
       "avgDownload": "Keskmine allalaadimine",
       "avgUpload": "Keskmine üleslaadimine",
       "avgPing": "Keskmine ping",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Toimingud on tahvli redigeerimisrežiimis keelatud.",
         "widgetItemUnavailable": "See vidinaelement pole saadaval.",
         "toggle": "Lülita sisse/välja",
-        "copied": "Kopeeritud",
         "confirmDelete": "Kinnita see pöördumatu toiming."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "Süsteem",
-        "source": "Integratsioon",
         "hostname": "Hostinimi",
         "cpuModel": "Protsessori mudel",
         "cores": "Tuuma",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Kõik agendid on ühendatud",
       "empty": "Ükski agent ei vasta sellele filtrile",
       "column": {
-        "status": "Olek",
-        "name": "Töö nimetus",
         "ip": "IP",
         "os": "Operatsioonisüsteem",
         "version": "Versioon",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Elementide ümarus",
-        "description": "Muudab paneelil olevate kaartide ümarust",
-        "option": {
-          "xs": "Väga väike",
-          "sm": "Väike",
-          "md": "Keskmine",
-          "lg": "Suur",
-          "xl": "Väga suur"
-        }
+        "description": "Muudab paneelil olevate kaartide ümarust"
       },
       "isPublic": {
         "label": "Avalik",
@@ -6730,14 +6661,7 @@
               "label": "Tausta ülekate"
             },
             "defaultRadius": {
-              "label": "Nurga stiil",
-              "options": {
-                "xs": "Tihe",
-                "sm": "Tagasihoidlik",
-                "md": "Tasakaalus",
-                "lg": "Ümar",
-                "xl": "Pehme"
-              }
+              "label": "Nurga stiil"
             },
             "customCss": {
               "label": "Globaalne kohandatud CSS",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Vaiketervitus",
               "boardColorLocked": "Paneeli värv lukustatud",
               "boardColorFlexible": "Paneelivärvid lubatud",
-              "appName": "Töö nimetus",
               "logo": "Logotüüp",
               "greeting": "Tervitus",
               "on": "Sees",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Viimane käivitamine"
-            },
-            "actions": {
-              "label": "Toimingud"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Looja",
-                  "source": "Integratsioon",
-                  "actions": "Toimingud"
+                  "createdBy": "Looja"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Olek",
         "option": {
           "created": "Loodud",
           "running": "Töötab",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Toimingud",
       "logs": {
         "label": "Vaata logisid",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Kubernetese andmete laadimine ebaõnnestus"
-    },
-    "field": {
-      "name": {
-        "label": "Töö nimetus"
-      },
-      "namespace": {
-        "label": "Nimeruum"
-      },
-      "creationTimestamp": {
-        "label": "Loodud"
-      },
-      "state": {
-        "label": "Töö olek"
-      },
-      "status": {
-        "label": "Olek"
-      },
-      "type": {
-        "label": "Allalaadimishalduri tüüp"
-      },
-      "architecture": {
-        "label": "Arhitektuur"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Õigus"
       }
-    },
-    "action": {
-      "saveUser": "Salvesta kasutajaõigus",
-      "saveGroup": "Salvesta rühmaõigus"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "Režiimi „{mode}“ tulemused",
       "footer": {
         "navigate": "Navigeeri",
-        "open": "Ava",
-        "close": "Sulge"
+        "open": "Ava"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "URL-i otsingumall"
-        },
-        "description": {
-          "label": "Kirjeldus"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "Hooaeg",
-                "episodes": "Osad",
-                "status": "Olek"
+                "episodes": "Osad"
               },
               "status": {
                 "requested": "Taotletud"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Muutke kogu laaditabelit. Olemasolevad reeglid säilitatakse, kui neid siin ei eemaldata.",
       "cssCharacters": "{count} / 16384 märki",
       "copyCss": "Kopeeri CSS",
-      "copied": "Kopeeritud",
       "restoreCss": "Taasta praegune CSS",
       "remoteCssTitle": "See CSS laadib kaugressursi",
       "remoteCssDescription": "Imporditud laaditabelid ja kaug-URL-id võtavad armatuurlaua laadimisel ühendust teise serveriga. Vaadake need enne jätkamist üle."

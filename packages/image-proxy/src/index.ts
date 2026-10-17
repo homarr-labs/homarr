@@ -1,7 +1,7 @@
 import { createHmac, hkdfSync, randomUUID } from "node:crypto";
 import { setImmediate } from "node:timers/promises";
 
-import { createId, formatBytes } from "@homarr/common";
+import { formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret, readBoundedResponseAsync } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -50,7 +50,7 @@ export class ImageProxy {
       return this.createImageUrl(existingId);
     }
 
-    const id = createId();
+    const id = randomUUID();
     await this.storeImageAsync(id, url, headers);
 
     return this.createImageUrl(id);

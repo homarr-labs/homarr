@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -7,7 +6,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { IngressesTable } from "~/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
@@ -28,12 +27,8 @@ export default async function NamespacesPage({
       ? []
       : await api.kubernetes.ingresses.getIngresses({ contextId: context.contextId });
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tResource("ingresses")}</Title>
-        <IngressesTable contextId={context.contextId} initialIngresses={ingresses} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tResource("ingresses")} container={false}>
+      <IngressesTable contextId={context.contextId} initialIngresses={ingresses} />
+    </ManagePageLayout>
   );
 }

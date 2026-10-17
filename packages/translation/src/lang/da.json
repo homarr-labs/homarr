@@ -142,13 +142,6 @@
         "secondaryColor": "Sekundær farve",
         "resetColors": "Nulstil farver",
         "radius": "Widget hjørne radius",
-        "radiusOptions": {
-          "xs": "Tæt",
-          "sm": "Subtile",
-          "md": "Balanceret",
-          "lg": "Aundet",
-          "xl": "Blød"
-        },
         "columns": "Bræt kolonner",
         "columnsDescription": "Kolonner definerer det vandrette gitter, der bruges til at størrelsen og positionere elementer. 12 er masser for de fleste mennesker.",
         "columnCount": "{count, plural, one {# kolonne} other {# kolonner}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Log ind som administrator efter opsætning for at oprette en API-nøgle.",
           "configuration": "Klient konfiguration",
           "copy": "Kopier konfiguration",
-          "copied": "Kopieret",
           "advanced": "Åbn MCP-værktøjer, tilladelser og opsætningsdetaljer"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Beskriveslse"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Brug anden URL til ping",
@@ -853,7 +842,6 @@
       "source": "API-kilde: {name}",
       "baseUrl": "Server URL",
       "networkScope": "Adgang til netværk",
-      "save": "Gem API-konfiguration",
       "expires": "Denne engangsanmodning udløber hos {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Indsæt en fuld brugerdefineret widget JSON med Ctrl+V eller Kommando+V",
       "delete": "",
       "deleteConfirm": "",
-      "export": "",
       "duplicate": "",
       "aiPrompt": "Design med AI",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
-      "menu": "",
       "downloadSkill": "Vis Brugerdefineret Widget Færdighed",
       "publishWorkshop": "Udgiv til værksted",
       "migrate": "Migrér Brugerdefineret Widget",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Konfigurér widget-kilder",
       "description": "Gennemgå hvor denne widget forbinder og tilføje eller erstatte sine krypterede legitimationsoplysninger.",
-      "credentialsRequired": "Anmodninger vil mislykkes, indtil de krævede legitimationsoplysninger er tilføjet.",
-      "save": "Gem konfiguration"
-    },
-    "field": {
-      "description": ""
+      "credentialsRequired": "Anmodninger vil mislykkes, indtil de krævede legitimationsoplysninger er tilføjet."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Formatér",
         "insertStarter": "Insert starter",
         "redo": "Gendan",
-        "copied": "Kopieret",
         "schema": "Skema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Anmod Om {count, number}",
         "requestId": "Anmod Om ID",
-        "type": "Type",
         "method": "Metode",
         "source": "API kilde",
         "run": "Kør",
@@ -1037,7 +1017,6 @@
         "optionName": "Valgmulighed navn",
         "label": "Etiket",
         "control": "Kontrol",
-        "description": "Beskriveslse",
         "default": "Standard",
         "optionDetails": "Begrænsninger og dynamiske valg",
         "minimum": "Mindste",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Den gemte værdi blev slettet.",
         "primary": "Primær API",
         "id": "Kilde ID",
-        "name": "Navn",
         "baseUrl": "Base URL",
         "baseUrlError": {
           "invalid": "Angiv en komplet URL.",
@@ -1091,7 +1069,6 @@
         "remove": "Fjern kilde og dets anmodninger",
         "advanced": "Avanceret",
         "add": "Tilføj en anden API-kilde",
-        "sourceType": "Integration",
         "manualSource": "HTTP API",
         "existingIntegration": "Eksisterende integration",
         "integrationType": "Integration type",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Gennemgå migreret v2 udskiftning",
       "migrationDescription": "Gennemgå og bekræfte denne genererede v2 definition. Bekræftelse atomisk erstatter den bevarede v1 post og samtidig holde eksisterende board placeringer knyttet til den samme widget ID.",
       "fileLabel": "Vælg en brugerdefineret widget JSON fil",
-      "name": "Jobnavn",
       "origin": "Basis oprindelse",
       "authentication": "Autorisering",
       "networkScope": "Netværk anvendelsesområde",
@@ -1245,8 +1221,6 @@
         "title": "Denne widget kan ændre fjerndata",
         "description": "Gennemgå alle navngivne handlinger, nedarvede legitimationsoplysninger og destruktiv bekræftelse efter import. Hemmeligheder er ikke inkluderet i filen."
       },
-      "cancel": "Annuller import",
-      "confirm": "Importér widget",
       "confirmMigration": "Bekræft udskiftning af v2"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Luk screenshot fremviser",
     "technicalDetails": "Tekniske detaljer",
     "sourceCode": "Værkstedspost",
-    "export": "Eksporter",
     "report": "Rapport",
     "reportTitle": "Indsendelse af rapport",
     "reportReason": "Årsag",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Se og administrer indsendelse",
       "done": "Udført",
       "signInHint": "Log ind for at publicere under din værkstedsidentitet.",
-      "titleField": "Titel",
-      "descriptionField": "Beskriveslse",
       "screenshots": "Skærmbilleder",
       "screenshotsDescription": "Op til fem PNG, JPEG, eller WebP billeder",
       "screenshotsPlaceholder": "Vælg skærmfotos",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Betroet certifikat",
                 "message": "Tilføjet certifikat til liste over betroede certifikater"
               },
               "error": {
-                "title": "Kunne ikke stole på certifikat",
                 "message": "Kunne ikke tilføje certifikat til listen over betroede certifikater"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Find medie",
     "field": {
       "preview": "Eksempelvisning",
-      "size": "Størrelse",
-      "creator": "Skaber",
-      "actions": "Styring"
+      "creator": "Skaber"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Tæt",
+        "sm": "Subtile",
+        "md": "Balanceret",
+        "lg": "Aundet",
+        "xl": "Blød"
+      }
+    },
     "success": "Lykkedes",
     "beta": "Beta",
     "error": "Fejl",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Ryd søgning",
       "copy": "Kopiér",
       "copied": "Kopieret",
-      "refresh": "Opdater"
+      "refresh": "Opdater",
+      "export": "Eksporter"
     },
     "pagination": {
       "pageOf": "Side {page} af {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Vis brug for # filsystem} other {Vis brug for # filsystemer}}",
     "field": {
-      "name": "Jobnavn"
+      "name": "Navn",
+      "description": "Beskriveslse",
+      "title": "Titel",
+      "actions": "Handlinger",
+      "type": "Type",
+      "status": "Status",
+      "state": "Tilstand",
+      "size": "Størrelse",
+      "source": "Kilde",
+      "namespace": "Navnerum",
+      "created": "Oprettet",
+      "architecture": "Arkitektur"
     },
     "label": {
       "new": "Ny"
@@ -2109,9 +2097,6 @@
         "collapse": "Sammenfold"
       },
       "option": {
-        "title": {
-          "label": "Titel"
-        },
         "customCssClasses": {
           "label": "Brugerdefinerede css-klasser"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Indstillinger",
         "settingsFor": "Indstillinger for {name}",
-        "options": "",
-        "actions": ""
+        "options": ""
       },
       "status": {
         "success": "",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# valgt element} other {# valgte emner}}",
       "selected": "{count, plural, one {# valgt} other {# valgt}}",
-      "copy": "Kopiér",
       "copied": "{count, plural, one {# element kopieret til udklipsholderen} other {# elementer kopieret til udklipsholderen}}",
       "copyError": "De valgte elementer kunne ikke kopieres. Din browser tillader muligvis ikke adgang til udklipsholderen.",
       "paste": "Indsæt",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# element fjernet} other {# elementer fjernet}}",
       "move": "Flyt",
       "moveTo": "Flyt markerede elementer",
-      "delete": "Slet",
       "clear": "Ryd valg",
       "clearShortcut": "Ryd valg (Escape)",
       "saveErrorTitle": "Kan ikke opdatere elementer",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integrationer",
           "removeLabel": "Fjern {name} integration"
-        },
-        "title": {
-          "label": "Titel"
         },
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "Navn",
             "node": "Node"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Navn",
-            "state": "Tilstand",
             "cpuUsage": "CPU-forbrug",
             "memoryUsage": "Hukommelsesforbrug"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
-        "name": "Navn",
         "id": "Id",
-        "status": "",
         "directPlay": "",
         "directStream": "",
         "transcodeVideo": "",
@@ -4279,38 +4253,27 @@
           "columnTitle": "Styring"
         },
         "added": {
-          "columnTitle": "Tilføjet",
-          "detailsTitle": "Dato tilføjet"
+          "columnTitle": "Tilføjet"
         },
         "category": {
-          "columnTitle": "Ekstra",
-          "detailsTitle": "Kategorier (ekstra information)"
+          "columnTitle": "Ekstra"
         },
         "downSpeed": {
-          "columnTitle": "Ned",
-          "detailsTitle": "Download hastighed"
+          "columnTitle": "Ned"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Nuværende indeks i klienten"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Id"
-        },
-        "integration": {
-          "columnTitle": "Integration"
-        },
-        "name": {
-          "columnTitle": "Jobnavn"
+          "columnTitle": "Id"
         },
         "progress": {
           "columnTitle": "Fremskridt",
           "detailsTitle": "Status på hentning"
         },
         "ratio": {
-          "columnTitle": "Delingsforhold",
-          "detailsTitle": "Torrent ratio (modtaget/sendt)"
+          "columnTitle": "Delingsforhold"
         },
         "received": {
           "columnTitle": "Total ned",
@@ -4320,26 +4283,14 @@
           "columnTitle": "Total op",
           "detailsTitle": "Total Uploadet"
         },
-        "size": {
-          "columnTitle": "Filstørrelse",
-          "detailsTitle": "Samlet størrelse af markering/filer"
-        },
-        "state": {
-          "columnTitle": "Tilstand",
-          "detailsTitle": "Job Status"
-        },
         "time": {
-          "columnTitle": "Slut tid",
-          "detailsTitle": "Tid siden/til færdiggørelse",
-          "eta": ""
+          "columnTitle": "Slut tid"
         },
         "type": {
-          "columnTitle": "Type",
           "detailsTitle": "Download klienttype"
         },
         "upSpeed": {
-          "columnTitle": "Op",
-          "detailsTitle": "Uploadhastighed"
+          "columnTitle": "Op"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "Fremskridt"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Størrelse"
-          }
-        },
         "common": {
           "empty": "Tom",
           "file": "Fil",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller ejer/navn"
-          },
-          "name": {
-            "label": "Navn"
           },
           "versionFilter": {
             "label": "Versionsfilter",
@@ -4891,7 +4834,6 @@
       "download": "Download",
       "upload": "Upload",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Gns Download",
       "avgUpload": "Gns Upload",
       "avgPing": "Gns Ping",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "Handlinger er deaktiveret mens tavlen er i redigeringstilstand.",
         "widgetItemUnavailable": "Denne widget element er ikke tilgængelig.",
         "toggle": "Skift",
-        "copied": "Kopieret",
         "confirmDelete": "Bekræft denne destruktive handling."
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "System",
-        "source": "Integration",
         "hostname": "Værtsnavn",
         "cpuModel": "CPU model",
         "cores": "Kerner",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "Alle agenter er forbundet",
       "empty": "Ingen agenter matcher dette filter",
       "column": {
-        "status": "Status",
-        "name": "Jobnavn",
         "ip": "IP",
         "os": "OS",
         "version": "Version",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "Element radius",
-        "description": "Ændrer rundheden af fliser på din tavle",
-        "option": {
-          "xs": "Meget lille",
-          "sm": "Lille",
-          "md": "Medium",
-          "lg": "Stor",
-          "xl": "Meget stor"
-        }
+        "description": "Ændrer rundheden af fliser på din tavle"
       },
       "isPublic": {
         "label": "Offentlig",
@@ -6730,14 +6661,7 @@
               "label": "Overlejring af baggrunden"
             },
             "defaultRadius": {
-              "label": "Hjørne stil",
-              "options": {
-                "xs": "Tæt",
-                "sm": "Subtile",
-                "md": "Balanceret",
-                "lg": "Aundet",
-                "xl": "Blød"
-              }
+              "label": "Hjørne stil"
             },
             "customCss": {
               "label": "Global brugerdefineret CSS",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "Standard hilsen",
               "boardColorLocked": "Brætfarve låst",
               "boardColorFlexible": "Brætfarver tilladt",
-              "appName": "Jobnavn",
               "logo": "Logo",
               "greeting": "Hilsen",
               "on": "Til",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "Sidste kørsel"
-            },
-            "actions": {
-              "label": "Handlinger"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Oprettet af",
-                  "source": "Integration",
-                  "actions": "Handlinger"
+                  "createdBy": "Oprettet af"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "Tilstand",
         "option": {
           "created": "Oprettet",
           "running": "Kører",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "Handlinger",
       "logs": {
         "label": "Vis logfiler",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Kunne ikke hente Kubernetes-data"
-    },
-    "field": {
-      "name": {
-        "label": "Jobnavn"
-      },
-      "namespace": {
-        "label": "Navnerum"
-      },
-      "creationTimestamp": {
-        "label": "Oprettet"
-      },
-      "state": {
-        "label": "Job Status"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Download klienttype"
-      },
-      "architecture": {
-        "label": "Arkitektur"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "Tilladelse"
       }
-    },
-    "action": {
-      "saveUser": "Gem brugertilladelse",
-      "saveGroup": "Gem gruppetilladelse"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "{mode} resultater",
       "footer": {
         "navigate": "Navigate",
-        "open": "Åbn",
-        "close": "Luk"
+        "open": "Åbn"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "URL søgeskabelon"
-        },
-        "description": {
-          "label": "Beskriveslse"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "Sæson",
-                "episodes": "Episoder",
-                "status": "Status"
+                "episodes": "Episoder"
               },
               "status": {
                 "requested": "Anmodet"
@@ -8772,7 +8656,6 @@
       "cssDescription": "Redigér hele stilarket. Eksisterende regler beholdes med mindre de fjernes her.",
       "cssCharacters": "{count} af 16384 tegn",
       "copyCss": "Copy CSS",
-      "copied": "Kopieret",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "Denne CSS indlæser en ekstern ressource",
       "remoteCssDescription": "Importerede stylesheets og eksterne URL'er kontakte en anden server, når tavlen indlæses. Gennemgå dem, før du fortsætter."

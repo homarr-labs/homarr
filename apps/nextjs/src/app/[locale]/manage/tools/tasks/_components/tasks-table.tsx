@@ -220,7 +220,7 @@ const createColumns = (
   },
   {
     id: "actions",
-    header: tTasks("field.actions.label"),
+    header: tCommon("field.actions"),
     size: 120,
     enableSorting: false,
     Cell({ row }) {

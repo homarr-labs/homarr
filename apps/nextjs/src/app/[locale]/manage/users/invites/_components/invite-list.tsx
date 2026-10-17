@@ -109,7 +109,7 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
         <InviteCreateButton onClick={toggleCreate} />
       </Group>
       <Collapse expanded={isCreateOpen}>
-        <Card withBorder>
+        <Card>
           <InviteCreateForm key={formKey} onClose={closeCreate} />
         </Card>
       </Collapse>

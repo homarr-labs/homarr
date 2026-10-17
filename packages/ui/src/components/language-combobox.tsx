@@ -58,7 +58,7 @@ export const LanguageCombobox = ({
           <Combobox.Options>
             {supportedLanguages.map((locale) => (
               <Combobox.Option value={locale} key={locale}>
-                <OptionItem currentLocale={value} localeKey={locale} showCheck />
+                {combobox.dropdownOpened && <OptionItem currentLocale={value} localeKey={locale} showCheck />}
               </Combobox.Option>
             ))}
           </Combobox.Options>

@@ -18,10 +18,10 @@ import { IconCertificateOff } from "@tabler/icons-react";
 import { auth } from "@homarr/auth/next";
 import { getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
 import { getI18n } from "@homarr/translation/server";
-import { Link } from "@homarr/ui";
+import { Link, NoResults } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { NoResults } from "~/components/no-results";
+
 import { RemoveHostnameActionIcon } from "./_components/remove-hostname";
 
 export default async function TrustedHostnamesPage() {

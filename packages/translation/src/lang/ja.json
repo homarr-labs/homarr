@@ -142,13 +142,6 @@
         "secondaryColor": "セカンダリーカラー",
         "resetColors": "色をリセット",
         "radius": "ウィジェットの角の半径",
-        "radiusOptions": {
-          "xs": "タイトな",
-          "sm": "Subtle",
-          "md": "バランス",
-          "lg": "四捨五入済み",
-          "xl": "ソフト"
-        },
         "columns": "ボードの列",
         "columnsDescription": "列は、アイテムのサイズと位置を決める水平グリッドを定義します。12 はほとんどの人に十分です。",
         "columnCount": "{count, plural, one {#カラム} other {#カラム}}",
@@ -192,7 +185,6 @@
           "loginRequired": "セットアップ後に管理者としてサインインしてAPIキーを作成します。",
           "configuration": "クライアント設定",
           "copy": "設定をコピー",
-          "copied": "コピーしました",
           "advanced": "MCP ツール、権限、およびセットアップの詳細を開く"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "説明"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "ping に 別の URL を使用する",
@@ -853,7 +842,6 @@
       "source": "API ソース: {name}",
       "baseUrl": "サーバー URL",
       "networkScope": "ネットワークアクセス",
-      "save": "API設定を保存",
       "expires": "この一回限りのリクエストは {time} に期限が切れます。"
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Ctrl+V または Command+V を使用して完全なカスタム ウィジェット JSON を貼り付け",
       "delete": "",
       "deleteConfirm": "",
-      "export": "",
       "duplicate": "",
       "aiPrompt": "AIによるデザイン",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
-      "menu": "",
       "downloadSkill": "カスタムウィジェットスキルを表示",
       "publishWorkshop": "ワークショップに公開",
       "migrate": "カスタムウィジェットの移行",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "ウィジェットのソースを設定",
       "description": "このウィジェットが接続されている場所を確認し、暗号化された資格情報を追加または置き換えます。",
-      "credentialsRequired": "要求された資格情報が追加されるまでリクエストは失敗します。",
-      "save": "設定を保存"
-    },
-    "field": {
-      "description": ""
+      "credentialsRequired": "要求された資格情報が追加されるまでリクエストは失敗します。"
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "書式",
         "insertStarter": "Insert starter",
         "redo": "Redo",
-        "copied": "コピーしました",
         "schema": "スキーマ"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "リクエスト {count, number}",
         "requestId": "要求ID",
-        "type": "ダウンロードクライアントの種類",
         "method": "方法",
         "source": "API ソース",
         "run": "実行",
@@ -1037,7 +1017,6 @@
         "optionName": "オプション名",
         "label": "ラベル",
         "control": "コントロール",
-        "description": "説明",
         "default": "デフォルト",
         "optionDetails": "制約と動的選択",
         "minimum": "最小",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "格納された値が削除されました。",
         "primary": "プライマリAPI",
         "id": "ソースID",
-        "name": "ジョブ名",
         "baseUrl": "ベースURL",
         "baseUrlError": {
           "invalid": "完全な URL を入力してください。",
@@ -1091,7 +1069,6 @@
         "remove": "ソースとそのリクエストを削除",
         "advanced": "高度な設定",
         "add": "別の API ソースを追加",
-        "sourceType": "連携機能",
         "manualSource": "HTTP API",
         "existingIntegration": "既存の統合",
         "integrationType": "連携タイプ",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Review migrated v2 replacement",
       "migrationDescription": "この生成されたv2定義を確認します。既存のボード配置を同じウィジェット IDにリンクしたまま保存されたv1レコードをアトミックに置き換えることを確認します。",
       "fileLabel": "カスタム ウィジェット JSON ファイルを選択します。",
-      "name": "ジョブ名",
       "origin": "基底元",
       "authentication": "認証",
       "networkScope": "ネットワークの範囲",
@@ -1245,8 +1221,6 @@
         "title": "このウィジェットはリモートデータを変更できます",
         "description": "すべての名前付きアクション、継承された資格情報、インポート後の破壊的な確認を確認します。秘密はファイルに含まれません。"
       },
-      "cancel": "インポートをキャンセル",
-      "confirm": "ウィジェットをインポート",
       "confirmMigration": "v2の交換を確認する"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "スクリーンショットビューアを閉じる",
     "technicalDetails": "技術的な詳細",
     "sourceCode": "ワークショップのエントリ",
-    "export": "エクスポート",
     "report": "レポート",
     "reportTitle": "提出を報告",
     "reportReason": "理由：",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "提出物の表示と管理",
       "done": "完了",
       "signInHint": "ワークショップIDで公開するにはサインインしてください。",
-      "titleField": "タイトル",
-      "descriptionField": "説明",
       "screenshots": "スクリーンショット",
       "screenshotsDescription": "最大 5 つの PNG、JPEG、または WebP 画像",
       "screenshotsPlaceholder": "スクリーンショットを選択",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "信頼できる証明書",
                 "message": "信頼できる証明書リストに証明書を追加しました"
               },
               "error": {
-                "title": "証明書の信頼に失敗",
                 "message": "信頼できる証明書リストに証明書を追加できませんでした"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "メディアを探す",
     "field": {
       "preview": "プレビュー",
-      "size": "サイズ",
-      "creator": "作成者",
-      "actions": "操作"
+      "creator": "作成者"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "タイトな",
+        "sm": "Subtle",
+        "md": "バランス",
+        "lg": "四捨五入済み",
+        "xl": "ソフト"
+      }
+    },
     "success": "成功",
     "beta": "Beta",
     "error": "エラー",
@@ -1911,7 +1887,8 @@
       "clearSearch": "検索をクリア",
       "copy": "コピー",
       "copied": "コピーしました",
-      "refresh": "更新"
+      "refresh": "更新",
+      "export": "エクスポート"
     },
     "pagination": {
       "pageOf": "ページ {page} / {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "合計",
     "filesystemUsage": "{count, plural, one {# ファイルシステムの使用状況を表示} other {# ファイルシステムの使用状況を表示}}",
     "field": {
-      "name": "ジョブ名"
+      "name": "名称",
+      "description": "説明",
+      "title": "タイトル",
+      "actions": "アクション",
+      "type": "種類",
+      "status": "ステータス",
+      "state": "状態",
+      "size": "サイズ",
+      "source": "ソース",
+      "namespace": "ネームスペース",
+      "created": "作成日",
+      "architecture": "アーキテクチャ"
     },
     "label": {
       "new": "新規作成"
@@ -2109,9 +2097,6 @@
         "collapse": "折りたたむ"
       },
       "option": {
-        "title": {
-          "label": "タイトル"
-        },
         "customCssClasses": {
           "label": "カスタム css クラス"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "設定",
         "settingsFor": "{name} の設定",
-        "options": "",
-        "actions": ""
+        "options": ""
       },
       "status": {
         "success": "",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# selected item} other {# selected item}}",
       "selected": "{count, plural, one {# selected} other {# selected}}",
-      "copy": "コピー",
       "copied": "{count, plural, other {# 件の項目をクリップボードにコピーしました}}",
       "copyError": "選択したアイテムをコピーできませんでした。お使いのブラウザはクリップボードへのアクセスを許可していない可能性があります。",
       "paste": "貼り付け",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, other {# 件の項目を削除しました}}",
       "move": "移動",
       "moveTo": "選択したアイテムを移動",
-      "delete": "削除",
       "clear": "選択をクリア",
       "clearShortcut": "選択をクリア (エスケープ)",
       "saveErrorTitle": "アイテムを更新できません",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "連携機能",
           "removeLabel": "{name} インテグレーションを削除"
-        },
-        "title": {
-          "label": "タイトル"
         },
         "customCssClasses": {
           "label": "カスタム CSS クラス"
@@ -2680,7 +2659,7 @@
         "veryPoor": "非常に悪い",
         "veryUnhealthy": "非常に不健康です",
         "extremelyPoor": "極貧状態",
-        "hazardous": "<unk>",
+        "hazardous": "危険",
         "unknown": "AQI読み込みがありません"
       },
       "uv": {
@@ -3321,8 +3300,8 @@
         "hourlyTooltipWithoutHumidity": "{feelsLike}{temperatureUnit} ・ {amount} mm・ {speed} {speedUnit} 風",
         "detailLabel": {
           "feelsLike": "以下のような感じ",
-          "precipitation": "<unk>",
-          "humidity": "平均<unk>",
+          "precipitation": "降水量",
+          "humidity": "平均湿度",
           "wind": "最大風 / 突風の最大",
           "uv": "最大UVインデックス",
           "daylight": "Daylight"
@@ -3460,7 +3439,6 @@
         },
         "table": {
           "header": {
-            "name": "名称",
             "node": "Node"
           }
         }
@@ -3490,8 +3468,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "名称",
-            "state": "状態",
             "cpuUsage": "CPU 使用率",
             "memoryUsage": "メモリ使用量"
           }
@@ -3902,9 +3878,7 @@
       "items": {
         "currentlyPlaying": "再生中の曲",
         "user": "ユーザー",
-        "name": "名称",
         "id": "Id",
-        "status": "",
         "directPlay": "",
         "directStream": "",
         "transcodeVideo": "",
@@ -4279,38 +4253,27 @@
           "columnTitle": "操作"
         },
         "added": {
-          "columnTitle": "追加日",
-          "detailsTitle": "追加された日"
+          "columnTitle": "追加日"
         },
         "category": {
-          "columnTitle": "補足",
-          "detailsTitle": "カテゴリー (または追加情報)"
+          "columnTitle": "補足"
         },
         "downSpeed": {
-          "columnTitle": "DL速度",
-          "detailsTitle": "ダウンロード速度"
+          "columnTitle": "DL速度"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "クライアント内の現在のインデックス"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Id"
-        },
-        "integration": {
-          "columnTitle": "連携機能"
-        },
-        "name": {
-          "columnTitle": "ジョブ名"
+          "columnTitle": "Id"
         },
         "progress": {
           "columnTitle": "進捗状況",
           "detailsTitle": "ダウンロードの進捗状況"
         },
         "ratio": {
-          "columnTitle": "比率",
-          "detailsTitle": "Torrent ratio (受信/送信)"
+          "columnTitle": "比率"
         },
         "received": {
           "columnTitle": "合計ダウン",
@@ -4320,26 +4283,14 @@
           "columnTitle": "合計アップ",
           "detailsTitle": "総アップロード数"
         },
-        "size": {
-          "columnTitle": "ファイルサイズ",
-          "detailsTitle": "選択ファイルの合計サイズ"
-        },
-        "state": {
-          "columnTitle": "状態",
-          "detailsTitle": "作業状態"
-        },
         "time": {
-          "columnTitle": "終了時刻",
-          "detailsTitle": "完了までの時間",
-          "eta": ""
+          "columnTitle": "終了時刻"
         },
         "type": {
-          "columnTitle": "種類",
           "detailsTitle": "ダウンロードクライアントの種類"
         },
         "upSpeed": {
-          "columnTitle": "Up",
-          "detailsTitle": "アップロード速度"
+          "columnTitle": "Up"
         }
       },
       "states": {
@@ -4527,11 +4478,6 @@
             "progress": "進捗状況"
           }
         },
-        "queue": {
-          "table": {
-            "size": "サイズ"
-          }
-        },
         "common": {
           "empty": "空",
           "file": "ファイル",
@@ -4661,9 +4607,6 @@
           "identifier": {
             "label": "識別名",
             "placeholder": "名前、または所有者名"
-          },
-          "name": {
-            "label": "名称"
           },
           "versionFilter": {
             "label": "バージョンフィルター",
@@ -4891,7 +4834,6 @@
       "download": "ダウンロード",
       "upload": "アップロード",
       "ping": "Ping",
-      "status": "ステータス",
       "avgDownload": "平均ダウンロード",
       "avgUpload": "平均アップロード",
       "avgPing": "平均 Ping",
@@ -5128,7 +5070,6 @@
         "actionsDisabledEditMode": "ボードが編集モードになっている間はアクションは無効になります。",
         "widgetItemUnavailable": "このウィジェットアイテムは利用できません。",
         "toggle": "切り替え",
-        "copied": "コピーしました",
         "confirmDelete": "この破壊的な行動を確認してください。"
       },
       "option": {
@@ -5397,7 +5338,6 @@
       },
       "metric": {
         "system": "システム",
-        "source": "連携機能",
         "hostname": "ホスト名",
         "cpuModel": "CPUモデル",
         "cores": "コア",
@@ -5644,8 +5584,6 @@
       "noDisconnected": "すべてのエージェントが接続されています",
       "empty": "このフィルターに一致するエージェントはありません",
       "column": {
-        "status": "ステータス",
-        "name": "ジョブ名",
         "ip": "IP",
         "os": "OS",
         "version": "バージョン",
@@ -6096,14 +6034,7 @@
       },
       "itemRadius": {
         "label": "アイテムの半径",
-        "description": "ボード上のタイルの丸みを変更する",
-        "option": {
-          "xs": "とても小さい",
-          "sm": "小さい",
-          "md": "中間",
-          "lg": "大きい",
-          "xl": "とても大きい"
-        }
+        "description": "ボード上のタイルの丸みを変更する"
       },
       "isPublic": {
         "label": "公開",
@@ -6730,14 +6661,7 @@
               "label": "背景をオーバーレイする"
             },
             "defaultRadius": {
-              "label": "角のスタイル",
-              "options": {
-                "xs": "タイトな",
-                "sm": "Subtle",
-                "md": "バランス",
-                "lg": "四捨五入済み",
-                "xl": "ソフト"
-              }
+              "label": "角のスタイル"
             },
             "customCss": {
               "label": "グローバルカスタム CSS",
@@ -6759,7 +6683,6 @@
               "greetingDefault": "既定の挨拶：",
               "boardColorLocked": "盤の色がロックされています",
               "boardColorFlexible": "ボードの色を許可する",
-              "appName": "ジョブ名",
               "logo": "ロゴ",
               "greeting": "あいさつ中",
               "on": "オン",
@@ -6985,9 +6908,6 @@
             },
             "lastExecution": {
               "label": "最終実行"
-            },
-            "actions": {
-              "label": "アクション"
             }
           },
           "table": {
@@ -7052,9 +6972,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "作成者",
-                  "source": "連携機能",
-                  "actions": "アクション"
+                  "createdBy": "作成者"
                 }
               },
               "provenance": {
@@ -7347,7 +7265,6 @@
     },
     "field": {
       "state": {
-        "label": "状態",
         "option": {
           "created": "作成",
           "running": "実行中",
@@ -7374,7 +7291,6 @@
       }
     },
     "action": {
-      "title": "操作",
       "logs": {
         "label": "",
         "page": {
@@ -7610,29 +7526,6 @@
     },
     "error": {
       "internalServerError": "Kubernetes データの取得に失敗しました"
-    },
-    "field": {
-      "name": {
-        "label": "ジョブ名"
-      },
-      "namespace": {
-        "label": "ネームスペース"
-      },
-      "creationTimestamp": {
-        "label": "作成日"
-      },
-      "state": {
-        "label": "作業状態"
-      },
-      "status": {
-        "label": "ステータス"
-      },
-      "type": {
-        "label": "ダウンロードクライアントの種類"
-      },
-      "architecture": {
-        "label": "アーキテクチャ"
-      }
     }
   },
   "permission": {
@@ -7658,10 +7551,6 @@
       "permission": {
         "label": "権限"
       }
-    },
-    "action": {
-      "saveUser": "ユーザー権限を保存する",
-      "saveGroup": "グループの権限を保存する"
     }
   },
   "navigationStructure": {
@@ -7773,8 +7662,7 @@
       "resultsAriaLabel": "{mode} 結果",
       "footer": {
         "navigate": "Navigate",
-        "open": "開く",
-        "close": "閉じる"
+        "open": "開く"
       }
     },
     "error": {
@@ -8203,9 +8091,6 @@
         },
         "urlTemplate": {
           "label": "URL 検索テンプレート"
-        },
-        "description": {
-          "label": "説明"
         }
       },
       "page": {
@@ -8275,8 +8160,7 @@
             "table": {
               "header": {
                 "season": "シーズン",
-                "episodes": "エピソード",
-                "status": ""
+                "episodes": "エピソード"
               },
               "status": {
                 "requested": ""
@@ -8772,7 +8656,6 @@
       "cssDescription": "完全なスタイルシートを編集します。既存のルールは、ここで削除されない限り保持されます。",
       "cssCharacters": "16384文字中{count}",
       "copyCss": "Copy CSS",
-      "copied": "コピーしました",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "このCSSはリモートリソースを読み込みます",
       "remoteCssDescription": "インポートされたスタイルシートとリモート URL ボードがロードされると、別のサーバーに接続します。続行する前に確認してください。"

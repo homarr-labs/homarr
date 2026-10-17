@@ -18,7 +18,7 @@ export const AddCertificateSection = () => {
         {t("action.create.label")}
       </Button>
       <Collapse expanded={opened}>
-        <Card withBorder>
+        <Card>
           <CertificateUploadForm
             onCancel={close}
             onSuccess={async () => {

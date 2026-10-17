@@ -101,7 +101,10 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
     editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
     editorView.focus();
   }, []);
-  const formattedValue = useMemo(() => formatCode(props.value, props.language), [props.language, props.value]);
+  const formattedValue = useMemo(() => {
+    if (props.readOnly || props.language === "jsx") return props.value;
+    return formatCode(props.value, props.language);
+  }, [props.language, props.readOnly, props.value]);
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
   const isCharacterLimitExceeded = props.maxLength !== undefined && props.value.length > props.maxLength;

@@ -1,10 +1,9 @@
-import { parse } from "path";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
+import type { RepositoryIcon } from "../types/repository-icon";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
 import { IconRepository } from "./icon-repository";
 
@@ -48,27 +47,13 @@ export class GitHubIconRepository extends IconRepository {
       throw new Error("GitHub icon index response contains a truncated file tree");
     }
 
-    return {
-      success: true,
-      icons: listOfFiles.tree
-        .filter(({ path }) =>
-          this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType),
-        )
-        .map(({ path, size: sizeInBytes, sha: checksum }) => {
-          const file = parse(path);
-          const fileNameWithExtension = file.base;
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const imageUrl = this.repositoryBlobUrlTemplate!.replace("{0}", path).replace("{1}", file.name);
-          return {
-            imageUrl,
-            fileNameWithExtension,
-            local: false,
-            sizeInBytes,
-            checksum,
-          };
-        }),
-      slug: this.slug,
-    };
+    const icons: RepositoryIcon[] = [];
+    for (const { path, size, sha } of listOfFiles.tree) {
+      const icon = this.createIcon(path, size, sha);
+      if (icon) icons.push(icon);
+    }
+
+    return { success: true, icons, slug: this.slug };
   }
 }
 

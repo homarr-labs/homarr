@@ -89,6 +89,7 @@ const ApiKeyActionsCell = ({ row, table }: ApiKeyCellProps & { table: MRT_TableI
 
 export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps) => {
   const t = useI18n("management.page.tool.api.tab.apiKey");
+  const tCommon = useI18n("common");
   const utils = clientApi.useUtils();
   const [newApiKey, setNewApiKey] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<"createError" | "deleteError" | "deleteSuccess" | "refreshError" | null>(
@@ -152,16 +153,16 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
           key.oauthClientId === null
             ? t("provenance.unattributed")
             : `${t("provenance.oauth")} ${key.oauthClientName ?? ""} ${key.oauthClientId} ${key.oauthRedirectUri ?? ""}`,
-        header: t("table.header.source"),
+        header: tCommon("field.source"),
         Cell: ApiKeyProvenanceCell,
         size: 300,
       },
       {
-        header: t("table.header.actions"),
+        header: tCommon("field.actions"),
         Cell: ApiKeyActionsCell,
       },
     ],
-    [t],
+    [t, tCommon],
   );
 
   const table = useMantineReactTable({

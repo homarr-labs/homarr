@@ -443,6 +443,7 @@ interface RepositoryEditProps {
 
 const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
   const tRepository = useI18n("widget.releases.option.repositories");
+  const tCommon = useI18n("common");
   const tIntegrationSelect = useI18n("widget.integrationSelect");
   const actionT = useI18n("common.action");
   const [loading, setLoading] = useState(false);
@@ -531,7 +532,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
 
       <Group align="center" wrap="nowrap" grow preventGrowOverflow={false}>
         <TextInput
-          label={tRepository("name.label")}
+          label={tCommon("field.name")}
           value={tempRepository.name ?? ""}
           onChange={(event) => handleChange({ name: event.currentTarget.value })}
           error={formErrors[`${innerProps.fieldPath}.name`]}

@@ -7,7 +7,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import { UserSelect } from "~/components/access/user-select";
+import { UserSelect } from "@homarr/forms-collection/access";
 
 interface AddGroupMemberProps {
   groupId: string;
