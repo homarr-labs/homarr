@@ -31,7 +31,7 @@ import {
 import type { UptimeKumaLayout } from "./layout";
 import { getMonitorRowTemplate, MonitorRow } from "./monitor-row";
 import type { MonitorRowVisibility } from "./monitor-row";
-import { filterProblems, getAllMonitors, getMonitorSections, sortMonitors } from "./monitors";
+import { getAllMonitors, getMonitorSections, needsAttention, sortMonitors } from "./monitors";
 import type { LoadedStatusPage, MonitorEntry } from "./monitors";
 import type { Notice } from "./notices";
 import { getNotices, NoticeIndicator, NoticeList } from "./notices";
@@ -40,6 +40,7 @@ import {
   AverageUptime,
   DistributionBar,
   getAverageUptimeText,
+  getShortStatusLabel,
   OverallStatus,
   StatusBreakdown,
   SummaryLine,
@@ -113,7 +114,7 @@ function UptimeKumaContent({
         <CenteredState
           icon={<IconHeartbeat className={classes.stateIcon} aria-hidden />}
           title={t("empty.title")}
-          description={layout === "tile" ? undefined : t("empty.description")}
+          description={layout !== "tile" && t("empty.description")}
         />
       </Frame>
     );
@@ -162,7 +163,15 @@ const Frame = ({ children, overlay }: { children: ReactNode; overlay: ReactNode 
   </div>
 );
 
-const CenteredState = ({ icon, title, description }: { icon: ReactNode; title: string; description?: string }) => (
+const CenteredState = ({
+  icon,
+  title,
+  description,
+}: {
+  icon: ReactNode;
+  title: string;
+  description?: string | false;
+}) => (
   <div className={classes.centeredState}>
     {icon}
     <Text fw={600} size="sm" ta="center">
@@ -221,6 +230,8 @@ const stripChromeHeight = 54;
 const stripHeaderReservedWidth = 20;
 const stripLineHeight = 22;
 const chipRowHeight = 32;
+const chipOverflowWidth = 56;
+const noticeIndicatorWidth = 30;
 
 const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProps) => {
   const t = useI18n("widget.uptimeKuma");
@@ -229,13 +240,13 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
   const breakdown = useBreakdownLayout(summary, bodyWidth);
   const breakdownHeight = breakdown.rows * stripLineHeight;
   const showBreakdown = stripChromeHeight + breakdownHeight <= size.height;
-  const baseHeight = stripChromeHeight + (showBreakdown ? breakdownHeight : 0);
+  const usedHeight = stripChromeHeight + (showBreakdown ? breakdownHeight : 0);
+  const chipMonitors = sortMonitors(getAllMonitors(pages).filter(needsAttention), options.sortBy);
+  const chipRows = chipMonitors.length > 0 ? clamp(Math.floor((size.height - usedHeight) / chipRowHeight), 0, 3) : 0;
   const uptime = options.showUptime ? getAverageUptimeText(summary) : null;
-  const uptimeLine = baseHeight + stripLineHeight <= size.height ? uptime : null;
-  const freeHeight = size.height - baseHeight - (uptimeLine ? stripLineHeight : 0);
-  const chipRows = bodyWidth >= 200 ? clamp(Math.floor(freeHeight / chipRowHeight), 0, 3) : 0;
-  const chipMonitors = sortMonitors(filterProblems(getAllMonitors(pages), options.showOnlyProblems), options.sortBy);
+  const uptimeLine = usedHeight + chipRows * chipRowHeight + stripLineHeight <= size.height ? uptime : null;
   const headlineWidth = bodyWidth - stripHeaderReservedWidth;
+  const chipMaxWidth = clamp(bodyWidth - chipOverflowWidth, 72, 180);
 
   return (
     <div className={classes.strip}>
@@ -254,13 +265,13 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
         </div>
         {showBreakdown && <StatusBreakdown summary={summary} layout={breakdown.kind} />}
         {uptimeLine && <AverageUptime value={uptimeLine} />}
-        {chipRows > 0 && chipMonitors.length > 0 && (
+        {chipRows > 0 && (
           <OverflowList
             data={chipMonitors}
             maxRows={chipRows}
             gap={6}
             getItemKey={(monitor) => monitor.key}
-            renderItem={(monitor) => <MonitorChip monitor={monitor} showUptime={options.showUptime} />}
+            renderItem={(monitor) => <MonitorChip monitor={monitor} maxWidth={chipMaxWidth} />}
             renderOverflow={(hidden) => (
               <Badge variant="light" color="gray" size="lg" radius="sm" tt="none" fw={500}>
                 +{hidden.length}
@@ -273,24 +284,20 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
   );
 };
 
-const chipColors = { ...monitorStatusColors, up: "gray" };
-
-const MonitorChip = ({ monitor, showUptime }: { monitor: MonitorEntry; showUptime: boolean }) => {
+const MonitorChip = ({ monitor, maxWidth }: { monitor: MonitorEntry; maxWidth: number }) => {
   const t = useI18n("widget.uptimeKuma");
-  const uptime = monitor.uptime24h === null ? null : formatUptime(monitor.uptime24h);
 
   return (
     <Badge
       variant="light"
-      color={chipColors[monitor.status]}
+      color={monitorStatusColors[monitor.status]}
       size="lg"
       radius="sm"
       tt="none"
       fw={500}
-      maw={180}
-      title={[monitor.name, t(`status.${monitor.status}`), uptime].filter(Boolean).join(" · ")}
+      maw={maxWidth}
+      title={`${monitor.name} · ${t(`status.${monitor.status}`)}`}
       leftSection={<span className={classes.dot} data-status={monitor.status} />}
-      rightSection={showUptime && uptime && <span className={classes.chipUptime}>{uptime}</span>}
     >
       {monitor.name}
     </Badge>
@@ -346,6 +353,11 @@ const ListLayout = ({
   const statusPageLinkWidth = statusPageLink ? estimateSmallTextWidth(statusPageLink.title) + 28 : 0;
   const shortHeadline =
     isColumn || !fitsHeadline(t(`overall.${summary.overallStatus}`), headerWidth - statusPageLinkWidth);
+  const showNoticeIndicator =
+    showSummary &&
+    isColumn &&
+    notices.length > 0 &&
+    fitsHeadline(getShortStatusLabel(summary, t), headerWidth - noticeIndicatorWidth);
   const gridStyle = {
     "--monitor-columns": columnCount,
     "--monitor-row-template": getMonitorRowTemplate(variant, visibility),
@@ -358,7 +370,7 @@ const ListLayout = ({
         <header className={classes.header}>
           <div className={classes.headerTop}>
             <OverallStatus summary={summary} short={shortHeadline} size={isColumn ? "sm" : "md"} />
-            {isColumn && !isNarrow && notices.length > 0 && <NoticeIndicator notices={notices} />}
+            {showNoticeIndicator && <NoticeIndicator notices={notices} />}
             {statusPageLink && statusPageHref && (
               <Anchor
                 href={statusPageHref}
@@ -386,8 +398,8 @@ const ListLayout = ({
         offsetScrollbars={!isColumn && "y"}
       >
         <div className={classes.scrollContent}>
-          {notices.length > 0 && !(isColumn && showSummary) && (
-            <NoticeList notices={notices} compact={isColumn || size.height < 400} now={now} />
+          {notices.length > 0 && !showNoticeIndicator && (
+            <NoticeList notices={notices} compact={isColumn || size.height < 400} showAge={!isNarrow} now={now} />
           )}
           {sections.length === 0 && (
             <CenteredState

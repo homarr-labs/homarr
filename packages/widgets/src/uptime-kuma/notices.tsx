@@ -11,7 +11,7 @@ import { iconSizes } from "@homarr/ui";
 
 import classes from "./component.module.css";
 import type { LoadedStatusPage } from "./monitors";
-import { incidentStyleColors } from "./status";
+import { formatRelativeTime, incidentStyleColors } from "./status";
 
 export interface Notice {
   key: string;
@@ -47,10 +47,12 @@ const noticeIcons = { incident: IconSpeakerphone, maintenance: IconTool } as con
 export const NoticeList = ({
   notices,
   compact,
+  showAge,
   now,
 }: {
   notices: readonly Notice[];
   compact: boolean;
+  showAge: boolean;
   now: Date | null;
 }) => {
   const formatter = useFormatter();
@@ -59,8 +61,7 @@ export const NoticeList = ({
     <div className={classes.notices}>
       {notices.map((notice) => {
         const Icon = noticeIcons[notice.kind];
-        const age =
-          notice.updatedAt !== null && now ? formatter.relativeTime(notice.updatedAt, { now, style: "narrow" }) : null;
+        const age = showAge && formatRelativeTime(formatter, notice.updatedAt, now);
 
         return (
           <div

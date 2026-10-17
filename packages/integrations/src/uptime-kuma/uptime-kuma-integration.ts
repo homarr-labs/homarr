@@ -78,11 +78,6 @@ export class UptimeKumaIntegration extends Integration {
           .slice(-uptimeKumaMaxHeartbeats),
       ]),
     );
-    const typicalCheckInterval = median(
-      [...heartbeatsByMonitor.values()]
-        .map(getCheckInterval)
-        .filter((interval): interval is number => interval !== null),
-    );
 
     return {
       title: statusPage.config?.title?.trim() || slug,
@@ -94,7 +89,6 @@ export class UptimeKumaIntegration extends Integration {
           mapMonitor(monitor, {
             heartbeats: heartbeatsByMonitor.get(monitor.id) ?? [],
             uptimeRatio: heartbeat.uptimeList[`${monitor.id}_24`],
-            typicalCheckInterval,
           }),
         ),
       })),
@@ -135,23 +129,21 @@ export class UptimeKumaIntegration extends Integration {
 interface MonitorHeartbeatData {
   heartbeats: UptimeKumaHeartbeat[];
   uptimeRatio: number | undefined;
-  typicalCheckInterval: number | null;
 }
 
 const mapMonitor = (
   monitor: StatusPageMonitor,
-  { heartbeats, uptimeRatio, typicalCheckInterval }: MonitorHeartbeatData,
+  { heartbeats, uptimeRatio }: MonitorHeartbeatData,
 ): UptimeKumaMonitor => {
   const latest = heartbeats.at(-1);
   const checkedWithinUptimeWindow = latest !== undefined && Date.now() - latest.time <= uptimeWindowMs;
-  const checkInterval = getCheckInterval(heartbeats) ?? typicalCheckInterval;
 
   return {
     id: monitor.id,
     name: monitor.name,
     type: monitor.type ?? null,
     url: monitor.url?.trim() || null,
-    status: getMonitorStatus(latest, checkInterval),
+    status: getMonitorStatus(latest, getCheckInterval(heartbeats)),
     uptime24h:
       checkedWithinUptimeWindow && typeof uptimeRatio === "number"
         ? Math.min(100, Math.max(0, uptimeRatio * 100))
@@ -174,10 +166,13 @@ const getMonitorStatus = (
   checkInterval: number | null,
 ): UptimeKumaMonitorStatus => {
   if (!latest) return "unknown";
-  if (checkInterval === null) return latest.status;
-  const pausedAfter = Math.max(minimumPausedAgeMs, checkInterval * missedChecksUntilPaused);
-  if (Date.now() - latest.time > pausedAfter) return "paused";
+  if (Date.now() - latest.time > getPausedAfter(checkInterval)) return "paused";
   return latest.status;
+};
+
+const getPausedAfter = (checkInterval: number | null) => {
+  if (checkInterval === null) return uptimeWindowMs;
+  return Math.max(minimumPausedAgeMs, checkInterval * missedChecksUntilPaused);
 };
 
 const getCheckInterval = (heartbeats: readonly UptimeKumaHeartbeat[]) =>

@@ -1009,6 +1009,7 @@
         "mantine-datatable": "catalog:",
         "mantine-react-table": "catalog:",
         "next": "catalog:",
+        "next-intl": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
         "react-markdown": "catalog:",

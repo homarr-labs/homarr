@@ -10,7 +10,13 @@ import { useI18n } from "@homarr/translation/client";
 import classes from "./component.module.css";
 import { HeartbeatBar } from "./heartbeat-bar";
 import type { MonitorEntry } from "./monitors";
-import { certificateWarningDays, formatUptime, getMonitorTypeTranslationKey, getUptimeTone } from "./status";
+import {
+  certificateWarningDays,
+  formatRelativeTime,
+  formatUptime,
+  getMonitorTypeTranslationKey,
+  getUptimeTone,
+} from "./status";
 
 export interface MonitorRowVisibility {
   heartbeatBar: boolean;
@@ -50,8 +56,7 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
   const formatter = useFormatter();
   const href = getSafeApplicationUrl(monitor.url);
   const isStacked = variant === "stacked";
-  const relative = (time: number | null) =>
-    time !== null && now ? formatter.relativeTime(time, { now, style: "narrow" }) : null;
+  const relative = (time: number | null) => formatRelativeTime(formatter, time, now);
 
   const statusDetail = getStatusDetail(monitor, visibility.statusDetail, relative(monitor.statusSince), t);
   const certificate = getCertificateDetail(monitor.certificateDaysRemaining, visibility, showDetails, t);
@@ -97,7 +102,7 @@ export const MonitorRow = ({ monitor, variant, visibility, showDetails, now }: M
           {visibility.tags && monitor.tags.length > 0 && <MonitorTags tags={monitor.tags} />}
         </div>
         {details && (
-          <span className={classes.monitorDetails} data-warning={certificate?.isWarning}>
+          <span className={classes.monitorDetails} data-warning={certificate?.isWarning || undefined}>
             {details}
           </span>
         )}

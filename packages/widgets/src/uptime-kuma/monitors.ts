@@ -1,7 +1,9 @@
 import type { UptimeKumaMonitor, UptimeKumaMonitorStatus, UptimeKumaStatusPage } from "@homarr/integrations/types";
-import { getUniqueUptimeKumaMonitors } from "@homarr/integrations/types";
+import { getUniqueUptimeKumaMonitors, isInactiveUptimeKumaStatus } from "@homarr/integrations/types";
 
-export type UptimeKumaSortBy = "status" | "statusPage" | "name" | "uptime";
+import type { WidgetComponentProps } from "../definition";
+
+type UptimeKumaSortBy = WidgetComponentProps<"uptimeKuma">["options"]["sortBy"];
 
 export interface LoadedStatusPage {
   integrationId: string;
@@ -41,21 +43,27 @@ export const getMonitorSections = (
   { groupByStatusPageGroup, showOnlyProblems, sortBy }: MonitorSectionOptions,
 ): MonitorSection[] => {
   const prepare = (monitors: MonitorEntry[]) => sortMonitors(filterProblems(monitors, showOnlyProblems), sortBy);
-  const sections = groupByStatusPageGroup
-    ? pages.flatMap((page) =>
-        page.statusPage.groups.map((group) => ({
-          key: `${page.integrationId}:${group.id}`,
-          title: pages.length > 1 ? `${page.statusPage.title} · ${group.name}` : group.name,
-          monitors: prepare(toEntries(page, group.monitors)),
-        })),
-      )
-    : [{ key: "all", title: null, monitors: prepare(getAllMonitors(pages)) }];
+  if (!groupByStatusPageGroup) {
+    return [{ key: "all", title: null, monitors: prepare(getAllMonitors(pages)) }].filter(hasMonitors);
+  }
 
-  return sections.filter((section) => section.monitors.length > 0);
+  const sections = pages.flatMap((page) =>
+    page.statusPage.groups.map((group) => ({
+      key: `${page.integrationId}:${group.id}`,
+      title: pages.length > 1 ? `${page.statusPage.title} · ${group.name}` : group.name,
+      monitors: prepare(toEntries(page, group.monitors)),
+    })),
+  );
+  return sections.filter(hasMonitors);
 };
 
-export const filterProblems = (monitors: readonly MonitorEntry[], showOnlyProblems: boolean) =>
+const hasMonitors = (section: MonitorSection) => section.monitors.length > 0;
+
+const filterProblems = (monitors: readonly MonitorEntry[], showOnlyProblems: boolean) =>
   monitors.filter((monitor) => !showOnlyProblems || monitor.status !== "up");
+
+export const needsAttention = (monitor: MonitorEntry) =>
+  monitor.status !== "up" && !isInactiveUptimeKumaStatus(monitor.status);
 
 export const sortMonitors = (monitors: readonly MonitorEntry[], sortBy: UptimeKumaSortBy): MonitorEntry[] =>
   monitors.toSorted((left, right) => compareMonitors(left, right, sortBy));

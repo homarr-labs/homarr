@@ -7,6 +7,7 @@ import {
   IconPlayerPause,
   IconTool,
 } from "@tabler/icons-react";
+import type { useFormatter } from "next-intl";
 
 import type {
   UptimeKumaIncidentStyle,
@@ -14,6 +15,7 @@ import type {
   UptimeKumaOverallStatus,
   UptimeKumaSummary,
 } from "@homarr/integrations/types";
+import { isInactiveUptimeKumaStatus } from "@homarr/integrations/types";
 import type { TablerIcon } from "@homarr/ui";
 
 export const monitorStatusColors: Record<UptimeKumaMonitorStatus, MantineColor> = {
@@ -86,10 +88,8 @@ export const presentStatuses = (summary: UptimeKumaSummary) =>
 
 type UptimeTone = "healthy" | "warning" | "critical" | "inactive";
 
-const inactiveStatuses = new Set<UptimeKumaMonitorStatus>(["paused", "unknown"]);
-
 export const getUptimeTone = (status: UptimeKumaMonitorStatus, uptime: number | null): UptimeTone => {
-  if (uptime === null || inactiveStatuses.has(status)) return "inactive";
+  if (uptime === null || isInactiveUptimeKumaStatus(status)) return "inactive";
   if (uptime >= 99) return "healthy";
   if (uptime >= 95) return "warning";
   return "critical";
@@ -102,3 +102,12 @@ export const formatUptime = (uptime: number) => {
 };
 
 export const certificateWarningDays = 14;
+
+export const formatRelativeTime = (
+  formatter: ReturnType<typeof useFormatter>,
+  time: number | null,
+  now: Date | null,
+) => {
+  if (time === null || now === null) return null;
+  return formatter.relativeTime(time, { now, style: "narrow" });
+};
