@@ -1935,6 +1935,7 @@
       "clear": "Clear image",
       "uploadImage": "Upload image",
       "results": "Image search results",
+      "websiteIcon": "Icon of the website",
       "localImages": "Your images",
       "svgIcons": "SVG icons",
       "otherImages": "Other images",
@@ -5901,6 +5902,15 @@
       "addWidget": "Add widget",
       "addApp": "Add app",
       "connectService": "Connect service"
+    },
+    "urlDrop": {
+      "hint": "Drop to add as an app",
+      "resolving": "Adding app…",
+      "notification": {
+        "success": {
+          "message": "{name} was added to the board"
+        }
+      }
     },
     "setupChecklist": {
       "title": "Make this board useful",
