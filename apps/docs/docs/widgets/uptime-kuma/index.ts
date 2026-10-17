@@ -9,13 +9,13 @@ export const uptimeKumaWidget: WidgetDefinition = {
   configuration: {
     items: [
       {
-        name: "Show status summary",
+        name: "Show summary",
         description: "Displays the overall status, monitor counts and averages above the monitor list",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
       {
-        name: "Show incidents and maintenance",
+        name: "Show incidents",
         description: "Displays pinned incidents and active maintenance from the status page",
         values: { type: "boolean" },
         defaultValue: "yes",
@@ -27,7 +27,7 @@ export const uptimeKumaWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
-        name: "Only show monitors with issues",
+        name: "Only show issues",
         description: "Hides monitors that are up. The advanced view still lists every monitor",
         values: { type: "boolean" },
         defaultValue: "no",
@@ -60,7 +60,7 @@ export const uptimeKumaWidget: WidgetDefinition = {
         defaultValue: "yes",
       },
       {
-        name: "Warn about expiring certificates",
+        name: "Certificate warnings",
         description: "Flags certificates that expire within 14 days",
         values: { type: "boolean" },
         defaultValue: "yes",

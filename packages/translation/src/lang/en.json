@@ -4900,20 +4900,20 @@
       "description": "Live status, heartbeats and uptime of the monitors on an Uptime Kuma status page",
       "option": {
         "showSummary": {
-          "label": "Show status summary",
-          "description": "Overall status, monitor counts and averages above the monitor list"
+          "label": "Show summary",
+          "description": "Overall status, counts and averages"
         },
         "showIncidents": {
-          "label": "Show incidents and maintenance",
-          "description": "Pinned incidents and active maintenance from the status page"
+          "label": "Show incidents",
+          "description": "Incidents and active maintenance"
         },
         "groupByStatusPageGroup": {
           "label": "Group monitors",
           "description": "Use the groups defined on the status page"
         },
         "showOnlyProblems": {
-          "label": "Only show monitors with issues",
-          "description": "Hide monitors that are up. The advanced view still lists every monitor"
+          "label": "Only show issues",
+          "description": "Hide monitors that are up, except in the advanced view"
         },
         "sortBy": {
           "label": "Sort monitors by",
@@ -4935,8 +4935,8 @@
           "label": "Show response time"
         },
         "showCertificateExpiry": {
-          "label": "Warn about expiring certificates",
-          "description": "Flags certificates that expire within 14 days. Requires certificate expiry on the status page"
+          "label": "Certificate warnings",
+          "description": "Flag certificates expiring within 14 days"
         }
       },
       "status": {
