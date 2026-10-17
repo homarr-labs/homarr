@@ -94,27 +94,45 @@ export default function WazuhWidget(props: WidgetComponentProps<"wazuh">) {
     [boardId, hasChangeAccess, itemId, options.view, saveItemOptions, setOptions],
   );
 
-  const View = viewComponents[view];
+  if (visibleViews.length <= 1) {
+    const View = viewComponents[view];
+    return (
+      <Box className={classes.root} data-view={view}>
+        <View {...props} />
+      </Box>
+    );
+  }
 
   return (
-    <Box className={classes.root} data-view={view}>
-      {visibleViews.length > 1 && (
-        <Tabs value={view} onChange={handleViewChange} variant="pills" radius="sm" className={classes.tabs}>
-          <Tabs.List style={{ flexWrap: "nowrap" }}>
-            {visibleViews.map((value) => {
-              const Icon = viewIcons[value];
-              return (
-                <Tooltip key={value} label={t(`view.${value}`)} withArrow openDelay={200}>
-                  <Tabs.Tab value={value} px={8} py={4} aria-label={t(`view.${value}`)}>
-                    <Icon size={16} stroke={1.8} />
-                  </Tabs.Tab>
-                </Tooltip>
-              );
-            })}
-          </Tabs.List>
-        </Tabs>
-      )}
-      <View {...props} />
-    </Box>
+    <Tabs
+      value={view}
+      onChange={handleViewChange}
+      variant="pills"
+      radius="sm"
+      className={classes.root}
+      data-view={view}
+    >
+      <Tabs.List className={classes.tabs} style={{ flexWrap: "nowrap" }} aria-label={t("name")}>
+        {visibleViews.map((value) => {
+          const Icon = viewIcons[value];
+          return (
+            <Tooltip key={value} label={t(`view.${value}`)} withArrow openDelay={200}>
+              <Tabs.Tab value={value} px={8} py={4} aria-label={t(`view.${value}`)}>
+                <Icon size={16} stroke={1.8} />
+              </Tabs.Tab>
+            </Tooltip>
+          );
+        })}
+      </Tabs.List>
+      {visibleViews.map((value) => {
+        const View = viewComponents[value];
+        // Every tab has a panel so aria-controls/aria-labelledby resolve; only the active one renders its view.
+        return (
+          <Tabs.Panel key={value} value={value} className={classes.panel}>
+            <View {...props} />
+          </Tabs.Panel>
+        );
+      })}
+    </Tabs>
   );
 }

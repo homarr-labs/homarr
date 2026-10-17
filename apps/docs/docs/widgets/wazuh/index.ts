@@ -19,6 +19,7 @@ export const wazuhWidget: WidgetDefinition = {
           type: "select",
           options: [
             "Severity",
+            "Alerts",
             "Timeline",
             "Top lists",
             "Agents",
@@ -31,7 +32,8 @@ export const wazuhWidget: WidgetDefinition = {
       },
       {
         name: "Time range",
-        description: "Period used by every tab except agents and vulnerabilities.",
+        description:
+          "Period used by the severity, alerts, timeline, top lists, file integrity and auth failures tabs. Agents and vulnerabilities always show the current state.",
         values: { type: "select", options: timeRanges },
         defaultValue: "Last 24 hours",
       },

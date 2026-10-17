@@ -3,6 +3,10 @@
   height: 100%;
 }
 
+.panel {
+  height: 100%;
+}
+
 .tabs {
   position: absolute;
   z-index: 2;
