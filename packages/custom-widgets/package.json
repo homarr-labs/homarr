@@ -21,14 +21,15 @@
     "./jsx/analyzer": "./src/jsx/analyzer.ts",
     "./runtime": "./src/runtime/index.ts",
     "./server": "./src/server/index.ts",
+    "./tabler-icons": "./src/core/tabler-icons.ts",
     "./workbench": "./src/workbench/index.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
     "check:architecture": "node ./scripts/check-architecture.mjs",
     "generate:catalog": "tsx ./scripts/generate-component-metadata.ts",
-    "generate:components": "pnpm generate:catalog",
-    "generate": "pnpm generate:catalog",
+    "generate:components": "bun run generate:catalog",
+    "generate": "bun run generate:catalog",
     "evaluate:ai": "tsx ./scripts/evaluate-ai-authoring.ts",
     "evaluate:assistant-ai": "tsx ./scripts/evaluate-ai-authoring.ts --assistant",
     "test:reference-apis": "tsx ./scripts/verify-reference-apis.ts",

@@ -1,11 +1,9 @@
-import "@homarr/redis";
-
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createChannelEventHistoryOld } from "@homarr/redis";
 
-import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";

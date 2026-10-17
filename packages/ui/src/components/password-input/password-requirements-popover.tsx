@@ -15,14 +15,14 @@ const strengthColorMap = [
 
 export const PasswordRequirementsPopover = ({ password, children }: PropsWithChildren<{ password: string }>) => {
   const tPassword = useI18n("user.field.password");
-  const requirements = useRequirements();
-  const strength = useStrength(password);
+  const requirements = useRequirements(password);
+  const strength = (100 / requirements.length) * requirements.filter(({ meets }) => meets).length;
   const [popoverOpened, setPopoverOpened] = useState(false);
   const strengthColor = strengthColorMap.find(({ min }) => strength >= min)?.color ?? "dimmed";
   const checks = (
     <>
       {requirements.map((requirement) => (
-        <PasswordRequirement key={requirement.label} label={requirement.label} meets={requirement.check(password)} />
+        <PasswordRequirement key={requirement.label} label={requirement.label} meets={requirement.meets} />
       ))}
     </>
   );
@@ -45,14 +45,8 @@ export const PasswordRequirementsPopover = ({ password, children }: PropsWithChi
   );
 };
 
-const useRequirements = () => {
+const useRequirements = (password: string) => {
   const t = useI18n("user.field.password.suggestion");
 
-  return passwordRequirements.map(({ check, value }) => ({ check, label: t(value) }));
+  return passwordRequirements.map(({ check, value }) => ({ meets: check(password), label: t(value) }));
 };
-
-function useStrength(password: string) {
-  const requirements = useRequirements();
-
-  return (100 / requirements.length) * requirements.filter(({ check }) => check(password)).length;
-}

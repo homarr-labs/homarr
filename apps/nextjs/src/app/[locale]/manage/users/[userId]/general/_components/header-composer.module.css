@@ -103,7 +103,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  max-width: 100%;
 }
 
 .sortableItem[data-drop-target="true"]::before {
@@ -139,7 +140,7 @@
 }
 
 .itemButton {
-  cursor: grab;
+  cursor: pointer;
   transition:
     border-color 120ms ease,
     background-color 120ms ease,
@@ -160,9 +161,26 @@
   box-shadow: 0 0 0 1px var(--mantine-primary-color-filled);
 }
 
-.itemButton:focus-visible {
+.itemButton:focus-visible,
+.dragHandle:focus-visible {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: 2px;
+}
+
+.dragHandle {
+  flex-shrink: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.itemButton:disabled,
+.dragHandle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .dragOverlay {

@@ -11,11 +11,13 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
   getCollapsedDisplayLayout,
+  CONTAINER_HEADER_HEIGHT,
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
   getLayoutRowCount,
   getLogicalGridSize,
   getReadonlyCanvasAttributes,
+  LOGICAL_GRID_PITCH,
   normalizeGridPlacement,
 } from "~/components/board/layout";
 import { calculateBoardUiScale, useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
@@ -58,6 +60,7 @@ export const SectionGrid = ({
   const canvasScale = useBoardCanvasScale();
   const parentContentScale = useContext(GridContentScaleContext);
   const parentRowScale = useContext(GridRowScaleContext);
+  const [collapsedRowsPerPixel, setCollapsedRowsPerPixel] = useState<number>();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const editorRegistry = useGridEditorRegistry();
   const editorHostRef = useRef<HTMLDivElement>(null);
@@ -65,6 +68,9 @@ export const SectionGrid = ({
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
+  const hasLabeledCollapsibleChildren = innerSections.some(
+    (child) => child.options.collapsible && child.options.showLabel,
+  );
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
   const expandSectionsForEditing = useExpandSectionsForEditing();
@@ -117,14 +123,29 @@ export const SectionGrid = ({
       ),
     [collapsedSectionIds, collapsibleSectionIds, placements],
   );
+  const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
   const displayPlacements = useMemo(() => {
     if (directCollapsedIds.size === 0) return placements;
 
+    let collapsedRowCountById: ReadonlyMap<string, number> | undefined;
+    if (collapsedRowsPerPixel !== undefined) {
+      const headerHeight = CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale) * canvasScale;
+      collapsedRowCountById = new Map(
+        innerSections
+          .filter((child) => child.options.collapsible && child.options.showLabel)
+          .map((child) => {
+            let topInset = CONTAINER_CARD_INSET;
+            if (railPlacement !== "main" && child.yOffset === 0) topInset = 0;
+            return [child.id, (headerHeight + topInset + 10) * collapsedRowsPerPixel];
+          }),
+      );
+    }
     return getCollapsedDisplayLayout(placements, {
       columnCount,
       collapsedItemIds: directCollapsedIds,
+      collapsedRowCountById,
     });
-  }, [columnCount, directCollapsedIds, placements]);
+  }, [canvasScale, columnCount, directCollapsedIds, innerSections, placements, collapsedRowsPerPixel, railPlacement]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
@@ -141,20 +162,14 @@ export const SectionGrid = ({
   const viewportRef = useRef<HTMLDivElement>(null);
   const isRail = railPlacement !== "main";
   const railLogicalHeight = useRailLogicalHeight(viewportRef, isRail, canvasScale);
-  const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
+  const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty" && isEditMode, canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
-  const railBaselineRef = useRef({ key: "", rowCount: 1 });
-  const railBaselineKey = `${section.id}:${currentLayoutId}`;
-  if (railBaselineRef.current.key !== railBaselineKey) {
-    railBaselineRef.current = { key: railBaselineKey, rowCount: Math.max(1, getLayoutRowCount(placements)) };
-  }
   const railViewportRowCount = getGridRowCountForVisualHeight(railLogicalHeight, 1);
   let rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   if (isRail) {
-    // Existing taller rails remain scrollable, but collision pushes cannot grow this cap.
-    rowCount = Math.max(railViewportRowCount, railBaselineRef.current.rowCount);
+    rowCount = Math.max(railViewportRowCount, contentRowCount);
   }
-  const maxRowCount = section.kind === "container" || isRail ? rowCount : null;
+  const maxRowCount = section.kind === "container" ? rowCount : null;
   const placementMaxRowCount = maxRowCount;
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
@@ -181,7 +196,27 @@ export const SectionGrid = ({
     allocatedViewportHeight *= parentRowScale;
   }
   const logicalWidth = Math.max(1, fullGridWidth - outerCardInlineInset);
-  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset);
+  const hasContainerHeader = section.kind === "container" && section.options.collapsible && section.options.showLabel;
+  let headerInset = 0;
+  if (hasContainerHeader && !collapsedSectionIds.has(section.id)) {
+    headerInset = (CONTAINER_HEADER_HEIGHT * calculateBoardUiScale(canvasScale)) / parentContentScale;
+  }
+  let nestedHeaderInset = 0;
+  if (
+    section.kind === "container" &&
+    (section.options.collapsible || (section.options.showLabel && section.options.title)) &&
+    innerSections.some(
+      (child) =>
+        child.yOffset === 0 &&
+        (child.options.collapsible || (child.options.showLabel && child.options.title)) &&
+        (!hasContainerHeader || !child.options.collapsible || !child.options.showLabel),
+    )
+  ) {
+    // Keep the extra gap whenever either adjacent header still floats over its border.
+    nestedHeaderInset = (20 * calculateBoardUiScale(canvasScale)) / effectiveCanvasScale;
+  }
+  nestedHeaderInset = Math.min(nestedHeaderInset, Math.max(0, allocatedViewportHeight - outerCardInset - 1));
+  const viewportHeight = Math.max(1, allocatedViewportHeight - outerCardInset - nestedHeaderInset - headerInset);
   // Fit columns to the card width. Rows fit the available height independently
   // without creating horizontal gutters or distorting text and icons.
   let containerContentScale = 1;
@@ -189,7 +224,8 @@ export const SectionGrid = ({
   if (section.kind === "container" && fullGridWidth > 0 && fullViewportHeight > 0) {
     containerContentScale = Math.max(0.01, Math.min(logicalWidth / fullGridWidth, 1));
     rowScale = Math.max(0.01, viewportHeight / (fullViewportHeight * containerContentScale));
-  } else if (isRail && railLogicalHeight > 0 && rowCount <= railViewportRowCount) {
+  } else if (isRail && railLogicalHeight > 0 && rowCount <= railViewportRowCount && !hasCollapsedHeader) {
+    // Keep fixed-height collapsed headers out of the rail's fill compression.
     rowScale = viewportHeight / fullViewportHeight;
   }
   const contentScale = parentContentScale * containerContentScale;
@@ -201,6 +237,11 @@ export const SectionGrid = ({
   // is a circular reference - CSS invalidates the whole group rather than using "the old value",
   // silently breaking every icon/text/custom-CSS size that compensates off it for descendants.
   const combinedUiScale = calculateBoardUiScale(canvasScale) / contentScale;
+  useLayoutEffect(() => {
+    if (!hasLabeledCollapsibleChildren) return;
+    // Convert the fixed header and visual insets into this grid's row units.
+    setCollapsedRowsPerPixel(1 / (effectiveContentScale * LOGICAL_GRID_PITCH * rowScale));
+  }, [effectiveContentScale, hasLabeledCollapsibleChildren, rowScale]);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
@@ -294,6 +335,7 @@ export const SectionGrid = ({
         style={
           {
             width: logicalWidth,
+            marginTop: nestedHeaderInset,
             height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
             "--board-grid-content-scale": containerContentScale,

@@ -265,7 +265,7 @@ existingStatsProviders.gluetun = adapter(
     metric("country", "Country", "text"),
   ],
   (client) => client.getSummaryAsync(),
-  (data) => ({ status: data.vpnStatus, publicIp: data.publicIp, country: data.country }),
+  (data) => ({ status: data.vpnStatus, publicIp: data.publicIp, country: data.country ?? null }),
 );
 existingStatsProviders.unifiController = adapter(
   "unifiController",

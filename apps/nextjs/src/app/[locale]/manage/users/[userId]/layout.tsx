@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
 import { IconSettings, IconShieldLock } from "@tabler/icons-react";
 
-import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
@@ -13,6 +12,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound, catchTrpcUnauthorized } from "~/errors/trpc-catch-error";
 import { NavigationLink } from "../groups/[id]/_navigation";
 import { canAccessUserEditPage } from "./access";
+import { getUserEditDataAsync } from "./_data";
 
 interface LayoutProps {
   params: Promise<{ userId: string }>;
@@ -27,7 +27,7 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
   const tNavigation = await getI18n("navigationStructure.manage.users");
   const tUserRoot = await getI18n("user");
   const tUser = await getI18n("management.page.user");
-  const user = await api.user.getById({ userId: params.userId }).catch(catchTrpcNotFound).catch(catchTrpcUnauthorized);
+  const user = await getUserEditDataAsync(params.userId).catch(catchTrpcNotFound).catch(catchTrpcUnauthorized);
 
   if (!canAccessUserEditPage(session, user.id)) {
     notFound();

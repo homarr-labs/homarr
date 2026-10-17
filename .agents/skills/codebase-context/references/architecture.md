@@ -18,9 +18,9 @@
 | `apps/websocket` | tRPC WebSocket subscriptions on port 3001                                                |
 | `apps/workshop`  | Go/PocketBase Workshop service and provider integration                                  |
 
-`pnpm dev` runs only `@homarr/nextjs`. Use `pnpm --filter @homarr/tasks dev`, `pnpm --filter @homarr/websocket dev`, or `pnpm dev:docs` when a task needs those runtimes.
+`bun run dev` runs only `@homarr/nextjs`. Use `bun run --filter @homarr/tasks dev`, `bun run --filter @homarr/websocket dev`, or `bun run dev:docs` when a task needs those runtimes.
 
-In production, `apps/nextjs/src/instrumentation-node.ts` starts the tasks and WebSocket runtimes inside the Node process. Nginx listens on port 7575, proxies `/websockets` to port 3001, and sends other traffic to port 3000. Redis can run internally or externally.
+In production, `apps/nextjs/src/instrumentation-node.ts` starts the tasks and WebSocket runtimes inside the Bun process. Nginx listens on port 7575, proxies `/websockets` to port 3001, and sends other traffic to port 3000. Redis can run internally or externally.
 
 ## Package map
 
@@ -34,7 +34,7 @@ In production, `apps/nextjs/src/instrumentation-node.ts` starts the tasks and We
 
 ### Data, identity, and transport
 
-- `db`: Drizzle schemas, queries, migrations, and three database drivers.
+- `db`: Drizzle schemas, queries, migrations, and SQLite and PostgreSQL drivers.
 - `auth`: Auth.js/NextAuth configuration, sessions, providers, and API keys.
 - `api`: tRPC routers, contexts, MCP metadata extraction, OpenAPI, and client/server entrypoints.
 - `redis`: Redis clients, pub/sub channels, and caches.
@@ -57,7 +57,7 @@ In production, `apps/nextjs/src/instrumentation-node.ts` starts the tasks and We
 - `settings`, `spotlight`, `notifications`, `onboarding`: cross-feature UI flows.
 - `widgets`: widget definitions, dynamic component loaders, and shared widget UI.
 - `translation`: next-intl configuration and locale catalogs.
-- `cli`: Node operations CLI. `tools/homarr-dev` is the separate Go developer CLI.
+- `cli`: Bun operations CLI. `tools/homarr-dev` is the separate Go developer CLI.
 
 ## Dependency direction
 
@@ -103,8 +103,8 @@ User routes live below `apps/nextjs/src/app/[locale]/`; the locale segment does 
 ## Commands and conventions
 
 - Read current scripts from the root or package `package.json`; avoid caching commands that do not exist.
-- Use `pnpm dev` for Next.js, `pnpm dev:docs` for docs, and `pnpm dev:cli -- <args>` for the Go developer CLI.
-- Use `pnpm docker:dev:up` for the Redis development dependency.
+- Use `bun run dev` for Next.js, `bun run dev:docs` for docs, and `bun run dev:cli -- <args>` for the Go developer CLI.
+- Use `bun run docker:dev:up` for the Redis development dependency.
 - Follow the Testing section in `AGENTS.md` for test creation and validation scope.
 - Use `~/*` only inside the Next.js app. Use public `@homarr/*` entrypoints across package boundaries.
 - Keep Mantine application styles separate from the Tailwind-based docs app.

@@ -85,6 +85,7 @@ export default function UptimeKumaWidget({
   width,
   height,
   displayMode = "compact",
+  displayScale = 1,
 }: WidgetComponentProps<"uptimeKuma">) {
   if (integrationIds.length === 0) {
     throw new NoIntegrationDataError();
@@ -97,6 +98,7 @@ export default function UptimeKumaWidget({
       width={width}
       height={height}
       displayMode={displayMode}
+      displayScale={displayScale}
     />
   );
 }
@@ -107,9 +109,17 @@ interface UptimeKumaContentProps {
   width: number;
   height: number;
   displayMode: "compact" | "advanced";
+  displayScale: number;
 }
 
-function UptimeKumaContent({ integrationIds, options, width, height, displayMode }: UptimeKumaContentProps) {
+function UptimeKumaContent({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode,
+  displayScale,
+}: UptimeKumaContentProps) {
   const t = useI18n("widget.uptimeKuma");
   const dashboardQuery = clientApi.widget.uptimeKuma.getDashboard.useQuery({ integrationIds });
   const dashboardData = getUsableWidgetQueryData(dashboardQuery);
@@ -129,11 +139,17 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
   );
   const uptimeValue = clampPercent(combined.averageUptimePercent);
   const uptimeColor = getUptimeColor(uptimeValue);
-  const visualScale = Math.min(width, height);
-  const ringSize = getRingSize(visualScale);
-  const iconSize = getIconSize(visualScale);
-  const gridCols = getGridCols(width);
   const isAdvanced = displayMode === "advanced";
+  let responsiveWidth = width;
+  let responsiveHeight = height;
+  if (!isAdvanced) {
+    responsiveWidth *= displayScale;
+    responsiveHeight *= displayScale;
+  }
+  const visualScale = Math.min(responsiveWidth, responsiveHeight);
+  const ringSize = getRingSize(visualScale);
+  const iconSize = getIconSize(Math.min(width, height));
+  const gridCols = getGridCols(responsiveWidth);
 
   const enabledStatKeys = Object.entries(statVisibilityByOption)
     .filter(([optionKey]) => isAdvanced || options[optionKey as keyof typeof options])
@@ -149,7 +165,7 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
   const heroRingClass = heroVariantByRing[String(showRing) as keyof typeof heroVariantByRing];
 
   const summaryContent = (
-    <div className={classes.root}>
+    <div className={classes.root} data-short={responsiveHeight < 240 || undefined}>
       {showHero && (
         <div className={`${classes.hero} ${heroLayoutClass} ${heroRingClass}`}>
           <div className={classes.heroText}>
@@ -195,7 +211,9 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
                   color={`var(--mantine-color-${color}-6)`}
                 />
                 <span className={classes.statValue}>{formatNumber(combined[statKey], 0)}</span>
-                <span className={classes.statLabel}>{t(`stats.${statKey}`)}</span>
+                <span className={classes.statLabel} title={t(`stats.${statKey}`)}>
+                  {t(`stats.${statKey}`)}
+                </span>
               </div>
             );
           })}

@@ -113,6 +113,7 @@ const previewCreateProcedure = permissionRequiredProcedure
   .meta({
     mcp: {
       enabled: true,
+      effect: "additive",
       description:
         "Fully validate a complete Custom JSX definition and create a short-lived preview in one call. Pass definition directly as an object, never serialized JSON. Prefer templateLines for multiline JSX. The result lists every query and action that needs evidence before saving.",
     },
@@ -234,6 +235,7 @@ export const previewBaseProcedures = {
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Replace only the JSX template in an existing preview after a response-driven correction. The inherited sources, requests, options, and secrets are fully revalidated without resending them. Prior evidence becomes stale, so rerun every returned query and action before persistence.",
       },

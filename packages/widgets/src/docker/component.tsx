@@ -51,6 +51,7 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import actionTargetClasses from "../common/action-target.module.css";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
+import { matchesContainerFilter } from "./filter";
 import { getDockerColumnVisibility, getDockerFooterVisibility } from "./layout";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
@@ -94,12 +95,6 @@ const getContainersQueryInput = (endpointIds: string[]) => {
   if (endpointIds.length === 0) return undefined;
   return { endpointIds };
 };
-
-function matchesContainerFilter(name: string, containerFilter: string[], filterIsWhitelist: boolean): boolean {
-  if (containerFilter.length === 0) return true;
-  const matches = containerFilter.includes(name);
-  return filterIsWhitelist === matches;
-}
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useI18n("docker.field.state.option");
@@ -289,9 +284,20 @@ export default function DockerWidget({
   const containers = useMemo(
     () =>
       (data?.containers ?? []).filter((container) =>
-        matchesContainerFilter(container.name, options.containerFilter, options.filterIsWhitelist),
+        matchesContainerFilter(container.name, {
+          containerFilter: options.containerFilter,
+          filterIsWhitelist: options.filterIsWhitelist,
+          filterCaseSensitive: options.filterCaseSensitive,
+          filterAllowWildcards: options.filterAllowWildcards,
+        }),
       ),
-    [data?.containers, options.containerFilter, options.filterIsWhitelist],
+    [
+      data?.containers,
+      options.containerFilter,
+      options.filterIsWhitelist,
+      options.filterCaseSensitive,
+      options.filterAllowWildcards,
+    ],
   );
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
@@ -358,7 +364,7 @@ export default function DockerWidget({
 
   const sortedContainers = useMemo(() => {
     const multiplier = sortStatus.direction === "desc" ? -1 : 1;
-    return [...containers].toSorted(
+    return containers.toSorted(
       (first, second) => compareContainers(first, second, sortStatus.columnAccessor) * multiplier,
     );
   }, [containers, sortStatus]);
@@ -425,6 +431,7 @@ export default function DockerWidget({
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       <Box style={{ flex: 1, minHeight: 0 }}>
         <HomarrDataTable
+          preserveColumnWidths
           isEditMode={isEditMode}
           cellPadding={isAdvanced || width < 400 ? "2px 8px" : "4px 8px"}
           className="docker-table"

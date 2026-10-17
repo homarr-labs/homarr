@@ -227,6 +227,7 @@ export const integrationRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
       },
@@ -414,7 +415,11 @@ export const integrationRouter = createTRPCRouter({
   }),
   delete: protectedProcedure
     .meta({
-      mcp: { enabled: true, description: "Delete an integration by ID. REQUIRED: id (integration ID string)" },
+      mcp: {
+        enabled: true,
+        effect: "destructive",
+        description: "Delete an integration by ID. REQUIRED: id (integration ID string)",
+      },
     })
     .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {
@@ -710,6 +715,7 @@ export const integrationRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Submit a media request to Overseerr/Jellyseerr/Seerr. REQUIRED: integrationId (Overseerr/Jellyseerr ID), mediaId (number), mediaType ('tv' or 'movie'). OPTIONAL: seasons (array of season numbers — for TV only, omit to request all). Workflow: searchMediaRequests → (getMediaRequestOptions for TV) → requestMedia",
       },
@@ -816,7 +822,9 @@ const getAccessibleMediaRequestSearchIntegrationsAsync = async (
       secrets: true,
       items: {
         with: {
-          item: true,
+          item: {
+            columns: { boardId: true },
+          },
         },
       },
       userPermissions: {

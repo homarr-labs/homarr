@@ -247,6 +247,82 @@
         "title": "Prisijunkite prie savo paskyros",
         "subtitle": "Sveiki sugrįžę! Prašome įvesti savo prisijungimo duomenis"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Prisijungti prie Homarr",
         "titleWithAppName": "Prisijungti prie {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Pasirinkti kelias",
         "cancelMultiple": "Išeiti iš kelių pasirinkimo režimo",
         "customApplication": "Pasirinktinė programa",
-        "application": "Programa"
+        "application": "Programa",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Sukurti naują programėlę",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Veikimo stebėjimas",
       "beszel": "Beszel",
       "systemMonitoring": "Sistemos stebėjimas",
-      "security": "Apsauga"
+      "security": "Apsauga",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "{page} puslapis iš {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "čia",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose"
+      "empty": "Pridėkite URL arba programėlę valdiklio nustatymuose",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": ""
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Matomos klasterio sekcijos"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Filtruotini konteineriai"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "Filtruoti kaip leidžiamąjį sąrašą"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Programėlė nerasta",
         "description": "Spustelėkite <here></here>, kad sukurtumėte naują programėlę",
-        "quickCreate": "Sukurti programėlę skrydžio metu"
+        "quickCreate": "Sukurti programėlę skrydžio metu",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nepasirinkta integracija",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": "Rodyti užbaigtais pažymėtus įvairius įrašus"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Slėpti baigtus torrent žemiau šios ribos"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": "Aprašymo eilučių apkarpymas"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Įrašų skaičiaus riba"
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": "Teikėjo URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikatorius",
             "placeholder": "Vardas arba savininkas / vardas"
@@ -4597,6 +4717,10 @@
       "openReleasePage": "Atidaryti leidimo puslapį",
       "releaseDescription": "Leidimo aprašymas",
       "projectDescription": "Projekto aprašymas",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Nežinoma",
       "created": "Sukurta",
       "error": {
         "label": "Klaida",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Rodyti tinklo diagramą"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Rodyti Docker CPU diagramą"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Viešųjų sąsajų tinklo srautas",
           "sent": "Išsiųsta",
           "recv": "Gauta"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Docker CPU naudojimas",
@@ -6331,6 +6476,31 @@
               "search": "Paieška",
               "firstDayOfWeek": "Pirmoji savaitės diena",
               "accessibility": "Pritaikymas neįgaliesiems",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Įvedimo mokymai",
                 "description": "Iš naujo nustatykite vedlio mokymus, kad pamatytumėte juos dar kartą kitą kartą apsilankę valdymo srityje arba valdymo skydelyje.",
@@ -6871,7 +7041,8 @@
               "label": "Autentifikavimas",
               "title": "API raktai",
               "button": {
-                "createApiToken": "Sukurti API prieigos raktą"
+                "createApiToken": "Sukurti API prieigos raktą",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Sukūrė",
+                  "source": "Integracija",
                   "actions": "Veiksmai"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

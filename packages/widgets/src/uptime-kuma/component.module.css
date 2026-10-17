@@ -36,7 +36,7 @@
 }
 
 .heroTextOnly .heroValue {
-  font-size: clamp(22px, 10cqmin, 36px);
+  font-size: clamp(var(--mantine-font-size-2xl), 10cqmin, var(--mantine-font-size-4xl));
 }
 
 .heroText {
@@ -48,13 +48,13 @@
 }
 
 .heroLabel {
-  font-size: clamp(9px, 2.8cqmin, 13px);
+  font-size: clamp(var(--mantine-font-size-xs), 2.8cqmin, var(--mantine-font-size-sm));
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
 }
 
 .heroValue {
-  font-size: clamp(18px, 8cqmin, 32px);
+  font-size: clamp(var(--mantine-font-size-xl), 8cqmin, var(--mantine-font-size-4xl));
   font-weight: 700;
   line-height: 1.1;
 }
@@ -88,19 +88,32 @@
   overflow: hidden;
 }
 
+.root[data-short] .statTile {
+  flex-direction: row;
+}
+
+.root[data-short] .statValue {
+  flex-shrink: 0;
+}
+
+.root[data-short] .statLabel {
+  min-width: 0;
+  text-align: left;
+}
+
 .statIcon {
   flex-shrink: 0;
 }
 
 .statValue {
-  font-size: clamp(14px, 5.5cqmin, 24px);
+  font-size: clamp(var(--mantine-font-size-lg), 5.5cqmin, var(--mantine-font-size-2xl));
   font-weight: 700;
   line-height: 1.1;
   text-align: center;
 }
 
 .statLabel {
-  font-size: clamp(8px, 2.5cqmin, 12px);
+  font-size: clamp(var(--mantine-font-size-xs), 2.5cqmin, var(--mantine-font-size-sm));
   color: var(--mantine-color-dimmed);
   line-height: 1.2;
   text-align: center;

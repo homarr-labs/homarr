@@ -247,6 +247,82 @@
         "title": "Prijavite se na svoj račun",
         "subtitle": "Dobro došli natrag! Unesite svoje podatke"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Pridružite se Homarru",
         "titleWithAppName": "Pridruži se aplikaciji {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Odaberi više",
         "cancelMultiple": "Izađi iz višestrukog odabira",
         "customApplication": "Prilagođena aplikacija",
-        "application": "Aplikacija"
+        "application": "Aplikacija",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Stvori novu aplikaciju",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Nadzor dostupnosti",
       "beszel": "Beszel",
       "systemMonitoring": "Nadzor sustava",
-      "security": "Sigurnost"
+      "security": "Sigurnost",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Stranica {page} od {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "ovdje",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Dodajte URL ili aplikaciju u postavkama widgeta"
+      "empty": "Dodajte URL ili aplikaciju u postavkama widgeta",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Zadana kartica"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Vidljivi odjeljci klastera"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Spremnici za filtriranje"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "Filtriraj kao popis dopuštenih"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Nijedna aplikacija nije pronađena",
         "description": "Kliknite <here></here> za stvaranje nove aplikacije",
-        "quickCreate": "Stvori aplikaciju u hodu"
+        "quickCreate": "Stvori aplikaciju u hodu",
+        "create": ""
       },
       "error": {
         "noIntegration": "Nijedna integracija nije odabrana",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": "Prikaži razne dovršene stavke"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Sakrij dovršene torrente ispod ovog praga"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": "Ograničavanje redaka opisa"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Ograničenje broja objava"
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": "URL pružatelja"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Naziv ili vlasnik/naziv"
@@ -4597,6 +4717,10 @@
       "openReleasePage": "Otvori stranicu izdanja",
       "releaseDescription": "Opis izdanja",
       "projectDescription": "Opis projekta",
+      "runningVersions": "",
+      "upToDate": "Ažurirano",
+      "updateAvailable": "",
+      "unknownStatus": "Nepoznato",
       "created": "Stvoreno",
       "error": {
         "label": "Pogreška",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Prikaži grafikon mreže"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Prikaži grafikon Docker CPU-a"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Mrežni promet javnih sučelja",
           "sent": "Poslano",
           "recv": "Primljeno"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Upotreba Docker CPU-a",
@@ -6331,6 +6476,31 @@
               "search": "Traži",
               "firstDayOfWeek": "Prvi dan u tjednu",
               "accessibility": "Pristupačnost",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Vodiči za onboarding",
                 "description": "Resetirajte onboarding vodiče kako biste ih ponovno vidjeli pri sljedećem posjetu upravljačkom području ili ploči.",
@@ -6871,7 +7041,8 @@
               "label": "Autentifikacija",
               "title": "API ključevi",
               "button": {
-                "createApiToken": "Stvori API token"
+                "createApiToken": "Stvori API token",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Stvorio",
+                  "source": "Integracija",
                   "actions": "Radnje"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

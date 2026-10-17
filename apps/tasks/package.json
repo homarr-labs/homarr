@@ -11,7 +11,7 @@
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "dev": "pnpm with-env tsx ./src/main.ts",
+    "dev": "bun run with-env tsx ./src/main.ts",
     "format": "oxfmt .",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit",
@@ -46,7 +46,6 @@
     "@types/node": "catalog:",
     "dotenv-cli": "catalog:",
     "esbuild": "catalog:",
-    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }

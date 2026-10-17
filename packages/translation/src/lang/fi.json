@@ -247,6 +247,82 @@
         "title": "Kirjaudu tilillesi",
         "subtitle": "Tervetuloa takaisin! Syötä kirjautumistietosi"
       },
+      "mcpConsent": {
+        "title": "Tarkista asiakkaan käyttöoikeus",
+        "description": "Tarkista tämän asiakkaan pääsy ennen yhdistämistä.",
+        "viewingHint": "Tämän sivun katselu ei myönnä pääsyä.",
+        "identityTitle": "Tili ja asiakas",
+        "loading": "Ladataan käyttöoikeuspyyntöä",
+        "allow": "Salli pääsy",
+        "deny": "Estä pääsy",
+        "decisionHint": "Salli pääsy vain, jos luotat tähän asiakkaaseen ja soitat takaisin.",
+        "requestExpires": "Pyyntö vanhenee (UTC):",
+        "details": "Tekniset tiedot",
+        "returnHome": "Palaa Homarriin",
+        "reload": "Lataa suostumuksen sivu uudelleen",
+        "account": {
+          "name": "Kirjautuneena nimellä",
+          "id": "Käyttäjän Tunnus",
+          "nameNotRecorded": "Käyttäjänimeä ei tallennettu"
+        },
+        "client": {
+          "name": "Asiakas",
+          "nameNotSupplied": "Asiakkaan nimeä ei annettu",
+          "id": "Asiakkaan Tunnus",
+          "callbackHost": "Takaisinkutsun isäntä",
+          "callbackUrl": "Koko puhelun URL",
+          "hostUnavailable": "Takaisinsoittopalvelin ei ole käytettävissä",
+          "unverifiedHint": "Asiakkaan nimet ovat itse raportoituja, Homarr ei ole vahvistanut niitä.",
+          "destinationHint": "Päätöksesi palaa tähän puheluun. Jos sallit käytön, asiakas voi vaihtaa valtuutuskoodia API-tunnusta varten."
+        },
+        "access": {
+          "title": "Tilin käyttöoikeus",
+          "description": "Käyttää nykyisiä käyttöoikeuksiasi, mukaan lukien jaetut resurssit.",
+          "details": "Näytä oikeudet ({count})",
+          "noGlobalPermissions": "Käyttää tiliäsi ja resurssiasi ilman maailmanlaajuisia käyttöoikeuksia."
+        },
+        "admin": {
+          "title": "Täysi järjestelmänvalvojan käyttöoikeus",
+          "description": "Voi hallita Homarr ja liitetyt palvelut, mukaan lukien tuhoisat toimet."
+        },
+        "credential": {
+          "title": "Tekijän soveltamisala ja käyttöikä",
+          "breadth": "Toimii Homarr's HTTP API ja MCP, mukaan lukien tämän asiakkaan ulkopuolella.",
+          "lifetime": "Ei automaattista vanhenemista. Sisäänkirjautuminen ei peruuta pääsyä.",
+          "manageConnections": "Peruuta yleiset asetukset"
+        },
+        "error": {
+          "freshStart": "Aloita asiakkaan uusi valtuutuspyyntö. Homarr pyytää sinua tarkistamaan pääsyn uudelleen.",
+          "unavailable": {
+            "title": "Käyttöpyyntö ei käytettävissä",
+            "description": "Tämä pyyntö on vanhentunut, se on jo käsitelty, tai se ei ole enää käytettävissä. Sitä ei voi hyväksyä tällä sivulla."
+          },
+          "invalid_browser": {
+            "title": "Käyttöoikeuspyyntö kuuluu toiseen selaimeen",
+            "description": "Tämä selain ei voi vahvistaa alkuperäistä pyyntöä. Käytä selainta, jossa olet aloittanut valtuutuksen tai käynnistänyt uuden pyynnön asiakkaalta."
+          },
+          "session_changed": {
+            "title": "Sisäänkirjautumisistuntosi on muuttunut",
+            "description": "Tämä pyyntö on linkitetty eri käyttäjän tai kirjautumisen istuntoon. Sitä ei voida hyväksyä tällä istuntojaksolla."
+          },
+          "invalid_request": {
+            "title": "Käyttöoikeuspyyntöä ei voitu todentaa",
+            "description": "Pyyntö on virheellinen, vanhentunut tai ei enää todennettavissa. Tällä yrityksellä ei myönnetty pääsyä."
+          },
+          "access_denied": {
+            "title": "Käyttöoikeutta ei myönnetty",
+            "description": "Valtuutusyritys hylättiin. Tällä yrityksellä ei ollut käyttöoikeutta."
+          },
+          "server_error": {
+            "title": "Käyttöoikeuspyyntöä ei voitu suorittaa",
+            "description": "Homarr ei voinut suorittaa tätä valtuutusyritystä. Tarkista OAuth-yhteydet ennen kuin aloitat uudestaan."
+          },
+          "unknown": {
+            "title": "Käyttöpyyntö ei käytettävissä",
+            "description": "Tämä sivu ei voi vahvistaa valtuutuksen tulosta. Tarkista OAuth-yhteytesi ennen kuin aloitat uudelleen."
+          }
+        }
+      },
       "invite": {
         "title": "Liity Homarriin",
         "titleWithAppName": "Liity {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Valitse useita",
         "cancelMultiple": "Poistu monivalinnasta",
         "customApplication": "Mukautettu sovellus",
-        "application": "Sovellus"
+        "application": "Sovellus",
+        "backToApps": "Takaisin sovelluksiin",
+        "createAndAdd": "Luo ja lisää",
+        "createAnother": "Luo ja jatka"
       },
       "create": {
         "title": "Luo uusi sovellus",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Käytettävyysvalvonta",
       "beszel": "Beszel",
       "systemMonitoring": "Järjestelmän Valvonta",
-      "security": "Suojaus"
+      "security": "Suojaus",
+      "serviceVersion": "Versio"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Sivu {page} / {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Vaihda navigointia"
     },
     "here": "",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Lisää URL tai sovellus widgetin asetuksiin"
+      "empty": "Lisää URL tai sovellus widgetin asetuksiin",
+      "groups": {
+        "label": "Kategoriat",
+        "placeholder": "Uusi kategoria",
+        "add": "Lisää kategoria",
+        "remove": "",
+        "rename": "Kategorian nimi {name}",
+        "assign": "Kategoria char@@0 {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": ""
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Järjestelmä ja klusteri",
+          "clusterFirst": "Klusteri ja järjestelmä"
+        },
         "visibleClusterSections": {
           "label": ""
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Suodatettavat säiliöt"
+        },
+        "filterCaseSensitive": {
+          "label": "Huomioi kirjainkoko"
+        },
+        "filterAllowWildcards": {
+          "label": "Salli jokerimerkit",
+          "description": "Käytä * nollaa tai useampia merkkejä."
         },
         "filterIsWhitelist": {
           "label": "Suodata valkolistana"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "",
         "description": "Luo uusi sovellus painamalla <here></here>",
-        "quickCreate": "Luo sovellus lennossa"
+        "quickCreate": "Luo sovellus lennossa",
+        "create": "Luo sovellus"
       },
       "error": {
         "noIntegration": "Integraatiota ei ole valittu",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": ""
         },
+        "includeArchivedHistory": {
+          "label": "Sisällytä arkistoitu SABnzbd-historia",
+          "description": "Näytä työt siirretty Arkistoon."
+        },
+        "historyWindowDays": {
+          "label": "Arkistoidun historian ikkuna (päivää)",
+          "description": "Rajoita SABnzbd-historiaa tähän päivään. Lisää tuoterajaa näyttääksesi lisää tuloksia."
+        },
         "activeTorrentThreshold": {
           "label": "Piilota tämän kynnysarvon alle jäävät valmistuneet torrentit"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": ""
         },
+        "descriptionMaxLength": {
+          "label": "Kuvaus max pituus",
+          "description": "Enimmäismäärä merkkejä, jotka on säilytettävä syötteen kuvauksesta"
+        },
         "maximumAmountPosts": {
           "label": ""
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": "Palveluntarjoajan URL"
           },
+          "integrations": {
+            "label": "Linkitetyt Integraatiot"
+          },
           "identifier": {
             "label": "",
             "placeholder": ""
@@ -4597,6 +4717,10 @@
       "openReleasePage": "",
       "releaseDescription": "",
       "projectDescription": "",
+      "runningVersions": "Käynnissä Olevat Versiot",
+      "upToDate": "Ajan tasalla",
+      "updateAvailable": "Päivitys saatavilla",
+      "unknownStatus": "Tuntematon",
       "created": "",
       "error": {
         "label": "",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Näytä verkon kaavio"
         },
+        "showGpuUsage": {
+          "label": "Näytä GPU:n käyttökaavio"
+        },
+        "showGpuMemory": {
+          "label": "Näytä näytönohjaimen muistikaavio"
+        },
+        "showGpuPower": {
+          "label": "Näytä GPU virtakaavio"
+        },
         "showDockerCpu": {
           "label": "Näytä Docker-suorittimen kaavio"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Julkisten rajapintojen verkkoliikenne",
           "sent": "Lähetetty",
           "recv": "Vastaanotettu"
+        },
+        "gpuUsage": {
+          "title": "Gpu:N Käyttö",
+          "subtitle": "GPU:n käyttö"
+        },
+        "gpuMemory": {
+          "title": "Gpu- Muisti",
+          "subtitle": "GPU:n käyttämä VRAM"
+        },
+        "gpuPower": {
+          "title": "Gpu:N Virta",
+          "subtitle": "Virtapiirros GPU:n avulla"
         },
         "dockerCpu": {
           "title": "Docker-suorittimen käyttö",
@@ -6263,7 +6408,7 @@
             "header": {
               "title": "Otsikon studio",
               "badge": "Henkilökohtainen",
-              "description": "Vedä säätöjä missä tahansa rivissä. Vasen, Center, ja Oikea pysyy kiinteänä ja ohjaimet siirtyvät niiden ympärille.",
+              "description": "Määritä ohjaimet painikkeillaan. Voit tilata ne uudelleen vasemmalta, keskukselta tai oikealta.",
               "device": {
                 "desktop": "Työpöytä",
                 "mobile": "Mobiili"
@@ -6276,7 +6421,7 @@
               "action": {
                 "hide": "Piilota otsikko",
                 "show": "Näytä otsikko",
-                "configure": "Siirrä tai määritä {item}",
+                "configure": "Määritä {item}",
                 "remove": "Poista {item}",
                 "dropIntoZone": "Siirrä {zone} osioon"
               },
@@ -6286,7 +6431,7 @@
               },
               "available": {
                 "title": "Saatavilla olevat kontrollit",
-                "description": "Lisää hallintalaite ja vedä sen koko painike asentoon.",
+                "description": "Lisää hallintalaite, sitten käytä sen vetokahvaa asettaaksesi sen ylle.",
                 "requiredAlways": "Tämä ohjaus on tarpeen, mutta voit siirtää sen mihin tahansa otsikkoon.",
                 "allAdded": "Jokainen sisäänrakennettu ohjaus on jo otsikossasi.",
                 "add": "Lisää {item}",
@@ -6331,6 +6476,31 @@
               "search": "Haku",
               "firstDayOfWeek": "Viikon ensimmäinen päivä",
               "accessibility": "Esteettömyys",
+              "oauthConnections": {
+                "title": "OAuth yhteydet",
+                "description": "Nämä asiakkaat saivat API käyttäjätunnukset tilillesi OAuthin kautta. Kirjautumistiedot toimivat Homarr's HTTP API:n sekä MCP:n kanssa, eivät vanhene automaattisesti, ja pysyvät voimassa kirjautumisen jälkeen.",
+                "revocationHint": "Yhteyden peruuttaminen poistaa sen API-tunnuksen. Voit yhdistää yhteyden uudelleen käynnistämällä valtuutuksen uudelleen asiakkaalta.",
+                "loading": "Ladataan OAuth-yhteyksiä",
+                "retry": "Lataa yhteydet uudelleen",
+                "revoke": "Peruuta yhteys",
+                "confirmRevoke": "Vahvista peruuttaminen",
+                "empty": {
+                  "title": "Ei tallennettuja OAuth-yhteyksiä",
+                  "description": "Uudet OAuth-yhteydet näkyvät täällä. Vanhemmat käyttäjätunnukset ilman tallennettuja asiakastietoja saattavat tarvita järjestelmänvalvojan peruuttamaan ne API-avaimissa."
+                },
+                "loadError": {
+                  "title": "OAuth- yhteyksiä ei voitu ladata",
+                  "description": "Yritä ladata lista uudelleen. Tämä ei kumoa käyttäjätunnuksia."
+                },
+                "success": {
+                  "title": "Yhteys poistettu",
+                  "description": "Tallennetut API-tunnisteet on poistettu. Yhdistä uudelleen ja myönnä käyttöoikeus uudelleen."
+                },
+                "error": {
+                  "title": "Yhteyttä ei voitu kumota",
+                  "description": "Tunnus voi edelleen olla aktiivinen. Yritä peruuttaa se uudelleen."
+                }
+              },
               "onboardingTours": {
                 "title": "Perehdytysilmoitukset",
                 "description": "Tyhjennä perehdytysvalinnat nähdäksesi ne uudelleen, kun seuraavan kerran avaat hallinnan tai kojelaudan alueita.",
@@ -6871,7 +7041,8 @@
               "label": "Tunnistautuminen",
               "title": "",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "",
+                "confirmDeletion": "Vahvista poisto"
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "",
+                  "source": "Integraatio",
                   "actions": ""
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Manuaalinen tai perinteinen API-avain",
+                "unnamedClient": "Asiakkaan nimeä ei tallennettu",
+                "clientNameHint": "Asiakkaan nimet ovat itse raportoituja eikä niitä ole vahvistettu.",
+                "details": "Yhteyden tiedot",
+                "credentialId": "Käyttöoikeustietojen Tunnus",
+                "clientId": "Asiakkaan Tunnus",
+                "callbackHost": "Takaisinkutsun isäntä",
+                "callbackUrl": "Koko puhelun URL",
+                "issuedAt": "Myönnetty (UTC)",
+                "unknown": "Ei tallennettu"
+              },
+              "empty": {
+                "title": "Ei näytettäviä API-avaimia",
+                "description": "Luo API-tunniste tai säädä taulukon suodattimia löytääksesi olemassa olevat avaimet."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API-avainta ei voitu luoda",
+                  "description": "Uutta tunnusta ei saatu. Tarkista avain ennen kuin yrität uudelleen."
+                },
+                "deleteError": {
+                  "title": "API-avainta ei voitu poistaa",
+                  "description": "Tunnus voi olla vielä aktiivinen. Yritä poistaa se uudelleen."
+                },
+                "deleteSuccess": {
+                  "title": "API-avain poistettu",
+                  "description": "Tallennetut API-tiedot on poistettu."
+                },
+                "refreshError": {
+                  "title": "API avain poistettu, mutta luetteloa ei voitu päivittää",
+                  "description": "Lataa tämä sivu uudelleen nähdäksesi nykyiset API-avaimet."
                 }
               }
             },
@@ -6904,9 +7111,9 @@
                   "description": "Välitä ApiKey-otsikko, jossa on koko API-avaimesi, MCP-asiakkaan asetuksissa."
                 },
                 "oauth": {
-                  "title": "OAuth (selainkirjautuminen)",
-                  "description": "Asiakkaat, jotka tukevat OAuthia (kuten Claude Code, opencode tai Cursor), voivat todentaa avaamalla selainikkunan. Suorita auth-komento asiakkaassasi, kirjaudu selaimeen Homarriin, ja olet yhteydessä – API-avain luodaan automaattisesti.",
-                  "hint": "OAuth-tokenit näkyvät tavallisina API-avaimina Tunnistautuminen-välilehdellä. Voit kumota ne milloin tahansa."
+                  "title": "OAuth (selaimen kirjautuminen ja lupa)",
+                  "description": "Aloita valtuutus OAuth-asiakkaasi ja kirjaudu tarvittaessa Homarriin. Tarkista asiakas, takaisinsoittokohde ja tilin käyttöoikeus, valitse Salli pääsy vain, jos luotat asiakkaaseen. API-tunnusluku luodaan vasta hyväksymisen ja onnistuneen koodinvaihdon jälkeen.",
+                  "hint": "Peruuta tallennetut OAuth yhteydet omissa Yleisissä asetuksissa. Ylläpitäjät voivat myös peruuttaa tunnuksia Authentication välilehdellä. Nämä tiedot toimivat Homarrin HTTP-API:n ja MCP:n kanssa, eivät vanhene automaattisesti, ja ne pysyvät voimassa uloskirjautumisen jälkeen."
                 },
                 "permissions": "API-avain määrittää tekoälyn käytettävissä olevat oikeudet – se toimii samalla käyttöoikeustasolla kuin avaimen omistaja."
               },

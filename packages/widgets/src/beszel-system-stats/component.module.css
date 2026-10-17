@@ -29,10 +29,21 @@
   flex: 1;
 }
 
-@media (any-pointer: coarse) {
+.beszelStatsTouchControls {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  top: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
+}
+
+@media (hover: none) and (any-pointer: coarse) {
   .beszelStatsControls {
-    opacity: 1;
-    pointer-events: auto;
+    display: none;
+  }
+
+  .beszelStatsTouchControls {
+    display: block;
   }
 }
 

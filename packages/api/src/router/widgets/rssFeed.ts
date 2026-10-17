@@ -28,6 +28,7 @@ const redactFeedFailureMessage = (message: string) => message.replace(/https?:\/
 const feedsInput = z.object({
   urls: z.array(z.string()).max(100),
   maximumAmountPosts: z.number(),
+  descriptionMaxLength: z.number().int().min(1).max(5000).default(250),
 });
 
 export const rssFeedRouter = createTRPCRouter({
@@ -43,6 +44,7 @@ export const rssFeedRouter = createTRPCRouter({
         const innerHandler = rssFeedsRequestHandler.handler({
           url,
           count: input.maximumAmountPosts,
+          descriptionMaxLength: input.descriptionMaxLength,
         });
         return await innerHandler.getDataAsync();
       }),
@@ -136,8 +138,8 @@ export async function restrictUrlsAsync(db: Database, urls: string[]) {
     where: eq(items.kind, "rssFeed"),
   });
 
-  const configuredUrls = rssFeedItems
-    .map((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options))
-    .flatMap((options) => options.feedUrls);
-  return urls.filter((url) => configuredUrls.includes(url));
+  const configuredUrls = new Set(
+    rssFeedItems.flatMap((item) => SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls),
+  );
+  return urls.filter((url) => configuredUrls.has(url));
 }

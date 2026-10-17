@@ -3,16 +3,16 @@
   overflow: hidden;
   @mixin dark {
     background: linear-gradient(
-      130deg,
-      #fa52521f 0%,
+      130deg in srgb,
+      color-mix(in srgb, var(--mantine-primary-color-5) calc(31 / 255 * 100%), transparent) 0%,
       var(--mantine-color-dark-6) 35%,
       var(--mantine-color-dark-6) 100%
     ) !important;
   }
   @mixin light {
     background: linear-gradient(
-      130deg,
-      #fa52521f 0%,
+      130deg in srgb,
+      color-mix(in srgb, var(--mantine-primary-color-5) calc(31 / 255 * 100%), transparent) 0%,
       var(--mantine-color-gray-3) 35%,
       var(--mantine-color-gray-3) 100%
     ) !important;

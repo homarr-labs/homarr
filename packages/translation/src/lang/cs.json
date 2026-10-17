@@ -247,6 +247,82 @@
         "title": "Přihlaste se ke svému účtu",
         "subtitle": "Vítejte zpět! Zadejte prosím Vaše přihlašovací údaje"
       },
+      "mcpConsent": {
+        "title": "Zkontrolovat přístup klienta",
+        "description": "Před připojením zkontrolujte přístup tohoto klienta.",
+        "viewingHint": "Zobrazení této stránky neposkytuje přístup.",
+        "identityTitle": "Účet a klient",
+        "loading": "Načítání požadavku na přístup",
+        "allow": "Povolit přístup",
+        "deny": "Zakázat přístup",
+        "decisionHint": "Přístup povolit pouze v případě, že věříte tomuto klientovi a zpětnému volání.",
+        "requestExpires": "Žádost vyprší (UTC):",
+        "details": "Technické podrobnosti",
+        "returnHome": "Zpět na Homarr",
+        "reload": "Znovu načíst stránku souhlasu",
+        "account": {
+          "name": "Přihlášen jako",
+          "id": "ID uživatele",
+          "nameNotRecorded": "Uživatelské jméno není zaznamenáno"
+        },
+        "client": {
+          "name": "Zákazník",
+          "nameNotSupplied": "Název klienta není zadán",
+          "id": "ID klienta",
+          "callbackHost": "Hostitel zpětného volání",
+          "callbackUrl": "Úplná URL adresa zpětného volání",
+          "hostUnavailable": "Hostitel zpětného volání není k dispozici",
+          "unverifiedHint": "Jména klientů jsou nahlášena sama, neověřena společností Homarr.",
+          "destinationHint": "Vaše rozhodnutí se vrátí k tomuto hovoru. Pokud povolíte přístup, klient si může vyměnit autorizační kód za pověření API."
+        },
+        "access": {
+          "title": "Přístup k účtu",
+          "description": "Používá vaše aktuální oprávnění, včetně sdílených zdrojů.",
+          "details": "Zobrazit oprávnění ({count})",
+          "noGlobalPermissions": "Používá váš účet a sdílený přístup k zdrojům, bez globálních oprávnění."
+        },
+        "admin": {
+          "title": "Úplný přístup administrátora",
+          "description": "Může spravovat Homarr a připojené služby, včetně destruktivních akcí."
+        },
+        "credential": {
+          "title": "Rozsah a životnost pověření",
+          "breadth": "Funguje s HTTP API a MCP Homarru, včetně mimo tohoto klienta.",
+          "lifetime": "Bez automatické vypršení platnosti. Odhlášení neodvolává přístup.",
+          "manageConnections": "Zrušit obecné nastavení"
+        },
+        "error": {
+          "freshStart": "Spusťte novou žádost o autorizaci od klienta. Homarr vás požádá o opětovné zkontrolování přístupu.",
+          "unavailable": {
+            "title": "Požadavek na přístup není k dispozici",
+            "description": "Tento požadavek již vypršel, byl zpracován nebo již není k dispozici. Z této stránky nemůže být schválen."
+          },
+          "invalid_browser": {
+            "title": "Požadavek na přístup patří do jiného prohlížeče",
+            "description": "Tento prohlížeč nemůže ověřit původní požadavek. Použijte prohlížeč, kde jste začali autorizovat, nebo spusťte nový požadavek klienta."
+          },
+          "session_changed": {
+            "title": "Vaše přihlašovací relace se změnila",
+            "description": "Tento požadavek byl propojen s jiným uživatelem nebo přihlášením. Nelze jej schválit s aktuální relací."
+          },
+          "invalid_request": {
+            "title": "Požadavek na přístup nelze ověřit",
+            "description": "Požadavek je neplatný, vypršel nebo již není ověřitelný. Tímto pokusem nebyl udělen přístup."
+          },
+          "access_denied": {
+            "title": "Přístup nebyl udělen",
+            "description": "Pokus o autorizaci byl zamítnut. Tímto pokusem nebyl udělen přístup."
+          },
+          "server_error": {
+            "title": "Požadavek na přístup nelze dokončit",
+            "description": "Homarr nemohl dokončit tento pokus o autorizaci. Před dalším spuštěním zkontrolujte připojení OAuth."
+          },
+          "unknown": {
+            "title": "Požadavek na přístup není k dispozici",
+            "description": "Tato stránka nemůže potvrdit výsledek autorizace. Před dalším spuštěním zkontrolujte připojení OAuth."
+          }
+        }
+      },
       "invite": {
         "title": "Připojit se k Homarrovi",
         "titleWithAppName": "Připojte se k {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Vybrat více",
         "cancelMultiple": "Opustit vícenásobný výběr",
         "customApplication": "Vlastní aplikace",
-        "application": "Žádost"
+        "application": "Žádost",
+        "backToApps": "Zpět do aplikací",
+        "createAndAdd": "Vytvořit a přidat",
+        "createAnother": "Vytvořit a pokračovat"
       },
       "create": {
         "title": "Vytvořit novou aplikaci",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Monitorování dostupnosti",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorování systému",
-      "security": "Bezpečnost"
+      "security": "Bezpečnost",
+      "serviceVersion": "Verze"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Strana {page} z {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Přepnout navigaci"
     },
     "here": "zde",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Přidat URL nebo aplikaci v nastavení widgetu"
+      "empty": "Přidat URL nebo aplikaci v nastavení widgetu",
+      "groups": {
+        "label": "Kategorie",
+        "placeholder": "Nová kategorie",
+        "add": "Přidat kategorii",
+        "remove": "Odstranit kategorii {name}",
+        "rename": "Název kategorie pro {name}",
+        "assign": "Kategorie pro {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Výchozí karta"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Systém pak cluster",
+          "clusterFirst": "cluster pak systém"
+        },
         "visibleClusterSections": {
           "label": "Viditelné části clusteru"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Kontejnery k filtrování"
+        },
+        "filterCaseSensitive": {
+          "label": "Rozlišovat velikost písmen"
+        },
+        "filterAllowWildcards": {
+          "label": "Povolit zástupné znaky",
+          "description": "Použijte * pro nulu nebo více znaků."
         },
         "filterIsWhitelist": {
           "label": "Filtrovat jako seznam povolených"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Žádná aplikace",
         "description": "Klikněte na <here></here> pro vytvoření nové aplikace",
-        "quickCreate": "Vytvořit aplikaci za běhu"
+        "quickCreate": "Vytvořit aplikaci za běhu",
+        "create": "Vytvořit aplikaci"
       },
       "error": {
         "noIntegration": "Nebyla vybrána žádná integrace",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": "Zobrazit dokončené ostatní položky"
         },
+        "includeArchivedHistory": {
+          "label": "Zahrnout archivovanou historii SABnzbd",
+          "description": "Zobrazit úlohy přesunuté do archivu."
+        },
+        "historyWindowDays": {
+          "label": "Okno archivované historie (dny)",
+          "description": "Limit dokončených SABnzbd historie na mnoho dní. Zvyšte limit položek pro zobrazení více výsledků."
+        },
         "activeTorrentThreshold": {
           "label": "Skrýt dokončené torrenty pod touto hranicí (v kiB/s)"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": "Omezení řádků popisu"
         },
+        "descriptionMaxLength": {
+          "label": "Maximální délka popisu",
+          "description": "Maximální počet znaků uchovaných z popisu kanálu"
+        },
         "maximumAmountPosts": {
           "label": "Limit počtu příspěvků"
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": "URL poskytovatele"
           },
+          "integrations": {
+            "label": "Propojené integrace"
+          },
           "identifier": {
             "label": "Identifikátor",
             "placeholder": "Název nebo Vlastník/Název"
@@ -4597,6 +4717,10 @@
       "openReleasePage": "Otevřít stránku vydání",
       "releaseDescription": "Popis vydání",
       "projectDescription": "Popis projektu",
+      "runningVersions": "Spuštěné verze",
+      "upToDate": "Aktuální",
+      "updateAvailable": "K dispozici je aktualizace",
+      "unknownStatus": "Neznámý",
       "created": "Vytvořeno",
       "error": {
         "label": "Chyba",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Zobrazit graf sítě"
         },
+        "showGpuUsage": {
+          "label": "Zobrazit graf využití GPU"
+        },
+        "showGpuMemory": {
+          "label": "Zobrazit graf paměti GPU"
+        },
+        "showGpuPower": {
+          "label": "Zobrazit graf napájení GPU"
+        },
         "showDockerCpu": {
           "label": "Zobrazit graf CPU Dockeru"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Síťový provoz veřejných rozhraní",
           "sent": "Odesláno",
           "recv": "Přijato"
+        },
+        "gpuUsage": {
+          "title": "Využití grafiky",
+          "subtitle": "Využití podle GPU"
+        },
+        "gpuMemory": {
+          "title": "Paměť GPU",
+          "subtitle": "VRAM používá GPU"
+        },
+        "gpuPower": {
+          "title": "Energie GPU",
+          "subtitle": "Vysílání pomocí GPU"
         },
         "dockerCpu": {
           "title": "Využití CPU Dockeru",
@@ -6331,6 +6476,31 @@
               "search": "Vyhledávání",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost",
+              "oauthConnections": {
+                "title": "OAuth připojení",
+                "description": "Tito klienti získali API přihlašovací údaje k vašemu účtu prostřednictvím OAuth. Přihlašovací údaje fungují s HTTP API aplikace Homarr, stejně jako MCP, nevyprší automaticky a zůstávají platné po odhlášení.",
+                "revocationHint": "Zrušení připojení odstraní přístupové údaje API. Chcete-li se znovu připojit, spusťte autorizaci znovu od klienta.",
+                "loading": "Načítání OAuth připojení",
+                "retry": "Znovu načíst připojení",
+                "revoke": "Zrušit připojení",
+                "confirmRevoke": "Potvrdit zrušení",
+                "empty": {
+                  "title": "Žádné zaznamenané OAuth připojení",
+                  "description": "Zde se objeví nová OAuth spojení. Starší přihlašovací údaje bez nahraných údajů klienta mohou potřebovat správce, aby je odvolal v API klíči."
+                },
+                "loadError": {
+                  "title": "OAuth připojení nelze načíst",
+                  "description": "Zkuste znovu načíst seznam. Toto neodvolává žádné přihlašovací údaje."
+                },
+                "success": {
+                  "title": "Připojení zrušeno",
+                  "description": "Uložené API pověření bylo odstraněno. Znovu připojte klienta a znovu udělejte přístup."
+                },
+                "error": {
+                  "title": "Připojení nelze odvolat",
+                  "description": "Důvěryhodnost může být stále aktivní. Zkuste ji odvolat znovu."
+                }
+              },
               "onboardingTours": {
                 "title": "Průvodci nastavením",
                 "description": "Obnovte průvodce nastavením, abyste je viděli znovu při příští návštěvě správy nebo plochy.",
@@ -6871,7 +7041,8 @@
               "label": "Ověřování",
               "title": "Klíče API",
               "button": {
-                "createApiToken": "Vytvořit token API"
+                "createApiToken": "Vytvořit token API",
+                "confirmDeletion": "Potvrdit odstranění"
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Vytvořil/a",
+                  "source": "Integrace",
                   "actions": "Akce"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Ruční nebo starší API klíč",
+                "unnamedClient": "Jméno klienta nebylo zaznamenáno",
+                "clientNameHint": "Názvy klientů jsou nahlášeny samostatně a nejsou ověřeny.",
+                "details": "Detaily připojení",
+                "credentialId": "ID pověření",
+                "clientId": "ID klienta",
+                "callbackHost": "Hostitel zpětného volání",
+                "callbackUrl": "Úplná URL adresa zpětného volání",
+                "issuedAt": "Vydáno (UTC)",
+                "unknown": "Nezaznamenáno"
+              },
+              "empty": {
+                "title": "Žádné API klíče k zobrazení",
+                "description": "Vytvořte API token nebo upravte tabulkové filtry pro nalezení existujících klíčů."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "Nelze vytvořit klíč API",
+                  "description": "Nebyly obdrženy žádné nové přihlašovací údaje. Před dalším pokusem zkontrolujte seznam klíčů."
+                },
+                "deleteError": {
+                  "title": "Klíč API nelze odstranit",
+                  "description": "Toto pověření může být stále aktivní. Zkuste jej znovu smazat."
+                },
+                "deleteSuccess": {
+                  "title": "API klíč odstraněn",
+                  "description": "Uložené API pověření bylo odstraněno."
+                },
+                "refreshError": {
+                  "title": "Klíč API byl odstraněn, ale seznam nemohl být obnoven",
+                  "description": "Znovu načtěte tuto stránku pro zobrazení aktuálních API klíčů."
                 }
               }
             },

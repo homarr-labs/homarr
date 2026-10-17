@@ -40,6 +40,7 @@ export default function DnsHoleSummaryWidget({
   integrationIds,
   width,
   height,
+  displayScale = 1,
 }: WidgetComponentProps<typeof widgetKind>) {
   const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({
     integrationIds,
@@ -67,7 +68,14 @@ export default function DnsHoleSummaryWidget({
       <SimpleGrid cols={2} spacing="xs" p="xs" {...layoutProps} style={{ ...layoutProps.style, flex: 1, minHeight: 0 }}>
         {data.length > 0 ? (
           stats.map((item) => (
-            <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
+            <StatCard
+              key={item.color}
+              item={item}
+              usePiHoleColors={options.usePiHoleColors}
+              data={data}
+              t={t}
+              displayScale={displayScale}
+            />
           ))
         ) : (
           <Stack
@@ -122,7 +130,7 @@ const stats = [
         size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedToday"),
-    color: "var(--mantine-color-red-light)",
+    color: "var(--mantine-color-red-6)",
   },
   {
     icon: IconPercentage,
@@ -132,7 +140,7 @@ const stats = [
       return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, size === "sm" ? 0 : 2)}%`;
     },
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
-    color: "var(--mantine-color-yellow-light)",
+    color: "var(--mantine-color-yellow-6)",
   },
   {
     icon: IconSearch,
@@ -142,7 +150,7 @@ const stats = [
         size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.dnsQueriesToday"),
-    color: "var(--mantine-color-cyan-light)",
+    color: "var(--mantine-color-cyan-6)",
   },
   {
     icon: IconWorldWww,
@@ -158,7 +166,7 @@ const stats = [
     },
     tooltip: (data, t) => (data.length >= 2 ? t("widget.dnsHoleSummary.domainsTooltip") : undefined),
     label: (t) => t("widget.dnsHoleSummary.data.domainsBeingBlocked"),
-    color: "var(--mantine-color-green-light)",
+    color: "var(--mantine-color-green-6)",
   },
 ] satisfies StatItem[];
 
@@ -175,19 +183,36 @@ interface StatCardProps {
   data: DnsHoleSummary[];
   usePiHoleColors: boolean;
   t: TranslationFunction;
+  displayScale: number;
 }
-const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
+const StatCard = ({ item, data, usePiHoleColors, t, displayScale }: StatCardProps) => {
   const { ref, height, width } = useElementSize();
-  const isLong = width > height + 20;
-  const canStackText = height > 32;
-  const hideLabel = (height <= 32 && width <= 256) || (height <= 64 && width <= 92);
-  const tooltip = item.tooltip?.(data, t);
+  let layoutScale = displayScale;
+  if (!Number.isFinite(layoutScale) || layoutScale <= 0) layoutScale = 1;
+
+  // Element measurements are logical pixels; density follows the displayed card.
+  const displayedWidth = width * layoutScale;
+  const displayedHeight = height * layoutScale;
+  const isLong = displayedWidth > displayedHeight + 20;
+  const canStackText = displayedHeight > 32;
+  const isCompact = (displayedHeight <= 32 && displayedWidth <= 256) || (displayedHeight <= 64 && displayedWidth <= 92);
   const board = useRequiredBoard();
   const label = translateIfNecessary(t, item.label);
-  const value = item.value(data, width <= 64 ? "sm" : "md");
+  const value = item.value(data, isCompact || displayedWidth <= 64 ? "sm" : "md");
+  let tooltip = item.tooltip?.(data, t);
+  let padding: number | "sm" = "sm";
+  let valueSize = "lg";
+  if (isCompact) {
+    padding = 2;
+    // Reserve padding and borders so four-character values fit narrow mobile cards.
+    valueSize = `calc(${Math.min(12, Math.max(0, displayedWidth - 6) / 3)}px * var(--board-canvas-ui-scale, 1))`;
+    let compactTooltip = label;
+    if (tooltip) compactTooltip += `. ${tooltip}`;
+    tooltip = compactTooltip;
+  }
   const backgroundColor = usePiHoleColors
-    ? `rgb(from ${item.color} r g b / calc(var(--opacity, 1) * 0.4))`
-    : "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+    ? `color-mix(in srgb, ${item.color} calc(var(--opacity, 1) * 40%), transparent)`
+    : "color-mix(in srgb, var(--mantine-color-primaryColor-filled) calc(var(--opacity, 1) * 12%), transparent)";
 
   return (
     <Tooltip label={tooltip} disabled={!tooltip} w={250} multiline events={{ hover: true, focus: true, touch: true }}>
@@ -197,13 +222,13 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
         tabIndex={tooltip ? 0 : undefined}
         aria-label={`${label}: ${value}`}
         className="summary-card"
-        p="sm"
+        p={padding}
         radius={board.itemRadius}
         bg={backgroundColor}
         style={{
           flex: 1,
           border:
-            "1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))",
+            "1px solid color-mix(in srgb, var(--mantine-color-secondaryColor-filled) calc(var(--opacity, 1) * 45%), transparent)",
         }}
       >
         <Flex
@@ -215,14 +240,16 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
           direction={isLong ? "row" : "column"}
           gap={0}
         >
-          <item.icon
-            className="summary-card-icon"
-            style={{
-              ...zoomCompensatedSize(24),
-              minWidth: "calc(24px * var(--board-canvas-ui-scale, 1))",
-              minHeight: "calc(24px * var(--board-canvas-ui-scale, 1))",
-            }}
-          />
+          {!isCompact && (
+            <item.icon
+              className="summary-card-icon"
+              style={{
+                ...zoomCompensatedSize(24),
+                minWidth: "calc(24px * var(--board-canvas-ui-scale, 1))",
+                minHeight: "calc(24px * var(--board-canvas-ui-scale, 1))",
+              }}
+            />
+          )}
           <Flex
             className="summary-card-texts"
             justify="center"
@@ -235,10 +262,10 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
             gap={isLong ? 4 : 0}
             wrap="wrap"
           >
-            <Text className="summary-card-value text-flash" ta="center" size="lg" fw="bold" maw="100%">
+            <Text className="summary-card-value text-flash" ta="center" size={valueSize} fw="bold" maw="100%">
               {value}
             </Text>
-            {!hideLabel && (
+            {!isCompact && (
               <Text className="summary-card-label" ta="center" size="xs" maw="100%">
                 {label}
               </Text>

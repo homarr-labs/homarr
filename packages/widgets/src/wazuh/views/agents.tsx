@@ -131,15 +131,17 @@ export function WazuhAgentsView({
   });
 
   const agents = result?.data?.agents;
-  const newestVersion = useMemo(
-    () =>
-      (agents ?? []).reduce<string | null>(
-        (newest, agent) => (compareVersions(agent.version, newest) > 0 ? agent.version : newest),
-        null,
-      ),
-    [agents],
-  );
+  const showTable = height >= 190;
+  const showVersion = showTable && options.showVersion && width >= 600;
+  const newestVersion = useMemo(() => {
+    if (!showVersion) return null;
+    return (agents ?? []).reduce<string | null>(
+      (newest, agent) => (compareVersions(agent.version, newest) > 0 ? agent.version : newest),
+      null,
+    );
+  }, [agents, showVersion]);
   const visibleAgents = useMemo(() => {
+    if (!showTable) return [];
     const filtered = (agents ?? []).filter((agent) => {
       if (filter === "all") return true;
       if (filter === "inactive") return agent.status !== "active";
@@ -148,7 +150,7 @@ export function WazuhAgentsView({
     const sorter = sorters[sortStatus.columnAccessor as SortKey] ?? sorters.status;
     const sorted = filtered.toSorted(sorter);
     return sortStatus.direction === "desc" ? sorted.toReversed() : sorted;
-  }, [agents, filter, sortStatus]);
+  }, [agents, filter, sortStatus, showTable]);
 
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -166,7 +168,6 @@ export function WazuhAgentsView({
 
   const showIp = width >= 380;
   const showOs = width >= 460;
-  const showVersion = options.showVersion && width >= 600;
   const showGroups = options.showGroups && width >= 720;
   const columns = useMemo<DataTableColumn<WazuhAgent>[]>(() => {
     const all: (DataTableColumn<WazuhAgent> & { visible: boolean })[] = [
@@ -326,7 +327,6 @@ export function WazuhAgentsView({
   const overview = result.data;
   const counts = overview.counts;
   const snapshotAgeMs = (now ?? new Date()).getTime() - new Date(overview.asOf).getTime();
-  const showTable = height >= 190;
   const toggleFilter = (value: StatusFilter) => setFilter((current) => (current === value ? "all" : value));
 
   const sourceBadge =

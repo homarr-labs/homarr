@@ -3,12 +3,11 @@
   extends: ["config:recommended", ":dependencyDashboardApproval"],
   packageRules: [
     {
-      matchPackageNames: ["^@homarr/"],
-      enabled: false,
+      matchPackageNames: ["@tabler/icons-react", "@tabler/icons-sprite"],
+      groupName: "Tabler icons",
     },
-    // Reenable once https://github.com/privatenumber/tsx/issues/737 is fixed
     {
-      matchPackageNames: ["tsx"],
+      matchPackageNames: ["^@homarr/"],
       enabled: false,
     },
     // Reenable once bug with undici v8 is fixed (https://github.com/homarr-labs/homarr/issues/5467)
@@ -22,11 +21,10 @@
       automerge: true,
     },
     {
-      // disallow automerge for allowBuilds dependencies (native builds need manual verification)
+      // disallow automerge for trustedDependencies (native builds need manual verification)
       matchPackageNames: [
         "@tree-sitter-grammars/tree-sitter-yaml",
         "bcrypt",
-        "better-sqlite3",
         "cpu-features",
         "esbuild",
         "sharp",
@@ -37,12 +35,6 @@
       automerge: false,
     },
   ],
-  // Updates lockfile for prebuilt-debian after if package.json is updated, otherwise only root lockfile is updated
-  postUpgradeTasks: {
-    commands: ["cd deployments/prebuilt-debian && pnpm install --ignore-workspace --lockfile-only"],
-    fileFilters: ["deployments/prebuilt-debian/pnpm-lock.yaml"],
-    executionMode: "update",
-  },
   updateInternalDeps: true,
   rangeStrategy: "bump",
   automerge: false,

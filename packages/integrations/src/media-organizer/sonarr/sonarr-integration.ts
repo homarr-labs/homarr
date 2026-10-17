@@ -9,15 +9,21 @@ import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
+import { fetchServarrServiceVersionAsync } from "../../base/servarr-service-version";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import type { IMediaOrganizerIntegration } from "../../interfaces/media-organizer/media-organizer-integration";
 import type { MissingMediaItem, QueuedMediaItem } from "../../interfaces/media-organizer/media-organizer-types";
+import type { IServiceVersionIntegration } from "../../interfaces/service-version/service-version-integration";
+import type { ServiceVersion } from "../../interfaces/service-version/service-version-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
 const logger = createLogger({ module: "sonarrIntegration" });
 
-export class SonarrIntegration extends Integration implements ICalendarIntegration, IMediaOrganizerIntegration {
+export class SonarrIntegration
+  extends Integration
+  implements ICalendarIntegration, IMediaOrganizerIntegration, IServiceVersionIntegration
+{
   public async getHttpAuthenticationAsync(): Promise<IntegrationHttpAuthentication> {
     return apiKeyAuth(this.integration);
   }
@@ -223,6 +229,13 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
         };
       }),
     };
+  }
+
+  async getServiceVersionAsync(): Promise<ServiceVersion> {
+    return await fetchServarrServiceVersionAsync(
+      this.url("/api/v3/system/status"),
+      (await this.getHttpAuthenticationAsync()).headers,
+    );
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

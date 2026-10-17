@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useState } from "react";
+import { startTransition, useRef, useState } from "react";
 import {
   Alert,
   Anchor,
@@ -109,6 +109,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
     },
   });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const errorRef = useRef<HTMLElement>(null);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, optionalSecrets, ...formValues }: FormType) => {
     // Optional secrets are only stored when a value was entered.
@@ -135,6 +136,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
           title: tCommon("notification.create.error"),
           message: tIntegration("page.create.notification.error.message"),
         });
+        requestAnimationFrame(() => errorRef.current?.focus());
         return;
       }
 
@@ -215,7 +217,15 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
           </Stack>
         </Fieldset>
 
-        {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
+        {error !== null && (
+          <section
+            ref={errorRef}
+            aria-label={tIntegration(`testConnection.error.${error.type}.title` as never)}
+            tabIndex={-1}
+          >
+            <IntegrationTestConnectionError error={error} url={form.values.url} />
+          </section>
+        )}
 
         {supportsSearchEngine && (
           <Checkbox

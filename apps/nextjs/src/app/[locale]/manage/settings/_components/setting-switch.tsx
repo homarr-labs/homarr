@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import React from "react";
 import type { MantineSpacing } from "@mantine/core";
-import { Group, Stack, Switch, Text, UnstyledButton } from "@mantine/core";
+import { Switch, Text } from "@mantine/core";
 
 import type { UseFormReturnType } from "@homarr/form";
 
@@ -24,7 +24,9 @@ export const SwitchSetting = <TFormValue extends Record<string, unknown>>({
   text: ReactNode;
   disabled?: boolean;
 }) => {
-  const handleClick = React.useCallback(() => {
+  const switchId = React.useId();
+  const titleId = `${switchId}-title`;
+  const handleChange = React.useCallback(() => {
     if (disabled) {
       return;
     }
@@ -33,16 +35,30 @@ export const SwitchSetting = <TFormValue extends Record<string, unknown>>({
   }, [form, formKey, disabled]);
 
   return (
-    <Group ms={ms} justify="space-between" gap="lg" align="center" wrap="nowrap">
-      <UnstyledButton style={{ flexGrow: 1 }} onClick={handleClick}>
-        <Stack gap={0}>
-          <Text fw="bold">{title}</Text>
-          <Text c="gray.5" fz={{ base: "xs", md: "sm" }}>
-            {text}
-          </Text>
-        </Stack>
-      </UnstyledButton>
-      <Switch disabled={disabled} onClick={handleClick} checked={Boolean(form.values[formKey])} />
-    </Group>
+    <Switch
+      id={switchId}
+      ms={ms}
+      labelPosition="left"
+      aria-labelledby={titleId}
+      label={
+        <Text component="span" id={titleId} fw="bold">
+          {title}
+        </Text>
+      }
+      description={
+        <Text component="span" c="gray.5" fz={{ base: "xs", md: "sm" }}>
+          {text}
+        </Text>
+      }
+      styles={{
+        body: { alignItems: "center" },
+        labelWrapper: { flexGrow: 1, paddingInlineEnd: "var(--mantine-spacing-lg)" },
+        label: { padding: 0 },
+        description: { marginTop: 0, padding: 0 },
+      }}
+      disabled={disabled}
+      onChange={handleChange}
+      checked={Boolean(form.values[formKey])}
+    />
   );
 };

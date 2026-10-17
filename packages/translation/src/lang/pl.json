@@ -247,6 +247,82 @@
         "title": "Zaloguj się do swojego konta",
         "subtitle": "Witamy ponownie! Wprowadź swoje dane logowania"
       },
+      "mcpConsent": {
+        "title": "Przejrzyj dostęp klienta",
+        "description": "Przejrzyj dostęp tego klienta przed połączeniem.",
+        "viewingHint": "Przeglądanie tej strony nie daje dostępu.",
+        "identityTitle": "Konto i klient",
+        "loading": "Wczytywanie żądania dostępu",
+        "allow": "Zezwalaj na dostęp",
+        "deny": "Odmowa dostępu",
+        "decisionHint": "Zezwalaj na dostęp tylko wtedy, gdy ufasz temu klientowi i oddzwanianiu.",
+        "requestExpires": "Żądanie wygasa (UTC):",
+        "details": "Szczegóły techniczne",
+        "returnHome": "Powrót do Homarr",
+        "reload": "Odśwież stronę zgody",
+        "account": {
+          "name": "Zalogowano jako",
+          "id": "ID użytkownika",
+          "nameNotRecorded": "Nazwa użytkownika nie została zapisana"
+        },
+        "client": {
+          "name": "Klient",
+          "nameNotSupplied": "Nie podano nazwy klienta",
+          "id": "Identyfikator klienta",
+          "callbackHost": "Oddzwonienie hosta",
+          "callbackUrl": "Pełny adres URL wywołania zwrotnego",
+          "hostUnavailable": "Oddzwonienie hosta jest niedostępne",
+          "unverifiedHint": "Nazwy klientów są raportowane, nie weryfikowane przez Homarr.",
+          "destinationHint": "Twoja decyzja powróci do tego wywołania. Jeśli zezwolisz na dostęp, klient może wymienić kod autoryzacji dla uwierzytelnienia API."
+        },
+        "access": {
+          "title": "Dostęp do konta",
+          "description": "Używa aktualnych uprawnień, w tym współdzielonych zasobów.",
+          "details": "Zobacz uprawnienia ({count})",
+          "noGlobalPermissions": "Używa Twojego konta i dostępu do współdzielonych zasobów, bez uprawnień globalnych."
+        },
+        "admin": {
+          "title": "Pełny dostęp administratora",
+          "description": "Może zarządzać Homarrem i połączonymi usługami, w tym działaniami destrukcyjnymi."
+        },
+        "credential": {
+          "title": "Zakres poświadczeń i okres użytkowania",
+          "breadth": "Działa z API HTTP Homarra i MCP, również poza tym klientem.",
+          "lifetime": "Brak automatycznego wygasania. Wylogowanie nie unieważnia dostępu.",
+          "manageConnections": "Unieważnij w ustawieniach ogólnych"
+        },
+        "error": {
+          "freshStart": "Rozpocznij nowe żądanie autoryzacji od klienta. Homarr poprosi Cię o ponowne sprawdzenie dostępu.",
+          "unavailable": {
+            "title": "Żądanie dostępu niedostępne",
+            "description": "To żądanie wygasło, zostało już obsługiwane lub nie jest już dostępne. Nie może zostać zatwierdzone z tej strony."
+          },
+          "invalid_browser": {
+            "title": "Żądanie dostępu należy do innej przeglądarki",
+            "description": "Ta przeglądarka nie może zweryfikować oryginalnego żądania. Użyj przeglądarki, w której rozpoczęłeś autoryzację, lub uruchom nowe żądanie od klienta."
+          },
+          "session_changed": {
+            "title": "Twoja sesja logowania uległa zmianie",
+            "description": "To żądanie zostało powiązane z innym użytkownikiem lub sesją logowania. Nie może zostać zatwierdzone przez bieżącą sesję."
+          },
+          "invalid_request": {
+            "title": "Żądanie dostępu nie może zostać zweryfikowane",
+            "description": "Żądanie jest nieprawidłowe, wygasło lub nie jest już weryfikowalne. Próba ta nie umożliwiła dostępu."
+          },
+          "access_denied": {
+            "title": "Dostęp nie został przyznany",
+            "description": "Próba autoryzacji została odrzucona. Ta próba nie zapewniła dostępu."
+          },
+          "server_error": {
+            "title": "Żądanie dostępu nie może zostać zakończone",
+            "description": "Homarr nie mógł zakończyć tej próby autoryzacji. Sprawdź swoje połączenia OAuth przed ponownym rozpoczęciem."
+          },
+          "unknown": {
+            "title": "Żądanie dostępu niedostępne",
+            "description": "Ta strona nie może potwierdzić wyniku autoryzacji. Sprawdź swoje połączenia OAuth przed ponownym rozpoczęciem."
+          }
+        }
+      },
       "invite": {
         "title": "Dołącz do Homarr",
         "titleWithAppName": "Dołącz do {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Wybierz wiele",
         "cancelMultiple": "Wyjdź z wielokrotnego wyboru",
         "customApplication": "Własna aplikacja",
-        "application": "Aplikacja"
+        "application": "Aplikacja",
+        "backToApps": "Powrót do aplikacji",
+        "createAndAdd": "Utwórz i dodaj",
+        "createAnother": "Utwórz i kontynuuj"
       },
       "create": {
         "title": "Stwórz nową aplikację",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Monitorowanie Czasu Pracy",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorowanie systemu",
-      "security": "Bezpieczeństwo"
+      "security": "Bezpieczeństwo",
+      "serviceVersion": "Wersja"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Strona {page} z {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Przełącz nawigację"
     },
     "here": "tutaj",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Dodaj adres URL lub aplikację w ustawieniach widżetu"
+      "empty": "Dodaj adres URL lub aplikację w ustawieniach widżetu",
+      "groups": {
+        "label": "Kategorie",
+        "placeholder": "Nowa kategoria",
+        "add": "Dodaj kategorię",
+        "remove": "Usuń kategorię {name}",
+        "rename": "Nazwa kategorii dla {name}",
+        "assign": "Kategoria dla {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Domyślna karta"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "System a następnie klaster",
+          "clusterFirst": "Klaster a system"
+        },
         "visibleClusterSections": {
           "label": "Widoczne sekcje klastra"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Pojemniki do filtrowania"
+        },
+        "filterCaseSensitive": {
+          "label": "Rozróżniana przez litery"
+        },
+        "filterAllowWildcards": {
+          "label": "Zezwalaj na karty wieloznaczne",
+          "description": "Użyj * dla zera lub więcej znaków."
         },
         "filterIsWhitelist": {
           "label": "Filtruj jako białą listę"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Nie znaleziono aplikacji",
         "description": "Kliknij <here></here> aby utworzyć nową aplikację",
-        "quickCreate": "Utwórz aplikację w locie"
+        "quickCreate": "Utwórz aplikację w locie",
+        "create": "Stwórz aplikację"
       },
       "error": {
         "noIntegration": "Nie wybrano integracji",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": "Pokaż różne wpisy oznaczone jako ukończone"
         },
+        "includeArchivedHistory": {
+          "label": "Dołącz zarchiwizowaną historię SABnzbd",
+          "description": "Pokaż zadania przeniesione do archiwum."
+        },
+        "historyWindowDays": {
+          "label": "Zarchiwizowane okno historii (dni)",
+          "description": "Limit zakończonych historii SABnzbd do tej liczby dni. Zwiększ limit przedmiotów, aby pokazać więcej wyników."
+        },
         "activeTorrentThreshold": {
           "label": "Ukryj ukończony torrent poniżej tego progu"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": "Maksymalna liczba linii opisu"
         },
+        "descriptionMaxLength": {
+          "label": "Maksymalna długość opisu",
+          "description": "Maksymalna liczba znaków zachowanych z opisu kanału"
+        },
         "maximumAmountPosts": {
           "label": "Limit liczby postów"
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": "URL dostawcy"
           },
+          "integrations": {
+            "label": "Powiązane Integracje"
+          },
           "identifier": {
             "label": "Identyfikator",
             "placeholder": "Nazwa lub Właściciel/Nazwa"
@@ -4597,6 +4717,10 @@
       "openReleasePage": "Otwórz stronę wydania",
       "releaseDescription": "Opis wydania",
       "projectDescription": "Opis projektu",
+      "runningVersions": "Uruchamianie wersji",
+      "upToDate": "Na bieżąco",
+      "updateAvailable": "Dostępna aktualizacja",
+      "unknownStatus": "Nieznany",
       "created": "Utworzony",
       "error": {
         "label": "Błąd",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Pokaż wykres sieci"
         },
+        "showGpuUsage": {
+          "label": "Pokaż wykres użycia GPU"
+        },
+        "showGpuMemory": {
+          "label": "Pokaż wykres pamięci GPU"
+        },
+        "showGpuPower": {
+          "label": "Pokaż wykres mocy GPU"
+        },
         "showDockerCpu": {
           "label": "Pokaż wykres CPU Dockera"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Ruch sieciowy interfejsów publicznych",
           "sent": "Wysłane",
           "recv": "Odebrane"
+        },
+        "gpuUsage": {
+          "title": "Użycie GPU",
+          "subtitle": "Wykorzystanie przez GPU"
+        },
+        "gpuMemory": {
+          "title": "Pamięć GPU",
+          "subtitle": "VRAM używany przez GPU"
+        },
+        "gpuPower": {
+          "title": "Moc GPU",
+          "subtitle": "Zasilanie przez GPU"
         },
         "dockerCpu": {
           "title": "Użycie CPU Docker",
@@ -6331,6 +6476,31 @@
               "search": "Szukaj",
               "firstDayOfWeek": "Pierwszy dzień tygodnia",
               "accessibility": "Ułatwienia dostępu",
+              "oauthConnections": {
+                "title": "Połączenia OAuth",
+                "description": "Klienci uzyskali poświadczenia API dla Twojego konta za pośrednictwem OAuth. Dane logowania działają z API HTTP Homarra, a także MCP, nie wygasają automatycznie i pozostają ważne po wylogowaniu.",
+                "revocationHint": "Unieważnienie połączenia usuwa jego dane API. Aby połączyć się ponownie, rozpocznij autoryzację ponownie od klienta.",
+                "loading": "Ładowanie połączeń OAuth",
+                "retry": "Odśwież połączenia",
+                "revoke": "Odwołaj połączenie",
+                "confirmRevoke": "Potwierdź odwołanie",
+                "empty": {
+                  "title": "Brak nagranych połączeń OAuth",
+                  "description": "Tutaj pojawiają się nowe połączenia OAuth. Starsze poświadczenia bez zapisanych danych klienta mogą potrzebować administratora, aby anulować je w kluczach API."
+                },
+                "loadError": {
+                  "title": "Nie można załadować połączeń OAuth",
+                  "description": "Spróbuj załadować listę ponownie. To nie unieważnia żadnych poświadczeń."
+                },
+                "success": {
+                  "title": "Połączenie odwołane",
+                  "description": "Zapisane dane logowania API zostały usunięte. Połącz się ponownie z klientem, aby ponownie udzielić dostępu."
+                },
+                "error": {
+                  "title": "Nie można odwołać połączenia",
+                  "description": "Dane uwierzytelniające mogą być nadal aktywne. Spróbuj odebrać je ponownie."
+                }
+              },
               "onboardingTours": {
                 "title": "Samouczek",
                 "description": "Zresetuj samouczki, aby zobaczyć je ponownie podczas następnej wizyty w obszarze zarządzania lub na tablicy.",
@@ -6871,7 +7041,8 @@
               "label": "Uwierzytelnianie",
               "title": "Klucze API",
               "button": {
-                "createApiToken": "Utwórz token API"
+                "createApiToken": "Utwórz token API",
+                "confirmDeletion": "Potwierdź usunięcie"
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Utworzony przez",
+                  "source": "Integracja",
                   "actions": "Akcje"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Ręczny lub starszy klucz API",
+                "unnamedClient": "Nazwa klienta nie została zapisana",
+                "clientNameHint": "Nazwy klientów są raportowane samodzielnie i nie są weryfikowane.",
+                "details": "Szczegóły połączenia",
+                "credentialId": "ID poświadczenia",
+                "clientId": "Identyfikator klienta",
+                "callbackHost": "Oddzwonienie hosta",
+                "callbackUrl": "Pełny adres URL wywołania zwrotnego",
+                "issuedAt": "Wystawione (UTC)",
+                "unknown": "Niezapisane"
+              },
+              "empty": {
+                "title": "Brak kluczy API do wyświetlenia",
+                "description": "Utwórz token API lub dostosuj filtry tabel, aby znaleźć istniejące klucze."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "Nie można utworzyć klucza API",
+                  "description": "Nie otrzymano żadnych nowych danych logowania. Sprawdź listę kluczy przed ponowną próbą."
+                },
+                "deleteError": {
+                  "title": "Nie można usunąć klucza API",
+                  "description": "Dane logowania mogą być nadal aktywne. Spróbuj usunąć je ponownie."
+                },
+                "deleteSuccess": {
+                  "title": "Klucz API został usunięty",
+                  "description": "Zapisane dane logowania API zostały usunięte."
+                },
+                "refreshError": {
+                  "title": "Klucz API usunięty, ale nie można odświeżyć listy",
+                  "description": "Odśwież stronę, aby zobaczyć bieżące klucze API."
                 }
               }
             },

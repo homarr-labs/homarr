@@ -16,7 +16,13 @@ import {
 } from "./policy";
 import { getInvalidCustomJsxPropValueReason } from "./runtime-component-policy";
 
+export type CustomJsxRequestParameterCheck = (
+  parameters: ReadonlyMap<string, ReadonlySet<string>>,
+  add: (node: AstNode, message: string) => void,
+) => void;
+
 interface AnalyzerJsxContext {
+  requestParameterChecks?: CustomJsxRequestParameterCheck[];
   requestParameters?: ReadonlyMap<string, ReadonlySet<string>>;
   add(node: AstNode, message: string, severity?: "error" | "warning"): void;
   visit(node: AstNode, depth: number, bindings: ReadonlySet<string>): void;
@@ -168,25 +174,33 @@ export function analyzeCustomJsxElement(
     if ((!requestIdAttribute && requiresRequestId) || hasInvalidRequestId) {
       context.add(requestIdAttribute ?? opening, `${resolvedName} must use a literal requestId`);
     }
-    if (componentsRequiringRequestId.has(resolvedName) && typeof requestIdLiteral?.value === "string") {
-      const expected = context.requestParameters?.get(requestIdLiteral.value);
+    if (
+      componentsRequiringRequestId.has(resolvedName) &&
+      typeof requestIdLiteral?.value === "string" &&
+      (context.requestParameters || context.requestParameterChecks)
+    ) {
+      const requestId = requestIdLiteral.value;
       let parameterProps = ["params"];
       if (resolvedName === "ToggleSwitch") parameterProps = ["enabledParams", "disabledParams"];
       for (const parameterProp of parameterProps) {
         const paramsAttribute = attributes.find((attribute) => nodeOf(attribute.name)?.name === parameterProp);
         const params = nodeOf(nodeOf(paramsAttribute?.value)?.expression);
-        // Unknown keys stay runtime-checked, but must not conceal known extra keys.
-        if (expected && (!paramsAttribute || params?.type === "ObjectExpression")) {
+        const check: CustomJsxRequestParameterCheck = (parameters, add) => {
+          const expected = parameters.get(requestId);
+          // Unknown keys stay runtime-checked, but must not conceal known extra keys.
+          if (!expected || (paramsAttribute && params?.type !== "ObjectExpression")) return;
           const actual = staticParameterKeys(params);
-          const missing = [...expected].filter((name) => actual.complete && !actual.keys.has(name));
-          const extra = [...actual.keys].filter((name) => !expected.has(name));
+          const missing = [...expected].filter((parameter) => actual.complete && !actual.keys.has(parameter));
+          const extra = [...actual.keys].filter((parameter) => !expected.has(parameter));
           if (missing.length > 0 || extra.length > 0) {
-            context.add(
+            add(
               paramsAttribute ?? opening,
-              `REQUEST_PARAMS_MISMATCH: ${resolvedName}.${parameterProp} '${requestIdLiteral.value}' expects only [${[...expected].join(", ")}]; missing [${missing.join(", ")}], extra [${extra.join(", ")}]. Match params to the request's $param references; fixed query values belong in the request, not params.`,
+              `REQUEST_PARAMS_MISMATCH: ${resolvedName}.${parameterProp} '${requestId}' expects only [${[...expected].join(", ")}]; missing [${missing.join(", ")}], extra [${extra.join(", ")}]. Match params to the request's $param references; fixed query values belong in the request, not params.`,
             );
           }
-        }
+        };
+        if (context.requestParameters) check(context.requestParameters, context.add);
+        context.requestParameterChecks?.push(check);
       }
     }
   }

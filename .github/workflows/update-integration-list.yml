@@ -33,22 +33,14 @@ jobs:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
       - name: Setup
         uses: ./tooling/github/setup
-      - run: pnpm run scripts:update-readme-integrations
-      - name: Commit changes
-        env:
-          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
-        run: |
-          git config --global user.email "210161987+homarr-update-contributors[bot]@users.noreply.github.com"
-          git config --global user.name "Homarr Update Contributors"
-          git add .
-          git commit -m "chore: update integrations list readme"
-
+      - run: bun run scripts:update-readme-integrations
       - name: Create Pull Request
         id: create-pull-request
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.obtainToken.outputs.token }}
           branch: update-integrations-readme
+          commit-message: "chore: update integrations list readme"
           base: dev
           title: "chore: update integrations list readme"
           delete-branch: true
@@ -56,9 +48,11 @@ jobs:
             This PR automatically updates the list of integrations of Homarr in the README.md
 
       - name: Install GitHub CLI
+        if: steps.create-pull-request.outputs.pull-request-number != ''
         run: sudo apt-get install -y gh
 
       - name: Enable auto-merge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
         run: |

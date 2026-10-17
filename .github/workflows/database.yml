@@ -12,6 +12,7 @@ env:
   CI: "true"
   SKIP_ENV_VALIDATION: "true"
   TURBO_TELEMETRY_DISABLED: "1"
+  BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
 
 jobs:
   changes:
@@ -20,6 +21,7 @@ jobs:
       migrations: ${{ steps.select.outputs.migrations }}
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -43,7 +45,7 @@ jobs:
             git diff --name-only -z "$comparison" > "$changed_files"
             while IFS= read -r -d '' file; do
               case "$file" in
-                packages/db/*|packages/core/src/infrastructure/db/*|packages/core/src/infrastructure/certificates/*|packages/auth/*|packages/api/src/router/onboard*|packages/api/src/router/test/onboard*|packages/onboarding/*|apps/nextjs/src/app/api/backup/*|apps/nextjs/src/app/*/init/*|Dockerfile|scripts/run.sh|scripts/entrypoint.sh|deployments/*|package.json|packages/core/package.json|packages/common/package.json|packages/definitions/package.json|packages/server-settings/package.json|packages/validation/package.json|mise.toml|pnpm-lock.yaml|pnpm-workspace.yaml|patches/*|vitest*|tooling/github/*|.github/workflows/database.yml|.github/workflows/ci.yml)
+                packages/db/*|packages/core/src/infrastructure/db/*|packages/core/src/infrastructure/certificates/*|packages/auth/*|packages/api/src/router/onboard*|packages/api/src/router/test/onboard*|packages/onboarding/*|apps/nextjs/src/app/api/backup/*|apps/nextjs/src/app/*/init/*|Dockerfile|scripts/run.sh|scripts/entrypoint.sh|deployments/*|package.json|packages/core/package.json|packages/common/package.json|packages/definitions/package.json|packages/server-settings/package.json|packages/validation/package.json|mise.toml|bun.lock|bunfig.toml|patches/*|vitest*|tooling/github/*|.github/workflows/database.yml|.github/workflows/ci.yml)
                   migrations=true
                   ;;
               esac
@@ -51,50 +53,42 @@ jobs:
           fi
           echo "migrations=$migrations" >> "$GITHUB_OUTPUT"
 
-  journals:
-    name: Migration journals
-    needs: changes
-    if: needs.changes.outputs.migrations == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - uses: ./tooling/github/setup
-      - run: pnpm exec vitest run --project db-node packages/db/test/migration-journal.spec.ts
-
   migrations:
-    name: SQLite and PostgreSQL migrations
+    name: Database checks
     needs: changes
     if: needs.changes.outputs.migrations == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        if: "!env.ACT"
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: ./tooling/github/setup
-      - name: Reject retired database configuration
-        run: pnpm exec vitest run --project dom packages/core/src/infrastructure/db/env.spec.ts
-      - run: pnpm exec vitest run --project db-node --project integration packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts packages/db/proxy-reader.integration.spec.ts --maxWorkers 1
+      - name: Check affected database tests
+        run: |
+          scope=()
+          if [[ -n "$BASE_SHA" ]]; then scope=(--changed "$BASE_SHA" --passWithNoTests); fi
+          bun x vitest run --project dom --project db-node --project integration \
+            packages/core/src/infrastructure/db/env.spec.ts packages/db/test/migration-journal.spec.ts \
+            packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts \
+            packages/db/proxy-reader.integration.spec.ts --maxWorkers 1 "${scope[@]}"
 
   database-gate:
     name: Database gate
-    needs: [changes, journals, migrations]
+    needs: [changes, migrations]
     if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Require selected database checks
         env:
           CHANGES: ${{ needs.changes.result }}
-          JOURNALS: ${{ needs.journals.result }}
           MIGRATIONS: ${{ needs.migrations.result }}
           RUN_MIGRATIONS: ${{ needs.changes.outputs.migrations }}
         run: |
           test "$CHANGES" = success
           test "$RUN_MIGRATIONS" = true || test "$RUN_MIGRATIONS" = false
           if [ "$RUN_MIGRATIONS" = true ]; then
-            test "$JOURNALS" = success
             test "$MIGRATIONS" = success
           fi

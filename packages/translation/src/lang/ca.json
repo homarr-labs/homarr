@@ -247,6 +247,82 @@
         "title": "Entreu al vostre compte",
         "subtitle": "Benvingut de nou! Si us plau, introduïu les credencials"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Uneix-te a Homarr",
         "titleWithAppName": "Uneix-te a {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Selecciona'n diverses",
         "cancelMultiple": "Surt de la selecció múltiple",
         "customApplication": "Aplicació personalitzada",
-        "application": "Aplicació"
+        "application": "Aplicació",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Crea una aplicació nova",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Monitoratge del temps d'activitat",
       "beszel": "Beszel",
       "systemMonitoring": "Monitoratge del sistema",
-      "security": "Seguretat"
+      "security": "Seguretat",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Pàgina {page} de {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "aquí",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Afegeix una URL o una aplicació a la configuració del giny"
+      "empty": "Afegeix una URL o una aplicació a la configuració del giny",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Pestanya predeterminada"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Seccions del clúster visibles"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Contenidors a filtrar"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "Filtra com a llista blanca"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "No s'ha trobat cap aplicació",
         "description": "Feu clic a <here></here> per crear una nova aplicació",
-        "quickCreate": "Crear aplicació al vol"
+        "quickCreate": "Crear aplicació al vol",
+        "create": ""
       },
       "error": {
         "noIntegration": "No s'ha seleccionat cap integració",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": "Mostra les entrades diverses marcades com a completades"
         },
+        "includeArchivedHistory": {
+          "label": "",
+          "description": ""
+        },
+        "historyWindowDays": {
+          "label": "",
+          "description": ""
+        },
         "activeTorrentThreshold": {
           "label": "Amaga els torrents completats sota aquest llindar"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": "Límit de línies de la descripció"
         },
+        "descriptionMaxLength": {
+          "label": "",
+          "description": ""
+        },
         "maximumAmountPosts": {
           "label": "Límit de quantitat de publicacions"
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": "URL del proveïdor"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nom o propietari/nom"
@@ -4597,6 +4717,10 @@
       "openReleasePage": "Obre la pàgina del llançament",
       "releaseDescription": "Descripció del llançament",
       "projectDescription": "Descripció del projecte",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "",
       "created": "Creat",
       "error": {
         "label": "Error",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Mostra el gràfic de la xarxa"
         },
+        "showGpuUsage": {
+          "label": ""
+        },
+        "showGpuMemory": {
+          "label": ""
+        },
+        "showGpuPower": {
+          "label": ""
+        },
         "showDockerCpu": {
           "label": "Mostra el gràfic de CPU de Docker"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Trànsit de xarxa de les interfícies públiques",
           "sent": "Enviat",
           "recv": "Rebut"
+        },
+        "gpuUsage": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuMemory": {
+          "title": "",
+          "subtitle": ""
+        },
+        "gpuPower": {
+          "title": "",
+          "subtitle": ""
         },
         "dockerCpu": {
           "title": "Ús de CPU de Docker",
@@ -6331,6 +6476,31 @@
               "search": "Cerca",
               "firstDayOfWeek": "Primer dia de la setmana",
               "accessibility": "Accessibilitat",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Visites guiades d'introducció",
                 "description": "Restableix les visites guiades d'introducció per tornar-les a veure la pròxima vegada que visitis l'àrea de gestió o el tauler.",
@@ -6871,7 +7041,8 @@
               "label": "Autenticació",
               "title": "Claus d'API",
               "button": {
-                "createApiToken": "Crea un token d'API"
+                "createApiToken": "Crea un token d'API",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Creat per",
+                  "source": "Integració",
                   "actions": "Accions"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

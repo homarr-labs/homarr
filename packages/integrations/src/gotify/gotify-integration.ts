@@ -90,7 +90,9 @@ export class GotifyIntegration extends Integration implements INotificationsInte
     const imageProxy = new ImageProxy();
     const iconUrlsByApplicationId = new Map<number, string | undefined>();
     await Promise.all(
-      [...applicationsById.entries()].map(async ([applicationId, application]) => {
+      [...new Set(messagesResult.data.messages.map((message) => message.appid))].map(async (applicationId) => {
+        const application = applicationsById.get(applicationId);
+        if (!application) return;
         iconUrlsByApplicationId.set(
           applicationId,
           await this.getApplicationIconUrlAsync(imageProxy, application.image),

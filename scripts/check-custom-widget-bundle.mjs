@@ -48,7 +48,8 @@ try {
     collect(join(nextRoot, "server/chunks/ssr"), (name) =>
       /^packages_widgets_src_custom-api_component.*\.js$/u.test(name),
     ),
-    collect(join(nextRoot, "standalone"), (name) => name === "react-loadable-manifest.json"),
+    // Canonical route manifests survive compiler-cache restoration; standalone is assembled separately.
+    collect(join(nextRoot, "server"), (name) => name === "react-loadable-manifest.json"),
   ]);
 } catch {
   throw new Error("Next.js build output is missing. Run the Next.js production build before the bundle check.");

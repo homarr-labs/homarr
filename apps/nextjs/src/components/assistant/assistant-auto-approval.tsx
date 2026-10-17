@@ -41,7 +41,7 @@ interface AssistantAutoApprovalContextValue {
   retryRevision: number;
 }
 
-const AssistantAutoApprovalContext = createContext<AssistantAutoApprovalContextValue | null>(null);
+export const AssistantAutoApprovalContext = createContext<AssistantAutoApprovalContextValue | null>(null);
 
 export const AssistantAutoApprovalProvider = ({
   children,

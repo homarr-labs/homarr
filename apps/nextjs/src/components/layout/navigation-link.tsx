@@ -4,9 +4,11 @@ import type { ReactElement, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { NavLink } from "@mantine/core";
+import { useSetAtom } from "jotai";
 
 import { Link } from "@homarr/ui";
 
+import { navigationCollapsedAtom } from "./header/burger";
 import { TourTarget } from "./header/tour-target";
 
 export const CommonNavLink = (props: ClientNavigationLink) =>
@@ -40,12 +42,20 @@ const useClientPathname = () => {
 
 const NavLinkHref = (props: NavigationLinkHref) => {
   const { pathname, isClient } = useClientPathname();
+  const setNavigationCollapsed = useSetAtom(navigationCollapsedAtom);
   const tourId = props["data-onboarding-tour-id"];
   const isActive = props.active ?? (isClient && pathMatches(pathname, props.href, props.exact));
   const link = props.external ? (
     <NavLink component="a" label={props.label} leftSection={props.icon} href={props.href} target="_blank" />
   ) : (
-    <NavLink component={Link} label={props.label} leftSection={props.icon} href={props.href} active={isActive} />
+    <NavLink
+      component={Link}
+      label={props.label}
+      leftSection={props.icon}
+      href={props.href}
+      active={isActive}
+      onClick={() => setNavigationCollapsed(true)}
+    />
   );
   return withOptionalTourTarget(tourId, link);
 };

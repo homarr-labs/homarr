@@ -247,6 +247,82 @@
         "title": "Log ind på din konto",
         "subtitle": "Velkommen tilbage! Indtast venligst dine legitimationsoplysninger"
       },
+      "mcpConsent": {
+        "title": "Gennemgå klientadgang",
+        "description": "Gennemgå denne klients adgang før forbindelse.",
+        "viewingHint": "Visning af denne side giver ikke adgang.",
+        "identityTitle": "Konto og klient",
+        "loading": "Indlæser adgangsanmodningen",
+        "allow": "Tillad adgang",
+        "deny": "Afvis adgang",
+        "decisionHint": "Tillad kun adgang, hvis du stoler på denne klient og tilbagekald.",
+        "requestExpires": "Anmodning udløber (UTC):",
+        "details": "Tekniske detaljer",
+        "returnHome": "Vend tilbage til Homarr",
+        "reload": "Genindlæs tilladelsessiden",
+        "account": {
+          "name": "Logget ind som",
+          "id": "Bruger ID",
+          "nameNotRecorded": "Brugernavn er ikke registreret"
+        },
+        "client": {
+          "name": "Klient",
+          "nameNotSupplied": "Klientnavn ikke leveret",
+          "id": "Klient ID",
+          "callbackHost": "Ring tilbage vært",
+          "callbackUrl": "Fuld callback URL",
+          "hostUnavailable": "Tilbagekald vært utilgængelig",
+          "unverifiedHint": "Klientnavne er selvrapporterede, ikke verificeret af Homarr.",
+          "destinationHint": "Din beslutning vil vende tilbage til denne tilbagekaldelse. Hvis du tillader adgang, kan klienten udveksle autorisationskoden for en API-legitimationsoplysninger."
+        },
+        "access": {
+          "title": "Konto adgang",
+          "description": "Bruger dine nuværende tilladelser, herunder delte ressourcer.",
+          "details": "Vis tilladelser ({count})",
+          "noGlobalPermissions": "Bruger din konto og delt ressourceadgang, uden globale tilladelser."
+        },
+        "admin": {
+          "title": "Fuld administrator adgang",
+          "description": "Kan administrere Homarr og forbundne tjenester, herunder destruktive handlinger."
+        },
+        "credential": {
+          "title": "Credential scope og levetid",
+          "breadth": "Arbejder med Homarr's HTTP API og MCP, herunder uden for denne klient.",
+          "lifetime": "Ingen automatisk udløbsdato. Tilmelding ophæver ikke adgang.",
+          "manageConnections": "Tilbagekald i generelle indstillinger"
+        },
+        "error": {
+          "freshStart": "Start en ny tilladelse anmodning fra klienten. Homarr vil bede dig om at gennemgå adgang igen.",
+          "unavailable": {
+            "title": "Adgangsanmodning utilgængelig",
+            "description": "Denne anmodning er udløbet, er allerede håndteret, eller er ikke længere tilgængelig. Den kan ikke godkendes fra denne side."
+          },
+          "invalid_browser": {
+            "title": "Adgangsanmodning tilhører en anden browser",
+            "description": "Denne browser kan ikke bekræfte den oprindelige anmodning. Brug browseren, hvor du startede godkendelsen, eller start en ny anmodning fra klienten."
+          },
+          "session_changed": {
+            "title": "Din login-session er ændret",
+            "description": "Denne anmodning blev knyttet til en anden bruger eller login-session. Den kan ikke godkendes med den aktuelle session."
+          },
+          "invalid_request": {
+            "title": "Adgangsanmodning kunne ikke bekræftes",
+            "description": "Anmodningen er ugyldig, udløbet eller ikke længere verificerbar. Ingen adgang blev givet ved dette forsøg."
+          },
+          "access_denied": {
+            "title": "Der blev ikke givet adgang",
+            "description": "Tilladelsesforsøget blev nægtet. Der blev ikke givet adgang ved dette forsøg."
+          },
+          "server_error": {
+            "title": "Adgangsanmodning kunne ikke fuldføres",
+            "description": "Homarr kunne ikke fuldføre dette godkendelsesforsøg. Tjek dine OAuth forbindelser før du starter igen."
+          },
+          "unknown": {
+            "title": "Adgangsanmodning utilgængelig",
+            "description": "Denne side kan ikke bekræfte godkendelsesresultatet. Tjek dine OAuth forbindelser, før du starter igen."
+          }
+        }
+      },
       "invite": {
         "title": "Tilmeld Homarr",
         "titleWithAppName": "Tilmeld Dig {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Vælg flere",
         "cancelMultiple": "Afslut multi-valg",
         "customApplication": "Brugerdefineret applikation",
-        "application": "Anvendelse"
+        "application": "Anvendelse",
+        "backToApps": "Tilbage til apps",
+        "createAndAdd": "Opret og tilføj",
+        "createAnother": "Opret og fortsæt"
       },
       "create": {
         "title": "Opret ny app",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Oppetidsovervågning",
       "beszel": "Beszel",
       "systemMonitoring": "System Overvågning",
-      "security": "Sikkerhed"
+      "security": "Sikkerhed",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Side {page} af {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Skift navigation"
     },
     "here": "her",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Tilføj en URL eller app i widget-indstillingerne"
+      "empty": "Tilføj en URL eller app i widget-indstillingerne",
+      "groups": {
+        "label": "Kategorier",
+        "placeholder": "Ny kategori",
+        "add": "Tilføj kategori",
+        "remove": "Fjern {name} kategori",
+        "rename": "Kategorinavn for {name}",
+        "assign": "Kategori for {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Standard fane"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "System derefter klynge",
+          "clusterFirst": "Klynge derefter System"
+        },
         "visibleClusterSections": {
           "label": "Synlige klynge sektioner"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Containere til filtrering"
+        },
+        "filterCaseSensitive": {
+          "label": "Versalfølsom sag"
+        },
+        "filterAllowWildcards": {
+          "label": "Tillad jokertegn",
+          "description": "Brug * til nul eller flere tegn."
         },
         "filterIsWhitelist": {
           "label": "Filtrer som en hvidliste"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Ingen app fundet",
         "description": "Klik på <here></here> for at oprette en ny app",
-        "quickCreate": "Opret app i farten"
+        "quickCreate": "Opret app i farten",
+        "create": "Opret app"
       },
       "error": {
         "noIntegration": "Ingen integration valgt",
@@ -4137,6 +4242,14 @@
         "showCompletedHttp": {
           "label": "Vis Diverse poster markeret som færdige"
         },
+        "includeArchivedHistory": {
+          "label": "Inkluder arkiveret SABnzbd historik",
+          "description": "Vis job flyttet til Arkiv."
+        },
+        "historyWindowDays": {
+          "label": "Arkiveret historikvindue (dage)",
+          "description": "Begræns færdig SABnzbd historie til disse mange dage. Øg elementgrænsen for at vise flere resultater."
+        },
         "activeTorrentThreshold": {
           "label": "Skjul afsluttet torrent under denne tærskel"
         },
@@ -4472,6 +4585,10 @@
         "textLinesClamp": {
           "label": "Beskrivelse linjeklemme"
         },
+        "descriptionMaxLength": {
+          "label": "Maks. beskrivelse længde",
+          "description": "Maksimalt antal tegn, der skal holdes fra feed-beskrivelsen"
+        },
         "maximumAmountPosts": {
           "label": "Grænse for antal indlæg"
         },
@@ -4538,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Linkede Integrationer"
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller ejer/navn"
@@ -4597,6 +4717,10 @@
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
       "projectDescription": "Projektbeskrivelse",
+      "runningVersions": "Kørende Versioner",
+      "upToDate": "Op til dato",
+      "updateAvailable": "Opdatering tilgængelig",
+      "unknownStatus": "Ukendt",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",
@@ -5110,6 +5234,15 @@
         "showNetwork": {
           "label": "Vis netværksdiagram"
         },
+        "showGpuUsage": {
+          "label": "Vis GPU brugsdiagram"
+        },
+        "showGpuMemory": {
+          "label": "Vis GPU hukommelsesdiagram"
+        },
+        "showGpuPower": {
+          "label": "Vis GPU strømdiagram"
+        },
         "showDockerCpu": {
           "label": "Vis Docker CPU-diagram"
         },
@@ -5163,6 +5296,18 @@
           "subtitle": "Netværkstrafik på offentlige grænseflader",
           "sent": "Sendt",
           "recv": "Modtaget"
+        },
+        "gpuUsage": {
+          "title": "Gpu Brug",
+          "subtitle": "Udnyttelse af GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU Hukommelse",
+          "subtitle": "VRAM brugt af GPU"
+        },
+        "gpuPower": {
+          "title": "Gpu Strøm",
+          "subtitle": "Strømtegning af GPU"
         },
         "dockerCpu": {
           "title": "Docker CPU-forbrug",
@@ -6331,6 +6476,31 @@
               "search": "Søg",
               "firstDayOfWeek": "Første ugedag",
               "accessibility": "Hjælpefunktioner",
+              "oauthConnections": {
+                "title": "OAuth forbindelser",
+                "description": "Disse klienter har fået API-legitimationsoplysninger til din konto via OAuth. De legitimationsoplysninger arbejde med Homarr's HTTP API samt MCP, udløber ikke automatisk, og forbliver gyldige, når du logger ud.",
+                "revocationHint": "Tilbagekaldelse af en forbindelse fjerner dens API-legitimationsoplysninger. For at genoprette forbindelsen, skal du starte tilladelsen igen fra klienten.",
+                "loading": "Indlæser OAuth forbindelser",
+                "retry": "Genindlæs forbindelser",
+                "revoke": "Tilbagekald forbindelse",
+                "confirmRevoke": "Bekræft tilbagekaldelse",
+                "empty": {
+                  "title": "Ingen optagede OAuth forbindelser",
+                  "description": "Nye OAuth forbindelser vises her. Ældre legitimationsoplysninger uden optagede klientoplysninger kan have brug for en administrator til at tilbagekalde dem i API Keys."
+                },
+                "loadError": {
+                  "title": "OAuth forbindelser kunne ikke indlæses",
+                  "description": "Prøv at indlæse listen igen. Dette ophæver ikke nogen legitimationsoplysninger."
+                },
+                "success": {
+                  "title": "Forbindelse tilbagekaldt",
+                  "description": "De gemte API-loginoplysninger er blevet fjernet. Genopret forbindelsen fra klienten for at give adgang igen."
+                },
+                "error": {
+                  "title": "Forbindelsen kunne ikke tilbagekaldes",
+                  "description": "legitimationsoplysningerne kan stadig være aktive. Prøv at tilbagekalde det igen."
+                }
+              },
               "onboardingTours": {
                 "title": "Onboarding-ture",
                 "description": "Nulstil onboarding-turene for at se dem igen på dit næste besøg i administrationsområdet eller dashboardet.",
@@ -6871,7 +7041,8 @@
               "label": "Autorisering",
               "title": "API Nøgler",
               "button": {
-                "createApiToken": "Opret API token"
+                "createApiToken": "Opret API token",
+                "confirmDeletion": "Bekræft sletning"
               },
               "modal": {
                 "delete": {
@@ -6882,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Oprettet af",
+                  "source": "Integration",
                   "actions": "Handlinger"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Manuel eller ældre API-nøgle",
+                "unnamedClient": "Klientnavn blev ikke registreret",
+                "clientNameHint": "Klientnavne er selvrapporterede og er ikke verificeret.",
+                "details": "Forbindelse detaljer",
+                "credentialId": "Credential ID",
+                "clientId": "Klient ID",
+                "callbackHost": "Ring tilbage vært",
+                "callbackUrl": "Fuld callback URL",
+                "issuedAt": "Udstedt (UTC)",
+                "unknown": "Ikke registreret"
+              },
+              "empty": {
+                "title": "Ingen API-nøgler at vise",
+                "description": "Opret en API-token eller juster tabelfiltre for at finde eksisterende nøgler."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API-nøgle kunne ikke oprettes",
+                  "description": "Ingen nye legitimationsoplysninger blev modtaget. Tjek nøglelisten, før du prøver igen."
+                },
+                "deleteError": {
+                  "title": "API-nøgle kunne ikke slettes",
+                  "description": "Loginoplysningerne kan stadig være aktive. Prøv at slette det igen."
+                },
+                "deleteSuccess": {
+                  "title": "API-nøgle slettet",
+                  "description": "De gemte API-loginoplysninger er blevet fjernet."
+                },
+                "refreshError": {
+                  "title": "API-nøgle slettet, men listen kunne ikke opdateres",
+                  "description": "Genindlæs denne side for at se de aktuelle API-nøgler."
                 }
               }
             },
@@ -6904,9 +7111,9 @@
                   "description": ""
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (browser login og samtykke)",
+                  "description": "Start godkendelse i din OAuth klient og log på Homarr, hvis det er nødvendigt. Gennemgå klienten, callback destination og kontoadgang, og vælg Tillad kun adgang, hvis du stoler på klienten. En API-legitimationsoplysninger oprettes kun efter godkendelse og en vellykket kode-udveksling.",
+                  "hint": "Tilbagekald optagede OAuth forbindelser i dine egne Generelle indstillinger. Administratorer kan også tilbagekalde legitimationsoplysninger i fanen Autentificering. Disse legitimationsoplysninger arbejder med Homarr's HTTP API og MCP, udløber ikke automatisk, og forbliver gyldige efter tilmelding."
                 },
                 "permissions": ""
               },

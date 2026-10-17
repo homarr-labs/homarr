@@ -1,4 +1,5 @@
 export { CustomWidgetDomainError } from "./errors";
+export { getCustomWidgetAuthConfigurationError } from "./auth";
 export type { CustomWidgetDomainErrorCode } from "./errors";
 export {
   assertJsonBudget,

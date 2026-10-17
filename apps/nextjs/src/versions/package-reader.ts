@@ -1,9 +1,5 @@
 import fsPromises from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
 import { glob } from "glob";
-import { parse as parseYaml } from "yaml";
-import z from "zod";
 
 import packageJson from "../../../../package.json";
 
@@ -34,28 +30,8 @@ export const getDependenciesAsync = async (): Promise<PackageJsonDependencies> =
 
 type DependencyCatalog = Map<string, string>;
 const parseDependencyCatalogsAsync = async (): Promise<DependencyCatalog> => {
-  const currentDir = path.dirname(fileURLToPath(import.meta.url));
-  const workspaceConfigPath = path.join(currentDir, "..", "..", "..", "..", "pnpm-workspace.yaml");
-
-  try {
-    const workspaceConfigContent = await fsPromises.readFile(workspaceConfigPath, "utf-8");
-    const workspaceConfig: unknown = parseYaml(workspaceConfigContent);
-    const parseResult = workspaceConfigCatalogSchema.parse(workspaceConfig);
-    return new Map(Object.entries(parseResult.catalog ?? {}));
-  } catch (error) {
-    // The workspace config is absent in Docker (only the runner stage is shipped),
-    // so a missing file is expected. Surface any other failure (e.g. malformed YAML).
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return new Map();
-    }
-
-    throw error;
-  }
+  return new Map(Object.entries(packageJson.workspaces.catalog));
 };
-
-const workspaceConfigCatalogSchema = z.object({
-  catalog: z.record(z.string(), z.string()).optional(),
-});
 
 export type PackageJsonDependencies = Record<string, string>;
 interface PackageJson {

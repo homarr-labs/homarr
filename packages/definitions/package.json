@@ -13,14 +13,16 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./beszel": "./src/beszel.ts",
     "./cookie": "./src/cookie.ts",
     "./integration": "./src/integration.ts",
     "./docs/*": "./src/docs/*.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
+    "docs:generate": "node --import tsx ./src/docs/codegen.ts",
+    "docs:refresh": "node --import tsx ./src/docs/codegen.ts --refresh",
     "format": "oxfmt .",
-    "postinstall": "tsx ./src/docs/codegen.ts",
     "lint": "oxlint",
     "typecheck": "tsc --noEmit"
   },
@@ -31,7 +33,6 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }

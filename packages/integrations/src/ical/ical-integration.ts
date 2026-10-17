@@ -42,11 +42,15 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
     const vevents = comp.getAllSubcomponents("vevent");
     const masterVevents: ICAL.Component[] = [];
     const exceptionVevents: ICAL.Component[] = [];
+    const exceptionVeventsByUid = new Map<string, ICAL.Component[]>();
 
     for (const vevent of vevents) {
       const event = new ICAL.Event(vevent, { exceptions: [] });
       if (event.isRecurrenceException()) {
         exceptionVevents.push(vevent);
+        const exceptionsForUid = exceptionVeventsByUid.get(event.uid) ?? [];
+        exceptionsForUid.push(vevent);
+        exceptionVeventsByUid.set(event.uid, exceptionsForUid);
       } else {
         masterVevents.push(vevent);
       }
@@ -57,13 +61,10 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
     const emittedExceptionComponents = new Set<ICAL.Component>();
 
     for (const masterVevent of masterVevents) {
-      // exceptions: [] so an unrelated series sharing no uid is never auto-attached; uids are matched by hand below.
+      // exceptions: [] so unrelated series are never auto-attached; only matching uid buckets are related below.
       const event = new ICAL.Event(masterVevent, { exceptions: [] });
 
-      for (const exceptionVevent of exceptionVevents) {
-        const exceptionEvent = new ICAL.Event(exceptionVevent, { exceptions: [] });
-        if (exceptionEvent.uid !== event.uid) continue;
-
+      for (const exceptionVevent of exceptionVeventsByUid.get(event.uid) ?? []) {
         event.relateException(exceptionVevent);
       }
 

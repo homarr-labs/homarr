@@ -1,0 +1,49 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["build:dependencies"],
+      "cache": false,
+      "outputs": [".output/standalone/**"],
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/static-data/**",
+        ".env*",
+        "$TURBO_ROOT$/.env*"
+      ]
+    },
+    "typecheck": {
+      "inputs": ["$TURBO_EXTENDS$", "$TURBO_ROOT$/static-data/**"]
+    },
+    "build:compiled": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.test.ts",
+        "!**/*.test.tsx",
+        "!**/*.spec.ts",
+        "!**/*.spec.tsx",
+        "!**/__tests__/**",
+        "!**/*.md",
+        "!**/*.mdx",
+        "!**/README*",
+        "!**/CHANGELOG*",
+        "!**/LICENSE*",
+        "!**/*.stories.{ts,tsx}",
+        "$TURBO_ROOT$/package.json",
+        "$TURBO_ROOT$/static-data/**",
+        ".env*",
+        "$TURBO_ROOT$/.env*"
+      ],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "!.next/standalone/**", "next-env.d.ts"],
+      "dependsOn": ["^build"],
+      "env": ["TURBO_PLATFORM"]
+    },
+    "build:dependencies": {
+      "dependsOn": ["build:compiled"],
+      "env": ["TURBO_PLATFORM"],
+      "inputs": ["package.json", "scripts/**"],
+      "outputs": [".output/dependencies/**"]
+    }
+  }
+}

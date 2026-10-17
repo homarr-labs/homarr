@@ -10,6 +10,16 @@ Use the generated specification under **Management → Tools → API** or the [i
 This page covers contracts that are not obvious from those schemas.
 The in-app reference loads its schema from `/api/openapi?format=scalar` on your Homarr instance. `/api/openapi` provides the raw JSON specification.
 
+REST exposes selected existing Homarr controls. Use tRPC for advanced operations; both accept the `ApiKey` header.
+`PUT /api/boards/{id}/content` uses the dashboard editor's complete `sections` and `items` arrays. Omitted entries are
+removed, so read the current content through tRPC `board.getBoardByName` before editing it. Widget movement and
+resizing can instead use the existing item-layout endpoint.
+
+Use `GET /api/users/preferences` and `PATCH /api/users/preferences` to read or change preferences. Send only changed
+values: `{ "colorScheme": "light" }` or `{ "headerPreferences": { "visible": false } }`. Omitted values stay unchanged;
+`null` clears nullable board/search references. Header fields merge; supplied zone arrays replace their zone.
+Omit `userId` for yourself; another user requires admin permission. Older preference routes remain available.
+
 ![Homarr's API documentation page](../img/api.png)
 
 ## Authentication and browser access
