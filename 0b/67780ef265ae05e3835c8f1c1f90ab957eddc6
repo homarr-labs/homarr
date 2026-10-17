@@ -1,0 +1,19 @@
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_99767f175fdcb8::t_e07de7d84a475c 82-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0b67780ef265ae05e3835c8f1c1f90ab957eddc6",
+  "prompts": {},
+  "sessions": {
+    "s_99767f175fdcb8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d20eff31-f9ac-4e73-940a-d0b708581f56",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
