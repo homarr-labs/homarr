@@ -1,0 +1,57 @@
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_99767f175fdcb8::t_20969e7165955c 18,24
+packages/integrations/src/stats/existing.ts
+  s_295bfbd299658c::t_3bc759b94dbc5d 299,311
+packages/integrations/src/uptime-kuma/test/uptime-kuma-integration.spec.ts
+  s_99767f175fdcb8::t_696e3ffdbb5709 218-258
+packages/integrations/src/uptime-kuma/uptime-kuma-integration.ts
+  s_99767f175fdcb8::t_b06635a7d67eb4 12,21,27-28,72-86,94-100,102,136-145,148,155,174-197
+packages/integrations/src/uptime-kuma/uptime-kuma-mock.ts
+  s_99767f175fdcb8::t_2433d6e92a5dc6 1
+packages/integrations/src/uptime-kuma/uptime-kuma-summary.ts
+  s_295bfbd299658c::t_7d1c130bd6918d 3,15-19,22-29,31,36-38,42-48,54
+packages/integrations/src/uptime-kuma/uptime-kuma-types.ts
+  s_99767f175fdcb8::t_63ded20fe6cb51 3-5,58
+packages/translation/src/lang/en.json
+  s_295bfbd299658c::t_a72c8ee8c645af 4947,4955,4963,4970-4971,4995-5006,5569,5571
+packages/widgets/src/uptime-kuma/component.module.css
+  s_99767f175fdcb8::t_ff5871a7590037 14,18,22-23,26,30,34-37,242,311-316,347,351-363,425-431,433-435,438-446
+packages/widgets/src/uptime-kuma/component.tsx
+  s_295bfbd299658c::t_6be581d71ee804 4-5,27,30-31,84-85,91,212,244-248,256-257,263-276,313,369,372
+packages/widgets/src/uptime-kuma/heartbeat-bar.tsx
+  s_99767f175fdcb8::t_a0dd4b78386ac8 9,24,58
+packages/widgets/src/uptime-kuma/monitor-row.tsx
+  s_295bfbd299658c::t_23c14e3ddd1c86 7,13-19,26,29-30,33,39,41,58,62-69,85-96,106,113-117,119,125-137,164-178,183
+packages/widgets/src/uptime-kuma/monitors.ts
+  s_99767f175fdcb8::t_d2e6562463d71b 2,32-34,38,44-53,55,58-60,77-78
+packages/widgets/src/uptime-kuma/notices.tsx
+  s_295bfbd299658c::t_1127c769fe531d 4,7,13,19,22,25-43,47-89,91-95,104-110
+packages/widgets/src/uptime-kuma/status.ts
+  s_99767f175fdcb8::t_e0fb775f15bccb 2-9,24,33,42,55-82
+packages/widgets/src/uptime-kuma/summary.tsx
+  s_295bfbd299658c::t_59ff00db51bd9e 20,82-86,104-114,135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1030142fadf67c22b5aa006146c189643c2c1317",
+  "prompts": {},
+  "sessions": {
+    "s_295bfbd299658c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "266bd517-b780-479c-ade7-14f4a0e080d6",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_99767f175fdcb8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d20eff31-f9ac-4e73-940a-d0b708581f56",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
