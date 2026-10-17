@@ -44,7 +44,7 @@ import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@ho
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useByteFormatter } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -463,7 +463,7 @@ export default function DockerWidget({
           wrap="nowrap"
         >
           <Group gap={4} wrap="nowrap">
-            <IconBrandDocker size="var(--mantine-font-size-md)" style={{ flexShrink: 0 }} />
+            <IconBrandDocker style={{ ...iconSizes.md, flexShrink: 0 }} />
             <Text size="xs" truncate>
               {t("table.footer", { count: containers.length.toString() })}
             </Text>
