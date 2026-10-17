@@ -55,7 +55,7 @@ export const uptimeKumaWidget: WidgetDefinition = {
       },
       {
         name: "Show response time",
-        description: "Displays the latest response time of each monitor and the average over all monitors",
+        description: "Displays the latest response time of each monitor",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
