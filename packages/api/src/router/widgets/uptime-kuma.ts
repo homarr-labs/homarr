@@ -6,7 +6,7 @@ import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const uptimeKumaRouter = createTRPCRouter({
-  getDashboard: publicProcedure
+  getStatusPages: publicProcedure
     .concat(createManyWidgetIntegrationMiddleware("query", "uptimeKuma"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
@@ -17,7 +17,7 @@ export const uptimeKumaRouter = createTRPCRouter({
               integrationId: integration.id,
               integrationName: integration.name,
               integrationUrl: integration.url,
-              dashboard: mockWidgetData.uptimeKuma,
+              statusPage: mockWidgetData.uptimeKuma,
               updatedAt: new Date(mockWidgetData.timestamp),
               error: undefined,
             };
@@ -29,7 +29,7 @@ export const uptimeKumaRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: data,
+            statusPage: data,
             updatedAt: timestamp,
             error: undefined,
           };
@@ -39,7 +39,7 @@ export const uptimeKumaRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: null,
+            statusPage: null,
             updatedAt: new Date(0),
             error: toPublicIntegrationError(error),
           }),
