@@ -48,7 +48,8 @@ export default function ThingportModelsWidget({
   const query = clientApi.widget.thingport.getModels.useQuery(input);
   const models = getUsableWidgetQueryData(query);
   useWidgetRuntimeQueries(widgetRuntimeRef, [getQueryKey(clientApi.widget.thingport.getModels, input, "query")]);
-  const isNarrow = width < 300;
+  // Below this the three labelled tabs no longer fit on one line, so they show only their icons.
+  const isNarrow = width < 380;
   const showHeader = options.showTitle && canShowThingportHeader(width, height);
 
   const tabs = (
@@ -62,7 +63,7 @@ export default function ThingportModelsWidget({
       mih={0}
       style={{ display: "flex", flexDirection: "column" }}
     >
-      <Tabs.List grow>
+      <Tabs.List grow style={{ flexWrap: "nowrap" }}>
         {thingportModelLists.map((list) => {
           const Icon = tabIcons[list];
           return (
