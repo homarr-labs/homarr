@@ -13,6 +13,16 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
+// The heatmap shows at most a calendar year (366 days in a leap year), inclusive of both ends.
+const MAX_ACTIVITY_DAYS = 366;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const activityInputSchema = z
+  .object({ from: isoDateSchema, to: isoDateSchema, timeZone: z.string().max(64) })
+  .refine(({ from, to }) => {
+    const days = (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / DAY_MS + 1;
+    return days >= 1 && days <= MAX_ACTIVITY_DAYS;
+  }, `The range must run forwards and cover at most ${MAX_ACTIVITY_DAYS} days`);
+
 export const thingportRouter = createTRPCRouter({
   getLibraryStats: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "thingport-libraryStats"))
@@ -48,7 +58,7 @@ export const thingportRouter = createTRPCRouter({
 
   getActivity: publicProcedure
     .concat(createOneWidgetIntegrationMiddleware("query", "thingport-activityHeatmap"))
-    .input(z.object({ from: isoDateSchema, to: isoDateSchema, timeZone: z.string().max(64) }))
+    .input(activityInputSchema)
     .query(async ({ ctx, input }) => {
       if (ctx.integration.kind === "mock") return createThingportMockActivity(input.from, input.to);
       const innerHandler = thingportActivityRequestHandler.handler({ ...ctx.integration, kind: "thingport" }, input);

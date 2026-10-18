@@ -57,7 +57,15 @@ export function ThingportModelViewer({ url, format, color, autoRotate, onOpen, o
     if (!mount) return;
     const abortController = new AbortController();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (error) {
+      // WebGL off (no hardware acceleration) or out of contexts: fall back to the thumbnail, not the error card.
+      console.warn("WebGL is unavailable for the Thingport featured model", error);
+      callbacksRef.current.onError();
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     // Keeps saturated colours from clipping to white under the room lighting.
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -180,6 +188,8 @@ export function ThingportModelViewer({ url, format, color, autoRotate, onOpen, o
       material.dispose();
       environment.dispose();
       pmrem.dispose();
+      // Frees the GL context now rather than at garbage collection; one is made per model or remount.
+      renderer.forceContextLoss();
       renderer.dispose();
       renderer.domElement.remove();
       materialRef.current = null;
