@@ -49,6 +49,22 @@ export const existingStatsProviders: Partial<Record<IntegrationKind, ExistingSta
     (client) => client.getStatsAsync(),
     (data) => ({ ...data }),
   ),
+  thingport: adapter(
+    "thingport",
+    [
+      metric("modelCount", "Models"),
+      metric("collectionCount", "Collections"),
+      metric("categoryCount", "Categories"),
+      metric("authorCount", "Authors"),
+    ],
+    (client) => client.getLibraryStatsAsync(),
+    ({ modelCount, collectionCount, categoryCount, authorCount }) => ({
+      modelCount,
+      collectionCount,
+      categoryCount,
+      authorCount,
+    }),
+  ),
   navidrome: adapter(
     "navidrome",
     [metric("artistCount", "Artists"), metric("albumCount", "Albums"), metric("songCount", "Songs")],

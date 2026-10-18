@@ -24,6 +24,7 @@ export * from "./uptime-kuma/uptime-kuma-types";
 export * from "./audiobookshelf/audiobookshelf-types";
 export * from "./navidrome/navidrome-types";
 export * from "./paperless-ngx/paperless-ngx-types";
+export * from "./thingport/thingport-types";
 export * from "./umami/umami-types";
 export * from "./gluetun/gluetun-types";
 export * from "./beszel/beszel-types";

@@ -32,6 +32,7 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "minecraft", "getServerStatus"]], intervalSeconds: null },
   { queryKey: [["widget", "networkController"]], intervalSeconds: null },
   { queryKey: [["widget", "paperlessNgx"]], intervalSeconds: null },
+  { queryKey: [["widget", "thingport"]], intervalSeconds: null },
   { queryKey: [["widget", "releases", "getLatest"]], intervalSeconds: null },
   { queryKey: [["widget", "releases", "getServiceVersions"]], intervalSeconds: null },
   { queryKey: [["widget", "rssFeed", "getFeeds"]], intervalSeconds: null },
