@@ -3,6 +3,7 @@ import { WebSocketServer } from "ws";
 
 import { appRouter, createTRPCContext } from "@homarr/api/websocket";
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
+import { API_KEY_HEADER_NAME } from "@homarr/auth/api-key";
 import { parseCookies } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
@@ -11,6 +12,15 @@ const logger = createLogger({ module: "websocketMain" });
 
 const wss = new WebSocketServer({
   port: 3001,
+  // API keys authenticate per HTTP request. Never ignore an explicit key and
+  // silently use an ambient browser session for a persistent connection.
+  verifyClient: ({ req }, done) => {
+    if (req.headers[API_KEY_HEADER_NAME.toLowerCase()] !== undefined) {
+      done(false, 401, "API keys require HTTP");
+      return;
+    }
+    done(true);
+  },
 });
 wss.on("error", (error) => {
   logger.error(new Error("WebSocket server error", { cause: error }));

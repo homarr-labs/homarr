@@ -32,14 +32,20 @@ export function OPTIONS() {
 }
 
 const handler = auth(async (req) => {
-  // Try API key auth first, fall back to session cookie
+  // A supplied key is authoritative; invalid or revoked keys must not use cookies.
   const apiKeyHeader = req.headers.get(API_KEY_HEADER_NAME);
   const ipAddress = ipAddressFromHeaders(req.headers);
 
   const { ua } = userAgent(req);
 
   const apiKeySession = await getSessionFromApiKeyAsync(db, apiKeyHeader, ipAddress, ua);
-  const session = apiKeySession ?? req.auth;
+  if (apiKeyHeader !== null && !apiKeySession) {
+    const response = Response.json({ error: "Invalid API key" }, { status: 401 });
+    setCorsHeaders(response);
+    return response;
+  }
+  let session = req.auth;
+  if (apiKeyHeader !== null) session = apiKeySession;
 
   const response = await fetchRequestHandler({
     endpoint: trpcPath,

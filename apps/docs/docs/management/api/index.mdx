@@ -25,10 +25,27 @@ Omit `userId` for yourself; another user requires admin permission. Older prefer
 ## Authentication and browser access
 
 API keys are shown once as `<id>.<token>`. Send one in the `ApiKey` header; it acts as its creator and does not expire.
-tRPC accepts the same header. Same-origin browser requests can use the Homarr session cookie.
+tRPC accepts the same header. A supplied key takes precedence over browser cookies, including when the key is invalid.
+Same-origin browser requests without a key can use the Homarr session cookie. API keys use HTTP; WebSocket connections reject an explicit `ApiKey` header.
 
 Cross-origin browser requests require `ApiKey`; they do not use session cookies. Reverse proxies must forward `OPTIONS`
 and preserve CORS headers. An HTTPS API reference cannot call an HTTP-only instance because browsers block mixed content.
+
+## Restricted integration keys
+
+Administrators can issue a GET/HEAD key for approved saved integrations and exact endpoint paths. It can call only
+`integration.request` / `POST /api/integrations/request`, including through MCP; other Homarr APIs and Custom Widget
+actions are denied. Use `integrationId`; name/kind selectors, caller headers and bodies are not accepted.
+
+Each listed query parameter is required exactly once with an approved value; unlisted parameters are denied.
+Paths append to the saved integration URL and accept no wildcards, encoded characters or dot segments. Changing that
+URL or integration kind invalidates its approval; issue a replacement key after reviewing the new destination.
+Credential rotation continues to use the current saved credentials. The owner's current full integration access is
+still required.
+
+GET and HEAD restrict HTTP methods, not upstream semantics: an endpoint can still change state or return sensitive
+data. Approve the endpoint and query values for that service, and use upstream credentials with suitably limited
+permissions where available. Existing unrestricted keys and OAuth-issued credentials keep their existing access.
 
 ## Endpoint constraints
 

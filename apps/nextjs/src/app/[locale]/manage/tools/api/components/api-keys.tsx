@@ -12,8 +12,10 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { InlineConfirmActionIcon, UserAvatar } from "@homarr/ui";
+import { apiKeyRestrictionsSchema } from "@homarr/validation/api-key";
 
 import { NewApiKeyAlert } from "./new-api-key-alert";
+import { RestrictedApiKey } from "./restricted-api-key";
 import { OAuthConnectionDetails } from "./oauth-connection-details";
 import { formatOAuthDisplayText, getOAuthCallbackHost } from "./oauth-display";
 
@@ -65,6 +67,39 @@ const ApiKeyProvenanceCell = ({ row }: ApiKeyCellProps) => {
       </details>
     </Stack>
   );
+};
+
+const ApiKeyAccessCell = ({ row }: ApiKeyCellProps) => {
+  const t = useI18n("management.page.tool.api.tab.apiKey.restrictedKey");
+  if (row.original.restrictions === null) return <Text size="sm">{t("unrestricted")}</Text>;
+  try {
+    const policy = apiKeyRestrictionsSchema.parse(JSON.parse(row.original.restrictions));
+    return (
+      <Stack gap={4}>
+        <Text size="sm" fw={500}>
+          {t("restricted")}
+        </Text>
+        <details>
+          <summary>{t("endpoints")}</summary>
+          {policy.endpoints.map((endpoint, index) => (
+            <Stack key={index} gap={2} py="xs">
+              <Text size="sm">
+                {endpoint.methods.join(" / ")} {endpoint.path}
+              </Text>
+              <Text size="xs">{endpoint.integrationId}</Text>
+              {endpoint.query.map(({ name, values }) => (
+                <Text key={name} size="xs">
+                  {name}: {values.join(", ")}
+                </Text>
+              ))}
+            </Stack>
+          ))}
+        </details>
+      </Stack>
+    );
+  } catch {
+    return <Text size="sm">{t("invalidPolicy")}</Text>;
+  }
 };
 
 const ApiKeyActionsCell = ({ row, table }: ApiKeyCellProps & { table: MRT_TableInstance<ApiKey> }) => {
@@ -157,6 +192,11 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
         size: 300,
       },
       {
+        id: "restrictions",
+        header: t("restrictedKey.access"),
+        Cell: ApiKeyAccessCell,
+      },
+      {
         header: t("table.header.actions"),
         Cell: ApiKeyActionsCell,
       },
@@ -181,15 +221,24 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
       </Stack>
     ),
     renderTopToolbarCustomActions: () => (
-      <Button
-        onClick={() => {
-          mutateCreate();
-        }}
-        loading={isPendingCreate}
-        disabled={newApiKey !== null}
-      >
-        {t("button.createApiToken")}
-      </Button>
+      <Group>
+        <RestrictedApiKey
+          disabled={newApiKey !== null}
+          onCreated={(apiKey) => {
+            setNewApiKey(apiKey);
+            onCreated();
+          }}
+        />
+        <Button
+          onClick={() => {
+            mutateCreate();
+          }}
+          loading={isPendingCreate}
+          disabled={newApiKey !== null}
+        >
+          {t("restrictedKey.createUnrestricted")}
+        </Button>
+      </Group>
     ),
     enableDensityToggle: false,
     state: {

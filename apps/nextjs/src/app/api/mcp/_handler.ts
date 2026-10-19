@@ -232,7 +232,7 @@ Read current state when it matters, reuse results across a batch, and complete t
 
 function extractApiKeyValue(req: NextRequest): string | null {
   const apiKeyHeader = req.headers.get(API_KEY_HEADER_NAME);
-  if (apiKeyHeader) return apiKeyHeader;
+  if (apiKeyHeader !== null) return apiKeyHeader;
 
   const authHeader = req.headers.get("Authorization");
   if (authHeader?.startsWith("Bearer ")) return authHeader.slice(7);
@@ -314,12 +314,26 @@ export const handleMcpRequest = async (req: NextRequest) => {
 
   const ctx = createTRPCContext({ session, headers: req.headers });
   const caller = mcpRouter.createCaller(ctx);
-  const isAdmin = session.user.permissions.includes("admin");
+  const restrictions = session.apiKeyRestrictions;
+  const isAdmin = session.user.permissions.includes("admin") && !restrictions;
+  let tools = getVisibleTools(extractMcpTools(), isAdmin);
+  let instructions = SERVER_INSTRUCTIONS;
+  if (restrictions) {
+    tools = tools.filter((tool) => tool.name === "integration_request");
+    instructions = `This API key only permits approved integration GET/HEAD endpoints. GET/HEAD does not guarantee upstream read-only behavior. Use explicit integrationId, no headers/body, and only these approved paths and query values: ${JSON.stringify(
+      restrictions.endpoints.map(({ integrationId, methods, path, query }) => ({
+        integrationId,
+        methods,
+        path,
+        query,
+      })),
+    )}`;
+  }
   const protocolHandler = createMcpProtocolHandler({
     caller,
-    tools: getVisibleTools(extractMcpTools(), isAdmin),
+    tools,
     version: getPackageVersion(),
-    instructions: SERVER_INSTRUCTIONS,
+    instructions,
     configureServer: isAdmin ? registerCustomWidgetAuthoring : undefined,
     formatToolError: sanitizeErrorMessage,
     onToolError: (tool, error) => {

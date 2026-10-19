@@ -5531,9 +5531,14 @@
       "unavailable": "Unavailable",
       "refreshFailed": "Refresh failed — showing saved data",
       "stale": "Saved data — refresh to update",
-      "table": { "value": "Value", "status": "Status" },
+      "table": {
+        "value": "Value",
+        "status": "Status"
+      },
       "option": {
-        "table": { "label": "Table view" },
+        "table": {
+          "label": "Table view"
+        },
         "rows": {
           "label": "Compact rows"
         },
@@ -7109,6 +7114,33 @@
                   "title": "API key deleted, but the list could not be refreshed",
                   "description": "Reload this page to see the current API keys."
                 }
+              },
+              "restrictedKey": {
+                "create": "Create GET/HEAD key",
+                "title": "Restricted integration API key",
+                "description": "This key can call only the approved integration GET/HEAD endpoints. Those methods can still change upstream state or return sensitive data. Approve each endpoint and query value for the intended service.",
+                "binding": "Changing a saved integration URL or kind invalidates its approved endpoints. Existing owner permissions still apply.",
+                "loadError": "Integrations could not be loaded.",
+                "endpoint": "Endpoint {number}",
+                "remove": "Remove endpoint",
+                "integration": "Integration",
+                "methods": "Allowed methods",
+                "path": "Exact endpoint path",
+                "pathHint": "Appended to the saved integration URL. No wildcards, encoded characters or dot segments.",
+                "queryHint": "No parameters are allowed unless listed. Every listed parameter is required exactly once.",
+                "queryName": "Query parameter name",
+                "queryValues": "Allowed values, one per line",
+                "removeParameter": "Remove parameter",
+                "addParameter": "Add query parameter",
+                "addEndpoint": "Add endpoint",
+                "invalid": "Check integrations, methods, exact paths and query values. Each endpoint must be complete; query names must be unique.",
+                "createError": "The restricted key could not be created. Check the saved integration and your access, then try again.",
+                "unrestricted": "Unrestricted",
+                "restricted": "Approved GET/HEAD endpoints",
+                "endpoints": "Show endpoints",
+                "invalidPolicy": "Restricted key; invalid policy",
+                "access": "Access",
+                "createUnrestricted": "Create unrestricted API key"
               }
             },
             "mcp": {
@@ -7133,7 +7165,9 @@
                   "description": "Start authorization in your OAuth client and sign in to Homarr if needed. Review the client, callback destination and account access, then choose Allow access only if you trust the client. An API credential is created only after approval and a successful code exchange.",
                   "hint": "Revoke recorded OAuth connections in your own General settings. Administrators can also revoke credentials in the Authentication tab. These credentials work with Homarr's HTTP API and MCP, do not expire automatically, and remain valid after sign-out."
                 },
-                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
+                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner.",
+                "scopedIntro": "Authenticate with an API key or OAuth. Administrators can create restricted GET/HEAD integration keys in the API keys tab. OAuth connections and unrestricted keys retain the owner’s access.",
+                "scopedPermissions": "The owner’s permissions are the access ceiling. A restricted key can call only its approved integration GET/HEAD endpoints; these methods do not guarantee upstream read-only behavior."
               },
               "clientConfig": {
                 "title": "Client Configuration",
@@ -7167,7 +7201,8 @@
                   "title": "No tools match this search",
                   "description": "No MCP tool matches \"{search}\". Try a namespace, tool name, or description."
                 }
-              }
+              },
+              "createUnrestrictedApiKeyButton": "Create unrestricted API key"
             }
           }
         },

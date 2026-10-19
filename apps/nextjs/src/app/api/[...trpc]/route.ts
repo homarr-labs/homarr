@@ -35,6 +35,10 @@ const handlerAsync = async (req: NextRequest) => {
 
   const session = await getSessionFromApiKeyAsync(db, apiKeyHeaderValue, ipAddress, ua);
 
+  if (apiKeyHeaderValue !== null && !session) {
+    return withCors(Response.json({ error: "Invalid API key" }, { status: 401 }));
+  }
+
   // Fallback to JSON if no content type is set
   if (!req.headers.has("Content-Type")) {
     req.headers.set("Content-Type", "application/json");

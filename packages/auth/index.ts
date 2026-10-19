@@ -3,12 +3,15 @@ import type { DefaultSession } from "@auth/core/types";
 
 import type { ColorScheme, GroupPermissionKey, SupportedAuthProvider } from "@homarr/definitions";
 
+import type { ApiKeyRestrictions } from "@homarr/validation/api-key";
+
 import { createConfiguration } from "./configuration";
 
 export type { Session } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
+    apiKeyRestrictions?: ApiKeyRestrictions;
     user: {
       id: string;
       permissions: GroupPermissionKey[];

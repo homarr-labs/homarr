@@ -13,6 +13,7 @@ import { integrationKinds } from "@homarr/definitions";
 
 import { protectedProcedure } from "../../trpc";
 import { getIntegrationHttpConnection, selectIntegrationForHttpRequest } from "./integration-http";
+import { assertIntegrationKeyRequestAllowed } from "./integration-key-restrictions";
 
 export const integrationRequestSchema = z.object({
   integrationId: z
@@ -167,6 +168,7 @@ export const integrationRequestProcedure = protectedProcedure
     if (Buffer.byteLength(JSON.stringify(input.headers ?? {})) > 16 * 1024)
       throw new TRPCError({ code: "PAYLOAD_TOO_LARGE", message: "Headers exceed the 16 KiB limit" });
     const integration = await selectIntegrationForHttpRequest(ctx, input);
+    assertIntegrationKeyRequestAllowed(ctx.session, input, integration);
     const targetUrl = resolveIntegrationRequestUrl(integration.url, input.path);
     // Decrypt only after authorization, from the same snapshot as URL and permissions.
     // Never log upstream data or retain secret-bearing error causes.

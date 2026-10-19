@@ -4,6 +4,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
+import { apiKeyRestrictionsSchema } from "@homarr/validation/api-key";
 
 import { comparePasswordsAsync } from "../security";
 import { createSessionAsync } from "../server";
@@ -42,6 +43,7 @@ export const getSessionFromApiKeyAsync = async (
     columns: {
       id: true,
       apiKey: true,
+      restrictions: true,
     },
     with: {
       user: {
@@ -67,10 +69,23 @@ export const getSessionFromApiKeyAsync = async (
     return null;
   }
 
+  const session = await createSessionAsync(db, apiKeyFromDb.user);
+  if (apiKeyFromDb.restrictions !== null) {
+    try {
+      session.apiKeyRestrictions = apiKeyRestrictionsSchema.parse(JSON.parse(apiKeyFromDb.restrictions));
+    } catch {
+      logger.warn("Failed to authenticate with api-key", {
+        ipAddress,
+        userAgent,
+        reason: "API_KEY_INVALID_RESTRICTIONS",
+      });
+      return null;
+    }
+  }
   logger.info("Successfully authenticated with api-key", {
     name: apiKeyFromDb.user.name,
     id: apiKeyFromDb.user.id,
   });
 
-  return await createSessionAsync(db, apiKeyFromDb.user);
+  return session;
 };

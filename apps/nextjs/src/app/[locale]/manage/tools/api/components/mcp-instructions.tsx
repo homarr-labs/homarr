@@ -153,7 +153,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups, onApiKeyCreat
               onClick={() => createApiKey()}
               loading={isPending}
             >
-              {t("createApiKeyButton")}
+              {t("createUnrestrictedApiKeyButton")}
             </Button>
           </Group>
         </Alert>
@@ -179,7 +179,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups, onApiKeyCreat
           </Group>
         </Title>
         <Text size="sm" mb="sm">
-          {t("authentication.intro")}
+          {t("authentication.scopedIntro")}
         </Text>
 
         <Accordion variant="separated" defaultValue="apikey">
@@ -194,7 +194,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups, onApiKeyCreat
               <Stack gap="xs">
                 <Text size="sm">{t("authentication.apiKey.description")}</Text>
                 <Text size="xs" c="dimmed">
-                  {t("authentication.permissions")}
+                  {t("authentication.scopedPermissions")}
                 </Text>
               </Stack>
             </AccordionPanel>

@@ -123,7 +123,19 @@ const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
   return next({ ctx });
 });
 
-const baseProcedure = isDemoReadOnly ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
+// A restricted key is a ceiling on every procedure, including public and
+// otherwise privileged builders. Transport tool visibility is not authorization.
+const keyRestrictedProcedure = t.procedure.use(({ ctx, path, next }) => {
+  if (ctx.session?.apiKeyRestrictions && path !== "integration.request") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "This API key only permits approved integration GET/HEAD requests",
+    });
+  }
+  return next({ ctx });
+});
+
+const baseProcedure = isDemoReadOnly ? keyRestrictedProcedure.use(enforceDemoModeReadOnly) : keyRestrictedProcedure;
 
 /**
  * Public (unauthed) procedure
@@ -147,7 +159,7 @@ const enforceOnboardingAccess = t.middleware(async ({ ctx, next }) => {
 
 export const onboardingClaimedProcedure = baseProcedure.use(enforceOnboardingAccess);
 
-export const internalProcedure = t.procedure;
+export const internalProcedure = keyRestrictedProcedure;
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session?.user) {
@@ -171,7 +183,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  */
 export const protectedProcedure = baseProcedure.use(enforceUserIsAuthed);
 
-export const demoWritableProtectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const demoWritableProtectedProcedure = keyRestrictedProcedure.use(enforceUserIsAuthed);
 
 /**
  * Procedure that requires a specific permission
