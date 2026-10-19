@@ -104,6 +104,7 @@ export const statsIntegrationKinds = [
   "coolify",
   "immich",
   "paperlessNgx",
+  "thingport",
   "patchmon",
   "tracearr",
   "speedtestTracker",
