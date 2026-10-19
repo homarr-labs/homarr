@@ -427,13 +427,19 @@ export const integrationRouter = createTRPCRouter({
         .where(eq(integrations.id, input.id));
 
       const changedSecrets = input.secrets.filter(
-        (secret): secret is { kind: IntegrationSecretKind; value: string } =>
-          secret.value !== null && // only update secrets that have a value
-          !integration.secrets.find(
-            // Checked above
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            (dbSecret) => dbSecret.kind === secret.kind && dbSecret.value === encryptSecret(secret.value!),
-          ),
+        (secret): secret is { kind: IntegrationSecretKind; value: string } => {
+          if (secret.value === null) return false;
+          const storedSecret = integration.secrets.find((dbSecret) => dbSecret.kind === secret.kind);
+          if (!storedSecret) return true;
+
+          try {
+            // Encryption uses a random IV, so ciphertext cannot identify an unchanged value.
+            return decryptSecret(storedSecret.value) !== secret.value;
+          } catch {
+            // A supplied replacement must still be able to repair an unreadable stored secret.
+            return true;
+          }
+        },
       );
 
       if (changedSecrets.length > 0) {
