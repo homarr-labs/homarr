@@ -1,0 +1,19 @@
+packages/api/src/router/widgets/releases.ts
+  s_4ad198a2827cbd::t_cb7db2f0fab359 98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0e63c064bc564af88600c22275f7e96d3537e535",
+  "prompts": {},
+  "sessions": {
+    "s_4ad198a2827cbd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "71e03beb-c109-4212-9516-57d964b9a5f5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
