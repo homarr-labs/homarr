@@ -26,6 +26,29 @@ Your apps have a self-signed certificate - Homarr will recognize that the certif
 
 To allow self-signed certificates, you can configure them on the certificates management page. You can find more informations on the dedicated page: [Certificates](/docs/management/certificates/)
 
+## Trusted request identity
+
+Bundled nginx attributes OAuth abuse-control requests to its TCP peer. Client-supplied forwarding headers do not establish trust. Raw Next.js access without an authenticated proxy shares an unattributed budget: 5 registrations and 10 failed token requests per minute. Use the bundled port `7575`, not the internal application port.
+
+Behind an external reverse proxy, set `HOMARR_TRUSTED_PROXIES` to that proxy's exact IP addresses or narrowly scoped CIDRs, separated by commas. No external proxies are trusted by default. For example, `HOMARR_TRUSTED_PROXIES=172.30.0.2/32,172.30.0.3/32` supports two known proxies. Every trusted hop must overwrite incoming `X-Forwarded-For` at the public edge or append its actual TCP peer; nginx walks the chain from the right to the last untrusted address. Never trust a network containing untrusted clients or containers. An unconfigured proxy safely shares its own budget rather than trusting its forwarded addresses.
+
+For an external nginx directly in front of bundled Homarr:
+
+```nginx
+location / {
+    proxy_pass http://homarr:7575;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+Allowlist this nginx instance's address in `HOMARR_TRUSTED_PROXIES`. Additional private proxy hops must append their TCP peer and be individually allowlisted. Restrict access to the proxy network, and use `BASE_URL=https://your.public.hostname` for TLS termination; identity trust does not change consent Origin checks or canonical URL handling.
+
+Non-container deployments may set `HOMARR_REQUEST_IDENTITY_SECRET` to a random 64-character hex secret shared only with their trusted proxy. That proxy must overwrite `X-Homarr-Proxy-Secret` with the secret and `X-Homarr-Client-IP` with its validated single client IP, using the same explicit peer allowlist. Keep the upstream network private and never log or return the secret. Bundled startup generates its own secret on each start; no manual secret configuration is needed.
+
+OAuth limits are process-local, with one-minute windows: registration 5 per identity and 50 total, token requests 60 per identity and 300 total, and failed token requests 10 per identity. Multi-instance deployments need an additional shared edge limit.
+
 ## Securing Homarr with Traefik
 
 Copying the configuration straight from the docker-compose file won't work if you are running Homarr behind Traefik, such as a Portainer setup, or docker-swarm. In that case, you should use the following slightly modified configuration:

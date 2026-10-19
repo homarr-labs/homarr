@@ -1,24 +1,9 @@
-export const beszelTableMetricOptionKeys = [
-  "showCpu",
-  "showMemory",
-  "showDisk",
-  "showGpu",
-  "showLoadAvg",
-  "showNet",
-  "showTemp",
-  "showBattery",
-  "showServices",
-  "showUptime",
-  "showAgent",
-] as const;
+import type { BeszelMetricOptions } from "@homarr/definitions/beszel";
+import { beszelMetricOptionKeys } from "@homarr/definitions/beszel";
 
-type BeszelTableMetricOptions = Record<(typeof beszelTableMetricOptionKeys)[number], boolean>;
+export const beszelTableMetricOptionKeys = beszelMetricOptionKeys;
 
-export const getBeszelTableVisibleMetricKeys = (
-  options: BeszelTableMetricOptions,
-  width: number,
-  isAdvanced: boolean,
-) => {
+export const getBeszelTableVisibleMetricKeys = (options: BeszelMetricOptions, width: number, isAdvanced: boolean) => {
   const enabled = isAdvanced
     ? [...beszelTableMetricOptionKeys]
     : beszelTableMetricOptionKeys.filter((key) => options[key]);

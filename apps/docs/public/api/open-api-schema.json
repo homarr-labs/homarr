@@ -1247,23 +1247,12 @@
                                     "type": "null"
                                   }
                                 ]
-                              },
-                              "email": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
                               }
                             },
                             "required": [
                               "id",
                               "name",
-                              "image",
-                              "email"
+                              "image"
                             ],
                             "additionalProperties": false
                           },

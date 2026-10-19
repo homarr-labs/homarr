@@ -55,6 +55,7 @@ COPY --from=builder /app/packages/db/migrations ./db/migrations
 COPY --from=builder /app/apps/nextjs/.output/standalone ./
 COPY --from=builder /app/.homarr-build-profile /app/build-profile
 COPY scripts/run.sh ./run.sh
+COPY scripts/trusted-proxies.mjs ./scripts/trusted-proxies.mjs
 COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf

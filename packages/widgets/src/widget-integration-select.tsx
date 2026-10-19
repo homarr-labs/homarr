@@ -80,7 +80,20 @@ export const WidgetIntegrationSelect = ({
   const values = multiSelectValues.map((item) => {
     const option = optionsById.get(item);
     if (!option) {
-      return null;
+      return (
+        <Pill
+          key={item}
+          withRemoveButton
+          onRemove={() => handleValueRemove(item)}
+          removeButtonProps={{
+            "aria-label": tItem("removeLabel", { name: item }),
+            "aria-hidden": false,
+            tabIndex: 0,
+          }}
+        >
+          {tIntegration("noData")}: {item}
+        </Pill>
+      );
     }
 
     return (

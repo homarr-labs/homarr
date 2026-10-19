@@ -1,6 +1,6 @@
 --- a/apps/nextjs/next.config.ts
 +++ b/apps/nextjs/next.config.ts
-@@ -34,6 +34,10 @@
+@@ -57,6 +57,10 @@
      HOMARR_VERSION: process.env.HOMARR_VERSION ?? "unknown",
    },
    output: "standalone",
@@ -11,7 +11,7 @@
    reactStrictMode: true,
    // react compiler breaks mantine-react-table, so disabled for now
    //reactCompiler: true,
-@@ -46,7 +50,7 @@
+@@ -69,7 +73,7 @@
    serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
    experimental: {
      optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
@@ -20,7 +20,7 @@
      turbopackFileSystemCacheForBuild: true,
      useTypeScriptCli: true,
    },
-@@ -66,13 +70,7 @@
+@@ -89,13 +93,7 @@
      ],
    },
    async rewrites() {
@@ -157,7 +157,7 @@
          availableBoards: availableBoards.map(({ id, name }) => ({ id, name })),
        }}
        sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
--      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration /> : undefined}
+-      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration refreshAfterSave={false} /> : undefined}
      />
    );
  }
@@ -278,7 +278,7 @@
        label: t("items.settings"),
 --- a/apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
 +++ b/apps/nextjs/src/app/[locale]/manage/tools/api/components/api-keys.tsx
-@@ -17,7 +17,6 @@
+@@ -19,7 +19,6 @@
  
  interface ApiKeysManagementProps {
    apiKeys: RouterOutputs["apiKeys"]["getAll"];
@@ -286,20 +286,23 @@
  }
  
  type ApiKey = RouterOutputs["apiKeys"]["getAll"][number];
-@@ -56,12 +55,11 @@
+@@ -87,7 +86,7 @@
    );
  };
  
 -export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps) => {
 +export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
+   const t = useI18n("management.page.tool.api.tab.apiKey");
+   const utils = clientApi.useUtils();
    const [newApiKey, setNewApiKey] = useState<string | null>(null);
-   const { mutate: mutateCreate, isPending: isPendingCreate } = clientApi.apiKeys.create.useMutation({
+@@ -100,7 +99,6 @@
+     },
      onSuccess(data) {
        setNewApiKey(data.apiKey);
 -      onCreated();
      },
-   });
-   const { mutateAsync: mutateDeleteAsync, isPending: isPendingDelete } = clientApi.apiKeys.delete.useMutation({
+     onError() {
+       setFeedback("createError");
 --- a/apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
 +++ b/apps/nextjs/src/app/[locale]/manage/tools/api/page.tsx
 @@ -1,38 +1,12 @@
@@ -374,7 +377,7 @@
    );
 --- a/apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
 +++ b/apps/nextjs/src/app/[locale]/manage/users/[userId]/general/_components/header-composer.tsx
-@@ -31,7 +31,6 @@
+@@ -32,7 +32,6 @@
    IconPencil,
    IconPlus,
    IconReplace,
@@ -382,7 +385,7 @@
    IconSearch,
    IconSettings,
    IconSunMoon,
-@@ -120,6 +119,7 @@
+@@ -135,6 +134,7 @@
    }, []);
    const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
    const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
@@ -390,7 +393,7 @@
      const item = createBuiltinHeaderItem(itemId);
      return !isRequiredHeaderItem(item) && !activeItemKeySet.has(getHeaderItemKey(item));
    });
-@@ -642,7 +642,6 @@
+@@ -678,7 +678,6 @@
    if (itemId === "search") return IconSearch;
    if (itemId === "home") return IconHome;
    if (itemId === "boardSwitcher") return IconReplace;
@@ -810,7 +813,7 @@
    server: {
 --- a/packages/auth/events.ts
 +++ b/packages/auth/events.ts
-@@ -3,46 +3,30 @@
+@@ -3,47 +3,30 @@
  import type { NextAuthConfig } from "next-auth";
  
  import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -845,7 +848,8 @@
      if (!dbUser) throw new Error("User not found");
  
 -    const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
--    const profileGroups = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
+-    const profileGroupsClaim = profile ? getProfileValueByPath(profile, groupsKey) : undefined;
+-    const profileGroups = typeof profileGroupsClaim === "string" ? [profileGroupsClaim] : profileGroupsClaim;
 -    // Groups from oidc provider are provided from the profile, it's not typed.
 -    if (!env.AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT && dbUser.provider === "oidc" && Array.isArray(profileGroups)) {
 -      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profileGroups)}`);
@@ -861,7 +865,7 @@
      await addUserToEveryoneGroupIfNotMemberAsync(db, user.id);
  
      if (dbUser.name !== user.name) {
-@@ -52,33 +36,6 @@
+@@ -53,33 +36,6 @@
          oldName: dbUser.name,
          newName: user.name,
        });
@@ -895,7 +899,7 @@
      }
  
      logger.info("User logged in", { userId: user.id, userName: dbUser.name, timestamp: dayjs().format() });
-@@ -109,83 +66,3 @@
+@@ -110,83 +66,3 @@
      logger.info("Added user to everyone group.", { userId });
    }
  };

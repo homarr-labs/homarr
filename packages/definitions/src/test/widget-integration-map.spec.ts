@@ -33,7 +33,7 @@ describe("widget integration config", () => {
   });
 
   test("derives optional connections and server selection limits", () => {
-    expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar"]));
+    expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar", "releases"]));
     expect(widgetIntegrationLimits).toEqual({
       "smartHome-entityState": 1,
       "smartHome-executeAutomation": 1,

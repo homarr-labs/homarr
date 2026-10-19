@@ -165,7 +165,6 @@ export const boardSummarySchema = z.object({
       id: z.string(),
       name: z.string().nullable(),
       image: z.string().nullable(),
-      email: z.string().nullable(),
     })
     .nullable(),
   isHome: z.boolean(),

@@ -1,4 +1,4 @@
-import type { ReleaseProviderKind } from "@homarr/definitions";
+import type { IntegrationKind, ReleaseProviderKind } from "@homarr/definitions";
 
 export interface ReleasesVersionFilter {
   prefix?: string;
@@ -14,6 +14,16 @@ export interface ReleasesRepository {
   versionFilter?: ReleasesVersionFilter;
   iconUrl?: string;
   providerUrl?: string;
+  integrationIds?: string[];
+}
+
+export interface ReleasesRepositoryIntegration {
+  id: string;
+  kind: IntegrationKind;
+  name: string;
+  version: string;
+  /** Undefined when either version has an unsupported format. */
+  isUpToDate: boolean | undefined;
 }
 
 export interface ReleasesRepositoryResponse extends ReleasesRepository {
@@ -41,6 +51,8 @@ export interface ReleasesRepositoryResponse extends ReleasesRepository {
   };
 
   viewed: boolean;
+
+  integrations?: ReleasesRepositoryIntegration[];
 
   error?: { code?: string; message?: string };
 }

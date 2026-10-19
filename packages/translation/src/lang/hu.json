@@ -247,6 +247,82 @@
         "title": "Jelentkezzen be a fiókjába",
         "subtitle": "Üdv újra! Add meg a hitelesítő adataidat"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Csatlakozz Homarrhoz",
         "titleWithAppName": "Csatlakozás ehhez: {appName}",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "Üzemidő Figyelés",
       "beszel": "Beszel",
       "systemMonitoring": "Rendszerfelügyelet",
-      "security": "Biztonság"
+      "security": "Biztonság",
+      "serviceVersion": "Verzió"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "{page}/{totalPages}. oldal"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "itt",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "Alapértelmezett fül"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Látható klaszterrészek"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": "Szolgáltató URL-je"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Azonosító",
             "placeholder": "Név vagy tulajdonos/név"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "Kiadási oldal megnyitása",
       "releaseDescription": "Kiadás leírása",
       "projectDescription": "Projekt leírása",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Ismeretlen",
       "created": "Létrehozva",
       "error": {
         "label": "Hiba",
@@ -6171,15 +6263,6 @@
           "notice": "Az oldal eltüntetéséhez kérd meg a szerver adminisztrátorát, hogy állítson be egy kezdőlap táblát a szervernek"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "Keresés",
               "firstDayOfWeek": "A hét első napja",
               "accessibility": "Kisegítő lehetőségek",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Betanító túrák",
                 "description": "A betanító túrák visszaállítása, hogy újra megjelenjenek a következő látogatáskor a kezelőfelületen vagy az irányítópulton.",
@@ -6933,7 +7041,8 @@
               "label": "Hitelesítés",
               "title": "API kulcsok",
               "button": {
-                "createApiToken": "API token létrehozása"
+                "createApiToken": "API token létrehozása",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Létrehozta",
+                  "source": "Integráció",
                   "actions": "Műveletek"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

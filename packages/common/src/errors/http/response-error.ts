@@ -1,3 +1,5 @@
+import { redactCredentialUrl } from "./credential-url";
+
 export class ResponseError extends Error {
   public readonly statusCode: number;
   public readonly url?: string;
@@ -7,6 +9,6 @@ export class ResponseError extends Error {
     this.name = ResponseError.name;
 
     this.statusCode = response.status;
-    this.url = response.url;
+    this.url = redactCredentialUrl(response.url);
   }
 }

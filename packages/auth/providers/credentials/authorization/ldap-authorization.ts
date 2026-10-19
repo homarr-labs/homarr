@@ -28,8 +28,8 @@ export const authorizeWithLdapCredentialsAsync = async (
   try {
     await client
       .bindAsync({
-        distinguishedName: env.AUTH_LDAP_BIND_DN,
-        password: env.AUTH_LDAP_BIND_PASSWORD,
+        distinguishedName: env.AUTH_LDAP_BIND_DN ?? "",
+        password: env.AUTH_LDAP_BIND_PASSWORD ?? "",
       })
       .catch((error) => {
         throw new CredentialsSignin("Failed to connect to LDAP server", { cause: error });

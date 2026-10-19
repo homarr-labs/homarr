@@ -38,6 +38,7 @@ export const statsRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Refresh read-only integration statistics through a bounded queue. Requires integrationId from integration_all and query access. force bypasses the one-hour freshness window.",
       },

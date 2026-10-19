@@ -247,6 +247,82 @@
         "title": "Logga in på ditt konto",
         "subtitle": "Välkommen tillbaka! Vänligen ange dina inloggningsuppgifter"
       },
+      "mcpConsent": {
+        "title": "Granska klientåtkomst",
+        "description": "Granska klientens åtkomst innan du ansluter.",
+        "viewingHint": "Att visa denna sida ger inte åtkomst.",
+        "identityTitle": "Konto och klient",
+        "loading": "Laddar begäran om åtkomst",
+        "allow": "Tillåt åtkomst",
+        "deny": "Neka åtkomst",
+        "decisionHint": "Tillåt endast åtkomst om du litar på denna klient och callback.",
+        "requestExpires": "Begäran löper ut (UTC):",
+        "details": "Tekniska detaljer",
+        "returnHome": "Återgå till Homarr",
+        "reload": "Ladda om samtyckessidan",
+        "account": {
+          "name": "Inloggad som",
+          "id": "Användar-ID",
+          "nameNotRecorded": "Användarnamn inte inspelade"
+        },
+        "client": {
+          "name": "Klient",
+          "nameNotSupplied": "Klientnamn ej angivet",
+          "id": "Klient ID",
+          "callbackHost": "Återuppringd värd",
+          "callbackUrl": "Fullständig URL för samtal",
+          "hostUnavailable": "Återuppringd värd ej tillgänglig",
+          "unverifiedHint": "Klientnamn är självrapporterade, inte verifierade av Homarr.",
+          "destinationHint": "Ditt beslut kommer att återgå till denna uppringning. Om du tillåter åtkomst kan klienten utbyta auktoriseringskoden för en API-autentisering."
+        },
+        "access": {
+          "title": "Kontoåtkomst",
+          "description": "Använder dina nuvarande behörigheter, inklusive delade resurser.",
+          "details": "Visa behörigheter ({count})",
+          "noGlobalPermissions": "Använder ditt konto och delad resurs utan globala behörigheter."
+        },
+        "admin": {
+          "title": "Fullständig administratörsåtkomst",
+          "description": "Kan hantera Homarr och uppkopplade tjänster, inklusive destruktiva åtgärder."
+        },
+        "credential": {
+          "title": "Uppgiftens omfattning och livslängd",
+          "breadth": "Fungerar med Homarr's HTTP API och MCP, inklusive utanför denna klient.",
+          "lifetime": "Ingen automatisk utgång. Utloggning återkallar inte åtkomst.",
+          "manageConnections": "Återkalla i allmänna inställningar"
+        },
+        "error": {
+          "freshStart": "Starta en ny begäran om auktorisering från kunden. Homarr kommer att be dig att granska åtkomst igen.",
+          "unavailable": {
+            "title": "Begäran om åtkomst inte tillgänglig",
+            "description": "Denna begäran har löpt ut, har redan hanterats, eller är inte längre tillgänglig. Den kan inte godkännas från denna sida."
+          },
+          "invalid_browser": {
+            "title": "Åtkomstförfrågan tillhör en annan webbläsare",
+            "description": "Denna webbläsare kan inte verifiera den ursprungliga begäran. Använd webbläsaren där du började auktorisera, eller starta en ny begäran från klienten."
+          },
+          "session_changed": {
+            "title": "Din inloggningssession har ändrats",
+            "description": "Denna begäran har kopplats till en annan användare eller inloggning. Den kan inte godkännas med den aktuella sessionen."
+          },
+          "invalid_request": {
+            "title": "Begäran om åtkomst kunde inte verifieras",
+            "description": "Begäran är ogiltig, utgången eller inte längre verifierbar. Ingen åtkomst beviljades av detta försök."
+          },
+          "access_denied": {
+            "title": "Åtkomst beviljades inte",
+            "description": "Godkännande försöket avvisades. Ingen åtkomst beviljades av detta försök."
+          },
+          "server_error": {
+            "title": "Begäran om åtkomst kunde inte slutföras",
+            "description": "Homarr kunde inte slutföra detta auktoriseringsförsök. Kontrollera dina OAuth anslutningar innan du startar igen."
+          },
+          "unknown": {
+            "title": "Begäran om åtkomst inte tillgänglig",
+            "description": "Den här sidan kan inte bekräfta auktoriseringsresultatet. Kontrollera dina OAuth anslutningar innan du startar igen."
+          }
+        }
+      },
       "invite": {
         "title": "Gå med i Homarr",
         "titleWithAppName": "Gå med i {appName}",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "Uppetidsövervakning",
       "beszel": "Beszel",
       "systemMonitoring": "Systemövervakning",
-      "security": "Säkerhet"
+      "security": "Säkerhet",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Sida {page} av {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Växla navigering"
     },
     "here": "här",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "Standardflik"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "System sedan kluster",
+          "clusterFirst": "Kluster sedan System"
+        },
         "visibleClusterSections": {
           "label": "Synliga klustersektioner"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": "Leverantörs-URL"
           },
+          "integrations": {
+            "label": "Länkade integrationer"
+          },
           "identifier": {
             "label": "Identifierare",
             "placeholder": "Namn eller Ägare/Namn"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "Öppna versionssida",
       "releaseDescription": "Versionsbeskrivning",
       "projectDescription": "Projektbeskrivning",
+      "runningVersions": "Löpande versioner",
+      "upToDate": "Senast uppdaterad",
+      "updateAvailable": "Uppdatering tillgänglig",
+      "unknownStatus": "Okänt",
       "created": "Skapad",
       "error": {
         "label": "Fel",
@@ -6171,15 +6263,6 @@
           "notice": "För att dölja den här sidan ber du serveradministratören ange en startsida för servern"
         }
       }
-    },
-    "snapshot": {
-      "take": "Ta ögonblicksbild av tavlans tillstånd",
-      "description": "Ladda ner en redigerad ögonblicksbild för att bifoga en felrapport och hjälpa oss att återskapa din layout",
-      "downloaded": "Tavlan ögonblicksbild hämtad",
-      "downloadedDescription": "Bifoga JSON och en skärmdump tagen i samma fönsterstorlek till din felrapport. Ögonblicksbilden inkluderar layout, inställningar, anpassade CSS, widgetalternativ och inlästa data, med privat text, webbadresser och uppgifter redacted.",
-      "playground": "Öppen spelplats",
-      "failed": "Det går inte att fånga snapshot på tavlan",
-      "failedDescription": "Tavlans data kunde inte exporteras på ett säkert sätt, eller så överskrider ögonblicksbilden 10 MB."
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "Sökning",
               "firstDayOfWeek": "Första dag på veckan",
               "accessibility": "Tillgänglighet",
+              "oauthConnections": {
+                "title": "OAuth anslutningar",
+                "description": "Dessa klienter erhöll API-uppgifter för ditt konto genom OAuth. Referenserna fungerar med Homarr's HTTP API såväl som MCP, upphör inte automatiskt och förblir giltiga efter att du loggat ut.",
+                "revocationHint": "Återkallande av en anslutning tar bort dess API-uppgifter. För att ansluta om, starta auktoriseringen igen från klienten.",
+                "loading": "Laddar OAuth anslutningar",
+                "retry": "Ladda om kontakter",
+                "revoke": "Återkalla anslutning",
+                "confirmRevoke": "Bekräfta återkallelse",
+                "empty": {
+                  "title": "Inga inspelade OAuth anslutningar",
+                  "description": "Nya OAuth anslutningar visas här. Äldre uppgifter utan inspelade klientuppgifter kan behöva en administratör för att återkalla dem i API-nycklar."
+                },
+                "loadError": {
+                  "title": "OAuth anslutningar kunde inte laddas",
+                  "description": "Försök att ladda listan igen. Detta återkallar inte några uppgifter."
+                },
+                "success": {
+                  "title": "Anslutning återkallad",
+                  "description": "Den sparade API-autentiseringen har tagits bort. Anslut från klienten för att ge åtkomst igen."
+                },
+                "error": {
+                  "title": "Anslutningen kunde inte återkallas",
+                  "description": "Uppgiften kan fortfarande vara aktiv. Försök att återkalla den igen."
+                }
+              },
               "onboardingTours": {
                 "title": "Introduktionsturer",
                 "description": "Återställ introduktionsturerna för att se dem igen vid nästa besök i administrationsområdet eller på instrumentpanelen.",
@@ -6933,7 +7041,8 @@
               "label": "Autentisering",
               "title": "API-nycklar",
               "button": {
-                "createApiToken": "Skapa API-token"
+                "createApiToken": "Skapa API-token",
+                "confirmDeletion": "Bekräfta radering"
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Skapad av",
+                  "source": "Integration",
                   "actions": "Åtgärder"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Manuell eller äldre API-nyckel",
+                "unnamedClient": "Klientnamnet är inte inspelat",
+                "clientNameHint": "Klientnamn är självrapporterade och är inte verifierade.",
+                "details": "Kontaktuppgifter",
+                "credentialId": "Uppgifter ID",
+                "clientId": "Klient ID",
+                "callbackHost": "Återuppringd värd",
+                "callbackUrl": "Fullständig URL för samtal",
+                "issuedAt": "Utfärdad (UTC)",
+                "unknown": "Inte inspelad"
+              },
+              "empty": {
+                "title": "Inga API-nycklar att visa",
+                "description": "Skapa en API-token eller justera tabellfiltren för att hitta befintliga nycklar."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API-nyckel kunde inte skapas",
+                  "description": "Ingen ny inloggning togs emot. Kontrollera nyckellistan innan du försöker igen."
+                },
+                "deleteError": {
+                  "title": "API-nyckel kunde inte raderas",
+                  "description": "Hängivelsen kan fortfarande vara aktiv. Försök att ta bort den igen."
+                },
+                "deleteSuccess": {
+                  "title": "API-nyckel borttagen",
+                  "description": "Den sparade API-autentiseringen har tagits bort."
+                },
+                "refreshError": {
+                  "title": "API-nyckel raderad, men listan kunde inte uppdateras",
+                  "description": "Ladda om denna sida för att se aktuella API-nycklar."
                 }
               }
             },

@@ -1,159 +1,81 @@
-import type { NextRequest } from "next/server";
-
-import { auth } from "@homarr/auth/next";
-
 import { getMcpBaseUrl } from "../../_base-url";
-import { consumePendingAuth, createAuthCode, getClient, storePendingAuth } from "../_store";
+import { beginMcpAuthorization, decideMcpAuthorization, readMcpConsent } from "../_grant";
+import {
+  authorizationQuery,
+  browserBinding,
+  consentDecisionError,
+  currentConsentSession,
+  finishAuthorization,
+  grantError,
+  localRedirect,
+  oauthError,
+  parameterBody,
+  validDecisionOrigin,
+} from "../_http";
 
-export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const session = await auth();
-
-  const pendingId = url.searchParams.get("pending");
-  if (pendingId) {
-    if (!session?.user) {
-      return Response.json(
-        {
-          error: "access_denied",
-          error_description: "Login was not completed",
-        },
-        { status: 403 },
+export async function GET(request: Request) {
+  const params = authorizationQuery(request);
+  if (!params.ok) return finishAuthorization(oauthError("invalid_request", "Invalid or duplicate parameters"), request);
+  const session = await currentConsentSession(request);
+  const pendingId = params.value.pending;
+  if (pendingId !== undefined) {
+    if (Object.keys(params.value).length !== 1)
+      return finishAuthorization(oauthError("invalid_request", "Invalid resumption parameters"), request, pendingId);
+    const result = readMcpConsent({ pendingId, browserBinding: browserBinding(request, pendingId), session });
+    if (!result.ok && result.error !== "login_required")
+      return finishAuthorization(
+        oauthError(result.error, "Consent request expired or is unavailable for this browser and session"),
+        request,
+        pendingId,
       );
-    }
+    const target = result.ok
+      ? `/auth/mcp?pending=${pendingId}`
+      : `/auth/login?callbackUrl=${encodeURIComponent(`/api/mcp/oauth/authorize?pending=${pendingId}`)}`;
+    return finishAuthorization(localRedirect(target), request, pendingId);
+  }
+  const baseUrl = getMcpBaseUrl(request.headers);
+  const result = beginMcpAuthorization(
+    params.value,
+    new Set([`${baseUrl}/api/mcp`, `${baseUrl}/api/mcp/mcp`]),
+    session,
+  );
+  if (!result.ok) return finishAuthorization(grantError(result), request);
+  const target = result.authenticated
+    ? `/auth/mcp?pending=${result.pendingId}`
+    : `/auth/login?callbackUrl=${encodeURIComponent(`/api/mcp/oauth/authorize?pending=${result.pendingId}`)}`;
+  return finishAuthorization(localRedirect(target), request, result.pendingId, result);
+}
 
-    const pending = consumePendingAuth(pendingId);
-    if (!pending) {
-      return Response.json(
-        {
-          error: "invalid_request",
-          error_description: "Authorization request expired, please try again",
-        },
-        { status: 400 },
+export async function POST(request: Request) {
+  let pendingId: string | null = null;
+  try {
+    if (!validDecisionOrigin(request))
+      return finishAuthorization(
+        consentDecisionError(request, "invalid_request", "A same-origin consent decision is required", 403),
+        request,
       );
-    }
-
-    const code = createAuthCode(
-      pending.clientId,
-      session.user.id,
-      pending.codeChallenge,
-      pending.codeChallengeMethod,
-      pending.redirectUri,
-      pending.resource,
-    );
-    if (!code) {
-      return Response.json(
-        {
-          error: "server_error",
-          error_description: "Server is busy, please try again later",
-        },
-        { status: 503 },
+    const params = await parameterBody(request);
+    if (!params.ok || Object.keys(params.value).some((key) => !["pending", "consentToken", "decision"].includes(key)))
+      return finishAuthorization(
+        consentDecisionError(request, "invalid_request", "Invalid or duplicate decision parameters"),
+        request,
       );
-    }
-
-    const redirect = new URL(pending.redirectUri);
-    redirect.searchParams.set("code", code);
-    if (pending.state) redirect.searchParams.set("state", pending.state);
-    return Response.redirect(redirect.toString());
-  }
-
-  const clientId = url.searchParams.get("client_id");
-  const redirectUri = url.searchParams.get("redirect_uri");
-  const codeChallenge = url.searchParams.get("code_challenge");
-  const codeChallengeMethod = url.searchParams.get("code_challenge_method") ?? "S256";
-  const state = url.searchParams.get("state");
-  const resource = url.searchParams.get("resource");
-
-  if (!clientId || !redirectUri || !codeChallenge) {
-    return Response.json(
-      {
-        error: "invalid_request",
-        error_description: "Missing required parameters",
-      },
-      { status: 400 },
+    pendingId = params.value.pending ?? "";
+    const session = await currentConsentSession(request);
+    const result = decideMcpAuthorization(
+      { pendingId, browserBinding: browserBinding(request, pendingId), session },
+      params.value.consentToken ?? "",
+      params.value.decision ?? "",
+    );
+    const response = result.ok
+      ? new Response(null, { status: 303, headers: { Location: result.redirectUri } })
+      : consentDecisionError(request, result.error, result.error_description, result.status);
+    return finishAuthorization(response, request, pendingId);
+  } catch {
+    return finishAuthorization(
+      consentDecisionError(request, "server_error", "Failed to complete consent decision", 500),
+      request,
+      pendingId,
     );
   }
-
-  if (codeChallengeMethod !== "S256") {
-    return Response.json(
-      {
-        error: "invalid_request",
-        error_description: "Only S256 code_challenge_method is supported",
-      },
-      { status: 400 },
-    );
-  }
-
-  const baseUrl = getMcpBaseUrl(req.headers);
-  const allowedResources = new Set([`${baseUrl}/api/mcp`, `${baseUrl}/api/mcp/mcp`]);
-  if (resource && !allowedResources.has(resource)) {
-    return Response.json(
-      {
-        error: "invalid_target",
-        error_description: "The resource must be the canonical Homarr MCP endpoint",
-      },
-      { status: 400 },
-    );
-  }
-
-  const client = getClient(clientId);
-  if (!client) {
-    return Response.json(
-      {
-        error: "invalid_client",
-        error_description:
-          "Unknown client_id — the server was restarted and lost the registration. Please re-run the auth command to re-register.",
-      },
-      { status: 400 },
-    );
-  }
-
-  if (!client.redirectUris.includes(redirectUri)) {
-    return Response.json(
-      {
-        error: "invalid_request",
-        error_description: "redirect_uri not registered",
-      },
-      { status: 400 },
-    );
-  }
-
-  if (session?.user) {
-    const code = createAuthCode(clientId, session.user.id, codeChallenge, codeChallengeMethod, redirectUri, resource);
-    if (!code) {
-      return Response.json(
-        {
-          error: "server_error",
-          error_description: "Server is busy, please try again later",
-        },
-        { status: 503 },
-      );
-    }
-
-    const redirect = new URL(redirectUri);
-    redirect.searchParams.set("code", code);
-    if (state) redirect.searchParams.set("state", state);
-    return Response.redirect(redirect.toString());
-  }
-
-  const id = storePendingAuth({
-    clientId,
-    redirectUri,
-    codeChallenge,
-    codeChallengeMethod,
-    state,
-    resource,
-  });
-  if (!id) {
-    return Response.json(
-      {
-        error: "server_error",
-        error_description: "Server is busy, please try again later",
-      },
-      { status: 503 },
-    );
-  }
-
-  const loginUrl = new URL("/auth/login", baseUrl);
-  loginUrl.searchParams.set("callbackUrl", `/api/mcp/oauth/authorize?pending=${id}`);
-  return Response.redirect(loginUrl.toString());
 }

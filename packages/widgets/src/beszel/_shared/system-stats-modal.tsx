@@ -3,19 +3,12 @@
 import { useState } from "react";
 import { SegmentedControl, Stack } from "@mantine/core";
 
+import type { BeszelTimePeriod } from "@homarr/definitions/beszel";
+import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { createModal } from "@homarr/modals";
 
-import type { BeszelTimePeriod } from "./chart";
+import { beszelCompactTimePeriodOptions } from "./options";
 import { BeszelStatsView } from "./stats-view";
-
-const timePeriodOptions: { value: BeszelTimePeriod; label: string }[] = [
-  { value: "1m", label: "Live" },
-  { value: "1h", label: "1H" },
-  { value: "12h", label: "12H" },
-  { value: "24h", label: "24H" },
-  { value: "1w", label: "1W" },
-  { value: "30d", label: "30D" },
-];
 
 const allCharts = {
   cpu: true,
@@ -37,15 +30,18 @@ interface BeszelSystemStatsModalProps {
 }
 
 export const BeszelSystemStatsModal = createModal<BeszelSystemStatsModalProps>(({ innerProps }) => {
-  const [timePeriod, setTimePeriod] = useState<BeszelTimePeriod>("1h");
+  const [timePeriod, setTimePeriod] = useState<BeszelTimePeriod>(defaultBeszelTimePeriod);
 
   return (
     <Stack gap="md">
       <SegmentedControl
         size="xs"
         value={timePeriod}
-        onChange={(value) => setTimePeriod(value as BeszelTimePeriod)}
-        data={timePeriodOptions}
+        onChange={(value) => {
+          const period = beszelTimePeriodSchema.safeParse(value);
+          if (period.success) setTimePeriod(period.data);
+        }}
+        data={beszelCompactTimePeriodOptions}
       />
       <BeszelStatsView
         integrationIds={[innerProps.integrationId]}
@@ -53,7 +49,7 @@ export const BeszelSystemStatsModal = createModal<BeszelSystemStatsModalProps>((
         timePeriod={timePeriod}
         visibility={allCharts}
         columns={2}
-        onSwitchToHistorical={() => setTimePeriod("1h")}
+        onSwitchToHistorical={() => setTimePeriod(defaultBeszelTimePeriod)}
       />
     </Stack>
   );

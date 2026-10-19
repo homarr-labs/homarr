@@ -117,6 +117,12 @@ export const releasesWidget: WidgetDefinition = {
                 },
                 defaultValue: "None",
               },
+              {
+                name: "Linked Integrations",
+                description: "The integrations whose running version is shown next to the latest release.",
+                values: "Select from the integrations selected for the widget.",
+                defaultValue: "None",
+              },
             ],
           },
         },

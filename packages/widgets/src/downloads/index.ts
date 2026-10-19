@@ -1,11 +1,13 @@
 import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { isRecord } from "@homarr/common";
 import { getIntegrationKindsByCategory, getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
+import { resolveDownloadsQueryInput } from "./query-input";
 
 const sortColumns = [
   "name",
@@ -26,13 +28,20 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
   icon: IconDownload,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
-  queryMatcher: ({ input }, scope) =>
-    widgetQueryInputMatches(input, {
-      integrationIds: scope.integrationIds,
-      limitPerIntegration: scope.options.limitPerIntegration,
-      includeArchivedHistory: scope.options.includeArchivedHistory,
-      historyWindowDays: scope.options.historyWindowDays,
-    }),
+  queryMatcher: ({ input }, scope) => {
+    if (!isRecord(input)) return false;
+    const expected = resolveDownloadsQueryInput(scope.integrationIds, scope.options);
+    return widgetQueryInputMatches(
+      {
+        ...resolveDownloadsQueryInput(scope.integrationIds, input),
+        integrationIds: input.integrationIds,
+        // Existing board snapshots can contain the query shape from before provider selection.
+        selection: expected.selection,
+        ...("selection" in input && { selection: input.selection }),
+      },
+      expected,
+    );
+  },
   refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(

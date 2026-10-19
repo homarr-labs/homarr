@@ -330,6 +330,16 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
       }),
     );
 
+    const imageUrlsByType = {
+      poster: new Map<string, string | undefined>(),
+      backdrop: new Map<string, string | undefined>(),
+    };
+    for (const image of proxiedImages) {
+      const urls = imageUrlsByType[image.type];
+      // Match find's first-entry semantics, including a failed proxy result.
+      if (!urls.has(image.mediaKey)) urls.set(image.mediaKey, image.url);
+    }
+
     const media = recentlyAddedItems
       .filter((item) => item.Image)
       .map((item) => {
@@ -354,8 +364,8 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           releaseDate: parseReleaseDate(item),
           releaseDateIsDateOnly: /^\d{4}-\d{2}-\d{2}$/.test(item.originallyAvailableAt ?? ""),
           imageUrls: {
-            poster: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "poster")?.url,
-            backdrop: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "backdrop")?.url,
+            poster: imageUrlsByType.poster.get(item.key),
+            backdrop: imageUrlsByType.backdrop.get(item.key),
           },
           producer: item.studio,
           rating: item.rating?.toFixed(1),

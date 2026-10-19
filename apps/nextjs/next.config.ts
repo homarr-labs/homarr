@@ -26,6 +26,29 @@ const getDevelopmentServiceAliases = () => {
   };
 };
 
+const contentSecurityPolicy = `
+  default-src 'self';
+  script-src * 'unsafe-inline' 'unsafe-eval';
+  worker-src * blob:;
+  base-uri 'self';
+  connect-src *;
+  style-src * 'unsafe-inline';
+  frame-ancestors *;
+  frame-src *;
+  form-action 'self';
+  img-src * data:;
+  font-src * data:;
+  media-src * data: blob:;
+`
+  .replace(/\s{2,}/g, " ")
+  .trim();
+
+const mcpContentSecurityPolicy = contentSecurityPolicy.replace("frame-ancestors *;", "frame-ancestors 'none';");
+const mcpConsentContentSecurityPolicy = mcpContentSecurityPolicy.replace(
+  "form-action 'self';",
+  "form-action 'self' http: https:;",
+);
+
 const nextConfig: NextConfig = {
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
@@ -79,6 +102,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/tabler-icons/:version/:asset",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         source: "/sw.js",
         headers: [
           { key: "Content-Type", value: "application/javascript; charset=utf-8" },
@@ -96,25 +123,38 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             // worker-src / media-src with blob: is necessary for video.js, see https://github.com/homarr-labs/homarr/issues/3912 and https://stackoverflow.com/questions/65792855/problem-with-video-js-and-content-security-policy-csp
-            value: `
-              default-src 'self';
-              script-src * 'unsafe-inline' 'unsafe-eval';
-              worker-src * blob:;
-              base-uri 'self';
-              connect-src *;
-              style-src * 'unsafe-inline'; 
-              frame-ancestors *;
-              frame-src *;
-              form-action 'self';
-              img-src * data:;
-              font-src * data:;
-              media-src * data: blob:;
-            `
-              .replace(/\s{2,}/g, " ")
-              .trim(),
+            value: contentSecurityPolicy,
           },
         ],
       },
+      {
+        source: "/api/mcp/oauth/:path*",
+        locale: false,
+        headers: [
+          { key: "Content-Security-Policy", value: mcpContentSecurityPolicy },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      },
+      ...["/auth/mcp/:path*", "/:locale/auth/mcp/:path*"].map((source) => ({
+        source,
+        locale: false as const,
+        headers: [
+          { key: "Content-Security-Policy", value: mcpContentSecurityPolicy },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      })),
+      ...["/auth/mcp", "/:locale/auth/mcp"].map((source) => ({
+        source,
+        locale: false as const,
+        headers: [
+          { key: "Content-Security-Policy", value: mcpConsentContentSecurityPolicy },
+          { key: "Referrer-Policy", value: "strict-origin" },
+        ],
+      })),
     ];
   },
 };
