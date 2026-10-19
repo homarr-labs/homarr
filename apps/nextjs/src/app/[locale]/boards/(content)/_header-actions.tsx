@@ -8,7 +8,7 @@ import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useRequiredBoard, useWhenBoardRestored } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -72,6 +72,7 @@ export const BoardContentSettingsAction = ({ demoReadOnly }: { demoReadOnly: boo
 
 const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const [isEditMode, { open, close }] = useEditMode();
+  const whenRestored = useWhenBoardRestored();
   const [editorLoadState, setEditorLoadState] = useState<"scheduled" | "loading" | "ready" | "error">("scheduled");
   const [isEnteringEditMode, setIsEnteringEditMode] = useState(false);
   const board = useRequiredBoard();
@@ -156,7 +157,8 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     }
     setIsEnteringEditMode(true);
     try {
-      await prepareEditorAsync();
+      const [, result] = await Promise.all([prepareEditorAsync(), whenRestored()]);
+      if (result !== "restored") return;
       open();
     } catch {
       showErrorNotification({
@@ -166,7 +168,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     } finally {
       setIsEnteringEditMode(false);
     }
-  }, [demoReadOnly, discardDemoChanges, isEditMode, open, prepareEditorAsync, saveBoard, t]);
+  }, [demoReadOnly, discardDemoChanges, isEditMode, open, prepareEditorAsync, saveBoard, t, whenRestored]);
 
   const cancelLayoutEdit = useCallback(() => {
     openConfirmModal({

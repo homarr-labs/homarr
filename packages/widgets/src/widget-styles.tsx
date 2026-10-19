@@ -82,11 +82,16 @@ const widgetStyles = {
   wazuhAuthFailures: dynamic(() => import("./wazuh-auth-failures/component").then(() => NoStyles)),
 } satisfies Record<WidgetKind, ComponentType>;
 
-export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => (
-  <Suspense fallback={null}>
-    {kinds.map((kind) => {
-      const Styles = widgetStyles[kind];
-      return <Styles key={kind} />;
-    })}
-  </Suspense>
-);
+export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => {
+  // Register CSS during SSR without importing every offscreen Widget again
+  // in the browser just to render these empty style-registration components.
+  return (
+    <Suspense fallback={null}>
+      {typeof window === "undefined" &&
+        kinds.map((kind) => {
+          const Styles = widgetStyles[kind];
+          return <Styles key={kind} />;
+        })}
+    </Suspense>
+  );
+};

@@ -23,6 +23,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import {
   useBoardRestoration,
+  useBoardRestorationLifecycle,
   useRequiredBoard,
   useWhenBoardRestored,
   useBoardRestoredAction,
@@ -59,6 +60,8 @@ import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
+import { createPreparedWidgetHydration } from "./prepared-widget-hydration";
+import { PreparedWidgetQueries } from "./prepared-widget-queries";
 
 const BoardItemMenu = dynamic(() => import("./item-menu").then((module) => module.BoardItemMenu), {
   ssr: false,
@@ -119,7 +122,7 @@ const GuardedWidgetError = ({ resetErrorBoundary, ...props }: Parameters<typeof 
 };
 
 const useMarkWidgetRestored = (id: string) => {
-  const { settle } = useBoardRestoration();
+  const { settle } = useBoardRestorationLifecycle();
   useLayoutEffect(() => settle(id), [id, settle]);
 };
 
@@ -128,7 +131,7 @@ const BoardItemPendingCard = ({ item, innerRef }: Pick<BoardItemCardProps, "item
 
   return (
     <BoardItemCard item={item} innerRef={innerRef}>
-      <Text c="dimmed" size="sm" p="sm">
+      <Text c="dimmed" size="sm" p="sm" data-homarr-widget-client-only>
         {getWidgetName(item.kind, t)}
       </Text>
     </BoardItemCard>
@@ -143,7 +146,8 @@ const getServerHydratedSnapshot = () => false;
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
-  const { register } = useBoardRestoration();
+  const { register, settle } = useBoardRestorationLifecycle();
+  const [hydration] = useState(createPreparedWidgetHydration);
   const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -160,8 +164,14 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     deferred ? getServerHydratedSnapshot : getHydratedSnapshot,
   );
   useLayoutEffect(() => {
-    if (prepared && !deferred) return register(item.id);
-  }, [deferred, item.id, prepared, register]);
+    if (!prepared) return;
+    const unregister = register(item.id);
+    const stopObserving = hydration.observe(item.id, () => settle(item.id));
+    return () => {
+      unregister();
+      stopObserving?.();
+    };
+  }, [hydration, item.id, prepared, register, settle]);
   if (!hydrated) {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
@@ -174,6 +184,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     >
       <Suspense fallback={<BoardItemPendingCard item={item} innerRef={ref} />}>
         <LoadedBoardItemContent
+          hydration={prepared ? hydration : undefined}
           item={item}
           width={width}
           height={height}
@@ -192,6 +203,7 @@ const createBoardItemRuntime = () => ({
 });
 
 interface LoadedBoardItemContentProps {
+  hydration?: ReturnType<typeof createPreparedWidgetHydration>;
   item: SectionItem;
   width: number;
   height: number;
@@ -201,6 +213,7 @@ interface LoadedBoardItemContentProps {
 }
 
 const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
+  if (props.hydration && typeof window !== "undefined") use(props.hydration.completion);
   if (props.item.kind === "app") {
     const Component = initialWidgetResources.app.Component as ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
     return (
@@ -542,7 +555,20 @@ interface InnerContentProps {
   Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
 }
 
-const InnerContent = memo(function InnerContent({ item, definition, Component, ...dimensions }: InnerContentProps) {
+const InnerContent = memo(function InnerContent(props: InnerContentProps) {
+  return (
+    <PreparedWidgetQueries>
+      <ResolvedInnerContent {...props} />
+    </PreparedWidgetQueries>
+  );
+});
+
+const ResolvedInnerContent = memo(function ResolvedInnerContent({
+  item,
+  definition,
+  Component,
+  ...dimensions
+}: InnerContentProps) {
   const { isRestoring } = useBoardRestoration();
   const whenRestored = useWhenBoardRestored();
   const settings = useSettings();
@@ -573,7 +599,7 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
 
   if (!hydrated)
     return (
-      <Text c="dimmed" size="sm" p="sm">
+      <Text c="dimmed" size="sm" p="sm" data-homarr-widget-client-only>
         {getWidgetName(item.kind, t)}
       </Text>
     );

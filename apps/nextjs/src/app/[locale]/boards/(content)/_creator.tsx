@@ -137,6 +137,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           <>
             <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
             <HydrationBoundary state={queries}>
+              <CachedWidgetRefresh queryHashes={queries.queries.map((query) => query.queryHash)} />
               <IntegrationProvider integrations={integrations}>
                 <ClientBoard />
               </IntegrationProvider>

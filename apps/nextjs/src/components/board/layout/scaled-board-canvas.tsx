@@ -98,13 +98,27 @@ const installBoardCanvasFitting = (
       adjustStyle(section, "--board-container-inset", renderedScale, (source) => source / scale, "px");
     }
   };
-  const mutations = new MutationObserver(check);
-  const measurements = new ResizeObserver(check);
+  let frame = 0;
+  const scheduleCheck = () => {
+    if (frame !== 0) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      check();
+    });
+  };
+  const mutations = new MutationObserver(scheduleCheck);
+  const measurements = new ResizeObserver(scheduleCheck);
   const stop = () => {
+    cancelAnimationFrame(frame);
     mutations.disconnect();
     measurements.disconnect();
   };
-  mutations.observe(document.documentElement, { attributes: true, childList: true, subtree: true });
+  mutations.observe(viewport, {
+    attributes: true,
+    attributeFilter: ["data-canvas-scale", "data-canvas-measured-width", "data-logical-width"],
+    childList: true,
+    subtree: true,
+  });
   measurements.observe(viewport);
   check();
 };

@@ -1,21 +1,13 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import {
-  createContext,
-  startTransition,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { createQueryHydrationSnapshot } from "./query-hydration";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
 import { updateBoardName } from "./updater";
@@ -34,7 +26,11 @@ const BoardContext = createContext<BoardContextValue | null>(null);
 type BoardRestorationResult = "restored" | "cancelled";
 
 interface BoardRestoration {
-  isRestoring: boolean;
+  prepareQuerySnapshot: () => void;
+  createQueryClient: () => ReturnType<ReturnType<typeof createQueryHydrationSnapshot>["createClient"]> | undefined;
+  subscribe: (listener: () => void) => () => void;
+  getIsRestoring: () => boolean;
+  getInitialIsRestoring: () => boolean;
   register: (id: string) => () => void;
   settle: (id: string) => void;
   seal: (host: object) => () => void;
@@ -44,7 +40,11 @@ interface BoardRestoration {
 const restored = Promise.resolve<BoardRestorationResult>("restored");
 const noop = () => undefined;
 const BoardRestorationContext = createContext<BoardRestoration>({
-  isRestoring: false,
+  prepareQuerySnapshot: noop,
+  createQueryClient: () => undefined,
+  subscribe: () => noop,
+  getIsRestoring: () => false,
+  getInitialIsRestoring: () => false,
   register: () => noop,
   settle: noop,
   seal: () => noop,
@@ -53,11 +53,18 @@ const BoardRestorationContext = createContext<BoardRestoration>({
 
 export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWithChildren<{ prepared: boolean }>) => {
   const pathname = usePathname();
-  const [isRestoring, setIsRestoring] = useState(prepared);
+  const queryClient = useQueryClient();
   const [restoration] = useState(() => {
     let phase: "pending" | "committing" | BoardRestorationResult = "restored";
     if (prepared) phase = "pending";
     let resumed = !prepared;
+    let querySnapshot: ReturnType<typeof createQueryHydrationSnapshot> | undefined;
+    let restoring = prepared;
+    const listeners = new Set<() => void>();
+    const finishRestoring = () => {
+      restoring = false;
+      for (const listener of listeners) listener();
+    };
     const pending = new Map<string, object>();
     const settled = new Set<string>();
     let host: object | undefined;
@@ -75,14 +82,46 @@ export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWi
       pending.clear();
       settled.clear();
       resolveRestored("cancelled");
-      if (update) startTransition(() => setIsRestoring(false));
+      if (update) {
+        finishRestoring();
+        queueMicrotask(() => {
+          resumed = true;
+        });
+      }
     };
     const check = () => {
       if (phase !== "pending" || !host || pending.size !== 0) return;
       phase = "committing";
-      startTransition(() => setIsRestoring(false));
+      finishRestoring();
+      // Layout effects have now attached every initial visible Widget. Complete
+      // after this commit without waiting on unrelated offscreen transitions.
+      queueMicrotask(() => {
+        if (phase !== "committing") return;
+        resumed = true;
+        phase = "restored";
+        pending.clear();
+        settled.clear();
+        resolveRestored("restored");
+      });
+    };
+    const prepareQuerySnapshot = () => {
+      if (!prepared || phase === "cancelled") return undefined;
+      querySnapshot ??= createQueryHydrationSnapshot(queryClient);
+      return querySnapshot;
     };
     return {
+      prepareQuerySnapshot: () => {
+        prepareQuerySnapshot();
+      },
+      createQueryClient: () => prepareQuerySnapshot()?.createClient(),
+      subscribe: (listener: () => void) => {
+        listeners.add(listener);
+        return () => {
+          listeners.delete(listener);
+        };
+      },
+      getIsRestoring: () => restoring,
+      getInitialIsRestoring: () => prepared,
       whenRestored: () => {
         if (resumed) return restored;
         return completion;
@@ -122,17 +161,10 @@ export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWi
         providerGeneration = token;
         return () =>
           queueMicrotask(() => {
-            if (providerGeneration === token) cancel(false);
+            if (providerGeneration !== token) return;
+            cancel(false);
+            querySnapshot?.dispose();
           });
-      },
-      commit: () => {
-        if (phase === "cancelled") resumed = true;
-        if (phase !== "committing") return;
-        resumed = true;
-        phase = "restored";
-        pending.clear();
-        settled.clear();
-        resolveRestored("restored");
       },
       navigate: (path: string | null) => {
         if (initialPath !== undefined && initialPath !== path) cancel();
@@ -142,17 +174,25 @@ export const PreparedBoardRestorationProvider = ({ prepared, children }: PropsWi
   });
   useEffect(() => restoration.mount(), [restoration]);
   useEffect(() => restoration.navigate(pathname), [pathname, restoration]);
-  useEffect(() => {
-    if (!isRestoring) restoration.commit();
-  }, [isRestoring, restoration]);
-  const value = useMemo(() => ({ ...restoration, isRestoring }), [isRestoring, restoration]);
-  return <BoardRestorationContext.Provider value={value}>{children}</BoardRestorationContext.Provider>;
+  return <BoardRestorationContext.Provider value={restoration}>{children}</BoardRestorationContext.Provider>;
 };
 
-export const useBoardRestoration = () => useContext(BoardRestorationContext);
+// Keep lifecycle registration independent of refresh state: changing a Context
+// value would wake every dehydrated Suspense boundary, including offscreen Widgets.
+export const useBoardRestorationLifecycle = () => useContext(BoardRestorationContext);
+
+export const useBoardRestoration = () => {
+  const restoration = useBoardRestorationLifecycle();
+  const isRestoring = useSyncExternalStore(
+    restoration.subscribe,
+    restoration.getIsRestoring,
+    restoration.getInitialIsRestoring,
+  );
+  return { ...restoration, isRestoring };
+};
 
 export const useWhenBoardRestored = () => {
-  const { whenRestored } = useBoardRestoration();
+  const { whenRestored } = useBoardRestorationLifecycle();
   const [lifetime] = useState(() => {
     let resolveCancelled: (result: BoardRestorationResult) => void = noop;
     const cancellation = new Promise<BoardRestorationResult>((resolve) => {
