@@ -29,6 +29,7 @@ import {
 import type { BoardPreparationSpec } from "./store";
 
 const logger = createLogger({ module: "boardPreparation" });
+const captureSessionPrefix = "board-preparation-capture:";
 
 const resolveViewerAsync = async (
   spec: Pick<BoardPreparationSpec, "viewerId" | "sessionExpires">,
@@ -38,7 +39,11 @@ const resolveViewerAsync = async (
     throw new Error("Prepared viewer has no current session lifetime");
   }
   const activeSession = await db.query.sessions.findFirst({
-    where: and(eq(sessions.userId, spec.viewerId), eq(sessions.expires, new Date(spec.sessionExpires))),
+    where: and(
+      eq(sessions.userId, spec.viewerId),
+      eq(sessions.expires, new Date(spec.sessionExpires)),
+      notLike(sessions.sessionToken, `${captureSessionPrefix}%`),
+    ),
     columns: { userId: true },
   });
   if (!activeSession) throw new Error("Prepared viewer session has ended or changed");
@@ -55,7 +60,6 @@ const desktopUserAgent =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36";
 const mobileUserAgent =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1";
-const captureSessionPrefix = "board-preparation-capture:";
 
 const loadSpecContextAsync = async (spec: BoardPreparationSpec, session: Session | null) => {
   let name: string | undefined;
