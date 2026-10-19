@@ -45,6 +45,8 @@ export class ThingportIntegration extends Integration implements ISearchableInte
     // The health route is public, so only an authenticated route proves the API token works.
     const response = await input.fetchAsync(this.url("/api/dashboard/summary"), {
       headers: this.getAuthHeaders(),
+      signal: AbortSignal.timeout(30_000),
+      redirect: "error",
     });
 
     if (!response.ok) {
@@ -54,8 +56,10 @@ export class ThingportIntegration extends Integration implements ISearchableInte
     return { success: true };
   }
 
-  public async getLibraryStatsAsync(): Promise<ThingportLibraryStats> {
-    const summary = thingportSummarySchema.parse(await this.fetchJsonAsync("/api/dashboard/summary"));
+  public async getLibraryStatsAsync(signal = AbortSignal.timeout(30_000)): Promise<ThingportLibraryStats> {
+    const summary = thingportSummarySchema.parse(
+      await this.fetchJsonAsync("/api/dashboard/summary", undefined, signal),
+    );
     // Thingport has no category or author index page, so those open the dashboard, as its own count cards do.
     const dashboard = this.externalUrl("/").toString();
 
@@ -73,11 +77,15 @@ export class ThingportIntegration extends Integration implements ISearchableInte
     };
   }
 
-  public async getModelsAsync(list: ThingportModelList, limit: number): Promise<ThingportModel[]> {
+  public async getModelsAsync(
+    list: ThingportModelList,
+    limit: number,
+    signal = AbortSignal.timeout(30_000),
+  ): Promise<ThingportModel[]> {
     const request = modelListRequests[list](limit);
     const models = thingportModelSchema
       .array()
-      .parse(await this.fetchJsonAsync(request.path, request.query))
+      .parse(await this.fetchJsonAsync(request.path, request.query, signal))
       .slice(0, limit);
 
     // Thumbnails need the API token, which must never reach the browser, so they go through the image proxy.
@@ -96,8 +104,13 @@ export class ThingportIntegration extends Integration implements ISearchableInte
   }
 
   /** Thingport picks one model a day; `date` is the viewer's local day, so it changes at their midnight. */
-  public async getFeaturedModelAsync(date: string): Promise<ThingportFeaturedModel | null> {
-    const { print } = thingportFeaturedSchema.parse(await this.fetchJsonAsync("/api/dashboard/featured", { date }));
+  public async getFeaturedModelAsync(
+    date: string,
+    signal = AbortSignal.timeout(30_000),
+  ): Promise<ThingportFeaturedModel | null> {
+    const { print } = thingportFeaturedSchema.parse(
+      await this.fetchJsonAsync("/api/dashboard/featured", { date }, signal),
+    );
     const plate = print?.plates[0];
     if (!print || !plate) return null;
 
@@ -129,9 +142,14 @@ export class ThingportIntegration extends Integration implements ISearchableInte
   }
 
   /** `from`/`to` are inclusive YYYY-MM-DD days, counted in the `timeZone` the board is viewed in. */
-  public async getActivityAsync(from: string, to: string, timeZone: string): Promise<ThingportActivity> {
+  public async getActivityAsync(
+    from: string,
+    to: string,
+    timeZone: string,
+    signal = AbortSignal.timeout(30_000),
+  ): Promise<ThingportActivity> {
     const activity = thingportActivitySchema.parse(
-      await this.fetchJsonAsync("/api/activity", { from, to, tz: timeZone }),
+      await this.fetchJsonAsync("/api/activity", { from, to, tz: timeZone }, signal),
     );
 
     return {
@@ -150,13 +168,13 @@ export class ThingportIntegration extends Integration implements ISearchableInte
   }
 
   /** Models first, as Thingport ranks them, then matching collections and tags. */
-  public async searchAsync(query: string): Promise<ThingportSearchResult[]> {
+  public async searchAsync(query: string, signal = AbortSignal.timeout(30_000)): Promise<ThingportSearchResult[]> {
     // The search router hands over the query already passed through encodeURI; the URL builder encodes it again.
     const q = decodeURI(query).trim();
     if (!q) return [];
 
     const result = thingportSearchSchema.parse(
-      await this.fetchJsonAsync("/api/search", { q, limit: String(SEARCH_MODEL_LIMIT) }),
+      await this.fetchJsonAsync("/api/search", { q, limit: String(SEARCH_MODEL_LIMIT) }, signal),
     );
 
     const thumbnailSources = result.models.flatMap((model) => (model.thumb_url ? [this.apiUrl(model.thumb_url)] : []));
@@ -184,16 +202,34 @@ export class ThingportIntegration extends Integration implements ISearchableInte
   }
 
   private apiUrl(relativePath: string): string {
-    return this.url(`/api${relativePath}` as `/${string}`).toString();
+    const target = this.url(`/api${relativePath}` as `/${string}`);
+    const apiBase = this.url("/api");
+    if (
+      !relativePath.startsWith("/") ||
+      relativePath.startsWith("//") ||
+      relativePath.includes("\\") ||
+      target.hash ||
+      target.origin !== apiBase.origin ||
+      !target.pathname.startsWith(`${apiBase.pathname}/`)
+    ) {
+      throw new Error("Thingport media must stay within the integration API path");
+    }
+    return target.toString();
   }
 
   private modelHref(id: string): string {
     return this.externalUrl(`/models/${encodeURIComponent(id)}`).toString();
   }
 
-  private async fetchJsonAsync(path: `/${string}`, queryParams?: Record<string, string>): Promise<unknown> {
+  private async fetchJsonAsync(
+    path: `/${string}`,
+    queryParams?: Record<string, string>,
+    signal?: AbortSignal,
+  ): Promise<unknown> {
     const response = await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
       headers: this.getAuthHeaders(),
+      signal,
+      redirect: "error",
     });
     if (!response.ok) {
       throw new ResponseError(response);

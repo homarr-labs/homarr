@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import {
   Center,
   Image,
@@ -26,7 +27,10 @@ import { useWidgetRuntimeQueries } from "../../runtime-hooks";
 import { getRenderedSize } from "../common/rendered-size";
 import { canShowThingportHeader, ThingportWidgetHeader } from "../common/widget-header";
 import classes from "./component.module.css";
-import { ThingportModelViewer } from "./model-viewer";
+
+const ThingportModelViewer = dynamic(() => import("./model-viewer").then((module) => module.ThingportModelViewer), {
+  ssr: false,
+});
 
 const pad = (value: number) => String(value).padStart(2, "0");
 const toLocalDate = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;

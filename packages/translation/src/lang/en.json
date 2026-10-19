@@ -3967,9 +3967,6 @@
       "description": "Totals for your Thingport 3D model library",
       "title": "Library",
       "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
         "showModels": {
           "label": "Show models"
         },
@@ -3981,9 +3978,6 @@
         },
         "showAuthors": {
           "label": "Show authors"
-        },
-        "openInNewTab": {
-          "label": "Open links in new tab"
         }
       },
       "models": "Models",
@@ -3995,17 +3989,11 @@
       "name": "Thingport Featured Model",
       "description": "One model from your Thingport library each day, spinning in 3D",
       "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
         "autoRotate": {
           "label": "Spin the model"
         },
         "showDetails": {
           "label": "Show model details"
-        },
-        "openInNewTab": {
-          "label": "Open model in new tab"
         }
       },
       "title": "Featured model",
@@ -4020,9 +4008,6 @@
       "description": "A year of imports, downloads and slicer opens from your Thingport profile",
       "title": "Activity",
       "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
         "weekStart": {
           "label": "First day of the week",
           "option": {
@@ -4057,9 +4042,6 @@
       "description": "Recently added, most viewed and most printed models from Thingport",
       "title": "Models",
       "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
         "defaultTab": {
           "label": "Default tab"
         },
@@ -4068,9 +4050,6 @@
         },
         "showThumbnails": {
           "label": "Show thumbnails"
-        },
-        "openInNewTab": {
-          "label": "Open models in new tab"
         }
       },
       "tab": {

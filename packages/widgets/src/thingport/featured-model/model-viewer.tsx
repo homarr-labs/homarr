@@ -25,14 +25,48 @@ interface ModelViewerProps {
   onError: () => void;
 }
 
+function disposeMaterials(materials: Iterable<THREE.Material>) {
+  const textures = new Set<THREE.Texture>();
+  for (const material of materials) {
+    for (const value of Object.values(material)) {
+      if (value instanceof THREE.Texture) textures.add(value);
+    }
+    material.dispose();
+  }
+  for (const texture of textures) {
+    const image: unknown = texture.source.data;
+    if (typeof ImageBitmap !== "undefined" && image instanceof ImageBitmap) image.close();
+    texture.dispose();
+  }
+}
+
+function disposeObject(object: THREE.Object3D) {
+  const materials = new Set<THREE.Material>();
+  object.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) return;
+    child.geometry.dispose();
+    for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
+      materials.add(material);
+    }
+  });
+  disposeMaterials(materials);
+}
+
 async function loadObjectAsync(url: string, format: ThingportMeshFormat, signal: AbortSignal) {
   const response = await fetch(url, { signal });
   if (!response.ok) throw new Error(`Thingport model request failed with ${response.status}`);
   const buffer = await response.arrayBuffer();
 
   if (format === "glb") {
+    const manager = new THREE.LoadingManager();
+    // The preview is self-contained. Never let a model fetch arbitrary browser URLs.
+    manager.setURLModifier((resourceUrl) => {
+      signal.throwIfAborted();
+      if (resourceUrl.startsWith("blob:") || resourceUrl.startsWith("data:")) return resourceUrl;
+      throw new Error("Thingport previews cannot load external resources");
+    });
     // The server's preview is already Y-up.
-    const gltf = await new GLTFLoader().parseAsync(buffer, "");
+    const gltf = await new GLTFLoader(manager).parseAsync(buffer, "");
     return gltf.scene;
   }
 
@@ -76,7 +110,9 @@ export function ThingportModelViewer({ url, format, color, autoRotate, onOpen, o
 
     const scene = new THREE.Scene();
     const pmrem = new THREE.PMREMGenerator(renderer);
-    const environment = pmrem.fromScene(new RoomEnvironment(), 0.04);
+    const room = new RoomEnvironment();
+    const environment = pmrem.fromScene(room, 0.04);
+    room.dispose();
     scene.environment = environment.texture;
     const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
     scene.add(keyLight);
@@ -142,14 +178,19 @@ export function ThingportModelViewer({ url, format, color, autoRotate, onOpen, o
 
     void loadObjectAsync(url, format, abortController.signal)
       .then((object) => {
-        if (abortController.signal.aborted) return;
+        if (abortController.signal.aborted) {
+          disposeObject(object);
+          return;
+        }
         // One material in the primary colour, as Thingport's own featured card draws it.
+        const replacedMaterials = new Set<THREE.Material>();
         object.traverse((child) => {
           if (!(child instanceof THREE.Mesh)) return;
           const previous: THREE.Material | THREE.Material[] = child.material;
-          for (const replaced of Array.isArray(previous) ? previous : [previous]) replaced.dispose();
+          for (const replaced of Array.isArray(previous) ? previous : [previous]) replacedMaterials.add(replaced);
           child.material = material;
         });
+        disposeMaterials(replacedMaterials);
         const box = new THREE.Box3().setFromObject(object);
         object.position.sub(box.getCenter(new THREE.Vector3()));
         radius = Math.max(box.getSize(new THREE.Vector3()).length() / 2, 0.001);

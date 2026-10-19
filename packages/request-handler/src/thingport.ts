@@ -15,9 +15,9 @@ export const thingportLibraryStatsRequestHandler = createIntegrationRequestHandl
   Record<string, never>
 >({
   cacheNamespace: "thingport:library-stats",
-  async requestAsync(integration) {
+  async requestAsync(integration, _input, signal) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getLibraryStatsAsync();
+    return await integrationInstance.getLibraryStatsAsync(signal);
   },
 });
 
@@ -27,9 +27,9 @@ export const thingportModelsRequestHandler = createIntegrationRequestHandler<
   { list: ThingportModelList; limit: number }
 >({
   cacheNamespace: "thingport:models",
-  async requestAsync(integration, input) {
+  async requestAsync(integration, input, signal) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getModelsAsync(input.list, input.limit);
+    return await integrationInstance.getModelsAsync(input.list, input.limit, signal);
   },
 });
 
@@ -41,9 +41,9 @@ export const thingportFeaturedModelRequestHandler = createIntegrationRequestHand
   cacheNamespace: "thingport:featured-model",
   // The pick only changes with the date, which is part of the cache key.
   cacheTtlMs: 60 * 60 * 1000,
-  async requestAsync(integration, input) {
+  async requestAsync(integration, input, signal) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getFeaturedModelAsync(input.date);
+    return await integrationInstance.getFeaturedModelAsync(input.date, signal);
   },
 });
 
@@ -54,8 +54,8 @@ export const thingportActivityRequestHandler = createIntegrationRequestHandler<
 >({
   cacheNamespace: "thingport:activity",
   cacheTtlMs: 5 * 60 * 1000,
-  async requestAsync(integration, input) {
+  async requestAsync(integration, input, signal) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getActivityAsync(input.from, input.to, input.timeZone);
+    return await integrationInstance.getActivityAsync(input.from, input.to, input.timeZone, signal);
   },
 });
