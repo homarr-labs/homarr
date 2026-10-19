@@ -3,11 +3,13 @@ import { TRPCError } from "@trpc/server";
 import {
   getCustomWidgetRequiredSecretKinds,
   hasSameCustomWidgetSourceAuthentication,
+  customWidgetSecretInputSchema,
+  isCustomWidgetHeaderSecretKind,
 } from "@homarr/custom-widgets/core";
-import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
+import type { CustomWidgetSource, CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
 
-export function requiredSecretKinds(authType: string) {
-  return getCustomWidgetRequiredSecretKinds(authType as Parameters<typeof getCustomWidgetRequiredSecretKinds>[0]);
+export function requiredSecretKinds(auth: Parameters<typeof getCustomWidgetRequiredSecretKinds>[0]) {
+  return getCustomWidgetRequiredSecretKinds(auth);
 }
 
 /**
@@ -25,13 +27,18 @@ export function hasSameSecretBinding(left: CustomWidgetSource, right: CustomWidg
 }
 
 export function assertSecretSources(
-  sources: Record<string, { auth?: string | { type: string }; type?: string }>,
-  secrets: readonly { sourceId: string; kind: "apiKey" | "username" | "password" }[],
+  sources: Record<string, CustomWidgetSource>,
+  secrets: readonly { sourceId: string; kind: CustomWidgetSecretKind; value?: string }[],
 ) {
+  const headerIdentities = new Set<string>();
   const invalid = secrets.find((secret) => {
     const source = sources[secret.sourceId];
-    const authType = typeof source?.auth === "string" ? source.auth : source?.auth?.type;
-    return !source || !authType || !new Set<string>(requiredSecretKinds(authType)).has(secret.kind);
+    if (!source || !new Set<string>(requiredSecretKinds(source.auth)).has(secret.kind)) return true;
+    if (!isCustomWidgetHeaderSecretKind(secret.kind)) return false;
+    const identity = `${secret.sourceId}:${secret.kind}`;
+    if (headerIdentities.has(identity) || !customWidgetSecretInputSchema.safeParse(secret).success) return true;
+    headerIdentities.add(identity);
+    return false;
   });
   if (invalid) {
     throw new TRPCError({

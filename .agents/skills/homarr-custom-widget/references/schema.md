@@ -42,7 +42,9 @@ Key `default` is the required source ID, not a source property. Fields: `name?`,
 
 Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit `integrationId`.
 
-Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, or `apiKeyQuery`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, `apiKeyQuery`, or `headers`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+
+For multiple secret headers, use `auth: {"type":"headers","headers":[{"name":"X-Api-Key","slot":"key"},{"name":"X-Api-Secret","slot":"secret"}]}`. Up to 8 HTTP-token names are allowed, unique ignoring case, with distinct stable slot IDs. Homarr configures each slot separately and stores its value encrypted; the manifest contains only names and slots. Header name or slot changes require credential configuration again. Use `bearer` for Authorization; routing, proxy, forwarding, cookie and hop-by-hop headers remain reserved.
 
 JSON responses become their decoded value. Responses with `application/x-ndjson` become an array with one decoded object per non-empty line.
 

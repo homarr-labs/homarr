@@ -5,30 +5,9 @@ import type { ConnectionOptions } from "node:tls";
 import { Agent } from "undici";
 
 import type { CustomJsxNetworkScope } from "../core";
+import { isReservedCustomWidgetRequestHeader } from "../core/request-header-policy";
 import { CustomWidgetDomainError } from "./errors";
 import { MAX_RESPONSE_BODY_BYTES } from "./response";
-
-const RESERVED_HEADERS = new Set([
-  "authorization",
-  "connection",
-  "content-length",
-  "cookie",
-  "expect",
-  "forwarded",
-  "host",
-  "keep-alive",
-  "proxy-authenticate",
-  "proxy-authorization",
-  "te",
-  "trailer",
-  "transfer-encoding",
-  "upgrade",
-  "via",
-  "x-forwarded-for",
-  "x-forwarded-host",
-  "x-forwarded-port",
-  "x-forwarded-proto",
-]);
 
 const blocked = new BlockList();
 for (const [address, prefix] of [
@@ -180,13 +159,7 @@ export function resolveSameOriginTarget(baseValue: string, targetValue?: string 
 
 export function assertSafeStaticHeaders(headers: Record<string, string> | undefined): void {
   for (const name of Object.keys(headers ?? {})) {
-    const value = name.trim().toLowerCase();
-    if (
-      RESERVED_HEADERS.has(value) ||
-      value.startsWith("proxy-") ||
-      value.startsWith("sec-") ||
-      value.startsWith("x-forwarded-")
-    ) {
+    if (isReservedCustomWidgetRequestHeader(name)) {
       throw new CustomWidgetDomainError({ code: "BAD_REQUEST", message: `Header '${name}' is reserved` });
     }
   }

@@ -1,7 +1,7 @@
 import { getCustomWidgetSourceAuthType } from "./request-schema";
-import type { CustomJsxNetworkScope, CustomWidgetSource } from "./request-schema";
+import type { CustomJsxNetworkScope, CustomWidgetSource, CustomWidgetAuthenticationHeader } from "./request-schema";
 import { getCustomWidgetSourceUrlIssue } from "./request-schema";
-import type { CustomWidgetSecretKind } from "./schema-types";
+import type { CustomWidgetAuthType, CustomWidgetSecretKind } from "./schema-types";
 import { getCustomWidgetSecretRequirements } from "./secret-requirements";
 
 export interface CustomWidgetConfiguredSecret {
@@ -19,7 +19,7 @@ export interface CustomWidgetSourceSetup {
   networkScope: CustomJsxNetworkScope;
   integrationKind?: string;
   integrationId?: string;
-  authType: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
+  authType: CustomWidgetAuthType;
   credentialFields: Array<{
     kind: CustomWidgetSecretKind;
     destination?: string;
@@ -56,7 +56,20 @@ export function hasSameCustomWidgetSourceAuthentication(left: CustomWidgetSource
     );
   }
   if (typeof left.auth === "string" || typeof right.auth === "string") return left.auth === right.auth;
+  if (left.auth.type === "headers" || right.auth.type === "headers") {
+    if (left.auth.type !== "headers" || right.auth.type !== "headers") return false;
+    return (
+      JSON.stringify(canonicalAuthHeaders(left.auth.headers)) ===
+      JSON.stringify(canonicalAuthHeaders(right.auth.headers))
+    );
+  }
   return left.auth.type === right.auth.type && left.auth.name === right.auth.name;
+}
+
+function canonicalAuthHeaders(headers: CustomWidgetAuthenticationHeader[]) {
+  return headers
+    .map(({ name, slot }) => ({ slot, name }))
+    .toSorted((leftHeader, rightHeader) => leftHeader.slot.localeCompare(rightHeader.slot));
 }
 
 export function getCustomWidgetSourceSetups(

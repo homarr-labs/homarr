@@ -249,7 +249,7 @@ function buildHeaders(input: CustomWidgetHttpRequest, url: URL, body: string | u
   if (body === undefined) headers.delete("Content-Type");
   if (input.auth) {
     if (input.auth.type === "apiKeyHeader") assertSafeStaticHeaders({ [input.auth.headerName ?? "X-API-Key"]: "" });
-    applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName);
+    applyAuth(headers, url, input.auth.type, input.auth.secrets, input.auth.headerName, input.auth.headerSlots);
     for (const [name, value] of Object.entries(input.auth.headers ?? {})) headers.set(name, value);
     for (const [name, value] of Object.entries(input.auth.query ?? {})) url.searchParams.set(name, value);
   }

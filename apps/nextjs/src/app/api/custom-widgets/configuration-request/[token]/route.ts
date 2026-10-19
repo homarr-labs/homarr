@@ -11,7 +11,11 @@ import {
   releaseCustomWidgetConfigurationRequest,
   retryCustomWidgetConfigurationRequest,
 } from "@homarr/api/custom-widget-configuration";
-import { customWidgetSourceSchema, isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
+import {
+  customWidgetSourceSchema,
+  customWidgetSecretInputSchema,
+  isCustomWidgetSourceUrlPlaceholder,
+} from "@homarr/custom-widgets/core";
 import { invalidateCustomWidgetResponseCache } from "@homarr/custom-widgets/server";
 import { db } from "@homarr/db";
 
@@ -99,9 +103,9 @@ const completeConfigurationRequest = async (
   }
   const secrets = pending.kinds.flatMap((kind) => {
     const value = body.secrets[kind];
-    return typeof value === "string" && value.length > 0 && value.length <= 8192
-      ? [{ sourceId: pending.sourceId, kind, value }]
-      : [];
+    const result = customWidgetSecretInputSchema.safeParse({ sourceId: pending.sourceId, kind, value });
+    if (!result.success) return [];
+    return [result.data];
   });
   if (secrets.length !== pending.kinds.length) {
     return NextResponse.json({ error: "Enter every requested credential field." }, { status: 400 });

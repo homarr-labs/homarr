@@ -4,11 +4,12 @@ import { IconCheck, IconKey, IconServer, IconX } from "@tabler/icons-react";
 
 import type {
   CustomWidgetSecretKind,
+  CustomWidgetLegacySecretKind,
   CustomJsxNetworkScope,
   CustomWidgetSourceSetup,
   CustomWidgetSourceUrlIssue,
 } from "../core";
-import { getCustomWidgetSourceSetupIssue } from "../core";
+import { getCustomWidgetSourceSetupIssue, isCustomWidgetHeaderSecretKind } from "../core";
 
 export interface CustomWidgetSourceSetupValue {
   baseUrl: string;
@@ -31,7 +32,7 @@ export interface CustomWidgetSourceSetupMessages {
   credentialsMissing: string;
   credentialsOptional: string;
   configured: string;
-  secret(kind: CustomWidgetSecretKind): string;
+  secret(kind: CustomWidgetLegacySecretKind): string;
   urlError(issue: CustomWidgetSourceUrlIssue): string;
 }
 
@@ -180,10 +181,13 @@ export function CustomWidgetSourceSetupPanel({
             )}
             {setup.credentialFields.map((field) => {
               const Input = field.kind === "username" ? TextInput : PasswordInput;
+              let label: string;
+              if (isCustomWidgetHeaderSecretKind(field.kind)) label = field.destination ?? field.kind.slice(7);
+              else label = messages.secret(field.kind);
               return (
                 <Input
                   key={field.kind}
-                  label={messages.secret(field.kind)}
+                  label={label}
                   description={field.destination}
                   value={value.secrets[field.kind] ?? ""}
                   placeholder={field.configured ? messages.configured : undefined}
