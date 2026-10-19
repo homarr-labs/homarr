@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import { getDefaultZIndex, Modal } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
 
@@ -33,8 +33,6 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
     modals: [],
     current: null,
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
 
   const closeModal = useCallback(
     (id: string, canceled?: boolean) => {
@@ -68,9 +66,10 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
   const handleCloseModal = useCallback(() => state.current && closeModal(state.current.id), [closeModal, state]);
 
   const activeModals = state.modals.filter((modal) => modal.id === state.current?.id || modal.props.keepMounted);
+  const contextValue = useMemo(() => ({ openModalInner, closeModal }), [openModalInner, closeModal]);
 
   return (
-    <ModalContext.Provider value={{ openModalInner, closeModal }}>
+    <ModalContext.Provider value={contextValue}>
       {activeModals.map((modal) => (
         <ActiveModal key={modal.id} modal={modal} state={state} handleCloseModal={handleCloseModal} />
       ))}

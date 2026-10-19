@@ -247,6 +247,82 @@
         "title": "Log in op je account",
         "subtitle": "Welkom terug! Voer je inloggegevens in"
       },
+      "mcpConsent": {
+        "title": "Klanttoegang herzien",
+        "description": "Controleer de toegang van deze klant voordat u verbindt.",
+        "viewingHint": "Deze pagina bekijken geeft geen toegang.",
+        "identityTitle": "Account en klant",
+        "loading": "Laden van het toegangsverzoek",
+        "allow": "Toegang toestaan",
+        "deny": "Toegang weigeren",
+        "decisionHint": "Sta alleen toegang toe als je deze client en callback vertrouwt.",
+        "requestExpires": "Verzoek verloopt (UTC):",
+        "details": "Technische details",
+        "returnHome": "Terug naar Homarr",
+        "reload": "Herlaad toestemming pagina",
+        "account": {
+          "name": "Ingelogd als",
+          "id": "Gebruiker ID",
+          "nameNotRecorded": "Gebruikersnaam niet opgenomen"
+        },
+        "client": {
+          "name": "Klant",
+          "nameNotSupplied": "Klantnaam niet opgegeven",
+          "id": "Klant ID",
+          "callbackHost": "Terugbeller host",
+          "callbackUrl": "Volledige callback URL",
+          "hostUnavailable": "Terugbelnummer host niet beschikbaar",
+          "unverifiedHint": "Clientnamen worden zelf gerapporteerd, niet geverifieerd door Homarr.",
+          "destinationHint": "Uw beslissing wordt teruggekeerd naar deze callback. Als u toegang geeft, kan de client de autorisatiecode uitwisselen voor een API-inloggegevens."
+        },
+        "access": {
+          "title": "Account toegang",
+          "description": "Gebruikt je huidige machtigingen, inclusief gedeelde bronnen.",
+          "details": "Bekijk machtigingen ({count})",
+          "noGlobalPermissions": "Gebruikt uw account en toegang tot gedeelde bronnen, zonder globale machtigingen."
+        },
+        "admin": {
+          "title": "Volledige administrator-toegang",
+          "description": "Kan Homarr en verbonden diensten beheren, inclusief destructieve acties."
+        },
+        "credential": {
+          "title": "Geldige scope en levensduur",
+          "breadth": "Werkt met Homarr HTTP API en MCP, ook buiten deze client.",
+          "lifetime": "Geen automatische vervaldatum. Afmelden betekent geen intrekking van de toegang.",
+          "manageConnections": "Intrekken in algemene instellingen"
+        },
+        "error": {
+          "freshStart": "Start een nieuw autorisatieverzoek van de client. Homarr zal u vragen de toegang opnieuw te bekijken.",
+          "unavailable": {
+            "title": "Toegangsverzoek niet beschikbaar",
+            "description": "Dit verzoek is verlopen, is reeds verwerkt of is niet meer beschikbaar. Het kan niet worden goedgekeurd vanaf deze pagina."
+          },
+          "invalid_browser": {
+            "title": "Toegangsaanvraag behoort tot een andere browser",
+            "description": "Deze browser kan de originele aanvraag niet verifiëren. Gebruik de browser waar u de autorisatie startte of start een nieuw verzoek van de client."
+          },
+          "session_changed": {
+            "title": "Uw sessie voor aanmelding is gewijzigd",
+            "description": "Dit verzoek is gekoppeld aan een andere gebruiker of inlogsessie. Het kan niet worden goedgekeurd met de huidige sessie."
+          },
+          "invalid_request": {
+            "title": "Toegangsverzoek kon niet worden geverifieerd",
+            "description": "Het verzoek is ongeldig, verlopen of niet langer verifieerbaar. Er is geen toegang verleend door deze poging."
+          },
+          "access_denied": {
+            "title": "Toegang is niet verleend",
+            "description": "De poging tot autorisatie is geweigerd. Er is geen toegang verleend door deze poging."
+          },
+          "server_error": {
+            "title": "Toegangsverzoek kon niet worden voltooid",
+            "description": "Homarr kon deze autorisatiepoging niet voltooien. Controleer uw OAuth verbindingen voordat u opnieuw begint."
+          },
+          "unknown": {
+            "title": "Toegangsverzoek niet beschikbaar",
+            "description": "Deze pagina kan het resultaat van de autorisatie niet bevestigen. Controleer uw OAuth verbindingen voordat u opnieuw begint."
+          }
+        }
+      },
       "invite": {
         "title": "Deelnemen aan Homarr",
         "titleWithAppName": "Deelnemen aan {appName}",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "Uptime-monitoring",
       "beszel": "Beszel",
       "systemMonitoring": "Systeem monitoring",
-      "security": "Beveiliging"
+      "security": "Beveiliging",
+      "serviceVersion": "Versie"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Pagina {page} van {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Navigatie in-/uitschakelen"
     },
     "here": "hier",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "Standaard tab"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Systeem dan cluster",
+          "clusterFirst": "Cluster dan systeem"
+        },
         "visibleClusterSections": {
           "label": "Zichtbare cluster secties"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Gekoppelde integraties"
+          },
           "identifier": {
             "label": "Identificator",
             "placeholder": "Naam of Eigenaar/naam"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "Uitgavepagina openen",
       "releaseDescription": "Uitgave beschrijving",
       "projectDescription": "Project beschrijving",
+      "runningVersions": "Lopende versies",
+      "upToDate": "Bijgewerkt tot",
+      "updateAvailable": "Update beschikbaar",
+      "unknownStatus": "Onbekend",
       "created": "Aangemaakt",
       "error": {
         "label": "Fout",
@@ -6171,15 +6263,6 @@
           "notice": "Om deze pagina te laten verdwijnen, vraag je de serverbeheerder om een home-bord in te stellen voor de server"
         }
       }
-    },
-    "snapshot": {
-      "take": "Neem momentopname van de status van het bord",
-      "description": "Download een aangepaste snapshot om aan een bugrapport toe te voegen en ons te helpen uw lay-out te reproduceren",
-      "downloaded": "Board snapshot gedownload",
-      "downloadedDescription": "Voeg de JSON en een schermafbeelding op dezelfde grootte van het scherm toe aan je bugrapport. De momentopname omvat lay-out, instellingen, aangepaste CSS-instellingen, widgetopties en geladen gegevens, met privétekst, URLs en aanmeldgegevens.",
-      "playground": "Open board playground",
-      "failed": "Kan momentopname van kaart niet maken",
-      "failedDescription": "De gegevens van het bord konden niet veilig worden geëxporteerd of de momentopname overschrijdt 10 MB."
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "Zoeken",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid",
+              "oauthConnections": {
+                "title": "OAuth verbindingen",
+                "description": "Deze cliënten hebben API-referenties voor uw account verkregen via OAuth. De inloggegevens werken met de HTTP-API van Homarr en MCP, verlopen niet automatisch, en blijven geldig na uitloggen.",
+                "revocationHint": "Het intrekken van een verbinding verwijdert de API-aanmelding. Om opnieuw verbinding te maken, start u opnieuw autorisatie van de client.",
+                "loading": "OAuth verbindingen laden",
+                "retry": "Verbindingen opnieuw laden",
+                "revoke": "Verbinding intrekken",
+                "confirmRevoke": "Bevestig intrekking",
+                "empty": {
+                  "title": "Geen opgenomen OAuth verbindingen",
+                  "description": "Nieuwe OAuth verbindingen verschijnen hier. Oudere inloggegevens zonder opgenomen clientgegevens hebben mogelijk een beheerder nodig om ze in API Keys in te trekken."
+                },
+                "loadError": {
+                  "title": "OAuth verbindingen konden niet worden geladen",
+                  "description": "Probeer de lijst opnieuw te laden. Dit trekt geen inloggegevens in."
+                },
+                "success": {
+                  "title": "Verbinding ingetrokken",
+                  "description": "De opgeslagen API-aanmeldgegevens zijn verwijderd. Maak opnieuw verbinding met de client om opnieuw toegang te verlenen."
+                },
+                "error": {
+                  "title": "Verbinding kon niet worden herroepen",
+                  "description": "De inloggegevens zijn mogelijk nog steeds actief. Probeer het opnieuw in te trekken."
+                }
+              },
               "onboardingTours": {
                 "title": "Onboarding-rondleidingen",
                 "description": "Reset de onboarding-rondleidingen om ze opnieuw te zien tijdens je volgende bezoek aan de beheerpagina of het dashboard.",
@@ -6933,7 +7041,8 @@
               "label": "Authenticatie",
               "title": "API-sleutels",
               "button": {
-                "createApiToken": "API-token aanmaken"
+                "createApiToken": "API-token aanmaken",
+                "confirmDeletion": "Bevestig verwijdering"
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Aangemaakt door",
+                  "source": "Integratie",
                   "actions": "Acties"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Handmatige of oudere API-sleutel",
+                "unnamedClient": "Klant naam niet opgenomen",
+                "clientNameHint": "Clientnamen zijn zelf gerapporteerd en niet geverifieerd.",
+                "details": "Details verbinding",
+                "credentialId": "Toegangsnummer",
+                "clientId": "Klant ID",
+                "callbackHost": "Terugbeller host",
+                "callbackUrl": "Volledige callback URL",
+                "issuedAt": "(UTC) uitgegeven",
+                "unknown": "Niet opgenomen"
+              },
+              "empty": {
+                "title": "Geen API-sleutels om weer te geven",
+                "description": "Maak een API-sleutel of pas de tabelfilters aan om bestaande sleutels te vinden."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API-sleutel kon niet worden gemaakt",
+                  "description": "Er is geen nieuw referentiebedrag ontvangen. Controleer de sleutellijst voordat u het opnieuw probeert."
+                },
+                "deleteError": {
+                  "title": "API-sleutel kon niet worden verwijderd",
+                  "description": "De inloggegevens zijn mogelijk nog actief. Probeer het opnieuw te verwijderen."
+                },
+                "deleteSuccess": {
+                  "title": "API-sleutel verwijderd",
+                  "description": "De opgeslagen API-aanmeldgegevens zijn verwijderd."
+                },
+                "refreshError": {
+                  "title": "API-sleutel verwijderd, maar de lijst kon niet worden vernieuwd",
+                  "description": "Herlaad deze pagina om de huidige API-sleutels te bekijken."
                 }
               }
             },
@@ -6966,9 +7111,9 @@
                   "description": ""
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (browser login en toestemming)",
+                  "description": "Start autorisatie in uw OAuth client en log in bij Homarr indien nodig. Controleer de klant, de callback-bestemming en de accounttoegang, en kies daarna alleen toegang toestaan als u de klant vertrouwt. Een API inloggegevens worden alleen na goedkeuring en een succesvolle uitwisseling van code gemaakt.",
+                  "hint": "Opgenomen OAuth verbindingen intrekken in uw eigen Algemene instellingen. Beheerders kunnen ook inloggegevens intrekken in het tabblad Verificatie. Deze inloggegevens werken met Homarr HTTP API en MCP, verlopen niet automatisch, en blijven geldig na uitloggen."
                 },
                 "permissions": ""
               },

@@ -39,6 +39,8 @@ Roles are fetched from LDAP groups. Groups with the same name of Homarr will be 
 
 LDAP users whose distinguished names contain non-ASCII characters can sign in and have their groups resolved.
 
+If your directory allows anonymous searches, omit or leave empty both `AUTH_LDAP_BIND_DN` and `AUTH_LDAP_BIND_PASSWORD`. Users still sign in with their own LDAP passwords. For authenticated directory searches, set both bind variables together.
+
 <details>
   <summary>
     Example Setup
@@ -47,7 +49,7 @@ LDAP users whose distinguished names contain non-ASCII characters can sign in an
 
     In this setup we are using [lldap](https://github.com/lldap/lldap). Install your server using docker or [as a service](https://github.com/lldap/lldap/blob/main/example_configs/lldap.service).
 
-    Minimal configuration requires 4 env variables, LDAP URI, base, user and password for querying data.
+    This lldap example uses four LDAP variables: the URI, base, service bind DN and service bind password.
 
     There's more variables, but all have defaults corresponding to lldap defaults. These might need to be changed if you have different LDAP provider.
     ```
@@ -99,8 +101,8 @@ LDAP users whose distinguished names contain non-ASCII characters can sign in an
 | --------------------------------------- | --------------------------------------------------------- | ------------------ |
 | `AUTH_LDAP_URI`                         | URI of your LDAP server                                   | ---                |
 | `AUTH_LDAP_BASE`                        | Base dn of your LDAP server                               | ---                |
-| `AUTH_LDAP_BIND_DN`                     | User used for finding users and groups                    | ---                |
-| `AUTH_LDAP_BIND_PASSWORD`               | Password for bind user                                    | ---                |
+| `AUTH_LDAP_BIND_DN`                     | Optional service bind DN for finding users and groups     | Empty (anonymous)  |
+| `AUTH_LDAP_BIND_PASSWORD`               | Optional password for the service bind DN                 | Empty (anonymous)  |
 | `AUTH_LDAP_USERNAME_ATTRIBUTE`          | Attribute used for username                               | uid                |
 | `AUTH_LDAP_USER_MAIL_ATTRIBUTE`         | Attribute used for mail field                             | mail               |
 | `AUTH_LDAP_GROUP_CLASS`                 | Class used for querying groups                            | groupOfUniqueNames |

@@ -67,6 +67,7 @@ import {
   getDownloadColumnAccessors,
   getDownloadsStatsDisplay,
 } from "./helpers";
+import { resolveDownloadsQueryInput } from "./query-input";
 
 dayjs.extend(relativeTime);
 
@@ -316,12 +317,9 @@ export default function DownloadClientsWidget({
     [allInteractAccess, integrationIds],
   );
 
-  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery({
-    integrationIds,
-    limitPerIntegration: options.limitPerIntegration,
-    includeArchivedHistory: options.includeArchivedHistory,
-    historyWindowDays: options.historyWindowDays,
-  });
+  const downloadsQuery = clientApi.widget.downloads.getJobsAndStatuses.useQuery(
+    resolveDownloadsQueryInput(integrationIds, options),
+  );
   const currentItems = getUsableWidgetQueryData(downloadsQuery);
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;
@@ -441,7 +439,7 @@ export default function DownloadClientsWidget({
         let initialTotalUp: number | undefined;
         if (isTorrent) initialTotalUp = 0;
 
-        const { totalUp, totalDown } = clientData.items
+        const { totalUp, totalDown } = (clientData.ratioItems ?? clientData.items)
           .filter(({ category }) => {
             if (!applyRatioFilter) return true;
             return matchesCategoryFilter(category, options.categoryFilter, options.filterIsWhitelist);

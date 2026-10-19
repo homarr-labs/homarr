@@ -339,11 +339,6 @@ export function Notebook({
     [canChange, editor, isEditing],
   );
 
-  const documentText = editor?.getText().trim() ?? "";
-  const documentStats = {
-    characters: documentText.length,
-    words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
-  };
   let layoutScale = 1;
   if (displayMode !== "advanced" && Number.isFinite(displayScale) && displayScale > 0) {
     layoutScale = displayScale;
@@ -360,6 +355,12 @@ export function Notebook({
   });
 
   const showDocumentStats = display.showDocumentStats && (displayMode === "advanced" || renderedWidth >= 280);
+  let documentText = "";
+  if (showDocumentStats) documentText = editor?.getText().trim() ?? "";
+  const documentStats = {
+    characters: documentText.length,
+    words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
+  };
 
   return (
     <Box
@@ -768,7 +769,7 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
     return () => {
       editor?.off("selectionUpdate", onSelection);
     };
-  });
+  }, [editor, onSelection]);
 
   const handleApplyColor = useCallback(() => {
     update(color);

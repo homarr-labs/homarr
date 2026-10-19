@@ -56,6 +56,7 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "additive",
         description:
           "Invalidate the cached Docker inventory so the next Docker query performs a fresh user-requested discovery. Requires admin permission.",
       },
@@ -103,6 +104,7 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description: "Start Docker containers. REQUIRED: targets (endpointId and id pairs from docker_getContainers)",
       },
     })
@@ -116,6 +118,7 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description: "Stop Docker containers. REQUIRED: targets (endpointId and id pairs from docker_getContainers)",
       },
     })
@@ -129,6 +132,7 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description: "Restart Docker containers. REQUIRED: targets (endpointId and id pairs from docker_getContainers)",
       },
     })
@@ -142,6 +146,7 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
+        effect: "destructive",
         description:
           "Remove/delete Docker containers. REQUIRED: targets (endpointId and id pairs from docker_getContainers)",
       },

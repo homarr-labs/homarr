@@ -1,6 +1,8 @@
 export type LocalizedDateValue = Date | number | string;
 
 const dateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/;
+const dateFormatters = new Map<string, Intl.DateTimeFormat>();
+const maxDateFormatters = 64;
 
 interface LocalizedTimeOptions {
   hour12?: boolean;
@@ -29,7 +31,17 @@ export const formatLocalizedDate = (
     typeof value === "string" && dateOnlyPattern.test(value) && options.timeZone === undefined
       ? { ...options, timeZone: "UTC" }
       : options;
-  return new Intl.DateTimeFormat(locale, normalizedOptions).format(date);
+  const key = JSON.stringify([locale, normalizedOptions]);
+  let formatter = dateFormatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, normalizedOptions);
+    if (dateFormatters.size >= maxDateFormatters) {
+      const oldestKey = dateFormatters.keys().next().value;
+      if (oldestKey !== undefined) dateFormatters.delete(oldestKey);
+    }
+    dateFormatters.set(key, formatter);
+  }
+  return formatter.format(date);
 };
 
 export const formatLocalizedTime = (

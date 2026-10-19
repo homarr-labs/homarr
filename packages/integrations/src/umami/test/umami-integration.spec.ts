@@ -172,7 +172,7 @@ describe("UmamiIntegration", () => {
       expect(result[0]?.dataPoints.reduce((sum, point) => sum + point.y, 0)).toBe(20 * PAGE_SIZE);
     });
 
-    test("requests event series one at a time", async () => {
+    test("bounds concurrent event requests and preserves selection order", async () => {
       let inFlight = 0;
       let maxInFlight = 0;
       mockFetch.mockImplementation(async () => {
@@ -190,10 +190,12 @@ describe("UmamiIntegration", () => {
         "signup",
         "purchase",
         "refund",
+        "login",
+        "logout",
       ]);
 
-      expect(result).toHaveLength(3);
-      expect(maxInFlight).toBe(1);
+      expect(result.map(({ eventName }) => eventName)).toEqual(["signup", "purchase", "refund", "login", "logout"]);
+      expect(maxInFlight).toBe(3);
     });
   });
 });

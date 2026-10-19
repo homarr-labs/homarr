@@ -138,6 +138,9 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
         top={0}
         left={0}
         alt=""
+        loading="lazy"
+        decoding="async"
+        fetchPriority="low"
       />
       <Group
         className="mediaRequests-list-item-contents"
@@ -156,6 +159,9 @@ const MediaRequestCard = ({ request, isTiny, showIntegrationSource, canInteract,
               w="auto"
               radius="md"
               alt=""
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
               style={{ flexShrink: 0 }}
             />
           )}

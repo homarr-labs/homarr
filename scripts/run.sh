@@ -64,6 +64,11 @@ fi
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
 
+HOMARR_REQUEST_IDENTITY_SECRET=$(openssl rand -hex 32) || exit 1
+export HOMARR_REQUEST_IDENTITY_SECRET
+NGINX_TRUSTED_PROXIES=$(node ./scripts/trusted-proxies.mjs) || exit 1
+export NGINX_TRUSTED_PROXIES
+
 # Start nginx proxy
 # 1. Create the nginx configuration file from the template
 # 2. Start the nginx server
@@ -76,7 +81,8 @@ export NGINX_LISTEN_IPV6=''
 if [ "${HOMARR_DISABLE_IPV6:-false}" != "true" ] && grep -q . /proc/net/if_inet6 2>/dev/null; then
     NGINX_LISTEN_IPV6='listen [::]:7575;'
 fi
-envsubst '${NGINX_LISTEN_IPV6}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+envsubst '${NGINX_LISTEN_IPV6} ${NGINX_TRUSTED_PROXIES} ${HOMARR_REQUEST_IDENTITY_SECRET}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+nginx -t || exit 1
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
 NGINX_PID=$!

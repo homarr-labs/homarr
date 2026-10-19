@@ -247,6 +247,82 @@
         "title": "Prihláste sa do vášho účtu.",
         "subtitle": "Vitajte späť! Zadajte svoje poverenia"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Pridajte sa k Homarrovi",
         "titleWithAppName": "Pripojiť sa k {appName}",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "Monitorovanie dostupnosti",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorovanie systému",
-      "security": "Bezpečnosť"
+      "security": "Bezpečnosť",
+      "serviceVersion": "Verzia"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Strana {page} z {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "tu",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "Predvolená karta"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Viditeľné časti klastra"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikátor",
             "placeholder": "Meno alebo vlastník/meno"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "Otvorte stránku vydania",
       "releaseDescription": "Popis vydania",
       "projectDescription": "",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Neznámy",
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
@@ -6171,15 +6263,6 @@
           "notice": "Ak chcete, aby táto stránka zmizla, požiadajte správcu servera o nastavenie domovskej dosky pre server"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "Hladať",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Sprievodcovia",
                 "description": "Obnovte sprievodcov, aby sa vám zobrazili pri ďalšej návšteve ovládacieho panela alebo prístrojovej dosky.",
@@ -6933,7 +7041,8 @@
               "label": "Autentifikácia",
               "title": "API kľúče",
               "button": {
-                "createApiToken": "Vytvorte token API"
+                "createApiToken": "Vytvorte token API",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Vytvoril/a",
+                  "source": "Integrácia",
                   "actions": "Úkony"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

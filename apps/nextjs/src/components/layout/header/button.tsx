@@ -34,6 +34,7 @@ export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((pr
       <ActionIcon
         ref={ref as ForwardedRef<HTMLAnchorElement>}
         component={Link}
+        prefetch={false}
         {...props}
         {...headerButtonActionIconProps}
       >

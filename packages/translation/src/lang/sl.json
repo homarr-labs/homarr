@@ -247,6 +247,82 @@
         "title": "Prijavite se v svoj račun",
         "subtitle": "Dobrodošli nazaj! Prosimo vnesite svoje podatke"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Pridruži se Homarr",
         "titleWithAppName": "Pridružite se {appName}",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "Spremljanje razpoložljivosti",
       "beszel": "Beszel",
       "systemMonitoring": "Sistemsko spremljanje",
-      "security": "Varnost"
+      "security": "Varnost",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Stran {page} od {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "tukaj",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "Privzeti zavihek"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Vidni razdelki gruče"
         },
@@ -3831,7 +3916,7 @@
         "metadata": {
           "title": "Statistika za radovedne",
           "video": {
-            "title": "",
+            "title": "Video",
             "resolution": "Ločljivost"
           },
           "audio": {
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": "URL ponudnika"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Ime ali lastnik/ime"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "Odpri stran izdaje",
       "releaseDescription": "Opis izdaje",
       "projectDescription": "Opis projekta",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Neznano",
       "created": "Ustvarjeno",
       "error": {
         "label": "Napaka",
@@ -6171,15 +6263,6 @@
           "notice": "Če želite skriti to stran, prosite skrbnika strežnika, naj za strežnik nastavi domačo tablo"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "Iskanje",
               "firstDayOfWeek": "Prvi dan v tednu",
               "accessibility": "Dostopnost",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Vodniki za uvajanje",
                 "description": "Ponastavite vodnike za uvajanje, da jih boste ob naslednjem obisku upravljalnega območja ali nadzorne plošče videli znova.",
@@ -6933,7 +7041,8 @@
               "label": "Preverjanje pristnosti",
               "title": "Ključi API",
               "button": {
-                "createApiToken": "Ustvari žeton API"
+                "createApiToken": "Ustvari žeton API",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Ustvaril/-a",
+                  "source": "Integracija",
                   "actions": "Dejanja"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

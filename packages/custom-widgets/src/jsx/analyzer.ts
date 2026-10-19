@@ -9,9 +9,10 @@ import {
 } from "./policy";
 import type { AstNode } from "./analyzer-ast";
 import { nodeOf, nodesOf, staticPropertyName } from "./analyzer-ast";
-import { createCustomJsxParseDiagnostic } from "./analyzer-diagnostics";
+import { createCustomJsxNodeDiagnostic, createCustomJsxParseDiagnostic } from "./analyzer-diagnostics";
 import type { CustomJsxTemplateDiagnostic } from "./analyzer-diagnostics";
 import { analyzeCustomJsxElement } from "./analyzer-jsx";
+import type { CustomJsxRequestParameterCheck } from "./analyzer-jsx";
 import {
   canStaticallyProduceCallable,
   isStaticallyCallableBinding,
@@ -80,22 +81,16 @@ function invalidRequestStatusField(node: AstNode) {
   return `INVALID_STATUS_FIELD: status.${requestId}.${field} is not available. Use status.${requestId}?.loading or status.${requestId}?.ok === false`;
 }
 
-export function validateCustomJsxTemplate(
+function analyzeTemplate(
   template: string,
   requestParameters?: ReadonlyMap<string, ReadonlySet<string>>,
+  requestParameterChecks?: CustomJsxRequestParameterCheck[],
 ): CustomJsxTemplateDiagnostic[] {
   const diagnostics: CustomJsxTemplateDiagnostic[] = [];
   let operations = 0;
 
   const add = (node: AstNode, message: string, severity: "error" | "warning" = "error") => {
-    const line = node.loc?.start?.line ?? 1;
-    diagnostics.push({
-      severity,
-      message,
-      index: Math.max(0, (node.start ?? 2) - 2),
-      line,
-      column: Math.max(1, (node.loc?.start?.column ?? 0) + 1 - (line === 1 ? 2 : 0)),
-    });
+    diagnostics.push(createCustomJsxNodeDiagnostic(node, message, severity));
   };
 
   const checkBudget = (node: AstNode, depth: number) => {
@@ -163,7 +158,13 @@ export function validateCustomJsxTemplate(
         nodesOf(node.children).forEach((child) => visit(child, depth + 1, bindings));
         return;
       case "JSXElement": {
-        analyzeCustomJsxElement(node, depth, bindings, { add, visit, visitArrow, requestParameters });
+        analyzeCustomJsxElement(node, depth, bindings, {
+          add,
+          visit,
+          visitArrow,
+          requestParameters,
+          requestParameterChecks,
+        });
         return;
       }
       case "JSXText":
@@ -344,4 +345,28 @@ export function validateCustomJsxTemplate(
   }
 
   return diagnostics;
+}
+
+export function validateCustomJsxTemplate(
+  template: string,
+  requestParameters?: ReadonlyMap<string, ReadonlySet<string>>,
+): CustomJsxTemplateDiagnostic[] {
+  return analyzeTemplate(template, requestParameters);
+}
+
+// Keep request checks from the same traversal until the sibling request manifest has been parsed.
+export function prepareCustomJsxTemplate(template: string) {
+  const checks: CustomJsxRequestParameterCheck[] = [];
+  const diagnostics = analyzeTemplate(template, undefined, checks);
+  return {
+    template,
+    diagnostics,
+    validateRequestParameters(parameters: ReadonlyMap<string, ReadonlySet<string>>) {
+      const parameterDiagnostics: CustomJsxTemplateDiagnostic[] = [];
+      for (const check of checks) {
+        check(parameters, (node, message) => parameterDiagnostics.push(createCustomJsxNodeDiagnostic(node, message)));
+      }
+      return parameterDiagnostics;
+    },
+  };
 }

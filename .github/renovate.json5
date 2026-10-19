@@ -3,6 +3,10 @@
   extends: ["config:recommended", ":dependencyDashboardApproval"],
   packageRules: [
     {
+      matchPackageNames: ["@tabler/icons-react", "@tabler/icons-sprite"],
+      groupName: "Tabler icons",
+    },
+    {
       matchPackageNames: ["^@homarr/"],
       enabled: false,
     },
