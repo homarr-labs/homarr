@@ -85,11 +85,23 @@ const containerImageToProviderKind: Record<string, ReleaseProviderKind> = {
 };
 
 export const getReleaseSourceFromDockerImage = (image: string) => {
-  const [maybeSource, maybeIdentifierAndVersion] = image.split(/\/(.*)/);
+  const digestIndex = image.indexOf("@");
+  let withoutDigest = image;
+  if (digestIndex !== -1) withoutDigest = image.slice(0, digestIndex);
+
+  const tagIndex = withoutDigest.indexOf(":", withoutDigest.lastIndexOf("/") + 1);
+  let reference = withoutDigest;
+  let version: string | undefined;
+  if (tagIndex !== -1) {
+    reference = withoutDigest.slice(0, tagIndex);
+    version = withoutDigest.slice(tagIndex + 1);
+  }
+
+  const [maybeSource, maybeIdentifier] = reference.split(/\/(.*)/);
   const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
   const source = hasSource ? maybeSource : "docker.io";
-  const [identifier, version] =
-    hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : image.split(":");
+  let identifier = reference;
+  if (hasSource && maybeIdentifier) identifier = maybeIdentifier;
 
   if (!identifier) return undefined;
 
