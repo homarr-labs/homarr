@@ -37,6 +37,7 @@ interface UserAvatarMenuProps {
   availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
   isDockerEnabled?: boolean;
   boardSwitcher: BoardSwitcherControls;
+  canAccessManagement?: boolean;
 }
 
 const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
@@ -45,7 +46,13 @@ const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
     .map((key) => (key === "mod" ? modifierLabel : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
     .join(" + ");
 
-export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, boardSwitcher }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({
+  children,
+  availableUpdates,
+  isDockerEnabled,
+  boardSwitcher,
+  canAccessManagement = true,
+}: UserAvatarMenuProps) => {
   const t = useI18n("common.userAvatar.menu");
   const tBoard = useI18n("board");
   const session = useSession();
@@ -90,15 +97,17 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
             {tBoard("action.settings")}
           </Menu.Item>
         )}
-        <Menu.Item
-          leftSection={<IconReplace size="1rem" />}
-          rightSection={<Kbd size="xs">{formatHotkeyLabel(boardSwitcher.hotkey, t("modifier"))}</Kbd>}
-          onClick={boardSwitcher.open}
-          onFocus={boardSwitcher.preload}
-          onPointerEnter={boardSwitcher.preload}
-        >
-          {tBoard("action.switch")}
-        </Menu.Item>
+        {boardSwitcher.enabled !== false && (
+          <Menu.Item
+            leftSection={<IconReplace size="1rem" />}
+            rightSection={<Kbd size="xs">{formatHotkeyLabel(boardSwitcher.hotkey, t("modifier"))}</Kbd>}
+            onClick={boardSwitcher.open}
+            onFocus={boardSwitcher.preload}
+            onPointerEnter={boardSwitcher.preload}
+          >
+            {tBoard("action.switch")}
+          </Menu.Item>
+        )}
         <Menu.Divider />
 
         <Menu.Item p={4} closeMenuOnClick={false} component="div">
@@ -133,17 +142,21 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
                 {t("assistant")}
               </Menu.Item>
             )}
-            <Menu.Item
-              component={Link}
-              href={`/manage/users/${session.data?.user.id}/general`}
-              leftSection={<IconSettings size="1rem" />}
-            >
-              {t("preferences")}
-            </Menu.Item>
+            {canAccessManagement && (
+              <>
+                <Menu.Item
+                  component={Link}
+                  href={`/manage/users/${session.data?.user.id}/general`}
+                  leftSection={<IconSettings size="1rem" />}
+                >
+                  {t("preferences")}
+                </Menu.Item>
 
-            <Menu.Item component={Link} href="/manage" leftSection={<IconTool size="1rem" />}>
-              {t("management")}
-            </Menu.Item>
+                <Menu.Item component={Link} href="/manage" leftSection={<IconTool size="1rem" />}>
+                  {t("management")}
+                </Menu.Item>
+              </>
+            )}
             {isDockerEnabled && (
               <Menu.Item leftSection={<IconBrandDocker size="1rem" />} onClick={() => openDockerModal()}>
                 {invariantTechnicalLabels.docker}

@@ -19,9 +19,16 @@ interface UserButtonClientProps {
   isAdmin: boolean;
   isDockerEnabled: boolean;
   boardSwitcher: BoardSwitcherControls;
+  canAccessManagement?: boolean;
 }
 
-export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitcher }: UserButtonClientProps) => {
+export const UserButtonClient = ({
+  avatar,
+  isAdmin,
+  isDockerEnabled,
+  boardSwitcher,
+  canAccessManagement = true,
+}: UserButtonClientProps) => {
   const [canCheckForUpdates, setCanCheckForUpdates] = useState(false);
   const t = useI18n("common.userAvatar.menu");
   const session = useSession();
@@ -49,7 +56,12 @@ export const UserButtonClient = ({ avatar, isAdmin, isDockerEnabled, boardSwitch
   const visibleUpdates = isCurrentSessionAdmin ? availableUpdates : undefined;
 
   return (
-    <UserAvatarMenu availableUpdates={visibleUpdates} isDockerEnabled={isDockerEnabled} boardSwitcher={boardSwitcher}>
+    <UserAvatarMenu
+      availableUpdates={visibleUpdates}
+      isDockerEnabled={isDockerEnabled}
+      boardSwitcher={boardSwitcher}
+      canAccessManagement={canAccessManagement}
+    >
       <UnstyledButton aria-label={t("open")}>
         <UpdateIndicator availableUpdates={visibleUpdates} disabled={!isCurrentSessionAdmin}>
           {avatar}

@@ -43,7 +43,7 @@ Standards review found hosted FormData and transient subscription recovery regre
 
 Source browser checks passed for owner connection, native board save/reload, invite enrollment in a fresh browser, returning username/password login, owner-created accounts, native password reset plus login with the replacement password, desktop/360px Worker/Users/Sharing/Connection/dialog layouts, and real Logs history/live events across remounts. Evidence: `/tmp/homarr-single-worker-ui-qa-20261019.md`; screenshots in the conversation visualization directory use `single-worker-*`.
 
-Public-link creation/viewer/revocation through the browser was rejected by automatic approval review, including for an empty isolated localhost test board. No link was created. A specific user approval question is pending; real backend PostgreSQL sharing/revocation coverage remains green. Do not claim this browser flow passed.
+The user subsequently explicitly approved the isolated public-link browser check. Scoped read-only access, unshared-board denial, live revocation and revoked-link reconnect denial passed. The temporary link and empty test board were cleaned up. Evidence: `/tmp/homarr-single-worker-public-share-qa-20261019.md`. The later inline UX request is tracked in `ux-rebuild.md`.
 
 The demo is deployed at `https://brainzilla.llama-stonecat.ts.net:8445/manage/workers`: frontend, worker-primary, platform, relay and gateway are healthy. Normal dashboards, Users/Sharing pages and real Logs render from the production containers. Raw public worker RPC remains404. Existing primary/account/key volumes survived; the retired integration-worker container was removed and its named volume remains intact. Existing8443 demo was not changed.
 

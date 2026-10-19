@@ -103,6 +103,10 @@
 
 ### Single-worker architecture follow-up — 19 October 2026
 
-Current scope and evidence: `architecture-followup.md`. The latest user decision supersedes earlier multiple-worker plans: one main worker, compact Users/Sharing management, full frontend tRPC removal, and real PostgreSQL validation. Parallel implementation and final integration are in progress.
+Current scope and evidence: `architecture-followup.md`. The latest user decision supersedes earlier multiple-worker plans: one main worker, compact Users/Sharing management, full frontend tRPC removal, and real PostgreSQL validation. Implementation, final integration and deployment are complete; the subsequent inline UX redesign is recorded in `ux-rebuild.md`.
 
-- Final source/container acceptance is recorded in `architecture-followup.md`. Single-worker UI, native frontend RPC, shared backend modules, PostgreSQL and Logs fixes are implemented and deployed. Public-link browser QA awaits specific approval; backend sharing/revocation coverage passed.
+- Final source/container acceptance is recorded in `architecture-followup.md`. Single-worker UI, native frontend RPC, shared backend modules, PostgreSQL and Logs fixes are implemented and deployed. Public-link browser QA was subsequently approved, passed, and cleaned up; see `ux-rebuild.md`.
+
+### Inline worker UX rebuild — 19 October 2026
+
+Latest scope and evidence: `ux-rebuild.md`. Worker management is rebuilt as inline Connection/Users/Sharing/MCP pages, board links have owner-only on-demand Copy, and MCP uses two permission bundles with recoverable replacement/disconnect. Both final review axes passed after fixing cancellation and cleanup durability. The rebuilt five-service Brainzilla demo is healthy; temporary QA authority and source services are cleaned up. Local encrypted MCP proof is recorded in `/tmp/homarr-inline-mcp-qa-20261019.md`; no live OAuth validation was attempted.

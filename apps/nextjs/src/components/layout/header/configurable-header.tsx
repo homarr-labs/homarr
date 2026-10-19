@@ -39,6 +39,8 @@ interface ConfigurableHeaderProps {
   userId: string | null;
   isAdmin: boolean;
   isDockerEnabled: boolean;
+  canSwitchBoards?: boolean;
+  canAccessManagement?: boolean;
 }
 
 type HeaderBoard = RouterOutputs["board"]["getAllBoards"][number];
@@ -57,6 +59,8 @@ export const ConfigurableHeader = ({
   userId,
   isAdmin,
   isDockerEnabled,
+  canSwitchBoards = true,
+  canAccessManagement = true,
 }: ConfigurableHeaderProps) => {
   const { headerPreferences } = useSettings();
   const assistant = useOptionalHomarrAssistant();
@@ -72,7 +76,7 @@ export const ConfigurableHeader = ({
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
 
   return (
-    <BoardSwitcher>
+    <BoardSwitcher enabled={canSwitchBoards}>
       {(boardSwitcher) => {
         const renderItems = (
           items: HeaderItem[],
@@ -90,6 +94,7 @@ export const ConfigurableHeader = ({
               userId={userId}
               isAdmin={isAdmin}
               isDockerEnabled={isDockerEnabled}
+              canAccessManagement={canAccessManagement}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
               searchDisplay={display.search}
               logoDisplay={display.logo}
@@ -148,10 +153,12 @@ export const ConfigurableHeader = ({
             {!headerPreferences.visible ? (
               <FloatingHeaderControls>
                 {hasNavigation ? <ClientBurger /> : null}
+                {actions}
                 <UserButtonClient
                   avatar={avatar}
                   isAdmin={isAdmin}
                   isDockerEnabled={isDockerEnabled}
+                  canAccessManagement={canAccessManagement}
                   boardSwitcher={boardSwitcher}
                 />
               </FloatingHeaderControls>
@@ -253,6 +260,7 @@ interface HeaderItemProps {
   userId: string | null;
   isAdmin: boolean;
   isDockerEnabled: boolean;
+  canAccessManagement: boolean;
   board: HeaderBoard | undefined;
   searchDisplay: "input" | "icon";
   logoDisplay: "logo" | "logoAndText";
@@ -274,6 +282,7 @@ const HeaderItem = ({
   userId,
   isAdmin,
   isDockerEnabled,
+  canAccessManagement,
   board,
   searchDisplay,
   logoDisplay,
@@ -342,6 +351,7 @@ const HeaderItem = ({
   }
 
   if (item.id === "boardSwitcher") {
+    if (boardSwitcher.enabled === false) return null;
     return (
       <Tooltip label={label("boardSwitcher")}>
         <HeaderButton
@@ -387,6 +397,7 @@ const HeaderItem = ({
   }
 
   if (item.id === "settings") {
+    if (!canAccessManagement) return null;
     const href = userId ? `/manage/users/${userId}/general` : "/auth/login";
     return (
       <Tooltip label={label("settings")}>
@@ -414,6 +425,7 @@ const HeaderItem = ({
           avatar={avatar}
           isAdmin={isAdmin}
           isDockerEnabled={isDockerEnabled}
+          canAccessManagement={canAccessManagement}
           boardSwitcher={boardSwitcher}
         />
       </div>

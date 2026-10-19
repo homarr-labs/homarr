@@ -78,30 +78,45 @@ interface AuthConfig {
 
 export function WorkerAccount() {
   const { session, request, refresh } = usePlatformAccount();
+  const accountUserId = session.user?.id;
   const [config, setConfig] = useState<AuthConfig | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [existing, setExisting] = useState(false);
+  const [retry, setRetry] = useState(0);
   const client = useRef<PocketBase | null>(null);
+  const mounted = useRef(true);
   useEffect(() => {
-    let active = true;
-    void request<AuthConfig>("/api/auth/config")
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  useEffect(() => {
+    if (accountUserId) return;
+    const controller = new AbortController();
+    setLoading(true);
+    setError("");
+    void request<AuthConfig>("/api/auth/config", { signal: controller.signal })
       .then((value) => {
-        if (!active) return;
+        if (!mounted.current || controller.signal.aborted) return;
         setConfig(value);
         client.current = new PocketBase(value.workshopApiUrl);
         setExisting(client.current.authStore.isValid);
       })
       .catch((cause) => {
-        if (active) setError(errorMessage(cause));
+        if (mounted.current && !controller.signal.aborted) setError(errorMessage(cause));
+      })
+      .finally(() => {
+        if (mounted.current && !controller.signal.aborted) setLoading(false);
       });
-    return () => {
-      active = false;
-    };
-  }, [request]);
-  const signIn = () => {
+    return () => controller.abort();
+  }, [request, retry, accountUserId]);
+
+  function signIn() {
     const pb = client.current;
-    if (!config || !pb) return;
+    if (!config || !pb || busy) return;
     setBusy(true);
     setError("");
     let authorization: Promise<unknown>;
@@ -117,47 +132,74 @@ export function WorkerAccount() {
         await refresh();
       })
       .catch((cause) => {
-        setError(errorMessage(cause));
-        setExisting(pb.authStore.isValid);
+        if (mounted.current) {
+          setError(errorMessage(cause));
+          setExisting(false);
+        }
       })
-      .finally(() => setBusy(false));
-  };
-  const signOut = async () => {
+      .finally(() => {
+        if (mounted.current) setBusy(false);
+      });
+  }
+
+  async function signOut() {
+    if (busy) return;
     setBusy(true);
     setError("");
     try {
       await request("/auth/logout", { method: "POST" });
       await refresh();
     } catch (cause) {
-      setError(errorMessage(cause));
+      if (mounted.current) setError(errorMessage(cause));
     } finally {
-      setBusy(false);
+      if (mounted.current) setBusy(false);
     }
-  };
-  return (
-    <Stack>
-      {session.user ? (
-        <Group justify="space-between">
-          <div>
-            <Text fw={600}>{session.user.name || session.user.login}</Text>
-            <Text c="dimmed" size="sm">
-              Your Homarr account
-            </Text>
-          </div>
-          <Button variant="default" onClick={() => void signOut()} loading={busy}>
-            Sign out of account
+  }
+
+  let signInLabel = "Continue with GitHub";
+  if (existing) signInLabel = "Continue with your Homarr account";
+  let content = (
+    <Stack gap="md">
+      <Text size="sm" c="dimmed">
+        Sign in to your Homarr cloud account to enable hosted MCP. Your dashboards and local users work without a cloud
+        account.
+      </Text>
+      <Group gap="sm">
+        <Button
+          leftSection={<IconBrandGithub size={18} />}
+          onClick={signIn}
+          disabled={!config || loading}
+          loading={busy}
+        >
+          {signInLabel}
+        </Button>
+        {error && !config && (
+          <Button variant="default" onClick={() => setRetry((value) => value + 1)} disabled={loading}>
+            Retry
           </Button>
-        </Group>
-      ) : (
-        <>
-          <Text c="dimmed">
-            Sign in to approve hosted MCP access. Local users and dashboard sharing stay on your worker.
+        )}
+      </Group>
+    </Stack>
+  );
+  if (session.user)
+    content = (
+      <Group justify="space-between" gap="sm">
+        <div>
+          <Text size="sm" fw={500}>
+            {session.user.name || session.user.login}
           </Text>
-          <Button leftSection={<IconBrandGithub size={18} />} onClick={signIn} disabled={!config} loading={busy}>
-            {existing ? "Continue with your Homarr account" : "Continue with GitHub"}
-          </Button>
-        </>
-      )}
+          <Text size="xs" c="dimmed">
+            Homarr cloud account
+          </Text>
+        </div>
+        <Button variant="subtle" size="sm" onClick={() => void signOut()} loading={busy}>
+          Sign out
+        </Button>
+      </Group>
+    );
+  return (
+    <Stack gap="md">
+      {content}
       {error && (
         <Alert color="red" role="alert">
           {error}

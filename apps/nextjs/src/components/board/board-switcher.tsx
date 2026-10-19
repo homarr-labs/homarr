@@ -41,13 +41,27 @@ export interface BoardSwitcherControls {
   open: () => void;
   preload: () => void;
   hotkey: string;
+  enabled?: boolean;
 }
 
 interface BoardSwitcherProps {
   children: (controls: BoardSwitcherControls) => ReactNode;
+  enabled?: boolean;
 }
 
-export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
+const unavailableBoardSwitcher: BoardSwitcherControls = {
+  open: () => undefined,
+  preload: () => undefined,
+  hotkey: boardSwitcherHotkey,
+  enabled: false,
+};
+
+export const BoardSwitcher = ({ children, enabled = true }: BoardSwitcherProps) => {
+  if (!enabled) return children(unavailableBoardSwitcher);
+  return <EnabledBoardSwitcher>{children}</EnabledBoardSwitcher>;
+};
+
+const EnabledBoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const t = useI18n("board.action.switcher");
   const tBoard = useI18n("board");
   const manageBoardsT = useI18n("management.page.board");
