@@ -7166,7 +7166,7 @@
                   "hint": "Revoke recorded OAuth connections in your own General settings. Administrators can also revoke credentials in the Authentication tab. These credentials work with Homarr's HTTP API and MCP, do not expire automatically, and remain valid after sign-out."
                 },
                 "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner.",
-                "scopedIntro": "Authenticate with an API key or OAuth. Administrators can create restricted GET/HEAD integration keys in the API keys tab. OAuth connections and unrestricted keys retain the owner’s access.",
+                "scopedIntro": "Authenticate with an API key or OAuth. Administrators can create restricted GET/HEAD integration keys in the Authentication tab. OAuth connections and unrestricted keys retain the owner’s access.",
                 "scopedPermissions": "The owner’s permissions are the access ceiling. A restricted key can call only its approved integration GET/HEAD endpoints; these methods do not guarantee upstream read-only behavior."
               },
               "clientConfig": {

@@ -88,7 +88,17 @@ export const RestrictedApiKey = ({
       >
         {t("create")}
       </Button>
-      <Modal opened={opened} onClose={close} title={t("title")} size="lg">
+      <Modal
+        opened={opened}
+        onClose={() => {
+          if (!create.isPending) close();
+        }}
+        title={t("title")}
+        size="lg"
+        closeOnEscape={!create.isPending}
+        closeOnClickOutside={!create.isPending}
+        withCloseButton={!create.isPending}
+      >
         <Stack>
           <Alert color="yellow">{t("description")}</Alert>
           <Text size="sm">{t("binding")}</Text>

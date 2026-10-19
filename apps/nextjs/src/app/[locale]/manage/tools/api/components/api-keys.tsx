@@ -223,8 +223,9 @@ export const ApiKeysManagement = ({ apiKeys, onCreated }: ApiKeysManagementProps
     renderTopToolbarCustomActions: () => (
       <Group>
         <RestrictedApiKey
-          disabled={newApiKey !== null}
+          disabled={newApiKey !== null || isPendingCreate}
           onCreated={(apiKey) => {
+            setFeedback(null);
             setNewApiKey(apiKey);
             onCreated();
           }}

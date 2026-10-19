@@ -24,6 +24,7 @@ const queryParameterSchema = z
       .array(
         z
           .string()
+          .min(1)
           .max(256)
           .refine((value) => !/\p{Cc}/u.test(value), { message: "Query values cannot contain control characters" }),
       )
