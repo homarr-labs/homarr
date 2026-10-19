@@ -9,7 +9,9 @@ export type CustomWidgetLegacySecretKind = (typeof customWidgetSecretKinds)[numb
 export type CustomWidgetHeaderSecretKind = `header:${string}`;
 export type CustomWidgetSecretKind = CustomWidgetLegacySecretKind | CustomWidgetHeaderSecretKind;
 
-export const CUSTOM_WIDGET_HEADER_SECRET_KIND_PATTERN = /^header:[A-Za-z][A-Za-z0-9_-]{0,63}$/u;
+// The existing PostgreSQL kind column has 64 characters, including "header:".
+export const MAX_CUSTOM_WIDGET_HEADER_SLOT_LENGTH = 57;
+export const CUSTOM_WIDGET_HEADER_SECRET_KIND_PATTERN = /^header:[A-Za-z][A-Za-z0-9_-]{0,56}$/u;
 
 export function getCustomWidgetHeaderSecretKind(slot: string): CustomWidgetHeaderSecretKind {
   return `header:${slot}`;

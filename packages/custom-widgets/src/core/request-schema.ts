@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 import { httpIntegrationKinds } from "@homarr/definitions/integration";
 
-import { customWidgetMethods } from "./schema-types";
+import { customWidgetMethods, MAX_CUSTOM_WIDGET_HEADER_SLOT_LENGTH } from "./schema-types";
 import {
   CUSTOM_WIDGET_HEADER_NAME_PATTERN,
   isReservedCustomWidgetRequestHeader,
@@ -26,7 +26,12 @@ const headerNameSchema = z
   .regex(CUSTOM_WIDGET_HEADER_NAME_PATTERN, "Header names must be valid HTTP tokens");
 
 export const customWidgetAuthenticationHeadersSchema = z
-  .array(z.strictObject({ name: headerNameSchema, slot: customWidgetIdentifierSchema }))
+  .array(
+    z.strictObject({
+      name: headerNameSchema,
+      slot: customWidgetIdentifierSchema.max(MAX_CUSTOM_WIDGET_HEADER_SLOT_LENGTH),
+    }),
+  )
   .min(1)
   .max(MAX_CUSTOM_WIDGET_AUTH_HEADERS)
   .superRefine((headers, ctx) => {
