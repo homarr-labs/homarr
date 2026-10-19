@@ -89,6 +89,7 @@ export const IconPicker = ({
   const isCommittedValueDraft = debouncedDraft === (value ?? "");
   const searchText = directUrl !== null || isCommittedValueDraft ? "" : debouncedDraft.trim();
   const canUpload = session?.user.permissions.includes("media-upload") ?? false;
+  const canDetectFavicon = session?.user.permissions.includes("app-create") ?? false;
 
   const query = clientApi.icon.findIcons.useQuery(
     { searchText, limitPerGroup: 24 },
@@ -109,7 +110,7 @@ export const IconPicker = ({
   // credentials, query and fragment of the app url stay in the browser.
   const faviconQuery = clientApi.icon.detectFavicon.useQuery(
     { href: faviconPage === null ? "" : `${faviconPage.origin}${faviconPage.pathname}` },
-    { enabled: faviconPage !== null && directUrl === null && combobox.dropdownOpened, retry: false },
+    { enabled: canDetectFavicon && faviconPage !== null && combobox.dropdownOpened, retry: false },
   );
   const detectedFaviconUrl = faviconQuery.data?.url ?? null;
 
@@ -126,17 +127,16 @@ export const IconPicker = ({
     () => arrangeIconPickerSections(query.data?.icons ?? [], searchText),
     [query.data?.icons, searchText],
   );
-  const detectedFavicon = useMemo(
-    () =>
-      detectedFaviconUrl !== null && faviconHostname !== null
-        ? { url: detectedFaviconUrl, hostname: faviconHostname }
-        : null,
-    [detectedFaviconUrl, faviconHostname],
-  );
-  const orderedOptions = useMemo(
-    () => [...(detectedFavicon ? [detectedFavicon] : []), ...sections.local, ...sections.svg, ...sections.other],
-    [detectedFavicon, sections.local, sections.svg, sections.other],
-  );
+  const detectedFavicon = useMemo(() => {
+    if (!canDetectFavicon || detectedFaviconUrl === null || faviconHostname === null) return null;
+    return { url: detectedFaviconUrl, hostname: faviconHostname };
+  }, [canDetectFavicon, detectedFaviconUrl, faviconHostname]);
+  const orderedOptions = useMemo(() => {
+    const options: { url: string }[] = [];
+    if (detectedFavicon) options.push(detectedFavicon);
+    if (directUrl === null) options.push(...sections.local, ...sections.svg, ...sections.other);
+    return options;
+  }, [detectedFavicon, directUrl, sections.local, sections.svg, sections.other]);
   const totalOptions = sections.local.length + sections.svg.length + sections.other.length;
   const keyboardIndex = useMemo(
     () =>
@@ -188,7 +188,7 @@ export const IconPicker = ({
       return;
     }
 
-    if (!directUrl && orderedOptions.length > 0 && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+    if (orderedOptions.length > 0 && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       event.preventDefault();
       combobox.openDropdown("keyboard");
       const nextIndex =
@@ -440,6 +440,7 @@ export const IconPicker = ({
 
       <Combobox.Dropdown className={classes.dropdown}>
         <Combobox.Options className={classes.options} aria-label={tCommon("iconPicker.results")}>
+          {renderDetectedFavicon()}
           {directUrl ? (
             <Paper p="sm" m="xs" className={classes.urlPreview}>
               <Group wrap="nowrap" align="center">
@@ -482,10 +483,7 @@ export const IconPicker = ({
               </Group>
             </Paper>
           ) : (
-            <>
-              {renderDetectedFavicon()}
-              {renderSearchResults()}
-            </>
+            renderSearchResults()
           )}
         </Combobox.Options>
       </Combobox.Dropdown>

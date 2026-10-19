@@ -148,6 +148,7 @@ const createPinnedDispatcherAsync = async (addresses: ResolvedAddress[], timeout
       httpProxy: "",
       httpsProxy: "",
       noProxy: "*",
+      logOriginOnly: true,
     },
   );
 

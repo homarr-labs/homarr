@@ -139,7 +139,7 @@ describe("IconPicker", () => {
     detectFaviconQuery.mockClear();
     refetch.mockClear();
     uploadSelection.mockClear();
-    sessionPermissions.current = [];
+    sessionPermissions.current = ["app-create"];
     queryResult = { data: emptyResult, isLoading: false, isFetching: false, isError: false };
     faviconResult = { data: undefined };
   });
