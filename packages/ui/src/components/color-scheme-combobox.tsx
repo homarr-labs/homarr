@@ -35,7 +35,7 @@ export const ColorSchemeCombobox = ({
   width,
   readOnly,
   disabled,
-  withinPortal,
+  withinPortal = false,
   variant = "filled",
   "aria-describedby": ariaDescribedBy,
   ...inputProps
@@ -69,6 +69,11 @@ export const ColorSchemeCombobox = ({
           rightSectionPointerEvents="none"
           onClick={() => {
             if (!readOnly && !disabled) combobox.toggleDropdown();
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+              event.stopPropagation();
+            }
           }}
           variant={variant}
           w={width}
