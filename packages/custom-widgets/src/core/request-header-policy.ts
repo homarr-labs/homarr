@@ -30,12 +30,5 @@ export function isReservedCustomWidgetRequestHeader(name: string) {
 }
 
 export function isCustomWidgetHeaderSecretValue(value: string) {
-  return (
-    value.length > 0 &&
-    value.length <= 8_192 &&
-    !/[\u0100-\u{10ffff}]/u.test(value) &&
-    !value.includes("\r") &&
-    !value.includes("\n") &&
-    !value.includes("\0")
-  );
+  return value.length > 0 && value.length <= 8_192 && /^[\t\x20-\x7e\x80-\xff]+$/u.test(value);
 }

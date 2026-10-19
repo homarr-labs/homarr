@@ -76,7 +76,7 @@ export const customWidgetSecretInputSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["value"],
-        message: "Authentication header values must use Latin-1 characters without line breaks or NUL",
+        message: "Authentication header values must use Latin-1 characters without unsupported control characters",
       });
     }
   });
