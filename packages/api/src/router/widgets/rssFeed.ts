@@ -141,22 +141,24 @@ export async function restrictUrlsAsync(ctx: { db: Database; session: Session | 
     where: eq(items.kind, "rssFeed"),
   });
 
-  const viewableBoards = new Map<string, boolean>();
-  const allowedUrls = new Set<string>();
+  const urlsByBoard = new Map<string, Set<string>>();
   for (const item of rssFeedItems) {
     const matchingUrls = SuperJSON.parse<WidgetComponentProps<"rssFeed">["options"]>(item.options).feedUrls.filter(
       (url) => requestedUrls.has(url),
     );
     if (matchingUrls.length === 0) continue;
 
-    let canView = viewableBoards.get(item.boardId);
-    if (canView === undefined) {
-      canView = await isActionAllowedAsync(ctx, eq(boards.id, item.boardId), "view");
-      viewableBoards.set(item.boardId, canView);
-    }
-    if (!canView) continue;
-
-    for (const url of matchingUrls) allowedUrls.add(url);
+    const boardUrls = urlsByBoard.get(item.boardId) ?? new Set<string>();
+    for (const url of matchingUrls) boardUrls.add(url);
+    urlsByBoard.set(item.boardId, boardUrls);
   }
+
+  const allowedUrls = new Set<string>();
+  await Promise.all(
+    [...urlsByBoard].map(async ([boardId, boardUrls]) => {
+      if (!(await isActionAllowedAsync(ctx, eq(boards.id, boardId), "view"))) return;
+      for (const url of boardUrls) allowedUrls.add(url);
+    }),
+  );
   return urls.filter((url) => allowedUrls.has(url));
 }
