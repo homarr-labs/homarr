@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Prikaži nespremljane"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# dogodek} two {# dogodka} few {# dogodki} other {# dogodkov}}",
         "loading": "Nalaganje dogodkov...",
         "noEvents": "Ta mesec ni dogodkov"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {

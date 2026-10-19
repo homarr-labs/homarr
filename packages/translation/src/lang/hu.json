@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Nem ellenőrzött megjelenítés"
+        },
+        "viewMode": {
+          "label": "Megtekintés"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# esemény} other {# esemény}}",
         "loading": "Naptáresemények betöltése...",
         "noEvents": "Ebben a hónapban nincsenek események"
+      },
+      "view": {
+        "compact": "",
+        "month": "hónap",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "Ma",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
