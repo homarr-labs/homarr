@@ -146,14 +146,14 @@ const createColumns = (
   {
     accessor: "state",
     title: t("field.state.label"),
-    width: 100,
+    width: 80,
     sortable: sortingEnabled,
     render: (container) => <ContainerStateBadge state={container.state} />,
   },
   {
     accessor: "host",
     title: t("field.host.label"),
-    width: 120,
+    width: 100,
     sortable: sortingEnabled,
     ellipsis: true,
     render: (container) => (
@@ -165,7 +165,7 @@ const createColumns = (
   {
     accessor: "cpuUsage",
     title: invariantTechnicalLabels.cpu,
-    width: 80,
+    width: 64,
     sortable: sortingEnabled,
     render: (container) => {
       const cpuUsage = safeValue(container.cpuUsage);
@@ -179,7 +179,7 @@ const createColumns = (
   {
     accessor: "memoryUsage",
     title: t("field.stats.memory.label"),
-    width: 100,
+    width: 80,
     sortable: sortingEnabled,
     render: (container) => {
       const memoryUsage = safeValue(container.memoryUsage);
@@ -383,8 +383,8 @@ export default function DockerWidget({
   );
 
   const columnVisibility = useMemo(
-    () => getDockerColumnVisibility(options.columns, responsiveWidth, isAdvanced),
-    [isAdvanced, options.columns, responsiveWidth],
+    () => getDockerColumnVisibility(options.columns, isAdvanced),
+    [isAdvanced, options.columns],
   );
   const columns = useMemo(() => {
     const sortingEnabled = (isAdvanced || options.enableRowSorting) && !isEditMode;
@@ -392,7 +392,7 @@ export default function DockerWidget({
       ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
   }, [actionHandlers, columnVisibility, formatBytes, isAdvanced, isEditMode, options.enableRowSorting, t, tCommon]);
-  const { effectiveColumns, storeKey } = usePersistedTableLayout({
+  const { effectiveColumns, storeKey, setMultipleColumnWidths } = usePersistedTableLayout({
     columns,
     columnAccessors,
     columnOrder: options.columnOrder,
@@ -432,6 +432,9 @@ export default function DockerWidget({
       <Box style={{ flex: 1, minHeight: 0 }}>
         <HomarrDataTable
           preserveColumnWidths
+          fillColumnAccessor="name"
+          defaultColumnWidths={columns}
+          onColumnWidthsChange={setMultipleColumnWidths}
           isEditMode={isEditMode}
           cellPadding={isAdvanced || width < 400 ? "2px 8px" : "4px 8px"}
           className="docker-table"
