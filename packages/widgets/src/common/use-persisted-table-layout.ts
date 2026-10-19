@@ -235,6 +235,7 @@ export const usePersistedTableLayout = <T>({
     [flushPendingLayout, onLayoutChange, storeKey, updatePendingLayout],
   );
 
-  if (syncedLayoutKey !== layoutKey) return { effectiveColumns: savedColumns, storeKey, onColumnLayoutChange };
-  return { effectiveColumns, storeKey, onColumnLayoutChange };
+  if (syncedLayoutKey !== layoutKey)
+    return { effectiveColumns: savedColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths };
+  return { effectiveColumns, storeKey, onColumnLayoutChange, setMultipleColumnWidths };
 };
