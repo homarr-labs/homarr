@@ -31,7 +31,7 @@ Thingport provides library totals, lists of your recently added, most viewed and
       capability: {
         icon: IconSearch,
         name: "Search",
-        description: "Search your models, collections and tags from Spotlight.",
+        description: "Search models, collections and tags through the integration API.",
         path: "../../management/search-engines/#from-integration",
       },
     },
@@ -62,33 +62,8 @@ import addIntegration from "./img/add-integration.png";
   ]}
 />
 
-### Searching Thingport from Spotlight
+### Integration search
 
-To search your library from Spotlight, go to **Manage → Search engines**, create a search engine, choose **From integration** in the configuration section and select your Thingport integration. Use a short name such as `tport`: shorter ones like `tp` or `tpo` are already DuckDuckGo bangs and appear above it in Spotlight.
-
-import searchEngineList from "./img/search-engine-list.png";
-import spotlightDark from "./img/spotlight-tport-dark.png";
-import spotlightLight from "./img/spotlight-tport-light.png";
-
-<img
-  src={searchEngineList.src}
-  alt="Search engines list with Thingport added as an integration search engine"
-  width={640}
-/>
-
-Typing `!tport` in Spotlight picks the Thingport search engine:
-
-<div className="flex gap-2 flex-wrap">
-  <img
-    src={spotlightDark.src}
-    alt="Spotlight with the Thingport search engine selected by its !tport shortcut, dark mode"
-    width={480}
-  />
-  <img
-    src={spotlightLight.src}
-    alt="Spotlight with the Thingport search engine selected by its !tport shortcut, light mode"
-    width={480}
-  />
-</div>
+The integration search API supports models, collections and tags. Thingport can be selected as an integration search engine, but Spotlight currently does not display its results.
 
 The API token is read-only and shows the library of the user who created it. The [Statistics widget](/docs/widgets/stats) can also combine Thingport totals with other sources.
