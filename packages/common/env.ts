@@ -24,10 +24,15 @@ export const env = createEnv({
         message: `SECRET_ENCRYPTION_KEY must only contain hex characters${errorSuffix}`,
       }),
     NO_EXTERNAL_CONNECTION: createBooleanSchema(false),
+    HOMARR_REQUEST_IDENTITY_SECRET: z
+      .string()
+      .regex(/^[a-fA-F0-9]{64}$/)
+      .optional(),
   },
   runtimeEnv: {
     SECRET_ENCRYPTION_KEY: process.env.SECRET_ENCRYPTION_KEY,
     NODE_ENV: process.env.NODE_ENV,
     NO_EXTERNAL_CONNECTION: process.env.NO_EXTERNAL_CONNECTION,
+    HOMARR_REQUEST_IDENTITY_SECRET: process.env.HOMARR_REQUEST_IDENTITY_SECRET,
   },
 });

@@ -1,3 +1,4 @@
+import type { PointerEvent, MouseEvent } from "react";
 import { createContext, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
@@ -10,7 +11,7 @@ import { getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
-import { COLLAPSED_SECTION_ROW_COUNT } from "~/components/board/layout";
+import { CONTAINER_HEADER_HEIGHT } from "~/components/board/layout";
 import { SectionGrid } from "./grid/section-grid";
 import { useSectionCollapse } from "./section-collapse";
 import { useSectionContext } from "./section-context";
@@ -48,6 +49,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   const t = useI18n("section.container");
   const tSection = useI18n("section");
   const options = section.options;
+  const hasHeader = options.collapsible && options.showLabel;
   const { open: openAllInNewTabs, isLoading: areAppsLoading } = useOpenSectionApps(
     section.id,
     options.showOpenAll && !isEditMode,
@@ -58,7 +60,11 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  const menuPosition = { right: getBoundedMenuOffset(menuRightOffset), top: getBoundedMenuOffset(menuTopOffset) };
+  let menuTop = getBoundedMenuOffset(menuTopOffset);
+  if (hasHeader) {
+    menuTop = "calc(var(--container-header-height) / 2 - 12px * var(--mantine-scale))";
+  }
+  const menuPosition = { right: getBoundedMenuOffset(menuRightOffset), top: menuTop };
   const labelTop = "calc(var(--mantine-spacing-xs) * -1)";
   const labelLeft = 8;
   let labelRight = 8;
@@ -89,6 +95,29 @@ export const BoardContainerSection = ({ section }: Props) => {
   ) : (
     <IconChevronUp size="var(--mantine-font-size-md)" />
   );
+  const toggleHandlers = {
+    onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
+      togglePointer.current = { x: event.clientX, y: event.clientY, moved: false };
+    },
+    onPointerMove: (event: PointerEvent<HTMLButtonElement>) => {
+      const pointer = togglePointer.current;
+      if (!pointer || event.buttons === 0) return;
+      if (Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) > 5) {
+        pointer.moved = true;
+      }
+    },
+    onPointerCancel: () => {
+      togglePointer.current = null;
+    },
+    onClick: (event: MouseEvent<HTMLButtonElement>) => {
+      if (event.detail > 0 && togglePointer.current?.moved) return;
+      toggle();
+    },
+  };
+  let headerActionInset = "0px";
+  if (isEditMode) {
+    headerActionInset = `calc(${menuPosition.right} + 28px * var(--mantine-scale))`;
+  }
 
   return (
     <Box
@@ -105,7 +134,8 @@ export const BoardContainerSection = ({ section }: Props) => {
           classes.itemCard,
           classes.containerCard,
           options.customCssClasses.join(" "),
-          isVisuallyCollapsed && classes.collapsedContainerCard,
+          isVisuallyCollapsed && !hasHeader && classes.collapsedContainerCard,
+          hasHeader && classes.labeledContainerCard,
         )}
         w="100%"
         h="100%"
@@ -115,12 +145,32 @@ export const BoardContainerSection = ({ section }: Props) => {
             overflow: "visible",
             "--opacity": board.opacity / 100,
             "--container-border-color": options.borderColor || undefined,
+            "--container-action-inset": headerActionInset,
+            "--container-header-height": `calc(${CONTAINER_HEADER_HEIGHT}px * var(--board-canvas-ui-scale, 1))`,
           },
         }}
         radius={board.itemRadius}
         p={0}
       >
-        {options.collapsible && (
+        {hasHeader && (
+          <div className={classes.containerHeader} data-board-container-header>
+            <button
+              type="button"
+              className={classes.containerHeaderToggle}
+              data-board-container-label
+              data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
+              {...toggleHandlers}
+              aria-expanded={!isVisuallyCollapsed}
+              aria-controls={contentId}
+              aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
+              title={label}
+            >
+              <span className={classes.containerHeaderTitle}>{label}</span>
+              <span className={classes.containerHeaderIcon}>{toggleIcon}</span>
+            </button>
+          </div>
+        )}
+        {options.collapsible && !hasHeader && (
           <Button
             className={classes.containerToggle}
             pos="absolute"
@@ -130,33 +180,15 @@ export const BoardContainerSection = ({ section }: Props) => {
             pe={collapsedLabelPaddingRight}
             radius="sm"
             variant="default"
-            justify={options.showLabel ? "flex-start" : "center"}
-            leftSection={options.showLabel && toggleIcon}
-            onPointerDown={(event) => {
-              togglePointer.current = { x: event.clientX, y: event.clientY, moved: false };
-            }}
-            onPointerMove={(event) => {
-              const pointer = togglePointer.current;
-              if (!pointer || event.buttons === 0) return;
-              if (Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) > 5) {
-                pointer.moved = true;
-              }
-            }}
-            onPointerCancel={() => {
-              togglePointer.current = null;
-            }}
-            onClick={(event) => {
-              if (event.detail > 0 && togglePointer.current?.moved) return;
-              toggle();
-            }}
+            justify="center"
+            {...toggleHandlers}
             aria-expanded={!isVisuallyCollapsed}
             aria-controls={contentId}
             aria-label={`${t(isVisuallyCollapsed ? "action.expand" : "action.collapse")}: ${label}`}
             data-board-container-collapsed-control={isVisuallyCollapsed ? "true" : undefined}
             data-board-container-label
-            title={options.showLabel ? label : undefined}
           >
-            {options.showLabel ? label : toggleIcon}
+            {toggleIcon}
           </Button>
         )}
         {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
@@ -212,7 +244,7 @@ export const BoardContainerSection = ({ section }: Props) => {
               columnCount={section.width}
               containerInlineInsetCount={containerInlineInsetCount}
               requestedRowCount={section.height}
-              viewportRowCountOverride={isVisuallyCollapsed ? COLLAPSED_SECTION_ROW_COUNT : undefined}
+              viewportRowCountOverride={isVisuallyCollapsed ? section.height : undefined}
               label={label}
             />
           </ContainerDepthContext>

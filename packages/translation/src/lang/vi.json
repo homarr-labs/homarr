@@ -247,6 +247,82 @@
         "title": "Đăng nhập vào tài khoản của bạn",
         "subtitle": "Chào mừng trở lại! Hãy nhập thông tin đăng nhập của bạn"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Tham gia Homarr",
         "titleWithAppName": "Tham gia {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Chọn nhiều mục",
         "cancelMultiple": "Thoát chế độ chọn nhiều",
         "customApplication": "Ứng dụng tùy chỉnh",
-        "application": "Ứng dụng"
+        "application": "Ứng dụng",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Tạo ứng dụng mới",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Giám sát thời gian hoạt động",
       "beszel": "Beszel",
       "systemMonitoring": "Giám sát hệ thống",
-      "security": "Bảo mật"
+      "security": "Bảo mật",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Trang {page} trên {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "tại đây",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích"
+      "empty": "Thêm URL hoặc Ứng dụng trong cài đặt tiện ích",
+      "groups": {
+        "label": "",
+        "placeholder": "",
+        "add": "",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Tab mặc định"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Các phần cụm hiển thị"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Các container cần lọc"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "Lọc dưới dạng danh sách cho phép"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Không tìm thấy ứng dụng",
         "description": "Nhấp <here></here> để tạo ứng dụng mới",
-        "quickCreate": "Tạo ứng dụng nhanh"
+        "quickCreate": "Tạo ứng dụng nhanh",
+        "create": "Tạo ứng dụng"
       },
       "error": {
         "noIntegration": "Chưa chọn tích hợp",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "URL nhà cung cấp"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Mã định danh",
             "placeholder": "Tên hoặc Chủ sở hữu/Tên"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "Mở trang bản phát hành",
       "releaseDescription": "Mô tả bản phát hành",
       "projectDescription": "Mô tả dự án",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Không rõ",
       "created": "Đã tạo",
       "error": {
         "label": "Lỗi",
@@ -6364,6 +6476,31 @@
               "search": "Tìm",
               "firstDayOfWeek": "Ngày đầu tiên trong tuần",
               "accessibility": "Trợ năng",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Hướng dẫn giới thiệu",
                 "description": "Đặt lại hướng dẫn giới thiệu để xem lại vào lần truy cập khu vực quản lý hoặc bảng tiếp theo.",
@@ -6904,7 +7041,8 @@
               "label": "Xác thực",
               "title": "Khóa API",
               "button": {
-                "createApiToken": "Tạo mã thông báo API"
+                "createApiToken": "Tạo mã thông báo API",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Người tạo",
+                  "source": "Tích hợp",
                   "actions": "Thao tác"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

@@ -247,6 +247,82 @@
         "title": "Connectez-vous à votre compte",
         "subtitle": "Bon retour parmi nous ! Veuillez entrer vos identifiants"
       },
+      "mcpConsent": {
+        "title": "Réviser l'accès client",
+        "description": "Passez en revue l'accès de ce client avant de vous connecter.",
+        "viewingHint": "L'affichage de cette page n'autorise pas l'accès.",
+        "identityTitle": "Compte et client",
+        "loading": "Chargement de la demande d'accès",
+        "allow": "Autoriser l'accès",
+        "deny": "Refuser l'accès",
+        "decisionHint": "Autoriser l'accès uniquement si vous faites confiance à ce client et à ce rappel.",
+        "requestExpires": "La demande expire (UTC) :",
+        "details": "Détails techniques",
+        "returnHome": "Retourner à Homarr",
+        "reload": "Recharger la page de consentement",
+        "account": {
+          "name": "Connecté en tant que",
+          "id": "Identifiant de l'utilisateur",
+          "nameNotRecorded": "Nom d'utilisateur non enregistré"
+        },
+        "client": {
+          "name": "Client",
+          "nameNotSupplied": "Nom du client non fourni",
+          "id": "ID du client",
+          "callbackHost": "Hôte de rappel",
+          "callbackUrl": "URL de rappel complète",
+          "hostUnavailable": "Hôte de rappel indisponible",
+          "unverifiedHint": "Les noms de clients sont auto-signalés, non vérifiés par Homarr.",
+          "destinationHint": "Votre décision retournera à ce rappel. Si vous autorisez l'accès, le client peut échanger le code d'autorisation pour un identifiant API."
+        },
+        "access": {
+          "title": "Accès au compte",
+          "description": "Utilise vos permissions actuelles, y compris les ressources partagées.",
+          "details": "Voir les permissions ({count})",
+          "noGlobalPermissions": "Utilise votre compte et l'accès aux ressources partagées, sans autorisation globale."
+        },
+        "admin": {
+          "title": "Accès complet à l'administrateur",
+          "description": "Permet de gérer Homarr et les services connectés, y compris les actions destructrices."
+        },
+        "credential": {
+          "title": "Périmètre d’identification et durée de vie",
+          "breadth": "Fonctionne avec l'API HTTP d'Homarr, et MCP, y compris en dehors de ce client.",
+          "lifetime": "Aucune expiration automatique. La déconnexion ne révoque pas l'accès.",
+          "manageConnections": "Révoquer dans les paramètres généraux"
+        },
+        "error": {
+          "freshStart": "Démarrez une nouvelle demande d'autorisation de la part du client. Homarr vous demandera de revoir votre accès.",
+          "unavailable": {
+            "title": "Demande d'accès indisponible",
+            "description": "Cette demande a expiré, a déjà été gérée ou n'est plus disponible. Elle ne peut pas être approuvée à partir de cette page."
+          },
+          "invalid_browser": {
+            "title": "La demande d'accès appartient à un autre navigateur",
+            "description": "Ce navigateur ne peut pas vérifier la demande originale. Utilisez le navigateur où vous avez commencé l'autorisation, ou lancez une nouvelle demande de la part du client."
+          },
+          "session_changed": {
+            "title": "Votre session de connexion a changé",
+            "description": "Cette requête a été liée à un autre utilisateur ou à une autre session de connexion. Elle ne peut pas être approuvée avec la session en cours."
+          },
+          "invalid_request": {
+            "title": "La demande d'accès n'a pas pu être vérifiée",
+            "description": "La requête est invalide, a expiré ou n'est plus vérifiable. Aucun accès n'a été accordé par cette tentative."
+          },
+          "access_denied": {
+            "title": "L'accès n'a pas été accordé",
+            "description": "La tentative d'autorisation a été refusée. Aucun accès n'a été accordé par cette tentative."
+          },
+          "server_error": {
+            "title": "La demande d'accès n'a pas pu être complétée",
+            "description": "Homarr n'a pas pu terminer cette tentative d'autorisation. Vérifiez vos connexions OAuth avant de recommencer."
+          },
+          "unknown": {
+            "title": "Demande d'accès indisponible",
+            "description": "Cette page ne peut pas confirmer le résultat d'autorisation. Vérifiez vos connexions OAuth avant de recommencer."
+          }
+        }
+      },
       "invite": {
         "title": "Rejoignez Homarr",
         "titleWithAppName": "Rejoindre {appName}",
@@ -749,7 +825,10 @@
         "selectMultiple": "Sélectionner plusieurs",
         "cancelMultiple": "Quitter la sélection multiple",
         "customApplication": "Application personnalisée",
-        "application": "Application"
+        "application": "Application",
+        "backToApps": "Retour aux applications",
+        "createAndAdd": "Créer et ajouter",
+        "createAnother": "Créer et continuer"
       },
       "create": {
         "title": "Créer une nouvelle application",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Surveillance des disponibilités",
       "beszel": "Beszel",
       "systemMonitoring": "Surveillance système",
-      "security": "Sécurité"
+      "security": "Sécurité",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Page {page} sur {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Basculer la navigation"
     },
     "here": "ici",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Ajouter une URL ou une application dans les paramètres du widget"
+      "empty": "Ajouter une URL ou une application dans les paramètres du widget",
+      "groups": {
+        "label": "Catégories",
+        "placeholder": "Nouvelle catégorie",
+        "add": "Ajouter une catégorie",
+        "remove": "Supprimer la catégorie {name}",
+        "rename": "Nom de la catégorie pour {name}",
+        "assign": "Catégorie pour {name}",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Onglet par défaut"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "Système puis Cluster",
+          "clusterFirst": "Cluster puis Système"
+        },
         "visibleClusterSections": {
           "label": "Sections visibles de cluster"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Conteneurs à filtrer"
+        },
+        "filterCaseSensitive": {
+          "label": "Sensible à la casse"
+        },
+        "filterAllowWildcards": {
+          "label": "Autoriser les caractères génériques",
+          "description": "Utilisez * pour zéro ou plus de caractères."
         },
         "filterIsWhitelist": {
           "label": "Filtrer en tant que liste blanche"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Aucune application trouvée",
         "description": "Cliquez sur <here></here> pour créer une nouvelle application",
-        "quickCreate": "Créer une application à la volée"
+        "quickCreate": "Créer une application à la volée",
+        "create": "Créer une application"
       },
       "error": {
         "noIntegration": "Aucune intégration sélectionnée",
@@ -3928,7 +4033,7 @@
         },
         "enableThresholdColors": {
           "label": "Activer les couleurs de seuil",
-          "description": ""
+          "description": "Valeurs de statistiques de couleur verte, jaune, ou rouge en fonction des préréglages de sévérité"
         },
         "useCustomThresholds": {
           "label": "Seuils avancés",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "URL du fournisseur"
           },
+          "integrations": {
+            "label": "Intégrations liées"
+          },
           "identifier": {
             "label": "Identifiant",
             "placeholder": "Nom ou Propriétaire / Nom"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "Ouvrir la page de publication",
       "releaseDescription": "Description de la publication",
       "projectDescription": "Description du projet",
+      "runningVersions": "Versions en cours d'exécution",
+      "upToDate": "À jour",
+      "updateAvailable": "Mise à jour disponible",
+      "unknownStatus": "Inconnu",
       "created": "Créé le",
       "error": {
         "label": "Erreur",
@@ -6364,6 +6476,31 @@
               "search": "Rechercher",
               "firstDayOfWeek": "Premier jour de la semaine",
               "accessibility": "Accessibilité",
+              "oauthConnections": {
+                "title": "Connexions OAuth",
+                "description": "Ces clients ont obtenu des identifiants API pour votre compte via OAuth. Les identifiants fonctionnent avec l'API HTTP d'Homarr, ainsi que MCP, n'expirent pas automatiquement, et restent valides après votre déconnexion.",
+                "revocationHint": "La révocation d'une connexion supprime ses informations d'identification API. Pour se reconnecter, recommencez à autoriser le client.",
+                "loading": "Chargement des connexions OAuth",
+                "retry": "Recharger les connexions",
+                "revoke": "Révoquer la connexion",
+                "confirmRevoke": "Confirmer la révocation",
+                "empty": {
+                  "title": "Aucune connexion OAuth enregistrée",
+                  "description": "De nouvelles connexions OAuth apparaissent ici. Les anciens identifiants sans les détails enregistrés du client peuvent avoir besoin d'un administrateur pour les révoquer dans les clés API."
+                },
+                "loadError": {
+                  "title": "Les connexions OAuth n'ont pas pu être chargées",
+                  "description": "Essayez de charger la liste à nouveau. Cela ne révoque aucun identifiant."
+                },
+                "success": {
+                  "title": "Connexion révoquée",
+                  "description": "Les identifiants API enregistrés ont été supprimés. Reconnectez-vous du client pour accorder l'accès à nouveau."
+                },
+                "error": {
+                  "title": "La connexion n'a pas pu être révoquée",
+                  "description": "Les informations d'identification peuvent toujours être activées. Essayez de les révoquer à nouveau."
+                }
+              },
               "onboardingTours": {
                 "title": "Visites guidées d'intégration",
                 "description": "Réinitialiser les visites guidées pour les revoir lors de votre prochaine visite dans la zone de gestion ou le tableau de bord.",
@@ -6904,7 +7041,8 @@
               "label": "Authentification",
               "title": "Clés API",
               "button": {
-                "createApiToken": "Créer un jeton API"
+                "createApiToken": "Créer un jeton API",
+                "confirmDeletion": "Confirmer la suppression"
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Créé par",
+                  "source": "Intégration",
                   "actions": "Actions"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "Clé manuelle ou ancienne de l'API",
+                "unnamedClient": "Nom du client non enregistré",
+                "clientNameHint": "Les noms de clients sont auto-signalés et ne sont pas vérifiés.",
+                "details": "Détails de la connexion",
+                "credentialId": "ID de l'identifiant",
+                "clientId": "ID du client",
+                "callbackHost": "Hôte de rappel",
+                "callbackUrl": "URL de rappel complète",
+                "issuedAt": "Émis (UTC)",
+                "unknown": "Non enregistré"
+              },
+              "empty": {
+                "title": "Aucune clé API à afficher",
+                "description": "Créez un jeton API ou ajustez les filtres de la table pour trouver des clés existantes."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "La clé API n'a pas pu être créée",
+                  "description": "Aucun nouvel identifiant n'a été reçu. Vérifiez la liste des clés avant de réessayer."
+                },
+                "deleteError": {
+                  "title": "La clé API n'a pas pu être supprimée",
+                  "description": "Les informations d'identification peuvent toujours être activées. Essayez de les supprimer à nouveau."
+                },
+                "deleteSuccess": {
+                  "title": "Clé API supprimée",
+                  "description": "Les identifiants API enregistrés ont été supprimés."
+                },
+                "refreshError": {
+                  "title": "Clé API supprimée, mais la liste n'a pas pu être actualisée",
+                  "description": "Recharger cette page pour voir les clés d'API actuelles."
                 }
               }
             },
@@ -6937,9 +7111,9 @@
                   "description": ""
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (login et consentement du navigateur)",
+                  "description": "Commencez votre autorisation dans votre client OAuth et connectez-vous à Homarr si nécessaire. Examinez le client, la destination de rappel et l'accès au compte, puis choisissez Autoriser l'accès uniquement si vous faites confiance au client. Un identifiant API n'est créé qu'après approbation et un échange de code réussi.",
+                  "hint": "Révoquer les connexions OAuth enregistrées dans vos propres paramètres généraux. Les administrateurs peuvent également révoquer les informations d'identification dans l'onglet Authentification. Ces informations d'identification fonctionnent avec l'API HTTP d'Homarr's et MCP, n'expirent pas automatiquement, et restent valides après la déconnexion."
                 },
                 "permissions": ""
               },

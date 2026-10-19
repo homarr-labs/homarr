@@ -90,7 +90,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
 
   return (
     <Combobox store={combobox} withinPortal={withinPortal} onOptionSubmit={onOptionSubmit}>
-      <Combobox.Target targetType="button">
+      <Combobox.Target targetType="button" withExpandedAttribute>
         <InputBase
           {...props}
           component="button"

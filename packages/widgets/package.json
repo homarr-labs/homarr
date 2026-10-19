@@ -72,6 +72,7 @@
     "@mantine/dates": "catalog:",
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
+    "@mantine/schedule": "catalog:",
     "@rexa-developer/tiks": "catalog:",
     "@tabler/icons-react": "catalog:",
     "@tiptap/extension-color": "catalog:",

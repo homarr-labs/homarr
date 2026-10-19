@@ -7,6 +7,7 @@ import {
   IconCircleCheckFilled,
   IconCircleXFilled,
   IconMapPin,
+  IconQuestionMark,
   IconShieldCheck,
   IconShieldX,
 } from "@tabler/icons-react";
@@ -43,8 +44,8 @@ export function VpnIntegrationCard({
         publicIp={vpn.publicIp}
         city={vpn.city}
         country={vpn.country}
-        provider={vpn.vpnProvider.provider}
-        protocol={vpn.vpnProvider.protocol}
+        provider={vpn.vpnProvider?.provider}
+        protocol={vpn.vpnProvider?.protocol}
         compact={compact}
         dense={dense}
       />
@@ -84,7 +85,7 @@ function VpnUnavailableContent({
 
   return (
     <Flex direction="row" w="100%" align="center" gap="xs">
-      {/* Empty statuses render the shield and DNS badge in red (see getStatusColor). */}
+      {/* An unavailable VPN is red; unknown DNS status stays neutral. */}
       <VpnStatusColumn vpnStatus="" dnsStatus="" compact={compact} dense={dense} />
       <Flex gap={2} direction="column" w="100%" align="flex-start" style={{ minWidth: 0 }}>
         {integrationName ? (
@@ -107,7 +108,7 @@ function VpnStatusColumn({
   dense,
 }: {
   vpnStatus: string;
-  dnsStatus: string;
+  dnsStatus?: string;
   compact: boolean;
   dense: boolean;
 }) {
@@ -149,10 +150,10 @@ function VpnInfoColumn({
 }: {
   integrationName?: string;
   publicIp: string;
-  city: string;
-  country: string;
-  provider: string;
-  protocol: string;
+  city?: string;
+  country?: string;
+  provider?: string;
+  protocol?: string;
   compact: boolean;
   dense: boolean;
 }) {
@@ -179,7 +180,7 @@ function VpnInfoColumn({
   );
 }
 
-function VpnProviderDetails({ provider, protocol }: { provider: string; protocol: string }) {
+function VpnProviderDetails({ provider, protocol }: { provider?: string; protocol?: string }) {
   return (
     <Group gap={6} justify="flex-start" wrap="nowrap" style={{ minWidth: 0 }}>
       <Text fz="xs" lh={1.2} tt="capitalize" lineClamp={1}>
@@ -193,16 +194,24 @@ function VpnProviderDetails({ provider, protocol }: { provider: string; protocol
   );
 }
 
-function DnsStatusBadge({ status }: { status: string }) {
+function DnsStatusBadge({ status }: { status?: string }) {
   const t = useI18n("widget.vpn");
-  const StatusIcon = status === RUNNING_STATUS ? IconCircleCheckFilled : IconCircleXFilled;
-  const statusLabel = t(
-    status === RUNNING_STATUS ? "status.running" : status ? "status.notRunning" : "status.unavailable",
-  );
+  let StatusIcon = IconQuestionMark;
+  let color = "gray";
+  let statusLabel = t("status.unavailable");
+  if (status) {
+    color = getStatusColor(status);
+    StatusIcon = IconCircleXFilled;
+    statusLabel = t("status.notRunning");
+    if (status === RUNNING_STATUS) {
+      StatusIcon = IconCircleCheckFilled;
+      statusLabel = t("status.running");
+    }
+  }
   return (
     <Badge
       variant="outline"
-      color={getStatusColor(status)}
+      color={color}
       size="xs"
       radius="xl"
       leftSection={<StatusIcon aria-hidden size="var(--mantine-font-size-xs)" />}

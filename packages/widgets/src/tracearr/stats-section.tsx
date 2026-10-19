@@ -10,8 +10,8 @@ export function StatsBar({
   width,
   transparent = false,
 }: {
-  stats: TracearrDashboardData["stats"];
-  summary: TracearrDashboardData["streams"]["summary"];
+  stats: Pick<TracearrDashboardData["stats"], "activeStreams" | "totalUsers">;
+  summary: Pick<TracearrDashboardData["streams"]["summary"], "total" | "transcodes" | "totalBitrate">;
   width: number;
   transparent?: boolean;
 }) {

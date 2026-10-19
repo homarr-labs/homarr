@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 import {
+  Avatar,
+  Badge,
   Button,
   Divider,
   Group,
@@ -22,9 +24,11 @@ import {
   IconExternalLink,
   IconGitFork,
   IconProgressCheck,
+  IconRefreshAlert,
   IconStar,
   IconTriangleFilled,
 } from "@tabler/icons-react";
+import { getQueryKey } from "@trpc/react-query";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -33,19 +37,33 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
-import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
+import { getIconUrl, getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import classes from "./component.module.scss";
 import { selectReleaseRepositoriesForDisplay } from "./display";
+import { getFailedServiceVersionIntegrations, getRowIntegrationVersions, truncateVersion } from "./integration-version";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
+
+const integrationStatusColors = {
+  upToDate: "green",
+  updateAvailable: "yellow",
+  unknownStatus: "gray",
+} as const;
+
+const getIntegrationStatus = (isUpToDate: boolean | undefined): keyof typeof integrationStatusColors => {
+  if (isUpToDate === undefined) return "unknownStatus";
+  return isUpToDate ? "upToDate" : "updateAvailable";
+};
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -53,7 +71,14 @@ const formatRelativeDate = (value: string): string => {
   return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
-export default function ReleasesWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"releases">) {
+export default function ReleasesWidget({
+  options,
+  itemId,
+  integrationIds,
+  width,
+  displayMode,
+  widgetRuntimeRef,
+}: WidgetComponentProps<"releases">) {
   const t = useI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -76,7 +101,12 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
   );
 
   const normalizedRepositories = useMemo(
-    () => options.repositories.map((repo) => (repo.id ? repo : { ...repo, id: createId() })),
+    () =>
+      options.repositories.map((repo) => ({
+        ...repo,
+        id: repo.id ? repo.id : createId(),
+        integrationIds: repo.integrationIds ?? [],
+      })),
     [options.repositories],
   );
 
@@ -130,6 +160,32 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
   );
   const isInitialLoading = queryResults.some(isInitialWidgetQueryPending);
 
+  // Only integrations linked by a repository are queried; attaching alone shows nothing.
+  const linkedIntegrationIds = useMemo(
+    () =>
+      integrationIds.filter((integrationId) =>
+        normalizedRepositories.some((repository) => repository.integrationIds.includes(integrationId)),
+      ),
+    [integrationIds, normalizedRepositories],
+  );
+  const serviceVersionsInput = useMemo(() => ({ integrationIds: linkedIntegrationIds }), [linkedIntegrationIds]);
+  const serviceVersionsQuery = clientApi.widget.releases.getServiceVersions.useQuery(serviceVersionsInput, {
+    enabled: linkedIntegrationIds.length > 0,
+  });
+  const runtimeQueries = useMemo(
+    () =>
+      linkedIntegrationIds.length > 0
+        ? [getQueryKey(clientApi.widget.releases.getServiceVersions, serviceVersionsInput, "query")]
+        : [],
+    [linkedIntegrationIds.length, serviceVersionsInput],
+  );
+  useWidgetRuntimeQueries(widgetRuntimeRef, runtimeQueries);
+  const serviceVersions = useMemo(() => serviceVersionsQuery.data ?? [], [serviceVersionsQuery.data]);
+  const failedServiceVersionIntegrations = getFailedServiceVersionIntegrations(
+    serviceVersionsQuery,
+    t("runningVersions"),
+  );
+
   const repositories = useMemo(() => {
     const resultById = new Map(results.flat().map((result) => [result.id, result]));
     const formattedResults = normalizedRepositories
@@ -152,6 +208,12 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
           isNewRelease: isReleaseWithin(relativeDateOptions.newReleaseWithin),
           isStaleRelease: !isReleaseWithin(relativeDateOptions.staleReleaseWithin),
           viewed: releasesViewedList[repository.id] === release.latestRelease,
+          integrations: getRowIntegrationVersions(
+            repository.integrationIds,
+            integrationIds,
+            serviceVersions,
+            release.latestRelease,
+          ),
         };
       })
       .toSorted((repoA, repoB) => {
@@ -167,6 +229,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
     });
   }, [
     displayMode,
+    integrationIds,
     results,
     normalizedRepositories,
     options.showOnlyHighlighted,
@@ -174,6 +237,7 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
     relativeDateOptions.newReleaseWithin,
     relativeDateOptions.staleReleaseWithin,
     releasesViewedList,
+    serviceVersions,
   ]);
 
   const toggleExpandedDisplay = useCallback(
@@ -194,161 +258,192 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
   if (repositories.length === 0) return <WidgetEmptyState />;
 
   return (
-    <ScrollArea h="100%" className="releases">
-      <SimpleGrid cols={columns} spacing={columns > 1 ? "sm" : 0} p={columns > 1 ? "xs" : 0}>
-        {repositories.map((repository: ReleasesRepositoryResponse) => {
-          const isActive = expandedRepositoryId === repository.id;
-          const hasError = repository.error !== undefined;
+    <Stack h="100%" gap={0}>
+      {failedServiceVersionIntegrations.length > 0 && (
+        <Group className="releases-integration-errors" gap={0} justify="flex-end">
+          <IntegrationErrorIndicator results={failedServiceVersionIntegrations} />
+        </Group>
+      )}
+      <ScrollArea className="releases" style={{ flex: 1, minHeight: 0 }}>
+        <SimpleGrid cols={columns} spacing={columns > 1 ? "sm" : 0} p={columns > 1 ? "xs" : 0}>
+          {repositories.map((repository: ReleasesRepositoryResponse) => {
+            const isActive = expandedRepositoryId === repository.id;
+            const hasError = repository.error !== undefined;
+            const outdatedIntegrations =
+              repository.integrations?.filter((integration) => integration.isUpToDate === false) ?? [];
 
-          return (
-            <Stack
-              key={repository.id}
-              className={combineClasses(
-                "releases-repository",
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                `releases-repository-${repository.providerMetadata?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
-                classes.releasesRepository,
-              )}
-              gap={0}
-              style={
-                columns > 1
-                  ? {
-                      border: "1px solid var(--mantine-color-default-border)",
-                      borderRadius: "var(--mantine-radius-sm)",
-                    }
-                  : undefined
-              }
-            >
-              <UnstyledButton
-                className={combineClasses("releases-repository-header", classes.releasesRepositoryHeader, {
-                  [classes.active ?? ""]: isActive,
-                })}
-                onClick={() => toggleExpandedDisplay(repository)}
-                aria-expanded={isActive}
-                aria-label={t(isActive ? "collapseDetails" : "expandDetails", {
+            return (
+              <Stack
+                key={repository.id}
+                className={combineClasses(
+                  "releases-repository",
                   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                  name: repository.name || repository.identifier,
-                })}
+                  `releases-repository-${repository.providerMetadata?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
+                  classes.releasesRepository,
+                )}
+                gap={0}
+                style={
+                  columns > 1
+                    ? {
+                        border: "1px solid var(--mantine-color-default-border)",
+                        borderRadius: "var(--mantine-radius-sm)",
+                      }
+                    : undefined
+                }
               >
-                <Group p="xs">
-                  <MaskedOrNormalImage
-                    className="releases-repository-header-icon"
-                    imageUrl={repository.iconUrl ?? repository.providerMetadata?.iconUrl}
-                    hasColor={hasIconColor}
-                    style={{
-                      width: "1em",
-                      aspectRatio: "1/1",
-                    }}
-                  />
+                <UnstyledButton
+                  className={combineClasses("releases-repository-header", classes.releasesRepositoryHeader, {
+                    [classes.active ?? ""]: isActive,
+                  })}
+                  onClick={() => toggleExpandedDisplay(repository)}
+                  aria-expanded={isActive}
+                  aria-label={t(isActive ? "collapseDetails" : "expandDetails", {
+                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                    name: repository.name || repository.identifier,
+                  })}
+                >
+                  <Group p="xs">
+                    <MaskedOrNormalImage
+                      className="releases-repository-header-icon"
+                      imageUrl={repository.iconUrl ?? repository.providerMetadata?.iconUrl}
+                      hasColor={hasIconColor}
+                      style={{
+                        width: "1em",
+                        aspectRatio: "1/1",
+                      }}
+                    />
 
-                  <Group
-                    className="releases-repository-header-nameVersion-wrapper"
-                    gap={5}
-                    justify="space-between"
-                    miw={0}
-                    style={{ flex: 1 }}
-                  >
-                    {(isAdvanced || !options.showOnlyIcon) && (
-                      <Text className="releases-repository-header-name" size="xs">
-                        {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-                        {repository.name || repository.identifier}
-                      </Text>
-                    )}
+                    <Group
+                      className="releases-repository-header-nameVersion-wrapper"
+                      gap={5}
+                      justify="space-between"
+                      miw={0}
+                      style={{ flex: 1 }}
+                    >
+                      {(isAdvanced || !options.showOnlyIcon) && (
+                        <Text className="releases-repository-header-name" size="xs">
+                          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                          {repository.name || repository.identifier}
+                        </Text>
+                      )}
 
-                    <Tooltip
-                      className="releases-repository-header-version-tooltip"
-                      withArrow
-                      arrowSize={5}
-                      label={repository.latestRelease}
-                      events={{ hover: repository.latestRelease !== undefined, focus: true, touch: false }}
+                      <Tooltip
+                        className="releases-repository-header-version-tooltip"
+                        withArrow
+                        arrowSize={5}
+                        label={repository.latestRelease}
+                        events={{ hover: repository.latestRelease !== undefined, focus: true, touch: false }}
+                      >
+                        <Text
+                          className="releases-repository-header-version"
+                          size="xs"
+                          fw={700}
+                          truncate="end"
+                          c={hasError ? "red" : "text"}
+                          style={{ flexShrink: 1 }}
+                        >
+                          {hasError ? t("error.label") : (repository.latestRelease ?? t("not-found"))}
+                        </Text>
+                      </Tooltip>
+                    </Group>
+
+                    <Group
+                      className="releases-repository-header-releaseDate-wrapper"
+                      gap={5}
+                      style={{ flex: "0 0 auto" }}
                     >
                       <Text
-                        className="releases-repository-header-version"
+                        className="releases-repository-header-releaseDate"
                         size="xs"
-                        fw={700}
-                        truncate="end"
-                        c={hasError ? "red" : "text"}
-                        style={{ flexShrink: 1 }}
+                        c={
+                          repository.viewed
+                            ? "green"
+                            : repository.isNewRelease
+                              ? "primaryColor"
+                              : repository.isStaleRelease
+                                ? "secondaryColor"
+                                : "dimmed"
+                        }
                       >
-                        {hasError ? t("error.label") : (repository.latestRelease ?? t("not-found"))}
+                        {repository.latestReleaseAt &&
+                          !hasError &&
+                          formatter.relativeTime(repository.latestReleaseAt, {
+                            now,
+                            style: "narrow",
+                          })}
                       </Text>
-                    </Tooltip>
-                  </Group>
-
-                  <Group
-                    className="releases-repository-header-releaseDate-wrapper"
-                    gap={5}
-                    style={{ flex: "0 0 auto" }}
-                  >
-                    <Text
-                      className="releases-repository-header-releaseDate"
-                      size="xs"
-                      c={
-                        repository.viewed
-                          ? "green"
-                          : repository.isNewRelease
-                            ? "primaryColor"
-                            : repository.isStaleRelease
-                              ? "secondaryColor"
-                              : "dimmed"
-                      }
-                    >
-                      {repository.latestReleaseAt &&
-                        !hasError &&
-                        formatter.relativeTime(repository.latestReleaseAt, {
-                          now,
-                          style: "long",
-                        })}
-                    </Text>
-                    {hasError ? (
-                      <IconTriangleFilled
-                        className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
-                        size="var(--mantine-font-size-xs)"
-                        color="var(--mantine-color-red-filled)"
-                      />
-                    ) : repository.viewed ? (
-                      <IconCheck
-                        className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
-                        size="var(--mantine-font-size-xs)"
-                        color="green"
-                      />
-                    ) : (
-                      (repository.isNewRelease || repository.isStaleRelease) && (
-                        <IconCircleFilled
-                          className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
+                      {hasError ? (
+                        <IconTriangleFilled
+                          className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
                           size="var(--mantine-font-size-xs)"
-                          color={
-                            repository.isNewRelease
-                              ? "var(--mantine-color-primaryColor-filled)"
-                              : "var(--mantine-color-secondaryColor-filled)"
-                          }
+                          color="var(--mantine-color-red-filled)"
                         />
-                      )
-                    )}
+                      ) : repository.viewed ? (
+                        <IconCheck
+                          className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
+                          size="var(--mantine-font-size-xs)"
+                          color="green"
+                        />
+                      ) : (
+                        (repository.isNewRelease || repository.isStaleRelease) && (
+                          <IconCircleFilled
+                            className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
+                            size="var(--mantine-font-size-xs)"
+                            color={
+                              repository.isNewRelease
+                                ? "var(--mantine-color-primaryColor-filled)"
+                                : "var(--mantine-color-secondaryColor-filled)"
+                            }
+                          />
+                        )
+                      )}
+                      {!hasError && outdatedIntegrations.length > 0 && (
+                        <Tooltip
+                          className="releases-repository-header-integrations-tooltip"
+                          withArrow
+                          arrowSize={5}
+                          label={
+                            <Stack gap={0}>
+                              {outdatedIntegrations.map((integration) => (
+                                <Text key={integration.id} size="xs">
+                                  {`${integration.name}: ${integration.version} → ${repository.latestRelease}`}
+                                </Text>
+                              ))}
+                            </Stack>
+                          }
+                        >
+                          <IconRefreshAlert
+                            className="releases-repository-header-releaseDate-icon releases-repository-header-integrations-outdated"
+                            size="var(--mantine-font-size-xs)"
+                            color="var(--mantine-color-yellow-6)"
+                          />
+                        </Tooltip>
+                      )}
+                    </Group>
                   </Group>
-                </Group>
-              </UnstyledButton>
-              {(isAdvanced || options.showDetails) && (
-                <DetailsDisplay
-                  repository={repository}
-                  isExpanded={isActive}
-                  toggleExpandedDisplay={toggleExpandedDisplay}
-                />
-              )}
-              {isActive && (
-                <ExpandedDisplay
-                  repository={repository}
-                  hasIconColor={hasIconColor}
-                  markReleaseViewed={markReleaseViewed}
-                  toggleExpandedDisplay={toggleExpandedDisplay}
-                />
-              )}
-              <Divider className="releases-repository-divider" />
-            </Stack>
-          );
-        })}
-      </SimpleGrid>
-    </ScrollArea>
+                </UnstyledButton>
+                {(isAdvanced || options.showDetails) && (
+                  <DetailsDisplay
+                    repository={repository}
+                    isExpanded={isActive}
+                    toggleExpandedDisplay={toggleExpandedDisplay}
+                  />
+                )}
+                {isActive && (
+                  <ExpandedDisplay
+                    repository={repository}
+                    hasIconColor={hasIconColor}
+                    markReleaseViewed={markReleaseViewed}
+                    toggleExpandedDisplay={toggleExpandedDisplay}
+                  />
+                )}
+                <Divider className="releases-repository-divider" />
+              </Stack>
+            );
+          })}
+        </SimpleGrid>
+      </ScrollArea>
+    </Stack>
   );
 }
 
@@ -632,6 +727,75 @@ const ExpandedDisplay = ({
               })}
             </Text>
           </Text>
+        )}
+
+        {repository.integrations && repository.integrations.length > 0 && (
+          <>
+            <Divider className="releases-repository-expanded-integrations-divider" mx="30%" />
+            <Title className="releases-repository-expanded-integrations-title" order={4} ta="center">
+              {t("runningVersions")}
+            </Title>
+            <Stack className="releases-repository-expanded-integrations" gap={5}>
+              {repository.integrations.map((integration) => (
+                <Group
+                  key={integration.id}
+                  className="releases-repository-expanded-integration"
+                  gap="xs"
+                  wrap="nowrap"
+                  justify="space-between"
+                >
+                  <Group
+                    className="releases-repository-expanded-integration-name-wrapper"
+                    gap="xs"
+                    wrap="nowrap"
+                    miw={0}
+                  >
+                    <Avatar
+                      className="releases-repository-expanded-integration-icon"
+                      src={getIconUrl(integration.kind)}
+                      size={18}
+                      radius="sm"
+                    />
+                    <Text className="releases-repository-expanded-integration-name" size="xs" fw={500} lineClamp={1}>
+                      {integration.name}
+                    </Text>
+                  </Group>
+                  <Group
+                    className="releases-repository-expanded-integration-status-wrapper"
+                    gap="xs"
+                    wrap="nowrap"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <Tooltip
+                      className="releases-repository-expanded-integration-version-tooltip"
+                      withArrow
+                      arrowSize={5}
+                      label={integration.version}
+                      disabled={truncateVersion(integration.version) === integration.version}
+                    >
+                      <Badge
+                        className="releases-repository-expanded-integration-version"
+                        size="xs"
+                        variant="subtle"
+                        color="gray"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        {truncateVersion(integration.version)}
+                      </Badge>
+                    </Tooltip>
+                    <Badge
+                      className="releases-repository-expanded-integration-status"
+                      size="xs"
+                      variant="dot"
+                      color={integrationStatusColors[getIntegrationStatus(integration.isUpToDate)]}
+                    >
+                      {t(getIntegrationStatus(integration.isUpToDate))}
+                    </Badge>
+                  </Group>
+                </Group>
+              ))}
+            </Stack>
+          </>
         )}
 
         <Divider className="releases-repository-expanded-actions-divider" mx="30%" />

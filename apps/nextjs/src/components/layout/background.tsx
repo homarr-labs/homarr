@@ -2,7 +2,6 @@ import { usePathname } from "next/navigation";
 import type { AppShellProps } from "@mantine/core";
 
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useBoardReplay } from "@homarr/api/board-replay";
 
 const supportedVideoFormats = ["mp4", "webm", "ogg"];
 const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLowerCase().endsWith(`.${format}`));
@@ -10,12 +9,11 @@ const isVideo = (url: string) => supportedVideoFormats.some((format) => url.toLo
 export const useOptionalBackgroundProps = (): Partial<AppShellProps> => {
   const board = useOptionalBoard();
   const pathname = usePathname();
-  const replay = useBoardReplay();
 
   if (!board?.backgroundImageUrl) return {};
 
   // Check if we are on a client board page
-  if (!replay && pathname.split("/").length > 3) return {};
+  if (pathname.split("/").length > 3) return {};
 
   if (isVideo(board.backgroundImageUrl)) {
     return {};

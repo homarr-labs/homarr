@@ -247,6 +247,82 @@
         "title": "アカウントにログイン",
         "subtitle": "おかえりなさい！認証情報を入力してください"
       },
+      "mcpConsent": {
+        "title": "クライアントへのアクセスを確認",
+        "description": "接続する前にこのクライアントのアクセスを確認してください。",
+        "viewingHint": "このページを表示するとアクセスが許可されません。",
+        "identityTitle": "アカウントとクライアント",
+        "loading": "アクセスリクエストを読み込み中",
+        "allow": "アクセスを許可",
+        "deny": "アクセス拒否",
+        "decisionHint": "このクライアントとコールバックを信頼する場合にのみアクセスを許可します。",
+        "requestExpires": "リクエストの有効期限（UTC）：",
+        "details": "技術的な詳細",
+        "returnHome": "Homarrに戻る",
+        "reload": "同意ページの再読み込み",
+        "account": {
+          "name": "としてサインインしました",
+          "id": "ユーザー ID",
+          "nameNotRecorded": "ユーザー名が記録されていません"
+        },
+        "client": {
+          "name": "クライアント",
+          "nameNotSupplied": "クライアント名が指定されていません",
+          "id": "クライアント ID",
+          "callbackHost": "コールバックホスト",
+          "callbackUrl": "完全なコールバックURL",
+          "hostUnavailable": "コールバックホストが利用できません",
+          "unverifiedHint": "クライアント名は自己報告されており、Homarrによって検証されていません。",
+          "destinationHint": "あなたの決定はこのコールバックに戻ります。アクセスを許可する場合、クライアントは認証コードをAPI資格情報と交換できます。"
+        },
+        "access": {
+          "title": "アカウントへのアクセス",
+          "description": "共有リソースを含む現在の権限を使用します。",
+          "details": "権限を表示 ({count})",
+          "noGlobalPermissions": "アカウントと共有リソースへのアクセスを使用します。グローバル権限はありません。"
+        },
+        "admin": {
+          "title": "フル管理者アクセス",
+          "description": "破壊行為を含むHomarrと接続されたサービスを管理することができます。"
+        },
+        "credential": {
+          "title": "資格情報の範囲と有効期間",
+          "breadth": "HomarrのHTTP APIとMCPで動作します。このクライアントの外部を含みます。",
+          "lifetime": "自動的に期限切れがありません。サインアウトするとアクセスが取り消されません。",
+          "manageConnections": "全般設定で取り消し"
+        },
+        "error": {
+          "freshStart": "クライアントから新しい認証リクエストを開始します。Homarrはアクセスを再度確認するよう要求します。",
+          "unavailable": {
+            "title": "アクセスリクエストは利用できません",
+            "description": "このリクエストは有効期限が切れているか、すでに処理されていないか、利用できません。このページから承認することはできません。"
+          },
+          "invalid_browser": {
+            "title": "アクセスリクエストは別のブラウザに属しています",
+            "description": "このブラウザーは元のリクエストを検証できません。許可を開始したブラウザーを使用するか、クライアントから新しいリクエストを開始します。"
+          },
+          "session_changed": {
+            "title": "サインインセッションが変更されました",
+            "description": "このリクエストは別のユーザーまたはサインインセッションにリンクされています。現在のセッションでは承認できません。"
+          },
+          "invalid_request": {
+            "title": "アクセスリクエストを確認できませんでした",
+            "description": "The request is invalid, expired or no longer verifiable. No access was granted by this attempt."
+          },
+          "access_denied": {
+            "title": "アクセスが許可されていません",
+            "description": "承認の試みが拒否されました。この試みによってアクセスが許可されませんでした。"
+          },
+          "server_error": {
+            "title": "アクセスリクエストを完了できませんでした",
+            "description": "Homarr could not complete this authorization attempt. Check your OAuth connections before starting again."
+          },
+          "unknown": {
+            "title": "アクセスリクエストは利用できません",
+            "description": "このページは承認結果を確認できません。再度開始する前に、OAuth 接続を確認してください。"
+          }
+        }
+      },
       "invite": {
         "title": "Homarrに参加",
         "titleWithAppName": "{appName} に参加",
@@ -749,7 +825,10 @@
         "selectMultiple": "複数を選択",
         "cancelMultiple": "複数選択を終了",
         "customApplication": "カスタム アプリケーション",
-        "application": "アプリケーション"
+        "application": "アプリケーション",
+        "backToApps": "アプリに戻る",
+        "createAndAdd": "作成して追加",
+        "createAnother": "作成して続ける"
       },
       "create": {
         "title": "新しいアプリを作成",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "",
       "beszel": "Beszel",
       "systemMonitoring": "システム監視",
-      "security": "セキュリティ"
+      "security": "セキュリティ",
+      "serviceVersion": "バージョン"
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "ページ {page} / {totalPages}"
+    },
+    "navigation": {
+      "toggle": "ナビゲーションの切り替え"
     },
     "here": "こちら",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "ウィジェットの設定で URL または App を追加する"
+      "empty": "ウィジェットの設定で URL または App を追加する",
+      "groups": {
+        "label": "カテゴリ",
+        "placeholder": "新しいカテゴリー",
+        "add": "カテゴリーを追加",
+        "remove": "{name} カテゴリを削除",
+        "rename": "カテゴリ名 {name}",
+        "assign": "{name} のカテゴリ",
+        "ungrouped": "Ungrouped"
+      }
     },
     "archiveTeamWarrior": {
       "name": "",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "デフォルトのタブ"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "システムとクラスター",
+          "clusterFirst": "Cluster then System"
+        },
         "visibleClusterSections": {
           "label": "表示するクラスターセクション"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "フィルタするコンテナ"
+        },
+        "filterCaseSensitive": {
+          "label": "大文字と小文字を区別する"
+        },
+        "filterAllowWildcards": {
+          "label": "ワイルドカードを許可",
+          "description": "0文字以上には*を使用します。"
         },
         "filterIsWhitelist": {
           "label": "ホワイトリストとしてフィルター"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "アプリが見つかりません",
         "description": "<here></here> をクリックして新しいアプリを作成する",
-        "quickCreate": "即座にアプリを作成"
+        "quickCreate": "即座にアプリを作成",
+        "create": "アプリの作成"
       },
       "error": {
         "noIntegration": "連携機能が選択されていません",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "連携連携"
+          },
           "identifier": {
             "label": "識別名",
             "placeholder": "名前、または所有者名"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "リリースページを開く",
       "releaseDescription": "リリースの説明",
       "projectDescription": "プロジェクトの説明",
+      "runningVersions": "実行中のバージョン",
+      "upToDate": "最新です",
+      "updateAvailable": "アップデートがあります",
+      "unknownStatus": "不明",
       "created": "作成日",
       "error": {
         "label": "エラー",
@@ -6364,6 +6476,31 @@
               "search": "検索",
               "firstDayOfWeek": "週の初日",
               "accessibility": "アクセシビリティ",
+              "oauthConnections": {
+                "title": "OAuth接続",
+                "description": "これらのクライアントは、OAuth を通じてアカウントの API 資格情報を取得しました。 認証情報は Homarr の HTTP API と MCP で動作します。自動的に失効することはなく、サインアウト後も有効になります。",
+                "revocationHint": "接続を取り消すと、API 資格情報が削除されます。再接続するには、クライアントから再度認証を開始してください。",
+                "loading": "OAuth接続を読み込み中",
+                "retry": "接続を再読み込み",
+                "revoke": "接続を取り消す",
+                "confirmRevoke": "取り消しを確認",
+                "empty": {
+                  "title": "記録されたOAuth接続はありません",
+                  "description": "新しい OAuth 接続がここに表示されます。古いクライアントの詳細が記録されていない資格情報は、API キーでそれらを取り消すために管理者が必要な場合があります。"
+                },
+                "loadError": {
+                  "title": "OAuth接続を読み込めませんでした",
+                  "description": "リストを再度読み込んでみてください。資格情報は取り消されません。"
+                },
+                "success": {
+                  "title": "接続が取り消されました",
+                  "description": "保存された API 資格情報が削除されました。再度クライアントからアクセスを許可するには再度接続してください。"
+                },
+                "error": {
+                  "title": "接続を取り消せませんでした",
+                  "description": "資格情報はまだアクティブになっている可能性があります。再度無効にしてください。"
+                }
+              },
               "onboardingTours": {
                 "title": "",
                 "description": "",
@@ -6904,7 +7041,8 @@
               "label": "認証",
               "title": "API キー",
               "button": {
-                "createApiToken": "API トークンの生成"
+                "createApiToken": "API トークンの生成",
+                "confirmDeletion": "削除の確認"
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "作成者",
+                  "source": "連携機能",
                   "actions": "アクション"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuth",
+                "unattributed": "手動またはレガシーAPIキー",
+                "unnamedClient": "クライアント名が記録されていません",
+                "clientNameHint": "クライアント名は自己報告されており、検証されていません。",
+                "details": "接続の詳細",
+                "credentialId": "証明書ID",
+                "clientId": "クライアント ID",
+                "callbackHost": "コールバックホスト",
+                "callbackUrl": "完全なコールバックURL",
+                "issuedAt": "発行済み（UTC）",
+                "unknown": "記録されていません"
+              },
+              "empty": {
+                "title": "表示するAPIキーがありません",
+                "description": "API トークンを作成するか、テーブルフィルタを調整して既存のキーを見つけます。"
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API キーを作成できませんでした",
+                  "description": "新しい資格情報を受け取れませんでした。もう一度試す前にキーリストを確認してください。"
+                },
+                "deleteError": {
+                  "title": "API キーを削除できませんでした",
+                  "description": "資格情報はまだアクティブかもしれません。もう一度削除してみてください。"
+                },
+                "deleteSuccess": {
+                  "title": "API キーが削除されました",
+                  "description": "保存された API 資格情報が削除されました。"
+                },
+                "refreshError": {
+                  "title": "APIキーを削除しましたが、リストを更新できませんでした",
+                  "description": "現在の API キーを参照するには、このページを再読み込みしてください。"
                 }
               }
             },
@@ -6937,9 +7111,9 @@
                   "description": ""
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth(ブラウザのログインと同意)",
+                  "description": "OAuthクライアントで認証を開始し、必要に応じてHomarrにサインインします。 クライアント、コールバック先、アカウントへのアクセスを確認し、クライアントを信頼している場合にのみアクセスを許可を選択します。 API 資格情報は承認とコード交換が成功した後にのみ作成されます。",
+                  "hint": "独自の一般設定で記録された OAuth 接続を取り消す。管理者は認証タブで資格情報を取り消すこともできます。 これらの資格情報は Homarr の HTTP API および MCP で動作し、自動的に期限切れにならず、サインアウト後も有効になります。"
                 },
                 "permissions": ""
               },

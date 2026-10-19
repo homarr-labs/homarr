@@ -247,6 +247,82 @@
         "title": "Melde dich bei deinem Konto an",
         "subtitle": "Willkommen zurück! Bitte gib deine Zugangsdaten ein"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "Homarr beitreten",
         "titleWithAppName": "{appName} beitreten",
@@ -749,7 +825,10 @@
         "selectMultiple": "Mehrere auswählen",
         "cancelMultiple": "Mehrfachauswahl beenden",
         "customApplication": "Benutzerdefinierte Anwendung",
-        "application": "Anwendung"
+        "application": "Anwendung",
+        "backToApps": "",
+        "createAndAdd": "",
+        "createAnother": ""
       },
       "create": {
         "title": "Neue App erstellen",
@@ -1433,7 +1512,8 @@
       "uptimeMonitoring": "Betriebszeitüberwachung",
       "beszel": "Beszel",
       "systemMonitoring": "Systemüberwachung",
-      "security": "Sicherheit"
+      "security": "Sicherheit",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -1835,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Seite {page} von {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "Hier",
     "serviceUrlTemplate": {
@@ -2346,7 +2429,16 @@
           }
         }
       },
-      "empty": "Füge eine URL oder App in den Widget-Einstellungen hinzu"
+      "empty": "Füge eine URL oder App in den Widget-Einstellungen hinzu",
+      "groups": {
+        "label": "",
+        "placeholder": "Neue Kategorie",
+        "add": "Kategorie hinzufügen",
+        "remove": "",
+        "rename": "",
+        "assign": "",
+        "ungrouped": ""
+      }
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",
@@ -3289,6 +3381,11 @@
         "defaultTab": {
           "label": "Standard Tab"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "Sichtbare Cluster-Abschnitte"
         },
@@ -3380,6 +3477,13 @@
         },
         "containerFilter": {
           "label": "Zu filternde Container"
+        },
+        "filterCaseSensitive": {
+          "label": ""
+        },
+        "filterAllowWildcards": {
+          "label": "",
+          "description": ""
         },
         "filterIsWhitelist": {
           "label": "Als Whitelist filtern"
@@ -3688,7 +3792,8 @@
       "app": {
         "noData": "Keine App gefunden",
         "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
-        "quickCreate": "Jetzt eine App erstellen"
+        "quickCreate": "Jetzt eine App erstellen",
+        "create": "App ersteue"
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
@@ -4550,6 +4655,9 @@
           "providerUrl": {
             "label": "Anbieter-URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Kennung",
             "placeholder": "Name oder Eigentümer/Name"
@@ -4609,6 +4717,10 @@
       "openReleasePage": "Veröffentlichungsseite öffnen",
       "releaseDescription": "Beschreibung der Veröffentlichung",
       "projectDescription": "Projektbeschreibung",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Unbekannt",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
@@ -6364,6 +6476,31 @@
               "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "Onboarding-Touren",
                 "description": "Setzen Sie die Onboarding-Touren zurück, damit sie bei Ihrem nächsten Besuch im Verwaltungsbereich oder Dashboard erneut angezeigt werden.",
@@ -6904,7 +7041,8 @@
               "label": "Authentifizierung",
               "title": "API Schlüssel",
               "button": {
-                "createApiToken": "API Token erstellen"
+                "createApiToken": "API Token erstellen",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6915,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Erstellt von",
+                  "source": "Integration",
                   "actions": "Aktionen"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },

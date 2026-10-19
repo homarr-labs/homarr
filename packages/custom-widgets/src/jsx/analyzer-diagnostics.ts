@@ -1,9 +1,26 @@
+import type { AstNode } from "./analyzer-ast";
+
 export interface CustomJsxTemplateDiagnostic {
   severity: "error" | "warning";
   message: string;
   index: number;
   line: number;
   column: number;
+}
+
+export function createCustomJsxNodeDiagnostic(
+  node: AstNode,
+  message: string,
+  severity: "error" | "warning" = "error",
+): CustomJsxTemplateDiagnostic {
+  const line = node.loc?.start?.line ?? 1;
+  return {
+    severity,
+    message,
+    index: Math.max(0, (node.start ?? 2) - 2),
+    line,
+    column: Math.max(1, (node.loc?.start?.column ?? 0) + 1 - (line === 1 ? 2 : 0)),
+  };
 }
 
 export function createCustomJsxParseDiagnostic(_template: string, error: unknown): CustomJsxTemplateDiagnostic {

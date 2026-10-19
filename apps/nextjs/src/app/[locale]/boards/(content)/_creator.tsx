@@ -22,6 +22,7 @@ import { env } from "~/env";
 import { createBoardLayout, getInitialViewportWidthAsync } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
+import { CachedWidgetRefresh } from "./_cached-widget-refresh";
 import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
 import { createBoardQuerySnapshot } from "./_query-snapshot";
 import { WidgetResourcePreload } from "./_widget-resource-preload";
@@ -38,7 +39,7 @@ const BoardWithIntegrations = async ({
   integrationsPromise: ReturnType<typeof getIntegrationsWithPermissionsAsync>;
 }) => (
   <IntegrationProvider integrations={await integrationsPromise}>
-    <ClientBoard debugActions={{ playgroundEnabled: env.ENABLE_BOARD_DEBUG }} />
+    <ClientBoard />
   </IntegrationProvider>
 );
 
@@ -56,25 +57,6 @@ const DeferredWidgetHydration = async ({
         shouldDehydrateQuery: (query) =>
           query.meta?.streamedBeszelSelection === true &&
           (query.state.status === "pending" || query.state.status === "success"),
-      })}
-    />
-  );
-};
-
-const RefreshedQueryHydration = async ({
-  queryClient,
-  queryHashes,
-  promises,
-}: {
-  queryClient: QueryClient;
-  queryHashes: Set<string>;
-  promises: Promise<unknown>[];
-}) => {
-  await Promise.allSettled(promises);
-  return (
-    <HydrationBoundary
-      state={dehydrate(queryClient, {
-        shouldDehydrateQuery: (query) => queryHashes.has(query.queryHash) && query.state.status === "success",
       })}
     />
   );
@@ -173,13 +155,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           <WidgetResourcePreload kinds={getInitiallyVisibleWidgetKinds(board, layoutId)} />
           <HydrationBoundary state={dehydrate(queryClient)}>
             {restoredRefreshes.length > 0 && (
-              <Suspense fallback={null}>
-                <RefreshedQueryHydration
-                  queryClient={queryClient}
-                  queryHashes={restoredQueryHashes}
-                  promises={restoredRefreshes.map(({ promise }) => promise)}
-                />
-              </Suspense>
+              <CachedWidgetRefresh queryHashes={restoredRefreshes.map(({ queryHash }) => queryHash)} />
             )}
             {dependentQueries.length > 0 && (
               <Suspense fallback={null}>

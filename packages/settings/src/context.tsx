@@ -8,8 +8,6 @@ import { createSettings } from "./creator";
 
 const SettingsContext = createContext<SettingsContextProps | null>(null);
 
-export const SettingsSnapshotProvider = SettingsContext.Provider;
-
 export const SettingsProvider = ({
   user,
   serverSettings,

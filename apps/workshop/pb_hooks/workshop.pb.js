@@ -79,6 +79,8 @@ routerAdd("GET", "/workshop/{id}", workshopDetailPage);
 routerAdd("GET", "/workshop/{id}/{$}", workshopDetailPage);
 
 onRecordCreateRequest((event) => {
+  const { validateSubmissionManifest } = require(`${__hooks}/workshop-utils.js`);
+  validateSubmissionManifest(event.record);
   event.record.set("revision", 1);
   event.record.set("expectedRevision", 0);
   event.record.set("changelog", "");
@@ -87,16 +89,41 @@ onRecordCreateRequest((event) => {
 }, "submissions");
 
 onRecordUpdateRequest((event) => {
-  const { rejectRequest } = require(`${__hooks}/workshop-utils.js`);
   const original = event.record.original();
   const currentRevision = original.getInt("revision");
-  const expectedRevision = event.record.getInt("expectedRevision");
+  const body = new DynamicModel({ expectedRevision: -0 });
+  try {
+    event.bindBody(body);
+  } catch {
+    throw new BadRequestError("Supply the current submission revision as expectedRevision");
+  }
+  const expectedRevision = body.expectedRevision;
   if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 1) {
-    rejectRequest("Submission changed since it was read");
+    throw new BadRequestError("Supply the current submission revision as expectedRevision");
+  }
+  const conflict = new ApiError(409, "Submission changed since it was read. Reload it before saving again", {
+    expectedRevision: new ValidationError("revision_conflict", "The submission revision is no longer current"),
+  });
+  if (expectedRevision !== currentRevision) {
+    throw conflict;
+  }
+  if (
+    ["type", "widgetSchema", "content"].some((field) => event.record.getString(field) !== original.getString(field))
+  ) {
+    const { validateSubmissionManifest } = require(`${__hooks}/workshop-utils.js`);
+    validateSubmissionManifest(event.record);
   }
   event.record.set("expectedRevision", expectedRevision);
   event.record.set("revision", currentRevision + 1);
-  event.next();
+  try {
+    event.next();
+  } catch (error) {
+    const cause = error.value?.rawData?.();
+    if (cause?.error?.().includes("submission revision compare-and-swap failed")) {
+      throw conflict;
+    }
+    throw error;
+  }
 }, "submissions");
 
 onRecordCreateRequest((event) => {

@@ -143,7 +143,9 @@ export const workshopProcedures = {
 
   workshopInstall: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Install one validated Workshop Custom JSX widget." } })
+    .meta({
+      mcp: { enabled: true, effect: "additive", description: "Install one validated Workshop Custom JSX widget." },
+    })
     .input(
       z.object({
         submissionId: z.string().min(1),

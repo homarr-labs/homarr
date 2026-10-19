@@ -49,6 +49,11 @@ export const WidgetIntegrationSelect = ({
   const tIntegration = useI18n("widget.common.integration");
   const tCommon = useI18n("common");
   const multiSelectValues = valueProp ?? [];
+  const selectedIds = new Set(multiSelectValues);
+  const optionsById = new Map<string, IntegrationSelectOption>();
+  for (const option of data) {
+    if (!optionsById.has(option.id)) optionsById.set(option.id, option);
+  }
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -56,7 +61,7 @@ export const WidgetIntegrationSelect = ({
   });
 
   const handleValueSelect = (selectedValue: string) => {
-    if (multiSelectValues.includes(selectedValue)) {
+    if (selectedIds.has(selectedValue)) {
       onChange(multiSelectValues.filter((value) => value !== selectedValue));
     } else if (canSelectMultiple) {
       onChange([...multiSelectValues, selectedValue]);
@@ -73,9 +78,22 @@ export const WidgetIntegrationSelect = ({
     onChange(multiSelectValues.filter((value) => value !== valueToRemove));
 
   const values = multiSelectValues.map((item) => {
-    const option = data.find((integration) => integration.id === item);
+    const option = optionsById.get(item);
     if (!option) {
-      return null;
+      return (
+        <Pill
+          key={item}
+          withRemoveButton
+          onRemove={() => handleValueRemove(item)}
+          removeButtonProps={{
+            "aria-label": tItem("removeLabel", { name: item }),
+            "aria-hidden": false,
+            tabIndex: 0,
+          }}
+        >
+          {tIntegration("noData")}: {item}
+        </Pill>
+      );
     }
 
     return (
@@ -90,10 +108,11 @@ export const WidgetIntegrationSelect = ({
   });
 
   const options = data.map((item) => {
+    const isSelected = selectedIds.has(item.id);
     return (
-      <Combobox.Option value={item.id} key={item.id} active={multiSelectValues.includes(item.id)}>
+      <Combobox.Option value={item.id} key={item.id} active={isSelected}>
         <Group gap="sm" align="center">
-          {multiSelectValues.includes(item.id) ? <CheckIcon size="var(--mantine-font-size-xs)" /> : null}
+          {isSelected && <CheckIcon size="var(--mantine-font-size-xs)" />}
           <Group gap={7} align="center">
             <Avatar src={getIconUrl(item.kind)} size="sm" />
             <Stack gap={0}>

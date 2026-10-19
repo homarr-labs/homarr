@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
+import { splitToChunksWithNItems } from "@homarr/common";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { getCustomWidgetSourceAuthType } from "@homarr/custom-widgets/core";
 import type { CustomWidgetHttpRequest } from "@homarr/custom-widgets/server";
@@ -15,10 +16,16 @@ export async function assertCustomWidgetIntegrationBindings(
   ctx: IntegrationHttpContext,
   sources: Record<string, CustomWidgetSource>,
 ) {
-  for (const source of Object.values(sources)) {
-    if (source.type !== "integration") continue;
-    if (!source.integrationId) continue;
-    await resolveIntegration(ctx, source);
+  const integrationSources = Object.values(sources).filter(
+    (source): source is Extract<CustomWidgetSource, { type: "integration" }> =>
+      source.type === "integration" && Boolean(source.integrationId),
+  );
+  for (const chunk of splitToChunksWithNItems(integrationSources, 4)) {
+    const results = await Promise.allSettled(chunk.map((source) => resolveIntegration(ctx, source)));
+    // Keep the first source's validation error even when a later lookup finishes first.
+    for (const result of results) {
+      if (result.status === "rejected") throw result.reason;
+    }
   }
 }
 

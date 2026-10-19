@@ -100,7 +100,6 @@
         "@assistant-ui/react-ai-sdk": "catalog:",
         "@assistant-ui/react-lexical": "catalog:",
         "@assistant-ui/react-markdown": "catalog:",
-        "@babel/parser": "catalog:",
         "@dnd-kit/abstract": "catalog:",
         "@dnd-kit/collision": "catalog:",
         "@dnd-kit/core": "catalog:",
@@ -174,7 +173,6 @@
         "better-sqlite3": "catalog:",
         "chroma-js": "catalog:",
         "clsx": "catalog:",
-        "css-tree": "catalog:",
         "dayjs": "catalog:",
         "dotenv": "catalog:",
         "drizzle-orm": "catalog:",
@@ -204,10 +202,10 @@
       },
       "devDependencies": {
         "@homarr/tsconfig": "workspace:^0.1.0",
+        "@tabler/icons-sprite": "catalog:",
         "@types/adm-zip": "catalog:",
         "@types/better-sqlite3": "catalog:",
         "@types/chroma-js": "catalog:",
-        "@types/css-tree": "catalog:",
         "@types/node": "catalog:",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
@@ -983,6 +981,7 @@
         "@mantine/dates": "catalog:",
         "@mantine/form": "catalog:",
         "@mantine/hooks": "catalog:",
+        "@mantine/schedule": "catalog:",
         "@rexa-developer/tiks": "catalog:",
         "@tabler/icons-react": "catalog:",
         "@tiptap/extension-color": "catalog:",
@@ -1253,6 +1252,7 @@
     "@mantine/lightbox": "9.6.0",
     "@mantine/modals": "9.6.0",
     "@mantine/notifications": "9.6.0",
+    "@mantine/schedule": "9.6.0",
     "@mantine/spotlight": "9.6.0",
     "@mantine/tiptap": "9.6.0",
     "@modelcontextprotocol/server": "2.0.0",
@@ -1270,6 +1270,7 @@
     "@shadcn/react": "^0.2.1",
     "@t3-oss/env-nextjs": "0.13.11",
     "@tabler/icons-react": "3.44.0",
+    "@tabler/icons-sprite": "3.44.0",
     "@tanstack/query-async-storage-persister": "5.101.2",
     "@tanstack/react-devtools": "0.10.9",
     "@tanstack/react-query": "5.101.2",
@@ -1309,7 +1310,6 @@
     "@types/cookies": "0.9.2",
     "@types/crypto-js": "4.2.2",
     "@types/css-modules": "1.0.5",
-    "@types/css-tree": "^2.3.11",
     "@types/dockerode": "4.0.1",
     "@types/mdx": "2.0.14",
     "@types/node": "24.13.3",
@@ -1350,7 +1350,6 @@
     "croner": "10.0.1",
     "cross-env": "10.1.0",
     "crypto-js": "4.2.0",
-    "css-tree": "3.2.1",
     "date-fns": "4.4.0",
     "dayjs": "1.11.21",
     "deepmerge": "4.3.1",
@@ -2080,6 +2079,8 @@
 
     "@mantine/notifications": ["@mantine/notifications@9.6.0", "", { "dependencies": { "@mantine/store": "9.6.0", "react-transition-group": "4.4.5" }, "peerDependencies": { "@mantine/core": "9.6.0", "@mantine/hooks": "9.6.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-1sTE7EaGpr6LX7ykE8DOwpTNxi3U7AHF7Ve/oBd1VEe2k/5RmEYLTWpexxf7WwNpEmHCi99MvG7qUMQJyqc9Fg=="],
 
+    "@mantine/schedule": ["@mantine/schedule@9.6.0", "", { "dependencies": { "rrule": "^2.8.1" }, "peerDependencies": { "@mantine/core": "9.6.0", "@mantine/dates": "9.6.0", "@mantine/hooks": "9.6.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-JQKfIq696yydxLcJM4uFh2Cv+BghiW/ZU+eQxvQlmRY1/f9o5yg1bp2wYIqFjRnwrQJas9W8hCVszwLpGPgdTQ=="],
+
     "@mantine/spotlight": ["@mantine/spotlight@9.6.0", "", { "dependencies": { "@mantine/store": "9.6.0" }, "peerDependencies": { "@mantine/core": "9.6.0", "@mantine/hooks": "9.6.0", "react": "^19.2.0", "react-dom": "^19.2.0" } }, "sha512-ZJgdrMWnhZDWSu6/OHcUkk5cXgLhkBnICCWWnHpuaapAKIa+ya3jj0BXDA8fzb3iY6yKCF06bqpKY5rhiuKaCw=="],
 
     "@mantine/store": ["@mantine/store@9.6.0", "", { "peerDependencies": { "react": "^19.2.0" } }, "sha512-nYt2tfn1/e6CK35a5TWlPbOL3Xwf7OzBmBElV0l+Ae6mswVaMip1WHm0mCaHAbTKgsOnvL/tooDTVxBBrmm87Q=="],
@@ -2672,6 +2673,8 @@
 
     "@tabler/icons-react": ["@tabler/icons-react@3.44.0", "", { "dependencies": { "@tabler/icons": "3.44.0" }, "peerDependencies": { "react": ">= 16" } }, "sha512-8+rvzBbVm/1Z3sG3x7GUNAaxIKxwgz8xaMhRs23nrCnMTKRFAhEC+82zAIFeAA0seXdrAGX5HFCkaLpGK2rVHg=="],
 
+    "@tabler/icons-sprite": ["@tabler/icons-sprite@3.44.0", "", { "dependencies": { "@tabler/icons": "3.44.0" } }, "sha512-+6eag3is1gOW8II/1iYad7ZLLXrBO4skNuDDI/vNTKr4WmiDCpLf8d9OBRTve95TXYkjJrClJuFMrOsgmI+HKA=="],
+
     "@tailwindcss/node": ["@tailwindcss/node@4.3.2", "", { "dependencies": { "@jridgewell/remapping": "2.3.5", "enhanced-resolve": "5.21.6", "jiti": "2.7.0", "lightningcss": "1.32.0", "magic-string": "0.30.21", "source-map-js": "1.2.1", "tailwindcss": "4.3.2" } }, "sha512-yWP/sqEcBLaD8JuA6zNwxoYKr75qxTioYwlRwekj5Jr/I5GXnoJfjetH/psLUIv74cYTH2lBUEzBkinthoYcBg=="],
 
     "@tailwindcss/oxide": ["@tailwindcss/oxide@4.3.2", "", { "optionalDependencies": { "@tailwindcss/oxide-android-arm64": "4.3.2", "@tailwindcss/oxide-darwin-arm64": "4.3.2", "@tailwindcss/oxide-darwin-x64": "4.3.2", "@tailwindcss/oxide-freebsd-x64": "4.3.2", "@tailwindcss/oxide-linux-arm-gnueabihf": "4.3.2", "@tailwindcss/oxide-linux-arm64-gnu": "4.3.2", "@tailwindcss/oxide-linux-arm64-musl": "4.3.2", "@tailwindcss/oxide-linux-x64-gnu": "4.3.2", "@tailwindcss/oxide-linux-x64-musl": "4.3.2", "@tailwindcss/oxide-wasm32-wasi": "4.3.2", "@tailwindcss/oxide-win32-arm64-msvc": "4.3.2", "@tailwindcss/oxide-win32-x64-msvc": "4.3.2" } }, "sha512-z8ZgnzX8gdNoWLBLqBPoh/sjnxkwvf9ZuWjnO0l0yIzbLa5/9S+eC5QxGZKRobVHIC3/1BoMWjHblqWjcgFgag=="],
@@ -2879,8 +2882,6 @@
     "@types/crypto-js": ["@types/crypto-js@4.2.2", "", {}, "sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ=="],
 
     "@types/css-modules": ["@types/css-modules@1.0.5", "", {}, "sha512-oeKafs/df9lwOvtfiXVliZsocFVOexK9PZtLQWuPeuVCFR7jwiqlg60lu80JTe5NFNtH3tnV6Fs/ySR8BUPHAw=="],
-
-    "@types/css-tree": ["@types/css-tree@2.3.11", "", {}, "sha512-aEokibJOI77uIlqoBOkVbaQGC9zII0A+JH1kcTNKW2CwyYWD8KM6qdo+4c77wD3wZOQfJuNWAr9M4hdk+YhDIg=="],
 
     "@types/d3": ["@types/d3@7.4.3", "", { "dependencies": { "@types/d3-array": "3.2.1", "@types/d3-axis": "3.0.6", "@types/d3-brush": "3.0.6", "@types/d3-chord": "3.0.6", "@types/d3-color": "3.1.3", "@types/d3-contour": "3.0.6", "@types/d3-delaunay": "6.0.4", "@types/d3-dispatch": "3.0.7", "@types/d3-drag": "3.0.7", "@types/d3-dsv": "3.0.7", "@types/d3-ease": "3.0.2", "@types/d3-fetch": "3.0.7", "@types/d3-force": "3.0.10", "@types/d3-format": "3.0.4", "@types/d3-geo": "3.1.0", "@types/d3-hierarchy": "3.1.7", "@types/d3-interpolate": "3.0.4", "@types/d3-path": "3.1.1", "@types/d3-polygon": "3.0.2", "@types/d3-quadtree": "3.0.6", "@types/d3-random": "3.0.3", "@types/d3-scale": "4.0.9", "@types/d3-scale-chromatic": "3.1.0", "@types/d3-selection": "3.0.11", "@types/d3-shape": "3.1.7", "@types/d3-time": "3.0.4", "@types/d3-time-format": "4.0.3", "@types/d3-timer": "3.0.2", "@types/d3-transition": "3.0.9", "@types/d3-zoom": "3.0.8" } }, "sha512-lZXZ9ckh5R8uiFVt8ogUNf+pIrK4EsWrx2Np75WvF/eTpJ0FMHNhjXk8CKEx/+gpHbNQyJWehbFaTvqmHWB3ww=="],
 
@@ -4871,6 +4872,8 @@
     "rope-sequence": ["rope-sequence@1.3.4", "", {}, "sha512-UT5EDe2cu2E/6O4igUr5PSFs23nvvukicWHx6GnOPlHAiiYbzNuCRQCuiUdHJQcqKalLKlrYJnjY0ySGsXNQXQ=="],
 
     "roughjs": ["roughjs@4.6.6", "", { "dependencies": { "hachure-fill": "0.5.2", "path-data-parser": "0.1.0", "points-on-curve": "0.2.0", "points-on-path": "0.2.1" } }, "sha512-ZUz/69+SYpFN/g/lUlo2FXcIjRkSu3nDarreVdGGndHEBJ6cXPdKguS8JGxwj5HA5xIbVKSmLgr5b3AWxtRfvQ=="],
+
+    "rrule": ["rrule@2.8.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-hM3dHSBMeaJ0Ktp7W38BJZ7O1zOgaFEsn41PDk+yHoEtfLV+PoJt9E9xAlZiWgf/iqEqionN0ebHFZIDAp+iGw=="],
 
     "rw": ["rw@1.3.3", "", {}, "sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ=="],
 
