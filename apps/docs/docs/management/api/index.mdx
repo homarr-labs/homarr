@@ -25,8 +25,9 @@ Omit `userId` for yourself; another user requires admin permission. Older prefer
 ## Authentication and browser access
 
 API keys are shown once as `<id>.<token>`. Send one in the `ApiKey` header; it acts as its creator and does not expire.
-tRPC accepts the same header. A supplied key takes precedence over browser cookies, including when the key is invalid.
-Same-origin browser requests without a key can use the Homarr session cookie. API keys use HTTP; WebSocket connections reject an explicit `ApiKey` header.
+tRPC accepts the same header. On API-key-enabled REST, tRPC and MCP endpoints, a supplied key takes precedence over
+browser cookies, including when the key is invalid. Browser sessions are separate credentials: cookie-only routes
+still require their normal session. API keys use HTTP; WebSocket connections reject an explicit `ApiKey` header.
 
 Cross-origin browser requests require `ApiKey`; they do not use session cookies. Reverse proxies must forward `OPTIONS`
 and preserve CORS headers. An HTTPS API reference cannot call an HTTP-only instance because browsers block mixed content.
