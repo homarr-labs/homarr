@@ -31,7 +31,7 @@
   --status-text-color: light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-5));
 }
 
-:is(.dot, .beat, .monitorRow):is([data-status="paused"], [data-status="unknown"], [data-status="empty"]) {
+:is(.dot, .beat, .monitorRow):is([data-status="stale"], [data-status="unknown"], [data-status="empty"]) {
   --status-color: var(--mantine-color-gray-6);
   --status-text-color: var(--mantine-color-dimmed);
 }

@@ -1,12 +1,5 @@
 import type { MantineColor } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconCircleCheck,
-  IconCircleX,
-  IconHelpCircle,
-  IconPlayerPause,
-  IconTool,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCircleCheck, IconCircleX, IconHelpCircle, IconTool } from "@tabler/icons-react";
 import type { useFormatter } from "next-intl";
 
 import type {
@@ -23,7 +16,7 @@ export const monitorStatusColors: Record<UptimeKumaMonitorStatus, MantineColor> 
   down: "red",
   pending: "orange",
   maintenance: "blue",
-  paused: "gray",
+  stale: "gray",
   unknown: "gray",
 };
 
@@ -32,7 +25,6 @@ export const overallStatusColors: Record<UptimeKumaOverallStatus, MantineColor> 
   degraded: "orange",
   outage: "red",
   maintenance: "blue",
-  paused: "gray",
   unknown: "gray",
 };
 
@@ -41,7 +33,6 @@ export const overallStatusIcons: Record<UptimeKumaOverallStatus, TablerIcon> = {
   degraded: IconAlertTriangle,
   outage: IconCircleX,
   maintenance: IconTool,
-  paused: IconPlayerPause,
   unknown: IconHelpCircle,
 };
 
@@ -81,7 +72,7 @@ const monitorTypeTranslationKeys = new Map<string, MonitorTypeTranslationKey>([
 
 export const getMonitorTypeTranslationKey = (type: string) => monitorTypeTranslationKeys.get(type) ?? null;
 
-const displayedStatusOrder = ["up", "down", "pending", "maintenance", "paused", "unknown"] as const;
+const displayedStatusOrder = ["up", "down", "pending", "maintenance", "stale", "unknown"] as const;
 
 export const presentStatuses = (summary: UptimeKumaSummary) =>
   displayedStatusOrder.filter((status) => summary.counts[status] > 0);

@@ -47,7 +47,7 @@ export const OverallStatus = ({
   const t = useI18n("widget.uptimeKuma");
   const Icon = overallStatusIcons[summary.overallStatus];
   const color = overallStatusColors[summary.overallStatus];
-  const label = short ? getShortStatusLabel(summary, t) : t(`overall.${summary.overallStatus}`);
+  const label = short ? getShortStatusLabel(summary, t) : getOverallStatusLabel(summary, t);
 
   return (
     <div className={classes.overallStatus} data-size={size}>
@@ -139,11 +139,22 @@ export const DistributionBar = ({ summary }: SummaryProps) => {
   );
 };
 
+export const getOverallStatusLabel = (
+  summary: UptimeKumaSummary,
+  t: ReturnType<typeof useI18n<"widget.uptimeKuma">>,
+) => {
+  if (summary.overallStatus !== "unknown") return t(`overall.${summary.overallStatus}`);
+  if (summary.counts.up > 0) return t("summary.upRatio", { up: summary.counts.up, total: summary.total });
+  if (summary.counts.stale > 0) return t("status.stale");
+  return t("overall.unknown");
+};
+
 export const getShortStatusLabel = (summary: UptimeKumaSummary, t: ReturnType<typeof useI18n<"widget.uptimeKuma">>) => {
   if (summary.counts.down > 0) return t("short.down", { count: summary.counts.down });
   if (summary.counts.pending > 0) return t("short.pending", { count: summary.counts.pending });
   if (summary.overallStatus === "maintenance") return t("short.maintenance");
   if (summary.overallStatus === "operational") return t("short.operational");
-  if (summary.overallStatus === "paused") return t("short.paused");
+  if (summary.counts.up > 0) return t("summary.upRatioShort", { up: summary.counts.up, total: summary.total });
+  if (summary.counts.stale > 0) return t("status.stale");
   return t("short.unknown");
 };

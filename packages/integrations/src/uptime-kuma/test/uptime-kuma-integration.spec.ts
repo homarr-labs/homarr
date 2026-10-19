@@ -184,7 +184,7 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
               { id: 1, name: "Pending", type: "http" },
               { id: 2, name: "Maintenance", type: "http" },
               { id: 3, name: "Never checked", type: "http" },
-              { id: 4, name: "Paused last week", type: "http" },
+              { id: 4, name: "Last checked last week", type: "http" },
             ],
           },
         ],
@@ -217,11 +217,11 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
       { name: "Pending", status: "pending", uptime24h: 50 },
       { name: "Maintenance", status: "maintenance", uptime24h: null },
       { name: "Never checked", status: "unknown", uptime24h: null },
-      { name: "Paused last week", status: "paused", uptime24h: null },
+      { name: "Last checked last week", status: "stale", uptime24h: null },
     ]);
   });
 
-  test("marks monitors that stopped reporting as paused", async () => {
+  test("marks monitors with old heartbeats as stale", async () => {
     const everyMinuteUntil = (hour: number, minute: number) =>
       Array.from({ length: 5 }, (_, index) =>
         beat(1, new Date(Date.UTC(2026, 9, 17, hour, minute - 4 + index)).toISOString()),
@@ -258,10 +258,10 @@ describe("UptimeKumaIntegration.getStatusPageAsync", () => {
 
     expect(statusPage.groups[0]?.monitors.map(({ name, status, uptime24h }) => ({ name, status, uptime24h }))).toEqual([
       { name: "Active", status: "up", uptime24h: 100 },
-      { name: "Stopped 35 minutes ago", status: "paused", uptime24h: 99 },
+      { name: "Stopped 35 minutes ago", status: "stale", uptime24h: 99 },
       { name: "Single check an hour ago", status: "down", uptime24h: 0 },
       { name: "Checked every two hours", status: "up", uptime24h: 100 },
-      { name: "Single check two days ago", status: "paused", uptime24h: null },
+      { name: "Single check two days ago", status: "stale", uptime24h: null },
     ]);
   });
 

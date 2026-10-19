@@ -24,8 +24,8 @@ import type {
 } from "./uptime-kuma-types";
 
 const uptimeWindowMs = 24 * 60 * 60 * 1000;
-const minimumPausedAgeMs = 10 * 60 * 1000;
-const missedChecksUntilPaused = 5;
+const minimumStaleAgeMs = 10 * 60 * 1000;
+const missedChecksUntilStale = 5;
 
 type StatusPageMonitor = UptimeKumaStatusPageResponse["publicGroupList"][number]["monitorList"][number];
 type StatusPageIncident = NonNullable<UptimeKumaStatusPageResponse["incident"]>;
@@ -137,20 +137,23 @@ const mapMonitor = (
 ): UptimeKumaMonitor => {
   const latest = heartbeats.at(-1);
   const checkedWithinUptimeWindow = latest !== undefined && Date.now() - latest.time <= uptimeWindowMs;
+  const status = getMonitorStatus(latest, getCheckInterval(heartbeats));
+  let statusSince: number | null = null;
+  if (status !== "stale") statusSince = getStatusSince(heartbeats);
 
   return {
     id: monitor.id,
     name: monitor.name,
     type: monitor.type ?? null,
     url: monitor.url?.trim() || null,
-    status: getMonitorStatus(latest, getCheckInterval(heartbeats)),
+    status,
     uptime24h:
       checkedWithinUptimeWindow && typeof uptimeRatio === "number"
         ? Math.min(100, Math.max(0, uptimeRatio * 100))
         : null,
     ping: latest?.ping ?? null,
     lastCheckAt: latest?.time ?? null,
-    statusSince: getStatusSince(heartbeats),
+    statusSince,
     certificateDaysRemaining: getCertificateDaysRemaining(monitor),
     tags: (monitor.tags ?? []).map((tag) => ({
       name: tag.name,
@@ -166,13 +169,13 @@ const getMonitorStatus = (
   checkInterval: number | null,
 ): UptimeKumaMonitorStatus => {
   if (!latest) return "unknown";
-  if (Date.now() - latest.time > getPausedAfter(checkInterval)) return "paused";
+  if (Date.now() - latest.time > getStaleAfter(checkInterval)) return "stale";
   return latest.status;
 };
 
-const getPausedAfter = (checkInterval: number | null) => {
+const getStaleAfter = (checkInterval: number | null) => {
   if (checkInterval === null) return uptimeWindowMs;
-  return Math.max(minimumPausedAgeMs, checkInterval * missedChecksUntilPaused);
+  return Math.max(minimumStaleAgeMs, checkInterval * missedChecksUntilStale);
 };
 
 const getCheckInterval = (heartbeats: readonly UptimeKumaHeartbeat[]) =>

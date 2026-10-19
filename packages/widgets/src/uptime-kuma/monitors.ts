@@ -30,7 +30,7 @@ const statusRank: Record<UptimeKumaMonitorStatus, number> = {
   down: 0,
   pending: 1,
   maintenance: 2,
-  paused: 3,
+  stale: 3,
   unknown: 4,
   up: 5,
 };

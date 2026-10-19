@@ -1,6 +1,6 @@
 import type { UptimeKumaGroup, UptimeKumaMonitor, UptimeKumaMonitorStatus } from "./uptime-kuma-types";
 
-export type UptimeKumaOverallStatus = "operational" | "degraded" | "outage" | "maintenance" | "paused" | "unknown";
+export type UptimeKumaOverallStatus = "operational" | "degraded" | "outage" | "maintenance" | "unknown";
 
 export interface UptimeKumaSummary {
   total: number;
@@ -11,7 +11,7 @@ export interface UptimeKumaSummary {
 
 type SummarizableMonitor = Pick<UptimeKumaMonitor, "status" | "uptime24h">;
 
-const inactiveStatuses = new Set<UptimeKumaMonitorStatus>(["paused", "unknown"]);
+const inactiveStatuses = new Set<UptimeKumaMonitorStatus>(["stale", "unknown"]);
 
 export const isInactiveUptimeKumaStatus = (status: UptimeKumaMonitorStatus) => inactiveStatuses.has(status);
 
@@ -25,7 +25,7 @@ export const summarizeUptimeKumaMonitors = (monitors: readonly SummarizableMonit
     down: 0,
     pending: 0,
     maintenance: 0,
-    paused: 0,
+    stale: 0,
     unknown: 0,
   };
   for (const monitor of monitors) counts[monitor.status] += 1;
@@ -43,11 +43,11 @@ const getOverallStatus = (
   counts: Record<UptimeKumaMonitorStatus, number>,
   activeCount: number,
 ): UptimeKumaOverallStatus => {
-  if (activeCount === 0 && counts.paused > 0) return "paused";
   if (activeCount === 0) return "unknown";
   if (counts.down === activeCount) return "outage";
   if (counts.down + counts.pending > 0) return "degraded";
   if (counts.maintenance > 0) return "maintenance";
+  if (counts.stale + counts.unknown > 0) return "unknown";
   return "operational";
 };
 

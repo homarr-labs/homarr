@@ -40,6 +40,7 @@ import {
   AverageUptime,
   DistributionBar,
   getAverageUptimeText,
+  getOverallStatusLabel,
   getShortStatusLabel,
   OverallStatus,
   StatusBreakdown,
@@ -258,10 +259,7 @@ const StripLayout = ({ pages, summary, notices, size, options }: StripLayoutProp
       <SummaryRing summary={summary} size={ringSize} />
       <div className={classes.stripBody}>
         <div className={classes.stripHeader}>
-          <OverallStatus
-            summary={summary}
-            short={!fitsHeadline(t(`overall.${summary.overallStatus}`), headlineWidth)}
-          />
+          <OverallStatus summary={summary} short={!fitsHeadline(getOverallStatusLabel(summary, t), headlineWidth)} />
         </div>
         {showBreakdown && <StatusBreakdown summary={summary} layout={breakdown.kind} />}
         {uptimeLine && <AverageUptime value={uptimeLine} />}
@@ -351,8 +349,7 @@ const ListLayout = ({
   const statusPageHref = getSafeApplicationUrl(singlePage?.url);
   const statusPageLink = singlePage && statusPageHref && size.width >= 340 ? singlePage : null;
   const statusPageLinkWidth = statusPageLink ? estimateSmallTextWidth(statusPageLink.title) + 28 : 0;
-  const shortHeadline =
-    isColumn || !fitsHeadline(t(`overall.${summary.overallStatus}`), headerWidth - statusPageLinkWidth);
+  const shortHeadline = isColumn || !fitsHeadline(getOverallStatusLabel(summary, t), headerWidth - statusPageLinkWidth);
   const showNoticeIndicator =
     showSummary &&
     isColumn &&

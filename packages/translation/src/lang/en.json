@@ -4952,7 +4952,7 @@
         "down": "Down",
         "pending": "Pending",
         "maintenance": "Maintenance",
-        "paused": "Paused",
+        "stale": "No recent data",
         "unknown": "No data"
       },
       "overall": {
@@ -4960,7 +4960,6 @@
         "degraded": "Partially degraded service",
         "outage": "Major outage",
         "maintenance": "Under maintenance",
-        "paused": "All monitors paused",
         "unknown": "Waiting for first checks"
       },
       "short": {
@@ -4968,7 +4967,6 @@
         "down": "{count} down",
         "pending": "{count} pending",
         "maintenance": "Maintenance",
-        "paused": "Paused",
         "unknown": "No data"
       },
       "summary": {

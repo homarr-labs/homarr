@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export type UptimeKumaMonitorStatus = "up" | "down" | "pending" | "maintenance" | "paused" | "unknown";
+export type UptimeKumaMonitorStatus = "up" | "down" | "pending" | "maintenance" | "stale" | "unknown";
 
 export const uptimeKumaMaxHeartbeats = 50;
 

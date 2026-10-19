@@ -21,7 +21,7 @@ The widget only sees what the status page publishes:
 
 - Only monitors in the status page's groups are shown.
 - Certificate expiry is only available when **Show Certificate Expiry** is enabled on the status page.
-- The status page does not publish whether a monitor is paused. A monitor that has missed about five checks, and at least 10 minutes, is shown as paused and left out of the averages. Remove paused monitors from the status page to hide them.
+- The status page does not publish pause state. Monitors with old heartbeats show **No recent data** and are excluded from average uptime.
 
 When multiple Uptime Kuma integrations are selected, monitors from healthy sources remain visible if another source fails. A warning indicator identifies each unavailable integration. If every selected integration fails, the widget reports an error.
 
