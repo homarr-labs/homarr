@@ -76,3 +76,23 @@ export const normalizeReleaseProviderIdentifier = (provider: ReleaseProviderKind
   // ponytail: only strip container image versions/digests for providers that use them
   return registryPrefix ? removeContainerImageVersion(withoutRegistry) : withoutRegistry;
 };
+
+const containerImageToProviderKind: Record<string, ReleaseProviderKind> = {
+  "ghcr.io": "gitHubContainerRegistry",
+  "docker.io": "dockerHub",
+  "lscr.io": "linuxServerIO",
+  "quay.io": "quay",
+};
+
+export const getReleaseSourceFromDockerImage = (image: string) => {
+  const [maybeSource, maybeIdentifierAndVersion] = image.split(/\/(.*)/);
+  const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
+  const source = hasSource ? maybeSource : "docker.io";
+  const [identifier, version] =
+    hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : image.split(":");
+
+  if (!identifier) return undefined;
+
+  const provider = containerImageToProviderKind[source] ?? "dockerHub";
+  return { provider, identifier: normalizeReleaseProviderIdentifier(provider, identifier), version };
+};

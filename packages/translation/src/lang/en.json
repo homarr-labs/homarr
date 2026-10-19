@@ -1904,6 +1904,7 @@
       "tryAgain": "Try again",
       "loading": "Loading",
       "show": "Show",
+      "showAll": "Show all",
       "hide": "Hide",
       "undo": "Undo",
       "editNamed": "Edit {name}",
@@ -1913,6 +1914,7 @@
       "copied": "Copied",
       "refresh": "Refresh"
     },
+    "hidden": "Hidden",
     "pagination": {
       "pageOf": "Page {page} of {totalPages}"
     },
