@@ -165,8 +165,8 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           load: true
           tags: homarr-workshop:smoke
-          cache-from: type=gha,scope=workshop-linux-${{ matrix.arch }}
-          cache-to: type=gha,scope=workshop-linux-${{ matrix.arch }},mode=max
+          cache-from: type=gha,scope=workshop-linux-${{ matrix.arch }}-${{ github.ref_name }}
+          cache-to: type=gha,scope=workshop-linux-${{ matrix.arch }}-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -220,8 +220,8 @@ jobs:
           platforms: linux/amd64
           labels: org.opencontainers.image.revision=${{ needs.validate.outputs.sha }}
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=workshop-linux-amd64
-          cache-to: type=gha,scope=workshop-linux-amd64,mode=max
+          cache-from: type=gha,scope=workshop-linux-amd64-${{ github.ref_name }}
+          cache-to: type=gha,scope=workshop-linux-amd64-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -266,8 +266,8 @@ jobs:
           platforms: linux/arm64
           labels: org.opencontainers.image.revision=${{ needs.validate.outputs.sha }}
           outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=workshop-linux-arm64
-          cache-to: type=gha,scope=workshop-linux-arm64,mode=max
+          cache-from: type=gha,scope=workshop-linux-arm64-${{ github.ref_name }}
+          cache-to: type=gha,scope=workshop-linux-arm64-${{ github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
