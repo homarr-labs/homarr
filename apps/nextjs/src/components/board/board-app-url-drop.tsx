@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader, Overlay, Paper, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconLink } from "@tabler/icons-react";
 
@@ -44,6 +44,9 @@ export const BoardAppUrlDrop = () => {
   const canCreateApp = session?.user.permissions.includes("app-create") ?? false;
   const [isDragging, setIsDragging] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
+  // Counts drops still in flight, so the overlay only hides once all of them are done
+  // instead of whichever drop happens to resolve first.
+  const pendingDropCountRef = useRef(0);
   const { createItem } = useItemActions();
   const utils = clientApi.useUtils();
   const { mutateAsync: detectMetadataAsync } = clientApi.app.detectMetadata.useMutation();
@@ -52,6 +55,7 @@ export const BoardAppUrlDrop = () => {
 
   const addAppFromUrlAsync = useCallback(
     async (url: string) => {
+      pendingDropCountRef.current++;
       setIsResolving(true);
       try {
         const metadata = await detectMetadataAsync({ href: url });
@@ -68,7 +72,8 @@ export const BoardAppUrlDrop = () => {
           message: t("app.page.create.notification.error.message"),
         });
       } finally {
-        setIsResolving(false);
+        pendingDropCountRef.current--;
+        if (pendingDropCountRef.current === 0) setIsResolving(false);
       }
     },
     [createAppAsync, createItem, detectMetadataAsync, t, utils],

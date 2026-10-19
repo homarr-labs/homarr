@@ -97,6 +97,14 @@ export const BoardProvider = ({
   const pathname = usePathname();
   const utils = clientApi.useUtils();
 
+  // A refetch started just before edit mode turned on (e.g. from window focus) is not
+  // covered by the refetchOnWindowFocus/refetchOnReconnect guard below, since that guard
+  // only stops new refetches. Cancelling here stops that in-flight one from resolving
+  // later and overwriting unsaved edit mode changes.
+  useEffect(() => {
+    if (isEditMode) void utils.board.getBoardByName.cancel({ name: initialBoard.name });
+  }, [isEditMode, utils, initialBoard.name]);
+
   // Invalidate the board when the pathname changes
   // This allows to refetch the board when it might have changed - e.g. if someone else added an item
   useEffect(() => {
