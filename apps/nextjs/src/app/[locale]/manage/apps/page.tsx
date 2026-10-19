@@ -7,7 +7,6 @@ import { z } from "zod/v4";
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getSafeAppHref } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
@@ -136,7 +135,6 @@ interface AppItemProps {
 
 const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
   const descriptionLines = app.description?.split("\n");
-  const safeHref = getSafeAppHref(app.href);
 
   return (
     <ManageCollectionItem
@@ -159,9 +157,9 @@ const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
         ) : undefined
       }
       metadata={
-        safeHref ? (
+        app.href ? (
           <Anchor
-            href={safeHref}
+            href={app.href}
             target="_blank"
             rel="noreferrer"
             lineClamp={1}

@@ -75,41 +75,6 @@ export const getSafeApplicationUrl = (value: unknown, options: SafeApplicationUr
   }
 };
 
-/**
- * Returns a safe user-configured app link, including paths and custom URI schemes.
- * SSH/SFTP authorities may include a username, never a password.
- */
-export const getSafeAppHref = (value: unknown): string | undefined => {
-  if (typeof value !== "string" || value.trim() === "") return undefined;
-  if (/[\p{Control}\\]/u.test(value)) return undefined;
-
-  const href = value.trim();
-  if (/^(?:javascript|data|vbscript|file|blob):/i.test(href)) return undefined;
-
-  try {
-    const url = new URL(href);
-    if (url.password !== "") return undefined;
-
-    if (url.username !== "") {
-      if (url.protocol !== "ssh:" && url.protocol !== "sftp:") return undefined;
-      const authority = /^(?:ssh|sftp):\/\/([^/?#]*)/i.exec(href)?.[1];
-      if (!authority || url.hostname === "") return undefined;
-      // Custom URI schemes accept opaque hosts; require a valid network authority.
-      if (new URL(`http://${url.host}`).hostname === "") return undefined;
-
-      const userinfoEnd = authority.lastIndexOf("@");
-      if (userinfoEnd === -1) return undefined;
-      const userinfo = authority.slice(0, userinfoEnd);
-      const username = decodeURIComponent(url.username);
-      if (userinfo.includes(":")) return undefined;
-      if (/[:/?#\p{Control}\\]/u.test(username)) return undefined;
-    }
-    return url.toString();
-  } catch {
-    return /^(?:[#?]|\/(?![\\/])|\.{1,2}\/)/.test(href) ? href : undefined;
-  }
-};
-
 const parseHttpUrl = (value: unknown, baseUrl?: string): URL | undefined => {
   if (typeof value !== "string") return undefined;
   const url = new URL(value, baseUrl);
