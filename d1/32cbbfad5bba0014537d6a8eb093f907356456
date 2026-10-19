@@ -1,0 +1,19 @@
+packages/auth/callbacks.ts
+  s_787d8cb4cd9748::t_c08adfb3d53855 51,55-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d132cbbfad5bba0014537d6a8eb093f907356456",
+  "prompts": {},
+  "sessions": {
+    "s_787d8cb4cd9748": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d2f3eed4-f833-4762-b8e4-4b4dd4db97d5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

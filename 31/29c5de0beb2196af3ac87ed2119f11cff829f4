@@ -1,0 +1,19 @@
+packages/api/src/router/integration/integration-router.ts
+  s_2f1ea714cd4242::t_e8a48c4cb93d75 339,741-748
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3129c5de0beb2196af3ac87ed2119f11cff829f4",
+  "prompts": {},
+  "sessions": {
+    "s_2f1ea714cd4242": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e67c758-1aaa-4093-8f89-d9f644e42a08",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
