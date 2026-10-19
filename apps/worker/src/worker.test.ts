@@ -534,6 +534,7 @@ describe("real worker and blind relay security", () => {
       "/remote/info",
       "/remote/boards",
       "/remote/access/grants",
+      "/remote/access/shares/example",
       "/api/openapi",
       "/api/mcp",
       "/api/about",
@@ -762,7 +763,14 @@ describe("real worker and blind relay security", () => {
 
   test("anonymous shares see only explicitly published boards and cannot call owner RPC or control APIs", async () => {
     const issued = await share();
+    const copied = await owner.fetch(`/remote/access/shares/${issued.id}`);
+    expect(copied.status).toBe(200);
+    expect(copied.headers.get("Cache-Control")).toBe("no-store");
+    expect(await copied.json()).toEqual({ share: { id: issued.id, token: issued.token, expiresAt: issued.expiresAt } });
+    expect((await owner.fetch(`/remote/access/shares/${issued.id}/extra`)).status).toBe(404);
+    expect((await owner.fetch(`/remote/access/shares/${ownerGrant.id}`)).status).toBe(404);
     const { connection: viewer } = await connect({ kind: "share", token: issued.token });
+    expect((await viewer.fetch(`/remote/access/shares/${issued.id}`)).status).toBe(403);
     const boardList = (await (await viewer.fetch("/remote/boards")).json()) as { boards: { id: string }[] };
     expect(boardList.boards.map((board) => board.id)).toEqual([publicBoard]);
     expect((await viewer.fetch(`/remote/boards/${publicBoard}`)).status).toBe(200);

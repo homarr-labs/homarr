@@ -31,6 +31,7 @@ type OpenOptions = {
 const defaultBoardReads = ["board.read", "board.widgetData", "remote.board", "remote.widgetData"];
 const maximumInvitationLifetime = 7 * 24 * 60 * 60 * 1000;
 const maximumServiceLifetime = 30 * 24 * 60 * 60 * 1000;
+const unavailableBoardShare = () => new WorkerAccessError("NOT_FOUND", "Active board share not found");
 const serviceIdentifiers = (ids: unknown, maximum: number): ids is string[] =>
   Array.isArray(ids) &&
   ids.length > 0 &&
@@ -341,6 +342,27 @@ export class WorkerAccess {
         anonymous: grant.anonymous ?? true,
         revoked: grant.revoked,
       }));
+  }
+
+  /** Reveal an existing board link only to a currently authorized owner, without renewing it. */
+  async getShareLink(owner: AccessPrincipal, id: string) {
+    this.requireOwner(owner);
+    const row = this.store.grant(id);
+    if (!row || row.revoked) throw unavailableBoardShare();
+    const stored = JSON.parse(row.payload) as AccessGrant;
+    if (stored.type !== "share" || stored.subject !== "bearer" || stored.role !== "viewer")
+      throw unavailableBoardShare();
+    let share: AccessGrant;
+    try {
+      share = await this.verifyGrant(row.token);
+    } catch (error) {
+      if (error instanceof WorkerAccessError) throw unavailableBoardShare();
+      throw error;
+    }
+    this.requireOwner(owner);
+    if (share.id !== id || share.type !== "share" || share.subject !== "bearer" || share.role !== "viewer")
+      throw unavailableBoardShare();
+    return { id: share.id, token: row.token, expiresAt: share.expiresAt };
   }
 
   linkAccount(owner: AccessPrincipal, accountId: string, deviceId = owner.deviceId) {

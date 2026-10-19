@@ -386,6 +386,51 @@ describe("worker-owned pairing and grants", () => {
     expect(access.getPairingInfo()).toMatchObject({ workerId: access.workerId, claimed: true, secret: null });
   });
 
+  test("only a current owner can retrieve an existing active board share token", async () => {
+    const { access, owner, clock } = await setup();
+    const share = await access.issueShare(owner.principal, { boardIds: ["a"], expiresAt: clock.value + 1000 });
+    const viewer = await access.authenticateEnvelope(await device(), { kind: "share", token: share.token });
+    expect(await access.getShareLink(owner.principal, share.id)).toEqual({
+      id: share.id,
+      token: share.token,
+      expiresAt: share.expiresAt,
+    });
+    await expect(access.getShareLink(viewer.principal, share.id)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(access.getShareLink({ ...owner.principal }, share.id)).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+    await expect(access.getShareLink(owner.principal, owner.grant.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+    const nativeUser = await access.grantAccess(owner.principal, {
+      role: "user",
+      userId: "native-user",
+      devicePublicJwk: (await device()).devicePublicJwk,
+    });
+    await expect(access.getShareLink(owner.principal, nativeUser.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+    const service = await access.grantAccess(owner.principal, {
+      role: "service",
+      devicePublicJwk: (await device()).devicePublicJwk,
+      expiresAt: clock.value + 1000,
+      service: {
+        integrationIds: ["selected"],
+        access: "query",
+        procedurePaths: ["integration.all"],
+        audience: "https://homarr.dev/mcp",
+        principalId: "account:alice",
+      },
+    });
+    await expect(access.getShareLink(owner.principal, service.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(access.getShareLink(owner.principal, "missing")).rejects.toMatchObject({ code: "NOT_FOUND" });
+    access.revokeGrant(owner.principal, share.id);
+    await expect(access.getShareLink(owner.principal, share.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+    const expires = await access.issueShare(owner.principal, { boardIds: ["a"], expiresAt: clock.value + 1 });
+    clock.value += 1;
+    await expect(access.getShareLink(owner.principal, expires.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+    const invitation = await access.createInvitation(owner.principal, { role: "owner", expiresAt: clock.value + 1000 });
+    const delegated = await access.authenticateEnvelope(await device(), { kind: "invite", token: invitation.token });
+    const child = await access.issueShare(delegated.principal, { boardIds: ["a"] });
+    access.revokeGrant(owner.principal, delegated.grant.id);
+    await expect(access.getShareLink(owner.principal, child.id)).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(access.getShareLink(delegated.principal, child.id)).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
   test("private shares require current approved device membership and retain its board limits", async () => {
     const { access, owner, clock } = await setup();
     const stranger = await device();

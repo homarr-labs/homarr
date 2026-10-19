@@ -105,6 +105,8 @@ export function createWorkerRequestHandler(state: WorkerState, getChannels: () =
           if (resource === "shares") response = Response.json({ shares: state.access.listShares(principal) });
           if (resource === "invitations")
             response = Response.json({ invitations: state.access.listInvitations(principal) });
+        } else if (request.method === "GET" && resource === "shares" && id && parts.length === 2) {
+          response = Response.json({ share: await state.access.getShareLink(principal, decodeURIComponent(id)) });
         } else if (request.method === "POST" && !id) {
           const body = await readBody(request);
           if (resource === "shares") {
