@@ -1,6 +1,6 @@
 # HTTP resource migration scratchpad
 
-The Hono resource router exports `resourcesRoutes` from `apps/backend/src/routes/resources.ts`. It mounts absolute `/api/...` routes. Runtime logic now belongs to `@homarr/backend-handlers`; the Next.js route files delegate to those exports while the dashboard remains supported.
+The Hono resource router exports `resourcesRoutes` from `packages/backend-handlers/src/router.ts`; both backend adapters consume that shared router. It mounts absolute `/api/...` routes. Runtime logic now belongs to `@homarr/backend-handlers`; the Next.js route files delegate to those exports while the dashboard remains supported.
 
 | Endpoint                                                | Extracted handler                            | Compatibility and access                                                                                                                                              |
 | ------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

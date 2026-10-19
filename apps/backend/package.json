@@ -28,10 +28,7 @@
     "@trpc/server": "catalog:",
     "hono": "catalog:",
     "trpc-to-openapi": "catalog:",
-    "zod": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/zod": "catalog:",
-    "@orpc/json-schema": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

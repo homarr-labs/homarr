@@ -1,7 +1,7 @@
 import { openapi, OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { SmartCoercionHandlerPlugin } from "@orpc/json-schema";
-import { DecoratedProcedure, Procedure } from "@orpc/server";
+import { DecoratedProcedure, onError, Procedure } from "@orpc/server";
 import type { AnyProcedure } from "@orpc/server";
 import { ZodToJsonSchemaConverter } from "@orpc/zod";
 import { z } from "zod/v4";
@@ -97,9 +97,10 @@ export const openApiRouter = createRestRouter({
 
 const generator = new OpenAPIGenerator({ converters: [new ZodToJsonSchemaConverter()] });
 
-export function createOpenApiHandler() {
+export function createOpenApiHandler(observeError?: (error: unknown, path: readonly string[]) => void) {
   return new OpenAPIHandler(openApiRouter, {
     plugins: [new SmartCoercionHandlerPlugin({ converters: [new ZodToJsonSchemaConverter()] })],
+    interceptors: [onError((error, { path }) => observeError?.(error, path))],
     clientInterceptors: [
       ({ next, ...options }) => {
         const schemas = options.procedure["~orpc"].inputSchemas;

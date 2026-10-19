@@ -700,6 +700,8 @@ describe("real worker and blind relay security", () => {
   }, 30_000);
 
   test("encrypted native REST accepts parameterless reads and coerces validated numeric query values", async () => {
+    const name = `${privateMarker}-rest-query`;
+    await dbModule.db.insert(schema.apps).values({ id: "rest-query-app", name, iconUrl: "" });
     const info = await owner.fetch("/api/info");
     expect(info.status).toBe(200);
     expect(typeof ((await info.json()) as { version: string }).version).toBe("string");
@@ -708,13 +710,11 @@ describe("real worker and blind relay security", () => {
     expect(Array.isArray(await all.json())).toBe(true);
     const defaults = await owner.fetch("/api/apps/paginated");
     expect(defaults.status).toBe(200);
-    const paginated = await owner.fetch(
-      `/api/apps/paginated?search=${encodeURIComponent(privateMarker)}&page=1&pageSize=1`,
-    );
+    const paginated = await owner.fetch(`/api/apps/paginated?search=${encodeURIComponent(name)}&page=1&pageSize=1`);
     expect(paginated.status).toBe(200);
     const result = (await paginated.json()) as { items: { name: string }[]; totalCount: number };
     expect(result.items.length).toBe(1);
-    expect(result.items[0]?.name).toBe(privateMarker);
+    expect(result.items[0]?.name).toBe(name);
     expect(result.totalCount).toBe(1);
     for (const query of ["page=not-a-number", "page=0", "pageSize=101"]) {
       expect((await owner.fetch(`/api/apps/paginated?${query}`)).status).toBe(400);

@@ -1,5 +1,4 @@
-// Shared widget contract inference references stylesheet types; worker bundles
-// reject emitted UI modules and do not load these assets at runtime.
+// Shared widget contract inference references stylesheet types in server runtimes.
 declare module "*.module.css" {
   const classes: Record<string, string>;
   export default classes;

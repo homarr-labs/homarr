@@ -4,7 +4,6 @@ import { createServer as createHttpsServer } from "node:https";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { brotliCompressSync, deflateSync, gzipSync } from "node:zlib";
-import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import type { z } from "zod/v4";
 
@@ -13,14 +12,14 @@ import { encryptSecret } from "@homarr/common/server";
 import { executeCustomWidgetRequest } from "@homarr/custom-widgets/server";
 import { eq } from "@homarr/db";
 import { createDb } from "@homarr/db/test";
-import { integrations, integrationSecrets, integrationUserPermissions, users } from "@homarr/db/schema";
+import { apps, integrations, integrationSecrets, integrationUserPermissions, users } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
 
 import { getIntegrationHttpAuthenticationAsync } from "@homarr/integrations/factory";
 
 import { createCallerFactory, createApiRouter } from "../procedure";
 import { callMcpTool, extractMcpToolsFromProcedures } from "../mcp-tools";
-import { openApiRouter } from "../open-api";
+import { createOpenApiHandler } from "../open-api";
 import {
   integrationRequestProcedure,
   integrationRequestSchema,
@@ -530,6 +529,30 @@ describe("integration proxy public contract", () => {
     });
   });
 
+  test("REST accepts void input and coerces query limits through the shared handler", async () => {
+    const context = await fixtureContext();
+    const session: Session = context.session;
+    session.user.permissions.push("app-modify-all");
+    await context.db.insert(apps).values([
+      { id: "app-one", name: "Example one", iconUrl: "" },
+      { id: "app-two", name: "Example two", iconUrl: "" },
+    ]);
+    const handler = createOpenApiHandler();
+    const info = await handler.handle(new Request("http://homarr.local/api/info"), { context });
+    expect(info.matched).toBe(true);
+    if (!info.matched) throw new Error("Missing REST info route");
+    expect(info.response.status).toBe(200);
+    await expect(info.response.json()).resolves.toEqual({ version: expect.any(String) });
+
+    const search = await handler.handle(new Request("http://homarr.local/api/apps/search?query=Example&limit=1"), {
+      context,
+    });
+    expect(search.matched).toBe(true);
+    if (!search.matched) throw new Error("Missing REST app search route");
+    expect(search.response.status).toBe(200);
+    await expect(search.response.json()).resolves.toMatchObject([{ id: "app-one" }]);
+  });
+
   test("REST and MCP expose the same result and permission boundary", async () => {
     const context = await fixtureContext("full");
     const request = () =>
@@ -538,7 +561,8 @@ describe("integration proxy public contract", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...get, path: "/echo" }),
       });
-    const handler = new OpenAPIHandler(openApiRouter);
+    const observeError = vi.fn();
+    const handler = createOpenApiHandler(observeError);
     const handled = await handler.handle(request(), { context });
     expect(handled.matched).toBe(true);
     if (!handled.matched) throw new Error("Missing REST integration route");
@@ -560,6 +584,10 @@ describe("integration proxy public contract", () => {
     if (!deniedResult.matched) throw new Error("Missing REST integration route");
     const denied = deniedResult.response;
     expect(denied.status).toBe(401);
+    expect(observeError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ code: "UNAUTHORIZED" }), [
+      "integration",
+      "request",
+    ]);
     await expect(callMcpTool(createCallerFactory(router)(deniedContext), tool, get)).rejects.toMatchObject({
       code: "UNAUTHORIZED",
     });

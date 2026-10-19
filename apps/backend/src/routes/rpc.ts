@@ -1,12 +1,8 @@
-import { SmartCoercionHandlerPlugin } from "@orpc/json-schema";
-import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
-import { ZodToJsonSchemaConverter } from "@orpc/zod";
 import { Hono } from "hono";
-import { z } from "zod/v4";
 
-import { normalizeRecursiveJsonSchemasForScalar, openApiDocument, openApiRouter } from "@homarr/api/open-api";
+import { createOpenApiHandler, normalizeRecursiveJsonSchemasForScalar, openApiDocument } from "@homarr/api/open-api";
 import { orpcRouter } from "@homarr/api/orpc";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -24,23 +20,8 @@ const rpcHandler = new RPCHandler(orpcRouter, {
     }),
   ],
 });
-const restHandler = new OpenAPIHandler(openApiRouter, {
-  plugins: [new SmartCoercionHandlerPlugin({ converters: [new ZodToJsonSchemaConverter()] })],
-  clientInterceptors: [
-    ({ next, ...options }) => {
-      // HTTP's empty query object represents no arguments for void procedures.
-      const schemas = options.procedure["~orpc"].inputSchemas;
-      if (schemas?.length && schemas.every((schema) => schema instanceof z.ZodVoid)) {
-        return next({ ...options, input: undefined });
-      }
-      return next();
-    },
-  ],
-  interceptors: [
-    onError((error, { path }) => {
-      logger.error(new ErrorWithMetadata("REST request failed", { path: path.join(".") }, { cause: error }));
-    }),
-  ],
+const restHandler = createOpenApiHandler((error, path) => {
+  logger.error(new ErrorWithMetadata("REST request failed", { path: path.join(".") }, { cause: error }));
 });
 
 export const rpcRoutes = new Hono()

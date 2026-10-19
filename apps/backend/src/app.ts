@@ -1,12 +1,12 @@
 import { Hono } from "hono";
 
+import { resourcesRoutes } from "@homarr/backend-handlers/router";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { backendCors } from "./cors";
 import { assistantRoutes } from "./routes/assistant";
 import { authRoutes } from "./routes/auth";
 import { mcpRoutes } from "./routes/mcp";
-import { resourcesRoutes } from "./routes/resources";
 import { registerRpcRoutes } from "./routes/rpc";
 
 const logger = createLogger({ module: "backend" });
