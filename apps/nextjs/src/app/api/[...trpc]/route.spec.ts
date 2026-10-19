@@ -31,6 +31,7 @@ describe("REST API browser access", () => {
   });
 
   it.each([200, 401, 403, 500])("exposes a %s API response to the calling browser", async (status) => {
+    sessionFromKey.mockResolvedValueOnce({ user: { id: "test-user" } });
     handle.mockResolvedValueOnce(Response.json({ status }, { status }));
     const request = new NextRequest("https://homarr.example/api/info", {
       headers: { Origin: "https://homarr.dev", ApiKey: "test-id.test-token" },
