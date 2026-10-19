@@ -664,6 +664,12 @@ function SessionDetails({ item }: { item: StreamSession }) {
   const transcoding = metadata?.transcoding;
   const status = playing ? getPlaybackStatus(transcoding) : null;
   const playbackState = playing?.playback?.state ?? null;
+  let playbackStateLabel: string | null = null;
+  if (playbackState === "paused") {
+    playbackStateLabel = t("paused");
+  } else if (playbackState) {
+    playbackStateLabel = t(`state.${playbackState}`);
+  }
   const positionMs = playing?.playback?.positionMs ?? null;
   const durationMs = playing?.playback?.durationMs ?? null;
   const progress =
@@ -740,7 +746,7 @@ function SessionDetails({ item }: { item: StreamSession }) {
                 </Text>
                 <Text fz={11} c="dimmed">
                   {[
-                    playbackState ? t(`state.${playbackState}`) : null,
+                    playbackStateLabel,
                     remainingMinutes !== null ? t("remaining", { minutes: remainingMinutes.toString() }) : null,
                   ]
                     .filter(Boolean)
@@ -780,7 +786,7 @@ function SessionDetails({ item }: { item: StreamSession }) {
           createEntry("video", t("metadata.video.title"), videoHandling),
           createEntry("audio", t("metadata.audio.title"), audioFormat),
           createEntry("audioHandling", t("details.audioHandling"), audioHandling),
-          createEntry("container", t("details.container"), container),
+          createEntry("container", t("metadata.transcoding.container"), container),
           createEntry(
             "id",
             t("details.sessionId"),

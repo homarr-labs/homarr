@@ -3938,14 +3938,12 @@
         "seasonEpisode": "S{season} E{episode}",
         "state": {
           "playing": "Playing",
-          "paused": "Paused",
           "buffering": "Buffering"
         },
         "details": {
           "device": "Device",
           "location": "Location",
           "sessionId": "Session ID",
-          "container": "Container",
           "bitrate": "Bitrate",
           "audioHandling": "Audio handling",
           "direct": "Direct",
@@ -3963,8 +3961,8 @@
           },
           "audio": {
             "title": "Audio",
-            "channelCount": "Channels",
-            "codec": "Codec"
+            "channelCount": "Audio channels",
+            "codec": "Audio codec"
           },
           "transcoding": {
             "title": "Transcoding",
