@@ -26,6 +26,14 @@ vi.mock("../../env", () => ({
   },
 }));
 
+const mocks = vi.hoisted(() => ({
+  logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+}));
+
+vi.mock("@homarr/core/infrastructure/logs", () => ({
+  createLogger: () => mocks.logger,
+}));
+
 const ipAddress = "203.0.113.7";
 
 describe("authorizeWithLdapCredentials", () => {
@@ -182,6 +190,7 @@ describe("authorizeWithLdapCredentials", () => {
     // Assert
     await expect(act()).rejects.toThrow(CredentialsSignin);
     expect(searchSpy).toHaveBeenCalledTimes(1);
+    expect(mocks.logger.warn).toHaveBeenCalledWith("Wrong credentials for user", { userName: "test", ipAddress });
   });
 
   test("should authorize user with correct credentials and create user", async () => {
