@@ -4033,7 +4033,7 @@
         },
         "enableThresholdColors": {
           "label": "Activer les couleurs de seuil",
-          "description": ""
+          "description": "Valeurs de statistiques de couleur verte, jaune, ou rouge en fonction des préréglages de sévérité"
         },
         "useCustomThresholds": {
           "label": "Seuils avancés",
