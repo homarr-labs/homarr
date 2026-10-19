@@ -1,0 +1,21 @@
+packages/api/src/middlewares/integration.ts
+  s_4ad198a2827cbd::t_b4f894df560cfc 11,43-59,79,168
+packages/api/src/router/search-engine/search-engine-router.ts
+  s_4ad198a2827cbd::t_04e40333cc1ec1 117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f6273d3f4c7a34b4d965772a0d5b036edc8bf788",
+  "prompts": {},
+  "sessions": {
+    "s_4ad198a2827cbd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "71e03beb-c109-4212-9516-57d964b9a5f5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
