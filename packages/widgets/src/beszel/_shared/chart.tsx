@@ -161,11 +161,8 @@ const BeszelChartPlaceholder = ({ height }: { height: AreaChartProps["h"] }) => 
 
 const DeferredBeszelChart = memo(
   ({ chartProps }: { chartProps: BeszelAreaChartProps; isVisible: boolean }) => {
-    // Let the dashboard hydrate and handle input before mounting or refreshing SVG charts.
-    const deferredChartProps = useDeferredValue(chartProps, null);
-    if (!deferredChartProps) {
-      return <BeszelChartPlaceholder height={chartProps.h} />;
-    }
+    // Show the first visible chart immediately; defer subsequent data updates.
+    const deferredChartProps = useDeferredValue(chartProps);
     return <BeszelAreaChart {...deferredChartProps} />;
   },
   // Retain mounted charts while offscreen; apply the latest data when they re-enter view.
