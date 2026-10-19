@@ -58,6 +58,7 @@ export const authorizeWithLdapCredentialsAsync = async (
     });
 
   if (!ldapUser) {
+    logger.warn("User not found", { userName: credentials.name, ipAddress });
     throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
   }
 

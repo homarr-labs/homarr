@@ -122,6 +122,7 @@ describe("authorizeWithLdapCredentials", () => {
 
     // Assert
     await expect(act()).rejects.toThrow(CredentialsSignin);
+    expect(mocks.logger.warn).toHaveBeenCalledWith("User not found", { userName: "test", ipAddress });
   });
 
   test("should fail when user has invalid email", async () => {
