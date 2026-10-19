@@ -90,21 +90,19 @@ export const getSafeAppHref = (value: unknown): string | undefined => {
     const url = new URL(href);
     if (url.password !== "") return undefined;
 
-    if (url.protocol === "ssh:" || url.protocol === "sftp:") {
+    if (url.username !== "") {
+      if (url.protocol !== "ssh:" && url.protocol !== "sftp:") return undefined;
       const authority = /^(?:ssh|sftp):\/\/([^/?#]*)/i.exec(href)?.[1];
       if (!authority || url.hostname === "") return undefined;
       // Custom URI schemes accept opaque hosts; require a valid network authority.
       if (new URL(`http://${url.host}`).hostname === "") return undefined;
 
       const userinfoEnd = authority.lastIndexOf("@");
-      if (userinfoEnd !== -1) {
-        const userinfo = authority.slice(0, userinfoEnd);
-        const username = decodeURIComponent(url.username);
-        if (username === "" || userinfo.includes(":")) return undefined;
-        if (/[:/?#\p{Control}\\]/u.test(username)) return undefined;
-      }
-    } else if (url.username !== "") {
-      return undefined;
+      if (userinfoEnd === -1) return undefined;
+      const userinfo = authority.slice(0, userinfoEnd);
+      const username = decodeURIComponent(url.username);
+      if (userinfo.includes(":")) return undefined;
+      if (/[:/?#\p{Control}\\]/u.test(username)) return undefined;
     }
     return url.toString();
   } catch {
