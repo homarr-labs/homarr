@@ -1,0 +1,28 @@
+# Plumber overlay: inherits every control from the CLI's built-in
+# baseline, only the differences for this repo are written here.
+# Run 'plumber config resolve' to see the full effective config.
+extends: plumber:default
+version: '2.0'
+
+github:
+  controls:
+    githubActionMustComeFromAuthorizedSources:
+      # Keep the curated default list and trust the actions this repo
+      # already uses on top of it, all pinned by commit SHA.
+      includePlumberDefaults: true
+      trustedGithubActions:
+        - EndBug/add-and-commit
+        - Ilshidur/action-discord
+        - amannn/action-semantic-pull-request
+        - ietf-tools/semver-action
+        - pascalgn/automerge-action
+
+    # dev and main are protected. release/v2 is a working branch for
+    # the v2 effort, keep the requirement on the branches releases and
+    # deployments actually cut from.
+    branchMustBeProtected:
+      defaultMustBeProtected: true
+      namePatterns:
+        - dev
+        - main
+

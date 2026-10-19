@@ -9,6 +9,9 @@
 <a href="https://github.com/homarr-labs/homarr/actions/workflows/deployment-docker-image.yml">
   <img title="Docker CI Status" src="https://github.com/homarr-labs/homarr/actions/workflows/deployment-docker-image.yml/badge.svg" alt="CI Status">
 </a>
+<a href="https://score.getplumber.io/github.com/homarr-labs/homarr">
+  <img title="Plumber Score" src="https://score.getplumber.io/github.com/homarr-labs/homarr.svg" alt="Plumber Score">
+</a>
 <a href="https://crowdin.com/project/homarr_labs">
 <img title="Translations" src="https://badges.crowdin.net/homarr_labs/localized.svg" />
 </a>
