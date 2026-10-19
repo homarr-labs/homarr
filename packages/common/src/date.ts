@@ -1,8 +1,12 @@
 import dayjs from "dayjs";
 import type { UnitTypeShort } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import relativeTime from "dayjs/plugin/relativeTime";
+import utc from "dayjs/plugin/utc";
 
 dayjs.extend(isBetween);
+dayjs.extend(relativeTime);
+dayjs.extend(utc);
 
 const validUnits = ["h", "d", "w", "M", "y"] as UnitTypeShort[];
 
@@ -15,6 +19,13 @@ export function formatDuration(milliseconds: number) {
     return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   }
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+// Keep durations independent of the current date and local daylight-saving transitions.
+const durationReference = dayjs.utc(0);
+
+export function formatHumanizedDuration(milliseconds: number): string {
+  return durationReference.add(milliseconds, "milliseconds").locale(dayjs.locale()).from(durationReference, true);
 }
 
 export const toValidDate = (value: unknown): Date | null => {
