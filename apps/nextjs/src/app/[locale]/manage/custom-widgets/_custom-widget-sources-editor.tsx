@@ -41,7 +41,7 @@ export function CustomWidgetSourcesEditor({
       ) {
         secrets = secrets.map((secret) => {
           if (secret.sourceId !== previous.id) return secret;
-          return { ...secret, value: "", hasValue: false };
+          return { ...secret, hasValue: false };
         });
       }
       form.setFieldValue("secrets", secrets);
