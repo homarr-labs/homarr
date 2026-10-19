@@ -3200,6 +3200,9 @@
         },
         "showUnmonitored": {
           "label": "Mostra non monitorato"
+        },
+        "viewMode": {
+          "label": "Vista"
         }
       },
       "advanced": {
@@ -3208,6 +3211,26 @@
         "eventCount": "{count, plural, one {# evento} other {# eventi}}",
         "loading": "Caricamento eventi calendario...",
         "noEvents": "Nessun evento in questo mese"
+      },
+      "view": {
+        "compact": "Mese compatto",
+        "month": "mese",
+        "week": "Settimana",
+        "day": "Giorno",
+        "agenda": "Agenda"
+      },
+      "controls": {
+        "view": "Vista calendario",
+        "today": "Oggi",
+        "previous": "Periodo precedente",
+        "next": "Prossimo periodo",
+        "noEvents": "Nessun evento in questo periodo",
+        "more": "{count} altro",
+        "moreLabel": "",
+        "eventDetails": "Dettagli evento",
+        "close": "Chiudi dettagli evento",
+        "timeSlot": "Fascia oraria",
+        "weekday": "Giorno Settimanale"
       }
     },
     "weather": {

@@ -3200,6 +3200,9 @@
         },
         "showUnmonitored": {
           "label": "Takip edilmeyenleri göster"
+        },
+        "viewMode": {
+          "label": "Görünüm"
         }
       },
       "advanced": {
@@ -3208,6 +3211,26 @@
         "eventCount": "{count, plural, one {# etkinlik} other {# etkinlik}}",
         "loading": "Takvim etkinlikleri yükleniyor...",
         "noEvents": "Bu ayda etkinlik yok"
+      },
+      "view": {
+        "compact": "",
+        "month": "Ay",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "Bugün",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {

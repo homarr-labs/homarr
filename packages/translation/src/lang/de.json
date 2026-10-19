@@ -3200,6 +3200,9 @@
         },
         "showUnmonitored": {
           "label": "Nicht überwachte anzeigen"
+        },
+        "viewMode": {
+          "label": "Ansicht"
         }
       },
       "advanced": {
@@ -3208,6 +3211,26 @@
         "eventCount": "{count, plural, one {# Ereignis} other {# Ereignisse}}",
         "loading": "Kalenderereignisse werden geladen...",
         "noEvents": "Keine Termine in diesem Monat"
+      },
+      "view": {
+        "compact": "Kompakter Monat",
+        "month": "Monat",
+        "week": "Woche",
+        "day": "Tag",
+        "agenda": "Arbeitsplan"
+      },
+      "controls": {
+        "view": "Kalenderansicht",
+        "today": "Heute",
+        "previous": "Vorheriger Zeitraum",
+        "next": "Nächster Zeitraum",
+        "noEvents": "Keine Termine in diesem Zeitraum",
+        "more": "{count} mehr",
+        "moreLabel": "{count} weitere Ereignisse anzeigen",
+        "eventDetails": "Ereignisdetails",
+        "close": "Ereignisdetails schließen",
+        "timeSlot": "Zeitfenster",
+        "weekday": "Wochentag"
       }
     },
     "weather": {
@@ -4016,7 +4039,7 @@
         "thresholdMode": {
           "option": {
             "absolute": "",
-            "percent": ""
+            "percent": "Prozent der gesamten Hosts"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
