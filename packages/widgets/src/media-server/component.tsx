@@ -704,7 +704,7 @@ function SessionDetails({ item }: { item: StreamSession }) {
       ? t("details.containerChanged", { container: containerName })
       : containerName;
   }
-  const location = playing?.location ? t(`location.${playing.location}`) : null;
+  const location = playing?.location?.toUpperCase() ?? null;
   const audioFormat = metadata
     ? [formatCodec(metadata.audio.codec), formatChannelLayout(metadata.audio.channelCount)].filter(Boolean).join(" ")
     : "";
@@ -779,7 +779,7 @@ function SessionDetails({ item }: { item: StreamSession }) {
           createEntry("bitrate", t("details.bitrate"), metadata ? formatBitrate(metadata.bitrateKbps) : null),
           createEntry("video", t("metadata.video.title"), videoHandling),
           createEntry("audio", t("metadata.audio.title"), audioFormat),
-          createEntry("audioHandling", t("details.playbackMethod"), audioHandling),
+          createEntry("audioHandling", t("details.audioHandling"), audioHandling),
           createEntry("container", t("details.container"), container),
           createEntry(
             "id",

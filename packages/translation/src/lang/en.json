@@ -3936,24 +3936,18 @@
         "paused": "Paused",
         "remaining": "{minutes} min left",
         "seasonEpisode": "S{season} E{episode}",
-        "location": {
-          "lan": "LAN",
-          "wan": "WAN"
-        },
         "state": {
           "playing": "Playing",
           "paused": "Paused",
           "buffering": "Buffering"
         },
         "details": {
-          "session": "Session",
           "device": "Device",
           "location": "Location",
           "sessionId": "Session ID",
-          "stream": "Stream",
           "container": "Container",
           "bitrate": "Bitrate",
-          "playbackMethod": "Playback",
+          "audioHandling": "Audio handling",
           "direct": "Direct",
           "transcode": "Transcoding to {target}",
           "containerChanged": "{container} (remux)",
