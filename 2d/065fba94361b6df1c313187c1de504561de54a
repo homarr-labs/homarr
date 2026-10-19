@@ -1,0 +1,27 @@
+packages/api/src/router/board/board-access.ts
+  s_e1310adf8a9726::t_6fee2285fe5278 66-79
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_e1310adf8a9726::t_83d760201e0a11 254,279
+packages/api/src/router/widgets/releases.ts
+  s_e1310adf8a9726::t_ef2a360578e99d 12,39,54,61,91-94,99-101,109-110
+packages/api/src/router/widgets/rssFeed.ts
+  s_e1310adf8a9726::t_a71531a4c5aea7 9,15,41,137-140,144-161
+packages/widgets/src/releases/component.tsx
+  s_e1310adf8a9726::t_6c572b8ec663a4 114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2d065fba94361b6df1c313187c1de504561de54a",
+  "prompts": {},
+  "sessions": {
+    "s_e1310adf8a9726": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a837434c-f21a-4ed2-a93e-7e2ce8a15ab1",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
