@@ -36,7 +36,7 @@ import { useWazuhLinks } from "../_shared/use-wazuh-links";
 import classes from "../_shared/wazuh.module.css";
 
 type SortKey = "status" | "name" | "ip" | "os" | "version" | "lastKeepAlive";
-type StatusFilter = "all" | "active" | "disconnected" | "inactive";
+type StatusFilter = "all" | "active" | "disconnected" | "inactive" | "never_connected";
 
 const statusOrder: Record<WazuhAgent["status"], number> = {
   disconnected: 0,
@@ -385,8 +385,8 @@ export function WazuhAgentsView({
               label={t("status.neverConnected")}
               value={String(counts.neverConnected)}
               color="gray"
-              active={filter === "inactive"}
-              onClick={() => toggleFilter("inactive")}
+              active={filter === "never_connected"}
+              onClick={() => toggleFilter("never_connected")}
               compact={compact}
             />
           )}

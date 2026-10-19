@@ -13,12 +13,16 @@ export class IntegrationRequestError extends IntegrationError {
    * to a secondary endpoint (for example a separate indexer URL) set it, so that test connection inspects and offers
    * to trust the certificate of the endpoint that actually failed.
    */
-  public readonly requestUrl: string;
+  readonly #requestUrl: string;
 
   constructor(integration: IntegrationErrorData, { cause, url }: { cause: AnyRequestError; url?: string }) {
     super(integration, "Request to integration failed", { cause });
     this.name = IntegrationRequestError.name;
-    this.requestUrl = url ?? integration.url;
+    this.#requestUrl = url ?? integration.url;
+  }
+
+  get requestUrl(): string {
+    return this.#requestUrl;
   }
 
   get cause(): AnyRequestError {

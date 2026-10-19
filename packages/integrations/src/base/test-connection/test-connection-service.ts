@@ -38,7 +38,7 @@ export class TestConnectionService {
 
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
     logger.debug("Testing connection", {
-      url: this.url.toString(),
+      url: this.url.origin,
     });
 
     const testingResult = await testingCallbackAsync({
@@ -74,14 +74,14 @@ export class TestConnectionService {
 
     if (testingResult.success) {
       logger.debug("Testing connection succeeded", {
-        url: this.url.toString(),
+        url: this.url.origin,
       });
 
       return testingResult;
     }
 
     logger.debug("Testing connection failed", {
-      url: this.url.toString(),
+      url: this.url.origin,
       error: `${testingResult.error.name}: ${testingResult.error.message}`,
     });
 
@@ -91,7 +91,8 @@ export class TestConnectionService {
 
     // The failing request may target a secondary endpoint (for example a separate indexer URL), so the
     // certificate has to be read from the URL of that request and not from the integration URL.
-    const certificateUrl = this.getCertificateUrl(testingResult.error);
+    // Certificate inspection only needs the origin. Keep credentials, paths and query parameters out of diagnostics.
+    const certificateUrl = new URL(this.getCertificateUrl(testingResult.error).origin);
     const certificate = await this.fetchCertificateAsync(certificateUrl).catch((error: unknown) => {
       logger.debug("Fetching certificate failed", {
         url: certificateUrl.toString(),

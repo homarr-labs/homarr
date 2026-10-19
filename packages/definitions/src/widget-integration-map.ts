@@ -118,6 +118,7 @@ export const statsIntegrationKinds = [
   "archiveTeamWarrior",
   "wud",
   "llamacpp",
+  "wazuh",
   "mock",
 ] as const satisfies readonly IntegrationKind[];
 
