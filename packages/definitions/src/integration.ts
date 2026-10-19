@@ -176,7 +176,7 @@ export const integrationDefs = {
   homebox: {
     httpAuth: { type: "adapter" },
     name: "Homebox",
-    secretKinds: [["username", "password"]],
+    secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homebox.svg",
     category: ["miscellaneous"],
     documentationSlug: "homebox",
