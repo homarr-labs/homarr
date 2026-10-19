@@ -28,6 +28,9 @@ export interface ServiceGrant {
   };
 }
 export interface ServiceApproval {
+  /** Routing state projected from storage; superseded grants remain available for cleanup. */
+  current?: boolean;
+  previousApprovalId?: string | null;
   id: string;
   workerId: string;
   userId: string;

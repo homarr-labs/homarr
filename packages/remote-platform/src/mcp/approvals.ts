@@ -4,7 +4,7 @@ import { exportWorkerIdentity, generateWorkerIdentity, getWorkerId, verifyIdenti
 import { onlyFields, record, textField } from "../security";
 import type { AuthorizedWorkerConnection } from "../types";
 import type { GlobalMcpOptions, ServiceApproval, ServiceGrant } from "./types";
-import { opaqueToken } from "./store";
+import { McpApprovalActivationError, opaqueToken } from "./store";
 import { approvedRelay, createMcpRelayConnector } from "./relay";
 import { importWorkerIdentity } from "@homarr/remote-protocol";
 import { sameSecret } from "./oauth";
@@ -18,6 +18,7 @@ export function approvalMetadata(approval: ServiceApproval) {
     createdAt: approval.createdAt,
     expiresAt: approval.expiresAt,
     active: Boolean(approval.grant),
+    current: approval.current === true,
     grantId: approval.grant?.id ?? null,
     service: approval.grant?.service,
   };
@@ -142,7 +143,7 @@ export function globalApprovalRoutes(options: GlobalMcpOptions) {
       deviceId: await getWorkerId(identity.publicJwk),
       privateJwk: await exportWorkerIdentity(identity),
     };
-    options.secrets.saveApproval(approval);
+    options.secrets.saveApproval(approval, now());
     return c.json(
       {
         approvalId: approval.id,
@@ -169,7 +170,7 @@ export function globalApprovalRoutes(options: GlobalMcpOptions) {
     const capability = textField(body.capability, "relay admission capability", 128);
     if (!/^[A-Za-z0-9_-]{43}$/.test(capability))
       throw new HTTPException(400, { message: "Invalid relay admission capability" });
-    const next = { ...approval, grant, capability, expiresAt: grant.expiresAt };
+    let next: ServiceApproval = { ...approval, grant, capability, expiresAt: grant.expiresAt };
     const connect = options.connect ?? createMcpRelayConnector(options);
     const connection = await connect({
       worker,
@@ -183,7 +184,12 @@ export function globalApprovalRoutes(options: GlobalMcpOptions) {
       // Worker verification happens over a new encrypted session before credential activation.
       await response.body?.cancel();
       mayApprove(session.userId, approval.workerId, approval.organizationId);
-      options.secrets.saveApproval(next);
+      try {
+        next = options.secrets.saveApproval(next, now());
+      } catch (error) {
+        if (error instanceof McpApprovalActivationError) throw new HTTPException(403, { message: error.message });
+        throw error;
+      }
     } finally {
       connection.close();
     }
@@ -196,8 +202,12 @@ export function globalApprovalRoutes(options: GlobalMcpOptions) {
     mayApprove(session.userId, approval.workerId, approval.organizationId, false);
     if (!approval.organizationId && approval.userId !== session.userId)
       throw new HTTPException(403, { message: "Account does not own this approval" });
-    options.secrets.revokeApproval(approval.id);
-    return c.json({ ok: true, workerAccessRevoked: false });
+    const { restoredApprovalId } = options.secrets.revokeApproval(approval.id, {
+      rollback: c.req.query("rollback") === "1",
+      retain: c.req.query("retain") === "1",
+      now: now(),
+    });
+    return c.json({ ok: true, workerAccessRevoked: false, restoredApprovalId });
   });
   app.post("/api/mcp/revoke", async (c) => {
     const session = await browser(c.req.raw, true);

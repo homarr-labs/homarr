@@ -5,6 +5,8 @@ import { dirname } from "node:path";
 
 import type { McpAccountToken, ServiceApproval } from "./types";
 
+export class McpApprovalActivationError extends Error {}
+
 export const tokenHash = (token: string) => createHash("sha256").update(token).digest("base64url");
 export const opaqueToken = () => randomBytes(32).toString("base64url");
 export interface OAuthClient {
@@ -87,48 +89,122 @@ export class McpServiceStore {
       Buffer.concat([decipher.update(bytes.subarray(28)), decipher.final()]).toString("utf8"),
     ) as ServiceApproval;
   }
-  saveApproval(approval: ServiceApproval) {
-    this.db
+  saveApproval(approval: ServiceApproval, now = Date.now()): ServiceApproval {
+    let supersededId: string | null = null;
+    const saved = this.db
       .transaction(() => {
-        if (approval.grant)
+        const existing = this.approval(approval.id, now);
+        if (approval.grant) {
+          if (
+            approval.grant.expiresAt <= now ||
+            approval.expiresAt <= now ||
+            !existing ||
+            existing.grant ||
+            existing.createdAt + 300_000 <= now ||
+            existing.workerId !== approval.workerId ||
+            existing.userId !== approval.userId ||
+            existing.organizationId !== approval.organizationId ||
+            existing.principalId !== approval.principalId ||
+            existing.audience !== approval.audience ||
+            existing.createdAt !== approval.createdAt ||
+            existing.deviceId !== approval.deviceId ||
+            JSON.stringify(existing.devicePublicJwk) !== JSON.stringify(approval.devicePublicJwk) ||
+            JSON.stringify(existing.privateJwk) !== JSON.stringify(approval.privateJwk)
+          )
+            throw new McpApprovalActivationError("Pending MCP approval expired, changed or was canceled");
+        } else if (existing?.grant) throw new McpApprovalActivationError("MCP approval was already activated");
+        let previousApprovalId: string | null = null;
+        if (approval.grant) {
+          const previous = this.currentApproval(approval.workerId, approval.principalId, now);
+          if (
+            previous &&
+            previous.organizationId === approval.organizationId &&
+            previous.audience === approval.audience
+          )
+            previousApprovalId = previous.id;
+          const row = this.db
+            .query<{ id: string }, [string, string]>(
+              "SELECT id FROM encrypted_approvals WHERE worker_id=? AND principal_id=? AND active=1",
+            )
+            .get(approval.workerId, approval.principalId);
+          supersededId = row?.id ?? null;
           this.db
-            .query("DELETE FROM encrypted_approvals WHERE worker_id=? AND principal_id=? AND active=1 AND id!=?")
-            .run(approval.workerId, approval.principalId, approval.id);
+            .query("UPDATE encrypted_approvals SET active=0 WHERE worker_id=? AND principal_id=? AND active=1")
+            .run(approval.workerId, approval.principalId);
+        }
+        const value = { ...approval, previousApprovalId, current: Boolean(approval.grant) };
         this.db
           .query(
             "INSERT OR REPLACE INTO encrypted_approvals(id,worker_id,principal_id,expires_at,active,ciphertext) VALUES(?,?,?,?,?,?)",
           )
           .run(
-            approval.id,
-            approval.workerId,
-            approval.principalId,
-            approval.grant ? approval.expiresAt : approval.createdAt + 300_000,
-            Number(Boolean(approval.grant)),
-            this.seal(approval.id, approval),
+            value.id,
+            value.workerId,
+            value.principalId,
+            value.grant ? value.expiresAt : value.createdAt + 300_000,
+            Number(value.current),
+            this.seal(value.id, value),
           );
+        return value;
       })
       .immediate();
+    if (supersededId) for (const listener of this.revocationListeners) listener(supersededId);
+    return saved;
   }
   approval(id: string, now: number): ServiceApproval | null {
     const row = this.db
-      .query<{ ciphertext: string }, [string, number]>(
-        "SELECT ciphertext FROM encrypted_approvals WHERE id=? AND expires_at>?",
+      .query<{ ciphertext: string; active: number }, [string, number]>(
+        "SELECT ciphertext,active FROM encrypted_approvals WHERE id=? AND expires_at>?",
       )
       .get(id, now);
     if (!row) return null;
-    return this.open(id, row.ciphertext);
+    return { ...this.open(id, row.ciphertext), current: Boolean(row.active) };
   }
   approvals(now: number): ServiceApproval[] {
     return this.db
-      .query<{ id: string; ciphertext: string }, [number]>(
-        "SELECT id,ciphertext FROM encrypted_approvals WHERE expires_at>?",
+      .query<{ id: string; ciphertext: string; active: number }, [number]>(
+        "SELECT id,ciphertext,active FROM encrypted_approvals WHERE expires_at>?",
       )
       .all(now)
-      .map((row) => this.open(row.id, row.ciphertext));
+      .map((row) => ({ ...this.open(row.id, row.ciphertext), current: Boolean(row.active) }));
   }
-  revokeApproval(id: string) {
-    this.db.query("DELETE FROM encrypted_approvals WHERE id=?").run(id);
+  currentApproval(workerId: string, principalId: string, now: number): ServiceApproval | null {
+    const row = this.db
+      .query<{ id: string; ciphertext: string }, [string, string, number]>(
+        "SELECT id,ciphertext FROM encrypted_approvals WHERE worker_id=? AND principal_id=? AND active=1 AND expires_at>?",
+      )
+      .get(workerId, principalId, now);
+    if (!row) return null;
+    const approval = this.open(row.id, row.ciphertext);
+    if (!approval.grant || approval.grant.expiresAt <= now) return null;
+    return { ...approval, current: true };
+  }
+  revokeApproval(id: string, options: { rollback?: boolean; retain?: boolean; now?: number } = {}) {
+    const now = options.now ?? Date.now();
+    const restoredApprovalId = this.db
+      .transaction(() => {
+        const removed = this.approval(id, now);
+        if (options.retain && removed?.grant)
+          this.db.query("UPDATE encrypted_approvals SET active=0 WHERE id=?").run(id);
+        else this.db.query("DELETE FROM encrypted_approvals WHERE id=?").run(id);
+        if (!options.rollback || !removed?.current || !removed.previousApprovalId) return null;
+        const previous = this.approval(removed.previousApprovalId, now);
+        if (
+          !previous?.grant ||
+          previous.current ||
+          previous.grant.expiresAt <= now ||
+          previous.workerId !== removed.workerId ||
+          previous.principalId !== removed.principalId ||
+          previous.organizationId !== removed.organizationId ||
+          previous.audience !== removed.audience
+        )
+          return null;
+        this.db.query("UPDATE encrypted_approvals SET active=1 WHERE id=?").run(previous.id);
+        return previous.id;
+      })
+      .immediate();
     for (const listener of this.revocationListeners) listener(id);
+    return { restoredApprovalId };
   }
   canRegisterClient(now: number) {
     this.cleanup(now);

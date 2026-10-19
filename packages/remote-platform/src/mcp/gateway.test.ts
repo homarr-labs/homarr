@@ -22,7 +22,7 @@ afterEach(() => {
 });
 const origin = "https://homarr.test";
 const publicUrl = `${origin}/platform`;
-function fixture(connect?: GlobalMcpOptions["connect"]) {
+function fixture(connect?: GlobalMcpOptions["connect"], now?: () => number) {
   const directory = mkdtempSync(join(tmpdir(), "homarr-global-mcp-"));
   const store = new PlatformStore(join(directory, "platform.sqlite"));
   const secrets = new McpServiceStore({
@@ -34,6 +34,7 @@ function fixture(connect?: GlobalMcpOptions["connect"]) {
     secrets,
     publicUrl,
     connect,
+    now,
     browserSession: async (request) => {
       const userId = request.headers.get("X-Test-User");
       if (!userId) return null;
@@ -201,6 +202,8 @@ async function approve(
   fixtureWorker: Awaited<ReturnType<typeof workerFixture>>,
   organizationId?: string,
   integrationIds = ["same-integration-id"],
+  beforeActivation?: (approvalId: string) => Promise<void>,
+  expectedStatus = 201,
 ) {
   const prepare = await f.app.request(`${publicUrl}/api/mcp/approvals/prepare`, {
     method: "POST",
@@ -238,12 +241,13 @@ async function approve(
   };
   const body = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const grant = { ...payload, token: `${body}.${await signIdentity(fixtureWorker.identity, body)}` };
+  await beforeActivation?.(pending.approvalId);
   const response = await f.app.request(`${publicUrl}/api/mcp/approvals`, {
     method: "POST",
     headers: sessionHeaders,
     body: JSON.stringify({ approvalId: pending.approvalId, grant, capability: "c".repeat(43) }),
   });
-  expect(response.status).toBe(201);
+  expect(response.status).toBe(expectedStatus);
   return { pending, grant };
 }
 const catalogTool = {
@@ -378,6 +382,217 @@ test("dedicated owner-approved credentials route two workers with colliding inte
     mcpApproved: boolean;
   }[];
   expect(workers.filter((worker) => worker.mcpApproved)).toHaveLength(1);
+});
+
+test("replacement retains retiring approvals on reload and routes the last activation despite equal creation times", async () => {
+  const routed: string[] = [];
+  const now = Date.now();
+  const f = fixture(
+    async ({ identity, approval }) => {
+      routed.push(approval.id);
+      return {
+        deviceIdentity: identity,
+        authorization: {},
+        close() {},
+        async fetch() {
+          return Response.json({ tools: [catalogTool] });
+        },
+      };
+    },
+    () => now,
+  );
+  const worker = await workerFixture(f, "Replacement worker");
+  const first = await approve(f, worker);
+  let middleId = "";
+  const last = await approve(f, worker, undefined, undefined, async () => {
+    middleId = (await approve(f, worker)).pending.approvalId;
+  });
+  const currentId = last.pending.approvalId;
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", now)?.id).toBe(currentId);
+  const reloaded = new McpServiceStore({
+    path: join(f.directory, "mcp.sqlite"),
+    keyFile: join(f.directory, "secrets/broker.key"),
+  });
+  try {
+    const records = reloaded.approvals(now);
+    expect(records).toHaveLength(3);
+    expect(new Set(records.map((record) => record.createdAt))).toEqual(new Set([now]));
+    expect(records.filter((record) => record.current).map((record) => record.id)).toEqual([currentId]);
+    expect(records.every((record) => Boolean(record.grant))).toBe(true);
+    expect(reloaded.currentApproval(worker.worker.workerId, "account:alice0000000000", now)?.id).toBe(currentId);
+    expect(required(reloaded.approval(currentId, now)).previousApprovalId).toBe(middleId);
+    expect(required(reloaded.approval(first.pending.approvalId, now)).current).toBe(false);
+  } finally {
+    reloaded.close();
+  }
+  const metadata = (await (
+    await f.app.request(`${publicUrl}/api/mcp/approvals`, { headers: sessionHeaders })
+  ).json()) as {
+    approvals: { id: string; active: boolean; current: boolean }[];
+  };
+  expect(metadata.approvals.every((approval) => approval.active)).toBe(true);
+  expect(metadata.approvals.filter((approval) => approval.current).map((approval) => approval.id)).toEqual([currentId]);
+  expect(JSON.stringify(metadata)).not.toContain(first.grant.token);
+  expect(readFileSync(join(f.directory, "mcp.sqlite")).includes(Buffer.from(first.grant.token))).toBe(false);
+  const token = await accessToken(f);
+  routed.length = 0;
+  await mcpRequest(f, token, "tools/list");
+  expect(routed).toEqual([currentId]);
+  const disconnected = await f.app.request(`${publicUrl}/api/mcp/approvals/${currentId}`, {
+    method: "DELETE",
+    headers: sessionHeaders,
+  });
+  expect(await disconnected.json()).toMatchObject({ restoredApprovalId: null });
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", now)).toBeNull();
+  expect(f.secrets.approvals(now)).toHaveLength(2);
+  routed.length = 0;
+  await mcpRequest(f, token, "tools/list");
+  expect(routed).toEqual([]);
+});
+
+test("explicit rollback restores only its current predecessor and cannot replace another browser activation", async () => {
+  const f = fixture(async ({ identity }) => ({
+    deviceIdentity: identity,
+    authorization: {},
+    close() {},
+    async fetch() {
+      return Response.json({ tools: [catalogTool] });
+    },
+  }));
+  const worker = await workerFixture(f, "Rollback worker");
+  const first = await approve(f, worker);
+  const failed = await approve(f, worker);
+  const remove = (id: string, rollback = false, retain = false) => {
+    const address = new URL(`${publicUrl}/api/mcp/approvals/${id}`);
+    if (rollback) address.searchParams.set("rollback", "1");
+    if (retain) address.searchParams.set("retain", "1");
+    return f.app.request(address.href, { method: "DELETE", headers: sessionHeaders });
+  };
+  const rolledBack = await remove(failed.pending.approvalId, true, true);
+  expect(rolledBack.status).toBe(200);
+  expect(await rolledBack.json()).toMatchObject({ restoredApprovalId: first.pending.approvalId });
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", Date.now())?.id).toBe(
+    first.pending.approvalId,
+  );
+  const reloaded = new McpServiceStore({
+    path: join(f.directory, "mcp.sqlite"),
+    keyFile: join(f.directory, "secrets/broker.key"),
+  });
+  try {
+    const retained = required(reloaded.approval(failed.pending.approvalId, Date.now()));
+    expect(retained.current).toBe(false);
+    expect(retained.grant?.id).toBe(failed.grant.id);
+    expect(reloaded.currentApproval(worker.worker.workerId, "account:alice0000000000", Date.now())?.id).toBe(
+      first.pending.approvalId,
+    );
+  } finally {
+    reloaded.close();
+  }
+  expect((await remove(failed.pending.approvalId)).status).toBe(200);
+  expect(f.secrets.approval(failed.pending.approvalId, Date.now())).toBeNull();
+  const stale = await approve(f, worker);
+  const otherBrowser = await approve(f, worker);
+  const staleRollback = await remove(stale.pending.approvalId, true);
+  expect(await staleRollback.json()).toMatchObject({ restoredApprovalId: null });
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", Date.now())?.id).toBe(
+    otherBrowser.pending.approvalId,
+  );
+  const disconnected = await remove(otherBrowser.pending.approvalId, false, true);
+  expect(await disconnected.json()).toMatchObject({ restoredApprovalId: null });
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", Date.now())).toBeNull();
+  expect(required(f.secrets.approval(first.pending.approvalId, Date.now())).current).toBe(false);
+  expect(required(f.secrets.approval(otherBrowser.pending.approvalId, Date.now())).current).toBe(false);
+  expect((await remove(otherBrowser.pending.approvalId)).status).toBe(200);
+  expect(f.secrets.approval(otherBrowser.pending.approvalId, Date.now())).toBeNull();
+});
+
+test("canceling a pending approval during worker verification cannot resurrect or replace it", async () => {
+  const verifying = Promise.withResolvers<void>();
+  const release = Promise.withResolvers<void>();
+  let block = false;
+  const f = fixture(async ({ identity }) => ({
+    deviceIdentity: identity,
+    authorization: {},
+    close() {},
+    async fetch() {
+      if (block) {
+        verifying.resolve();
+        await release.promise;
+      }
+      return Response.json({ tools: [catalogTool] });
+    },
+  }));
+  const worker = await workerFixture(f, "Canceled activation worker");
+  const previous = await approve(f, worker);
+  let canceledId = "";
+  block = true;
+  const activation = approve(
+    f,
+    worker,
+    undefined,
+    undefined,
+    async (id) => {
+      canceledId = id;
+    },
+    403,
+  );
+  await verifying.promise;
+  const canceled = await f.app.request(`${publicUrl}/api/mcp/approvals/${canceledId}?rollback=1&retain=1`, {
+    method: "DELETE",
+    headers: sessionHeaders,
+  });
+  expect(canceled.status).toBe(200);
+  release.resolve();
+  await activation;
+  expect(f.secrets.approval(canceledId, Date.now())).toBeNull();
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", Date.now())?.id).toBe(
+    previous.pending.approvalId,
+  );
+});
+
+test("activating a replacement aborts in-flight work and retains its retiring worker grant", async () => {
+  const called = Promise.withResolvers<void>();
+  let aborted = false;
+  const f = fixture(async ({ identity, signal }) => ({
+    deviceIdentity: identity,
+    authorization: {},
+    close() {},
+    async fetch(input) {
+      if (input === "/remote/mcp/catalog") return Response.json({ tools: [catalogTool] });
+      called.resolve();
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            signal.addEventListener(
+              "abort",
+              () => {
+                aborted = true;
+                controller.error(new Error("cancelled"));
+              },
+              { once: true },
+            );
+          },
+        }),
+      );
+    },
+  }));
+  const worker = await workerFixture(f, "In-flight replacement worker");
+  const first = await approve(f, worker);
+  const token = await accessToken(f);
+  const pending = mcpRequest(f, token, "tools/call", {
+    name: "integration_all",
+    arguments: { workerId: worker.worker.workerId, arguments: {} },
+  });
+  await called.promise;
+  const replacement = await approve(f, worker);
+  expect((await pending).result.isError).toBe(true);
+  expect(aborted).toBe(true);
+  const retiring = required(f.secrets.approval(first.pending.approvalId, Date.now()));
+  expect(retiring.current).toBe(false);
+  expect(retiring.grant?.id).toBe(first.grant.id);
+  expect(f.secrets.currentApproval(worker.worker.workerId, "account:alice0000000000", Date.now())?.id).toBe(
+    replacement.pending.approvalId,
+  );
 });
 
 test("organization member removal rejects an existing OAuth session before any further worker request", async () => {

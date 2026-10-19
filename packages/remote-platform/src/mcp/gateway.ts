@@ -70,17 +70,9 @@ export class GlobalMcpGateway {
   private approval(worker: AuthorizedWorkerConnection, token: McpAccountToken): ServiceApproval | null {
     let principalId = `account:${token.userId}`;
     if (worker.organizationId) principalId = `organization:${worker.organizationId}`;
-    return (
-      this.options.secrets
-        .approvals(this.now())
-        .find(
-          (approval) =>
-            approval.workerId === worker.workerId &&
-            approval.principalId === principalId &&
-            approval.organizationId === worker.organizationId &&
-            Boolean(approval.grant),
-        ) ?? null
-    );
+    const approval = this.options.secrets.currentApproval(worker.workerId, principalId, this.now());
+    if (approval?.organizationId !== worker.organizationId) return null;
+    return approval;
   }
   private assertWorker(
     raw: string,
@@ -91,7 +83,14 @@ export class GlobalMcpGateway {
     this.assertToken(raw, token);
     const current = currentWorker(this.options, token.userId, worker.workerId, worker.organizationId);
     const live = this.options.secrets.approval(approval.id, this.now());
-    if (!live?.grant || live.principalId !== approval.principalId || live.grant.id !== approval.grant?.id)
+    if (
+      !live?.current ||
+      !live.grant ||
+      live.workerId !== worker.workerId ||
+      live.organizationId !== worker.organizationId ||
+      live.principalId !== approval.principalId ||
+      live.grant.id !== approval.grant?.id
+    )
       throw new HTTPException(403, { message: "Worker MCP approval was revoked" });
     approvedRelay(this.options, current.relayUrl);
     return current;
