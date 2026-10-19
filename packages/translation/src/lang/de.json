@@ -247,6 +247,82 @@
         "title": "Melde dich bei deinem Konto an",
         "subtitle": "Willkommen zurück! Bitte gib deine Zugangsdaten ein"
       },
+      "mcpConsent": {
+        "title": "Clientzugriff überprüfen",
+        "description": "Überprüfen Sie den Zugriff dieses Clients, bevor Sie sich verbinden.",
+        "viewingHint": "Das Betrachten dieser Seite gewährt keinen Zugriff.",
+        "identityTitle": "Konto und Kunde",
+        "loading": "Zugriffsanfrage wird geladen",
+        "allow": "Zugriff erlauben",
+        "deny": "Zugriff verweigern",
+        "decisionHint": "Erlauben Sie nur den Zugriff, wenn Sie diesem Client vertrauen und Callback vertrauen.",
+        "requestExpires": "Anfrage läuft ab (UTC):",
+        "details": "Technische Details",
+        "returnHome": "Zurück zu Homarr",
+        "reload": "Zustimmungsseite neu laden",
+        "account": {
+          "name": "Eingeloggt als",
+          "id": "Benutzer-ID",
+          "nameNotRecorded": "Benutzername nicht aufgezeichnet"
+        },
+        "client": {
+          "name": "Kunde",
+          "nameNotSupplied": "Kundenname nicht angegeben",
+          "id": "Kunden-ID",
+          "callbackHost": "Callback-Host",
+          "callbackUrl": "Vollständige Callback-URL",
+          "hostUnavailable": "Callback-Host nicht verfügbar",
+          "unverifiedHint": "Kundennamen werden selbst gemeldet, nicht von Homarr überprüft.",
+          "destinationHint": "Ihre Entscheidung wird zu diesem Rückruf zurückkehren. Wenn Sie Zugriff erlauben, kann der Client den Autorisierungscode gegen API-Zugangsdaten tauschen."
+        },
+        "access": {
+          "title": "Kontozugriff",
+          "description": "Verwendet Ihre aktuellen Berechtigungen, einschließlich gemeinsamer Ressourcen.",
+          "details": "Berechtigungen anzeigen ({count})",
+          "noGlobalPermissions": "Verwendet Ihr Konto und Zugriff auf freigegebene Ressourcen, ohne globale Berechtigungen."
+        },
+        "admin": {
+          "title": "Voller Administrator-Zugriff",
+          "description": "Du kannst Homarr und verbundene Dienste verwalten, einschließlich destruktiver Aktionen."
+        },
+        "credential": {
+          "title": "Anmeldedatenbereich und -dauer",
+          "breadth": "Funktioniert mit Homarr's HTTP API und MCP, einschließlich außerhalb dieses Clients.",
+          "lifetime": "Kein automatisches Ablauf. Abmeldung widerruft nicht den Zugriff.",
+          "manageConnections": "In den allgemeinen Einstellungen widerrufen"
+        },
+        "error": {
+          "freshStart": "Starten Sie eine neue Autorisierungsanfrage vom Client. Homarr wird Sie bitten, den Zugriff erneut zu überprüfen.",
+          "unavailable": {
+            "title": "Zugriffsanfrage nicht verfügbar",
+            "description": "Diese Anfrage ist abgelaufen, wurde bereits bearbeitet oder ist nicht mehr verfügbar. Sie kann nicht von dieser Seite genehmigt werden."
+          },
+          "invalid_browser": {
+            "title": "Zugriffsanfrage gehört zu einem anderen Browser",
+            "description": "Dieser Browser kann die ursprüngliche Anfrage nicht verifizieren. Verwenden Sie den Browser, in dem Sie mit der Autorisierung begonnen haben, oder starten Sie eine neue Anfrage vom Client."
+          },
+          "session_changed": {
+            "title": "Ihre Anmeldesitzung hat sich geändert",
+            "description": "Diese Anfrage wurde mit einem anderen Benutzer oder einer anderen Anmeldesitzung verknüpft. Sie kann nicht mit der aktuellen Sitzung genehmigt werden."
+          },
+          "invalid_request": {
+            "title": "Zugriffsanfrage konnte nicht verifiziert werden",
+            "description": "Die Anfrage ist ungültig, abgelaufen oder nicht mehr überprüfbar. Bei diesem Versuch wurde kein Zugriff gewährt."
+          },
+          "access_denied": {
+            "title": "Zugriff nicht gewährt",
+            "description": "Der Autorisierungsversuch wurde abgelehnt. Kein Zugriff wurde durch diesen Versuch gewährt."
+          },
+          "server_error": {
+            "title": "Zugriffsanfrage konnte nicht abgeschlossen werden",
+            "description": "Homarr konnte diesen Autorisierungsversuch nicht abschließen. Überprüfen Sie Ihre OAuth-Verbindungen, bevor Sie erneut starten."
+          },
+          "unknown": {
+            "title": "Zugriffsanfrage nicht verfügbar",
+            "description": "Diese Seite kann das Autorisierungsergebnis nicht bestätigen. Überprüfen Sie Ihre OAuth-Verbindungen, bevor Sie erneut starten."
+          }
+        }
+      },
       "invite": {
         "title": "Homarr beitreten",
         "titleWithAppName": "{appName} beitreten",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "Überwachung der Betriebszeit",
       "beszel": "Beszel",
       "systemMonitoring": "Systemüberwachung",
-      "security": "Sicherheit"
+      "security": "Sicherheit",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "Seite {page} von {totalPages}"
+    },
+    "navigation": {
+      "toggle": "Navigation umschalten"
     },
     "here": "Hier",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "Standard Tab"
         },
+        "tabOrder": {
+          "label": "Tab order",
+          "systemFirst": "System dann Cluster",
+          "clusterFirst": "Cluster dann System"
+        },
         "visibleClusterSections": {
           "label": "Sichtbare Cluster-Abschnitte"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Verknüpfte Integrationen"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name oder Eigentümer/Name"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
       "projectDescription": "Projektbeschreibung",
+      "runningVersions": "Laufende Versionen",
+      "upToDate": "Aktuell",
+      "updateAvailable": "Update verfügbar",
+      "unknownStatus": "Unbekannt",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
@@ -6171,15 +6263,6 @@
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
       }
-    },
-    "snapshot": {
-      "take": "Schnappschuss des Brettstatus machen",
-      "description": "Laden Sie einen geretteten Schnappschuss herunter, um einen Fehlerbericht anzuhängen und helfen Sie uns, Ihr Layout zu reproduzieren",
-      "downloaded": "Brett-Snapshot heruntergeladen",
-      "downloadedDescription": "Fügen Sie den JSON und einen Screenshot mit der gleichen Fenstergröße an Ihren Fehlerbericht an. Der Schnappschuss enthält Layout, Einstellungen, benutzerdefinierte CSS, Widget-Optionen und geladene Daten, mit privatem Text, URLs und Anmeldeinformationen.",
-      "playground": "Spielplatz öffnen",
-      "failed": "Brett-Snapshot konnte nicht aufgenommen werden",
-      "failedDescription": "Die Boarddaten konnten nicht sicher exportiert werden oder der Snapshot überschreitet 10 MB."
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit",
+              "oauthConnections": {
+                "title": "OAuth Verbindungen",
+                "description": "Diese Clients erhielten API-Zugangsdaten für Ihr Konto über OAuth. Die Anmeldedaten funktionieren sowohl mit Homarrs HTTP API als auch mit MCP, verfallen nicht automatisch und bleiben gültig, nachdem Sie sich abgemeldet haben.",
+                "revocationHint": "Das Widerrufen einer Verbindung entfernt die API-Anmeldeinformation. Um eine Verbindung wiederherzustellen, starten Sie die Autorisierung erneut vom Client.",
+                "loading": "OAuth-Verbindungen werden geladen",
+                "retry": "Verbindungen neu laden",
+                "revoke": "Verbindung widerrufen",
+                "confirmRevoke": "Widerruf bestätigen",
+                "empty": {
+                  "title": "Keine OAuth-Verbindungen aufgezeichnet",
+                  "description": "Neue OAuth-Verbindungen erscheinen hier. Ältere Zugangsdaten ohne registrierte Client-Details benötigen möglicherweise einen Administrator, um sie in API-Schlüsseln zu widerrufen."
+                },
+                "loadError": {
+                  "title": "OAuth-Verbindungen konnten nicht geladen werden",
+                  "description": "Versuchen Sie die Liste erneut zu laden. Dies widerrufen keine Anmeldeinformationen."
+                },
+                "success": {
+                  "title": "Verbindung widerrufen",
+                  "description": "Die gespeicherten API-Zugangsdaten wurden entfernt. Verbinden Sie sich erneut vom Client, um den Zugriff erneut zu gewähren."
+                },
+                "error": {
+                  "title": "Verbindung konnte nicht widerrufen werden",
+                  "description": "Die Anmeldedaten sind möglicherweise noch aktiv. Versuchen Sie es erneut zu widerrufen."
+                }
+              },
               "onboardingTours": {
                 "title": "",
                 "description": "",
@@ -6933,7 +7041,8 @@
               "label": "Authentifizierung",
               "title": "API Schlüssel",
               "button": {
-                "createApiToken": "API Token erstellen"
+                "createApiToken": "API Token erstellen",
+                "confirmDeletion": "Löschen bestätigen"
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "Erstellt von",
+                  "source": "Integration",
                   "actions": "Aktionen"
+                }
+              },
+              "provenance": {
+                "oauth": "OAuh",
+                "unattributed": "Manueller oder älterer API-Schlüssel",
+                "unnamedClient": "Client-Name nicht aufgezeichnet",
+                "clientNameHint": "Kundennamen sind selbst gemeldet und werden nicht überprüft.",
+                "details": "Verbindungsdetails",
+                "credentialId": "Anmeldedaten ID",
+                "clientId": "Kunden-ID",
+                "callbackHost": "Callback-Host",
+                "callbackUrl": "Vollständige Callback-URL",
+                "issuedAt": "Ausgestellt (UTC)",
+                "unknown": "Nicht aufgezeichnet"
+              },
+              "empty": {
+                "title": "Keine API-Schlüssel zum Anzeigen",
+                "description": "Erstellen Sie ein API-Token oder passen Sie die Tabellenfilter an, um vorhandene Schlüssel zu finden."
+              },
+              "feedback": {
+                "createError": {
+                  "title": "API-Schlüssel konnte nicht erstellt werden",
+                  "description": "Es wurden keine neuen Anmeldedaten empfangen. Überprüfen Sie die Schlüsselliste, bevor Sie es erneut versuchen."
+                },
+                "deleteError": {
+                  "title": "API-Schlüssel konnte nicht gelöscht werden",
+                  "description": "Die Anmeldedaten sind möglicherweise noch aktiv. Versuchen Sie es erneut."
+                },
+                "deleteSuccess": {
+                  "title": "API-Schlüssel gelöscht",
+                  "description": "Die gespeicherten API-Zugangsdaten wurden entfernt."
+                },
+                "refreshError": {
+                  "title": "API-Schlüssel gelöscht, aber die Liste konnte nicht aktualisiert werden",
+                  "description": "Diese Seite neu laden, um die aktuellen API-Schlüssel zu sehen."
                 }
               }
             },
@@ -6966,9 +7111,9 @@
                   "description": ""
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (Browser-Login und Einwilligung)",
+                  "description": "Starten Sie die Autorisierung in Ihrem OAuth-Client und melden Sie sich bei Bedarf bei Homarr an. Überprüfen Sie den Client, das Callback-Ziel und den Kontozugriff, dann wählen Sie \"Zugriff erlauben\" nur, wenn Sie dem Client vertrauen. Ein API-Anmeldeinformationen wird erst nach Freigabe und erfolgreichem Code-Austausch erstellt.",
+                  "hint": "Aufheben von OAuth-Verbindungen in Ihren eigenen allgemeinen Einstellungen. Administratoren können die Anmeldedaten auch im Register Authentifizierung widerrufen. Diese Zugangsdaten funktionieren mit Homarrs HTTP API und MCP, verfallen nicht automatisch und bleiben nach der Abmeldung gültig."
                 },
                 "permissions": ""
               },

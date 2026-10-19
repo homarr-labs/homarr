@@ -34,7 +34,6 @@ export class BoardMockBuilder {
         id: createId(),
         image: null,
         name: "User",
-        email: null,
       },
       groupPermissions: [],
       userPermissions: [],

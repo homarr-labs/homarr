@@ -247,6 +247,82 @@
         "title": "crwdns6:0crwdne6:0",
         "subtitle": "crwdns8:0crwdne8:0"
       },
+      "mcpConsent": {
+        "title": "crwdns10941:0crwdne10941:0",
+        "description": "crwdns10943:0crwdne10943:0",
+        "viewingHint": "crwdns10945:0crwdne10945:0",
+        "identityTitle": "crwdns10947:0crwdne10947:0",
+        "loading": "crwdns10949:0crwdne10949:0",
+        "allow": "crwdns10951:0crwdne10951:0",
+        "deny": "crwdns10953:0crwdne10953:0",
+        "decisionHint": "crwdns10955:0crwdne10955:0",
+        "requestExpires": "crwdns10957:0crwdne10957:0",
+        "details": "crwdns10959:0crwdne10959:0",
+        "returnHome": "crwdns10961:0crwdne10961:0",
+        "reload": "crwdns10963:0crwdne10963:0",
+        "account": {
+          "name": "crwdns10965:0crwdne10965:0",
+          "id": "crwdns10967:0crwdne10967:0",
+          "nameNotRecorded": "crwdns10969:0crwdne10969:0"
+        },
+        "client": {
+          "name": "crwdns10971:0crwdne10971:0",
+          "nameNotSupplied": "crwdns10973:0crwdne10973:0",
+          "id": "crwdns10975:0crwdne10975:0",
+          "callbackHost": "crwdns10977:0crwdne10977:0",
+          "callbackUrl": "crwdns10979:0crwdne10979:0",
+          "hostUnavailable": "crwdns10981:0crwdne10981:0",
+          "unverifiedHint": "crwdns10983:0crwdne10983:0",
+          "destinationHint": "crwdns10985:0crwdne10985:0"
+        },
+        "access": {
+          "title": "crwdns10987:0crwdne10987:0",
+          "description": "crwdns10989:0crwdne10989:0",
+          "details": "crwdns10991:0{count}crwdne10991:0",
+          "noGlobalPermissions": "crwdns10993:0crwdne10993:0"
+        },
+        "admin": {
+          "title": "crwdns10995:0crwdne10995:0",
+          "description": "crwdns10997:0crwdne10997:0"
+        },
+        "credential": {
+          "title": "crwdns10999:0crwdne10999:0",
+          "breadth": "crwdns11001:0crwdne11001:0",
+          "lifetime": "crwdns11003:0crwdne11003:0",
+          "manageConnections": "crwdns11005:0crwdne11005:0"
+        },
+        "error": {
+          "freshStart": "crwdns11007:0crwdne11007:0",
+          "unavailable": {
+            "title": "crwdns11009:0crwdne11009:0",
+            "description": "crwdns11011:0crwdne11011:0"
+          },
+          "invalid_browser": {
+            "title": "crwdns11013:0crwdne11013:0",
+            "description": "crwdns11015:0crwdne11015:0"
+          },
+          "session_changed": {
+            "title": "crwdns11017:0crwdne11017:0",
+            "description": "crwdns11019:0crwdne11019:0"
+          },
+          "invalid_request": {
+            "title": "crwdns11021:0crwdne11021:0",
+            "description": "crwdns11023:0crwdne11023:0"
+          },
+          "access_denied": {
+            "title": "crwdns11025:0crwdne11025:0",
+            "description": "crwdns11027:0crwdne11027:0"
+          },
+          "server_error": {
+            "title": "crwdns11029:0crwdne11029:0",
+            "description": "crwdns11031:0crwdne11031:0"
+          },
+          "unknown": {
+            "title": "crwdns11033:0crwdne11033:0",
+            "description": "crwdns11035:0crwdne11035:0"
+          }
+        }
+      },
       "invite": {
         "title": "crwdns10:0crwdne10:0",
         "titleWithAppName": "crwdns6647:0{appName}crwdne6647:0",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "crwdns4981:0crwdne4981:0",
       "beszel": "crwdns7571:0crwdne7571:0",
       "systemMonitoring": "crwdns7573:0crwdne7573:0",
-      "security": "crwdns7575:0crwdne7575:0"
+      "security": "crwdns7575:0crwdne7575:0",
+      "serviceVersion": "crwdns11127:0crwdne11127:0"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "crwdns7619:0{page}crwdnd7619:0{totalPages}crwdne7619:0"
+    },
+    "navigation": {
+      "toggle": "crwdns11037:0crwdne11037:0"
     },
     "here": "crwdns552:0crwdne552:0",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "crwdns2636:0crwdne2636:0"
         },
+        "tabOrder": {
+          "label": "crwdns10935:0crwdne10935:0",
+          "systemFirst": "crwdns10937:0crwdne10937:0",
+          "clusterFirst": "crwdns10939:0crwdne10939:0"
+        },
         "visibleClusterSections": {
           "label": "crwdns3448:0crwdne3448:0"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": "crwdns5723:0crwdne5723:0"
           },
+          "integrations": {
+            "label": "crwdns11129:0crwdne11129:0"
+          },
           "identifier": {
             "label": "crwdns3206:0crwdne3206:0",
             "placeholder": "crwdns3208:0crwdne3208:0"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "crwdns3250:0crwdne3250:0",
       "releaseDescription": "crwdns3252:0crwdne3252:0",
       "projectDescription": "crwdns3522:0crwdne3522:0",
+      "runningVersions": "crwdns11131:0crwdne11131:0",
+      "upToDate": "crwdns11133:0crwdne11133:0",
+      "updateAvailable": "crwdns11135:0crwdne11135:0",
+      "unknownStatus": "crwdns11137:0crwdne11137:0",
       "created": "crwdns3254:0crwdne3254:0",
       "error": {
         "label": "crwdns3262:0crwdne3262:0",
@@ -6171,15 +6263,6 @@
           "notice": "crwdns2472:0crwdne2472:0"
         }
       }
-    },
-    "snapshot": {
-      "take": "crwdns10921:0crwdne10921:0",
-      "description": "crwdns10923:0crwdne10923:0",
-      "downloaded": "crwdns10925:0crwdne10925:0",
-      "downloadedDescription": "crwdns10927:0crwdne10927:0",
-      "playground": "crwdns10929:0crwdne10929:0",
-      "failed": "crwdns10931:0crwdne10931:0",
-      "failedDescription": "crwdns10933:0crwdne10933:0"
     }
   },
   "layout": {
@@ -6325,7 +6408,7 @@
             "header": {
               "title": "crwdns9701:0crwdne9701:0",
               "badge": "crwdns9703:0crwdne9703:0",
-              "description": "crwdns9705:0crwdne9705:0",
+              "description": "crwdns11039:0crwdne11039:0",
               "device": {
                 "desktop": "crwdns9707:0crwdne9707:0",
                 "mobile": "crwdns9709:0crwdne9709:0"
@@ -6338,7 +6421,7 @@
               "action": {
                 "hide": "crwdns9717:0crwdne9717:0",
                 "show": "crwdns9719:0crwdne9719:0",
-                "configure": "crwdns9721:0{item}crwdne9721:0",
+                "configure": "crwdns11041:0{item}crwdne11041:0",
                 "remove": "crwdns9723:0{item}crwdne9723:0",
                 "dropIntoZone": "crwdns9725:0{zone}crwdne9725:0"
               },
@@ -6348,7 +6431,7 @@
               },
               "available": {
                 "title": "crwdns9731:0crwdne9731:0",
-                "description": "crwdns9733:0crwdne9733:0",
+                "description": "crwdns11043:0crwdne11043:0",
                 "requiredAlways": "crwdns9735:0crwdne9735:0",
                 "allAdded": "crwdns9737:0crwdne9737:0",
                 "add": "crwdns9739:0{item}crwdne9739:0",
@@ -6393,6 +6476,31 @@
               "search": "crwdns2702:0crwdne2702:0",
               "firstDayOfWeek": "crwdns1674:0crwdne1674:0",
               "accessibility": "crwdns1676:0crwdne1676:0",
+              "oauthConnections": {
+                "title": "crwdns11045:0crwdne11045:0",
+                "description": "crwdns11047:0crwdne11047:0",
+                "revocationHint": "crwdns11049:0crwdne11049:0",
+                "loading": "crwdns11051:0crwdne11051:0",
+                "retry": "crwdns11053:0crwdne11053:0",
+                "revoke": "crwdns11055:0crwdne11055:0",
+                "confirmRevoke": "crwdns11057:0crwdne11057:0",
+                "empty": {
+                  "title": "crwdns11059:0crwdne11059:0",
+                  "description": "crwdns11061:0crwdne11061:0"
+                },
+                "loadError": {
+                  "title": "crwdns11063:0crwdne11063:0",
+                  "description": "crwdns11065:0crwdne11065:0"
+                },
+                "success": {
+                  "title": "crwdns11067:0crwdne11067:0",
+                  "description": "crwdns11069:0crwdne11069:0"
+                },
+                "error": {
+                  "title": "crwdns11071:0crwdne11071:0",
+                  "description": "crwdns11073:0crwdne11073:0"
+                }
+              },
               "onboardingTours": {
                 "title": "crwdns4511:0crwdne4511:0",
                 "description": "crwdns4513:0crwdne4513:0",
@@ -6933,7 +7041,8 @@
               "label": "crwdns1866:0crwdne1866:0",
               "title": "crwdns1868:0crwdne1868:0",
               "button": {
-                "createApiToken": "crwdns1870:0crwdne1870:0"
+                "createApiToken": "crwdns1870:0crwdne1870:0",
+                "confirmDeletion": "crwdns11075:0crwdne11075:0"
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "crwdns1874:0crwdne1874:0",
+                  "source": "crwdns11077:0crwdne11077:0",
                   "actions": "crwdns2740:0crwdne2740:0"
+                }
+              },
+              "provenance": {
+                "oauth": "crwdns11079:0crwdne11079:0",
+                "unattributed": "crwdns11081:0crwdne11081:0",
+                "unnamedClient": "crwdns11083:0crwdne11083:0",
+                "clientNameHint": "crwdns11085:0crwdne11085:0",
+                "details": "crwdns11087:0crwdne11087:0",
+                "credentialId": "crwdns11089:0crwdne11089:0",
+                "clientId": "crwdns11091:0crwdne11091:0",
+                "callbackHost": "crwdns11093:0crwdne11093:0",
+                "callbackUrl": "crwdns11095:0crwdne11095:0",
+                "issuedAt": "crwdns11097:0crwdne11097:0",
+                "unknown": "crwdns11099:0crwdne11099:0"
+              },
+              "empty": {
+                "title": "crwdns11101:0crwdne11101:0",
+                "description": "crwdns11103:0crwdne11103:0"
+              },
+              "feedback": {
+                "createError": {
+                  "title": "crwdns11105:0crwdne11105:0",
+                  "description": "crwdns11107:0crwdne11107:0"
+                },
+                "deleteError": {
+                  "title": "crwdns11109:0crwdne11109:0",
+                  "description": "crwdns11111:0crwdne11111:0"
+                },
+                "deleteSuccess": {
+                  "title": "crwdns11113:0crwdne11113:0",
+                  "description": "crwdns11115:0crwdne11115:0"
+                },
+                "refreshError": {
+                  "title": "crwdns11117:0crwdne11117:0",
+                  "description": "crwdns11119:0crwdne11119:0"
                 }
               }
             },
@@ -6966,9 +7111,9 @@
                   "description": "crwdns5193:0crwdne5193:0"
                 },
                 "oauth": {
-                  "title": "crwdns5195:0crwdne5195:0",
-                  "description": "crwdns5197:0crwdne5197:0",
-                  "hint": "crwdns5199:0crwdne5199:0"
+                  "title": "crwdns11121:0crwdne11121:0",
+                  "description": "crwdns11123:0crwdne11123:0",
+                  "hint": "crwdns11125:0crwdne11125:0"
                 },
                 "permissions": "crwdns5201:0crwdne5201:0"
               },

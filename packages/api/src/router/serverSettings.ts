@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import {
   getServerSettingByKeyAsync,
@@ -37,6 +38,47 @@ const legacyAuthBrandingUpdateSchema = z.object({
   showCustomLogoOnLogin: z.boolean().optional(),
   showCustomGreetingOnLogin: z.boolean().optional(),
 });
+
+const saveBoardSettingsAsync = async (db: Database, input: unknown) => {
+  const parsedInput = boardServerSettingsUpdateSchema.safeParse(input);
+  if (!parsedInput.success) {
+    throw new TRPCError({ code: "BAD_REQUEST", cause: parsedInput.error, message: parsedInput.error.message });
+  }
+
+  const current = await getServerSettingByKeyAsync(db, "board");
+  const parsedSettings = boardServerSettingsSchema.safeParse({ ...current, ...parsedInput.data });
+  if (!parsedSettings.success) {
+    throw new TRPCError({ code: "BAD_REQUEST", cause: parsedSettings.error, message: parsedSettings.error.message });
+  }
+  const next = parsedSettings.data;
+  const boardIds = [next.homeBoardId, next.mobileHomeBoardId].filter((id) => id !== null);
+
+  if (boardIds.length > 0) {
+    const publicBoards = await db.query.boards.findMany({
+      columns: { id: true },
+      where: and(inArray(boards.id, boardIds), eq(boards.isPublic, true)),
+    });
+    const publicBoardIds = new Set(publicBoards.map((board) => board.id));
+    const invalidBoardIds = boardIds.filter((id) => !publicBoardIds.has(id));
+    if (invalidBoardIds.length > 0) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
+      });
+    }
+  }
+
+  const existing = await db.query.serverSettings.findFirst({
+    where: eq(serverSettings.settingKey, "board"),
+  });
+  if (existing) {
+    await updateServerSettingByKeyAsync(db, "board", next);
+  } else {
+    await insertServerSettingByKeyAsync(db, "board", next);
+  }
+  return next;
+};
+
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
     return await getServerSettingByKeyAsync(ctx.db, "culture");
@@ -96,38 +138,7 @@ export const serverSettingsRouter = createTRPCRouter({
     .input(boardServerSettingsUpdateSchema)
     .output(boardServerSettingsSchema)
     .mutation(async ({ ctx, input }) => {
-      const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter(
-        (id) => id !== undefined && id !== null,
-      );
-
-      if (inputBoardIds.length > 0) {
-        const publicBoards = await ctx.db.query.boards.findMany({
-          columns: { id: true },
-          where: and(inArray(boards.id, inputBoardIds), eq(boards.isPublic, true)),
-        });
-        const publicBoardIds = new Set(publicBoards.map((board) => board.id));
-        const invalidBoardIds = inputBoardIds.filter((id) => !publicBoardIds.has(id));
-        if (invalidBoardIds.length > 0) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
-          });
-        }
-      }
-
-      const current = await getServerSettingByKeyAsync(ctx.db, "board");
-      const next = { ...current, ...input };
-      const existing = await ctx.db.query.serverSettings.findFirst({
-        where: eq(serverSettings.settingKey, "board"),
-      });
-
-      if (existing) {
-        await updateServerSettingByKeyAsync(ctx.db, "board", next);
-      } else {
-        await insertServerSettingByKeyAsync(ctx.db, "board", next);
-      }
-
-      return next;
+      return await saveBoardSettingsAsync(ctx.db, input);
     }),
   saveSettings: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -138,6 +149,10 @@ export const serverSettingsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.settingsKey === "board") {
+        await saveBoardSettingsAsync(ctx.db, input.value);
+        return;
+      }
       if (input.settingsKey === "branding") {
         const current = await getServerSettingByKeyAsync(ctx.db, "branding");
         const parsedInput = brandingServerSettingsUpdateSchema.parse(input.value);

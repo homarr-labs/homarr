@@ -2,6 +2,79 @@ const rejectRequest = (message) => {
   throw new BadRequestError(message);
 };
 
+const isManifestObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+const isManifestString = (value, max) => typeof value === "string" && value.trim().length > 0 && value.length <= max;
+const isManifestMap = (value, max) =>
+  isManifestObject(value) &&
+  Object.keys(value).length <= max &&
+  Object.entries(value).every(([key, entry]) => /^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(key) && isManifestObject(entry));
+
+const isManifestHttpUrl = (value) => {
+  if (!isManifestString(value, 2048) || !/^https?:\/\//i.test(value)) return false;
+  const authority = /^https?:\/\/([^/?#]+)/i.exec(value)?.[1];
+  if (!authority || authority.includes("@") || /\?[^#]+|#[\s\S]+/.test(value)) return false;
+  const field = new URLField({ name: "baseUrl", required: true });
+  const record = new Record(new Collection());
+  record.set("baseUrl", value);
+  try {
+    field.validateValue(new Context(), $app, record);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const validateSubmissionManifest = (record) => {
+  const type = record.getString("type");
+  const schema = record.getString("widgetSchema");
+  const content = record.getString("content");
+  const supportedSchema =
+    type === "customWidget" ? "homarr-custom-widget-v2" : type === "customCss" ? "homarr-custom-css-v1" : null;
+  if (!supportedSchema || schema !== supportedSchema) {
+    rejectRequest("Unsupported Workshop submission schema for this type");
+  }
+  if (type === "customCss") {
+    if (!isManifestString(content, 16_384)) rejectRequest("CSS must be nonempty and at most 16384 characters");
+    return;
+  }
+  if (content.length > 1_000_000) rejectRequest("Widget content must be at most 1000000 characters");
+  let manifest;
+  try {
+    manifest = JSON.parse(content);
+  } catch {
+    rejectRequest("Widget content must be valid JSON");
+  }
+  if (!isManifestObject(manifest) || manifest.$schema !== schema) {
+    rejectRequest("Widget manifest schema must match the supported listing schema");
+  }
+  if (
+    !isManifestString(manifest.name, 128) ||
+    !isManifestString(manifest.template, 50_000) ||
+    (manifest.description !== undefined &&
+      (typeof manifest.description !== "string" || manifest.description.length > 512)) ||
+    (manifest.iconUrl !== undefined && !isManifestString(manifest.iconUrl, 2048))
+  ) {
+    rejectRequest("Widget manifest has invalid name, template, description or iconUrl fields");
+  }
+  if (
+    !isManifestMap(manifest.sources, 8) ||
+    !Object.prototype.hasOwnProperty.call(manifest.sources, "default") ||
+    !isManifestMap(manifest.requests, 64) ||
+    (manifest.options !== undefined && !isManifestMap(manifest.options, 64))
+  ) {
+    rejectRequest("Widget manifest requires keyed sources with a default source, requests and optional options");
+  }
+  for (const source of Object.values(manifest.sources)) {
+    const validSource =
+      source.type === "integration"
+        ? isManifestString(source.integrationKind, 128)
+        : (source.type === undefined || source.type === "http") &&
+          isManifestHttpUrl(source.baseUrl) &&
+          ["public", "private", "loopback"].includes(source.networkScope);
+    if (!validSource) rejectRequest("Widget manifest has an invalid source declaration");
+  }
+};
+
 const escapeHtml = (value) =>
   String(value)
     .replaceAll("&", "&amp;")
@@ -65,4 +138,5 @@ module.exports = {
   rejectRequest,
   renderWorkshopSocialHtml,
   sendEmail,
+  validateSubmissionManifest,
 };

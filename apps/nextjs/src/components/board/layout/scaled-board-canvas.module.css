@@ -20,8 +20,7 @@
 
   /*
    * Keep dashboard UI at its normal readable density while the fixed canvas
-   * is fitted below 100%. Above 100%, the canvas still behaves like browser
-   * zoom and enlarges everything together.
+   * is fitted to the available width.
    */
   --mantine-scale: var(--board-canvas-ui-scale, 1);
   /* Keep a subtle boundary inset without widening the visual gap too much. */

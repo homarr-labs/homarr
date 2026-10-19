@@ -4,7 +4,7 @@ import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/de
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import type { SelectOption } from "../_inputs/widget-select-input";
-import { statusOptions } from "../beszel/_shared/options";
+import { createBeszelMetricOptions, statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
 
 const sortOptions = [
@@ -46,17 +46,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
           defaultValue: "asc",
           options: sortDirectionOptions,
         }),
-        showCpu: factory.switch({ defaultValue: true }),
-        showMemory: factory.switch({ defaultValue: true }),
-        showDisk: factory.switch({ defaultValue: true }),
-        showGpu: factory.switch({ defaultValue: true }),
-        showLoadAvg: factory.switch({ defaultValue: true }),
-        showNet: factory.switch({ defaultValue: true }),
-        showTemp: factory.switch({ defaultValue: true }),
-        showBattery: factory.switch({ defaultValue: true }),
-        showServices: factory.switch({ defaultValue: true }),
-        showUptime: factory.switch({ defaultValue: true }),
-        showAgent: factory.switch({ defaultValue: true }),
+        ...createBeszelMetricOptions(() => factory.switch({ defaultValue: true })),
         columnOrder: factory.text({ defaultValue: "" }),
         columnWidths: factory.text({ defaultValue: "" }),
       }),

@@ -2,25 +2,14 @@
 
 import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
-import dynamic from "next/dynamic";
 
 import { useI18n } from "@homarr/translation/client";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
 
 import { AssistantContext } from "./assistant-context";
+import { AssistantLauncher } from "./assistant-launcher";
 import { AssistantBoardWidgetLazy } from "./assistant-widget-lazy";
 import { useRegisterAssistantSpotlightPlaceholder } from "./assistant-spotlight-placeholder";
-
-/**
- * The enabled runtime is the expensive half of the assistant (assistant-ui, Lexical, Markdown,
- * Mermaid). Loading it through `next/dynamic` puts it in its own chunk that is only requested when
- * this component actually renders. Availability is resolved alongside other root-layout reads on
- * the server, so enabled instances render children in their final provider from the initial HTML
- * without remounting the board after hydration.
- */
-const EnabledAssistantRoot = dynamic(() =>
-  import("./assistant-provider").then((module) => ({ default: module.EnabledAssistantRoot })),
-);
 
 const DisabledAssistant = ({ children, description }: PropsWithChildren<{ description: string }>) => {
   useRegisterAssistantSpotlightPlaceholder(description);
@@ -74,7 +63,7 @@ export const AssistantGate = ({ availability, children }: AssistantGateProps) =>
   const t = useI18n("assistant");
 
   if (availability === "enabled") {
-    return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;
+    return <AssistantLauncher>{children}</AssistantLauncher>;
   }
 
   return <DisabledAssistant description={t(unavailableMessageKeys[availability])}>{children}</DisabledAssistant>;

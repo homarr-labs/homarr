@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { LiveStatsEvent } from "@homarr/integrations/types";
 import {
@@ -149,7 +150,7 @@ export const beszelRouter = createTRPCRouter({
     .input(
       z.object({
         systemId: z.string(),
-        timePeriod: z.enum(["1m", "1h", "12h", "24h", "1w", "30d"]).default("1h"),
+        timePeriod: beszelTimePeriodSchema.default(defaultBeszelTimePeriod),
         includeDocker: z.boolean().default(true),
       }),
     )

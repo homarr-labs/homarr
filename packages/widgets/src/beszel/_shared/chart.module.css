@@ -1,0 +1,79 @@
+.chart {
+  --mantine-scale: 1;
+  --beszel-chart-saturation: 65%;
+  --beszel-chart-lightness: 50%;
+  --beszel-tooltip-background: hsl(30 8% 98%);
+  --beszel-chart-foreground: hsl(30 0% 10%);
+  --beszel-chart-muted: hsl(24 2.79% 35.1%);
+  --beszel-chart-border: hsl(30 8.11% 85.49%);
+
+  @mixin dark {
+    --beszel-chart-saturation: 60%;
+    --beszel-chart-lightness: 55%;
+    --beszel-tooltip-background: hsl(220 5.5% 9%);
+    --beszel-chart-foreground: hsl(220 2% 97%);
+    --beszel-chart-muted: hsl(220 4% 67%);
+    --beszel-chart-border: hsl(220 3% 17%);
+  }
+}
+
+.tooltip {
+  display: grid;
+  gap: 6px;
+  min-width: 112px;
+  padding: 6px 10px;
+  border: 1px solid color-mix(in srgb, var(--beszel-chart-border) 50%, transparent);
+  border-radius: 12.8px;
+  background: var(--beszel-tooltip-background);
+  color: var(--beszel-chart-foreground);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  font-size: 12px;
+  line-height: 18px;
+  pointer-events: none;
+}
+
+.tooltipHeader,
+.tooltipValue {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tooltipRows {
+  display: grid;
+  gap: 6px;
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 12px;
+}
+
+.tooltipIndicator {
+  width: 4px;
+  align-self: stretch;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tooltipName {
+  flex: 1;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--beszel-chart-muted);
+}
+
+.tooltipTotal {
+  display: flex;
+  gap: 8px;
+  line-height: 12px;
+  border-top: 1px solid var(--beszel-chart-border);
+  margin-top: 2px;
+  padding-top: 4px;
+  padding-inline-start: 12px;
+}

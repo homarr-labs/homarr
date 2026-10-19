@@ -19,26 +19,33 @@ import {
   useAuiState,
   useRemoteThreadListRuntime,
   WebSpeechSynthesisAdapter,
+  AuiProvider,
+  AuiConfig,
 } from "@assistant-ui/react";
 import { useChat } from "@ai-sdk/react";
 import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
-import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
-import { assistantHomarrProviderTokenHeader, hotkeys } from "@homarr/definitions";
+import { assistantHomarrProviderTokenHeader } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { closeSpotlight } from "@homarr/spotlight/store";
 import { useI18n } from "@homarr/translation/client";
 import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
+import type { WidgetComponentProps } from "@homarr/widgets";
 import { createWorkshopClient } from "~/components/workshop/workshop-client";
 
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
+import type { AssistantContextValue } from "./assistant-context";
+import type { AssistantWidgetRender } from "./assistant-launcher";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { getAssistantProviderQuotaRefreshDelay, isAssistantProviderUnavailable } from "./assistant-provider-quota";
-import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
+import {
+  AssistantAutoApprovalContext,
+  AssistantAutoApprovalProvider,
+  useAssistantAutoApproval,
+} from "./assistant-auto-approval";
 import { getRunningAssistantPartType } from "./assistant-activity-state";
 import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
 import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
@@ -134,15 +141,17 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
   };
 };
 
-const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
+const AssistantPreferencesProvider = ({ children, active }: PropsWithChildren<{ active: boolean }>) => {
   const t = useI18n("assistant");
   const { data, isLoading } = clientApi.assistant.getRuntimeOptions.useQuery(undefined, {
     staleTime: 10 * 60_000,
+    enabled: active,
   });
   const [modelId, setModelIdState] = useState<string | null>(null);
   const [reasoning, setReasoningState] = useState<AssistantReasoningMode>("auto");
   const workshopClient = useMemo(createWorkshopClient, []);
   const [providerUser, setProviderUser] = useState(workshopClient.currentUser);
+  const [providerAuthReady, setProviderAuthReady] = useState(false);
   const [quota, setQuota] = useState<Awaited<ReturnType<typeof workshopClient.getAssistantUsage>> | null>(null);
   const [quotaLoading, setQuotaLoading] = useState(false);
   const [quotaError, setQuotaError] = useState<string | null>(null);
@@ -195,6 +204,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
     return token ? { [assistantHomarrProviderTokenHeader]: token } : {};
   }, [data?.provider, workshopClient]);
   const refreshQuota = useCallback(async () => {
+    if (!active) return;
     quotaRequestRef.current?.abort();
     if (data?.provider !== "homarr" || !workshopClient.authToken) {
       quotaRequestRef.current = null;
@@ -220,7 +230,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
         setQuotaLoading(false);
       }
     }
-  }, [data?.provider, t, workshopClient]);
+  }, [active, data?.provider, t, workshopClient]);
   const signInToProvider = useCallback(async () => {
     setQuotaLoading(true);
     setQuotaError(null);
@@ -251,19 +261,33 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   }, [data]);
 
   useEffect(() => {
+    if (!active) {
+      setProviderAuthReady(false);
+      return;
+    }
     if (data?.provider !== "homarr") {
       setProviderUser(null);
       setQuota(null);
       setQuotaError(null);
       return;
     }
+    let disposed = false;
     const unsubscribe = workshopClient.subscribeToAuth(setProviderUser);
     void workshopClient
       .refreshAuth()
-      .then(setProviderUser)
-      .catch(() => undefined);
-    return unsubscribe;
-  }, [data?.provider, workshopClient]);
+      .then((user) => {
+        if (disposed) return;
+        setProviderUser(user);
+        setProviderAuthReady(true);
+      })
+      .catch(() => {
+        if (!disposed) setProviderAuthReady(true);
+      });
+    return () => {
+      disposed = true;
+      unsubscribe();
+    };
+  }, [active, data?.provider, workshopClient]);
 
   useEffect(
     () => () => {
@@ -273,15 +297,22 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
-    if (data?.provider !== "homarr" || !providerUser) return;
+    if (!active || !providerAuthReady || data?.provider !== "homarr" || !providerUser) return;
     void refreshQuota();
-  }, [data?.provider, providerUser, refreshQuota]);
+  }, [active, data?.provider, providerAuthReady, providerUser, refreshQuota]);
 
   useEffect(() => {
-    if (data?.provider !== "homarr" || !providerUser || !quota) return;
+    if (!active || data?.provider !== "homarr" || !providerUser || !quota) return;
     const timeout = window.setTimeout(() => void refreshQuota(), getAssistantProviderQuotaRefreshDelay(quota.resetsAt));
     return () => window.clearTimeout(timeout);
-  }, [data?.provider, providerUser, quota, refreshQuota]);
+  }, [active, data?.provider, providerUser, quota, refreshQuota]);
+
+  useEffect(() => {
+    if (active) return;
+    quotaRequestRef.current?.abort();
+    quotaRequestRef.current = null;
+    setQuotaLoading(false);
+  }, [active]);
 
   const value = useMemo(
     () => ({
@@ -290,7 +321,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       modelId,
       models,
       reasoning,
-      isLoading,
+      isLoading: isLoading || (active && data?.provider === "homarr" && !providerAuthReady),
       providerUser,
       quota,
       quotaLoading,
@@ -308,6 +339,8 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       getRequestBody,
       getRequestHeaders,
       isLoading,
+      active,
+      providerAuthReady,
       modelId,
       models,
       providerUser,
@@ -678,9 +711,30 @@ const getNotificationKey = (message: ThreadMessage | undefined) => {
   return `${message.id}:${message.status.type}:${"reason" in message.status ? message.status.reason : ""}`;
 };
 
-const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
+interface EnabledAssistantRootProps {
+  active: boolean;
+  opened: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onStateChange: (value: AssistantContextValue) => void;
+  onWidgetRender: (render: AssistantWidgetRender) => void;
+  onRequestPrompt: (prompt: string) => boolean;
+  pendingPrompt: string | null;
+  onPromptHandled: () => void;
+}
+
+const EnabledAssistantProvider = ({
+  active,
+  opened,
+  onOpen,
+  onClose,
+  onStateChange,
+  onWidgetRender,
+  onRequestPrompt,
+  pendingPrompt,
+  onPromptHandled,
+}: EnabledAssistantRootProps) => {
   const t = useI18n("assistant");
-  const [opened, setOpened] = useState(false);
   const [activityDismissed, setActivityDismissed] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
   const [visibleWidgetIds, setVisibleWidgetIds] = useState<Set<string>>(() => new Set());
@@ -733,9 +787,9 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const open = useCallback(() => {
     markRead();
     setActivityDismissed(false);
-    setOpened(true);
-  }, [markRead]);
-  const close = useCallback(() => setOpened(false), []);
+    onOpen();
+  }, [markRead, onOpen]);
+  const close = onClose;
   const setWidgetVisible = useCallback((widgetId: string, visible: boolean) => {
     if (visible) markReadRef.current();
     setVisibleWidgetIds((current) => {
@@ -760,6 +814,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     (prompt: string) => {
       const text = prompt.trim();
       if (text.length === 0) return false;
+      if (!active) return onRequestPrompt(text);
       if (providerUnavailable) {
         showWarningNotification({
           title: t("providerQuota.title"),
@@ -783,7 +838,17 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       }
       return sendPromptThroughRuntime(aui, text);
     },
-    [assistantIsRunning, aui, isLoading, latestStatus?.type, preferences.providerUser, providerUnavailable, t],
+    [
+      active,
+      assistantIsRunning,
+      aui,
+      isLoading,
+      latestStatus?.type,
+      onRequestPrompt,
+      preferences.providerUser,
+      providerUnavailable,
+      t,
+    ],
   );
   const selectModel = useCallback(
     (modelId: string) => {
@@ -794,6 +859,12 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     },
     [aui, preferences],
   );
+
+  useEffect(() => {
+    if (pendingPrompt === null || isLoading || preferences.isLoading) return;
+    sendPrompt(pendingPrompt);
+    onPromptHandled();
+  }, [isLoading, onPromptHandled, pendingPrompt, preferences.isLoading, sendPrompt]);
 
   useEffect(() => {
     if (assistantIsRunning) setActivityDismissed(false);
@@ -846,8 +917,6 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       });
     });
   }, [conversationId, isLoading, refreshCurrentView, successfulMutationIds, t]);
-
-  useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
 
   const spotlightItem = useMemo(() => {
     const canSend = !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
@@ -910,11 +979,13 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     ],
   );
 
+  useEffect(() => onStateChange(value), [onStateChange, value]);
+
   return (
     <AssistantAutoApprovalProvider conversationId={conversationId}>
       <AssistantContext.Provider value={value}>
         <AssistantComposerRuntimeProvider>
-          <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
+          <AssistantWidgetScope onRender={onWidgetRender} />
           <AssistantComposerSurfaceBoundary surfaceId="assistant-panel">
             <AssistantPanel
               opened={opened}
@@ -950,15 +1021,54 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
 };
 
 /**
- * The enabled half of the assistant. Only rendered (and only downloaded) when the instance has the
- * assistant configured and the visitor is signed in - see `assistant-gate`.
+ * Keep the runtime separate from dashboard children so activating it does not
+ * remount the board. Board widgets reuse its scopes inside their existing tree.
  */
-export const EnabledAssistantRoot = ({ children }: PropsWithChildren) => (
-  <AssistantPreferencesProvider>
+export const EnabledAssistantRoot = (props: EnabledAssistantRootProps) => (
+  <AssistantPreferencesProvider active={props.active}>
     <AssistantViewRefreshProvider>
       <AssistantRuntime>
-        <EnabledAssistantProvider>{children}</EnabledAssistantProvider>
+        <EnabledAssistantProvider {...props} />
       </AssistantRuntime>
     </AssistantViewRefreshProvider>
   </AssistantPreferencesProvider>
 );
+
+interface AssistantWidgetScopeValue {
+  aui: ReturnType<typeof useAui>;
+  preferences: ReturnType<typeof useAssistantPreferences>;
+  approval: ReturnType<typeof useAssistantAutoApproval>;
+}
+
+const ScopedAssistantBoardWidget = ({
+  scope,
+  widget,
+}: {
+  scope: AssistantWidgetScopeValue;
+  widget: WidgetComponentProps<"assistant">;
+}) => {
+  const config = useMemo(() => AuiConfig({}), []);
+  return (
+    <AuiProvider extends={scope.aui} config={config}>
+      <AssistantPreferencesContext.Provider value={scope.preferences}>
+        <AssistantAutoApprovalContext.Provider value={scope.approval}>
+          <AssistantBoardWidget {...widget} />
+        </AssistantAutoApprovalContext.Provider>
+      </AssistantPreferencesContext.Provider>
+    </AuiProvider>
+  );
+};
+
+const AssistantWidgetScope = ({ onRender }: { onRender: (render: AssistantWidgetRender) => void }) => {
+  const aui = useAui();
+  const preferences = useAssistantPreferences();
+  const approval = useAssistantAutoApproval();
+  const render = useCallback(
+    (widget: WidgetComponentProps<"assistant">) => (
+      <ScopedAssistantBoardWidget scope={{ aui, preferences, approval }} widget={widget} />
+    ),
+    [approval, aui, preferences],
+  );
+  useEffect(() => onRender(render), [onRender, render]);
+  return null;
+};

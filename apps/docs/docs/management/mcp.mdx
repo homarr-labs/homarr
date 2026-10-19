@@ -61,8 +61,9 @@ For clients that only support STDIO, use `mcp-remote`:
 Clients with OAuth support can authorize through OAuth 2.1 with PKCE instead of an API key.
 Homarr publishes discovery metadata under `/.well-known/`.
 
-If your reverse proxy does not preserve the public host and protocol, set `BASE_URL` to your public origin,
-such as `https://homarr.example.com`, without a path.
+Set `BASE_URL` to your canonical public origin, such as `https://homarr.example.com`, without a path,
+when a reverse proxy terminates TLS or changes the public Host. For TLS termination, an explicit HTTPS
+`BASE_URL` is required even if the proxy forwards the public host and scheme.
 
 ## Permissions and tools
 

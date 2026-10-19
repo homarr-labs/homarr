@@ -69,6 +69,7 @@ e2e/shared/tmp
 
 #personal backgrounds
 apps/nextjs/public/images/background.png
+apps/nextjs/public/tabler-icons/
 
 
 
@@ -94,3 +95,4 @@ homarr-backup*.zip
 
 # PR description screenshots belong on the pull request, not in the repository
 .screenshots/
+.slim/deepwork/

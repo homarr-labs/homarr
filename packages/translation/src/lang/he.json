@@ -247,6 +247,82 @@
         "title": "היכנס לחשבון שלך",
         "subtitle": "ברוך שובך! אנא הזן את שם המשתמש והסיסמה שלך"
       },
+      "mcpConsent": {
+        "title": "",
+        "description": "",
+        "viewingHint": "",
+        "identityTitle": "",
+        "loading": "",
+        "allow": "",
+        "deny": "",
+        "decisionHint": "",
+        "requestExpires": "",
+        "details": "",
+        "returnHome": "",
+        "reload": "",
+        "account": {
+          "name": "",
+          "id": "",
+          "nameNotRecorded": ""
+        },
+        "client": {
+          "name": "",
+          "nameNotSupplied": "",
+          "id": "",
+          "callbackHost": "",
+          "callbackUrl": "",
+          "hostUnavailable": "",
+          "unverifiedHint": "",
+          "destinationHint": ""
+        },
+        "access": {
+          "title": "",
+          "description": "",
+          "details": "",
+          "noGlobalPermissions": ""
+        },
+        "admin": {
+          "title": "",
+          "description": ""
+        },
+        "credential": {
+          "title": "",
+          "breadth": "",
+          "lifetime": "",
+          "manageConnections": ""
+        },
+        "error": {
+          "freshStart": "",
+          "unavailable": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_browser": {
+            "title": "",
+            "description": ""
+          },
+          "session_changed": {
+            "title": "",
+            "description": ""
+          },
+          "invalid_request": {
+            "title": "",
+            "description": ""
+          },
+          "access_denied": {
+            "title": "",
+            "description": ""
+          },
+          "server_error": {
+            "title": "",
+            "description": ""
+          },
+          "unknown": {
+            "title": "",
+            "description": ""
+          }
+        }
+      },
       "invite": {
         "title": "הצטרף ל- Homarr",
         "titleWithAppName": "הצטרפות ל-{appName}",
@@ -1436,7 +1512,8 @@
       "uptimeMonitoring": "",
       "beszel": "Beszel",
       "systemMonitoring": "ניטור המערכת",
-      "security": "אבטחה"
+      "security": "אבטחה",
+      "serviceVersion": "גרסה"
     },
     "testConnection": {
       "action": {
@@ -1838,6 +1915,9 @@
     },
     "pagination": {
       "pageOf": "עמוד {page} מתוך {totalPages}"
+    },
+    "navigation": {
+      "toggle": ""
     },
     "here": "כאן",
     "serviceUrlTemplate": {
@@ -3301,6 +3381,11 @@
         "defaultTab": {
           "label": "כרטיסיית ברירת מחדל"
         },
+        "tabOrder": {
+          "label": "",
+          "systemFirst": "",
+          "clusterFirst": ""
+        },
         "visibleClusterSections": {
           "label": "מקטעי אשכול גלויים"
         },
@@ -4570,6 +4655,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "מזהה",
             "placeholder": "שם או בעלים/שם"
@@ -4629,6 +4717,10 @@
       "openReleasePage": "פתח את דף הגרסאות",
       "releaseDescription": "תיאור הגרסה",
       "projectDescription": "תיאור הפרויקט",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "לא ידוע",
       "created": "נוצר",
       "error": {
         "label": "שגיאה",
@@ -6171,15 +6263,6 @@
           "notice": "על מנת לגרום לדף זה להיעלם, בקש ממנהל השרת להגדיר לוח בית עבור השרת"
         }
       }
-    },
-    "snapshot": {
-      "take": "",
-      "description": "",
-      "downloaded": "",
-      "downloadedDescription": "",
-      "playground": "",
-      "failed": "",
-      "failedDescription": ""
     }
   },
   "layout": {
@@ -6393,6 +6476,31 @@
               "search": "חיפוש",
               "firstDayOfWeek": "היום הראשון בשבוע",
               "accessibility": "נגישות",
+              "oauthConnections": {
+                "title": "",
+                "description": "",
+                "revocationHint": "",
+                "loading": "",
+                "retry": "",
+                "revoke": "",
+                "confirmRevoke": "",
+                "empty": {
+                  "title": "",
+                  "description": ""
+                },
+                "loadError": {
+                  "title": "",
+                  "description": ""
+                },
+                "success": {
+                  "title": "",
+                  "description": ""
+                },
+                "error": {
+                  "title": "",
+                  "description": ""
+                }
+              },
               "onboardingTours": {
                 "title": "",
                 "description": "",
@@ -6933,7 +7041,8 @@
               "label": "אימות",
               "title": "מפתח API",
               "button": {
-                "createApiToken": "יצירת מפתח  API"
+                "createApiToken": "יצירת מפתח  API",
+                "confirmDeletion": ""
               },
               "modal": {
                 "delete": {
@@ -6944,7 +7053,43 @@
               "table": {
                 "header": {
                   "createdBy": "נוצר על ידי",
+                  "source": "אינטגרציה",
                   "actions": "פעולות"
+                }
+              },
+              "provenance": {
+                "oauth": "",
+                "unattributed": "",
+                "unnamedClient": "",
+                "clientNameHint": "",
+                "details": "",
+                "credentialId": "",
+                "clientId": "",
+                "callbackHost": "",
+                "callbackUrl": "",
+                "issuedAt": "",
+                "unknown": ""
+              },
+              "empty": {
+                "title": "",
+                "description": ""
+              },
+              "feedback": {
+                "createError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteError": {
+                  "title": "",
+                  "description": ""
+                },
+                "deleteSuccess": {
+                  "title": "",
+                  "description": ""
+                },
+                "refreshError": {
+                  "title": "",
+                  "description": ""
                 }
               }
             },
