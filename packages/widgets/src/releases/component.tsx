@@ -141,6 +141,7 @@ export default function ReleasesWidget({
       trpc.widget.releases.getLatest(
         {
           itemId,
+          boardId: board.id,
           repositories: repositories.map((repository) => ({
             id: repository.id,
             provider,
