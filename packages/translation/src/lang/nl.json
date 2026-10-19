@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Niet-bewaakte items weergeven"
+        },
+        "viewMode": {
+          "label": "Bekijken"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# event} other {# gebeurtenissen}}",
         "loading": "Agenda-afspraken laden...",
         "noEvents": "Geen gebeurtenissen in deze maand"
+      },
+      "view": {
+        "compact": "Compacte maand",
+        "month": "maand",
+        "week": "week",
+        "day": "dag",
+        "agenda": "Agenda"
+      },
+      "controls": {
+        "view": "Kalender weergave",
+        "today": "vandaag",
+        "previous": "Vorige periode",
+        "next": "Volgende periode",
+        "noEvents": "Geen gebeurtenissen in deze periode",
+        "more": "{count} meer",
+        "moreLabel": "Toon {count} meer evenementen",
+        "eventDetails": "Details evenement",
+        "close": "Sluit evenement details",
+        "timeSlot": "Tijd slot",
+        "weekday": "Weekdag"
       }
     },
     "weather": {

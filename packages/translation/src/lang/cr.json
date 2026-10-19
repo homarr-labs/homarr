@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "crwdns2857:0crwdne2857:0"
+        },
+        "viewMode": {
+          "label": "crwdns11139:0crwdne11139:0"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "crwdns8403:0count={count}crwdne8403:0",
         "loading": "crwdns8405:0crwdne8405:0",
         "noEvents": "crwdns8407:0crwdne8407:0"
+      },
+      "view": {
+        "compact": "crwdns11141:0crwdne11141:0",
+        "month": "crwdns11143:0crwdne11143:0",
+        "week": "crwdns11145:0crwdne11145:0",
+        "day": "crwdns11147:0crwdne11147:0",
+        "agenda": "crwdns11149:0crwdne11149:0"
+      },
+      "controls": {
+        "view": "crwdns11151:0crwdne11151:0",
+        "today": "crwdns11153:0crwdne11153:0",
+        "previous": "crwdns11155:0crwdne11155:0",
+        "next": "crwdns11157:0crwdne11157:0",
+        "noEvents": "crwdns11159:0crwdne11159:0",
+        "more": "crwdns11161:0{count}crwdne11161:0",
+        "moreLabel": "crwdns11163:0{count}crwdne11163:0",
+        "eventDetails": "crwdns11165:0crwdne11165:0",
+        "close": "crwdns11167:0crwdne11167:0",
+        "timeSlot": "crwdns11169:0crwdne11169:0",
+        "weekday": "crwdns11171:0crwdne11171:0"
       }
     },
     "weather": {

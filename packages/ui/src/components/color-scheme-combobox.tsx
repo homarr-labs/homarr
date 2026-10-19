@@ -28,12 +28,13 @@ export const ColorSchemeCombobox = ({ label, value, onChange, width }: ColorSche
   return (
     <Combobox
       store={combobox}
+      withinPortal={false}
       onOptionSubmit={(nextValue) => {
         onChange(nextValue as ColorScheme);
         combobox.closeDropdown();
       }}
     >
-      <Combobox.Target>
+      <Combobox.Target targetType="button" withExpandedAttribute>
         <InputBase
           component="button"
           type="button"
@@ -42,6 +43,11 @@ export const ColorSchemeCombobox = ({ label, value, onChange, width }: ColorSche
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
           onClick={() => combobox.toggleDropdown()}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+              event.stopPropagation();
+            }
+          }}
           variant="filled"
           w={width}
         >

@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "显示未监视的"
+        },
+        "viewMode": {
+          "label": "视图"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# 事件} other {# 事件}}",
         "loading": "正在加载日历事件...",
         "noEvents": "本月无事件"
+      },
+      "view": {
+        "compact": "简洁的月",
+        "month": "个月",
+        "week": "周",
+        "day": "白天",
+        "agenda": "议程项目"
+      },
+      "controls": {
+        "view": "日历视图",
+        "today": "今天",
+        "previous": "上一期间",
+        "next": "下一周期",
+        "noEvents": "这段时间里没有事件",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "事件详情",
+        "close": "关闭事件详情",
+        "timeSlot": "时间段",
+        "weekday": "周日"
       }
     },
     "weather": {

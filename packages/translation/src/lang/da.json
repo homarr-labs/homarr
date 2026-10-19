@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Vis uovervåget"
+        },
+        "viewMode": {
+          "label": "Vis"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# begivenhed} other {# begivenheder}}",
         "loading": "Indlæser kalenderbegivenheder...",
         "noEvents": "Ingen begivenheder i denne måned"
+      },
+      "view": {
+        "compact": "Kompakt måned",
+        "month": "Måned",
+        "week": "Uge",
+        "day": "Dag",
+        "agenda": "Dagsorden"
+      },
+      "controls": {
+        "view": "Kalender visning",
+        "today": "Idag",
+        "previous": "Tidligere periode",
+        "next": "Næste periode",
+        "noEvents": "Ingen begivenheder i denne periode",
+        "more": "{count} mere",
+        "moreLabel": "Vis {count} flere begivenheder",
+        "eventDetails": "Begivenhed detaljer",
+        "close": "Luk begivenhedsdetaljer",
+        "timeSlot": "Tidspunkt",
+        "weekday": "Ugedag"
       }
     },
     "weather": {

@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Afficher les messages non surveillés"
+        },
+        "viewMode": {
+          "label": "Voir"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# événement} other {# événements}}",
         "loading": "Chargement des événements du calendrier...",
         "noEvents": "Aucun événement ce mois-ci"
+      },
+      "view": {
+        "compact": "Mois compact",
+        "month": "mois",
+        "week": "Semaine",
+        "day": "Jour",
+        "agenda": "Ordre du jour"
+      },
+      "controls": {
+        "view": "Vue calendrier",
+        "today": "Aujourd'hui",
+        "previous": "Période précédente",
+        "next": "Période suivante",
+        "noEvents": "Aucun événement dans cette période",
+        "more": "{count} de plus",
+        "moreLabel": "",
+        "eventDetails": "Détails de l'événement",
+        "close": "Fermer les détails de l'événement",
+        "timeSlot": "Plage horaire",
+        "weekday": "Jour de la semaine"
       }
     },
     "weather": {

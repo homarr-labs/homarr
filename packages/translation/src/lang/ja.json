@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "監視されていない状態で表示"
+        },
+        "viewMode": {
+          "label": "表示"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# イベント} other {# イベント}}",
         "loading": "カレンダーイベントを読み込み中...",
         "noEvents": "今月の予定はありません"
+      },
+      "view": {
+        "compact": "コンパクト月",
+        "month": "ヵ月",
+        "week": "週",
+        "day": "日",
+        "agenda": "予定"
+      },
+      "controls": {
+        "view": "カレンダー表示",
+        "today": "今日",
+        "previous": "前の期間",
+        "next": "次の期間",
+        "noEvents": "この期間に予定はありません",
+        "more": "{count} 以上",
+        "moreLabel": "{count} 他のイベントを表示",
+        "eventDetails": "イベントの詳細",
+        "close": "イベントの詳細を閉じる",
+        "timeSlot": "タイムスロット",
+        "weekday": "Weekday"
       }
     },
     "weather": {

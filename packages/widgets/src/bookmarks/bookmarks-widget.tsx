@@ -27,7 +27,7 @@ import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
-import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -103,7 +103,7 @@ export default function BookmarksWidget({
   useRegisterSpotlightContextResults(
     `bookmark-${itemId}`,
     data.flatMap((bookmark) => {
-      const href = getSafeAppHref(bookmark.href);
+      const href = bookmark.href;
       if (!href) return [];
 
       return [
@@ -321,7 +321,7 @@ const BookmarkCard = ({
 }: BookmarkCardProps) => {
   const [active, setActive] = useState(false);
   const reduceMotion = useReducedMotion();
-  const href = getSafeAppHref(bookmark.href);
+  const href = bookmark.href ?? undefined;
   const hostname = bookmark.href ? getBookmarkHostname(bookmark.href) : undefined;
   const iconUrl = bookmark.iconUrl ?? getBookmarkFaviconUrl(bookmark.href);
   const iconOnly = orientation === "icon" || (!showTitle && !showHostname);
