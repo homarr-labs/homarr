@@ -28,9 +28,7 @@ const boardSchema = boardSettingsSchema.extend({
   customCss: z.string().nullable(),
   isPublic: z.boolean(),
   creatorId: z.string().nullable(),
-  creator: z
-    .object({ id: z.string(), name: z.string().nullable(), image: z.string().nullable(), email: z.string().nullable() })
-    .nullable(),
+  creator: z.object({ id: z.string(), name: z.string().nullable(), image: z.string().nullable() }).nullable(),
   userPermissions: z.array(z.object({ permission: z.enum(["view", "modify", "full"]) })),
   groupPermissions: z.array(
     z.object({ permission: z.enum(["view", "modify", "full"]), boardId: z.string(), groupId: z.string() }),
