@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Uppetidsövervakning",
       "beszel": "Beszel",
       "systemMonitoring": "Systemövervakning",
-      "security": "Säkerhet"
+      "security": "Säkerhet",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Visa även det som ej monitoreras"
+        },
+        "viewMode": {
+          "label": "Visa"
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# händelse} other {# händelser}}",
         "loading": "Laddar kalenderhändelser...",
         "noEvents": "Inga händelser i denna månad"
+      },
+      "view": {
+        "compact": "Kompakt månad",
+        "month": "Månad",
+        "week": "Vecka",
+        "day": "Dag",
+        "agenda": "Föredragningslista"
+      },
+      "controls": {
+        "view": "Kalender vy",
+        "today": "Idag",
+        "previous": "Föregående period",
+        "next": "Nästa period",
+        "noEvents": "Inga händelser i denna period",
+        "more": "{count} mer",
+        "moreLabel": "Visa {count} fler händelser",
+        "eventDetails": "Händelse detaljer",
+        "close": "Stäng händelsedetaljer",
+        "timeSlot": "Tidsgräns",
+        "weekday": "Veckodag"
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "Leverantörs-URL"
           },
+          "integrations": {
+            "label": "Länkade integrationer"
+          },
           "identifier": {
             "label": "Identifierare",
             "placeholder": "Namn eller Ägare/Namn"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Öppna versionssida",
       "releaseDescription": "Versionsbeskrivning",
       "projectDescription": "Projektbeskrivning",
+      "runningVersions": "Löpande versioner",
+      "upToDate": "Senast uppdaterad",
+      "updateAvailable": "Uppdatering tillgänglig",
+      "unknownStatus": "Okänt",
       "created": "Skapad",
       "error": {
         "label": "Fel",

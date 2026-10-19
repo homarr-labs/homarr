@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "運作時間監控",
       "beszel": "Beszel",
       "systemMonitoring": "系統監控",
-      "security": "安全"
+      "security": "安全",
+      "serviceVersion": "版本"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "顯示未監控項目"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, other {# 個事件}}",
         "loading": "正在載入行事曆事件……",
         "noEvents": "本月沒有事件"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "今天",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "提供者網址"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "識別碼",
             "placeholder": "名稱或擁有者/名稱"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "開啟發布葉面",
       "releaseDescription": "版本描述",
       "projectDescription": "專案說明",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "未知",
       "created": "已創建",
       "error": {
         "label": "錯誤",

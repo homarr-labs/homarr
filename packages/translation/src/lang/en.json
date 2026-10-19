@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Uptime Monitoring",
       "beszel": "Beszel",
       "systemMonitoring": "System Monitoring",
-      "security": "Security"
+      "security": "Security",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -3221,6 +3222,9 @@
         },
         "showUnmonitored": {
           "label": "Show unmonitored"
+        },
+        "viewMode": {
+          "label": "View"
         }
       },
       "advanced": {
@@ -3229,6 +3233,26 @@
         "eventCount": "{count, plural, one {# event} other {# events}}",
         "loading": "Loading calendar events...",
         "noEvents": "No events in this month"
+      },
+      "view": {
+        "compact": "Compact month",
+        "month": "Month",
+        "week": "Week",
+        "day": "Day",
+        "agenda": "Agenda"
+      },
+      "controls": {
+        "view": "Calendar view",
+        "today": "Today",
+        "previous": "Previous period",
+        "next": "Next period",
+        "noEvents": "No events in this period",
+        "more": "{count} more",
+        "moreLabel": "Show {count} more events",
+        "eventDetails": "Event details",
+        "close": "Close event details",
+        "timeSlot": "Time slot",
+        "weekday": "Weekday"
       }
     },
     "weather": {
@@ -4544,7 +4568,7 @@
     },
     "mediaMissing": {
       "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies, episodes and books from {radarr}, {sonarr} and {bindery}",
+      "description": "Shows missing and queued movies, episodes, events and books from {radarr}, {sonarr}, {sportarr} and {bindery}",
       "option": {
         "showMissing": {
           "label": "Show missing items"
@@ -4655,6 +4679,9 @@
           "providerUrl": {
             "label": "Provider URL"
           },
+          "integrations": {
+            "label": "Linked Integrations"
+          },
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
@@ -4714,6 +4741,10 @@
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
       "projectDescription": "Project Description",
+      "runningVersions": "Running Versions",
+      "upToDate": "Up to date",
+      "updateAvailable": "Update available",
+      "unknownStatus": "Unknown",
       "created": "Created",
       "error": {
         "label": "Error",

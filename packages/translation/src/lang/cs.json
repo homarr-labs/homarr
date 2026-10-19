@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Monitorování dostupnosti",
       "beszel": "Beszel",
       "systemMonitoring": "Monitorování systému",
-      "security": "Bezpečnost"
+      "security": "Bezpečnost",
+      "serviceVersion": "Verze"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Zobrazit nesledované"
+        },
+        "viewMode": {
+          "label": "Zobrazit"
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# událost} other {# události}}",
         "loading": "Načítání událostí v kalendáři...",
         "noEvents": "Žádné události v tomto měsíci"
+      },
+      "view": {
+        "compact": "Zkompaktní měsíc",
+        "month": "Měsíc",
+        "week": "Týden",
+        "day": "Den",
+        "agenda": "Pořad jednání"
+      },
+      "controls": {
+        "view": "Zobrazení kalendáře",
+        "today": "Dnes",
+        "previous": "Předchozí období",
+        "next": "Další období",
+        "noEvents": "Žádné události v tomto období",
+        "more": "{count} další",
+        "moreLabel": "Zobrazit další {count} události",
+        "eventDetails": "Detaily události",
+        "close": "Zavřít detaily události",
+        "timeSlot": "Časový úsek",
+        "weekday": "Den v týdnu"
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "URL poskytovatele"
           },
+          "integrations": {
+            "label": "Propojené integrace"
+          },
           "identifier": {
             "label": "Identifikátor",
             "placeholder": "Název nebo Vlastník/Název"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Otevřít stránku vydání",
       "releaseDescription": "Popis vydání",
       "projectDescription": "Popis projektu",
+      "runningVersions": "Spuštěné verze",
+      "upToDate": "Aktuální",
+      "updateAvailable": "K dispozici je aktualizace",
+      "unknownStatus": "Neznámý",
       "created": "Vytvořeno",
       "error": {
         "label": "Chyba",

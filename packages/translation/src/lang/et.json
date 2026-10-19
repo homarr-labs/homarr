@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Tööaja seire",
       "beszel": "Beszel",
       "systemMonitoring": "Süsteemi jälgimine",
-      "security": "Turvalisus"
+      "security": "Turvalisus",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Kuva jälgimata üksused"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# sündmus} other {# sündmust}}",
         "loading": "Kalendrisündmuste laadimine...",
         "noEvents": "Sel kuul sündmusi pole"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "Pakkuja URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikaator",
             "placeholder": "Nimi või omanik/nimi"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Ava väljalaske leht",
       "releaseDescription": "Väljalaske kirjeldus",
       "projectDescription": "Projekti kirjeldus",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "",
       "created": "Loodud",
       "error": {
         "label": "Viga",

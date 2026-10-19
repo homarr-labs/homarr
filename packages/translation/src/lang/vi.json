@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Giám sát thời gian hoạt động",
       "beszel": "Beszel",
       "systemMonitoring": "Giám sát hệ thống",
-      "security": "Bảo mật"
+      "security": "Bảo mật",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Hiển thị mục chưa giám sát"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, other {# sự kiện}}",
         "loading": "Đang tải sự kiện lịch...",
         "noEvents": "Không có sự kiện trong tháng này"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "URL nhà cung cấp"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Mã định danh",
             "placeholder": "Tên hoặc Chủ sở hữu/Tên"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Mở trang bản phát hành",
       "releaseDescription": "Mô tả bản phát hành",
       "projectDescription": "Mô tả dự án",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Không rõ",
       "created": "Đã tạo",
       "error": {
         "label": "Lỗi",

@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Betriebszeitüberwachung",
       "beszel": "Beszel",
       "systemMonitoring": "Systemüberwachung",
-      "security": "Sicherheit"
+      "security": "Sicherheit",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Nicht überwachte anzeigen"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# Ereignis} other {# Ereignisse}}",
         "loading": "Kalenderereignisse werden geladen...",
         "noEvents": "Keine Ereignisse in diesem Monat"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "Anbieter-URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Kennung",
             "placeholder": "Name oder Eigentümer/Name"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Veröffentlichungsseite öffnen",
       "releaseDescription": "Beschreibung der Veröffentlichung",
       "projectDescription": "Projektbeschreibung",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Unbekannt",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",

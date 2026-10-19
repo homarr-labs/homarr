@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "업타임 모니터링",
       "beszel": "Beszel",
       "systemMonitoring": "시스템 모니터링",
-      "security": "보안"
+      "security": "보안",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "모니터링되지 않음 표시"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, other {이벤트 #개}}",
         "loading": "캘린더 이벤트 불러오는 중...",
         "noEvents": "이번 달에 이벤트 없음"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "공급자 URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "식별자",
             "placeholder": "이름 또는 소유자/이름"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "릴리스 페이지 열기",
       "releaseDescription": "릴리스 설명",
       "projectDescription": "프로젝트 설명",
+      "runningVersions": "",
+      "upToDate": "최신",
+      "updateAvailable": "",
+      "unknownStatus": "알 수 없음",
       "created": "생성됨",
       "error": {
         "label": "오류",

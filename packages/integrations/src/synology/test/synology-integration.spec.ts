@@ -182,6 +182,13 @@ const upgradeCheckResponse = {
 
 const toUrlString = (url: unknown): string => String(url);
 
+const getRequestParameters = (url: string, init?: Parameters<typeof fetchWithTrustedCertificatesAsync>[1]) => {
+  if (typeof init?.body === "string") {
+    return new URLSearchParams(init.body);
+  }
+  return new URL(url).searchParams;
+};
+
 const getApiFromUrl = (url: string) => {
   const parsedUrl = new URL(url);
   return parsedUrl.searchParams.get("api");
@@ -208,10 +215,11 @@ const mockSuccessfulFlow = (options?: {
   storageV2?: { success: boolean; data: z.input<typeof synologyStorageV2DataSchema> };
   storageLoadInfo?: typeof storageLoadInfoResponse;
 }) => {
-  mockFetch.mockImplementation((url) => {
+  mockFetch.mockImplementation((url, init) => {
     const urlString = toUrlString(url);
-    const apiName = getApiFromUrl(urlString);
-    const method = getMethodFromUrl(urlString);
+    const parameters = getRequestParameters(urlString, init);
+    const apiName = parameters.get("api");
+    const method = parameters.get("method");
     const type = getTypeFromUrl(urlString);
 
     if (apiName === "SYNO.API.Info" && method === "query") {
@@ -565,10 +573,11 @@ describe("SynologyIntegration.listStorageVolumesAsync", () => {
 
 describe("SynologyIntegration authentication", () => {
   test("rejects two-factor authentication during login", async () => {
-    mockFetch.mockImplementation((url) => {
+    mockFetch.mockImplementation((url, init) => {
       const urlString = toUrlString(url);
-      const apiName = getApiFromUrl(urlString);
-      const method = getMethodFromUrl(urlString);
+      const parameters = getRequestParameters(urlString, init);
+      const apiName = parameters.get("api");
+      const method = parameters.get("method");
 
       if (apiName === "SYNO.API.Info" && method === "query") {
         const query = new URL(urlString).searchParams.get("query") ?? "SYNO.API.Auth";
@@ -596,8 +605,9 @@ describe("SynologyIntegration authentication", () => {
   test("does not leak credentials in login error URLs", async () => {
     mockFetch.mockImplementation((url, init) => {
       const urlString = toUrlString(url);
-      const apiName = getApiFromUrl(urlString);
-      const method = getMethodFromUrl(urlString);
+      const parameters = getRequestParameters(urlString, init);
+      const apiName = parameters.get("api");
+      const method = parameters.get("method");
 
       if (apiName === "SYNO.API.Info" && method === "query") {
         const query = new URL(urlString).searchParams.get("query") ?? "SYNO.API.Auth";

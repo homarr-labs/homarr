@@ -44,11 +44,11 @@ describe("board canvas scale policy", () => {
     expect(calculateBoardCanvasScale(availableWidth, logicalWidth)).toBe(1);
   });
 
-  test("keeps UI typography and density at 100% while fitting the canvas down", () => {
+  test("keeps UI typography and density at 100% while fitting the canvas", () => {
     expect(calculateBoardUiScale(0.75)).toBeCloseTo(4 / 3);
     expect(calculateBoardUiScale(0.84)).toBeCloseTo(1 / 0.84);
     expect(calculateBoardUiScale(1)).toBe(1);
-    expect(calculateBoardUiScale(1.5)).toBe(1);
+    expect(calculateBoardUiScale(1.5)).toBeCloseTo(2 / 3);
   });
 
   test.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])(

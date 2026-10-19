@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "",
       "beszel": "Beszel",
       "systemMonitoring": "ניטור המערכת",
-      "security": "אבטחה"
+      "security": "אבטחה",
+      "serviceVersion": "גרסה"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "הצג ללא פיקוח"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {אירוע אחד} two {שני אירועים} other {# אירועים}}",
         "loading": "טוען אירועי לוח שנה...",
         "noEvents": "אין אירועים בחודש זה"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "מזהה",
             "placeholder": "שם או בעלים/שם"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "פתח את דף הגרסאות",
       "releaseDescription": "תיאור הגרסה",
       "projectDescription": "תיאור הפרויקט",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "לא ידוע",
       "created": "נוצר",
       "error": {
         "label": "שגיאה",

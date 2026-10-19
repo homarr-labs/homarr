@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Veikimo stebėjimas",
       "beszel": "Beszel",
       "systemMonitoring": "Sistemos stebėjimas",
-      "security": "Apsauga"
+      "security": "Apsauga",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Rodyti nestebimus"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# įvykis} few {# įvykiai} many {# įvykių} other {# įvykio}}",
         "loading": "Įkeliami kalendoriaus įvykiai...",
         "noEvents": "Šį mėnesį įvykių nėra"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "Teikėjo URL"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikatorius",
             "placeholder": "Vardas arba savininkas / vardas"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Atidaryti leidimo puslapį",
       "releaseDescription": "Leidimo aprašymas",
       "projectDescription": "Projekto aprašymas",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Nežinoma",
       "created": "Sukurta",
       "error": {
         "label": "Klaida",

@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Üzemidő Figyelés",
       "beszel": "Beszel",
       "systemMonitoring": "Rendszerfelügyelet",
-      "security": "Biztonság"
+      "security": "Biztonság",
+      "serviceVersion": "Verzió"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Nem ellenőrzött megjelenítés"
+        },
+        "viewMode": {
+          "label": "Megtekintés"
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# esemény} other {# esemény}}",
         "loading": "Naptáresemények betöltése...",
         "noEvents": "Ebben a hónapban nincsenek események"
+      },
+      "view": {
+        "compact": "",
+        "month": "hónap",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "Ma",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "Szolgáltató URL-je"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Azonosító",
             "placeholder": "Név vagy tulajdonos/név"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Kiadási oldal megnyitása",
       "releaseDescription": "Kiadás leírása",
       "projectDescription": "Projekt leírása",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Ismeretlen",
       "created": "Létrehozva",
       "error": {
         "label": "Hiba",

@@ -14,7 +14,8 @@ import { vpnWidget } from "@site/docs/widgets/vpn";
 <IntegrationHeader integration={gluetunIntegration} categories={["VPN", "Network"]} />
 
 [Gluetun](https://github.com/qdm12/gluetun) exposes a control server that Homarr can query to report the VPN tunnel
-status, DNS status, public IP address, and active provider details in the VPN widget.
+status and public IP address in the VPN widget. DNS and provider details remain unavailable.
+Location appears only when Gluetun supplies it.
 
 ### Widgets & Capabilities
 
@@ -30,14 +31,16 @@ status, DNS status, public IP address, and active provider details in the VPN wi
 
 Refer to the [Gluetun control server documentation](https://github.com/qdm12/gluetun-wiki/blob/main/setup/advanced/control-server.md#authentication) to enable and configure authentication.
 
+A read-only role granting `GET /v1/vpn/status` and `GET /v1/publicip/ip` is sufficient.
+Homarr does not need access to VPN settings or your VPN-provider credentials.
+
 ### Adding the integration
 
 <AddingIntegration />
 
 ### Secrets
 
-Gluetun's control server can be left unprotected or secured with either an API key or HTTP Basic authentication.
-Choose the option that matches how your Gluetun instance integration is set up.
+Use a control-server API key or HTTP Basic credentials that match your Gluetun authentication role.
 
 <IntegrationSecrets
   secrets={[

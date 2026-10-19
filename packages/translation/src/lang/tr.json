@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Çalışma Süresi İzleme",
       "beszel": "Beszel",
       "systemMonitoring": "Sistem İzleme",
-      "security": "Güvenlik"
+      "security": "Güvenlik",
+      "serviceVersion": "Sürüm"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Takip edilmeyenleri göster"
+        },
+        "viewMode": {
+          "label": "Görünüm"
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# etkinlik} other {# etkinlik}}",
         "loading": "Takvim etkinlikleri yükleniyor...",
         "noEvents": "Bu ayda etkinlik yok"
+      },
+      "view": {
+        "compact": "",
+        "month": "Ay",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "Bugün",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "Sağlayıcı URL'si"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Tanımlayıcı",
             "placeholder": "Ad veya Sahip/Ad"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
       "projectDescription": "Proje Açıklaması",
+      "runningVersions": "",
+      "upToDate": "Güncel",
+      "updateAvailable": "",
+      "unknownStatus": "Bilinmeyen",
       "created": "Oluşturuldu",
       "error": {
         "label": "Hata",

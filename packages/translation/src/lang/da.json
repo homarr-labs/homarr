@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Oppetidsovervågning",
       "beszel": "Beszel",
       "systemMonitoring": "System Overvågning",
-      "security": "Sikkerhed"
+      "security": "Sikkerhed",
+      "serviceVersion": "Version"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Vis uovervåget"
+        },
+        "viewMode": {
+          "label": "Vis"
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# begivenhed} other {# begivenheder}}",
         "loading": "Indlæser kalenderbegivenheder...",
         "noEvents": "Ingen begivenheder i denne måned"
+      },
+      "view": {
+        "compact": "Kompakt måned",
+        "month": "Måned",
+        "week": "Uge",
+        "day": "Dag",
+        "agenda": "Dagsorden"
+      },
+      "controls": {
+        "view": "Kalender visning",
+        "today": "Idag",
+        "previous": "Tidligere periode",
+        "next": "Næste periode",
+        "noEvents": "Ingen begivenheder i denne periode",
+        "more": "{count} mere",
+        "moreLabel": "Vis {count} flere begivenheder",
+        "eventDetails": "Begivenhed detaljer",
+        "close": "Luk begivenhedsdetaljer",
+        "timeSlot": "Tidspunkt",
+        "weekday": "Ugedag"
       }
     },
     "weather": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Linkede Integrationer"
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Navn eller ejer/navn"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
       "projectDescription": "Projektbeskrivelse",
+      "runningVersions": "Kørende Versioner",
+      "upToDate": "Op til dato",
+      "updateAvailable": "Opdatering tilgængelig",
+      "unknownStatus": "Ukendt",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",

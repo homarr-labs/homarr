@@ -371,15 +371,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -986,15 +978,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -7460,6 +7444,7 @@
                       "aria2",
                       "slskd",
                       "sonarr",
+                      "sportarr",
                       "radarr",
                       "lidarr",
                       "readarr",
@@ -7635,6 +7620,7 @@
                             "aria2",
                             "slskd",
                             "sonarr",
+                            "sportarr",
                             "radarr",
                             "lidarr",
                             "readarr",

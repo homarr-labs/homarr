@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Monitoramento do Uptime",
       "beszel": "Beszel",
       "systemMonitoring": "Sistema de Monitoramento",
-      "security": "Segurança"
+      "security": "Segurança",
+      "serviceVersion": "Versão"
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Mostrar não monitorados"
+        },
+        "viewMode": {
+          "label": "Visualização"
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# evento} other {# eventos}}",
         "loading": "Carregando eventos do calendário...",
         "noEvents": "Nenhum evento neste mês"
+      },
+      "view": {
+        "compact": "Mês compacto",
+        "month": "mês",
+        "week": "semana",
+        "day": "dia",
+        "agenda": "Compromissos"
+      },
+      "controls": {
+        "view": "Visualização de calendário",
+        "today": "Hoje",
+        "previous": "Período anterior",
+        "next": "Próximo período",
+        "noEvents": "Nenhum evento neste período",
+        "more": "",
+        "moreLabel": "Mostrar mais {count} eventos",
+        "eventDetails": "Detalhes do evento",
+        "close": "Fechar detalhes do evento",
+        "timeSlot": "Intervalo de tempo",
+        "weekday": "Dia de semana"
       }
     },
     "weather": {
@@ -4270,7 +4294,7 @@
         "noColumns": "Selecionar Colunas em Itens",
         "noCommunications": "Não foi possível carregar dados da integração",
         "noItems": "",
-        "actionFailed": "",
+        "actionFailed": "A ação falhou",
         "actionFailedMessage": ""
       },
       "items": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": ""
           },
+          "integrations": {
+            "label": "Integrações ligadas"
+          },
           "identifier": {
             "label": "Identificador",
             "placeholder": "Nome ou Proprietário/Nome"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Abrir página do lançamento",
       "releaseDescription": "Descrição do lançamento",
       "projectDescription": "Descrição do projeto",
+      "runningVersions": "Versões em execução",
+      "upToDate": "Até a data",
+      "updateAvailable": "Atualização disponível",
+      "unknownStatus": "Desconhecido",
       "created": "Criado",
       "error": {
         "label": "Erro",

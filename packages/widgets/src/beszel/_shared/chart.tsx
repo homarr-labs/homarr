@@ -1,9 +1,10 @@
 "use client";
 
-import { memo, useMemo, useRef } from "react";
-import { Group, Stack, Text } from "@mantine/core";
+import { memo, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { Box, Group, Stack, Text } from "@mantine/core";
 import type { AreaChartProps } from "@mantine/charts";
 import { AreaChart } from "@mantine/charts";
+import { useInViewport } from "@mantine/hooks";
 import dayjs from "dayjs";
 
 import type { BeszelTimePeriod } from "@homarr/definitions/beszel";
@@ -11,6 +12,7 @@ import { defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import type { BeszelContainerStatsRecord, BeszelGPUData, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 import { formatLocalizedDate } from "../../common/locale";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { containerChartColor } from "./colors";
 import classes from "./chart.module.css";
 
@@ -105,6 +107,14 @@ const chartStyle = {
   zoom: "var(--board-canvas-inverse-scale, 1)",
 } as const;
 const panelStyle = { minWidth: 0 } as const;
+const chartContainerStyle = {
+  minWidth: 0,
+  minHeight: 1,
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: 1,
+  flexShrink: 0,
+} as const;
 const chartMargin = { top: 12, right: 5, bottom: 0, left: 0 } as const;
 export const CPU_Y_AXIS_DOMAIN: [number, string] = [0, "auto"];
 
@@ -114,21 +124,53 @@ interface BeszelChartPanelProps {
   chartProps: BeszelAreaChartProps;
 }
 
-export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => (
-  <Stack gap={4} style={panelStyle}>
-    <Group gap="xs" wrap="nowrap">
-      <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
-        {title}
-      </Text>
-      {subtitle && (
-        <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
-          {subtitle}
+export const BeszelChartPanel = memo(({ title, subtitle, chartProps }: BeszelChartPanelProps) => {
+  const { ref, inViewport } = useInViewport<HTMLDivElement>();
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
+  const isVisible = inViewport || typeof IntersectionObserver === "undefined";
+
+  useEffect(() => {
+    if (isVisible) setHasBeenVisible(true);
+  }, [isVisible]);
+
+  return (
+    <Stack gap={4} style={panelStyle}>
+      <Group gap="xs" wrap="nowrap">
+        <Text size="sm" fw={600} style={{ flexShrink: 0 }}>
+          {title}
         </Text>
-      )}
-    </Group>
-    <BeszelAreaChart {...chartProps} />
-  </Stack>
-));
+        {subtitle && (
+          <Text size="xs" c="dimmed" truncate style={{ minWidth: 0 }}>
+            {subtitle}
+          </Text>
+        )}
+      </Group>
+      <Box ref={ref} style={chartContainerStyle}>
+        {(inViewport || hasBeenVisible) && <DeferredBeszelChart chartProps={chartProps} isVisible={isVisible} />}
+        {!inViewport && !hasBeenVisible && <BeszelChartPlaceholder height={chartProps.h} />}
+      </Box>
+    </Stack>
+  );
+});
+
+const BeszelChartPlaceholder = ({ height }: { height: AreaChartProps["h"] }) => (
+  <Box h={height} className={classes.chart} style={chartStyle}>
+    <WidgetQueryLoadingState />
+  </Box>
+);
+
+const DeferredBeszelChart = memo(
+  ({ chartProps }: { chartProps: BeszelAreaChartProps; isVisible: boolean }) => {
+    // Let the dashboard hydrate and handle input before mounting or refreshing SVG charts.
+    const deferredChartProps = useDeferredValue(chartProps, null);
+    if (!deferredChartProps) {
+      return <BeszelChartPlaceholder height={chartProps.h} />;
+    }
+    return <BeszelAreaChart {...deferredChartProps} />;
+  },
+  // Retain mounted charts while offscreen; apply the latest data when they re-enter view.
+  (previous, next) => !next.isVisible || previous.chartProps === next.chartProps,
+);
 
 type BeszelAreaChartProps = Omit<AreaChartProps, "dataKey" | "curveType" | "withDots" | "withYAxis"> & {
   yAxisFormatter: (value: number) => string;

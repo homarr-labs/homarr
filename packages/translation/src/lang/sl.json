@@ -1512,7 +1512,8 @@
       "uptimeMonitoring": "Spremljanje razpoložljivosti",
       "beszel": "Beszel",
       "systemMonitoring": "Sistemsko spremljanje",
-      "security": "Varnost"
+      "security": "Varnost",
+      "serviceVersion": ""
     },
     "testConnection": {
       "action": {
@@ -3220,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Prikaži nespremljane"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3228,6 +3232,26 @@
         "eventCount": "{count, plural, one {# dogodek} two {# dogodka} few {# dogodki} other {# dogodkov}}",
         "loading": "Nalaganje dogodkov...",
         "noEvents": "Ta mesec ni dogodkov"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -3915,7 +3939,7 @@
         "metadata": {
           "title": "Statistika za radovedne",
           "video": {
-            "title": "",
+            "title": "Video",
             "resolution": "Ločljivost"
           },
           "audio": {
@@ -4654,6 +4678,9 @@
           "providerUrl": {
             "label": "URL ponudnika"
           },
+          "integrations": {
+            "label": ""
+          },
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Ime ali lastnik/ime"
@@ -4713,6 +4740,10 @@
       "openReleasePage": "Odpri stran izdaje",
       "releaseDescription": "Opis izdaje",
       "projectDescription": "Opis projekta",
+      "runningVersions": "",
+      "upToDate": "",
+      "updateAvailable": "",
+      "unknownStatus": "Neznano",
       "created": "Ustvarjeno",
       "error": {
         "label": "Napaka",
