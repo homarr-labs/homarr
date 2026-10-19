@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { getSafeAppHref } from "@homarr/common";
 import type { ContextSpecificItem } from "@homarr/spotlight";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { hasPendingSpotlightOpen, spotlightOpenEvent } from "@homarr/spotlight/open";
@@ -42,7 +41,7 @@ export const BoardAppsSpotlightRegistrar = () => {
   const apps = appQueries.flatMap((query) => query.data ?? []);
   const spotlightItems = useMemo<ContextSpecificItem[]>(() => {
     return apps.flatMap((app) => {
-      const href = getSafeAppHref(app.href);
+      const href = app.href;
       if (!href) return [];
 
       return [
