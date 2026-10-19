@@ -37,7 +37,12 @@ async function persistentSecret(
     await chmod(path, 0o600);
     return;
   }
-  if (variable === "SECRET_ENCRYPTION_KEY" && !configured && process.env.DB_DRIVER !== "node-postgres") {
+  if (variable === "SECRET_ENCRYPTION_KEY" && !configured) {
+    if (process.env.DB_DRIVER === "node-postgres") {
+      throw new Error(
+        "PostgreSQL needs its original SECRET_ENCRYPTION_KEY restored; for a fresh database, explicitly configure a new key before starting",
+      );
+    }
     const databasePath = process.env.DB_URL ?? "/appdata/db/db.sqlite";
     try {
       const database = await lstat(databasePath);

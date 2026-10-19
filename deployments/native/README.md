@@ -33,6 +33,8 @@ The gateway serves the normal frontend at `/`, the account and MCP service at `/
 
 Keep all four named volumes: each worker owns its dashboard and integration database, `platform-data` holds account-directory and approved MCP state, and `broker-secrets` holds the encryption key for that MCP state. Back up the broker database and key together. Losing the broker key requires authorizing the affected worker connections again.
 
+For PostgreSQL workers (`DB_DRIVER=node-postgres`), provide `SECRET_ENCRYPTION_KEY` on first start; use a new 64-character hexadecimal key only for a fresh database. Back up the persisted worker key (`/appdata/worker/secret-encryption-key` by default) with the database. If that key file is lost, restore the original key or supply it through `SECRET_ENCRYPTION_KEY` before starting; a new key cannot decrypt existing secrets. Startup stops when neither a persisted nor configured key is available.
+
 The frontend stores its own device keys in the browser. A platform account or organization membership still requires worker approval before it can access private worker data. Hosted MCP access uses separately approved worker credentials; browser keys are not uploaded.
 
 Worker connections and local organizations are managed under **Management → Your Homarr workers**. A local invitation lets a member create a username and password on that worker without GitHub. Keep the worker's sign-in link for another browser; the administrator manages membership and sessions on the same page.
