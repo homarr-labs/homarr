@@ -1,0 +1,19 @@
+packages/api/src/router/widgets/rssFeed.ts
+  s_787d8cb4cd9748::t_0cf082f06163de 144,151-153,155-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "33a466a104aa4b7640f6777f09065240db13df77",
+  "prompts": {},
+  "sessions": {
+    "s_787d8cb4cd9748": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d2f3eed4-f833-4762-b8e4-4b4dd4db97d5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
