@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Näytä valvomattomat"
+        },
+        "viewMode": {
+          "label": "Näytä"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# tapahtuma} other {# tapahtuma}}",
         "loading": "Ladataan kalenteritapahtumia...",
         "noEvents": "Ei tapahtumia tässä kuussa"
+      },
+      "view": {
+        "compact": "Kompakti kuukausi",
+        "month": "Kuukausi",
+        "week": "Viikko",
+        "day": "Päivä",
+        "agenda": "Esityslista"
+      },
+      "controls": {
+        "view": "Kalenterin näkymä",
+        "today": "Tänään",
+        "previous": "Edellinen jakso",
+        "next": "Seuraava kausi",
+        "noEvents": "Ei tapahtumia tänä aikana",
+        "more": "{count} lisää",
+        "moreLabel": "Näytä {count} muuta tapahtumaa",
+        "eventDetails": "Tapahtuman tiedot",
+        "close": "Sulje tapahtuman tiedot",
+        "timeSlot": "Ajan paikka",
+        "weekday": "Arkipäivä"
       }
     },
     "weather": {

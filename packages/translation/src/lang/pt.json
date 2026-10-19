@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Mostrar não monitorados"
+        },
+        "viewMode": {
+          "label": "Visualizar"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# evento} other {# eventos}}",
         "loading": "Carregando eventos do calendário...",
         "noEvents": "Nenhum evento neste mês"
+      },
+      "view": {
+        "compact": "Mês compacto",
+        "month": "mês",
+        "week": "semana",
+        "day": "dia",
+        "agenda": "Compromissos"
+      },
+      "controls": {
+        "view": "Visualização de calendário",
+        "today": "hoje",
+        "previous": "Período anterior",
+        "next": "Próxima menstruação",
+        "noEvents": "Nenhum evento neste período",
+        "more": "",
+        "moreLabel": "Mostrar mais {count} eventos",
+        "eventDetails": "Detalhes do evento",
+        "close": "Fechar detalhes do evento",
+        "timeSlot": "Intervalo de tempo",
+        "weekday": "Dia de semana"
       }
     },
     "weather": {

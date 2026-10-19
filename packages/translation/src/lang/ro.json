@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Arată nesupravegheate"
+        },
+        "viewMode": {
+          "label": "Vizualizare"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# eveniment} other {# evenimente}}",
         "loading": "Se încarcă evenimentele din calendar...",
         "noEvents": "Nu există evenimente în această lună"
+      },
+      "view": {
+        "compact": "Lună compactă",
+        "month": "Lună",
+        "week": "Saptamana",
+        "day": "Zi",
+        "agenda": "Agendă"
+      },
+      "controls": {
+        "view": "Vizualizare calendar",
+        "today": "Astăzi",
+        "previous": "Perioada anterioară",
+        "next": "Următoarea perioadă",
+        "noEvents": "Nici un eveniment în această perioadă",
+        "more": "{count} mai mult",
+        "moreLabel": "Arată {count} mai multe evenimente",
+        "eventDetails": "Detalii eveniment",
+        "close": "Închide detaliile evenimentului",
+        "timeSlot": "Slot de timp",
+        "weekday": "Saptamana"
       }
     },
     "weather": {

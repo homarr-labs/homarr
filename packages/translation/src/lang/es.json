@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Mostrar sin monitorear"
+        },
+        "viewMode": {
+          "label": "Ver"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# evento} other {# eventos}}",
         "loading": "Cargando eventos del calendario...",
         "noEvents": "No hay eventos en este mes"
+      },
+      "view": {
+        "compact": "Mes de pacto",
+        "month": "Mes",
+        "week": "Semana",
+        "day": "Día",
+        "agenda": "Orden del día"
+      },
+      "controls": {
+        "view": "Vista de calendario",
+        "today": "Hoy",
+        "previous": "Periodo anterior",
+        "next": "Siguiente período",
+        "noEvents": "No hay eventos en este período",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "Detalles del evento",
+        "close": "Cerrar detalles del evento",
+        "timeSlot": "Intervalo de tiempo",
+        "weekday": "Día semanal"
       }
     },
     "weather": {

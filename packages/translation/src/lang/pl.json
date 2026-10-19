@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Pokaż niemonitorowane"
+        },
+        "viewMode": {
+          "label": "Widok"
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# wydarzenie} other {# wydarzeń}}",
         "loading": "Ładowanie wydarzeń kalendarza...",
         "noEvents": "Brak wydarzeń w tym miesiącu"
+      },
+      "view": {
+        "compact": "Miesiąc kompaktowy",
+        "month": "Miesiąc",
+        "week": "Tydzień",
+        "day": "Dzień",
+        "agenda": "Harmonogram"
+      },
+      "controls": {
+        "view": "Widok kalendarza",
+        "today": "Dzisiaj",
+        "previous": "Poprzedni okres",
+        "next": "Następny okres",
+        "noEvents": "Brak wydarzeń w tym okresie",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "Szczegóły wydarzenia",
+        "close": "Zamknij szczegóły wydarzenia",
+        "timeSlot": "Przedział czasowy",
+        "weekday": "Dzień tygodnia"
       }
     },
     "weather": {
