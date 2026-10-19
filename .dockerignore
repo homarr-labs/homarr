@@ -22,6 +22,8 @@ coverage
 **/.docusaurus
 **/build
 .git
+.reviews
+.homarr-build-profile
 .github
 dev
 .build
