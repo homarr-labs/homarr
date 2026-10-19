@@ -10,8 +10,8 @@ export const uptimeKumaRequestHandler = createIntegrationRequestHandler<
 >({
   cacheNamespace: "uptime-kuma:status-page",
   cacheTtlMs: 30_000,
-  async requestAsync(integration, _input) {
+  async requestAsync(integration, _input, signal) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getStatusPageAsync();
+    return await integrationInstance.getStatusPageAsync(signal);
   },
 });

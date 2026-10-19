@@ -60,10 +60,10 @@ export class UptimeKumaIntegration extends Integration {
     return { success: true };
   }
 
-  public async getStatusPageAsync(): Promise<UptimeKumaStatusPage> {
+  public async getStatusPageAsync(signal?: AbortSignal): Promise<UptimeKumaStatusPage> {
     const [statusPageResponse, heartbeatResponse] = await Promise.all([
-      this.fetchOkAsync(this.statusPageApiUrl()),
-      this.fetchOkAsync(this.heartbeatApiUrl()),
+      this.fetchOkAsync(this.statusPageApiUrl(), signal),
+      this.fetchOkAsync(this.heartbeatApiUrl(), signal),
     ]);
 
     const statusPage = uptimeKumaStatusPageResponseSchema.parse(await statusPageResponse.json());
@@ -101,8 +101,8 @@ export class UptimeKumaIntegration extends Integration {
     };
   }
 
-  private async fetchOkAsync(url: URL) {
-    const response = await fetchWithTrustedCertificatesAsync(url);
+  private async fetchOkAsync(url: URL, signal?: AbortSignal) {
+    const response = await fetchWithTrustedCertificatesAsync(url, { signal });
     if (!response.ok) {
       throw new ResponseError(response);
     }

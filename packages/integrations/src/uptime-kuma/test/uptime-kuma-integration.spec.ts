@@ -1,5 +1,13 @@
+// @vitest-environment node
+
 import { Response } from "undici";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+
+vi.hoisted(() => {
+  process.env.SECRET_ENCRYPTION_KEY = "0".repeat(64);
+  process.env.DB_DRIVER = "better-sqlite3";
+  process.env.DB_URL = ":memory:";
+});
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
