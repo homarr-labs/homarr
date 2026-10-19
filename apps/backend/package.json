@@ -21,13 +21,12 @@
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
-    "@homarr/tasks": "workspace:^0.1.0",
-    "@homarr/websocket": "workspace:^0.1.0",
     "@orpc/client": "catalog:",
     "@orpc/server": "catalog:",
     "@trpc/server": "catalog:",
     "hono": "catalog:",
     "trpc-to-openapi": "catalog:",
+    "undici": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

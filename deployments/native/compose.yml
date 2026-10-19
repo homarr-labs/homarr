@@ -73,7 +73,7 @@ services:
     depends_on:
       relay:
         condition: service_healthy
-    environment: &worker-environment
+    environment:
       WORKER_NAME: Primary worker
       WORKER_PUBLIC_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/workers/primary
       WORKER_PLATFORM_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/
@@ -85,7 +85,7 @@ services:
       HOMARR_STATE_BACKEND: memory
     volumes:
       - worker-primary-data:/appdata
-    healthcheck: &worker-healthcheck
+    healthcheck:
       test:
         [
           CMD,
@@ -98,20 +98,6 @@ services:
       start_period: 20s
       retries: 30
 
-  worker-integrations:
-    image: ${HOMARR_NATIVE_WORKER_IMAGE:-homarr:native-worker-local}
-    restart: unless-stopped
-    depends_on:
-      relay:
-        condition: service_healthy
-    environment:
-      <<: *worker-environment
-      WORKER_NAME: Integration worker
-      WORKER_PUBLIC_URL: ${HOMARR_PUBLIC_URL:-http://localhost:43105}/workers/integrations
-    volumes:
-      - worker-integrations-data:/appdata
-    healthcheck: *worker-healthcheck
-
   gateway:
     image: ${HOMARR_NATIVE_GATEWAY_IMAGE:-nginx:1.30.6-alpine}
     restart: unless-stopped
@@ -123,8 +109,6 @@ services:
       relay:
         condition: service_healthy
       worker-primary:
-        condition: service_healthy
-      worker-integrations:
         condition: service_healthy
     ports:
       - "127.0.0.1:${HOMARR_NATIVE_PORT:-43105}:80"
@@ -139,6 +123,7 @@ services:
 
 volumes:
   worker-primary-data:
+  # Retained for existing installations; no service mounts this legacy data.
   worker-integrations-data:
   platform-data:
   broker-secrets:

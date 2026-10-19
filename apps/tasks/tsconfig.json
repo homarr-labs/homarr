@@ -5,7 +5,8 @@
       "~/*": ["./src/*"],
       "@homarr/node-unifi": ["../../node_modules/@types/node-unifi"]
     },
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "types": ["node", "@homarr/tsconfig/assets"]
   },
   "include": ["."],
   "exclude": ["node_modules", "*.cjs", "*.css"]

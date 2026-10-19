@@ -2,16 +2,22 @@ import { describe, expect, test, vi } from "vitest";
 import { ORPCError, os } from "@orpc/server";
 import type { AnyRouter } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
-import { createTRPCUntypedClient, getUntypedClient } from "@trpc/client";
+import { RPCLink } from "@orpc/client/fetch";
+import { createNativeApiClient, getNativeClient } from "../native-client";
+import type { ApiClientContext } from "../native-client";
+import type { ClientLink } from "@orpc/client";
 import { z } from "zod/v4";
 
 import { mediaUploadSchema } from "@homarr/validation/media";
 
-import type { AppRouter } from "../legacy";
 import { fetchApi } from "../client";
 import { configureWorkerTransport, createWorkerLink } from "../worker-link";
 
-function client(router: AnyRouter) {
+function createTestClient(options: { link: ClientLink<ApiClientContext> }) {
+  return getNativeClient(createNativeApiClient(options));
+}
+
+function client(router: AnyRouter, transport: "worker" | "hosted" = "worker") {
   const requests: Request[] = [];
   const handler = new RPCHandler(router);
   const connection = {
@@ -23,14 +29,16 @@ function client(router: AnyRouter) {
       return result.response;
     },
   };
+  let link: ClientLink<ApiClientContext> = createWorkerLink(connection);
+  if (transport === "hosted") link = new RPCLink({ url: "/rpc", method: "POST", fetch: connection.fetch });
   return {
-    client: createTRPCUntypedClient<AppRouter>({ links: [createWorkerLink(connection)] }),
+    client: createTestClient({ link }),
     requests,
     connection,
   };
 }
 
-describe("existing Homarr hooks over native worker RPC", () => {
+describe("native Homarr client over worker RPC", () => {
   test("browser weather requires opt-in, a null worker result, and successful authorization", async () => {
     const fetch = vi.fn().mockResolvedValue(new Response("unavailable", { status: 503 }));
     vi.stubGlobal("fetch", fetch);
@@ -48,15 +56,15 @@ describe("existing Homarr hooks over native worker RPC", () => {
         },
         unrelated: os.handler(() => null),
       });
-      const api = createTRPCUntypedClient<AppRouter>({
-        links: [createWorkerLink({ ...worker.connection, browserWeather: true })],
+      const api = createTestClient({
+        link: createWorkerLink({ ...worker.connection, browserWeather: true }),
       });
       const input = { latitude: 48.85, longitude: 2.35, url: "https://private.invalid" };
       expect(await worker.client.query("widget.weather.atLocation", input)).toBeNull();
       expect(await api.query("unrelated")).toBeNull();
       allowed = false;
       await expect(api.query("widget.weather.atLocation", input)).rejects.toMatchObject({
-        data: { code: "FORBIDDEN" },
+        code: "FORBIDDEN",
       });
       expect(fetch).not.toHaveBeenCalled();
       allowed = true;
@@ -78,51 +86,70 @@ describe("existing Homarr hooks over native worker RPC", () => {
     }
   });
 
-  test("native media uploads preserve repeated FormData files and all bytes", async () => {
-    const bytes = new Uint8Array(3 * 1024 * 1024).fill(19);
-    const form = new FormData();
-    form.append("files", new File([bytes], "large.png", { type: "image/png" }));
-    form.append("files", new File(["second file"], "small.png", { type: "image/png" }));
-    const { client: api } = client({
-      upload: os.input(mediaUploadSchema).handler(async ({ input }) =>
-        Promise.all(
-          input.files.map(async (file) => ({
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            digest: Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer()))),
-          })),
+  test.each(["worker", "hosted"] as const)(
+    "%s media uploads preserve repeated FormData files and all bytes",
+    async (transport) => {
+      const bytes = new Uint8Array(3 * 1024 * 1024).fill(19);
+      const form = new FormData();
+      form.append("files", new File([bytes], "large.png", { type: "image/png" }));
+      form.append("files", new File(["second file"], "small.png", { type: "image/png" }));
+      const { client: api } = client(
+        {
+          upload: os.input(mediaUploadSchema).handler(async ({ input }) =>
+            Promise.all(
+              input.files.map(async (file) => ({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                digest: Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer()))),
+              })),
+            ),
+          ),
+        },
+        transport,
+      );
+      const result = await api.mutation("upload", form);
+      expect(result).toEqual(
+        await Promise.all(
+          [form.getAll("files")[0], form.getAll("files")[1]].map(async (file) => {
+            if (!(file instanceof File)) throw new Error("Expected upload file");
+            return {
+              name: file.name,
+              type: file.type,
+              size: file.size,
+              digest: Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer()))),
+            };
+          }),
         ),
-      ),
-    });
-    const result = await api.mutation("upload", form);
-    expect(result).toEqual(
-      await Promise.all(
-        [form.getAll("files")[0], form.getAll("files")[1]].map(async (file) => {
-          if (!(file instanceof File)) throw new Error("Expected upload file");
-          return {
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            digest: Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", await file.arrayBuffer()))),
-          };
-        }),
-      ),
-    );
-  });
+      );
+    },
+  );
 
-  test("top-level forms preserve repeated text fields and reject unsafe prototype fields", async () => {
-    const { client: api, requests } = client({
-      upload: os.input(z.object({ labels: z.array(z.string()) })).handler(({ input }) => input),
-    });
-    const form = new FormData();
-    form.append("labels", "first");
-    form.append("labels", "second");
-    expect(await api.mutation("upload", form)).toEqual({ labels: ["first", "second"] });
-    form.append("__proto__", "unsafe");
-    await expect(api.mutation("upload", form)).rejects.toThrow("Unsafe form field");
-    expect(requests).toHaveLength(1);
-  });
+  test.each(["worker", "hosted"] as const)(
+    "%s top-level forms preserve repeated fields and reject unsafe prototype fields",
+    async (transport) => {
+      const { client: api, requests } = client(
+        {
+          upload: os.input(z.object({ labels: z.array(z.string()) })).handler(({ input }) => input),
+          certificate: os.input(z.object({ file: z.file() })).handler(async ({ input }) => ({
+            name: input.file.name,
+            text: await input.file.text(),
+          })),
+        },
+        transport,
+      );
+      const form = new FormData();
+      form.append("labels", "first");
+      form.append("labels", "second");
+      expect(await api.mutation("upload", form)).toEqual({ labels: ["first", "second"] });
+      form.append("__proto__", "unsafe");
+      await expect(api.mutation("upload", form)).rejects.toThrow("Unsafe form field");
+      expect(requests).toHaveLength(1);
+      const certificate = new FormData();
+      certificate.append("file", new File(["certificate bytes"], "server.crt"));
+      expect(await api.mutation("certificate", certificate)).toEqual({ name: "server.crt", text: "certificate bytes" });
+    },
+  );
 
   test("queries and mutations retain native values and input validation without tRPC HTTP", async () => {
     let saved = "";
@@ -141,7 +168,7 @@ describe("existing Homarr hooks over native worker RPC", () => {
     expect(
       requests.every((request) => request.method === "POST" && new URL(request.url).pathname.startsWith("/rpc/")),
     ).toBe(true);
-    await expect(api.mutation("board.save", { name: "" })).rejects.toMatchObject({ data: { code: "BAD_REQUEST" } });
+    await expect(api.mutation("board.save", { name: "" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
     expect(saved).toBe("My board");
   });
 
@@ -152,9 +179,9 @@ describe("existing Homarr hooks over native worker RPC", () => {
       }),
     });
     await expect(api.query("denied")).rejects.toMatchObject({
-      name: "TRPCClientError",
+      name: "ORPCError",
       message: "Access removed",
-      data: { code: "FORBIDDEN", httpStatus: 403 },
+      code: "FORBIDDEN",
     });
   });
 
@@ -188,8 +215,8 @@ describe("existing Homarr hooks over native worker RPC", () => {
       }),
     });
     const finiteFetch = vi.fn().mockRejectedValue(new Error("Persistent stream used finite request slots"));
-    const api = createTRPCUntypedClient<AppRouter>({
-      links: [createWorkerLink({ fetch: finiteFetch, fetchSubscription: connection.fetch })],
+    const api = createTestClient({
+      link: createWorkerLink({ fetch: finiteFetch, fetchSubscription: connection.fetch }),
     });
     const values: unknown[] = [];
     await new Promise<void>((resolve, reject) =>
@@ -205,15 +232,13 @@ describe("existing Homarr hooks over native worker RPC", () => {
 
   test("query cancellation aborts the bound worker request", async () => {
     let signal: AbortSignal | undefined;
-    const api = createTRPCUntypedClient<AppRouter>({
-      links: [
-        createWorkerLink({
-          fetch(_url, init) {
-            signal = init?.signal ?? undefined;
-            return new Promise((_resolve, reject) => signal?.addEventListener("abort", () => reject(signal?.reason)));
-          },
-        }),
-      ],
+    const api = createTestClient({
+      link: createWorkerLink({
+        fetch(_url, init) {
+          signal = init?.signal ?? undefined;
+          return new Promise((_resolve, reject) => signal?.addEventListener("abort", () => reject(signal?.reason)));
+        },
+      }),
     });
     const abort = new AbortController();
     const pending = api.query("board.read", undefined, { signal: abort.signal });
@@ -310,7 +335,7 @@ describe("existing Homarr hooks over native worker RPC", () => {
     const c = api.subscription("live", undefined, { onData: (value) => values.push(value) });
     await vi.waitFor(() => expect(values).toEqual([1, 1]));
     expect(requests).toHaveLength(2);
-    const independent = createTRPCUntypedClient<AppRouter>({ links: [createWorkerLink(connection)] });
+    const independent = createTestClient({ link: createWorkerLink(connection) });
     const d = independent.subscription("live", undefined, { onData: (value) => values.push(value) });
     await vi.waitFor(() => expect(values).toEqual([1, 1, 1]));
     expect(requests).toHaveLength(3);
@@ -330,7 +355,7 @@ describe("existing Homarr hooks over native worker RPC", () => {
     const first = client(router);
     const second = client(router);
     let active = first.connection;
-    const api = createTRPCUntypedClient<AppRouter>({ links: [createWorkerLink(() => active)] });
+    const api = createTestClient({ link: createWorkerLink(() => active) });
     const values: unknown[] = [];
     const a = api.subscription("live", { host: "one" }, { onData: (value) => values.push(value) });
     const b = api.subscription("live", { host: "two" }, { onData: (value) => values.push(value) });
@@ -346,12 +371,10 @@ describe("existing Homarr hooks over native worker RPC", () => {
   });
 
   test("offline worker selection fails without falling back to hosted HTTP", async () => {
-    const api = createTRPCUntypedClient<AppRouter>({
-      links: [
-        createWorkerLink(() => {
-          throw new Error("Worker offline");
-        }),
-      ],
+    const api = createTestClient({
+      link: createWorkerLink(() => {
+        throw new Error("Worker offline");
+      }),
     });
     await expect(api.query("board.read")).rejects.toMatchObject({ message: "Worker offline" });
   });
@@ -362,7 +385,7 @@ describe("existing Homarr hooks over native worker RPC", () => {
     const release = configureWorkerTransport(() => connection);
     let releaseOffline: (() => void) | undefined;
     try {
-      const api = getUntypedClient(fetchApi);
+      const api = getNativeClient(fetchApi);
       expect(await api.query("read")).toBe("private worker data");
       releaseOffline = configureWorkerTransport(() => {
         throw new Error("Worker offline");
@@ -391,10 +414,90 @@ describe("existing Homarr hooks over native worker RPC", () => {
         return result.response;
       },
     });
-    const api = createTRPCUntypedClient<AppRouter>({ links: [createWorkerLink(() => connection(active))] });
+    const api = createTestClient({ link: createWorkerLink(() => connection(active)) });
     const pending = api.query("read");
     active = "second";
     expect(await pending).toBe("first");
     expect(await api.query("read")).toBe("second");
   });
+
+  test("hosted subscriptions reconnect after a transient transport error and stop on unsubscribe", async () => {
+    vi.useFakeTimers();
+    try {
+      const worker = client({
+        live: os.handler(async function* ({ signal }) {
+          yield 7;
+          await new Promise<void>((resolve) => signal?.addEventListener("abort", () => resolve(), { once: true }));
+        }),
+      });
+      const fetch = vi
+        .fn()
+        .mockRejectedValueOnce(new TypeError("Network disconnected"))
+        .mockImplementation(worker.connection.fetch);
+      const api = createTestClient({ link: new RPCLink({ url: "/rpc", fetch }) });
+      const values: unknown[] = [];
+      const errors: unknown[] = [];
+      const subscription = api.subscription("live", undefined, {
+        onData: (value) => values.push(value),
+        onError: (error) => errors.push(error),
+      });
+      await vi.advanceTimersByTimeAsync(250);
+      expect(values).toEqual([7]);
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(errors).toEqual([]);
+      subscription.unsubscribe();
+      await vi.advanceTimersByTimeAsync(20_000);
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(worker.requests[0]?.signal.aborted).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test("subscription retries are bounded and caller cancellation clears pending reconnects", async () => {
+    vi.useFakeTimers();
+    try {
+      const fetch = vi.fn().mockRejectedValue(new TypeError("Network disconnected"));
+      const api = createTestClient({ link: new RPCLink({ url: "/rpc", fetch }) });
+      const errors: unknown[] = [];
+      api.subscription("live", undefined, { onError: (error) => errors.push(error) });
+      await vi.advanceTimersByTimeAsync(20_000);
+      expect(fetch).toHaveBeenCalledTimes(6);
+      expect(errors).toHaveLength(1);
+      fetch.mockClear();
+      const abort = new AbortController();
+      api.subscription("live", undefined, { signal: abort.signal });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(fetch).toHaveBeenCalledTimes(1);
+      abort.abort();
+      await vi.advanceTimersByTimeAsync(20_000);
+      expect(fetch).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test.each(["UNAUTHORIZED", "FORBIDDEN", "BAD_REQUEST"] as const)(
+    "%s subscription failures never reconnect",
+    async (code) => {
+      vi.useFakeTimers();
+      try {
+        const worker = client({
+          live: os.handler(() => {
+            throw new ORPCError(code);
+          }),
+        });
+        const fetch = vi.fn(worker.connection.fetch);
+        const api = createTestClient({ link: new RPCLink({ url: "/rpc", fetch }) });
+        const errors: unknown[] = [];
+        api.subscription("live", undefined, { onError: (error) => errors.push(error) });
+        await vi.advanceTimersByTimeAsync(20_000);
+        expect(errors).toHaveLength(1);
+        expect(errors[0]).toMatchObject({ code });
+        expect(fetch).toHaveBeenCalledTimes(1);
+      } finally {
+        vi.useRealTimers();
+      }
+    },
+  );
 });

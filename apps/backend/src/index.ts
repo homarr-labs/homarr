@@ -1,9 +1,13 @@
 // Install the opt-in process-wide DNS cache before importing request handlers.
 // eslint-disable-next-line import/no-unassigned-import
 import "@homarr/core/infrastructure/dns/init";
+// eslint-disable-next-line import/no-unassigned-import
+import "./overrides";
 
+import type { startWebSocketServer } from "@homarr/api/websocket-runtime";
+import { cleanupSessionsAsync } from "@homarr/auth/session-cleanup";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { jobGroup } from "@homarr/cron-jobs";
+import { createCronJobRuntime } from "@homarr/cron-jobs/runtime";
 
 import { createBackendApp } from "./app";
 import { env } from "./env";
@@ -22,10 +26,13 @@ const server = Bun.serve({
   idleTimeout: 0,
 });
 
+const jobs = createCronJobRuntime();
+let websocket: ReturnType<typeof startWebSocketServer> | undefined;
 try {
-  const tasks = await import("@homarr/tasks");
-  await tasks.startupPromise;
-  const websocket = await import("@homarr/websocket");
+  await cleanupSessionsAsync();
+  await jobs.startAsync();
+  const { startWebSocketServer } = await import("@homarr/api/websocket-runtime");
+  websocket = startWebSocketServer();
   await websocket.startupPromise;
   ready = true;
   logger.info(`Headless backend listening on ${server.url}`);
@@ -41,10 +48,10 @@ function shutdown() {
   stopping = true;
   ready = false;
   logger.info("Stopping backend");
-  jobGroup.stopAll();
+  jobs.stop();
+  websocket?.stop();
   server.stop();
-  // The WebSocket handler receives SIGTERM too. Bound the drain of active jobs
-  // and long-running streams so the container can terminate reliably.
+  // Bound the drain of active jobs and long-running streams.
   const timeout = setTimeout(() => process.exit(0), 5000);
   timeout.unref();
 }

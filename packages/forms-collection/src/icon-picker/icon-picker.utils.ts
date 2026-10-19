@@ -1,10 +1,7 @@
-import type { inferRouterOutputs } from "@trpc/server";
-
-import type { AppRouter } from "@homarr/api/legacy";
+import type { RouterOutputs } from "@homarr/api";
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-export type IconGroup = RouterOutput["icon"]["findIcons"]["icons"][number];
+export type IconGroup = RouterOutputs["icon"]["findIcons"]["icons"][number];
 export type PickerIcon = IconGroup["icons"][number] & { repositorySlug: string };
 
 export interface IconPickerSections {

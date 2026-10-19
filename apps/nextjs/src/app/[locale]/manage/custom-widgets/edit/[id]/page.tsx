@@ -6,7 +6,7 @@ import { auth } from "@homarr/auth/next";
 import { createLoginUrl } from "@homarr/auth/shared";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
+import { catchRpcNotFound } from "~/errors/rpc-catch-error";
 import { CustomWidgetForm } from "../../_custom-widget-form";
 import { FormErrorBoundary } from "../../_form-error-boundary";
 
@@ -22,7 +22,7 @@ export default async function EditCustomWidgetPage(props: EditCustomWidgetPagePr
   if (!session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-  const definition = await api.customWidget.get.query({ id: params.id }).catch(catchTrpcNotFound);
+  const definition = await api.customWidget.get.query({ id: params.id }).catch(catchRpcNotFound);
 
   return (
     <>

@@ -1,5 +1,10 @@
 import superjson from "superjson";
 
+import {
+  createPublishedBeszelRead,
+  publishedAlbumSelection,
+  publishedMediaPage,
+} from "@homarr/api/published-item-reads";
 import { defaultClockWeatherLocation, defaultWeatherLocation } from "@homarr/definitions";
 import type { AccessPrincipal } from "@homarr/worker-access";
 import { WorkerAccessError } from "@homarr/worker-access";
@@ -171,7 +176,6 @@ const optionFields: Record<string, Record<string, { option?: string; fallback?: 
     includeHistory: { option: "showHistory", fallback: true },
     maxHistoryItems: { fallback: 10 },
   },
-  "widget.beszel.getSystemStats": { timePeriod: { fallback: "1h" } },
   "widget.immich.getAlbumPreview": { randomizePhotos: { fallback: false } },
   "widget.umami.getVisitorStats": { websiteId: {}, timeFrame: { fallback: "24h" }, eventName: { fallback: undefined } },
   "widget.umami.getActiveVisitors": { websiteId: {} },
@@ -254,24 +258,21 @@ function matchesIntegrationItem(item: ViewerItem, call: NativeViewerCall, disclo
     } else if (!equal(input[key], expected)) return false;
   }
   if (call.path === "widget.immich.getAlbum" || call.path === "widget.immich.getAlbumPreview") {
-    let album = item.options.albumId;
-    if (album === "all" || album === "") album = undefined;
-    if (input.albumId !== album) return false;
+    if (input.albumId !== publishedAlbumSelection(item.options)) return false;
   }
+  if (
+    call.path === "widget.beszel.getSystemStats" &&
+    !equal(input.timePeriod, createPublishedBeszelRead(item).timePeriod)
+  )
+    return false;
   if (call.path === "widget.beszel.getSystemStats" || call.path === "widget.beszel.subscribeSystemStats") {
-    if (requested.length !== 1 || typeof input.systemId !== "string") return false;
+    const [integrationId] = requested;
+    if (requested.length !== 1 || typeof integrationId !== "string" || typeof input.systemId !== "string") return false;
     if (item.kind === "beszelSystemStats") {
-      const stored = item.options.systemId;
+      const read = createPublishedBeszelRead(item);
       const current = disclosure.selectedSystems.get(itemRevision(item));
-      let selected = stored === `${requested[0]}:${input.systemId}`;
-      if (item.integrationIds.length === 1 && stored === input.systemId) selected = true;
-      if (!stored && current && current.integrationId === requested[0] && current.systemId === input.systemId)
-        selected = true;
-      if (!selected) return false;
-      const docker = ["showDockerCpu", "showDockerMemory", "showDockerNetwork"].some(
-        (key) => item.options[key] === true,
-      );
-      if (call.path.endsWith("getSystemStats") && input.includeDocker !== docker) return false;
+      if (!read.allowsSystem({ integrationId, systemId: input.systemId }, current)) return false;
+      if (call.path.endsWith("getSystemStats") && input.includeDocker !== read.includeDocker) return false;
     }
   }
   if (call.path.startsWith("widget.stats.")) {
@@ -281,12 +282,12 @@ function matchesIntegrationItem(item: ViewerItem, call: NativeViewerCall, disclo
   }
   if (
     call.path === "widget.mediaTranscoding.getDataAsync" &&
-    (typeof input.pageSize !== "number" || input.pageSize < 1 || input.pageSize > 25)
+    !publishedMediaPage("mediaTranscoding", item.options).allowsViewerSize(input.pageSize)
   )
     return false;
   if (
     call.path === "widget.mediaOrganizer.getData" &&
-    (typeof input.pageSize !== "number" || input.pageSize < 1 || input.pageSize > 50)
+    !publishedMediaPage("mediaMissing", item.options).allowsViewerSize(input.pageSize)
   )
     return false;
   return true;
@@ -544,9 +545,7 @@ export function projectNativeViewerValue(
         matchesIntegrationItem(item, { ...call, kind: "subscription" }, policy.disclosure),
     );
     const docker = candidates.some(
-      (item) =>
-        item.kind !== "beszelSystemStats" ||
-        ["showDockerCpu", "showDockerMemory", "showDockerNetwork"].some((key) => item.options[key] === true),
+      (item) => item.kind !== "beszelSystemStats" || createPublishedBeszelRead(item).includeDocker,
     );
     if (!docker) return { ...record(value), record: { ...record(record(value).record), stats: [] } };
   }
@@ -589,13 +588,7 @@ export function projectNativeViewerValue(
     );
     const selected = new Set<string>();
     for (const item of candidates) {
-      const stored = item.options.systemId;
-      let choice = systems.find((system) => `${system.integrationId}:${system.systemId}` === stored);
-      if (!stored) choice = systems[0];
-      if (!choice) {
-        const legacy = systems.filter((system) => system.systemId === stored);
-        if (legacy.length === 1) choice = legacy[0];
-      }
+      const choice = createPublishedBeszelRead(item).selectSystem(systems);
       if (choice) {
         selected.add(`${choice.integrationId}:${choice.systemId}`);
         policy.disclosure.selectedSystems.set(itemRevision(item), choice);

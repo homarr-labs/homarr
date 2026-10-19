@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
 
+import type { ORPCClient } from "@homarr/api/orpc";
+import { createPublishedBeszelRead, publishedMediaPage } from "@homarr/api/published-item-reads";
+import { getBoardWidgetData } from "./widget-data";
+
 import { createNativeViewerPolicy, projectNativeViewerValue } from "./native-viewer";
 import type { ViewerBoard, ViewerItem } from "./native-viewer";
 
@@ -322,5 +326,91 @@ describe("native viewer publication boundary", () => {
     ).toEqual([
       { integrationId: "selected", healthInfo: { fileSystem: [{ deviceName: "public-volume" }], smart: [] } },
     ]);
+  });
+});
+
+describe("shared published item reads", () => {
+  test("system discovery scopes defaults and legacy IDs to this item's saved integrations", () => {
+    const read = createPublishedBeszelRead({ options: {}, integrationIds: ["selected"] });
+    const foreign = { integrationId: "private", systemId: "same" };
+    const saved = { integrationId: "selected", systemId: "same" };
+    expect(read.selectSystem([foreign, saved])).toEqual(saved);
+    expect(read.allowsSystem(saved)).toBe(false);
+    expect(read.allowsSystem(saved, saved)).toBe(true);
+    expect(read.allowsSystem(foreign, foreign)).toBe(false);
+    const legacy = createPublishedBeszelRead({ options: { systemId: "same" }, integrationIds: ["selected"] });
+    expect(legacy.selectSystem([foreign, saved])).toEqual(saved);
+    expect(legacy.allowsSystem(saved)).toBe(true);
+    const ambiguous = createPublishedBeszelRead({
+      options: { systemId: "same" },
+      integrationIds: ["selected", "private"],
+    });
+    expect(ambiguous.selectSystem([foreign, saved])).toBeUndefined();
+    expect(ambiguous.allowsSystem(saved)).toBe(false);
+  });
+
+  test("DTO system discovery and native publication share the same default and Docker intent", async () => {
+    const saved = item("beszelSystemStats", {});
+    const systems = [{ integrationId: "selected", systems: [{ id: "default" }, { id: "other" }] }];
+    const policy = createNativeViewerPolicy([board(saved)]);
+    const discovery = query("widget.beszel.getSystems", { integrationIds: ["selected"] });
+    expect(projectNativeViewerValue(policy, discovery, systems)).toEqual([
+      { integrationId: "selected", systems: [{ id: "default" }] },
+    ]);
+    let readInput: unknown;
+    const caller = {
+      widget: {
+        beszel: {
+          getSystems: async () => systems,
+          getSystemStats: async (input: unknown) => {
+            readInput = input;
+            return { containerStats: ["private"] };
+          },
+        },
+      },
+    } as unknown as ORPCClient;
+    const result = await getBoardWidgetData({ ...saved, itemId: saved.id }, { caller });
+    expect(result).toEqual({ status: "ready", data: { containerStats: [], systemId: "default" } });
+    expect(readInput).toEqual({
+      integrationIds: ["selected"],
+      systemId: "default",
+      timePeriod: "1h",
+      includeDocker: false,
+    });
+    expect(() => policy.authorize(query("widget.beszel.getSystemStats", readInput))).not.toThrow();
+    expect(() =>
+      policy.authorize(query("widget.beszel.getSystemStats", { ...(readInput as object), systemId: "other" })),
+    ).toThrow();
+  });
+
+  test("DTO page size and native viewer limits retain their distinct contracts", async () => {
+    const saved = item("mediaTranscoding", { queuePageSize: 100 });
+    let readInput: unknown;
+    const caller = {
+      widget: {
+        mediaTranscoding: {
+          getDataAsync: async (input: unknown) => {
+            readInput = input;
+            return {};
+          },
+        },
+      },
+    } as unknown as ORPCClient;
+    await getBoardWidgetData({ ...saved, itemId: saved.id }, { caller });
+    expect(readInput).toEqual({ integrationId: "selected", page: 1, pageSize: 30 });
+    const policy = createNativeViewerPolicy([board(saved)]);
+    expect(() => policy.authorize(query("widget.mediaTranscoding.getDataAsync", readInput))).toThrow();
+    expect(() =>
+      policy.authorize(
+        query("widget.mediaTranscoding.getDataAsync", { integrationId: "selected", page: 1, pageSize: 25 }),
+      ),
+    ).not.toThrow();
+    expect(() =>
+      policy.authorize(
+        query("widget.mediaTranscoding.getDataAsync", { integrationId: "selected", page: 1, pageSize: 0 }),
+      ),
+    ).toThrow();
+    expect(publishedMediaPage("mediaMissing", { pageSize: 100 }).displaySize).toBe(50);
+    expect(publishedMediaPage("mediaMissing", {}).displaySize).toBe(10);
   });
 });

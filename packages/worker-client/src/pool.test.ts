@@ -130,11 +130,213 @@ describe("browser worker connections", () => {
       grant: { ...owner.grant, id: "share", role: "viewer" as const },
     };
     const pool = new WorkerConnectionPool({
+      singleWorker: true,
       vault: storage,
       open: async () => ({ worker: shared, connection: transport(shared) }),
     });
     await pool.connectInput(shared);
     expect((await storage.list())[0]?.credential).toEqual(owner.credential);
     expect(pool.getWorker()?.grant.role).toBe("viewer");
+  });
+  test("single-worker hydration exposes only the remembered primary and preserves other saved access", async () => {
+    const first = await saved("first");
+    const second = await saved("second");
+    const storage = vault([first, second]);
+    const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+    let preferred = second.workerId;
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: {
+        localStorage: {
+          getItem: () => preferred,
+          setItem: (_key: string, value: string) => {
+            preferred = value;
+          },
+        },
+      },
+    });
+    try {
+      const pool = new WorkerConnectionPool({ singleWorker: true, vault: storage });
+      await pool.hydrate();
+      expect(pool.getSnapshot().workers.map((entry) => entry.worker.workerId)).toEqual([second.workerId]);
+      expect(pool.getSnapshot().primaryWorkerId).toBe(second.workerId);
+      expect(await storage.list()).toEqual([first, second]);
+      await pool.forget(second.workerId);
+      expect(pool.getSnapshot().workers).toEqual([]);
+      expect(pool.getSnapshot().primaryWorkerId).toBeNull();
+      expect(await storage.list()).toEqual([first]);
+      const reloaded = new WorkerConnectionPool({ singleWorker: true, vault: storage });
+      await reloaded.hydrate();
+      expect(reloaded.getSnapshot().workers).toEqual([]);
+      expect(reloaded.getSnapshot().primaryWorkerId).toBeNull();
+    } finally {
+      if (previousWindow) Object.defineProperty(globalThis, "window", previousWindow);
+      else Reflect.deleteProperty(globalThis, "window");
+    }
+  });
+
+  test("single-worker replacement preserves the working connection on failure and closes it on success", async () => {
+    const first = await saved("first");
+    const second = await saved("second");
+    let closed = 0;
+    let fail = false;
+    const original = {
+      ...transport(first),
+      close: () => {
+        closed++;
+      },
+    };
+    const pool = new WorkerConnectionPool({
+      singleWorker: true,
+      vault: vault(),
+      open: async (input) => {
+        if (fail) throw new Error("Unavailable");
+        if (input.workerId === first.workerId) return { worker: first, connection: original };
+        return { worker: second, connection: transport(second) };
+      },
+    });
+    await pool.connectInput(first);
+    const scope = pool.getSnapshot().primaryScope;
+    fail = true;
+    await expect(pool.connectInput(first)).rejects.toThrow("Unavailable");
+    expect(pool.getConnection()).toBe(original);
+    expect(pool.getSnapshot().primaryScope).toBe(scope);
+    await expect(pool.connectInput(second)).rejects.toThrow("Unavailable");
+    expect(pool.getConnection()).toBe(original);
+    expect(pool.getSnapshot().primaryScope).toBe(scope);
+    expect(closed).toBe(0);
+    fail = false;
+    await pool.connectInput(second);
+    expect(closed).toBe(1);
+    expect(pool.getSnapshot().workers.map((entry) => entry.worker.workerId)).toEqual([second.workerId]);
+    expect(pool.getSnapshot().primaryWorkerId).toBe(second.workerId);
+    expect(pool.getSnapshot().primaryScope).not.toBe(scope);
+    await pool.forget(second.workerId);
+    expect(pool.getSnapshot().workers).toEqual([]);
+    expect(pool.getSnapshot().primaryWorkerId).toBeNull();
+  });
+
+  test("single-worker replacement cancels an older restore before it can reinstate another worker", async () => {
+    const first = await saved("first");
+    const second = await saved("second");
+    let finish!: (result: { worker: SavedWorker; connection: WorkerConnection }) => void;
+    let opened!: () => void;
+    const started = new Promise<void>((resolve) => {
+      opened = resolve;
+    });
+    let closed = 0;
+    const pool = new WorkerConnectionPool({
+      singleWorker: true,
+      vault: vault([first]),
+      open: async (input) => {
+        if (input.workerId === second.workerId) return { worker: second, connection: transport(second) };
+        opened();
+        return new Promise((resolve) => {
+          finish = resolve;
+        });
+      },
+    });
+    const restoring = pool.restore(first.workerId);
+    await started;
+    await pool.connectInput(second);
+    finish({
+      worker: first,
+      connection: {
+        ...transport(first),
+        close: () => {
+          closed++;
+        },
+      },
+    });
+    await expect(restoring).rejects.toThrow("cancelled");
+    expect(closed).toBe(1);
+    expect(pool.getSnapshot().workers.map((entry) => entry.worker.workerId)).toEqual([second.workerId]);
+    expect(() => pool.getConnection(first.workerId)).toThrow("offline");
+  });
+
+  test("closing single-worker mode during hydration cancels a pending connection", async () => {
+    const worker = await saved("pending");
+    let finish!: (workers: SavedWorker[]) => void;
+    let opened = false;
+    const pool = new WorkerConnectionPool({
+      singleWorker: true,
+      vault: {
+        ...vault(),
+        list: () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          }),
+      },
+      open: async () => {
+        opened = true;
+        return { worker, connection: transport(worker) };
+      },
+    });
+    const pending = pool.connectInput(worker);
+    pool.close();
+    finish([]);
+    await expect(pending).rejects.toThrow("cancelled");
+    expect(opened).toBe(false);
+    expect(pool.getSnapshot().workers).toEqual([]);
+  });
+  test("returning to a hidden worker with a consumed invite reuses only its matching saved grant", async () => {
+    const first = await saved("first");
+    const second = await saved("second");
+    let observed: ConnectionInput | undefined;
+    const pool = new WorkerConnectionPool({
+      singleWorker: true,
+      vault: vault(),
+      open: async (input) => {
+        observed = input;
+        if (input.credential.kind !== "grant") throw new Error("Invite already consumed");
+        const worker = input.workerId === first.workerId ? first : second;
+        return { worker, connection: transport(worker) };
+      },
+    });
+    await pool.connectInput(first);
+    await pool.connectInput(second);
+    await pool.connectInput({ ...first, credential: { kind: "invite", token: "consumed" }, deviceIdentity: undefined });
+    expect(observed?.credential).toEqual(first.credential);
+    expect(observed?.deviceIdentity).toBe(first.deviceIdentity);
+    expect(pool.getSnapshot().primaryWorkerId).toBe(first.workerId);
+    await expect(pool.connectInput({ ...first, pinnedIdentity: second.pinnedIdentity })).rejects.toThrow("identity");
+    await expect(pool.connectInput({ ...first, credential: { kind: "share", token: "share" } })).rejects.toThrow(
+      "Invite already consumed",
+    );
+    expect(observed?.credential.kind).toBe("share");
+  });
+
+  test("forget waits for an in-flight vault save so cancelled access cannot reappear", async () => {
+    const worker = await saved("pending-save");
+    const storage = vault();
+    let finishSave!: () => void;
+    let saving!: () => void;
+    const started = new Promise<void>((resolve) => {
+      saving = resolve;
+    });
+    const pool = new WorkerConnectionPool({
+      singleWorker: true,
+      vault: {
+        ...storage,
+        save: async (value) => {
+          saving();
+          await new Promise<void>((resolve) => {
+            finishSave = resolve;
+          });
+          await storage.save(value);
+        },
+      },
+      open: async () => ({ worker, connection: transport(worker) }),
+    });
+    const pending = pool.connectInput(worker);
+    const cancelled = pending.catch((error: unknown) => error);
+    await started;
+    const forgotten = pool.forget(worker.workerId);
+    finishSave();
+    expect(await cancelled).toBeInstanceOf(Error);
+    await expect(pending).rejects.toThrow("cancelled");
+    await forgotten;
+    expect(await storage.list()).toEqual([]);
+    expect(pool.getSnapshot().workers).toEqual([]);
   });
 });

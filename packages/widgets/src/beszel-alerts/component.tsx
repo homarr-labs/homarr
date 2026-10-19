@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Badge, Box, Divider, Group, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconBellOff, IconCircleCheck, IconFlame, IconHistory } from "@tabler/icons-react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { LucideIcon } from "lucide-react";

@@ -5,7 +5,7 @@ import { queryCacheDefaultStaleTimeMs } from "./query-cache";
 /**
  * Creates a headers callback for a given source
  * It will set the x-trpc-source header and cookies if needed
- * @param source trpc source request comes from
+ * @param source request source label
  * @returns headers callback
  */
 export function createHeadersCallbackForSource(source: string) {
@@ -46,15 +46,10 @@ function getBaseUrl() {
   return process.env.HOMARR_BACKEND_URL ?? "http://127.0.0.1:3002";
 }
 
-import { trpcPath } from "./paths";
-export { trpcPath } from "./paths";
+import { orpcPath } from "./paths";
 
-/**
- * Creates the full url for the trpc api endpoint
- * @returns
- */
-export function getTrpcUrl() {
-  return `${getBaseUrl()}${trpcPath}`;
+export function getRpcUrl() {
+  return `${getBaseUrl()}${orpcPath}`;
 }
 
 export const makeQueryClient = () => {

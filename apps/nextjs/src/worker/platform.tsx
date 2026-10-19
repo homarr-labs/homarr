@@ -151,8 +151,7 @@ export function WorkerAccount() {
       ) : (
         <>
           <Text c="dimmed">
-            Use your Homarr account to organize workers and invite people. Worker access is approved separately on each
-            worker.
+            Sign in to approve hosted MCP access. Local users and dashboard sharing stay on your worker.
           </Text>
           <Button leftSection={<IconBrandGithub size={18} />} onClick={signIn} disabled={!config} loading={busy}>
             {existing ? "Continue with your Homarr account" : "Continue with GitHub"}

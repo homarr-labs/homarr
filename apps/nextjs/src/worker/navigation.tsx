@@ -185,7 +185,7 @@ export function useWorkerManagementLinks(): NavigationLink[] {
       hidden: !session?.user.permissions.includes("admin"),
       "data-onboarding-tour-id": "manage-settings",
     },
-    { label: "Your Homarr workers", icon: IconPlugConnected, href: "/manage/workers" },
+    { label: "Worker", icon: IconPlugConnected, href: "/manage/workers" },
     {
       label: t("items.help.label"),
       icon: IconHelpSquareRoundedFilled,

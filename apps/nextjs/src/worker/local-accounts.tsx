@@ -1,24 +1,25 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Accordion,
+  ActionIcon,
   Alert,
-  Badge,
   Button,
   CopyButton,
   Group,
-  Loader,
+  Menu,
   Modal,
-  Paper,
   PasswordInput,
+  Skeleton,
   Stack,
+  Table,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconCheck, IconCopy, IconMailPlus, IconUsersGroup } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconDots, IconMailPlus, IconPlus } from "@tabler/icons-react";
 
 import { parseConnectionLink, shareLink, workerRequest } from "@homarr/worker-client";
 import type { ConnectionInput, SavedWorker, WorkerConnection } from "@homarr/worker-client";
@@ -168,76 +169,100 @@ export function WorkerLocalLoginLink({
   );
 }
 
-export function WorkerLocalAccounts({ worker, connection }: { worker: SavedWorker; connection: WorkerConnection }) {
+export function WorkerLocalAccounts(props: { worker: SavedWorker; connection: WorkerConnection }) {
+  return <LocalAccountsPanel key={props.worker.workerId} {...props} />;
+}
+
+function LocalAccountsPanel({ worker, connection }: { worker: SavedWorker; connection: WorkerConnection }) {
   const { pool } = useWorkerWorkspace();
   const router = useRouter();
+  const active = useRef(true);
+  const currentConnection = useRef(connection);
+  currentConnection.current = connection;
   const [accounts, setAccounts] = useState<Accounts | null>(null);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [invitationLink, setInvitationLink] = useState("");
+  const [dialog, setDialog] = useState<"invite" | "create" | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
-  const [openingPath, setOpeningPath] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
-  const load = useCallback(
-    async () => setAccounts(await workerRequest<Accounts>(connection, "/remote/local-accounts")),
-    [connection],
-  );
+  const isCurrent = useCallback(() => active.current && currentConnection.current === connection, [connection]);
+  const load = useCallback(async () => {
+    const result = await workerRequest<Accounts>(connection, "/remote/local-accounts");
+    if (isCurrent()) setAccounts(result);
+  }, [connection, isCurrent]);
   useEffect(() => {
-    if (worker.grant.role === "owner") void load().catch((cause) => setError(errorMessage(cause)));
-  }, [load, worker.grant.role]);
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
+  useEffect(() => {
+    if (worker.grant.role === "owner")
+      void load().catch((cause) => {
+        if (isCurrent()) setError(errorMessage(cause));
+      });
+  }, [load, isCurrent, worker.grant.role]);
+
   if (worker.grant.role !== "owner")
     return (
-      <Paper withBorder p="md" radius="md">
-        <Stack gap="xs">
-          <Title order={3}>Your local organization</Title>
-          <Text size="sm" c="dimmed">
-            Your sign-in details are stored on {worker.name}. Ask its administrator to manage your organization access.
-          </Text>
-        </Stack>
-      </Paper>
+      <Text size="sm" c="dimmed">
+        Ask your administrator to manage users and organization access.
+      </Text>
     );
+
   async function perform(action: () => Promise<void>, success?: string) {
     setBusy(true);
     setError("");
     setNotice("");
     try {
       await action();
+      if (!isCurrent()) return false;
       await load();
+      if (!isCurrent()) return false;
       setConfirmation(null);
       if (success) setNotice(success);
+      return true;
     } catch (cause) {
-      setError(errorMessage(cause));
+      if (isCurrent()) setError(errorMessage(cause));
+      return false;
     } finally {
-      setBusy(false);
+      if (isCurrent()) setBusy(false);
     }
   }
   async function openManagement(path: string) {
     if (busy) return;
     setBusy(true);
-    setOpeningPath(path);
     setError("");
-    setNotice("");
     try {
       const selected = pool.getSnapshot().workers.find((entry) => entry.worker.workerId === worker.workerId);
       if (!selected?.connected) await pool.restore(worker.workerId);
+      if (!isCurrent()) return;
       pool.setPrimary(worker.workerId);
       router.push(path);
     } catch (cause) {
-      setError(errorMessage(cause));
+      if (isCurrent()) setError(errorMessage(cause));
     } finally {
-      setOpeningPath(null);
-      setBusy(false);
+      if (isCurrent()) setBusy(false);
     }
   }
   async function mutate(path: string, method: string, body?: object) {
     await workerRequest(connection, `/remote/local-accounts${path}`, { method, body: body && JSON.stringify(body) });
   }
+  function closeDialog() {
+    if (busy) return;
+    setDialog(null);
+    setPassword("");
+    setError("");
+  }
+  let dialogTitle = "Invite a user";
+  if (dialog === "create") dialogTitle = "Create a user";
   return (
-    <Stack>
-      {error && (
+    <Stack gap="md">
+      {error && !dialog && !confirmation && (
         <Alert color="red" role="alert">
           {error}
         </Alert>
@@ -247,213 +272,223 @@ export function WorkerLocalAccounts({ worker, connection }: { worker: SavedWorke
           {notice}
         </Alert>
       )}
-      {!accounts && !error && <Loader size="sm" aria-label="Loading local organization" />}
-      <Paper withBorder p="md" radius="md">
-        <Stack>
-          <Group gap="sm">
-            <IconUsersGroup size={22} />
-            <Title order={3}>Your local organization</Title>
-          </Group>
-          <Text size="sm" c="dimmed">
-            Invite people to {worker.name}. Each user signs in with their own username, with access controlled by Homarr
-            groups and board permissions.
-          </Text>
-          {accounts && !accounts.organization && (
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                void perform(() => mutate("", "POST", { name }), "Organization created. You can now invite users.");
-              }}
-            >
-              <Stack>
-                <TextInput
-                  label="Organization name"
-                  placeholder="Home, family, or team name"
-                  value={name}
-                  onChange={(event) => setName(event.currentTarget.value)}
-                  required
-                  maxLength={100}
-                  disabled={busy}
-                />
-                <Group>
-                  <Button type="submit" loading={busy}>
-                    Create local organization
-                  </Button>
-                </Group>
-              </Stack>
-            </form>
-          )}
-          {accounts?.organization && (
-            <Group justify="space-between" align="flex-start">
-              <Stack gap={4}>
-                <Text fw={600} style={{ overflowWrap: "anywhere" }}>
-                  {accounts.organization.name}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  {accounts.members.length} users
-                </Text>
-              </Stack>
-              <Button
-                disabled={busy}
-                loading={openingPath?.startsWith("/manage/users/groups/")}
-                onClick={() => {
-                  if (accounts.organization)
-                    void openManagement(
-                      `/manage/users/groups/${encodeURIComponent(accounts.organization.id)}/permissions`,
-                    );
-                }}
-                variant="default"
-                size="sm"
-              >
-                Group permissions
+      {!accounts && !error && (
+        <Stack gap="sm" aria-label="Loading users" aria-busy="true">
+          <Skeleton height={32} />
+          <Skeleton height={44} />
+          <Skeleton height={44} />
+        </Stack>
+      )}
+      {!accounts && error && (
+        <Button variant="default" size="sm" onClick={() => void perform(load)}>
+          Retry
+        </Button>
+      )}
+      {accounts && !accounts.organization && (
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void perform(() => mutate("", "POST", { name }), "Organization created.");
+          }}
+        >
+          <Stack gap="sm">
+            <Text size="sm" c="dimmed">
+              Create an organization to add users with their own username and password.
+            </Text>
+            <TextInput
+              label="Organization name"
+              placeholder="Home, family, or team"
+              value={name}
+              onChange={(event) => setName(event.currentTarget.value)}
+              required
+              maxLength={64}
+              disabled={busy}
+            />
+            <Group>
+              <Button type="submit" size="sm" loading={busy}>
+                Create organization
               </Button>
             </Group>
-          )}
-        </Stack>
-      </Paper>
+          </Stack>
+        </form>
+      )}
       {accounts?.organization && (
         <>
-          <Paper withBorder p="md" radius="md">
-            <Stack>
-              <Title order={4}>Invite users</Title>
-              <Text size="sm" c="dimmed">
-                Send a private invitation so someone can choose their own username and password. Each invitation can be
-                used once.
+          <Group justify="space-between" align="flex-start" gap="sm">
+            <div style={{ minWidth: 0 }}>
+              <Text fw={600} style={{ overflowWrap: "anywhere" }}>
+                {accounts.organization.name}
               </Text>
-              <Group>
-                <Button
-                  leftSection={<IconMailPlus size={16} />}
-                  loading={busy}
-                  onClick={() =>
-                    void perform(async () => {
-                      const { invitation } = await workerRequest<{ invitation: { id: string; token: string } }>(
-                        connection,
-                        "/remote/local-accounts/invitations",
-                        { method: "POST" },
-                      );
-                      setInvitationLink(accountLink(worker, invitation));
-                    })
-                  }
-                >
-                  Create invitation
+              <Text size="sm" c="dimmed">
+                {accounts.members.length} users · Username and password sign-in
+              </Text>
+            </div>
+            <Button
+              size="xs"
+              variant="subtle"
+              disabled={busy}
+              onClick={() => {
+                if (accounts.organization)
+                  void openManagement(
+                    `/manage/users/groups/${encodeURIComponent(accounts.organization.id)}/permissions`,
+                  );
+              }}
+            >
+              Group permissions
+            </Button>
+          </Group>
+          <Group justify="space-between" gap="xs">
+            <Group gap="xs">
+              <Button
+                size="sm"
+                leftSection={<IconMailPlus size={16} />}
+                disabled={busy}
+                onClick={() => {
+                  setInvitationLink("");
+                  setError("");
+                  setDialog("invite");
+                }}
+              >
+                Invite user
+              </Button>
+              <Button
+                size="sm"
+                variant="default"
+                leftSection={<IconPlus size={16} />}
+                disabled={busy}
+                onClick={() => {
+                  setUsername("");
+                  setPassword("");
+                  setError("");
+                  setDialog("create");
+                }}
+              >
+                Create user
+              </Button>
+            </Group>
+            <CopyButton value={accountLink(worker)}>
+              {({ copied, copy }) => (
+                <Button size="xs" variant="subtle" onClick={copy}>
+                  {copied ? "Copied sign-in link" : "Copy sign-in link"}
                 </Button>
-                <CopyButton value={accountLink(worker)}>
-                  {({ copied, copy }) => (
-                    <Button variant="default" onClick={copy}>
-                      {copied ? "Sign-in link copied" : "Copy sign-in link"}
-                    </Button>
-                  )}
-                </CopyButton>
-              </Group>
-              {invitationLink && (
-                <Alert color="blue" title="Invitation ready" aria-live="polite">
-                  <Stack gap="xs">
-                    <Text size="sm">Copy this link now and share it privately. It expires in 24 hours.</Text>
-                    <TextInput
-                      aria-label="Private invitation link"
-                      value={invitationLink}
-                      readOnly
-                      data-private="true"
-                      onFocus={(event) => event.currentTarget.select()}
-                    />
-                    <CopyButton value={invitationLink}>
-                      {({ copied, copy }) => (
-                        <Button
-                          size="sm"
-                          variant="light"
-                          leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                          onClick={copy}
-                        >
-                          {copied ? "Copied" : "Copy invitation"}
-                        </Button>
-                      )}
-                    </CopyButton>
-                  </Stack>
-                </Alert>
               )}
-              {accounts.invitations.length > 0 && (
-                <Stack gap="xs">
-                  <Text size="sm" fw={600}>
-                    Pending invitations
-                  </Text>
-                  {accounts.invitations.map((invitation) => (
-                    <Group key={invitation.id} justify="space-between">
-                      <Text size="sm" c="dimmed">
-                        Expires {new Date(invitation.expirationDate).toLocaleString()}
+            </CopyButton>
+          </Group>
+          {!accounts.members.length && (
+            <Text size="sm" c="dimmed" py="md">
+              No users yet. Invite someone or create their account.
+            </Text>
+          )}
+          {accounts.members.length > 0 && (
+            <Table.ScrollContainer minWidth={360}>
+              <Table verticalSpacing="sm" highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Username</Table.Th>
+                    <Table.Th>Sessions</Table.Th>
+                    <Table.Th w={48}>
+                      <Text size="xs" span>
+                        Actions
                       </Text>
-                      <Button
-                        size="xs"
-                        variant="subtle"
-                        color="red"
-                        disabled={busy}
-                        onClick={() =>
-                          setConfirmation({
-                            path: `/invitations/${encodeURIComponent(invitation.id)}`,
-                            method: "DELETE",
-                            title: "Revoke invitation?",
-                            description: "Anyone with this invitation link will no longer be able to join.",
-                            action: "Revoke invitation",
-                          })
-                        }
-                      >
-                        Revoke
-                      </Button>
-                    </Group>
-                  ))}
-                </Stack>
-              )}
-            </Stack>
-          </Paper>
-          <Paper withBorder p="md" radius="md">
-            <Stack>
-              <Group justify="space-between">
-                <Title order={4}>Local users</Title>
-                <Button
-                  disabled={busy}
-                  loading={openingPath === "/manage/users"}
-                  onClick={() => void openManagement("/manage/users")}
-                  size="xs"
-                  variant="subtle"
-                >
-                  Manage Homarr users
-                </Button>
-              </Group>
-              {!accounts.members.length && (
-                <Text size="sm" c="dimmed">
-                  No users yet. Create an invitation to welcome someone.
-                </Text>
-              )}
-              {accounts.members.map((member) => {
-                const memberName = member.name || "Unnamed user";
-                return (
-                  <Paper key={member.id} withBorder p="sm" radius="sm">
-                    <Group justify="space-between" align="flex-start">
-                      <Stack gap={6} style={{ minWidth: 0 }}>
-                        <Text fw={500} style={{ overflowWrap: "anywhere" }}>
-                          {memberName}
+                    </Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {accounts.members.map((member) => {
+                    const memberName = member.name || "Unnamed user";
+                    return (
+                      <Table.Tr key={member.id}>
+                        <Table.Td>
+                          <Text size="sm" fw={500} style={{ overflowWrap: "anywhere" }}>
+                            {memberName}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="sm" c="dimmed" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            {member.sessions}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Menu position="bottom-end" withinPortal>
+                            <Menu.Target>
+                              <ActionIcon
+                                variant="subtle"
+                                color="gray"
+                                aria-label={`Actions for ${memberName}`}
+                                disabled={busy}
+                              >
+                                <IconDots size={18} />
+                              </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                              <Menu.Item
+                                onClick={() =>
+                                  void openManagement(`/manage/users/${encodeURIComponent(member.id)}/general`)
+                                }
+                              >
+                                User settings
+                              </Menu.Item>
+                              {member.provider === "credentials" && (
+                                <Menu.Item
+                                  onClick={() =>
+                                    void openManagement(`/manage/users/${encodeURIComponent(member.id)}/security`)
+                                  }
+                                >
+                                  Change password
+                                </Menu.Item>
+                              )}
+                              <Menu.Item
+                                disabled={!member.sessions}
+                                onClick={() =>
+                                  setConfirmation({
+                                    path: `/sessions/${encodeURIComponent(member.id)}`,
+                                    method: "POST",
+                                    title: `Sign out ${memberName}?`,
+                                    description:
+                                      "Their active worker sessions will end. They can sign in again with their username and password.",
+                                    action: "Sign out sessions",
+                                  })
+                                }
+                              >
+                                Sign out sessions
+                              </Menu.Item>
+                              <Menu.Divider />
+                              <Menu.Item
+                                color="red"
+                                onClick={() =>
+                                  setConfirmation({
+                                    path: `/members/${encodeURIComponent(member.id)}`,
+                                    method: "DELETE",
+                                    title: `Remove ${memberName}?`,
+                                    description:
+                                      "This removes their organization access and ends their worker sessions. Their Homarr user account is kept.",
+                                    action: "Remove user",
+                                  })
+                                }
+                              >
+                                Remove from organization
+                              </Menu.Item>
+                            </Menu.Dropdown>
+                          </Menu>
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })}
+                </Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
+          )}
+          {accounts.invitations.length > 0 && (
+            <Accordion variant="default">
+              <Accordion.Item value="invitations">
+                <Accordion.Control>Pending invitations ({accounts.invitations.length})</Accordion.Control>
+                <Accordion.Panel>
+                  <Stack gap="xs">
+                    {accounts.invitations.map((invitation) => (
+                      <Group key={invitation.id} justify="space-between" gap="xs" wrap="wrap">
+                        <Text size="sm" c="dimmed">
+                          Expires {new Date(invitation.expirationDate).toLocaleString()}
                         </Text>
-                        <Badge size="sm" variant="light" color="gray">
-                          {member.sessions} active sessions
-                        </Badge>
-                      </Stack>
-                      <Group gap="xs">
-                        <Button
-                          size="xs"
-                          variant="default"
-                          disabled={busy || !member.sessions}
-                          onClick={() =>
-                            setConfirmation({
-                              path: `/sessions/${encodeURIComponent(member.id)}`,
-                              method: "POST",
-                              title: `Sign out ${memberName}?`,
-                              description:
-                                "Their current worker sessions will end. They can sign in again with their username and password.",
-                              action: "Sign out sessions",
-                            })
-                          }
-                        >
-                          Sign out sessions
-                        </Button>
                         <Button
                           size="xs"
                           color="red"
@@ -461,111 +496,201 @@ export function WorkerLocalAccounts({ worker, connection }: { worker: SavedWorke
                           disabled={busy}
                           onClick={() =>
                             setConfirmation({
-                              path: `/members/${encodeURIComponent(member.id)}`,
+                              path: `/invitations/${encodeURIComponent(invitation.id)}`,
                               method: "DELETE",
-                              title: `Remove ${memberName}?`,
-                              description:
-                                "This removes their organization membership and ends their worker sessions. Their Homarr user remains available in Users.",
-                              action: "Remove user",
+                              title: "Revoke invitation?",
+                              description: "Anyone with this invitation link will no longer be able to join.",
+                              action: "Revoke invitation",
                             })
                           }
                         >
-                          Remove
+                          Revoke
                         </Button>
                       </Group>
-                    </Group>
-                  </Paper>
-                );
-              })}
-              <Accordion variant="separated">
-                <Accordion.Item value="create-account">
-                  <Accordion.Control>Create a user</Accordion.Control>
-                  <Accordion.Panel>
-                    <form
-                      onSubmit={(event) => {
-                        event.preventDefault();
+                    ))}
+                  </Stack>
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
+          )}
+          <Button
+            variant="subtle"
+            size="xs"
+            disabled={busy}
+            onClick={() => void openManagement("/manage/users")}
+            style={{ alignSelf: "flex-start" }}
+          >
+            Manage all Homarr users
+          </Button>
+        </>
+      )}
+      <Modal
+        opened={dialog !== null}
+        onClose={closeDialog}
+        title={dialogTitle}
+        centered
+        closeOnEscape={!busy}
+        closeOnClickOutside={!busy}
+        withCloseButton={!busy}
+      >
+        <Stack gap="sm">
+          {error && (
+            <Alert color="red" role="alert">
+              {error}
+            </Alert>
+          )}
+          {dialog === "invite" && (
+            <>
+              {!invitationLink && (
+                <>
+                  <Text size="sm" c="dimmed">
+                    One person can use this private link to choose their username and password. It expires in 24 hours.
+                  </Text>
+                  <Group justify="flex-end">
+                    <Button variant="default" disabled={busy} onClick={closeDialog}>
+                      Cancel
+                    </Button>
+                    <Button
+                      loading={busy}
+                      onClick={() =>
                         void perform(async () => {
-                          await mutate("/members", "POST", { username, password });
-                          setUsername("");
-                          setPassword("");
-                        }, "User created. Share their username, password, and sign-in link privately.");
-                      }}
+                          const { invitation } = await workerRequest<{ invitation: { id: string; token: string } }>(
+                            connection,
+                            "/remote/local-accounts/invitations",
+                            { method: "POST" },
+                          );
+                          if (isCurrent()) setInvitationLink(accountLink(worker, invitation));
+                        })
+                      }
                     >
-                      <Stack>
-                        <Text size="sm" c="dimmed">
-                          An invitation lets users choose their own password. You can also create a user here and share
-                          its details privately.
-                        </Text>
-                        <TextInput
-                          label="Username"
-                          value={username}
-                          onChange={(event) => setUsername(event.currentTarget.value)}
-                          autoComplete="off"
-                          required
-                          minLength={3}
-                          maxLength={255}
-                          disabled={busy}
-                        />
-                        <PasswordInput
-                          label="Password"
-                          description="Use at least 8 characters."
-                          value={password}
-                          onChange={(event) => setPassword(event.currentTarget.value)}
-                          autoComplete="new-password"
-                          required
-                          minLength={8}
-                          maxLength={72}
-                          disabled={busy}
-                        />
-                        <Group>
-                          <Button type="submit" variant="default" loading={busy}>
-                            Create user
-                          </Button>
-                        </Group>
-                      </Stack>
-                    </form>
-                  </Accordion.Panel>
-                </Accordion.Item>
-              </Accordion>
-            </Stack>
-          </Paper>
-          {confirmation && (
-            <Modal
-              opened
-              onClose={() => {
-                if (!busy) setConfirmation(null);
+                      Create invitation
+                    </Button>
+                  </Group>
+                </>
+              )}
+              {invitationLink && (
+                <>
+                  <Text size="sm" c="dimmed">
+                    Share this link privately. Copy it before closing.
+                  </Text>
+                  <TextInput
+                    label="Invitation link"
+                    value={invitationLink}
+                    readOnly
+                    data-private="true"
+                    onFocus={(event) => event.currentTarget.select()}
+                  />
+                  <Group justify="flex-end">
+                    <Button variant="default" onClick={closeDialog}>
+                      Done
+                    </Button>
+                    <CopyButton value={invitationLink}>
+                      {({ copied, copy }) => (
+                        <Button onClick={copy} leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />}>
+                          {copied ? "Copied" : "Copy invitation"}
+                        </Button>
+                      )}
+                    </CopyButton>
+                  </Group>
+                </>
+              )}
+            </>
+          )}
+          {dialog === "create" && (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void (async () => {
+                  const created = await perform(
+                    () => mutate("/members", "POST", { username, password }),
+                    "User created. Share their sign-in link, username, and password privately.",
+                  );
+                  if (created && isCurrent()) {
+                    setPassword("");
+                    setDialog(null);
+                  }
+                })();
               }}
-              title={confirmation.title}
-              centered
-              closeOnEscape={!busy}
-              closeOnClickOutside={!busy}
             >
               <Stack gap="sm">
-                <Text size="sm">{confirmation.description}</Text>
-                {error && (
-                  <Alert color="red" role="alert">
-                    {error}
-                  </Alert>
-                )}
-                <Group>
-                  <Button
-                    color="red"
-                    size="sm"
-                    loading={busy}
-                    onClick={() =>
-                      void perform(() => mutate(confirmation.path, confirmation.method), "Access updated.")
-                    }
-                  >
-                    {confirmation.action}
-                  </Button>
-                  <Button variant="default" size="sm" disabled={busy} onClick={() => setConfirmation(null)}>
+                <TextInput
+                  label="Username"
+                  value={username}
+                  onChange={(event) => setUsername(event.currentTarget.value)}
+                  autoComplete="off"
+                  required
+                  minLength={3}
+                  maxLength={255}
+                  disabled={busy}
+                  data-autofocus
+                />
+                <PasswordInput
+                  label="Password"
+                  description="Use 8–72 characters."
+                  value={password}
+                  onChange={(event) => setPassword(event.currentTarget.value)}
+                  autoComplete="new-password"
+                  required
+                  minLength={8}
+                  maxLength={72}
+                  disabled={busy}
+                />
+                <Group justify="flex-end">
+                  <Button variant="default" disabled={busy} onClick={closeDialog}>
                     Cancel
+                  </Button>
+                  <Button type="submit" loading={busy}>
+                    Create user
                   </Button>
                 </Group>
               </Stack>
-            </Modal>
+            </form>
           )}
-        </>
+        </Stack>
+      </Modal>
+      {confirmation && (
+        <Modal
+          opened
+          onClose={() => {
+            if (!busy) {
+              setConfirmation(null);
+              setError("");
+            }
+          }}
+          title={confirmation.title}
+          centered
+          closeOnEscape={!busy}
+          closeOnClickOutside={!busy}
+          withCloseButton={!busy}
+        >
+          <Stack gap="sm">
+            <Text size="sm">{confirmation.description}</Text>
+            {error && (
+              <Alert color="red" role="alert">
+                {error}
+              </Alert>
+            )}
+            <Group justify="flex-end">
+              <Button
+                variant="default"
+                disabled={busy}
+                onClick={() => {
+                  setConfirmation(null);
+                  setError("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="red"
+                loading={busy}
+                onClick={() => void perform(() => mutate(confirmation.path, confirmation.method), "Access updated.")}
+              >
+                {confirmation.action}
+              </Button>
+            </Group>
+          </Stack>
+        </Modal>
       )}
     </Stack>
   );

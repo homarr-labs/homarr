@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Anchor, Button, Code, Divider, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
-import { getTrpcUrl } from "@homarr/api/shared";
+import { getRpcUrl } from "@homarr/api/shared";
 import type { McpConsentResult } from "@homarr/api/http/mcp/oauth/_grant";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getIntlLocale } from "@homarr/translation";
@@ -25,7 +25,7 @@ export default async function McpConsentPage({ params, searchParams }: McpConsen
   }
 
   const [session, requestHeaders] = await Promise.all([auth(), headers()]);
-  const backendUrl = new URL("/api/mcp/oauth/consent", getTrpcUrl());
+  const backendUrl = new URL("/api/mcp/oauth/consent", getRpcUrl());
   backendUrl.searchParams.set("pending", query.pending);
   const response = await fetch(backendUrl, {
     headers: { cookie: requestHeaders.get("cookie") ?? "" },

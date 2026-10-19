@@ -17,7 +17,9 @@
     "./server": "./server.ts",
     "./shared": "./shared.ts",
     "./env": "./env.ts",
-    "./request-session": "./request-session.ts"
+    "./request-session": "./request-session.ts",
+    "./credential-lifecycle": "./credential-lifecycle.ts",
+    "./session-cleanup": "./session-cleanup.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

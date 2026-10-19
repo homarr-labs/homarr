@@ -19,7 +19,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconBook, IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 
 import { clientApi } from "@homarr/api/client";
 import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";

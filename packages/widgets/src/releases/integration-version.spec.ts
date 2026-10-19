@@ -100,10 +100,7 @@ describe("getFailedServiceVersionIntegrations", () => {
 
   test("ignores permission errors", () => {
     expect(
-      getFailedServiceVersionIntegrations(
-        { data: undefined, error: { data: { code: "FORBIDDEN" } } },
-        "Running Versions",
-      ),
+      getFailedServiceVersionIntegrations({ data: undefined, error: { code: "FORBIDDEN" } }, "Running Versions"),
     ).toEqual([]);
   });
 });

@@ -1,18 +1,17 @@
+import type { createCronJobRuntime } from "@homarr/cron-jobs/runtime";
+
 let initialize: Promise<void> | undefined;
-let stop = () => {};
+let runtime: ReturnType<typeof createCronJobRuntime> | undefined;
+let stopped = false;
 
 /** Load operational jobs only when an authenticated client starts using domain APIs. */
 export function initializeWorkerServices() {
+  if (stopped) return Promise.resolve();
   initialize ??= (async () => {
-    const { jobGroup } = await import("@homarr/cron-jobs");
-    await jobGroup.initializeAsync();
-    stop = () => jobGroup.stopAll();
-    // Optional network-backed startup work must not hold the worker API hostage.
-    for (const key of jobGroup.getKeys()) {
-      // Hosted UI assets and telemetry are optional for a private service worker.
-      if ((key === "analytics" || key === "iconsUpdater") && process.env.WORKER_RUN_OPTIONAL_JOBS !== "true") continue;
-      void jobGroup.startAsync(key).catch(() => console.error("Worker scheduled job failed to start", key));
-    }
+    const { createCronJobRuntime } = await import("@homarr/cron-jobs/runtime");
+    if (stopped) return;
+    runtime ??= createCronJobRuntime();
+    await runtime.startWorkerAsync({ runOptionalJobs: process.env.WORKER_RUN_OPTIONAL_JOBS === "true" });
   })().catch((error: unknown) => {
     initialize = undefined;
     throw error;
@@ -21,5 +20,6 @@ export function initializeWorkerServices() {
 }
 
 export function stopWorkerServices() {
-  stop();
+  stopped = true;
+  runtime?.stop();
 }

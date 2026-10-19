@@ -38,7 +38,7 @@ export const BoardAppsSpotlightRegistrar = () => {
   }, [board.items]);
   const appIds = useMemo(() => Array.from(openInNewTabByAppId.keys()), [openInNewTabByAppId]);
   const activeAppIds = isSpotlightActivated ? appIds : [];
-  const appQueries = clientApi.useQueries((trpc) => activeAppIds.map((id) => trpc.app.byId({ id })));
+  const appQueries = clientApi.useQueries((rpc) => activeAppIds.map((id) => rpc.app.byId({ id })));
   const apps = appQueries.flatMap((query) => query.data ?? []);
   const spotlightItems = useMemo<ContextSpecificItem[]>(() => {
     return apps.flatMap((app) => {

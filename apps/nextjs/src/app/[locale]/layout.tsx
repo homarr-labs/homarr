@@ -45,7 +45,7 @@ import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
 import { AuthProvider } from "./_client-providers/session";
-import { TRPCReactProvider } from "./_client-providers/trpc";
+import { RPCReactProvider } from "./_client-providers/rpc";
 import { composeWrappers } from "./compose";
 
 const fontSans = Inter({
@@ -178,7 +178,7 @@ export default async function Layout(props: {
       />
     ),
     (innerProps) => <JotaiProvider {...innerProps} />,
-    (innerProps) => <TRPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
+    (innerProps) => <RPCReactProvider demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} />,
     (innerProps) => (

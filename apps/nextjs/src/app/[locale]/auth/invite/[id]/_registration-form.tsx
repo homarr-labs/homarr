@@ -47,9 +47,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
         },
         onError(error) {
           const message =
-            error.data?.code === "CONFLICT"
-              ? t("error.usernameTaken")
-              : t("action.register.notification.error.message");
+            error.code === "CONFLICT" ? t("error.usernameTaken") : t("action.register.notification.error.message");
 
           showErrorNotification({
             title: t("action.register.notification.error.title"),

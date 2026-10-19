@@ -51,7 +51,7 @@ const ScalarApiReference = dynamic(() =>
 );
 
 export function WorkerApp({ platformPath }: { platformPath: string }) {
-  const [pool] = useState(() => new WorkerConnectionPool());
+  const [pool] = useState(() => new WorkerConnectionPool({ singleWorker: true }));
   const router = useRouter();
   const requestedWorkersTab = useSearchParams().get("workers");
   const [initialLink, setInitialLink] = useState("");
@@ -75,13 +75,18 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
     let active = true;
     configureWorkerTransport(() => pool.getConnection());
     try {
-      setOrganizationIdState(localStorage.getItem("homarr:worker-organization:v1"));
+      // Cloud organization selection is not part of this single-worker workspace.
+      localStorage.removeItem("homarr:worker-organization:v1");
     } catch {
       // Worker grants use their own storage validation before a connection is attempted.
     }
     const address = new URL(window.location.href);
     const requestedTab = address.searchParams.get("workers");
-    const legacyTab = requestedTab && ["workers", "account", "organizations", "sharing", "mcp"].includes(requestedTab);
+    const legacyTab =
+      requestedTab &&
+      ["workers", "account", "organizations", "overview", "users", "sharing", "connection", "mcp"].includes(
+        requestedTab,
+      );
     const fragment = new URLSearchParams(window.location.hash.slice(1));
     const incomingWorkerId = fragment.get("worker");
     const hasSetupLink = Boolean(incomingWorkerId);
@@ -100,8 +105,7 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
       .then(async () => {
         if (!active) return;
         const primary = pool.getSnapshot().primaryWorkerId;
-        // A second worker's invitation must not strand the saved primary offline.
-        // Same-worker setup retains its explicit confirmation/recovery path.
+        // Keep the current worker available while a replacement invitation is reviewed.
         if (primary && primary !== incomingWorkerId) await pool.restore(primary);
       })
       .catch(() => {
@@ -116,7 +120,9 @@ export function WorkerApp({ platformPath }: { platformPath: string }) {
   useEffect(() => {
     if (
       !requestedWorkersTab ||
-      !["workers", "account", "organizations", "sharing", "mcp"].includes(requestedWorkersTab)
+      !["workers", "account", "organizations", "overview", "users", "sharing", "connection", "mcp"].includes(
+        requestedWorkersTab,
+      )
     )
       return;
     router.replace(`/manage/workers?tab=${encodeURIComponent(requestedWorkersTab)}`);
@@ -172,7 +178,7 @@ function WorkerWorkspace() {
       <Stack align="center" maw={560}>
         <Title order={1}>Homarr</Title>
         <Text c="dimmed" ta="center">
-          Your boards live on your workers. Connect one to open Homarr, then add more workers for your other services.
+          Connect your worker to open your boards, integrations and widgets.
         </Text>
         {pending && <Loader aria-label="Opening worker" />}
         {error && (
@@ -185,7 +191,7 @@ function WorkerWorkspace() {
             {primary.error}
           </Alert>
         )}
-        <Button onClick={manageWorkers}>Set up your workers</Button>
+        <Button onClick={manageWorkers}>Connect your worker</Button>
       </Stack>
     </Center>
   );

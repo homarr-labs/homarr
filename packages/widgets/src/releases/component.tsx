@@ -28,7 +28,7 @@ import {
   IconStar,
   IconTriangleFilled,
 } from "@tabler/icons-react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -136,9 +136,9 @@ export default function ReleasesWidget({
     );
   }, [groupedRepositories]);
 
-  const queryResults = clientApi.useQueries((trpc) =>
+  const queryResults = clientApi.useQueries((rpc) =>
     batchedRepositories.flatMap(({ provider, repositories }) =>
-      trpc.widget.releases.getLatest(
+      rpc.widget.releases.getLatest(
         {
           itemId,
           repositories: repositories.map((repository) => ({

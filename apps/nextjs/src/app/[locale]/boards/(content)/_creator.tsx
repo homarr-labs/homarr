@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { TRPCClientError } from "@trpc/client";
+import { ORPCError } from "@orpc/client";
 
 import type { QueryClient } from "@tanstack/react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -80,7 +80,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       void integrationsPromise.catch(() => undefined);
 
       const board = await boardPromise.catch(async (error: unknown) => {
-        if (error instanceof TRPCClientError && error.data?.code === "NOT_FOUND") {
+        if (error instanceof ORPCError && error.code === "NOT_FOUND") {
           const session = await sessionPromise;
           if (!session) {
             const requestedBoardName =
@@ -93,7 +93,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
           notFound();
         }
 
-        if (error instanceof TRPCClientError && error.data?.code === "BAD_REQUEST") {
+        if (error instanceof ORPCError && error.code === "BAD_REQUEST") {
           notFound();
         }
 
@@ -156,7 +156,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         };
       } catch (error) {
         // Ignore not found and bad-request errors and return empty metadata
-        if (error instanceof TRPCClientError && (error.data?.code === "NOT_FOUND" || error.data?.code === "BAD_REQUEST")) {
+        if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
           return {};
         }
 

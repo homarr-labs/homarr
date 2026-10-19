@@ -61,6 +61,7 @@ const renderMessages = ({
   focusTimestamp,
   markerText,
   expiredMarkerText,
+  isActive,
 }: {
   terminal: Terminal;
   messages: LoggerMessage[];
@@ -68,6 +69,7 @@ const renderMessages = ({
   focusTimestamp: number | undefined;
   markerText: string;
   expiredMarkerText: string;
+  isActive: () => boolean;
 }) => {
   const activeLevelSet = new Set(activeLevels);
   const visibleMessages = messages.filter((message) => activeLevelSet.has(message.level));
@@ -95,6 +97,7 @@ const renderMessages = ({
   }
 
   terminal.write(`\x1bc${output.join("\r\n")}${output.length > 0 ? "\r\n" : ""}`, () => {
+    if (!isActive()) return;
     if (markerLinesFromEnd === null) {
       terminal.scrollToBottom();
       return;
@@ -141,6 +144,7 @@ export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) =>
       focusTimestamp: focusTimestampRef.current,
       markerText: markerTextRef.current,
       expiredMarkerText: expiredMarkerTextRef.current,
+      isActive: () => terminalRef.current === terminal,
     });
   };
 
@@ -198,10 +202,11 @@ export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) =>
 
     return () => {
       window.clearTimeout(fitTimeout);
-      canvasAddon.dispose();
-      terminalRef.current?.dispose();
+      const terminal = terminalRef.current;
       terminalRef.current = null;
       fitAddonRef.current = null;
+      canvasAddon.dispose();
+      terminal?.dispose();
     };
   }, []);
 

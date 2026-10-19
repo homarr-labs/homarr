@@ -78,10 +78,10 @@ export class WorkerChannels {
         const input = credential as AccessCredential;
         if (input.kind === "local-login" || input.kind === "local-register") {
           const { authenticateLocalAccount } = await import("./local-accounts");
-          const { userId, passwordHash } = await authenticateLocalAccount(this.state, input);
-          authorization = await this.state.access.authenticateNativeAccount(device, userId);
+          const verifiedCredential = await authenticateLocalAccount(this.state, input);
+          authorization = await this.state.access.authenticateNativeAccount(device, verifiedCredential.userId);
           const { recordLocalSession } = await import("./local-accounts");
-          await recordLocalSession(authorization, passwordHash);
+          await recordLocalSession(authorization, verifiedCredential);
         } else authorization = await this.state.access.authenticateEnvelope(device, input);
         await this.assertAuthorization(authorization);
         if ((credential as AccessCredential).kind === "claim") await writePairingFile(this.state);

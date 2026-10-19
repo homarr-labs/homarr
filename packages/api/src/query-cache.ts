@@ -2,13 +2,13 @@ import type { QueryKey } from "@tanstack/react-query";
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
-interface ForbiddenTrpcError {
-  data: { code: "FORBIDDEN" };
+interface ForbiddenRpcError {
+  code: "FORBIDDEN";
 }
 
-export const isTrpcForbiddenError = (error: unknown): error is ForbiddenTrpcError => {
-  if (!isRecord(error) || !isRecord(error.data)) return false;
-  return error.data.code === "FORBIDDEN";
+export const isRpcForbiddenError = (error: unknown): error is ForbiddenRpcError => {
+  if (!isRecord(error)) return false;
+  return error.code === "FORBIDDEN";
 };
 
 // RSC-prefetched data must survive the hydration pass without an immediate
@@ -22,7 +22,7 @@ const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContai
 // Beszel system stats come from a live subscription rather than ordinary query recovery.
 const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
 
-export const isWidgetDataTrpcPath = (path: string) => {
+export const isWidgetDataRpcPath = (path: string) => {
   if (path.startsWith("widget.")) return !excludedWidgetPaths.has(path);
   return widgetDataQueryPaths.has(path);
 };
@@ -62,7 +62,7 @@ export const dashboardSupportingQueryPolicies = [
   },
 ] as const;
 
-const getTrpcPathFromQueryKey = (queryKey: QueryKey) => {
+const getRpcPathFromQueryKey = (queryKey: QueryKey) => {
   const first = queryKey[0];
   if (!Array.isArray(first)) return null;
 
@@ -71,8 +71,8 @@ const getTrpcPathFromQueryKey = (queryKey: QueryKey) => {
 };
 
 export const isWidgetDataQueryKey = (queryKey: QueryKey) => {
-  const path = getTrpcPathFromQueryKey(queryKey);
+  const path = getRpcPathFromQueryKey(queryKey);
   if (!path) return false;
 
-  return isWidgetDataTrpcPath(path.join("."));
+  return isWidgetDataRpcPath(path.join("."));
 };

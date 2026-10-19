@@ -3,7 +3,7 @@ import type { JSX, PropsWithChildren } from "react";
 import { cookies, headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
-import { TRPCClientError } from "@trpc/client";
+import { ORPCError } from "@orpc/client";
 
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
@@ -79,7 +79,7 @@ export const createBoardLayout = <TParams extends Params>({
     ]);
     if (initialBoardResult.status === "rejected") {
       const { error } = initialBoardResult;
-      if (error instanceof TRPCClientError && error.data?.code === "NOT_FOUND") {
+      if (error instanceof ORPCError && error.code === "NOT_FOUND") {
         if (!session) {
           logger.debug("No home board found for anonymous user, redirecting to login");
           redirect("/auth/login");
@@ -89,7 +89,7 @@ export const createBoardLayout = <TParams extends Params>({
         notFound();
       }
 
-      if (error instanceof TRPCClientError && error.data?.code === "BAD_REQUEST") {
+      if (error instanceof ORPCError && error.code === "BAD_REQUEST") {
         notFound();
       }
 

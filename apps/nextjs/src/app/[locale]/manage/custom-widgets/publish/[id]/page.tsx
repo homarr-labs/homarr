@@ -4,7 +4,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { createLoginUrl } from "@homarr/auth/shared";
 
-import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
+import { catchRpcNotFound } from "~/errors/rpc-catch-error";
 import { WorkshopPublishForm } from "./_workshop-publish-form";
 
 interface WorkshopPublishPageProps {
@@ -15,7 +15,7 @@ export default async function WorkshopPublishPage(props: WorkshopPublishPageProp
   const [session, { id }] = await Promise.all([auth(), props.params]);
   if (!session) redirect(createLoginUrl(`/manage/custom-widgets/publish/${id}`));
   if (!session.user.permissions.includes("admin")) redirect("/");
-  const definition = await api.customWidget.get.query({ id }).catch(catchTrpcNotFound);
+  const definition = await api.customWidget.get.query({ id }).catch(catchRpcNotFound);
 
   return <WorkshopPublishForm widget={{ id, name: definition.name }} />;
 }

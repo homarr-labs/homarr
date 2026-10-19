@@ -47,7 +47,7 @@ export default function CustomApiWidget({
   if (isEditMode && !itemId) return <Unavailable message={t("editModePending")} />;
   if (query.isLoading) return <WidgetQueryLoadingState />;
   if (query.error) {
-    const errorCode = query.error.data?.code;
+    const errorCode = query.error.code;
     const migrationRequired = isLegacyCustomWidgetMigrationError(query.error);
     if (isEditMode && errorCode === "NOT_FOUND") {
       return <Unavailable message={t("editModePending")} />;

@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef } from "react";
 import { ActionIcon, Box, Button, Center, Group, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconAdjustments, IconCheck, IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";

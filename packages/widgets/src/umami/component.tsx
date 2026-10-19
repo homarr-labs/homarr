@@ -1,7 +1,7 @@
 "use client";
 
 import { Stack, Text } from "@mantine/core";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";

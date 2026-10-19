@@ -2,13 +2,14 @@ import { ApiError } from "../procedure";
 import { z } from "zod/v4";
 
 import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
+import { CredentialLifecycleError, enrollCredentialUserAsync } from "@homarr/auth/credential-lifecycle";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { groupMembers, groupPermissions, groups, invites, onboarding, sessions, users } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, onboarding, sessions, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
@@ -132,64 +133,20 @@ export const userRouter = createApiRouter({
     .output(z.void())
     .mutation(async ({ context, input }) => {
       throwIfCredentialsDisabled();
-      const inviteWhere = and(eq(invites.id, input.inviteId), eq(invites.token, input.token));
-      const dbInvite = await context.db.query.invites.findFirst({
-        columns: {
-          id: true,
-          expirationDate: true,
-        },
-        where: inviteWhere,
-      });
-
-      if (!dbInvite || dbInvite.expirationDate < new Date()) {
-        throw new ApiError({
-          code: "FORBIDDEN",
-          message: "Invalid invite",
+      try {
+        await enrollCredentialUserAsync(context.db, {
+          username: input.username,
+          password: input.password,
+          invitation: { id: input.inviteId, token: input.token },
         });
+      } catch (error) {
+        if (error instanceof CredentialLifecycleError) {
+          if (error.code === "USERNAME_TAKEN")
+            throw new ApiError({ code: "CONFLICT", message: "Username already taken" });
+          throw new ApiError({ code: "FORBIDDEN", message: "Invalid invite" });
+        }
+        throw error;
       }
-
-      await checkUsernameAlreadyTakenAndThrowAsync(context.db, "credentials", input.username);
-
-      const hashedPassword = await hashPasswordAsync(input.password);
-
-      const userId = createId();
-      const user = {
-        id: userId,
-        name: input.username,
-        password: hashedPassword,
-      };
-
-      await handleTransactionsAsync(context.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (trx) => {
-            await trx.insert(schema.users).values(user);
-
-            // Delete invite as it's used
-            const queryResult = await trx.delete(schema.invites).where(inviteWhere);
-            const count = queryResult.rowCount ?? 0;
-            if (count === 0) {
-              throw new ApiError({
-                code: "FORBIDDEN",
-                message: "Invalid invite",
-              });
-            }
-          });
-        },
-        handleSync(db) {
-          db.transaction((trx) => {
-            trx.insert(users).values(user).run();
-            // Delete invite as it's used
-            const result = trx.delete(invites).where(inviteWhere).run();
-
-            if (result.changes === 0) {
-              throw new ApiError({
-                code: "FORBIDDEN",
-                message: "Invalid invite",
-              });
-            }
-          });
-        },
-      });
     }),
   create: permissionRequiredProcedure
     .requiresPermission("admin")

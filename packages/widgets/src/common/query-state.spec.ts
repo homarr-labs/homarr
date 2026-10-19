@@ -13,7 +13,7 @@ describe("getUsableWidgetQueryData", () => {
   });
 
   test("throws access-denied refetches instead of rendering stale cached data", () => {
-    const error = { data: { code: "FORBIDDEN" } };
+    const error = { code: "FORBIDDEN" };
     expect(() => getUsableWidgetQueryData({ data: [{ id: "revoked" }], error })).toThrow(error);
   });
 

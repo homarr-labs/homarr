@@ -1,7 +1,7 @@
 import type React from "react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { hashKey } from "@tanstack/react-query";
-import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
+import type { ORPCErrorCode } from "@orpc/client";
 
 import { isRecord } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -123,7 +123,7 @@ export interface WidgetDefinition {
   ) => WidgetOptionsRecord;
   errors?: Partial<
     Record<
-      DefaultErrorData["code"],
+      ORPCErrorCode,
       {
         icon: TablerIcon;
         message: stringOrTranslation;

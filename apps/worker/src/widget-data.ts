@@ -1,3 +1,8 @@
+import {
+  createPublishedBeszelRead,
+  publishedAlbumSelection,
+  publishedMediaPage,
+} from "@homarr/api/published-item-reads";
 import type { ORPCClient } from "@homarr/api/orpc";
 
 export interface BoardWidgetSource {
@@ -472,14 +477,14 @@ export async function getBoardWidgetData(
       case "mediaMissing":
         return ready(
           await api.widget.mediaOrganizer.getData(
-            { ...many, pageSize: number(options, "pageSize", 10, 1, 50) },
+            { ...many, pageSize: publishedMediaPage("mediaMissing", options).displaySize },
             requestOptions,
           ),
         );
       case "mediaTranscoding":
         return ready(
           await api.widget.mediaTranscoding.getDataAsync(
-            { ...one, page: 1, pageSize: number(options, "queuePageSize", 10, 1, 30) },
+            { ...one, page: 1, pageSize: publishedMediaPage("mediaTranscoding", options).displaySize },
             requestOptions,
           ),
         );
@@ -545,19 +550,11 @@ export async function getBoardWidgetData(
         const choices = results.flatMap((entry) =>
           entry.systems.map((system) => ({ integrationId: entry.integrationId, systemId: system.id })),
         );
-        const stored = text(options, "systemId");
-        let selected = choices.find((entry) => `${entry.integrationId}:${entry.systemId}` === stored);
-        if (!stored) selected = choices[0];
-        if (!selected && stored) {
-          const legacy = choices.filter((entry) => entry.systemId === stored);
-          if (legacy.length === 1) selected = legacy[0];
-        }
-        if (!selected || !integrationIds.includes(selected.integrationId))
-          return notConfigured("The selected system is not in this widget's saved integrations.");
-        const includeDocker = ["showDockerCpu", "showDockerMemory", "showDockerNetwork"].some((key) =>
-          flag(options, key),
-        );
-        const timePeriod = pick(options.timePeriod, ["1m", "1h", "12h", "24h", "1w", "30d"], "1h");
+        const read = createPublishedBeszelRead({ options, integrationIds });
+        const selected = read.selectSystem(choices);
+        if (!selected) return notConfigured("The selected system is not in this widget's saved integrations.");
+        const includeDocker = read.includeDocker;
+        const timePeriod = pick(read.timePeriod, ["1m", "1h", "12h", "24h", "1w", "30d"], "1h");
         const result = await api.widget.beszel.getSystemStats(
           { integrationIds: [selected.integrationId], systemId: selected.systemId, timePeriod, includeDocker },
           requestOptions,
@@ -568,9 +565,9 @@ export async function getBoardWidgetData(
       case "immich-serverStats":
         return ready(await api.widget.immich.getServerStats(one, requestOptions));
       case "immich-albumCarousel": {
-        const stored = text(options, "albumId", "all");
+        const savedAlbum = publishedAlbumSelection(options);
         let albumId: string | undefined;
-        if (stored && stored !== "all") albumId = stored;
+        if (typeof savedAlbum === "string") albumId = savedAlbum.slice(0, 8_192);
         return ready(await api.widget.immich.getAlbum({ ...one, albumId }, requestOptions));
       }
       case "healthMonitoring":

@@ -100,3 +100,9 @@
 - Local organizations reuse native groups/users/Everyone defaults/password hashes/sessions, with one-use invitation registration and returning password login over encryption. The focused security flow passes 30 assertions. Review findings for default membership and secondary-worker navigation were fixed and re-reviewed.
 - Browser weather is explicitly enabled in the sample deployment, with worker authorization before fixed public Open-Meteo requests. Source browser checks prove actual native current weather and forecasts, fresh-browser user signup/login, native user visibility and a 360px layout.
 - Final worker and frontend builds were deployed with existing volumes. Six services remain healthy; the existing 8443 demo remains untouched. Source QA services were stopped and task-only owner invitations revoked. Final container acceptance is recorded in `followup.md`.
+
+### Single-worker architecture follow-up — 19 October 2026
+
+Current scope and evidence: `architecture-followup.md`. The latest user decision supersedes earlier multiple-worker plans: one main worker, compact Users/Sharing management, full frontend tRPC removal, and real PostgreSQL validation. Parallel implementation and final integration are in progress.
+
+- Final source/container acceptance is recorded in `architecture-followup.md`. Single-worker UI, native frontend RPC, shared backend modules, PostgreSQL and Logs fixes are implemented and deployed. Public-link browser QA awaits specific approval; backend sharing/revocation coverage passed.

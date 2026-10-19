@@ -74,7 +74,7 @@ const accessLevel: Record<ServiceAccess, number> = { query: 0, interact: 1, full
 export function WorkerMcp({ worker, connection }: { worker: SavedWorker; connection: WorkerConnection }) {
   const { session, request } = usePlatformAccount();
   const { organizationId } = useWorkerWorkspace();
-  const api = useMemo(() => clientApi.createClient({ links: [createWorkerLink(connection)] }), [connection]);
+  const api = useMemo(() => clientApi.createClient({ link: createWorkerLink(connection) }), [connection]);
   const [tools, setTools] = useState<CatalogTool[]>([]);
   const [toolAccess, setToolAccess] = useState<Record<string, ServiceAccess>>({});
   const [integrations, setIntegrations] = useState<IntegrationOption[]>([]);
@@ -309,8 +309,7 @@ export function WorkerMcp({ worker, connection }: { worker: SavedWorker; connect
   }
 
   if (!isOwner) return <Alert>Only a worker owner can approve hosted MCP access.</Alert>;
-  if (!session.user)
-    return <Alert>Sign in with your Homarr account in the Account tab before approving hosted MCP access.</Alert>;
+  if (!session.user) return <Alert>Sign in to your Homarr cloud account above to approve hosted MCP access.</Alert>;
 
   const searchValue = search.toLocaleLowerCase().trim();
   const visibleTools = tools.filter(

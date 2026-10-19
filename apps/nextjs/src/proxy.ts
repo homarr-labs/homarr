@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { createTRPCClient, httpLink } from "@trpc/client";
-import SuperJSON from "superjson";
+import { createORPCClient } from "@orpc/client";
+import { RPCLink } from "@orpc/client/fetch";
 
-import type { AppRouter } from "@homarr/api/legacy";
-import { getTrpcUrl } from "@homarr/api/shared";
+import type { ORPCClient } from "@homarr/api/orpc";
+import { getRpcUrl } from "@homarr/api/shared";
 import { localeCookieKey } from "@homarr/definitions/cookie";
 import type { SupportedLanguage } from "@homarr/translation/languages";
 import { supportedLanguages } from "@homarr/translation/languages";
@@ -13,15 +13,15 @@ import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 import { isWorkerFrontend } from "./worker/mode";
 
-const backend = createTRPCClient<AppRouter>({
-  links: [httpLink({ url: getTrpcUrl(), transformer: SuperJSON, headers: { "x-trpc-source": "next-proxy" } })],
-});
+const backend: ORPCClient = createORPCClient(
+  new RPCLink({ url: "/rpc", origin: new URL(getRpcUrl()).origin, headers: { "x-trpc-source": "next-proxy" } }),
+);
 
 let isOnboardingFinished = false;
-let routingPromise: ReturnType<typeof backend.frontend.routing.query> | null = null;
+let routingPromise: ReturnType<typeof backend.frontend.routing> | null = null;
 
 const getRoutingDedupedAsync = () => {
-  routingPromise ??= backend.frontend.routing.query().finally(() => {
+  routingPromise ??= backend.frontend.routing().finally(() => {
     routingPromise = null;
   });
   return routingPromise;
@@ -31,7 +31,7 @@ export async function proxy(request: NextRequest) {
   if (isWorkerFrontend()) return proxyWorkerFrontend(request);
   if (/^\/(api|rpc)(\/|$)/.test(request.nextUrl.pathname)) return NextResponse.next();
   if (request.nextUrl.pathname.includes(".")) return NextResponse.next();
-  let requestRouting: ReturnType<typeof backend.frontend.routing.query> | undefined;
+  let requestRouting: ReturnType<typeof backend.frontend.routing> | undefined;
   const getRequestRoutingAsync = () => {
     requestRouting ??= getRoutingDedupedAsync();
     return requestRouting;

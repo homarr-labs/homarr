@@ -3,13 +3,15 @@
 import { ActionIcon, Alert, Button, Code, CopyButton, Group, List, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconBrain, IconCheck, IconCopy, IconPlugConnected, IconSettings } from "@tabler/icons-react";
 
+import { Link } from "@homarr/ui";
+
 import { useI18n } from "@homarr/translation/client";
 
 import { useWorkerWorkspace } from "~/worker/context";
 
 /** Hosted MCP uses account OAuth and explicit worker approvals rather than an instance API key. */
 export function WorkerMcpInstructions() {
-  const { platformPath, manageWorkers } = useWorkerWorkspace();
+  const { platformPath } = useWorkerWorkspace();
   const t = useI18n("management.page.tool.api.tab.mcp");
   const tCommon = useI18n("common");
   let origin = "https://homarr.dev";
@@ -26,21 +28,29 @@ export function WorkerMcpInstructions() {
         <div>
           <Title order={3}>{t("title")}</Title>
           <Text size="sm" c="dimmed">
-            Use your Homarr account to reach your approved workers from an MCP client.
+            Use your Homarr account to reach your approved worker from an MCP client.
           </Text>
         </div>
       </Group>
 
       <List type="ordered" spacing="sm" size="sm">
-        <List.Item>Open the worker control center and sign in with GitHub.</List.Item>
-        <List.Item>Connect each worker through the relay and approve the services MCP may access.</List.Item>
+        <List.Item>Open Worker → MCP and sign in to your cloud account.</List.Item>
+        <List.Item>
+          Connect your worker through the relay and approve the integrations and tools MCP may access.
+        </List.Item>
         <List.Item>
           Add the address below to your MCP client, then complete the browser sign-in when prompted.
         </List.Item>
       </List>
 
-      <Button variant="light" w="fit-content" leftSection={<IconSettings size={16} />} onClick={manageWorkers}>
-        Open worker control center
+      <Button
+        variant="light"
+        w="fit-content"
+        leftSection={<IconSettings size={16} />}
+        component={Link}
+        href="/manage/workers?tab=mcp"
+      >
+        Manage MCP access
       </Button>
 
       <Stack gap="xs">
@@ -60,8 +70,8 @@ export function WorkerMcpInstructions() {
       </Stack>
 
       <Alert variant="light">
-        Hosted MCP requires relay access and a separate approval from each worker. It can continue working while your
-        browser is closed. Direct-only workers are available to your browser but cannot be reached by hosted MCP.
+        Hosted MCP requires relay access and a separate worker approval. It can continue working while your browser is
+        closed. A direct-only connection is available to your browser; hosted MCP requires the relay.
       </Alert>
     </Stack>
   );

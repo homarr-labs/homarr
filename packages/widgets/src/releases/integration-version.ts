@@ -1,4 +1,4 @@
-import { isTrpcForbiddenError } from "@homarr/api/query-cache";
+import { isRpcForbiddenError } from "@homarr/api/query-cache";
 import type { IntegrationKind } from "@homarr/definitions";
 
 import type { ReleasesRepositoryIntegration } from "./releases-repository";
@@ -61,7 +61,7 @@ export const getFailedServiceVersionIntegrations = (
   query: { data: readonly ServiceVersionResult[] | undefined; error: unknown },
   totalFailureName: string,
 ) => {
-  if (query.error && !isTrpcForbiddenError(query.error)) {
+  if (query.error && !isRpcForbiddenError(query.error)) {
     return [{ integrationId: "service-versions", integrationName: totalFailureName, error: "failed" }];
   }
 

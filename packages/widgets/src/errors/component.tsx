@@ -1,6 +1,5 @@
 import { IconExclamationCircle, IconShield } from "@tabler/icons-react";
-import { TRPCClientError } from "@trpc/client";
-import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
+import { ORPCError } from "@orpc/client";
 
 import type { WidgetDefinition } from "../definition";
 import { ErrorBoundaryError } from "./base";
@@ -18,14 +17,14 @@ export const WidgetError = ({ error, resetErrorBoundary, definition }: WidgetErr
     return <BaseWidgetError {...error.getErrorBoundaryData()} onRetry={resetErrorBoundary} />;
   }
 
-  const widgetTrpcErrorData = definition ? handleWidgetTrpcError(error, definition) : null;
-  if (widgetTrpcErrorData) {
-    return <BaseWidgetError {...widgetTrpcErrorData} onRetry={resetErrorBoundary} />;
+  const widgetRpcErrorData = definition ? handleWidgetRpcError(error, definition) : null;
+  if (widgetRpcErrorData) {
+    return <BaseWidgetError {...widgetRpcErrorData} onRetry={resetErrorBoundary} />;
   }
 
-  const trpcErrorData = handleCommonTrpcError(error);
-  if (trpcErrorData) {
-    return <BaseWidgetError {...trpcErrorData} onRetry={resetErrorBoundary} />;
+  const rpcErrorData = handleCommonRpcError(error);
+  if (rpcErrorData) {
+    return <BaseWidgetError {...rpcErrorData} onRetry={resetErrorBoundary} />;
   }
 
   return (
@@ -38,13 +37,13 @@ export const WidgetError = ({ error, resetErrorBoundary, definition }: WidgetErr
   );
 };
 
-const handleWidgetTrpcError = (
+const handleWidgetRpcError = (
   error: unknown,
   currentDefinition: WidgetDefinition,
 ): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
-  if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
+  if (!(error instanceof ORPCError)) return null;
 
-  const errorData = error.data as DefaultErrorData;
+  const errorData = error;
 
   if (!("errors" in currentDefinition) || currentDefinition.errors === undefined) return null;
 
@@ -59,10 +58,10 @@ const handleWidgetTrpcError = (
   };
 };
 
-const handleCommonTrpcError = (error: unknown): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
-  if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
+const handleCommonRpcError = (error: unknown): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
+  if (!(error instanceof ORPCError)) return null;
 
-  const errorData = error.data as DefaultErrorData;
+  const errorData = error;
 
   if (errorData.code === "UNAUTHORIZED" || errorData.code === "FORBIDDEN") {
     return {

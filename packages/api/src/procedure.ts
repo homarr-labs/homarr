@@ -1,4 +1,4 @@
-import { createRouterClient, Lazy, os, ORPCError } from "@orpc/server";
+import { createRouterClient, Lazy, os, ORPCError, ValidationError } from "@orpc/server";
 import type {
   AnyRouter,
   AnySchema,
@@ -15,8 +15,10 @@ import type {
   Schema,
 } from "@orpc/server";
 
+import { ZodError } from "zod/v4";
+
 import type { Session } from "@homarr/auth";
-import { extractBaseUrlFromHeaders } from "@homarr/common";
+import { extractBaseUrlFromHeaders, FlattenError } from "@homarr/common";
 import { resolveRequestIdentity, userAgent } from "@homarr/common/server";
 import type { DeviceType, RequestIdentity } from "@homarr/common/server";
 import { db } from "@homarr/db";
@@ -69,7 +71,14 @@ export const createApiContext = (opts: { headers: Headers; session: Session | nu
 /** Domain errors use native oRPC codes on every transport. */
 export class ApiError extends ORPCError<ORPCErrorCode, unknown> {
   constructor(options: { code: ORPCErrorCode; message?: string; cause?: unknown; data?: unknown }) {
-    super(options.code, options);
+    let data = options.data;
+    if (data === undefined && options.cause instanceof ZodError) {
+      data = { zodError: options.cause.flatten(), error: null };
+    }
+    if (data === undefined && options.cause instanceof FlattenError) {
+      data = { zodError: null, error: options.cause.flatten() };
+    }
+    super(options.code, { ...options, data });
   }
 }
 
@@ -269,7 +278,25 @@ export const createCallerFactory =
 
 export const isDemoMode = env.DEMO_MODE;
 export const isDemoReadOnly = env.DEMO_MODE && env.DEMO_READ_ONLY;
-export const internalProcedure = new ApiProcedureBuilder<ApiContext>();
+// This middleware precedes input parsing, so field errors also reach native clients.
+// Output validation errors retain oRPC's private server-error payload.
+const formattedProcedure = os.$context<ApiContext>().use(async ({ next }) => {
+  try {
+    return await next();
+  } catch (error) {
+    if (error instanceof ORPCError && error.code === "BAD_REQUEST" && error.cause instanceof ValidationError) {
+      const validation = new ZodError(error.cause.issues as ZodError["issues"]);
+      throw new ApiError({
+        code: error.code,
+        message: error.message,
+        cause: error.cause,
+        data: { zodError: validation.flatten(), error: null },
+      });
+    }
+    throw error;
+  }
+});
+export const internalProcedure = new ApiProcedureBuilder<ApiContext>(formattedProcedure as unknown as NativeBuilder);
 const baseProcedure = internalProcedure.use(({ procedure, next }) => {
   if (isDemoReadOnly && procedure["~orpc"].meta.operationType === "mutation") {
     throw new ApiError({ code: "FORBIDDEN", message: "Mutations are disabled in demo mode" });

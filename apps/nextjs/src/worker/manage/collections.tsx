@@ -45,7 +45,6 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { useWorkerConnections, useWorkerWorkspace } from "~/worker/context";
 
 import { WorkerQuery, WorkerQueryStatus } from "./query-state";
-import { WorkerFederationPanel } from "./federation";
 
 export interface WorkerRouteProps {
   segments: string[];
@@ -373,7 +372,6 @@ function WorkerIntegrationList({ searchParams }: { searchParams: URLSearchParams
             }
             toolbar={
               <Stack>
-                {session?.user.permissions.includes("admin") && <WorkerFederationPanel />}
                 <SearchInput
                   placeholder={`${t("page.list.search")}...`}
                   ariaLabel={t("page.list.search")}

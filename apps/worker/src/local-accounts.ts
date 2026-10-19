@@ -1,10 +1,15 @@
 import { randomBytes } from "node:crypto";
 
-import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth/security";
+import type { VerifiedCredential } from "@homarr/auth/credential-lifecycle";
+import {
+  CredentialLifecycleError,
+  enrollCredentialUserAsync,
+  recordCredentialSessionAsync,
+  verifyCredentialUserAsync,
+} from "@homarr/auth/credential-lifecycle";
 import { createId } from "@homarr/common";
-import { and, db, eq, gt, handleTransactionsAsync, inArray, sql } from "@homarr/db";
-import { groupMembers, groups, invites, sessions, users } from "@homarr/db/schema";
-import { everyoneGroup } from "@homarr/definitions";
+import { and, db, eq, gt, inArray, or, sql } from "@homarr/db";
+import { groupMembers, groups, invites, sessions } from "@homarr/db/schema";
 import { WorkerAccessError } from "@homarr/worker-access";
 import type { AccessPrincipal, AuthenticatedEnvelope, LocalAccountCredential } from "@homarr/worker-access";
 
@@ -12,7 +17,11 @@ import { getOwnerSession } from "./api";
 import type { WorkerState } from "./state";
 
 const groupId = (state: WorkerState) => `worker-local:${state.workerId}`;
-const invitePrefix = (state: WorkerState) => `local:${state.workerId}:`;
+// Keep invitation IDs within the native varchar(64) limit; worker IDs are cryptographic fingerprints.
+const invitePrefix = (state: WorkerState) => `local:${state.workerId.slice(0, 24)}:`;
+const legacyInvitePrefix = (state: WorkerState) => `local:${state.workerId}:`;
+const isLocalInvitation = (state: WorkerState, id: string) =>
+  id.startsWith(invitePrefix(state)) || id.startsWith(legacyInvitePrefix(state));
 const invalid = () => new WorkerAccessError("UNAUTHORIZED", "Invalid account credentials or invitation");
 const limits = new WeakMap<WorkerState, { started: number; attempts: number; active: number }>();
 // Worker-wide: new device keys and invented usernames cannot bypass this limit.
@@ -60,110 +69,41 @@ export async function authenticateLocalAccount(state: WorkerState, input: LocalA
     if (input.kind === "local-register") {
       if (
         typeof input.inviteId !== "string" ||
-        !input.inviteId.startsWith(invitePrefix(state)) ||
+        !isLocalInvitation(state, input.inviteId) ||
         typeof input.token !== "string" ||
         input.token.length > 128
       )
         throw invalid();
-      const inviteWhere = and(
-        eq(invites.id, input.inviteId),
-        eq(invites.token, input.token),
-        gt(invites.expirationDate, new Date()),
-      );
-      if (!(await db.query.invites.findFirst({ where: inviteWhere, columns: { id: true } }))) throw invalid();
-      const existing = await db.query.users.findFirst({
-        where: and(eq(users.name, fields.username), eq(users.provider, "credentials")),
-        columns: { id: true },
+      return await enrollCredentialUserAsync(db, {
+        ...fields,
+        invitation: { id: input.inviteId, token: input.token },
+        memberships: { groupIds: [organization.id], includeEveryone: true },
       });
-      if (existing) throw new WorkerAccessError("INVALID_INPUT", "Username is already in use");
-      const user = {
-        id: createId(),
-        name: fields.username,
-        password: await hashPasswordAsync(fields.password),
-        provider: "credentials" as const,
-      };
-      // Consume the native invitation and create membership in the same native transaction.
-      await handleTransactionsAsync(db, {
-        async handleAsync(database, schema) {
-          await database.transaction(async (trx) => {
-            await trx.execute(sql`select pg_advisory_xact_lock(hashtext(${fields.username}))`);
-            const taken = await trx.query.users.findFirst({
-              where: and(eq(schema.users.name, fields.username), eq(schema.users.provider, "credentials")),
-              columns: { id: true },
-            });
-            if (taken) throw new WorkerAccessError("INVALID_INPUT", "Username is already in use");
-            const consumed = await trx.delete(schema.invites).where(inviteWhere);
-            if (consumed.rowCount !== 1) throw invalid();
-            await trx.insert(schema.users).values(user);
-            await trx.insert(schema.groupMembers).values({ groupId: organization.id, userId: user.id });
-            const everyone = await trx.query.groups.findFirst({
-              where: eq(schema.groups.name, everyoneGroup),
-              columns: { id: true },
-            });
-            if (everyone && everyone.id !== organization.id)
-              await trx.insert(schema.groupMembers).values({ groupId: everyone.id, userId: user.id });
-          });
-        },
-        handleSync(database) {
-          database.transaction((trx) => {
-            if (trx.delete(invites).where(inviteWhere).run().changes !== 1) throw invalid();
-            if (
-              trx
-                .select({ id: users.id })
-                .from(users)
-                .where(and(eq(users.name, fields.username), eq(users.provider, "credentials")))
-                .get()
-            )
-              throw new WorkerAccessError("INVALID_INPUT", "Username is already in use");
-            trx.insert(users).values(user).run();
-            trx.insert(groupMembers).values({ groupId: organization.id, userId: user.id }).run();
-            const everyone = trx.select({ id: groups.id }).from(groups).where(eq(groups.name, everyoneGroup)).get();
-            if (everyone && everyone.id !== organization.id)
-              trx.insert(groupMembers).values({ groupId: everyone.id, userId: user.id }).run();
-          });
-        },
-      });
-      return { userId: user.id, passwordHash: user.password };
     }
-    const user = await db.query.users.findFirst({
-      where: and(eq(users.name, fields.username), eq(users.provider, "credentials")),
-    });
-    const passwordHash = user?.password ?? "$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy";
-    const matches = await comparePasswordsAsync(fields.password, passwordHash);
-    if (!user || !matches) throw invalid();
+    const credential = await verifyCredentialUserAsync(db, fields);
     const member = await db.query.groupMembers.findFirst({
-      where: and(eq(groupMembers.groupId, organization.id), eq(groupMembers.userId, user.id)),
+      where: and(eq(groupMembers.groupId, organization.id), eq(groupMembers.userId, credential.userId)),
     });
     if (!member) throw invalid();
-    return { userId: user.id, passwordHash };
+    return credential;
+  } catch (error) {
+    if (error instanceof CredentialLifecycleError) {
+      if (error.code === "USERNAME_TAKEN") throw new WorkerAccessError("INVALID_INPUT", "Username is already in use");
+      throw invalid();
+    }
+    throw error;
   } finally {
     finish();
   }
 }
-export async function recordLocalSession({ grant }: AuthenticatedEnvelope, passwordHash: string) {
-  if (!grant.userId || !grant.expiresAt) throw invalid();
-  const session = { sessionToken: grant.id, userId: grant.userId, expires: new Date(grant.expiresAt) };
-  // Password resets must not race a verification that was already in progress.
-  await handleTransactionsAsync(db, {
-    async handleAsync(database, schema) {
-      await database.transaction(async (trx) => {
-        const [user] = await trx
-          .select({ password: schema.users.password })
-          .from(schema.users)
-          .where(eq(schema.users.id, session.userId))
-          .for("update");
-        if (user?.password !== passwordHash) throw invalid();
-        await trx.insert(schema.sessions).values(session);
-      });
-    },
-    handleSync(database) {
-      database.transaction((trx) => {
-        const user = trx.select({ password: users.password }).from(users).where(eq(users.id, session.userId)).get();
-        if (user?.password !== passwordHash) throw invalid();
-        trx.insert(sessions).values(session).run();
-      });
-    },
-  });
+export async function recordLocalSession({ grant }: AuthenticatedEnvelope, credential: VerifiedCredential) {
+  if (!grant.userId || !grant.expiresAt || grant.userId !== credential.userId) throw invalid();
+  try {
+    await recordCredentialSessionAsync(db, credential, { sessionToken: grant.id, expires: new Date(grant.expiresAt) });
+  } catch (error) {
+    if (error instanceof CredentialLifecycleError) throw invalid();
+    throw error;
+  }
 }
 export async function localAccountsRequest(
   state: WorkerState,
@@ -174,8 +114,8 @@ export async function localAccountsRequest(
   state.access.requireOwner(principal);
   const path = new URL(request.url).pathname.slice("/remote/local-accounts".length);
   if (!path && request.method === "POST") {
-    if (typeof body.name !== "string" || !body.name.trim() || body.name.length > 100)
-      throw new WorkerAccessError("INVALID_INPUT", "Enter an organization name of 1–100 characters");
+    if (typeof body.name !== "string" || !body.name.trim() || body.name.length > 64)
+      throw new WorkerAccessError("INVALID_INPUT", "Enter an organization name of 1–64 characters");
     const owner = await getOwnerSession(state);
     const existing = await db.query.groups.findFirst({
       where: eq(groups.name, body.name.trim()),
@@ -203,7 +143,10 @@ export async function localAccountsRequest(
         with: { user: { columns: { id: true, name: true, provider: true } } },
       }),
       db.query.invites.findMany({
-        where: sql`substr(${invites.id}, 1, ${invitePrefix(state).length}) = ${invitePrefix(state)}`,
+        where: or(
+          sql`substr(${invites.id}, 1, ${invitePrefix(state).length}) = ${invitePrefix(state)}`,
+          sql`substr(${invites.id}, 1, ${legacyInvitePrefix(state).length}) = ${legacyInvitePrefix(state)}`,
+        ),
         columns: { id: true, expirationDate: true },
       }),
     ]);
@@ -271,7 +214,7 @@ export async function localAccountsRequest(
   }
   const [, resource, encodedId] = path.split("/");
   const id = decodeURIComponent(encodedId ?? "");
-  if (resource === "invitations" && request.method === "DELETE" && id.startsWith(invitePrefix(state))) {
+  if (resource === "invitations" && request.method === "DELETE" && isLocalInvitation(state, id)) {
     await db.delete(invites).where(eq(invites.id, id));
     return Response.json({ revoked: true });
   }

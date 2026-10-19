@@ -73,13 +73,11 @@ export function WorkerProviders({ bootstrap, children }: PropsWithChildren<{ boo
   });
   const [apiClient] = useState(() =>
     clientApi.createClient({
-      links: [
-        createWorkerLink({
-          fetch: connection.fetch,
-          fetchSubscription: connection.fetchSubscription,
-          browserWeather: bootstrap.runtime.browserWeather,
-        }),
-      ],
+      link: createWorkerLink({
+        fetch: connection.fetch,
+        fetchSubscription: connection.fetchSubscription,
+        browserWeather: bootstrap.runtime.browserWeather,
+      }),
     }),
   );
   useEffect(() => () => queryClient.clear(), [queryClient]);

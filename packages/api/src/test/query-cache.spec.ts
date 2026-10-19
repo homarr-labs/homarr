@@ -4,7 +4,7 @@ import { QueryClient } from "@tanstack/react-query";
 import {
   dashboardSupportingQueryPolicies,
   isWidgetDataQueryKey,
-  isWidgetDataTrpcPath,
+  isWidgetDataRpcPath,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
   queryCacheMetadataStaleTimeMs,
@@ -32,7 +32,7 @@ describe("isWidgetDataQueryKey", () => {
   });
 });
 
-describe("isWidgetDataTrpcPath", () => {
+describe("isWidgetDataRpcPath", () => {
   test.each([
     ["widget.calendar.findAllEvents", true],
     ["app.byIds", true],
@@ -42,7 +42,7 @@ describe("isWidgetDataTrpcPath", () => {
     ["widget.beszel.getSystemStats", false],
     ["board.getBoardByName", false],
   ])("classifies dashboard data path %s", (path, expected) => {
-    expect(isWidgetDataTrpcPath(path)).toBe(expected);
+    expect(isWidgetDataRpcPath(path)).toBe(expected);
   });
 });
 

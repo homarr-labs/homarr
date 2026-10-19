@@ -20,10 +20,10 @@ usage() {
     cat <<'HELP'
 Usage: bash scripts/native-demo.sh [up|build|status|pair|down] [options]
 
-  up                         Start the normal Homarr frontend and two workers.
+  up                         Start Homarr with one main worker.
   build                      Build the current source without starting it.
   status                     Show this demo's containers and address.
-  pair [primary|integrations] Print the chosen worker's private setup link.
+  pair [primary]             Print the main worker's private setup link.
   down                       Stop this demo; preserve its data and keys.
 
   --public-url https://HOST   Public HTTPS origin of an existing reverse proxy.
@@ -54,6 +54,8 @@ while [ "$#" -gt 0 ]; do
         *) usage >&2; fail "Unknown argument: $1" ;;
     esac
 done
+
+[ "$worker" = primary ] || fail 'The integrations worker has been removed. Use pair primary for the main worker.'
 
 case "$name" in ''|*[!a-z0-9-]*|-*) fail 'Name must contain lowercase letters, digits, and hyphens.' ;; esac
 [ "${#name}" -le 40 ] || fail 'Name is too long.'
@@ -163,8 +165,7 @@ case "$action" in
         ensure_images
         compose up -d --wait --wait-timeout 240
         printf '\nOpen Homarr: %s/\n' "$public_url"
-        printf 'Get your first worker setup link: bash scripts/native-demo.sh pair primary --name %s\n' "$name"
-        printf 'Add the second worker: bash scripts/native-demo.sh pair integrations --name %s\n' "$name"
+        printf 'Get your worker setup link: bash scripts/native-demo.sh pair primary --name %s\n' "$name"
         ;;
     status)
         compose ps

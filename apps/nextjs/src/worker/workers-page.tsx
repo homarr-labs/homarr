@@ -21,17 +21,21 @@ export function WorkerManagementPage() {
   const router = useRouter();
   const params = useSearchParams();
   const { initialLink = "", clearInitialLink } = useWorkerWorkspace();
-  let initialTab = params.get("tab") ?? "workers";
-  if (!["workers", "account", "organizations", "sharing", "mcp"].includes(initialTab)) initialTab = "workers";
+  let initialTab = params.get("tab") ?? "overview";
+  if (initialTab === "workers") initialTab = "overview";
+  if (initialTab === "organizations") initialTab = "users";
+  if (initialTab === "account") initialTab = "mcp";
+  if (!["overview", "users", "sharing", "connection", "mcp"].includes(initialTab)) initialTab = "overview";
+  if (initialLink) initialTab = "connection";
   return (
     <ManagePageLayout
-      title="Your Homarr workers"
+      title="Worker"
       breadcrumb={
         <Breadcrumbs mb="md">
           <Anchor component={Link} href="/manage" aria-label="Management home">
             <IconHomeFilled size={18} />
           </Anchor>
-          <Text size="sm">Your Homarr workers</Text>
+          <Text size="sm">Worker</Text>
         </Breadcrumbs>
       }
     >
@@ -66,7 +70,7 @@ export function DisconnectedWorkersPage() {
           />
         </Group>
       </AppShellHeader>
-      <MainNavigation links={[{ label: "Your Homarr workers", icon: IconPlugConnected, href: "/manage/workers" }]} />
+      <MainNavigation links={[{ label: "Worker", icon: IconPlugConnected, href: "/manage/workers" }]} />
       <AppShellMain>
         <WorkerManagementPage />
       </AppShellMain>

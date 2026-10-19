@@ -8,12 +8,12 @@ const mocks = vi.hoisted(() => ({
   createI18nMiddleware: vi.fn(),
 }));
 
-vi.mock("@trpc/client", () => ({
-  createTRPCClient: () => ({ frontend: { routing: { query: mocks.getRouting } } }),
-  httpLink: vi.fn(),
+vi.mock("@orpc/client", () => ({
+  createORPCClient: () => ({ frontend: { routing: mocks.getRouting } }),
 }));
+vi.mock("@orpc/client/fetch", () => ({ RPCLink: class {} }));
 
-vi.mock("@homarr/api/shared", () => ({ getTrpcUrl: () => "http://backend:3002/api/trpc" }));
+vi.mock("@homarr/api/shared", () => ({ getRpcUrl: () => "http://backend:3002/rpc" }));
 
 vi.mock("@homarr/translation/middleware", () => ({
   createI18nMiddleware: mocks.createI18nMiddleware,

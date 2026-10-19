@@ -1,11 +1,10 @@
 import { dehydrate } from "@tanstack/react-query";
-import { serialize } from "superjson";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { makeQueryClient } from "@homarr/api/shared";
 
 import { prefetchForKind } from "./prefetch";
-import { createTrpcQueryKey } from "./trpc-query-key";
+import { createRpcQueryKey } from "./rpc-query-key";
 
 vi.mock("next/headers", () => ({
   headers: async () => new Headers({ cookie: "session=board-reader" }),
@@ -28,17 +27,17 @@ describe("board app data prefetch", () => {
     const bookmarkResult = Promise.withResolvers<{ id: string; name: string }[]>();
     backendFetch.mockImplementation((input) => {
       const url = new URL(String(input));
-      if (url.pathname.endsWith("/app.byId")) {
-        return appResult.promise.then((app) => Response.json({ result: { data: serialize(app) } }));
+      if (url.pathname.endsWith("/app/byId")) {
+        return appResult.promise.then((app) => Response.json({ json: app }));
       }
-      if (url.pathname.endsWith("/app.byIds")) {
-        return bookmarkResult.promise.then((apps) => Response.json({ result: { data: serialize(apps) } }));
+      if (url.pathname.endsWith("/app/byIds")) {
+        return bookmarkResult.promise.then((apps) => Response.json({ json: apps }));
       }
       throw new Error(`Unexpected backend request: ${url.pathname}`);
     });
     const queryClient = makeQueryClient();
-    const appKey = createTrpcQueryKey("app.byId", { id: "app-1" });
-    const bookmarkKey = createTrpcQueryKey("app.byIds", ["app-1"]);
+    const appKey = createRpcQueryKey("app.byId", { id: "app-1" });
+    const bookmarkKey = createRpcQueryKey("app.byIds", ["app-1"]);
 
     prefetchForKind("app", queryClient, [{ options: { appId: "app-1" } }]);
     prefetchForKind("bookmarks", queryClient, [{ options: { items: ["app-1"] } }]);
@@ -53,7 +52,7 @@ describe("board app data prefetch", () => {
     expect(dehydrated.queries.every((query) => query.promise instanceof Promise)).toBe(true);
     await vi.waitFor(() => expect(backendFetch).toHaveBeenCalledTimes(2));
     for (const [url, init] of backendFetch.mock.calls) {
-      expect(new URL(String(url)).pathname).toContain("/api/trpc/app.byId");
+      expect(new URL(String(url)).pathname).toContain("/rpc/app/byId");
       expect(new Headers(init?.headers).get("cookie")).toBe("session=board-reader");
       expect(new Headers(init?.headers).get("x-trpc-source")).toBe("rsc");
     }

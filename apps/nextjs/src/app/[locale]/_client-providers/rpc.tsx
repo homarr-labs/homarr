@@ -5,32 +5,20 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { defaultShouldDehydrateQuery, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import {
-  createWSClient,
-  httpBatchStreamLink,
-  httpLink,
-  httpSubscriptionLink,
-  isNonJsonSerializable,
-  loggerLink,
-  splitLink,
-  wsLink,
-} from "@trpc/client";
+import { ORPCError } from "@orpc/client";
+import { RPCLink } from "@orpc/client/fetch";
 import superjson from "superjson";
-import type { SuperJSONResult } from "superjson";
 
-import { TRPCClientError } from "@trpc/client";
-
-import type { AppRouter } from "@homarr/api/legacy";
 import { clientApi } from "@homarr/api/client";
 import {
   dashboardSupportingQueryPolicies,
-  isTrpcForbiddenError,
+  isRpcForbiddenError,
   isWidgetDataQueryKey,
   queryCacheDefaultGcTimeMs,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
 } from "@homarr/api/query-cache";
-import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
+import { createHeadersCallbackForSource, getRpcUrl } from "@homarr/api/shared";
 import { useSession } from "@homarr/auth/client";
 import { showWarningNotification } from "@homarr/notifications";
 import { DemoReadOnlyProvider } from "@homarr/widgets/demo-read-only";
@@ -45,28 +33,7 @@ const DevelopmentTools =
     ? dynamic(() => import("./development-tools").then(({ DevelopmentTools: Tools }) => Tools), { ssr: false })
     : () => null;
 
-const getWebSocketProtocol = () => {
-  if (typeof window === "undefined") {
-    return "ws";
-  }
-
-  return window.location.protocol === "https:" ? "wss" : "ws";
-};
-
-const constructWebsocketUrl = () => {
-  const fallback = `${getWebSocketProtocol()}://localhost:3001/websockets`;
-  if (typeof window === "undefined") {
-    return fallback;
-  }
-
-  if (process.env.NODE_ENV === "development") {
-    return fallback;
-  }
-
-  return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
-};
-
-export function TRPCReactProvider({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) {
+export function RPCReactProvider({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) {
   const { data: session } = useSession();
   const { logoutRedirectInProgress } = useAuthContext();
   const sessionQueryScope = getSessionQueryScope(session);
@@ -81,7 +48,7 @@ export function TRPCReactProvider({ children, demoReadOnly }: PropsWithChildren<
       currentScope={sessionQueryScope}
       onScopeChange={handleScopeChange}
     >
-      <ScopedTRPCReactProvider demoReadOnly={demoReadOnly}>{children}</ScopedTRPCReactProvider>
+      <ScopedRPCReactProvider demoReadOnly={demoReadOnly}>{children}</ScopedRPCReactProvider>
     </SessionQueryScopeGuard>
   );
 }
@@ -102,28 +69,14 @@ const clearLegacyDashboardPersistence = () => {
   }
 };
 
-const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) => {
+const ScopedRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{ demoReadOnly: boolean }>) => {
   useEffect(clearLegacyDashboardPersistence, []);
-  const wsClient = useMemo(
-    () =>
-      createWSClient({
-        url: constructWebsocketUrl(),
-        lazy: { enabled: true, closeMs: 30_000 },
-      }),
-    [],
-  );
-  useEffect(
-    () => () => {
-      void wsClient.close();
-    },
-    [wsClient],
-  );
   const [{ queryClient, rscStreamedQueryHashes }] = useState(() => {
     const streamedHashes = new Set<string>();
     const client = new QueryClient({
       queryCache: new QueryCache({
         onError(error, query) {
-          if (!isTrpcForbiddenError(error) || !isWidgetDataQueryKey(query.queryKey)) return;
+          if (!isRpcForbiddenError(error) || !isWidgetDataQueryKey(query.queryKey)) return;
           query.setState({ data: undefined, dataUpdatedAt: 0, isInvalidated: true });
         },
       }),
@@ -136,8 +89,8 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
         mutations: {
           onError(error) {
             if (
-              error instanceof TRPCClientError &&
-              error.data?.code === "FORBIDDEN" &&
+              error instanceof ORPCError &&
+              error.code === "FORBIDDEN" &&
               error.message === "Mutations are disabled in demo mode"
             ) {
               showWarningNotification({
@@ -182,51 +135,18 @@ const ScopedTRPCReactProvider = ({ children, demoReadOnly }: PropsWithChildren<{
 
   useEffect(() => () => queryClient.clear(), [queryClient]);
 
-  const trpcClient = useMemo(() => {
-    return clientApi.createClient({
-      links: [
-        loggerLink({
-          enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
+  const trpcClient = useMemo(
+    () =>
+      clientApi.createClient({
+        link: new RPCLink({
+          url: "/rpc",
+          origin: new URL(getRpcUrl()).origin,
+          headers: createHeadersCallbackForSource("nextjs-react"),
+          fetch: (request, init) => fetch(request, { ...init, credentials: "include" }),
         }),
-        splitLink({
-          condition: ({ type }) => type === "subscription",
-          true: splitLink({
-            condition: ({ path }) => path === "widget.beszel.subscribeSystemStats",
-            true: httpSubscriptionLink({
-              url: getTrpcUrl(),
-              transformer: superjson,
-              eventSourceOptions: { withCredentials: true },
-            }),
-            false: wsLink<AppRouter>({
-              client: wsClient,
-              transformer: superjson,
-            }),
-          }),
-          false: splitLink({
-            condition: ({ input }) => isNonJsonSerializable(input),
-            true: httpLink({
-              transformer: {
-                serialize(object: unknown) {
-                  return object;
-                },
-                deserialize(data: SuperJSONResult) {
-                  return superjson.deserialize<unknown>(data);
-                },
-              },
-              url: getTrpcUrl(),
-              headers: createHeadersCallbackForSource("nextjs-react (form-data)"),
-            }),
-            false: httpBatchStreamLink({
-              transformer: superjson,
-              url: getTrpcUrl(),
-              maxURLLength: 2083,
-              headers: createHeadersCallbackForSource("nextjs-react (json)"),
-            }),
-          }),
-        }),
-      ],
-    });
-  }, [wsClient]);
+      }),
+    [],
+  );
 
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>

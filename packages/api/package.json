@@ -29,7 +29,10 @@
     "./custom-widget-configuration": "./src/custom-widget-configuration.ts",
     "./http/*": "./src/http/*.ts",
     "./paths": "./src/paths.ts",
-    "./federation-media": "./src/federation/media.ts"
+    "./federation-media": "./src/federation/media.ts",
+    "./published-item-reads": "./src/published-item-reads.ts",
+    "./websocket-runtime": "./src/websocket-runtime.ts",
+    "./native-client": "./src/native-client.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -70,9 +73,7 @@
     "@orpc/zod": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
-    "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
-    "@trpc/tanstack-react-query": "catalog:",
     "ai": "catalog:",
     "ajv": "catalog:",
     "lodash.clonedeep": "catalog:",
@@ -82,10 +83,12 @@
     "superjson": "catalog:",
     "trpc-to-openapi": "catalog:",
     "undici": "catalog:",
+    "ws": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/ws": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -1,14 +1,8 @@
 "use client";
 
-import { COMMON_ERROR_STATUS_MAP, ORPCError } from "@orpc/client";
+import type { ClientLink } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
-import { TRPCClientError } from "@trpc/client";
-import type { Operation, OperationResultEnvelope, OperationResultObservable, TRPCLink } from "@trpc/client";
-import type { Observer, Unsubscribable } from "@trpc/server/observable";
-import { observable } from "@trpc/server/observable";
-import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/unstable-core-do-not-import";
-
-import type { AppRouter } from "./legacy";
+import type { ApiClientContext } from "./native-client";
 import { requestBrowserWeatherAsync } from "./browser-weather";
 
 /** Only the browser transport is shared; native routers and handlers are never imported. */
@@ -39,47 +33,6 @@ export function getWorkerTransport(): WorkerFetch {
   return configuredTransport();
 }
 
-function clientError(error: unknown, path: string): TRPCClientError<AppRouter> {
-  if (!(error instanceof ORPCError)) {
-    if (error instanceof Error) return TRPCClientError.from(error);
-    return TRPCClientError.from(new Error("The worker request failed."));
-  }
-  let code: keyof typeof TRPC_ERROR_CODES_BY_KEY = "INTERNAL_SERVER_ERROR";
-  if (Object.hasOwn(TRPC_ERROR_CODES_BY_KEY, error.code)) code = error.code as typeof code;
-  const details = error.data as Record<string, unknown> | undefined;
-  return TRPCClientError.from({
-    error: {
-      message: error.message,
-      code: TRPC_ERROR_CODES_BY_KEY[code],
-      data: {
-        code,
-        httpStatus: COMMON_ERROR_STATUS_MAP[code],
-        path,
-        zodError: details?.zodError ?? null,
-        error: details?.error ?? null,
-      },
-    },
-  });
-}
-
-function nativeInput(input: unknown): unknown {
-  if (!(input instanceof FormData)) return input;
-  // oRPC encodes File values inside records as multipart fields. Top-level
-  // FormData is otherwise treated as an empty JSON object by the beta codec.
-  const fields = Object.create(null) as Record<string, FormDataEntryValue | FormDataEntryValue[]>;
-  for (const [name, value] of input.entries()) {
-    if (name === "__proto__" || name === "constructor" || name === "prototype")
-      throw new TypeError("Unsafe form field");
-    if (!Object.hasOwn(fields, name)) fields[name] = value;
-    else {
-      const previous = fields[name];
-      if (Array.isArray(previous)) previous.push(value);
-      else if (previous !== undefined) fields[name] = [previous, value];
-    }
-  }
-  return fields;
-}
-
 // Canonicalize only values whose native encoding is unambiguous. Unsupported
 // inputs keep independent streams rather than risk joining distinct requests.
 function subscriptionKey(path: string, input: unknown): string | undefined {
@@ -103,7 +56,7 @@ function subscriptionKey(path: string, input: unknown): string | undefined {
       return [
         "object",
         Object.keys(value)
-          .sort()
+          .toSorted()
           .map((key) => [key, encode((value as Record<string, unknown>)[key])]),
       ];
     } finally {
@@ -117,144 +70,140 @@ function subscriptionKey(path: string, input: unknown): string | undefined {
   }
 }
 
-type WorkerResult = OperationResultEnvelope<unknown, TRPCClientError<AppRouter>>;
-type WorkerObserver = Observer<WorkerResult, TRPCClientError<AppRouter>>;
+interface Listener {
+  queue: unknown[];
+  pending?: { resolve(value: IteratorResult<unknown>): void; reject(error: unknown): void };
+  done: boolean;
+  error?: unknown;
+}
 interface SharedSubscription {
-  observers: Set<WorkerObserver>;
-  source?: Unsubscribable;
-  started: boolean;
-  latest?: WorkerResult;
+  listeners: Set<Listener>;
+  abort: AbortController;
+  iterator?: AsyncIterator<unknown>;
+  latest?: unknown;
+  hasLatest: boolean;
+  finished: boolean;
 }
 
-/** Source compatibility for existing hooks; the wire protocol is exclusively native oRPC. */
+/** Native oRPC transport bound to the selected worker for the entire call. */
 export function createWorkerLink(
   connection: WorkerFetch | WorkerTransportResolver = getWorkerTransport,
-): TRPCLink<AppRouter> {
-  return () => {
-    // Each client lifecycle and actual worker connection has its own streams.
-    const workers = new WeakMap<WorkerFetch, Map<string, SharedSubscription>>();
-    return ({ op }) =>
-      observable<WorkerResult, TRPCClientError<AppRouter>>((observer) => {
-        let selected: WorkerFetch;
-        try {
-          selected = typeof connection === "function" ? connection() : connection;
-        } catch (error) {
-          observer.error(clientError(error, op.path));
-          return;
-        }
-        const key = subscriptionKey(op.path, op.input);
-        if (op.type !== "subscription" || key === undefined) return workerRequest(selected, op).subscribe(observer);
-        if (op.signal?.aborted) {
-          observer.error(clientError(op.signal.reason, op.path));
-          return;
-        }
-        let streams = workers.get(selected);
-        if (!streams) {
-          streams = new Map();
-          workers.set(selected, streams);
-        }
-        let shared = streams.get(key);
-        const existing = shared !== undefined;
-        if (!shared) {
-          shared = { observers: new Set(), started: false };
-          streams.set(key, shared);
-        }
-        const entry = shared;
-        entry.observers.add(observer);
-        const release = () => {
-          op.signal?.removeEventListener("abort", abortListener);
-          entry.observers.delete(observer);
-          if (entry.observers.size !== 0) return;
-          if (streams.get(key) === entry) streams.delete(key);
-          entry.source?.unsubscribe();
-        };
-        const abortListener = () => {
-          release();
-          observer.error(clientError(op.signal?.reason, op.path));
-        };
-        op.signal?.addEventListener("abort", abortListener, { once: true });
-        if (entry.started) observer.next({ result: { type: "started" } });
-        if (entry.latest) observer.next(structuredClone(entry.latest));
-        if (!existing) {
-          // A listener's signal must never cancel another listener's stream.
-          entry.source = workerRequest(selected, { ...op, signal: null }).subscribe({
-            next(value) {
-              if ("type" in value.result && value.result.type === "started") entry.started = true;
-              if ("type" in value.result && value.result.type === "data") entry.latest = structuredClone(value);
-              for (const listener of [...entry.observers]) listener.next(structuredClone(value));
-            },
-            error(error) {
-              if (streams.get(key) === entry) streams.delete(key);
-              for (const listener of [...entry.observers]) listener.error(error);
-            },
-            complete() {
-              if (streams.get(key) === entry) streams.delete(key);
-              for (const listener of [...entry.observers]) listener.complete();
-            },
-          });
-        }
-        return release;
+): ClientLink<ApiClientContext> {
+  const workers = new WeakMap<WorkerFetch, Map<string, SharedSubscription>>();
+  return {
+    async call(path, input, options) {
+      const selected = typeof connection === "function" ? connection() : connection;
+      const native = new RPCLink<ApiClientContext>({
+        url: "/rpc",
+        method: "POST",
+        fetch: (url, init) => {
+          if (options.context.operationType === "subscription" && selected.fetchSubscription)
+            return selected.fetchSubscription(url, init);
+          return selected.fetch(url, init);
+        },
       });
-  };
-}
-
-function workerRequest(selected: WorkerFetch, op: Operation): OperationResultObservable<AppRouter, unknown> {
-  return observable((observer) => {
-    const abort = new AbortController();
-    let active = true;
-    let iterator: AsyncIterator<unknown> | undefined;
-    const abortFromCaller = () => abort.abort(op.signal?.reason);
-    op.signal?.addEventListener("abort", abortFromCaller, { once: true });
-    if (op.signal?.aborted) abortFromCaller();
-    const native = new RPCLink({
-      url: "/rpc",
-      method: "POST",
-      fetch: (url, init) => {
-        if (op.type === "subscription" && selected.fetchSubscription) return selected.fetchSubscription(url, init);
-        return selected.fetch(url, init);
-      },
-    });
-    void (async () => {
-      try {
-        let result = await native.call(op.path.split("."), nativeInput(op.input), {
-          signal: abort.signal,
-          context: {},
-        });
-        if (!active) return;
-        if (op.type === "query" && result === null && selected.browserWeather === true) {
-          result = await requestBrowserWeatherAsync(op.path, op.input, abort.signal);
-          if (!active) return;
-        }
-        if (op.type !== "subscription") {
-          observer.next({ result: { type: "data", data: result } });
-          observer.complete();
-          return;
-        }
-        if (!result || typeof result !== "object" || !(Symbol.asyncIterator in result))
-          throw new Error("The worker did not return a subscription.");
-        iterator = (result as AsyncIterable<unknown>)[Symbol.asyncIterator]();
-        observer.next({ result: { type: "started" } });
-        while (true) {
-          if (!active) break;
-          const event = await iterator.next();
-          if (!active || event.done) break;
-          observer.next({ result: { type: "data", data: event.value } });
-        }
-        if (active) {
-          observer.next({ result: { type: "stopped" } });
-          observer.complete();
-        }
-      } catch (error) {
-        if (active) observer.error(clientError(error, op.path));
-      } finally {
-        op.signal?.removeEventListener("abort", abortFromCaller);
+      if (options.context.operationType !== "subscription") {
+        let result = await native.call(path, input, options);
+        if (options.context.operationType === "query" && result === null && selected.browserWeather === true)
+          result = await requestBrowserWeatherAsync(
+            path.join("."),
+            input,
+            options.signal ?? new AbortController().signal,
+          );
+        return result;
       }
-    })();
-    return () => {
-      active = false;
-      abort.abort();
-      op.signal?.removeEventListener("abort", abortFromCaller);
-      void Promise.resolve(iterator?.return?.()).catch(() => undefined);
-    };
-  });
+      options.signal?.throwIfAborted();
+      const key = subscriptionKey(path.join("."), input);
+      let streams = workers.get(selected);
+      if (!streams) {
+        streams = new Map();
+        workers.set(selected, streams);
+      }
+      let shared = key === undefined ? undefined : streams.get(key);
+      const existing = shared !== undefined;
+      if (!shared) {
+        shared = { listeners: new Set(), abort: new AbortController(), hasLatest: false, finished: false };
+        if (key !== undefined) streams.set(key, shared);
+      }
+      const entry = shared;
+      const listener: Listener = { queue: [], done: false };
+      if (entry.hasLatest) listener.queue.push(structuredClone(entry.latest));
+      entry.listeners.add(listener);
+      function finish(error?: unknown) {
+        if (listener.done) return;
+        listener.done = true;
+        listener.error = error;
+        options.signal?.removeEventListener("abort", cancelled);
+        entry.listeners.delete(listener);
+        if (listener.pending) {
+          if (error !== undefined) listener.pending.reject(error);
+          else listener.pending.resolve({ done: true, value: undefined });
+          listener.pending = undefined;
+        }
+        if (entry.listeners.size !== 0) return;
+        if (key !== undefined && streams?.get(key) === entry) streams.delete(key);
+        entry.abort.abort();
+        void Promise.resolve(entry.iterator?.return?.()).catch(() => undefined);
+      }
+      const cancelled = () => finish(options.signal?.reason);
+      options.signal?.addEventListener("abort", cancelled, { once: true });
+      if (!existing)
+        void (async () => {
+          try {
+            const result = await native.call(path, input, { ...options, signal: entry.abort.signal });
+            if (!result || typeof result !== "object" || !(Symbol.asyncIterator in result))
+              throw new Error("The worker did not return a subscription.");
+            entry.iterator = (result as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+            while (!entry.abort.signal.aborted) {
+              const event = await entry.iterator.next();
+              if (event.done) break;
+              entry.latest = structuredClone(event.value);
+              entry.hasLatest = true;
+              for (const current of entry.listeners) {
+                const value = structuredClone(event.value);
+                if (current.pending) {
+                  current.pending.resolve({ done: false, value });
+                  current.pending = undefined;
+                } else current.queue.push(value);
+              }
+            }
+            entry.finished = true;
+            for (const current of entry.listeners) {
+              current.pending?.resolve({ done: true, value: undefined });
+              current.pending = undefined;
+            }
+          } catch (error) {
+            entry.finished = true;
+            for (const current of entry.listeners) {
+              current.error = error;
+              current.pending?.reject(error);
+              current.pending = undefined;
+            }
+          } finally {
+            if (key !== undefined && streams?.get(key) === entry) streams.delete(key);
+          }
+        })();
+      return {
+        [Symbol.asyncIterator]() {
+          return this;
+        },
+        async next(): Promise<IteratorResult<unknown>> {
+          if (listener.error !== undefined) throw listener.error;
+          if (listener.done) return { done: true, value: undefined };
+          if (listener.queue.length) return { done: false, value: listener.queue.shift() };
+          if (entry.finished) {
+            finish();
+            return { done: true, value: undefined };
+          }
+          return new Promise((resolve, reject) => {
+            listener.pending = { resolve, reject };
+          });
+        },
+        async return(): Promise<IteratorResult<unknown>> {
+          finish();
+          return { done: true, value: undefined };
+        },
+      };
+    },
+  };
 }

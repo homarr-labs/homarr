@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { Alert, Badge, Button, Group, MultiSelect, NativeSelect, Paper, Stack, Text, Title } from "@mantine/core";
 import { IconAffiliate, IconPlugConnected } from "@tabler/icons-react";
-import { createTRPCClient } from "@trpc/client";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi, useScopedFetchApi } from "@homarr/api/client";
-import type { AppRouter } from "@homarr/api/legacy";
 import { createWorkerLink } from "@homarr/api/worker-link";
 import { getIntegrationName } from "@homarr/definitions";
 import { workerRequest } from "@homarr/worker-client";
@@ -54,7 +52,7 @@ export function WorkerFederationPanel() {
       if (!sourceWorkerId) throw new Error("Select a source worker first.");
       await pool.restore(sourceWorkerId);
       const connection = pool.getConnection(sourceWorkerId);
-      const source = createTRPCClient<AppRouter>({ links: [createWorkerLink(connection)] });
+      const source = clientApi.createClient({ link: createWorkerLink(connection) });
       const integrations = await source.integration.all.query();
       const available = integrations.filter(
         (integration) => integration.permissions.hasFullAccess && !integration.origin,

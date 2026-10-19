@@ -3,7 +3,7 @@ import { setImmediate } from "node:timers/promises";
 import type { FetchQueryOptions, QueryClient, QueryKey } from "@tanstack/react-query";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
-import { api, trpc } from "@homarr/api/server";
+import { api, rpc } from "@homarr/api/server";
 import { beszelTimePeriodSchema, defaultBeszelTimePeriod } from "@homarr/definitions/beszel";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
@@ -75,12 +75,12 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
   if (!selection) {
     // An unset system or an ambiguous legacy ID needs discovery first. Stream
     // its exact stats query from a separate boundary as soon as discovery ends.
-    return queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
+    return queryClient.fetchQuery(rpc.widget.beszel.getSystems.queryOptions({ integrationIds })).then(
       (systems) => {
         const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
         if (!selected) return;
         prefetchQuery(queryClient, {
-          ...trpc.widget.beszel.getSystemStats.queryOptions({
+          ...rpc.widget.beszel.getSystemStats.queryOptions({
             integrationIds: [selected.integrationId],
             systemId: selected.systemId,
             timePeriod,
@@ -97,13 +97,13 @@ const prefetchBeszelStats = (queryClient: QueryClient, item: Item) => {
     timePeriod,
     includeDocker,
   };
-  const query = trpc.widget.beszel.getSystemStats.queryOptions(input);
+  const query = rpc.widget.beszel.getSystemStats.queryOptions(input);
   // Register the dependent promise before dehydration. Resolve the selection on
   // the server rather than waiting for a client discovery/render round trip.
   prefetchQuery(queryClient, {
     ...query,
     queryFn: async () => {
-      const systems = await queryClient.fetchQuery(trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+      const systems = await queryClient.fetchQuery(rpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
       const selected = resolveBeszelSystemChoice(createBeszelSystemChoices(systems), storedValue);
       if (!selected || selected.systemId !== input.systemId || selected.integrationId !== input.integrationIds[0]) {
         throw new Error("The selected Beszel system is no longer available");
@@ -132,7 +132,7 @@ export const prefetchInitialWidgetData = (
 ) => {
   const dependentQueries: Promise<void>[] = [];
   const calendarMonth = getUnambiguousCalendarMonth();
-  if (isAuthenticated) prefetchQuery(queryClient, trpc.integration.all.queryOptions());
+  if (isAuthenticated) prefetchQuery(queryClient, rpc.integration.all.queryOptions());
   for (const item of board.items) {
     if (!isInitiallyVisible(board, item, layoutId)) continue;
     const { integrationIds, options } = item;
@@ -142,13 +142,13 @@ export const prefetchInitialWidgetData = (
       case "dnsHoleSummary":
       case "dnsHoleControls":
         if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.dnsHole.summary.queryOptions({ integrationIds }));
+          prefetchQuery(queryClient, rpc.widget.dnsHole.summary.queryOptions({ integrationIds }));
         break;
       case "beszelSystemStats":
       case "beszelSystemTable":
       case "beszelSystemGrid":
         if (!integrationIds.length) break;
-        prefetchQuery(queryClient, trpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
+        prefetchQuery(queryClient, rpc.widget.beszel.getSystems.queryOptions({ integrationIds }));
         if (item.kind === "beszelSystemStats") {
           const discovery = prefetchBeszelStats(queryClient, item);
           if (discovery) dependentQueries.push(discovery);
@@ -158,22 +158,22 @@ export const prefetchInitialWidgetData = (
         if (integrationIds.length)
           prefetchQuery(
             queryClient,
-            trpc.widget.downloads.getJobsAndStatuses.queryOptions(resolveDownloadsQueryInput(integrationIds, options)),
+            rpc.widget.downloads.getJobsAndStatuses.queryOptions(resolveDownloadsQueryInput(integrationIds, options)),
           );
         break;
       case "indexerManager":
         if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.indexerManager.getIndexersStatus.queryOptions({ integrationIds }));
+          prefetchQuery(queryClient, rpc.widget.indexerManager.getIndexersStatus.queryOptions({ integrationIds }));
         break;
       case "mediaReleases":
         if (integrationIds.length)
-          prefetchQuery(queryClient, trpc.widget.mediaRelease.getMediaReleases.queryOptions({ integrationIds }));
+          prefetchQuery(queryClient, rpc.widget.mediaRelease.getMediaReleases.queryOptions({ integrationIds }));
         break;
       case "mediaServer":
         if (integrationIds.length)
           prefetchQuery(
             queryClient,
-            trpc.widget.mediaServer.getCurrentStreams.queryOptions({
+            rpc.widget.mediaServer.getCurrentStreams.queryOptions({
               integrationIds,
               showOnlyPlaying: (options.showOnlyPlaying ?? true) === true,
             }),
@@ -192,7 +192,7 @@ export const prefetchInitialWidgetData = (
         }
         prefetchQuery(
           queryClient,
-          trpc.widget.mediaRequests.getLatestRequests.queryOptions({
+          rpc.widget.mediaRequests.getLatestRequests.queryOptions({
             integrationIds,
             statuses,
             recentDays: Number(options.recentDays ?? 0),
@@ -204,7 +204,7 @@ export const prefetchInitialWidgetData = (
         if (integrationIds[0])
           prefetchQuery(
             queryClient,
-            trpc.widget.immich.getServerStats.queryOptions({ integrationId: integrationIds[0] }),
+            rpc.widget.immich.getServerStats.queryOptions({ integrationId: integrationIds[0] }),
           );
         break;
       case "immich-albumCarousel": {
@@ -215,7 +215,7 @@ export const prefetchInitialWidgetData = (
         if (albumId)
           prefetchQuery(
             queryClient,
-            trpc.widget.immich.getAlbumPreview.queryOptions({
+            rpc.widget.immich.getAlbumPreview.queryOptions({
               integrationId: integrationIds[0],
               albumId,
               randomizePhotos: options.randomizePhotos === true,
@@ -223,7 +223,7 @@ export const prefetchInitialWidgetData = (
           );
         prefetchQuery(
           queryClient,
-          trpc.widget.immich.getAlbum.queryOptions({ integrationId: integrationIds[0], albumId }),
+          rpc.widget.immich.getAlbum.queryOptions({ integrationId: integrationIds[0], albumId }),
         );
         break;
       }
@@ -235,14 +235,14 @@ export const prefetchInitialWidgetData = (
           options.endpointIds.every((id) => typeof id === "string")
         )
           input = { endpointIds: options.endpointIds };
-        prefetchQuery(queryClient, trpc.docker.getContainers.queryOptions(input));
+        prefetchQuery(queryClient, rpc.docker.getContainers.queryOptions(input));
         break;
       }
       case "rssFeed":
         if (Array.isArray(options.feedUrls) && options.feedUrls.every((url) => typeof url === "string"))
           prefetchQuery(
             queryClient,
-            trpc.widget.rssFeed.getFeeds.queryOptions({
+            rpc.widget.rssFeed.getFeeds.queryOptions({
               urls: options.feedUrls,
               maximumAmountPosts: Number(options.maximumAmountPosts ?? 100),
             }),
@@ -260,7 +260,7 @@ export const prefetchInitialWidgetData = (
         ) {
           prefetchQuery(
             queryClient,
-            trpc.widget.weather.atLocation.queryOptions({ latitude: location.latitude, longitude: location.longitude }),
+            rpc.widget.weather.atLocation.queryOptions({ latitude: location.latitude, longitude: location.longitude }),
           );
         }
         break;
@@ -279,7 +279,7 @@ export const prefetchInitialWidgetData = (
         }
         prefetchQuery(
           queryClient,
-          trpc.widget.calendar.findAllEvents.queryOptions({
+          rpc.widget.calendar.findAllEvents.queryOptions({
             integrationIds,
             ...calendarMonth,
             releaseType,

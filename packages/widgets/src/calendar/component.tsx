@@ -5,7 +5,7 @@ import { ActionIcon, Box, Center, Group, Loader, Stack, Text, Tooltip, useMantin
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";

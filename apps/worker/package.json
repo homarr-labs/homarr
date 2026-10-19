@@ -23,7 +23,6 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/remote-protocol": "workspace:^0.1.0",
-    "@homarr/tasks": "workspace:^0.1.0",
     "@homarr/worker-access": "workspace:^0.1.0",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",

@@ -6,9 +6,11 @@ import {
   Alert,
   Badge,
   Button,
+  Checkbox,
+  Code,
+  Divider,
   Group,
   NativeSelect,
-  Paper,
   Stack,
   Tabs,
   Text,
@@ -16,22 +18,18 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconAffiliate, IconCheck, IconKey, IconPlugConnected, IconUsers } from "@tabler/icons-react";
+import { IconAffiliate, IconDashboard, IconKey, IconPlugConnected, IconUsers } from "@tabler/icons-react";
 
-import type { EnrollmentChallenge } from "@homarr/remote-protocol";
-import type { WorkerEnrollment } from "@homarr/remote-platform/types";
 import type { ConnectionInput, SavedWorker } from "@homarr/worker-client";
 import {
   browserCryptoAvailable,
   matchingSavedWorker,
   parseConnectionLink,
   validateConnectionAddress,
-  workerRequest,
 } from "@homarr/worker-client";
 
 import { useWorkerConnections, useWorkerWorkspace } from "./context";
-import { WorkerAccount, errorMessage, usePlatformAccount } from "./platform";
-import { WorkerOrganizations } from "./organizations";
+import { WorkerAccount, errorMessage } from "./platform";
 import { WorkerSharing } from "./sharing";
 import { WorkerMcp } from "./mcp";
 import { WorkerLocalAccounts, WorkerLocalLoginLink } from "./local-accounts";
@@ -47,30 +45,44 @@ export function WorkerSetup({
 }) {
   const { pool, organizationId } = useWorkerWorkspace();
   const snapshot = useWorkerConnections();
-  const { session, request } = usePlatformAccount();
-  const [link, setLink] = useState("");
+  const [link, setLink] = useState(initialLink);
   const [cryptoAvailable, setCryptoAvailable] = useState(false);
-  useEffect(() => setCryptoAvailable(browserCryptoAvailable()), []);
-  const [tab, setTab] = useState<string | null>("workers");
+  const [tab, setTab] = useState<string | null>(initialTab);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const [expandedWorkerId, setExpandedWorkerId] = useState<string | null>(null);
-  const [selectedWorkerId, setSelectedWorkerId] = useState<string | null>(null);
+  const [replaceConfirmed, setReplaceConfirmed] = useState(false);
+  const [forgetConfirmed, setForgetConfirmed] = useState(false);
+  useEffect(() => setCryptoAvailable(browserCryptoAvailable()), []);
   useEffect(() => {
     if (initialLink) setLink(initialLink);
   }, [initialLink]);
-  useEffect(() => {
-    setTab(initialTab);
-  }, [initialTab]);
+  useEffect(() => setTab(initialTab), [initialTab]);
+  useEffect(() => setReplaceConfirmed(false), [link]);
   const selected =
-    snapshot.workers.find(({ worker }) => worker.workerId === selectedWorkerId) ??
-    snapshot.workers.find(({ worker }) => worker.workerId === snapshot.primaryWorkerId) ??
-    snapshot.workers[0];
+    snapshot.workers.find(({ worker }) => worker.workerId === snapshot.primaryWorkerId) ?? snapshot.workers[0];
+  const worker = selected?.worker;
   const connection = useMemo(() => {
     if (!selected?.connected) return null;
     return pool.getConnection(selected.worker.workerId);
   }, [pool, selected]);
+  const incoming = useMemo(() => {
+    if (!link) return null;
+    try {
+      return parseConnectionLink(link);
+    } catch {
+      return null;
+    }
+  }, [link]);
+  const replacing = Boolean(worker && incoming && incoming.workerId !== worker.workerId);
+  const localLogin = incoming?.credential.kind === "local-register" || incoming?.credential.kind === "local-login";
+  let status = "Not connected";
+  let statusColor = "gray";
+  if (selected?.connected) {
+    status = "Connected";
+    statusColor = "green";
+  } else if (worker) status = "Offline";
+
   async function action(execute: () => Promise<unknown>) {
     setBusy(true);
     setError("");
@@ -84,21 +96,17 @@ export function WorkerSetup({
     }
   }
   async function connectInput(input: ConnectionInput) {
+    if (worker && input.workerId !== worker.workerId && !replaceConfirmed) {
+      throw new Error("Confirm that you want to replace the connected worker first.");
+    }
     const saved = matchingSavedWorker(
-      snapshot.workers.map(({ worker }) => worker),
+      snapshot.workers.map((entry) => entry.worker),
       input,
     );
-    let worker: SavedWorker;
     const restoreSaved =
       input.credential.kind === "claim" || input.credential.kind === "grant" || input.credential.kind === "invite";
-    if (saved && restoreSaved) worker = await pool.restore(saved.workerId);
-    else worker = await pool.connectInput(input);
-    // Adding a service worker keeps the board on its current primary.
-    // A shared board link still opens the board it was created for.
-    if (!snapshot.primaryWorkerId || input.credential.kind === "share" || worker.grant.role === "viewer") {
-      pool.setPrimary(worker.workerId);
-    }
-    setSelectedWorkerId(worker.workerId);
+    if (saved && restoreSaved) await pool.restore(saved.workerId);
+    else await pool.connectInput(input);
     setLink("");
     onClose();
   }
@@ -106,283 +114,288 @@ export function WorkerSetup({
     event.preventDefault();
     await action(() => connectInput(parseConnectionLink(link, window.location.origin)));
   }
-  const localLogin = useMemo(() => {
-    if (!link) return false;
-    try {
-      const input = parseConnectionLink(link, window.location.origin);
-      return input.credential.kind === "local-register" || input.credential.kind === "local-login";
-    } catch {
-      return false;
-    }
-  }, [link]);
-  async function enroll(worker: SavedWorker) {
-    await action(async () => {
-      const { challenge } = await request<{ challenge: EnrollmentChallenge }>("/api/workers/challenge", {
-        method: "POST",
-      });
-      const proof = await workerRequest<
-        Pick<WorkerEnrollment, "workerId" | "workerPublicKey" | "workerSigningKey" | "signature">
-      >(pool.getConnection(worker.workerId), "/remote/platform-enrollment", {
-        method: "POST",
-        body: JSON.stringify({ challenge }),
-      });
-      await request("/api/workers", {
-        method: "POST",
-        body: JSON.stringify({
-          ...proof,
-          challenge,
-          name: worker.name,
-          mode: worker.mode,
-          relayUrl: worker.relayUrl || null,
-          directUrl: worker.directUrl || null,
-        }),
-      });
-      setNotice("Worker added to your account. You can now add it to an organization.");
-    });
-  }
-  return (
-    <>
-      <Stack>
-        <Text c="dimmed" size="sm">
-          Pick the worker that stores your boards. Keep other workers connected to use integrations from your other
-          servers.
+  const connectionForm = (
+    <Stack gap="md" maw={720}>
+      <div>
+        <Title order={3}>{worker ? "Replace worker" : "Connect your worker"}</Title>
+        <Text c="dimmed" size="sm" mt={4}>
+          Your worker stores your boards, integrations and widgets. Paste its setup, sign-in or invitation link.
         </Text>
-        {(tab === "organizations" || tab === "sharing" || tab === "mcp") && snapshot.workers.length > 1 && (
-          <NativeSelect
-            label="Worker"
-            value={selected?.worker.workerId ?? ""}
-            onChange={(event) => setSelectedWorkerId(event.currentTarget.value)}
-            data={snapshot.workers.map(({ worker }) => ({ label: worker.name, value: worker.workerId }))}
+      </div>
+      {!cryptoAvailable && <Alert color="yellow">Open Homarr using HTTPS or localhost to connect securely.</Alert>}
+      <form onSubmit={(event) => void connect(event)}>
+        <Stack gap="sm">
+          <Textarea
+            label="Private connection link"
+            placeholder="Paste the complete link from your worker"
+            required
+            minRows={3}
+            value={link}
+            onChange={(event) => setLink(event.currentTarget.value)}
+            autoComplete="off"
+            data-private="true"
+            spellCheck={false}
           />
+          {replacing && (
+            <Checkbox
+              checked={replaceConfirmed}
+              onChange={(event) => setReplaceConfirmed(event.currentTarget.checked)}
+              label={`Use this worker instead of ${worker?.name}`}
+              description="Your current worker stays connected if the new connection fails. Its saved access is retained in this browser."
+            />
+          )}
+          {!localLogin && (
+            <Group>
+              <Button
+                type="submit"
+                loading={busy}
+                disabled={!cryptoAvailable || !link.trim() || (replacing && !replaceConfirmed)}
+              >
+                {replacing ? "Replace and connect" : "Connect worker"}
+              </Button>
+            </Group>
+          )}
+        </Stack>
+      </form>
+      {(!replacing || replaceConfirmed) && <WorkerLocalLoginLink link={link} onConnect={connectInput} />}
+    </Stack>
+  );
+  let overview = connectionForm;
+  if (worker)
+    overview = (
+      <Stack gap="lg" maw={720}>
+        <div>
+          <Group justify="space-between" gap="sm">
+            <Title order={3} style={{ overflowWrap: "anywhere" }}>
+              {worker.name}
+            </Title>
+            <Badge color={statusColor} variant="light">
+              {status}
+            </Badge>
+          </Group>
+          <Text size="sm" c="dimmed" mt="xs">
+            Your boards, integrations and widgets run on this worker.
+          </Text>
+        </div>
+        {selected?.error && (
+          <Alert color="red" role="alert">
+            {selected.error}
+          </Alert>
         )}
-        <Tabs value={tab} onChange={setTab}>
-          <Tabs.List style={{ flexWrap: "wrap" }}>
-            <Tabs.Tab value="workers" leftSection={<IconPlugConnected size={16} />}>
-              Workers
-            </Tabs.Tab>
-            <Tabs.Tab value="account" leftSection={<IconUsers size={16} />}>
-              Account
-            </Tabs.Tab>
-            <Tabs.Tab value="organizations" leftSection={<IconUsers size={16} />}>
-              Organizations
-            </Tabs.Tab>
-            <Tabs.Tab value="sharing" leftSection={<IconKey size={16} />}>
-              Sharing
-            </Tabs.Tab>
-            <Tabs.Tab value="mcp" leftSection={<IconAffiliate size={16} />}>
-              MCP
-            </Tabs.Tab>
-          </Tabs.List>
-          <Tabs.Panel value="workers" pt="md">
-            <Stack>
-              {!cryptoAvailable && (
-                <Alert color="yellow">Open Homarr using its HTTPS address before connecting a worker.</Alert>
-              )}
-              <Paper withBorder p="md" radius="md">
-                <form onSubmit={(event) => void connect(event)}>
-                  <Stack>
-                    <Title order={4}>Connect a worker</Title>
-                    <Textarea
-                      label="Private connection link"
-                      placeholder="Paste the complete setup or invitation link from your worker"
-                      required
-                      minRows={2}
-                      value={link}
-                      onChange={(event) => setLink(event.currentTarget.value)}
-                      autoComplete="off"
-                      data-private="true"
-                      spellCheck={false}
-                    />
-                    {link && (
-                      <Text size="sm" c="green">
-                        <IconCheck size={14} /> Connection link ready.
+        <Group>
+          <Button
+            loading={busy}
+            onClick={() =>
+              void action(async () => {
+                if (!selected?.connected) await pool.restore(worker.workerId);
+                onClose();
+              })
+            }
+          >
+            Open boards
+          </Button>
+          <Button variant="default" onClick={() => setTab("connection")}>
+            Connection settings
+          </Button>
+        </Group>
+        <Divider />
+        <Stack gap="xs">
+          <Text size="sm" fw={600}>
+            This browser’s access
+          </Text>
+          <Text size="sm" tt="capitalize">
+            {worker.grant.role}
+          </Text>
+          <Text size="sm" c="dimmed">
+            Manage people in Users, create private links in Sharing, or approve assistant access in MCP.
+          </Text>
+        </Stack>
+        <Accordion variant="default">
+          <Accordion.Item value="identity">
+            <Accordion.Control>Worker identity</Accordion.Control>
+            <Accordion.Panel>
+              <Text size="sm" c="dimmed" mb="xs">
+                Use this identifier to check which worker you connected.
+              </Text>
+              <Code block style={{ overflowWrap: "anywhere", whiteSpace: "pre-wrap" }}>
+                {worker.workerId}
+              </Code>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+      </Stack>
+    );
+  return (
+    <Stack gap="lg">
+      <Text size="sm" c="dimmed">
+        One worker powers this Homarr workspace.
+      </Text>
+      <Tabs value={tab} onChange={setTab} keepMounted={false}>
+        <Tabs.List style={{ flexWrap: "wrap" }}>
+          <Tabs.Tab value="overview" leftSection={<IconDashboard size={16} />}>
+            Overview
+          </Tabs.Tab>
+          <Tabs.Tab value="users" leftSection={<IconUsers size={16} />}>
+            Users
+          </Tabs.Tab>
+          <Tabs.Tab value="sharing" leftSection={<IconKey size={16} />}>
+            Sharing
+          </Tabs.Tab>
+          <Tabs.Tab value="connection" leftSection={<IconPlugConnected size={16} />}>
+            Connection
+          </Tabs.Tab>
+          <Tabs.Tab value="mcp" leftSection={<IconAffiliate size={16} />}>
+            MCP
+          </Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="overview" pt="lg">
+          {overview}
+        </Tabs.Panel>
+        <Tabs.Panel value="users" pt="lg">
+          {connection && worker && (
+            <WorkerLocalAccounts key={worker.workerId} worker={worker} connection={connection} />
+          )}
+          {!connection && (
+            <ConnectionRequired
+              action={() => setTab("connection")}
+              text="Connect your worker to manage users and invitations."
+            />
+          )}
+        </Tabs.Panel>
+        <Tabs.Panel value="sharing" pt="lg">
+          {connection && worker && <WorkerSharing worker={worker} connection={connection} />}
+          {!connection && (
+            <ConnectionRequired
+              action={() => setTab("connection")}
+              text="Connect your worker to manage private sharing links."
+            />
+          )}
+        </Tabs.Panel>
+        <Tabs.Panel value="connection" pt="lg">
+          <Stack gap="xl">
+            {worker && (
+              <ConnectionSettings
+                key={worker.workerId}
+                worker={worker}
+                busy={busy}
+                apply={(input) =>
+                  action(async () => {
+                    await pool.connectInput(input);
+                    setNotice("Connection saved.");
+                  })
+                }
+              />
+            )}
+            {worker && <Divider />}
+            {connectionForm}
+            {worker && (
+              <Accordion variant="default" maw={720}>
+                <Accordion.Item value="browser-access">
+                  <Accordion.Control>Browser access</Accordion.Control>
+                  <Accordion.Panel>
+                    <Stack gap="sm">
+                      <Text size="sm" c="dimmed">
+                        Disconnect to close the current session. Forgetting removes this worker’s saved access from this
+                        browser; it does not delete worker data.
                       </Text>
-                    )}
-                    {!localLogin && (
-                      <Button type="submit" loading={busy} disabled={!cryptoAvailable}>
-                        Connect worker
-                      </Button>
-                    )}
-                  </Stack>
-                </form>
-                <WorkerLocalLoginLink link={link} onConnect={connectInput} />
-              </Paper>
-              {snapshot.workers.map((entry) => (
-                <Paper key={entry.worker.workerId} withBorder p="md" radius="md">
-                  <Stack gap="sm">
-                    <Group justify="space-between">
-                      <div>
-                        <Text fw={600} style={{ overflowWrap: "anywhere" }}>
-                          {entry.worker.name}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {entry.worker.workerId.slice(0, 24)}…
-                        </Text>
-                      </div>
-                      <Group gap="xs">
-                        <Badge color={entry.connected ? "green" : "gray"}>
-                          {entry.connected ? "Connected" : "Offline"}
-                        </Badge>
-                        {snapshot.primaryWorkerId === entry.worker.workerId && (
-                          <Badge variant="light">Board worker</Badge>
-                        )}
-                      </Group>
-                    </Group>
-                    <Group>
-                      <Button
-                        size="xs"
-                        loading={busy}
-                        onClick={() =>
-                          void action(async () => {
-                            if (!entry.connected) await pool.restore(entry.worker.workerId);
-                            pool.setPrimary(entry.worker.workerId);
-                            setSelectedWorkerId(entry.worker.workerId);
-                            onClose();
-                          })
-                        }
-                      >
-                        Open Homarr
-                      </Button>
-                      <Button
-                        size="xs"
-                        variant="light"
-                        onClick={() => {
-                          setSelectedWorkerId(entry.worker.workerId);
-                          setExpandedWorkerId((current) =>
-                            current === entry.worker.workerId ? null : entry.worker.workerId,
-                          );
-                        }}
-                      >
-                        Connection settings
-                      </Button>
-                      {entry.connected && session.user && entry.worker.grant.role === "owner" && (
-                        <Button size="xs" variant="default" onClick={() => void enroll(entry.worker)}>
-                          Add to account
-                        </Button>
-                      )}
-                      {entry.connected && (
-                        <Button size="xs" variant="subtle" onClick={() => pool.disconnect(entry.worker.workerId)}>
+                      <Group>
+                        <Button
+                          variant="default"
+                          disabled={!selected?.connected || busy}
+                          onClick={() => pool.disconnect(worker.workerId)}
+                        >
                           Disconnect
                         </Button>
-                      )}
-                      <Button
-                        size="xs"
-                        variant="subtle"
-                        color="red"
-                        onClick={() => void action(() => pool.forget(entry.worker.workerId))}
-                      >
-                        Forget this browser
-                      </Button>
-                    </Group>
-                    {expandedWorkerId === entry.worker.workerId && (
-                      <ConnectionSettings
-                        worker={entry.worker}
-                        apply={(input) =>
-                          action(async () => {
-                            await pool.connectInput(input);
-                            setNotice("Connection saved.");
-                          })
-                        }
+                      </Group>
+                      <Checkbox
+                        checked={forgetConfirmed}
+                        onChange={(event) => setForgetConfirmed(event.currentTarget.checked)}
+                        label="Remove this worker’s saved access from this browser"
                       />
-                    )}
-                    {entry.error && (
-                      <Text size="sm" c="red">
-                        {entry.error}
-                      </Text>
-                    )}
-                  </Stack>
-                </Paper>
-              ))}
-            </Stack>
-          </Tabs.Panel>
-          <Tabs.Panel value="account" pt="md">
-            <Stack>
-              <Text size="sm" c="dimmed">
-                Your local organization and users are managed on your worker.
-              </Text>
-              <Group>
-                <Button variant="default" onClick={() => setTab("organizations")}>
-                  Manage local organization
-                </Button>
-              </Group>
-              <Paper withBorder p="md" radius="md">
-                <Stack gap="sm">
-                  <Title order={4}>Homarr cloud account</Title>
-                  <Text size="sm" c="dimmed">
-                    Optional. Use a cloud account to organize workers across servers.
-                  </Text>
-                  <WorkerAccount />
-                </Stack>
-              </Paper>
-            </Stack>
-          </Tabs.Panel>
-          <Tabs.Panel value="organizations" pt="md">
-            <Stack>
-              {connection && selected && (
-                <WorkerLocalAccounts key={selected.worker.workerId} worker={selected.worker} connection={connection} />
-              )}
-              {!connection && (
-                <Paper withBorder p="md" radius="md">
-                  <Stack gap="xs">
-                    <Title order={3}>Your local organization</Title>
-                    <Text c="dimmed" size="sm">
-                      Connect a worker to create an organization and invite users.
-                    </Text>
-                    <Group>
-                      <Button variant="default" onClick={() => setTab("workers")}>
-                        Connect a worker
-                      </Button>
-                    </Group>
-                  </Stack>
-                </Paper>
-              )}
-              <Accordion variant="separated">
-                <Accordion.Item value="cloud-organizations">
-                  <Accordion.Control>Cloud organizations · optional</Accordion.Control>
-                  <Accordion.Panel>
-                    <WorkerOrganizations />
+                      <Group>
+                        <Button
+                          variant="light"
+                          color="red"
+                          loading={busy}
+                          disabled={!forgetConfirmed}
+                          onClick={() => void action(() => pool.forget(worker.workerId))}
+                        >
+                          Forget worker
+                        </Button>
+                      </Group>
+                    </Stack>
                   </Accordion.Panel>
                 </Accordion.Item>
               </Accordion>
-            </Stack>
-          </Tabs.Panel>
-          <Tabs.Panel value="sharing" pt="md">
-            {connection && selected ? (
-              <WorkerSharing worker={selected.worker} connection={connection} />
-            ) : (
-              <Text c="dimmed">Connect a worker to manage its private links.</Text>
             )}
-          </Tabs.Panel>
-          <Tabs.Panel value="mcp" pt="md">
-            {connection && selected ? (
+          </Stack>
+        </Tabs.Panel>
+        <Tabs.Panel value="mcp" pt="lg">
+          <Stack gap="lg">
+            <Accordion variant="default">
+              <Accordion.Item value="cloud-account">
+                <Accordion.Control>Cloud account · optional</Accordion.Control>
+                <Accordion.Panel>
+                  <Text size="sm" c="dimmed" mb="md">
+                    Sign in for hosted MCP access.
+                  </Text>
+                  <WorkerAccount />
+                </Accordion.Panel>
+              </Accordion.Item>
+            </Accordion>
+            {connection && worker && (
               <WorkerMcp
-                key={`${selected.worker.workerId}:${organizationId ?? "personal"}`}
-                worker={selected.worker}
+                key={`${worker.workerId}:${organizationId ?? "personal"}`}
+                worker={worker}
                 connection={connection}
               />
-            ) : (
-              <Text c="dimmed">Connect a worker to approve MCP access.</Text>
             )}
-          </Tabs.Panel>
-        </Tabs>
+            {!connection && (
+              <ConnectionRequired
+                action={() => setTab("connection")}
+                text="Connect your worker to approve MCP access."
+              />
+            )}
+          </Stack>
+        </Tabs.Panel>
+      </Tabs>
+      {error && (
+        <Alert color="red" role="alert">
+          {error}
+        </Alert>
+      )}
+      {notice && (
+        <Alert color="green" aria-live="polite">
+          {notice}
+        </Alert>
+      )}
+    </Stack>
+  );
+}
 
-        {error && (
-          <Alert color="red" role="alert">
-            {error}
-          </Alert>
-        )}
-        {notice && <Alert color="green">{notice}</Alert>}
-      </Stack>
-    </>
+function ConnectionRequired({ action, text }: { action: () => void; text: string }) {
+  return (
+    <Stack gap="sm">
+      <Text c="dimmed" size="sm">
+        {text}
+      </Text>
+      <Group>
+        <Button variant="default" onClick={action}>
+          Connection settings
+        </Button>
+      </Group>
+    </Stack>
   );
 }
 
 function ConnectionSettings({
   worker,
   apply,
+  busy,
 }: {
   worker: SavedWorker;
   apply: (input: ConnectionInput) => Promise<void>;
+  busy: boolean;
 }) {
   const [mode, setMode] = useState(worker.mode);
   const [name, setName] = useState(worker.name);
@@ -393,7 +406,9 @@ function ConnectionSettings({
     event.preventDefault();
     setError("");
     try {
-      validateConnectionAddress(mode, mode === "direct" ? directUrl : relayUrl);
+      let address = relayUrl;
+      if (mode === "direct") address = directUrl;
+      validateConnectionAddress(mode, address);
       await apply({ ...worker, name, mode, directUrl, relayUrl });
     } catch (cause) {
       setError(errorMessage(cause));
@@ -401,10 +416,11 @@ function ConnectionSettings({
   }
   return (
     <form onSubmit={(event) => void save(event)}>
-      <Stack gap="sm">
+      <Stack gap="md" maw={720}>
+        <Title order={3}>Connection settings</Title>
         <TextInput label="Worker name" value={name} onChange={(event) => setName(event.currentTarget.value)} required />
         <NativeSelect
-          label="Connection"
+          label="Connection method"
           value={mode}
           onChange={(event) => setMode(event.currentTarget.value as "direct" | "relay")}
           data={[
@@ -412,14 +428,15 @@ function ConnectionSettings({
             { value: "direct", label: "Direct or Tailscale" },
           ]}
         />
-        {mode === "direct" ? (
+        {mode === "direct" && (
           <TextInput
             label="Worker URL"
             value={directUrl}
             onChange={(event) => setDirectUrl(event.currentTarget.value)}
             required
           />
-        ) : (
+        )}
+        {mode === "relay" && (
           <TextInput
             label="Relay URL"
             value={relayUrl}
@@ -427,18 +444,18 @@ function ConnectionSettings({
             required
           />
         )}
-        <Text size="xs" c="dimmed">
-          This selects how your browser reaches the worker. Global MCP uses the Homarr relay.
+        <Text size="sm" c="dimmed">
+          This controls how your browser reaches the worker. Hosted MCP uses the Homarr relay.
         </Text>
         <Group>
-          <Button type="submit" size="xs" variant="default">
+          <Button type="submit" variant="default" loading={busy}>
             Save and reconnect
           </Button>
         </Group>
         {error && (
-          <Text c="red" size="sm">
+          <Alert color="red" role="alert">
             {error}
-          </Text>
+          </Alert>
         )}
       </Stack>
     </form>

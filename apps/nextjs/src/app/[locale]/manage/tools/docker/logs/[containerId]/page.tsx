@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Box, Group } from "@mantine/core";
-import { TRPCClientError } from "@trpc/client";
+import { ORPCError } from "@orpc/client";
 
 import { api, getBackendRuntimeAsync } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -30,7 +30,7 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
   try {
     await api.docker.logs.query({ endpointId: resolvedEndpointId, id: containerId, tail: 1 });
   } catch (error) {
-    if (error instanceof TRPCClientError && error.data?.code === "NOT_FOUND") {
+    if (error instanceof ORPCError && error.code === "NOT_FOUND") {
       notFound();
     }
     throw error;

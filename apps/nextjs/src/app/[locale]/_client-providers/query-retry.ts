@@ -1,6 +1,6 @@
-import { TRPCClientError } from "@trpc/client";
+import { ORPCError } from "@orpc/client";
 
-const nonRetryableTrpcCodes = new Set([
+const nonRetryableRpcCodes = new Set([
   "PARSE_ERROR",
   "BAD_REQUEST",
   "UNAUTHORIZED",
@@ -15,6 +15,6 @@ const nonRetryableTrpcCodes = new Set([
 
 export const createQueryRetry = (maxRetries: number) => (failureCount: number, error: unknown) => {
   if (failureCount >= maxRetries) return false;
-  if (error instanceof TRPCClientError && error.data?.code && nonRetryableTrpcCodes.has(error.data.code)) return false;
+  if (error instanceof ORPCError && error.code && nonRetryableRpcCodes.has(error.code)) return false;
   return true;
 };

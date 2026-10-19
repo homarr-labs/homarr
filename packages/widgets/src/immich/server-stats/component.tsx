@@ -3,7 +3,7 @@
 import React from "react";
 import { Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";

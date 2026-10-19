@@ -28,10 +28,7 @@ const canEditPermission = (permission: AnchorNotePermission) => {
 const isForbiddenError = (error: unknown): boolean => {
   if (typeof error !== "object" || error === null) return false;
 
-  const data = (error as { data?: unknown }).data;
-  if (typeof data !== "object" || data === null) return false;
-
-  return (data as { code?: unknown }).code === "FORBIDDEN";
+  return "code" in error && error.code === "FORBIDDEN";
 };
 
 export default function AnchorNoteWidget({

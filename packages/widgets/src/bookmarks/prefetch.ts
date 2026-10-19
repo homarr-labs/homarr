@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 
-import { trpc } from "@homarr/api/server";
+import { rpc } from "@homarr/api/server";
 
 import { getDirectBookmarkUrl } from "./bookmark-item";
 
@@ -10,7 +10,7 @@ const prefetchAll = (queryClient: QueryClient, items: { options: Record<string, 
     const appIds = item.options.items.filter(
       (value): value is string => typeof value === "string" && !getDirectBookmarkUrl(value),
     );
-    if (appIds.length > 0) void queryClient.prefetchQuery(trpc.app.byIds.queryOptions(appIds));
+    if (appIds.length > 0) void queryClient.prefetchQuery(rpc.app.byIds.queryOptions(appIds));
   }
 };
 

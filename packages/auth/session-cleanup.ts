@@ -1,4 +1,4 @@
-import { env } from "@homarr/auth/env";
+import { env } from "./env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, eq, inArray } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";

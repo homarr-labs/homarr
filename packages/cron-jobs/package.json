@@ -13,7 +13,8 @@
   },
   "exports": {
     ".": "./index.ts",
-    "./job-manager": "./src/job-manager.ts"
+    "./job-manager": "./src/job-manager.ts",
+    "./runtime": "./src/runtime.ts"
   },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",

@@ -7,7 +7,7 @@ import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
-import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
+import { catchRpcNotFound } from "~/errors/rpc-catch-error";
 import { canAccessUserEditPage } from "../access";
 import { getUserEditDataAsync } from "../_data";
 import { DeleteUserButton } from "./_components/_delete-user-button";
@@ -45,7 +45,7 @@ export default async function EditUserPage(props: Props) {
   const tUser = await getI18n("user");
   const tGeneral = await getI18n("management.page.user.setting.general");
   const session = await auth();
-  const user = await getUserEditDataAsync(params.userId).catch(catchTrpcNotFound);
+  const user = await getUserEditDataAsync(params.userId).catch(catchRpcNotFound);
 
   if (!canAccessUserEditPage(session, user.id)) {
     notFound();

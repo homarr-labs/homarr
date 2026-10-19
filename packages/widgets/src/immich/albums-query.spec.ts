@@ -13,11 +13,8 @@ const mocks = vi.hoisted(() => ({
   getAlbums: vi.fn(() => ({ data: [], isPending: false, isError: false })),
 }));
 
-vi.mock("@trpc/react-query", () => ({
-  getQueryKey: (procedure: { path: string[] }, input: unknown) => [procedure.path, { input, type: "query" }],
-}));
-
 vi.mock("@homarr/api/client", () => ({
+  getQueryKey: (procedure: { path: string[] }, input: unknown) => [procedure.path, { input, type: "query" }],
   clientApi: {
     widget: {
       immich: {

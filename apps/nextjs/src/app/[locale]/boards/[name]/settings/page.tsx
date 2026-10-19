@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Container, Stack, Title } from "@mantine/core";
-import { TRPCClientError } from "@trpc/client";
+import { ORPCError } from "@orpc/client";
 
 import { api } from "@homarr/api/server";
 import { capitalize } from "@homarr/common";
@@ -31,7 +31,7 @@ const getBoardAndPermissionsAsync = async (params: Awaited<Props["params"]>) => 
   } catch (error) {
     // Ignore not found errors and redirect to 404
     // error is already logged in _layout-creator.tsx
-    if (error instanceof TRPCClientError && (error.data?.code === "NOT_FOUND" || error.data?.code === "BAD_REQUEST")) {
+    if (error instanceof ORPCError && (error.code === "NOT_FOUND" || error.code === "BAD_REQUEST")) {
       notFound();
     }
 

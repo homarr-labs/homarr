@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { getQueryKey } from "@trpc/react-query";
+import { getQueryKey } from "@homarr/api/client";
 import { Button, Divider, Group, Pagination, Paper, ScrollArea, Select, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
