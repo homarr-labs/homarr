@@ -10,6 +10,10 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { StreamSession } from "@homarr/integrations";
 
 import {
+  formatChannelLayout,
+  formatCodec,
+  formatFrameRate,
+  formatPlaybackTime,
   getMediaServerColumnVisibility,
   getResolutionLabel,
   getSeasonEpisodeParams,
@@ -102,6 +106,88 @@ describe("SessionDetailsPopover", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
     expect(target?.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  test("shows the stream stats and never prints a null codec", async () => {
+    const transcodingSession = {
+      sessionId: "session-2",
+      sessionName: "Plezy (SHIELD)",
+      user: { username: "Alex", profilePictureUrl: null },
+      currentlyPlaying: {
+        type: "tv",
+        name: "Example show",
+        episodeName: "Pilot",
+        seasonName: "Season 1",
+        seasonNumber: 1,
+        episodeNumber: 2,
+        playback: { state: "playing", positionMs: 600_000, durationMs: 2_400_000 },
+        location: "wan",
+        metadata: {
+          video: { resolution: { width: 1920, height: 1080 }, frameRate: 23.976023 },
+          audio: { channelCount: 6, codec: "aac" },
+          transcoding: {
+            container: "mp4",
+            resolution: null,
+            target: { audioCodec: null, videoCodec: null },
+            isVideoDirect: true,
+            isAudioDirect: false,
+            containerChanged: true,
+          },
+          bitrateKbps: 8200,
+        },
+      },
+    } as unknown as StreamSession;
+
+    await act(() =>
+      root.render(
+        <MantineProvider env="test">
+          <SessionDetailsPopover item={transcodingSession} opened onChange={() => undefined}>
+            Open session
+          </SessionDetailsPopover>
+        </MantineProvider>,
+      ),
+    );
+
+    const text = document.body.textContent;
+    expect(text).toContain("Example show");
+    expect(text).toContain("1920×1080 (1080p)");
+    expect(text).toContain("23.976 fps");
+    expect(text).toContain("5.1");
+    expect(text).toContain("AAC");
+    expect(text).toContain("8.2 Mb/s");
+    expect(text).not.toContain("null");
+    expect(text).not.toContain("undefined");
+  });
+});
+
+describe("session detail formatters", () => {
+  test("formats playback time with and without hours", () => {
+    expect(formatPlaybackTime(0)).toBe("0:00");
+    expect(formatPlaybackTime(65_000)).toBe("1:05");
+    expect(formatPlaybackTime(3_725_000)).toBe("1:02:05");
+    expect(formatPlaybackTime(null)).toBeNull();
+    expect(formatPlaybackTime(-1)).toBeNull();
+  });
+
+  test("names common channel layouts", () => {
+    expect(formatChannelLayout(2)).toBe("2.0");
+    expect(formatChannelLayout(6)).toBe("5.1");
+    expect(formatChannelLayout(8)).toBe("7.1");
+    expect(formatChannelLayout(null)).toBeNull();
+    expect(formatChannelLayout(0)).toBeNull();
+  });
+
+  test("trims frame rates and ignores missing values", () => {
+    expect(formatFrameRate(23.976023)).toBe("23.976 fps");
+    expect(formatFrameRate(25)).toBe("25 fps");
+    expect(formatFrameRate(null)).toBeNull();
+    expect(formatFrameRate(0)).toBeNull();
+  });
+
+  test("upper-cases codecs and ignores empty ones", () => {
+    expect(formatCodec("hevc")).toBe("HEVC");
+    expect(formatCodec(null)).toBeNull();
+    expect(formatCodec("")).toBeNull();
   });
 });
 

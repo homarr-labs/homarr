@@ -3936,11 +3936,28 @@
         "paused": "Paused",
         "remaining": "{minutes} min left",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "Playing",
+          "buffering": "Buffering"
+        },
+        "details": {
+          "device": "Device",
+          "location": "Location",
+          "sessionId": "Session ID",
+          "bitrate": "Bitrate",
+          "audioHandling": "Audio handling",
+          "direct": "Direct",
+          "transcode": "Transcoding to {target}",
+          "containerChanged": "{container} (remux)",
+          "position": "{position} / {duration}",
+          "unknown": "unknown format"
+        },
         "metadata": {
           "title": "Stats for nerds",
           "video": {
             "title": "Video",
-            "resolution": "Resolution"
+            "resolution": "Resolution",
+            "frameRate": "Frame rate"
           },
           "audio": {
             "title": "Audio",
