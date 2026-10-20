@@ -49,6 +49,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         defaultValue: 0,
         validate: z.number().min(0),
       }),
+      hiddenDockerSuggestions: factory.internal({ defaultValue: [] as string[] }),
       repositories: factory.multiReleasesRepositories({
         defaultValue: [
           {

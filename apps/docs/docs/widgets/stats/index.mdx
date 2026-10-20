@@ -35,7 +35,7 @@ Opening a board reuses saved data. Multiple metrics from the same integration sh
 
 ## New service integrations in v2
 
-These 31 integrations work with Statistics, alongside existing providers such as Sonarr, Radarr, Paperless-ngx and Navidrome. The metric picker shows what's available for each source.
+These 32 integrations work with Statistics, alongside existing providers such as Sonarr, Radarr, Paperless-ngx and Navidrome. The metric picker shows what's available for each source.
 
 <details>
 <summary>Integration setup guides and available metrics</summary>
@@ -73,5 +73,8 @@ These 31 integrations work with Statistics, alongside existing providers such as
 | [Komga](/docs/integrations/komga)                        | Libraries, series, books                                                |
 | [NetAlertX](/docs/integrations/netalertx)                | Total, connected, new, down alerts                                      |
 | [Jackett](/docs/integrations/jackett)                    | Configured indexers; existing indexer widget                            |
+| [Wazuh](/docs/integrations/wazuh)                        | Agents (total, active, disconnected); alerts (total, high, critical)    |
 
 </details>
+
+Wazuh alert metrics cover the last 24 hours and require indexer credentials. Agent metrics also work with server API credentials alone.

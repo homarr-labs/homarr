@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Mostrar no monitorat"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# esdeveniment} other {# esdeveniments}}",
         "loading": "S'estan carregant els esdeveniments del calendari...",
         "noEvents": "No hi ha esdeveniments aquest mes"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
