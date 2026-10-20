@@ -9,10 +9,10 @@ import { getMantineColor } from "@homarr/common";
 import { loadCustomRootCertificatesAsync } from "@homarr/core/infrastructure/certificates";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
-import { Link } from "@homarr/ui";
+import { Link, NoResults } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { NoResults } from "~/components/no-results";
+
 import { AddCertificateSection } from "./_components/add-certificate";
 import { RemoveCertificate } from "./_components/remove-certificate";
 

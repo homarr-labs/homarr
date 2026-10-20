@@ -18,7 +18,10 @@ export * from "./options-schema";
 export * from "./request-schema";
 export const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
 const CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH = 50_000;
-const customJsxTemplateLengthSchema = z.string().min(1).max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH);
+const customJsxTemplateLengthSchema = z
+  .string()
+  .min(1, { abort: true })
+  .max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH, { abort: true });
 
 export const normalizeCustomJsxAuthoringTemplate = (template: string) =>
   template
@@ -191,12 +194,9 @@ function validateCaseInsensitiveSourceIds(sources: Definition["sources"], ctx: z
 const previewTemplateSchema = z
   .string()
   .transform(normalizeCustomJsxAuthoringTemplate)
+  .pipe(customJsxTemplateLengthSchema)
   .transform(prepareCustomJsxTemplate)
   .superRefine((analysis, ctx) => {
-    const length = customJsxTemplateLengthSchema.safeParse(analysis.template);
-    if (!length.success) {
-      for (const issue of length.error.issues) ctx.addIssue({ ...issue });
-    }
     for (const diagnostic of analysis.diagnostics) {
       if (diagnostic.severity === "error") {
         ctx.addIssue({

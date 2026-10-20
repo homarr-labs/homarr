@@ -13,41 +13,55 @@ interface HomarrCustomWidgetV2 {
 }
 ```
 
-Key `default` is the required source ID, not a source property. Fields: `name?`, `baseUrl`, `networkScope`, `auth?`; localhost/loopback URLs require `networkScope: "loopback"`; never widen explicit scope:
+`sources.default` is required. HTTP sources have `baseUrl`, `networkScope`, optional `name`, and optional `auth` (default
+`"none"`). Scope `public` permits public addresses, `private` additionally permits private addresses, and `loopback` additionally
+permits loopback. Blocked address classes remain blocked at every scope. Localhost requires `loopback`; preserve explicit
+scope rather than widening it on failure. Base URLs have no credentials, query, or fragment. Use documented public URLs or
+`https://your-service.example.com` for missing self-hosted URLs; Homarr configures URL/scope/credentials separately.
 
 ```json
 {
   "sources": {
     "default": {
-      "name": "Service",
-      "baseUrl": "http://service.local:5055/api/v1",
+      "baseUrl": "https://your-service.example.com/api/v1",
       "networkScope": "private",
       "auth": { "type": "apiKeyHeader", "name": "X-Api-Key" }
     }
   },
   "requests": {
     "summary": { "path": "/summary" },
-    "search": { "trigger": "manual", "path": "/search", "query": { "q": { "$param": "query" } } },
+    "search": {
+      "trigger": "manual",
+      "path": "/search",
+      "query": { "q": { "$param": "query" }, "page": { "$param": "page" } }
+    },
     "create": {
       "kind": "action",
       "method": "POST",
       "path": "/items",
       "body": { "id": { "$param": "id" } },
       "confirmation": "Create this item?",
-      "invalidates": ["search"]
+      "invalidates": ["summary"]
     }
   }
 }
 ```
 
-Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover and bind a full-access entry before preview. Omit URL/auth; paths append to its URL, non-GET requests are actions, and exports omit `integrationId`.
+Auth: `"none"`, `"bearer"`, `"basic"`, `{"type":"apiKeyHeader","name":"X-Api-Key"}`, or
+`{"type":"apiKeyQuery","name":"api_key"}`. Values are credential-free declarations.
 
-Auth is `none`, `bearer`, `basic`, `apiKeyHeader`, or `apiKeyQuery`. Requests default to source `default`, query/GET/load, inherited auth, and view permission. Use `load` for initial/current display and `manual` only for explicit interactions or invocation params. Actions are manual/modify; DELETE requires full permission and confirmation.
+Saved sources use `{"type":"integration","integrationKind":"sonarr","integrationId":"saved-id"}`. Discover supported kinds
+and matching full-access entries with integration tools. Bind the ID before preview; omit URL/scope/auth. Paths append to the
+saved URL; non-GET requests are actions. Portable exports omit integrationId.
 
-JSON responses become their decoded value. Responses with `application/x-ndjson` become an array with one decoded object per non-empty line.
+Requests default to source `default`, query/GET/load, inherited auth, and view permission. Initial/current displays use load;
+explicit interactions use manual. Actions stay manual with modify permission; DELETE requires full permission and
+confirmation. Preserve confirmation, permission, and invalidates. Query responses are decoded JSON; application/x-ndjson is
+an array of decoded lines.
 
-Use real public API URLs and clear self-hosted placeholders. Homarr collects URL, scope, and credentials outside the manifest.
+Paths start with `/` and use `{option:name}`/`{param:name}`. Query/body bindings use `{"$option":"name"}`/`{"$param":"name"}`.
+`$param` is manual-only; `$option` may drive loads. Path/query values are primitive; JSON bodies may contain structured options.
 
-Paths use `{option:name}`/`{param:name}`; query/body objects use `{"$option":"name"}`/`{"$param":"name"}`. `$param` is manual-only; `$option` may drive loads. Constants stay primitive.
-
-Every option has `label`, `control`, and `default`. Optional fields are `description`, `choices`, `choicesFrom`, `min`, `max`, `step`, `advanced`, and `group`.
+Every option has label, control, default. Optional fields: description, choices, choicesFrom, min, max, step, advanced, group.
+Static select choices are label/value objects; choicesFrom uses request, optional itemsPath, valuePath, and labelPath. Use a
+load request and preserve its response envelope. Structured options use control `json`.

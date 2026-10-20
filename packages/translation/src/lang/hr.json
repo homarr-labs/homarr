@@ -142,13 +142,6 @@
         "secondaryColor": "Sekundarna boja",
         "resetColors": "Poništi boje",
         "radius": "Polumjer kutova widgeta",
-        "radiusOptions": {
-          "xs": "Usko",
-          "sm": "Suptilno",
-          "md": "Uravnoteženo",
-          "lg": "Zaobljeno",
-          "xl": "Blago"
-        },
         "columns": "Stupci ploče",
         "columnsDescription": "Stupci definiraju vodoravnu mrežu koja se upotrebljava za određivanje veličine i položaja stavki. 12 je dovoljno za većinu korisnika.",
         "columnCount": "{count, plural, one {# stupac} few {# stupca} other {# stupaca}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Nakon postavljanja prijavite se kao administrator kako biste izradili API ključ.",
           "configuration": "Konfiguracija klijenta",
           "copy": "Kopiraj konfiguraciju",
-          "copied": "Kopirano",
           "advanced": "Otvori MCP alate, dopuštenja i pojedinosti postavljanja"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Opis"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Koristi drugi URL za ping",
@@ -853,7 +842,6 @@
       "source": "API izvor: {name}",
       "baseUrl": "URL poslužitelja",
       "networkScope": "Mrežni pristup",
-      "save": "Spremi API konfiguraciju",
       "expires": "Ovaj jednokratni zahtjev istječe u {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Zalijepite potpuni JSON prilagođenog widgeta pomoću Ctrl+V ili Command+V",
       "delete": "Izbriši prilagođeni widget",
       "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{name}\"? Ova se radnja ne može poništiti.",
-      "export": "Izvezi",
       "duplicate": "Dupliciraj",
       "aiPrompt": "Dizajniraj pomoću umjetne inteligencije",
       "copyAiPrompt": "Kopiraj AI upit",
       "enable": "Omogući",
       "disable": "Onemogući",
-      "menu": "Radnje",
       "downloadSkill": "Pregledaj vještinu prilagođenog widgeta",
       "publishWorkshop": "Objavi u radionici",
       "migrate": "Migriraj prilagođeni widget",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Konfiguriraj izvore widgeta",
       "description": "Pregledajte s čime se ovaj widget povezuje i dodajte ili zamijenite njegove šifrirane vjerodajnice.",
-      "credentialsRequired": "Zahtjevi neće uspjeti dok se ne dodaju potrebne vjerodajnice.",
-      "save": "Spremi konfiguraciju"
-    },
-    "field": {
-      "description": "Opis"
+      "credentialsRequired": "Zahtjevi neće uspjeti dok se ne dodaju potrebne vjerodajnice."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Oblikuj",
         "insertStarter": "Umetni početni sadržaj",
         "redo": "Ponovi",
-        "copied": "Kopirano",
         "schema": "Shema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Zahtjev {count, number}",
         "requestId": "ID zahtjeva",
-        "type": "Vrsta klijenta za preuzimanje",
         "method": "Metoda",
         "source": "API izvor",
         "run": "Pokreni",
@@ -1037,7 +1017,6 @@
         "optionName": "Naziv mogućnosti",
         "label": "Oznaka",
         "control": "Kontrola",
-        "description": "Opis",
         "default": "Zadano",
         "optionDetails": "Ograničenja i dinamički izbori",
         "minimum": "Minimum",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "Spremljena vrijednost je izbrisana.",
         "primary": "Primarni API",
         "id": "ID izvora",
-        "name": "Naziv posla",
         "baseUrl": "Osnovni URL",
         "baseUrlError": {
           "invalid": "Unesite potpun URL.",
@@ -1091,7 +1069,6 @@
         "remove": "Ukloni izvor i njegove zahtjeve",
         "advanced": "Napredno",
         "add": "Dodaj drugi API izvor",
-        "sourceType": "Integracija",
         "manualSource": "HTTP API",
         "existingIntegration": "Postojeća integracija",
         "integrationType": "Vrsta integracije",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Pregled migrirane zamjene v2",
       "migrationDescription": "Pregledajte i potvrdite ovu generiranu definiciju v2. Potvrdom se atomski zamjenjuje sačuvani zapis v1, a postojeći smještaji na ploči ostaju povezani s istim ID-om widgeta.",
       "fileLabel": "Odaberite JSON datoteku prilagođenog widgeta",
-      "name": "Naziv posla",
       "origin": "Osnovno podrijetlo",
       "authentication": "Provjera autentičnosti",
       "networkScope": "Opseg mreže",
@@ -1245,8 +1221,6 @@
         "title": "Ovaj widget može mijenjati udaljene podatke",
         "description": "Nakon uvoza pregledajte svaku imenovanu radnju, naslijeđenu vjerodajnicu i destruktivnu potvrdu. Tajne nisu uključene u datoteku."
       },
-      "cancel": "Odustani od uvoza",
-      "confirm": "Uvezi widget",
       "confirmMigration": "Potvrdi zamjenu v2"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Zatvori preglednik snimki zaslona",
     "technicalDetails": "Tehnički detalji",
     "sourceCode": "Unos radionice",
-    "export": "Izvezi",
     "report": "Prijavi",
     "reportTitle": "Prijavi unos",
     "reportReason": "Razlog",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Prikaži i upravljaj unosom",
       "done": "Gotovo",
       "signInHint": "Prijavite se za objavu pod svojim identitetom radionice.",
-      "titleField": "Naslov",
-      "descriptionField": "Opis",
       "screenshots": "Snimke zaslona",
       "screenshotsDescription": "Do pet PNG, JPEG ili WebP slika",
       "screenshotsPlaceholder": "Odaberite snimke zaslona",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Certifikat je pouzdan",
                 "message": "Certifikat je dodan na popis pouzdanih certifikata"
               },
               "error": {
-                "title": "Vjerovanje certifikatu nije uspjelo",
                 "message": "Dodavanje certifikata na popis pouzdanih certifikata nije uspjelo"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Pronađi medij",
     "field": {
       "preview": "Pretpregled",
-      "size": "Veličina",
-      "creator": "Stvoritelj",
-      "actions": "Kontrole"
+      "creator": "Stvoritelj"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Uski",
+        "sm": "Suptilno",
+        "md": "Uravnoteženi",
+        "lg": "Zaobljeni",
+        "xl": "Blagi"
+      }
+    },
     "success": "Uspjeh",
     "beta": "Beta",
     "error": "Pogreška",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Izbriši pretragu",
       "copy": "Kopiraj",
       "copied": "Kopirano",
-      "refresh": "Osvježi"
+      "refresh": "Osvježi",
+      "export": "Izvezi"
     },
     "pagination": {
       "pageOf": "Stranica {page} od {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Ukupno",
     "filesystemUsage": "{count, plural, one {Prikaži upotrebu za # datotečni sustav} few {Prikaži upotrebu za # datotečna sustava} other {Prikaži upotrebu za # datotečnih sustava}}",
     "field": {
-      "name": "Naziv posla"
+      "name": "Naziv",
+      "description": "Opis",
+      "title": "Naslov",
+      "actions": "Radnje",
+      "type": "Vrsta",
+      "status": "Status",
+      "state": "Stanje",
+      "size": "Veličina",
+      "source": "Izvor",
+      "namespace": "Prostor imena",
+      "created": "Kreirano",
+      "architecture": "Arhitektura"
     },
     "label": {
       "new": "Novo"
@@ -2109,9 +2097,6 @@
         "collapse": "Sažmi"
       },
       "option": {
-        "title": {
-          "label": "Naslov"
-        },
         "customCssClasses": {
           "label": "Prilagođene CSS klase"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Postavke",
         "settingsFor": "Postavke za {name}",
-        "options": "Opcije",
-        "actions": "Radnje"
+        "options": "Opcije"
       },
       "status": {
         "success": "U redu",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# odabrana stavka} few {# odabrane stavke} other {# odabranih stavki}}",
       "selected": "{count, plural, one {# odabrano} few {# odabrane} other {# odabranih}}",
-      "copy": "Kopiraj",
       "copied": "{count, plural, one {# stavka kopirana je u međuspremnik} few {# stavke kopirane su u međuspremnik} other {# stavki kopirano je u međuspremnik}}",
       "copyError": "Odabrane stavke nije moguće kopirati. Vaš preglednik možda ne dopušta pristup međuspremniku.",
       "paste": "Zalijepi",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# stavka uklonjena} few {# stavke uklonjene} other {# stavki uklonjeno}}",
       "move": "Premjesti",
       "moveTo": "Premjesti odabrane stavke",
-      "delete": "Obriši",
       "clear": "Izbriši odabir",
       "clearShortcut": "Izbriši odabir (Escape)",
       "saveErrorTitle": "Stavke nije moguće ažurirati",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integracije",
           "removeLabel": "Ukloni integraciju {name}"
-        },
-        "title": {
-          "label": "Naslov"
         },
         "customCssClasses": {
           "label": "Prilagođene CSS klase"
@@ -3483,7 +3462,6 @@
         },
         "table": {
           "header": {
-            "name": "Naziv",
             "node": "Čvor"
           }
         }
@@ -3513,8 +3491,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Naziv",
-            "state": "Stanje",
             "cpuUsage": "Upotreba CPU-a",
             "memoryUsage": "Upotreba memorije"
           }
@@ -3925,9 +3901,7 @@
       "items": {
         "currentlyPlaying": "Trenutačno se reproducira",
         "user": "Koris.",
-        "name": "Naziv",
         "id": "ID",
-        "status": "Status",
         "directPlay": "Izravna reprodukcija",
         "directStream": "Izravni stream",
         "transcodeVideo": "Transkodiranje videozapisa",
@@ -4302,38 +4276,27 @@
           "columnTitle": "Kontrole"
         },
         "added": {
-          "columnTitle": "Dodano",
-          "detailsTitle": "Datum dodavanja"
+          "columnTitle": "Dodano"
         },
         "category": {
-          "columnTitle": "Dodaci",
-          "detailsTitle": "Kategorije (ili dodatne informacije)"
+          "columnTitle": "Dodaci"
         },
         "downSpeed": {
-          "columnTitle": "Isključeno",
-          "detailsTitle": "Brzina preuzimanja"
+          "columnTitle": "Isključeno"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Trenutačni indeks unutar klijenta"
         },
         "id": {
-          "columnTitle": "ID stavke",
-          "detailsTitle": "ID stavke"
-        },
-        "integration": {
-          "columnTitle": "Integracija"
-        },
-        "name": {
-          "columnTitle": "Naziv posla"
+          "columnTitle": "ID stavke"
         },
         "progress": {
           "columnTitle": "Napredak",
           "detailsTitle": "Napredak preuzimanja"
         },
         "ratio": {
-          "columnTitle": "Omjer",
-          "detailsTitle": "Omjer torrenata (primljeno/poslano)"
+          "columnTitle": "Omjer"
         },
         "received": {
           "columnTitle": "Ukupno preuzeto",
@@ -4343,26 +4306,14 @@
           "columnTitle": "Ukupno poslano",
           "detailsTitle": "Ukupno učitano"
         },
-        "size": {
-          "columnTitle": "Veličina datoteke",
-          "detailsTitle": "Ukupna veličina odabira/datoteka"
-        },
-        "state": {
-          "columnTitle": "Stanje",
-          "detailsTitle": "Stanje posla"
-        },
         "time": {
-          "columnTitle": "Vrijeme završetka",
-          "detailsTitle": "Vrijeme od/do dovršenja",
-          "eta": "Procijenjeno vrijeme završetka"
+          "columnTitle": "Vrijeme završetka"
         },
         "type": {
-          "columnTitle": "Vrsta",
           "detailsTitle": "Vrsta klijenta za preuzimanje"
         },
         "upSpeed": {
-          "columnTitle": "Uključeno",
-          "detailsTitle": "Brzina slanja"
+          "columnTitle": "Uključeno"
         }
       },
       "states": {
@@ -4550,11 +4501,6 @@
             "progress": "Napredak"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Veličina"
-          }
-        },
         "common": {
           "empty": "Isprazni",
           "file": "Datoteka",
@@ -4684,9 +4630,6 @@
           "identifier": {
             "label": "Identifikator",
             "placeholder": "Naziv ili vlasnik/naziv"
-          },
-          "name": {
-            "label": "Naziv"
           },
           "versionFilter": {
             "label": "Filtar verzije",
@@ -4914,7 +4857,6 @@
       "download": "Preuzimanje",
       "upload": "Slanje",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Prosj. preuzimanje",
       "avgUpload": "Prosj. slanje",
       "avgPing": "Prosj. ping",
@@ -5151,7 +5093,6 @@
         "actionsDisabledEditMode": "Radnje su onemogućene dok je ploča u načinu uređivanja.",
         "widgetItemUnavailable": "Ova stavka widgeta nije dostupna.",
         "toggle": "Uključi/isključi",
-        "copied": "Kopirano",
         "confirmDelete": "Potvrdite ovu destruktivnu radnju."
       },
       "option": {
@@ -5420,7 +5361,6 @@
       },
       "metric": {
         "system": "Sustav",
-        "source": "Integracija",
         "hostname": "Naziv računala",
         "cpuModel": "Model CPU-a",
         "cores": "Jezgre",
@@ -5667,8 +5607,6 @@
       "noDisconnected": "Svi su agenti povezani",
       "empty": "Nijedan agent ne odgovara ovom filtru",
       "column": {
-        "status": "Stanje",
-        "name": "Naziv posla",
         "ip": "IP",
         "os": "OS",
         "version": "Verzija",
@@ -6119,14 +6057,7 @@
       },
       "itemRadius": {
         "label": "Polumjer stavke",
-        "description": "Mijenja zaobljenost pločica na vašoj ploči",
-        "option": {
-          "xs": "Vrlo mala",
-          "sm": "Mala",
-          "md": "Srednja",
-          "lg": "Velika",
-          "xl": "Vrlo velika"
-        }
+        "description": "Mijenja zaobljenost pločica na vašoj ploči"
       },
       "isPublic": {
         "label": "Javno",
@@ -6753,14 +6684,7 @@
               "label": "Prekrivanje pozadine"
             },
             "defaultRadius": {
-              "label": "Stil kutova",
-              "options": {
-                "xs": "Uski",
-                "sm": "Suptilno",
-                "md": "Uravnoteženi",
-                "lg": "Zaobljeni",
-                "xl": "Blagi"
-              }
+              "label": "Stil kutova"
             },
             "customCss": {
               "label": "Globalni prilagođeni CSS",
@@ -6782,7 +6706,6 @@
               "greetingDefault": "Zadani pozdrav",
               "boardColorLocked": "Boja ploče zaključana",
               "boardColorFlexible": "Boje ploče dopuštene",
-              "appName": "Naziv posla",
               "logo": "Logotip",
               "greeting": "Pozdrav",
               "on": "Uključeno",
@@ -7008,9 +6931,6 @@
             },
             "lastExecution": {
               "label": "Posljednje izvršavanje"
-            },
-            "actions": {
-              "label": "Radnje"
             }
           },
           "table": {
@@ -7075,9 +6995,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Stvorio",
-                  "source": "Integracija",
-                  "actions": "Radnje"
+                  "createdBy": "Stvorio"
                 }
               },
               "provenance": {
@@ -7370,7 +7288,6 @@
     },
     "field": {
       "state": {
-        "label": "Stanje",
         "option": {
           "created": "Kreirano",
           "running": "U radu",
@@ -7397,7 +7314,6 @@
       }
     },
     "action": {
-      "title": "Radnje",
       "logs": {
         "label": "Prikaži zapise",
         "page": {
@@ -7633,29 +7549,6 @@
     },
     "error": {
       "internalServerError": "Dohvaćanje Kubernetesovih podataka nije uspjelo"
-    },
-    "field": {
-      "name": {
-        "label": "Naziv posla"
-      },
-      "namespace": {
-        "label": "Prostor imena"
-      },
-      "creationTimestamp": {
-        "label": "Kreirano"
-      },
-      "state": {
-        "label": "Stanje posla"
-      },
-      "status": {
-        "label": "Stanje"
-      },
-      "type": {
-        "label": "Vrsta klijenta za preuzimanje"
-      },
-      "architecture": {
-        "label": "Arhitektura"
-      }
     }
   },
   "permission": {
@@ -7681,10 +7574,6 @@
       "permission": {
         "label": "Dopuštenje"
       }
-    },
-    "action": {
-      "saveUser": "Spremi korisničko dopuštenje",
-      "saveGroup": "Spremi grupno dopuštenje"
     }
   },
   "navigationStructure": {
@@ -7796,8 +7685,7 @@
       "resultsAriaLabel": "Rezultati za {mode}",
       "footer": {
         "navigate": "Navigacija",
-        "open": "Otvori",
-        "close": "Zatvori"
+        "open": "Otvori"
       }
     },
     "error": {
@@ -8226,9 +8114,6 @@
         },
         "urlTemplate": {
           "label": "Predložak URL pretraživanja"
-        },
-        "description": {
-          "label": "Opis"
         }
       },
       "page": {
@@ -8298,8 +8183,7 @@
             "table": {
               "header": {
                 "season": "Sezona",
-                "episodes": "Epizode",
-                "status": "Stanje"
+                "episodes": "Epizode"
               },
               "status": {
                 "requested": "Zatraženo"
@@ -8795,7 +8679,6 @@
       "cssDescription": "Uredite cijeli stilski predložak. Postojeća se pravila zadržavaju osim ako ih ovdje uklonite.",
       "cssCharacters": "{count} od 16384 znakova",
       "copyCss": "Kopiraj CSS",
-      "copied": "Kopirano",
       "restoreCss": "Vrati trenutačni CSS",
       "remoteCssTitle": "Ovaj CSS učitava udaljeni resurs",
       "remoteCssDescription": "Uvezeni stilski predlošci i udaljeni URL-ovi povezuju se s drugim poslužiteljem pri učitavanju ploče. Pregledajte ih prije nastavka."

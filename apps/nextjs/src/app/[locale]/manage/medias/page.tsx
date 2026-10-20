@@ -26,11 +26,11 @@ import type { ByteUnitSystem } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
-import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, UserAvatar, NoResults } from "@homarr/ui";
 
 import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { NoResults } from "~/components/no-results";
+
 import { CopyMedia } from "./_actions/copy-media";
 import { DeleteMedia } from "./_actions/delete-media";
 import { IncludeFromAllUsersSwitch } from "./_actions/show-all";
@@ -119,10 +119,10 @@ export default async function MediaListPage(props: MediaListPageProps) {
                   <VisuallyHidden>{tMedia("field.preview")}</VisuallyHidden>
                 </TableTh>
                 <TableTh>{tCommon("field.name")}</TableTh>
-                <TableTh>{tMedia("field.size")}</TableTh>
+                <TableTh>{tCommon("field.size")}</TableTh>
                 <TableTh>{tMedia("field.creator")}</TableTh>
                 <TableTh>
-                  <VisuallyHidden>{tMedia("field.actions")}</VisuallyHidden>
+                  <VisuallyHidden>{tCommon("field.actions")}</VisuallyHidden>
                 </TableTh>
               </TableTr>
             </TableThead>

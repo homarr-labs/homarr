@@ -49,13 +49,9 @@ env:
   PREVIEW_IMAGE: ghcr.io/homarr-labs/homarr-test
 
 jobs:
-  database-validation:
-    name: Database validation
-    if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
-    uses: ./.github/workflows/database.yml
-
   validation-plan:
-    name: Plan affected checks
+    # Keep this required check name while sharing formatting and planning setup.
+    name: Check formatting
     if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -64,6 +60,7 @@ jobs:
       builds-app: ${{ steps.plan.outputs.builds-app }}
       typecheck-matrix: ${{ steps.plan.outputs.typecheck-matrix }}
       has-typechecks: ${{ steps.plan.outputs.has-typechecks }}
+      database: ${{ steps.select.outputs.migrations }}
     env:
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD~1' }}
       TURBO_SCM_HEAD: ${{ github.sha }}
@@ -82,8 +79,44 @@ jobs:
         run: |
           test -n "$PR_NUMBER" || { echo "pr_number is required for publish"; exit 1; }
           test -n "$BUILD_REF" || { echo "ref is required for publish"; exit 1; }
+      - name: Select database checks
+        id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+        shell: bash
+        run: |
+          migrations=false
+          if [[ "$EVENT_NAME" != pull_request && "$EVENT_NAME" != merge_group && "$EVENT_NAME" != push ]] ||
+             [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]] ||
+             ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            migrations=true
+          else
+            changed_files=$(mktemp)
+            trap 'rm -f "$changed_files"' EXIT
+            comparison="$BASE_SHA...HEAD"
+            if [[ "$EVENT_NAME" = push ]]; then comparison="$BASE_SHA..HEAD"; fi
+            git diff --name-only -z "$comparison" > "$changed_files"
+            while IFS= read -r -d '' file; do
+              case "$file" in
+                packages/db/*|packages/core/src/infrastructure/db/*|packages/core/src/infrastructure/certificates/*|packages/auth/*|packages/api/src/router/onboard*|packages/api/src/router/test/onboard*|packages/onboarding/*|apps/nextjs/src/app/api/backup/*|apps/nextjs/src/app/*/init/*|Dockerfile|scripts/run.sh|scripts/entrypoint.sh|deployments/*|package.json|packages/core/package.json|packages/common/package.json|packages/definitions/package.json|packages/server-settings/package.json|packages/validation/package.json|mise.toml|bun.lock|bunfig.toml|patches/*|vitest*|tooling/github/*|.github/workflows/ci.yml)
+                  migrations=true
+                  ;;
+              esac
+            done < "$changed_files"
+          fi
+          echo "migrations=$migrations" >> "$GITHUB_OUTPUT"
+
       - name: Setup
         uses: ./tooling/github/setup
+      - name: Check changed-file formatting
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          git diff --name-only --diff-filter=ACMR -z "$BASE_SHA...HEAD" -- \
+            '*.css' '*.js' '*.json' '*.jsonc' '*.jsx' '*.md' '*.mdx' '*.scss' '*.ts' '*.tsx' '*.yaml' '*.yml' \
+            | xargs -0 -r bun x oxfmt --check --no-error-on-unmatched-pattern --
       - name: Plan validation
         id: plan
         run: |
@@ -105,6 +138,33 @@ jobs:
             "typecheck-matrix=\($matrix | tojson)",
             "has-typechecks=\($typechecks | length > 0)"
           ' "$RUNNER_TEMP/turbo-plan.json" >> "$GITHUB_OUTPUT"
+
+  database-checks:
+    name: Database checks
+    needs: validation-plan
+    if: needs.validation-plan.outputs.database == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NODE_ENV: development
+      CI: "true"
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+      - uses: ./tooling/github/setup
+      - name: Check affected database tests
+        run: |
+          scope=()
+          if [[ -n "$BASE_SHA" ]]; then scope=(--changed "$BASE_SHA" --passWithNoTests); fi
+          bun x vitest run --project dom --project db-node --project integration \
+            packages/core/src/infrastructure/db/env.spec.ts packages/db/test/migration-journal.spec.ts \
+            packages/db/test/sqlite-migration.spec.ts packages/db/test/postgresql-migration.spec.ts \
+            packages/db/proxy-reader.integration.spec.ts --maxWorkers 1 "${scope[@]}"
 
   workspace-checks:
     name: Lint and build
@@ -196,22 +256,28 @@ jobs:
 
   fast-gate:
     name: Fast gate
-    needs: [database-validation, validation-plan, workspace-checks, typecheck]
+    needs: [validation-plan, database-checks, workspace-checks, typecheck]
     if: ${{ !cancelled() && github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Require all validation jobs
         env:
-          DATABASE_RESULT: ${{ needs.database-validation.result }}
+          DATABASE_RESULT: ${{ needs.database-checks.result }}
+          HAS_DATABASE_CHECKS: ${{ needs.validation-plan.outputs.database }}
           PLAN_RESULT: ${{ needs.validation-plan.result }}
           WORKSPACE_RESULT: ${{ needs.workspace-checks.result }}
           TYPECHECK_RESULT: ${{ needs.typecheck.result }}
           HAS_TYPECHECKS: ${{ needs.validation-plan.outputs.has-typechecks }}
         run: |
-          test "$DATABASE_RESULT" = success
           test "$PLAN_RESULT" = success
           test "$WORKSPACE_RESULT" = success
+          if [[ "$HAS_DATABASE_CHECKS" == true ]]; then
+            test "$DATABASE_RESULT" = success
+          else
+            test "$HAS_DATABASE_CHECKS" = false
+            test "$DATABASE_RESULT" = skipped
+          fi
           if [[ "$HAS_TYPECHECKS" == true ]]; then
             test "$TYPECHECK_RESULT" = success
           else
@@ -269,11 +335,8 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
-          # Scoped to the ref actually checked out (the dispatch input when
-          # set), so a cache written for one ref never seeds the image built
-          # for another.
-          cache-from: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-e2e-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -297,8 +360,6 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
-          # Ref-scoped for the same reason as the build cache above, this
-          # job can push a preview image after the browsers run.
           key: playwright-${{ runner.os }}-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}-${{ hashFiles('bun.lock') }}
 
       - name: Install Playwright Chromium
@@ -370,8 +431,8 @@ jobs:
           network: host
           platforms: linux/amd64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-amd64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-amd64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -422,8 +483,8 @@ jobs:
           network: host
           platforms: linux/arm64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
-          cache-to: type=gha,scope=homarr-linux-arm64-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
+          cache-from: type=gha,scope=homarr-linux-arm64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }}
+          cache-to: type=gha,scope=homarr-linux-arm64-glibc-${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref_name }},mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}

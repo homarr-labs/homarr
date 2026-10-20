@@ -32,12 +32,45 @@ const periodDays: Partial<Record<BeszelTimePeriod, number>> = { "1w": 7, "30d": 
 export const formatBeszelChartTimestamp = (timestamp: string, timePeriod: BeszelTimePeriod, locale: string): string =>
   formatLocalizedDate(timestamp, locale, timeFormatOptions[timePeriod]);
 
-function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod, locale: string) {
-  const fmt = (timestamp: string) => formatBeszelChartTimestamp(timestamp, timePeriod, locale);
-  if (timePeriod === "1m") {
-    return { fmt, ordered: records };
-  }
-  return { fmt, ordered: records.toReversed() };
+interface BeszelChartRecords<T> {
+  points: { time: string; rawTime: string; record?: T }[];
+  hasRecords: boolean;
+}
+
+export function prepareChartRecords<T extends { created: string }>(
+  records: T[] | undefined,
+  timePeriod: BeszelTimePeriod,
+  locale: string,
+): BeszelChartRecords<T> | undefined {
+  if (!records) return undefined;
+  let ordered = records;
+  if (timePeriod !== "1m") ordered = records.toReversed();
+  const mapped = ordered.map((record) => ({
+    time: formatBeszelChartTimestamp(record.created, timePeriod, locale),
+    rawTime: record.created,
+    record,
+  }));
+  return {
+    points: padTimeGrid(mapped, timePeriod, locale) as BeszelChartRecords<T>["points"],
+    hasRecords: records.length > 0,
+  };
+}
+
+export const useChartRecords = <T extends { created: string }>(
+  records: T[] | undefined,
+  timePeriod: BeszelTimePeriod,
+  locale: string,
+) => useMemo(() => prepareChartRecords(records, timePeriod, locale), [records, timePeriod, locale]);
+
+function mapChartRecords<T>(
+  records: BeszelChartRecords<T> | undefined,
+  mapFn: (record: T) => Record<string, unknown>,
+): Record<string, unknown>[] {
+  if (!records) return [];
+  return records.points.map(({ time, rawTime, record }) => {
+    if (!record) return { time, rawTime };
+    return { time, rawTime, ...mapFn(record) };
+  });
 }
 
 function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod, locale: string) {
@@ -247,21 +280,9 @@ const BeszelAreaChart = memo(
 );
 
 export const useSystemChartData = (
-  systemStats: BeszelSystemStatsRecord[] | undefined,
+  records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,
   mapFn: (stats: BeszelSystemStatsRecord["stats"]) => Record<string, unknown>,
-  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
-  locale = "en-US",
-) =>
-  useMemo(() => {
-    if (!systemStats) return [];
-    const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
-    const mapped = ordered.map((r) => ({
-      time: fmt(r.created),
-      rawTime: r.created,
-      ...mapFn(r.stats),
-    }));
-    return padTimeGrid(mapped, timePeriod, locale);
-  }, [systemStats, mapFn, timePeriod, locale]);
+) => useMemo(() => mapChartRecords(records, (record) => mapFn(record.stats)), [records, mapFn]);
 
 export const useContainerNames = (containerStats: BeszelContainerStatsRecord[] | undefined) => {
   const prevRef = useRef<string[]>([]);
@@ -309,9 +330,10 @@ export const useContainerSeries = (
   metric: "cpu" | "memory" | "network",
 ) =>
   useMemo(() => {
+    if (!records) return [];
     const totals = new Map(names.map((name) => [name, 0]));
     const extract = defaultContainerExtractors[metric];
-    for (const record of records ?? []) {
+    for (const record of records) {
       for (const container of record.stats) {
         totals.set(container.n, (totals.get(container.n) ?? 0) + extract(container));
       }
@@ -322,16 +344,10 @@ export const useContainerSeries = (
   }, [records, names, metric]);
 
 export const useDiskChartData = (
-  systemStats: BeszelSystemStatsRecord[] | undefined,
+  records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,
   efsPaths: string[],
   rootSeriesName: string,
-  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
-  locale = "en-US",
-) =>
-  useMemo(
-    () => buildDiskChartData(systemStats, efsPaths, rootSeriesName, timePeriod, locale),
-    [systemStats, efsPaths, rootSeriesName, timePeriod, locale],
-  );
+) => useMemo(() => mapDiskChartData(records, efsPaths, rootSeriesName), [records, efsPaths, rootSeriesName]);
 
 export const buildDiskChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
@@ -339,41 +355,34 @@ export const buildDiskChartData = (
   rootSeriesName: string,
   timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
+) => mapDiskChartData(prepareChartRecords(systemStats, timePeriod, locale), efsPaths, rootSeriesName);
+
+const mapDiskChartData = (
+  records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,
+  efsPaths: string[],
+  rootSeriesName: string,
 ) => {
-  if (!systemStats?.length) return [];
-  const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
-  const mapped = ordered.map((record) => {
-    const point: Record<string, unknown> = {
-      time: fmt(record.created),
-      rawTime: record.created,
-      [rootSeriesName]: record.stats.du * GIBIBYTE,
-    };
+  if (!records?.hasRecords) return [];
+  return mapChartRecords(records, (record) => {
+    const point: Record<string, unknown> = { [rootSeriesName]: record.stats.du * GIBIBYTE };
     const efs = record.stats.efs ?? {};
-    for (const path of efsPaths) {
-      point[path] = (efs[path]?.du ?? 0) * GIBIBYTE;
-    }
+    for (const path of efsPaths) point[path] = (efs[path]?.du ?? 0) * GIBIBYTE;
     return point;
   });
-  return padTimeGrid(mapped, timePeriod, locale);
 };
 
 export const useDiskIOChartData = (
-  systemStats: BeszelSystemStatsRecord[] | undefined,
+  records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,
   efsPaths: string[],
   rootReadSeriesName: string,
   rootWriteSeriesName: string,
   readLabel: string,
   writeLabel: string,
-  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
-  locale = "en-US",
 ) =>
   useMemo(() => {
-    if (!systemStats?.length) return [];
-    const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
-    const mapped = ordered.map((record) => {
+    if (!records?.hasRecords) return [];
+    return mapChartRecords(records, (record) => {
       const point: Record<string, unknown> = {
-        time: fmt(record.created),
-        rawTime: record.created,
         [rootReadSeriesName]: normalizeBeszelByteRate(record.stats.dio?.[0], record.stats.dr),
         [rootWriteSeriesName]: normalizeBeszelByteRate(record.stats.dio?.[1], record.stats.dw),
       };
@@ -385,23 +394,18 @@ export const useDiskIOChartData = (
       }
       return point;
     });
-    return padTimeGrid(mapped, timePeriod, locale);
-  }, [systemStats, efsPaths, rootReadSeriesName, rootWriteSeriesName, readLabel, writeLabel, timePeriod, locale]);
+  }, [records, efsPaths, rootReadSeriesName, rootWriteSeriesName, readLabel, writeLabel]);
 
 export const useDockerChartData = (
-  containerStats: BeszelContainerStatsRecord[] | undefined,
+  records: BeszelChartRecords<BeszelContainerStatsRecord> | undefined,
   containerNames: string[],
   metric: "cpu" | "memory" | "network",
-  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
-  locale = "en-US",
 ) =>
   useMemo(() => {
-    if (!containerStats?.length) return [];
+    if (!records?.hasRecords) return [];
     const extract = defaultContainerExtractors[metric];
-    if (!extract) return [];
-    const { fmt, ordered } = prepareRecords(containerStats, timePeriod, locale);
-    const mapped = ordered.map((record) => {
-      const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
+    return mapChartRecords(records, (record) => {
+      const point: Record<string, unknown> = {};
       const byName = new Map(record.stats.map((c) => [c.n, c]));
       for (const name of containerNames) {
         const container = byName.get(name);
@@ -410,8 +414,7 @@ export const useDockerChartData = (
       }
       return point;
     });
-    return padTimeGrid(mapped, timePeriod, locale);
-  }, [containerStats, containerNames, metric, timePeriod, locale]);
+  }, [records, containerNames, metric]);
 
 export interface BeszelGpuDevice {
   id: string;
@@ -448,16 +451,10 @@ const gpuExtractors: Record<BeszelGpuMetric, (device: BeszelGPUData | undefined)
 };
 
 export const useGpuChartData = (
-  systemStats: BeszelSystemStatsRecord[] | undefined,
+  records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,
   devices: BeszelGpuDevice[],
   metric: BeszelGpuMetric,
-  timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
-  locale = "en-US",
-) =>
-  useMemo(
-    () => buildGpuChartData(systemStats, devices, metric, timePeriod, locale),
-    [systemStats, devices, metric, timePeriod, locale],
-  );
+) => useMemo(() => mapGpuChartData(records, devices, metric), [records, devices, metric]);
 
 export const buildGpuChartData = (
   systemStats: BeszelSystemStatsRecord[] | undefined,
@@ -465,16 +462,18 @@ export const buildGpuChartData = (
   metric: BeszelGpuMetric,
   timePeriod: BeszelTimePeriod = defaultBeszelTimePeriod,
   locale = "en-US",
+) => mapGpuChartData(prepareChartRecords(systemStats, timePeriod, locale), devices, metric);
+
+const mapGpuChartData = (
+  records: BeszelChartRecords<BeszelSystemStatsRecord> | undefined,
+  devices: BeszelGpuDevice[],
+  metric: BeszelGpuMetric,
 ) => {
-  if (!systemStats?.length) return [];
+  if (!records?.hasRecords) return [];
   const extract = gpuExtractors[metric];
-  const { fmt, ordered } = prepareRecords(systemStats, timePeriod, locale);
-  const mapped = ordered.map((record) => {
-    const point: Record<string, unknown> = { time: fmt(record.created), rawTime: record.created };
-    for (const device of devices) {
-      point[device.seriesName] = extract(record.stats.g?.[device.id]);
-    }
+  return mapChartRecords(records, (record) => {
+    const point: Record<string, unknown> = {};
+    for (const device of devices) point[device.seriesName] = extract(record.stats.g?.[device.id]);
     return point;
   });
-  return padTimeGrid(mapped, timePeriod, locale);
 };

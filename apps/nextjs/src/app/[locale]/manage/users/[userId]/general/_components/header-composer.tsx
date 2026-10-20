@@ -204,7 +204,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
   };
 
   return (
-    <Card className={classes.composer} padding={0} radius="lg" withBorder>
+    <Card className={classes.composer} padding={0} radius="lg">
       <Stack gap={0}>
         <Group className={classes.heading} justify="space-between" align="flex-start" wrap="wrap">
           <Stack gap={4}>
@@ -304,7 +304,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
 
         <Stack className={classes.tray} gap="sm">
           {selectedItem ? (
-            <Paper className={classes.configuration} p="sm" radius="md" withBorder>
+            <Paper className={classes.configuration} p="sm" radius="md">
               <Group justify="space-between" gap="sm" wrap="wrap">
                 <Stack gap={0}>
                   <Text fw={650} size="sm">

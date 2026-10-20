@@ -115,7 +115,7 @@ const ConfigurationSection = ({ number, title, description, status, actions, chi
 
 const ConfigurationSkeleton = ({ label }: { label: string }) => (
   <Stack className={classes.configuration} gap="md" aria-label={label}>
-    <Paper withBorder p="md">
+    <Paper p="md">
       <Group justify="space-between">
         <Group>
           <Skeleton circle h={36} />
@@ -128,7 +128,7 @@ const ConfigurationSkeleton = ({ label }: { label: string }) => (
       </Group>
     </Paper>
     {[1, 2, 3].map((number) => (
-      <Paper key={number} withBorder p="md">
+      <Paper key={number} p="md">
         <Stack gap="sm">
           <Skeleton h={18} w={220} />
           <Skeleton h={12} w="65%" />
@@ -371,7 +371,7 @@ export const AssistantConfiguration = ({ refreshAfterSave = true }: AssistantCon
   return (
     <>
       <Stack className={classes.configuration} gap="md">
-        <Paper className={classes.summary} withBorder p="md" radius="md" pos="relative">
+        <Paper className={classes.summary} p="md" radius="md" pos="relative">
           <LoadingOverlay visible={pending} />
           <Group justify="space-between" align="center">
             <Group className={classes.summaryProvider} gap="sm" wrap="nowrap">

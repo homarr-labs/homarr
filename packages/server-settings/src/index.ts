@@ -1,4 +1,5 @@
 import type { ColorScheme } from "@homarr/definitions";
+import { cornerStyleValues } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
 import { z } from "zod/v4";
 
@@ -15,8 +16,8 @@ export const defaultServerSettingsKeys = [
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
 
-export const brandingRadiusOptions = ["xs", "sm", "md", "lg", "xl"] as const;
-export type BrandingRadius = (typeof brandingRadiusOptions)[number];
+export { cornerStyleValues as brandingRadiusOptions } from "@homarr/definitions";
+export type { CornerStyle as BrandingRadius } from "@homarr/definitions";
 
 export const authBrandingSchema = z.object({
   showAppName: z.boolean(),
@@ -50,7 +51,7 @@ export const brandingServerSettingsSchema = z.object({
   signInBackgroundImageUrl: brandingImageUrlSchema,
   signInBackgroundOverlay: z.number().min(0).max(0.9),
   authBranding: authBrandingSchema,
-  defaultRadius: z.enum(brandingRadiusOptions),
+  defaultRadius: z.enum(cornerStyleValues),
   customCss: z.string().max(16_384),
 });
 

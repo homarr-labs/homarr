@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -7,7 +6,7 @@ import { env } from "@homarr/docker/env";
 import { getI18n } from "@homarr/translation/server";
 
 import { PodsTable } from "~/app/[locale]/manage/tools/kubernetes/pods/pods-table";
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import type { KubernetesContextSearchParams } from "../kubernetes-context";
 import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
@@ -22,12 +21,8 @@ export default async function PodsPage({ searchParams }: { searchParams: Promise
   const pods =
     context.status === "unavailable" ? [] : await api.kubernetes.pods.getPods({ contextId: context.contextId });
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tResource("pods")}</Title>
-        <PodsTable contextId={context.contextId} initialPods={pods} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tResource("pods")} container={false}>
+      <PodsTable contextId={context.contextId} initialPods={pods} />
+    </ManagePageLayout>
   );
 }

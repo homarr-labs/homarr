@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { boardPermissions, boardPermissionsMap } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import { AccessSettings } from "~/components/access/access-settings";
+import { AccessSettings } from "@homarr/forms-collection/access";
 import type { Board } from "../../_types";
 
 interface Props {

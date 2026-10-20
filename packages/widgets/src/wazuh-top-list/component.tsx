@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Box, Center, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Box, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconDeviceDesktop, IconListNumbers, IconTarget, IconWorld } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -111,11 +111,7 @@ export default function WazuhTopListWidget({
       }
     >
       {list.entries.length === 0 ? (
-        <Center h="100%">
-          <Text size="sm" c="dimmed" ta="center">
-            {t(`empty.${options.kind}`)}
-          </Text>
-        </Center>
+        <WidgetEmptyState message={t(`empty.${options.kind}`)} />
       ) : (
         <ScrollArea h="100%" type="auto" scrollbarSize={6} offsetScrollbars="y">
           <Stack gap={1}>

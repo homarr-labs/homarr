@@ -142,13 +142,6 @@
         "secondaryColor": "보조 색상",
         "resetColors": "색상 초기화",
         "radius": "위젯 모서리 반경",
-        "radiusOptions": {
-          "xs": "좁게",
-          "sm": "은은하게",
-          "md": "균형 있게",
-          "lg": "둥글게",
-          "xl": "부드럽게"
-        },
         "columns": "보드 열 개수",
         "columnsDescription": "열은 항목의 크기와 위치를 지정하는 가로 그리드를 정의합니다. 대부분의 경우 12개면 충분합니다.",
         "columnCount": "{count, plural, other {#개 열}}",
@@ -192,7 +185,6 @@
           "loginRequired": "설정 후 관리자로 로그인하여 API 키를 생성하세요.",
           "configuration": "클라이언트 설정",
           "copy": "구성 복사",
-          "copied": "복사됨",
           "advanced": "MCP 도구, 권한 및 설정 세부 정보 열기"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "설명"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "다른 URL을 ping에 사용",
@@ -853,7 +842,6 @@
       "source": "API 소스: {name}",
       "baseUrl": "서버 URL",
       "networkScope": "네트워크 액세스",
-      "save": "API 구성 저장",
       "expires": "이 일회성 요청은 {time}에 만료됩니다."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Ctrl+V 또는 Command+V를 사용하여 전체 사용자 지정 위젯 JSON 붙여넣기",
       "delete": "사용자 지정 위젯 삭제",
       "deleteConfirm": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
-      "export": "내보내기",
       "duplicate": "복사",
       "aiPrompt": "AI로 디자인",
       "copyAiPrompt": "AI 프롬프트 복사",
       "enable": "활성화",
       "disable": "비활성화",
-      "menu": "동작",
       "downloadSkill": "Custom Widget 스킬 보기",
       "publishWorkshop": "Workshop에 게시",
       "migrate": "Custom Widget 마이그레이션",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "위젯 소스 구성",
       "description": "이 위젯이 연결되는 위치를 확인하고 암호화된 자격 증명을 추가하거나 교체하세요.",
-      "credentialsRequired": "필수 자격 증명을 추가할 때까지 요청이 실패합니다.",
-      "save": "구성 저장"
-    },
-    "field": {
-      "description": "설명"
+      "credentialsRequired": "필수 자격 증명을 추가할 때까지 요청이 실패합니다."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "서식",
         "insertStarter": "시작 항목 삽입",
         "redo": "다시 실행",
-        "copied": "복사됨",
         "schema": "스키마"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "요청 {count, number}",
         "requestId": "요청 ID",
-        "type": "다운로드 클라이언트 유형",
         "method": "메서드",
         "source": "API 소스",
         "run": "실행",
@@ -1037,7 +1017,6 @@
         "optionName": "옵션 이름",
         "label": "레이블",
         "control": "컨트롤",
-        "description": "설명",
         "default": "기본값",
         "optionDetails": "제약 조건 및 동적 선택 항목",
         "minimum": "최솟값",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "저장된 값이 삭제되었습니다.",
         "primary": "기본 API",
         "id": "소스 ID",
-        "name": "작업 이름",
         "baseUrl": "기본 URL",
         "baseUrlError": {
           "invalid": "완전한 URL을 입력하세요.",
@@ -1091,7 +1069,6 @@
         "remove": "소스 및 해당 요청 제거",
         "advanced": "고급",
         "add": "다른 API 소스 추가",
-        "sourceType": "통합",
         "manualSource": "HTTP API",
         "existingIntegration": "기존 통합",
         "integrationType": "통합 유형",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "마이그레이션된 v2 대체 항목 검토",
       "migrationDescription": "생성된 v2 정의를 검토하고 확인하세요. 확인하면 보존된 v1 레코드가 원자적으로 대체되며, 기존 보드 배치는 동일한 위젯 ID에 연결된 상태로 유지됩니다.",
       "fileLabel": "사용자 지정 위젯 JSON 파일 선택",
-      "name": "작업 이름",
       "origin": "기본 출처",
       "authentication": "인증",
       "networkScope": "네트워크 범위",
@@ -1245,8 +1221,6 @@
         "title": "이 위젯은 원격 데이터를 변경할 수 있습니다",
         "description": "가져온 후 이름이 지정된 모든 작업, 상속된 자격 증명 및 파괴적 작업 확인을 검토하세요. 파일에는 비밀 정보가 포함되지 않습니다."
       },
-      "cancel": "가져오기 취소",
-      "confirm": "위젯 가져오기",
       "confirmMigration": "v2 교체 확인"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "스크린샷 뷰어 닫기",
     "technicalDetails": "기술 세부 정보",
     "sourceCode": "워크숍 항목",
-    "export": "내보내기",
     "report": "신고",
     "reportTitle": "제출 항목 신고",
     "reportReason": "이유",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "제출 항목 보기 및 관리",
       "done": "완료",
       "signInHint": "워크숍 계정으로 게시하려면 로그인하세요.",
-      "titleField": "제목",
-      "descriptionField": "설명",
       "screenshots": "스크린샷",
       "screenshotsDescription": "PNG, JPEG 또는 WebP 이미지 최대 5개",
       "screenshotsPlaceholder": "스크린샷 선택",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "신뢰하는 인증서",
                 "message": "인증서를 신뢰하는 인증서 목록에 추가"
               },
               "error": {
-                "title": "인증서 신뢰 실패",
                 "message": "인증서 신뢰 목록 추가 실패"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "미디어 찾기",
     "field": {
       "preview": "미리보기",
-      "size": "크기",
-      "creator": "크리에이터",
-      "actions": "제어"
+      "creator": "크리에이터"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "좁게",
+        "sm": "미세하게",
+        "md": "균형 있게",
+        "lg": "둥글게",
+        "xl": "부드럽게"
+      }
+    },
     "success": "성공",
     "beta": "베타",
     "error": "오류",
@@ -1911,7 +1887,8 @@
       "clearSearch": "검색 지우기",
       "copy": "복사",
       "copied": "복사됨",
-      "refresh": "새로고침"
+      "refresh": "새로고침",
+      "export": "내보내기"
     },
     "pagination": {
       "pageOf": "{totalPages}페이지 중 {page}페이지"
@@ -2054,7 +2031,18 @@
     "total": "합계",
     "filesystemUsage": "{count, plural, other {#개 파일 시스템의 사용량 표시}}",
     "field": {
-      "name": "작업 이름"
+      "name": "이름",
+      "description": "설명",
+      "title": "제목",
+      "actions": "동작",
+      "type": "유형",
+      "status": "상태",
+      "state": "상태",
+      "size": "크기",
+      "source": "소스",
+      "namespace": "네임스페이스",
+      "created": "생성됨",
+      "architecture": "아키텍처"
     },
     "label": {
       "new": "신규"
@@ -2109,9 +2097,6 @@
         "collapse": "접기"
       },
       "option": {
-        "title": {
-          "label": "제목"
-        },
         "customCssClasses": {
           "label": "사용자 지정 css 클래스"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "설정",
         "settingsFor": "{name} 설정",
-        "options": "옵션",
-        "actions": "동작"
+        "options": "옵션"
       },
       "status": {
         "success": "확인",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, other {#개 항목 선택됨}}",
       "selected": "{count, plural, other {#개 선택됨}}",
-      "copy": "복사",
       "copied": "{count, plural, other {클립보드에 항목 #개 복사됨}}",
       "copyError": "선택한 항목을 복사할 수 없습니다. 브라우저에서 클립보드 액세스를 허용하지 않을 수 있습니다.",
       "paste": "붙여넣기",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, other {항목 #개 제거됨}}",
       "move": "이동",
       "moveTo": "선택한 항목 이동",
-      "delete": "삭제",
       "clear": "선택 해제",
       "clearShortcut": "선택 해제(Escape)",
       "saveErrorTitle": "항목을 업데이트할 수 없음",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "통합",
           "removeLabel": "{name} 통합 제거"
-        },
-        "title": {
-          "label": "제목"
         },
         "customCssClasses": {
           "label": "사용자 지정 css 클래스"
@@ -3483,7 +3462,6 @@
         },
         "table": {
           "header": {
-            "name": "이름",
             "node": "노드"
           }
         }
@@ -3513,8 +3491,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "이름",
-            "state": "상태",
             "cpuUsage": "CPU 사용량",
             "memoryUsage": "메모리 사용량"
           }
@@ -3925,9 +3901,7 @@
       "items": {
         "currentlyPlaying": "현재 재생 중",
         "user": "사용자",
-        "name": "이름",
         "id": "아이디",
-        "status": "상태",
         "directPlay": "직접 재생",
         "directStream": "직접 스트림",
         "transcodeVideo": "비디오 트랜스코딩",
@@ -4302,38 +4276,27 @@
           "columnTitle": "제어"
         },
         "added": {
-          "columnTitle": "추가됨",
-          "detailsTitle": "추가된 날짜"
+          "columnTitle": "추가됨"
         },
         "category": {
-          "columnTitle": "기타",
-          "detailsTitle": "카테고리 (또는 기타 정보)"
+          "columnTitle": "기타"
         },
         "downSpeed": {
-          "columnTitle": "다운로드",
-          "detailsTitle": "다운로드 속도"
+          "columnTitle": "다운로드"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "클라이언트 내 현재 인덱스"
         },
         "id": {
-          "columnTitle": "아이디",
-          "detailsTitle": "항목 ID"
-        },
-        "integration": {
-          "columnTitle": "통합"
-        },
-        "name": {
-          "columnTitle": "작업 이름"
+          "columnTitle": "아이디"
         },
         "progress": {
           "columnTitle": "진행률",
           "detailsTitle": "다운로드 진행률"
         },
         "ratio": {
-          "columnTitle": "비율",
-          "detailsTitle": "Torrent 비율 (수신/송신)"
+          "columnTitle": "비율"
         },
         "received": {
           "columnTitle": "총 다운로드",
@@ -4343,26 +4306,14 @@
           "columnTitle": "총 업로드",
           "detailsTitle": "전체 업로드 용량"
         },
-        "size": {
-          "columnTitle": "파일 크기",
-          "detailsTitle": "선택/파일 총 크기"
-        },
-        "state": {
-          "columnTitle": "상태",
-          "detailsTitle": "직업 상태"
-        },
         "time": {
-          "columnTitle": "완료 시간",
-          "detailsTitle": "완료/완료 후 경과 시간",
-          "eta": "남은 시간"
+          "columnTitle": "완료 시간"
         },
         "type": {
-          "columnTitle": "유형",
           "detailsTitle": "다운로드 클라이언트 유형"
         },
         "upSpeed": {
-          "columnTitle": "업로드",
-          "detailsTitle": "업로드 속도"
+          "columnTitle": "업로드"
         }
       },
       "states": {
@@ -4550,11 +4501,6 @@
             "progress": "진행률"
           }
         },
-        "queue": {
-          "table": {
-            "size": "크기"
-          }
-        },
         "common": {
           "empty": "비어 있음",
           "file": "파일",
@@ -4684,9 +4630,6 @@
           "identifier": {
             "label": "식별자",
             "placeholder": "이름 또는 소유자/이름"
-          },
-          "name": {
-            "label": "이름"
           },
           "versionFilter": {
             "label": "버전 필터",
@@ -4914,7 +4857,6 @@
       "download": "다운로드",
       "upload": "업로드",
       "ping": "핑",
-      "status": "상태",
       "avgDownload": "평균 다운로드",
       "avgUpload": "평균 업로드",
       "avgPing": "평균 핑",
@@ -5151,7 +5093,6 @@
         "actionsDisabledEditMode": "보드가 편집 모드인 동안 작업이 비활성화됩니다.",
         "widgetItemUnavailable": "이 위젯 항목은 사용할 수 없습니다.",
         "toggle": "전환",
-        "copied": "복사됨",
         "confirmDelete": "이 파괴적인 작업을 확인하십시오."
       },
       "option": {
@@ -5420,7 +5361,6 @@
       },
       "metric": {
         "system": "시스템",
-        "source": "통합",
         "hostname": "호스트네임",
         "cpuModel": "CPU 모델",
         "cores": "코어",
@@ -5667,8 +5607,6 @@
       "noDisconnected": "모든 에이전트가 연결됨",
       "empty": "이 필터와 일치하는 에이전트 없음",
       "column": {
-        "status": "상태",
-        "name": "작업 이름",
         "ip": "IP",
         "os": "OS",
         "version": "버전",
@@ -6119,14 +6057,7 @@
       },
       "itemRadius": {
         "label": "항목 둥글기",
-        "description": "보드에 있는 타일의 모서리 둥글기를 변경합니다",
-        "option": {
-          "xs": "매우 작게",
-          "sm": "작게",
-          "md": "보통",
-          "lg": "크게",
-          "xl": "매우 크게"
-        }
+        "description": "보드에 있는 타일의 모서리 둥글기를 변경합니다"
       },
       "isPublic": {
         "label": "공개",
@@ -6177,7 +6108,7 @@
             }
           },
           "edit": {
-            "action": "레이아웃 편집　　　},{",
+            "action": "레이아웃 편집",
             "saveAndEdit": "저장하고 편집하기",
             "save": "레이아웃 저장",
             "cancel": {
@@ -6753,14 +6684,7 @@
               "label": "배경 오버레이"
             },
             "defaultRadius": {
-              "label": "모서리 스타일",
-              "options": {
-                "xs": "좁게",
-                "sm": "미세하게",
-                "md": "균형 있게",
-                "lg": "둥글게",
-                "xl": "부드럽게"
-              }
+              "label": "모서리 스타일"
             },
             "customCss": {
               "label": "전역 사용자 지정 CSS",
@@ -6782,7 +6706,6 @@
               "greetingDefault": "기본 인사말",
               "boardColorLocked": "보드 색상 잠금",
               "boardColorFlexible": "보드 색상 허용",
-              "appName": "작업 이름",
               "logo": "로고",
               "greeting": "인사말",
               "on": "켜짐",
@@ -7008,9 +6931,6 @@
             },
             "lastExecution": {
               "label": "최근 실행"
-            },
-            "actions": {
-              "label": "동작"
             }
           },
           "table": {
@@ -7075,9 +6995,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "생성자",
-                  "source": "통합",
-                  "actions": "동작"
+                  "createdBy": "생성자"
                 }
               },
               "provenance": {
@@ -7370,7 +7288,6 @@
     },
     "field": {
       "state": {
-        "label": "상태",
         "option": {
           "created": "생성됨",
           "running": "실행 중",
@@ -7397,7 +7314,6 @@
       }
     },
     "action": {
-      "title": "동작",
       "logs": {
         "label": "로그 보기",
         "page": {
@@ -7633,29 +7549,6 @@
     },
     "error": {
       "internalServerError": "Kubernetes 데이터를 가져오지 못했습니다"
-    },
-    "field": {
-      "name": {
-        "label": "작업 이름"
-      },
-      "namespace": {
-        "label": "네임스페이스"
-      },
-      "creationTimestamp": {
-        "label": "생성됨"
-      },
-      "state": {
-        "label": "직업 상태"
-      },
-      "status": {
-        "label": "상태"
-      },
-      "type": {
-        "label": "다운로드 클라이언트 유형"
-      },
-      "architecture": {
-        "label": "아키텍처"
-      }
     }
   },
   "permission": {
@@ -7681,10 +7574,6 @@
       "permission": {
         "label": "권한"
       }
-    },
-    "action": {
-      "saveUser": "사용자 권한 저장",
-      "saveGroup": "그룹 권한 저장"
     }
   },
   "navigationStructure": {
@@ -7796,8 +7685,7 @@
       "resultsAriaLabel": "{mode} 결과",
       "footer": {
         "navigate": "탐색",
-        "open": "열기",
-        "close": "닫기"
+        "open": "열기"
       }
     },
     "error": {
@@ -8226,9 +8114,6 @@
         },
         "urlTemplate": {
           "label": "URL 검색 템플릿"
-        },
-        "description": {
-          "label": "설명"
         }
       },
       "page": {
@@ -8298,8 +8183,7 @@
             "table": {
               "header": {
                 "season": "시즌",
-                "episodes": "에피소드",
-                "status": "상태"
+                "episodes": "에피소드"
               },
               "status": {
                 "requested": "요청됨"
@@ -8795,7 +8679,6 @@
       "cssDescription": "전체 스타일시트를 편집합니다. 여기서 제거하지 않는 한 기존 규칙은 유지됩니다.",
       "cssCharacters": "문자 {count}개 / 16384개",
       "copyCss": "CSS 복사",
-      "copied": "복사됨",
       "restoreCss": "현재 CSS 복원",
       "remoteCssTitle": "이 CSS는 원격 리소스를 로드합니다",
       "remoteCssDescription": "가져온 스타일시트와 원격 URL은 보드가 로드될 때 다른 서버에 연결합니다. 계속하기 전에 검토하세요."

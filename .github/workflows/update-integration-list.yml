@@ -33,9 +33,10 @@ jobs:
           persist-credentials: false
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
-      - name: Setup
-        uses: ./tooling/github/setup
-      - run: bun run scripts:update-readme-integrations
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.3
+      - run: bun ./scripts/update-integration-list.mts
       - name: Create Pull Request
         id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
@@ -48,10 +49,6 @@ jobs:
           delete-branch: true
           body: |
             This PR automatically updates the list of integrations of Homarr in the README.md
-
-      - name: Install GitHub CLI
-        if: steps.create-pull-request.outputs.pull-request-number != ''
-        run: sudo apt-get install -y gh
 
       - name: Enable auto-merge
         if: steps.create-pull-request.outputs.pull-request-number != ''

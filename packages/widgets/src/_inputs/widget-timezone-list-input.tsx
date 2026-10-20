@@ -185,7 +185,7 @@ const SortableTimezone = ({
     : [{ value: city.timeZone, label: t("unsupportedOption", { timeZone: city.timeZone }) }, ...timeZoneOptions];
 
   return (
-    <Card ref={setNodeRef} withBorder p="xs" style={style}>
+    <Card ref={setNodeRef} p="xs" style={style}>
       <Group gap="xs" wrap="wrap" align="end">
         <ActionIcon
           ref={setActivatorNodeRef}

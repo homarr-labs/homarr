@@ -216,32 +216,7 @@ const searchAccessibleBoardsAsync = async (
   limit?: number,
 ) => {
   const userId = ctx.session?.user.id;
-  const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
-    where: eq(boardUserPermissions.userId, userId ?? ""),
-  });
-
-  const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, userId ?? ""),
-    with: {
-      group: {
-        with: {
-          boardPermissions: {},
-          permissions: {},
-        },
-      },
-    },
-  });
-  const boardIds = permissionsOfCurrentUserWhenPresent
-    .map((permission) => permission.boardId)
-    .concat(
-      permissionsOfCurrentUserGroupsWhenPresent
-        .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
-        .flat(),
-    );
-
-  const currentUserWhenPresent = await ctx.db.query.users.findFirst({
-    where: eq(users.id, userId ?? ""),
-  });
+  const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
 
   const foundBoards = await ctx.db.query.boards.findMany({
     where: and(
@@ -264,7 +239,7 @@ const searchAccessibleBoardsAsync = async (
         where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: getBoardGroupPermissionWhere(permissionsOfCurrentUserGroupsWhenPresent),
+        where: getBoardGroupPermissionWhere(groupMemberships),
       },
     },
   });
@@ -274,8 +249,8 @@ const searchAccessibleBoardsAsync = async (
     name: board.name,
     logoImageUrl: board.logoImageUrl,
     permissions: constructBoardPermissions(board, ctx.session),
-    isHome: currentUserWhenPresent?.homeBoardId === board.id,
-    isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
+    isHome: currentUser?.homeBoardId === board.id,
+    isMobileHome: currentUser?.mobileHomeBoardId === board.id,
   }));
 };
 
@@ -2881,29 +2856,30 @@ const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string)
 const protectedLayoutRepairPromises = new Map<string, Promise<void>>();
 
 const getBoardAccessContextAsync = async (db: Database, userId: string | undefined) => {
-  const [userPermissions, groupMemberships, currentUser] = await Promise.all([
-    db.query.boardUserPermissions.findMany({
-      where: eq(boardUserPermissions.userId, userId ?? ""),
-    }),
-    db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, userId ?? ""),
-      with: {
-        group: {
-          with: {
-            boardPermissions: {},
-            permissions: {},
+  const currentUser = await db.query.users.findFirst({
+    where: eq(users.id, userId ?? ""),
+    columns: {
+      homeBoardId: true,
+      mobileHomeBoardId: true,
+    },
+    with: {
+      boardPermissions: { columns: { boardId: true } },
+      groups: {
+        columns: { groupId: true },
+        with: {
+          group: {
+            columns: {},
+            with: {
+              boardPermissions: { columns: { boardId: true } },
+              permissions: { columns: { permission: true } },
+            },
           },
         },
       },
-    }),
-    db.query.users.findFirst({
-      where: eq(users.id, userId ?? ""),
-      columns: {
-        homeBoardId: true,
-        mobileHomeBoardId: true,
-      },
-    }),
-  ]);
+    },
+  });
+  const userPermissions = currentUser?.boardPermissions ?? [];
+  const groupMemberships = currentUser?.groups ?? [];
   const boardIds = userPermissions
     .map((permission) => permission.boardId)
     .concat(

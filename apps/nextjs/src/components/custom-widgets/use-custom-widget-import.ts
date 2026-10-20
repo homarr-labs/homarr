@@ -123,7 +123,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
 
   const reviewMessages: ImportReviewContentMessages = {
     description: legacyId ? t("importReview.migrationDescription") : t("importReview.description"),
-    name: t("importReview.name"),
+    name: tCommon("field.name"),
     origin: t("importReview.origin"),
     authentication: t("importReview.authentication"),
     networkScope: t("importReview.networkScope"),

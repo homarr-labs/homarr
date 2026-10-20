@@ -142,13 +142,6 @@
         "secondaryColor": "Secundaire kleur",
         "resetColors": "Kleuren opnieuw instellen",
         "radius": "Widget hoek radius",
-        "radiusOptions": {
-          "xs": "Strak",
-          "sm": "Subtiel",
-          "md": "Evenwichtig",
-          "lg": "Afgerond",
-          "xl": "Zacht"
-        },
         "columns": "Bord kolommen",
         "columnsDescription": "Kolommen definiëren het horizontale raster dat wordt gebruikt voor grootte en positie items. 12 is veel voor de meeste mensen.",
         "columnCount": "{count, plural, one {# kolom} other {# kolommen}}",
@@ -192,7 +185,6 @@
           "loginRequired": "Meld u aan als beheerder na het instellen van een API-sleutel.",
           "configuration": "Client configuratie",
           "copy": "Kopieer configuratie",
-          "copied": "Gekoppeld",
           "advanced": "Open MCP tools, machtigingen en setup details"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "Beschrijving"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "Gebruik andere URL voor ping",
@@ -853,7 +842,6 @@
       "source": "API bron: {name}",
       "baseUrl": "Server URL",
       "networkScope": "Netwerk toegang",
-      "save": "API-configuratie opslaan",
       "expires": "Deze eenmalige aanvraag verloopt op {time}."
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "Plak een volledige aangepaste widget JSON met Ctrl+V of Command+V",
       "delete": "",
       "deleteConfirm": "",
-      "export": "",
       "duplicate": "",
       "aiPrompt": "Ontwerp met AI",
       "copyAiPrompt": "",
       "enable": "",
       "disable": "",
-      "menu": "",
       "downloadSkill": "Bekijk Aangepaste Widget Vaardigheid",
       "publishWorkshop": "Publiceer naar de Workshop",
       "migrate": "Migreer Aangepaste Widget",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "Widget bronnen configureren",
       "description": "Controleer waar deze widget verbindt en voeg toe of vervang de versleutelde inloggegevens.",
-      "credentialsRequired": "Verzoek zal mislukken totdat de vereiste inloggegevens worden toegevoegd.",
-      "save": "Configuratie opslaan"
-    },
-    "field": {
-      "description": ""
+      "credentialsRequired": "Verzoek zal mislukken totdat de vereiste inloggegevens worden toegevoegd."
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "Formatteren",
         "insertStarter": "Insert starter",
         "redo": "Opnieuw",
-        "copied": "Gekoppeld",
         "schema": "Schema"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "Verzoek {count, number}",
         "requestId": "ID aanvragen",
-        "type": "Client type downloaden",
         "method": "Methode",
         "source": "API bron",
         "run": "Uitvoeren",
@@ -1037,7 +1017,6 @@
         "optionName": "Optie naam",
         "label": "Omschrijving",
         "control": "Bediening",
-        "description": "Beschrijving",
         "default": "Standaard",
         "optionDetails": "Beperkingen en dynamische keuzes",
         "minimum": "Minimum",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "De opgeslagen waarde is verwijderd.",
         "primary": "Primaire API",
         "id": "Bron ID",
-        "name": "Taaknaam",
         "baseUrl": "Basis-URL",
         "baseUrlError": {
           "invalid": "Voer een volledige URL in.",
@@ -1091,7 +1069,6 @@
         "remove": "Verwijder de bron en de bijbehorende verzoeken",
         "advanced": "Geavanceerd",
         "add": "Een andere API-bron toevoegen",
-        "sourceType": "Integratie",
         "manualSource": "HTTP API",
         "existingIntegration": "Bestaande integratie",
         "integrationType": "Integratie type",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "Bekijk gemigreerde v2 vervanging",
       "migrationDescription": "Controleer en bevestig dit gegenereerde v2-definitie. Bevestigen op atomatische wijze vervangt het gespaard v1-record terwijl bestaande plaatsingen op board gekoppeld blijven aan dezelfde widget-ID.",
       "fileLabel": "Kies een aangepast widget JSON-bestand",
-      "name": "Taaknaam",
       "origin": "Basis oorsprong",
       "authentication": "Authenticatie",
       "networkScope": "Netwerk bereik",
@@ -1245,8 +1221,6 @@
         "title": "Deze widget kan externe gegevens wijzigen",
         "description": "Bekijk alle acties met naam en aanmeldgegevens en vernietigende bevestiging na het importeren. Geheime acties zijn niet opgenomen in het bestand."
       },
-      "cancel": "Import annuleren",
-      "confirm": "Importeer widget",
       "confirmMigration": "Bevestig v2 vervanging"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "Schermafbeelding weergeven sluiten",
     "technicalDetails": "Technische details",
     "sourceCode": "Werkplaats invoer",
-    "export": "Exporteren",
     "report": "Rapporteren",
     "reportTitle": "Rapport indienen",
     "reportReason": "Reden",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "Bekijk en beheer indiening",
       "done": "Voltooid",
       "signInHint": "Log in om te publiceren onder je Workshop-identiteit.",
-      "titleField": "Titel",
-      "descriptionField": "Beschrijving",
       "screenshots": "Schermafbeeldingen",
       "screenshotsDescription": "Maximaal 5 PNG, JPEG, of WebP afbeeldingen",
       "screenshotsPlaceholder": "Kies schermafbeeldingen",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "Vertrouwd certificaat",
                 "message": "Certificaat toegevoegd aan lijst met vertrouwde certificaten"
               },
               "error": {
-                "title": "Vertrouwen certificaat mislukt",
                 "message": "Certificaat toevoegen aan lijst met vertrouwde certificaten mislukt"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "Vind een media",
     "field": {
       "preview": "Voorvertoning",
-      "size": "Grootte",
-      "creator": "Maker",
-      "actions": "Bedieningen"
+      "creator": "Maker"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "Strak",
+        "sm": "Subtiel",
+        "md": "Evenwichtig",
+        "lg": "Afgerond",
+        "xl": "Zacht"
+      }
+    },
     "success": "Succes",
     "beta": "Beta",
     "error": "Fout",
@@ -1911,7 +1887,8 @@
       "clearSearch": "Zoekopdracht wissen",
       "copy": "Kopiëren",
       "copied": "Gekoppeld",
-      "refresh": "Vernieuwen"
+      "refresh": "Vernieuwen",
+      "export": "Exporteren"
     },
     "pagination": {
       "pageOf": "Pagina {page} van {totalPages}"
@@ -2054,7 +2031,18 @@
     "total": "Totaal",
     "filesystemUsage": "{count, plural, one {Toon gebruik voor # bestandssysteem} other {Toon gebruik voor # filesystemen}}",
     "field": {
-      "name": "Taaknaam"
+      "name": "Naam",
+      "description": "Beschrijving",
+      "title": "Titel",
+      "actions": "Acties",
+      "type": "Type",
+      "status": "Status",
+      "state": "Status",
+      "size": "Grootte",
+      "source": "Bron",
+      "namespace": "Namespace",
+      "created": "Aangemaakt",
+      "architecture": "Architectuur"
     },
     "label": {
       "new": "Nieuw"
@@ -2109,9 +2097,6 @@
         "collapse": "Samenvouwen"
       },
       "option": {
-        "title": {
-          "label": "Titel"
-        },
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "Instellingen",
         "settingsFor": "Instellingen voor {name}",
-        "options": "",
-        "actions": ""
+        "options": ""
       },
       "status": {
         "success": "",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, one {# geselecteerde item} other {# geselecteerde artikel}}",
       "selected": "{count, plural, one {# geselecteerd} other {# geselecteerd}}",
-      "copy": "Kopiëren",
       "copied": "{count, plural, one {# item is naar het klembord gekopieerd} other {# items zijn naar het klembord gekopieerd}}",
       "copyError": "De geselecteerde items konden niet worden gekopieerd. Uw browser staat mogelijk geen toegang toe tot het klembord.",
       "paste": "Plakken",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, one {# item is verwijderd} other {# items zijn verwijderd}}",
       "move": "Verplaatsen",
       "moveTo": "Geselecteerde items verplaatsen",
-      "delete": "Verwijderen",
       "clear": "Selectie wissen",
       "clearShortcut": "Selectie wissen (Escape)",
       "saveErrorTitle": "Kan items niet bijwerken",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "Integraties",
           "removeLabel": "{name} integratie verwijderen"
-        },
-        "title": {
-          "label": "Titel"
         },
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
@@ -3483,7 +3462,6 @@
         },
         "table": {
           "header": {
-            "name": "Naam",
             "node": "Node"
           }
         }
@@ -3513,8 +3491,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "Naam",
-            "state": "Status",
             "cpuUsage": "CPU-gebruik",
             "memoryUsage": "Geheugengebruik"
           }
@@ -3925,9 +3901,7 @@
       "items": {
         "currentlyPlaying": "Momenteel aan het afspelen",
         "user": "Gebruiker",
-        "name": "Naam",
         "id": "Id",
-        "status": "",
         "directPlay": "",
         "directStream": "",
         "transcodeVideo": "",
@@ -4302,38 +4276,27 @@
           "columnTitle": "Bedieningen"
         },
         "added": {
-          "columnTitle": "Toegevoegd",
-          "detailsTitle": "Datum toegevoegd"
+          "columnTitle": "Toegevoegd"
         },
         "category": {
-          "columnTitle": "Extra’s",
-          "detailsTitle": "Categorieën (of extra informatie)"
+          "columnTitle": "Extra’s"
         },
         "downSpeed": {
-          "columnTitle": "Omlaag",
-          "detailsTitle": "Downloadsnelheid"
+          "columnTitle": "Omlaag"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "Huidige index binnen client"
         },
         "id": {
-          "columnTitle": "ID",
-          "detailsTitle": "ID"
-        },
-        "integration": {
-          "columnTitle": "Integratie"
-        },
-        "name": {
-          "columnTitle": "Taaknaam"
+          "columnTitle": "ID"
         },
         "progress": {
           "columnTitle": "Voortgang",
           "detailsTitle": "Downloadvoortgang"
         },
         "ratio": {
-          "columnTitle": "Verhouding",
-          "detailsTitle": "Torrent ratio (ontvangen/verzonden)"
+          "columnTitle": "Verhouding"
         },
         "received": {
           "columnTitle": "Totaal down",
@@ -4343,26 +4306,14 @@
           "columnTitle": "Totaal up",
           "detailsTitle": "Totaal geüpload"
         },
-        "size": {
-          "columnTitle": "Bestandsgrootte",
-          "detailsTitle": "Totale grootte van selectie/bestanden"
-        },
-        "state": {
-          "columnTitle": "Status",
-          "detailsTitle": "Taakstatus"
-        },
         "time": {
-          "columnTitle": "Eindtijd",
-          "detailsTitle": "Tijd sinds/tot voltooiing",
-          "eta": ""
+          "columnTitle": "Eindtijd"
         },
         "type": {
-          "columnTitle": "Type",
           "detailsTitle": "Client type downloaden"
         },
         "upSpeed": {
-          "columnTitle": "Omhoog",
-          "detailsTitle": "Uploadsnelheid"
+          "columnTitle": "Omhoog"
         }
       },
       "states": {
@@ -4550,11 +4501,6 @@
             "progress": "Voortgang"
           }
         },
-        "queue": {
-          "table": {
-            "size": "Grootte"
-          }
-        },
         "common": {
           "empty": "Leeg",
           "file": "Bestand",
@@ -4684,9 +4630,6 @@
           "identifier": {
             "label": "Identificator",
             "placeholder": "Naam of Eigenaar/naam"
-          },
-          "name": {
-            "label": "Naam"
           },
           "versionFilter": {
             "label": "Versie filter",
@@ -4914,7 +4857,6 @@
       "download": "Download",
       "upload": "Upload",
       "ping": "Ping",
-      "status": "Status",
       "avgDownload": "Gem. Download",
       "avgUpload": "Gem. Upload",
       "avgPing": "Gem. Ping",
@@ -5151,7 +5093,6 @@
         "actionsDisabledEditMode": "Acties zijn uitgeschakeld als het bord in de bewerkingsmodus is.",
         "widgetItemUnavailable": "Dit widget item is niet beschikbaar.",
         "toggle": "Omschakelen",
-        "copied": "Gekoppeld",
         "confirmDelete": "Bevestig deze destructieve actie."
       },
       "option": {
@@ -5420,7 +5361,6 @@
       },
       "metric": {
         "system": "Systeem",
-        "source": "Integratie",
         "hostname": "Hostnaam",
         "cpuModel": "CPU model",
         "cores": "Cores",
@@ -5667,8 +5607,6 @@
       "noDisconnected": "Alle agenten zijn verbonden",
       "empty": "Er komen geen agenten overeen met deze filter",
       "column": {
-        "status": "Status",
-        "name": "Taaknaam",
         "ip": "IP-adres",
         "os": "OS",
         "version": "Versie",
@@ -6119,14 +6057,7 @@
       },
       "itemRadius": {
         "label": "Item radius",
-        "description": "Verandert de rondheid van tegels op je bord",
-        "option": {
-          "xs": "Zeer klein",
-          "sm": "Klein",
-          "md": "Gemiddeld",
-          "lg": "Groot",
-          "xl": "Zeer groot"
-        }
+        "description": "Verandert de rondheid van tegels op je bord"
       },
       "isPublic": {
         "label": "Openbaar",
@@ -6753,14 +6684,7 @@
               "label": "Achtergrond overlay"
             },
             "defaultRadius": {
-              "label": "Hoek stijl",
-              "options": {
-                "xs": "Strak",
-                "sm": "Subtiel",
-                "md": "Evenwichtig",
-                "lg": "Afgerond",
-                "xl": "Zacht"
-              }
+              "label": "Hoek stijl"
             },
             "customCss": {
               "label": "Globale aangepaste CSS",
@@ -6782,7 +6706,6 @@
               "greetingDefault": "Standaard begroeting",
               "boardColorLocked": "Kleur op bord vergrendeld",
               "boardColorFlexible": "Kleuren op bord toegestaan",
-              "appName": "Taaknaam",
               "logo": "Logo",
               "greeting": "Begroeting",
               "on": "op",
@@ -7008,9 +6931,6 @@
             },
             "lastExecution": {
               "label": "Laatste uitvoering"
-            },
-            "actions": {
-              "label": "Acties"
             }
           },
           "table": {
@@ -7075,9 +6995,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "Aangemaakt door",
-                  "source": "Integratie",
-                  "actions": "Acties"
+                  "createdBy": "Aangemaakt door"
                 }
               },
               "provenance": {
@@ -7370,7 +7288,6 @@
     },
     "field": {
       "state": {
-        "label": "Status",
         "option": {
           "created": "Aangemaakt",
           "running": "Actief",
@@ -7397,7 +7314,6 @@
       }
     },
     "action": {
-      "title": "Acties",
       "logs": {
         "label": "Logboeken bekijken",
         "page": {
@@ -7633,29 +7549,6 @@
     },
     "error": {
       "internalServerError": "Kubernetes gegevens ophalen mislukt"
-    },
-    "field": {
-      "name": {
-        "label": "Taaknaam"
-      },
-      "namespace": {
-        "label": "Namespace"
-      },
-      "creationTimestamp": {
-        "label": "Aangemaakt"
-      },
-      "state": {
-        "label": "Taakstatus"
-      },
-      "status": {
-        "label": "Status"
-      },
-      "type": {
-        "label": "Client type downloaden"
-      },
-      "architecture": {
-        "label": "Architectuur"
-      }
     }
   },
   "permission": {
@@ -7681,10 +7574,6 @@
       "permission": {
         "label": "Machtiging"
       }
-    },
-    "action": {
-      "saveUser": "Gebruikersmachtiging opslaan",
-      "saveGroup": "Groepsmachtiging opslaan"
     }
   },
   "navigationStructure": {
@@ -7796,8 +7685,7 @@
       "resultsAriaLabel": "{mode} resultaten",
       "footer": {
         "navigate": "Navigate",
-        "open": "Open",
-        "close": "Sluiten"
+        "open": "Open"
       }
     },
     "error": {
@@ -8226,9 +8114,6 @@
         },
         "urlTemplate": {
           "label": "URL zoektemplate"
-        },
-        "description": {
-          "label": "Beschrijving"
         }
       },
       "page": {
@@ -8298,8 +8183,7 @@
             "table": {
               "header": {
                 "season": "Seizoen",
-                "episodes": "Afleveringen",
-                "status": "Status"
+                "episodes": "Afleveringen"
               },
               "status": {
                 "requested": "Aangevraagd"
@@ -8795,7 +8679,6 @@
       "cssDescription": "Bewerk het volledige stylesheet. Bestaande regels worden bewaard tenzij ze hier verwijderd worden.",
       "cssCharacters": "{count} van 16384 tekens",
       "copyCss": "Copy CSS",
-      "copied": "Gekoppeld",
       "restoreCss": "Restore current CSS",
       "remoteCssTitle": "Deze CSS laadt een externe bron",
       "remoteCssDescription": "Geïmporteerde stylesheets en externe URL's nemen contact op met een andere server wanneer het bord wordt geladen. Controleer deze voordat u doorgaat."

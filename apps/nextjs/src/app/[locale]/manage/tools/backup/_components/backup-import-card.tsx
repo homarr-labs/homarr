@@ -11,7 +11,7 @@ export const BackupImportCard = () => {
   const t = useI18n("management.page.tool.backup.import");
 
   return (
-    <Card withBorder>
+    <Card>
       <Stack gap="md">
         <Group gap="sm">
           <IconDatabaseImport size={24} />

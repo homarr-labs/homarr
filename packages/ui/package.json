@@ -39,8 +39,7 @@
     "mantine-react-table": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "svgson": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",

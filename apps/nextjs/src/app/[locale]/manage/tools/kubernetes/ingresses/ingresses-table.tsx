@@ -28,16 +28,16 @@ interface IngressesTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.ingresses">,
-  tField: ScopedTranslationFunction<"kubernetes.field">,
+  tField: ScopedTranslationFunction<"common.field">,
 ): MRT_ColumnDef<KubernetesIngress>[] => [
   {
     accessorKey: "name",
-    header: tField("name.label"),
+    header: tField("name"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: tField("namespace.label"),
+    header: tField("namespace"),
     enableClickToCopy: true,
   },
   {
@@ -74,14 +74,14 @@ const createColumns = (
   },
   {
     accessorKey: "creationTimestamp",
-    header: tField("creationTimestamp.label"),
+    header: tField("created"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function IngressesTable({ contextId, initialIngresses }: IngressesTableComponentProps) {
   const tIngresses = useI18n("kubernetes.ingresses");
-  const tField = useI18n("kubernetes.field");
+  const tField = useI18n("common.field");
 
   const { data, isError } = clientApi.kubernetes.ingresses.getIngresses.useQuery(
     { contextId },

@@ -142,13 +142,6 @@
         "secondaryColor": "輔助色",
         "resetColors": "重設顏色",
         "radius": "小工具圓角半徑",
-        "radiusOptions": {
-          "xs": "緊密",
-          "sm": "微妙",
-          "md": "平衡",
-          "lg": "圓潤",
-          "xl": "柔和"
-        },
         "columns": "面板欄數",
         "columnsDescription": "欄數定義用於調整項目大小和位置的水平網格。對大多數人來說，12 欄已經足夠。",
         "columnCount": "{count, plural, other {# 欄}}",
@@ -192,7 +185,6 @@
           "loginRequired": "設定完成後，請以管理員身分登入以建立 API 金鑰。",
           "configuration": "用戶端設定",
           "copy": "複製設定",
-          "copied": "已複製",
           "advanced": "開啟 MCP 工具、權限和設定詳細資料"
         }
       },
@@ -799,9 +791,6 @@
       }
     },
     "field": {
-      "description": {
-        "label": "描述"
-      },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "使用不同的 URL 進行 Ping",
@@ -853,7 +842,6 @@
       "source": "API 來源：{name}",
       "baseUrl": "伺服器 URL",
       "networkScope": "網路存取",
-      "save": "儲存 API 設定",
       "expires": "此一次性請求將於 {time} 到期。"
     },
     "page": {
@@ -884,13 +872,11 @@
       "pasteImportHint": "使用 Ctrl+V 或 Command+V 貼上完整的自訂小工具 JSON",
       "delete": "刪除自訂小工具",
       "deleteConfirm": "確定要刪除 \"{name}\" 嗎？此動作無法復原。",
-      "export": "匯出",
       "duplicate": "複製",
       "aiPrompt": "使用 AI 設計",
       "copyAiPrompt": "複製 AI 提示",
       "enable": "啟用",
       "disable": "停用",
-      "menu": "動作",
       "downloadSkill": "檢視自訂小工具技能",
       "publishWorkshop": "發佈至 Workshop",
       "migrate": "移轉自訂小工具",
@@ -904,11 +890,7 @@
     "sourceSetupDialog": {
       "title": "設定小工具來源",
       "description": "檢視此小工具的連線位置，並新增或取代其加密認證資料。",
-      "credentialsRequired": "在新增必要的認證資料前，請求將會失敗。",
-      "save": "儲存設定"
-    },
-    "field": {
-      "description": "描述"
+      "credentialsRequired": "在新增必要的認證資料前，請求將會失敗。"
     },
     "editor": {
       "errorBoundary": {
@@ -919,7 +901,6 @@
         "format": "格式化",
         "insertStarter": "插入入門範例",
         "redo": "重做",
-        "copied": "已複製",
         "schema": "結構描述"
       },
       "reference": {
@@ -1000,7 +981,6 @@
         "manifestFilename": "widget.json",
         "request": "請求 {count, number}",
         "requestId": "請求 ID",
-        "type": "下載器類型",
         "method": "方法",
         "source": "API 來源",
         "run": "執行",
@@ -1037,7 +1017,6 @@
         "optionName": "選項名稱",
         "label": "標籤",
         "control": "控制項",
-        "description": "描述",
         "default": "預設值",
         "optionDetails": "限制和動態選項",
         "minimum": "最小值",
@@ -1074,7 +1053,6 @@
         "credentialRemovedDescription": "儲存的值已刪除。",
         "primary": "主要 API",
         "id": "來源 ID",
-        "name": "工作名稱",
         "baseUrl": "基底 URL",
         "baseUrlError": {
           "invalid": "請輸入完整的 URL。",
@@ -1091,7 +1069,6 @@
         "remove": "移除來源及其請求",
         "advanced": "進階",
         "add": "新增其他 API 來源",
-        "sourceType": "集成",
         "manualSource": "HTTP API",
         "existingIntegration": "現有整合",
         "integrationType": "整合類型",
@@ -1225,7 +1202,6 @@
       "migrationTitle": "檢查遷移後的 v2 替代項目",
       "migrationDescription": "檢查並確認此產生的 v2 定義。確認後會以原子方式取代保留的 v1 記錄，同時讓現有面板配置繼續連結至相同的小工具 ID。",
       "fileLabel": "選擇自訂小工具 JSON 檔案",
-      "name": "工作名稱",
       "origin": "基底來源",
       "authentication": "認證",
       "networkScope": "網路範圍",
@@ -1245,8 +1221,6 @@
         "title": "此小工具可以變更遠端資料",
         "description": "匯入後，請檢查每個具名動作、繼承的憑證和破壞性確認。檔案不包含秘密。"
       },
-      "cancel": "取消匯入",
-      "confirm": "匯入小工具",
       "confirmMigration": "確認 v2 替代項目"
     },
     "secret": {
@@ -1310,7 +1284,6 @@
     "closeScreenshotViewer": "關閉螢幕截圖檢視器",
     "technicalDetails": "技術詳細資料",
     "sourceCode": "Workshop 項目",
-    "export": "匯出",
     "report": "檢舉",
     "reportTitle": "檢舉投稿",
     "reportReason": "原因",
@@ -1341,8 +1314,6 @@
       "viewSubmission": "檢視並管理投稿",
       "done": "完成",
       "signInHint": "登入即可使用您的 Workshop 身分發佈。",
-      "titleField": "標題",
-      "descriptionField": "描述",
       "screenshots": "螢幕截圖",
       "screenshotsDescription": "最多五張 PNG、JPEG 或 WebP 圖片",
       "screenshotsPlaceholder": "選擇螢幕截圖",
@@ -1607,11 +1578,9 @@
             },
             "notification": {
               "success": {
-                "title": "已信任的憑證",
                 "message": "已將憑證加入受信任憑證清單"
               },
               "error": {
-                "title": "信任憑證失敗",
                 "message": "無法將憑證加入受信任憑證清單"
               }
             }
@@ -1832,9 +1801,7 @@
     "search": "尋找多媒體",
     "field": {
       "preview": "預覽",
-      "size": "大小",
-      "creator": "創建者",
-      "actions": "控制"
+      "creator": "創建者"
     },
     "action": {
       "upload": {
@@ -1875,6 +1842,15 @@
     }
   },
   "common": {
+    "cornerStyle": {
+      "options": {
+        "xs": "緊湊",
+        "sm": "細微",
+        "md": "平衡",
+        "lg": "圓潤",
+        "xl": "柔和"
+      }
+    },
     "success": "成功",
     "beta": "測試版",
     "error": "錯誤",
@@ -1911,7 +1887,8 @@
       "clearSearch": "清除搜尋",
       "copy": "複製",
       "copied": "已複製",
-      "refresh": "刷新"
+      "refresh": "刷新",
+      "export": "匯出"
     },
     "pagination": {
       "pageOf": "第 {page} 頁，共 {totalPages} 頁"
@@ -2054,7 +2031,18 @@
     "total": "總計",
     "filesystemUsage": "{count, plural, other {顯示 # 個檔案系統的使用量}}",
     "field": {
-      "name": "工作名稱"
+      "name": "名稱",
+      "description": "描述",
+      "title": "標題",
+      "actions": "動作",
+      "type": "類型",
+      "status": "狀態",
+      "state": "狀態",
+      "size": "大小",
+      "source": "來源",
+      "namespace": "命名空間",
+      "created": "已創建",
+      "architecture": "架構"
     },
     "label": {
       "new": "創建"
@@ -2109,9 +2097,6 @@
         "collapse": "摺疊"
       },
       "option": {
-        "title": {
-          "label": "標題"
-        },
         "customCssClasses": {
           "label": "自定義 CSS html"
         },
@@ -2135,8 +2120,7 @@
       "label": {
         "settings": "設定",
         "settingsFor": "{name} 的設定",
-        "options": "選項",
-        "actions": "動作"
+        "options": "選項"
       },
       "status": {
         "success": "確定",
@@ -2189,7 +2173,6 @@
     "selection": {
       "summary": "{count, plural, other {已選取 # 個項目}}",
       "selected": "{count, plural, other {已選取 # 個}}",
-      "copy": "複製",
       "copied": "{count, plural, other {已將 # 個項目複製到剪貼簿}}",
       "copyError": "無法複製所選項目。您的瀏覽器可能不允許存取剪貼簿。",
       "paste": "貼上",
@@ -2201,7 +2184,6 @@
       "removed": "{count, plural, other {已移除 # 個項目}}",
       "move": "移動",
       "moveTo": "移動所選項目",
-      "delete": "移除",
       "clear": "清除選取項目",
       "clearShortcut": "清除選取項目（Escape）",
       "saveErrorTitle": "無法更新項目",
@@ -2276,9 +2258,6 @@
         "integrations": {
           "label": "集成",
           "removeLabel": "移除 {name} 整合"
-        },
-        "title": {
-          "label": "標題"
         },
         "customCssClasses": {
           "label": "自定義 CSS html"
@@ -3483,7 +3462,6 @@
         },
         "table": {
           "header": {
-            "name": "名稱",
             "node": "節點"
           }
         }
@@ -3513,8 +3491,6 @@
         },
         "defaultSort": {
           "option": {
-            "name": "名稱",
-            "state": "狀態",
             "cpuUsage": "CPU 使用率",
             "memoryUsage": "記憶體使用率"
           }
@@ -3925,9 +3901,7 @@
       "items": {
         "currentlyPlaying": "目前播放中",
         "user": "使用者",
-        "name": "名稱",
         "id": "ID",
-        "status": "狀態",
         "directPlay": "直接播放",
         "directStream": "直接串流",
         "transcodeVideo": "轉碼影片",
@@ -4302,38 +4276,27 @@
           "columnTitle": "控制"
         },
         "added": {
-          "columnTitle": "已新增",
-          "detailsTitle": "日期已新增"
+          "columnTitle": "已新增"
         },
         "category": {
-          "columnTitle": "擴展的",
-          "detailsTitle": "分類 (額外訊息)"
+          "columnTitle": "擴展的"
         },
         "downSpeed": {
-          "columnTitle": "下載",
-          "detailsTitle": "下載速度"
+          "columnTitle": "下載"
         },
         "index": {
           "columnTitle": "#",
           "detailsTitle": "下載器中的當前索引"
         },
         "id": {
-          "columnTitle": "項目 ID",
-          "detailsTitle": "項目 ID"
-        },
-        "integration": {
-          "columnTitle": "集成"
-        },
-        "name": {
-          "columnTitle": "工作名稱"
+          "columnTitle": "項目 ID"
         },
         "progress": {
           "columnTitle": "進度",
           "detailsTitle": "下載進度"
         },
         "ratio": {
-          "columnTitle": "分享率",
-          "detailsTitle": "Torrent 速率 (接收/發送)"
+          "columnTitle": "分享率"
         },
         "received": {
           "columnTitle": "總下載",
@@ -4343,26 +4306,14 @@
           "columnTitle": "總上傳",
           "detailsTitle": "總上傳量"
         },
-        "size": {
-          "columnTitle": "檔案大小",
-          "detailsTitle": "選擇/檔案的總大小"
-        },
-        "state": {
-          "columnTitle": "狀態",
-          "detailsTitle": "工作狀態"
-        },
         "time": {
-          "columnTitle": "完成時間",
-          "detailsTitle": "剩餘完成時間",
-          "eta": "剩餘時間"
+          "columnTitle": "完成時間"
         },
         "type": {
-          "columnTitle": "類型",
           "detailsTitle": "下載器類型"
         },
         "upSpeed": {
-          "columnTitle": "上傳",
-          "detailsTitle": "上傳速度"
+          "columnTitle": "上傳"
         }
       },
       "states": {
@@ -4550,11 +4501,6 @@
             "progress": "進度"
           }
         },
-        "queue": {
-          "table": {
-            "size": "大小"
-          }
-        },
         "common": {
           "empty": "空",
           "file": "檔案",
@@ -4684,9 +4630,6 @@
           "identifier": {
             "label": "識別碼",
             "placeholder": "名稱或擁有者/名稱"
-          },
-          "name": {
-            "label": "名稱"
           },
           "versionFilter": {
             "label": "版本篩選",
@@ -4914,7 +4857,6 @@
       "download": "下載",
       "upload": "上傳",
       "ping": "Ping",
-      "status": "狀態",
       "avgDownload": "平均下載",
       "avgUpload": "平均上傳",
       "avgPing": "平均 Ping",
@@ -5151,7 +5093,6 @@
         "actionsDisabledEditMode": "看板處於編輯模式時，動作已停用。",
         "widgetItemUnavailable": "此小工具項目無法使用。",
         "toggle": "切換",
-        "copied": "已複製",
         "confirmDelete": "確認此破壞性動作。"
       },
       "option": {
@@ -5420,7 +5361,6 @@
       },
       "metric": {
         "system": "系統",
-        "source": "集成",
         "hostname": "主機名稱",
         "cpuModel": "CPU 型號",
         "cores": "核心數",
@@ -5667,8 +5607,6 @@
       "noDisconnected": "所有代理程式都已連線",
       "empty": "沒有代理程式符合此篩選條件",
       "column": {
-        "status": "狀態",
-        "name": "工作名稱",
         "ip": "IP 位址",
         "os": "系統",
         "version": "版本",
@@ -6119,14 +6057,7 @@
       },
       "itemRadius": {
         "label": "項目圓角半徑",
-        "description": "變更面板上磚塊的圓角程度",
-        "option": {
-          "xs": "非常小",
-          "sm": "小",
-          "md": "中",
-          "lg": "大",
-          "xl": "非常大"
-        }
+        "description": "變更面板上磚塊的圓角程度"
       },
       "isPublic": {
         "label": "公開",
@@ -6753,14 +6684,7 @@
               "label": "背景覆蓋層"
             },
             "defaultRadius": {
-              "label": "圓角樣式",
-              "options": {
-                "xs": "緊湊",
-                "sm": "細微",
-                "md": "平衡",
-                "lg": "圓潤",
-                "xl": "柔和"
-              }
+              "label": "圓角樣式"
             },
             "customCss": {
               "label": "全域自訂 CSS",
@@ -6782,7 +6706,6 @@
               "greetingDefault": "預設問候語",
               "boardColorLocked": "面板色彩已鎖定",
               "boardColorFlexible": "允許面板色彩變更",
-              "appName": "工作名稱",
               "logo": "標誌",
               "greeting": "問候語",
               "on": "開啟",
@@ -7008,9 +6931,6 @@
             },
             "lastExecution": {
               "label": "上次執行"
-            },
-            "actions": {
-              "label": "操作"
             }
           },
           "table": {
@@ -7075,9 +6995,7 @@
               },
               "table": {
                 "header": {
-                  "createdBy": "創建者",
-                  "source": "集成",
-                  "actions": "動作"
+                  "createdBy": "創建者"
                 }
               },
               "provenance": {
@@ -7370,7 +7288,6 @@
     },
     "field": {
       "state": {
-        "label": "狀態",
         "option": {
           "created": "已創建",
           "running": "運行中",
@@ -7397,7 +7314,6 @@
       }
     },
     "action": {
-      "title": "操作",
       "logs": {
         "label": "檢視日誌",
         "page": {
@@ -7633,29 +7549,6 @@
     },
     "error": {
       "internalServerError": "無法擷取 Kubernetes 資料"
-    },
-    "field": {
-      "name": {
-        "label": "工作名稱"
-      },
-      "namespace": {
-        "label": "命名空間"
-      },
-      "creationTimestamp": {
-        "label": "已創建"
-      },
-      "state": {
-        "label": "工作狀態"
-      },
-      "status": {
-        "label": "狀態"
-      },
-      "type": {
-        "label": "下載器類型"
-      },
-      "architecture": {
-        "label": "架構"
-      }
     }
   },
   "permission": {
@@ -7681,10 +7574,6 @@
       "permission": {
         "label": "權限"
       }
-    },
-    "action": {
-      "saveUser": "儲存使用者權限",
-      "saveGroup": "儲存用戶組權限"
     }
   },
   "navigationStructure": {
@@ -7796,8 +7685,7 @@
       "resultsAriaLabel": "{mode} 結果",
       "footer": {
         "navigate": "導覽",
-        "open": "開啟",
-        "close": "關閉"
+        "open": "開啟"
       }
     },
     "error": {
@@ -8226,9 +8114,6 @@
         },
         "urlTemplate": {
           "label": "網址搜尋面板"
-        },
-        "description": {
-          "label": "描述"
         }
       },
       "page": {
@@ -8298,8 +8183,7 @@
             "table": {
               "header": {
                 "season": "季",
-                "episodes": "劇集",
-                "status": "狀態"
+                "episodes": "劇集"
               },
               "status": {
                 "requested": "已請求"
@@ -8795,7 +8679,6 @@
       "cssDescription": "編輯完整樣式表。除非在此移除，否則現有規則都會保留。",
       "cssCharacters": "{count} / 16384 個字元",
       "copyCss": "複製 CSS",
-      "copied": "已複製",
       "restoreCss": "還原目前的 CSS",
       "remoteCssTitle": "此 CSS 會載入遠端資源",
       "remoteCssDescription": "匯入的樣式表和遠端網址會在看板載入時連線至其他伺服器。請在繼續前先檢視。"

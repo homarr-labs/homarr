@@ -65,10 +65,11 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      * @param data data to be published
      */
     publishAsync: async (data: TData) => {
+      const serialized = superjson.stringify(data);
       if (persist) {
-        await requireRedisConnection(lastDataClient).set(lastChannelName, superjson.stringify(data));
+        await requireRedisConnection(lastDataClient).set(lastChannelName, serialized);
       }
-      await requireRedisConnection(publisher).publish(channelName, superjson.stringify(data));
+      await requireRedisConnection(publisher).publish(channelName, serialized);
     },
     getLastDataAsync: async () => {
       const data = await requireRedisConnection(lastDataClient).get(lastChannelName);

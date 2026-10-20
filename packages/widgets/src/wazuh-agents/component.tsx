@@ -28,6 +28,7 @@ import type { WidgetComponentProps } from "../definition";
 import { WazuhChip } from "../wazuh/_shared/badges";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
 import { WazuhRelativeTime, WazuhPendingState, WazuhStatTile, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { wazuhMinuteQueryOptions } from "../wazuh/_shared/options";
 import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
 import classes from "../wazuh/_shared/wazuh.module.css";
 
@@ -126,13 +127,11 @@ export default function WazuhAgentsWidget({
   height,
 }: WidgetComponentProps<"wazuhAgents">) {
   const t = useI18n("widget.wazuhAgents");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
   const now = useWidgetNow("minute");
   const integrationId = integrationIds[0] ?? "";
-  const query = clientApi.widget.wazuh.getAgents.useQuery(
-    { integrationId },
-    { staleTime: 60_000, refetchInterval: 60_000 },
-  );
+  const query = clientApi.widget.wazuh.getAgents.useQuery({ integrationId }, wazuhMinuteQueryOptions);
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);
 
@@ -279,13 +278,13 @@ export default function WazuhAgentsWidget({
                       <SortHeader
                         column="status"
                         label=""
-                        ariaLabel={t("column.status")}
+                        ariaLabel={tCommon("field.status")}
                         sort={sort}
                         onSort={handleSort}
                       />
                     </th>
                     <th>
-                      <SortHeader column="name" label={t("column.name")} sort={sort} onSort={handleSort} />
+                      <SortHeader column="name" label={tCommon("field.name")} sort={sort} onSort={handleSort} />
                     </th>
                     {showIp && (
                       <th>

@@ -234,7 +234,7 @@ export const BoardSelectionToolbar = () => {
             leftSection={<IconCopy size={15} />}
             onClick={() => void copySelectedItems()}
           >
-            {tSelection("copy")}
+            {t("common.action.copy")}
           </Button>
 
           <Tooltip label={tSelection("pasteShortcut")} withArrow>
@@ -278,7 +278,7 @@ export const BoardSelectionToolbar = () => {
             leftSection={<IconTrash size={15} />}
             onClick={removeSelectedItems}
           >
-            {tSelection("delete")}
+            {t("common.action.delete")}
           </Button>
 
           <Tooltip label={tSelection("clearShortcut")} withArrow>

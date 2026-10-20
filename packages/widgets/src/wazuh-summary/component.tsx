@@ -13,6 +13,7 @@ import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common
 import type { WidgetComponentProps } from "../definition";
 import { WazuhErrorState } from "../wazuh/_shared/error-state";
 import { WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
+import { wazuhMinuteQueryOptions } from "../wazuh/_shared/options";
 import {
   formatWazuhCount,
   formatWazuhTrend,
@@ -79,7 +80,7 @@ export default function WazuhSummaryWidget({
   const integrationId = integrationIds[0] ?? "";
   const query = clientApi.widget.wazuh.getSummary.useQuery(
     { integrationId, range: options.range },
-    { staleTime: 60_000, refetchInterval: 60_000 },
+    wazuhMinuteQueryOptions,
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);

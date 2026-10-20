@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 import {
   colorSchemes,
+  cornerStyleValues,
   integrationKinds,
   integrationSecretKinds,
   onboardingLayoutPresets,
@@ -80,7 +81,7 @@ export const onboardingCompleteSetupSchema = z
       name: boardNameSchema,
       primaryColor: hexColorSchema,
       secondaryColor: hexColorSchema,
-      itemRadius: z.enum(["xs", "sm", "md", "lg", "xl"]),
+      itemRadius: z.enum(cornerStyleValues),
       layoutPreset: z.enum(onboardingLayoutPresets).default("balanced"),
       columnCount: z.number().int().min(8).max(24).optional(),
       leftSidebar: z.boolean().default(false),

@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { STATUS_CODES } from "node:http";
-import { Headers, Response } from "undici";
+import { Headers } from "undici";
 
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
 export type { CustomWidgetAuthConfig, CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "./request-types";
@@ -15,7 +15,7 @@ import {
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { decodeResponseBody, parseResponseBody, redactResponseSecrets } from "./response";
+import { decodeResponseBody, parseBufferedResponseBody, redactResponseSecrets } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -131,17 +131,16 @@ async function performRequestWithinDeadline(
           responseHeaders.delete("content-encoding");
           responseHeaders.delete("content-length");
         }
-        const response = new Response(body.byteLength > 0 ? body : null, {
+        if (responseData.statusCode < 200 || responseData.statusCode > 599)
+          throw new RangeError("Upstream response status is outside the supported range");
+        if (body.byteLength > 0 && [204, 205, 304].includes(responseData.statusCode))
+          throw new TypeError("Upstream response status does not allow a body");
+        let data: unknown = null;
+        if (currentMethod !== "HEAD") data = parseBufferedResponseBody(body, responseHeaders, input.textFallback);
+        const parsed = {
+          ok: responseData.statusCode >= 200 && responseData.statusCode < 300,
           status: responseData.statusCode,
           statusText: STATUS_CODES[responseData.statusCode] ?? "",
-          headers: responseHeaders,
-        });
-        let data: unknown = null;
-        if (currentMethod !== "HEAD") data = await parseResponseBody(response, input.textFallback);
-        const parsed = {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
           data,
         };
         parsed.data = redactResponseSecrets(parsed.data, input.redactSecrets ?? []);

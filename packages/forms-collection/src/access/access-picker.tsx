@@ -9,7 +9,6 @@ export interface AccessPickerOption<T> {
   value: string;
   label: string;
   keywords?: readonly string[];
-  content: ReactNode;
   item: T;
 }
 
@@ -21,7 +20,9 @@ interface AccessPickerProps<T> {
   emptyMessage: string;
   triggerLabel: string;
   options: AccessPickerOption<T>[];
+  renderOption: (option: AccessPickerOption<T>) => ReactNode;
   isPending: boolean;
+  onOpenedChange: (opened: boolean) => void;
   onSelect: (option: AccessPickerOption<T>) => void | Promise<void>;
   triggerProps?: AccessPickerTriggerProps;
 }
@@ -32,7 +33,9 @@ export const AccessPicker = <T,>({
   emptyMessage,
   triggerLabel,
   options,
+  renderOption,
   isPending,
+  onOpenedChange,
   onSelect,
   triggerProps,
 }: AccessPickerProps<T>) => {
@@ -40,24 +43,31 @@ export const AccessPicker = <T,>({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const combobox = useCombobox({
     onDropdownClose: () => {
+      onOpenedChange(false);
       combobox.resetSelectedOption();
       setSearch("");
       requestAnimationFrame(() => combobox.focusTarget());
     },
     onDropdownOpen: () => {
+      onOpenedChange(true);
       combobox.selectFirstOption();
       requestAnimationFrame(() => combobox.focusSearchInput());
     },
   });
 
   const normalizedSearch = search.trim().toLowerCase();
-  const filteredOptions = options.filter((option) => {
-    if (!normalizedSearch) return true;
+  const visibleOptions: AccessPickerOption<T>[] = [];
+  if (combobox.dropdownOpened) {
+    for (const option of options) {
+      if (normalizedSearch) {
+        const searchableText = [option.label, ...(option.keywords ?? [])].join(" ").toLowerCase();
+        if (!searchableText.includes(normalizedSearch)) continue;
+      }
 
-    const searchableText = [option.label, ...(option.keywords ?? [])].join(" ").toLowerCase();
-    return searchableText.includes(normalizedSearch);
-  });
-  const visibleOptions = filteredOptions.slice(0, 5);
+      visibleOptions.push(option);
+      if (visibleOptions.length === 5) break;
+    }
+  }
 
   const handleSelect = (value: string) => {
     const option = options.find((item) => item.value === value);
@@ -113,11 +123,11 @@ export const AccessPicker = <T,>({
                 <LoaderPlaceholder />
               </Center>
             )}
-            {!isPending && filteredOptions.length === 0 && <Combobox.Empty>{emptyMessage}</Combobox.Empty>}
+            {!isPending && visibleOptions.length === 0 && <Combobox.Empty>{emptyMessage}</Combobox.Empty>}
             {!isPending &&
               visibleOptions.map((option) => (
                 <Combobox.Option value={option.value} key={option.value}>
-                  {option.content}
+                  {renderOption(option)}
                 </Combobox.Option>
               ))}
           </Combobox.Options>

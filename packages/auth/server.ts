@@ -1,4 +1,7 @@
-export { hasQueryAccessToIntegrationsAsync } from "./permissions/integration-query-permissions";
+export {
+  filterIntegrationsWithQueryAccessAsync,
+  hasQueryAccessToIntegrationsAsync,
+} from "./permissions/integration-query-permissions";
 export { getIntegrationsWithPermissionsAsync } from "./permissions/integrations-with-permissions";
 export {
   isProviderEnabled,

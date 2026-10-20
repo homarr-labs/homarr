@@ -266,6 +266,7 @@ function workshopError(error: unknown, fallback: string) {
 
 export class WorkshopBackend {
   public readonly pocketBase: TypedWorkshopPocketBase;
+  private readonly pendingAuthRefreshes = new Map<string, Promise<WorkshopUser | null>>();
 
   public constructor(public readonly baseUrl = WORKSHOP_API_URL) {
     this.pocketBase = new PocketBase(baseUrl.replace(/\/$/u, "")) as TypedWorkshopPocketBase;
@@ -297,16 +298,24 @@ export class WorkshopBackend {
       this.pocketBase.authStore.clear();
       return null;
     }
-    try {
-      await this.pocketBase.collection("users").authRefresh();
-      return this.currentUser;
-    } catch (error) {
-      if (error instanceof ClientResponseError && (error.status === 401 || error.status === 403)) {
-        this.pocketBase.authStore.clear();
-        return null;
+    const token = this.pocketBase.authStore.token;
+    const pendingRefresh = this.pendingAuthRefreshes.get(token);
+    if (pendingRefresh) return pendingRefresh;
+
+    const refresh = (async () => {
+      try {
+        await this.pocketBase.collection("users").authRefresh();
+        return this.currentUser;
+      } catch (error) {
+        if (error instanceof ClientResponseError && (error.status === 401 || error.status === 403)) {
+          this.pocketBase.authStore.clear();
+          return null;
+        }
+        return this.currentUser;
       }
-      return this.currentUser;
-    }
+    })().finally(() => this.pendingAuthRefreshes.delete(token));
+    this.pendingAuthRefreshes.set(token, refresh);
+    return refresh;
   }
 
   public async signInWithGitHub() {
@@ -396,7 +405,12 @@ export class WorkshopBackend {
       .getFullList(options)
       .catch((error: unknown) => {
         if (isViewCompatibilityError(error))
-          return this.pocketBase.collection("submissions").getFullList({ ...options, expand: "author" });
+          return this.pocketBase.collection("submissions").getFullList({
+            ...options,
+            expand: "author",
+            fields:
+              "id,type,title,description,widgetSchema,screenshots,author,revision,changelog,outdated,created,updated,expand.author.name",
+          });
         throw error;
       });
     return parseListings(rows);
@@ -404,16 +418,16 @@ export class WorkshopBackend {
 
   public async get(id: string, signal?: AbortSignal): Promise<WorkshopSubmissionDetail> {
     try {
-      const submission = await this.pocketBase
-        .collection("submissions")
-        .getOne(id, { signal: requestSignal(signal), expand: "author" });
-      const listing = await this.pocketBase
-        .collection("workshop_listings")
-        .getOne(id, { signal: requestSignal(signal) })
-        .catch((error: unknown) => {
-          if (error instanceof ClientResponseError && (error.status === 400 || error.status === 404)) return {};
-          throw error;
-        });
+      const [submission, listing] = await Promise.all([
+        this.pocketBase.collection("submissions").getOne(id, { signal: requestSignal(signal), expand: "author" }),
+        this.pocketBase
+          .collection("workshop_listings")
+          .getOne(id, { signal: requestSignal(signal) })
+          .catch((error: unknown) => {
+            if (error instanceof ClientResponseError && (error.status === 400 || error.status === 404)) return {};
+            throw error;
+          }),
+      ]);
       return workshopSubmissionDetailSchema.parse(
         enrichAuthor({ ...submission, ...listing, expand: submission.expand, content: submission.content }),
       );
@@ -529,9 +543,14 @@ export class WorkshopBackend {
 
   public async listReports(): Promise<WorkshopReport[]> {
     try {
-      const items = await this.pocketBase
-        .collection("reports")
-        .getFullList({ batch: 200, filter: "status = 'open'", sort: "-created", expand: "reporter,submission" });
+      const items = await this.pocketBase.collection("reports").getFullList({
+        batch: 200,
+        filter: "status = 'open'",
+        sort: "-created",
+        expand: "reporter,submission",
+        fields:
+          "id,submission,reporter,category,explanation,status,created,updated,expand.reporter.name,expand.submission.title",
+      });
       return items.map((item) =>
         workshopReportSchema.parse({
           ...item,

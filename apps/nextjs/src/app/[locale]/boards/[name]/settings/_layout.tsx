@@ -25,9 +25,8 @@ import { createId } from "@homarr/common";
 import type { UseFormReturnType } from "@homarr/form";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { InlineConfirmButton } from "@homarr/ui";
+import { InlineConfirmButton, SectionCard } from "@homarr/ui";
 
-import { SectionCard } from "~/components/manage/section-card";
 import type { Board } from "../../_types";
 import { LayoutPreview } from "./_layout-preview";
 import type { FormValues } from "./_settings-form";

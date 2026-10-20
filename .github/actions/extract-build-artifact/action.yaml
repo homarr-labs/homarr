@@ -1,11 +1,11 @@
 name: Extract Build Artifact
-description: Extracts artifacts from an existing Docker image to be used for from source installation
+description: Extracts and validates native Debian and Alpine release archives
 inputs:
   digest:
     description: Digest of Docker image to use
     required: true
   architecture:
-    description: Name of architecture, will be used to build artifact content (amd64 or arm64)
+    description: Native architecture (amd64 or arm64)
     required: true
   release-tag:
     description: Tag of the release to which the artifact will be attached
@@ -20,51 +20,90 @@ inputs:
     description: Upload validated archives to the release
     default: "true"
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Prebuilt debian dependencies
+    - name: Extract the application and identify its native platform
+      id: extraction
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.digest }}
+        ARCHITECTURE: ${{ inputs.architecture }}
+      run: |
+        case "$ARCHITECTURE" in amd64|arm64) ;; *) exit 1 ;; esac
+        platform="$(docker run --rm --platform "linux/$ARCHITECTURE" --entrypoint node "$IMAGE" -e '
+          const arch = { x64: "amd64", arm64: "arm64" }[process.arch];
+          let libc = "alpine";
+          if (process.report.getReport().header.glibcVersionRuntime) libc = "debian";
+          console.log(`${arch} ${libc}`);
+        ')"
+        read -r actual_arch source_libc <<< "$platform"
+        test "$actual_arch" = "$ARCHITECTURE"
+        case "$source_libc" in
+          debian) compatibility_libc=alpine ;;
+          alpine) compatibility_libc=debian ;;
+          *) exit 1 ;;
+        esac
+        archive_dir="$(mktemp -d "$RUNNER_TEMP/homarr-archive-${ARCHITECTURE}.XXXXXX")"
+        mkdir "$archive_dir/source"
+        container="homarr-extraction-${ARCHITECTURE}"
+        trap 'docker rm -f -v "$container" >/dev/null' EXIT
+        docker create --name "$container" --entrypoint node "$IMAGE" --version >/dev/null
+        docker cp "$container:/app/." "$archive_dir/source/"
+        docker cp "$container:/etc/nginx/templates/nginx.conf" "$archive_dir/source/nginx.conf"
+        printf 'path=%s\nsource-libc=%s\ncompatibility-libc=%s\n' \
+          "$archive_dir" "$source_libc" "$compatibility_libc" >> "$GITHUB_OUTPUT"
+
+    - name: Build the opposite-libc SQLite binding
       uses: ./.github/actions/prebuilt-debian
-      id: prebuilt-debian
+      id: prebuilt
       with:
         architecture: ${{ inputs.architecture }}
-    - name: Start docker container for ${{ inputs.architecture }}
-      id: extraction-container
+        libc: ${{ steps.extraction.outputs.compatibility-libc }}
+
+    - name: Create both release archives
+      shell: bash
+      env:
+        ARCHIVE_DIR: ${{ steps.extraction.outputs.path }}
+        ARCHITECTURE: ${{ inputs.architecture }}
+        SOURCE_LIBC: ${{ steps.extraction.outputs.source-libc }}
+        COMPATIBILITY_LIBC: ${{ steps.extraction.outputs.compatibility-libc }}
+        PREBUILT_PATH: ${{ steps.prebuilt.outputs.path }}
       run: |
-        docker run --name homarr-extraction-${{ inputs.architecture }} \
-          -e "SECRET_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000" \
-          --detach --rm ${{ inputs.digest }}
+        tar --owner=0 --group=0 -czf "$ARCHIVE_DIR/build-${SOURCE_LIBC}-${ARCHITECTURE}.tar.gz" -C "$ARCHIVE_DIR/source" .
+        cp "$PREBUILT_PATH/better_sqlite3.node" "$ARCHIVE_DIR/source/build/better_sqlite3.node"
+        cp "$PREBUILT_PATH/better_sqlite3.node" "$ARCHIVE_DIR/source/node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+        tar --owner=0 --group=0 -czf "$ARCHIVE_DIR/build-${COMPATIBILITY_LIBC}-${ARCHITECTURE}.tar.gz" -C "$ARCHIVE_DIR/source" .
+
+    - name: Validate both archives on their target libc and architecture
       shell: bash
-    - name: Prepare extraction
+      env:
+        ARCHIVE_DIR: ${{ steps.extraction.outputs.path }}
+        ARCHITECTURE: ${{ inputs.architecture }}
       run: |
-        docker exec homarr-extraction-${{ inputs.architecture }} cp /etc/nginx/templates/nginx.conf /app && \
-        mkdir -p ${{ runner.temp }}/extraction/${{ inputs.architecture }}
-      shell: bash
-    - name: Extract source from ${{ inputs.architecture }} container (alpine)
-      run: |
-        docker exec homarr-extraction-${{ inputs.architecture }} tar -czf extraction-alpine.tar.gz -C /app . && \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction-alpine.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-alpine-${{ inputs.architecture }}.tar.gz && \
-        docker exec homarr-extraction-${{ inputs.architecture }} rm /app/extraction-alpine.tar.gz
-      shell: bash
-    - name: Extract source from ${{ inputs.architecture }} container (debian)
-      run: |
-        docker cp ${{ steps.prebuilt-debian.outputs.path }}/better_sqlite3.node homarr-extraction-${{ inputs.architecture }}:/app/build/better_sqlite3.node && \
-        docker cp ${{ steps.prebuilt-debian.outputs.path }}/better_sqlite3.node homarr-extraction-${{ inputs.architecture }}:/app/node_modules/better-sqlite3/build/Release/better_sqlite3.node && \
-        docker exec homarr-extraction-${{ inputs.architecture }} tar -czf extraction-debian.tar.gz -C /app . && \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction-debian.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz
-      shell: bash
-    - name: Stop ${{ inputs.architecture }} container
-      if: always() && steps.extraction-container.outcome == 'success'
-      run: docker container remove --force --volumes homarr-extraction-${{ inputs.architecture }}
-      shell: bash
-    - name: Add build archive to release (alpine)
+        for distribution in debian alpine; do
+          node_image=node:24.18.0-trixie-slim
+          if [[ "$distribution" = alpine ]]; then node_image=node:24.18.0-alpine; fi
+          docker run --rm --platform "linux/$ARCHITECTURE" \
+            --mount "type=bind,src=$ARCHIVE_DIR,dst=/archives,readonly" \
+            --mount "type=bind,src=$GITHUB_WORKSPACE/.github/actions/extract-build-artifact/validate-native.cjs,dst=/validate-native.cjs,readonly" \
+            "$node_image" sh -ec '
+              mkdir /tmp/archive
+              tar -xzf "/archives/build-$1-$2.tar.gz" -C /tmp/archive
+              cd /tmp/archive
+              node /validate-native.cjs "$1" "$2"
+            ' sh "$distribution" "$ARCHITECTURE"
+        done
+
+    - name: Upload both validated archives
       if: inputs.upload == 'true'
+      shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
-      run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-alpine-${{ inputs.architecture }}.tar.gz --clobber
-      shell: bash
-    - name: Add build archive to release (debian)
-      if: inputs.upload == 'true'
-      env:
-        GH_TOKEN: ${{ inputs.token }}
-      run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-debian-${{ inputs.architecture }}.tar.gz --clobber
-      shell: bash
+        GH_REPO: ${{ inputs.repository }}
+        RELEASE_TAG: ${{ inputs.release-tag }}
+        ARCHIVE_DIR: ${{ steps.extraction.outputs.path }}
+        ARCHITECTURE: ${{ inputs.architecture }}
+      run: |
+        gh release upload "$RELEASE_TAG" \
+          "$ARCHIVE_DIR/build-alpine-${ARCHITECTURE}.tar.gz" \
+          "$ARCHIVE_DIR/build-debian-${ARCHITECTURE}.tar.gz" --clobber
