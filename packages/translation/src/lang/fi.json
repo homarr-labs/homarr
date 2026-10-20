@@ -6431,7 +6431,7 @@
             "header": {
               "title": "",
               "badge": "",
-              "description": "Vedä säätöjä missä tahansa rivissä. Vasen, Center, ja Oikea pysyy kiinteänä ja ohjaimet siirtyvät niiden ympärille.",
+              "description": "",
               "device": {
                 "desktop": "",
                 "mobile": "Mobiili"
@@ -6444,7 +6444,7 @@
               "action": {
                 "hide": "",
                 "show": "",
-                "configure": "Siirrä tai määritä {item}",
+                "configure": "",
                 "remove": "Poista {item}",
                 "dropIntoZone": ""
               },
@@ -6454,7 +6454,7 @@
               },
               "available": {
                 "title": "",
-                "description": "Lisää hallintalaite ja vedä sen koko painike asentoon.",
+                "description": "",
                 "requiredAlways": "",
                 "allAdded": "",
                 "add": "",
@@ -7134,9 +7134,9 @@
                   "description": "Välitä ApiKey-otsikko, jossa on koko API-avaimesi, MCP-asiakkaan asetuksissa."
                 },
                 "oauth": {
-                  "title": "OAuth (selainkirjautuminen)",
-                  "description": "Asiakkaat, jotka tukevat OAuthia (kuten Claude Code, opencode tai Cursor), voivat todentaa avaamalla selainikkunan. Suorita auth-komento asiakkaassasi, kirjaudu selaimeen Homarriin, ja olet yhteydessä – API-avain luodaan automaattisesti.",
-                  "hint": "OAuth-tokenit näkyvät tavallisina API-avaimina Tunnistautuminen-välilehdellä. Voit kumota ne milloin tahansa."
+                  "title": "",
+                  "description": "",
+                  "hint": ""
                 },
                 "permissions": "API-avain määrittää tekoälyn käytettävissä olevat oikeudet – se toimii samalla käyttöoikeustasolla kuin avaimen omistaja."
               },

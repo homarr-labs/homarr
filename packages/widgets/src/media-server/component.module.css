@@ -15,10 +15,6 @@
   min-height: 0;
 }
 
-.tableViewport :global(.mantine-ScrollArea-viewport) {
-  overscroll-behavior: contain;
-}
-
 .tableViewport :global(table) {
   min-width: 100%;
 }
