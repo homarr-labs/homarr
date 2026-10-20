@@ -8,7 +8,7 @@ const states = new Map([
 const waiting = "waiting-for-reporter";
 const ready = "ready for test";
 const aiDisclaimer =
-  /\b(?:generated|written|created|assisted|authored)\s+by\s+(?:an?\s+)?AI\b|\bAI[- ](?:generated|assisted|written|authored)\b/i;
+  /^\s*(?:>\s*)?[*_]*(?:This was (?:generated|written|created|assisted|authored) by (?:an? )?AI\b|AI[- ](?:generated|assisted|written|authored) (?:reply|response|comment|message)\b)/i;
 const labels = (issue) => issue.labels.map((label) => label.name);
 const activeStates = (issue) => labels(issue).filter((label) => states.has(label));
 const latestLabel = (events, name) =>
