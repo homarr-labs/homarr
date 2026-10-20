@@ -1169,7 +1169,7 @@
       "get": {
         "operationId": "boardRouter-getAllBoards",
         "summary": "List accessible boards",
-        "description": "Return accessible boards with creator details, visibility, the board each one was duplicated from when the caller can access it, and the current user's desktop and mobile home flags. Anonymous callers can see public boards.",
+        "description": "Return accessible boards with creator details, visibility, and the current user's desktop and mobile home flags. Anonymous callers can see public boards.",
         "tags": [
           "boards"
         ],
@@ -1207,16 +1207,6 @@
                       },
                       "isPublic": {
                         "type": "boolean"
-                      },
-                      "sourceBoardId": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
                       },
                       "creator": {
                         "anyOf": [
@@ -1311,7 +1301,6 @@
                       "name",
                       "logoImageUrl",
                       "isPublic",
-                      "sourceBoardId",
                       "creator",
                       "isHome",
                       "isMobileHome",
@@ -1489,7 +1478,7 @@
       "post": {
         "operationId": "boardRouter-duplicateBoard",
         "summary": "Duplicate a board",
-        "description": "Copy a board under a unique name and return the IDs of the copy and its base and mobile layouts. The copy records the source board ID. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
+        "description": "Copy a board under a unique name and return the IDs of the copy and its base and mobile layouts. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
         "tags": [
           "boards"
         ],
@@ -3537,6 +3526,10 @@
                               "immich-serverStats",
                               "immich-albumCarousel",
                               "paperlessNgx",
+                              "thingport-libraryStats",
+                              "thingport-models",
+                              "thingport-featuredModel",
+                              "thingport-activityHeatmap",
                               "patchmon",
                               "bazarr",
                               "tracearr",
@@ -3653,7 +3646,7 @@
       "put": {
         "operationId": "boardRouter-saveBoard",
         "summary": "Save dashboard content",
-        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Options of new or changed app items are validated: missing or null options get their defaults (pingEnabled follows the server's enableStatusByDefault board setting) and unknown options are dropped; unchanged items keep their stored options. Requires modify access; Custom Widget placement changes require admin access.",
+        "description": "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Requires modify access; Custom Widget placement changes require admin access.",
         "tags": [
           "boards"
         ],
@@ -4696,7 +4689,7 @@
       "post": {
         "operationId": "boardRouter-addItem",
         "summary": "Add an item to a board",
-        "description": "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission. Options of app items are validated: missing or null options get their defaults (pingEnabled follows the server's enableStatusByDefault board setting) and unknown options are dropped.",
+        "description": "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
         "tags": [
           "boards"
         ],
@@ -5253,6 +5246,10 @@
                         "immich-serverStats",
                         "immich-albumCarousel",
                         "paperlessNgx",
+                        "thingport-libraryStats",
+                        "thingport-models",
+                        "thingport-featuredModel",
+                        "thingport-activityHeatmap",
                         "patchmon",
                         "bazarr",
                         "tracearr",
@@ -5358,7 +5355,7 @@
       "patch": {
         "operationId": "boardRouter-updateItem",
         "summary": "Update one board item",
-        "description": "Replace the supplied widget options, advanced options, or integration IDs of one item without replacing the board. Omitted fields remain unchanged; the kind and placements cannot be changed here. Changed options of app items are validated like when saving the board content: missing or null options get their defaults and unknown options are dropped. Requires modify access to the board and use access to newly linked integrations; changing Custom Widget options requires admin permission.",
+        "description": "Replace the supplied widget options, advanced options, or integration IDs of one item without replacing the board. Omitted fields remain unchanged; the kind and placements cannot be changed here. Requires modify access to the board and use access to newly linked integrations; changing Custom Widget options requires admin permission.",
         "tags": [
           "boards"
         ],
@@ -5578,6 +5575,10 @@
                         "immich-serverStats",
                         "immich-albumCarousel",
                         "paperlessNgx",
+                        "thingport-libraryStats",
+                        "thingport-models",
+                        "thingport-featuredModel",
+                        "thingport-activityHeatmap",
                         "patchmon",
                         "bazarr",
                         "tracearr",
@@ -6908,7 +6909,7 @@
       "put": {
         "operationId": "groupRouter-saveMembers",
         "summary": "Replace group members",
-        "description": "Replace the members of a group and return the resulting member IDs. Every user must exist and omitted members are removed. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be added or removed, so members with isMembershipManagedLocally set to false in GET /api/groups/{id} must stay listed. Not allowed for the 'everyone' group. Requires admin permission.",
+        "description": "Replace the members of a group and return the resulting member IDs. Omitted members are removed. Users whose groups are synchronized from an external provider cannot be added or removed. Not allowed for the 'everyone' group. Requires admin permission.",
         "tags": [
           "groups"
         ],
@@ -9196,7 +9197,7 @@
       "put": {
         "operationId": "userRouter-setGroups",
         "summary": "Set a user's groups",
-        "description": "Replace the groups a user is a member of and return the resulting group IDs. Every group must exist. The everyone group is managed automatically: an existing membership is kept, and supplying its ID has no effect. Requires admin permission. Fails when no enabled authentication provider allows managing group members locally, or when the user's group memberships are synchronized from an external provider.",
+        "description": "Replace the groups of a user and return the resulting group IDs. The everyone group membership is kept automatically. Fails when the user's groups are synchronized from an external provider. Requires admin permission.",
         "tags": [
           "users"
         ],
@@ -11561,6 +11562,7 @@
                           "aria2",
                           "slskd",
                           "sonarr",
+                          "sportarr",
                           "radarr",
                           "lidarr",
                           "readarr",
@@ -11595,6 +11597,7 @@
                           "coolify",
                           "immich",
                           "paperlessNgx",
+                          "thingport",
                           "patchmon",
                           "tracearr",
                           "speedtestTracker",
@@ -11829,6 +11832,7 @@
                           "aria2",
                           "slskd",
                           "sonarr",
+                          "sportarr",
                           "radarr",
                           "lidarr",
                           "readarr",
@@ -11863,6 +11867,7 @@
                           "coolify",
                           "immich",
                           "paperlessNgx",
+                          "thingport",
                           "patchmon",
                           "tracearr",
                           "speedtestTracker",
@@ -11973,7 +11978,7 @@
       "post": {
         "operationId": "integration-create",
         "summary": "Create an integration",
-        "description": "Create an integration with its secrets and optionally link an existing app or create a new one. Requires integration-create permission, and app-create permission for a new app. The secrets must cover one secret kind option from GET /api/integrations/kinds, each kind at most once. The connection is tested before saving: a failed test returns BAD_REQUEST with only the failure category (authorization, certificate, request, statusCode, parse or unknown) as message. skipConnectionTest saves without contacting the service.",
+        "description": "Create an integration with its secrets and optionally link or create an app. Secrets must cover one secret kind option from GET /api/integrations/kinds. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires integration-create permission, and app-create permission for a new app.",
         "tags": [
           "integrations"
         ],
@@ -12041,6 +12046,7 @@
                       "aria2",
                       "slskd",
                       "sonarr",
+                      "sportarr",
                       "radarr",
                       "lidarr",
                       "readarr",
@@ -12075,6 +12081,7 @@
                       "coolify",
                       "immich",
                       "paperlessNgx",
+                      "thingport",
                       "patchmon",
                       "tracearr",
                       "speedtestTracker",
@@ -12173,15 +12180,7 @@
                           "href": {
                             "anyOf": [
                               {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "string",
-                                    "const": ""
-                                  }
-                                ]
+                                "type": "string"
                               },
                               {
                                 "type": "null"
@@ -12292,6 +12291,7 @@
                             "aria2",
                             "slskd",
                             "sonarr",
+                            "sportarr",
                             "radarr",
                             "lidarr",
                             "readarr",
@@ -12326,6 +12326,7 @@
                             "coolify",
                             "immich",
                             "paperlessNgx",
+                            "thingport",
                             "patchmon",
                             "tracearr",
                             "speedtestTracker",
@@ -12498,6 +12499,7 @@
                         "aria2",
                         "slskd",
                         "sonarr",
+                        "sportarr",
                         "radarr",
                         "lidarr",
                         "readarr",
@@ -12532,6 +12534,7 @@
                         "coolify",
                         "immich",
                         "paperlessNgx",
+                        "thingport",
                         "patchmon",
                         "tracearr",
                         "speedtestTracker",
@@ -12712,7 +12715,7 @@
       "put": {
         "operationId": "integration-update",
         "summary": "Update an integration",
-        "description": "Replace the name, URL, linked app and secrets of an integration; its kind cannot be changed. secrets lists every secret kind to keep, each at most once: a value replaces the stored secret, null keeps the stored value, and stored kinds that are not listed are deleted. The kept secrets must cover one secret kind option. Requires full access to the integration. The connection is tested with the kept secrets before saving: a failed test returns BAD_REQUEST with only the failure category as message. skipConnectionTest saves without contacting the service.",
+        "description": "Replace the name, URL, linked app and secrets of an integration. Each listed secret kind is kept: a value replaces it, null keeps the stored value (only when the URL is unchanged); unlisted kinds are deleted. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires full access to the integration.",
         "tags": [
           "integrations"
         ],

@@ -46,7 +46,6 @@ export interface EditIntegrationFormHandle {
 
 const formSchema = integrationUpdateSchema.omit({ id: true, appId: true, secrets: true, skipConnectionTest: true }).and(
   z.object({
-    // An empty value keeps the stored secret, it is sent as null
     secrets: z.array(z.object({ kind: zodEnumFromArray(integrationSecretKinds), value: z.string() })),
     app: z
       .object({
@@ -109,7 +108,6 @@ export const EditIntegrationForm = ({
         message: tIntegration("page.edit.notification.error.message"),
       });
 
-      // A failed connection test carries details that are shown in the form
       const testConnectionError = mutationError.data?.error as AnyMappedTestConnectionError | null | undefined;
       if (!testConnectionError) return;
       setError(testConnectionError);
@@ -145,7 +143,6 @@ export const EditIntegrationForm = ({
               kind: secret.kind,
               value: secret.value === "" ? null : secret.value,
             })),
-            // Optional secrets that were cleared are left out, which removes them from the integration.
             ...optionalSecretKinds.flatMap((optionalKind) => {
               const value = optionalSecrets.find((secret) => secret.kind === optionalKind)?.value.trim() ?? "";
               return value.length > 0 ? [{ kind: optionalKind, value }] : [];
@@ -154,7 +151,6 @@ export const EditIntegrationForm = ({
           appId: app?.id ?? null,
         });
       } catch {
-        // The error is shown by onError
         return false;
       }
 

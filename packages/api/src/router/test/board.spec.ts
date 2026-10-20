@@ -294,30 +294,6 @@ describe("getAllBoards should return all boards accessable to the current user",
       expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
     },
   );
-
-  test("with a copied board it should return the source board only when the source board is accessible", async () => {
-    // Arrange
-    const db = createDb();
-    const anonymousCaller = boardRouter.createCaller({ db, deviceType: undefined, session: null });
-    const viewAllCaller = boardRouter.createCaller({
-      db,
-      deviceType: undefined,
-      session: { ...defaultSession, user: { ...defaultSession.user, permissions: ["board-view-all"] } },
-    });
-    const sourceBoardId = createId();
-    await db.insert(boards).values([
-      { id: sourceBoardId, name: "source", isPublic: false },
-      { id: createId(), name: "copy", isPublic: true, sourceBoardId },
-    ]);
-
-    // Act
-    const anonymousResult = await anonymousCaller.getAllBoards();
-    const viewAllResult = await viewAllCaller.getAllBoards();
-
-    // Assert
-    expect(anonymousResult).toEqual([expect.objectContaining({ name: "copy", sourceBoardId: null })]);
-    expect(viewAllResult).toEqual(expect.arrayContaining([expect.objectContaining({ name: "copy", sourceBoardId })]));
-  });
 });
 
 describe("getManageOverview", () => {
@@ -848,7 +824,7 @@ describe("duplicateBoard should preserve protected layout invariants", () => {
   });
 });
 
-describe("duplicateBoard should remember the source board", () => {
+describe("duplicateBoard should return the layouts of the copy", () => {
   const boardCreateSession = {
     ...defaultSession,
     user: {
@@ -857,7 +833,7 @@ describe("duplicateBoard should remember the source board", () => {
     },
   };
 
-  test("stores the source board and returns the layout ids of the copy", async () => {
+  test("returns the layout ids of the copy", async () => {
     // Arrange
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: boardCreateSession });
@@ -872,28 +848,11 @@ describe("duplicateBoard should remember the source board", () => {
       where: eq(boards.id, result.boardId),
       with: { layouts: true },
     });
-    expect(copiedBoard?.sourceBoardId).toBe(boardId);
     expect(result).toEqual({
       boardId: copiedBoard?.id,
       baseLayoutId: copiedBoard?.layouts.find((layout) => layout.role === "base")?.id,
       mobileLayoutId: copiedBoard?.layouts.find((layout) => layout.role === "mobile")?.id,
     });
-  });
-
-  test("deleting the source board keeps the copy and clears its source", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: boardCreateSession });
-    const { boardId, integrationId } = await createFullBoardAsync(db, "source");
-    await db.delete(integrationItems).where(eq(integrationItems.integrationId, integrationId));
-    const { boardId: copiedBoardId } = await caller.duplicateBoard({ id: boardId, name: "copy" });
-
-    // Act
-    await caller.deleteBoard({ id: boardId });
-
-    // Assert
-    const copiedBoard = await db.query.boards.findFirst({ where: eq(boards.id, copiedBoardId) });
-    expect(copiedBoard?.sourceBoardId).toBeNull();
   });
 });
 
@@ -1029,45 +988,6 @@ describe("deleteBoard should delete board", () => {
     });
     expect(dbBoard).toBeUndefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
-  });
-
-  test("should clear instance home boards that reference the deleted board", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-
-    await db.insert(users).values({
-      id: defaultCreatorId,
-    });
-    const boardId = createId();
-    const otherBoardId = createId();
-    await db.insert(boards).values([
-      { id: boardId, name: "board", creatorId: defaultCreatorId, isPublic: true },
-      { id: otherBoardId, name: "other", creatorId: defaultCreatorId, isPublic: true },
-    ]);
-    await db.insert(serverSettings).values({
-      settingKey: "board",
-      value: SuperJSON.stringify({
-        homeBoardId: boardId,
-        mobileHomeBoardId: otherBoardId,
-        enableStatusByDefault: false,
-        forceDisableStatus: true,
-      }),
-    });
-
-    // Act
-    await caller.deleteBoard({ id: boardId });
-
-    // Assert
-    const dbBoardSettings = await db.query.serverSettings.findFirst({
-      where: eq(serverSettings.settingKey, "board"),
-    });
-    expect(SuperJSON.parse(dbBoardSettings?.value ?? "null")).toStrictEqual({
-      homeBoardId: null,
-      mobileHomeBoardId: otherBoardId,
-      enableStatusByDefault: false,
-      forceDisableStatus: true,
-    });
   });
 
   test("should throw error when board not found", async () => {

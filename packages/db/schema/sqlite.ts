@@ -271,9 +271,6 @@ export const boards = sqliteTable("board", {
   creatorId: text().references(() => users.id, {
     onDelete: "set null",
   }),
-  sourceBoardId: text().references((): AnySQLiteColumn => boards.id, {
-    onDelete: "set null",
-  }),
   pageTitle: text(),
   metaTitle: text(),
   logoImageUrl: text(),

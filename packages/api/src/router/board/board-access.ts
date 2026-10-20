@@ -62,7 +62,6 @@ export const throwIfActionForbiddenAsync = async (
   }
 
   if (hasViewAccess || hasChangeAccess) {
-    // User can already see the board, so revealing its existence does not allow snooping
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "Permission denied",

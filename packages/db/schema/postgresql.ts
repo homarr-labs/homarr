@@ -286,9 +286,6 @@ export const boards = pgTable("board", {
   creatorId: varchar({ length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),
-  sourceBoardId: varchar({ length: 64 }).references((): AnyPgColumn => boards.id, {
-    onDelete: "set null",
-  }),
   pageTitle: text(),
   metaTitle: text(),
   logoImageUrl: text(),

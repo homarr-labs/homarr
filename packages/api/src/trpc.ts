@@ -44,7 +44,6 @@ interface ApiContext {
   baseUrl?: `${string}://${string}`;
   onboardingClaimToken?: string;
   requestIdentity?: RequestIdentity;
-  /** Set for REST requests served through the OpenAPI router */
   isOpenApiRequest?: boolean;
   db: typeof db;
 }

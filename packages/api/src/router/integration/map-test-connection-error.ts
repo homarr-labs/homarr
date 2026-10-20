@@ -143,9 +143,6 @@ export const mapTestConnectionError = (error: AnyTestConnectionError) => {
   } as AnyMappedTestConnectionError;
 };
 
-/**
- * Carries the mapped error of a failed connection test to the client as error.data.error
- */
 export class TestConnectionFailedError extends FlattenError {
   constructor(mappedError: AnyMappedTestConnectionError) {
     super(mappedError.message, { ...mappedError });

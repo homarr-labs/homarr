@@ -17,7 +17,6 @@ const integrationUrlSchema = z
   .url()
   .regex(/^https?:\/\//); // Only allow http and https for security reasons (javascript: is not allowed)
 
-// An integration stores one secret per kind
 const hasUniqueSecretKinds = (secrets: { kind: string }[]) =>
   new Set(secrets.map((secret) => secret.kind)).size === secrets.length;
 

@@ -1,14 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { canManageGroupMembersLocally, isGroupMembershipManagedLocally } from "@homarr/auth/server";
+import { isGroupMembershipManagedLocally } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { boards, groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
+import { boards, groupMembers, groupPermissions, groups, onboarding } from "@homarr/db/schema";
 import { selectGroupSchema, selectUserSchema } from "@homarr/db/validationSchemas";
-import type { SupportedAuthProvider } from "@homarr/definitions";
 import { everyoneGroup, groupPermissionKeys, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { zodEnumFromArray } from "@homarr/validation/enums";
@@ -23,6 +22,11 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import {
+  getUsersOrThrowAsync,
+  throwIfGroupMembersCannotBeManagedLocally,
+  throwIfUserMembershipsNotManagedLocally,
+} from "./group-membership";
 
 const groupPermissionKeySchema = zodEnumFromArray(groupPermissionKeys);
 
@@ -504,7 +508,7 @@ export const groupRouter = createTRPCRouter({
         tags: ["groups"],
         protect: true,
         summary: "Replace group members",
-        description: `Replace the members of a group and return the resulting member IDs. Every user must exist and omitted members are removed. Users whose groups are synchronized from an external provider (LDAP, or OIDC without local group management) cannot be added or removed, so members with isMembershipManagedLocally set to false in GET /api/groups/{id} must stay listed. Not allowed for the '${everyoneGroup}' group. Requires admin permission.`,
+        description: `Replace the members of a group and return the resulting member IDs. Omitted members are removed. Users whose groups are synchronized from an external provider cannot be added or removed. Not allowed for the '${everyoneGroup}' group. Requires admin permission.`,
       },
     })
     .mutation(async ({ input, ctx }) => {
@@ -657,45 +661,6 @@ const throwIfGroupNameIsReservedAsync = async (db: Database, id: string) => {
   }
 };
 
-const throwIfGroupMembersCannotBeManagedLocally = () => {
-  if (!canManageGroupMembersLocally()) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Group members cannot be managed locally",
-    });
-  }
-};
-
-const getUsersOrThrowAsync = async (db: Database, userIds: string[]) => {
-  if (userIds.length === 0) return [];
-
-  const dbUsers = await db.query.users.findMany({
-    columns: {
-      id: true,
-      provider: true,
-    },
-    where: inArray(users.id, userIds),
-  });
-
-  if (dbUsers.length !== userIds.length) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "User not found",
-    });
-  }
-
-  return dbUsers;
-};
-
-const throwIfUserMembershipsNotManagedLocally = (dbUsers: { provider: SupportedAuthProvider }[]) => {
-  if (dbUsers.some((user) => !isGroupMembershipManagedLocally(user.provider))) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "User's provider is not managed locally",
-    });
-  }
-};
-
 const throwIfBoardsNotFoundAsync = async (db: Database, boardIds: string[]) => {
   if (boardIds.length === 0) return;
 
@@ -738,7 +703,6 @@ const throwIfGroupPositionsIncompleteAsync = async (db: Database, groupIds: stri
     });
   }
 
-  // The everyone group is the last fallback for home boards and therefore not part of the order
   const dbEveryoneGroup = dbGroups.find((group) => group.name === everyoneGroup);
   if (dbEveryoneGroup && groupIds.includes(dbEveryoneGroup.id)) {
     throw new TRPCError({

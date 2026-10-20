@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
-import { canManageGroupMembersLocally, isGroupMembershipManagedLocally, isProviderEnabled } from "@homarr/auth/server";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
@@ -43,6 +43,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
+import {
+  getUsersOrThrowAsync,
+  throwIfGroupMembersCannotBeManagedLocally,
+  throwIfUserMembershipsNotManagedLocally,
+} from "./group-membership";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { getUserPreferencesAsync, updateUserPreferencesAsync } from "./user/preferences";
 
@@ -529,41 +534,15 @@ export const userRouter = createTRPCRouter({
         protect: true,
         summary: "Set a user's groups",
         description:
-          "Replace the groups a user is a member of and return the resulting group IDs. Every group must exist. The everyone group is managed automatically: an existing membership is kept, and supplying its ID has no effect. Requires admin permission. Fails when no enabled authentication provider allows managing group members locally, or when the user's group memberships are synchronized from an external provider.",
+          "Replace the groups of a user and return the resulting group IDs. The everyone group membership is kept automatically. Fails when the user's groups are synchronized from an external provider. Requires admin permission.",
       },
     })
     .mutation(async ({ ctx, input }) => {
-      if (!canManageGroupMembersLocally()) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Group members cannot be managed locally",
-        });
-      }
-
-      const user = await ctx.db.query.users.findFirst({
-        columns: {
-          provider: true,
-        },
-        where: eq(users.id, input.userId),
-      });
-
-      if (!user) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
-      }
-
-      if (!isGroupMembershipManagedLocally(user.provider)) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "User's provider is not managed locally",
-        });
-      }
+      throwIfGroupMembersCannotBeManagedLocally();
+      throwIfUserMembershipsNotManagedLocally(await getUsersOrThrowAsync(ctx.db, [input.userId]));
 
       const dbGroups = await getGroupsOrThrowAsync(ctx.db, input.groupIds);
 
-      // The everyone membership is managed automatically, so it is neither added nor removed here
       const groupMemberRows = dbGroups
         .filter((group) => group.name !== everyoneGroup)
         .map((group) => ({ groupId: group.id, userId: input.userId }));
@@ -673,7 +652,6 @@ export const userRouter = createTRPCRouter({
 
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.name, input.id);
 
-      // undefined keeps the current email, null removes it
       const emailChanged = input.email !== undefined && input.email !== user.email;
       await ctx.db
         .update(users)

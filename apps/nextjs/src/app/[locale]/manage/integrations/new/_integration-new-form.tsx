@@ -108,7 +108,6 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       await utils.integration.invalidate();
     },
     onError(mutationError) {
-      // A failed connection test carries details that are shown in the form
       const testConnectionError = mutationError.data?.error as AnyMappedTestConnectionError | null | undefined;
       if (!testConnectionError) return;
       setError(testConnectionError);

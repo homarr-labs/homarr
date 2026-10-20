@@ -74,7 +74,6 @@ export const getCustomWidgetConfigurationStatusRecovery = (toolName: string, inp
   };
 };
 
-// integration_create rejects a failed connection test with only its failure category as message
 const connectionTestFailureCategories = ["authorization", "certificate", "request", "statusCode", "parse", "unknown"];
 
 export const getConnectionTestFailureMessage = (error: unknown, toolName: string | undefined) => {

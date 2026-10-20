@@ -34,7 +34,6 @@ import {
   sectionCollapseStates,
   sectionLayouts,
   sections,
-  serverSettings,
   users,
 } from "@homarr/db/schema";
 import type { BoardLane, IntegrationKind, WidgetKind } from "@homarr/definitions";
@@ -53,7 +52,6 @@ import {
   widgetDefaultSizes,
   widgetKinds,
 } from "@homarr/definitions";
-import type { ServerSettings } from "@homarr/server-settings";
 import {
   addItemToBoardSchema,
   boardByNameSchema,
@@ -90,7 +88,7 @@ import {
   throwIfCustomWidgetBoardDuplicationForbidden,
   throwIfCustomWidgetPlacementChangeForbidden,
 } from "./board/custom-widget-placement-access";
-import { normalizeChangedWidgetOptionsAsync, normalizeWidgetOptionsAsync } from "./board/widget-options";
+import { throwIfPermissionPrincipalsInvalidAsync } from "./permission-principals";
 import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 interface BoardItemPlacementRectangle {
@@ -219,31 +217,6 @@ const validateWidgetConfigurationsAsync = async (
       message: getWidgetIntegrationIssueMessage(item.kind, integrationIssue),
     });
   }
-};
-
-const throwIfBoardPermissionPrincipalsInvalidAsync = async (
-  db: Database,
-  principalKind: "user" | "group",
-  principalIds: string[],
-) => {
-  if (new Set(principalIds).size !== principalIds.length) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Principal IDs must be unique",
-    });
-  }
-  if (principalIds.length === 0) return;
-
-  const existingPrincipals =
-    principalKind === "user"
-      ? await db.query.users.findMany({ columns: { id: true }, where: inArray(users.id, principalIds) })
-      : await db.query.groups.findMany({ columns: { id: true }, where: inArray(groups.id, principalIds) });
-  if (existingPrincipals.length === principalIds.length) return;
-
-  throw new TRPCError({
-    code: "NOT_FOUND",
-    message: principalKind === "user" ? "User not found" : "Group not found",
-  });
 };
 
 const searchAccessibleBoardsAsync = async (
@@ -382,12 +355,12 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "List accessible boards",
         description:
-          "Return accessible boards with creator details, visibility, the board each one was duplicated from when the caller can access it, and the current user's desktop and mobile home flags. Anonymous callers can see public boards.",
+          "Return accessible boards with creator details, visibility, and the current user's desktop and mobile home flags. Anonymous callers can see public boards.",
       },
       mcp: {
         enabled: true,
         description:
-          "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, sourceBoardId, creator, isHome and isMobileHome flags",
+          "List all boards the current user can access. Returns id, name, logoImageUrl, isPublic, creator, isHome and isMobileHome flags",
       },
     })
     .query(async ({ ctx }) => {
@@ -401,7 +374,6 @@ export const boardRouter = createTRPCRouter({
           name: true,
           logoImageUrl: true,
           isPublic: true,
-          sourceBoardId: true,
         },
         with: {
           creator: {
@@ -420,12 +392,8 @@ export const boardRouter = createTRPCRouter({
         },
         where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
       });
-      const accessibleBoardIds = new Set(dbBoards.map((board) => board.id));
       return dbBoards.map((board) => ({
         ...board,
-        // The source of a copy is only revealed to callers who can access the source board as well
-        sourceBoardId:
-          board.sourceBoardId !== null && accessibleBoardIds.has(board.sourceBoardId) ? board.sourceBoardId : null,
         isHome: currentUser?.homeBoardId === board.id,
         isMobileHome: currentUser?.mobileHomeBoardId === board.id,
       }));
@@ -810,7 +778,7 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Duplicate a board",
         description:
-          "Copy a board under a unique name and return the IDs of the copy and its base and mobile layouts. The copy records the source board ID. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
+          "Copy a board under a unique name and return the IDs of the copy and its base and mobile layouts. Requires board-create permission, view access to the source, and use access to its linked integrations. Widget configurations must be valid; boards containing Custom Widgets require admin permission.",
       },
       mcp: {
         enabled: true,
@@ -1037,7 +1005,6 @@ export const boardRouter = createTRPCRouter({
               id: newBoardId,
               name: input.name,
               creatorId: ctx.session.user.id,
-              sourceBoardId: board.id,
             });
 
             if (layoutsToInsert.length > 0) {
@@ -1078,7 +1045,6 @@ export const boardRouter = createTRPCRouter({
                 id: newBoardId,
                 name: input.name,
                 creatorId: ctx.session.user.id,
-                sourceBoardId: board.id,
               })
               .run();
 
@@ -1200,41 +1166,7 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction.delete(schema.boards).where(eq(schema.boards.id, input.id));
-            const [boardSetting] = await transaction
-              .select({ value: schema.serverSettings.value })
-              .from(schema.serverSettings)
-              .where(eq(schema.serverSettings.settingKey, "board"))
-              .for("update");
-            const boardSettingValue = boardSetting && clearInstanceHomeBoard(boardSetting.value, input.id);
-            if (!boardSettingValue) return;
-            await transaction
-              .update(schema.serverSettings)
-              .set({ value: boardSettingValue })
-              .where(eq(schema.serverSettings.settingKey, "board"));
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction.delete(boards).where(eq(boards.id, input.id)).run();
-            const boardSetting = transaction
-              .select({ value: serverSettings.value })
-              .from(serverSettings)
-              .where(eq(serverSettings.settingKey, "board"))
-              .get();
-            const boardSettingValue = boardSetting && clearInstanceHomeBoard(boardSetting.value, input.id);
-            if (!boardSettingValue) return;
-            transaction
-              .update(serverSettings)
-              .set({ value: boardSettingValue })
-              .where(eq(serverSettings.settingKey, "board"))
-              .run();
-          });
-        },
-      });
+      await ctx.db.delete(boards).where(eq(boards.id, input.id));
     }),
   setHomeBoard: protectedProcedure
     .meta({
@@ -1412,7 +1344,6 @@ export const boardRouter = createTRPCRouter({
       });
       if (!boardLayoutsNeedRepair(boardLayouts)) return boardLayouts;
 
-      // Loading the full board restores a missing Mobile or Base layout first
       const board = await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session.user.id);
       return board.layouts.map(({ resizeSource: _, ...layout }) => layout);
     }),
@@ -1461,7 +1392,6 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      // Stored gutters already have their canvases, only newly requested gutters can need one
       const requestedGutterColumnCounts = {
         left: input.leftGutterColumnCount ?? 0,
         right: input.rightGutterColumnCount ?? 0,
@@ -1469,7 +1399,6 @@ export const boardRouter = createTRPCRouter({
       const requiredGutterRoots = (["left", "right"] as const).filter((lane) => requestedGutterColumnCounts[lane] > 0);
       await ensureGutterRootSectionsAsync(ctx.db, input.boardId, requiredGutterRoots);
 
-      // Merge into the layouts read by the save, so other layouts are never saved from an older read
       const savedLayouts = await saveBoardLayoutsAsync(ctx.db, ctx.session.user.id, input.boardId, (currentLayouts) => {
         if (!currentLayouts.some((layout) => layout.id === input.layoutId)) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Layout not found" });
@@ -1664,7 +1593,6 @@ export const boardRouter = createTRPCRouter({
         layouts: board.layouts.map(({ resizeSource: _, ...layout }) => layout),
         sections: board.sections.map((section) => {
           if (section.kind !== "container") return section;
-          // Collapsing is stored per user and is not part of the board content
           const { collapsed: _, ...containerSection } = section;
           return containerSection;
         }),
@@ -1680,7 +1608,7 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Save dashboard content",
         description:
-          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Options of new or changed app items are validated: missing or null options get their defaults (pingEnabled follows the server's enableStatusByDefault board setting) and unknown options are dropped; unchanged items keep their stored options. Requires modify access; Custom Widget placement changes require admin access.",
+          "Save the editor's complete sections and items arrays, including widget options and placements. Omitted items and sections are removed. Requires modify access; Custom Widget placement changes require admin access.",
       },
       mcp: {
         enabled: true,
@@ -1700,7 +1628,6 @@ export const boardRouter = createTRPCRouter({
         submittedItems: input.items,
         storedItems: dbBoard.items,
       });
-      const submittedItems = await normalizeChangedWidgetOptionsAsync(ctx.db, input.items, dbBoard.items);
 
       for (const item of input.items) {
         if (item.kind !== "timetable") continue;
@@ -1714,9 +1641,9 @@ export const boardRouter = createTRPCRouter({
       const storedSectionIds = new Set(dbBoard.sections.map(({ id }) => id));
       const submittedItemIds = new Set(input.items.map(({ id }) => id));
       const submittedSectionIds = new Set(input.sections.map(({ id }) => id));
-      const addedItems = submittedItems.filter(({ id }) => !storedItemIds.has(id));
+      const addedItems = input.items.filter(({ id }) => !storedItemIds.has(id));
       const addedSections = input.sections.filter(({ id }) => !storedSectionIds.has(id));
-      const updatedItems = submittedItems.filter(({ id }) => storedItemIds.has(id));
+      const updatedItems = input.items.filter(({ id }) => storedItemIds.has(id));
       const updatedSections = input.sections.filter(({ id }) => storedSectionIds.has(id));
       const removedItems = dbBoard.items.filter(({ id }) => !submittedItemIds.has(id));
       const removedSections = dbBoard.sections.filter(({ id }) => !submittedSectionIds.has(id));
@@ -2207,7 +2134,7 @@ export const boardRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
-      await throwIfBoardPermissionPrincipalsInvalidAsync(
+      await throwIfPermissionPrincipalsInvalidAsync(
         ctx.db,
         "user",
         input.permissions.map(({ principalId }) => principalId),
@@ -2267,7 +2194,7 @@ export const boardRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
-      await throwIfBoardPermissionPrincipalsInvalidAsync(
+      await throwIfPermissionPrincipalsInvalidAsync(
         ctx.db,
         "group",
         input.permissions.map(({ principalId }) => principalId),
@@ -2320,7 +2247,7 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Add an item to a board",
         description:
-          "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission. Options of app items are validated: missing or null options get their defaults (pingEnabled follows the server's enableStatusByDefault board setting) and unknown options are dropped.",
+          "Add a widget or app to the first available position in the main canvas of each layout and return its item ID. Requires modify access to the board and use access to linked integrations. Widget configurations must be valid; placing Custom Widgets requires admin permission.",
       },
       mcp: {
         enabled: true,
@@ -2342,7 +2269,6 @@ export const boardRouter = createTRPCRouter({
         submittedItems: [{ id: "", kind: input.kind, options: input.options }],
         storedItems: [],
       });
-      const options = await normalizeWidgetOptionsAsync(ctx.db, { id: "", kind: input.kind, options: input.options });
 
       if (input.kind === "timetable") {
         await validateTimetableOptionsChangeAsync(input.options);
@@ -2415,7 +2341,7 @@ export const boardRouter = createTRPCRouter({
           id: itemId,
           boardId: input.boardId,
           kind: input.kind,
-          options: superjson.stringify(options),
+          options: superjson.stringify(input.options),
           advancedOptions: emptySuperJSON,
         });
         if (layoutRows.length > 0) await ctx.db.insert(itemLayouts).values(layoutRows);
@@ -2552,7 +2478,7 @@ export const boardRouter = createTRPCRouter({
         protect: true,
         summary: "Update one board item",
         description:
-          "Replace the supplied widget options, advanced options, or integration IDs of one item without replacing the board. Omitted fields remain unchanged; the kind and placements cannot be changed here. Changed options of app items are validated like when saving the board content: missing or null options get their defaults and unknown options are dropped. Requires modify access to the board and use access to newly linked integrations; changing Custom Widget options requires admin permission.",
+          "Replace the supplied widget options, advanced options, or integration IDs of one item without replacing the board. Omitted fields remain unchanged; the kind and placements cannot be changed here. Requires modify access to the board and use access to newly linked integrations; changing Custom Widget options requires admin permission.",
       },
     })
     .input(updateBoardItemSchema)
@@ -2568,18 +2494,12 @@ export const boardRouter = createTRPCRouter({
         integrationIds: input.integrationIds ?? storedItem.integrationIds,
       };
 
-      // Same checks as saving the complete board content
       await validateWidgetConfigurationsAsync(ctx, [submittedItem], [storedItem]);
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: ctx.session.user.permissions.includes("admin"),
         submittedItems: [submittedItem],
         storedItems: [storedItem],
       });
-      const [normalizedItem = submittedItem] = await normalizeChangedWidgetOptionsAsync(
-        ctx.db,
-        [submittedItem],
-        [storedItem],
-      );
       if (submittedItem.kind === "timetable" && input.options !== undefined) {
         await validateTimetableOptionsChangeAsync(submittedItem.options, storedItem.options);
       }
@@ -2590,9 +2510,8 @@ export const boardRouter = createTRPCRouter({
       const removedIntegrationIds = storedItem.integrationIds.filter(
         (integrationId) => !submittedItem.integrationIds.includes(integrationId),
       );
-      // Omitted columns are not written, so they keep changes saved since the item was read
       const itemUpdate = {
-        options: input.options === undefined ? undefined : superjson.stringify(normalizedItem.options),
+        options: input.options === undefined ? undefined : superjson.stringify(submittedItem.options),
         advancedOptions:
           input.advancedOptions === undefined ? undefined : superjson.stringify(submittedItem.advancedOptions),
       };
@@ -2647,7 +2566,6 @@ export const boardRouter = createTRPCRouter({
         },
       });
 
-      // Read back the stored item, so the response matches a following read
       return await getBoardItemAsync(ctx.db, input.boardId, input.itemId);
     }),
   deleteItem: protectedProcedure
@@ -2738,21 +2656,6 @@ export const getHomeIdBoardAsync = async (
 
   const boardSettings = await getServerSettingByKeyAsync(db, "board");
   return boardSettings[settingKey] ?? boardSettings.homeBoardId;
-};
-
-/**
- * Unlike user and group home boards, the instance home boards have no foreign key that clears them on delete.
- * Returns the stored board setting without the given board, or null when it is not an instance home board.
- */
-const clearInstanceHomeBoard = (boardSettingValue: string, boardId: string) => {
-  const boardSettings = superjson.parse<Partial<ServerSettings["board"]>>(boardSettingValue);
-  if (boardSettings.homeBoardId !== boardId && boardSettings.mobileHomeBoardId !== boardId) return null;
-
-  return superjson.stringify({
-    ...boardSettings,
-    ...(boardSettings.homeBoardId === boardId ? { homeBoardId: null } : {}),
-    ...(boardSettings.mobileHomeBoardId === boardId ? { mobileHomeBoardId: null } : {}),
-  });
 };
 
 const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredIds: string[] = []) => {
@@ -2875,27 +2778,25 @@ const saveBoardLayoutsAsync = async (
 
   const itemSectionLayoutsToUpdate: InferInsertModel<typeof itemLayouts>[] = [];
   const sectionLayoutsToUpdate: InferInsertModel<typeof sectionLayouts>[] = [];
-  // Unchanged layouts are not written, so a concurrent save of another layout is kept
-  const layoutsToUpdate = layoutsToSave.filter((layout) => {
+  const layoutsToUpdate = layoutsToSave.flatMap((layout) => {
     const dbLayout = existingLayoutsById.get(layout.id);
-    return (
-      dbLayout !== undefined &&
-      (dbLayout.name !== layout.name ||
-        dbLayout.columnCount !== layout.columnCount ||
-        dbLayout.leftGutterColumnCount !== layout.leftGutterColumnCount ||
-        dbLayout.rightGutterColumnCount !== layout.rightGutterColumnCount ||
-        dbLayout.breakpoint !== layout.breakpoint)
-    );
+    if (!dbLayout) return [];
+    const changed =
+      dbLayout.name !== layout.name ||
+      dbLayout.columnCount !== layout.columnCount ||
+      dbLayout.leftGutterColumnCount !== layout.leftGutterColumnCount ||
+      dbLayout.rightGutterColumnCount !== layout.rightGutterColumnCount ||
+      dbLayout.breakpoint !== layout.breakpoint;
+    if (!changed) return [];
+    return [{ layout, dbLayout }];
   });
   const resizeSourcesToUpdate = new Map<string, string | null>();
 
-  for (const updatedLayout of layoutsToUpdate) {
-    const dbLayout = existingLayoutsById.get(updatedLayout.id);
+  for (const { layout: updatedLayout, dbLayout } of layoutsToUpdate) {
     if (
-      !dbLayout ||
-      (dbLayout.columnCount === updatedLayout.columnCount &&
-        dbLayout.leftGutterColumnCount === updatedLayout.leftGutterColumnCount &&
-        dbLayout.rightGutterColumnCount === updatedLayout.rightGutterColumnCount)
+      dbLayout.columnCount === updatedLayout.columnCount &&
+      dbLayout.leftGutterColumnCount === updatedLayout.leftGutterColumnCount &&
+      dbLayout.rightGutterColumnCount === updatedLayout.rightGutterColumnCount
     )
       continue;
 
@@ -2968,7 +2869,7 @@ const saveBoardLayoutsAsync = async (
               ),
             );
         }
-        for (const layout of layoutsToUpdate) {
+        for (const { layout } of layoutsToUpdate) {
           await transaction
             .update(schema.layouts)
             .set({
@@ -3027,7 +2928,7 @@ const saveBoardLayoutsAsync = async (
             )
             .run();
         }
-        for (const layout of layoutsToUpdate) {
+        for (const { layout } of layoutsToUpdate) {
           transaction
             .update(layouts)
             .set({
@@ -3441,10 +3342,6 @@ const getFullBoardWithWhereAsync = async (
     : eq(boardGroupPermissions.groupId, "");
   const board = await db.query.boards.findFirst({
     where,
-    // Viewers of a copy may not have access to its source board, so getAllBoards is the only place exposing it
-    columns: {
-      sourceBoardId: false,
-    },
     with: {
       creator: {
         columns: {
@@ -3547,7 +3444,6 @@ const getBoardItemAsync = async (db: Database, boardId: string, itemId: string) 
       layouts: true,
     },
   });
-  // Items that cannot be parsed are left out of the board as well
   const parsedItem = item ? parseStoredItem(item) : null;
   if (!parsedItem) {
     throw new TRPCError({ code: "NOT_FOUND", message: "Item not found" });

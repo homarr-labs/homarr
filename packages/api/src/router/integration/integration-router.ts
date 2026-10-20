@@ -13,12 +13,10 @@ import {
   apps,
   groupMembers,
   groupPermissions,
-  groups,
   integrationGroupPermissions,
   integrations,
   integrationSecrets,
   integrationUserPermissions,
-  users,
 } from "@homarr/db/schema";
 import type {
   GroupPermissionKey,
@@ -56,6 +54,7 @@ import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/va
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+import { throwIfPermissionPrincipalsInvalidAsync } from "../permission-principals";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
@@ -282,7 +281,7 @@ export const integrationRouter = createTRPCRouter({
         protect: true,
         summary: "Create an integration",
         description:
-          "Create an integration with its secrets and optionally link an existing app or create a new one. Requires integration-create permission, and app-create permission for a new app. The secrets must cover one secret kind option from GET /api/integrations/kinds, each kind at most once. The connection is tested before saving: a failed test returns BAD_REQUEST with only the failure category (authorization, certificate, request, statusCode, parse or unknown) as message. skipConnectionTest saves without contacting the service.",
+          "Create an integration with its secrets and optionally link or create an app. Secrets must cover one secret kind option from GET /api/integrations/kinds. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires integration-create permission, and app-create permission for a new app.",
       },
       mcp: {
         enabled: true,
@@ -371,7 +370,7 @@ export const integrationRouter = createTRPCRouter({
         protect: true,
         summary: "Update an integration",
         description:
-          "Replace the name, URL, linked app and secrets of an integration; its kind cannot be changed. secrets lists every secret kind to keep, each at most once: a value replaces the stored secret, null keeps the stored value, and stored kinds that are not listed are deleted. The kept secrets must cover one secret kind option. Requires full access to the integration. The connection is tested with the kept secrets before saving: a failed test returns BAD_REQUEST with only the failure category as message. skipConnectionTest saves without contacting the service.",
+          "Replace the name, URL, linked app and secrets of an integration. Each listed secret kind is kept: a value replaces it, null keeps the stored value (only when the URL is unchanged); unlisted kinds are deleted. The connection is tested before saving unless skipConnectionTest is set; a failed test returns BAD_REQUEST with the failure category. Requires full access to the integration.",
       },
     })
     .input(integrationUpdateSchema)
@@ -420,7 +419,6 @@ export const integrationRouter = createTRPCRouter({
             kind: integration.kind,
             secrets: input.secrets,
           },
-          // Stored secrets that are not listed are deleted below, so the test must not rely on them
           reusableSecrets.filter((dbSecret) => input.secrets.some((secret) => secret.kind === dbSecret.kind)),
         );
       }
@@ -444,7 +442,6 @@ export const integrationRouter = createTRPCRouter({
             // Encryption uses a random IV, so ciphertext cannot identify an unchanged value.
             return decryptSecret(storedSecret.value) !== secret.value;
           } catch {
-            // A supplied replacement must still be able to repair an unreadable stored secret.
             return true;
           }
         },
@@ -631,7 +628,7 @@ export const integrationRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
-      await throwIfIntegrationPermissionPrincipalsInvalidAsync(
+      await throwIfPermissionPrincipalsInvalidAsync(
         ctx.db,
         "user",
         input.permissions.map(({ principalId }) => principalId),
@@ -694,7 +691,7 @@ export const integrationRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ input, ctx }) => {
       await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.entityId), "full");
-      await throwIfIntegrationPermissionPrincipalsInvalidAsync(
+      await throwIfPermissionPrincipalsInvalidAsync(
         ctx.db,
         "group",
         input.permissions.map(({ principalId }) => principalId),
@@ -1027,15 +1024,10 @@ const throwIfConnectionTestFailedAsync = async (
   throw new TRPCError({
     code: "BAD_REQUEST",
     message: mappedError.type,
-    // The integration forms show the mapped error, REST callers only get the category as on test-connection
     cause: ctx.isOpenApiRequest ? undefined : new TestConnectionFailedError(mappedError),
   });
 };
 
-/**
- * Without a connection test nothing resolves the secrets,
- * so at least one secret kind option of the integration kind has to be complete
- */
 const throwIfSecretsMissing = (kind: IntegrationKind, secretKinds: IntegrationSecretKind[]) => {
   const hasCompleteSecretKindOption = getAllSecretKindOptions(kind).some((secretKindOption) =>
     secretKindOption.every((secretKind) => secretKinds.includes(secretKind)),
@@ -1057,31 +1049,6 @@ const throwIfAppNotFoundAsync = async (db: Database, appId: string | null) => {
   throw new TRPCError({
     code: "NOT_FOUND",
     message: "App not found",
-  });
-};
-
-const throwIfIntegrationPermissionPrincipalsInvalidAsync = async (
-  db: Database,
-  principalKind: "user" | "group",
-  principalIds: string[],
-) => {
-  if (new Set(principalIds).size !== principalIds.length) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Principal IDs must be unique",
-    });
-  }
-  if (principalIds.length === 0) return;
-
-  const existingPrincipals =
-    principalKind === "user"
-      ? await db.query.users.findMany({ columns: { id: true }, where: inArray(users.id, principalIds) })
-      : await db.query.groups.findMany({ columns: { id: true }, where: inArray(groups.id, principalIds) });
-  if (existingPrincipals.length === principalIds.length) return;
-
-  throw new TRPCError({
-    code: "NOT_FOUND",
-    message: principalKind === "user" ? "User not found" : "Group not found",
   });
 };
 

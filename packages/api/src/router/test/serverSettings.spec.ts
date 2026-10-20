@@ -221,7 +221,6 @@ describe("board settings API", () => {
       }),
     });
 
-    // The settings form sends every board setting when any of them changed
     await caller.saveSettings({
       settingsKey: "board",
       value: {

@@ -87,7 +87,6 @@ export const boardSettingsSchema = boardSavePartialSettingsSchema.required().ext
   name: z.string(),
 });
 
-// Without cross-field refinements, so stored layouts can be returned as they are
 export const boardLayoutFieldsSchema = z.object({
   id: z.string(),
   name: z.string().trim().nonempty().max(32),
@@ -218,7 +217,6 @@ export const boardSummarySchema = z.object({
   name: z.string(),
   logoImageUrl: z.string().nullable(),
   isPublic: z.boolean(),
-  sourceBoardId: z.string().nullable(),
   creator: z
     .object({
       id: z.string(),
@@ -254,13 +252,11 @@ export const updateBoardItemLayoutSchema = z.object({
   height: z.number().int().min(1).max(24),
 });
 
-// One object instead of an intersection, so API responses describe every item field together
 export const boardItemSchema = sharedItemSchema.extend({
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()),
 });
 
-// Same sections and items as the content input, without the legacy section kind and the per-user collapsed state
 export const boardContentSchema = z.object({
   id: z.string(),
   name: z.string(),

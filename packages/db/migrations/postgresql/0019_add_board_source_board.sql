@@ -1,2 +1,0 @@
-ALTER TABLE "board" ADD COLUMN "source_board_id" varchar(64);--> statement-breakpoint
-ALTER TABLE "board" ADD CONSTRAINT "board_source_board_id_board_id_fk" FOREIGN KEY ("source_board_id") REFERENCES "public"."board"("id") ON DELETE set null ON UPDATE no action;
