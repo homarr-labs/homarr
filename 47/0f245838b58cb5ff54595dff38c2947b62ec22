@@ -1,0 +1,37 @@
+apps/docs/public/api/open-api-schema.json
+  s_88eb69bc660f9d::t_56df9ef269b867 1172,1481,3529-3532,3649,4692,5249-5252,5358,5578-5581,6912,9200,11565,11600,11835,11870,11981,12049,12084,12183,12294,12329,12502,12537,12718
+packages/api/src/router/board.ts
+  s_88eb69bc660f9d::t_2aa662b2d6773d 91,358,363,781,1169,1611,1644,1646,2137,2197,2250,2344,2481,2514,2781,2783-2791,2795,2797-2799,2872,2931
+packages/api/src/router/group-membership.ts
+  s_88eb69bc660f9d::t_7a1e29c8ac8823 1,3-7,9-16,18-19,21-26,29-45
+packages/api/src/router/group.ts
+  s_88eb69bc660f9d::t_7cc1854a888e19 4,9,25-29,511
+packages/api/src/router/integration/integration-router.ts
+  s_88eb69bc660f9d::t_189d448dc702fd 57,284,373,631,694
+packages/api/src/router/onboard/onboard-router.ts
+  s_88eb69bc660f9d::t_8082b7633ba1d9 1003-1004
+packages/api/src/router/permission-principals.ts
+  s_88eb69bc660f9d::t_59923d2bf5c964 4-5,7,9-29
+packages/api/src/router/test/board.spec.ts
+  s_88eb69bc660f9d::t_abb14f2f760b7c 827,836
+packages/api/src/router/user.ts
+  s_88eb69bc660f9d::t_106a6eb9e095df 5,46-50,537,541-542
+packages/api/src/router/widgets/options.ts
+  s_88eb69bc660f9d::t_8e3fd7f504743d 62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "470f245838b58cb5ff54595dff38c2947b62ec22",
+  "prompts": {},
+  "sessions": {
+    "s_88eb69bc660f9d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1088892f-b63b-48e2-bdb1-c2cb09349f52",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
