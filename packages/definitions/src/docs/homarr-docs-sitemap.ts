@@ -285,6 +285,7 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/uptime-kuma"
   | "/docs/widgets/video"
   | "/docs/widgets/vpn"
+  | "/docs/widgets/wazuh"
   | "/docs/widgets/weather"
   | "/docs/widgets/whats-up-docker"
   | "/docs/workshop"

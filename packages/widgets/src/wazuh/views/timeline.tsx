@@ -8,13 +8,13 @@ import { IconChartAreaLine } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhLegendChip, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
-import { formatWazuhCount, wazuhSeverityChartColors } from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import type { WazuhViewProps } from "../view-props";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhLegendChip, WazuhPendingState, WazuhWidgetFrame } from "../_shared/frame";
+import { formatWazuhCount, wazuhSeverityChartColors } from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
 
 const rangeToRefetchMs = { "1h": 60_000, "24h": 60_000, "7d": 5 * 60_000, "30d": 5 * 60_000 } as const;
 const formatInterval = (intervalMs: number, locale: string) => {
@@ -44,13 +44,8 @@ const formatTick = (timestamp: number, range: "1h" | "24h" | "7d" | "30d", local
     : date.toLocaleDateString(locale, { day: "numeric", month: "short" });
 };
 
-export default function WazuhTimelineWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-}: WidgetComponentProps<"wazuhTimeline">) {
-  const t = useI18n("widget.wazuhTimeline");
+export function WazuhTimelineView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.timeline");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
   const integrationId = integrationIds[0] ?? "";

@@ -6,32 +6,29 @@ import { IconDeviceDesktop, IconShieldBolt, IconShieldCheck, IconWorld } from "@
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../wazuh/_shared/badges";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
-import { getWazuhSeverityForLevel, wazuhSeverities, wazuhSeverityColors } from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
-import classes from "../wazuh/_shared/wazuh.module.css";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { getWazuhRangeHours } from "../views";
+import type { WazuhViewProps } from "../view-props";
+import { isPrivateIp, WazuhChip, WazuhLevelBadge } from "../_shared/badges";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../_shared/frame";
+import { getWazuhSeverityForLevel, wazuhSeverities, wazuhSeverityColors } from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
+import classes from "../_shared/wazuh.module.css";
 
-export default function WazuhAlertsWidget({
-  integrationIds,
-  options,
-  width,
-  height,
-}: WidgetComponentProps<"wazuhAlerts">) {
-  const t = useI18n("widget.wazuhAlerts");
+export function WazuhAlertsView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.alerts");
   const integrationId = integrationIds[0] ?? "";
+  const hours = getWazuhRangeHours(options.range);
   const query = clientApi.widget.wazuh.getAlerts.useQuery(
-    { integrationId, minLevel: options.minLevel, limit: options.limit, hours: options.hours },
+    { integrationId, minLevel: options.alertsMinLevel, limit: options.alertsLimit, hours },
     { staleTime: 60_000, refetchInterval: 60_000 },
   );
   const result = getUsableWidgetQueryData(query);
   const links = useWazuhLinks(result?.dashboardUrl);
   const compact = height < 170 || width < 260;
-  const title = t("title", { level: String(options.minLevel), hours: String(options.hours) });
+  const title = t("title", { level: String(options.alertsMinLevel), hours: String(hours) });
 
   if (isInitialWidgetQueryPending(query)) {
     return (
@@ -57,7 +54,7 @@ export default function WazuhAlertsWidget({
     <WazuhWidgetFrame
       icon={IconShieldBolt}
       title={title}
-      href={links?.events({ query: `rule.level >= ${options.minLevel}`, from: `now-${options.hours}h` })}
+      href={links?.events({ query: `rule.level >= ${options.alertsMinLevel}`, from: `now-${hours}h` })}
       compact={compact}
       iconColor="orange"
       headerRight={

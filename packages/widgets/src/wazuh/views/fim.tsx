@@ -15,15 +15,15 @@ import type { WazuhFimEntry } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
-import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import type { WidgetComponentProps } from "../definition";
-import { WazuhChip } from "../wazuh/_shared/badges";
-import { WazuhErrorState } from "../wazuh/_shared/error-state";
-import { WazuhLegendChip, WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../wazuh/_shared/frame";
-import { formatWazuhCount } from "../wazuh/_shared/severity";
-import { useWazuhLinks } from "../wazuh/_shared/use-wazuh-links";
-import classes from "../wazuh/_shared/wazuh.module.css";
+import { WidgetEmptyState } from "../../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import type { WazuhViewProps } from "../view-props";
+import { WazuhChip } from "../_shared/badges";
+import { WazuhErrorState } from "../_shared/error-state";
+import { WazuhLegendChip, WazuhRelativeTime, WazuhPendingState, WazuhWidgetFrame } from "../_shared/frame";
+import { formatWazuhCount } from "../_shared/severity";
+import { useWazuhLinks } from "../_shared/use-wazuh-links";
+import classes from "../_shared/wazuh.module.css";
 
 const eventStyles: Record<WazuhFimEntry["event"], { icon: TablerIcon; color: string }> = {
   added: { icon: IconFilePlus, color: "green" },
@@ -38,8 +38,8 @@ const formatPath = (entry: WazuhFimEntry) => {
   return entry.valueName ? `${path}\\${entry.valueName}` : path;
 };
 
-export default function WazuhFimWidget({ integrationIds, options, width, height }: WidgetComponentProps<"wazuhFim">) {
-  const t = useI18n("widget.wazuhFim");
+export function WazuhFimView({ integrationIds, options, width, height }: WazuhViewProps) {
+  const t = useI18n("widget.wazuh.fim");
   const tShared = useI18n("widget.wazuh");
   const locale = useCurrentIntlLocale();
   const integrationId = integrationIds[0] ?? "";
@@ -47,8 +47,8 @@ export default function WazuhFimWidget({ integrationIds, options, width, height 
     {
       integrationId,
       range: options.range,
-      event: options.event,
-      limit: options.limit,
+      event: options.fimEvent,
+      limit: options.fimLimit,
       includeRegistry: options.includeRegistry,
     },
     { staleTime: 60_000, refetchInterval: 60_000 },

@@ -52,12 +52,13 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     return this.Unknown(cause).toResult();
   }
 
-  private static Certificate(requestError: RequestError<"certificate">, certificate: X509Certificate) {
+  private static Certificate(requestError: RequestError<"certificate">, certificate: X509Certificate, url: string) {
     return new TestConnectionError(
       "certificate",
       {
         requestError,
         certificate,
+        url,
       },
       {
         cause: requestError,
@@ -65,8 +66,16 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     );
   }
 
-  public static CertificateResult(requestError: RequestError<"certificate">, certificate: X509Certificate) {
-    return this.Certificate(requestError, certificate).toResult();
+  /**
+   * @param url the URL whose certificate failed validation. It can differ from the integration URL when an
+   * integration also requests a secondary endpoint.
+   */
+  public static CertificateResult(
+    requestError: RequestError<"certificate">,
+    certificate: X509Certificate,
+    url: string,
+  ) {
+    return this.Certificate(requestError, certificate, url).toResult();
   }
 
   private static Authorization(statusCode: number) {
@@ -169,6 +178,8 @@ interface TestConnectionErrorMap {
   certificate: {
     requestError: RequestError<"certificate">;
     certificate: X509Certificate;
+    /** URL of the endpoint that presented the certificate. */
+    url: string;
   };
   request: {
     requestError: Exclude<AnyRequestError, RequestError<"certificate">>;
