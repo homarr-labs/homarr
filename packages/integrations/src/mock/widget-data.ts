@@ -10,7 +10,7 @@ import type { SpeedtestTrackerDashboardData } from "../speedtest-tracker/speedte
 import type { TracearrDashboardData } from "../tracearr/tracearr-types";
 import type { TraefikDashboardData } from "../traefik/traefik-types";
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats, UmamiWebsite } from "../umami/umami-types";
-import type { UptimeKumaDashboardData } from "../uptime-kuma/uptime-kuma-types";
+import { createUptimeKumaMockStatusPage } from "../uptime-kuma/uptime-kuma-mock";
 import type { LlamacppStats } from "../llama-cpp/llamacpp-types";
 import type { WudStats } from "../wud/wud-types";
 import { createWazuhMockData } from "../wazuh/wazuh-mock";
@@ -317,21 +317,7 @@ export const mockWidgetData = {
       ],
     },
   ] satisfies UmamiEventSeries[],
-  uptimeKuma: {
-    totalMonitors: 6,
-    upCount: 5,
-    downCount: 1,
-    pausedCount: 0,
-    averageUptimePercent: 99.72,
-    monitors: [
-      { id: 1, name: "Homarr", status: "up", uptimePercent24h: 100 },
-      { id: 2, name: "Media server", status: "up", uptimePercent24h: 99.98 },
-      { id: 3, name: "Home cloud", status: "up", uptimePercent24h: 99.91 },
-      { id: 4, name: "Backups", status: "up", uptimePercent24h: 99.62 },
-      { id: 5, name: "VPN", status: "up", uptimePercent24h: 99.8 },
-      { id: 6, name: "Lab service", status: "down", uptimePercent24h: 98.99 },
-    ],
-  } satisfies UptimeKumaDashboardData,
+  uptimeKuma: createUptimeKumaMockStatusPage(Date.parse(demoTimestamp)),
   vpn: {
     vpnStatus: "running",
     dnsStatus: "running",

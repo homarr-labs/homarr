@@ -5,6 +5,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import type { IntegrationInput } from "../base/integration";
 import { createIntegrationAsync } from "../factory";
+import { getUniqueUptimeKumaMonitors, summarizeUptimeKumaMonitors } from "../uptime-kuma/uptime-kuma-summary";
 import type { StatsMetric, StatsUnit, StatsValue } from "./types";
 
 export interface ExistingStatsProvider {
@@ -301,15 +302,24 @@ existingStatsProviders.uptimeKuma = adapter(
     metric("totalMonitors", "Monitors"),
     metric("upCount", "Up"),
     metric("downCount", "Down"),
+    metric("pendingCount", "Pending"),
+    metric("maintenanceCount", "Maintenance"),
+    metric("staleCount", "No recent data"),
     metric("averageUptimePercent", "Average uptime", "percent"),
   ],
-  (client) => client.getDashboardDataAsync(),
-  ({ totalMonitors, upCount, downCount, averageUptimePercent }) => ({
-    totalMonitors,
-    upCount,
-    downCount,
-    averageUptimePercent,
-  }),
+  (client) => client.getStatusPageAsync(),
+  (statusPage) => {
+    const summary = summarizeUptimeKumaMonitors(getUniqueUptimeKumaMonitors(statusPage.groups));
+    return {
+      totalMonitors: summary.total,
+      upCount: summary.counts.up,
+      downCount: summary.counts.down,
+      pendingCount: summary.counts.pending,
+      maintenanceCount: summary.counts.maintenance,
+      staleCount: summary.counts.stale,
+      averageUptimePercent: summary.averageUptime24h,
+    };
+  },
 );
 existingStatsProviders.tdarr = adapter(
   "tdarr",
