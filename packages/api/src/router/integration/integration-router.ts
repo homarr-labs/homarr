@@ -336,7 +336,7 @@ export const integrationRouter = createTRPCRouter({
         kind: integration.kind,
         secrets: input.secrets,
       },
-      integration.secrets,
+      isSameUrl(integration.url, input.url) ? integration.secrets : [],
     ).catch((error) => {
       if (!(error instanceof MissingSecretError)) throw error;
 
@@ -737,6 +737,14 @@ export const integrationRouter = createTRPCRouter({
       return result;
     }),
 });
+
+const isSameUrl = (storedUrl: string, submittedUrl: string) => {
+  try {
+    return new URL(storedUrl).href === new URL(submittedUrl).href;
+  } catch {
+    return false;
+  }
+};
 
 const globalIntegrationPermissions = [
   "integration-use-all",
