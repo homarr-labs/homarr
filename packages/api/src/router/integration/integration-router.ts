@@ -18,7 +18,12 @@ import {
   integrationSecrets,
   integrationUserPermissions,
 } from "@homarr/db/schema";
-import type { GroupPermissionKey, IntegrationPermission, IntegrationSecretKind } from "@homarr/definitions";
+import type {
+  GroupPermissionKey,
+  IntegrationKindByCategory,
+  IntegrationPermission,
+  IntegrationSecretKind,
+} from "@homarr/definitions";
 import {
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
@@ -28,6 +33,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
+import type { IntegrationInstanceOfKind } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
@@ -46,6 +52,11 @@ import { integrationRequestProcedure } from "./integration-request";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 import { integrationTestStoredConnectionProcedure } from "./integration-test-stored-connection";
 import { mapTestConnectionError } from "./map-test-connection-error";
+
+// Calling `searchAsync` on a union of integration classes types the result as only one member's, so the union is
+// spelled out per kind: Overseerr's results keep their media type, Thingport's keep their own shape.
+type IntegrationSearchResult<TKind extends IntegrationKindByCategory<"search"> = IntegrationKindByCategory<"search">> =
+  TKind extends unknown ? Awaited<ReturnType<IntegrationInstanceOfKind<TKind>["searchAsync"]>>[number] : never;
 
 const logger = createLogger({ module: "integrationRouter" });
 const mediaRequestSearchKinds = getIntegrationKindsByCategory("mediaSearch");
@@ -615,7 +626,7 @@ export const integrationRouter = createTRPCRouter({
     })
     .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }): Promise<IntegrationSearchResult[]> => {
       const integrationInstance = await createIntegrationAsync(ctx.integration);
       return await integrationInstance.searchAsync(encodeURI(input.query));
     }),

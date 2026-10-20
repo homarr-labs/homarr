@@ -3980,6 +3980,109 @@
         "transcoding": "{count} transcoding"
       }
     },
+    "thingport-libraryStats": {
+      "name": "Thingport Library Stats",
+      "description": "Totals for your Thingport 3D model library",
+      "title": "Library",
+      "option": {
+        "showModels": {
+          "label": "Show models"
+        },
+        "showCollections": {
+          "label": "Show collections"
+        },
+        "showCategories": {
+          "label": "Show categories"
+        },
+        "showAuthors": {
+          "label": "Show authors"
+        }
+      },
+      "models": "Models",
+      "collections": "Collections",
+      "categories": "Categories",
+      "authors": "Authors"
+    },
+    "thingport-featuredModel": {
+      "name": "Thingport Featured Model",
+      "description": "One model from your Thingport library each day, spinning in 3D",
+      "option": {
+        "autoRotate": {
+          "label": "Spin the model"
+        },
+        "showDetails": {
+          "label": "Show model details"
+        }
+      },
+      "title": "Featured model",
+      "empty": "No 3D models to feature yet",
+      "hint": "Drag to spin, click to open",
+      "noPreview": "No 3D preview for this model yet",
+      "views": "{count, plural, one {# view} other {# views}}",
+      "prints": "{count, plural, one {# print} other {# prints}}"
+    },
+    "thingport-activityHeatmap": {
+      "name": "Thingport Activity Heatmap",
+      "description": "A year of imports, downloads and slicer opens from your Thingport profile",
+      "title": "Activity",
+      "option": {
+        "weekStart": {
+          "label": "First day of the week",
+          "option": {
+            "sunday": "Sunday",
+            "monday": "Monday"
+          }
+        },
+        "showTotal": {
+          "label": "Show total"
+        },
+        "showLegend": {
+          "label": "Show legend"
+        }
+      },
+      "lastYear": "Last 12 months",
+      "totalLastYear": "{count, plural, one {# activity in the last year} other {# activities in the last year}}",
+      "totalInYear": "{count, plural, one {# activity in {year}} other {# activities in {year}}}",
+      "dayTotal": "{count, plural, one {# activity on {date}} other {# activities on {date}}}",
+      "dayEmpty": "No activity on {date}",
+      "kinds": {
+        "import": "Imported",
+        "upload": "Uploaded",
+        "download": "Downloaded",
+        "slicer": "Opened in slicer",
+        "delete": "Deleted"
+      },
+      "less": "Less",
+      "more": "More"
+    },
+    "thingport-models": {
+      "name": "Thingport Models",
+      "description": "Recently added, most viewed and most printed models from Thingport",
+      "title": "Models",
+      "option": {
+        "defaultTab": {
+          "label": "Default tab"
+        },
+        "itemCount": {
+          "label": "Number of models"
+        },
+        "showThumbnails": {
+          "label": "Show thumbnails"
+        }
+      },
+      "tab": {
+        "recentlyAdded": "Recent",
+        "topViewed": "Top viewed",
+        "topPrinted": "Top printed"
+      },
+      "empty": {
+        "recentlyAdded": "No models in your library yet",
+        "topViewed": "No viewed models yet",
+        "topPrinted": "No printed models yet"
+      },
+      "views": "{count, plural, one {# view} other {# views}}",
+      "prints": "{count, plural, one {# print} other {# prints}}"
+    },
     "paperlessNgx": {
       "description": "Overview of your Paperless-ngx document archive",
       "documentsTotal": "Total Documents",

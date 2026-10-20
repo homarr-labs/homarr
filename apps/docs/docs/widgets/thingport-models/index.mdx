@@ -1,0 +1,44 @@
+---
+title: "Thingport Models"
+description: "Lists recently added, most viewed and most printed models from Thingport."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { thingportModelsWidget } from ".";
+import { thingportIntegration } from "@site/docs/integrations/thingport";
+
+<WidgetHeader widget={thingportModelsWidget} categories={["Miscellaneous"]} />
+
+This widget lists models from your Thingport library in three tabs: recently added, most viewed and most printed. Selecting a model opens it in Thingport.
+
+### Screenshots
+
+The widget at several grid sizes, in dark and light mode.
+
+import sizesDark from "./img/sizes-dark.png";
+import sizesLight from "./img/sizes-light.png";
+
+<div className="flex gap-2 flex-wrap">
+  <img src={sizesDark.src} alt="Thingport Models widget at several sizes in dark mode" width={720} />
+  <img src={sizesLight.src} alt="Thingport Models widget at several sizes in light mode" width={720} />
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{ integration: thingportIntegration }]} />
+
+<WidgetInteractionGuide advancedView={false} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={thingportModelsWidget.configuration} />

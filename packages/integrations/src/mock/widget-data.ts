@@ -7,6 +7,14 @@ import type { NavidromeDashboardData } from "../navidrome/navidrome-types";
 import type { PaperlessNgxStats } from "../paperless-ngx/paperless-ngx-types";
 import type { PatchMonStats } from "../patchmon/patchmon-types";
 import type { SpeedtestTrackerDashboardData } from "../speedtest-tracker/speedtest-tracker-types";
+import type {
+  ThingportActivity,
+  ThingportActivityDay,
+  ThingportFeaturedModel,
+  ThingportLibraryStats,
+  ThingportModel,
+  ThingportModelList,
+} from "../thingport/thingport-types";
 import type { TracearrDashboardData } from "../tracearr/tracearr-types";
 import type { TraefikDashboardData } from "../traefik/traefik-types";
 import type { UmamiEventSeries, UmamiMetricItem, UmamiVisitorStats, UmamiWebsite } from "../umami/umami-types";
@@ -178,6 +186,30 @@ export const mockWidgetData = {
       },
     ],
   } satisfies ImmichAlbum,
+  thingportLibraryStats: {
+    modelCount: 1_284,
+    collectionCount: 37,
+    categoryCount: 52,
+    authorCount: 412,
+    links: {
+      models: "https://thingport.net/models",
+      collections: "https://thingport.net/models/collections",
+      categories: "https://thingport.net/",
+      authors: "https://thingport.net/",
+    },
+  } satisfies ThingportLibraryStats,
+  thingportModels: createThingportMockModels(),
+  thingportFeaturedModel: {
+    id: "demo-model-1",
+    name: "Articulated Dragon",
+    href: "https://thingport.net/models/demo-model-1",
+    thumbnailUrl: null,
+    author: "McGybeer",
+    category: "Toys & Games",
+    viewCount: 214,
+    printCount: 9,
+    mesh: null,
+  } satisfies ThingportFeaturedModel,
   paperlessNgx: {
     documentsTotal: 2_847,
     documentsInbox: 14,
@@ -371,3 +403,60 @@ export const mockWidgetData = {
     },
   } satisfies LlamacppStats,
 } as const;
+
+function createThingportMockModels(): Record<ThingportModelList, ThingportModel[]> {
+  const models = [
+    { name: "Articulated Dragon", viewCount: 214, printCount: 9 },
+    { name: "Cable Management Clips", viewCount: 87, printCount: 23 },
+    { name: "Gridfinity Baseplate 4x4", viewCount: 156, printCount: 17 },
+    { name: "Benchy Calibration Boat", viewCount: 64, printCount: 31 },
+    { name: "Planetary Gear Fidget", viewCount: 121, printCount: 6 },
+  ].map((model, index) => ({
+    id: `demo-model-${index + 1}`,
+    name: model.name,
+    href: `https://thingport.net/models/demo-model-${index + 1}`,
+    thumbnailUrl: null,
+    viewCount: model.viewCount,
+    printCount: model.printCount,
+    createdAt: new Date(Date.parse(demoTimestamp) - index * 36 * 60 * 60 * 1000).toISOString(),
+  }));
+
+  return {
+    recentlyAdded: models,
+    topViewed: models.toSorted((left, right) => right.viewCount - left.viewCount),
+    topPrinted: models.toSorted((left, right) => right.printCount - left.printCount),
+  };
+}
+
+/** A year and a half of made-up activity, the same on every load, filtered to the range a widget asks for. */
+export function createThingportMockActivity(from: string, to: string): ThingportActivity {
+  const days: ThingportActivityDay[] = [];
+  const end = Date.parse(`${to}T00:00:00Z`);
+  for (let time = Date.parse(`${from}T00:00:00Z`); time <= end; time += 24 * 60 * 60 * 1000) {
+    const date = new Date(time).toISOString().slice(0, 10);
+    // Cheap deterministic noise from the date, so the demo heatmap has busy streaks and quiet gaps.
+    const seed = [...date].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) % 9973, 7);
+    const weekday = new Date(time).getUTCDay();
+    if (seed % 10 < (weekday === 0 || weekday === 6 ? 5 : 3)) continue;
+    const download = seed % 5;
+    const imported = seed % 7 === 0 ? 3 + (seed % 4) : seed % 3;
+    const slicer = seed % 4 === 0 ? 1 + (seed % 3) : 0;
+    const upload = seed % 11 === 0 ? 1 : 0;
+    const counts: ThingportActivityDay["counts"] = {};
+    if (imported) counts.import = imported;
+    if (upload) counts.upload = upload;
+    if (download) counts.download = download;
+    if (slicer) counts.slicer = slicer;
+    if (Object.keys(counts).length > 0) days.push({ date, counts });
+  }
+
+  return {
+    days,
+    total: days.reduce(
+      (sum, day) => sum + Object.values(day.counts).reduce((daySum, count) => daySum + (count ?? 0), 0),
+      0,
+    ),
+    years: [2026, 2025, 2024],
+    profileUrl: "https://thingport.net/profile",
+  };
+}
