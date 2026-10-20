@@ -351,6 +351,13 @@
       "when": 1791637584382,
       "tag": "0049_add_api_key_oauth_provenance",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "6",
+      "when": 1791808473698,
+      "tag": "0050_add_icon_search_name",
+      "breakpoints": true
     }
   ]
 }
