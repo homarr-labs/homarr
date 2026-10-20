@@ -151,7 +151,7 @@
         },
         "columns": "看板列数",
         "columnsDescription": "列决定了用于调整项目大小和位置的横向网格。对大多数人来说，12 列已经足够。",
-        "columnCount": "",
+        "columnCount": "{count, plural, one {# 列} other {# 列}}",
         "leftSidebar": "左侧边栏",
         "rightSidebar": "",
         "previewLabel": "第一个看板布局的实时预览"
@@ -201,13 +201,13 @@
         "description": "Homarr 会测试未保存的连接、导入所选应用、应用外观与布局，然后打开按您的选择配置好的看板。",
         "board": "第一个看板",
         "columns": "看板列数",
-        "columnsValue": "",
+        "columnsValue": "{count, plural, one {# 列} other {# 列}}",
         "sidebars": "",
         "sidebarsValue": "{count, plural, =0 {无} one {# 个侧边栏} other {# 个侧边栏}}",
         "layouts": "响应式布局",
         "layoutsValue": "移动端 + 基础",
         "integrations": "集成",
-        "integrationsValue": "",
+        "integrationsValue": "{count, plural, =0 {未选择任何项} one {# 集成} other {# 集成}}",
         "apps": "应用卡片",
         "appsValue": "{count, plural, =0 {仅入门应用} one {# 个应用卡片} other {# 个应用卡片}}",
         "language": "语言",
@@ -278,7 +278,7 @@
         "access": {
           "title": "",
           "description": "",
-          "details": "",
+          "details": "查看权限（{count}）",
           "noGlobalPermissions": ""
         },
         "admin": {
@@ -863,7 +863,7 @@
         "enabled": "已启用",
         "disabled": "已禁用",
         "disabledDescription": "此小部件仍保留配置，但不会在任何看板上加载。",
-        "requestCount": "",
+        "requestCount": "{count, plural, one {# 请求} other {# 请求}}",
         "invalidDefinition": "",
         "migrationRequired": "",
         "migrationInstructions": "打开「操作」即可复制或导出原始 v1 定义以便手动重建，也可以配合 LLM 使用迁移提示。迁移后，看板上已有的位置仍可正常工作。",
@@ -929,19 +929,19 @@
       "componentReference": {
         "search": "",
         "empty": "",
-        "count": ""
+        "count": "{count, number} 个可用组件"
       },
       "status": {
-        "errors": "",
-        "warnings": "",
+        "errors": "{count, number} 个错误",
+        "warnings": "{count, number} 个警告",
         "ready": "",
         "position": "第 {line, number} 行，第 {column, number} 列",
-        "characters": "",
-        "charactersWithLimit": ""
+        "characters": "{count, number} 个字符",
+        "charactersWithLimit": "{count, number} / {limit, number}"
       },
       "diagnostics": {
         "title": "模板诊断",
-        "line": "",
+        "line": "第 {line, number} 行",
         "ast": "{value}",
         "bindingTypeConflict": "输入“{value}”被值类型不兼容的控件共享。",
         "runtimeBindingTypeConflict": "输入“{value}”同时绑定为 {firstType} 和 {secondType}。",
@@ -998,7 +998,7 @@
         "advancedManifest": "",
         "advancedJson": "",
         "manifestFilename": "widget.json",
-        "request": "",
+        "request": "请求 {count, number}",
         "requestId": "",
         "type": "类型",
         "method": "方法",
@@ -1068,7 +1068,7 @@
       },
       "sources": {
         "title": "API 源与凭据",
-        "newName": "",
+        "newName": "API {count, number}",
         "duplicateSourceId": "",
         "credentialRemoved": "",
         "credentialRemovedDescription": "已存储的值已删除。",
@@ -1163,7 +1163,7 @@
         "runAction": "",
         "deleteConfirmation": "",
         "simulated": "操作已模拟",
-        "httpStatus": "",
+        "httpStatus": "HTTP {status, number}",
         "tab": {
           "widget": "",
           "data": "",
@@ -1363,7 +1363,7 @@
       "description": "连接已通过测试。请选择接下来要在看板上显示的内容。",
       "connectionReady": "",
       "appReady": "",
-      "compatibleWidgets": "",
+      "compatibleWidgets": "{count, plural, =0 {没有兼容的小部件} one {# 个兼容小部件} other {# 个兼容小部件}} available",
       "chooseWidget": "",
       "recipes": {
         "title": "推荐用于此看板",
@@ -1475,7 +1475,7 @@
       "widgetCount": "{count} 个小组件",
       "noWidgets": "暂无小组件",
       "detected": "通过 Docker 检测到",
-      "connected": "",
+      "connected": "{count, plural, one {# 个已连接} other {# 个已连接}}",
       "tiedWidgets": "关联的小部件",
       "more": "还有 {count} 个",
       "loadError": ""
@@ -1559,6 +1559,7 @@
             "untrusted": "此证书不受信任。",
             "hostnameMismatch": "证书主机名与 URL 不匹配。"
           },
+          "secondaryUrl": "该证书由 {url} 提供，这是此集成上配置的附加端点。",
           "alert": {
             "permission": {
               "title": "权限不足",
@@ -1904,6 +1905,7 @@
       "tryAgain": "重试",
       "loading": "正在加载",
       "show": "显示",
+      "showAll": "显示全部",
       "hide": "隐藏",
       "undo": "撤销",
       "editNamed": "编辑 {name}",
@@ -1913,6 +1915,7 @@
       "copied": "",
       "refresh": "刷新"
     },
+    "hidden": "已隐藏",
     "pagination": {
       "pageOf": "第 {page} 页，共 {totalPages} 页"
     },
@@ -1935,6 +1938,7 @@
       "clear": "清除图片",
       "uploadImage": "",
       "results": "图片搜索结果",
+      "websiteIcon": "网站图标",
       "localImages": "你的图片",
       "svgIcons": "",
       "otherImages": "其他图片",
@@ -2187,7 +2191,7 @@
       }
     },
     "selection": {
-      "summary": "",
+      "summary": "{count, plural, one {# 个选中项} other {# 个选中项}}",
       "selected": "{count, plural, one {# 已选中} other {# 已选中}}",
       "copy": "复制",
       "copied": "{count, plural, one {已将 # 个项目复制到剪贴板} other {已将 # 个项目复制到剪贴板}}",
@@ -2434,9 +2438,9 @@
         "label": "",
         "placeholder": "新建分类",
         "add": "添加分类",
-        "remove": "",
-        "rename": "",
-        "assign": "",
+        "remove": "移除 {name} 分类",
+        "rename": "{name} 的分类名称",
+        "assign": "{name} 的分类",
         "ungrouped": ""
       }
     },
@@ -2526,7 +2530,7 @@
       },
       "error": {
         "internalServerError": "无法控制 DNS Hole",
-        "bulkActionsFailed": ""
+        "bulkActionsFailed": "{count, plural, one {# 个操作失败} other {# 个操作失败}}"
       },
       "controls": {
         "enableAll": "全部启用",
@@ -2778,7 +2782,7 @@
       "completedEvents": "已完成的事件",
       "invalid": {
         "title": "",
-        "description": "",
+        "description": "{count, plural, one {一个事件的日期无效或时区不受支持。} other {# 个事件的日期无效或时区不受支持。}}",
         "value": "不可用"
       },
       "alert": {
@@ -2972,7 +2976,7 @@
         }
       },
       "saveFailed": "",
-      "documentStats": ""
+      "documentStats": "{words, plural, one {# 个词} other {# 个词}} · {characters, plural, one {# 个字符} other {# 个字符}}"
     },
     "anchorNote": {
       "name": "锚点笔记",
@@ -3229,7 +3233,7 @@
       "advanced": {
         "previousMonth": "",
         "nextMonth": "显示下月",
-        "eventCount": "",
+        "eventCount": "{count, plural, one {# 个事件} other {# 个事件}}",
         "loading": "",
         "noEvents": ""
       },
@@ -3246,8 +3250,8 @@
         "previous": "",
         "next": "",
         "noEvents": "",
-        "more": "",
-        "moreLabel": "",
+        "more": "还有 {count} 个",
+        "moreLabel": "显示另外 {count} 个事件",
         "eventDetails": "",
         "close": "",
         "timeSlot": "",
@@ -3457,7 +3461,7 @@
             "name": "虚拟机"
           },
           "lxc": {
-            "name": "LXCs"
+            "name": "LXC 容器"
           },
           "storage": {
             "name": "存储"
@@ -3936,11 +3940,28 @@
         "paused": "已暂停",
         "remaining": "剩余 {minutes} 分钟",
         "seasonEpisode": "第 {season} 季 第 {episode} 集",
+        "state": {
+          "playing": "播放中",
+          "buffering": "缓冲中"
+        },
+        "details": {
+          "device": "设备",
+          "location": "位置",
+          "sessionId": "会话 ID",
+          "bitrate": "比特率",
+          "audioHandling": "音频处理",
+          "direct": "直接播放",
+          "transcode": "转码为 {target}",
+          "containerChanged": "{container}（重封装）",
+          "position": "{position} / {duration}",
+          "unknown": "未知格式"
+        },
         "metadata": {
           "title": "技术统计",
           "video": {
             "title": "视频",
-            "resolution": "分辨率"
+            "resolution": "分辨率",
+            "frameRate": "帧率"
           },
           "audio": {
             "title": "音频",
@@ -3957,10 +3978,113 @@
         "unknownUser": ""
       },
       "summary": {
-        "sessions": "",
+        "sessions": "{count, plural, one {# 个会话} other {# 个会话}}",
         "playing": "{count} 个正在播放",
         "transcoding": "{count} 个正在转码"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "Thingport 媒体库统计",
+      "description": "Thingport 3D 模型库的统计总览",
+      "title": "模型库",
+      "option": {
+        "showModels": {
+          "label": "显示模型"
+        },
+        "showCollections": {
+          "label": "显示合集"
+        },
+        "showCategories": {
+          "label": "显示分类"
+        },
+        "showAuthors": {
+          "label": "显示作者"
+        }
+      },
+      "models": "模型",
+      "collections": "合集",
+      "categories": "分类",
+      "authors": "作者"
+    },
+    "thingport-featuredModel": {
+      "name": "Thingport 精选模型",
+      "description": "每天从你的 Thingport 模型库中挑选一个模型，以 3D 旋转展示",
+      "option": {
+        "autoRotate": {
+          "label": "旋转模型"
+        },
+        "showDetails": {
+          "label": "显示模型详情"
+        }
+      },
+      "title": "精选模型",
+      "empty": "暂无可展示的 3D 模型",
+      "hint": "拖动旋转，点击打开",
+      "noPreview": "此模型暂无 3D 预览",
+      "views": "{count, plural, one {# 次浏览} other {# 次浏览}}",
+      "prints": "{count, plural, one {# 次打印} other {# 次打印}}"
+    },
+    "thingport-activityHeatmap": {
+      "name": "Thingport 活动热力图",
+      "description": "你 Thingport 个人资料中一年的导入、下载和切片器打开记录",
+      "title": "活动",
+      "option": {
+        "weekStart": {
+          "label": "每周第一天",
+          "option": {
+            "sunday": "周日",
+            "monday": "周一"
+          }
+        },
+        "showTotal": {
+          "label": "显示总计"
+        },
+        "showLegend": {
+          "label": "显示图例"
+        }
+      },
+      "lastYear": "最近 12 个月",
+      "totalLastYear": "{count, plural, one {过去一年共 # 次活动} other {过去一年共 # 次活动}}",
+      "totalInYear": "{count, plural, one {{year} 年共 # 次活动} other {{year} 年共 # 次活动}}",
+      "dayTotal": "{count, plural, one {{date} 共 # 次活动} other {{date} 共 # 次活动}}",
+      "dayEmpty": "{date} 无活动",
+      "kinds": {
+        "import": "已导入",
+        "upload": "已上传",
+        "download": "已下载",
+        "slicer": "在切片器中打开",
+        "delete": "已删除"
+      },
+      "less": "少",
+      "more": "多"
+    },
+    "thingport-models": {
+      "name": "Thingport 模型",
+      "description": "来自 Thingport 的最新添加、最多浏览和最多打印的模型",
+      "title": "模型",
+      "option": {
+        "defaultTab": {
+          "label": "默认标签页"
+        },
+        "itemCount": {
+          "label": "模型数量"
+        },
+        "showThumbnails": {
+          "label": "显示缩略图"
+        }
+      },
+      "tab": {
+        "recentlyAdded": "最新",
+        "topViewed": "最多浏览",
+        "topPrinted": "最多打印"
+      },
+      "empty": {
+        "recentlyAdded": "你的模型库中还没有模型",
+        "topViewed": "还没有浏览过的模型",
+        "topPrinted": "还没有打印过的模型"
+      },
+      "views": "{count, plural, one {# 次浏览} other {# 次浏览}}",
+      "prints": "{count, plural, one {# 次打印} other {# 次打印}}"
     },
     "paperlessNgx": {
       "description": "Paperless-ngx 文档存档概览",
@@ -4567,7 +4691,7 @@
     },
     "mediaMissing": {
       "name": "缺失和排队媒体",
-      "description": "显示来自 {radarr}、{sonarr} 和 {bindery} 的缺失和排队的电影、剧集和书籍",
+      "description": "显示来自 {radarr}、{sonarr}、{sportarr} 和 {bindery} 的缺失和排队中的电影、剧集、赛事和书籍",
       "option": {
         "showMissing": {
           "label": "显示缺失项目"
@@ -4764,7 +4888,7 @@
         "updated": "",
         "metric": {
           "latency": "",
-          "ping": "Ping",
+          "ping": "延迟",
           "uptime": "运行时间",
           "users": "用户",
           "guests": "访客"
@@ -4772,7 +4896,7 @@
       },
       "card": {
         "vpn": {
-          "countConnected": "",
+          "countConnected": "{count, plural, one {# 个已连接} other {# 个已连接}}",
           "label": "VPN"
         },
         "wan": "",
@@ -4910,10 +5034,10 @@
       "tests": "{count}次测试",
       "recentResults": "近期结果",
       "recentResultsSpeed": "速度",
-      "recentResultsPing": "Ping",
+      "recentResultsPing": "延迟",
       "download": "下载",
       "upload": "上传",
-      "ping": "Ping",
+      "ping": "延迟",
       "status": "状态",
       "avgDownload": "平均下载",
       "avgUpload": "平均上传",
@@ -4930,45 +5054,108 @@
     "uptimeKuma": {
       "description": "来自 Uptime Kuma 状态页面的运行时间监控统计",
       "option": {
-        "showAverageUptime": {
-          "label": "显示平均运行时间",
-          "description": "显示过去 24 小时的平均可用率"
+        "showSummary": {
+          "label": "显示摘要",
+          "description": "整体状态、计数和平均值"
         },
-        "showUptimeRing": {
-          "label": "显示运行时间环形图",
-          "description": "在平均运行时间值旁显示进度环"
+        "showIncidents": {
+          "label": "显示事件",
+          "description": "事件和进行中的维护"
         },
-        "showTotalMonitors": {
-          "label": "显示监控项总数",
-          "description": "显示已配置的监控项总数"
+        "groupByStatusPageGroup": {
+          "label": "监控分组",
+          "description": "使用状态页中定义的组"
         },
-        "showUpCount": {
-          "label": "显示正常数量",
-          "description": "显示当前正常在线的监控项数量"
+        "showOnlyProblems": {
+          "label": "仅显示问题",
+          "description": "隐藏正常运行的监控项（高级视图除外）"
         },
-        "showDownCount": {
-          "label": "显示异常数量",
-          "description": "显示当前异常的监控项数量"
+        "sortBy": {
+          "label": "监控排序方式",
+          "option": {
+            "status": "状态，问题优先",
+            "statusPage": "状态页顺序",
+            "name": "名称",
+            "uptime": "在线率，最低优先"
+          }
         },
-        "showPausedCount": {
-          "label": "显示已暂停数量",
-          "description": "显示当前已暂停的监控项数量"
+        "showHeartbeatBar": {
+          "label": "显示心跳条",
+          "description": "以彩色条显示最近的检查，最新的在右侧"
+        },
+        "showUptime": {
+          "label": "显示 24 小时在线率"
+        },
+        "showResponseTime": {
+          "label": "显示响应时间"
+        },
+        "showCertificateExpiry": {
+          "label": "证书警告",
+          "description": "标记 14 天内到期的证书"
         }
-      },
-      "averageUptime": "平均可用率（24小时）",
-      "stats": {
-        "totalMonitors": "监控项总数",
-        "upCount": "正常",
-        "downCount": "异常",
-        "pausedCount": "已暂停"
-      },
-      "error": {
-        "internalServerError": "获取运行时间数据失败"
       },
       "status": {
         "up": "在线",
         "down": "离线",
-        "paused": "已暂停"
+        "pending": "等待中",
+        "maintenance": "维护中",
+        "stale": "无最新数据",
+        "unknown": "无数据"
+      },
+      "overall": {
+        "operational": "所有系统运行正常",
+        "degraded": "部分服务降级",
+        "outage": "严重故障",
+        "maintenance": "维护中",
+        "unknown": "等待首次检查"
+      },
+      "short": {
+        "operational": "全部正常",
+        "down": "{count} 个异常",
+        "pending": "{count} 个等待中",
+        "maintenance": "维护中",
+        "unknown": "无数据"
+      },
+      "summary": {
+        "upRatio": "{total} 个监控中 {up} 个正常",
+        "upRatioShort": "{up}/{total} 正常",
+        "averageUptime": "24 小时可用率",
+        "uptimeShort": "可用率 {value}",
+        "statusCount": "{count} 个{status}"
+      },
+      "unit": {
+        "milliseconds": "{value} 毫秒"
+      },
+      "heartbeatBar": {
+        "label": "{count, plural, one {最近 # 次检查} other {最近 # 次检查}}，{down} 个故障"
+      },
+      "detail": {
+        "checked": "检查于 {time}",
+        "certificate": "{count, plural, one {证书将在 # 天后过期} other {证书将在 # 天后过期}}"
+      },
+      "notice": {
+        "label": "{count, plural, one {# 个事件或维护} other {# 个事件或维护}}",
+        "untitled": "无标题"
+      },
+      "empty": {
+        "title": "暂无监控",
+        "description": "在状态页面添加监控后即可在此查看"
+      },
+      "allClear": "{count, plural, one {监控器运行正常} other {全部 # 个监控器运行正常}}",
+      "error": {
+        "internalServerError": "获取运行时间数据失败"
+      },
+      "monitorType": {
+        "http": "HTTP",
+        "keyword": "HTTP 关键词",
+        "jsonQuery": "HTTP JSON 查询",
+        "port": "TCP 端口",
+        "ping": "Ping",
+        "dns": "DNS",
+        "docker": "Docker 容器",
+        "push": "推送",
+        "group": "分组",
+        "realBrowser": "浏览器"
       }
     },
     "traefik": {
@@ -5176,7 +5363,7 @@
         "empty": "",
         "preview": "预览",
         "sources": "{count, plural, one {# 个来源} other {# 个来源}}",
-        "requests": "",
+        "requests": "{count, plural, one {# 请求} other {# 请求}}",
         "migrationRequired": "",
         "migrationDescription": "此 v1 小部件尚不能运行。将其脱敏后的提示词复制到 LLM，再把返回的单个 JSON 响应粘贴回 Homarr。",
         "manageMigration": "打开「管理自定义小部件」",
@@ -5448,7 +5635,7 @@
         "average": "启动以来的平均生成速度",
         "request": "本次请求开始以来的平均速度"
       },
-      "busy": "{count, plural, other {# 个请求处理中}}",
+      "busy": "{count, plural, one {# 个请求正在运行} other {# 个请求正在运行}}",
       "modelInfo": {
         "context": "上下文",
         "size": "文件大小",
@@ -5575,6 +5762,8 @@
       "allHidden": "此视图中所有指标均已隐藏。使用「自定义此视图」可恢复显示。"
     },
     "wazuh": {
+      "name": "Wazuh",
+      "description": "Wazuh 安全概览，包含告警严重程度、告警、时间线、排行榜、代理、漏洞、文件完整性和认证失败等标签页",
       "target": {
         "api": "",
         "indexer": "",
@@ -5594,6 +5783,14 @@
         "certificate": {
           "title": "{target} 的证书不受信任",
           "description": "Wazuh 默认使用自签名证书。请在集成中运行「测试连接」并信任该证书，或在「设置 → 证书」中添加你的 CA 证书。"
+        },
+        "certificateHostname": {
+          "title": "{target} 证书与 URL 不匹配",
+          "description": "该证书并非为集成 URL 中的主机签发。请使用证书中列出的主机名或 IP 地址，用该名称重新签发证书，或通过“测试连接”信任该主机名。"
+        },
+        "certificateExpired": {
+          "title": "{target} 证书已过期或尚未生效",
+          "description": "请续订 Wazuh 证书，并检查 Homarr 与 Wazuh 主机的时钟是否正确。"
         },
         "unreachable": {
           "title": "无法连接到 {target}",
@@ -5618,7 +5815,9 @@
         "unknown": {
           "title": "无法从 {target} 加载数据",
           "description": "详情请查看 Homarr 日志。"
-        }
+        },
+        "viewSaveTitle": "无法保存所选标签页",
+        "viewSaveMessage": "该标签页目前仍会显示，但面板重新加载后将恢复原状。"
       },
       "range": {
         "1h": "",
@@ -5626,268 +5825,234 @@
         "7d": "7 天",
         "30d": ""
       },
-      "levelTooltip": "规则级别 {level}（{severity}）"
-    },
-    "wazuhAgents": {
-      "name": "",
-      "description": "可排序的 Wazuh 代理列表，含状态、系统、版本和最后保活时间",
+      "levelTooltip": "规则级别 {level}（{severity}）",
+      "summary": {
+        "title": "告警严重程度 · {range}",
+        "alerts": "条告警",
+        "none": "无告警",
+        "trend": {
+          "new": "新增",
+          "tooltip": "上一周期：{previous}"
+        },
+        "previous": "上一 {range}：{count}",
+        "maxLevel": "最高级别 {level}",
+        "health": "索引器状态：{status}",
+        "manager": "管理器 {version}"
+      },
+      "alerts": {
+        "title": "告警 · 级别 {level}+ · {hours} 小时",
+        "empty": "该级别暂无告警，一切正常。",
+        "rule": "规则 {id}",
+        "openInDashboard": "在 Wazuh 仪表板中打开此告警"
+      },
+      "timeline": {
+        "title": "告警时间线 · {range}",
+        "total": "{count} 条告警",
+        "interval": "每 {interval}"
+      },
+      "top": {
+        "title": {
+          "rules": "热门规则 · {range}",
+          "agents": "活跃代理 · {range}",
+          "sourceIps": "热门来源 IP · {range}",
+          "mitreTactics": "MITRE 战术 · {range}",
+          "mitreTechniques": "MITRE 技术 · {range}"
+        },
+        "empty": {
+          "rules": "该时段内无告警",
+          "agents": "该时段内无告警",
+          "sourceIps": "该时段内无带来源 IP 的告警",
+          "mitreTactics": "该时段内无映射到 MITRE ATT&CK 的告警",
+          "mitreTechniques": "该时段内无映射到 MITRE ATT&CK 的告警"
+        },
+        "totalTooltip": "{count} 条匹配告警",
+        "private": "局域网",
+        "public": "公网",
+        "agents": "出现在 {count} 个代理上",
+        "others": "其他条目中还有 {count} 条告警"
+      },
+      "agents": {
+        "title": "代理",
+        "total": "{count} 个代理",
+        "status": {
+          "active": "活跃",
+          "disconnected": "已断开",
+          "neverConnected": "从未连接",
+          "pending": "待处理"
+        },
+        "statusLabel": {
+          "active": "活跃",
+          "disconnected": "已断开",
+          "never_connected": "从未连接",
+          "pending": "待处理",
+          "unknown": "未知"
+        },
+        "live": "实时",
+        "snapshot": "快照已过期 {age}",
+        "snapshotHint": "数据来自 Wazuh 仪表板于 {time} 生成的代理快照（wazuh-monitoring）。添加服务器 API 凭据以获取实时数据。",
+        "staleSnapshot": "{time} 的代理快照已过期。请检查 Wazuh 仪表板的监控任务是否在运行，或添加服务器 API 凭据。",
+        "noDisconnected": "所有代理均已连接",
+        "empty": "没有符合此筛选条件的代理",
+        "column": {
+          "status": "状态",
+          "name": "名称",
+          "ip": "IP",
+          "os": "操作系统",
+          "version": "版本",
+          "lastKeepAlive": "保活",
+          "groups": "分组"
+        },
+        "outdated": "低于最新代理版本（{version}）"
+      },
+      "vulnerabilities": {
+        "title": "漏洞",
+        "topCves": "主要 CVE",
+        "score": "评分",
+        "agentsShort": "代理",
+        "topAgents": "漏洞最多的代理",
+        "criticalHigh": "严重 / 高危",
+        "totalTooltip": "{agents} 个代理上共有 {count} 项发现",
+        "affected": "{count} 个代理",
+        "empty": "未检测到漏洞",
+        "distribution": "严重程度分布。未显示 {unscored} 项无评分的发现。",
+        "worst": "最严重：{agents} 个代理上的 {id}（{score}）"
+      },
+      "fim": {
+        "title": "文件完整性 · {range}",
+        "event": {
+          "added": "已添加",
+          "modified": "已修改",
+          "deleted": "已删除",
+          "unknown": "已更改"
+        },
+        "empty": "该时间段内无文件完整性事件",
+        "user": "由 {user}",
+        "registry": "注册表"
+      },
+      "authFailures": {
+        "title": "认证失败 · {hours}小时",
+        "seriesTooltip": "所有代理在过去 {hours} 小时内",
+        "peak": "峰值 {count}/桶",
+        "empty": "该时间段内无登录失败",
+        "failed": "登录失败",
+        "failedHint": "单次认证失败（sshd、PAM、Windows 登录、无效用户）",
+        "bruteForce": "暴力破解",
+        "bruteForceHint": "关联的暴力破解规则（短时间内多次失败，MITRE T1110）",
+        "sourceIps": "来源 IP",
+        "ipTooltip": "{ip}：{count} 次失败",
+        "bruteForceCount": "{count} 次暴力破解"
+      },
+      "view": {
+        "overview": "严重程度",
+        "alerts": "告警",
+        "timeline": "时间线",
+        "top": "排行榜",
+        "agents": "代理",
+        "vulnerabilities": "漏洞",
+        "fim": "文件完整性",
+        "authFailures": "认证失败"
+      },
       "option": {
-        "statusFilter": {
-          "label": ""
+        "visibleViews": {
+          "label": "可见标签页",
+          "description": "标签切换器中仅显示这些标签页。只有一个标签页时，切换器将隐藏。"
         },
-        "sortBy": {
-          "label": "排序方式"
-        },
-        "showVersion": {
-          "label": ""
-        },
-        "showGroups": {
-          "label": ""
-        }
-      },
-      "title": "",
-      "total": "{count} 个代理",
-      "status": {
-        "active": "活跃",
-        "disconnected": "已断开",
-        "neverConnected": "",
-        "pending": "待处理"
-      },
-      "statusLabel": {
-        "active": "活跃",
-        "disconnected": "已断开",
-        "never_connected": "",
-        "pending": "待处理",
-        "unknown": "未知"
-      },
-      "live": "实时",
-      "snapshot": "快照距今 {age}",
-      "snapshotHint": "数据来自 {time} 抓取的 Wazuh 仪表盘代理快照（wazuh-monitoring）。添加服务器 API 凭据以获取实时数据。",
-      "staleSnapshot": "{time} 的代理快照已过时。请检查 Wazuh 仪表板监控任务是否正在运行，或添加服务器 API 凭据。",
-      "noDisconnected": "所有代理均已连接",
-      "empty": "没有符合此筛选条件的代理",
-      "column": {
-        "status": "状态",
-        "name": "名称",
-        "ip": "",
-        "os": "系统",
-        "version": "版本",
-        "lastKeepAlive": "保活",
-        "groups": "群组"
-      },
-      "outdated": "比最新代理版本（{version}）更旧"
-    },
-    "wazuhAlerts": {
-      "name": "",
-      "description": "最近的 Wazuh 告警，含级别、MITRE ATT&CK 技术、代理和源 IP",
-      "option": {
-        "minLevel": {
-          "label": "",
-          "description": "Wazuh 级别：0-6 低，7-11 中，12-14 高，15+ 严重"
-        },
-        "hours": {
-          "label": "时间窗口（小时）"
-        },
-        "limit": {
-          "label": ""
-        },
-        "showMitre": {
-          "label": "显示 MITRE ATT&CK 技术"
-        },
-        "showAgent": {
-          "label": ""
-        },
-        "showSourceIp": {
-          "label": "显示源 IP"
-        },
-        "showRuleId": {
-          "label": ""
-        }
-      },
-      "title": "警报 · 级别 {level}+ · {hours} 小时",
-      "empty": "此级别暂无告警，一切正常。",
-      "rule": "规则 {id}",
-      "openInDashboard": "在 Wazuh 仪表盘中打开此告警"
-    },
-    "wazuhSummary": {
-      "name": "",
-      "description": "告警严重程度分布，并与上一周期对比趋势",
-      "option": {
         "range": {
-          "label": ""
+          "label": "时间范围"
         },
         "showTrend": {
-          "label": ""
+          "label": "显示与上一周期的趋势对比"
         },
         "showFooter": {
-          "label": ""
-        }
-      },
-      "title": "告警严重程度 · {range}",
-      "alerts": "条告警",
-      "none": "无告警",
-      "trend": {
-        "new": "新建",
-        "tooltip": "上一时段：{previous}"
-      },
-      "previous": "上一{range}：{count}",
-      "maxLevel": "最高级别 {level}",
-      "health": "索引器健康状态：{status}",
-      "manager": "管理器 {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh 告警时间线",
-      "description": "按严重程度分列的 Wazuh 告警堆叠图",
-      "option": {
-        "range": {
-          "label": ""
+          "label": "显示页脚"
         },
         "interval": {
-          "label": ""
+          "label": "间隔"
         },
         "chartType": {
           "label": "图表类型"
         },
         "yScale": {
-          "label": "",
-          "description": "平方根刻度可让高级别和严重告警在数千条低级别告警旁依然可见"
+          "label": "Y 轴刻度",
+          "description": "平方根刻度可让高危及严重告警在数千条低危告警旁依然可见"
         },
         "minLevel": {
-          "label": ""
+          "label": "最低规则级别（时间线和排行榜）"
         },
         "showLegend": {
-          "label": "显示带合计的图例"
-        }
-      },
-      "title": "警报时间线 · {range}",
-      "total": "{count} 个警报",
-      "interval": "每 {interval}"
-    },
-    "wazuhTopList": {
-      "name": "",
-      "description": "按告警数量排列的规则、代理、源 IP 或 MITRE ATT&CK 战术与技术",
-      "option": {
-        "kind": {
+          "label": "显示含总计的图例"
+        },
+        "topKind": {
           "label": "排名依据"
         },
-        "range": {
-          "label": ""
-        },
-        "limit": {
-          "label": ""
-        },
-        "minLevel": {
-          "label": ""
+        "topLimit": {
+          "label": "排行榜条目数"
         },
         "showBars": {
           "label": "显示条形"
-        }
-      },
-      "title": {
-        "rules": "规则排行 · {range}",
-        "agents": "代理排行 · {range}",
-        "sourceIps": "源 IP 排行 · {range}",
-        "mitreTactics": "MITRE 战术 · {range}",
-        "mitreTechniques": "MITRE 技术 · {range}"
-      },
-      "empty": {
-        "rules": "此时间段内无告警",
-        "agents": "此时间段内无告警",
-        "sourceIps": "此时间段内没有带源 IP 的告警",
-        "mitreTactics": "此时间段内没有映射到 MITRE ATT&CK 的告警",
-        "mitreTechniques": "此时间段内没有映射到 MITRE ATT&CK 的告警"
-      },
-      "totalTooltip": "{count} 条匹配的告警",
-      "private": "",
-      "public": "公网",
-      "agents": "在 {count} 个代理上发现",
-      "others": "其他条目中还有 {count} 条告警"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh 漏洞",
-      "description": "漏洞数量、重点 CVE 和最易受影响的代理",
-      "option": {
+        },
+        "agentStatusFilter": {
+          "label": "显示代理"
+        },
+        "agentSortBy": {
+          "label": "排序方式"
+        },
+        "showVersion": {
+          "label": "代理：显示 Wazuh 版本列"
+        },
+        "showGroups": {
+          "label": "代理：显示分组列"
+        },
         "cveOrder": {
           "label": "CVE 排序依据"
         },
         "minSeverity": {
-          "label": ""
+          "label": "CVE 严重程度"
         },
         "cveLimit": {
           "label": "CVE 数量"
         },
         "agentLimit": {
-          "label": ""
+          "label": "代理数量"
         },
         "showAgents": {
-          "label": "显示最易受影响的代理"
-        }
-      },
-      "title": "漏洞",
-      "topCves": "重点 CVE",
-      "score": "",
-      "agentsShort": "",
-      "topAgents": "最易受影响的代理",
-      "criticalHigh": "严重 / 高",
-      "totalTooltip": "{count} 个发现项，涉及 {agents} 个代理",
-      "affected": "{count} 个代理",
-      "empty": "未检测到漏洞",
-      "distribution": "严重程度分布。{unscored} 个无评分的结果未显示。",
-      "worst": "最严重：{id}（{score}），涉及 {agents} 个代理"
-    },
-    "wazuhFim": {
-      "name": "Wazuh 文件完整性",
-      "description": "最近的文件完整性监控（syscheck）事件",
-      "option": {
-        "range": {
-          "label": ""
+          "label": "显示最易受攻击的代理"
         },
-        "event": {
+        "fimEvent": {
           "label": "事件"
         },
-        "limit": {
-          "label": ""
+        "fimLimit": {
+          "label": "文件完整性事件"
         },
         "includeRegistry": {
           "label": "包含 Windows 注册表事件"
-        }
-      },
-      "title": "文件完整性 · {range}",
-      "event": {
-        "added": "新增",
-        "modified": "",
-        "deleted": "已删除",
-        "unknown": ""
-      },
-      "empty": "",
-      "user": "由 {user} 执行",
-      "registry": "注册表"
-    },
-    "wazuhAuthFailures": {
-      "name": "",
-      "description": "各代理的登录失败与暴力破解告警，附每小时迷你趋势图",
-      "option": {
-        "hours": {
-          "label": "时间窗口（小时）"
         },
-        "limit": {
-          "label": ""
+        "authLimit": {
+          "label": "认证失败代理"
         },
         "showSourceIps": {
-          "label": "显示重点源 IP"
+          "label": "显示来源 IP 排行"
+        },
+        "alertsMinLevel": {
+          "label": "告警：最低规则级别",
+          "description": "Wazuh 级别：0-6 低，7-11 中，12-14 高，15+ 严重"
+        },
+        "alertsLimit": {
+          "label": "告警：告警数量"
+        },
+        "showMitre": {
+          "label": "显示 MITRE ATT&CK 技术"
+        },
+        "showAgent": {
+          "label": "显示代理"
+        },
+        "showSourceIp": {
+          "label": "显示来源 IP"
+        },
+        "showRuleId": {
+          "label": "显示规则 ID"
         }
-      },
-      "title": "身份验证失败 · {hours} 小时",
-      "seriesTooltip": "过去 {hours} 小时内的所有代理",
-      "peak": "峰值 {count}/时间段",
-      "empty": "此时间段内没有登录失败",
-      "failed": "",
-      "failedHint": "单次认证失败（sshd、PAM、Windows 登录、无效用户）",
-      "bruteForce": "暴力破解",
-      "bruteForceHint": "关联的暴力破解规则（短时间内多次失败，MITRE T1110）",
-      "sourceIps": "",
-      "ipTooltip": "{ip}：{count} 次失败",
-      "bruteForceCount": "{count} 次暴力破解"
+      }
     }
   },
   "widgetPreview": {
@@ -6167,7 +6332,7 @@
             "columns": "列",
             "empty": "",
             "dynamicSection": "",
-            "editorWidthLabel": ""
+            "editorWidthLabel": "{layoutName} · {width}px"
           },
           "reset": {
             "action": "从基础布局重置",
@@ -6926,7 +7091,7 @@
               "manualFallback": "模型发现不可用。您仍然可以手动输入模型 ID。",
               "saveConnectionFirst": "",
               "discovering": "正在刷新此提供商提供的可用模型……",
-              "discovered": "",
+              "discovered": "{count, plural, one {发现 # 个模型。工具支持取决于所选的端点和模型。} other {发现 # 个模型。工具支持取决于所选的端点和模型。}}",
               "discoveryFailed": "",
               "context": "{count} 个上下文窗口",
               "toolsConfirmed": "已声明工具",
@@ -6979,7 +7144,7 @@
               "label": "分析"
             },
             "ping": {
-              "label": "Pings"
+              "label": "Ping 检测"
             }
           },
           "action": {
@@ -6988,9 +7153,9 @@
             "disable": "禁用 {name}"
           },
           "interval": {
-            "seconds": "每 {interval, plural, =1 {秒} other {# 秒}}",
-            "minutes": "每 {interval, plural, =1 {分钟} other {# 分钟}}",
-            "hours": "每 {interval, plural, =1 {小时} other {# 小时}}",
+            "seconds": "Every {interval, plural, =1 {秒} other {# 秒}}",
+            "minutes": "Every {interval, plural, =1 {分钟} other {# 分钟}}",
+            "hours": "Every {interval, plural, =1 {小时} other {# 小时}}",
             "midnight": "每日午夜",
             "weeklyMonday": "每周一",
             "update": {
@@ -7148,7 +7313,7 @@
                   "worksWith": "适用于：Cursor、Claude Desktop、VS Code Copilot、Windsurf、Claude Code",
                   "addToConfig": "添加到您的 MCP 客户端配置文件中：",
                   "cursor": "{name}：项目或全局设置中的 {file}",
-                  "claudeDesktop": "{name}: {file}",
+                  "claudeDesktop": "{name}：{file}",
                   "claudeCode": "{name}：{file} 或使用 {command}",
                   "vsCodeCopilot": "{name}：工作区设置中的 {file}",
                   "replaceHint": "将占位符替换为您在创建时收到的 API 密钥。"
@@ -7463,7 +7628,7 @@
       "result": {
         "failure": {
           "title": "部分容器操作失败",
-          "message": "{total, plural, other {{failed} 个操作失败：{names}}}"
+          "message": "{total, plural, one {{failed} 个操作中有 # 个失败：{names}} other {{failed} 个操作中有 # 个失败：{names}}}"
         }
       },
       "refresh": {
@@ -7497,7 +7662,7 @@
     },
     "error": {
       "internalServerError": "获取 Docker 容器失败",
-      "endpointUnavailable": "{count, plural, other {# 个 Docker 端点不可用：{names}}}",
+      "endpointUnavailable": "{count, plural, one {# Docker endpoint unavailable: {names}} other {# Docker endpoints unavailable: {names}}}",
       "noColumns": "请在小组件设置中至少选择一列"
     }
   },
@@ -8707,7 +8872,7 @@
     "webSearch": {
       "title": "联网搜索",
       "completed": "OpenRouter 为此回复进行了联网搜索。",
-      "searches": "",
+      "searches": "{count, plural, one {# 次搜索} other {# 次搜索}}",
       "sources": "{count, plural, one {# 个来源} other {# 个来源}}"
     },
     "responseError": {
