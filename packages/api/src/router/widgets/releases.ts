@@ -12,7 +12,7 @@ import { serviceVersionRequestHandler } from "@homarr/request-handler/service-ve
 import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
-import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { isActionAllowedAsync, throwIfActionForbiddenAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "releasesRouter" });
 const PUBLIC_RELEASE_ERROR_MESSAGE: string = "Release provider request failed";
@@ -39,6 +39,7 @@ export const releasesRouter = createTRPCRouter({
     .input(
       z.object({
         itemId: z.string().optional(),
+        boardId: z.string().optional(),
         repositories: z.array(
           z.object({
             id: z.string().optional(),
@@ -53,12 +54,14 @@ export const releasesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const tokensByProvider = new Map<string, string>();
       const savedRepos = new Map<string, { providerUrl?: string }>();
+      let configurationBoardId = input.boardId;
 
       if (input.itemId) {
         try {
           const item = await ctx.db.query.items.findFirst({ where: eq(items.id, input.itemId) });
           if (item && item.kind === "releases") {
             await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view");
+            configurationBoardId = item.boardId;
 
             const options = SuperJSON.parse<Record<string, unknown>>(item.options);
             const repos = options.repositories as
@@ -88,10 +91,17 @@ export const releasesRouter = createTRPCRouter({
         }
       }
 
+      const canConfigure = configurationBoardId
+        ? await isActionAllowedAsync(ctx, eq(boards.id, configurationBoardId), "modify")
+        : false;
+
       return await Promise.all(
         input.repositories.map(async (repository) => {
           const repositoryId = repository.id ?? repository.identifier;
           const savedRepo = savedRepos.get(`${repository.provider}:${repository.identifier}`);
+          const providerUrl = canConfigure ? repository.providerUrl : savedRepo?.providerUrl;
+          const token =
+            savedRepo && providerUrl === savedRepo.providerUrl ? tokensByProvider.get(repository.provider) : undefined;
           try {
             const response = await releasesRequestHandler
               .handler({
@@ -99,8 +109,8 @@ export const releasesRouter = createTRPCRouter({
                 provider: repository.provider,
                 identifier: repository.identifier,
                 versionRegex: formatVersionFilterRegex(repository.versionFilter),
-                providerUrl: savedRepo?.providerUrl ?? repository.providerUrl,
-                token: savedRepo ? tokensByProvider.get(repository.provider) : undefined,
+                providerUrl,
+                token,
               })
               .getDataAsync();
 

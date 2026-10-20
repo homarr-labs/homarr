@@ -57,6 +57,7 @@
       "@mantine/lightbox": "9.6.0",
       "@mantine/modals": "9.6.0",
       "@mantine/notifications": "9.6.0",
+      "@mantine/schedule": "9.6.0",
       "@mantine/spotlight": "9.6.0",
       "@mantine/tiptap": "9.6.0",
       "@modelcontextprotocol/server": "2.0.0",

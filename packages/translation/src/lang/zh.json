@@ -92,7 +92,7 @@
         "partialDescription": "已保留可存取主機的結果。請檢查通訊端權限，或在下一節手動新增服務。",
         "status": {
           "checking": "正在檢查可用性……",
-          "available": "待定",
+          "available": "可用",
           "partial": "部分可用",
           "empty": "可存取，但沒有符合的執行中服務",
           "disabled": "已由伺服器設定停用",
@@ -169,7 +169,7 @@
         "workshopSetup": {
           "title": "Homarr 工作坊",
           "description": "瀏覽社群自訂小工具、檢視其要求的功能、安裝小工具，並發佈您自己的作品，無需在伺服器之間複製程式碼。",
-          "available": "待定",
+          "available": "可用",
           "checking": "檢查中……",
           "unavailable": "無法使用",
           "discoverTitle": "探索",
@@ -206,7 +206,7 @@
         "sidebarsValue": "{count, plural, =0 {無} one {# 個側邊欄} other {# 個側邊欄}}",
         "layouts": "響應式佈局",
         "layoutsValue": "行動版 + 基本版",
-        "integrations": "集成",
+        "integrations": "整合",
         "integrationsValue": "{count, plural, =0 {未選擇} one {# 個整合} other {# 個整合}}",
         "apps": "應用程式圖塊",
         "appsValue": "{count, plural, =0 {僅入門應用程式} one {# 個應用程式圖塊} other {# 個應用程式圖塊}}",
@@ -1928,7 +1928,7 @@
       "path": "每項服務使用一個路徑"
     },
     "iconPicker": {
-      "label": "Icon 網址",
+      "label": "圖示網址",
       "description": "搜尋圖庫、貼上圖片網址或上傳檔案。",
       "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}",
       "headerLoading": "輸入以搜尋圖示",
@@ -2065,9 +2065,9 @@
       "certificates": "憑證",
       "customWidgets": "自訂小工具",
       "groups": "群組",
-      "integrations": "集成",
+      "integrations": "整合",
       "invites": "邀請",
-      "logs": "Logs",
+      "logs": "日誌",
       "media": "多媒體",
       "searchEngines": "搜尋引擎",
       "tasks": "任務",
@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "顯示未監控項目"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, other {# 個事件}}",
         "loading": "正在載入行事曆事件……",
         "noEvents": "本月沒有事件"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "今天",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {
@@ -5949,7 +5972,7 @@
       },
       "duplicate": {
         "title": "複製面板",
-        "message": "這將複製看板 {name} 及其所有內容。如果小工具引用了無法使用的集成，它們將被移除",
+        "message": "這將複製看板 {name} 及其所有內容。如果小工具引用了您無權使用的整合，它們將被移除。",
         "notification": {
           "success": {
             "title": "面板已複製",
@@ -6074,17 +6097,17 @@
         "label": "不透明度"
       },
       "iconColor": {
-        "label": "icon 顏色"
+        "label": "圖示顏色"
       },
       "clearColor": {
         "label": "清除顏色"
       },
       "customCss": {
-        "label": "自定義此面板 CSS html",
-        "description": "僅推薦有經驗的使用者使用 CSS html",
+        "label": "自定義此面板的 CSS",
+        "description": "僅推薦有經驗的使用者使用 CSS 進一步自定義面板",
         "customClassesAlert": {
           "title": "自定義類別",
-          "description": "可以於每個項目中的進階選項中新增自定義類別至面板，並於自定義 CSS html 中使用他們"
+          "description": "可在每個項目的進階選項中為面板項目新增自定義類別，並在上方自定義 CSS 中使用。"
         }
       },
       "disableStatus": {
@@ -6197,7 +6220,7 @@
           "action": {
             "rename": {
               "label": "重新命名面板",
-              "description": "更改面板可見性",
+              "description": "變更名稱會使所有連至此面板的連結失效。",
               "button": "更改名稱"
             },
             "visibility": {

@@ -375,15 +375,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -990,15 +982,7 @@
                   "href": {
                     "anyOf": [
                       {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "string",
-                            "const": ""
-                          }
-                        ]
+                        "type": "string"
                       },
                       {
                         "type": "null"
@@ -4000,6 +3984,10 @@
                                 "immich-serverStats",
                                 "immich-albumCarousel",
                                 "paperlessNgx",
+                                "thingport-libraryStats",
+                                "thingport-models",
+                                "thingport-featuredModel",
+                                "thingport-activityHeatmap",
                                 "patchmon",
                                 "bazarr",
                                 "tracearr",
@@ -4773,6 +4761,10 @@
                       "immich-serverStats",
                       "immich-albumCarousel",
                       "paperlessNgx",
+                      "thingport-libraryStats",
+                      "thingport-models",
+                      "thingport-featuredModel",
+                      "thingport-activityHeatmap",
                       "patchmon",
                       "bazarr",
                       "tracearr",
@@ -11068,6 +11060,7 @@
                       "aria2",
                       "slskd",
                       "sonarr",
+                      "sportarr",
                       "radarr",
                       "lidarr",
                       "readarr",
@@ -11102,6 +11095,7 @@
                       "coolify",
                       "immich",
                       "paperlessNgx",
+                      "thingport",
                       "patchmon",
                       "tracearr",
                       "speedtestTracker",
@@ -11243,6 +11237,7 @@
                             "aria2",
                             "slskd",
                             "sonarr",
+                            "sportarr",
                             "radarr",
                             "lidarr",
                             "readarr",
@@ -11277,6 +11272,7 @@
                             "coolify",
                             "immich",
                             "paperlessNgx",
+                            "thingport",
                             "patchmon",
                             "tracearr",
                             "speedtestTracker",

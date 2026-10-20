@@ -46,6 +46,10 @@ const getSharedOptionProperty = (kind: WidgetKind, property: string): string => 
 };
 
 const getSharedOptionNamespace = (kind: WidgetKind, property: string): string | undefined => {
+  if (kind.startsWith("thingport-") && (property === "showTitle" || property === "openInNewTab")) {
+    return "widget.common";
+  }
+
   if ((kind === "beszelSystemTable" || kind === "beszelSystemGrid") && BESZEL_OPTION_PROPERTIES.has(property)) {
     return "widget.beszel.options";
   }

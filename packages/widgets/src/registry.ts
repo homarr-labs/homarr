@@ -40,6 +40,10 @@ import type * as networkControllerSummary from "./network-controller/summary";
 import type * as notebook from "./notebook";
 import type * as notifications from "./notifications";
 import type * as paperlessNgx from "./paperless-ngx";
+import type * as thingportLibraryStats from "./thingport/library-stats";
+import type * as thingportModels from "./thingport/models";
+import type * as thingportFeaturedModel from "./thingport/featured-model";
+import type * as thingportActivityHeatmap from "./thingport/activity-heatmap";
 import type * as patchmon from "./patchmon";
 import type * as releases from "./releases";
 import type * as rssFeed from "./rssFeed";
@@ -117,6 +121,10 @@ export const widgetModuleLoaders = {
   "immich-albumCarousel": () => import("./immich/album-carousel"),
   stats: () => import("./stats"),
   paperlessNgx: () => import("./paperless-ngx"),
+  "thingport-libraryStats": () => import("./thingport/library-stats"),
+  "thingport-models": () => import("./thingport/models"),
+  "thingport-featuredModel": () => import("./thingport/featured-model"),
+  "thingport-activityHeatmap": () => import("./thingport/activity-heatmap"),
   patchmon: () => import("./patchmon"),
   tracearr: () => import("./tracearr"),
   speedtestTracker: () => import("./speedtest-tracker"),
@@ -189,6 +197,10 @@ export type WidgetImports = {
   "immich-albumCarousel": typeof immichAlbumCarousel;
   stats: typeof stats;
   paperlessNgx: typeof paperlessNgx;
+  "thingport-libraryStats": typeof thingportLibraryStats;
+  "thingport-models": typeof thingportModels;
+  "thingport-featuredModel": typeof thingportFeaturedModel;
+  "thingport-activityHeatmap": typeof thingportActivityHeatmap;
   patchmon: typeof patchmon;
   tracearr: typeof tracearr;
   speedtestTracker: typeof speedtestTracker;
@@ -268,6 +280,10 @@ export const widgetComponentLoaders = {
   "immich-albumCarousel": () => import("./immich/album-carousel/component"),
   stats: () => import("./stats/component"),
   paperlessNgx: () => import("./paperless-ngx/component"),
+  "thingport-libraryStats": () => import("./thingport/library-stats/component"),
+  "thingport-models": () => import("./thingport/models/component"),
+  "thingport-featuredModel": () => import("./thingport/featured-model/component"),
+  "thingport-activityHeatmap": () => import("./thingport/activity-heatmap/component"),
   patchmon: () => import("./patchmon/component"),
   tracearr: () => import("./tracearr/component"),
   speedtestTracker: () => import("./speedtest-tracker/component"),

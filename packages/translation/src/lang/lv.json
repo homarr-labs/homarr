@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Rādīt nepārraudzītos"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, zero {Nav neviena notikuma} one {# notikums} other {# notikumi}}",
         "loading": "Notiek kalendāra notikumu ielāde...",
         "noEvents": "Šajā mēnesī nav notikumu"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {

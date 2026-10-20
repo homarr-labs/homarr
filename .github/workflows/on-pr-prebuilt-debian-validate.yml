@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Validate Debian archive for ${{ matrix.architecture }}
         uses: ./.github/actions/extract-build-artifact
         with:

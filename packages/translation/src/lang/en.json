@@ -1900,6 +1900,7 @@
       "tryAgain": "Try again",
       "loading": "Loading",
       "show": "Show",
+      "showAll": "Show all",
       "hide": "Hide",
       "undo": "Undo",
       "editNamed": "Edit {name}",
@@ -1909,6 +1910,7 @@
       "copied": "Copied",
       "refresh": "Refresh"
     },
+    "hidden": "Hidden",
     "pagination": {
       "pageOf": "Page {page} of {totalPages}"
     },
@@ -1931,6 +1933,7 @@
       "clear": "Clear image",
       "uploadImage": "Upload image",
       "results": "Image search results",
+      "websiteIcon": "Icon of the website",
       "localImages": "Your images",
       "svgIcons": "SVG icons",
       "otherImages": "Other images",
@@ -3217,6 +3220,9 @@
         },
         "showUnmonitored": {
           "label": "Show unmonitored"
+        },
+        "viewMode": {
+          "label": "View"
         }
       },
       "advanced": {
@@ -3225,6 +3231,26 @@
         "eventCount": "{count, plural, one {# event} other {# events}}",
         "loading": "Loading calendar events...",
         "noEvents": "No events in this month"
+      },
+      "view": {
+        "compact": "Compact month",
+        "month": "Month",
+        "week": "Week",
+        "day": "Day",
+        "agenda": "Agenda"
+      },
+      "controls": {
+        "view": "Calendar view",
+        "today": "Today",
+        "previous": "Previous period",
+        "next": "Next period",
+        "noEvents": "No events in this period",
+        "more": "{count} more",
+        "moreLabel": "Show {count} more events",
+        "eventDetails": "Event details",
+        "close": "Close event details",
+        "timeSlot": "Time slot",
+        "weekday": "Weekday"
       }
     },
     "weather": {
@@ -3909,11 +3935,28 @@
         "paused": "Paused",
         "remaining": "{minutes} min left",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "Playing",
+          "buffering": "Buffering"
+        },
+        "details": {
+          "device": "Device",
+          "location": "Location",
+          "sessionId": "Session ID",
+          "bitrate": "Bitrate",
+          "audioHandling": "Audio handling",
+          "direct": "Direct",
+          "transcode": "Transcoding to {target}",
+          "containerChanged": "{container} (remux)",
+          "position": "{position} / {duration}",
+          "unknown": "unknown format"
+        },
         "metadata": {
           "title": "Stats for nerds",
           "video": {
             "title": "Video",
-            "resolution": "Resolution"
+            "resolution": "Resolution",
+            "frameRate": "Frame rate"
           },
           "audio": {
             "title": "Audio",
@@ -3934,6 +3977,109 @@
         "playing": "{count} playing",
         "transcoding": "{count} transcoding"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "Thingport Library Stats",
+      "description": "Totals for your Thingport 3D model library",
+      "title": "Library",
+      "option": {
+        "showModels": {
+          "label": "Show models"
+        },
+        "showCollections": {
+          "label": "Show collections"
+        },
+        "showCategories": {
+          "label": "Show categories"
+        },
+        "showAuthors": {
+          "label": "Show authors"
+        }
+      },
+      "models": "Models",
+      "collections": "Collections",
+      "categories": "Categories",
+      "authors": "Authors"
+    },
+    "thingport-featuredModel": {
+      "name": "Thingport Featured Model",
+      "description": "One model from your Thingport library each day, spinning in 3D",
+      "option": {
+        "autoRotate": {
+          "label": "Spin the model"
+        },
+        "showDetails": {
+          "label": "Show model details"
+        }
+      },
+      "title": "Featured model",
+      "empty": "No 3D models to feature yet",
+      "hint": "Drag to spin, click to open",
+      "noPreview": "No 3D preview for this model yet",
+      "views": "{count, plural, one {# view} other {# views}}",
+      "prints": "{count, plural, one {# print} other {# prints}}"
+    },
+    "thingport-activityHeatmap": {
+      "name": "Thingport Activity Heatmap",
+      "description": "A year of imports, downloads and slicer opens from your Thingport profile",
+      "title": "Activity",
+      "option": {
+        "weekStart": {
+          "label": "First day of the week",
+          "option": {
+            "sunday": "Sunday",
+            "monday": "Monday"
+          }
+        },
+        "showTotal": {
+          "label": "Show total"
+        },
+        "showLegend": {
+          "label": "Show legend"
+        }
+      },
+      "lastYear": "Last 12 months",
+      "totalLastYear": "{count, plural, one {# activity in the last year} other {# activities in the last year}}",
+      "totalInYear": "{count, plural, one {# activity in {year}} other {# activities in {year}}}",
+      "dayTotal": "{count, plural, one {# activity on {date}} other {# activities on {date}}}",
+      "dayEmpty": "No activity on {date}",
+      "kinds": {
+        "import": "Imported",
+        "upload": "Uploaded",
+        "download": "Downloaded",
+        "slicer": "Opened in slicer",
+        "delete": "Deleted"
+      },
+      "less": "Less",
+      "more": "More"
+    },
+    "thingport-models": {
+      "name": "Thingport Models",
+      "description": "Recently added, most viewed and most printed models from Thingport",
+      "title": "Models",
+      "option": {
+        "defaultTab": {
+          "label": "Default tab"
+        },
+        "itemCount": {
+          "label": "Number of models"
+        },
+        "showThumbnails": {
+          "label": "Show thumbnails"
+        }
+      },
+      "tab": {
+        "recentlyAdded": "Recent",
+        "topViewed": "Top viewed",
+        "topPrinted": "Top printed"
+      },
+      "empty": {
+        "recentlyAdded": "No models in your library yet",
+        "topViewed": "No viewed models yet",
+        "topPrinted": "No printed models yet"
+      },
+      "views": "{count, plural, one {# view} other {# views}}",
+      "prints": "{count, plural, one {# print} other {# prints}}"
     },
     "paperlessNgx": {
       "description": "Overview of your Paperless-ngx document archive",
@@ -4540,7 +4686,7 @@
     },
     "mediaMissing": {
       "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies, episodes and books from {radarr}, {sonarr} and {bindery}",
+      "description": "Shows missing and queued movies, episodes, events and books from {radarr}, {sonarr}, {sportarr} and {bindery}",
       "option": {
         "showMissing": {
           "label": "Show missing items"
@@ -4901,47 +5047,110 @@
       }
     },
     "uptimeKuma": {
-      "description": "Monitor uptime statistics from your Uptime Kuma status page",
+      "description": "Live status, heartbeats and uptime of the monitors on an Uptime Kuma status page",
       "option": {
-        "showAverageUptime": {
-          "label": "Show average uptime",
-          "description": "Display the combined 24-hour average uptime percentage"
+        "showSummary": {
+          "label": "Show summary",
+          "description": "Overall status, counts and averages"
         },
-        "showUptimeRing": {
-          "label": "Show uptime ring",
-          "description": "Display a progress ring alongside the average uptime value"
+        "showIncidents": {
+          "label": "Show incidents",
+          "description": "Incidents and active maintenance"
         },
-        "showTotalMonitors": {
-          "label": "Show total monitors",
-          "description": "Display the total number of configured monitors"
+        "groupByStatusPageGroup": {
+          "label": "Group monitors",
+          "description": "Use the groups defined on the status page"
         },
-        "showUpCount": {
-          "label": "Show up count",
-          "description": "Display how many monitors are currently up"
+        "showOnlyProblems": {
+          "label": "Only show issues",
+          "description": "Hide monitors that are up, except in the advanced view"
         },
-        "showDownCount": {
-          "label": "Show down count",
-          "description": "Display how many monitors are currently down"
+        "sortBy": {
+          "label": "Sort monitors by",
+          "option": {
+            "status": "Status, issues first",
+            "statusPage": "Status page order",
+            "name": "Name",
+            "uptime": "Uptime, lowest first"
+          }
         },
-        "showPausedCount": {
-          "label": "Show paused count",
-          "description": "Display how many monitors are currently paused"
+        "showHeartbeatBar": {
+          "label": "Show heartbeat bar",
+          "description": "Recent checks as colored bars, newest on the right"
+        },
+        "showUptime": {
+          "label": "Show 24-hour uptime"
+        },
+        "showResponseTime": {
+          "label": "Show response time"
+        },
+        "showCertificateExpiry": {
+          "label": "Certificate warnings",
+          "description": "Flag certificates expiring within 14 days"
         }
-      },
-      "averageUptime": "Average uptime (24h)",
-      "stats": {
-        "totalMonitors": "Total monitors",
-        "upCount": "Up",
-        "downCount": "Down",
-        "pausedCount": "Paused"
-      },
-      "error": {
-        "internalServerError": "Failed to fetch uptime data"
       },
       "status": {
         "up": "Up",
         "down": "Down",
-        "paused": "Paused"
+        "pending": "Pending",
+        "maintenance": "Maintenance",
+        "stale": "No recent data",
+        "unknown": "No data"
+      },
+      "overall": {
+        "operational": "All systems operational",
+        "degraded": "Partially degraded service",
+        "outage": "Major outage",
+        "maintenance": "Under maintenance",
+        "unknown": "Waiting for first checks"
+      },
+      "short": {
+        "operational": "All up",
+        "down": "{count} down",
+        "pending": "{count} pending",
+        "maintenance": "Maintenance",
+        "unknown": "No data"
+      },
+      "summary": {
+        "upRatio": "{up} of {total} monitors up",
+        "upRatioShort": "{up}/{total} up",
+        "averageUptime": "uptime 24h",
+        "uptimeShort": "{value} uptime",
+        "statusCount": "{count} {status}"
+      },
+      "unit": {
+        "milliseconds": "{value} ms"
+      },
+      "heartbeatBar": {
+        "label": "{count, plural, one {# recent check} other {# recent checks}}, {down} down"
+      },
+      "detail": {
+        "checked": "checked {time}",
+        "certificate": "{count, plural, one {certificate expires in # day} other {certificate expires in # days}}"
+      },
+      "notice": {
+        "label": "{count, plural, one {# incident or maintenance} other {# incidents or maintenances}}",
+        "untitled": "Untitled"
+      },
+      "empty": {
+        "title": "No monitors",
+        "description": "Add monitors to the status page to see them here"
+      },
+      "allClear": "{count, plural, one {The monitor is up} other {All # monitors are up}}",
+      "error": {
+        "internalServerError": "Failed to fetch the Uptime Kuma status page"
+      },
+      "monitorType": {
+        "http": "HTTP",
+        "keyword": "HTTP keyword",
+        "jsonQuery": "HTTP JSON query",
+        "port": "TCP port",
+        "ping": "Ping",
+        "dns": "DNS",
+        "docker": "Docker container",
+        "push": "Push",
+        "group": "Group",
+        "realBrowser": "Browser"
       }
     },
     "traefik": {
