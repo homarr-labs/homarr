@@ -11,12 +11,17 @@ const aiDisclaimer =
   /\b(?:generated|written|created|assisted|authored)\s+by\s+(?:an?\s+)?AI\b|\bAI[- ](?:generated|assisted|written|authored)\b/i;
 const labels = (issue) => issue.labels.map((label) => label.name);
 const activeStates = (issue) => labels(issue).filter((label) => states.has(label));
+const latestLabel = (events, name) =>
+  events
+    .filter((event) => event.event === "labeled" && event.label?.name === name)
+    .reduce((latest, event) => Math.max(latest, Date.parse(event.created_at)), 0);
 const statusFor = (issue) => {
   if (issue.state === "closed") {
     if (issue.state_reason === "not_planned" || labels(issue).includes("wontfix")) return "Not planned";
     return "Done";
   }
   const current = activeStates(issue);
+  if (current.length === 0) return "Needs triage";
   if (current.length === 1) return states.get(current[0]);
 };
 
@@ -34,9 +39,10 @@ module.exports = async ({ github, context, core }) => {
     const issue = await read(number);
     const current = activeStates(issue);
     let remove = [];
-    if (issue.state === "open" && current.length <= 1) {
+    if (issue.state === "open") {
       if (
         comment &&
+        current.length === 1 &&
         current[0] === waiting &&
         comment.user?.id === issue.user.id &&
         comment.user.type === "User" &&
@@ -49,22 +55,29 @@ module.exports = async ({ github, context, core }) => {
           issue_number: number,
           per_page: 100,
         });
-        const waitingSince = events
-          .filter((event) => event.event === "labeled" && event.label?.name === waiting)
-          .reduce((latest, event) => Math.max(latest, Date.parse(event.created_at)), 0);
+        const waitingSince = latestLabel(events, waiting);
         // A queued old comment must not release a newer request for reporter testing.
         if (waitingSince && Date.parse(comment.created_at) > waitingSince) remove = [waiting];
       }
-      if (
-        context.eventName === "pull_request_target" &&
-        context.payload.action === "synchronize" &&
-        current[0] !== "needs info from the maintainer" &&
-        current[0] !== "wontfix"
-      ) {
+      if (context.eventName === "pull_request_target" && context.payload.action === "synchronize") {
         const { data: pull } = await github.rest.pulls.get({ ...repo, pull_number: number });
-        if (pull.head.sha === context.payload.pull_request.head.sha) {
-          remove = labels(issue).filter((label) => label === ready || label === waiting);
-          if (remove.length && current[0]) remove.push(current[0]);
+        const pushedAt = Date.parse(context.payload.pull_request.updated_at);
+        if (pull.head.sha === context.payload.pull_request.head.sha && Number.isFinite(pushedAt)) {
+          const events = await github.paginate(github.rest.issues.listEvents, {
+            ...repo,
+            issue_number: number,
+            per_page: 100,
+          });
+          // Replays must preserve readiness applied after this push, including ambiguous same-second events.
+          remove = labels(issue).filter((label) => {
+            if (label !== ready && !(current.length === 1 && label === waiting)) return false;
+            const appliedAt = latestLabel(events, label);
+            return appliedAt > 0 && appliedAt < pushedAt;
+          });
+          if (remove.includes(ready) && current.length === 1 && current[0] === "specced-out") {
+            const specifiedAt = latestLabel(events, current[0]);
+            if (specifiedAt > 0 && specifiedAt < pushedAt) remove.push(current[0]);
+          }
         }
       }
       if (remove.length) {
@@ -77,7 +90,10 @@ module.exports = async ({ github, context, core }) => {
         ) {
           for (const name of new Set(remove))
             await github.rest.issues.removeLabel({ ...repo, issue_number: number, name });
-          await github.rest.issues.addLabels({ ...repo, issue_number: number, labels: ["needs triage"] });
+          const afterRemoval = await read(number);
+          if (afterRemoval.state === "open" && activeStates(afterRemoval).length === 0) {
+            await github.rest.issues.addLabels({ ...repo, issue_number: number, labels: ["needs triage"] });
+          }
         }
       }
     }
@@ -88,6 +104,10 @@ module.exports = async ({ github, context, core }) => {
       if (!/^[1-9]\d*$/.test(input) || !Number.isSafeInteger(Number(input)))
         throw new Error("Enter a positive issue or PR number.");
       targets = [Number(input)];
+      const issue = await read(targets[0]);
+      if (issue.state === "open" && activeStates(issue).length === 0) {
+        await github.rest.issues.addLabels({ ...repo, issue_number: targets[0], labels: ["needs triage"] });
+      }
     } else {
       const found = new Set();
       backfill: for (const label of states.keys()) {
@@ -168,7 +188,7 @@ module.exports = async ({ github, context, core }) => {
     // GITHUB_TOKEN label writes do not start another run; mirror the fresh state here.
     const issue = await read(target);
     if (!statusFor(issue)) {
-      core.warning(`#${target}: Project sync skipped because there is no single triage state.`);
+      core.warning(`#${target}: Project sync skipped because triage state labels conflict.`);
       continue;
     }
     const added = await graphql(
