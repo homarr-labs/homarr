@@ -65,6 +65,18 @@ export function parseLocation(remoteEndPoint: string | null | undefined): "lan" 
   return privateAddresses.check(host, family === 4 ? "ipv4" : "ipv6") ? "lan" : "wan";
 }
 
+// Episodes only carry their own name, so the show name is added as the title and the episode as the subtitle.
+const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => {
+  const name = item.Name ?? item.EpisodeTitle ?? "";
+  const season = item.ParentIndexNumber;
+  const episode = item.IndexNumber;
+  if (season === undefined || season === null || episode === undefined || episode === null) {
+    return name || undefined;
+  }
+  const code = `S${String(season).padStart(2, "0")}E${String(episode).padStart(2, "0")}`;
+  return name ? `${code} – ${name}` : code;
+};
+
 const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
 const pendingAuthentications = new Map<string, Promise<string>>();
 
@@ -267,25 +279,30 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       displayedSeries.add(item.SeriesId);
       return [parent];
     });
-    return items.map((item) => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      id: item.Id!,
-      type: this.mapMediaReleaseType(item.Type),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      title: item.Name!,
-      subtitle: item.Taglines?.at(0),
-      description: item.Overview ?? undefined,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      releaseDate: new Date(item.PremiereDate ?? item.DateCreated!),
-      imageUrls: {
-        poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
-        backdrop: this.getMediaReleaseBackdropUrl(item),
-      },
-      producer: item.Studios?.at(0)?.Name ?? undefined,
-      rating: item.CommunityRating?.toFixed(1),
-      tags: item.Genres ?? [],
-      href: super.externalUrl(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
-    }));
+    return items.map((item) => {
+      const isEpisode = item.Type === "Episode";
+      return {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: item.Id!,
+        type: this.mapMediaReleaseType(item.Type),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        title: (isEpisode ? item.SeriesName : undefined) ?? item.Name!,
+        subtitle: isEpisode ? formatEpisodeSubtitle(item) : item.Taglines?.at(0),
+        description: item.Overview ?? undefined,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        releaseDate: new Date(item.PremiereDate ?? item.DateCreated!),
+        imageUrls: {
+          poster: super
+            .externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`)
+            .toString(),
+          backdrop: this.getMediaReleaseBackdropUrl(item),
+        },
+        producer: item.Studios?.at(0)?.Name ?? undefined,
+        rating: item.CommunityRating?.toFixed(1),
+        tags: item.Genres ?? [],
+        href: super.externalUrl(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+      };
+    });
   }
 
   private getMediaReleaseBackdropUrl(item: BaseItemDto) {
