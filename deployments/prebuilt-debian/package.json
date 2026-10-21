@@ -6,7 +6,7 @@
   },
   "engines": {
     "bun": ">=1.4.2",
-    "node": ">=24.18.0"
+    "node": ">=24.22.1"
   },
   "packageManager": "bun@1.4.2",
   "trustedDependencies": [
