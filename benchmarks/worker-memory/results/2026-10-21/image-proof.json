@@ -1,0 +1,33 @@
+{
+  "bunVersion": "1.4.2",
+  "workerUid": "1000",
+  "readinessStatus": 200,
+  "rawPrivateRpcStatus": 404,
+  "dataset": {
+    "board": 1,
+    "app": 4,
+    "item": 7,
+    "integration": 0,
+    "user": 1
+  },
+  "forbiddenBinaries": {
+    "node": null,
+    "nginx": null,
+    "redis": null
+  },
+  "frontendPresent": false,
+  "forbiddenRuntimePackages": [],
+  "imageId": "sha256:2e092ca4bd13e64dc391953fc51d52df0a4d77e286a45ba5000cbe685fea9390",
+  "sourceCommit": "82978841fa40834d224e82ba8fc5b3976309809b",
+  "publishedPorts": {
+    "3002/tcp": null
+  },
+  "scope": "Fresh SQLite, in-process cache, optional jobs off, provider outbound disabled; one browser via encrypted relay; frontend/relay/account service excluded from measurements.",
+  "cleanup": {
+    "taskContainerRemoved": true,
+    "taskVolumeRemoved": true,
+    "privateSetupFilesRemoved": true,
+    "taskBrowserClosed": true,
+    "mainDemoUnchanged": true
+  }
+}

@@ -15,3 +15,5 @@ bash scripts/worker.sh up --frontend https://your-host:8445 --image homarr:worke
 ```
 
 The launcher publishes no ports and retains data in a named Docker volume. For a separate relay, add `--relay wss://relay-host/path`. See [worker deployment](../../deployments/worker/README.md) for registration tokens, pairing and lifecycle commands. This builds a local image; it does not publish one.
+
+Current image size and separate fresh/active/warmed RAM readings: [standalone worker measurements](../../docs/notes/remote/worker-memory-20261021.md).

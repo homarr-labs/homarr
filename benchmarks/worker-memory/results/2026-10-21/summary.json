@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-21",
+  "sourceCommit": "82978841fa40834d224e82ba8fc5b3976309809b",
+  "buildCommand": "docker build -f apps/backend/Dockerfile -t homarr:worker-mini-local .",
+  "imageTag": "homarr:worker-mini-local",
+  "imageId": "sha256:2e092ca4bd13e64dc391953fc51d52df0a4d77e286a45ba5000cbe685fea9390",
+  "imageBytes": 128817562,
+  "imageMiB": 122.85000038146973,
+  "phases": {
+    "cold-idle": {
+      "name": "cold-idle-no-clients",
+      "seconds": 60,
+      "samples": 61,
+      "summary": {
+        "workingSetBytes": {
+          "medianMiB": 7.015625,
+          "minMiB": 7.0,
+          "maxMiB": 8.33203125
+        },
+        "cgroupCurrentBytes": {
+          "medianMiB": 7.50390625,
+          "minMiB": 7.48828125,
+          "maxMiB": 8.8203125
+        },
+        "rssBytes": {
+          "medianMiB": 44.4453125,
+          "minMiB": 44.4453125,
+          "maxMiB": 45.4375
+        },
+        "pssBytes": {
+          "medianMiB": 22.0068359375,
+          "minMiB": 21.9794921875,
+          "maxMiB": 23.16015625
+        },
+        "averageCpuCores": 0.0004270164497631942
+      }
+    },
+    "active": {
+      "name": "active-first-dashboard-and-management",
+      "seconds": 90,
+      "samples": 91,
+      "summary": {
+        "workingSetBytes": {
+          "medianMiB": 91.6015625,
+          "minMiB": 6.60546875,
+          "maxMiB": 97.0546875
+        },
+        "cgroupCurrentBytes": {
+          "medianMiB": 92.0859375,
+          "minMiB": 7.09375,
+          "maxMiB": 97.5390625
+        },
+        "rssBytes": {
+          "medianMiB": 135.71484375,
+          "minMiB": 44.12890625,
+          "maxMiB": 140.80859375
+        },
+        "pssBytes": {
+          "medianMiB": 111.259765625,
+          "minMiB": 21.5966796875,
+          "maxMiB": 116.509765625
+        },
+        "averageCpuCores": 0.014885780548382091
+      },
+      "interpretation": "Initial encrypted dashboard connection/loading. Saved management-navigation proof ran after this window and before the warm-idle window; it is not concurrent load evidence."
+    },
+    "warm-idle": {
+      "name": "warm-idle-after-browser-closed",
+      "seconds": 60,
+      "samples": 61,
+      "summary": {
+        "workingSetBytes": {
+          "medianMiB": 94.23828125,
+          "minMiB": 94.13671875,
+          "maxMiB": 96.6953125
+        },
+        "cgroupCurrentBytes": {
+          "medianMiB": 94.72265625,
+          "minMiB": 94.62109375,
+          "maxMiB": 97.1796875
+        },
+        "rssBytes": {
+          "medianMiB": 138.625,
+          "minMiB": 138.625,
+          "maxMiB": 140.80859375
+        },
+        "pssBytes": {
+          "medianMiB": 113.947265625,
+          "minMiB": 113.8603515625,
+          "maxMiB": 116.349609375
+        },
+        "averageCpuCores": 0.0020210080069147235
+      }
+    }
+  },
+  "scope": "One fresh SQLite worker, four default apps / three widgets, zero integrations, one browser, optional jobs off, provider outbound disabled. Short sequential windows on a shared host; no minimum RAM or leak claim.",
+  "effectiveLimits": {
+    "memory.max": "536870912",
+    "memory.swap.max": "0",
+    "cpu.max": "200000 100000",
+    "pids.max": "128"
+  },
+  "sourceSha256": {
+    "apps/backend/Dockerfile": "d00341405a74593a511dc69129247b3f0edaf93ffa63da99d6b2fb817b2ef8b8",
+    "apps/worker/src/state.ts": "75913a51e703ae06fbe632eb2413fc4ea8a5895f34855d3947132a2f09d63963",
+    "scripts/assemble-backend.mjs": "fd5b1dba4515e62a216c0e1a012ea78b2ab8028cb2570c90abc279d37a5d9693",
+    "scripts/worker-entrypoint.sh": "ed79b1361a76fcbb0d5e29034152b0ae95622521c307f596b93c09a18de07150"
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "requestedPath": "/manage/apps",
+    "state": {
+      "path": "/manage/apps",
+      "text": "Homarr\nSearch for anything...\nWO\nHome\nBoards\nApps\nIntegrations\nCustom widgets\nSearch engines\nMedia\nUsers\nTools\nAssistant\nSettings\nWorker\nHelp\nAbout\n\nHome\n\n/\nApps\nApps\nNew app\nHelp Translate\nhttps://homarr.dev/docs/community/translations\nHomarr Docs\nhttps://homarr.dev/docs/getting-started\nHomarr GitHub\nhttps://github.com/homarr-labs/homarr\nSupport Homarr\nhttps://opencollective.com/homarr",
+      "privateFieldsHaveValue": false
+    },
+    "atUnixMs": 1792615379599.5754
+  },
+  {
+    "requestedPath": "/manage/integrations",
+    "state": {
+      "path": "/manage/integrations",
+      "text": "Homarr\nSearch for anything...\nWO\nHome\nBoards\nApps\nIntegrations\nCustom widgets\nSearch engines\nMedia\nUsers\nTools\nAssistant\nSettings\nWorker\nHelp\nAbout\n\nHome\n\n/\nIntegrations\nIntegrations\nNew integration\n\nThere are no integrations yet\n\nConnect a service to use its data and actions in Homarr widgets.\n\nCreate your first integration",
+      "privateFieldsHaveValue": false
+    },
+    "atUnixMs": 1792615383881.295
+  },
+  {
+    "requestedPath": "/manage/workers",
+    "state": {
+      "path": "/manage/workers",
+      "text": "Homarr\nSearch for anything...\nWO\nHome\nBoards\nApps\nIntegrations\nCustom widgets\nSearch engines\nMedia\nUsers\nTools\nAssistant\nSettings\nWorker\nHelp\nAbout\n/\n\nWorker\n\nWorker\nMy Homarr\nCONNECTED\nOpen boards\nConnection\nUsers\nSharing\nMCP\nHow you connect\n\nEncrypted relay\n\nChange connection\n\nwss://brainzilla.llama-stonecat.ts.net:8445/relay\n\nCopy address\n\nThe address locates your worker. Your device key authorizes access, even when the address is on the public web.\n\nThis browser\n\nYour saved device key gives this browser owner access.\n\nDisconnect\nForget saved access\nWorker identity and replacement",
+      "privateFieldsHaveValue": false
+    },
+    "atUnixMs": 1792615388117.6526
+  },
+  {
+    "requestedPath": "/",
+    "state": {
+      "path": "/",
+      "text": "Homarr\nSearch for anything...\nWO\n\nHomarr Docs\n\nHomarr GitHub\n\nHelp Translate\n\nSupport Homarr\n\nOpen advanced view\n22:43\n\nWednesday, October 21\n\nOpen advanced view\n\nWeather data is unavailable because outbound connections are disabled\n\nOpen advanced view\n\nUseful Links",
+      "privateFieldsHaveValue": false
+    },
+    "atUnixMs": 1792615392438.4019
+  }
+]

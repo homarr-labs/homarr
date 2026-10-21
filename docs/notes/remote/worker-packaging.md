@@ -1,5 +1,7 @@
 # Bun worker packaging
 
+Current app-local build and measured RAM: [21 October 2026 worker measurements](worker-memory-20261021.md). The dated samples below remain historical implementation evidence.
+
 ## Current contract
 
 - `bun scripts/assemble-backend.mjs --worker` bundles `apps/worker/src/index.ts` to `apps/worker/build`.
