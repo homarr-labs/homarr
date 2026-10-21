@@ -1,6 +1,7 @@
 import { RedisContainer } from "@testcontainers/redis";
 import type { StartedRedisContainer } from "@testcontainers/redis";
 import { Redis } from "ioredis";
+import type { createLockChannel as createLock } from "../packages/redis/src/lib/channel";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
 const connection = vi.hoisted(() => ({ client: undefined as Redis | undefined }));
@@ -9,8 +10,13 @@ vi.mock("../packages/redis/src/lib/connection", () => ({
   requireReadyRedisConnectionAsync: async (client: Redis) => client,
 }));
 
+const getClient = () => {
+  if (!connection.client) throw new Error("Redis has not been initialized");
+  return connection.client;
+};
+
 let container: StartedRedisContainer;
-let createLockChannel: typeof import("../packages/redis/src/lib/channel").createLockChannel;
+let createLockChannel: typeof createLock;
 const budget = { indexName: "document-budget", maxBytes: 200, maxEntries: 3 };
 
 beforeAll(async () => {
@@ -37,12 +43,12 @@ describe("bounded prepared document publication", () => {
       ),
     );
     expect(results.every(Boolean)).toBe(true);
-    const keys = await connection.client!.zrange(budget.indexName, 0, -1);
-    const sizes = await Promise.all(keys.map((key) => connection.client!.strlen(key)));
+    const keys = await getClient().zrange(budget.indexName, 0, -1);
+    const sizes = await Promise.all(keys.map((key) => getClient().strlen(key)));
     expect(keys.length).toBeLessThanOrEqual(budget.maxEntries);
     expect(sizes.reduce((total, size) => total + size, 0)).toBeLessThanOrEqual(budget.maxBytes);
-    expect(await connection.client!.get("build-0:document")).toBeNull();
-    expect(await connection.client!.get("build-39:document")).not.toBeNull();
+    expect(await getClient().get("build-0:document")).toBeNull();
+    expect(await getClient().get("build-39:document")).not.toBeNull();
   });
 
   test("a stale lease or oversized value cannot evict or replace a published document", async () => {
@@ -50,11 +56,11 @@ describe("bounded prepared document publication", () => {
     const token = await lock.acquireAsync(60);
     if (!token) throw new Error("No lease");
     expect(await lock.setIfOwnedWithinBudgetAsync(token, "old", "retained", 60_000, budget)).toBe(true);
-    const original = await connection.client!.get("old");
+    const original = await getClient().get("old");
     expect(await lock.setIfOwnedWithinBudgetAsync("stale", "new", "data", 60_000, budget)).toBe(false);
     expect(await lock.setIfOwnedWithinBudgetAsync(token, "old", "x".repeat(201), 60_000, budget)).toBe(false);
-    expect(await connection.client!.get("old")).toBe(original);
-    expect(await connection.client!.zrange(budget.indexName, 0, -1)).toEqual(["old"]);
+    expect(await getClient().get("old")).toBe(original);
+    expect(await getClient().zrange(budget.indexName, 0, -1)).toEqual(["old"]);
   });
 
   test("a shorter entry lifetime cannot make the budget forget longer-lived documents", async () => {
@@ -63,7 +69,7 @@ describe("bounded prepared document publication", () => {
     if (!token) throw new Error("No lease");
     await lock.setIfOwnedWithinBudgetAsync(token, "long", "retained", 60_000, budget);
     await lock.setIfOwnedWithinBudgetAsync(token, "short", "data", 1_000, budget);
-    expect(await connection.client!.pttl(budget.indexName)).toBeGreaterThan(50_000);
+    expect(await getClient().pttl(budget.indexName)).toBeGreaterThan(50_000);
   });
 
   test("replacing an entry counts its new bytes once and removes expired index members", async () => {
@@ -71,10 +77,10 @@ describe("bounded prepared document publication", () => {
     const token = await lock.acquireAsync(60);
     if (!token) throw new Error("No lease");
     await lock.setIfOwnedWithinBudgetAsync(token, "expired", "data", 60_000, budget);
-    await connection.client!.del("expired");
+    await getClient().del("expired");
     await lock.setIfOwnedWithinBudgetAsync(token, "retained", "data", 60_000, budget);
     await lock.setIfOwnedWithinBudgetAsync(token, "retained", "x".repeat(160), 60_000, budget);
-    expect(await connection.client!.zrange(budget.indexName, 0, -1)).toEqual(["retained"]);
-    expect(await connection.client!.pttl("retained")).toBeGreaterThan(0);
+    expect(await getClient().zrange(budget.indexName, 0, -1)).toEqual(["retained"]);
+    expect(await getClient().pttl("retained")).toBeGreaterThan(0);
   });
 });

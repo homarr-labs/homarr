@@ -147,7 +147,10 @@ const getServerHydratedSnapshot = () => false;
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
   const { register, settle } = useBoardRestorationLifecycle();
-  const [hydration] = useState(createPreparedWidgetHydration);
+  const [hydration] = useState(() => {
+    if (prepared) return createPreparedWidgetHydration(item.id);
+    return createPreparedWidgetHydration();
+  });
   const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -213,7 +216,7 @@ interface LoadedBoardItemContentProps {
 }
 
 const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
-  if (props.hydration && typeof window !== "undefined") use(props.hydration.completion);
+  if (props.hydration && !props.hydration.isReady() && typeof window !== "undefined") use(props.hydration.completion);
   if (props.item.kind === "app") {
     const Component = initialWidgetResources.app.Component as ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
     return (
