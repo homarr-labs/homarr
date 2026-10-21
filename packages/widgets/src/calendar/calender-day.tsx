@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import type { ReactNode } from "react";
-import { Box, Container, HoverCard, Text, useMantineTheme } from "@mantine/core";
+import { Box, Container, HoverCard, Text } from "@mantine/core";
 
-import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
@@ -27,10 +26,6 @@ const getDayScale = (minAxisSize: number) =>
   dayScaleTiers.find((tier) => minAxisSize >= tier.minAxisSize) ?? fallbackDayScale;
 
 export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
-  const board = useRequiredBoard();
-  const mantineTheme = useMantineTheme();
-  const actualItemRadius = mantineTheme.radius[board.itemRadius];
-
   const minAxisSize = Math.min(rootWidth, rootHeight);
   const { textSize, indicatorSize, indicatorMarginTop } = useMemo(() => getDayScale(minAxisSize), [minAxisSize]);
 
@@ -43,7 +38,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
       pos="relative"
       style={{
         alignItems: "center",
-        borderRadius: actualItemRadius,
+        borderRadius: "var(--mantine-radius-sm)",
         cursor: disabled ? "default" : "pointer",
         display: "flex",
         flexDirection: "column",

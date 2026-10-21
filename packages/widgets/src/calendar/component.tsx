@@ -1,11 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useMantineTheme } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useCurrentIntlLocale } from "@homarr/translation/client";
 
@@ -107,8 +105,6 @@ interface CalendarBaseProps extends WidgetComponentProps<"calendar"> {
 const CalendarBase = ({ options, displayMode, ...props }: CalendarBaseProps) => {
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
-  const board = useRequiredBoard();
-  const theme = useMantineTheme();
 
   return (
     <CalendarDisplay
@@ -117,7 +113,6 @@ const CalendarBase = ({ options, displayMode, ...props }: CalendarBaseProps) => 
       view={displayMode === "advanced" ? "agenda" : options.viewMode}
       locale={locale}
       firstDayOfWeek={firstDayOfWeek}
-      radius={theme.radius[board.itemRadius]}
     />
   );
 };

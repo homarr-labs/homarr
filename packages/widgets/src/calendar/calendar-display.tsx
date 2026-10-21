@@ -47,7 +47,6 @@ interface CalendarDisplayProps {
   releaseType: readonly string[];
   locale: string;
   firstDayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  radius: CSSProperties["borderRadius"];
 }
 
 export const CalendarDisplay = ({
@@ -61,7 +60,6 @@ export const CalendarDisplay = ({
   releaseType,
   locale,
   firstDayOfWeek,
-  radius,
 }: CalendarDisplayProps) => {
   const t = useI18n("widget.calendar");
   const { ref, width, height } = useElementSize();
@@ -207,7 +205,7 @@ export const CalendarDisplay = ({
               month: { height: "100%", tableLayout: "fixed" },
               monthCell: { textAlign: "center", position: "relative", padding: 2 },
               day: {
-                borderRadius: radius,
+                borderRadius: "var(--mantine-radius-sm)",
                 width: "100%",
                 height: "100%",
                 position: "absolute",
