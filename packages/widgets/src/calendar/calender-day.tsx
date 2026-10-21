@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { Box } from "@mantine/core";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
@@ -29,11 +28,7 @@ const NotificationIndicator = ({ events }: { events: CalendarEvent[] }) => {
   if (colors.length === 0) return null;
 
   return (
-    <Box
-      className={classes.indicators}
-      style={{ "--indicator-columns": Math.min(colors.length, 3) } as CSSProperties}
-      aria-hidden
-    >
+    <Box className={classes.indicators} aria-hidden>
       {colors.map((color) => (
         <Box key={color} bg={color} className={classes.indicator} />
       ))}

@@ -62,13 +62,12 @@
 .compactDay {
   --calendar-font: clamp(8px, calc(var(--calendar-cell) * 0.6), 36px);
   --indicator-size: clamp(3px, calc(var(--calendar-font) * 0.28), 10px);
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--calendar-font) * 0.12);
   border-radius: var(--mantine-radius-sm);
   cursor: pointer;
 }
@@ -80,13 +79,16 @@
   line-height: 1;
 }
 .indicators {
-  display: grid;
-  grid-template-columns: repeat(var(--indicator-columns), var(--indicator-size));
-  gap: calc(var(--indicator-size) * 0.4);
+  position: absolute;
+  top: calc(50% + var(--calendar-font) * 0.48);
+  inset-inline: 12.5%;
+  display: flex;
   justify-content: center;
-  max-width: 75%;
+  gap: calc(var(--indicator-size) * 0.4);
+  overflow: hidden;
 }
 .indicator {
+  flex-shrink: 0;
   width: var(--indicator-size);
   height: var(--indicator-size);
   border-radius: 999px;
@@ -151,16 +153,22 @@
   margin-top: auto;
 }
 .detailedDay[data-compact] {
-  flex-direction: row;
+  position: relative;
   align-items: center;
   justify-content: center;
-  gap: 2px;
 }
 .detailedDay[data-compact] .dayNumber,
 .detailedDay[data-compact] .moreEvents {
   font-size: 10px;
   line-height: 12px;
   margin: 0;
+}
+.detailedDay[data-compact] .moreEvents {
+  position: absolute;
+  top: 1px;
+  inset-inline-end: 2px;
+  font-size: 8px;
+  line-height: 10px;
 }
 .root .week {
   --week-view-min-slot-width: 0px;
