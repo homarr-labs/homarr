@@ -1,95 +1,42 @@
-import { useMemo } from "react";
-import { Box, Container, Text } from "@mantine/core";
+import type { CSSProperties } from "react";
+import { Box } from "@mantine/core";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventsHoverCard } from "./calendar-event-list";
+import classes from "./component.module.css";
 
 interface CalendarDayProps {
   date: Date;
   events: CalendarEvent[];
   disabled: boolean;
-  rootWidth: number;
-  rootHeight: number;
 }
 
-const fallbackDayScale = { textSize: "xs" as const, indicatorSize: 3, indicatorMarginTop: 2 };
-const dayScaleTiers = [
-  { minAxisSize: 700, textSize: "lg" as const, indicatorSize: 6, indicatorMarginTop: 6 },
-  { minAxisSize: 450, textSize: "md" as const, indicatorSize: 5, indicatorMarginTop: 4 },
-  { minAxisSize: 250, textSize: "sm" as const, indicatorSize: 4, indicatorMarginTop: 3 },
-  { minAxisSize: 0, ...fallbackDayScale },
-];
+export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => (
+  <CalendarEventsHoverCard events={events} disabled={disabled}>
+    <Box className={classes.compactDay} data-disabled={disabled || undefined}>
+      <span className={classes.compactDayNumber}>{date.getDate()}</span>
+      <NotificationIndicator events={events} />
+    </Box>
+  </CalendarEventsHoverCard>
+);
 
-const getDayScale = (minAxisSize: number) =>
-  dayScaleTiers.find((tier) => minAxisSize >= tier.minAxisSize) ?? fallbackDayScale;
-
-export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
-  const minAxisSize = Math.min(rootWidth, rootHeight);
-  const { textSize, indicatorSize, indicatorMarginTop } = useMemo(() => getDayScale(minAxisSize), [minAxisSize]);
-
-  const cell = (
-    <Container
-      h="100%"
-      w="100%"
-      p={0}
-      m={0}
-      pos="relative"
-      style={{
-        alignItems: "center",
-        borderRadius: "var(--mantine-radius-sm)",
-        cursor: disabled ? "default" : "pointer",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <Text ta={"center"} size={textSize} lh={1}>
-        {date.getDate()}
-      </Text>
-      <NotificationIndicator events={events} size={indicatorSize} marginTop={indicatorMarginTop} />
-    </Container>
+const NotificationIndicator = ({ events }: { events: CalendarEvent[] }) => {
+  const colors = [...new Set(events.map((event) => event.indicatorColor))].filter((color): color is string =>
+    Boolean(color),
   );
 
-  return (
-    <CalendarEventsHoverCard events={events} disabled={disabled}>
-      {cell}
-    </CalendarEventsHoverCard>
-  );
-};
-
-interface NotificationIndicatorProps {
-  events: CalendarEvent[];
-  size: number;
-  marginTop: number;
-}
-
-const NotificationIndicator = ({ events, size, marginTop }: NotificationIndicatorProps) => {
-  const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(
-    (color): color is string => Boolean(color),
-  );
-
-  if (notificationEvents.length === 0) return null;
+  if (colors.length === 0) return null;
 
   return (
     <Box
-      mt={marginTop}
-      w="fit-content"
-      maw="75%"
-      p={0}
-      style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${Math.min(notificationEvents.length, 3)}, ${size}px)`,
-        gap: 2,
-        justifyContent: "center",
-      }}
+      className={classes.indicators}
+      style={{ "--indicator-columns": Math.min(colors.length, 3) } as CSSProperties}
       aria-hidden
     >
-      {notificationEvents.map((notificationEvent) => {
-        return (
-          <Box key={notificationEvent} bg={notificationEvent} h={size} w={size} p={0} style={{ borderRadius: 999 }} />
-        );
-      })}
+      {colors.map((color) => (
+        <Box key={color} bg={color} className={classes.indicator} />
+      ))}
     </Box>
   );
 };

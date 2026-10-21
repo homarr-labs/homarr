@@ -62,7 +62,7 @@ export const CalendarDisplay = ({
   firstDayOfWeek,
 }: CalendarDisplayProps) => {
   const t = useI18n("widget.calendar");
-  const { ref, width, height } = useElementSize();
+  const { ref, width } = useElementSize();
   const { ref: bodyRef, height: bodyHeight } = useElementSize();
   const filteredEvents = useMemo(
     () =>
@@ -136,7 +136,18 @@ export const CalendarDisplay = ({
   };
 
   return (
-    <Box ref={ref} className={classes.root} h="100%" w="100%" p="xs" data-calendar-view={view}>
+    <Box
+      ref={ref}
+      className={classes.root}
+      h="100%"
+      w="100%"
+      p="xs"
+      data-calendar-view={view}
+      style={{ "--calendar-weeks": weekCount } as CSSProperties}
+    >
+      <Box className={classes.floatingError}>
+        <IntegrationErrorIndicator results={failedIntegrations} />
+      </Box>
       <Box className={classes.header}>
         <Group className={classes.navigation} gap={2} wrap="nowrap">
           <ActionIcon
@@ -196,6 +207,7 @@ export const CalendarDisplay = ({
             firstDayOfWeek={firstDayOfWeek}
             static={view === "month"}
             className={classes.calendar}
+            classNames={{ weekday: classes.weekday, weekdaysRow: classes.weekdaysRow }}
             w="100%"
             h="100%"
             styles={{
@@ -215,8 +227,6 @@ export const CalendarDisplay = ({
                 maxWidth: "100%",
                 overflow: "hidden",
               },
-              weekday: { padding: 0, fontSize: "var(--mantine-font-size-xs)" },
-              weekdaysRow: { height: 22 },
             }}
             renderDay={(value) => {
               const tileDate = dayjs(value).toDate();
@@ -231,15 +241,7 @@ export const CalendarDisplay = ({
                     disabled={isEditMode}
                   />
                 );
-              return (
-                <CalendarDay
-                  date={tileDate}
-                  events={dayEvents}
-                  disabled={dayEvents.length === 0 || isEditMode}
-                  rootWidth={width}
-                  rootHeight={height}
-                />
-              );
+              return <CalendarDay date={tileDate} events={dayEvents} disabled={dayEvents.length === 0 || isEditMode} />;
             }}
           />
         )}
