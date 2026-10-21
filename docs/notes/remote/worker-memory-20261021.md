@@ -36,7 +36,7 @@ docker build -f apps/backend/Dockerfile -t homarr:worker-mini-local .
 bash scripts/worker.sh up --frontend https://YOUR-FRONTEND --image homarr:worker-mini-local
 ```
 
-The second command needs an existing frontend/relay; it publishes no worker ports and keeps `/appdata` in a named volume. This image is available locally; no registry image was published. See [backend build instructions](../../../apps/backend/README.md) and [worker lifecycle](../../../deployments/worker/README.md).
+The second command needs an existing frontend/relay; it publishes no worker ports and keeps `/appdata` in a named volume. Fresh launcher instances and the prototype’s Copy command now select `homarr:worker-mini-local`. Persisted instance configuration and explicit image overrides remain authoritative. This image is available locally; no registry image was published. See [backend build instructions](../../../apps/backend/README.md) and [worker lifecycle](../../../deployments/worker/README.md).
 
 The live check caught and fixed a relay-only startup configuration bug: the launcher intentionally supplied an empty public address, while native API handlers required a valid internal request URL. Empty/whitespace `WORKER_PUBLIC_URL` now uses the existing localhost fallback. Relay pairing and explicit direct addresses remain supported. A prior failed fixture was removed and its measurements excluded; every accepted window uses the corrected image above.
 

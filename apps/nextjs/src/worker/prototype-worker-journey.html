@@ -1388,7 +1388,7 @@
         }),
       );
       const command =
-        "bash /home/habs/.codex/worktrees/headless-hono/homarr/scripts/worker.sh up \\\n  --frontend https://brainzilla.llama-stonecat.ts.net:8445 \\\n  --image homarr:native-worker-local";
+        "bash /home/habs/.codex/worktrees/headless-hono/homarr/scripts/worker.sh up \\\n  --frontend https://brainzilla.llama-stonecat.ts.net:8445 \\\n  --image homarr:worker-mini-local";
       $("launch-command").textContent = command;
       $("copy-command").addEventListener("click", async () => {
         try {

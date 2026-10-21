@@ -22,11 +22,11 @@ Usage: bash scripts/worker.sh [up|status|pair|down] [options]
 
   --frontend https://HOST  Existing frontend origin (required on first start).
   --relay wss://HOST/PATH  Reachable relay; defaults to frontend origin + /relay.
-  --image IMAGE           Local worker image (default homarr:native-worker-local).
+  --image IMAGE           Local worker image (default homarr:worker-mini-local).
   --name NAME             Independent instance (default "default").
 
 Example:
-  bash scripts/worker.sh up --frontend https://your-host:8445 --image homarr:native-worker-local
+  bash scripts/worker.sh up --frontend https://your-host:8445 --image homarr:worker-mini-local
 
 Docker and Compose v2 are required. No ports are published and no images are built
 or pulled. For a protected relay, set WORKER_RELAY_REGISTRATION_TOKEN in your
@@ -90,11 +90,11 @@ if [ "$action" = up ]; then
     case "$relay_host" in
         localhost|127.*|0.0.0.0) fail 'Loopback relay URLs point inside the worker container. Set --relay to a reachable WSS URL.' ;;
     esac
-    image=${image:-homarr:native-worker-local}
+    image=${image:-homarr:worker-mini-local}
     case "$image" in ''|*[!A-Za-z0-9_./:@-]*|-*) fail 'Invalid Docker image name.' ;; esac
     if ! docker image inspect "$image" >/dev/null 2>&1; then
         printf 'Worker image %s is not available locally. Build it from this checkout:\n' "$image" >&2
-        printf '  docker build --target worker -t %s .\n' "$image" >&2
+        printf '  docker build -f apps/backend/Dockerfile -t %s .\n' "$image" >&2
         exit 1
     fi
     umask 077

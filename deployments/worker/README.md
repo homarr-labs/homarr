@@ -1,7 +1,7 @@
 Connect one worker to an **existing** frontend and relay:
 
 ```sh
-bash scripts/worker.sh up --frontend https://your-host:8445 --image homarr:native-worker-local
+bash scripts/worker.sh up --frontend https://your-host:8445 --image homarr:worker-mini-local
 ```
 
 This experimental launcher needs a locally available worker image. If missing, it prints the build command. It starts one container, publishes no ports and keeps worker data in a named Docker volume. The frontend must serve the native frontend at `/` and the relay at `/relay`; use `--relay wss://relay-host/path` for a separate relay. No public frontend, relay or worker image is provided by this command.
