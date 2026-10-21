@@ -1,0 +1,51 @@
+packages/request-handler/src/lib/request-handler.ts
+  s_b33778671a3872::t_98f7f1050cf29d 4,258,262-264,335,342-343,345
+packages/request-handler/src/release-providers.ts
+  s_b33778671a3872::t_49369f14e21295 38,46,51-81,91-166,203-206,262,264,269,273,276,294,309,314-316,339-351,355-360,363-384,386-387,389,391,396-408,411-421,425-432,434-435,437-446,449,455-456,489-496,498-512,514,516-523,533,535-552,555-558,560-564,571-576,585-586,588-590,592-605,607-616,619-624,631,633,639-640,642-645,684-689,692-695,710,758,769,778-783,786-795,797,807,831,840-845,848-851,856,861,897-915,937,940-945,947-948,950-954,956-965,967,974-976,985,988-996,999-1002,1006-1010,1019,1021,1023,1025-1030,1033,1035,1037,1040,1042-1061
+  s_b33778671a3872::t_fb961084f07e92 448,450-454,459-488,513,515,524-532,534
+packages/request-handler/src/releases.ts
+  s_b33778671a3872::t_1eef07702821a4 14
+  s_b33778671a3872::t_e9c5220b941cbc 3,7-8,15-16
+packages/request-handler/src/test/github-release-pagination.spec.ts
+  s_b33778671a3872::t_713f9f513a16cd 57-61,63-77,85
+packages/request-handler/src/test/release-providers.spec.ts
+  s_b33778671a3872::t_295446ddd9e765 76,245
+apps/docs/docs/widgets/releases/index.mdx
+  s_b33778671a3872::t_91b23a4919b178 3,23-24,29-30,33-34,42-45
+packages/db/migrations/custom/0005_releases_widget_options.ts
+  s_b33778671a3872::t_ef8bd1b36b59e8 1-13,14-20,22-31,32-55,57-85
+  s_b33778671a3872::t_271c1e785a8275 21,56
+packages/db/migrations/custom/index.ts
+  s_b33778671a3872::t_434596f37d94db 7,15
+packages/widgets/src/releases/component.tsx
+  s_b33778671a3872::t_61fc2d80364e20 3-5,7,9-11,14,18,20,23,25-46,53-54,56,61-66,68-72,74,76-90,92,94-107,109-150,152-155,157-226,229-244,248-260,262,264,266-267,280-285,287-291,293-312,314-318,320-339,341-345,347-355,357-365,367-389,391-399,401-423,425-432,434-459,463-474,477-489,492-501,504-516,518-566,568-570,574-580,583-584,587-616
+  s_b33778671a3872::t_53bc0ce38d0352 156,261,263,265,268-279,286
+packages/widgets/src/releases/index.ts
+  s_b33778671a3872::t_f1cb099fbd492f 9-14,28-29,31-34,36-37,39-42,44-45,47-50,52-58,60-66,68-69
+packages/widgets/src/releases/release-entry.ts
+  s_b33778671a3872::t_177ee6c3ac1aea 1-44
+packages/widgets/src/releases/release-options.ts
+  s_b33778671a3872::t_15bca94b6c0bac 1-8
+packages/widgets/src/releases/use-release-entries.ts
+  s_b33778671a3872::t_82762660a9b7bf 1-197
+packages/translation/src/lang/en.json
+  s_b33778671a3872::t_06e43450b8f094 4884-4885
+packages/widgets/src/releases/component.module.css
+  s_b33778671a3872::t_2f41293fa17352 85-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b83b222dd153487bd76232865f7e43c7a0313c0",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
