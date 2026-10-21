@@ -27,11 +27,14 @@ export interface OpenItemMoveModalInput {
   sourceSectionId: string;
 }
 
+type MoveGridGeometry = Pick<RegisteredGridEditor, "placementMaxRowCount"> &
+  Partial<Pick<RegisteredGridEditor, "transactionPlacements">>;
+
 interface InnerProps extends OpenItemMoveModalInput {
   board: Board;
   currentLayoutId: string;
   commitSectionGrids: (snapshots: readonly CommitSectionGridInput[]) => void;
-  registeredGridEditors: ReadonlyMap<string, Pick<RegisteredGridEditor, "placementMaxRowCount">>;
+  registeredGridEditors: ReadonlyMap<string, MoveGridGeometry>;
 }
 
 interface MoveTarget {
@@ -61,8 +64,8 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   const tMoveResize = useI18n("item.moveResize");
   const { board, commitSectionGrids, currentLayoutId, entry, registeredGridEditors, sourceSectionId } = innerProps;
   const minimumSize = useMemo(
-    () => getEntryMinimumSize(board, currentLayoutId, entry),
-    [board, currentLayoutId, entry],
+    () => getEntryMinimumSize(board, currentLayoutId, entry, registeredGridEditors),
+    [board, currentLayoutId, entry, registeredGridEditors],
   );
   const targets = getMoveTargets(
     board,
@@ -125,9 +128,10 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
         w: width,
         h: height,
       };
-      const targetPlacements = getSectionGridPlacements(board, currentLayoutId, target.id).filter(
-        (placement) => placement.id !== entry.id,
-      );
+      const targetPlacements = (
+        registeredGridEditors.get(target.id)?.transactionPlacements ??
+        getSectionGridPlacements(board, currentLayoutId, target.id)
+      ).filter((placement) => placement.id !== entry.id);
       const resolvedTarget = resolvePinnedGridCollisions(
         [...targetPlacements, nextPlacement],
         nextPlacement,
@@ -145,9 +149,10 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
               {
                 layoutId: currentLayoutId,
                 sectionId: sourceSectionId,
-                placements: getSectionGridPlacements(board, currentLayoutId, sourceSectionId).filter(
-                  (placement) => placement.id !== entry.id,
-                ),
+                placements: (
+                  registeredGridEditors.get(sourceSectionId)?.transactionPlacements ??
+                  getSectionGridPlacements(board, currentLayoutId, sourceSectionId)
+                ).filter((placement) => placement.id !== entry.id),
               },
               { layoutId: currentLayoutId, sectionId: target.id, placements: resolvedTarget },
             ];
@@ -164,6 +169,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
       entry,
       form,
       minimumSize,
+      registeredGridEditors,
       sourceSectionId,
       targetById,
       tMoveResize,
@@ -259,9 +265,9 @@ export const getMoveTargets = (
   layoutId: string,
   entry: MovableEntry,
   labels: MoveTargetLabels,
-  registeredGridEditors?: ReadonlyMap<string, { placementMaxRowCount: number | null }>,
+  registeredGridEditors?: ReadonlyMap<string, MoveGridGeometry>,
 ): MoveTarget[] => {
-  const minimum = getEntryMinimumSize(board, layoutId, entry);
+  const minimum = getEntryMinimumSize(board, layoutId, entry, registeredGridEditors);
 
   const candidates = board.sections.flatMap((section): MoveTargetCandidate[] => {
     if (section.kind === "empty") {
@@ -284,10 +290,11 @@ export const getMoveTargets = (
 
     const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) return [];
+    const maxRowCount = registeredGridEditors?.get(section.id)?.placementMaxRowCount ?? layout.height;
     if (
       (entry.type === "section" && isSameOrDescendant(board, layoutId, section.id, entry.id)) ||
       minimum.width > layout.width ||
-      minimum.height > layout.height
+      minimum.height > maxRowCount
     ) {
       return [];
     }
@@ -297,7 +304,7 @@ export const getMoveTargets = (
         id: section.id,
         name: section.options.title || labels.container,
         columnCount: layout.width,
-        maxRowCount: layout.height,
+        maxRowCount,
       },
     ];
   });
@@ -328,13 +335,24 @@ const getSectionMaxRowCount = (board: Board, layoutId: string, sectionId: string
   return null;
 };
 
-const getEntryMinimumSize = (board: Board, layoutId: string, entry: MovableEntry) => {
+const getEntryMinimumSize = (
+  board: Board,
+  layoutId: string,
+  entry: MovableEntry,
+  registeredGridEditors?: ReadonlyMap<string, MoveGridGeometry>,
+) => {
   if (entry.type === "item") return { width: 1, height: 1 };
   const children = getSectionGridPlacements(board, layoutId, entry.id);
-  return {
+  const minimum = {
     width: Math.max(1, ...children.map((child) => child.x + child.w)),
     height: Math.max(1, ...children.map((child) => child.y + child.h)),
   };
+  for (const editor of registeredGridEditors?.values() ?? []) {
+    const placement = editor.transactionPlacements?.find((candidate) => candidate.id === entry.id);
+    if (!placement) continue;
+    return { width: placement.minW ?? minimum.width, height: placement.minH ?? minimum.height };
+  }
+  return minimum;
 };
 
 const isSameOrDescendant = (board: Board, layoutId: string, candidateId: string, ancestorId: string) => {

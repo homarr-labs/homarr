@@ -128,7 +128,6 @@ export const SectionGrid = ({
       ),
     [collapsedSectionIds, collapsibleSectionIds, placements],
   );
-  const hasCollapsedHeader = innerSections.some((child) => child.options.showLabel && directCollapsedIds.has(child.id));
   const displayPlacements = useMemo(() => {
     if (directCollapsedIds.size === 0) return placements;
 
@@ -219,7 +218,9 @@ export const SectionGrid = ({
     rowCount = Math.max(contentRowCount, availableRows, 1);
   } else if (isRail && railLogicalHeight > 0) {
     viewportHeight = railLogicalHeight;
-    if (rowCount <= railViewportRowCount && !hasCollapsedHeader) {
+    // Container minimum heights reserve space for square content before rail sizing.
+    // Compressing their parent rows would remove that space again; let the rail scroll.
+    if (rowCount <= railViewportRowCount && innerSections.length === 0) {
       rowScale = viewportHeight / getLogicalGridSize(rowCount);
     }
   }
