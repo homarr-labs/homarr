@@ -199,6 +199,10 @@
   min-width: 0;
 }
 
+.tile[data-compact] .overallStatusIcon {
+  display: none;
+}
+
 .tileNotice {
   position: absolute;
   top: rem(6px);
