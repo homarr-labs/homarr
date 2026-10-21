@@ -1,0 +1,19 @@
+packages/widgets/src/calendar/component.module.css
+  s_5346b932c02e40::t_4c7435fe11d3d9 102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b11bdcb5b2b384cff474f19675d714a1ea800fb8",
+  "prompts": {},
+  "sessions": {
+    "s_5346b932c02e40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51d67401-c504-45b8-8590-7fb4c66ab4df",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
