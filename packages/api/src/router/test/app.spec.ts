@@ -13,6 +13,22 @@ import * as appAccessControl from "../app/app-access-control";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
+const { fetchWebsiteMetadataAsyncMock, createImageAsyncMock } = vi.hoisted(() => ({
+  fetchWebsiteMetadataAsyncMock: vi.fn(),
+  createImageAsyncMock: vi.fn(),
+}));
+
+// getIconForName keeps its real implementation, so only the network-dependent part is mocked
+vi.mock("@homarr/icons", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@homarr/icons")>()),
+  fetchWebsiteMetadataAsync: fetchWebsiteMetadataAsyncMock,
+}));
+vi.mock("@homarr/image-proxy", () => ({
+  ImageProxy: class {
+    createImageAsync = createImageAsyncMock;
+  },
+}));
+
 const createFakeAccessControl = (canAccess: boolean) =>
   vi.fn(
     class {
@@ -379,5 +395,74 @@ describe("delete should delete an app", () => {
     // Assert
     const dbApp = await db.query.apps.findFirst();
     expect(dbApp).toBeUndefined();
+  });
+});
+
+describe("detectMetadata", () => {
+  test("refuses a user who may not create apps without detecting anything", async () => {
+    // Arrange
+    const caller = appRouter.createCaller({ db: createDb(), deviceType: undefined, session: createDefaultSession([]) });
+
+    // Act & Assert
+    await expect(caller.detectMetadata({ href: "https://app.example.com" })).rejects.toThrow("Permission denied");
+    expect(fetchWebsiteMetadataAsyncMock).not.toHaveBeenCalled();
+  });
+
+  test("proxies the detected icon so the tile never links the site directly", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Example App",
+      iconUrl: "https://app.example.com/favicon.ico",
+    });
+    createImageAsyncMock.mockResolvedValueOnce("/api/image-proxy/abc123");
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result).toEqual({ name: "Example App", iconUrl: "/api/image-proxy/abc123" });
+    expect(createImageAsyncMock).toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+  });
+
+  test("falls back to the site's own icon url when registering it with the proxy fails", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({
+      title: "Example App",
+      iconUrl: "https://app.example.com/favicon.ico",
+    });
+    createImageAsyncMock.mockRejectedValueOnce(new Error("redis unavailable"));
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result).toEqual({ name: "Example App", iconUrl: "https://app.example.com/favicon.ico" });
+  });
+
+  test("does not register anything with the proxy when no icon was detected", async () => {
+    // Arrange
+    fetchWebsiteMetadataAsyncMock.mockResolvedValueOnce({ title: null, iconUrl: null });
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(["app-create"]),
+    });
+
+    // Act
+    const result = await caller.detectMetadata({ href: "https://app.example.com" });
+
+    // Assert
+    expect(result.name).toBe("app.example.com");
+    expect(createImageAsyncMock).not.toHaveBeenCalled();
   });
 });
