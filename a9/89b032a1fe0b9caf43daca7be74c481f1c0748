@@ -1,0 +1,27 @@
+packages/request-handler/src/lib/request-handler.ts
+  s_b33778671a3872::t_98f7f1050cf29d 4,258,262-264,335,342-343,345
+packages/request-handler/src/release-providers.ts
+  s_b33778671a3872::t_49369f14e21295 38,46,51-81,91-166,203-206,262,264,269,273,276,294,309,314-316,339-351,355-360,363-384,386-387,389,391,396-408,411-421,425-432,434-435,437-446,448-456,459-466,468-502,504-524,527-530,532-536,543-548,557-558,560-562,564-577,579-588,591-596,603,605,611-612,614-617,656-661,664-667,682,730,741,750-755,758-767,769,779,803,812-817,820-823,828,833,869-887,909,912-917,919-920,922-926,928-937,939,946-948,957,960-968,971-974,978-982,991,993,995,997-1002,1005,1007,1009,1012,1014-1033
+packages/request-handler/src/releases.ts
+  s_b33778671a3872::t_1eef07702821a4 12-13
+packages/request-handler/src/test/github-release-pagination.spec.ts
+  s_b33778671a3872::t_713f9f513a16cd 57-61,63-77,85
+packages/request-handler/src/test/release-providers.spec.ts
+  s_b33778671a3872::t_295446ddd9e765 76,245
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a989b032a1fe0b9caf43daca7be74c481f1c0748",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
