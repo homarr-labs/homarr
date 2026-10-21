@@ -128,7 +128,7 @@ export const CalendarDisplay = ({
       mah: "100%",
       type: "auto" as const,
       styles: { content: { minWidth: 0, width: "100%" } },
-      startScrollPosition: { y: 8 * Math.max(40, bodyHeight / 12) },
+      startScrollPosition: { y: 8 * slotHeight },
     },
     slotHeight,
     allDaySlotHeight: 28,
@@ -235,15 +235,7 @@ export const CalendarDisplay = ({
               const tileDate = dayjs(value).toDate();
               const dayEvents = (eventsByDate.get(toCalendarDateKey(tileDate)) ?? []) as CalendarEventWithSource[];
               if (view === "month")
-                return (
-                  <DetailedDay
-                    date={tileDate}
-                    events={dayEvents}
-                    locale={locale}
-                    cellHeight={(bodyHeight - 22) / weekCount}
-                    disabled={isEditMode}
-                  />
-                );
+                return <DetailedDay date={tileDate} events={dayEvents} locale={locale} disabled={isEditMode} />;
               return <CalendarDay date={tileDate} events={dayEvents} disabled={dayEvents.length === 0 || isEditMode} />;
             }}
           />
@@ -312,19 +304,19 @@ interface DetailedDayProps {
   date: Date;
   events: CalendarEventWithSource[];
   locale: string;
-  cellHeight: number;
   disabled: boolean;
 }
 
-const DetailedDay = ({ date, events, locale, cellHeight, disabled }: DetailedDayProps) => {
+const DetailedDay = ({ date, events, locale, disabled }: DetailedDayProps) => {
   const theme = useMantineTheme();
-  const maxRows = Math.max(0, Math.floor((cellHeight - 20) / 18));
+  const { ref, height } = useElementSize();
+  const maxRows = Math.max(0, Math.floor((height - 20) / 18));
   let visibleCount = Math.min(events.length, maxRows);
   if (events.length > maxRows) visibleCount = Math.max(0, maxRows - 1);
   const hiddenCount = events.length - visibleCount;
   return (
     <CalendarEventsHoverCard events={events} disabled={disabled}>
-      <Box className={classes.detailedDay} data-compact={maxRows === 0 || undefined}>
+      <Box ref={ref} className={classes.detailedDay} data-compact={maxRows === 0 || undefined}>
         <span className={classes.dayNumber}>{date.getDate()}</span>
         {events.slice(0, visibleCount).map((event, index) => (
           <span
