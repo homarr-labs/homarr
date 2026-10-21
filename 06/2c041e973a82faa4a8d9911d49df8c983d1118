@@ -1,0 +1,33 @@
+apps/docs/docs/widgets/calendar/index.mdx
+  s_5346b932c02e40::t_97ac59a3853f09 28
+packages/widgets/src/calendar/calendar-display.tsx
+  s_5346b932c02e40::t_54ddaeebe292db 31,33,91-95,299-303,319-337
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_5346b932c02e40::t_0a5bb504f3923f 2,9,33-57
+packages/widgets/src/calendar/calender-day.tsx
+  s_21e92d6b7c4fd4::t_4f46a208db9e50 2,6,54-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "062c041e973a82faa4a8d9911d49df8c983d1118",
+  "prompts": {},
+  "sessions": {
+    "s_21e92d6b7c4fd4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "89f7c02b-855b-48a4-8e04-42c47bead86c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5346b932c02e40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51d67401-c504-45b8-8590-7fb4c66ab4df",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
