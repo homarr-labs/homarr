@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { extractHost, parseLocation } from "./jellyfin-integration";
+import { extractHost, formatEpisodeSubtitle, getMediaReleaseTitle, parseLocation } from "./jellyfin-integration";
 
 describe("extractHost", () => {
   test("strips the port from an IPv4 endpoint", () => {
@@ -61,5 +61,39 @@ describe("parseLocation", () => {
     // it isn't a private range in the traditional (RFC 1918 / ULA) sense.
     expect(parseLocation("169.254.1.5:8096")).toBe("lan");
     expect(parseLocation("[fe80::1]:8096")).toBe("lan");
+  });
+});
+
+describe("getMediaReleaseTitle", () => {
+  test("uses the series name as the title of an episode", () => {
+    expect(getMediaReleaseTitle({ Type: "Episode", Name: "Ozymandias", SeriesName: "Breaking Bad" })).toBe(
+      "Breaking Bad",
+    );
+  });
+
+  test("falls back to the item name when the series name is missing", () => {
+    expect(getMediaReleaseTitle({ Type: "Episode", Name: "Ozymandias" })).toBe("Ozymandias");
+  });
+
+  test("uses the item name for other media types", () => {
+    expect(getMediaReleaseTitle({ Type: "Movie", Name: "Inception" })).toBe("Inception");
+  });
+});
+
+describe("formatEpisodeSubtitle", () => {
+  test("combines the season and episode number with the episode name", () => {
+    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Ozymandias", ParentIndexNumber: 5, IndexNumber: 14 })).toBe(
+      "S05E14 – Ozymandias",
+    );
+  });
+
+  test("pads season and episode numbers to two digits", () => {
+    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot", ParentIndexNumber: 1, IndexNumber: 3 })).toBe(
+      "S01E03 – Pilot",
+    );
+  });
+
+  test("falls back to the episode name when the numbers are missing", () => {
+    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot" })).toBe("Pilot");
   });
 });

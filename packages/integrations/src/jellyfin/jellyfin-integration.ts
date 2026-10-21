@@ -65,8 +65,13 @@ export function parseLocation(remoteEndPoint: string | null | undefined): "lan" 
   return privateAddresses.check(host, family === 4 ? "ipv4" : "ipv6") ? "lan" : "wan";
 }
 
-// Episodes only carry their own name, so the show name is added as the title and the episode as the subtitle.
-const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => {
+// Episodes only carry their own name, so the show name is used as the title and the episode as the subtitle.
+export const getMediaReleaseTitle = (item: BaseItemDto): string => {
+  if (item.Type === "Episode" && item.SeriesName) return item.SeriesName;
+  return item.Name ?? "";
+};
+
+export const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => {
   const name = item.Name ?? item.EpisodeTitle ?? "";
   const season = item.ParentIndexNumber;
   const episode = item.IndexNumber;
@@ -285,8 +290,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         id: item.Id!,
         type: this.mapMediaReleaseType(item.Type),
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        title: (isEpisode ? item.SeriesName : undefined) ?? item.Name!,
+        title: getMediaReleaseTitle(item),
         subtitle: isEpisode ? formatEpisodeSubtitle(item) : item.Taglines?.at(0),
         description: item.Overview ?? undefined,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
