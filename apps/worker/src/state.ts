@@ -59,7 +59,7 @@ export async function openWorkerState(
     workerId: await getWorkerId(identity.publicJwk),
     platformUrl: process.env.WORKER_PLATFORM_URL ?? "https://homarr.dev/remote/",
     relayUrl: process.env.WORKER_RELAY_URL ?? "",
-    publicUrl: process.env.WORKER_PUBLIC_URL ?? `http://localhost:${process.env.WORKER_PORT ?? 3002}`,
+    publicUrl: process.env.WORKER_PUBLIC_URL?.trim() || `http://localhost:${process.env.WORKER_PORT ?? 3002}`,
   };
   await writePairingFile(state);
   return state;
