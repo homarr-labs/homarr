@@ -21,6 +21,8 @@ coverage
 **/coverage
 **/.docusaurus
 **/build
+# Local deployment configuration and worker credentials are not build inputs.
+**/.state
 .git
 .github
 dev

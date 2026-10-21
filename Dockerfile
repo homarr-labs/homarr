@@ -86,6 +86,8 @@ ENV NGINX_FRONTEND_UPSTREAM='http://127.0.0.1:3002'
 
 # Standalone worker: direct Hono HTTP, no Node, nginx or embedded Redis server.
 # docker build --target worker -t homarr:worker .
+# Worker-only Dockerfile (worker is its default target):
+# docker build -f apps/backend/Dockerfile -t homarr:worker-mini-local .
 FROM alpine:3.24.2 AS worker
 WORKDIR /app
 RUN apk add --no-cache libstdc++ ca-certificates su-exec && \
