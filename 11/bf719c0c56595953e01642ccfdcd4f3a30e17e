@@ -1,0 +1,21 @@
+packages/widgets/src/calendar/calendar-display.tsx
+  s_5346b932c02e40::t_9eddf12f11eb65 208
+packages/widgets/src/calendar/calender-day.tsx
+  s_5346b932c02e40::t_c62d3af0f91c5b 3,41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "11bf719c0c56595953e01642ccfdcd4f3a30e17e",
+  "prompts": {},
+  "sessions": {
+    "s_5346b932c02e40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51d67401-c504-45b8-8590-7fb4c66ab4df",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
