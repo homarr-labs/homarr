@@ -1,0 +1,19 @@
+packages/widgets/src/calendar/calender-day.tsx
+  s_5346b932c02e40::t_3a5845b9987f88 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cf8dd122c1152aa9b8fab4a33c273b47ace0570d",
+  "prompts": {},
+  "sessions": {
+    "s_5346b932c02e40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51d67401-c504-45b8-8590-7fb4c66ab4df",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
