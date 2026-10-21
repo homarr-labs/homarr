@@ -36,7 +36,21 @@
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  --calendar-cell: min(100cqw / 7, 100cqh / (var(--calendar-weeks) + 2));
+  --calendar-header-rows: 1;
+  --calendar-weekday-rows: 1;
+  --calendar-cell: min(
+    100cqw / 7,
+    100cqh / (var(--calendar-weeks) + var(--calendar-header-rows) + var(--calendar-weekday-rows))
+  );
+}
+.root[data-hide-header] .header {
+  display: none;
+}
+.root[data-hide-header] .floatingError {
+  display: block;
+}
+.root[data-hide-header] .body {
+  --calendar-header-rows: 0;
 }
 .root .weekday {
   padding: 0;
@@ -83,7 +97,8 @@
     display: block;
   }
   .body {
-    --calendar-cell: min(100cqw / 7, 100cqh / var(--calendar-weeks));
+    --calendar-header-rows: 0;
+    --calendar-weekday-rows: 0;
   }
 }
 .calendar div[data-month-level] {

@@ -111,6 +111,7 @@ const CalendarBase = ({ options, displayMode, ...props }: CalendarBaseProps) => 
       {...props}
       releaseType={options.releaseType}
       view={displayMode === "advanced" ? "agenda" : options.viewMode}
+      hideHeader={displayMode !== "advanced" && options.hideHeader}
       locale={locale}
       firstDayOfWeek={firstDayOfWeek}
     />

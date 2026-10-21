@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "View"
+        },
+        "hideHeader": {
+          "label": "Hide header",
+          "description": "Hide the date navigation. Widgets that are too short always hide it."
         }
       },
       "advanced": {

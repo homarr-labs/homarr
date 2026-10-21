@@ -44,6 +44,7 @@ interface CalendarDisplayProps {
   month: Date;
   setMonth: (date: Date) => void;
   view: CalendarView;
+  hideHeader: boolean;
   releaseType: readonly string[];
   locale: string;
   firstDayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -57,6 +58,7 @@ export const CalendarDisplay = ({
   month: date,
   setMonth: setDate,
   view,
+  hideHeader,
   releaseType,
   locale,
   firstDayOfWeek,
@@ -143,6 +145,7 @@ export const CalendarDisplay = ({
       w="100%"
       p="xs"
       data-calendar-view={view}
+      data-hide-header={hideHeader || undefined}
       style={{ "--calendar-weeks": weekCount } as CSSProperties}
     >
       <Box className={classes.floatingError}>
