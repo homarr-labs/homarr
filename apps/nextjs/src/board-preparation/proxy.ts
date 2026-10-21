@@ -128,7 +128,10 @@ const resolvePreparedResponseAsync = async (
     return { hit: false, reason };
   }
   const html = await readPreparedDocumentAsync(id, ready.token);
-  if (!html) return { hit: false, reason: "document_unavailable" };
+  if (!html) {
+    requestPreparation(id, backgroundWork);
+    return { hit: false, reason: "document_unavailable" };
+  }
   return { hit: true, html, viewId: id.slice(0, 12), preparedAt: ready.preparedAt };
 };
 

@@ -8,13 +8,16 @@ import { hashObjectBase64 } from "@homarr/common";
 import { createGetSetChannel, createLockChannel } from "@homarr/redis";
 import type { SupportedLanguage } from "@homarr/translation";
 
+import { compressDocumentAsync, decompressDocumentAsync } from "./document";
+import type { CompressedDocument } from "./document";
+
 import type { RootLayoutData } from "~/app/[locale]/_root-layout-data";
 import type { Board } from "~/app/[locale]/boards/_types";
 import type { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 
 export const preparationMaxAgeMs = 72 * 60 * 60_000;
 const maxVariants = 128;
-const maxDocumentBytes = 4 * 1024 * 1024;
+const maxStoredDocumentBytes = 8 * 1024 * 1024;
 
 export interface BoardPreparationSpec {
   boardId: string;
@@ -38,9 +41,8 @@ export interface BoardPreparationContext {
   layoutId: string;
 }
 
-interface PreparedDocument {
+interface PreparedDocument extends CompressedDocument {
   token: string;
-  html: string;
 }
 
 interface PreparedVersion {
@@ -190,16 +192,24 @@ export const readPreparedVersionAsync = async (id: string) => {
 
 export const writePreparedDocumentAsync = async (
   id: string,
-  document: PreparedDocument,
+  document: { token: string; html: string },
   ready: PreparedVersion,
   lock: PreparationLock,
   lease: string,
 ) => {
   const namespace = await getPreparationNamespaceAsync();
   if (!namespace) return false;
-  if (Buffer.byteLength(document.html) > maxDocumentBytes) throw new Error("Prepared Board exceeds its size budget");
-  if (!(await lock.setIfOwnedAsync(lease, `${namespace}:document:${id}`, document, preparationMaxAgeMs))) return false;
-  return await lock.setIfOwnedAsync(lease, `${namespace}:ready:${id}`, ready, preparationMaxAgeMs);
+  const compressed = { token: document.token, ...(await compressDocumentAsync(document.html)) };
+  if (
+    !(await lock.setIfOwnedWithinBudgetAsync(lease, `${namespace}:document:${id}`, compressed, preparationMaxAgeMs, {
+      indexName: "board-preparation:document-budget:v1",
+      maxBytes: maxStoredDocumentBytes,
+      maxEntries: maxVariants,
+    }))
+  )
+    return false;
+  if (!(await lock.setIfOwnedAsync(lease, `${namespace}:ready:${id}`, ready, preparationMaxAgeMs))) return false;
+  return { storedDocumentBytes: Buffer.byteLength(JSON.stringify(serialize(compressed))) };
 };
 
 export const readPreparedDocumentAsync = async (id: string, token: string) => {
@@ -209,5 +219,5 @@ export const readPreparedDocumentAsync = async (id: string, token: string) => {
     useBoundedCacheClient: true,
   }).getAsync();
   if (document?.token !== token) return null;
-  return document.html;
+  return await decompressDocumentAsync(document);
 };

@@ -208,22 +208,21 @@ export const prepareBoardAsync = async (id: string, runId?: string, signal?: Abo
     if (session) validUntil = Math.min(validUntil, Date.parse(session.expires));
     const token = randomUUID();
     const preparedAt = Date.now();
-    if (
-      !(await writePreparedDocumentAsync(
-        id,
-        { token, html },
-        { fingerprint, token, validUntil, preparedAt },
-        lock,
-        lease,
-      ))
-    )
-      throw new Error("Board preparation lease expired before publication");
+    const publication = await writePreparedDocumentAsync(
+      id,
+      { token, html },
+      { fingerprint, token, validUntil, preparedAt },
+      lock,
+      lease,
+    );
+    if (!publication) throw new Error("Board preparation lease expired before publication");
     log.info("Prepared Board view published", {
       boardId: spec.boardId,
       durationMs: Math.round(stopwatch.getElapsedInMilliseconds()),
       captureDurationMs,
       streamedReveals: countStreamedReveals(html),
       documentBytes: Buffer.byteLength(html),
+      storedDocumentBytes: publication.storedDocumentBytes,
     });
     return "prepared" as const;
   } finally {

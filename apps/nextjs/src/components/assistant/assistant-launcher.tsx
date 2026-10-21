@@ -17,7 +17,6 @@ import { useHotkeys } from "@mantine/hooks";
 
 import { hotkeys } from "@homarr/definitions";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { closeSpotlight } from "@homarr/spotlight/store";
 import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "@homarr/widgets";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
@@ -66,7 +65,13 @@ const DeferredAssistantSpotlight = ({ sendPrompt }: Pick<AssistantContextValue, 
       alwaysVisible: true,
       placement: "fallback" as const,
       interaction: (prompt: string) =>
-        createAssistantPromptInteraction({ sendPrompt, prompt, onPromptAccepted: closeSpotlight }),
+        createAssistantPromptInteraction({
+          sendPrompt,
+          prompt,
+          onPromptAccepted: () => {
+            void import("@homarr/spotlight/store").then(({ closeSpotlight }) => closeSpotlight());
+          },
+        }),
     }),
     [sendPrompt, t],
   );
