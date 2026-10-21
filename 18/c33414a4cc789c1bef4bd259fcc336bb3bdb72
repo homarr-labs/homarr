@@ -1,0 +1,33 @@
+apps/docs/docs/widgets/releases/index.mdx
+  s_b33778671a3872::t_91b23a4919b178 3,23-24,29-30,33-34,42-45
+packages/db/migrations/custom/0005_releases_widget_options.ts
+  s_b33778671a3872::t_ef8bd1b36b59e8 1-86
+packages/db/migrations/custom/index.ts
+  s_b33778671a3872::t_434596f37d94db 7,15
+packages/widgets/src/releases/component.tsx
+  s_b33778671a3872::t_61fc2d80364e20 3-5,7,9-11,14,18,20,23,25-46,53-54,56,61-66,68-72,74,76-90,92,94-107,109-150,152-225,228-243,247-279,281-300,302-306,308-327,329-333,335-343,345-353,355-377,379-387,389-411,413-420,422-447,451-462,465-477,480-489,492-504,506-554,556-558,562-568,571-572,575-604
+packages/widgets/src/releases/index.ts
+  s_b33778671a3872::t_f1cb099fbd492f 9-14,28-29,31-34,36-37,39-42,44-45,47-50,52-58,60-66,68-69
+packages/widgets/src/releases/release-entry.ts
+  s_b33778671a3872::t_177ee6c3ac1aea 1-44
+packages/widgets/src/releases/release-options.ts
+  s_b33778671a3872::t_15bca94b6c0bac 1-8
+packages/widgets/src/releases/use-release-entries.ts
+  s_b33778671a3872::t_82762660a9b7bf 1-197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "18c33414a4cc789c1bef4bd259fcc336bb3bdb72",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
