@@ -54,20 +54,27 @@ describe("GitHub release history limits", () => {
   });
 
   test.each([
-    { versionRegex: undefined, expected: "v1001" },
-    { versionRegex: "^v2$", expected: "v2" },
-  ])(
-    "retains matching release $expected when the next page reaches GitHub's cap",
-    async ({ versionRegex, expected }) => {
-      const pages = mockHistoryFailure(11, 422, limitMessage);
-      const result = await request(versionRegex);
+    { versionRegex: undefined, expected: "v1001", pageCount: 1 },
+    { versionRegex: "^v2$", expected: "v2", pageCount: 10 },
+  ])("stops paging at the first page containing $expected", async ({ versionRegex, expected, pageCount }) => {
+    const pages = mockHistoryFailure(11, 422, limitMessage);
+    const result = await request(versionRegex);
 
-      expect(result.success).toBe(true);
-      if (!result.success) throw new Error(result.error.message);
-      expect(result.data.latestRelease).toBe(expected);
-      expect(pages).toEqual(Array.from({ length: 11 }, (_, index) => index + 1));
-    },
-  );
+    expect(result.success).toBe(true);
+    if (!result.success) throw new Error(result.error.message);
+    expect(result.data.latestRelease).toBe(expected);
+    expect(pages).toEqual(Array.from({ length: pageCount }, (_, index) => index + 1));
+  });
+
+  test("reports no matching version when the history reaches GitHub's cap", async () => {
+    const pages = mockHistoryFailure(11, 422, limitMessage);
+    const result = await request("^v0$");
+
+    expect(result.success).toBe(false);
+    if (result.success) throw new Error("Expected no matching version");
+    expect(result.error.code).toBe("noMatchingVersion");
+    expect(pages).toEqual(Array.from({ length: 11 }, (_, index) => index + 1));
+  });
 
   test.each([
     { page: 2, status: 422, message: "Validation Failed" },
@@ -75,7 +82,7 @@ describe("GitHub release history limits", () => {
     { page: 1, status: 422, message: limitMessage },
   ])("does not hide an API error on page $page: $message", async ({ page, status, message }) => {
     mockHistoryFailure(page, status, message);
-    const result = await request();
+    const result = await request("^v2$");
 
     expect(result.success).toBe(false);
     if (result.success) throw new Error("Expected API failure");

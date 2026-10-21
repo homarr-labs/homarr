@@ -35,6 +35,7 @@ export interface DetailsProviderResponse {
 export interface ReleaseProviderResponse {
   latestRelease: string;
   latestReleaseAt: Date;
+  resolvedFromTag?: string;
   releaseUrl?: string;
   releaseDescription?: string;
   isPreRelease?: boolean;
@@ -42,10 +43,41 @@ export interface ReleaseProviderResponse {
 
 export type ReleaseData = DetailsProviderResponse & ReleaseProviderResponse;
 export type ReleaseError = {
-  code: "invalidIdentifier" | "noMatchingVersion" | "noReleasesFound" | "unexpected";
+  code: "invalidIdentifier" | "noMatchingVersion" | "noReleasesFound" | "notFound" | "rateLimited" | "unexpected";
   message: string;
 };
 export type ReleaseResponse = { success: true; data: ReleaseData } | { success: false; error: ReleaseError };
+
+class ProviderHttpError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = "ProviderHttpError";
+  }
+}
+
+const getHttpErrorCode = (status: number): ReleaseError["code"] => {
+  if (status === 404) return "notFound";
+  if (status === 429) return "rateLimited";
+  return "unexpected";
+};
+
+const toReleaseError = (error: unknown): ReleaseError => {
+  if (error instanceof OctokitRequestError) {
+    const isRateLimited =
+      error.status === 429 ||
+      (error.status === 403 &&
+        (error.response?.headers["x-ratelimit-remaining"] === "0" || /rate limit/i.test(error.message)));
+    if (isRateLimited) return { code: "rateLimited", message: error.message };
+    return { code: getHttpErrorCode(error.status), message: error.message };
+  }
+  if (error instanceof ProviderHttpError) return { code: getHttpErrorCode(error.status), message: error.message };
+  return { code: "unexpected", message: error instanceof Error ? error.message : String(error) };
+};
+
+const failure = (error: ReleaseError): ReleaseResponse => ({ success: false, error });
 
 const compileVersionRegex = (versionRegex?: string): RegExp | null => {
   if (!versionRegex) return null;
@@ -54,6 +86,82 @@ const compileVersionRegex = (versionRegex?: string): RegExp | null => {
   } catch {
     return null;
   }
+};
+
+const parseVersion = (tag: string) => /\d+(?:\.\d+)*/.exec(tag)?.[0].split(".").map(Number);
+
+const compareVersions = (left: number[], right: number[]) => {
+  for (let index = 0; index < Math.max(left.length, right.length); index++) {
+    const difference = (left[index] ?? -1) - (right[index] ?? -1);
+    if (difference !== 0) return difference;
+  }
+  return 0;
+};
+
+const isPlainVersionTag = (tag: string) => /^v?\d{1,4}(?:\.\d+)*$/.test(tag);
+
+const isVersionLikeTag = (tag: string) => isPlainVersionTag(tag) || /\d+\.\d+/.test(tag);
+
+const floatingTagNames = ["latest", "release", "stable"];
+
+interface RegistryTag {
+  name: string;
+  date: Date;
+  digest?: string;
+}
+
+const pickHighestVersion = <TTag extends { name: string; date?: Date }>(tags: TTag[]) =>
+  tags
+    .map((tag) => ({ tag, version: parseVersion(tag.name) ?? [] }))
+    .toSorted(
+      (left, right) =>
+        compareVersions(right.version, left.version) ||
+        (right.tag.date?.getTime() ?? 0) - (left.tag.date?.getTime() ?? 0),
+    )[0]?.tag;
+
+const pickMostSpecificVersion = <TTag extends { name: string }>(tags: TTag[]) =>
+  tags
+    .filter((tag) => isVersionLikeTag(tag.name))
+    .toSorted(
+      (left, right) =>
+        Number(isPlainVersionTag(right.name)) - Number(isPlainVersionTag(left.name)) ||
+        (parseVersion(right.name)?.length ?? 0) - (parseVersion(left.name)?.length ?? 0) ||
+        left.name.length - right.name.length,
+    )[0];
+
+const selectRegistryTag = (tags: RegistryTag[], regex: RegExp | null): ReleaseProviderResponse | null => {
+  if (regex) {
+    const tag = pickHighestVersion(tags.filter((candidate) => regex.test(candidate.name)));
+    return tag ? { latestRelease: tag.name, latestReleaseAt: tag.date } : null;
+  }
+
+  const floatingTag = floatingTagNames
+    .map((name) => tags.find((tag) => tag.name === name))
+    .find((tag) => tag !== undefined);
+  if (floatingTag) {
+    const versionTag = floatingTag.digest
+      ? pickMostSpecificVersion(
+          tags.filter((tag) => tag.name !== floatingTag.name && tag.digest === floatingTag.digest),
+        )
+      : undefined;
+    return {
+      latestRelease: versionTag?.name ?? floatingTag.name,
+      latestReleaseAt: floatingTag.date,
+      resolvedFromTag: versionTag ? floatingTag.name : undefined,
+    };
+  }
+
+  const tag =
+    pickHighestVersion(tags.filter((candidate) => isPlainVersionTag(candidate.name))) ??
+    tags.toSorted((left, right) => right.date.getTime() - left.date.getTime())[0];
+  return tag ? { latestRelease: tag.name, latestReleaseAt: tag.date } : null;
+};
+
+const describeNoMatch = (tags: string[], versionRegex?: string) => {
+  const sampleTags = tags.slice(0, 5).join(", ");
+  return versionRegex
+    ? `Regex /${versionRegex}/ matched 0/${tags.length} tags. Sample tags: [${sampleTags}]`
+    : `Found ${tags.length} tags but none could be used. Sample tags: [${sampleTags}]`;
 };
 
 export const getLatestRelease = (
@@ -91,6 +199,10 @@ export const getLatestRelease = (
 export const getLatestMatchingReleaseAsync = async (input: ReleasesRepositoryRequest): Promise<ReleaseResponse> => {
   const baseUrl = removeTrailingSlash(input.providerUrl ?? getReleaseProviderDefaultUrl(input.provider));
   const identifier = normalizeReleaseProviderIdentifier(input.provider, input.identifier);
+
+  if (input.versionRegex && !compileVersionRegex(input.versionRegex)) {
+    return failure({ code: "noMatchingVersion", message: `Invalid regex: /${input.versionRegex}/` });
+  }
 
   switch (input.provider) {
     case "github":
@@ -147,22 +259,21 @@ const getGithubReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed)
-    return {
-      success: false,
-      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
-    };
+  if (!parsed) return failure({ code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` });
 
+  const regex = compileVersionRegex(versionRegex);
   const api = getGithubApi(baseUrl, "Homarr-Lab/Homarr:GithubReleaseProvider", token);
   try {
     const allReleases: Awaited<ReturnType<typeof api.rest.repos.listReleases>>["data"] = [];
     try {
+      // Releases are listed newest first, so only page further while a version filter has not matched yet.
       for await (const page of api.paginate.iterator(api.rest.repos.listReleases, {
         owner: parsed.owner,
         repo: parsed.name,
-        per_page: 100,
+        per_page: regex ? 100 : 10,
       })) {
         allReleases.push(...page.data);
+        if (!regex || page.data.some((release) => regex.test(release.tag_name))) break;
       }
     } catch (error) {
       // GitHub can reject a later page even though earlier pages contain the latest release.
@@ -180,7 +291,7 @@ const getGithubReleaseAsync = async (
       });
     }
     if (allReleases.length === 0) {
-      return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitHub releases` } };
+      return failure({ code: "noReleasesFound", message: `${identifier} has no GitHub releases` });
     }
 
     const releases = allReleases.reduce<ReleaseProviderResponse[]>((acc, release) => {
@@ -195,16 +306,14 @@ const getGithubReleaseAsync = async (
       return acc;
     }, []);
     const result = getLatestRelease(releases, versionRegex);
-    if ("noMatch" in result) {
-      return { success: false, error: { code: "noMatchingVersion", message: result.noMatch } };
-    }
+    if ("noMatch" in result) return failure({ code: "noMatchingVersion", message: result.noMatch });
 
     const details = await getGithubDetailsAsync(api, parsed.owner, parsed.name);
     return { success: true, data: { ...details, ...result.release } };
   } catch (error) {
-    const message = error instanceof OctokitRequestError ? error.message : String(error);
-    logger.warn("Failed to get GitHub releases", { identifier, error: message });
-    return { success: false, error: { code: "unexpected", message } };
+    const releaseError = toReleaseError(error);
+    logger.warn("Failed to get GitHub releases", { identifier, error: releaseError });
+    return failure(releaseError);
   }
 };
 
@@ -227,6 +336,156 @@ const getGithubDetailsAsync = async (api: Octokit, owner: string, name: string):
   }
 };
 
+const ociManifestAccept = [
+  "application/vnd.oci.image.index.v1+json",
+  "application/vnd.docker.distribution.manifest.list.v2+json",
+  "application/vnd.oci.image.manifest.v1+json",
+  "application/vnd.docker.distribution.manifest.v2+json",
+].join(", ");
+const OCI_TAG_PAGE_SIZE = 1000;
+const OCI_MAX_TAG_PAGES = 5;
+const OCI_MAX_DIGEST_CANDIDATES = 5;
+
+const ociTokenSchema = z.object({ token: z.string() });
+const ociTagsSchema = z.object({ tags: z.array(z.string()).nullish() });
+const ociManifestSchema = z.object({
+  config: z.object({ digest: z.string() }).optional(),
+  manifests: z.array(z.object({ digest: z.string() })).optional(),
+});
+const ociConfigSchema = z.object({
+  created: z
+    .string()
+    .transform((value) => new Date(value))
+    .optional(),
+  config: z.object({ Labels: z.record(z.string(), z.string()).nullish() }).optional(),
+});
+
+interface OciRegistry {
+  origin: string;
+  host: string;
+  repository: string;
+  token: string;
+}
+
+const requestOciAsync = async (
+  registry: OciRegistry,
+  path: string,
+  init: { method?: string; accept?: string } = {},
+) => {
+  const response = await fetchProvider(buildUrl(registry.origin, `/v2/${registry.repository}/${path}`), {
+    method: init.method,
+    headers: { Authorization: `Bearer ${registry.token}`, ...(init.accept ? { Accept: init.accept } : {}) },
+  });
+  if (!response.ok) throw new ProviderHttpError(response.status, response.statusText);
+  return response;
+};
+
+const getOciTokenAsync = async (registryUrl: URL, repository: string, token?: string) => {
+  const scope = encodeURIComponent(`repository:${repository}:pull`);
+  const response = await fetchProvider(
+    buildUrl(registryUrl.origin, `/token?service=${registryUrl.host}&scope=${scope}`),
+    token ? { headers: { Authorization: `Basic ${Buffer.from(`homarr:${token}`).toString("base64")}` } } : undefined,
+  );
+  if (!response.ok) throw new ProviderHttpError(response.status, response.statusText);
+
+  const result = ociTokenSchema.safeParse(await response.json());
+  if (!result.success) throw new Error(result.error.message);
+  return result.data.token;
+};
+
+const listOciTagsAsync = async (registry: OciRegistry) => {
+  const tags: string[] = [];
+  let path: string | undefined = `tags/list?n=${OCI_TAG_PAGE_SIZE}`;
+  for (let page = 0; path && page < OCI_MAX_TAG_PAGES; page++) {
+    const response = await requestOciAsync(registry, path);
+    const result = ociTagsSchema.safeParse(await response.json());
+    if (!result.success) throw new Error(result.error.message);
+    tags.push(...(result.data.tags ?? []));
+
+    const next = /<([^>]+)>;\s*rel="next"/.exec(response.headers.get("link") ?? "")?.[1];
+    path = next ? next.slice(next.indexOf("tags/list")) : undefined;
+  }
+  return tags;
+};
+
+const getOciImageAsync = async (registry: OciRegistry, reference: string) => {
+  const response = await requestOciAsync(registry, `manifests/${reference}`, { accept: ociManifestAccept });
+  const digest = response.headers.get("docker-content-digest") ?? undefined;
+  const manifest = ociManifestSchema.parse(await response.json());
+  const platformDigest = manifest.manifests?.[0]?.digest;
+  const imageManifest =
+    manifest.config || !platformDigest
+      ? manifest
+      : ociManifestSchema.parse(
+          await (await requestOciAsync(registry, `manifests/${platformDigest}`, { accept: ociManifestAccept })).json(),
+        );
+  const configDigest = imageManifest.config?.digest;
+  if (!configDigest) throw new Error("Missing image config digest");
+
+  const config = ociConfigSchema.parse(await (await requestOciAsync(registry, `blobs/${configDigest}`)).json());
+  return { digest, createdAt: config.created, labels: config.config?.Labels ?? {} };
+};
+
+const getOciDigestAsync = async (registry: OciRegistry, reference: string) => {
+  const response = await requestOciAsync(registry, `manifests/${reference}`, {
+    method: "HEAD",
+    accept: ociManifestAccept,
+  });
+  return response.headers.get("docker-content-digest") ?? undefined;
+};
+
+const findOciFloatingImageAsync = async (registry: OciRegistry) => {
+  for (const tag of floatingTagNames) {
+    try {
+      return { tag, ...(await getOciImageAsync(registry, tag)) };
+    } catch (error) {
+      if (!(error instanceof ProviderHttpError) || error.status !== 404) throw error;
+    }
+  }
+  return null;
+};
+
+const findOciTagWithDigestAsync = async (registry: OciRegistry, candidates: string[], digest: string) => {
+  for (const candidate of candidates) {
+    try {
+      if ((await getOciDigestAsync(registry, candidate)) === digest) return candidate;
+    } catch (error) {
+      if (!(error instanceof ProviderHttpError) || error.status !== 404) throw error;
+    }
+  }
+  return undefined;
+};
+
+const resolveOciFloatingVersionAsync = async (
+  registry: OciRegistry,
+  image: { tag: string; digest?: string; labels: Record<string, string> },
+) => {
+  if (!image.digest) return undefined;
+
+  const labelVersion = image.labels["org.opencontainers.image.version"];
+  if (labelVersion && labelVersion !== image.tag && isVersionLikeTag(labelVersion)) {
+    const labelTags = [labelVersion, ...floatingTagNames.map((tag) => `${tag}-${labelVersion}`)];
+    if (await findOciTagWithDigestAsync(registry, labelTags, image.digest)) return labelVersion;
+  }
+
+  const versionTags = (await listOciTagsAsync(registry))
+    .filter(isPlainVersionTag)
+    .toSorted((left, right) => compareVersions(parseVersion(right) ?? [], parseVersion(left) ?? []))
+    .slice(0, OCI_MAX_DIGEST_CANDIDATES);
+  return await findOciTagWithDigestAsync(registry, versionTags, image.digest);
+};
+
+const findNewestOciImageAsync = async (registry: OciRegistry, tags: string[]) => {
+  const images = await Promise.all(
+    tags.slice(-OCI_MAX_DIGEST_CANDIDATES).map(async (name) => ({ name, ...(await getOciImageAsync(registry, name)) })),
+  );
+  const [newest] = images.toSorted(
+    (left, right) => (right.createdAt?.getTime() ?? 0) - (left.createdAt?.getTime() ?? 0),
+  );
+  if (!newest) throw new ProviderHttpError(404, "No container tags");
+  return newest;
+};
+
 const getGitHubContainerRegistryReleaseAsync = async (
   baseUrl: string,
   identifier: string,
@@ -234,177 +493,87 @@ const getGitHubContainerRegistryReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerPackageName(identifier);
-  if (!parsed)
-    return {
-      success: false,
-      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/package` },
-    };
+  if (!parsed) return failure({ code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/package` });
 
+  const repository = `${parsed.owner}/${parsed.name}`;
   try {
-    const repositoryName = `${parsed.owner}/${parsed.name}`;
-    const regex = compileVersionRegex(versionRegex);
-    if (versionRegex && !regex) {
-      return { success: false, error: { code: "noMatchingVersion", message: `Invalid regex: /${versionRegex}/` } };
-    }
     const registryUrl = new URL(baseUrl);
-    const registryToken = token ?? (await getGitHubContainerRegistryTokenAsync(registryUrl, repositoryName));
-    const tags = await getGitHubContainerRegistryTagsAsync(registryUrl, repositoryName, registryToken);
-    if (tags.length === 0) {
-      return { success: false, error: { code: "noReleasesFound", message: `${repositoryName} has no container tags` } };
-    }
-    const matchingTags = regex ? tags.filter((tag) => regex.test(tag)) : tags;
-    const tagsToCheck = versionRegex
-      ? matchingTags.slice(-100)
-      : matchingTags.includes("latest")
-        ? ["latest"]
-        : matchingTags.slice(-100);
-    if (tagsToCheck.length === 0) {
-      const sampleTags = tags.slice(0, 5).join(", ");
-      const msg = versionRegex
-        ? `Regex /${versionRegex}/ matched 0/${tags.length} tags. Sample: [${sampleTags}]`
-        : `No "latest" tag found among ${tags.length} tags. Sample: [${sampleTags}]`;
-      return { success: false, error: { code: "noMatchingVersion", message: msg } };
+    const registry: OciRegistry = {
+      origin: registryUrl.origin,
+      host: registryUrl.host,
+      repository,
+      token: await getOciTokenAsync(registryUrl, repository, token),
+    };
+    const regex = compileVersionRegex(versionRegex);
+    const floatingImage = regex ? null : await findOciFloatingImageAsync(registry);
+
+    let release: ReleaseProviderResponse;
+    let labels: Record<string, string> = floatingImage?.labels ?? {};
+    if (floatingImage) {
+      const version = await resolveOciFloatingVersionAsync(registry, floatingImage);
+      release = {
+        latestRelease: version ?? floatingImage.tag,
+        latestReleaseAt: floatingImage.createdAt ?? new Date(),
+        resolvedFromTag: version ? floatingImage.tag : undefined,
+      };
+    } else {
+      const tags = await listOciTagsAsync(registry);
+      if (tags.length === 0) {
+        return failure({ code: "noReleasesFound", message: `${repository} has no container tags` });
+      }
+      const tag = regex
+        ? pickHighestVersion(tags.filter((name) => regex.test(name)).map((name) => ({ name })))
+        : (pickHighestVersion(tags.filter(isPlainVersionTag).map((name) => ({ name }))) ??
+          pickHighestVersion(tags.filter(isVersionLikeTag).map((name) => ({ name }))));
+      if (!tag && regex) return failure({ code: "noMatchingVersion", message: describeNoMatch(tags, versionRegex) });
+
+      const image = tag
+        ? { name: tag.name, ...(await getOciImageAsync(registry, tag.name)) }
+        : await findNewestOciImageAsync(registry, tags);
+      labels = image.labels;
+      release = { latestRelease: image.name, latestReleaseAt: image.createdAt ?? new Date() };
     }
 
-    const releases = await Promise.all(
-      tagsToCheck.map(async (tag) => ({
-        latestRelease: tag,
-        latestReleaseAt: await getGitHubContainerRegistryTagCreatedAtAsync(
-          registryUrl,
-          repositoryName,
-          tag,
-          registryToken,
-        ),
-        releaseUrl: `https://github.com/${repositoryName}/pkgs/container/${encodeURIComponent(parsed.name)}`,
-      })),
-    );
-    const result = getLatestRelease(releases, versionRegex);
-    if ("noMatch" in result) {
-      return { success: false, error: { code: "noMatchingVersion", message: result.noMatch } };
-    }
-
+    const sourceRepository = parseGithubRepo(labels["org.opencontainers.image.source"]?.replace(/\.git$/, "") ?? "");
+    const projectUrl = `https://github.com/${sourceRepository ?? repository}`;
     return {
       success: true,
       data: {
-        projectUrl: `https://github.com/${repositoryName}`,
-        ...result.release,
+        projectUrl,
+        projectDescription: labels["org.opencontainers.image.description"],
+        releaseUrl: `${projectUrl}/pkgs/container/${encodeURIComponent(parsed.name)}`,
+        ...release,
       },
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    logger.warn("Failed to get GitHub container registry releases", { identifier, error: message });
-    return { success: false, error: { code: "unexpected", message } };
+    const releaseError = toReleaseError(error);
+    logger.warn("Failed to get GitHub container registry releases", { identifier, error: releaseError });
+    return failure(releaseError);
   }
 };
 
-const gitHubContainerRegistryTokenSchema = z.object({ token: z.string() });
-const gitHubContainerRegistryTagsSchema = z.object({ tags: z.array(z.string()).optional() });
-const gitHubContainerRegistryManifestSchema = z.object({
-  config: z.object({ digest: z.string() }).optional(),
-  manifests: z.array(z.object({ digest: z.string() })).optional(),
-});
-const gitHubContainerRegistryConfigSchema = z.object({
-  created: z.string().transform((value) => new Date(value)),
-});
+const DOCKER_HUB_MAX_PAGES = 5;
 
-const getGitHubContainerRegistryTokenAsync = async (registryUrl: URL, repositoryName: string) => {
-  const response = await fetchProvider(
-    buildUrl(
-      registryUrl.origin,
-      `/token?service=${registryUrl.host}&scope=${encodeURIComponent(`repository:${repositoryName}:pull`)}` as `/${string}`,
-    ),
-  );
-  if (!response.ok) throw new Error(response.statusText);
-
-  const result = gitHubContainerRegistryTokenSchema.safeParse(await response.json());
-  if (!result.success) throw new Error(result.error.message);
-
-  return result.data.token;
-};
-
-const getGitHubContainerRegistryTagsAsync = async (registryUrl: URL, repositoryName: string, token: string) => {
-  const response = await fetchProvider(buildUrl(registryUrl.origin, `/v2/${repositoryName}/tags/list`), {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!response.ok) throw new Error(response.statusText);
-
-  const result = gitHubContainerRegistryTagsSchema.safeParse(await response.json());
-  if (!result.success) throw new Error(result.error.message);
-
-  return result.data.tags ?? [];
-};
-
-const getGitHubContainerRegistryTagCreatedAtAsync = async (
-  registryUrl: URL,
-  repositoryName: string,
-  tag: string,
-  token: string,
-) => {
-  const manifest = await getGitHubContainerRegistryManifestAsync(registryUrl, repositoryName, tag, token);
-  const imageManifest = manifest.config
-    ? manifest
-    : await getGitHubContainerRegistryManifestAsync(
-        registryUrl,
-        repositoryName,
-        manifest.manifests?.[0]?.digest ?? "",
-        token,
-      );
-  const configDigest = imageManifest.config?.digest;
-  if (!configDigest) throw new Error("Missing image config digest");
-
-  const response = await fetchProvider(buildUrl(registryUrl.origin, `/v2/${repositoryName}/blobs/${configDigest}`), {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!response.ok) throw new Error(response.statusText);
-
-  const result = gitHubContainerRegistryConfigSchema.safeParse(await response.json());
-  if (!result.success) throw new Error(result.error.message);
-
-  return result.data.created;
-};
-
-const getGitHubContainerRegistryManifestAsync = async (
-  registryUrl: URL,
-  repositoryName: string,
-  reference: string,
-  token: string,
-) => {
-  if (!reference) throw new Error("Missing image manifest reference");
-
-  const response = await fetchProvider(buildUrl(registryUrl.origin, `/v2/${repositoryName}/manifests/${reference}`), {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: [
-        "application/vnd.oci.image.index.v1+json",
-        "application/vnd.docker.distribution.manifest.list.v2+json",
-        "application/vnd.oci.image.manifest.v1+json",
-        "application/vnd.docker.distribution.manifest.v2+json",
-      ].join(", "),
-    },
-  });
-  if (!response.ok) throw new Error(response.statusText);
-
-  const result = gitHubContainerRegistryManifestSchema.safeParse(await response.json());
-  if (!result.success) throw new Error(result.error.message);
-
-  return result.data;
-};
-
-const dockerHubReleasesSchema = z.object({
+const dockerHubTagsSchema = z.object({
+  next: z.string().nullish(),
   results: z.array(
-    z.object({ name: z.string(), last_updated: z.string().transform((value) => new Date(value)) }).transform((tag) => ({
-      latestRelease: tag.name,
-      latestReleaseAt: tag.last_updated,
-    })),
+    z.object({
+      name: z.string(),
+      last_updated: z.string().nullish(),
+      digest: z.string().nullish(),
+    }),
   ),
 });
 
 const dockerHubDetailsSchema = z.object({
   name: z.string(),
   namespace: z.string(),
-  description: z.string(),
-  star_count: z.number(),
-  date_registered: z.string().transform((value) => new Date(value)),
+  description: z.string().nullish(),
+  star_count: z.number().nullish(),
+  date_registered: z
+    .string()
+    .transform((value) => new Date(value))
+    .nullish(),
 });
 
 const getDockerHubReleaseAsync = async (
@@ -413,70 +582,67 @@ const getDockerHubReleaseAsync = async (
   versionRegex?: string,
   token?: string,
 ): Promise<ReleaseResponse> => {
-  const parsed = identifier.includes("/") ? parseOwnerName(identifier) : { owner: "", name: identifier };
-  if (!parsed) return { success: false, error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}"` } };
+  const parsed = identifier.includes("/") ? parseOwnerName(identifier) : { owner: "library", name: identifier };
+  if (!parsed) return failure({ code: "invalidIdentifier", message: `Cannot parse "${identifier}"` });
 
-  const relativeUrl = parsed.owner
-    ? `/v2/namespaces/${encodeURIComponent(parsed.owner)}/repositories/${encodeURIComponent(parsed.name)}`
-    : `/v2/repositories/library/${encodeURIComponent(parsed.name)}`;
+  const relativeUrl: `/${string}` = `/v2/namespaces/${encodeURIComponent(parsed.owner)}/repositories/${encodeURIComponent(parsed.name)}`;
+  const init = token ? { headers: { Authorization: `Bearer ${token}` } } : undefined;
+  const regex = compileVersionRegex(versionRegex);
 
-  const headers: Record<string, string> = {};
-  if (token) headers.Authorization = `Bearer ${token}`;
+  try {
+    const tags: RegistryTag[] = [];
+    for (let page = 1; page <= DOCKER_HUB_MAX_PAGES; page++) {
+      const response = await fetchProvider(buildUrl(baseUrl, `${relativeUrl}/tags?page_size=100&page=${page}`), init);
+      if (!response.ok)
+        throw new ProviderHttpError(response.status, `Docker Hub ${response.status}: ${response.statusText}`);
 
-  let lastNoMatch = "";
-  for (let page = 0; page <= 5; page++) {
-    const response = await fetchProvider(
-      buildUrl(baseUrl, `${relativeUrl}/tags?page_size=100&page=${page}` as `/${string}`),
-      headers.Authorization ? { headers } : undefined,
-    );
-    if (!response.ok)
-      return {
-        success: false,
-        error: { code: "unexpected", message: `Docker Hub ${response.status}: ${response.statusText}` },
-      };
-
-    const json: unknown = await response.json();
-    const result = dockerHubReleasesSchema.safeParse(json);
-    if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
-
-    const matched = getLatestRelease(result.data.results, versionRegex);
-    if ("noMatch" in matched) {
-      lastNoMatch = matched.noMatch;
-      continue;
+      const result = dockerHubTagsSchema.parse(await response.json());
+      for (const tag of result.results) {
+        if (!tag.last_updated) continue;
+        tags.push({ name: tag.name, date: new Date(tag.last_updated), digest: tag.digest ?? undefined });
+      }
+      if (!result.next || !regex || tags.some((tag) => regex.test(tag.name))) break;
     }
 
-    const details = await getDockerHubDetailsAsync(baseUrl, relativeUrl as `/${string}`, token);
-    return { success: true, data: { ...details, ...matched.release } };
-  }
+    if (tags.length === 0) return failure({ code: "noReleasesFound", message: `${identifier} has no tags` });
+    const selected = selectRegistryTag(tags, regex);
+    if (!selected) {
+      return failure({
+        code: "noMatchingVersion",
+        message: describeNoMatch(
+          tags.map((tag) => tag.name),
+          versionRegex,
+        ),
+      });
+    }
 
-  return {
-    success: false,
-    error: { code: "noMatchingVersion", message: lastNoMatch || `No matching tags found for ${identifier}` },
-  };
+    const details = await getDockerHubDetailsAsync(baseUrl, relativeUrl, init);
+    return { success: true, data: { ...details, ...selected } };
+  } catch (error) {
+    const releaseError = toReleaseError(error);
+    logger.warn("Failed to get Docker Hub releases", { identifier, error: releaseError });
+    return failure(releaseError);
+  }
 };
 
 const getDockerHubDetailsAsync = async (
   baseUrl: string,
   relativeUrl: `/${string}`,
-  token?: string,
+  init?: Parameters<typeof fetchProvider>[1],
 ): Promise<DetailsProviderResponse> => {
-  const headers: Record<string, string> = {};
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  const response = await fetchProvider(
-    buildUrl(baseUrl, `${relativeUrl}/` as `/${string}`),
-    headers.Authorization ? { headers } : undefined,
-  );
+  const response = await fetchProvider(buildUrl(baseUrl, `${relativeUrl}/`), init);
   if (!response.ok) return {};
 
   const result = dockerHubDetailsSchema.safeParse(await response.json());
   if (!result.success) return {};
 
+  const path =
+    result.data.namespace === "library" ? `_/${result.data.name}` : `r/${result.data.namespace}/${result.data.name}`;
   return {
-    projectUrl: `https://hub.docker.com/r/${result.data.namespace}/${result.data.name}`,
-    projectDescription: result.data.description,
-    createdAt: result.data.date_registered,
-    starsCount: result.data.star_count,
+    projectUrl: `https://hub.docker.com/${path}`,
+    projectDescription: result.data.description ?? undefined,
+    createdAt: result.data.date_registered ?? undefined,
+    starsCount: result.data.star_count ?? undefined,
   };
 };
 
@@ -515,16 +681,18 @@ const getGitlabReleaseAsync = async (
     buildUrl(baseUrl, `/api/v4/projects/${encodedIdentifier}/releases?per_page=100`),
     headers["PRIVATE-TOKEN"] ? { headers } : undefined,
   );
-  if (!response.ok)
-    return {
-      success: false,
-      error: { code: "unexpected", message: `GitLab ${response.status}: ${response.statusText}` },
-    };
+  if (!response.ok) {
+    return failure({
+      code: getHttpErrorCode(response.status),
+      message: `GitLab ${response.status}: ${response.statusText}`,
+    });
+  }
 
   const result = gitlabReleasesSchema.safeParse(await response.json());
-  if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
-  if (result.data.length === 0)
-    return { success: false, error: { code: "noReleasesFound", message: `${identifier} has no GitLab releases` } };
+  if (!result.success) return failure({ code: "unexpected", message: result.error.message });
+  if (result.data.length === 0) {
+    return failure({ code: "noReleasesFound", message: `${identifier} has no GitLab releases` });
+  }
 
   const releases = result.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
     if (!release.released_at) return acc;
@@ -539,7 +707,7 @@ const getGitlabReleaseAsync = async (
     return acc;
   }, []);
   const matched = getLatestRelease(releases, versionRegex);
-  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
+  if ("noMatch" in matched) return failure({ code: "noMatchingVersion", message: matched.noMatch });
 
   const details = await getGitlabDetailsAsync(baseUrl, encodedIdentifier, token);
   return { success: true, data: { ...details, ...matched.release } };
@@ -587,6 +755,7 @@ const npmReleasesSchema = z.object({
         .filter(([key]) => !npmTimeMetadataKeys.has(key))
         .map(([key, value]) => ({ latestRelease: key, latestReleaseAt: value })),
     ),
+  "dist-tags": z.record(z.string(), z.string()).optional(),
   versions: z.record(z.string(), z.object({ description: z.string().optional() })),
   name: z.string(),
 });
@@ -597,7 +766,7 @@ const getNpmReleaseAsync = async (
   versionRegex?: string,
   token?: string,
 ): Promise<ReleaseResponse> => {
-  if (!identifier) return { success: false, error: { code: "invalidIdentifier", message: "Empty npm package name" } };
+  if (!identifier) return failure({ code: "invalidIdentifier", message: "Empty npm package name" });
 
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -606,19 +775,26 @@ const getNpmReleaseAsync = async (
     buildUrl(baseUrl, `/${encodeURIComponent(identifier)}`),
     headers.Authorization ? { headers } : undefined,
   );
-  if (!response.ok)
-    return { success: false, error: { code: "unexpected", message: `npm ${response.status}: ${response.statusText}` } };
+  if (!response.ok) {
+    return failure({
+      code: getHttpErrorCode(response.status),
+      message: `npm ${response.status}: ${response.statusText}`,
+    });
+  }
 
   const result = npmReleasesSchema.safeParse(await response.json());
-  if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
+  if (!result.success) return failure({ code: "unexpected", message: result.error.message });
 
-  const releases = result.data.time.map((tag) => ({
-    ...tag,
-    releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(result.data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
-    releaseDescription: result.data.versions[tag.latestRelease]?.description ?? "",
-  }));
+  const latestTag = versionRegex ? undefined : result.data["dist-tags"]?.latest;
+  const releases = result.data.time
+    .filter((release) => !latestTag || release.latestRelease === latestTag)
+    .map((release) => ({
+      ...release,
+      releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(result.data.name)}/v/${encodeURIComponent(release.latestRelease)}`,
+      releaseDescription: result.data.versions[release.latestRelease]?.description ?? "",
+    }));
   const matched = getLatestRelease(releases, versionRegex);
-  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
+  if ("noMatch" in matched) return failure({ code: "noMatchingVersion", message: matched.noMatch });
 
   return { success: true, data: matched.release };
 };
@@ -628,6 +804,7 @@ const codebergReleasesSchema = z.array(
     tag_name: z.string(),
     published_at: z.string().transform((value) => new Date(value)),
     url: z.string(),
+    html_url: z.string().optional(),
     body: z.string(),
     prerelease: z.boolean(),
   }),
@@ -651,11 +828,7 @@ const getCodebergReleaseAsync = async (
   token?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed)
-    return {
-      success: false,
-      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
-    };
+  if (!parsed) return failure({ code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` });
 
   const headers: Record<string, string> = {};
   if (token) headers.Authorization = `token ${token}`;
@@ -664,24 +837,28 @@ const getCodebergReleaseAsync = async (
     buildUrl(baseUrl, `/api/v1/repos/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}/releases`),
     headers.Authorization ? { headers } : undefined,
   );
-  if (!response.ok)
-    return {
-      success: false,
-      error: { code: "unexpected", message: `Codeberg ${response.status}: ${response.statusText}` },
-    };
+  if (!response.ok) {
+    return failure({
+      code: getHttpErrorCode(response.status),
+      message: `Codeberg ${response.status}: ${response.statusText}`,
+    });
+  }
 
   const result = codebergReleasesSchema.safeParse(await response.json());
-  if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
+  if (!result.success) return failure({ code: "unexpected", message: result.error.message });
+  if (result.data.length === 0) {
+    return failure({ code: "noReleasesFound", message: `${identifier} has no Codeberg releases` });
+  }
 
   const releases = result.data.map((tag) => ({
     latestRelease: tag.tag_name,
     latestReleaseAt: tag.published_at,
-    releaseUrl: tag.url,
+    releaseUrl: tag.html_url ?? tag.url,
     releaseDescription: tag.body,
     isPreRelease: tag.prerelease,
   }));
   const matched = getLatestRelease(releases, versionRegex);
-  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
+  if ("noMatch" in matched) return failure({ code: "noMatchingVersion", message: matched.noMatch });
 
   const details = await getCodebergDetailsAsync(baseUrl, parsed.owner, parsed.name, token);
   return { success: true, data: { ...details, ...matched.release } };
@@ -717,27 +894,25 @@ const getCodebergDetailsAsync = async (
   };
 };
 
-const linuxServerIOReleasesSchema = z.object({
-  data: z.object({
-    repositories: z.object({
-      linuxserver: z.array(
-        z.object({
-          name: z.string(),
-          initial_date: z
-            .string()
-            .transform((value) => new Date(value))
-            .optional(),
-          github_url: z.string(),
-          description: z.string(),
-          version: z.string(),
-          version_timestamp: z.string().transform((value) => new Date(value)),
-          stars: z.number(),
-          deprecated: z.boolean(),
-          changelog: z.array(z.object({ date: z.string(), desc: z.string() })).optional(),
-        }),
-      ),
-    }),
-  }),
+const linuxServerIOImagesSchema = z.object({
+  data: z.object({ repositories: z.object({ linuxserver: z.array(z.unknown()) }) }),
+});
+
+const linuxServerIOImageNameSchema = z.object({ name: z.string() });
+
+const linuxServerIOImageSchema = z.object({
+  name: z.string(),
+  initial_date: z
+    .string()
+    .transform((value) => new Date(value))
+    .nullish(),
+  github_url: z.string().nullish(),
+  description: z.string().nullish(),
+  version: z.string(),
+  version_timestamp: z.string().transform((value) => new Date(value)),
+  stars: z.number().nullish(),
+  deprecated: z.boolean().nullish(),
+  changelog: z.array(z.object({ date: z.string(), desc: z.string() })).nullish(),
 });
 
 // Parse a github.com project URL (as returned by the LSIO registry) into an
@@ -759,49 +934,46 @@ const getLinuxServerIOReleaseAsync = async (
   versionRegex?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed)
-    return {
-      success: false,
-      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` },
-    };
+  if (!parsed) return failure({ code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/name` });
 
   const response = await fetchProvider(buildUrl(baseUrl, "/api/v1/images"));
-  if (!response.ok)
-    return {
-      success: false,
-      error: { code: "unexpected", message: `LSIO ${response.status}: ${response.statusText}` },
-    };
-
-  const result = linuxServerIOReleasesSchema.safeParse(await response.json());
-  if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
-
-  const release = result.data.data.repositories.linuxserver.find((repo) => repo.name === parsed.name);
-  if (!release)
-    return {
-      success: false,
-      error: { code: "noReleasesFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` },
-    };
-
-  const regex = compileVersionRegex(versionRegex);
-  if (versionRegex && !regex) {
-    return {
-      success: false,
-      error: { code: "noMatchingVersion", message: `Invalid regex: /${versionRegex}/` },
-    };
+  if (!response.ok) {
+    return failure({
+      code: getHttpErrorCode(response.status),
+      message: `LSIO ${response.status}: ${response.statusText}`,
+    });
   }
 
+  const result = linuxServerIOImagesSchema.safeParse(await response.json());
+  if (!result.success) return failure({ code: "unexpected", message: result.error.message });
+
+  const image = result.data.data.repositories.linuxserver.find(
+    (entry) => linuxServerIOImageNameSchema.safeParse(entry).data?.name === parsed.name,
+  );
+  if (!image) {
+    return failure({ code: "notFound", message: `Image "${parsed.name}" not found in LinuxServer.io registry` });
+  }
+  const parsedImage = linuxServerIOImageSchema.safeParse(image);
+  if (!parsedImage.success) return failure({ code: "unexpected", message: parsedImage.error.message });
+  const release = parsedImage.data;
+
+  const imageMetadata = {
+    projectUrl: release.github_url ?? undefined,
+    projectDescription: release.description ?? undefined,
+    isArchived: release.deprecated ?? undefined,
+    starsCount: release.stars ?? undefined,
+  };
+
+  const regex = compileVersionRegex(versionRegex);
   if (!regex || regex.test(release.version)) {
     return {
       success: true,
       data: {
         latestRelease: release.version,
         latestReleaseAt: release.version_timestamp,
-        releaseDescription: release.changelog?.shift()?.desc,
-        projectUrl: release.github_url,
-        projectDescription: release.description,
-        isArchived: release.deprecated,
-        createdAt: release.initial_date,
-        starsCount: release.stars,
+        releaseDescription: release.changelog?.[0]?.desc,
+        createdAt: release.initial_date ?? undefined,
+        ...imageMetadata,
       },
     };
   }
@@ -810,37 +982,32 @@ const getLinuxServerIOReleaseAsync = async (
   // that does not match it cannot surface an older release (#4351). Delegate to
   // the image's GitHub repository to fetch the real release history while
   // keeping LSIO's own image metadata.
-  const githubRepo = parseGithubRepo(release.github_url);
+  const githubRepo = release.github_url ? parseGithubRepo(release.github_url) : null;
   if (githubRepo) {
     const githubResult = await getGithubReleaseAsync(getReleaseProviderDefaultUrl("github"), githubRepo, versionRegex);
-    if (githubResult.success) {
-      return {
-        success: true,
-        data: {
-          ...githubResult.data,
-          projectUrl: release.github_url,
-          projectDescription: release.description,
-          isArchived: release.deprecated,
-          starsCount: release.stars,
-          createdAt: release.initial_date ?? githubResult.data.createdAt,
-        },
-      };
-    }
-    return githubResult;
+    if (!githubResult.success) return githubResult;
+    return {
+      success: true,
+      data: {
+        ...githubResult.data,
+        ...imageMetadata,
+        createdAt: release.initial_date ?? githubResult.data.createdAt,
+      },
+    };
   }
 
-  return {
-    success: false,
-    error: {
-      code: "noMatchingVersion",
-      message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
-    },
-  };
+  return failure({
+    code: "noMatchingVersion",
+    message: `Regex /${versionRegex}/ does not match LSIO version "${release.version}"`,
+  });
 };
 
 const quayReleasesSchema = z.object({
-  description: z.string().optional(),
-  tags: z.record(z.string(), z.object({ name: z.string(), last_modified: z.string() })),
+  description: z.string().nullish(),
+  tags: z.record(
+    z.string(),
+    z.object({ name: z.string(), last_modified: z.string().nullish(), manifest_digest: z.string().nullish() }),
+  ),
 });
 
 const getQuayReleaseAsync = async (
@@ -849,38 +1016,47 @@ const getQuayReleaseAsync = async (
   versionRegex?: string,
 ): Promise<ReleaseResponse> => {
   const parsed = parseOwnerName(identifier);
-  if (!parsed)
-    return {
-      success: false,
-      error: { code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` },
-    };
+  if (!parsed) return failure({ code: "invalidIdentifier", message: `Cannot parse "${identifier}" as owner/repo` });
 
+  const repositoryPath = `${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}`;
   const response = await fetchProvider(
-    buildUrl(
-      baseUrl,
-      `/api/v1/repository/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}?includeTags=true&includeStats=true`,
-    ),
+    buildUrl(baseUrl, `/api/v1/repository/${repositoryPath}?includeTags=true&includeStats=true`),
   );
-  if (!response.ok)
-    return {
-      success: false,
-      error: { code: "unexpected", message: `Quay ${response.status}: ${response.statusText}` },
-    };
+  if (!response.ok) {
+    return failure({
+      code: getHttpErrorCode(response.status),
+      message: `Quay ${response.status}: ${response.statusText}`,
+    });
+  }
 
   const result = quayReleasesSchema.safeParse(await response.json());
-  if (!result.success) return { success: false, error: { code: "unexpected", message: result.error.message } };
+  if (!result.success) return failure({ code: "unexpected", message: result.error.message });
 
-  const releases = Object.values(result.data.tags).reduce<ReleaseProviderResponse[]>((acc, tag) => {
+  const tags = Object.values(result.data.tags).reduce<RegistryTag[]>((acc, tag) => {
     if (!tag.name || !tag.last_modified) return acc;
-    acc.push({
-      latestRelease: tag.name,
-      latestReleaseAt: new Date(tag.last_modified),
-      releaseUrl: `https://quay.io/repository/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.name)}/tag/${encodeURIComponent(tag.name)}`,
-    });
+    acc.push({ name: tag.name, date: new Date(tag.last_modified), digest: tag.manifest_digest ?? undefined });
     return acc;
   }, []);
-  const matched = getLatestRelease(releases, versionRegex);
-  if ("noMatch" in matched) return { success: false, error: { code: "noMatchingVersion", message: matched.noMatch } };
+  if (tags.length === 0) return failure({ code: "noReleasesFound", message: `${identifier} has no tags` });
 
-  return { success: true, data: { projectDescription: result.data.description, ...matched.release } };
+  const selected = selectRegistryTag(tags, compileVersionRegex(versionRegex));
+  if (!selected) {
+    return failure({
+      code: "noMatchingVersion",
+      message: describeNoMatch(
+        tags.map((tag) => tag.name),
+        versionRegex,
+      ),
+    });
+  }
+
+  return {
+    success: true,
+    data: {
+      projectUrl: `https://quay.io/repository/${repositoryPath}`,
+      projectDescription: result.data.description ?? undefined,
+      releaseUrl: `https://quay.io/repository/${repositoryPath}/tag/${encodeURIComponent(selected.latestRelease)}`,
+      ...selected,
+    },
+  };
 };

@@ -1,7 +1,7 @@
 interface Options<TData, TInput extends Record<string, unknown>> {
   requestAsync: (input: TInput, signal: AbortSignal) => Promise<TData>;
   getCacheKey?: (input: TInput) => string;
-  cacheTtlMs?: number;
+  cacheTtlMs?: number | ((data: TData) => number);
   fallbackToStaleOnError?: boolean;
   staleIfErrorTtlMs?: number;
   requestTimeoutMs?: number;
@@ -255,10 +255,13 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
         const deadlineAt = Date.now() + requestTimeoutMs;
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
+        const isCacheEnabled = typeof ttl === "function" || ttl > 0;
         const baseKey = options.getCacheKey?.(input) ?? JSON.stringify(input);
         const requestGeneration = generation;
         let sharedCache: SharedCacheAdapter<TData> | undefined;
-        const sharedCacheResolution = ttl > 0 ? resolveSharedCacheAsync(input, baseKey, requestGeneration) : undefined;
+        const sharedCacheResolution = isCacheEnabled
+          ? resolveSharedCacheAsync(input, baseKey, requestGeneration)
+          : undefined;
         if (sharedCacheResolution) {
           sharedCache = await sharedCacheResolution;
           throwIfDeadlineExceeded(deadlineAt);
@@ -329,16 +332,17 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             upstreamSettledAsync = request.settledAsync;
             const data = await request.resultAsync;
             const completedAt = Date.now();
+            const entryTtlMs = typeof ttl === "function" ? ttl(data) : ttl;
             const staleIfErrorTtlMs = options.fallbackToStaleOnError
               ? Math.max(0, options.staleIfErrorTtlMs ?? DEFAULT_STALE_IF_ERROR_TTL_MS)
               : 0;
             const entry: CacheEntry<TData> = {
               data,
               timestamp: new Date(completedAt),
-              expiresAt: completedAt + ttl,
-              staleUntil: completedAt + ttl + staleIfErrorTtlMs,
+              expiresAt: completedAt + entryTtlMs,
+              staleUntil: completedAt + entryTtlMs + staleIfErrorTtlMs,
             };
-            if (ttl > 0) {
+            if (entryTtlMs > 0) {
               let canStoreInMemory = true;
               if (sharedCache?.isShared) {
                 canStoreInMemory = false;

@@ -73,7 +73,7 @@ describe("getLatestMatchingReleaseAsync for GitHub Container Registry", () => {
     expect(new URL(mockedFetch.mock.calls[0]?.[0].toString() ?? "").searchParams.get("service")).toBe(
       "registry.example.com",
     );
-    expectUrl(1, "https://registry.example.com/v2/homarr-labs/homarr/tags/list");
+    expectUrl(1, "https://registry.example.com/v2/homarr-labs/homarr/manifests/latest");
   });
 
   test("chooses the newest matching version tag", async () => {
@@ -242,7 +242,7 @@ describe("getLatestMatchingReleaseAsync for LinuxServer.io", () => {
 
     expect(result).toEqual({
       success: false,
-      error: expect.objectContaining({ code: "unexpected", message: expect.stringContaining("GitHub unavailable") }),
+      error: expect.objectContaining({ code: "notFound", message: expect.stringContaining("GitHub unavailable") }),
     });
     expect(mockedFetch.mock.calls.length).toBeGreaterThan(1);
   });

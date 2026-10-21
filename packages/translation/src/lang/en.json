@@ -4877,6 +4877,8 @@
           "noReleasesFound": "No releases found",
           "noProviderSelected": "No provider selected",
           "noProviderResponse": "No response from provider",
+          "notFound": "Repository or image not found",
+          "rateLimited": "Rate limited by the provider. Add a token in the widget settings",
           "unexpected": "Unexpected provider error"
         }
       },
