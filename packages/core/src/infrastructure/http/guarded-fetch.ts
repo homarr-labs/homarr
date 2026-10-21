@@ -2,7 +2,7 @@ import { lookup } from "node:dns/promises";
 import type { LookupFunction } from "node:net";
 import { BlockList, isIP } from "node:net";
 
-import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "./request";
 
 type FetchResponse = Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
 type Dispatcher = Awaited<ReturnType<typeof createCertificateAgentAsync>>;

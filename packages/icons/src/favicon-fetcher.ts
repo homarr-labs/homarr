@@ -1,7 +1,6 @@
 import type { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { cancelBodyAsync, fetchGuardedAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-
-import { cancelBodyAsync, fetchGuardedAsync } from "./guarded-fetch";
 
 const logger = createLogger({ module: "faviconFetcher" });
 

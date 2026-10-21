@@ -3,12 +3,15 @@ import { lookup } from "node:dns/promises";
 import type { LookupAddress } from "node:dns";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { createCertificateAgentAsync, fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import {
+  createCertificateAgentAsync,
+  fetchWithTrustedCertificatesAsync,
+} from "@homarr/core/infrastructure/http/request";
 
 import { fetchFaviconUrlAsync } from "../favicon-fetcher";
 
 vi.mock("node:dns/promises", () => ({ lookup: vi.fn() }));
-vi.mock("@homarr/core/infrastructure/http", () => ({
+vi.mock("@homarr/core/infrastructure/http/request", () => ({
   createCertificateAgentAsync: vi.fn(),
   fetchWithTrustedCertificatesAsync: vi.fn(),
 }));

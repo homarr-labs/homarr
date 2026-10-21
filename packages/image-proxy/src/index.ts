@@ -4,7 +4,7 @@ import { setImmediate } from "node:timers/promises";
 import { createId, formatBytes } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret, readBoundedResponseAsync } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { cancelBodyAsync, fetchGuardedAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel } from "@homarr/redis";
@@ -100,36 +100,43 @@ export class ImageProxy {
     );
     try {
       signal.throwIfAborted();
-      const response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
-        headers: urlAndHeaders.headers ?? {},
-        signal,
-      });
+      // The stored url was accepted at registration time, but its address can change by the
+      // time it is actually fetched here (DNS rebinding) or point somewhere unsafe that was
+      // never checked at all, such as a page-declared icon url. fetchGuardedAsync re-resolves
+      // and re-checks the address of every hop, including redirects, immediately before
+      // connecting, while still allowing the private network addresses self hosted
+      // integrations intentionally proxy through here.
+      return await fetchGuardedAsync(
+        new URL(urlAndHeaders.url),
+        { headers: urlAndHeaders.headers ?? {}, timeout: IMAGE_PROXY_TIMEOUT_MS, signal },
+        async (response) => {
+          if (!response.ok) {
+            await cancelBodyAsync(response);
+            logger.error(
+              new ErrorWithMetadata("Failed to fetch image", {
+                id,
+                url: this.redactUrl(urlAndHeaders.url),
+                headers: this.redactHeaders(urlAndHeaders.headers),
+                proxyUrl,
+                statusCode: response.status,
+              }),
+            );
+            return { error: "upstream-error", statusCode: response.status };
+          }
 
-      if (!response.ok) {
-        void response.body?.cancel().catch(() => undefined);
-        logger.error(
-          new ErrorWithMetadata("Failed to fetch image", {
+          const body = await readBoundedResponseAsync(response, IMAGE_PROXY_MAX_BYTES, "Image", signal);
+          const image = body?.buffer ?? new ArrayBuffer(0);
+          logger.debug("Forwarding image succeeded", {
             id,
             url: this.redactUrl(urlAndHeaders.url),
             headers: this.redactHeaders(urlAndHeaders.headers),
             proxyUrl,
-            statusCode: response.status,
-          }),
-        );
-        return { error: "upstream-error", statusCode: response.status };
-      }
+            size: formatBytes(image.byteLength),
+          });
 
-      const body = await readBoundedResponseAsync(response, IMAGE_PROXY_MAX_BYTES, "Image", signal);
-      const image = body?.buffer ?? new ArrayBuffer(0);
-      logger.debug("Forwarding image succeeded", {
-        id,
-        url: this.redactUrl(urlAndHeaders.url),
-        headers: this.redactHeaders(urlAndHeaders.headers),
-        proxyUrl,
-        size: formatBytes(image.byteLength),
-      });
-
-      return { image, contentType: response.headers.get("content-type") };
+          return { image, contentType: response.headers.get("content-type") };
+        },
+      );
     } catch (error) {
       logger.error(
         new ErrorWithMetadata(
