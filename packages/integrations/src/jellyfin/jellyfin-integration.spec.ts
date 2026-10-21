@@ -82,18 +82,34 @@ describe("getMediaReleaseTitle", () => {
 
 describe("formatEpisodeSubtitle", () => {
   test("combines the season and episode number with the episode name", () => {
-    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Ozymandias", ParentIndexNumber: 5, IndexNumber: 14 })).toBe(
-      "S05E14 – Ozymandias",
-    );
+    expect(
+      formatEpisodeSubtitle({
+        Type: "Episode",
+        Name: "Ozymandias",
+        SeriesName: "Breaking Bad",
+        ParentIndexNumber: 5,
+        IndexNumber: 14,
+      }),
+    ).toBe("S05E14 – Ozymandias");
   });
 
   test("pads season and episode numbers to two digits", () => {
-    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot", ParentIndexNumber: 1, IndexNumber: 3 })).toBe(
-      "S01E03 – Pilot",
-    );
+    expect(
+      formatEpisodeSubtitle({
+        Type: "Episode",
+        Name: "Pilot",
+        SeriesName: "Breaking Bad",
+        ParentIndexNumber: 1,
+        IndexNumber: 3,
+      }),
+    ).toBe("S01E03 – Pilot");
   });
 
   test("falls back to the episode name when the numbers are missing", () => {
-    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot" })).toBe("Pilot");
+    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot", SeriesName: "Breaking Bad" })).toBe("Pilot");
+  });
+
+  test("keeps the tagline when the series name is missing", () => {
+    expect(formatEpisodeSubtitle({ Type: "Episode", Name: "Pilot", Taglines: ["A tagline"] })).toBe("A tagline");
   });
 });

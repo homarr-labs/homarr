@@ -72,6 +72,8 @@ export const getMediaReleaseTitle = (item: BaseItemDto): string => {
 };
 
 export const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => {
+  // Without a series name the title stays the item name, so the previous tagline is kept as the subtitle.
+  if (!item.SeriesName) return item.Taglines?.at(0);
   const name = item.Name ?? item.EpisodeTitle ?? "";
   const season = item.ParentIndexNumber;
   const episode = item.IndexNumber;
