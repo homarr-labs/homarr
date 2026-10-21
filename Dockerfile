@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.25
 
-FROM oven/bun:1.4.2-alpine AS bun-tool
+FROM oven/bun:1.4.3-alpine AS bun-tool
 
 FROM node:24.22.1-alpine AS base
 
