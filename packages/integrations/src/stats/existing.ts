@@ -5,6 +5,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import type { IntegrationInput } from "../base/integration";
 import { createIntegrationAsync } from "../factory";
+import { getUniqueUptimeKumaMonitors, summarizeUptimeKumaMonitors } from "../uptime-kuma/uptime-kuma-summary";
 import type { StatsMetric, StatsUnit, StatsValue } from "./types";
 
 export interface ExistingStatsProvider {
@@ -48,6 +49,22 @@ export const existingStatsProviders: Partial<Record<IntegrationKind, ExistingSta
     ],
     (client) => client.getStatsAsync(),
     (data) => ({ ...data }),
+  ),
+  thingport: adapter(
+    "thingport",
+    [
+      metric("modelCount", "Models"),
+      metric("collectionCount", "Collections"),
+      metric("categoryCount", "Categories"),
+      metric("authorCount", "Authors"),
+    ],
+    (client) => client.getLibraryStatsAsync(),
+    ({ modelCount, collectionCount, categoryCount, authorCount }) => ({
+      modelCount,
+      collectionCount,
+      categoryCount,
+      authorCount,
+    }),
   ),
   navidrome: adapter(
     "navidrome",
@@ -185,11 +202,15 @@ for (const kind of ["jellyseerr", "seerr", "overseerr"] as const) {
     ({ pending, approved, available, processing }) => ({ pending, approved, available, processing }),
   );
 }
-for (const kind of ["sonarr", "radarr"] as const) {
+for (const kind of ["sonarr", "sportarr", "radarr"] as const) {
   const libraryMetric = metric("movies", "Movies");
   if (kind === "sonarr") {
     libraryMetric.key = "shows";
     libraryMetric.label = "Shows";
+  }
+  if (kind === "sportarr") {
+    libraryMetric.key = "shows";
+    libraryMetric.label = "Leagues";
   }
   const metrics = [
     libraryMetric,
@@ -202,6 +223,10 @@ for (const kind of ["sonarr", "radarr"] as const) {
   if (kind === "sonarr") {
     metrics[2] = metric("downloaded", "Downloaded episodes");
     metrics.push(metric("episodes", "Episodes"));
+  }
+  if (kind === "sportarr") {
+    metrics[2] = metric("downloaded", "Downloaded events");
+    metrics.push(metric("episodes", "Events"));
   }
   existingStatsProviders[kind] = adapter(
     kind,
@@ -293,15 +318,24 @@ existingStatsProviders.uptimeKuma = adapter(
     metric("totalMonitors", "Monitors"),
     metric("upCount", "Up"),
     metric("downCount", "Down"),
+    metric("pendingCount", "Pending"),
+    metric("maintenanceCount", "Maintenance"),
+    metric("staleCount", "No recent data"),
     metric("averageUptimePercent", "Average uptime", "percent"),
   ],
-  (client) => client.getDashboardDataAsync(),
-  ({ totalMonitors, upCount, downCount, averageUptimePercent }) => ({
-    totalMonitors,
-    upCount,
-    downCount,
-    averageUptimePercent,
-  }),
+  (client) => client.getStatusPageAsync(),
+  (statusPage) => {
+    const summary = summarizeUptimeKumaMonitors(getUniqueUptimeKumaMonitors(statusPage.groups));
+    return {
+      totalMonitors: summary.total,
+      upCount: summary.counts.up,
+      downCount: summary.counts.down,
+      pendingCount: summary.counts.pending,
+      maintenanceCount: summary.counts.maintenance,
+      staleCount: summary.counts.stale,
+      averageUptimePercent: summary.averageUptime24h,
+    };
+  },
 );
 existingStatsProviders.tdarr = adapter(
   "tdarr",
@@ -419,6 +453,33 @@ for (const kind of ["lidarr", "readarr"] as const) {
     (data) => data,
   );
 }
+existingStatsProviders.wazuh = adapter(
+  "wazuh",
+  [
+    metric("agents", "Agents"),
+    metric("activeAgents", "Active agents"),
+    metric("disconnectedAgents", "Disconnected agents"),
+    metric("alerts24h", "Alerts (24h)"),
+    metric("highAlerts24h", "High alerts (24h)"),
+    metric("criticalAlerts24h", "Critical alerts (24h)"),
+  ],
+  async (client) => {
+    const [agents, summary] = await Promise.all([
+      client.getAgentsOverviewAsync(),
+      // Alert counts need the indexer; agent counts still work with server API credentials only.
+      client.getSecuritySummaryAsync({ range: "24h" }).catch(() => null),
+    ]);
+    return { agents: agents.counts, alerts: summary?.alerts ?? null };
+  },
+  ({ agents, alerts }) => ({
+    agents: agents.total,
+    activeAgents: agents.active,
+    disconnectedAgents: agents.disconnected,
+    alerts24h: alerts?.total ?? null,
+    highAlerts24h: alerts?.high ?? null,
+    criticalAlerts24h: alerts?.critical ?? null,
+  }),
+);
 existingStatsProviders.mock = {
   metrics: [metric("documents", "Documents"), metric("songs", "Songs"), metric("storage", "Storage", "bytes")],
   async fetchAsync() {

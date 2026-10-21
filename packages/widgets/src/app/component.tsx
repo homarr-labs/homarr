@@ -12,7 +12,7 @@ import { useSettings } from "@homarr/settings";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
@@ -34,7 +34,7 @@ export default function AppWidget({
     enabled: Boolean(options.appId),
   });
   const app = getUsableWidgetQueryData(appQuery);
-  const href = getSafeAppHref(app?.href);
+  const href = app?.href ?? undefined;
 
   if (!options.appId) return <WidgetEmptyState />;
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;

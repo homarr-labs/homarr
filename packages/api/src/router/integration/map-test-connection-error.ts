@@ -64,6 +64,7 @@ type MappedData<TType extends TestConnectionErrorType> = TType extends "unknown"
         type: TestConnectionErrorDataOfType<TType>["requestError"]["type"];
         reason: TestConnectionErrorDataOfType<TType>["requestError"]["reason"];
         certificate: MappedCertificate;
+        url: TestConnectionErrorDataOfType<TType>["url"];
       }
     : TType extends "request"
       ? {
@@ -95,6 +96,7 @@ const mapData = (error: AnyTestConnectionError): AnyMappedData => {
       type: error.data.requestError.type,
       reason: error.data.requestError.reason,
       certificate: mapCertificate(error.data.certificate, error.data.requestError.code),
+      url: error.data.url,
     };
   }
   if (error.type === "request") {

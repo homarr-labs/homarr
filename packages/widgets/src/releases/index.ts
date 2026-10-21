@@ -51,6 +51,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         defaultValue: 0,
         validate: z.number().min(0),
       }),
+      hiddenDockerSuggestions: factory.internal({ defaultValue: [] as string[] }),
       repositories: factory.multiReleasesRepositories({
         defaultValue: [
           {
@@ -86,7 +87,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
 })
   .withData({
     mode: "queries",
-    queries: ({ integrationIds, options, itemId }) => {
+    queries: ({ integrationIds, options, itemId, board }) => {
       const repositories = normalizeReleasesRepositories(options.repositories);
       const linked = getReleasesLinkedIntegrationIds(integrationIds, repositories);
       return {
@@ -96,7 +97,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
           { enabled: linked.length > 0 },
         ),
         latest: getReleasesLatestInputs(itemId, repositories).map((input) =>
-          widgetQuery("widget.releases.getLatest", input),
+          widgetQuery("widget.releases.getLatest", { ...input, boardId: board?.id }),
         ),
       };
     },

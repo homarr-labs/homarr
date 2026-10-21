@@ -1,21 +1,27 @@
 import { removeTrailingSlash } from "@homarr/common";
+import { FetchHttpErrorHandler } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import type { fetch as undiciFetch } from "undici";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { IntegrationRequestError } from "../base/errors/http/integration-request-error";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IntegrationHttpAuthentication } from "../http-auth";
+import type { Notification } from "../interfaces/notifications/notification-types";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import { WazuhRequestError } from "./wazuh-errors";
 import type { KeyedBucket, SeverityRangeResult } from "./wazuh-queries";
 import {
   alertSourceFields,
   authFailureQuery,
   bruteForceQuery,
+  createAlertDashboardUrl,
+  formatAlertNotificationBody,
   getTotalHits,
   mapAlertHit,
   normalizeAgentStatus,
@@ -64,6 +70,10 @@ const TOKEN_TTL_SECONDS = 600;
 const MONITORING_SNAPSHOT_WINDOW_MS = 5 * 60 * 1000;
 /** Upper bound for agent lists; larger fleets should use the Wazuh dashboard. */
 const MAX_AGENTS = 1000;
+/** Matches Wazuh's default email_alert_level: the notifications widget lists what Wazuh would send as email. */
+const NOTIFICATION_MIN_LEVEL = 12;
+const NOTIFICATION_WINDOW_HOURS = 24;
+const NOTIFICATION_LIMIT = 25;
 
 interface WazuhSession {
   token: string;
@@ -85,10 +95,12 @@ const findWazuhRequestError = (error: unknown): WazuhRequestError | null => {
   return null;
 };
 
+const fetchHttpErrorHandler = new FetchHttpErrorHandler();
+
 const basicAuth = (username: string, password: string) =>
   `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
 
-export class WazuhIntegration extends Integration {
+export class WazuhIntegration extends Integration implements INotificationsIntegration {
   private readonly sessionStore: SessionStore<WazuhSession>;
 
   constructor(integration: IntegrationInput) {
@@ -416,6 +428,26 @@ export class WazuhIntegration extends Integration {
     });
 
     return response.hits.hits.map(mapAlertHit);
+  }
+
+  /**
+   * High and critical alerts of the last 24 hours for the notifications widget. Needs the indexer, like all alerts.
+   */
+  public async getNotificationsAsync(): Promise<Notification[]> {
+    const alerts = await this.getRecentAlertsAsync({
+      minLevel: NOTIFICATION_MIN_LEVEL,
+      limit: NOTIFICATION_LIMIT,
+      hours: NOTIFICATION_WINDOW_HOURS,
+    });
+    const dashboardUrl = this.getDashboardUrl();
+
+    return alerts.map((alert) => ({
+      id: alert.id,
+      time: new Date(alert.timestamp),
+      title: alert.description || `Wazuh rule ${alert.ruleId ?? "alert"}`,
+      body: formatAlertNotificationBody(alert),
+      href: dashboardUrl ? createAlertDashboardUrl(dashboardUrl, alert) : undefined,
+    }));
   }
 
   public async getAlertTimelineAsync(input: {
@@ -922,11 +954,15 @@ export class WazuhIntegration extends Integration {
       const error = findWazuhRequestError(thrown) ?? thrown;
       if (error instanceof WazuhRequestError) {
         if (error.reason === "unauthorized") return TestConnectionError.UnauthorizedResult(error.status ?? 401);
+        const url = error.target === "indexer" ? (indexer?.url ?? this.integration.url) : this.integration.url;
         if (error.reason === "status" && error.status !== undefined) {
-          const url = error.target === "indexer" ? (indexer?.url ?? this.integration.url) : this.integration.url;
           return TestConnectionError.StatusResult({ status: error.status, url });
         }
-        // Rethrow the original fetch error so the shared test-connection flow can offer certificate trust.
+        // Report TLS and network failures with the URL of the endpoint that failed. The shared test-connection
+        // flow then reads and offers to trust the certificate of that endpoint (API or indexer), not always the
+        // certificate of the integration URL.
+        const requestError = fetchHttpErrorHandler.handleRequestError(error.cause);
+        if (requestError) throw new IntegrationRequestError(this.publicIntegration, { cause: requestError, url });
         if (error.cause !== undefined) throw error.cause;
       }
       throw error;

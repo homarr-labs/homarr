@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Zobraziť nemonitorované"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# udalosť} few {# udalosti} many {# udalostí} other {# udalostí}}",
         "loading": "Načítavajú sa udalosti kalendára...",
         "noEvents": "Tento mesiac nemá žiadne udalosti"
+      },
+      "view": {
+        "compact": "",
+        "month": "mesiac",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {

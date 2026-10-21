@@ -40,6 +40,10 @@ import type * as networkControllerSummary from "./network-controller/summary";
 import type * as notebook from "./notebook";
 import type * as notifications from "./notifications";
 import type * as paperlessNgx from "./paperless-ngx";
+import type * as thingportLibraryStats from "./thingport/library-stats";
+import type * as thingportModels from "./thingport/models";
+import type * as thingportFeaturedModel from "./thingport/featured-model";
+import type * as thingportActivityHeatmap from "./thingport/activity-heatmap";
 import type * as patchmon from "./patchmon";
 import type * as releases from "./releases";
 import type * as rssFeed from "./rssFeed";
@@ -59,16 +63,9 @@ import type * as uptimeKuma from "./uptime-kuma";
 import type * as video from "./video";
 import type * as vpn from "./vpn";
 import type * as weather from "./weather";
+import type * as wazuh from "./wazuh";
 import type * as wud from "./wud";
 import type * as llamacpp from "./llama-cpp";
-import type * as wazuhAgents from "./wazuh-agents";
-import type * as wazuhAlerts from "./wazuh-alerts";
-import type * as wazuhSummary from "./wazuh-summary";
-import type * as wazuhTimeline from "./wazuh-timeline";
-import type * as wazuhTopList from "./wazuh-top-list";
-import type * as wazuhVulnerabilities from "./wazuh-vulnerabilities";
-import type * as wazuhFim from "./wazuh-fim";
-import type * as wazuhAuthFailures from "./wazuh-auth-failures";
 
 // Keep these imports explicit so Next.js and Turbopack can discover every widget
 // module without loading any widget definition or component eagerly.
@@ -117,6 +114,10 @@ export const widgetModuleLoaders = {
   "immich-albumCarousel": () => import("./immich/album-carousel"),
   stats: () => import("./stats"),
   paperlessNgx: () => import("./paperless-ngx"),
+  "thingport-libraryStats": () => import("./thingport/library-stats"),
+  "thingport-models": () => import("./thingport/models"),
+  "thingport-featuredModel": () => import("./thingport/featured-model"),
+  "thingport-activityHeatmap": () => import("./thingport/activity-heatmap"),
   patchmon: () => import("./patchmon"),
   tracearr: () => import("./tracearr"),
   speedtestTracker: () => import("./speedtest-tracker"),
@@ -134,14 +135,7 @@ export const widgetModuleLoaders = {
   weather: () => import("./weather"),
   wud: () => import("./wud"),
   llamacpp: () => import("./llama-cpp"),
-  wazuhAgents: () => import("./wazuh-agents"),
-  wazuhAlerts: () => import("./wazuh-alerts"),
-  wazuhSummary: () => import("./wazuh-summary"),
-  wazuhTimeline: () => import("./wazuh-timeline"),
-  wazuhTopList: () => import("./wazuh-top-list"),
-  wazuhVulnerabilities: () => import("./wazuh-vulnerabilities"),
-  wazuhFim: () => import("./wazuh-fim"),
-  wazuhAuthFailures: () => import("./wazuh-auth-failures"),
+  wazuh: () => import("./wazuh"),
 } satisfies { [TKind in WidgetKind]: () => Promise<WidgetImports[TKind]> };
 
 export type WidgetImports = {
@@ -189,6 +183,10 @@ export type WidgetImports = {
   "immich-albumCarousel": typeof immichAlbumCarousel;
   stats: typeof stats;
   paperlessNgx: typeof paperlessNgx;
+  "thingport-libraryStats": typeof thingportLibraryStats;
+  "thingport-models": typeof thingportModels;
+  "thingport-featuredModel": typeof thingportFeaturedModel;
+  "thingport-activityHeatmap": typeof thingportActivityHeatmap;
   patchmon: typeof patchmon;
   tracearr: typeof tracearr;
   speedtestTracker: typeof speedtestTracker;
@@ -206,14 +204,7 @@ export type WidgetImports = {
   weather: typeof weather;
   wud: typeof wud;
   llamacpp: typeof llamacpp;
-  wazuhAgents: typeof wazuhAgents;
-  wazuhAlerts: typeof wazuhAlerts;
-  wazuhSummary: typeof wazuhSummary;
-  wazuhTimeline: typeof wazuhTimeline;
-  wazuhTopList: typeof wazuhTopList;
-  wazuhVulnerabilities: typeof wazuhVulnerabilities;
-  wazuhFim: typeof wazuhFim;
-  wazuhAuthFailures: typeof wazuhAuthFailures;
+  wazuh: typeof wazuh;
 };
 
 type WidgetComponentLoaders = {
@@ -268,6 +259,10 @@ export const widgetComponentLoaders = {
   "immich-albumCarousel": () => import("./immich/album-carousel/component"),
   stats: () => import("./stats/component"),
   paperlessNgx: () => import("./paperless-ngx/component"),
+  "thingport-libraryStats": () => import("./thingport/library-stats/component"),
+  "thingport-models": () => import("./thingport/models/component"),
+  "thingport-featuredModel": () => import("./thingport/featured-model/component"),
+  "thingport-activityHeatmap": () => import("./thingport/activity-heatmap/component"),
   patchmon: () => import("./patchmon/component"),
   tracearr: () => import("./tracearr/component"),
   speedtestTracker: () => import("./speedtest-tracker/component"),
@@ -285,14 +280,7 @@ export const widgetComponentLoaders = {
   weather: () => import("./weather/component"),
   wud: () => import("./wud/component"),
   llamacpp: () => import("./llama-cpp/component"),
-  wazuhAgents: () => import("./wazuh-agents/component"),
-  wazuhAlerts: () => import("./wazuh-alerts/component"),
-  wazuhSummary: () => import("./wazuh-summary/component"),
-  wazuhTimeline: () => import("./wazuh-timeline/component"),
-  wazuhTopList: () => import("./wazuh-top-list/component"),
-  wazuhVulnerabilities: () => import("./wazuh-vulnerabilities/component"),
-  wazuhFim: () => import("./wazuh-fim/component"),
-  wazuhAuthFailures: () => import("./wazuh-auth-failures/component"),
+  wazuh: () => import("./wazuh/component"),
 } satisfies WidgetComponentLoaders;
 
 export type WidgetImportKey = keyof WidgetImports;

@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Prikaži stavke bez nadzora"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# događaj} few {# događaja} other {# događaja}}",
         "loading": "Učitavanje događaja kalendara...",
         "noEvents": "Nema događaja u ovom mjesecu"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {

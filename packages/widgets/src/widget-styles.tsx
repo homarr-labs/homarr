@@ -72,14 +72,11 @@ const widgetStyles = {
   weather: dynamic(() => import("./weather/component").then(() => NoStyles)),
   wud: dynamic(() => import("./wud/component").then(() => NoStyles)),
   llamacpp: dynamic(() => import("./llama-cpp/component").then(() => NoStyles)),
-  wazuhAgents: dynamic(() => import("./wazuh-agents/component").then(() => NoStyles)),
-  wazuhAlerts: dynamic(() => import("./wazuh-alerts/component").then(() => NoStyles)),
-  wazuhSummary: dynamic(() => import("./wazuh-summary/component").then(() => NoStyles)),
-  wazuhTimeline: dynamic(() => import("./wazuh-timeline/component").then(() => NoStyles)),
-  wazuhTopList: dynamic(() => import("./wazuh-top-list/component").then(() => NoStyles)),
-  wazuhVulnerabilities: dynamic(() => import("./wazuh-vulnerabilities/component").then(() => NoStyles)),
-  wazuhFim: dynamic(() => import("./wazuh-fim/component").then(() => NoStyles)),
-  wazuhAuthFailures: dynamic(() => import("./wazuh-auth-failures/component").then(() => NoStyles)),
+  wazuh: dynamic(() => import("./wazuh/component").then(() => NoStyles)),
+  "thingport-libraryStats": dynamic(() => import("./thingport/library-stats/component").then(() => NoStyles)),
+  "thingport-models": dynamic(() => import("./thingport/models/component").then(() => NoStyles)),
+  "thingport-featuredModel": dynamic(() => import("./thingport/featured-model/component").then(() => NoStyles)),
+  "thingport-activityHeatmap": dynamic(() => import("./thingport/activity-heatmap/component").then(() => NoStyles)),
 } satisfies Record<WidgetKind, ComponentType>;
 
 export const WidgetStyles = ({ kinds }: { kinds: WidgetKind[] }) => {

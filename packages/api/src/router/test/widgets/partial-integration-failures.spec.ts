@@ -16,7 +16,7 @@ import type {
   TracearrDashboardData,
   TraefikDashboardData,
   UpsSummary,
-  UptimeKumaDashboardData,
+  UptimeKumaStatusPage,
 } from "@homarr/integrations/types";
 import type * as MediaRequestListHandlerModule from "@homarr/request-handler/media-request-list";
 
@@ -235,13 +235,12 @@ vi.mock("@homarr/request-handler/uptime-kuma", () => ({
   uptimeKumaRequestHandler: {
     handler: (integration: { name: string }) =>
       createHandler(integration, {
-        totalMonitors: 1,
-        upCount: 1,
-        downCount: 0,
-        pausedCount: 0,
-        averageUptimePercent: 100,
-        monitors: [{ id: 1, name: "Healthy monitor", status: "up", uptimePercent24h: 100 }],
-      } satisfies UptimeKumaDashboardData),
+        title: "Healthy status page",
+        url: "https://kuma.example.com/status/default",
+        incidents: [],
+        maintenances: [],
+        groups: [{ id: 1, name: "Services", monitors: [] }],
+      } satisfies UptimeKumaStatusPage),
   },
 }));
 
@@ -364,12 +363,12 @@ const dashboardPartialFailureCases = [
   },
   {
     kind: "uptimeKuma" as const,
-    payloadKey: "dashboard",
+    payloadKey: "statusPage",
     fallbackValue: null,
     run: async (setup: IntegrationSetup) =>
       await uptimeKumaRouter
         .createCaller({ db: setup.db, deviceType: undefined, session: setup.session })
-        .getDashboard({ integrationIds: setup.integrationIds }),
+        .getStatusPages({ integrationIds: setup.integrationIds }),
   },
 ] as const;
 

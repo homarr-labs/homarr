@@ -19,6 +19,8 @@ import { useRemoteQuery } from "../../lib/remote-query";
 
 type SearchEngine = RouterOutputs["searchEngine"]["catalog"][number];
 type FromIntegrationSearchResult = RouterOutputs["integration"]["searchInIntegration"][number];
+// Only the media request integrations (Overseerr, Jellyseerr, Seerr) send a media type with their results.
+type MediaSearchResult = Extract<FromIntegrationSearchResult, { type: unknown }>;
 type DuckDuckGoBang = RouterOutputs["bangs"]["search"][number];
 
 type ExternalOption =
@@ -72,7 +74,7 @@ type MediaRequestChildrenProps = {
 
 export const useMediaRequestSearchInteraction = (
   integration: MediaRequestChildrenProps["integration"],
-  searchResult: FromIntegrationSearchResult,
+  searchResult: MediaSearchResult,
 ): inferSearchInteractionDefinition<"link" | "children"> => {
   const { openSearchInNewTab } = useSettings();
 

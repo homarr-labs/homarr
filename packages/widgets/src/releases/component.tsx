@@ -115,8 +115,8 @@ export default function ReleasesWidget({
   );
 
   const queries = useMemo(
-    () => definition.data.queries({ options, integrationIds, itemId }),
-    [options, integrationIds, itemId],
+    () => definition.data.queries({ options, integrationIds, itemId, board }),
+    [options, integrationIds, itemId, board],
   );
   const latestInputs = queries.latest.map(({ input }) => input);
 

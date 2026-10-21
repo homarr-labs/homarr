@@ -3221,6 +3221,9 @@
         },
         "showUnmonitored": {
           "label": "Rodyti nestebimus"
+        },
+        "viewMode": {
+          "label": ""
         }
       },
       "advanced": {
@@ -3229,6 +3232,26 @@
         "eventCount": "{count, plural, one {# įvykis} few {# įvykiai} many {# įvykių} other {# įvykio}}",
         "loading": "Įkeliami kalendoriaus įvykiai...",
         "noEvents": "Šį mėnesį įvykių nėra"
+      },
+      "view": {
+        "compact": "",
+        "month": "",
+        "week": "",
+        "day": "",
+        "agenda": ""
+      },
+      "controls": {
+        "view": "",
+        "today": "",
+        "previous": "",
+        "next": "",
+        "noEvents": "",
+        "more": "",
+        "moreLabel": "",
+        "eventDetails": "",
+        "close": "",
+        "timeSlot": "",
+        "weekday": ""
       }
     },
     "weather": {

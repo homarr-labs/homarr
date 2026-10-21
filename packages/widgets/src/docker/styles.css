@@ -3,3 +3,21 @@
   --mantine-datatable-background-color: transparent !important;
   --mantine-datatable-striped-color: transparent !important;
 }
+
+/* border-collapse drops a border on the sticky header, so the line is an inset
+   shadow. The opaque fill replaces the shared backdrop-filter, which blanks
+   row paint in Mac Chrome. Scoped to this table; scroll shadows stay. */
+.homarr-data-table.docker-table .mantine-datatable-header th {
+  border-bottom: none;
+  box-shadow: inset 0 -1px 0 var(--mantine-color-default-border);
+}
+
+.homarr-data-table.docker-table th {
+  background:
+    linear-gradient(
+      var(--background-color, var(--mantine-color-body)),
+      var(--background-color, var(--mantine-color-body))
+    ),
+    var(--mantine-color-body) !important;
+  backdrop-filter: none;
+}

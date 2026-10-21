@@ -25,7 +25,7 @@ export interface WidgetDataContext<TOptions = Record<string, unknown>> {
   integrationIds: string[];
   itemId?: string;
   displayMode?: "compact" | "advanced";
-  board?: { disableStatus: boolean };
+  board?: { id?: string; disableStatus: boolean };
   settings?: Pick<SettingsContextProps, "forceDisableStatus">;
 }
 
