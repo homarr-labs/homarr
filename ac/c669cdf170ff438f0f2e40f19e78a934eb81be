@@ -1,0 +1,155 @@
+packages/request-handler/src/lib/request-handler.ts
+  s_b33778671a3872::t_bae7acf672d122 4,258,262-264,335,342-343,345
+packages/request-handler/src/release-providers.ts
+  s_2093a02ff72221::t_42680c9b710917 38,46,51-81,91-166,203-206,244-245,250,259,263,271,275,288,290,295,299,302,320,335,340-342,365-377,381-386,389-410,412-413,415,417,422-434,437-447,451-458,460-461,463-472,474-482,485-492,494-528,530-550,553-556,558-562,569-574,583-584,586-588,590-603,605-614,617-622,629,631,637-638,640-643,682-687,690-693,708,756,767,776-781,784-793,795,805,829,838-843,846-849,854,859,895-913,935,938-943,945-946,948-952,954-963,965,972-974,983,986-994,997-1000,1004-1008,1017,1019,1021,1023-1028,1031,1033,1035,1038,1040-1059
+packages/request-handler/src/releases.ts
+  s_7655eb7cf14634::t_7d237e03682c6c 9-10
+packages/request-handler/src/test/github-release-pagination.spec.ts
+  s_b33778671a3872::t_2b8f6899f155fc 57-61,63-77,85
+packages/request-handler/src/test/release-providers.spec.ts
+  s_b33778671a3872::t_06e0ee97cf7b20 76,245
+packages/translation/src/lang/en.json
+  s_b33778671a3872::t_7c14c2550a1fde 4725-4726
+packages/widgets/src/releases/component.tsx
+  s_b33778671a3872::t_ddc20dbd40954c 4,6-24,27-29,31-36,38,40,44-62
+packages/widgets/src/releases/prototype/legacy.tsx
+  s_b33778671a3872::t_768d700a8267df 1-732
+packages/widgets/src/releases/prototype/switcher.tsx
+  s_b33778671a3872::t_f71ffb85bdb0df 1-121
+packages/widgets/src/releases/prototype/types.ts
+  s_b33778671a3872::t_c23c2ba2eea308 1-16
+packages/widgets/src/releases/prototype/variant-a.module.css
+  s_2093a02ff72221::t_37c50e9a0772dc 1-160
+packages/widgets/src/releases/prototype/variant-a.tsx
+  s_fb8296da8760f2::t_178470d9fd18c7 1-941
+packages/widgets/src/releases/prototype/variant-b.module.css
+  s_67b30fa443422d::t_89e759a68511d4 1-77
+packages/widgets/src/releases/prototype/variant-b.tsx
+  s_67b30fa443422d::t_75b8981861458b 1-1015
+packages/widgets/src/releases/prototype/variant-c.tsx
+  s_7a7deab7b821b0::t_a06cda0e15ee74 1-1248
+packages/widgets/src/releases/prototype/variant-d.module.css
+  s_68c2d6c9643a3f::t_31dec3f490fdc5 1-806
+packages/widgets/src/releases/prototype/variant-d.tsx
+  s_e92279bcf74fec::t_ac557c567eada8 1-842
+packages/widgets/src/releases/prototype/variant-e.module.css
+  s_9719198b2d94af::t_506467c60cafbe 1-1222
+packages/widgets/src/releases/prototype/variant-e.tsx
+  s_9719198b2d94af::t_6101c106fc9075 1-1093
+packages/widgets/src/releases/prototype/variant-f.module.css
+  s_71d900a2ced52c::t_eac833a336fdae 1-1143
+packages/widgets/src/releases/prototype/variant-f.tsx
+  s_5346b932c02e40::t_80c6fd41b3acd1 1-939
+packages/widgets/src/releases/prototype/variant-g.module.css
+  s_869176a512ba95::t_9814a07ff52dbc 1-649
+packages/widgets/src/releases/prototype/variant-g.tsx
+  s_869176a512ba95::t_426d5541a8ac9a 1-1048
+packages/widgets/src/releases/release-entry.ts
+  s_b33778671a3872::t_d1f74348cb8350 1-42
+packages/widgets/src/releases/use-release-entries.ts
+  s_b33778671a3872::t_e1c1feb2854d28 1-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "acc669cdf170ff438f0f2e40f19e78a934eb81be",
+  "prompts": {},
+  "sessions": {
+    "s_2093a02ff72221": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d24ab935-3fd8-47d8-ae81-8c1800461471",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5346b932c02e40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51d67401-c504-45b8-8590-7fb4c66ab4df",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_67b30fa443422d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f8a8fca5-3e33-4fc1-b237-4a515481e63b",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_68c2d6c9643a3f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f225f14c-2d5f-41cc-b439-482ae4ed8015",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_71d900a2ced52c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a78252a7-3a33-40ee-b6f7-b8654a379970",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7655eb7cf14634": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e9daa03c-0072-4b70-b91d-a363e17dc87e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7a7deab7b821b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f445b23a-fdb7-4fc8-94a6-683ba7c7b3ce",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_869176a512ba95": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8b77705e-a12e-4925-aabf-55540dc534b5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9719198b2d94af": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5c5dc006-680b-4c6a-a1c7-0c0ab7a1ec7e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e92279bcf74fec": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "64133c26-5467-4a98-ab3d-5d7eebbe0074",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_fb8296da8760f2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "45120464-dc86-493f-bf63-b6ee65c8309e",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
