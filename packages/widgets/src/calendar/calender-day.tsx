@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import type { ReactNode } from "react";
 import { Box, Container, HoverCard, Text, useMantineTheme } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -31,7 +32,6 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
 
   const minAxisSize = Math.min(rootWidth, rootHeight);
-  const shouldShowIndicators = rootHeight >= 256;
   const { textSize, indicatorSize, indicatorMarginTop } = useMemo(() => getDayScale(minAxisSize), [minAxisSize]);
 
   const cell = (
@@ -53,49 +53,50 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
       <Text ta={"center"} size={textSize} lh={1}>
         {date.getDate()}
       </Text>
-      <NotificationIndicator
-        events={events}
-        size={indicatorSize}
-        marginTop={indicatorMarginTop}
-        visible={shouldShowIndicators}
-      />
+      <NotificationIndicator events={events} size={indicatorSize} marginTop={indicatorMarginTop} />
     </Container>
   );
 
   if (disabled) return cell;
 
-  return (
-    <HoverCard
-      position="bottom"
-      withArrow
-      withinPortal
-      radius="lg"
-      shadow="sm"
-      transitionProps={{ transition: "pop" }}
-      openDelay={350}
-      closeDelay={400}
-    >
-      <HoverCard.Target>{cell}</HoverCard.Target>
-      <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} ps={4} pe={4} pt={4} pb={0} style={{ overflow: "hidden" }}>
-        <CalendarEventList events={events} />
-      </HoverCard.Dropdown>
-    </HoverCard>
-  );
+  return <CalendarEventsHoverCard events={events}>{cell}</CalendarEventsHoverCard>;
 };
+
+interface CalendarEventsHoverCardProps {
+  events: CalendarEvent[];
+  children: ReactNode;
+}
+
+export const CalendarEventsHoverCard = ({ events, children }: CalendarEventsHoverCardProps) => (
+  <HoverCard
+    position="bottom"
+    withArrow
+    withinPortal
+    radius="lg"
+    shadow="sm"
+    transitionProps={{ transition: "pop" }}
+    openDelay={350}
+    closeDelay={400}
+  >
+    <HoverCard.Target>{children}</HoverCard.Target>
+    <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} ps={4} pe={4} pt={4} pb={0} style={{ overflow: "hidden" }}>
+      <CalendarEventList events={events} />
+    </HoverCard.Dropdown>
+  </HoverCard>
+);
 
 interface NotificationIndicatorProps {
   events: CalendarEvent[];
   size: number;
   marginTop: number;
-  visible: boolean;
 }
 
-const NotificationIndicator = ({ events, size, marginTop, visible }: NotificationIndicatorProps) => {
+const NotificationIndicator = ({ events, size, marginTop }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(
     (color): color is string => Boolean(color),
   );
 
-  if (!visible || notificationEvents.length === 0) return null;
+  if (notificationEvents.length === 0) return null;
 
   return (
     <Box

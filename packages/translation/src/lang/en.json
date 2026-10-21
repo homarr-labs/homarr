@@ -3245,15 +3245,11 @@
         "agenda": "Agenda"
       },
       "controls": {
-        "view": "Calendar view",
         "today": "Today",
         "previous": "Previous period",
         "next": "Next period",
         "noEvents": "No events in this period",
         "more": "{count} more",
-        "moreLabel": "Show {count} more events",
-        "eventDetails": "Event details",
-        "close": "Close event details",
         "timeSlot": "Time slot",
         "weekday": "Weekday"
       }

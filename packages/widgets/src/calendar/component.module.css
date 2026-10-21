@@ -88,6 +88,18 @@
   line-height: 12px;
   margin: 0;
 }
+.root .week {
+  --week-view-min-slot-width: 0px;
+  --week-view-slots-label-width: 3.5rem;
+  --week-view-week-day-height: 2.5rem;
+}
+.scheduleEvent {
+  display: block;
+  font-size: 10px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .dayAllDay,
 .weekAllDay,
 .daySlotLabel[data-all-day] {
@@ -108,5 +120,9 @@
 @container (max-width: 350px) {
   .eventTime {
     display: none;
+  }
+  .root .week {
+    --week-view-slots-label-width: 2rem;
+    --week-view-week-day-height: 2rem;
   }
 }

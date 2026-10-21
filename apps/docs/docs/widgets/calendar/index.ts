@@ -10,7 +10,7 @@ export const calendarWidget: WidgetDefinition = {
     items: [
       {
         name: "View",
-        description: "Shared default view. View menu selections are remembered only in the current browser.",
+        description: "Layout used to display events.",
         values: "Compact month, Month, Week, Day, Agenda",
         defaultValue: "Compact month",
       },
