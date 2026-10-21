@@ -1,0 +1,4 @@
+__pycache__/
+
+# Synthetic fixture logs are primary benchmark evidence.
+!results/**/*.log

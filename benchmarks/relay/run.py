@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Bounded, isolated relay comparison. Requires existing images; never builds/pulls."""
 import argparse
+import hashlib
 import json
 import os
 import pathlib
@@ -83,6 +84,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runtime", choices=["bun", "go"], required=True)
     parser.add_argument("--output", type=pathlib.Path, required=True)
+    parser.add_argument("--label", help="Record an exact compiler/runtime label, e.g. go1.27.3")
     parser.add_argument("--bun-image", default="homarr:native-relay-local")
     parser.add_argument("--go-binary", type=pathlib.Path)
     parser.add_argument("--relay-cpus", type=float, default=2, help="CPU quota, not CPU affinity")
@@ -104,6 +106,8 @@ def main():
         "active128": {"workers": 16, "channelsPerWorker": 8, "hz": 2, "payloadBytes": 1024},
         "active512": {"workers": 64, "channelsPerWorker": 8, "hz": 5, "payloadBytes": 4096},
         "active1024": {"workers": 128, "channelsPerWorker": 8, "hz": 10, "payloadBytes": 4096},
+        "active2048": {"workers": 256, "channelsPerWorker": 8, "hz": 10, "payloadBytes": 4096},
+        "active3072": {"workers": 384, "channelsPerWorker": 8, "hz": 10, "payloadBytes": 4096},
         "active512-12k": {"workers": 64, "channelsPerWorker": 8, "hz": 5, "payloadBytes": 12288},
         "active512-64k": {"workers": 64, "channelsPerWorker": 8, "hz": 5, "payloadBytes": 65536},
         "fanin192": {"workers": 1, "channelsPerWorker": 32, "hz": 6, "payloadBytes": 1024},
@@ -113,7 +117,10 @@ def main():
     selected = args.cases.split(",")
     if any(name not in matrix for name in selected):
         parser.error("unknown case")
-    manifest = {"schemaVersion": 1, "runtime": args.runtime, "gitCommit": command(["git", "rev-parse", "HEAD"], cwd=root), "host": command(["uname", "-a"]), "cpuCount": os.cpu_count(), "clockTicksPerSecond": os.sysconf("SC_CLK_TCK"), "relayCpuQuota": args.relay_cpus, "generatorCpuQuota": args.generator_cpus, "cpuAffinityEnforced": False, "cpuIsolationNote": "Docker CPU quotas bound consumed CPU time; neither process is physically pinned. Shared-host scheduling interference remains.", "memoryLimitBytes": 536870912, "generatorMemoryLimitBytes": 2147483648, "durationSeconds": args.duration, "bunVersion": command([args.bun, "--version"]), "network": "Generator container shares relay network namespace; no published-port proxy. Rootless host networking may be rootlesskit namespace rather than physical host loopback.", "results": []}
+    manifest = {"schemaVersion": 1, "runtime": args.label or args.runtime, "implementation": args.runtime, "gitCommit": command(["git", "rev-parse", "HEAD"], cwd=root), "host": command(["uname", "-a"]), "cpuCount": os.cpu_count(), "clockTicksPerSecond": os.sysconf("SC_CLK_TCK"), "relayCpuQuota": args.relay_cpus, "generatorCpuQuota": args.generator_cpus, "cpuAffinityEnforced": False, "cpuIsolationNote": "Docker CPU quotas bound consumed CPU time; neither process is physically pinned. Shared-host scheduling interference remains.", "memoryLimitBytes": 536870912, "generatorMemoryLimitBytes": 2147483648, "durationSeconds": args.duration, "bunVersion": command([args.bun, "--version"]), "network": "Generator container shares relay network namespace; no published-port proxy. Rootless host networking may be rootlesskit namespace rather than physical host loopback.", "results": []}
+    manifest["sourceSha256"] = {str(path): hashlib.sha256((root / path).read_bytes()).hexdigest() for path in [pathlib.Path("apps/relay/src/relay.ts"), pathlib.Path("apps/relay-go/main.go"), pathlib.Path("benchmarks/relay/load.ts"), pathlib.Path("benchmarks/relay/run.py")]}
+    if args.go_binary:
+        manifest["goBinarySha256"] = hashlib.sha256(args.go_binary.read_bytes()).hexdigest()
     for name in selected:
         case = matrix[name]
         container = f"homarr-relay-bench-20261021-{os.getpid()}-{args.runtime}"

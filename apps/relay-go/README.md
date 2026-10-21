@@ -1,13 +1,13 @@
 # Go relay benchmark candidate
 
-Standalone `homarr-relay-v1` candidate. It does not replace the Bun relay or change deployment defaults. Requires Go 1.24 (built locally with Go 1.24.5); WebSockets use pinned `github.com/coder/websocket` v1.8.14.
+Standalone `homarr-relay-v1` candidate. It does not replace the Bun relay or change deployment defaults. The module supports Go 1.24; this experiment compares the original Go 1.24.5 build with a verified current Go 1.27.3 build; WebSockets use pinned `github.com/coder/websocket` v1.8.14.
 
 ```sh
 cd apps/relay-go
-GOTOOLCHAIN=local go build -o /tmp/homarr-relay-go .
+GOTOOLCHAIN=go1.27.3 go build -o /tmp/homarr-relay-candidate .
 HOST=127.0.0.1 PORT=8788 \
   RELAY_ALLOWED_ORIGINS=https://remote.homarr.test \
-  /tmp/homarr-relay-go
+  /tmp/homarr-relay-candidate
 ```
 
 Run the existing external smoke from the repository root:
@@ -20,13 +20,13 @@ bun apps/relay/scripts/smoke.ts http://127.0.0.1:8788
 
 Optional candidate tuning maps to Bun's internal relay options:
 
-| Environment | Default |
-| --- | ---: |
-| `RELAY_MAX_PAYLOAD_LENGTH` | 1048576 |
-| `RELAY_MAX_BUFFERED_BYTES` | 2097152 |
-| `RELAY_MAX_MESSAGES_PER_SECOND` | 256 |
-| `RELAY_MAX_BYTES_PER_SECOND` | 16777216 |
-| `RELAY_HANDSHAKE_TIMEOUT_MS` | 5000 |
+| Environment                     |  Default |
+| ------------------------------- | -------: |
+| `RELAY_MAX_PAYLOAD_LENGTH`      |  1048576 |
+| `RELAY_MAX_BUFFERED_BYTES`      |  2097152 |
+| `RELAY_MAX_MESSAGES_PER_SECOND` |      256 |
+| `RELAY_MAX_BYTES_PER_SECOND`    | 16777216 |
+| `RELAY_HANDSHAKE_TIMEOUT_MS`    |     5000 |
 
 Compare matching limits and resource budgets. `GOMAXPROCS` can bound Go scheduler parallelism. Registration token configuration requires a worker transport that sends the authorization header; the existing external smoke assumes no registration token.
 
@@ -39,3 +39,5 @@ go test -race -count=1 -run 'TestIdentityIsolationAndReplacement|TestHandshakeSe
 These checks cover nonce proof rejection, origin/query/token policy, channel isolation, generation replacement, capability rejection, binary frames, handshake timeout, channel/rate/global/IP/upgrade/worker/frame limits and bounded output. The external Bun smoke verifies WebCrypto interoperability. They do not establish whole-application capacity or production readiness.
 
 Candidate differences to account for: output accounting includes the in-flight write and caps queued messages at 4096, making backpressure more conservative than Bun's socket-buffer accounting. A message or write has a 120-second deadline; control-frame-only traffic does not reset the Go message deadline. HTTP headers have a 5-second read deadline and 16 KiB limit. One mutex serializes routing and JSON envelope encoding; proof verification runs outside it. Shutdown explicitly closes all upgraded sockets. No cross-process registry, deployment wiring or production load validation is included.
+
+The final comparison uses Go 1.27.3. Exact compiler/dependency/binary hashes and legacy results are retained with the experiment evidence. The five race-enabled source checks were run using the original Go 1.24.5 toolchain; the current binary also completed authenticated, per-client validated load runs. No pure Go container image was built or published.

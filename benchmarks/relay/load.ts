@@ -1,6 +1,8 @@
 import { generateWorkerIdentity, getWorkerId, randomSecret, signIdentity } from "../../packages/remote-protocol";
 
-const config = JSON.parse(await Bun.file(process.argv[2]!).text());
+const configPath = process.argv[2];
+if (!configPath) throw new Error("Pass the benchmark configuration JSON path.");
+const config = JSON.parse(await Bun.file(configPath).text());
 const started = performance.now();
 const usageStart = process.resourceUsage();
 const sockets: WebSocket[] = [];
@@ -31,7 +33,9 @@ async function batch<T>(items: T[], fn: (item: T, index: number) => Promise<void
     Array.from({ length: config.concurrency ?? 8 }, async () => {
       while (index < items.length) {
         const current = index++;
-        await fn(items[current]!, current).catch((error) => failure(String(error.message ?? error)));
+        const item = items[current];
+        if (item === undefined) throw new Error("Benchmark setup item is missing.");
+        await fn(item, current).catch((error) => failure(String(error.message ?? error)));
       }
     }),
   );
@@ -196,6 +200,11 @@ function stats(values: number[]) {
 }
 if (config.reconnect) await batch(workers, register);
 const setupMs = performance.now() - started;
+if (typeof config.startAtUnixMs === "number") {
+  const delayMs = config.startAtUnixMs - Date.now();
+  if (delayMs < 0) failure("start barrier missed");
+  else await sleep(delayMs);
+}
 const begin = performance.now();
 measuring = true;
 if ((config.hz ?? 0) > 0) {
@@ -206,7 +215,7 @@ if ((config.hz ?? 0) > 0) {
     schedulingLagMs.push(Math.max(0, performance.now() - due));
     for (const client of clients) {
       if (client.readyState !== 1) continue;
-      const id = String(sent++);
+      const id = `${config.messageIdPrefix ?? ""}${sent++}`;
       const body = `${id}|${"x".repeat(Math.max(0, config.payloadBytes - id.length - 1))}`;
       pending.set(id, { sent: performance.now(), body, client });
       try {
@@ -233,7 +242,7 @@ const processStatus = await Bun.file("/proc/self/status").text();
 const generatorMemoryKiB: Record<string, number> = {};
 for (const line of processStatus.split("\n")) {
   const match = /^(VmRSS|VmHWM):\s+(\d+)/.exec(line);
-  if (match) generatorMemoryKiB[match[1]!] = Number(match[2]);
+  if (match?.[1]) generatorMemoryKiB[match[1]] = Number(match[2]);
 }
 const result = {
   schemaVersion: 1,
