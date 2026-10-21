@@ -52,6 +52,9 @@
 .root[data-hide-header] .body {
   --calendar-header-rows: 0;
 }
+.root .weekdaysRow {
+  height: calc(var(--calendar-cell) * 0.6);
+}
 .root .weekday {
   padding: 0;
   font-size: clamp(8px, calc(var(--calendar-cell) * 0.4), 20px);
