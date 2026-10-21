@@ -392,12 +392,6 @@ export function getDeterministicEvaluationIssues(
       message: `Use the verified ${expectations.sourceAuth} authentication mode.`,
     });
   }
-  if (expectations.sourceNetworkScope !== undefined && source?.networkScope !== expectations.sourceNetworkScope) {
-    issues.push({
-      path: ["sources", "default", "networkScope"],
-      message: `Use the verified ${expectations.sourceNetworkScope} network scope.`,
-    });
-  }
   if (expectations.sourceAuthName !== undefined && getAuthName(source) !== expectations.sourceAuthName) {
     issues.push({
       path: ["sources", "default", "auth", "name"],

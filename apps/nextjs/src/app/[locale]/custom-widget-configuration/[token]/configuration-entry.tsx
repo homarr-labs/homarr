@@ -1,19 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Center,
-  PasswordInput,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
+import { Alert, Button, Card, Center, PasswordInput, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
 import { isCustomWidgetSourceUrlPlaceholder } from "@homarr/custom-widgets/core";
@@ -38,7 +26,6 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [integrationId, setIntegrationId] = useState<string>();
   const [baseUrl, setBaseUrl] = useState("");
-  const [networkScope, setNetworkScope] = useState<"public" | "private" | "loopback">("public");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -51,7 +38,6 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
         setDetails(body);
         const sourceBaseUrl = body.source.baseUrl ?? "";
         setBaseUrl(isCustomWidgetSourceUrlPlaceholder(sourceBaseUrl) ? "" : sourceBaseUrl);
-        setNetworkScope(body.source.networkScope ?? "public");
         setIntegrationId(body.source.integrationId);
       })
       .catch((cause: unknown) => setError(cause instanceof Error ? cause.message : t("unavailable")))
@@ -62,7 +48,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
     setSaving(true);
     setError(null);
     try {
-      let configuration: unknown = { baseUrl, networkScope, secrets: values };
+      let configuration: unknown = { baseUrl, secrets: values };
       if (details?.source.type === "integration") configuration = { integrationId, secrets: {} };
       const response = await fetch(`/api/custom-widgets/configuration-request/${encodeURIComponent(token)}`, {
         method: "POST",
@@ -125,13 +111,6 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                     placeholder={details.source.baseUrl}
                     onChange={(event) => setBaseUrl(event.currentTarget.value)}
                     required
-                  />
-                  <Select
-                    label={t("networkScope")}
-                    data={["public", "private", "loopback"]}
-                    value={networkScope}
-                    allowDeselect={false}
-                    onChange={(value) => value && setNetworkScope(value as typeof networkScope)}
                   />
                 </>
               )}

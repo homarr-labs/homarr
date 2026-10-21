@@ -55,7 +55,6 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
       id,
       name: source.name,
       origin: source.type === "integration" ? source.integrationKind : new URL(source.baseUrl).origin,
-      networkScope: source.networkScope,
       authType: source.type === "integration" ? "integration" : getCustomWidgetSourceAuthType(source),
     })),
     requestCount: Object.keys(widget.requests).length,
@@ -114,7 +113,6 @@ export function mapAvailableCustomWidget(definition: StoredDefinition) {
       sources: Object.entries(widget.sources).map(([id, source]) => ({
         id,
         name: source.name,
-        networkScope: source.networkScope,
         authType: source.type === "integration" ? "integration" : getCustomWidgetSourceAuthType(source),
       })),
       requestCapabilities: Object.entries(widget.requests).map(

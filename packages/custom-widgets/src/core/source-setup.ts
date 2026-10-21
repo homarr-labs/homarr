@@ -1,5 +1,5 @@
 import { getCustomWidgetSourceAuthType } from "./request-schema";
-import type { CustomJsxNetworkScope, CustomWidgetSource } from "./request-schema";
+import type { CustomWidgetSource } from "./request-schema";
 import { getCustomWidgetSourceUrlIssue } from "./request-schema";
 import type { CustomWidgetSecretKind } from "./schema-types";
 import { getCustomWidgetSecretRequirements } from "./secret-requirements";
@@ -16,7 +16,6 @@ export interface CustomWidgetSourceSetup {
   sourceName: string;
   suggestedBaseUrl: string;
   baseUrl: string;
-  networkScope: CustomJsxNetworkScope;
   integrationKind?: string;
   integrationId?: string;
   authType: "none" | "bearer" | "basic" | "apiKeyHeader" | "apiKeyQuery";
@@ -44,7 +43,7 @@ export function isCustomWidgetSourceUrlPlaceholder(baseUrl: string) {
 
 export function customWidgetSourceRequiresUrlConfirmation(source: CustomWidgetSource) {
   if (source.type === "integration") return !source.integrationId;
-  return source.networkScope !== "public" || isCustomWidgetSourceUrlPlaceholder(source.baseUrl);
+  return isCustomWidgetSourceUrlPlaceholder(source.baseUrl);
 }
 
 export function hasSameCustomWidgetSourceAuthentication(left: CustomWidgetSource, right: CustomWidgetSource) {
@@ -71,7 +70,6 @@ export function getCustomWidgetSourceSetups(
       sourceName: source.name ?? sourceId,
       suggestedBaseUrl: source.baseUrl ?? "",
       baseUrl: source.baseUrl ?? "",
-      networkScope: source.networkScope ?? "private",
       integrationKind: source.integrationKind,
       integrationId: source.integrationId,
       authType,
@@ -94,7 +92,7 @@ export function getCustomWidgetSourceSetups(
 
 export function applyCustomWidgetSourceSetup(
   sources: Record<string, CustomWidgetSource>,
-  setup: Record<string, { baseUrl?: string; networkScope?: CustomJsxNetworkScope; integrationId?: string }>,
+  setup: Record<string, { baseUrl?: string; integrationId?: string }>,
 ) {
   return Object.fromEntries(
     Object.entries(sources).map(([sourceId, source]) => {
@@ -108,7 +106,6 @@ export function applyCustomWidgetSourceSetup(
         {
           ...source,
           baseUrl: configured.baseUrl ?? source.baseUrl,
-          networkScope: configured.networkScope ?? source.networkScope,
         },
       ];
     }),

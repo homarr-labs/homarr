@@ -60,7 +60,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
         Object.fromEntries(
           Object.entries(values).map(([sourceId, value]) => [
             sourceId,
-            { baseUrl: value.baseUrl, networkScope: value.networkScope, integrationId: value.integrationId },
+            { baseUrl: value.baseUrl, integrationId: value.integrationId },
           ]),
         ),
       ),
@@ -126,7 +126,6 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     name: t("importReview.name"),
     origin: t("importReview.origin"),
     authentication: t("importReview.authentication"),
-    networkScope: t("importReview.networkScope"),
     methods: t("importReview.methods"),
     permissions: t("importReview.permissions"),
     actionWarningTitle: t("importReview.actionWarning.title"),
@@ -139,7 +138,6 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     description: t("importReview.sourceSetup.description"),
     suggestedUrl: t("importReview.sourceSetup.suggestedUrl"),
     baseUrl: t("workbench.sources.baseUrl"),
-    networkScope: t("workbench.sources.networkScope"),
     authentication: t("workbench.sources.authentication"),
     confirmUrl: t("importReview.sourceSetup.confirmUrl"),
     ready: t("importReview.sourceSetup.ready"),
