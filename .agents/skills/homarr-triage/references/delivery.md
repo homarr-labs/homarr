@@ -40,7 +40,7 @@ Keep ordinary PR descriptions focused on the final problem, resulting behavior, 
 
 ## Update a public follow-up
 
-After implementation, tell the person what changed, link the PR and exact usable preview, show relevant evidence, and give short reproduction steps plus the remaining question. If checks/publication are pending, say so rather than asking them to test an unavailable build.
+Apply the cross-pass message-continuity rule in `SKILL.md` before publishing. After implementation, tell the person what changed, link the PR and exact usable preview, show relevant evidence, and give short reproduction steps plus the remaining question. If checks/publication are pending, say so rather than asking them to test an unavailable build.
 
 For editing an existing top-level Conversation comment, first list comments and identify the exact AI-authored comment by ID and provenance, especially when automation shares the maintainer account:
 

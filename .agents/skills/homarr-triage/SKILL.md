@@ -57,7 +57,9 @@ Prefix new AI-authored public triage text with:
 
 Explain what changed or was established, the evidence, and the single next action. Use human-facing language; keep agent assignments, internal prompts, and status recitations in the working ledger. Do not post an "Agent Brief" to the contributor.
 
-Inspect the latest Conversation before posting. Maintain one current AI follow-up instead of consecutive AI comments: edit the existing AI note, or replace it when an authorized fresh ping is needed. The authenticated account can also contain human-written comments; verify the exact comment ID and AI provenance before editing/deleting. Preserve human replies, useful history, and the maintainer's removal of obsolete AI notes. Re-read after a successful write.
+Inspect the latest Conversation before posting. If an AI/LLM triage follow-up already exists and no human has replied since, a later triage pass must not append another AI message. This applies across sessions, models, and accounts; intervening bot activity does not reset it. Leave the message alone when nothing material changed, or edit it with new findings/corrections. When an authorized fresh ping is needed, replace the identified existing AI note with one corrected message instead of leaving both in the conversation.
+
+The authenticated account can also contain human-written comments; verify the exact comment ID and AI provenance before editing/deleting. Edit/delete only messages within the agent's authorized control. If the existing AI note cannot be updated, keep the new findings in the working ledger until a human replies or the maintainer directs otherwise. Preserve human replies, useful history, and the maintainer's removal of obsolete AI notes. Re-read after a successful write.
 
 ## Completion
 
