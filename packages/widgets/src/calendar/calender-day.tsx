@@ -1,10 +1,9 @@
 import { useMemo } from "react";
-import type { ReactNode } from "react";
-import { Box, Container, HoverCard, Text } from "@mantine/core";
+import { Box, Container, Text } from "@mantine/core";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
 
-import { CalendarEventList } from "./calendar-event-list";
+import { CalendarEventsHoverCard } from "./calendar-event-list";
 
 interface CalendarDayProps {
   date: Date;
@@ -52,33 +51,12 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
     </Container>
   );
 
-  if (disabled) return cell;
-
-  return <CalendarEventsHoverCard events={events}>{cell}</CalendarEventsHoverCard>;
+  return (
+    <CalendarEventsHoverCard events={events} disabled={disabled}>
+      {cell}
+    </CalendarEventsHoverCard>
+  );
 };
-
-interface CalendarEventsHoverCardProps {
-  events: CalendarEvent[];
-  children: ReactNode;
-}
-
-export const CalendarEventsHoverCard = ({ events, children }: CalendarEventsHoverCardProps) => (
-  <HoverCard
-    position="bottom"
-    withArrow
-    withinPortal
-    radius="lg"
-    shadow="sm"
-    transitionProps={{ transition: "pop" }}
-    openDelay={350}
-    closeDelay={400}
-  >
-    <HoverCard.Target>{children}</HoverCard.Target>
-    <HoverCard.Dropdown maw="calc(100vw - 24px)" w={512} ps={4} pe={4} pt={4} pb={0} style={{ overflow: "hidden" }}>
-      <CalendarEventList events={events} />
-    </HoverCard.Dropdown>
-  </HoverCard>
-);
 
 interface NotificationIndicatorProps {
   events: CalendarEvent[];

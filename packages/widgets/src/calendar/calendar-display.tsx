@@ -28,9 +28,9 @@ import "@mantine/schedule/styles.css";
 import actionTargetClasses from "../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { formatLocalizedTime } from "../common/locale";
-import { CalendarDay, CalendarEventsHoverCard } from "./calender-day";
+import { CalendarDay } from "./calender-day";
 import { getCalendarAgendaEvents, groupEventsByDate, splitEvents, toCalendarDateKey } from "./calendar-events";
-import { CalendarEventList } from "./calendar-event-list";
+import { CalendarEventList, CalendarEventsHoverCard } from "./calendar-event-list";
 import type { CalendarEventWithSource } from "./calendar-event-list";
 import { getCalendarScheduleEvents, isCalendarAllDayEvent } from "./calendar-schedule-events";
 import type { CalendarView } from "./calendar-view";
@@ -88,12 +88,11 @@ export const CalendarDisplay = ({
     timeSlot: t("controls.timeSlot"),
     moreLabel: (count: number) => t("controls.more", { count }),
   };
-  const renderEvent: WeekViewProps["renderEvent"] = (event, props) => {
-    const button = <UnstyledButton {...props} />;
-    const original = getOriginalEvent(event);
-    if (isEditMode || !original) return button;
-    return <CalendarEventsHoverCard events={[original]}>{button}</CalendarEventsHoverCard>;
-  };
+  const renderEvent: WeekViewProps["renderEvent"] = (event, props) => (
+    <CalendarEventsHoverCard events={getOriginalEvents(event)} disabled={isEditMode}>
+      <UnstyledButton {...props} />
+    </CalendarEventsHoverCard>
+  );
   const moveDate = (amount: number) => {
     if (view === "day") setDate(dayjs(date).add(amount, "day").toDate());
     else if (view === "week") setDate(dayjs(date).add(amount, "week").toDate());
@@ -297,7 +296,11 @@ export const CalendarDisplay = ({
   );
 };
 
-const getOriginalEvent = (event: ScheduleEventData) => event.payload?.event as CalendarEventWithSource | undefined;
+const getOriginalEvents = (event: ScheduleEventData): CalendarEventWithSource[] => {
+  const original = event.payload?.event as CalendarEventWithSource | undefined;
+  if (!original) return [];
+  return [original];
+};
 
 interface DetailedDayProps {
   date: Date;
@@ -313,26 +316,24 @@ const DetailedDay = ({ date, events, locale, cellHeight, disabled }: DetailedDay
   let visibleCount = Math.min(events.length, maxRows);
   if (events.length > maxRows) visibleCount = Math.max(0, maxRows - 1);
   const hiddenCount = events.length - visibleCount;
-  const cell = (
-    <Box className={classes.detailedDay} data-compact={maxRows === 0 || undefined}>
-      <span className={classes.dayNumber}>{date.getDate()}</span>
-      {events.slice(0, visibleCount).map((event, index) => (
-        <span
-          key={index}
-          className={classes.monthEvent}
-          style={{ "--event-color": getThemeColor(event.indicatorColor, theme) } as CSSProperties}
-        >
-          {!isCalendarAllDayEvent(event) && (
-            <span className={classes.eventTime}>{formatLocalizedTime(event.startDate, locale)} </span>
-          )}
-          {event.title}
-        </span>
-      ))}
-      {hiddenCount > 0 && <span className={classes.moreEvents}>+{hiddenCount}</span>}
-    </Box>
+  return (
+    <CalendarEventsHoverCard events={events} disabled={disabled}>
+      <Box className={classes.detailedDay} data-compact={maxRows === 0 || undefined}>
+        <span className={classes.dayNumber}>{date.getDate()}</span>
+        {events.slice(0, visibleCount).map((event, index) => (
+          <span
+            key={index}
+            className={classes.monthEvent}
+            style={{ "--event-color": getThemeColor(event.indicatorColor, theme) } as CSSProperties}
+          >
+            {!isCalendarAllDayEvent(event) && (
+              <span className={classes.eventTime}>{formatLocalizedTime(event.startDate, locale)} </span>
+            )}
+            {event.title}
+          </span>
+        ))}
+        {hiddenCount > 0 && <span className={classes.moreEvents}>+{hiddenCount}</span>}
+      </Box>
+    </CalendarEventsHoverCard>
   );
-
-  if (disabled || events.length === 0) return cell;
-
-  return <CalendarEventsHoverCard events={events}>{cell}</CalendarEventsHoverCard>;
 };
