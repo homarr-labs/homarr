@@ -67,6 +67,20 @@ export const createItemCallback =
     };
   };
 
+/**
+ * Whether createItemCallback would find room for an item of this kind without throwing,
+ * so a caller that needs the result of a step before placement (for example persisting a
+ * record server side, which it cannot easily undo) can check first instead of after.
+ */
+export const hasRoomForItem = (board: Board, kind: WidgetKind, size?: { width: number; height: number }): boolean => {
+  try {
+    createItemCallback({ kind, size })(board);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const defaultItemSize = { width: 1, height: 1 };
 
 const getWidgetItemSize = (kind: WidgetKind) => widgetDefaultSizes[kind] ?? defaultItemSize;

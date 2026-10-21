@@ -6073,6 +6073,9 @@
       "notification": {
         "success": {
           "message": "{name} was added to the board"
+        },
+        "full": {
+          "message": "Your board is full"
         }
       }
     },

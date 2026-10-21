@@ -6,10 +6,12 @@ import { IconLink } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 
+import { hasRoomForItem } from "./items/actions/create-item";
 import { useItemActions } from "./items/item-actions";
 
 // Firefox sends text/x-moz-url (the url, then the page title on the next line) instead of text/uri-list.
@@ -42,6 +44,7 @@ export const BoardAppUrlDrop = () => {
   const [isEditMode] = useEditMode();
   const { data: session } = useSession();
   const canCreateApp = session?.user.permissions.includes("app-create") ?? false;
+  const board = useRequiredBoard();
   const [isDragging, setIsDragging] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
   // Counts drops still in flight, so the overlay only hides once all of them are done
@@ -55,6 +58,17 @@ export const BoardAppUrlDrop = () => {
 
   const addAppFromUrlAsync = useCallback(
     async (url: string) => {
+      // Checked before creating the app record server side: placement can fail when the
+      // board is full, and this feature only has permission to create apps, not the
+      // app-full-all needed to delete the now-unplaced record afterward.
+      if (!hasRoomForItem(board, "app")) {
+        showErrorNotification({
+          title: t("common.notification.create.error"),
+          message: t("board.urlDrop.notification.full.message"),
+        });
+        return;
+      }
+
       pendingDropCountRef.current++;
       setIsResolving(true);
       try {
@@ -76,7 +90,7 @@ export const BoardAppUrlDrop = () => {
         if (pendingDropCountRef.current === 0) setIsResolving(false);
       }
     },
-    [createAppAsync, createItem, detectMetadataAsync, t, utils],
+    [board, createAppAsync, createItem, detectMetadataAsync, t, utils],
   );
 
   const isEnabled = isEditMode && canCreateApp;

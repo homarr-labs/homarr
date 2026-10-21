@@ -10,10 +10,21 @@ const mocks = vi.hoisted(() => ({
   createItem: vi.fn(),
   invalidateApp: vi.fn(),
   detectMetadataAsync: vi.fn(),
+  hasRoomForItem: vi.fn(),
+  showErrorNotification: vi.fn(),
+  showSuccessNotification: vi.fn(),
 }));
 
 vi.mock("@homarr/boards/edit-mode", () => ({
   useEditMode: () => [mocks.isEditMode, { open: vi.fn(), close: vi.fn() }],
+}));
+
+vi.mock("@homarr/boards/context", () => ({
+  useRequiredBoard: () => ({ name: "board" }),
+}));
+
+vi.mock("./items/actions/create-item", () => ({
+  hasRoomForItem: mocks.hasRoomForItem,
 }));
 
 vi.mock("@homarr/auth/client", () => ({
@@ -21,8 +32,8 @@ vi.mock("@homarr/auth/client", () => ({
 }));
 
 vi.mock("@homarr/notifications", () => ({
-  showSuccessNotification: vi.fn(),
-  showErrorNotification: vi.fn(),
+  showSuccessNotification: mocks.showSuccessNotification,
+  showErrorNotification: mocks.showErrorNotification,
 }));
 
 vi.mock("@homarr/translation/client", () => ({
@@ -100,6 +111,9 @@ describe("BoardAppUrlDrop", () => {
     mocks.createItem.mockClear();
     mocks.invalidateApp.mockClear();
     mocks.detectMetadataAsync.mockReset().mockResolvedValue({ name: "App", iconUrl: null });
+    mocks.hasRoomForItem.mockReset().mockReturnValue(true);
+    mocks.showErrorNotification.mockClear();
+    mocks.showSuccessNotification.mockClear();
     createResolvers = [];
 
     act(() => {
@@ -128,5 +142,18 @@ describe("BoardAppUrlDrop", () => {
     await act(async () => createResolvers[1]?.({ id: "2", name: "Second" }));
     expect(container.textContent).not.toContain("board.urlDrop.resolving");
     expect(mocks.createItem).toHaveBeenCalledTimes(2);
+  });
+
+  test("does not create an app when the board has no room for it", async () => {
+    mocks.hasRoomForItem.mockReturnValue(false);
+
+    await dropUrl("https://first.example.com");
+
+    expect(mocks.detectMetadataAsync).not.toHaveBeenCalled();
+    expect(createResolvers).toHaveLength(0);
+    expect(mocks.createItem).not.toHaveBeenCalled();
+    expect(mocks.showErrorNotification).toHaveBeenCalledWith(
+      expect.objectContaining({ message: "board.urlDrop.notification.full.message" }),
+    );
   });
 });
