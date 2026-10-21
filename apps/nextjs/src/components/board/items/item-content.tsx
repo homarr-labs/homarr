@@ -60,7 +60,7 @@ import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
-import { createPreparedWidgetHydration } from "./prepared-widget-hydration";
+import { usePreparedWidgetHydration } from "./prepared-widget-hydration";
 import { PreparedWidgetQueries } from "./prepared-widget-queries";
 
 const BoardItemMenu = dynamic(() => import("./item-menu").then((module) => module.BoardItemMenu), {
@@ -146,11 +146,8 @@ const getServerHydratedSnapshot = () => false;
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const prepared = useInitialRenderTime() !== undefined;
-  const { register, settle } = useBoardRestorationLifecycle();
-  const [hydration] = useState(() => {
-    if (prepared) return createPreparedWidgetHydration(item.id);
-    return createPreparedWidgetHydration();
-  });
+  const { register } = useBoardRestorationLifecycle();
+  const browserActive = usePreparedWidgetHydration(item.id, prepared);
   const { ref, width: measuredWidth, height: measuredHeight } = useHydrationSafeElementSize<HTMLDivElement>();
   const canvasScale = useBoardCanvasScale();
   const { getEntryRuntime } = useBoardGridPortalHost();
@@ -168,13 +165,8 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   );
   useLayoutEffect(() => {
     if (!prepared) return;
-    const unregister = register(item.id);
-    const stopObserving = hydration.observe(item.id, () => settle(item.id));
-    return () => {
-      unregister();
-      stopObserving?.();
-    };
-  }, [hydration, item.id, prepared, register, settle]);
+    return register(item.id);
+  }, [item.id, prepared, register]);
   if (!hydrated) {
     return <BoardItemPendingCard item={item} innerRef={ref} />;
   }
@@ -187,7 +179,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     >
       <Suspense fallback={<BoardItemPendingCard item={item} innerRef={ref} />}>
         <LoadedBoardItemContent
-          hydration={prepared ? hydration : undefined}
+          browserActive={browserActive}
           item={item}
           width={width}
           height={height}
@@ -206,7 +198,7 @@ const createBoardItemRuntime = () => ({
 });
 
 interface LoadedBoardItemContentProps {
-  hydration?: ReturnType<typeof createPreparedWidgetHydration>;
+  browserActive: boolean;
   item: SectionItem;
   width: number;
   height: number;
@@ -216,7 +208,6 @@ interface LoadedBoardItemContentProps {
 }
 
 const LoadedBoardItemContent = (props: LoadedBoardItemContentProps) => {
-  if (props.hydration && !props.hydration.isReady() && typeof window !== "undefined") use(props.hydration.completion);
   if (props.item.kind === "app") {
     const Component = initialWidgetResources.app.Component as ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
     return (
@@ -245,6 +236,7 @@ const DynamicBoardItemContent = (props: LoadedBoardItemContentProps) => {
 
 const ResolvedBoardItemContent = ({
   item,
+  browserActive,
   width,
   height,
   widgetStateRef,
@@ -444,6 +436,7 @@ const ResolvedBoardItemContent = ({
         >
           <InnerContent
             item={item}
+            browserActive={browserActive}
             width={width}
             height={height}
             displayScale={boardCanvasScale}
@@ -547,6 +540,7 @@ const ResolvedBoardItemContent = ({
 };
 
 interface InnerContentProps {
+  browserActive: boolean;
   item: SectionItem;
   width: number;
   height: number;
@@ -568,6 +562,7 @@ const InnerContent = memo(function InnerContent(props: InnerContentProps) {
 
 const ResolvedInnerContent = memo(function ResolvedInnerContent({
   item,
+  browserActive,
   definition,
   Component,
   ...dimensions
@@ -600,7 +595,7 @@ const ResolvedInnerContent = memo(function ResolvedInnerContent({
     needsBrowser ? getServerHydratedSnapshot : getHydratedSnapshot,
   );
 
-  if (!hydrated)
+  if (!hydrated || (needsBrowser && !browserActive))
     return (
       <Text c="dimmed" size="sm" p="sm" data-homarr-widget-client-only>
         {getWidgetName(item.kind, t)}

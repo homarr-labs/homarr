@@ -1,6 +1,7 @@
-const noop = () => undefined;
+import { useLayoutEffect, useState, useSyncExternalStore } from "react";
 
-/** Defer browser-only placeholders; hydrate meaningful prepared content normally. */
+const readyOnServer = () => true;
+
 const getDeferredPlaceholder = (id: string) => {
   const element = document.querySelector<HTMLElement>(`[data-grid-item-id="${CSS.escape(id)}"]`);
   if (
@@ -14,30 +15,31 @@ const getDeferredPlaceholder = (id: string) => {
   return element;
 };
 
+/** Keep browser-only content idle without suspending its SSR shell's hydration. */
 export const createPreparedWidgetHydration = (initialId?: string) => {
-  let resolveReady: () => void = noop;
   let ready = false;
-  const completion = new Promise<void>((resolve) => {
-    resolveReady = resolve;
-  });
+  const listeners = new Set<() => void>();
   const resume = () => {
+    if (ready) return;
     ready = true;
-    resolveReady();
+    for (const listener of listeners) listener();
   };
-  // Meaningful SSR content must not suspend on an artificial, already-resolved
-  // Promise: React may otherwise leave its offscreen boundary dehydrated.
   if (initialId && typeof window !== "undefined" && !getDeferredPlaceholder(initialId)) resume();
   return {
     isReady: () => ready,
-    completion,
-    observe: (id: string, skipRestoration: () => void) => {
+    subscribe: (listener: () => void) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    observe: (id: string) => {
       if (ready) return;
       const element = getDeferredPlaceholder(id);
       if (!element) {
         resume();
         return;
       }
-      skipRestoration();
       const observer = new IntersectionObserver(
         (entries) => {
           if (entries.some((entry) => entry.isIntersecting)) activate();
@@ -59,4 +61,14 @@ export const createPreparedWidgetHydration = (initialId?: string) => {
       return cleanup;
     },
   };
+};
+
+export const usePreparedWidgetHydration = (id: string, prepared: boolean) => {
+  const [hydration] = useState(() => createPreparedWidgetHydration(id));
+  const ready = useSyncExternalStore(hydration.subscribe, hydration.isReady, readyOnServer);
+  useLayoutEffect(() => {
+    if (!prepared) return;
+    return hydration.observe(id);
+  }, [hydration, id, prepared]);
+  return !prepared || ready;
 };
