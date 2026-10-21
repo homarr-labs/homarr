@@ -1,0 +1,1621 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Homarr · A simpler worker</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #20262e;
+        --muted: #536171;
+        --line: #d8dfe7;
+        --paper: #fff;
+        --soft: #f4f6f9;
+        --accent: #bd3445;
+        --good: #14734f;
+        --warn: #825800;
+        --bad: #ad2639;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      a,
+      input,
+      summary {
+        touch-action: manipulation;
+      }
+      button {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 9px 14px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      button:hover {
+        background: var(--soft);
+      }
+      button:disabled {
+        cursor: default;
+        color: #647180;
+        background: #edf0f4;
+      }
+      button.primary {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      button.primary:hover {
+        background: #a62d3c;
+      }
+      button.danger {
+        color: var(--bad);
+      }
+      a {
+        color: var(--accent);
+        text-underline-offset: 3px;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      summary:focus-visible,
+      input:focus-visible,
+      .table-wrap:focus-visible {
+        outline: 3px solid #9e3546;
+        outline-offset: 3px;
+      }
+      ::selection {
+        background: #f7dbe0;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(1.8rem, 4vw, 2.55rem);
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+      }
+      h2 {
+        font-size: 1.35rem;
+        line-height: 1.3;
+      }
+      h3 {
+        font-size: 1rem;
+      }
+      p {
+        max-width: 72ch;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding: 18px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .brand {
+        font-weight: 750;
+        font-size: 1.2rem;
+        color: var(--accent);
+      }
+      .quiet {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: auto;
+        padding: 36px 28px 64px;
+      }
+      .lead {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      .lead p {
+        margin-top: 12px;
+        color: var(--muted);
+      }
+      .tag {
+        font-size: 0.76rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      .nav {
+        display: flex;
+        gap: 8px;
+        margin-top: 30px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      .nav button[aria-selected="true"],
+      .scenarios button[aria-selected="true"] {
+        color: var(--accent);
+        border-color: var(--accent);
+        background: #fff3f5;
+      }
+      .section {
+        padding-top: 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+        gap: 32px;
+      }
+      .path {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .node {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 16px;
+        min-width: 0;
+      }
+      .node p {
+        font-size: 0.86rem;
+        color: var(--muted);
+        margin-top: 7px;
+      }
+      .node strong {
+        display: block;
+        font-size: 0.95rem;
+        margin-top: 9px;
+      }
+      .node[data-state="good"] {
+        border-color: #80b9a4;
+      }
+      .node[data-state="bad"] {
+        border-color: #ce7d88;
+      }
+      .node[data-state="warn"] {
+        border-color: #be9849;
+      }
+      .pill {
+        display: inline-block;
+        font-size: 0.75rem;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: #edf0f4;
+        color: #465260;
+      }
+      .pill.good {
+        background: #e8f5ee;
+        color: var(--good);
+      }
+      .pill.bad {
+        background: #fcecef;
+        color: var(--bad);
+      }
+      .pill.warn {
+        background: #fff3d9;
+        color: var(--warn);
+      }
+      .status {
+        margin: 18px 0;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+        min-height: 78px;
+      }
+      .status strong {
+        display: block;
+      }
+      .status p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-top: 5px;
+      }
+      .scenarios {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 18px;
+      }
+      .scenarios button {
+        font-size: 0.82rem;
+        padding: 7px 10px;
+      }
+      .guided {
+        margin-top: 16px;
+      }
+      .steps {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .steps button {
+        text-align: left;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-height: 46px;
+      }
+      .steps .index {
+        font-variant-numeric: tabular-nums;
+        min-width: 18px;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .steps button.done {
+        color: var(--good);
+      }
+      .steps button.current {
+        border-color: var(--accent);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 14px;
+      }
+      .actions button {
+        font-size: 0.8rem;
+        padding: 7px 10px;
+      }
+      .details {
+        border-top: 1px solid var(--line);
+        margin-top: 26px;
+        padding-top: 14px;
+      }
+      .details summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .details > div,
+      .details > p {
+        margin-top: 14px;
+      }
+      .side {
+        border-left: 1px solid var(--line);
+        padding-left: 28px;
+        min-width: 0;
+      }
+      .fields {
+        margin: 14px 0 0;
+      }
+      .fields > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 0.86rem;
+      }
+      .fields dt {
+        color: var(--muted);
+      }
+      .fields dd {
+        margin: 0;
+        text-align: right;
+        font-weight: 500;
+      }
+      .event-list {
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 0.83rem;
+        display: grid;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .command {
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 16px;
+      }
+      .command pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 0.82rem;
+        line-height: 1.65;
+        margin: 8px 0 14px;
+        user-select: all;
+      }
+      .command p {
+        font-size: 0.84rem;
+        color: var(--muted);
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.87rem;
+        margin-top: 14px;
+      }
+      input {
+        display: block;
+        width: 100%;
+        border: 1px solid #aebac7;
+        border-radius: 5px;
+        padding: 9px 10px;
+        background: white;
+        color: var(--ink);
+        margin-top: 5px;
+      }
+      input[type="range"] {
+        padding: 0;
+        accent-color: var(--accent);
+      }
+      .note {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 14px 16px;
+        margin-top: 20px;
+        background: var(--soft);
+        font-size: 0.88rem;
+      }
+      .table-wrap {
+        overflow: auto;
+        margin-top: 18px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.87rem;
+        text-align: left;
+      }
+      th {
+        font-weight: 650;
+        background: var(--soft);
+      }
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      td small {
+        display: block;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .metrics {
+        font-variant-numeric: tabular-nums;
+      }
+      .calc {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .calc-result {
+        background: var(--soft);
+        padding: 20px;
+        border-radius: 6px;
+      }
+      .calc-result p {
+        font-size: 0.89rem;
+        margin-top: 12px;
+      }
+      .roadmap {
+        margin-top: 22px;
+        display: grid;
+        gap: 0;
+      }
+      .work {
+        display: grid;
+        grid-template-columns: minmax(150px, 0.8fr) minmax(0, 2fr) auto;
+        gap: 22px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .work p {
+        font-size: 0.89rem;
+        color: var(--muted);
+        margin-top: 5px;
+      }
+      .work a {
+        font-size: 0.85rem;
+      }
+      .footer {
+        border-top: 1px solid var(--line);
+        margin-top: 32px;
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .button-line {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 760px) {
+        header {
+          padding: 15px 18px;
+        }
+        .wrap {
+          padding: 26px 18px 48px;
+        }
+        .lead {
+          display: block;
+        }
+        .lead > .tag {
+          display: inline-block;
+          margin-top: 14px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .side {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+          padding: 22px 0 0;
+        }
+        .path {
+          gap: 9px;
+          grid-template-columns: 1fr;
+        }
+        .node {
+          padding: 12px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 4px 12px;
+        }
+        .node > .quiet {
+          display: none;
+        }
+        .node h3 {
+          grid-column: 1;
+          grid-row: 1;
+        }
+        .node p {
+          font-size: 0.83rem;
+          grid-column: 1/-1;
+          margin-top: 0;
+        }
+        .node strong {
+          font-size: 0.83rem;
+          grid-column: 2;
+          grid-row: 1;
+          margin-top: 0;
+        }
+        .calc {
+          grid-template-columns: 1fr;
+        }
+        .two {
+          grid-template-columns: 1fr;
+        }
+        .work {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .work > .tag {
+          justify-self: start;
+        }
+        h1 {
+          max-width: 16ch;
+        }
+        .nav button {
+          flex: 1;
+          padding: 10px 8px;
+          font-size: 0.84rem;
+        }
+        th,
+        td {
+          padding: 9px;
+        }
+        .fields > div {
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="brand">Homarr</span
+      ><a href="https://brainzilla.llama-stonecat.ts.net:8445/manage/workers" target="_blank" rel="noopener"
+        >Open the current app</a
+      >
+    </header>
+    <main class="wrap">
+      <div class="lead">
+        <div>
+          <h1>One worker. A shared Homarr.</h1>
+          <p>
+            Can setup be one command and one private link? Try the connection flow, inspect the measured relay limits,
+            and see which changes make that possible.
+          </p>
+        </div>
+        <span class="tag">Prototype · simulated controls</span>
+      </div>
+      <nav class="nav" role="tablist" aria-label="Explore the proposal">
+        <button role="tab" id="tab-journey" aria-selected="true" aria-controls="journey" data-view="journey">
+          Try the setup</button
+        ><button
+          role="tab"
+          id="tab-capacity"
+          aria-selected="false"
+          tabindex="-1"
+          aria-controls="capacity"
+          data-view="capacity"
+        >
+          Relay capacity</button
+        ><button role="tab" id="tab-next" aria-selected="false" tabindex="-1" aria-controls="next" data-view="next">
+          What needs building
+        </button>
+      </nav>
+      <section class="section" id="journey" role="tabpanel" aria-labelledby="tab-journey">
+        <div class="grid">
+          <div>
+            <h2>Launch → connect → open your boards</h2>
+            <p class="quiet" style="margin-top: 8px">
+              The normal Homarr dashboard follows this flow. Everything you click here is in memory.
+            </p>
+            <div class="path">
+              <article class="node" id="worker-node">
+                <span class="quiet">Your server</span>
+                <h3>Worker</h3>
+                <strong id="worker-state">Stopped</strong>
+                <p>Boards, integrations, users and worker keys stay here.</p>
+              </article>
+              <article class="node" id="relay-node">
+                <span class="quiet">Shared service</span>
+                <h3>Relay</h3>
+                <strong id="relay-state">Available</strong>
+                <p>Routes encrypted traffic. No worker port to expose.</p>
+              </article>
+              <article class="node" id="browser-node">
+                <span class="quiet">Your browsers</span>
+                <h3>Homarr</h3>
+                <strong id="browser-state">Not connected</strong>
+                <p>Hosted frontend. Each browser keeps its own device key.</p>
+              </article>
+            </div>
+            <div class="status" role="status" aria-live="polite">
+              <strong id="status-title">Start your worker</strong>
+              <p id="status-detail">The worker makes an outbound connection to the shared relay.</p>
+            </div>
+            <div class="scenarios" role="tablist" aria-label="Guided scenarios" id="scenarios"></div>
+            <div class="guided" id="guided">
+              <h3 id="scenario-title"></h3>
+              <p class="quiet" id="scenario-description" style="margin-top: 7px"></p>
+              <div class="steps" id="steps"></div>
+              <div class="button-line">
+                <button id="reset-scenario">Restart this scenario</button><span class="quiet" id="step-progress"></span>
+              </div>
+            </div>
+            <details class="details">
+              <summary>Try actions in any order</summary>
+              <p class="quiet">Invalid actions explain what is missing; they never grant access.</p>
+              <div class="actions" id="free-actions"></div>
+            </details>
+          </div>
+          <aside class="side">
+            <h3>Access state</h3>
+            <dl class="fields" id="state-fields"></dl>
+            <h3 style="margin-top: 24px">What just happened</h3>
+            <ol class="event-list" id="event-list"></ol>
+            <div class="command">
+              <h3>Try the real launcher</h3>
+              <p style="margin-top: 7px">
+                Run on Brainzilla. Uses the experimental checkout and the existing local worker image.
+              </p>
+              <pre id="launch-command"></pre>
+              <button id="copy-command">Copy command</button><span id="copy-status" role="status" class="quiet"></span>
+              <p style="margin-top: 12px">
+                Real launcher; simulated walkthrough. Public images and a production homarr.dev relay still need
+                shipping.
+              </p>
+            </div>
+          </aside>
+        </div>
+        <div class="note">
+          <strong>One worker per workspace, many workspaces on the service.</strong> Today, saved primary-worker
+          selection is shared by tabs on the same browser origin. Independent workspace URLs and separate browser vault
+          namespaces are proposed; they are not implemented by this demo.
+        </div>
+      </section>
+      <section class="section" id="capacity" role="tabpanel" aria-labelledby="tab-capacity" hidden>
+        <h2>Count connections and traffic</h2>
+        <p class="quiet" style="margin-top: 9px">
+          One worker socket plus one socket per open browser or service client. A user with four tabs can cost four
+          client connections. These measurements cover the relay, not full Homarr widgets or third-party integrations.
+        </p>
+        <div class="note" id="measurement-note">
+          Measurements are being collected on a shared host. Results appear here when the run is complete; no estimated
+          capacity is presented as a measured result.
+        </div>
+        <div class="table-wrap" role="region" aria-label="Measured relay comparison" tabindex="0">
+          <table class="metrics">
+            <caption style="text-align: left; font-weight: 650; margin-bottom: 10px">
+              Bun and Go · same workload and limits
+            </caption>
+            <thead>
+              <tr>
+                <th>Workload</th>
+                <th>Runtime</th>
+                <th>Verified roundtrips/s</th>
+                <th>p95 / p99</th>
+                <th>Peak RSS</th>
+                <th>CPU</th>
+                <th>Outcome</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-results">
+              <tr>
+                <td colspan="7">No measurement loaded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <details class="details">
+          <summary>What this comparison includes</summary>
+          <p>
+            Real worker proof, origin and capability checks, multiplexed channels and verified per-client replies.
+            Opaque echo payloads exclude browser rendering, native API execution, integration calls and endpoint
+            encryption. Separate relay and load-generator containers have enforced CPU/memory budgets. Local networking,
+            short runs and a shared host limit what this says about production.
+          </p>
+          <p style="margin-top: 10px">
+            * Higher-load latency is the maximum of individual generator-shard p99 values, not a pooled percentile. RSS
+            is sampled process memory; main-row RSS is the median of per-run peaks. CPU is average relay cores during
+            active traffic. Keep Bun as the default for now; the first Go port has higher CPU cost here. It preserves
+            the wire protocol and remains useful for further profiling.
+          </p>
+        </details>
+        <div class="note">
+          <strong>Local networking matters.</strong> At 20,480 roundtrips/sec with 4KiB requests and replies, relay
+          egress payload alone is 160MiB/sec. A 1Gbit/sec link carries about 119MiB/sec before overhead, so it cannot
+          reproduce that echo workload. Real request and reply sizes differ.
+        </div>
+        <h2 style="margin-top: 34px">Explore the limits</h2>
+        <p class="quiet" style="margin-top: 9px">
+          Planning arithmetic using source defaults. This is not a measured server capacity or a promise.
+        </p>
+        <div class="calc">
+          <div>
+            <label for="workers">Workers <output id="workers-value">100</output></label
+            ><input id="workers" type="range" min="1" max="1000" value="100" /><label for="tabs"
+              >Open clients per worker <output id="tabs-value">4</output></label
+            ><input id="tabs" type="range" min="1" max="64" value="4" /><label for="updates"
+              >Reply messages per client per second <output id="updates-value">2</output></label
+            ><input id="updates" type="range" min="1" max="12" value="2" /><label for="payload">Opaque reply size</label
+            ><select id="payload" style="padding: 9px; width: 100%; margin-top: 6px">
+              <option value="1024">1 KiB · small update</option>
+              <option value="4096" selected>4 KiB · larger update</option>
+              <option value="65536">64 KiB · streaming frame</option>
+            </select>
+          </div>
+          <div class="calc-result" id="capacity-state" aria-live="polite"></div>
+        </div>
+        <div class="table-wrap" role="region" aria-label="Relay failure limits" tabindex="0">
+          <table>
+            <thead>
+              <tr>
+                <th>Potential failure</th>
+                <th>What the user sees</th>
+                <th>What fixes it</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Proxy/IP admission</td>
+                <td>New connections rejected despite spare CPU.</td>
+                <td>Trusted edge admission and per-worker budgets. Raising limits alone loses protection.</td>
+              </tr>
+              <tr>
+                <td>Hot worker</td>
+                <td>One installation drops many clients together.</td>
+                <td>Align peer caps and reject only the excess channel; tune aggregate message budgets.</td>
+              </tr>
+              <tr>
+                <td>Slow consumer / queued data</td>
+                <td>Slow clients are disconnected; memory pressure rises.</td>
+                <td>Bound total queued bytes and isolate slow tenants.</td>
+              </tr>
+              <tr>
+                <td>Relay or worker saturated</td>
+                <td>The connection stays open while widget requests stall.</td>
+                <td>Bound queues, shed load and show the last successful worker response.</td>
+              </tr>
+              <tr>
+                <td>Network / home uplink</td>
+                <td>Widgets update slowly even with a fast relay.</td>
+                <td>Measure egress, payload encoding and geographic RTT. Go cannot create more bandwidth.</td>
+              </tr>
+              <tr>
+                <td>Multiple relay replicas</td>
+                <td>Worker is registered but clients cannot find it.</td>
+                <td>Route worker and clients to the same owner shard; coordinate reconnection on changes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section" id="next" role="tabpanel" aria-labelledby="tab-next" hidden>
+        <h2>What remains before public hosting</h2>
+        <p class="quiet" style="margin-top: 9px">
+          Keep transport machinery in the service. Show users their workspace, whether it is reachable, and one useful
+          next action.
+        </p>
+        <div class="roadmap">
+          <article class="work">
+            <h3>Worker-only launch</h3>
+            <div>
+              <p>One persistent worker, outbound relay, no public worker ports, one private setup link.</p>
+              <p>
+                Verified on this branch: one fresh worker opened the normal hosted Homarr through the relay with zero
+                published ports. Uses a local image and existing frontend/relay.
+              </p>
+            </div>
+            <span class="tag">Implemented · verified</span>
+          </article>
+          <article class="work">
+            <h3>Independent workspace URLs</h3>
+            <div>
+              <p>Open Home and Studio in separate tabs without replacing the saved worker.</p>
+              <p>
+                Needs route-bound worker identity, browser-vault namespaces and query/resource-cache scopes. One primary
+                worker inside each workspace.
+              </p>
+            </div>
+            <span class="tag">Next · frontend + vault</span>
+          </article>
+          <article class="work">
+            <h3>Useful connection status</h3>
+            <div>
+              <p>
+                “Connecting”, “Worker unavailable”, “Access revoked”, or “Relay busy”, each with the correct next
+                action.
+              </p>
+              <p>
+                Needs real transport signals, last successful encrypted worker contact, retry jitter and liveness
+                deadlines. An open socket alone does not prove the app is responsive.
+              </p>
+            </div>
+            <span class="tag">Next · transport + UX</span>
+          </article>
+          <article class="work">
+            <h3>Invite a person</h3>
+            <div>
+              <p>Invite → create local username/password → open boards. Keep device approval separate.</p>
+              <p>
+                The native account flow exists. Remove the first-user group setup detour and improve invitation labels.
+              </p>
+            </div>
+            <span class="tag">Refine existing flow</span>
+          </article>
+          <article class="work">
+            <h3>Recover a lost owner device</h3>
+            <div>
+              <p>
+                Existing owner invitation works today. Sole-owner loss needs an explicit recovery flow on the worker.
+              </p>
+              <p>
+                Design a local operator command or recovery kit, preserving data and identity. Cloud sign-in alone must
+                not unlock a worker.
+              </p>
+            </div>
+            <span class="tag">Design · security boundary</span>
+          </article>
+          <article class="work">
+            <h3>Public hosted service</h3>
+            <div>
+              <p>Publish versioned worker images and configure the real shared website/relay endpoints.</p>
+              <p>
+                Decide per-install relay admission, quotas, updates and backups. A deployment-wide registration secret
+                is not a customer install token.
+              </p>
+            </div>
+            <span class="tag">Required before launch</span>
+          </article>
+          <article class="work">
+            <h3>Scale relay hosting</h3>
+            <div>
+              <p>Fix proxy admission, worker peer limits, reconnect storms and observability before adding replicas.</p>
+              <p>
+                Use measured workload budgets. The Go candidate also needs idle-heartbeat parity and soak validation.
+                Add worker-ID routing and drain ownership when a single node is no longer enough.
+              </p>
+            </div>
+            <span class="tag">Measure → harden → shard</span>
+          </article>
+        </div>
+        <div class="note">
+          Hosted MCP stays optional. Its approved service can read authorized tool arguments and results; the routing
+          relay sees metadata and encrypted traffic. Dashboard and local-account access do not require GitHub.
+        </div>
+      </section>
+      <footer class="footer">
+        Experimental branch <code>feat/worker-relay-prototype-20261021</code>. This file is a throwaway flow prototype,
+        not a new Homarr frontend. Simulated state is reset when you reload.
+        <a href="prototype-worker-journey.html" download="homarr-worker-prototype.html">Download this standalone demo</a
+        >. Research and benchmark commands live alongside the source.
+      </footer>
+    </main>
+    <script>
+      // Pure model. No DOM, network, storage, real keys or production mutations.
+      const Flow = (() => {
+        const initial = () => ({
+          worker: false,
+          registered: false,
+          relay: true,
+          busy: false,
+          claimed: false,
+          ownerKey: false,
+          ownerPaused: false,
+          invite: false,
+          inviteUsed: false,
+          guestKey: false,
+          guestAccount: false,
+          registrationPending: false,
+          guestMember: false,
+          guestPaused: false,
+          cloud: false,
+          mcp: false,
+          events: ["No worker has been launched."],
+        });
+        const online = (s) => s.worker && s.registered && s.relay;
+        const owner = (s) => online(s) && s.ownerKey && !s.ownerPaused;
+        const guest = (s) => online(s) && s.guestKey && s.guestMember && !s.guestPaused;
+        function reduce(previous, action) {
+          const s = { ...previous, events: [...previous.events] };
+          let text = "";
+          const allowOwner = () => {
+            if (owner(s)) return true;
+            text = "An online owner device must approve that action.";
+            return false;
+          };
+          switch (action) {
+            case "start":
+              s.worker = true;
+              s.registered = s.relay && !s.busy;
+              if (!s.registered) {
+                text = "Worker process started. Relay registration is waiting for availability or admission capacity.";
+                break;
+              }
+              text = s.claimed
+                ? "Worker restarted with the same identity and data. Saved grants remain."
+                : "Worker started and made an outbound relay connection. A private first-owner link is ready.";
+              break;
+            case "claim":
+              if (s.busy) {
+                text = "Relay admission is full. Wait and retry the same private link; it has not been consumed.";
+                break;
+              }
+              if (!online(s)) {
+                text = "The browser cannot reach the worker. Restore the worker and relay first.";
+                break;
+              }
+              if (s.claimed) {
+                text =
+                  "The first-owner link has already been used. Owner control needs a saved owner key or owner invitation. A local sign-in restores that user’s permitted access.";
+                break;
+              }
+              s.claimed = true;
+              s.ownerKey = true;
+              s.ownerPaused = false;
+              text = "Worker identity verified. This browser now holds the owner key. Open the usual Homarr boards.";
+              break;
+            case "invite":
+              if (!allowOwner()) break;
+              s.invite = true;
+              s.inviteUsed = false;
+              s.registrationPending = false;
+              text = "Owner created a one-use invitation for a person. The public worker address still grants nothing.";
+              break;
+            case "accept":
+              s.registrationPending = true;
+              text =
+                "Signup form opened. The worker checks and consumes the invitation when the username and password are submitted.";
+              break;
+            case "account":
+              if (s.busy) {
+                text =
+                  "New sessions need relay admission. Retry when capacity is available; the invitation is not consumed.";
+                break;
+              }
+              if (s.guestAccount) {
+                text =
+                  "The local account already exists. An owner must restore workspace membership; creating the account again is not recovery.";
+                break;
+              }
+              if (!online(s) || !s.registrationPending || !s.invite) {
+                text = "A valid invitation and a reachable worker are required to create this local account.";
+                break;
+              }
+              s.guestAccount = true;
+              s.guestMember = true;
+              s.guestKey = true;
+              s.guestPaused = false;
+              s.invite = false;
+              s.inviteUsed = true;
+              s.registrationPending = false;
+              text =
+                "Registration succeeded. Local credentials stay on the worker and this browser has member access. No GitHub account is needed.";
+              break;
+            case "forgetGuest":
+              s.guestKey = false;
+              s.guestPaused = true;
+              text = "The member key was removed from this browser. A local account can sign in again.";
+              break;
+            case "login":
+              if (s.busy) {
+                text = "A new browser session needs relay admission. Existing sessions can keep working.";
+                break;
+              }
+              if (!online(s)) {
+                text = "The worker must be reachable to check a password.";
+                break;
+              }
+              if (!s.guestAccount || !s.guestMember) {
+                text =
+                  "No active workspace membership exists. The account can remain on the worker; a password cannot restore removed membership or create owner control.";
+                break;
+              }
+              s.guestKey = true;
+              s.guestPaused = false;
+              text = "Local password sign-in restored member access on this device.";
+              break;
+            case "remove":
+              if (!allowOwner()) break;
+              s.guestKey = false;
+              s.guestMember = false;
+              s.invite = false;
+              s.registrationPending = false;
+              text =
+                "Owner removed workspace membership and revoked sessions. The local account still exists; it cannot reconnect to this workspace without restored membership.";
+              break;
+            case "pause":
+              s.ownerPaused = true;
+              text = "This browser is paused. Its saved owner key remains; other users are unaffected.";
+              break;
+            case "reconnect":
+              if (s.busy) {
+                text = "New relay connections are full. Retry when capacity is available; saved keys remain valid.";
+                break;
+              }
+              if (!online(s)) {
+                text = s.busy
+                  ? "The relay is busy. Retry after capacity is available."
+                  : "Worker or relay unavailable. Retrying does not change grants.";
+                break;
+              }
+              if (!s.ownerKey) {
+                text = "No owner key is saved. Cloud account sign-in alone cannot unlock this worker.";
+                break;
+              }
+              s.ownerPaused = false;
+              text = "Saved owner access reconnected to the same verified worker.";
+              break;
+            case "lose":
+              s.ownerKey = false;
+              s.ownerPaused = true;
+              text =
+                "Owner key lost. Another owner can invite a new device. Sole-owner local recovery is proposed, not implemented.";
+              break;
+            case "public":
+              text =
+                "Denied: a public worker address is a location, not an access grant. Existing valid sessions are unchanged.";
+              break;
+            case "stop":
+              s.worker = false;
+              s.registered = false;
+              s.ownerPaused = true;
+              s.guestPaused = true;
+              text = "Worker stopped. Data and identity stay on its persistent volume. Hosted widgets cannot refresh.";
+              break;
+            case "relayDown":
+              s.relay = false;
+              s.registered = false;
+              s.ownerPaused = true;
+              s.guestPaused = true;
+              text =
+                "Relay unavailable. Private data is still on the worker. This simulated outage affects all installations on that relay.";
+              break;
+            case "relayUp":
+              s.relay = true;
+              s.busy = false;
+              s.registered = s.worker;
+              text =
+                "Relay is available again. Saved grants can reconnect; requests that changed data are not replayed.";
+              break;
+            case "busy":
+              s.busy = true;
+              text =
+                "Relay admission is full. Existing sessions keep working; new sessions must wait. Saved keys and memberships are unchanged.";
+              break;
+            case "cloud":
+              s.cloud = true;
+              text = "Simulated cloud sign-in. It does not create worker access; only the worker can approve that.";
+              break;
+            case "mcp":
+              if (!allowOwner()) break;
+              if (s.busy) {
+                text =
+                  "Hosted MCP needs a new relay connection to confirm approval. Retry when admission is available; earlier approval remains unchanged.";
+                break;
+              }
+              if (!s.cloud) {
+                text =
+                  "Hosted MCP needs an optional cloud sign-in and separate worker-owner approval. Your dashboard does not need this.";
+                break;
+              }
+              s.mcp = true;
+              text =
+                "Owner approved hosted read-only MCP. This is a separate authorized endpoint that can read its approved results.";
+              break;
+          }
+          s.events.unshift(text);
+          s.events = s.events.slice(0, 5);
+          return s;
+        }
+        return { initial, reduce, online, owner, guest };
+      })();
+      const scenarios = [
+        {
+          id: "first",
+          name: "First launch",
+          title: "Start a worker and open Homarr",
+          description: "No worker port to expose and no cloud account in the dashboard setup path.",
+          setup: () => Flow.initial(),
+          steps: [
+            ["start", "Start the worker"],
+            ["claim", "Open the private setup link"],
+            ["public", "Another browser: open the public address"],
+          ],
+        },
+        {
+          id: "invite",
+          name: "Invite someone",
+          title: "Give someone local access",
+          description:
+            "The owner invites a person. The invited person can create a worker-local login for another browser.",
+          setup: () => ({ ...Flow.initial(), worker: true, registered: true, claimed: true, ownerKey: true }),
+          steps: [
+            ["invite", "Owner: create an invitation"],
+            ["accept", "Member: open the invitation"],
+            ["account", "Member: create a local login"],
+            ["forgetGuest", "Member: forget this browser key"],
+            ["login", "Member: sign in with the password"],
+            ["remove", "Owner: remove the member"],
+            ["login", "Member: try the old password"],
+          ],
+        },
+        {
+          id: "offline",
+          name: "Worker offline",
+          title: "Restart without replacing the worker",
+          description:
+            "Availability and authorization are separate. Stopping the worker must not erase its identity or create new access.",
+          setup: () => ({ ...Flow.initial(), worker: true, registered: true, claimed: true, ownerKey: true }),
+          steps: [
+            ["stop", "Stop the worker"],
+            ["reconnect", "Try to reconnect"],
+            ["start", "Start it with the original data volume"],
+            ["reconnect", "Reconnect with the saved owner key"],
+          ],
+        },
+        {
+          id: "lost",
+          name: "Lost device",
+          title: "A cloud login is not a recovery key",
+          description:
+            "Show the honest boundary: another owner can invite a new owner device today; recovering the sole owner locally still needs product work.",
+          setup: () => ({ ...Flow.initial(), worker: true, registered: true, claimed: true, ownerKey: true }),
+          steps: [
+            ["lose", "Lose the only owner browser key"],
+            ["public", "Try the public worker address"],
+            ["claim", "Try the consumed first-owner link"],
+            ["reconnect", "Try reconnecting without a key"],
+          ],
+        },
+        {
+          id: "relay",
+          name: "Relay trouble",
+          title: "Tell an outage from revoked access",
+          description: "A busy or unavailable relay needs a retry, not new passwords or a replacement worker.",
+          setup: () => ({ ...Flow.initial(), worker: true, registered: true, claimed: true, ownerKey: true }),
+          steps: [
+            ["relayDown", "Simulate a relay outage"],
+            ["reconnect", "Try to reconnect"],
+            ["relayUp", "Restore the relay"],
+            ["busy", "Simulate full admission"],
+            ["reconnect", "Retry while busy"],
+            ["relayUp", "Capacity becomes available"],
+            ["reconnect", "Reconnect with the same key"],
+          ],
+        },
+      ];
+      const labels = {
+        start: "Start / restart worker",
+        claim: "Open setup link",
+        invite: "Invite a person",
+        accept: "Open invitation",
+        account: "Create local login",
+        forgetGuest: "Forget member key",
+        login: "Sign in locally",
+        remove: "Remove member",
+        pause: "Pause owner browser",
+        reconnect: "Reconnect owner",
+        lose: "Lose owner key",
+        public: "Anonymous: try worker address",
+        stop: "Stop worker",
+        relayDown: "Relay outage",
+        relayUp: "Restore relay",
+        busy: "Relay busy",
+        cloud: "Cloud sign-in (simulated)",
+        mcp: "Approve read-only MCP",
+      };
+      let state = Flow.initial(),
+        currentScenario = 0,
+        currentStep = 0;
+      const $ = (id) => document.getElementById(id);
+      function field(label, value) {
+        const row = document.createElement("div"),
+          dt = document.createElement("dt"),
+          dd = document.createElement("dd");
+        dt.textContent = label;
+        dd.textContent = value;
+        row.append(dt, dd);
+        return row;
+      }
+      function render() {
+        const online = Flow.online(state),
+          isOwner = Flow.owner(state),
+          isGuest = Flow.guest(state),
+          hasSession = isOwner || isGuest;
+        let workerStatus = "Stopped",
+          workerVisual = "neutral";
+        if (state.worker) {
+          workerStatus = "Running";
+          workerVisual = "good";
+        } else if (state.claimed) workerVisual = "bad";
+        let relayStatus = "Available",
+          relayVisual = "good";
+        if (!state.relay) {
+          relayStatus = "Unavailable";
+          relayVisual = "bad";
+        } else if (state.busy) {
+          relayStatus = "New connections full";
+          relayVisual = "warn";
+        } else if (state.registered) relayStatus = "Worker connected";
+        else if (state.worker) relayStatus = "Worker connecting";
+        let browserStatus = "Not connected yet",
+          browserVisual = "neutral";
+        if (isOwner && isGuest) {
+          browserStatus = "Owner + member";
+          browserVisual = "good";
+        } else if (isOwner) {
+          browserStatus = "Owner connected";
+          browserVisual = "good";
+        } else if (isGuest) {
+          browserStatus = "Member connected";
+          browserVisual = "good";
+        } else if (state.claimed) {
+          browserStatus = "Access required";
+          browserVisual = "bad";
+          if (!online) browserStatus = "Cannot connect";
+          else if (state.ownerKey && state.ownerPaused) browserStatus = "Paused";
+        }
+        let title = "Open the private setup link";
+        if (!state.worker) {
+          title = "Start your worker";
+          if (state.claimed) title = "Worker is stopped";
+        } else if (!state.relay) title = "Relay unavailable";
+        else if (!state.registered) {
+          title = "Worker connecting";
+          if (state.busy) title = "Relay busy · worker waiting";
+        } else if (hasSession) title = "Ready to open your boards";
+        else if (state.busy) title = "Relay busy";
+        else if (state.ownerKey && state.ownerPaused) title = "Reconnect this browser";
+        else if (state.claimed) title = "Saved access required";
+        $("worker-state").textContent = workerStatus;
+        $("worker-node").dataset.state = workerVisual;
+        $("relay-state").textContent = relayStatus;
+        $("relay-node").dataset.state = relayVisual;
+        $("browser-state").textContent = browserStatus;
+        $("browser-node").dataset.state = browserVisual;
+        $("status-title").textContent = title;
+        $("status-detail").textContent = state.events[0];
+        let data = "Fresh installation",
+          link = "Not created",
+          ownerDevice = "No saved key",
+          memberDevice = "No saved key",
+          account = "Not created",
+          membership = "Not joined",
+          invitation = "None",
+          cloud = "Not needed for boards",
+          mcp = "Off";
+        if (state.claimed) {
+          data = "Existing installation";
+          link = "Consumed";
+        } else if (state.worker) link = "Ready";
+        if (state.ownerKey) {
+          ownerDevice = "Saved key";
+          if (state.ownerPaused) ownerDevice = "Saved key · paused";
+        }
+        if (state.guestKey) memberDevice = "Key saved";
+        if (isGuest) memberDevice = "Connected";
+        if (state.guestAccount) {
+          account = "On the worker";
+          membership = "Removed from workspace";
+        }
+        if (state.guestMember) membership = "Member";
+        if (state.invite) invitation = "Unused · one use";
+        if (state.inviteUsed) invitation = "Used";
+        if (state.registrationPending) invitation = "Signup form open";
+        if (state.cloud) cloud = "Signed in · simulated";
+        if (state.mcp) mcp = "Read only approved";
+        $("state-fields").replaceChildren(
+          field("Worker data", data),
+          field("First-owner link", link),
+          field("Owner device", ownerDevice),
+          field("Member device", memberDevice),
+          field("Local account", account),
+          field("Workspace access", membership),
+          field("Invitation", invitation),
+          field("Cloud account", cloud),
+          field("Hosted MCP", mcp),
+        );
+        $("event-list").replaceChildren(
+          ...state.events.map((text) => {
+            const li = document.createElement("li");
+            li.textContent = text;
+            return li;
+          }),
+        );
+        const scenario = scenarios[currentScenario];
+        $("scenario-title").textContent = scenario.title;
+        $("scenario-description").textContent = scenario.description;
+        $("steps").replaceChildren(
+          ...scenario.steps.map(([action, text], index) => {
+            const b = document.createElement("button");
+            b.className = index < currentStep ? "done" : index === currentStep ? "current" : "";
+            b.disabled = index !== currentStep;
+            const n = document.createElement("span");
+            n.className = "index";
+            n.textContent = String(index + 1);
+            const span = document.createElement("span");
+            span.textContent = text;
+            b.append(n, span);
+            b.addEventListener("click", () => {
+              state = Flow.reduce(state, action);
+              currentStep++;
+              render();
+              const next = $("steps").querySelector("button.current");
+              if (next) {
+                next.focus();
+              } else {
+                $("reset-scenario").focus();
+              }
+            });
+            return b;
+          }),
+        );
+        $("step-progress").textContent =
+          currentStep === scenario.steps.length
+            ? "Scenario complete. Try another or explore freely."
+            : `Step ${currentStep + 1} of ${scenario.steps.length}`;
+        document.querySelectorAll("#scenarios button").forEach((b, index) => {
+          b.setAttribute("aria-selected", String(index === currentScenario));
+          b.tabIndex = index === currentScenario ? 0 : -1;
+        });
+      }
+      scenarios.forEach((s, index) => {
+        const b = document.createElement("button");
+        b.textContent = s.name;
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-controls", "guided");
+        b.addEventListener("click", () => {
+          currentScenario = index;
+          currentStep = 0;
+          state = s.setup();
+          state.events = [s.description];
+          render();
+        });
+        $("scenarios").append(b);
+      });
+      Object.entries(labels).forEach(([action, label]) => {
+        const b = document.createElement("button");
+        b.textContent = label;
+        b.addEventListener("click", () => {
+          state = Flow.reduce(state, action);
+          render();
+        });
+        $("free-actions").append(b);
+      });
+      $("reset-scenario").addEventListener("click", () => {
+        currentStep = 0;
+        state = scenarios[currentScenario].setup();
+        render();
+      });
+      function showView(view) {
+        if (!["journey", "capacity", "next"].includes(view)) view = "journey";
+        document.querySelectorAll("[data-view]").forEach((b) => {
+          const selected = b.dataset.view === view;
+          b.setAttribute("aria-selected", String(selected));
+          b.tabIndex = selected ? 0 : -1;
+          $(b.dataset.view).hidden = !selected;
+        });
+        const url = new URL(location.href);
+        url.searchParams.set("view", view);
+        try {
+          history.replaceState(null, "", url);
+        } catch {}
+      }
+      document
+        .querySelectorAll("[data-view]")
+        .forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
+      document.querySelectorAll("[role=tablist]").forEach((list) =>
+        list.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+          const tabs = [...list.querySelectorAll("[role=tab]")];
+          let at = tabs.indexOf(document.activeElement);
+          if (at < 0) return;
+          event.preventDefault();
+          at = (at + (event.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+          tabs[at].click();
+          tabs[at].focus();
+        }),
+      );
+      const command =
+        "bash /home/habs/.codex/worktrees/headless-hono/homarr/scripts/worker.sh up \\\n  --frontend https://brainzilla.llama-stonecat.ts.net:8445 \\\n  --image homarr:native-worker-local";
+      $("launch-command").textContent = command;
+      $("copy-command").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(command);
+          $("copy-status").textContent = "Copied";
+        } catch {
+          const range = document.createRange();
+          range.selectNodeContents($("launch-command"));
+          const selection = getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          $("copy-status").textContent = "Select and copy the command above";
+        }
+      });
+      function calculate() {
+        const w = Number($("workers").value),
+          c = Number($("tabs").value),
+          r = Number($("updates").value),
+          p = Number($("payload").value);
+        $("workers-value").textContent = w;
+        $("tabs-value").textContent = c;
+        $("updates-value").textContent = r;
+        const clients = w * c,
+          sockets = w + clients,
+          bytes = clients * r * p;
+        const warnings = [];
+        if (c > 32) warnings.push("Exceeds the real worker’s current 32-peer cap.");
+        if (c * r > 256)
+          warnings.push("Exceeds the default 256-message/s worker socket budget, before control traffic.");
+        if (sockets > 4096) warnings.push("Exceeds the standalone relay’s default 4,096 total connections.");
+        if (w > 100 || sockets > 256)
+          warnings.push("Exceeds the demo deployment’s smaller 100-worker / 256-connection policy.");
+        warnings.push("A shared proxy IP also encounters source-IP upgrade and connection limits.");
+        const box = $("capacity-state");
+        box.replaceChildren();
+        const h = document.createElement("h3");
+        h.textContent = "Source-limit arithmetic";
+        const facts = document.createElement("dl");
+        facts.className = "fields";
+        facts.append(
+          field("Client connections", clients.toLocaleString()),
+          field("Relay sockets", sockets.toLocaleString()),
+          field("HTTP/1.1 proxy sockets (approx.)", (sockets * 2).toLocaleString()),
+          field("One-way opaque payload", (bytes / 1048576).toFixed(1) + " MiB/s"),
+        );
+        box.append(h, facts);
+        const blurb = document.createElement("p");
+        blurb.textContent =
+          "Payload only: excludes protocol envelopes, endpoint encoding, responses in the other direction, TLS and network framing. Proxy figures assume one upstream socket per upgraded downstream socket.";
+        box.append(blurb);
+        warnings.forEach((text) => {
+          const p = document.createElement("p");
+          p.textContent = text;
+          box.append(p);
+        });
+      }
+      ["workers", "tabs", "updates", "payload"].forEach((id) => $(id).addEventListener("input", calculate));
+      const BENCHMARK_DATA = /* BENCHMARK_DATA_START */ {
+        note: "Measured 21 October 2026. Relay: 2 CPU quota / 512 MiB; opaque echo traffic on local networking, 15 seconds per run. Main active results use medians of 4 Bun and 3 current-Go runs. Higher-load probes ran once each. Full Homarr, TLS, endpoint encryption and integration performance are excluded.",
+        rows: [
+          {
+            workload: "Idle · 256 workers / 2,048 clients",
+            runtime: "Bun 1.4.2",
+            rps: "Idle",
+            latency: "—",
+            rss: "46.8 MiB",
+            cpu: "0.00 cores",
+            outcome: "1 run(s) · no loss",
+          },
+          {
+            workload: "Idle · 256 workers / 2,048 clients",
+            runtime: "Go 1.27.3 candidate",
+            rps: "Idle",
+            latency: "—",
+            rss: "69.5 MiB",
+            cpu: "0.00 cores",
+            outcome: "1 run(s) · no loss",
+          },
+          {
+            workload: "Active · 64 workers / 512 clients · 5Hz · 4KiB",
+            runtime: "Bun 1.4.2",
+            rps: "2,560",
+            latency: "27.1 / 33.1ms",
+            rss: "50.8 MiB",
+            cpu: "0.12 cores",
+            outcome: "4 run(s) · no loss",
+          },
+          {
+            workload: "Active · 64 workers / 512 clients · 5Hz · 4KiB",
+            runtime: "Go 1.27.3 candidate",
+            rps: "2,560",
+            latency: "33.6 / 37.2ms",
+            rss: "36.0 MiB",
+            cpu: "0.36 cores",
+            outcome: "3 run(s) · no loss",
+          },
+          {
+            workload: "Active · 128 workers / 1,024 clients · 10Hz · 4KiB",
+            runtime: "Bun 1.4.2",
+            rps: "10,240",
+            latency: "44.2 / 58.7ms",
+            rss: "64.1 MiB",
+            cpu: "0.40 cores",
+            outcome: "4 run(s) · no loss",
+          },
+          {
+            workload: "Active · 128 workers / 1,024 clients · 10Hz · 4KiB",
+            runtime: "Go 1.27.3 candidate",
+            rps: "10,240",
+            latency: "68.9 / 76.6ms",
+            rss: "60.1 MiB",
+            cpu: "1.40 cores",
+            outcome: "3 run(s) · no loss",
+          },
+          {
+            workload: "2 generators · 256 workers / 2,048 clients · 10Hz · 4KiB",
+            runtime: "Bun 1.4.2",
+            rps: "20,480 target",
+            latency: "— / 77.9ms*",
+            rss: "62.2 MiB",
+            cpu: "0.73 cores",
+            outcome: "Pass · no loss",
+          },
+          {
+            workload: "2 generators · 256 workers / 2,048 clients · 10Hz · 4KiB",
+            runtime: "Go 1.27.3 candidate",
+            rps: "20,480 target",
+            latency: "— / 7149.5ms*",
+            rss: "126.0 MiB",
+            cpu: "1.99 cores",
+            outcome: "Fails · 15,228 missing; 176,703 replies >2s",
+          },
+          {
+            workload: "3 generators · 384 workers / 3,072 clients · 10Hz · 4KiB",
+            runtime: "Bun 1.4.2",
+            rps: "30,720 target",
+            latency: "— / 882.5ms*",
+            rss: "61.1 MiB",
+            cpu: "0.98 cores",
+            outcome: "Latency limit · above 100ms target",
+          },
+        ],
+        splitProbe: {
+          bun2048: {
+            verifiedRoundtripsPerSecond: 20480.5971222897,
+            maxOfShardRttP99Ms: 77.87026700000206,
+            maxOfShardSchedulingP99Ms: 0.30182199999762815,
+            startSkewMs: 0.139404296875,
+            readyWorkers: 256,
+            readyClients: 2048,
+            missing: 0,
+            mismatches: 0,
+            unknownMessages: 0,
+            handshakeFailures: 0,
+            deadlineExceededReceived: 0,
+            sendErrors: 0,
+            startBarrierMaxLatenessMs: 1.27783203125,
+            percentileNote:
+              "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration.",
+            peakRssMiB: 62.2265625,
+            activeAverageCpuCores: 0.7282490022454792,
+            openClientsAtEnd: 2048,
+            unexpectedCloses: {},
+          },
+          go2048: {
+            verifiedRoundtripsPerSecond: 19248.147497912545,
+            maxOfShardRttP99Ms: 7149.486830000002,
+            maxOfShardSchedulingP99Ms: 2.01344699999936,
+            startSkewMs: 0.748046875,
+            readyWorkers: 256,
+            readyClients: 2048,
+            missing: 15228,
+            mismatches: 0,
+            unknownMessages: 0,
+            handshakeFailures: 0,
+            deadlineExceededReceived: 176703,
+            sendErrors: 0,
+            startBarrierMaxLatenessMs: 1.252197265625,
+            percentileNote:
+              "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration.",
+            peakRssMiB: 126.04296875,
+            activeAverageCpuCores: 1.9872418749690115,
+            openClientsAtEnd: 1656,
+            unexpectedCloses: { "1000:Worker disconnected": 392, "1008:Connection rate limit reached": 49 },
+          },
+          bun3072: {
+            verifiedRoundtripsPerSecond: 30720.91530704608,
+            maxOfShardRttP99Ms: 882.4784490000002,
+            maxOfShardSchedulingP99Ms: 7.708407000000079,
+            startSkewMs: 0.9345703125,
+            readyWorkers: 384,
+            readyClients: 3072,
+            missing: 0,
+            mismatches: 0,
+            unknownMessages: 0,
+            handshakeFailures: 0,
+            deadlineExceededReceived: 0,
+            sendErrors: 0,
+            startBarrierMaxLatenessMs: 1.285400390625,
+            percentileNote:
+              "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration.",
+            peakRssMiB: 61.11328125,
+            activeAverageCpuCores: 0.9773682031792882,
+            openClientsAtEnd: 3072,
+            unexpectedCloses: {},
+          },
+        },
+      }; /* BENCHMARK_DATA_END */
+      function renderBenchmarks() {
+        if (!BENCHMARK_DATA) return;
+        $("measurement-note").textContent = BENCHMARK_DATA.note;
+        const rows = [];
+        for (const row of BENCHMARK_DATA.rows) {
+          const tr = document.createElement("tr");
+          for (const value of [row.workload, row.runtime, row.rps, row.latency, row.rss, row.cpu, row.outcome]) {
+            const td = document.createElement("td");
+            td.textContent = value;
+            tr.append(td);
+          }
+          rows.push(tr);
+        }
+        $("benchmark-results").replaceChildren(...rows);
+      }
+      render();
+      calculate();
+      renderBenchmarks();
+      showView(new URLSearchParams(location.search).get("view") || "journey");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "url": "ws://127.0.0.1:44080",
+  "origin": "https://benchmark.invalid",
+  "registrationToken": "benchmark-local-only",
+  "workers": 128,
+  "channelsPerWorker": 8,
+  "hz": 10,
+  "payloadBytes": 4096,
+  "durationMs": 15000,
+  "concurrency": 8,
+  "startAtUnixMs": 1792609889022,
+  "messageIdPrefix": "shard0:"
+}

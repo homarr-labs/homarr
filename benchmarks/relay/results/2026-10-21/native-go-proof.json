@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-21",
+  "relay": "Go1.27.3 candidate",
+  "sourceSha256": "da1efc755fb46dd68c46431c623ff13802f08b997b46b60e61272d861f8a9723",
+  "binarySha256": "f3b8ad651cd5d926771b049d2199771e7b01c590017b11169f58e63de396ec3e",
+  "workerImage": "homarr:native-worker-local",
+  "frontend": "existing normal Homarr at8445",
+  "temporaryRelay": "private WSS endpoint8447",
+  "workerPublishedPorts": {},
+  "initialPrivateClaimOpenedNativeBoards": true,
+  "nativeConnectionSettingsShowEncryptedRelayAndConnected": true,
+  "browserRuntimeErrors": 0,
+  "oauthAttempted": false,
+  "scope": "One fresh empty worker/browser, encrypted registration/claim/bootstrap and settings. No end-to-end widget load, pure Go image build or production idle/soak claim. Temporary Go QA worker, relay and browser profile cleaned after proof."
+}

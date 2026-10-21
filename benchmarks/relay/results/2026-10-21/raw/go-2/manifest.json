@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "runtime": "go",
+  "gitCommit": "94ef85c5d5b42b91ea1a6ba3e535df2af709348d",
+  "host": "Linux brainzilla 6.8.0-90-generic #91-Ubuntu SMP PREEMPT_DYNAMIC Tue Nov 18 14:14:30 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux",
+  "cpuCount": 20,
+  "clockTicksPerSecond": 100,
+  "relayCpuQuota": 2,
+  "generatorCpuQuota": 4,
+  "cpuAffinityEnforced": false,
+  "cpuIsolationNote": "Docker CPU quotas bound consumed CPU time; neither process is physically pinned. Shared-host scheduling interference remains.",
+  "memoryLimitBytes": 536870912,
+  "generatorMemoryLimitBytes": 2147483648,
+  "durationSeconds": 15,
+  "bunVersion": "1.4.2",
+  "network": "Generator container shares relay network namespace; no published-port proxy. Rootless host networking may be rootlesskit namespace rather than physical host loopback.",
+  "results": [
+    {
+      "case": "active512",
+      "result": {
+        "schemaVersion": 1,
+        "config": {
+          "workers": 64,
+          "channelsPerWorker": 8,
+          "hz": 5,
+          "payloadBytes": 4096,
+          "url": "ws://127.0.0.1:44080",
+          "registrationToken": "benchmark-local-only",
+          "origin": "https://benchmark.invalid",
+          "durationMs": 15000,
+          "concurrency": 8
+        },
+        "startedAt": "2026-10-21T18:53:54.227Z",
+        "identitiesPreparedMs": 7.495889,
+        "setupMs": 140.922245,
+        "activeElapsedMs": 14999.287862000001,
+        "measurementBeginUnixMs": 1792608834368.4226,
+        "measurementEndUnixMs": 1792608849367.7104,
+        "connections": {
+          "attemptedWorkers": 64,
+          "readyWorkers": 64,
+          "attemptedClients": 512,
+          "readyClients": 512,
+          "openClientsAtEnd": 512
+        },
+        "messages": {
+          "sent": 38400,
+          "received": 38400,
+          "missing": 0,
+          "mismatches": 0,
+          "unknownMessages": 0,
+          "sendErrors": 0,
+          "deadlineExceededReceived": 0,
+          "successfulRoundtripsPerSecond": 2560.1215439890725,
+          "applicationBytesEachDirection": 157286400
+        },
+        "latencyMs": {
+          "count": 38400,
+          "min": 8.486837999999807,
+          "p50": 29.98403600000165,
+          "p95": 44.959288000000015,
+          "p99": 48.86635700000079,
+          "max": 54.458124
+        },
+        "registrationMs": {
+          "count": 64,
+          "min": 0.9690499999999993,
+          "p50": 1.554161999999998,
+          "p95": 10.854905000000002,
+          "p99": 11.319492999999998,
+          "max": 11.319492999999998
+        },
+        "connectMs": {
+          "count": 512,
+          "min": 0.3332709999999963,
+          "p50": 1.123599000000013,
+          "p95": 3.125841000000001,
+          "p99": 14.150813999999997,
+          "max": 14.906992000000002
+        },
+        "schedulingLagMs": {
+          "count": 75,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.06429600000046776,
+          "p99": 1.1829999999999927,
+          "max": 1.1829999999999927
+        },
+        "failures": {},
+        "closes": {},
+        "generator": {
+          "userCpuMs": 1216.971,
+          "systemCpuMs": 1910.504,
+          "resourceUsageMaxRssRaw": 66428,
+          "memoryKiB": {
+            "VmHWM": 66428,
+            "VmRSS": 53228
+          },
+          "elapsedMs": 15163.40242
+        }
+      },
+      "resourcesFile": "active512.resources.json"
+    },
+    {
+      "case": "active1024",
+      "result": {
+        "schemaVersion": 1,
+        "config": {
+          "workers": 128,
+          "channelsPerWorker": 8,
+          "hz": 10,
+          "payloadBytes": 4096,
+          "url": "ws://127.0.0.1:44080",
+          "registrationToken": "benchmark-local-only",
+          "origin": "https://benchmark.invalid",
+          "durationMs": 15000,
+          "concurrency": 8
+        },
+        "startedAt": "2026-10-21T18:54:10.609Z",
+        "identitiesPreparedMs": 10.041652999999998,
+        "setupMs": 234.72802399999998,
+        "activeElapsedMs": 14999.949638,
+        "measurementBeginUnixMs": 1792608850844.2031,
+        "measurementEndUnixMs": 1792608865844.1528,
+        "connections": {
+          "attemptedWorkers": 128,
+          "readyWorkers": 128,
+          "attemptedClients": 1024,
+          "readyClients": 1024,
+          "openClientsAtEnd": 1024
+        },
+        "messages": {
+          "sent": 153600,
+          "received": 153600,
+          "missing": 0,
+          "mismatches": 0,
+          "unknownMessages": 0,
+          "sendErrors": 0,
+          "deadlineExceededReceived": 0,
+          "successfulRoundtripsPerSecond": 10240.034380574098,
+          "applicationBytesEachDirection": 629145600
+        },
+        "latencyMs": {
+          "count": 153600,
+          "min": 10.31376999999975,
+          "p50": 60.39562799999999,
+          "p95": 94.51577499999996,
+          "p99": 118.96633699999984,
+          "max": 176.32088600000043
+        },
+        "registrationMs": {
+          "count": 128,
+          "min": 0.7738039999999984,
+          "p50": 1.7864690000000003,
+          "p95": 12.792758,
+          "p99": 14.291217999999994,
+          "max": 14.373236000000006
+        },
+        "connectMs": {
+          "count": 1024,
+          "min": 0.16504900000001044,
+          "p50": 0.925744999999992,
+          "p95": 2.202949000000018,
+          "p99": 12.592556000000002,
+          "max": 20.356735000000015
+        },
+        "schedulingLagMs": {
+          "count": 150,
+          "min": 0,
+          "p50": 0,
+          "p95": 0.06348299999990559,
+          "p99": 0.5220810000009806,
+          "max": 1.1974830000000054
+        },
+        "failures": {},
+        "closes": {},
+        "generator": {
+          "userCpuMs": 4049.803,
+          "systemCpuMs": 5943.276,
+          "resourceUsageMaxRssRaw": 88268,
+          "memoryKiB": {
+            "VmHWM": 88268,
+            "VmRSS": 83452
+          },
+          "elapsedMs": 15286.928022
+        }
+      },
+      "resourcesFile": "active1024.resources.json"
+    }
+  ],
+  "generatorImage": "sha256:1ca36ab804cc2274557f1f8e7aa71719429e225836bc2ea5f15bcd69e1b8743d",
+  "generatorHostConfig": {
+    "Memory": 2147483648,
+    "MemorySwap": 2147483648,
+    "NanoCpus": 4000000000,
+    "PidsLimit": 128
+  }
+}

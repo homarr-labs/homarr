@@ -1,0 +1,22 @@
+{
+  "hostConfig": {
+    "Memory": 536870912,
+    "MemorySwap": 536870912,
+    "NanoCpus": 2000000000,
+    "PidsLimit": 128
+  },
+  "containerState": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 3013183,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-21T18:55:48.823618827Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "image": "sha256:1ca36ab804cc2274557f1f8e7aa71719429e225836bc2ea5f15bcd69e1b8743d"
+}

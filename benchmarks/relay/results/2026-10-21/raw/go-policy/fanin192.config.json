@@ -1,0 +1,11 @@
+{
+  "workers": 1,
+  "channelsPerWorker": 32,
+  "hz": 6,
+  "payloadBytes": 1024,
+  "url": "ws://127.0.0.1:44080",
+  "registrationToken": "benchmark-local-only",
+  "origin": "https://benchmark.invalid",
+  "durationMs": 15000,
+  "concurrency": 8
+}

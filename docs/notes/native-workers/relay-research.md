@@ -2,7 +2,7 @@
 
 Research date: 21 October 2026. Source baseline: `feat/headless-hono-backend`, commit `32eccd0f84bb401b1d49f94b7c37a1f905e7eff4`.
 
-This is architecture research, not a capacity result. Repository facts below were inspected at that baseline; the parallel Go implementation and benchmark results are outside this note. No load tests, deployment mutations, live OAuth, or production measurements were performed. Recommendations are explicitly proposals or inferences. Current official documentation was consulted directly; Context7 is handled separately by the lead session after the previously reported quota failure.
+This is architecture research, not a capacity result. Repository facts below were inspected at that baseline; the parallel Go implementation and benchmark results are outside this note. No load tests, deployment mutations, live OAuth, or production measurements were performed. Recommendations are explicitly proposals or inferences. Current official documentation was consulted directly. The lead separately fetched current Go documentation with the Context7 CLI from `/tmp`; the checkout’s npm override blocked running that CLI from the repository.
 
 ## Recommendation
 

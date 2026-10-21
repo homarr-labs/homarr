@@ -1,0 +1,16 @@
+{
+  "compiler": "go1.27.3 linux/amd64",
+  "official_manifest": "https://go.dev/dl/?mode=json",
+  "archive": "https://go.dev/dl/go1.27.3.linux-amd64.tar.gz",
+  "archive_sha256": "65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40",
+  "build_command": "GOCACHE=/tmp/homarr-go-current-toolchain/cache GOTOOLCHAIN=local GOPROXY=off /tmp/homarr-go-current-toolchain/go/bin/go build -p=1 -buildvcs=false -o relay-go-current .",
+  "sha256": {
+    "main.go": "da1efc755fb46dd68c46431c623ff13802f08b997b46b60e61272d861f8a9723",
+    "go.mod": "bdd71dc100948455f652c4c550332af6edaf4a64a9f5b4f1ca9cf3da0378b7ea",
+    "go.sum": "1f1676fc6bb94593d3b340f85b1913414d1a8c3c85f1179cb057c17b32d8c4f2",
+    "relay-go": "0ddc463042f51fa246d629d2b7ceab31b00b649bca1c92a65597b88302e5930e",
+    "relay-go-current": "f3b8ad651cd5d926771b049d2199771e7b01c590017b11169f58e63de396ec3e"
+  },
+  "peak_new_toolchain_and_cache_approx_mib": 381,
+  "source_changed": false
+}

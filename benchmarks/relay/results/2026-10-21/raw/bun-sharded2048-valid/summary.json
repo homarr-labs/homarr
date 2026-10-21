@@ -1,0 +1,186 @@
+{
+  "verifiedRoundtripsPerSecond": 20480.5971222897,
+  "maxOfShardRttP99Ms": 77.87026700000206,
+  "maxOfShardSchedulingP99Ms": 0.30182199999762815,
+  "startSkewMs": 0.139404296875,
+  "readyWorkers": 256,
+  "readyClients": 2048,
+  "missing": 0,
+  "mismatches": 0,
+  "unknownMessages": 0,
+  "handshakeFailures": 0,
+  "deadlineExceededReceived": 0,
+  "sendErrors": 0,
+  "startBarrierMaxLatenessMs": 1.27783203125,
+  "shards": [
+    {
+      "schemaVersion": 1,
+      "config": {
+        "url": "ws://127.0.0.1:44080",
+        "origin": "https://benchmark.invalid",
+        "registrationToken": "benchmark-local-only",
+        "workers": 128,
+        "channelsPerWorker": 8,
+        "hz": 10,
+        "payloadBytes": 4096,
+        "durationMs": 15000,
+        "concurrency": 8,
+        "startAtUnixMs": 1792609732219,
+        "messageIdPrefix": "shard0:"
+      },
+      "startedAt": "2026-10-21T19:08:42.350Z",
+      "identitiesPreparedMs": 6.723505,
+      "setupMs": 225.713237,
+      "activeElapsedMs": 14999.743331999998,
+      "measurementBeginUnixMs": 1792609732220.2778,
+      "measurementEndUnixMs": 1792609747220.0212,
+      "connections": {
+        "attemptedWorkers": 128,
+        "readyWorkers": 128,
+        "attemptedClients": 1024,
+        "readyClients": 1024,
+        "openClientsAtEnd": 1024
+      },
+      "messages": {
+        "sent": 153600,
+        "received": 153600,
+        "missing": 0,
+        "mismatches": 0,
+        "unknownMessages": 0,
+        "sendErrors": 0,
+        "deadlineExceededReceived": 0,
+        "successfulRoundtripsPerSecond": 10240.175221686255,
+        "applicationBytesEachDirection": 629145600
+      },
+      "latencyMs": {
+        "count": 153600,
+        "min": 21.22397600000113,
+        "p50": 51.17452599999888,
+        "p95": 72.44032499999958,
+        "p99": 77.08793499999956,
+        "max": 96.3057489999992
+      },
+      "registrationMs": {
+        "count": 128,
+        "min": 0.6940200000000019,
+        "p50": 1.389720999999998,
+        "p95": 3.167712,
+        "p99": 3.3957580000000007,
+        "max": 3.4315549999999995
+      },
+      "connectMs": {
+        "count": 1024,
+        "min": 0.4902090000000001,
+        "p50": 1.294713999999999,
+        "p95": 1.7769539999999893,
+        "p99": 7.8054500000000075,
+        "max": 15.099274000000008
+      },
+      "schedulingLagMs": {
+        "count": 150,
+        "min": 0,
+        "p50": 0,
+        "p95": 0.080549999998766,
+        "p99": 0.24633600000015576,
+        "max": 1.090130999999019
+      },
+      "failures": {},
+      "closes": {},
+      "generator": {
+        "userCpuMs": 3492.289,
+        "systemCpuMs": 5345.606,
+        "resourceUsageMaxRssRaw": 82348,
+        "memoryKiB": {
+          "VmHWM": 82348,
+          "VmRSS": 81144
+        },
+        "elapsedMs": 24907.158519999997
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "config": {
+        "url": "ws://127.0.0.1:44080",
+        "origin": "https://benchmark.invalid",
+        "registrationToken": "benchmark-local-only",
+        "workers": 128,
+        "channelsPerWorker": 8,
+        "hz": 10,
+        "payloadBytes": 4096,
+        "durationMs": 15000,
+        "concurrency": 8,
+        "startAtUnixMs": 1792609732219,
+        "messageIdPrefix": "shard1:"
+      },
+      "startedAt": "2026-10-21T19:08:42.360Z",
+      "identitiesPreparedMs": 9.815304000000001,
+      "setupMs": 216.48555199999998,
+      "activeElapsedMs": 14999.382007,
+      "measurementBeginUnixMs": 1792609732220.1384,
+      "measurementEndUnixMs": 1792609747219.5205,
+      "connections": {
+        "attemptedWorkers": 128,
+        "readyWorkers": 128,
+        "attemptedClients": 1024,
+        "readyClients": 1024,
+        "openClientsAtEnd": 1024
+      },
+      "messages": {
+        "sent": 153600,
+        "received": 153600,
+        "missing": 0,
+        "mismatches": 0,
+        "unknownMessages": 0,
+        "sendErrors": 0,
+        "deadlineExceededReceived": 0,
+        "successfulRoundtripsPerSecond": 10240.421900603442,
+        "applicationBytesEachDirection": 629145600
+      },
+      "latencyMs": {
+        "count": 153600,
+        "min": 20.69107299999996,
+        "p50": 52.25604600000224,
+        "p95": 72.92396500000177,
+        "p99": 77.87026700000206,
+        "max": 85.43294500000047
+      },
+      "registrationMs": {
+        "count": 128,
+        "min": 0.9494970000000009,
+        "p50": 1.704000999999998,
+        "p95": 2.363118,
+        "p99": 2.6065780000000025,
+        "max": 2.706848000000001
+      },
+      "connectMs": {
+        "count": 1024,
+        "min": 0.38612000000000535,
+        "p50": 1.2866339999999923,
+        "p95": 1.7057970000000182,
+        "p99": 7.700810000000004,
+        "max": 9.898969000000022
+      },
+      "schedulingLagMs": {
+        "count": 150,
+        "min": 0,
+        "p50": 0,
+        "p95": 0.0777909999997064,
+        "p99": 0.30182199999762815,
+        "max": 1.129888999999821
+      },
+      "failures": {},
+      "closes": {},
+      "generator": {
+        "userCpuMs": 3497.383,
+        "systemCpuMs": 5523.931,
+        "resourceUsageMaxRssRaw": 82540,
+        "memoryKiB": {
+          "VmHWM": 82540,
+          "VmRSS": 67020
+        },
+        "elapsedMs": 24912.560910999997
+      }
+    }
+  ],
+  "percentileNote": "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration."
+}

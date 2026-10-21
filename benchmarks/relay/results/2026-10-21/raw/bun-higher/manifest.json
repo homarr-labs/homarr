@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "runtime": "bun",
+  "gitCommit": "94ef85c5d5b42b91ea1a6ba3e535df2af709348d",
+  "host": "Linux brainzilla 6.8.0-90-generic #91-Ubuntu SMP PREEMPT_DYNAMIC Tue Nov 18 14:14:30 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux",
+  "cpuCount": 20,
+  "clockTicksPerSecond": 100,
+  "relayCpuQuota": 2,
+  "generatorCpuQuota": 4,
+  "cpuAffinityEnforced": false,
+  "cpuIsolationNote": "Docker CPU quotas bound consumed CPU time; neither process is physically pinned. Shared-host scheduling interference remains.",
+  "memoryLimitBytes": 536870912,
+  "generatorMemoryLimitBytes": 2147483648,
+  "durationSeconds": 15,
+  "bunVersion": "1.4.2",
+  "network": "Generator container shares relay network namespace; no published-port proxy. Rootless host networking may be rootlesskit namespace rather than physical host loopback.",
+  "results": [
+    {
+      "case": "active2048",
+      "result": {
+        "schemaVersion": 1,
+        "config": {
+          "workers": 256,
+          "channelsPerWorker": 8,
+          "hz": 10,
+          "payloadBytes": 4096,
+          "url": "ws://127.0.0.1:44080",
+          "registrationToken": "benchmark-local-only",
+          "origin": "https://benchmark.invalid",
+          "durationMs": 15000,
+          "concurrency": 8
+        },
+        "startedAt": "2026-10-21T19:00:05.761Z",
+        "identitiesPreparedMs": 22.850601,
+        "setupMs": 595.587236,
+        "activeElapsedMs": 14999.939764,
+        "measurementBeginUnixMs": 1792609206357.487,
+        "measurementEndUnixMs": 1792609221357.4268,
+        "connections": {
+          "attemptedWorkers": 256,
+          "readyWorkers": 256,
+          "attemptedClients": 2048,
+          "readyClients": 2048,
+          "openClientsAtEnd": 2048
+        },
+        "messages": {
+          "sent": 307200,
+          "received": 307200,
+          "missing": 0,
+          "mismatches": 0,
+          "unknownMessages": 0,
+          "sendErrors": 0,
+          "deadlineExceededReceived": 0,
+          "successfulRoundtripsPerSecond": 20480.08224254893,
+          "applicationBytesEachDirection": 1258291200
+        },
+        "latencyMs": {
+          "count": 307200,
+          "min": 25.692415999999866,
+          "p50": 122.13968999999997,
+          "p95": 309.0143029999999,
+          "p99": 450.4922310000002,
+          "max": 575.6837779999987
+        },
+        "registrationMs": {
+          "count": 256,
+          "min": 1.0543059999999969,
+          "p50": 2.692791999999997,
+          "p95": 5.174028,
+          "p99": 5.815571999999996,
+          "max": 6.053765999999996
+        },
+        "connectMs": {
+          "count": 2048,
+          "min": 0.4029780000000187,
+          "p50": 1.491277999999994,
+          "p95": 2.829009000000042,
+          "p99": 9.744115999999963,
+          "max": 35.42113800000004
+        },
+        "schedulingLagMs": {
+          "count": 150,
+          "min": 0,
+          "p50": 5.891093000000183,
+          "p95": 102.43066599999997,
+          "p99": 143.30229300000065,
+          "max": 175.39229400000113
+        },
+        "failures": {},
+        "closes": {},
+        "generator": {
+          "userCpuMs": 6566.223,
+          "systemCpuMs": 8804.419,
+          "resourceUsageMaxRssRaw": 209156,
+          "memoryKiB": {
+            "VmHWM": 209156,
+            "VmRSS": 202560
+          },
+          "elapsedMs": 15665.431738000001
+        }
+      },
+      "resourcesFile": "active2048.resources.json"
+    }
+  ],
+  "generatorImage": "sha256:1ca36ab804cc2274557f1f8e7aa71719429e225836bc2ea5f15bcd69e1b8743d",
+  "generatorHostConfig": {
+    "Memory": 2147483648,
+    "MemorySwap": 2147483648,
+    "NanoCpus": 4000000000,
+    "PidsLimit": 128
+  }
+}

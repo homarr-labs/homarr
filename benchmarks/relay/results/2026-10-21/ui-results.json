@@ -1,0 +1,151 @@
+{
+  "note": "Measured 21 October 2026. Relay: 2 CPU quota / 512 MiB; opaque echo traffic on local networking, 15 seconds per run. Main active results use medians of 4 Bun and 3 current-Go runs. Higher-load probes ran once each. Full Homarr, TLS, endpoint encryption and integration performance are excluded.",
+  "rows": [
+    {
+      "workload": "Idle · 256 workers / 2,048 clients",
+      "runtime": "Bun 1.4.2",
+      "rps": "Idle",
+      "latency": "—",
+      "rss": "46.8 MiB",
+      "cpu": "0.00 cores",
+      "outcome": "1 run(s) · no loss"
+    },
+    {
+      "workload": "Idle · 256 workers / 2,048 clients",
+      "runtime": "Go 1.27.3 candidate",
+      "rps": "Idle",
+      "latency": "—",
+      "rss": "69.5 MiB",
+      "cpu": "0.00 cores",
+      "outcome": "1 run(s) · no loss"
+    },
+    {
+      "workload": "Active · 64 workers / 512 clients · 5Hz · 4KiB",
+      "runtime": "Bun 1.4.2",
+      "rps": "2,560",
+      "latency": "27.1 / 33.1ms",
+      "rss": "50.8 MiB",
+      "cpu": "0.12 cores",
+      "outcome": "4 run(s) · no loss"
+    },
+    {
+      "workload": "Active · 64 workers / 512 clients · 5Hz · 4KiB",
+      "runtime": "Go 1.27.3 candidate",
+      "rps": "2,560",
+      "latency": "33.6 / 37.2ms",
+      "rss": "36.0 MiB",
+      "cpu": "0.36 cores",
+      "outcome": "3 run(s) · no loss"
+    },
+    {
+      "workload": "Active · 128 workers / 1,024 clients · 10Hz · 4KiB",
+      "runtime": "Bun 1.4.2",
+      "rps": "10,240",
+      "latency": "44.2 / 58.7ms",
+      "rss": "64.1 MiB",
+      "cpu": "0.40 cores",
+      "outcome": "4 run(s) · no loss"
+    },
+    {
+      "workload": "Active · 128 workers / 1,024 clients · 10Hz · 4KiB",
+      "runtime": "Go 1.27.3 candidate",
+      "rps": "10,240",
+      "latency": "68.9 / 76.6ms",
+      "rss": "60.1 MiB",
+      "cpu": "1.40 cores",
+      "outcome": "3 run(s) · no loss"
+    },
+    {
+      "workload": "2 generators · 256 workers / 2,048 clients · 10Hz · 4KiB",
+      "runtime": "Bun 1.4.2",
+      "rps": "20,480 target",
+      "latency": "— / 77.9ms*",
+      "rss": "62.2 MiB",
+      "cpu": "0.73 cores",
+      "outcome": "Pass · no loss"
+    },
+    {
+      "workload": "2 generators · 256 workers / 2,048 clients · 10Hz · 4KiB",
+      "runtime": "Go 1.27.3 candidate",
+      "rps": "20,480 target",
+      "latency": "— / 7149.5ms*",
+      "rss": "126.0 MiB",
+      "cpu": "1.99 cores",
+      "outcome": "Fails · 15,228 missing; 176,703 replies >2s"
+    },
+    {
+      "workload": "3 generators · 384 workers / 3,072 clients · 10Hz · 4KiB",
+      "runtime": "Bun 1.4.2",
+      "rps": "30,720 target",
+      "latency": "— / 882.5ms*",
+      "rss": "61.1 MiB",
+      "cpu": "0.98 cores",
+      "outcome": "Latency limit · above 100ms target"
+    }
+  ],
+  "splitProbe": {
+    "bun2048": {
+      "verifiedRoundtripsPerSecond": 20480.5971222897,
+      "maxOfShardRttP99Ms": 77.87026700000206,
+      "maxOfShardSchedulingP99Ms": 0.30182199999762815,
+      "startSkewMs": 0.139404296875,
+      "readyWorkers": 256,
+      "readyClients": 2048,
+      "missing": 0,
+      "mismatches": 0,
+      "unknownMessages": 0,
+      "handshakeFailures": 0,
+      "deadlineExceededReceived": 0,
+      "sendErrors": 0,
+      "startBarrierMaxLatenessMs": 1.27783203125,
+      "percentileNote": "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration.",
+      "peakRssMiB": 62.2265625,
+      "activeAverageCpuCores": 0.7282490022454792,
+      "openClientsAtEnd": 2048,
+      "unexpectedCloses": {}
+    },
+    "go2048": {
+      "verifiedRoundtripsPerSecond": 19248.147497912545,
+      "maxOfShardRttP99Ms": 7149.486830000002,
+      "maxOfShardSchedulingP99Ms": 2.01344699999936,
+      "startSkewMs": 0.748046875,
+      "readyWorkers": 256,
+      "readyClients": 2048,
+      "missing": 15228,
+      "mismatches": 0,
+      "unknownMessages": 0,
+      "handshakeFailures": 0,
+      "deadlineExceededReceived": 176703,
+      "sendErrors": 0,
+      "startBarrierMaxLatenessMs": 1.252197265625,
+      "percentileNote": "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration.",
+      "peakRssMiB": 126.04296875,
+      "activeAverageCpuCores": 1.9872418749690115,
+      "openClientsAtEnd": 1656,
+      "unexpectedCloses": {
+        "1000:Worker disconnected": 392,
+        "1008:Connection rate limit reached": 49
+      }
+    },
+    "bun3072": {
+      "verifiedRoundtripsPerSecond": 30720.91530704608,
+      "maxOfShardRttP99Ms": 882.4784490000002,
+      "maxOfShardSchedulingP99Ms": 7.708407000000079,
+      "startSkewMs": 0.9345703125,
+      "readyWorkers": 384,
+      "readyClients": 3072,
+      "missing": 0,
+      "mismatches": 0,
+      "unknownMessages": 0,
+      "handshakeFailures": 0,
+      "deadlineExceededReceived": 0,
+      "sendErrors": 0,
+      "startBarrierMaxLatenessMs": 1.285400390625,
+      "percentileNote": "Maximum of independently measured shard p99 values; not a combined histogram percentile. Throughput is the sum of each shard's verified count divided by its own active duration.",
+      "peakRssMiB": 61.11328125,
+      "activeAverageCpuCores": 0.9773682031792882,
+      "openClientsAtEnd": 3072,
+      "unexpectedCloses": {}
+    }
+  }
+}
