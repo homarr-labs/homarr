@@ -301,7 +301,7 @@
     "scripts:update-openapi": "tsx ./scripts/check-openapi-schema.mts --write",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "bun run --filter @homarr/nextjs start",
-    "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\"",
+    "test": "cross-env NODE_ENV=development CI=true vitest run --project \"*-node\" --project dom",
     "test:coverage": "bun run test --coverage.enabled",
     "test:integration": "cross-env NODE_ENV=development CI=true vitest run --project integration --maxWorkers 2",
     "test:docs-screenshots": "cross-env UPDATE_DOCS_SCREENSHOTS=true NODE_ENV=development CI=true vitest run --project docs-screenshots",
@@ -309,7 +309,7 @@
     "test:workshop": "sh apps/workshop/test.sh",
     "test:workshop-live-provider": "node apps/workshop/tests/openrouter-live-smoke.mjs",
     "test:workshop-image": "sh apps/workshop/test-image.sh",
-    "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"!e2e\" --project \"!integration\" --project \"!docs-screenshots\" --ui",
+    "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"*-node\" --project dom --ui",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"
   },
