@@ -1,6 +1,6 @@
 ---
 title: "Releases"
-description: "Displays a list of the current version of the given repositories with the given version regex."
+description: "Tracks the latest releases of repositories and container images, and shows their changelogs."
 hide_title: true
 ---
 
@@ -20,19 +20,18 @@ import { sonarrIntegration } from "@site/docs/integrations/sonarr";
 
 <WidgetHeader widget={releasesWidget} categories={["Releases", "Software"]} />
 
-The releases widget enables you to track a list of repositories and see their respective latest release. Compact mode keeps repositories in the familiar full-width stack.
+The releases widget tracks the latest release of repositories and container images, and lets you read their changelogs.
+Releases published within the highlight period are listed under New until you mark them as viewed. Repositories that could not be checked are grouped by cause under Needs attention.
 It also supports importing releases from your local docker containers.
 
 ### Screenshots
 
-import collapsibleCard from "./img/collapsible.png";
-import fullCard from "./img/full.png";
-import noDetailsCard from "./img/no-details.png";
+import overviewCard from "./img/overview.png";
+import readerCard from "./img/reader.png";
 
 <div className="flex gap-1">
-  <img src={fullCard.src} alt="releases full" width={128 * 3} />
-  <img src={collapsibleCard.src} alt="releases collapsible" width={128 * 3} />
-  <img src={noDetailsCard.src} alt="releases no details" width={128 * 3} />
+  <img src={overviewCard.src} alt="releases list" width={128 * 3} />
+  <img src={readerCard.src} alt="releases with changelog reader" width={128 * 6} />
 </div>
 
 ### Supported Providers
@@ -40,12 +39,14 @@ import noDetailsCard from "./img/no-details.png";
 GitHub, Docker Hub, GitLab, NPM, Codeberg, GitHub Container Registry, Quay, and LinuxServer.io are configured per repository in the widget.
 Adding or removing a provider token refreshes active release results.
 
+GitHub allows 60 requests per hour without a token, shared by every repository on the server. If GitHub repositories show "Rate limited by GitHub", add a GitHub token in the widget settings.
+
+For container images tracked by a floating tag such as `latest`, the widget shows the version tag that points to the same image.
+
 For GitHub repositories with more than 1,000 releases, Homarr uses the releases returned before GitHub's history limit. The latest release remains available in the widget.
 
 For GitHub Container Registry, use `owner/package` identifiers such as `homarr-labs/homarr`.
 Full image references such as `ghcr.io/homarr-labs/homarr:latest` are also accepted.
-
-Advanced view shows every configured repository in a roomier responsive layout. Repository names and details remain visible, and selecting a repository still expands its description and links.
 
 ### Supported integrations
 
