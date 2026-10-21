@@ -1,0 +1,35 @@
+# One worker connected outbound to an existing frontend and relay. No host ports.
+services:
+  worker:
+    image: ${HOMARR_WORKER_IMAGE:?Run scripts/worker.sh up first}
+    pull_policy: never
+    restart: unless-stopped
+    # Read once as container root; worker-entrypoint drops to PUID afterwards.
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - 'export WORKER_RELAY_REGISTRATION_TOKEN="$$(cat /run/secrets/relay_registration_token)"; exec /app/worker-entrypoint.sh'
+    environment:
+      WORKER_PUBLIC_URL: ""
+      WORKER_PLATFORM_URL: ${WORKER_PLATFORM_URL:?Set the frontend URL}
+      WORKER_ALLOWED_ORIGINS: ${WORKER_ALLOWED_ORIGINS:?Set the frontend origin}
+      WORKER_RELAY_URL: ${WORKER_RELAY_URL:?Set the relay URL}
+      WORKER_RUN_OPTIONAL_JOBS: "false"
+      HOMARR_STATE_BACKEND: memory
+    secrets:
+      - relay_registration_token
+    volumes:
+      - appdata:/appdata
+    healthcheck:
+      test: ["CMD", "bun", "-e", "const r=await fetch('http://127.0.0.1:3002/api/health/ready');process.exit(r.ok?0:1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 10s
+
+volumes:
+  appdata:
+
+secrets:
+  relay_registration_token:
+    file: ${HOMARR_WORKER_REGISTRATION_FILE:?Run scripts/worker.sh up first}
