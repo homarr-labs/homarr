@@ -124,8 +124,8 @@ export const CalendarDisplay = ({
     renderEvent,
     renderEventBody: (event: ScheduleEventData) => <span className={classes.scheduleEvent}>{event.title}</span>,
     scrollAreaProps: {
-      h: bodyHeight,
-      mah: bodyHeight,
+      h: "100%",
+      mah: "100%",
       type: "auto" as const,
       styles: { content: { minWidth: 0, width: "100%" } },
       startScrollPosition: { y: 8 * Math.max(40, bodyHeight / 12) },
@@ -275,6 +275,7 @@ export const CalendarDisplay = ({
             {...scheduleProps}
             firstDayOfWeek={firstDayOfWeek}
             withWeekNumber={false}
+            withCurrentTimeBubble={false}
             classNames={{ weekViewAllDaySlots: classes.weekAllDay }}
             className={classes.week}
             styles={{
