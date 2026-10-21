@@ -1,0 +1,25 @@
+packages/db/migrations/custom/0005_releases_widget_options.ts
+  s_b33778671a3872::t_271c1e785a8275 21,56
+packages/translation/src/lang/en.json
+  s_b33778671a3872::t_06e43450b8f094 4884-4885
+packages/widgets/src/releases/component.module.css
+  s_b33778671a3872::t_2f41293fa17352 85-88
+packages/widgets/src/releases/component.tsx
+  s_b33778671a3872::t_53bc0ce38d0352 156,261,263,265,268-279,286
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "796980ca9d2c1645eca5494ea492af23d213dde2",
+  "prompts": {},
+  "sessions": {
+    "s_b33778671a3872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4836a7b0-29a0-4329-9cac-5cfb8625bd5c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
