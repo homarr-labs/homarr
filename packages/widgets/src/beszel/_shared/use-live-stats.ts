@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { skipToken } from "@tanstack/react-query";
+import { skipToken, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
+import { useBoardReplay } from "@homarr/api/board-replay";
+import { useBoardSnapshotState } from "@homarr/api/board-snapshot";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
 // Beszel emits roughly one record per second. Keep a sliding one-minute window
@@ -21,11 +23,13 @@ const getPageVisibility = () => typeof document === "undefined" || document.visi
 const usePageVisible = () => useSyncExternalStore(subscribeToVisibility, getPageVisibility, () => true);
 
 export const useLiveStats = (integrationIds: string[], systemId: string, enabled: boolean) => {
+  const queryClient = useQueryClient();
+  const isReplay = useBoardReplay();
   const [systemStats, setSystemStats] = useState<BeszelSystemStatsRecord[]>([]);
   const [containerStats, setContainerStats] = useState<BeszelContainerStatsRecord[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const pageVisible = usePageVisible();
-  const subscriptionEnabled = enabled && pageVisible && systemId !== "";
+  const subscriptionEnabled = !isReplay && enabled && pageVisible && systemId !== "";
 
   // Append to buffer, trimming to MAX_BUFFER
   const appendSystemStats = useCallback((record: BeszelSystemStatsRecord) => {
@@ -73,5 +77,13 @@ export const useLiveStats = (integrationIds: string[], systemId: string, enabled
 
   const data = systemStats.length > 0 || containerStats.length > 0 ? { systemStats, containerStats } : null;
 
+  useBoardSnapshotState(["board-debug-beszel", integrationIds, systemId], data);
+  if (isReplay) {
+    const captured = queryClient.getQueryData<{
+      systemStats: BeszelSystemStatsRecord[];
+      containerStats: BeszelContainerStatsRecord[];
+    }>(["board-debug-beszel", integrationIds, systemId]);
+    return { data: captured ?? null, error: null };
+  }
   return { data, error };
 };
