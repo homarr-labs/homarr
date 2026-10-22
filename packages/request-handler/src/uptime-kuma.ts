@@ -6,13 +6,13 @@ import { createIntegrationRequestHandler } from "./lib/integration-request-handl
 export const uptimeKumaRequestHandler = createIntegrationRequestHandler<
   UptimeKumaStatusPage,
   "uptimeKuma",
-  Record<string, never>
+  { statusPageSlug?: string }
 >({
   cacheNamespace: "uptime-kuma:status-page",
   cacheVersion: "stale-status-v1",
   cacheTtlMs: 30_000,
-  async requestAsync(integration, _input, signal) {
+  async requestAsync(integration, input, signal) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getStatusPageAsync(signal);
+    return await integrationInstance.getStatusPageAsync(signal, input.statusPageSlug);
   },
 });

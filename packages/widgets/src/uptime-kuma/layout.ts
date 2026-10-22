@@ -6,10 +6,16 @@ const minimumInlineRowWidth = 430;
 const minimumTaggedRowWidth = 600;
 const maximumColumns = 3;
 
-export const getUptimeKumaLayout = (width: number, height: number, isAdvanced: boolean): UptimeKumaLayout => {
+export const getUptimeKumaLayout = (
+  width: number,
+  height: number,
+  isAdvanced: boolean,
+  summaryOnly = false,
+): UptimeKumaLayout => {
   if (isAdvanced) return "board";
   const isNarrow = width < compactBreakpoint;
   const isShort = height < compactBreakpoint;
+  if (summaryOnly && !isShort) return "tile";
   if (isNarrow && isShort) return "tile";
   if (isShort) return "strip";
   if (isNarrow) return "column";
