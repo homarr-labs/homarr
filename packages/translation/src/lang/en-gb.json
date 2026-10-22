@@ -1559,6 +1559,7 @@
             "untrusted": "The certificate is not trusted.",
             "hostnameMismatch": "The certificate hostname does not match the URL."
           },
+          "secondaryUrl": "",
           "alert": {
             "permission": {
               "title": "Not enough permissions",
@@ -1904,6 +1905,7 @@
       "tryAgain": "Try again",
       "loading": "Loading",
       "show": "Show",
+      "showAll": "",
       "hide": "Hide",
       "undo": "Undo",
       "editNamed": "Edit {name}",
@@ -1913,6 +1915,7 @@
       "copied": "Copied",
       "refresh": "Refresh"
     },
+    "hidden": "Hidden",
     "pagination": {
       "pageOf": "Page {page} of {totalPages}"
     },
@@ -1935,6 +1938,7 @@
       "clear": "Clear image",
       "uploadImage": "Upload image",
       "results": "Image search results",
+      "websiteIcon": "",
       "localImages": "Your images",
       "svgIcons": "SVG icons",
       "otherImages": "Other images",
@@ -3936,11 +3940,28 @@
         "paused": "Paused",
         "remaining": "{minutes} min left",
         "seasonEpisode": "S{season} E{episode}",
+        "state": {
+          "playing": "",
+          "buffering": ""
+        },
+        "details": {
+          "device": "Device",
+          "location": "",
+          "sessionId": "",
+          "bitrate": "",
+          "audioHandling": "",
+          "direct": "",
+          "transcode": "",
+          "containerChanged": "",
+          "position": "",
+          "unknown": ""
+        },
         "metadata": {
           "title": "Stats for nerds",
           "video": {
             "title": "Video",
-            "resolution": "Resolution"
+            "resolution": "Resolution",
+            "frameRate": ""
           },
           "audio": {
             "title": "Audio",
@@ -3961,6 +3982,109 @@
         "playing": "{count} playing",
         "transcoding": "{count} transcoding"
       }
+    },
+    "thingport-libraryStats": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "showModels": {
+          "label": ""
+        },
+        "showCollections": {
+          "label": ""
+        },
+        "showCategories": {
+          "label": ""
+        },
+        "showAuthors": {
+          "label": ""
+        }
+      },
+      "models": "",
+      "collections": "",
+      "categories": "",
+      "authors": ""
+    },
+    "thingport-featuredModel": {
+      "name": "",
+      "description": "",
+      "option": {
+        "autoRotate": {
+          "label": ""
+        },
+        "showDetails": {
+          "label": ""
+        }
+      },
+      "title": "",
+      "empty": "",
+      "hint": "",
+      "noPreview": "",
+      "views": "",
+      "prints": ""
+    },
+    "thingport-activityHeatmap": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "weekStart": {
+          "label": "First day of the week",
+          "option": {
+            "sunday": "",
+            "monday": ""
+          }
+        },
+        "showTotal": {
+          "label": ""
+        },
+        "showLegend": {
+          "label": ""
+        }
+      },
+      "lastYear": "",
+      "totalLastYear": "",
+      "totalInYear": "",
+      "dayTotal": "",
+      "dayEmpty": "",
+      "kinds": {
+        "import": "",
+        "upload": "",
+        "download": "",
+        "slicer": "",
+        "delete": ""
+      },
+      "less": "",
+      "more": ""
+    },
+    "thingport-models": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "option": {
+        "defaultTab": {
+          "label": "Default tab"
+        },
+        "itemCount": {
+          "label": ""
+        },
+        "showThumbnails": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "empty": {
+        "recentlyAdded": "",
+        "topViewed": "",
+        "topPrinted": ""
+      },
+      "views": "",
+      "prints": ""
     },
     "paperlessNgx": {
       "description": "Overview of your Paperless-ngx document archive",
@@ -4930,45 +5054,108 @@
     "uptimeKuma": {
       "description": "Monitor uptime statistics from your Uptime Kuma status page",
       "option": {
-        "showAverageUptime": {
-          "label": "Show average uptime",
-          "description": "Display the combined 24-hour average uptime percentage"
+        "showSummary": {
+          "label": "",
+          "description": ""
         },
-        "showUptimeRing": {
-          "label": "Show uptime ring",
-          "description": "Display a progress ring alongside the average uptime value"
+        "showIncidents": {
+          "label": "",
+          "description": ""
         },
-        "showTotalMonitors": {
-          "label": "Show total monitors",
-          "description": "Display the total number of configured monitors"
+        "groupByStatusPageGroup": {
+          "label": "",
+          "description": ""
         },
-        "showUpCount": {
-          "label": "Show up count",
-          "description": "Display how many monitors are currently up"
+        "showOnlyProblems": {
+          "label": "",
+          "description": ""
         },
-        "showDownCount": {
-          "label": "Show down count",
-          "description": "Display how many monitors are currently down"
+        "sortBy": {
+          "label": "",
+          "option": {
+            "status": "",
+            "statusPage": "",
+            "name": "Job name",
+            "uptime": ""
+          }
         },
-        "showPausedCount": {
-          "label": "Show paused count",
-          "description": "Display how many monitors are currently paused"
+        "showHeartbeatBar": {
+          "label": "",
+          "description": ""
+        },
+        "showUptime": {
+          "label": ""
+        },
+        "showResponseTime": {
+          "label": ""
+        },
+        "showCertificateExpiry": {
+          "label": "",
+          "description": ""
         }
-      },
-      "averageUptime": "Average uptime (24h)",
-      "stats": {
-        "totalMonitors": "Total monitors",
-        "upCount": "Up",
-        "downCount": "Down",
-        "pausedCount": "Paused"
-      },
-      "error": {
-        "internalServerError": "Failed to fetch uptime data"
       },
       "status": {
         "up": "Up",
         "down": "Down",
-        "paused": "Paused"
+        "pending": "",
+        "maintenance": "",
+        "stale": "",
+        "unknown": ""
+      },
+      "overall": {
+        "operational": "",
+        "degraded": "",
+        "outage": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "short": {
+        "operational": "",
+        "down": "",
+        "pending": "",
+        "maintenance": "",
+        "unknown": ""
+      },
+      "summary": {
+        "upRatio": "",
+        "upRatioShort": "",
+        "averageUptime": "",
+        "uptimeShort": "",
+        "statusCount": ""
+      },
+      "unit": {
+        "milliseconds": ""
+      },
+      "heartbeatBar": {
+        "label": ""
+      },
+      "detail": {
+        "checked": "",
+        "certificate": ""
+      },
+      "notice": {
+        "label": "",
+        "untitled": "Untitled"
+      },
+      "empty": {
+        "title": "",
+        "description": ""
+      },
+      "allClear": "",
+      "error": {
+        "internalServerError": "Failed to fetch uptime data"
+      },
+      "monitorType": {
+        "http": "",
+        "keyword": "",
+        "jsonQuery": "",
+        "port": "",
+        "ping": "",
+        "dns": "",
+        "docker": "",
+        "push": "",
+        "group": "Group",
+        "realBrowser": ""
       }
     },
     "traefik": {
@@ -5575,6 +5762,8 @@
       "allHidden": "All metrics are hidden in this view. Use Customise this view to restore them."
     },
     "wazuh": {
+      "name": "",
+      "description": "",
       "target": {
         "api": "Wazuh server API",
         "indexer": "Wazuh indexer",
@@ -5594,6 +5783,14 @@
         "certificate": {
           "title": "{target} certificate is not trusted",
           "description": "Wazuh uses a self-signed certificate by default. Run \"Test connection\" for the integration and trust the certificate, or add your CA under Settings → Certificates."
+        },
+        "certificateHostname": {
+          "title": "",
+          "description": ""
+        },
+        "certificateExpired": {
+          "title": "",
+          "description": ""
         },
         "unreachable": {
           "title": "Cannot reach {target}",
@@ -5618,7 +5815,9 @@
         "unknown": {
           "title": "Could not load data from {target}",
           "description": "Check the Homarr logs for further details."
-        }
+        },
+        "viewSaveTitle": "",
+        "viewSaveMessage": ""
       },
       "range": {
         "1h": "1h",
@@ -5626,268 +5825,234 @@
         "7d": "7d",
         "30d": "30d"
       },
-      "levelTooltip": "Rule level {level} ({severity})"
-    },
-    "wazuhAgents": {
-      "name": "Wazuh agents",
-      "description": "Sortable list of Wazuh agents showing status, OS, version, and last keepalive",
+      "levelTooltip": "Rule level {level} ({severity})",
+      "summary": {
+        "title": "",
+        "alerts": "",
+        "none": "",
+        "trend": {
+          "new": "new",
+          "tooltip": ""
+        },
+        "previous": "",
+        "maxLevel": "",
+        "health": "",
+        "manager": ""
+      },
+      "alerts": {
+        "title": "",
+        "empty": "",
+        "rule": "",
+        "openInDashboard": ""
+      },
+      "timeline": {
+        "title": "",
+        "total": "",
+        "interval": ""
+      },
+      "top": {
+        "title": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "empty": {
+          "rules": "",
+          "agents": "",
+          "sourceIps": "",
+          "mitreTactics": "",
+          "mitreTechniques": ""
+        },
+        "totalTooltip": "",
+        "private": "",
+        "public": "",
+        "agents": "",
+        "others": ""
+      },
+      "agents": {
+        "title": "",
+        "total": "",
+        "status": {
+          "active": "",
+          "disconnected": "Disconnected",
+          "neverConnected": "",
+          "pending": ""
+        },
+        "statusLabel": {
+          "active": "",
+          "disconnected": "Disconnected",
+          "never_connected": "",
+          "pending": "",
+          "unknown": "Unknown"
+        },
+        "live": "",
+        "snapshot": "",
+        "snapshotHint": "",
+        "staleSnapshot": "",
+        "noDisconnected": "",
+        "empty": "",
+        "column": {
+          "status": "Status",
+          "name": "Job name",
+          "ip": "",
+          "os": "",
+          "version": "",
+          "lastKeepAlive": "",
+          "groups": "Groups"
+        },
+        "outdated": ""
+      },
+      "vulnerabilities": {
+        "title": "",
+        "topCves": "",
+        "score": "",
+        "agentsShort": "",
+        "topAgents": "",
+        "criticalHigh": "",
+        "totalTooltip": "",
+        "affected": "",
+        "empty": "",
+        "distribution": "",
+        "worst": ""
+      },
+      "fim": {
+        "title": "",
+        "event": {
+          "added": "",
+          "modified": "",
+          "deleted": "",
+          "unknown": ""
+        },
+        "empty": "",
+        "user": "",
+        "registry": ""
+      },
+      "authFailures": {
+        "title": "",
+        "seriesTooltip": "",
+        "peak": "",
+        "empty": "",
+        "failed": "",
+        "failedHint": "",
+        "bruteForce": "",
+        "bruteForceHint": "",
+        "sourceIps": "",
+        "ipTooltip": "",
+        "bruteForceCount": ""
+      },
+      "view": {
+        "overview": "",
+        "alerts": "",
+        "timeline": "",
+        "top": "",
+        "agents": "",
+        "vulnerabilities": "",
+        "fim": "",
+        "authFailures": ""
+      },
       "option": {
-        "statusFilter": {
-          "label": "Display agents"
+        "visibleViews": {
+          "label": "",
+          "description": ""
         },
-        "sortBy": {
-          "label": "Sort by"
-        },
-        "showVersion": {
-          "label": "Display Wazuh version column"
-        },
-        "showGroups": {
-          "label": "Display groups column"
-        }
-      },
-      "title": "Agents",
-      "total": "{count} agents",
-      "status": {
-        "active": "Active",
-        "disconnected": "Disconnected",
-        "neverConnected": "Never connected",
-        "pending": "Pending"
-      },
-      "statusLabel": {
-        "active": "Active",
-        "disconnected": "Disconnected",
-        "never_connected": "Never connected",
-        "pending": "Pending",
-        "unknown": "Unknown"
-      },
-      "live": "Live",
-      "snapshot": "Snapshot {age} old",
-      "snapshotHint": "Read from the Wazuh dashboard's agent snapshot (wazuh-monitoring), taken at {time}. Add server API credentials for live data.",
-      "staleSnapshot": "The agent snapshot from {time} is outdated. Check that the Wazuh dashboard monitoring job is running, or add server API credentials.",
-      "noDisconnected": "All agents are connected",
-      "empty": "No agents match this filter",
-      "column": {
-        "status": "Status",
-        "name": "Job name",
-        "ip": "IP",
-        "os": "OS",
-        "version": "Version",
-        "lastKeepAlive": "Keepalive",
-        "groups": "Groups"
-      },
-      "outdated": "Older than the latest agent version ({version})"
-    },
-    "wazuhAlerts": {
-      "name": "Wazuh alerts feed",
-      "description": "Recent Wazuh alerts with level, MITRE ATT&CK techniques, agent, and source IP",
-      "option": {
-        "minLevel": {
-          "label": "Minimum rule level",
-          "description": "Wazuh levels: 0–6 low, 7–11 medium, 12–14 high, 15+ critical"
-        },
-        "hours": {
-          "label": "Time window (hours)"
-        },
-        "limit": {
-          "label": "Number of alerts"
-        },
-        "showMitre": {
-          "label": "Display MITRE ATT&CK techniques"
-        },
-        "showAgent": {
-          "label": "Display agent"
-        },
-        "showSourceIp": {
-          "label": "Show source IP"
-        },
-        "showRuleId": {
-          "label": "Show rule ID"
-        }
-      },
-      "title": "Alerts · level {level}+ · {hours}h",
-      "empty": "No alerts at this level. All quiet.",
-      "rule": "Rule {id}",
-      "openInDashboard": "Open this alert in the Wazuh dashboard"
-    },
-    "wazuhSummary": {
-      "name": "Wazuh alert severity",
-      "description": "Alert severity breakdown with a trend against the previous period",
-      "option": {
         "range": {
-          "label": "Time range"
+          "label": ""
         },
         "showTrend": {
-          "label": "Show trend against the previous period"
+          "label": ""
         },
         "showFooter": {
-          "label": "Show footer"
-        }
-      },
-      "title": "Alert severity · {range}",
-      "alerts": "alerts",
-      "none": "No alerts",
-      "trend": {
-        "new": "new",
-        "tooltip": "Previous period: {previous}"
-      },
-      "previous": "Previous {range}: {count}",
-      "maxLevel": "Max level {level}",
-      "health": "Indexer health: {status}",
-      "manager": "Manager {version}"
-    },
-    "wazuhTimeline": {
-      "name": "Wazuh alerts timeline",
-      "description": "Stacked chart of Wazuh alerts over time by severity",
-      "option": {
-        "range": {
-          "label": "Time range"
+          "label": ""
         },
         "interval": {
-          "label": "Interval"
+          "label": ""
         },
         "chartType": {
-          "label": "Chart type"
+          "label": ""
         },
         "yScale": {
-          "label": "Y-axis scale",
-          "description": "Square root keeps high and critical alerts visible next to thousands of low ones"
+          "label": "",
+          "description": ""
         },
         "minLevel": {
-          "label": "Minimum rule level"
+          "label": ""
         },
         "showLegend": {
-          "label": "Show legend with totals"
-        }
-      },
-      "title": "Alerts timeline · {range}",
-      "total": "{count} alerts",
-      "interval": "per {interval}"
-    },
-    "wazuhTopList": {
-      "name": "Wazuh top list",
-      "description": "Top rules, agents, source IPs or MITRE ATT&CK tactics and techniques by alert count",
-      "option": {
-        "kind": {
-          "label": "Rank"
+          "label": ""
         },
-        "range": {
-          "label": "Time range"
+        "topKind": {
+          "label": ""
         },
-        "limit": {
-          "label": "Number of entries"
-        },
-        "minLevel": {
-          "label": "Minimum rule level"
+        "topLimit": {
+          "label": ""
         },
         "showBars": {
-          "label": "Show bars"
-        }
-      },
-      "title": {
-        "rules": "Top rules · {range}",
-        "agents": "Top agents · {range}",
-        "sourceIps": "Top source IPs · {range}",
-        "mitreTactics": "MITRE tactics · {range}",
-        "mitreTechniques": "MITRE techniques · {range}"
-      },
-      "empty": {
-        "rules": "No alerts in this period",
-        "agents": "No alerts in this period",
-        "sourceIps": "No alerts with a source IP in this period",
-        "mitreTactics": "No alerts mapped to MITRE ATT&CK in this period",
-        "mitreTechniques": "No alerts mapped to MITRE ATT&CK in this period"
-      },
-      "totalTooltip": "{count} matching alerts",
-      "private": "LAN",
-      "public": "Public",
-      "agents": "Seen on {count} agents",
-      "others": "{count} more alerts in other entries"
-    },
-    "wazuhVulnerabilities": {
-      "name": "Wazuh vulnerabilities",
-      "description": "Vulnerability counts, top CVEs and the most vulnerable agents",
-      "option": {
+          "label": ""
+        },
+        "agentStatusFilter": {
+          "label": ""
+        },
+        "agentSortBy": {
+          "label": ""
+        },
+        "showVersion": {
+          "label": ""
+        },
+        "showGroups": {
+          "label": ""
+        },
         "cveOrder": {
-          "label": "Rank CVEs by"
+          "label": ""
         },
         "minSeverity": {
-          "label": "CVE severity"
+          "label": ""
         },
         "cveLimit": {
-          "label": "Number of CVEs"
+          "label": ""
         },
         "agentLimit": {
-          "label": "Number of agents"
+          "label": ""
         },
         "showAgents": {
-          "label": "Show most vulnerable agents"
-        }
-      },
-      "title": "Vulnerabilities",
-      "topCves": "Top CVEs",
-      "score": "Score",
-      "agentsShort": "Agents",
-      "topAgents": "Most vulnerable agents",
-      "criticalHigh": "Crit / High",
-      "totalTooltip": "{count} findings on {agents} agents",
-      "affected": "{count} agents",
-      "empty": "No vulnerabilities detected",
-      "distribution": "Severity distribution. {unscored} findings without a score are not shown.",
-      "worst": "Worst: {id} ({score}) on {agents} agents"
-    },
-    "wazuhFim": {
-      "name": "Wazuh file integrity",
-      "description": "Recent file integrity monitoring (syscheck) events",
-      "option": {
-        "range": {
-          "label": "Time range"
+          "label": ""
         },
-        "event": {
-          "label": "Events"
+        "fimEvent": {
+          "label": ""
         },
-        "limit": {
-          "label": "Number of events"
+        "fimLimit": {
+          "label": ""
         },
         "includeRegistry": {
-          "label": "Include Windows Registry events"
-        }
-      },
-      "title": "File integrity · {range}",
-      "event": {
-        "added": "Added",
-        "modified": "Modified",
-        "deleted": "Deleted",
-        "unknown": "Changed"
-      },
-      "empty": "No file integrity events in this period",
-      "user": "by {user}",
-      "registry": "Registry"
-    },
-    "wazuhAuthFailures": {
-      "name": "Wazuh authentication failures",
-      "description": "Failed logins and brute-force alerts per agent with hourly sparklines",
-      "option": {
-        "hours": {
-          "label": "Time window (hours)"
+          "label": ""
         },
-        "limit": {
-          "label": "Number of agents"
+        "authLimit": {
+          "label": ""
         },
         "showSourceIps": {
-          "label": "Show top source IPs"
+          "label": ""
+        },
+        "alertsMinLevel": {
+          "label": "",
+          "description": ""
+        },
+        "alertsLimit": {
+          "label": ""
+        },
+        "showMitre": {
+          "label": ""
+        },
+        "showAgent": {
+          "label": ""
+        },
+        "showSourceIp": {
+          "label": ""
+        },
+        "showRuleId": {
+          "label": ""
         }
-      },
-      "title": "Authentication failures · {hours}h",
-      "seriesTooltip": "All agents over the last {hours}h",
-      "peak": "Peak {count}/bucket",
-      "empty": "No failed logins in this period",
-      "failed": "Failed logins",
-      "failedHint": "Individual authentication failures (sshd, PAM, Windows logon, invalid users)",
-      "bruteForce": "Brute force",
-      "bruteForceHint": "Correlated brute-force rules (multiple failures in a short period, MITRE T1110)",
-      "sourceIps": "Source IPs",
-      "ipTooltip": "{ip}: {count} failures",
-      "bruteForceCount": "{count} brute-force attempts"
+      }
     }
   },
   "widgetPreview": {

@@ -5,10 +5,10 @@
     "better-sqlite3": "12.11.1"
   },
   "engines": {
-    "bun": ">=1.4.2",
-    "node": ">=24.18.0"
+    "bun": ">=1.4.3",
+    "node": ">=24.22.1"
   },
-  "packageManager": "bun@1.4.2",
+  "packageManager": "bun@1.4.3",
   "trustedDependencies": [
     "better-sqlite3"
   ]

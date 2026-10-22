@@ -60,15 +60,15 @@ export class UptimeKumaIntegration extends Integration {
     return { success: true };
   }
 
-  public async getStatusPageAsync(signal?: AbortSignal): Promise<UptimeKumaStatusPage> {
+  public async getStatusPageAsync(signal?: AbortSignal, statusPageSlug?: string): Promise<UptimeKumaStatusPage> {
+    const slug = statusPageSlug?.trim().toLowerCase() || this.getSlug();
     const [statusPageResponse, heartbeatResponse] = await Promise.all([
-      this.fetchOkAsync(this.statusPageApiUrl(), signal),
-      this.fetchOkAsync(this.heartbeatApiUrl(), signal),
+      this.fetchOkAsync(this.statusPageApiUrl(slug), signal),
+      this.fetchOkAsync(this.heartbeatApiUrl(slug), signal),
     ]);
 
     const statusPage = uptimeKumaStatusPageResponseSchema.parse(await statusPageResponse.json());
     const heartbeat = uptimeKumaHeartbeatResponseSchema.parse(await heartbeatResponse.json());
-    const slug = this.getSlug();
     const heartbeatsByMonitor = new Map(
       Object.entries(heartbeat.heartbeatList).map(([monitorId, heartbeats]) => [
         Number(monitorId),
@@ -109,12 +109,12 @@ export class UptimeKumaIntegration extends Integration {
     return response;
   }
 
-  private statusPageApiUrl() {
-    return this.url(`/api/status-page/${encodeURIComponent(this.getSlug())}`);
+  private statusPageApiUrl(slug = this.getSlug()) {
+    return this.url(`/api/status-page/${encodeURIComponent(slug)}`);
   }
 
-  private heartbeatApiUrl() {
-    return this.url(`/api/status-page/heartbeat/${encodeURIComponent(this.getSlug())}`);
+  private heartbeatApiUrl(slug = this.getSlug()) {
+    return this.url(`/api/status-page/heartbeat/${encodeURIComponent(slug)}`);
   }
 
   private getSlug() {

@@ -3228,6 +3228,10 @@
         },
         "viewMode": {
           "label": "View"
+        },
+        "hideHeader": {
+          "label": "Hide header",
+          "description": "Hide the date navigation. Widgets that are too short always hide it."
         }
       },
       "advanced": {
@@ -3245,15 +3249,11 @@
         "agenda": "Agenda"
       },
       "controls": {
-        "view": "Calendar view",
         "today": "Today",
         "previous": "Previous period",
         "next": "Next period",
         "noEvents": "No events in this period",
         "more": "{count} more",
-        "moreLabel": "Show {count} more events",
-        "eventDetails": "Event details",
-        "close": "Close event details",
         "timeSlot": "Time slot",
         "weekday": "Weekday"
       }
@@ -5054,6 +5054,14 @@
     "uptimeKuma": {
       "description": "Live status, heartbeats and uptime of the monitors on an Uptime Kuma status page",
       "option": {
+        "statusPageSlug": {
+          "label": "Status page slug",
+          "description": "The part after /status/ in the page URL, such as homelab. Leave blank to use each integration's configured page."
+        },
+        "summaryOnly": {
+          "label": "General status only",
+          "description": "Hide monitor rows and chips. Overrides Show summary; full details remain available in the advanced view."
+        },
         "showSummary": {
           "label": "Show summary",
           "description": "Overall status, counts and averages"

@@ -1,6 +1,7 @@
 import { IconHeartbeat, IconServerOff } from "@tabler/icons-react";
 
 import { getWidgetIntegrationConfig } from "@homarr/definitions";
+import { uptimeKumaStatusPageSlugSchema } from "@homarr/validation/uptime-kuma";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -10,6 +11,12 @@ export const { definition, componentLoader } = createWidgetDefinition("uptimeKum
   supportsAdvancedFocus: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      statusPageSlug: factory.text({
+        defaultValue: "",
+        validate: uptimeKumaStatusPageSlugSchema,
+        withDescription: true,
+      }),
+      summaryOnly: factory.switch({ defaultValue: false, withDescription: true }),
       showSummary: factory.switch({ defaultValue: true, withDescription: true }),
       showIncidents: factory.switch({ defaultValue: true, withDescription: true }),
       groupByStatusPageGroup: factory.switch({ defaultValue: false, withDescription: true }),
