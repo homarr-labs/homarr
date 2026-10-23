@@ -80,7 +80,7 @@ export const isActionAllowedAsync = async (
     await throwIfActionForbiddenAsync(ctx, boardWhere, permission);
     return true;
   } catch (error) {
-    if (error instanceof TRPCError && error.code === "NOT_FOUND") return false;
+    if (error instanceof TRPCError && (error.code === "NOT_FOUND" || error.code === "FORBIDDEN")) return false;
     throw error;
   }
 };
