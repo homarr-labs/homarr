@@ -84,6 +84,31 @@ export const formatEpisodeSubtitle = (item: BaseItemDto): string | undefined => 
   return name ? `${code} – ${name}` : code;
 };
 
+function groupRecentEpisodes(items: BaseItemDto[]): Map<string, BaseItemDto[]> {
+  const episodesBySeries = new Map<string, BaseItemDto[]>();
+  for (const item of items) {
+    if (item.Type !== "Episode" || !item.SeriesId) continue;
+    const episodes = episodesBySeries.get(item.SeriesId) ?? [];
+    episodes.push(item);
+    episodesBySeries.set(item.SeriesId, episodes);
+  }
+
+  for (const [seriesId, episodes] of episodesBySeries) {
+    const datedEpisodes = episodes
+      .map((episode) => ({ episode, addedAt: Date.parse(episode.DateCreated ?? "") }))
+      .filter(({ addedAt }) => Number.isFinite(addedAt));
+    if (datedEpisodes.length === 0) continue;
+
+    // Jellyfin groups additions within 24 hours of the newest episode in each series.
+    const cutoff = Math.max(...datedEpisodes.map(({ addedAt }) => addedAt)) - 24 * 60 * 60 * 1000;
+    episodesBySeries.set(
+      seriesId,
+      datedEpisodes.filter(({ addedAt }) => addedAt >= cutoff).map(({ episode }) => episode),
+    );
+  }
+  return episodesBySeries;
+}
+
 const authorizationPrefix = 'MediaBrowser Client="Homarr", Device="Homarr", DeviceId="homarr", Version="0.0.1"';
 const pendingAuthentications = new Map<string, Promise<string>>();
 
@@ -259,32 +284,8 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       // Root-level grouping uses the first library's type and can omit items from other libraries.
       groupItems: false,
     });
-    // Jellyfin groups additions within 24 hours of the newest episode in each series.
-    // Older episodes in the latest-100 response must not turn a single addition into a batch.
-    const recentAdditionWindowMs = 24 * 60 * 60 * 1000;
-    const latestEpisodeDates = new Map<string, number>();
-    for (const item of result.data) {
-      if (item.Type !== "Episode" || !item.SeriesId) continue;
-      const addedAt = Date.parse(item.DateCreated ?? "");
-      if (!Number.isFinite(addedAt)) continue;
-      latestEpisodeDates.set(
-        item.SeriesId,
-        Math.max(latestEpisodeDates.get(item.SeriesId) ?? Number.NEGATIVE_INFINITY, addedAt),
-      );
-    }
-    const recentEpisodeCounts = new Map<string, number>();
-    for (const item of result.data) {
-      if (item.Type !== "Episode" || !item.SeriesId) continue;
-      const latestAddedAt = latestEpisodeDates.get(item.SeriesId);
-      const addedAt = Date.parse(item.DateCreated ?? "");
-      if (
-        latestAddedAt !== undefined &&
-        (!Number.isFinite(addedAt) || addedAt < latestAddedAt - recentAdditionWindowMs)
-      )
-        continue;
-      recentEpisodeCounts.set(item.SeriesId, (recentEpisodeCounts.get(item.SeriesId) ?? 0) + 1);
-    }
-    const seriesIds = [...recentEpisodeCounts].filter(([, count]) => count > 1).map(([id]) => id);
+    const recentEpisodesBySeries = groupRecentEpisodes(result.data);
+    const seriesIds = [...recentEpisodesBySeries].filter(([, episodes]) => episodes.length > 1).map(([id]) => id);
     const seriesResults = await Promise.allSettled(
       seriesIds.map((itemId) => userLibraryApi.getItem({ userId, itemId })),
     );
@@ -300,14 +301,8 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       const parent = series.get(item.SeriesId);
       // Single additions use the newest episode; failed batch lookups keep the original episodes.
       if (!parent) {
-        const latestAddedAt = latestEpisodeDates.get(item.SeriesId);
-        const addedAt = Date.parse(item.DateCreated ?? "");
-        if (
-          recentEpisodeCounts.get(item.SeriesId) === 1 &&
-          latestAddedAt !== undefined &&
-          (!Number.isFinite(addedAt) || addedAt < latestAddedAt)
-        )
-          return [];
+        const recentEpisodes = recentEpisodesBySeries.get(item.SeriesId);
+        if (recentEpisodes?.length === 1 && recentEpisodes[0] !== item) return [];
         return [item];
       }
       if (displayedSeries.has(item.SeriesId)) return [];
