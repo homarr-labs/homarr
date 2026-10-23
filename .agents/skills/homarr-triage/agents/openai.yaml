@@ -1,3 +1,6 @@
 interface:
   display_name: "Homarr Triage"
-  short_description: "Triage Homarr issues, PRs, and Project follow-ups"
+  short_description: "Maintainer-only: triage Homarr issues, PRs, and Project follow-ups"
+
+policy:
+  allow_implicit_invocation: false
