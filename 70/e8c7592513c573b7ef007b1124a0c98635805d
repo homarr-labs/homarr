@@ -1,0 +1,19 @@
+packages/api/src/router/board/board-access.ts
+  s_88eb69bc660f9d::t_67178c3bb30ced 83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "70e8c7592513c573b7ef007b1124a0c98635805d",
+  "prompts": {},
+  "sessions": {
+    "s_88eb69bc660f9d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1088892f-b63b-48e2-bdb1-c2cb09349f52",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
