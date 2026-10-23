@@ -87,6 +87,7 @@ export const summarizeChangelog = (notes: string | undefined): ChangelogDigest =
         .replace(/\s+by @[\w-]+(?:\[bot\])? in https?:\/\/\S+/g, "")
         .replace(/https?:\/\/\S+/g, "")
         .replace(/<[^>]+>/g, "")
+        .replace(/[<>]/g, "")
         .replace(/\[![A-Z]+\]/g, "")
         .replace(/:[a-z][a-z0-9_+-]*:/g, "")
         .replace(/^\s*(#{1,6}|[-*+]|\d+\.|>)\s*/, "")
