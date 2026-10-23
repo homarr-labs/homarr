@@ -111,6 +111,7 @@ Portable skills live in `.agents/skills/`. Read the relevant `SKILL.md` before w
 - `documentation-sync` — user-critical documentation only
 - `mcp-integration` — safe tRPC-to-MCP exposure
 - `homarr-custom-widget` — safe Custom JSX v2 authoring
+- `homarr-triage` — issue/PR queues, reporter follow-ups, and GitHub Project operations
 
 ### Issue tracker
 

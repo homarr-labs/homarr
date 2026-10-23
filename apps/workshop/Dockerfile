@@ -13,9 +13,9 @@ RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
 FROM pocketbase-builder AS pocketbase-test
 RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
 
-FROM oven/bun:1.4.2-alpine AS bun-tool
+FROM oven/bun:1.4.3-alpine AS bun-tool
 
-FROM node:24.18.0-alpine AS dependencies
+FROM node:24.22.1-alpine AS dependencies
 COPY --from=bun-tool /usr/local/bin/bun /usr/local/bin/bun
 WORKDIR /app
 RUN apk add --no-cache libstdc++ python3 make g++
@@ -68,7 +68,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
     --mount=type=cache,id=workshop-next-build-${TARGETPLATFORM},target=/app/apps/docs/.next/cache,sharing=locked \
     --mount=type=cache,id=workshop-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.22.1" \
     CI=true SKIP_ENV_VALIDATION=true bun run turbo run build --filter=@homarr/docs
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime

@@ -5,9 +5,7 @@ import { describe, expect, test } from "vitest";
 import {
   assertJsonBudget,
   assertSafeStaticHeaders,
-  classifyAddress,
   executeCustomWidgetRequest,
-  resolveAndValidateHost,
   resolveSameOriginTarget,
   validateCustomWidgetUrl,
 } from "../server";
@@ -15,25 +13,7 @@ import { isCustomWidgetRequestTimeoutError } from "../server/request-executor";
 import { parseResponseBody } from "../server/response";
 
 describe("custom widget network policy", () => {
-  test.each([
-    ["8.8.8.8", "public"],
-    ["10.0.0.1", "private"],
-    ["127.0.0.1", "loopback"],
-    ["169.254.169.254", "blocked"],
-    ["224.0.0.1", "blocked"],
-    ["::ffff:127.0.0.1", "blocked"],
-    ["fe80::1", "blocked"],
-  ] as const)("classifies %s as %s", (address, expected) => expect(classifyAddress(address)).toBe(expected));
-
-  test("enforces configured address scopes", async () => {
-    await expect(resolveAndValidateHost("10.0.0.1", "public")).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(resolveAndValidateHost("10.0.0.1", "private")).resolves.toHaveLength(1);
-    await expect(resolveAndValidateHost("127.0.0.1", "private")).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(resolveAndValidateHost("127.0.0.1", "loopback")).resolves.toHaveLength(1);
-    await expect(resolveAndValidateHost("169.254.169.254", "loopback")).rejects.toMatchObject({ code: "FORBIDDEN" });
-  });
-
-  test("executes a DNS-pinned request within the approved scope", async () => {
+  test("executes an HTTP request", async () => {
     const server = createServer((_request, response) => {
       response.writeHead(200, { "content-type": "application/json" });
       response.end('{"status":"ok"}');
@@ -46,7 +26,6 @@ describe("custom widget network policy", () => {
         executeCustomWidgetRequest({
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
-          networkScope: "loopback",
           kind: "query",
         }),
       ).resolves.toMatchObject({ ok: true, status: 200, data: { status: "ok" } });
@@ -87,7 +66,6 @@ describe("custom widget network policy", () => {
         executeCustomWidgetRequest({
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
-          networkScope: "loopback",
           kind: "query",
           logError: (event) => events.push(event),
         }),
@@ -114,7 +92,6 @@ describe("custom widget network policy", () => {
         executeCustomWidgetRequest({
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
-          networkScope: "loopback",
           kind: "query",
         }),
       ).rejects.toMatchObject({ code: "BAD_GATEWAY" });
@@ -136,7 +113,6 @@ describe("custom widget network policy", () => {
         executeCustomWidgetRequest({
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
-          networkScope: "loopback",
           kind: "query",
         }),
       ).rejects.toMatchObject({ code: "PAYLOAD_TOO_LARGE" });
@@ -158,7 +134,6 @@ describe("custom widget network policy", () => {
         executeCustomWidgetRequest({
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
-          networkScope: "loopback",
           kind: "query",
         }),
       ).rejects.toMatchObject({
@@ -202,7 +177,6 @@ describe("custom widget network policy", () => {
           baseUrl: `http://127.0.0.1:${address.port}`,
           method: "GET",
           body: '{"query":"status"}',
-          networkScope: "loopback",
           kind: "query",
         }),
       ).resolves.toMatchObject({ ok: true, data: { body: '{"query":"status"}' } });
@@ -252,7 +226,6 @@ describe("custom widget network policy", () => {
           targetUrl: `${baseUrl}/start`,
           method: "POST",
           body: '{"query":"status"}',
-          networkScope: "loopback",
           kind: "query",
         }),
       ).resolves.toMatchObject({
@@ -283,7 +256,6 @@ describe("custom widget network policy", () => {
           baseUrl,
           targetUrl: `${baseUrl}/start`,
           method: "POST",
-          networkScope: "loopback",
           kind: "action",
         }),
       ).rejects.toThrow("redirect limit");

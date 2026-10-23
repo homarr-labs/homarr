@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "2.7.0",
+  "version": "2.8.1",
   "private": true,
   "workspaces": {
     "packages": [
@@ -193,7 +193,7 @@
       "maria2": "0.4.1",
       "mermaid": "11.17.2",
       "motion": "^13.0.0",
-      "next": "16.5.0-canary.15",
+      "next": "16.4.2",
       "next-auth": "5.0.0-beta.32",
       "next-intl": "4.13.1",
       "next-themes": "0.4.6",
@@ -378,7 +378,6 @@
     "lodash-es@<4.17.24": "4.18.1",
     "nanoid@>=3.0.0 <3.3.18": "3.3.18",
     "nanoid@>=4.0.0 <5.0.9": ">=5.1.16",
-    "next": "16.5.0-canary.15",
     "picomatch@>=2.0.0 <2.3.2": "2.3.2",
     "postcss@<8.5.23": "8.5.23",
     "prismjs@<1.30.0": ">=1.30.0",
@@ -398,10 +397,10 @@
     "vite@>=5.0.0 <=5.4.18": ">=8.1.4"
   },
   "engines": {
-    "bun": ">=1.4.2",
-    "node": ">=24.18.0"
+    "bun": ">=1.4.3",
+    "node": ">=24.22.1"
   },
-  "packageManager": "bun@1.4.2",
+  "packageManager": "bun@1.4.3",
   "patchedDependencies": {
     "@mantine/hooks@9.6.0": "patches/@mantine__hooks@9.6.0.patch",
     "dns-caching@0.2.9": "patches/dns-caching.patch",

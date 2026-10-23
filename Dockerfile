@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.25
 
-FROM oven/bun:1.4.2-alpine AS bun-tool
+FROM oven/bun:1.4.3-alpine AS bun-tool
 
-FROM node:24.18.0-alpine AS base
+FROM node:24.22.1-alpine AS base
 
 FROM base AS builder
 ARG TARGETPLATFORM
@@ -27,7 +27,7 @@ RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_REMOTE_CACHE_SIGNATURE_KEY,env=TURBO_REMOTE_CACHE_SIGNATURE_KEY \
     --mount=type=cache,id=homarr-next-build-${TARGETPLATFORM},target=/app/apps/nextjs/.next/cache,sharing=locked \
     --mount=type=cache,id=homarr-turbo-${TARGETPLATFORM},target=/app/.turbo,sharing=locked \
-    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.18.0" \
+    TURBO_PLATFORM="${TARGETPLATFORM:-linux/amd64}/musl/node-24.22.1" \
     bun run turbo run build --filter=@homarr/nextjs... --filter=@homarr/cli
 
 FROM alpine:3.24.2 AS runner

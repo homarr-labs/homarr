@@ -1,4 +1,33 @@
 ## What's Changed
+* fix(deps): patch Next.js security vulnerabilities by @ajnart in https://github.com/homarr-labs/homarr/pull/7280
+* chore(release): automatic release v2.8.1 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7281
+
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.8.0...v2.8.1
+
+## What's Changed
+* feat(ci): sync triage replies with GitHub Projects by @ajnart in https://github.com/homarr-labs/homarr/pull/7249
+* chore: update bug report template by @homarr-releases[bot] in https://github.com/homarr-labs/homarr/pull/7251
+* i18n(cn): complete the Simplified Chinese catalog (266 missing keys) by @ApplesBear-X in https://github.com/homarr-labs/homarr/pull/7252
+* fix: remove custom widget network filtering by @ajnart in https://github.com/homarr-labs/homarr/pull/7120
+* chore(deps): update node.js to v24.22.1 [security] by @RedwindA in https://github.com/homarr-labs/homarr/pull/7267
+* chore(deps): update oven/bun docker tag to v1.4.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7269
+* chore(deps): update dependency bun to v1.4.3 by @homarr-renovate[bot] in https://github.com/homarr-labs/homarr/pull/7268
+* chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7259
+* fix(coolify): use linked app URL for widget links by @darbyjack in https://github.com/homarr-labs/homarr/pull/7261
+* feat(jellyfin): show series name on episode release tiles by @darbyjack in https://github.com/homarr-labs/homarr/pull/7260
+* feat(uptime-kuma): add summary-only mode and per-widget status pages by @ajnart in https://github.com/homarr-labs/homarr/pull/7264
+* docs(agents): add Homarr triage skill by @ajnart in https://github.com/homarr-labs/homarr/pull/7263
+* fix(calendar): make view a widget option only and use hover for details by @ajnart in https://github.com/homarr-labs/homarr/pull/7266
+* chore(release): automatic release v2.8.0 by @github-actions[bot] in https://github.com/homarr-labs/homarr/pull/7276
+
+## New Contributors
+* @ApplesBear-X made their first contribution in https://github.com/homarr-labs/homarr/pull/7252
+* @RedwindA made their first contribution in https://github.com/homarr-labs/homarr/pull/7267
+
+**Full Changelog**: https://github.com/homarr-labs/homarr/compare/v2.7.0...v2.8.0
+
+## What's Changed
 * chore(lang): updated translations from crowdin by @homarr-crowdin[bot] in https://github.com/homarr-labs/homarr/pull/7204
 * docs: clarify request limits, Kuma API checks, and JSX icons by @ajnart in https://github.com/homarr-labs/homarr/pull/7205
 * docs(helm): update chart installation page by @homarr-charts-docs-sync[bot] in https://github.com/homarr-labs/homarr/pull/7203

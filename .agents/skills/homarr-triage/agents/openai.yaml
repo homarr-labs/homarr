@@ -1,0 +1,3 @@
+interface:
+  display_name: "Homarr Triage"
+  short_description: "Triage Homarr issues, PRs, and Project follow-ups"

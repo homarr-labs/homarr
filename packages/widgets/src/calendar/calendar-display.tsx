@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { CSSProperties } from "react";
 import {
   ActionIcon,
   Box,
-  Button,
   Center,
   Group,
   Loader,
-  Menu,
-  Modal,
   Text,
   Tooltip,
   UnstyledButton,
@@ -20,7 +17,8 @@ import {
 import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import { DayView, WeekView } from "@mantine/schedule";
-import { IconCheck, IconChevronDown, IconChevronLeft, IconChevronRight, IconCalendarEvent } from "@tabler/icons-react";
+import type { ScheduleEventData, WeekViewProps } from "@mantine/schedule";
+import { IconChevronLeft, IconChevronRight, IconCalendarEvent } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { useI18n } from "@homarr/translation/client";
@@ -32,10 +30,9 @@ import { IntegrationErrorIndicator } from "../common/integration-error-indicator
 import { formatLocalizedTime } from "../common/locale";
 import { CalendarDay } from "./calender-day";
 import { getCalendarAgendaEvents, groupEventsByDate, splitEvents, toCalendarDateKey } from "./calendar-events";
-import { CalendarEventList } from "./calendar-event-list";
+import { CalendarEventList, CalendarEventsHoverCard } from "./calendar-event-list";
 import type { CalendarEventWithSource } from "./calendar-event-list";
 import { getCalendarScheduleEvents, isCalendarAllDayEvent } from "./calendar-schedule-events";
-import { calendarViews } from "./calendar-view";
 import type { CalendarView } from "./calendar-view";
 import classes from "./component.module.css";
 
@@ -49,16 +46,14 @@ interface CalendarDisplayProps {
   month: Date;
   setMonth: (date: Date) => void;
   view: CalendarView;
-  setView: (view: CalendarView) => void;
+  hideHeader: boolean;
   releaseType: readonly string[];
   locale: string;
   firstDayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-  radius: CSSProperties["borderRadius"];
 }
 
 export const CalendarDisplay = ({
   width: initialWidth,
-  height: initialHeight,
   events,
   failedIntegrations,
   isPending,
@@ -66,19 +61,15 @@ export const CalendarDisplay = ({
   month: date,
   setMonth: setDate,
   view,
-  setView,
+  hideHeader,
   releaseType,
   locale,
   firstDayOfWeek,
-  radius,
 }: CalendarDisplayProps) => {
   const t = useI18n("widget.calendar");
-  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize();
+  const { ref, width: measuredWidth } = useElementSize();
   const width = measuredWidth || initialWidth;
-  const height = measuredHeight || initialHeight;
   const { ref: bodyRef, height: bodyHeight } = useElementSize();
-  const [details, setDetails] = useState<CalendarEventWithSource[] | null>(null);
-  useEffect(() => setDetails(null), [date, view]);
   const filteredEvents = useMemo(
     () =>
       events.filter((event) => event.metadata?.type !== "radarr" || releaseType.includes(event.metadata.releaseType)),
@@ -103,16 +94,11 @@ export const CalendarDisplay = ({
     timeSlot: t("controls.timeSlot"),
     moreLabel: (count: number) => t("controls.more", { count }),
   };
-  const openEvent = (event: (typeof scheduleEvents)[number]) => {
-    if (isEditMode) return;
-    const original = event.payload?.event as CalendarEventWithSource | undefined;
-    if (original) setDetails([original]);
-  };
-  const openDay = (value: string) => {
-    if (isEditMode) return;
-    const dayEvents = eventsByDate.get(value) as CalendarEventWithSource[] | undefined;
-    if (dayEvents?.length) setDetails(dayEvents);
-  };
+  const renderEvent: WeekViewProps["renderEvent"] = (event, props) => (
+    <CalendarEventsHoverCard events={getOriginalEvents(event)} disabled={isEditMode}>
+      <UnstyledButton {...props} />
+    </CalendarEventsHoverCard>
+  );
   const moveDate = (amount: number) => {
     if (view === "day") setDate(dayjs(date).add(amount, "day").toDate());
     else if (view === "week") setDate(dayjs(date).add(amount, "week").toDate());
@@ -139,23 +125,36 @@ export const CalendarDisplay = ({
     labels,
     withHeader: false,
     mode: scheduleMode,
-    onEventClick: openEvent,
+    renderEvent,
+    renderEventBody: (event: ScheduleEventData) => <span className={classes.scheduleEvent}>{event.title}</span>,
     scrollAreaProps: {
-      h: bodyHeight,
-      mah: bodyHeight,
+      h: "100%",
+      mah: "100%",
       type: "auto" as const,
       styles: { content: { minWidth: 0, width: "100%" } },
-      startScrollPosition: { y: 8 * Math.max(40, bodyHeight / 12) },
+      startScrollPosition: { y: 8 * slotHeight },
     },
     slotHeight,
-    allDaySlotHeight: 48,
+    allDaySlotHeight: 28,
     h: "100%",
     w: "100%",
     slotLabelFormat: (value: string) => formatLocalizedTime(dayjs(value).toDate(), locale),
   };
 
   return (
-    <Box ref={ref} className={classes.root} h="100%" w="100%" p="xs" data-calendar-view={view}>
+    <Box
+      ref={ref}
+      className={classes.root}
+      h="100%"
+      w="100%"
+      p="xs"
+      data-calendar-view={view}
+      data-hide-header={hideHeader || undefined}
+      style={{ "--calendar-weeks": weekCount } as CSSProperties}
+    >
+      <Box className={classes.floatingError}>
+        <IntegrationErrorIndicator results={failedIntegrations} />
+      </Box>
       <Box className={classes.header}>
         <Group className={classes.navigation} gap={2} wrap="nowrap">
           <ActionIcon
@@ -196,31 +195,6 @@ export const CalendarDisplay = ({
               <IconCalendarEvent size={16} />
             </ActionIcon>
           </Tooltip>
-          <Menu withinPortal position="bottom-end" shadow="sm">
-            <Menu.Target>
-              <Button
-                className={actionTargetClasses.root}
-                variant="subtle"
-                size="compact-xs"
-                disabled={isEditMode}
-                aria-label={`${t("controls.view")}: ${t(`view.${view}`)}`}
-                rightSection={<IconChevronDown size={12} />}
-              >
-                {t(`view.${view}`)}
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              {calendarViews.map((mode) => (
-                <Menu.Item
-                  key={mode}
-                  onClick={() => setView(mode)}
-                  rightSection={view === mode && <IconCheck size={14} aria-hidden />}
-                >
-                  {t(`view.${mode}`)}
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
         </Group>
       </Box>
       <Box ref={bodyRef} className={classes.body}>
@@ -240,19 +214,16 @@ export const CalendarDisplay = ({
             firstDayOfWeek={firstDayOfWeek}
             static={view === "month"}
             className={classes.calendar}
+            classNames={{ weekday: classes.weekday, weekdaysRow: classes.weekdaysRow }}
             w="100%"
             h="100%"
-            getDayProps={(value) => {
-              if (view === "month") return {};
-              return { onClick: () => openDay(value), disabled: isEditMode };
-            }}
             styles={{
               calendarHeader: { display: "none" },
               levelsGroup: { height: "100%" },
               month: { height: "100%", tableLayout: "fixed" },
               monthCell: { textAlign: "center", position: "relative", padding: 2 },
               day: {
-                borderRadius: radius,
+                borderRadius: "var(--mantine-radius-sm)",
                 width: "100%",
                 height: "100%",
                 position: "absolute",
@@ -263,32 +234,13 @@ export const CalendarDisplay = ({
                 maxWidth: "100%",
                 overflow: "hidden",
               },
-              weekday: { padding: 0, fontSize: "var(--mantine-font-size-xs)" },
-              weekdaysRow: { height: 22 },
             }}
             renderDay={(value) => {
               const tileDate = dayjs(value).toDate();
               const dayEvents = (eventsByDate.get(toCalendarDateKey(tileDate)) ?? []) as CalendarEventWithSource[];
               if (view === "month")
-                return (
-                  <DetailedDay
-                    date={tileDate}
-                    events={dayEvents}
-                    locale={locale}
-                    cellHeight={(bodyHeight - 22) / weekCount}
-                    disabled={isEditMode}
-                    onOpen={setDetails}
-                  />
-                );
-              return (
-                <CalendarDay
-                  date={tileDate}
-                  events={dayEvents}
-                  disabled={dayEvents.length === 0 || isEditMode}
-                  rootWidth={width}
-                  rootHeight={height}
-                />
-              );
+                return <DetailedDay date={tileDate} events={dayEvents} locale={locale} disabled={isEditMode} />;
+              return <CalendarDay date={tileDate} events={dayEvents} disabled={dayEvents.length === 0 || isEditMode} />;
             }}
           />
         )}
@@ -319,13 +271,9 @@ export const CalendarDisplay = ({
             {...scheduleProps}
             firstDayOfWeek={firstDayOfWeek}
             withWeekNumber={false}
+            withCurrentTimeBubble={false}
             classNames={{ weekViewAllDaySlots: classes.weekAllDay }}
-            style={
-              {
-                "--week-view-min-slot-width": "0px",
-                "--week-view-slots-label-width": width < 350 ? "2rem" : "3.5rem",
-              } as CSSProperties
-            }
+            className={classes.week}
             styles={{
               weekViewRoot: { height: "100%" },
               weekViewScrollArea: { height: "100%" },
@@ -343,77 +291,51 @@ export const CalendarDisplay = ({
             onDateChange={(value) => {
               if (!isEditMode) setDate(dayjs(value).toDate());
             }}
-            onViewChange={(value) => {
-              if (!isEditMode && value === "day") setView("day");
-            }}
           />
         )}
       </Box>
-      <Modal
-        opened={details !== null}
-        onClose={() => setDetails(null)}
-        title={t("controls.eventDetails")}
-        closeButtonProps={{ "aria-label": t("controls.close") }}
-        centered
-        size="lg"
-      >
-        {details && <CalendarEventList events={details} advanced locale={locale} />}
-      </Modal>
     </Box>
   );
+};
+
+const getOriginalEvents = (event: ScheduleEventData): CalendarEventWithSource[] => {
+  const original = event.payload?.event as CalendarEventWithSource | undefined;
+  if (!original) return [];
+  return [original];
 };
 
 interface DetailedDayProps {
   date: Date;
   events: CalendarEventWithSource[];
   locale: string;
-  cellHeight: number;
   disabled: boolean;
-  onOpen: (events: CalendarEventWithSource[]) => void;
 }
 
-const DetailedDay = ({ date, events, locale, cellHeight, disabled, onOpen }: DetailedDayProps) => {
+const DetailedDay = ({ date, events, locale, disabled }: DetailedDayProps) => {
   const theme = useMantineTheme();
-  const t = useI18n("widget.calendar");
-  const maxRows = Math.max(0, Math.floor((cellHeight - 20) / 18));
+  const { ref, height } = useElementSize();
+  const maxRows = Math.max(0, Math.floor((height - 20) / 18));
   let visibleCount = Math.min(events.length, maxRows);
   if (events.length > maxRows) visibleCount = Math.max(0, maxRows - 1);
   const hiddenCount = events.length - visibleCount;
   return (
-    <Box className={classes.detailedDay} data-compact={maxRows === 0 || undefined}>
-      <UnstyledButton
-        className={classes.dayNumber}
-        aria-label={new Intl.DateTimeFormat(locale, { dateStyle: "full" }).format(date)}
-        disabled={disabled || events.length === 0}
-        onClick={() => onOpen(events)}
-      >
-        {date.getDate()}
-      </UnstyledButton>
-      {events.slice(0, visibleCount).map((event, index) => (
-        <UnstyledButton
-          key={index}
-          disabled={disabled}
-          className={classes.monthEvent}
-          onClick={() => onOpen([event])}
-          style={{ "--event-color": getThemeColor(event.indicatorColor ?? "blue", theme) } as CSSProperties}
-          title={event.title}
-        >
-          {!isCalendarAllDayEvent(event) && (
-            <span className={classes.eventTime}>{formatLocalizedTime(event.startDate, locale)} </span>
-          )}
-          {event.title}
-        </UnstyledButton>
-      ))}
-      {hiddenCount > 0 && (
-        <UnstyledButton
-          disabled={disabled}
-          className={classes.moreEvents}
-          aria-label={t("controls.moreLabel", { count: hiddenCount })}
-          onClick={() => onOpen(events)}
-        >
-          +{hiddenCount}
-        </UnstyledButton>
-      )}
-    </Box>
+    <CalendarEventsHoverCard events={events} disabled={disabled}>
+      <Box ref={ref} className={classes.detailedDay} data-compact={maxRows === 0 || undefined}>
+        <span className={classes.dayNumber}>{date.getDate()}</span>
+        {events.slice(0, visibleCount).map((event, index) => (
+          <span
+            key={index}
+            className={classes.monthEvent}
+            style={{ "--event-color": getThemeColor(event.indicatorColor, theme) } as CSSProperties}
+          >
+            {!isCalendarAllDayEvent(event) && (
+              <span className={classes.eventTime}>{formatLocalizedTime(event.startDate, locale)} </span>
+            )}
+            {event.title}
+          </span>
+        ))}
+        {hiddenCount > 0 && <span className={classes.moreEvents}>+{hiddenCount}</span>}
+      </Box>
+    </CalendarEventsHoverCard>
   );
 };
